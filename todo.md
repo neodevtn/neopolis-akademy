@@ -61,3 +61,10 @@
 - [x] Adapter la landing page au thème clair
 - [x] Adapter le formulaire au thème clair
 - [x] Adapter le dashboard admin au thème clair
+
+## Illustrations académiques
+- [x] Rechercher des illustrations style académique/learning
+- [x] Intégrer des visuels dans la section Hero
+- [x] Intégrer des visuels dans la section La Formule
+- [x] Intégrer des visuels dans la section Partenariats
+- [x] Intégrer des visuels dans la section Ambassadeur
