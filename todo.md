@@ -156,3 +156,18 @@
 - [x] Corriger format téléphone +216 au lieu de +212
 - [x] Tunisie sélectionnée par défaut dans le pays de résidence
 - [x] Corriger erreur React key dans AdminDashboard
+
+## Responsive Mobile
+- [x] Corriger le header mobile (logo trop grand, bouton Postuler déborde)
+- [x] Corriger le hero mobile (graphique orbital trop petit/illisible, badges flottants débordent)
+- [x] Corriger la barre stats mobile (texte trop petit, éléments serrés)
+- [x] Corriger les cartes étapes mobile (images et texte bien empilés)
+- [x] Corriger la section Pourquoi maintenant mobile (cartes stats empilées)
+- [x] Corriger la section Partenariats mobile (cartes et graphique réseau)
+- [x] Corriger le footer mobile
+- [x] Ajouter un menu hamburger mobile pour la navigation
+
+## Corrections textuelles
+- [x] Remplacer "marché africain" par "marché de l'IA agentique" dans le hero et les sections
+- [x] Adapter la FAQ "Quels pays africains" pour mentionner la Tunisie et la région MENA
+- [x] Corriger la description de l'étape Ambassadeur (supprimer "continent africain")

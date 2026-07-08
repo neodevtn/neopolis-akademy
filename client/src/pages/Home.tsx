@@ -18,6 +18,8 @@ import {
   Sparkles,
   Target,
   Rocket,
+  Menu,
+  X,
 } from "lucide-react";
 
 // Chart.js
@@ -65,8 +67,8 @@ const faqItems = [
   { q: "Quels sont les prérequis pour postuler ?", a: "Aucun prérequis technique n'est exigé. Le programme est ouvert à tous les professionnels dont le métier est menacé par l'IA : développeurs, comptables, juristes, traducteurs, agents de service client, etc. Une motivation forte et une capacité d'apprentissage sont les seuls critères essentiels." },
   { q: "La formation et la certification sont-elles vraiment gratuites ?", a: "Oui, 100% gratuites. La formation e-learning de 7 jours, l'accès à la plateforme Anthropic, et le voucher pour la certification Claude Certified Architect (CCA) sont entièrement pris en charge par Neopolis Development grâce à nos partenariats stratégiques." },
   { q: "Combien de temps dure le programme complet ?", a: "La formation e-learning dure 7 jours intensifs. Ensuite, vous disposez d'un accès à la plateforme Anthropic pour préparer la certification CCA à votre rythme, avec une date limite de passage fixée au 31 août 2026." },
-  { q: "Quels sont les débouchés après la certification ?", a: "Les candidats certifiés obtiennent le statut d'AI Solutions Partner - Ambassadeur Certifié. Vous devenez un entrepreneur indépendant distribuant des solutions IA auprès des PME/TPE de votre secteur d'activité sur tout le continent africain, avec le soutien technique et commercial complet de Neopolis Development." },
-  { q: "Quels pays africains sont concernés ?", a: "L'ensemble des 54 pays africains sont éligibles. Le programme vise à créer un réseau d'ambassadeurs couvrant tout le continent, avec un focus particulier sur les marchés francophones, anglophones et arabophones." },
+  { q: "Quels sont les débouchés après la certification ?", a: "Les candidats certifiés obtiennent le statut d'AI Solutions Partner - Ambassadeur Certifié. Vous devenez un entrepreneur indépendant distribuant des solutions IA auprès des entreprises de votre secteur d'activité, avec le soutien technique et commercial complet de Neopolis Development." },
+  { q: "Quels pays sont concernés ?", a: "Le programme est ouvert aux professionnels tunisiens. Il vise à créer un réseau d'ambassadeurs certifiés couvrant tous les secteurs d'activité en Tunisie et dans la région MENA." },
   { q: "Comment fonctionne le processus de sélection ?", a: "Après soumission de votre candidature, un score est calculé automatiquement basé sur vos compétences techniques (40%), votre expertise métier (35%) et vos capacités de communication (25%). Les 200 à 300 meilleurs profils seront sélectionnés pour intégrer le programme." },
   { q: "Quelles ressources Neopolis Development fournit-elle aux ambassadeurs ?", a: "Neopolis fournit : ressources humaines et techniques, matériel et appliances, agents IA prêts à l'emploi, accès à des LLM multiples (pas seulement Anthropic), infrastructure de serveurs puissants hébergés on-premise, et toute l'assistance nécessaire pour attaquer votre marché cible." },
 ];
@@ -113,9 +115,9 @@ export default function Home() {
           boxShadow: scrolled ? "0 1px 3px rgba(14,15,12,0.08)" : "none",
         }}
       >
-        <div className="container flex items-center justify-between py-4">
+        <div className="container flex items-center justify-between py-3 md:py-4 px-4 md:px-6">
           <div className="flex items-center gap-3">
-            <img src={LOGO_URL} alt="Neopolis Akademy" className="h-14 object-contain" />
+            <img src={LOGO_URL} alt="Neopolis Akademy" className="h-10 md:h-14 object-contain" />
           </div>
           <div className="hidden md:flex items-center gap-8">
             <NavLink href="#formule">La Formule</NavLink>
@@ -123,22 +125,25 @@ export default function Home() {
             <NavLink href="#partenaires">Partenaires</NavLink>
             <NavLink href="#faq">FAQ</NavLink>
           </div>
-          <Link href="/apply">
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="wise-btn-primary flex items-center gap-2"
-            >
-              Postuler <ChevronRight size={16} />
-            </motion.button>
-          </Link>
+          <div className="flex items-center gap-2 md:gap-3">
+            <Link href="/apply">
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="wise-btn-primary flex items-center gap-1 md:gap-2 text-xs md:text-base px-3 md:px-6 py-2 md:py-3"
+              >
+                Postuler <ChevronRight size={14} />
+              </motion.button>
+            </Link>
+            <MobileMenuButton />
+          </div>
         </div>
       </motion.nav>
 
       {/* ─── Hero Band (Sage) ─── */}
       <section className="wise-hero-band overflow-hidden">
-        <div className="container py-8 md:py-14">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="container py-6 md:py-14 px-4 md:px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
             <motion.div
               initial="hidden"
               animate="visible"
@@ -154,7 +159,7 @@ export default function Home() {
                 <span className="text-sm font-semibold" style={{ color: "var(--wise-positive-deep)" }}>Programme 2026 - Places limitées</span>
               </motion.div>
 
-              <motion.h1 variants={fadeInUp} className="wise-display-xl mb-6" style={{ lineHeight: 1.05 }}>
+              <motion.h1 variants={fadeInUp} className="text-3xl md:text-5xl lg:text-6xl font-black mb-4 md:mb-6" style={{ lineHeight: 1.05 }}>
                 Transformez la menace de l'IA{" "}
                 <span className="relative inline-block">
                   <span style={{ color: "var(--wise-positive)" }}>en opportunité</span>
@@ -168,17 +173,17 @@ export default function Home() {
                 </span>
               </motion.h1>
 
-              <motion.p variants={fadeInUp} className="wise-body-lg mb-8 max-w-lg">
+              <motion.p variants={fadeInUp} className="text-sm md:text-base mb-5 md:mb-8 max-w-lg" style={{ color: "var(--wise-ink-soft)" }}>
                 Formation certifiante <strong>100% gratuite</strong>. Devenez{" "}
-                <strong>AI Solutions Partner - Ambassadeur Certifié</strong> et conquérez le marché africain de l'IA agentique.
+                <strong>AI Solutions Partner - Ambassadeur Certifié</strong> et conquérez le marché de l'IA agentique.
               </motion.p>
 
-              <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 mb-6">
+              <motion.div variants={fadeInUp} className="flex flex-wrap gap-3 md:gap-4 mb-4 md:mb-6">
                 <Link href="/apply">
                   <motion.button
                     whileHover={{ scale: 1.04, boxShadow: "0 8px 30px rgba(159,232,112,0.3)" }}
                     whileTap={{ scale: 0.97 }}
-                    className="wise-btn-primary flex items-center gap-2 text-lg px-8 py-4"
+                    className="wise-btn-primary flex items-center gap-2 text-sm md:text-lg px-5 md:px-8 py-3 md:py-4"
                   >
                     Déposer ma candidature <ArrowRight size={20} />
                   </motion.button>
@@ -187,27 +192,27 @@ export default function Home() {
                   <motion.button
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
-                    className="wise-btn-secondary flex items-center gap-2 text-lg px-8 py-4"
+                    className="wise-btn-secondary flex items-center gap-2 text-sm md:text-lg px-5 md:px-8 py-3 md:py-4"
                   >
                     Découvrir le programme
                   </motion.button>
                 </a>
               </motion.div>
 
-              <motion.div variants={fadeInUp} className="inline-flex items-center gap-3 px-4 py-2 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(0,0,0,0.06)" }}>
-                <div className="flex items-center gap-1.5 whitespace-nowrap">
-                  <CheckCircle2 size={16} style={{ color: "var(--wise-positive)" }} />
-                  <span className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>100% Gratuit</span>
+              <motion.div variants={fadeInUp} className="inline-flex flex-wrap items-center gap-2 md:gap-3 px-3 md:px-4 py-2 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(0,0,0,0.06)" }}>
+                <div className="flex items-center gap-1 whitespace-nowrap">
+                  <CheckCircle2 size={13} style={{ color: "var(--wise-positive)" }} />
+                  <span className="text-xs md:text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>100% Gratuit</span>
                 </div>
-                <div className="w-px h-4" style={{ backgroundColor: "rgba(0,0,0,0.12)" }} />
-                <div className="flex items-center gap-1.5 whitespace-nowrap">
-                  <CheckCircle2 size={16} style={{ color: "var(--wise-positive)" }} />
-                  <span className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>296 places</span>
+                <div className="w-px h-3 md:h-4" style={{ backgroundColor: "rgba(0,0,0,0.12)" }} />
+                <div className="flex items-center gap-1 whitespace-nowrap">
+                  <CheckCircle2 size={13} style={{ color: "var(--wise-positive)" }} />
+                  <span className="text-xs md:text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>296 places</span>
                 </div>
-                <div className="w-px h-4" style={{ backgroundColor: "rgba(0,0,0,0.12)" }} />
-                <div className="flex items-center gap-1.5 whitespace-nowrap">
-                  <CheckCircle2 size={16} style={{ color: "var(--wise-negative)" }} />
-                  <span className="text-sm font-semibold" style={{ color: "var(--wise-negative)" }}>Avant le 31 août 2026</span>
+                <div className="w-px h-3 md:h-4" style={{ backgroundColor: "rgba(0,0,0,0.12)" }} />
+                <div className="flex items-center gap-1 whitespace-nowrap">
+                  <CheckCircle2 size={13} style={{ color: "var(--wise-negative)" }} />
+                  <span className="text-xs md:text-sm font-semibold" style={{ color: "var(--wise-negative)" }}>Avant le 31 août 2026</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -246,7 +251,7 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <motion.div variants={staggerContainer} className="grid md:grid-cols-3 gap-8">
+          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
             <motion.div variants={fadeInUp}>
               <FormulaCard
                 icon={<BookOpen size={28} />}
@@ -272,7 +277,7 @@ export default function Home() {
                 icon={<Globe size={28} />}
                 step="03"
                 title="Statut Ambassadeur"
-                description="Devenez AI Solutions Partner indépendant et distribuez des solutions IA sur tout le continent africain."
+                description="Devenez AI Solutions Partner indépendant et distribuez des solutions IA auprès des entreprises de votre secteur."
                 badge="Accompagnement complet"
                 image={AFRICA_IMG}
               />
@@ -292,7 +297,7 @@ export default function Home() {
           </motion.div>
 
           {/* Stats grid - design moderne */}
-          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-10">
             <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-6" style={{ background: "linear-gradient(135deg, rgba(159,232,112,0.12) 0%, rgba(159,232,112,0.03) 100%)", border: "1px solid rgba(159,232,112,0.2)" }}>
               <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(159,232,112,0.15)" }} />
               <TrendingDown size={24} style={{ color: "var(--wise-primary)" }} className="mb-3" />
@@ -335,11 +340,11 @@ export default function Home() {
           <motion.div variants={fadeInUp} className="text-center mb-14">
             <h2 className="wise-display-md mb-4">Partenariats Stratégiques</h2>
             <p className="wise-body-lg max-w-2xl mx-auto">
-              Neopolis Development a noué des partenariats avec les leaders mondiaux de l'IA pour conquérir le marché africain.
+              Neopolis Development a noué des partenariats avec les leaders mondiaux de l'IA pour conquérir le marché de l'IA agentique.
             </p>
           </motion.div>
 
-          <motion.div variants={staggerContainer} className="grid md:grid-cols-2 gap-8 mb-12">
+          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mb-8 md:mb-12">
             <motion.div variants={scaleIn}>
               <PartnerCard
                 name="Anthropic"
@@ -356,7 +361,7 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-10 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
             {/* Graphique animé - Réseau de nœuds */}
             <motion.div variants={fadeInLeft} className="relative flex items-center justify-center">
               <NetworkGraph />
@@ -396,7 +401,7 @@ export default function Home() {
       {/* ─── AI Solutions Partner Section ─── */}
       <AnimatedSection className="wise-content-band">
         <div className="container py-12">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
             <motion.div variants={fadeInLeft}>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
                 <Target size={14} style={{ color: "var(--wise-positive-deep)" }} />
@@ -414,7 +419,7 @@ export default function Home() {
               </div>
             </motion.div>
             <motion.div variants={fadeInRight}>
-              <img src={AFRICA_IMG} alt="Réseau Afrique" className="w-full max-w-sm mx-auto object-contain rounded-3xl" />
+              <img src={AFRICA_IMG} alt="Réseau Afrique" className="w-full max-w-xs md:max-w-sm mx-auto object-contain rounded-3xl" />
             </motion.div>
           </div>
         </div>
@@ -422,7 +427,7 @@ export default function Home() {
 
       {/* ─── CTA Band ─── */}
       <AnimatedSection style={{ backgroundColor: "var(--wise-ink)" }}>
-        <div className="container py-20 text-center">
+        <div className="container py-10 md:py-20 text-center px-4 md:px-6">
           <motion.div variants={fadeInUp}>
             <motion.div
               animate={{ rotate: [0, 5, -5, 0] }}
@@ -431,7 +436,7 @@ export default function Home() {
             >
               <Rocket size={40} style={{ color: "var(--wise-primary)" }} />
             </motion.div>
-            <h2 className="text-3xl md:text-5xl font-black mb-5" style={{ color: "var(--wise-primary)", lineHeight: 1.1 }}>
+            <h2 className="text-2xl md:text-3xl lg:text-5xl font-black mb-4 md:mb-5" style={{ color: "var(--wise-primary)", lineHeight: 1.1 }}>
               Ne subissez pas la disruption.<br />Devenez-en l'acteur.
             </h2>
             <p className="text-lg mb-10" style={{ color: "var(--wise-canvas-soft)" }}>
@@ -469,7 +474,7 @@ export default function Home() {
       {/* ─── Footer (Dark) ─── */}
       <footer className="wise-footer">
         <div className="container py-6">
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             <div>
               <img src={LOGO_URL} alt="Neopolis Akademy" className="h-14 object-contain mb-2 brightness-0 invert" />
               <p className="text-sm" style={{ color: "var(--wise-mute)" }}>
@@ -527,7 +532,7 @@ function StatCard({ value, label, source, highlight }: { value: string; label: s
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
       className={highlight ? "wise-card-green text-center h-full" : "wise-card-sage text-center h-full"}
     >
-      <p className="text-4xl md:text-5xl font-black mb-3" style={{ color: highlight ? "var(--wise-positive-deep)" : "var(--wise-ink)" }}>{value}</p>
+      <p className="text-3xl md:text-4xl lg:text-5xl font-black mb-2 md:mb-3" style={{ color: highlight ? "var(--wise-positive-deep)" : "var(--wise-ink)" }}>{value}</p>
       <p className="wise-body-md mb-2">{label}</p>
       <p className="text-xs" style={{ color: "var(--wise-mute)" }}>{source}</p>
     </motion.div>
@@ -729,7 +734,7 @@ function NetworkGraph() {
   ];
 
   return (
-    <div className="relative w-full" style={{ height: "320px" }}>
+    <div className="relative w-full" style={{ height: "280px" }}>
       {/* Lignes de connexion animées */}
       <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
         {edges.map((edge, i) => {
@@ -815,7 +820,9 @@ function NetworkGraph() {
 
 function HeroGraphic() {
   return (
-    <div className="relative w-full flex items-center justify-center" style={{ height: "420px" }}>
+    <div className="relative w-full flex items-center justify-center" style={{ height: "320px" }}>
+      {/* Masquer sur mobile pour performance */}
+      <div className="hidden md:block absolute inset-0">
       {/* Fond radial subtil */}
       <div className="absolute inset-0 rounded-3xl" style={{ background: "radial-gradient(circle at 50% 50%, rgba(159,232,112,0.08) 0%, transparent 60%)" }} />
 
@@ -1003,11 +1010,29 @@ function HeroGraphic() {
         );
       })}
 
+      </div>
+      {/* Version mobile simplifiée */}
+      <div className="md:hidden w-full flex items-center justify-center">
+        <motion.div
+          className="flex items-center justify-center rounded-full overflow-hidden"
+          style={{
+            width: "120px",
+            height: "120px",
+            background: "#ffffff",
+            boxShadow: "0 0 40px rgba(159,232,112,0.3), 0 4px 20px rgba(0,0,0,0.1)",
+            border: "3px solid rgba(159,232,112,0.6)",
+          }}
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <img src={LOGO_URL} alt="Neopolis Akademy" className="w-20 h-20 object-contain" />
+        </motion.div>
+      </div>
       {/* Badges flottants */}
       <motion.div
         animate={{ y: [0, -6, 0] }}
         transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", delay: 0.5 }}
-        className="absolute -top-2 right-0 wise-card px-3 py-2 shadow-lg"
+        className="absolute -top-2 right-0 wise-card px-3 py-2 shadow-lg hidden md:block"
       >
         <div className="flex items-center gap-2">
           <Sparkles size={14} style={{ color: "var(--wise-primary)" }} />
@@ -1017,7 +1042,7 @@ function HeroGraphic() {
       <motion.div
         animate={{ y: [0, 6, 0] }}
         transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-2 left-0 wise-card px-3 py-2 shadow-lg"
+        className="absolute bottom-2 left-0 wise-card px-3 py-2 shadow-lg hidden md:block"
       >
         <div className="flex items-center gap-2">
           <Globe size={14} style={{ color: "var(--wise-accent-cyan)" }} />
@@ -1025,5 +1050,41 @@ function HeroGraphic() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+function MobileMenuButton() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        onClick={() => setOpen(!open)}
+        className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg"
+        style={{ backgroundColor: "var(--wise-primary-pale)" }}
+        aria-label="Menu"
+      >
+        {open ? <X size={20} style={{ color: "var(--wise-ink)" }} /> : <Menu size={20} style={{ color: "var(--wise-ink)" }} />}
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+            className="md:hidden fixed top-16 left-0 right-0 z-50 px-4 pt-2"
+          >
+            <div className="rounded-2xl p-4 shadow-xl" style={{ backgroundColor: "#ffffff", border: "1px solid rgba(0,0,0,0.06)" }}>
+              <nav className="flex flex-col gap-3">
+                <a href="#formule" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>La Formule</a>
+                <a href="#pourquoi" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>Pourquoi maintenant</a>
+                <a href="#partenaires" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>Partenaires</a>
+                <a href="#faq" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>FAQ</a>
+              </nav>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
