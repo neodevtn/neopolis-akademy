@@ -171,3 +171,17 @@
 - [x] Remplacer "marché africain" par "marché de l'IA agentique" dans le hero et les sections
 - [x] Adapter la FAQ "Quels pays africains" pour mentionner la Tunisie et la région MENA
 - [x] Corriger la description de l'étape Ambassadeur (supprimer "continent africain")
+- [x] Corriger le placeholder motivation ("en Afrique" -> "dans votre secteur")
+
+## Responsive Formulaire (Apply.tsx)
+- [x] Grille Prénom/Nom : grid-cols-1 sur mobile, sm:grid-cols-2 sur tablette+
+- [x] Container padding réduit sur mobile (py-6 px-4)
+- [x] Titre d'étape : taille réduite sur mobile (text-xl vs text-2xl)
+- [x] Indicateurs d'étapes : gap et hauteur réduits sur mobile
+- [x] Boutons navigation : taille texte et padding réduits sur mobile
+- [x] Bouton Soumettre : texte raccourci sur mobile pour éviter débordement
+- [x] Player vidéo : max-h-[50vh] pour ne pas prendre tout l'écran mobile
+- [x] Timer badge vidéo : position et taille réduites sur mobile
+- [x] Prompt dynamique vidéo : marges et texte réduits sur mobile
+- [x] Boutons enregistrement vidéo : full-width sur mobile, flex-col layout
+- [x] Texte idle vidéo : taille réduite sur mobile

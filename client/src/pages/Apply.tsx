@@ -473,16 +473,16 @@ export default function Apply() {
         </div>
       </nav>
 
-      <div className="container py-12 max-w-2xl mx-auto">
+      <div className="container py-6 md:py-12 px-4 md:px-6 max-w-2xl mx-auto">
         <motion.div
           className="mb-10"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
         >
-          <div className="flex items-center gap-3 mb-2">
-            {stepTitles[step - 1] && (() => { const Icon = stepTitles[step - 1].icon; return <Icon className="w-5 h-5" style={{ color: "var(--wise-positive)" }} />; })()}
-            <h1 className="wise-display-xs">{stepTitles[step - 1]?.title}</h1>
+          <div className="flex items-center gap-2 md:gap-3 mb-2">
+            {stepTitles[step - 1] && (() => { const Icon = stepTitles[step - 1].icon; return <Icon className="w-4 h-4 md:w-5 md:h-5" style={{ color: "var(--wise-positive)" }} />; })()}
+            <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--wise-ink)" }}>{stepTitles[step - 1]?.title}</h1>
           </div>
           <p className="wise-body-sm">Étape {step} sur {totalSteps}</p>
           <div className="mt-4 h-2 rounded-full overflow-hidden" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
@@ -496,11 +496,11 @@ export default function Apply() {
           </div>
 
           {/* Step indicators */}
-          <div className="flex items-center gap-1 mt-4">
+          <div className="flex items-center gap-0.5 md:gap-1 mt-3 md:mt-4">
             {Array.from({ length: totalSteps }, (_, i) => (
               <div
                 key={i}
-                className="h-1.5 flex-1 rounded-full transition-all duration-300"
+                className="h-1 md:h-1.5 flex-1 rounded-full transition-all duration-300"
                 style={{
                   backgroundColor: i < step ? "var(--wise-primary)" : i === step - 1 ? "var(--wise-positive)" : "var(--wise-canvas-soft)",
                   opacity: i < step ? 1 : 0.5,
@@ -533,7 +533,7 @@ export default function Apply() {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
             className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Prénom *</Label>
                 <Input value={formData.firstName} onChange={e => updateField("firstName", e.target.value)} placeholder="Votre prénom" className={errors.firstName ? "border-destructive" : ""} />
@@ -764,7 +764,7 @@ export default function Apply() {
             <div className="space-y-2">
               <Label>Lettre de motivation * <span className="text-muted-foreground">(min. 50 caractères)</span></Label>
               <Textarea value={formData.motivation} onChange={e => updateField("motivation", e.target.value)}
-                placeholder="Expliquez pourquoi vous souhaitez devenir AI Solutions Partner - Ambassadeur Certifié et comment vous comptez contribuer à la transformation IA en Afrique..." rows={6} className={errors.motivation ? "border-destructive" : ""} />
+                placeholder="Expliquez pourquoi vous souhaitez devenir AI Solutions Partner - Ambassadeur Certifié et comment vous comptez contribuer à la transformation IA dans votre secteur..." rows={6} className={errors.motivation ? "border-destructive" : ""} />
               <div className="flex justify-between">
                 <FieldError error={errors.motivation} />
                 <span className="text-xs text-muted-foreground">{formData.motivation.length}/5000</span>
@@ -859,7 +859,7 @@ export default function Apply() {
             </div>
 
             {/* Video preview area */}
-            <div className="relative rounded-xl overflow-hidden bg-gray-900 aspect-video shadow-lg">
+            <div className="relative rounded-xl overflow-hidden bg-gray-900 aspect-video shadow-lg max-h-[50vh]">
               <video
                 ref={videoPreviewRef}
                 className="w-full h-full object-cover"
@@ -874,8 +874,8 @@ export default function Apply() {
                   <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-4 border-2 border-white/20">
                     <Video className="w-10 h-10 text-white/70" />
                   </div>
-                  <p className="text-lg font-medium text-white">Prêt à enregistrer votre pitch</p>
-                  <p className="text-sm text-white/50 mt-1">Assurez-vous d'être dans un endroit calme et bien éclairé</p>
+                  <p className="text-base md:text-lg font-medium text-white">Prêt à enregistrer votre pitch</p>
+                  <p className="text-xs md:text-sm text-white/50 mt-1">Endroit calme et bien éclairé</p>
                 </div>
               )}
 
@@ -893,7 +893,7 @@ export default function Apply() {
               {isRecording && (
                 <>
                   {/* Timer badge */}
-                  <div className="absolute top-4 right-4 flex items-center gap-2 bg-red-600 text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-lg">
+                  <div className="absolute top-2 right-2 md:top-4 md:right-4 flex items-center gap-1.5 md:gap-2 bg-red-600 text-white px-2 md:px-3 py-1 md:py-1.5 rounded-full text-xs md:text-sm font-medium shadow-lg">
                     <Circle className="w-3 h-3 fill-white animate-pulse" />
                     {Math.floor(recordingTime / 60)}:{(recordingTime % 60).toString().padStart(2, "0")} / 1:30
                   </div>
@@ -907,9 +907,9 @@ export default function Apply() {
                   </div>
 
                   {/* Dynamic prompt */}
-                  <div className="absolute bottom-6 left-4 right-4">
-                    <div className="bg-black/60 backdrop-blur-sm rounded-lg px-4 py-2 text-center">
-                      <p className="text-white text-sm font-medium">💡 {getCurrentPrompt()}</p>
+                  <div className="absolute bottom-6 left-2 right-2 md:left-4 md:right-4">
+                    <div className="bg-black/60 backdrop-blur-sm rounded-lg px-2 md:px-4 py-1.5 md:py-2 text-center">
+                      <p className="text-white text-xs md:text-sm font-medium">💡 {getCurrentPrompt()}</p>
                     </div>
                   </div>
                 </>
@@ -949,28 +949,28 @@ export default function Apply() {
             )}
 
             {/* Controls */}
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               {!isRecording && !recordedBlob && countdown === 0 && (
-                <Button onClick={startRecording} className="btn-pill bg-red-600 hover:bg-red-700 text-white px-6 py-3 text-base">
-                  <Circle className="w-5 h-5 mr-2 fill-white" /> Démarrer l'enregistrement
+                <Button onClick={startRecording} className="btn-pill bg-red-600 hover:bg-red-700 text-white px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base w-full sm:w-auto">
+                  <Circle className="w-4 h-4 md:w-5 md:h-5 mr-2 fill-white" /> Démarrer l'enregistrement
                 </Button>
               )}
               {isRecording && (
-                <Button onClick={stopRecording} className="btn-pill bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 text-base">
-                  <Square className="w-5 h-5 mr-2 fill-white" /> Arrêter l'enregistrement
+                <Button onClick={stopRecording} className="btn-pill bg-gray-800 hover:bg-gray-900 text-white px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base w-full sm:w-auto">
+                  <Square className="w-4 h-4 md:w-5 md:h-5 mr-2 fill-white" /> Arrêter
                 </Button>
               )}
               {!isRecording && recordedBlob && (
-                <div className="flex flex-col items-center gap-3">
-                  <div className="flex items-center gap-3">
-                    <Button variant="outline" onClick={resetRecording} className="btn-pill">
+                <div className="flex flex-col items-center gap-2 w-full">
+                  <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
+                    <Button variant="outline" onClick={resetRecording} className="btn-pill w-full sm:w-auto">
                       Recommencer
                     </Button>
-                    <div className="text-sm text-green-600 font-medium flex items-center gap-1 bg-green-50 px-3 py-1.5 rounded-full">
-                      <CheckCircle className="w-4 h-4" /> Vidéo enregistrée ({Math.round(recordedBlob.size / 1024 / 1024 * 10) / 10} Mo)
+                    <div className="text-xs md:text-sm text-green-600 font-medium flex items-center gap-1 bg-green-50 px-3 py-1.5 rounded-full">
+                      <CheckCircle className="w-3.5 h-3.5 md:w-4 md:h-4" /> Vidéo ({Math.round(recordedBlob.size / 1024 / 1024 * 10) / 10} Mo)
                     </div>
                   </div>
-                  <p className="text-xs text-muted-foreground">Vous pouvez relire votre vidéo ci-dessus avant de soumettre</p>
+                  <p className="text-xs text-muted-foreground text-center">Relisez votre vidéo ci-dessus avant de soumettre</p>
                 </div>
               )}
             </div>
@@ -1009,20 +1009,20 @@ export default function Apply() {
         </AnimatePresence>
 
         {/* Navigation */}
-        <div className="flex justify-between mt-10 pt-6" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
+        <div className="flex justify-between items-center mt-6 md:mt-10 pt-4 md:pt-6 gap-3" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
           {step > 1 ? (
-            <button onClick={handleBack} className="wise-btn-tertiary flex items-center gap-2">
-              <ArrowLeft className="w-4 h-4" /> Précédent
+            <button onClick={handleBack} className="wise-btn-tertiary flex items-center gap-1 md:gap-2 text-sm md:text-base px-3 md:px-4 py-2 md:py-3">
+              <ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4" /> Précédent
             </button>
           ) : <div />}
 
           {step < totalSteps ? (
-            <button onClick={handleNext} className="wise-btn-primary flex items-center gap-2">
-              Suivant <ArrowRight className="w-4 h-4" />
+            <button onClick={handleNext} className="wise-btn-primary flex items-center gap-1 md:gap-2 text-sm md:text-base px-4 md:px-6 py-2 md:py-3">
+              Suivant <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
             </button>
           ) : (
-            <button onClick={handleSubmit} disabled={submitMutation.isPending || uploading || !recordedBlob} className="wise-btn-primary flex items-center gap-2" style={{ opacity: (submitMutation.isPending || uploading || !recordedBlob) ? 0.6 : 1 }}>
-              {(submitMutation.isPending || uploading) ? <><Loader2 className="w-4 h-4 animate-spin" /> Envoi en cours...</> : !recordedBlob ? <>Enregistrez votre vidéo d'abord <Video className="w-4 h-4" /></> : <>Soumettre ma candidature <CheckCircle className="w-4 h-4" /></>}
+            <button onClick={handleSubmit} disabled={submitMutation.isPending || uploading || !recordedBlob} className="wise-btn-primary flex items-center gap-1 md:gap-2 text-xs md:text-base px-3 md:px-6 py-2 md:py-3" style={{ opacity: (submitMutation.isPending || uploading || !recordedBlob) ? 0.6 : 1 }}>
+              {(submitMutation.isPending || uploading) ? <><Loader2 className="w-4 h-4 animate-spin" /> Envoi...</> : !recordedBlob ? <>Vidéo requise <Video className="w-4 h-4" /></> : <>Soumettre <CheckCircle className="w-4 h-4" /></>}
             </button>
           )}
         </div>
