@@ -312,24 +312,48 @@ export default function Home() {
       {/* ─── Pourquoi maintenant (Dark Band) ─── */}
       <AnimatedSection id="pourquoi" className="wise-hero-band-dark">
         <div className="container py-12">
-          <motion.div variants={fadeInUp} className="text-center mb-14">
-            <h2 className="wise-display-md mb-4" style={{ color: "var(--wise-primary)" }}>Pourquoi se transformer maintenant ?</h2>
-            <p className="wise-body-lg" style={{ color: "var(--wise-canvas-soft)" }}>
-              L'IA agentique ne menace pas seulement les développeurs. Elle redéfinit l'ensemble du marché du travail.
+          <motion.div variants={fadeInUp} className="text-center mb-12">
+            <h2 className="wise-display-md mb-3" style={{ color: "var(--wise-primary)" }}>Pourquoi se transformer maintenant ?</h2>
+            <p className="wise-body-lg max-w-2xl mx-auto" style={{ color: "var(--wise-canvas-soft)" }}>
+              L'IA agentique redéfinit le marché du travail. Ceux qui ne s'adaptent pas seront remplacés.
             </p>
           </motion.div>
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div variants={fadeInLeft}>
-              <JobLossChart />
-              <p className="text-xs mt-3" style={{ color: "var(--wise-mute)" }}>Sources : WEF Future of Jobs 2025, Goldman Sachs, BLS</p>
+
+          {/* Stats grid - design moderne */}
+          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-6" style={{ background: "linear-gradient(135deg, rgba(159,232,112,0.12) 0%, rgba(159,232,112,0.03) 100%)", border: "1px solid rgba(159,232,112,0.2)" }}>
+              <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(159,232,112,0.15)" }} />
+              <TrendingDown size={24} style={{ color: "var(--wise-primary)" }} className="mb-3" />
+              <p className="text-3xl font-bold mb-1" style={{ color: "#fff" }}>92M</p>
+              <p className="text-sm font-medium mb-2" style={{ color: "var(--wise-primary)" }}>d'emplois menacés</p>
+              <p className="text-xs" style={{ color: "var(--wise-mute)" }}>Déplacés par l'IA d'ici 2030 - World Economic Forum</p>
             </motion.div>
-            <motion.div variants={staggerContainer} className="space-y-5">
-              <motion.div variants={fadeInRight}><ImpactItem icon={<TrendingDown size={20} />} title="92 millions d'emplois" desc="seront déplacés par l'IA d'ici 2030 selon le World Economic Forum." /></motion.div>
-              <motion.div variants={fadeInRight}><ImpactItem icon={<Users size={20} />} title="41% du code" desc="est déjà généré par l'IA en 2025. Les développeurs classiques sont en première ligne." /></motion.div>
-              <motion.div variants={fadeInRight}><ImpactItem icon={<Shield size={20} />} title="234 milliards $" desc="de dépenses SaaS menacées. Les logiciels traditionnels seront remplacés par des agents IA." /></motion.div>
-              <motion.div variants={fadeInRight}><ImpactItem icon={<Zap size={20} />} title="Ne subissez pas." desc="Devenez l'acteur de cette transformation. Passez du côté de ceux qui déploient l'IA." /></motion.div>
+
+            <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-6" style={{ background: "linear-gradient(135deg, rgba(56,200,255,0.12) 0%, rgba(56,200,255,0.03) 100%)", border: "1px solid rgba(56,200,255,0.2)" }}>
+              <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(56,200,255,0.15)" }} />
+              <Users size={24} style={{ color: "#38c8ff" }} className="mb-3" />
+              <p className="text-3xl font-bold mb-1" style={{ color: "#fff" }}>41%</p>
+              <p className="text-sm font-medium mb-2" style={{ color: "#38c8ff" }}>du code généré par l'IA</p>
+              <p className="text-xs" style={{ color: "var(--wise-mute)" }}>Les développeurs classiques sont en première ligne</p>
             </motion.div>
-          </div>
+
+            <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-6" style={{ background: "linear-gradient(135deg, rgba(255,192,145,0.12) 0%, rgba(255,192,145,0.03) 100%)", border: "1px solid rgba(255,192,145,0.2)" }}>
+              <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(255,192,145,0.15)" }} />
+              <Shield size={24} style={{ color: "#ffc091" }} className="mb-3" />
+              <p className="text-3xl font-bold mb-1" style={{ color: "#fff" }}>234Mds$</p>
+              <p className="text-sm font-medium mb-2" style={{ color: "#ffc091" }}>de SaaS menacés</p>
+              <p className="text-xs" style={{ color: "var(--wise-mute)" }}>Logiciels traditionnels remplacés par des agents IA</p>
+            </motion.div>
+          </motion.div>
+
+          {/* CTA bottom */}
+          <motion.div variants={fadeInUp} className="text-center">
+            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full" style={{ background: "linear-gradient(135deg, rgba(159,232,112,0.15) 0%, rgba(159,232,112,0.05) 100%)", border: "1px solid rgba(159,232,112,0.3)" }}>
+              <Zap size={18} style={{ color: "var(--wise-primary)" }} />
+              <span className="text-sm font-semibold" style={{ color: "#fff" }}>Ne subissez pas la disruption. Devenez l'acteur du changement.</span>
+            </div>
+            <p className="text-xs mt-4" style={{ color: "var(--wise-mute)" }}>Sources : WEF Future of Jobs 2025, Goldman Sachs, Gartner</p>
+          </motion.div>
         </div>
       </AnimatedSection>
 
