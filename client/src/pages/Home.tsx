@@ -218,35 +218,7 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
               className="hidden md:block relative"
             >
-              <div className="relative">
-                <motion.div
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                >
-                  <img src={HERO_IMG} alt="Professionnels tunisiens en formation IA" className="w-full max-w-lg mx-auto object-contain rounded-3xl" />
-                </motion.div>
-                {/* Floating badges */}
-                <motion.div
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", delay: 0.5 }}
-                  className="absolute -top-4 -right-4 wise-card px-4 py-2 shadow-lg"
-                >
-                  <div className="flex items-center gap-2">
-                    <Sparkles size={16} style={{ color: "var(--wise-primary)" }} />
-                    <span className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>Certification CCA</span>
-                  </div>
-                </motion.div>
-                <motion.div
-                  animate={{ y: [0, 6, 0] }}
-                  transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 1 }}
-                  className="absolute -bottom-4 -left-4 wise-card px-4 py-2 shadow-lg"
-                >
-                  <div className="flex items-center gap-2">
-                    <Globe size={16} style={{ color: "var(--wise-accent-cyan)" }} />
-                    <span className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>Certification internationale</span>
-                  </div>
-                </motion.div>
-              </div>
+              <HeroGraphic />
             </motion.div>
           </div>
         </div>
@@ -837,6 +809,221 @@ function NetworkGraph() {
           </span>
         </motion.div>
       ))}
+    </div>
+  );
+}
+
+function HeroGraphic() {
+  return (
+    <div className="relative w-full flex items-center justify-center" style={{ height: "420px" }}>
+      {/* Fond radial subtil */}
+      <div className="absolute inset-0 rounded-3xl" style={{ background: "radial-gradient(circle at 50% 50%, rgba(159,232,112,0.08) 0%, transparent 60%)" }} />
+
+      {/* Orbites animées */}
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 400">
+        {/* Orbite extérieure */}
+        <motion.circle
+          cx="200" cy="200" r="160"
+          fill="none"
+          stroke="rgba(159,232,112,0.15)"
+          strokeWidth="1"
+          strokeDasharray="8 6"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          style={{ transformOrigin: "center" }}
+        />
+        {/* Orbite moyenne */}
+        <motion.circle
+          cx="200" cy="200" r="110"
+          fill="none"
+          stroke="rgba(159,232,112,0.2)"
+          strokeWidth="1.5"
+          strokeDasharray="4 8"
+          animate={{ rotate: -360 }}
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+          style={{ transformOrigin: "center" }}
+        />
+        {/* Orbite intérieure */}
+        <motion.circle
+          cx="200" cy="200" r="60"
+          fill="none"
+          stroke="rgba(159,232,112,0.25)"
+          strokeWidth="1"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          style={{ transformOrigin: "center" }}
+        />
+
+        {/* Lignes de connexion entre les nœuds satellites et le centre */}
+        {[
+          { angle: 0, r: 160 },
+          { angle: 72, r: 160 },
+          { angle: 144, r: 160 },
+          { angle: 216, r: 160 },
+          { angle: 288, r: 160 },
+          { angle: 30, r: 110 },
+          { angle: 120, r: 110 },
+          { angle: 210, r: 110 },
+          { angle: 300, r: 110 },
+        ].map((pos, i) => {
+          const x = 200 + pos.r * Math.cos((pos.angle * Math.PI) / 180);
+          const y = 200 + pos.r * Math.sin((pos.angle * Math.PI) / 180);
+          return (
+            <motion.line
+              key={`line-${i}`}
+              x1="200" y1="200"
+              x2={x} y2={y}
+              stroke="rgba(159,232,112,0.12)"
+              strokeWidth="1"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0.1, 0.3, 0.1] }}
+              transition={{ duration: 3, repeat: Infinity, delay: i * 0.3 }}
+            />
+          );
+        })}
+
+        {/* Particules qui voyagent sur les orbites */}
+        {[0, 1, 2, 3, 4].map((i) => (
+          <motion.circle
+            key={`particle-orbit-${i}`}
+            r="3"
+            fill="#9fe870"
+            opacity="0.8"
+            animate={{
+              cx: [
+                200 + 160 * Math.cos((i * 72 * Math.PI) / 180),
+                200 + 160 * Math.cos(((i * 72 + 180) * Math.PI) / 180),
+                200 + 160 * Math.cos(((i * 72 + 360) * Math.PI) / 180),
+              ],
+              cy: [
+                200 + 160 * Math.sin((i * 72 * Math.PI) / 180),
+                200 + 160 * Math.sin(((i * 72 + 180) * Math.PI) / 180),
+                200 + 160 * Math.sin(((i * 72 + 360) * Math.PI) / 180),
+              ],
+            }}
+            transition={{ duration: 8 + i, repeat: Infinity, ease: "linear" }}
+          />
+        ))}
+      </svg>
+
+      {/* Nœud central - Logo/Marque */}
+      <motion.div
+        className="absolute flex flex-col items-center justify-center rounded-full"
+        style={{
+          width: "100px",
+          height: "100px",
+          background: "linear-gradient(135deg, #9fe870 0%, #6bc840 100%)",
+          boxShadow: "0 0 40px rgba(159,232,112,0.4), 0 0 80px rgba(159,232,112,0.15)",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+        }}
+        animate={{ scale: [1, 1.05, 1] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <Sparkles size={28} color="#0e0f0c" />
+        <span className="text-xs font-bold mt-1" style={{ color: "#0e0f0c" }}>CCA</span>
+      </motion.div>
+
+      {/* Nœuds satellites - Orbite extérieure */}
+      {[
+        { label: "Claude", angle: 0, icon: "ai" },
+        { label: "Qwen", angle: 72, icon: "ai" },
+        { label: "DeepSeek", angle: 144, icon: "ai" },
+        { label: "Agents", angle: 216, icon: "bot" },
+        { label: "Deploy", angle: 288, icon: "rocket" },
+      ].map((node, i) => {
+        const x = 50 + 38 * Math.cos((node.angle * Math.PI) / 180);
+        const y = 50 + 38 * Math.sin((node.angle * Math.PI) / 180);
+        return (
+          <motion.div
+            key={node.label}
+            className="absolute flex flex-col items-center"
+            style={{ left: `${x}%`, top: `${y}%`, transform: "translate(-50%, -50%)" }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.5 + i * 0.15, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <motion.div
+              className="w-10 h-10 rounded-full flex items-center justify-center"
+              style={{
+                backgroundColor: "rgba(159,232,112,0.15)",
+                border: "1.5px solid rgba(159,232,112,0.4)",
+                backdropFilter: "blur(4px)",
+              }}
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 2.5 + i * 0.3, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <span className="text-xs font-bold" style={{ color: "#9fe870" }}>
+                {node.label.charAt(0)}
+              </span>
+            </motion.div>
+            <span className="text-xs font-medium mt-1 whitespace-nowrap" style={{ color: "var(--wise-ink)", opacity: 0.7 }}>
+              {node.label}
+            </span>
+          </motion.div>
+        );
+      })}
+
+      {/* Nœuds satellites - Orbite moyenne */}
+      {[
+        { label: "Formation", angle: 30 },
+        { label: "Certification", angle: 120 },
+        { label: "Business", angle: 210 },
+        { label: "Support", angle: 300 },
+      ].map((node, i) => {
+        const x = 50 + 26 * Math.cos((node.angle * Math.PI) / 180);
+        const y = 50 + 26 * Math.sin((node.angle * Math.PI) / 180);
+        return (
+          <motion.div
+            key={node.label}
+            className="absolute flex flex-col items-center"
+            style={{ left: `${x}%`, top: `${y}%`, transform: "translate(-50%, -50%)" }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.8 + i * 0.15, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <motion.div
+              className="w-8 h-8 rounded-full flex items-center justify-center"
+              style={{
+                backgroundColor: "rgba(56,200,255,0.1)",
+                border: "1px solid rgba(56,200,255,0.3)",
+              }}
+              animate={{ scale: [1, 1.08, 1] }}
+              transition={{ duration: 3 + i * 0.4, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <span className="text-xs font-bold" style={{ color: "#38c8ff" }}>
+                {node.label.charAt(0)}
+              </span>
+            </motion.div>
+            <span className="text-[10px] font-medium mt-0.5 whitespace-nowrap" style={{ color: "var(--wise-ink)", opacity: 0.6 }}>
+              {node.label}
+            </span>
+          </motion.div>
+        );
+      })}
+
+      {/* Badges flottants */}
+      <motion.div
+        animate={{ y: [0, -6, 0] }}
+        transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", delay: 0.5 }}
+        className="absolute -top-2 right-0 wise-card px-3 py-2 shadow-lg"
+      >
+        <div className="flex items-center gap-2">
+          <Sparkles size={14} style={{ color: "var(--wise-primary)" }} />
+          <span className="text-xs font-semibold" style={{ color: "var(--wise-ink)" }}>Certification CCA</span>
+        </div>
+      </motion.div>
+      <motion.div
+        animate={{ y: [0, 6, 0] }}
+        transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 1 }}
+        className="absolute bottom-2 left-0 wise-card px-3 py-2 shadow-lg"
+      >
+        <div className="flex items-center gap-2">
+          <Globe size={14} style={{ color: "var(--wise-accent-cyan)" }} />
+          <span className="text-xs font-semibold" style={{ color: "var(--wise-ink)" }}>Certification internationale</span>
+        </div>
+      </motion.div>
     </div>
   );
 }
