@@ -81,3 +81,8 @@
 - [x] Validation frontend : messages d'erreur explicites par champ, validation en temps réel
 - [x] Validation backend : schéma Zod renforcé avec messages personnalisés en français
 - [x] Affichage des erreurs serveur côté client si la validation front est contournée
+
+## Mise en avant gratuité + message transformation + graphique emplois
+- [x] Mettre en avant la GRATUITÉ des formations et certifications (badge, texte prominent)
+- [x] Renforcer le message "Transformez la menace de l'IA en opportunité" sur la landing page
+- [x] Ajouter un graphique (courbe) montrant la perte d'emplois 2025-2030 pour les postes les plus impactés
