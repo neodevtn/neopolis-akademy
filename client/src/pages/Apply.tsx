@@ -683,13 +683,13 @@ export default function Apply() {
               <p className="text-sm text-primary font-medium">Cette section évalue votre profil psychologique d'entrepreneur. Soyez honnête, il n'y a pas de mauvaise réponse.</p>
             </div>
             <SelectField label="Tolérance au risque *" value={formData.riskTolerance} onChange={v => updateField("riskTolerance", v)} error={errors.riskTolerance}
-              options={[["very_low","Très faible — J'évite tout risque"],["low","Faible — Je préfère la sécurité"],["moderate","Modérée — Risques calculés"],["high","Élevée — J'accepte les risques importants"],["very_high","Très élevée — Je recherche le risque"]]} />
+              options={[["very_low","Très faible - J'évite tout risque"],["low","Faible - Je préfère la sécurité"],["moderate","Modérée - Risques calculés"],["high","Élevée - J'accepte les risques importants"],["very_high","Très élevée - Je recherche le risque"]]} />
             <SelectField label="Niveau d'autonomie *" value={formData.autonomyLevel} onChange={v => updateField("autonomyLevel", v)} error={errors.autonomyLevel}
               options={[["needs_guidance","Besoin d'accompagnement constant"],["somewhat_autonomous","Relativement autonome"],["autonomous","Autonome"],["very_autonomous","Très autonome"],["fully_independent","Totalement indépendant"]]} />
             <SelectField label="Résilience face aux échecs *" value={formData.resilienceLevel} onChange={v => updateField("resilienceLevel", v)} error={errors.resilienceLevel}
-              options={[["low","Faible — Les échecs me découragent"],["moderate","Modérée — Je me relève après un temps"],["high","Élevée — Je rebondis rapidement"],["very_high","Très élevée — Les échecs me motivent"]]} />
+              options={[["low","Faible - Les échecs me découragent"],["moderate","Modérée - Je me relève après un temps"],["high","Élevée - Je rebondis rapidement"],["very_high","Très élevée - Les échecs me motivent"]]} />
             <SelectField label="Style de leadership *" value={formData.leadershipStyle} onChange={v => updateField("leadershipStyle", v)} error={errors.leadershipStyle}
-              options={[["follower","Suiveur — Je préfère exécuter"],["collaborative","Collaboratif — Je travaille en équipe"],["situational","Situationnel — Je m'adapte"],["visionary","Visionnaire — J'inspire les autres"],["transformational","Transformationnel — Je change les choses"]]} />
+              options={[["follower","Suiveur - Je préfère exécuter"],["collaborative","Collaboratif - Je travaille en équipe"],["situational","Situationnel - Je m'adapte"],["visionary","Visionnaire - J'inspire les autres"],["transformational","Transformationnel - Je change les choses"]]} />
             <div className="space-y-2">
               <Label>Expériences entrepreneuriales passées</Label>
               <Textarea value={formData.entrepreneurialExperience} onChange={e => updateField("entrepreneurialExperience", e.target.value)}
@@ -758,7 +758,7 @@ export default function Apply() {
             <div className="space-y-2">
               <Label>Lettre de motivation * <span className="text-muted-foreground">(min. 50 caractères)</span></Label>
               <Textarea value={formData.motivation} onChange={e => updateField("motivation", e.target.value)}
-                placeholder="Expliquez pourquoi vous souhaitez devenir AI Solutions Partner — Ambassadeur Certifié et comment vous comptez contribuer à la transformation IA en Afrique..." rows={6} className={errors.motivation ? "border-destructive" : ""} />
+                placeholder="Expliquez pourquoi vous souhaitez devenir AI Solutions Partner - Ambassadeur Certifié et comment vous comptez contribuer à la transformation IA en Afrique..." rows={6} className={errors.motivation ? "border-destructive" : ""} />
               <div className="flex justify-between">
                 <FieldError error={errors.motivation} />
                 <span className="text-xs text-muted-foreground">{formData.motivation.length}/5000</span>

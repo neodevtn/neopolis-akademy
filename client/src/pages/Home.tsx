@@ -26,7 +26,7 @@ Chart.register(...registerables);
 
 /* ─── Asset URLs ─── */
 const LOGO_URL = "/manus-storage/logo_neopolis_akademy_wise_ede57803.png";
-const HERO_IMG = "/manus-storage/wise_hero_illustration_0a3cf474.png";
+const HERO_IMG = "/manus-storage/hero_neopolis_modern_443958af.png";
 const CERT_IMG = "/manus-storage/wise_certification_badge_c2e19576.png";
 const ELEARNING_IMG = "/manus-storage/wise_elearning_illustration_a269c91a.png";
 const AFRICA_IMG = "/manus-storage/wise_africa_network_650980bb.png";
@@ -65,7 +65,7 @@ const faqItems = [
   { q: "Quels sont les prérequis pour postuler ?", a: "Aucun prérequis technique n'est exigé. Le programme est ouvert à tous les professionnels dont le métier est menacé par l'IA : développeurs, comptables, juristes, traducteurs, agents de service client, etc. Une motivation forte et une capacité d'apprentissage sont les seuls critères essentiels." },
   { q: "La formation et la certification sont-elles vraiment gratuites ?", a: "Oui, 100% gratuites. La formation e-learning de 7 jours, l'accès à la plateforme Anthropic, et le voucher pour la certification Claude Certified Architect (CCA) sont entièrement pris en charge par Neopolis Development grâce à nos partenariats stratégiques." },
   { q: "Combien de temps dure le programme complet ?", a: "La formation e-learning dure 7 jours intensifs. Ensuite, vous disposez d'un accès à la plateforme Anthropic pour préparer la certification CCA à votre rythme, avec une date limite de passage fixée au 31 août 2026." },
-  { q: "Quels sont les débouchés après la certification ?", a: "Les candidats certifiés obtiennent le statut d'AI Solutions Partner — Ambassadeur Certifié. Vous devenez un entrepreneur indépendant distribuant des solutions IA auprès des PME/TPE de votre secteur d'activité sur tout le continent africain, avec le soutien technique et commercial complet de Neopolis Development." },
+  { q: "Quels sont les débouchés après la certification ?", a: "Les candidats certifiés obtiennent le statut d'AI Solutions Partner - Ambassadeur Certifié. Vous devenez un entrepreneur indépendant distribuant des solutions IA auprès des PME/TPE de votre secteur d'activité sur tout le continent africain, avec le soutien technique et commercial complet de Neopolis Development." },
   { q: "Quels pays africains sont concernés ?", a: "L'ensemble des 54 pays africains sont éligibles. Le programme vise à créer un réseau d'ambassadeurs couvrant tout le continent, avec un focus particulier sur les marchés francophones, anglophones et arabophones." },
   { q: "Comment fonctionne le processus de sélection ?", a: "Après soumission de votre candidature, un score est calculé automatiquement basé sur vos compétences techniques (40%), votre expertise métier (35%) et vos capacités de communication (25%). Les 200 à 300 meilleurs profils seront sélectionnés pour intégrer le programme." },
   { q: "Quelles ressources Neopolis Development fournit-elle aux ambassadeurs ?", a: "Neopolis fournit : ressources humaines et techniques, matériel et appliances, agents IA prêts à l'emploi, accès à des LLM multiples (pas seulement Anthropic), infrastructure de serveurs puissants hébergés on-premise, et toute l'assistance nécessaire pour attaquer votre marché cible." },
@@ -151,7 +151,7 @@ export default function Home() {
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: "var(--wise-positive)" }}
                 />
-                <span className="text-sm font-semibold" style={{ color: "var(--wise-positive-deep)" }}>Programme 2026 — Places limitées</span>
+                <span className="text-sm font-semibold" style={{ color: "var(--wise-positive-deep)" }}>Programme 2026 - Places limitées</span>
               </motion.div>
 
               <motion.h1 variants={fadeInUp} className="wise-display-xl mb-6" style={{ lineHeight: 1.05 }}>
@@ -170,7 +170,7 @@ export default function Home() {
 
               <motion.p variants={fadeInUp} className="wise-body-lg mb-8 max-w-lg">
                 Formation certifiante <strong>100% gratuite</strong>. Devenez{" "}
-                <strong>AI Solutions Partner — Ambassadeur Certifié</strong> et conquérez le marché africain de l'IA agentique.
+                <strong>AI Solutions Partner - Ambassadeur Certifié</strong> et conquérez le marché africain de l'IA agentique.
               </motion.p>
 
               <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 mb-6">
@@ -252,7 +252,7 @@ export default function Home() {
 
       {/* ─── Stats Band ─── */}
       <AnimatedSection className="wise-content-band">
-        <div className="container py-16">
+        <div className="container py-10">
           <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.div variants={scaleIn}><StatCard value="220Mds$" label="Dépenses SaaS menacées par l'IA agentique d'ici 2030" source="Gartner, 2025" /></motion.div>
             <motion.div variants={scaleIn}><StatCard value="90M" label="Emplois à risque dans le monde d'ici 2030" source="WEF Future of Jobs, 2025" /></motion.div>
@@ -263,12 +263,12 @@ export default function Home() {
 
       {/* ─── La Formule (Green Band) ─── */}
       <AnimatedSection id="formule" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
-        <div className="container py-20">
+        <div className="container py-12">
           <motion.div variants={fadeInUp} className="text-center mb-14">
             <span className="wise-badge-positive inline-block mb-4">100% GRATUIT</span>
             <h2 className="wise-display-md mb-4">La Formule Complète</h2>
             <p className="wise-body-lg max-w-2xl mx-auto">
-              Un parcours en 3 étapes pour devenir AI Solutions Partner — Ambassadeur Certifié
+              Un parcours en 3 étapes pour devenir AI Solutions Partner - Ambassadeur Certifié
             </p>
           </motion.div>
 
@@ -309,7 +309,7 @@ export default function Home() {
 
       {/* ─── Pourquoi maintenant (Dark Band) ─── */}
       <AnimatedSection id="pourquoi" className="wise-hero-band-dark">
-        <div className="container py-20">
+        <div className="container py-12">
           <motion.div variants={fadeInUp} className="text-center mb-14">
             <h2 className="wise-display-md mb-4" style={{ color: "var(--wise-primary)" }}>Pourquoi se transformer maintenant ?</h2>
             <p className="wise-body-lg" style={{ color: "var(--wise-canvas-soft)" }}>
@@ -333,7 +333,7 @@ export default function Home() {
 
       {/* ─── Partenariats (Sage Band) ─── */}
       <AnimatedSection id="partenaires" className="wise-hero-band">
-        <div className="container py-20">
+        <div className="container py-12">
           <motion.div variants={fadeInUp} className="text-center mb-14">
             <h2 className="wise-display-md mb-4">Partenariats Stratégiques</h2>
             <p className="wise-body-lg max-w-2xl mx-auto">
@@ -393,7 +393,7 @@ export default function Home() {
 
       {/* ─── AI Solutions Partner Section ─── */}
       <AnimatedSection className="wise-content-band">
-        <div className="container py-20">
+        <div className="container py-12">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div variants={fadeInLeft}>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
@@ -402,12 +402,12 @@ export default function Home() {
               </div>
               <h2 className="wise-display-md mb-6">Devenez AI Solutions Partner</h2>
               <p className="wise-body-lg mb-6">
-                Après votre certification, vous obtenez le statut d'<strong>AI Solutions Partner — Ambassadeur Certifié</strong>. Vous devenez un entrepreneur indépendant qui distribue des solutions IA auprès des PME/TPE de votre secteur d'activité.
+                Après votre certification, vous obtenez le statut d'<strong>AI Solutions Partner - Ambassadeur Certifié</strong>. Vous devenez un entrepreneur indépendant qui distribue des solutions IA auprès des PME/TPE de votre secteur d'activité.
               </p>
               <div className="wise-card-sage p-6">
                 <h4 className="font-semibold text-lg mb-3" style={{ color: "var(--wise-ink)" }}>Votre mission :</h4>
                 <p className="wise-body-md">
-                  Identifier les entreprises de votre secteur dont les processus peuvent être automatisés par des agents IA, leur proposer des solutions concrètes, et les accompagner dans leur transformation digitale — avec tout le soutien de Neopolis Development.
+                  Identifier les entreprises de votre secteur dont les processus peuvent être automatisés par des agents IA, leur proposer des solutions concrètes, et les accompagner dans leur transformation digitale - avec tout le soutien de Neopolis Development.
                 </p>
               </div>
             </motion.div>
@@ -433,7 +433,7 @@ export default function Home() {
               Ne subissez pas la disruption.<br />Devenez-en l'acteur.
             </h2>
             <p className="text-lg mb-10" style={{ color: "var(--wise-canvas-soft)" }}>
-              Formation et certification 100% gratuites — 296 places seulement
+              Formation et certification 100% gratuites - 296 places seulement
             </p>
             <Link href="/apply">
               <motion.button
@@ -450,7 +450,7 @@ export default function Home() {
 
       {/* ─── FAQ Section ─── */}
       <AnimatedSection id="faq" className="wise-hero-band">
-        <div className="container py-20">
+        <div className="container py-12">
           <motion.div variants={fadeInUp}>
             <h2 className="wise-display-md text-center mb-14">Questions fréquentes</h2>
           </motion.div>
@@ -471,7 +471,7 @@ export default function Home() {
             <div>
               <img src={LOGO_URL} alt="Neopolis Akademy" className="h-9 object-contain mb-4 brightness-0 invert" />
               <p className="text-sm" style={{ color: "var(--wise-mute)" }}>
-                Neopolis Development — Transformer la menace de l'IA en opportunité pour l'Afrique.
+                Neopolis Development - Transformer la menace de l'IA en opportunité pour l'Afrique.
               </p>
             </div>
             <div>
@@ -665,7 +665,7 @@ function JobLossChart() {
         animation: { duration: 1500, easing: "easeOutQuart" },
         plugins: {
           legend: { position: "bottom", labels: { color: "#e8ebe6", font: { size: 11, family: "Inter" }, boxWidth: 12, padding: 16, usePointStyle: true } },
-          title: { display: true, text: "Emplois restants (%) — Projection 2025-2030", color: "#e8ebe6", font: { size: 14, weight: "bold", family: "Inter" }, padding: { bottom: 16 } },
+          title: { display: true, text: "Emplois restants (%) - Projection 2025-2030", color: "#e8ebe6", font: { size: 14, weight: "bold", family: "Inter" }, padding: { bottom: 16 } },
         },
         scales: {
           x: { ticks: { color: "#868685", font: { family: "Inter" } }, grid: { color: "rgba(255,255,255,0.04)" } },
