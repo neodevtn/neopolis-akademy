@@ -26,7 +26,7 @@ Chart.register(...registerables);
 
 /* ─── Asset URLs ─── */
 const LOGO_URL = "/manus-storage/logo_neopolis_akademy_wise_ede57803.png";
-const HERO_IMG = "/manus-storage/hero_neopolis_modern_443958af.png";
+const HERO_IMG = "/manus-storage/hero_tunisian_ai_08a6f956.png";
 const CERT_IMG = "/manus-storage/wise_certification_badge_c2e19576.png";
 const ELEARNING_IMG = "/manus-storage/wise_elearning_illustration_a269c91a.png";
 const AFRICA_IMG = "/manus-storage/wise_africa_network_650980bb.png";
@@ -194,18 +194,18 @@ export default function Home() {
                 </a>
               </motion.div>
 
-              <motion.div variants={fadeInUp} className="flex items-center gap-4">
+              <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-6">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 size={16} style={{ color: "var(--wise-positive)" }} />
-                  <span className="text-sm font-medium" style={{ color: "var(--wise-body)" }}>100% Gratuit</span>
+                  <CheckCircle2 size={18} style={{ color: "var(--wise-positive)" }} />
+                  <span className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>100% Gratuit</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 size={16} style={{ color: "var(--wise-positive)" }} />
-                  <span className="text-sm font-medium" style={{ color: "var(--wise-body)" }}>296 places</span>
+                  <CheckCircle2 size={18} style={{ color: "var(--wise-positive)" }} />
+                  <span className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>296 places</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 size={16} style={{ color: "var(--wise-negative)" }} />
-                  <span className="text-sm font-semibold" style={{ color: "var(--wise-negative)" }}>Avant le 31 août 2026</span>
+                  <CheckCircle2 size={18} style={{ color: "var(--wise-negative)" }} />
+                  <span className="text-sm font-bold" style={{ color: "var(--wise-negative)" }}>Avant le 31 août 2026</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -221,7 +221,7 @@ export default function Home() {
                   animate={{ y: [0, -8, 0] }}
                   transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                 >
-                  <img src={HERO_IMG} alt="Professionnels africains en formation IA" className="w-full max-w-lg mx-auto object-contain rounded-3xl" />
+                  <img src={HERO_IMG} alt="Professionnels tunisiens en formation IA" className="w-full max-w-lg mx-auto object-contain rounded-3xl" />
                 </motion.div>
                 {/* Floating badges */}
                 <motion.div
@@ -241,7 +241,7 @@ export default function Home() {
                 >
                   <div className="flex items-center gap-2">
                     <Globe size={16} style={{ color: "var(--wise-accent-cyan)" }} />
-                    <span className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>54 pays africains</span>
+                    <span className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>Certification internationale</span>
                   </div>
                 </motion.div>
               </div>
