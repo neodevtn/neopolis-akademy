@@ -385,32 +385,50 @@ export default function Home() {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div variants={fadeInLeft}>
-              <img src={PARTNER_IMG} alt="Partenariats globaux" className="w-full max-w-md mx-auto object-contain rounded-3xl" />
+            <motion.div
+              variants={fadeInLeft}
+              className="relative"
+            >
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <img src="/manus-storage/partnership_tunisian_6fd91acb.png" alt="Équipe Neopolis - Partenariats technologiques" className="w-full max-w-md mx-auto object-contain rounded-3xl" />
+              </motion.div>
+              {/* Glow effect derrière l'image */}
+              <div className="absolute -inset-4 rounded-3xl blur-2xl opacity-20 -z-10" style={{ background: "radial-gradient(circle, var(--wise-primary) 0%, transparent 70%)" }} />
             </motion.div>
             <motion.div variants={fadeInRight}>
               <h3 className="wise-display-xs mb-6">Ce que nous fournissons</h3>
               <div className="space-y-4">
                 {[
-                  "Ressources humaines et techniques dédiées",
-                  "Agents IA prêts à l'emploi (ready-to-use)",
-                  "Accès multi-LLM (Claude, Qwen, DeepSeek...)",
-                  "Infrastructure serveurs on-premise puissante",
-                  "Accompagnement commercial et marketing",
-                  "Support technique continu",
+                  { text: "Ressources humaines et techniques dédiées", icon: "team" },
+                  { text: "Agents IA prêts à l'emploi (ready-to-use)", icon: "ai" },
+                  { text: "Accès multi-LLM (Claude, Qwen, DeepSeek...)", icon: "llm" },
+                  { text: "Infrastructure serveurs on-premise puissante", icon: "server" },
+                  { text: "Accompagnement commercial et marketing", icon: "marketing" },
+                  { text: "Support technique continu", icon: "support" },
                 ].map((item, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: 30 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.08, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                    transition={{ delay: i * 0.1, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
                     viewport={{ once: true }}
-                    className="flex items-center gap-3"
+                    whileHover={{ x: 6, transition: { duration: 0.2 } }}
+                    className="flex items-center gap-4 p-3 rounded-xl cursor-default transition-colors"
+                    style={{ backgroundColor: "transparent" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(159,232,112,0.06)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; }}
                   >
-                    <span className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "var(--wise-primary)" }}>
-                      <CheckCircle2 size={14} style={{ color: "var(--wise-ink)" }} />
-                    </span>
-                    <span className="wise-body-md font-medium">{item}</span>
+                    <motion.span
+                      className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                      style={{ backgroundColor: "var(--wise-primary)" }}
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                    >
+                      <CheckCircle2 size={16} style={{ color: "var(--wise-ink)" }} />
+                    </motion.span>
+                    <span className="wise-body-md font-medium">{item.text}</span>
                   </motion.div>
                 ))}
               </div>
