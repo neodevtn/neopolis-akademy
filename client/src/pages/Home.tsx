@@ -108,14 +108,14 @@ export default function Home() {
         transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
         className="sticky top-0 z-50 transition-all duration-300"
         style={{
-          backgroundColor: scrolled ? "rgba(255,255,255,0.95)" : "var(--wise-canvas-soft)",
-          backdropFilter: scrolled ? "blur(12px)" : "none",
+          backgroundColor: "#ffffff",
+          backdropFilter: "blur(12px)",
           boxShadow: scrolled ? "0 1px 3px rgba(14,15,12,0.08)" : "none",
         }}
       >
         <div className="container flex items-center justify-between py-4">
           <div className="flex items-center gap-3">
-            <img src={LOGO_URL} alt="Neopolis Akademy" className="h-10 object-contain" />
+            <img src={LOGO_URL} alt="Neopolis Akademy" className="h-14 object-contain" />
           </div>
           <div className="hidden md:flex items-center gap-8">
             <NavLink href="#formule">La Formule</NavLink>
@@ -137,7 +137,7 @@ export default function Home() {
 
       {/* ─── Hero Band (Sage) ─── */}
       <section className="wise-hero-band overflow-hidden">
-        <div className="container py-16 md:py-28">
+        <div className="container py-8 md:py-14">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div
               initial="hidden"
