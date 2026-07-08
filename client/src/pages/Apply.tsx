@@ -13,7 +13,7 @@ import {
   step6Schema, step7Schema, step8Schema, step9Schema, step10Schema, applicationSchema, getFieldErrors
 } from "@shared/validation";
 
-const LOGO_URL = "/manus-storage/logo_neopolis_dev_04585f1b.png";
+const LOGO_URL = "/manus-storage/logo_neopolis_akademy_0d0427ea.png";
 
 const africanCountries = [
   "Algérie", "Angola", "Bénin", "Botswana", "Burkina Faso", "Burundi", "Cameroun",
@@ -425,12 +425,14 @@ export default function Apply() {
   // Result page
   if (step === 11 && result) {
     return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background text-foreground noise-overlay flex items-center justify-center p-4">
         <div className="max-w-lg w-full text-center">
-          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
+          <div className="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto mb-6">
+            <CheckCircle className="w-10 h-10 text-green-400" />
+          </div>
           <h1 className="display-lg text-foreground mb-4">Candidature soumise !</h1>
           <p className="body-md text-muted-foreground mb-8">Votre score a été calculé automatiquement.</p>
-          <div className="card-stripe mb-8">
+          <div className="surface-1 rounded-xl p-8 mb-8 glow-primary">
             <div className="display-xxl text-primary mb-2">{Number(result.scoreTotal).toFixed(1)}%</div>
             <p className="text-sm text-muted-foreground mb-6">Score global</p>
             <div className="grid grid-cols-3 gap-4 text-center">
@@ -449,22 +451,22 @@ export default function Apply() {
             </div>
           </div>
           <p className="body-md text-muted-foreground mb-6">Si votre profil est retenu, vous serez contacté sous 48h.</p>
-          <Link href="/"><Button variant="outline" className="btn-pill">Retour à l'accueil</Button></Link>
+          <Link href="/" className="btn-secondary text-sm px-6 py-3 rounded-lg inline-flex items-center gap-2">Retour à l'accueil</Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <nav className="border-b border-border bg-background/90 backdrop-blur-md">
+    <div className="min-h-screen bg-background text-foreground noise-overlay">
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50">
         <div className="container flex items-center justify-between h-16">
-          <Link href="/"><div className="flex items-center gap-2 cursor-pointer"><img src={LOGO_URL} alt="Neopolis" className="h-7" /><span className="text-lg font-light tracking-tight">Akademy</span></div></Link>
+          <Link href="/"><div className="flex items-center gap-2 cursor-pointer"><img src={LOGO_URL} alt="Neopolis Akademy" className="h-8 object-contain" /></div></Link>
           <Link href="/"><Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground"><ArrowLeft className="w-4 h-4 mr-2" /> Retour</Button></Link>
         </div>
       </nav>
 
-      <div className="container py-12 max-w-2xl mx-auto">
+      <div className="container py-12 pt-24 max-w-2xl mx-auto relative z-10">
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-2">
             {stepTitles[step - 1] && (() => { const Icon = stepTitles[step - 1].icon; return <Icon className="w-5 h-5 text-primary" />; })()}

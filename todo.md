@@ -118,3 +118,13 @@
 - [x] Questions : prérequis, processus de sélection, durée, débouchés, gratuité, certification
 - [x] Ajouter un email de confirmation automatique envoyé au candidat après soumission
 - [x] Contenu email : récapitulatif candidature + score obtenu
+
+## Refonte Design Ultra-Moderne (Linear/Cursor-inspired)
+- [x] Analyse des design systems Linear et Cursor dans awesome-design-md
+- [x] Création du logo Neopolis Development Akademy
+- [x] Refonte index.css : dark luxury, noise overlay, gradient mesh, animations fluides
+- [x] Refonte Home.tsx : hero avec gradient mesh animé, illustrations IA, sections premium
+- [x] Refonte Apply.tsx : formulaire dark avec surface-1, progress bar animée
+- [x] Refonte AdminDashboard.tsx : badges dark, surface-1, header fixed blur
+- [x] Tests unitaires passent (7/7)
+- [x] Vérification visuelle complète

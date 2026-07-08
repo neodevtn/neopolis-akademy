@@ -1,143 +1,51 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&.dark);
+@custom-variant dark (&:is(.dark *));
 
-/* Stripe-inspired Design System — adapted for Neopolis Akademy */
-/* Typography: Inter at weight 300 (thin) with negative tracking for display */
-/* Colors: Navy ink + Ruby/Red primary (Neopolis brand) */
-
-@layer base {
-  :root {
-    /* Neopolis-Stripe Palette */
-    --background: oklch(1 0 0); /* #ffffff */
-    --foreground: oklch(0.15 0.04 250); /* deep navy ink #0a1628 */
-
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.15 0.04 250);
-
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.15 0.04 250);
-
-    /* Primary: Neopolis Red/Ruby */
-    --primary: oklch(0.55 0.22 15); /* #e94560 */
-    --primary-foreground: oklch(1 0 0);
-
-    /* Secondary: Canvas Soft */
-    --secondary: oklch(0.97 0.005 250); /* #f6f9fc */
-    --secondary-foreground: oklch(0.15 0.04 250);
-
-    /* Muted */
-    --muted: oklch(0.97 0.005 250);
-    --muted-foreground: oklch(0.55 0.02 250); /* #64748d */
-
-    /* Accent: Deep Navy (for highlighted text) */
-    --accent: oklch(0.35 0.08 250); /* #1c1e54 brand-dark */
-    --accent-foreground: oklch(1 0 0);
-
-    /* Destructive */
-    --destructive: oklch(0.55 0.22 25);
-    --destructive-foreground: oklch(1 0 0);
-
-    --border: oklch(0.92 0.005 250); /* #e3e8ee hairline */
-    --input: oklch(0.78 0.02 250); /* #a8c3de hairline-input */
-    --ring: oklch(0.55 0.22 15); /* primary */
-
-    --radius: 0.75rem;
-
-    /* Chart colors */
-    --chart-1: oklch(0.55 0.22 15);
-    --chart-2: oklch(0.35 0.08 250);
-    --chart-3: oklch(0.65 0.15 250);
-    --chart-4: oklch(0.7 0.12 50);
-    --chart-5: oklch(0.6 0.18 330);
-
-    /* Sidebar */
-    --sidebar: oklch(0.97 0.005 250);
-    --sidebar-foreground: oklch(0.15 0.04 250);
-    --sidebar-primary: oklch(0.55 0.22 15);
-    --sidebar-primary-foreground: oklch(1 0 0);
-    --sidebar-accent: oklch(0.94 0.005 250);
-    --sidebar-accent-foreground: oklch(0.15 0.04 250);
-    --sidebar-border: oklch(0.92 0.005 250);
-    --sidebar-ring: oklch(0.55 0.22 15);
-  }
-
-  .dark {
-    --background: oklch(0.13 0.04 250);
-    --foreground: oklch(0.95 0.005 250);
-    --card: oklch(0.17 0.04 250);
-    --card-foreground: oklch(0.95 0.005 250);
-    --popover: oklch(0.17 0.04 250);
-    --popover-foreground: oklch(0.95 0.005 250);
-    --primary: oklch(0.6 0.22 15);
-    --primary-foreground: oklch(1 0 0);
-    --secondary: oklch(0.2 0.04 250);
-    --secondary-foreground: oklch(0.95 0.005 250);
-    --muted: oklch(0.2 0.04 250);
-    --muted-foreground: oklch(0.65 0.02 250);
-    --accent: oklch(0.6 0.22 15);
-    --accent-foreground: oklch(1 0 0);
-    --destructive: oklch(0.55 0.22 25);
-    --destructive-foreground: oklch(1 0 0);
-    --border: oklch(0.25 0.04 250);
-    --input: oklch(0.25 0.04 250);
-    --ring: oklch(0.6 0.22 15);
-    --chart-1: oklch(0.6 0.22 15);
-    --chart-2: oklch(0.65 0.15 250);
-    --chart-3: oklch(0.7 0.12 50);
-    --chart-4: oklch(0.6 0.18 330);
-    --chart-5: oklch(0.55 0.22 15);
-    --sidebar: oklch(0.17 0.04 250);
-    --sidebar-foreground: oklch(0.95 0.005 250);
-    --sidebar-primary: oklch(0.6 0.22 15);
-    --sidebar-primary-foreground: oklch(1 0 0);
-    --sidebar-accent: oklch(0.2 0.04 250);
-    --sidebar-accent-foreground: oklch(0.95 0.005 250);
-    --sidebar-border: oklch(0.25 0.04 250);
-    --sidebar-ring: oklch(0.6 0.22 15);
-  }
-}
+/* ═══════════════════════════════════════════════════════════════
+   NEOPOLIS AKADEMY — Dark Luxury AI Design System
+   Inspired by: Linear (dark canvas) + Cursor (warm accent)
+   ═══════════════════════════════════════════════════════════════ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: "Inter", "SF Pro Display", system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+  --color-background: oklch(0.08 0.01 270);
+  --color-foreground: oklch(0.97 0.005 270);
+  --color-card: oklch(0.12 0.012 270);
+  --color-card-foreground: oklch(0.95 0.005 270);
+  --color-popover: oklch(0.12 0.012 270);
+  --color-popover-foreground: oklch(0.95 0.005 270);
+  --color-primary: oklch(0.65 0.22 270);
+  --color-primary-foreground: oklch(0.98 0.005 270);
+  --color-secondary: oklch(0.15 0.015 270);
+  --color-secondary-foreground: oklch(0.90 0.01 270);
+  --color-muted: oklch(0.15 0.01 270);
+  --color-muted-foreground: oklch(0.60 0.01 270);
+  --color-accent: oklch(0.70 0.18 30);
+  --color-accent-foreground: oklch(0.98 0.005 270);
+  --color-destructive: oklch(0.60 0.20 25);
+  --color-border: oklch(0.20 0.015 270);
+  --color-input: oklch(0.18 0.015 270);
+  --color-ring: oklch(0.65 0.22 270);
+  --color-chart-1: oklch(0.65 0.22 270);
+  --color-chart-2: oklch(0.70 0.18 30);
+  --color-chart-3: oklch(0.75 0.15 180);
+  --color-chart-4: oklch(0.60 0.20 320);
+  --color-chart-5: oklch(0.80 0.12 90);
+  --color-sidebar: oklch(0.10 0.012 270);
+  --color-sidebar-foreground: oklch(0.90 0.01 270);
+  --color-sidebar-primary: oklch(0.65 0.22 270);
+  --color-sidebar-primary-foreground: oklch(0.98 0.005 270);
+  --color-sidebar-accent: oklch(0.15 0.015 270);
+  --color-sidebar-accent-foreground: oklch(0.90 0.01 270);
+  --color-sidebar-border: oklch(0.20 0.015 270);
+  --color-sidebar-ring: oklch(0.65 0.22 270);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
 }
 
 @layer base {
@@ -145,133 +53,335 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "ss01", "cv01";
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Custom scrollbar for dark theme */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: oklch(0.10 0.01 270);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.25 0.015 270);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.35 0.015 270);
   }
 }
 
-/* Stripe-inspired Typography Utilities */
-.display-xxl {
-  font-size: 56px;
-  font-weight: 300;
-  line-height: 1.03;
-  letter-spacing: -1.4px;
+/* ═══════════════════════════════════════════════════════════════
+   TYPOGRAPHY SYSTEM — Linear-inspired negative tracking
+   ═══════════════════════════════════════════════════════════════ */
+
+.display-hero {
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 .display-xl {
-  font-size: 48px;
-  font-weight: 300;
-  line-height: 1.15;
-  letter-spacing: -0.96px;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
 }
 
 .display-lg {
-  font-size: 32px;
-  font-weight: 300;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
   line-height: 1.1;
-  letter-spacing: -0.64px;
+  letter-spacing: -0.025em;
 }
 
 .display-md {
-  font-size: 26px;
-  font-weight: 300;
-  line-height: 1.12;
-  letter-spacing: -0.26px;
-}
-
-.heading-lg {
-  font-size: 22px;
-  font-weight: 300;
-  line-height: 1.1;
-  letter-spacing: -0.22px;
-}
-
-.heading-md {
-  font-size: 20px;
-  font-weight: 300;
-  line-height: 1.4;
-  letter-spacing: -0.2px;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 .body-lg {
-  font-size: 16px;
-  font-weight: 300;
-  line-height: 1.6;
-  letter-spacing: 0;
-}
-
-.body-md {
-  font-size: 15px;
-  font-weight: 300;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-
-/* Gradient Mesh Background (Stripe signature) adapted for Neopolis */
-.gradient-mesh {
-  background: 
-    radial-gradient(ellipse at 20% 50%, rgba(233, 69, 96, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(28, 30, 84, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(245, 233, 212, 0.4) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 60%, rgba(83, 58, 253, 0.04) 0%, transparent 40%),
-    linear-gradient(180deg, #f6f9fc 0%, #ffffff 100%);
-}
-
-/* Pill Button Override */
-.btn-pill {
-  border-radius: 9999px;
-  padding: 10px 24px;
+  font-size: 1.125rem;
   font-weight: 400;
-  font-size: 16px;
-  letter-spacing: 0;
-  transition: all 0.15s cubic-bezier(0.23, 1, 0.32, 1);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
 }
 
-.btn-pill:active {
+.eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GRADIENT & GLOW EFFECTS
+   ═══════════════════════════════════════════════════════════════ */
+
+.gradient-text {
+  background: linear-gradient(135deg, #818cf8 0%, #c084fc 40%, #fb923c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-accent {
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #f97316 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-border {
+  position: relative;
+  background: oklch(0.12 0.012 270);
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, oklch(0.65 0.22 270 / 0.3), oklch(0.70 0.18 30 / 0.3));
+  z-index: -1;
+}
+
+.glow-primary {
+  box-shadow: 0 0 40px oklch(0.65 0.22 270 / 0.15), 0 0 80px oklch(0.65 0.22 270 / 0.05);
+}
+
+.glow-accent {
+  box-shadow: 0 0 40px oklch(0.70 0.18 30 / 0.15), 0 0 80px oklch(0.70 0.18 30 / 0.05);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATED GRADIENT MESH BACKGROUND
+   ═══════════════════════════════════════════════════════════════ */
+
+.mesh-gradient {
+  position: relative;
+  overflow: hidden;
+}
+
+.mesh-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 40%, oklch(0.35 0.15 270 / 0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 20%, oklch(0.30 0.12 30 / 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 50% 80%, oklch(0.25 0.10 180 / 0.08) 0%, transparent 50%);
+  animation: mesh-shift 20s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+@keyframes mesh-shift {
+  0% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.05) translate(-2%, 3%); }
+  100% { transform: scale(1) translate(2%, -2%); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CARD SYSTEM — Surface ladder
+   ═══════════════════════════════════════════════════════════════ */
+
+.surface-0 {
+  background: oklch(0.08 0.01 270);
+}
+
+.surface-1 {
+  background: oklch(0.12 0.012 270);
+  border: 1px solid oklch(0.20 0.015 270);
+}
+
+.surface-2 {
+  background: oklch(0.15 0.015 270);
+  border: 1px solid oklch(0.22 0.015 270);
+}
+
+.surface-3 {
+  background: oklch(0.18 0.018 270);
+  border: 1px solid oklch(0.25 0.015 270);
+}
+
+/* Hover glow effect for cards */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card-hover:hover {
+  border-color: oklch(0.35 0.05 270);
+  box-shadow: 0 8px 32px oklch(0.65 0.22 270 / 0.06), 0 0 0 1px oklch(0.30 0.03 270);
+  transform: translateY(-2px);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BUTTON SYSTEM
+   ═══════════════════════════════════════════════════════════════ */
+
+.btn-primary {
+  background: linear-gradient(135deg, oklch(0.60 0.20 270), oklch(0.55 0.18 290));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 2px 8px oklch(0.60 0.20 270 / 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px oklch(0.60 0.20 270 / 0.4);
+}
+
+.btn-primary:active {
   transform: scale(0.97);
 }
 
-/* Card Stripe Style */
-.card-stripe {
-  background: white;
-  border: 1px solid #e3e8ee;
-  border-radius: 12px;
-  padding: 32px;
-  transition: border-color 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+.btn-secondary {
+  background: oklch(0.15 0.015 270);
+  color: oklch(0.90 0.01 270);
+  border: 1px solid oklch(0.25 0.015 270);
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.card-stripe:hover {
-  border-color: rgba(233, 69, 96, 0.3);
+.btn-secondary:hover {
+  background: oklch(0.18 0.018 270);
+  border-color: oklch(0.35 0.03 270);
 }
 
-/* Canvas Soft Section */
-.section-soft {
-  background-color: #f6f9fc;
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATION UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
+
+.animate-fade-up {
+  animation: fade-up 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  opacity: 0;
 }
 
-/* Canvas Cream Section */
-.section-cream {
-  background-color: #f5f0e8;
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Container override */
+.animate-fade-in {
+  animation: fade-in 0.5s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  opacity: 0;
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Stagger delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-800 { animation-delay: 800ms; }
+
+/* Floating animation for decorative elements */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Pulse glow */
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px oklch(0.65 0.22 270 / 0.1); }
+  50% { box-shadow: 0 0 40px oklch(0.65 0.22 270 / 0.25); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NOISE TEXTURE OVERLAY
+   ═══════════════════════════════════════════════════════════════ */
+
+.noise-overlay {
+  position: relative;
+}
+
+.noise-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CONTAINER UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
+
 .container {
-  max-width: 1200px;
+  width: 100%;
+  max-width: 1280px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 24px;
-  padding-right: 24px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+@media (min-width: 640px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
-/* Selection color */
-::selection {
-  background: rgba(233, 69, 96, 0.15);
-  color: #0a1628;
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HAIRLINE DIVIDERS
+   ═══════════════════════════════════════════════════════════════ */
+
+.hairline {
+  border-color: oklch(0.20 0.015 270);
+}
+
+.hairline-strong {
+  border-color: oklch(0.28 0.02 270);
 }

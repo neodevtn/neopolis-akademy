@@ -8,7 +8,7 @@ import { Link } from "wouter";
 import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video } from "lucide-react";
 import { getLoginUrl } from "@/const";
 
-const LOGO_URL = "/manus-storage/logo_neopolis_dev_04585f1b.png";
+const LOGO_URL = "/manus-storage/logo_neopolis_akademy_0d0427ea.png";
 
 export default function AdminDashboard() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -29,7 +29,7 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background noise-overlay flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
@@ -37,7 +37,7 @@ export default function AdminDashboard() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background text-foreground noise-overlay flex items-center justify-center p-4">
         <div className="text-center">
           <h1 className="display-lg mb-4">Accès restreint</h1>
           <p className="body-md text-muted-foreground mb-6">Vous devez être connecté en tant qu'administrateur.</p>
@@ -100,16 +100,16 @@ export default function AdminDashboard() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "selectionne": return <Badge className="bg-green-50 text-green-700 border border-green-200 font-normal">Sélectionné</Badge>;
-      case "refuse": return <Badge className="bg-red-50 text-red-700 border border-red-200 font-normal">Refusé</Badge>;
-      default: return <Badge className="bg-amber-50 text-amber-700 border border-amber-200 font-normal">En attente</Badge>;
+      case "selectionne": return <Badge className="bg-green-500/10 text-green-400 border border-green-500/20 font-normal">Sélectionné</Badge>;
+      case "refuse": return <Badge className="bg-red-500/10 text-red-400 border border-red-500/20 font-normal">Refusé</Badge>;
+      default: return <Badge className="bg-amber-500/10 text-amber-400 border border-amber-500/20 font-normal">En attente</Badge>;
     }
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 70) return "text-green-600";
-    if (score >= 50) return "text-amber-600";
-    return "text-red-600";
+    if (score >= 70) return "text-green-400";
+    if (score >= 50) return "text-amber-400";
+    return "text-red-400";
   };
 
   const labelMap: Record<string, string> = {
@@ -126,13 +126,13 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-secondary text-foreground">
+    <div className="min-h-screen bg-background text-foreground noise-overlay">
       {/* Header */}
-      <nav className="border-b border-border bg-background">
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50">
         <div className="container flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
-            <img src={LOGO_URL} alt="Neopolis" className="h-7" />
-            <span className="text-lg font-light tracking-tight">Admin</span>
+            <img src={LOGO_URL} alt="Neopolis Akademy" className="h-8 object-contain" />
+            <span className="text-sm font-medium text-muted-foreground ml-2 px-2 py-0.5 rounded bg-primary/10 text-primary">Admin</span>
           </div>
           <Link href="/">
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
@@ -142,7 +142,7 @@ export default function AdminDashboard() {
         </div>
       </nav>
 
-      <div className="container py-10">
+      <div className="container py-10 pt-24 relative z-10">
         <h1 className="display-lg text-foreground mb-10">Tableau de bord — Candidatures</h1>
 
         {/* Stats */}
@@ -176,7 +176,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Table */}
-        <div className="bg-background border border-border rounded-xl overflow-hidden">
+        <div className="surface-1 rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -406,7 +406,7 @@ export default function AdminDashboard() {
 
 function StatCard({ icon, value, label }: { icon: React.ReactNode; value: number | string; label: string }) {
   return (
-    <div className="p-5 rounded-xl border border-border bg-background">
+    <div className="surface-1 p-5 rounded-xl card-hover">
       <div className="flex items-center gap-2 mb-2 text-muted-foreground">{icon}<span className="text-xs uppercase tracking-wider">{label}</span></div>
       <div className="display-md text-foreground">{value}</div>
     </div>
