@@ -194,18 +194,20 @@ export default function Home() {
                 </a>
               </motion.div>
 
-              <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-6">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 size={18} style={{ color: "var(--wise-positive)" }} />
+              <motion.div variants={fadeInUp} className="inline-flex items-center gap-3 px-4 py-2 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(0,0,0,0.06)" }}>
+                <div className="flex items-center gap-1.5 whitespace-nowrap">
+                  <CheckCircle2 size={16} style={{ color: "var(--wise-positive)" }} />
                   <span className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>100% Gratuit</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 size={18} style={{ color: "var(--wise-positive)" }} />
+                <div className="w-px h-4" style={{ backgroundColor: "rgba(0,0,0,0.12)" }} />
+                <div className="flex items-center gap-1.5 whitespace-nowrap">
+                  <CheckCircle2 size={16} style={{ color: "var(--wise-positive)" }} />
                   <span className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>296 places</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 size={18} style={{ color: "var(--wise-negative)" }} />
-                  <span className="text-sm font-bold" style={{ color: "var(--wise-negative)" }}>Avant le 31 août 2026</span>
+                <div className="w-px h-4" style={{ backgroundColor: "rgba(0,0,0,0.12)" }} />
+                <div className="flex items-center gap-1.5 whitespace-nowrap">
+                  <CheckCircle2 size={16} style={{ color: "var(--wise-negative)" }} />
+                  <span className="text-sm font-semibold" style={{ color: "var(--wise-negative)" }}>Avant le 31 août 2026</span>
                 </div>
               </motion.div>
             </motion.div>
