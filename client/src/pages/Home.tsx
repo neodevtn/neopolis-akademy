@@ -906,14 +906,15 @@ function HeroGraphic() {
         ))}
       </svg>
 
-      {/* Nœud central - Logo/Marque */}
+      {/* Nœud central - Logo Neopolis Akademy */}
       <motion.div
-        className="absolute flex flex-col items-center justify-center rounded-full"
+        className="absolute flex items-center justify-center rounded-full overflow-hidden"
         style={{
-          width: "100px",
-          height: "100px",
-          background: "linear-gradient(135deg, #9fe870 0%, #6bc840 100%)",
-          boxShadow: "0 0 40px rgba(159,232,112,0.4), 0 0 80px rgba(159,232,112,0.15)",
+          width: "110px",
+          height: "110px",
+          background: "#ffffff",
+          boxShadow: "0 0 40px rgba(159,232,112,0.4), 0 0 80px rgba(159,232,112,0.15), 0 4px 20px rgba(0,0,0,0.1)",
+          border: "3px solid rgba(159,232,112,0.6)",
           left: "50%",
           top: "50%",
           transform: "translate(-50%, -50%)",
@@ -921,8 +922,7 @@ function HeroGraphic() {
         animate={{ scale: [1, 1.05, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       >
-        <Sparkles size={28} color="#0e0f0c" />
-        <span className="text-xs font-bold mt-1" style={{ color: "#0e0f0c" }}>CCA</span>
+        <img src={LOGO_URL} alt="Neopolis Akademy" className="w-20 h-20 object-contain" />
       </motion.div>
 
       {/* Nœuds satellites - Orbite extérieure */}
