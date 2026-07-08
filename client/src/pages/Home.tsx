@@ -1,475 +1,390 @@
-import { Link } from "wouter";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Shield, Zap, Globe, Users, TrendingDown, Award, Rocket, ChevronDown, ChevronUp, GraduationCap, Brain, Network } from "lucide-react";
+import { Link } from "wouter";
+import { ChevronRight, GraduationCap, Award, Globe, Users, TrendingDown, Shield, Zap, BookOpen, ArrowRight, ChevronDown } from "lucide-react";
 
-/* ═══════════════════════════════════════════════════════════════
-   NEOPOLIS AKADEMY — Landing Page
-   Design: Dark Luxury AI (Linear + Cursor inspired)
-   ═══════════════════════════════════════════════════════════════ */
+// Chart.js
+import { Chart, registerables } from "chart.js";
+Chart.register(...registerables);
 
-// Animated counter hook
-function useCountUp(end: number, duration: number = 2000, startOnView: boolean = true) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const started = useRef(false);
+const LOGO_URL = "/manus-storage/logo_neopolis_akademy_9c9a0823.png";
+const HERO_IMG = "/manus-storage/hero_ai_network_cb2c2cf9.png";
+const AFRICA_IMG = "/manus-storage/africa_network_fb63ec75.png";
+const CERT_IMG = "/manus-storage/certification_badge_35220f38.png";
+const PARTNER_IMG = "/manus-storage/partnership_globe_2c18a400.png";
 
-  useEffect(() => {
-    if (!startOnView) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          const startTime = Date.now();
-          const animate = () => {
-            const elapsed = Date.now() - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setCount(Math.floor(eased * end));
-            if (progress < 1) requestAnimationFrame(animate);
-          };
-          animate();
-        }
-      },
-      { threshold: 0.3 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [end, duration, startOnView]);
+/* ─── FAQ Data ─── */
+const faqItems = [
+  { q: "Quels sont les prérequis pour postuler ?", a: "Aucun prérequis technique n'est exigé. Le programme est ouvert à tous les professionnels dont le métier est menacé par l'IA : développeurs, comptables, juristes, traducteurs, agents de service client, etc. Une motivation forte et une capacité d'apprentissage sont les seuls critères essentiels." },
+  { q: "La formation et la certification sont-elles vraiment gratuites ?", a: "Oui, 100% gratuites. La formation e-learning de 7 jours, l'accès à la plateforme Anthropic, et le voucher pour la certification Claude Certified Architect (CCA) sont entièrement pris en charge par Neopolis Development grâce à nos partenariats stratégiques." },
+  { q: "Combien de temps dure le programme complet ?", a: "La formation e-learning dure 7 jours intensifs. Ensuite, vous disposez d'un accès à la plateforme Anthropic pour préparer la certification CCA à votre rythme, avec une date limite de passage fixée au 31 août 2026." },
+  { q: "Quels sont les débouchés après la certification ?", a: "Les candidats certifiés obtiennent le statut d'AI Solutions Partner — Ambassadeur Certifié. Vous devenez un entrepreneur indépendant distribuant des solutions IA auprès des PME/TPE de votre secteur d'activité sur tout le continent africain, avec le soutien technique et commercial complet de Neopolis Development." },
+  { q: "Quels pays africains sont concernés ?", a: "L'ensemble des 54 pays africains sont éligibles. Le programme vise à créer un réseau d'ambassadeurs couvrant tout le continent, avec un focus particulier sur les marchés francophones, anglophones et arabophones." },
+  { q: "Comment fonctionne le processus de sélection ?", a: "Après soumission de votre candidature, un score est calculé automatiquement basé sur vos compétences techniques (40%), votre expertise métier (35%) et vos capacités de communication (25%). Les 200 à 300 meilleurs profils seront sélectionnés pour intégrer le programme." },
+  { q: "Quelles ressources Neopolis Development fournit-elle aux ambassadeurs ?", a: "Neopolis fournit : ressources humaines et techniques, matériel et appliances, agents IA prêts à l'emploi, accès à des LLM multiples (pas seulement Anthropic), infrastructure de serveurs puissants hébergés on-premise, et toute l'assistance nécessaire pour attaquer votre marché cible." },
+];
 
-  return { count, ref };
+export default function Home() {
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: "var(--wise-canvas)" }}>
+      {/* ─── Navigation ─── */}
+      <nav className="sticky top-0 z-50" style={{ backgroundColor: "var(--wise-canvas)", borderBottom: "1px solid var(--wise-canvas-soft)" }}>
+        <div className="container flex items-center justify-between py-3">
+          <div className="flex items-center gap-2">
+            <img src={LOGO_URL} alt="Neopolis Akademy" className="h-9 object-contain" />
+          </div>
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#formule" className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>La Formule</a>
+            <a href="#pourquoi" className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>Pourquoi maintenant</a>
+            <a href="#partenaires" className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>Partenaires</a>
+            <a href="#faq" className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>FAQ</a>
+          </div>
+          <Link href="/apply">
+            <button className="wise-btn-primary flex items-center gap-2">
+              Postuler <ChevronRight size={16} />
+            </button>
+          </Link>
+        </div>
+      </nav>
+
+      {/* ─── Hero Band (Sage) ─── */}
+      <section className="wise-hero-band">
+        <div className="container py-16 md:py-24">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: "var(--wise-positive)" }}></span>
+                <span className="text-sm font-semibold" style={{ color: "var(--wise-positive-deep)" }}>Programme 2026 — Places limitées</span>
+              </div>
+              <h1 className="wise-display-xl mb-6">
+                Transformez la menace de l'IA<br />
+                <span style={{ color: "var(--wise-positive)" }}>en opportunité</span>
+              </h1>
+              <p className="wise-body-lg mb-8 max-w-lg">
+                Formation certifiante <strong>100% gratuite</strong>. Devenez <strong>AI Solutions Partner — Ambassadeur Certifié</strong> et conquérez le marché africain de l'IA agentique.
+              </p>
+              <div className="flex flex-wrap gap-4 mb-6">
+                <Link href="/apply">
+                  <button className="wise-btn-primary flex items-center gap-2 text-lg px-8 py-4">
+                    Déposer ma candidature <ArrowRight size={20} />
+                  </button>
+                </Link>
+                <a href="#formule">
+                  <button className="wise-btn-secondary flex items-center gap-2 text-lg px-8 py-4">
+                    Découvrir le programme
+                  </button>
+                </a>
+              </div>
+              <p className="text-sm" style={{ color: "var(--wise-mute)" }}>
+                Date limite de candidature : <strong style={{ color: "var(--wise-negative)" }}>31 août 2026</strong>
+              </p>
+            </div>
+            <div className="hidden md:block">
+              <img src={HERO_IMG} alt="Réseau IA Afrique" className="w-full max-w-md mx-auto object-contain rounded-3xl" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Stats Band ─── */}
+      <section className="wise-content-band">
+        <div className="container py-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <StatCard value="220Mds$" label="Dépenses SaaS menacées par l'IA agentique d'ici 2030" source="Gartner, 2025" />
+            <StatCard value="90M" label="Emplois à risque dans le monde d'ici 2030" source="WEF Future of Jobs, 2025" />
+            <StatCard value="296" label="Candidats sélectionnés pour ce programme exclusif" source="Places disponibles" highlight />
+          </div>
+        </div>
+      </section>
+
+      {/* ─── La Formule (Green Band) ─── */}
+      <section id="formule" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
+        <div className="container py-20">
+          <div className="text-center mb-12">
+            <span className="wise-badge-positive inline-block mb-4">100% GRATUIT</span>
+            <h2 className="wise-display-md mb-4">La Formule Complète</h2>
+            <p className="wise-body-lg max-w-2xl mx-auto">
+              Un parcours en 3 étapes pour devenir AI Solutions Partner — Ambassadeur Certifié
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="wise-card">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
+                <BookOpen size={24} style={{ color: "var(--wise-positive-deep)" }} />
+              </div>
+              <h3 className="wise-display-xs mb-2">E-Learning 7 jours</h3>
+              <p className="wise-body-md">Formation intensive sur l'IA générale, les LLM, les agents IA et leurs applications métier concrètes.</p>
+              <div className="mt-4 pt-4" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
+                <span className="wise-badge-positive">Gratuit</span>
+              </div>
+            </div>
+            <div className="wise-card">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
+                <Award size={24} style={{ color: "var(--wise-positive-deep)" }} />
+              </div>
+              <h3 className="wise-display-xs mb-2">Certification CCA</h3>
+              <p className="wise-body-md">Accès à la plateforme Anthropic + voucher pour passer la certification Claude Certified Architect avant le 31 août 2026.</p>
+              <div className="mt-4 pt-4" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
+                <span className="wise-badge-positive">Gratuit</span>
+              </div>
+            </div>
+            <div className="wise-card">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
+                <Globe size={24} style={{ color: "var(--wise-positive-deep)" }} />
+              </div>
+              <h3 className="wise-display-xs mb-2">Statut Ambassadeur</h3>
+              <p className="wise-body-md">Devenez AI Solutions Partner indépendant et distribuez des solutions IA sur tout le continent africain.</p>
+              <div className="mt-4 pt-4" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
+                <span className="wise-badge-positive">Accompagnement complet</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Pourquoi maintenant (Dark Band) ─── */}
+      <section id="pourquoi" className="wise-hero-band-dark">
+        <div className="container py-20">
+          <div className="text-center mb-12">
+            <h2 className="wise-display-md mb-4" style={{ color: "var(--wise-primary)" }}>Pourquoi se transformer maintenant ?</h2>
+            <p className="wise-body-lg" style={{ color: "var(--wise-canvas-soft)" }}>
+              L'IA agentique ne menace pas seulement les développeurs. Elle redéfinit l'ensemble du marché du travail.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <JobLossChart />
+              <p className="text-xs mt-3" style={{ color: "var(--wise-mute)" }}>Sources : WEF Future of Jobs 2025, Goldman Sachs, BLS</p>
+            </div>
+            <div className="space-y-6">
+              <ImpactItem icon={<TrendingDown size={20} />} title="92 millions d'emplois" desc="seront déplacés par l'IA d'ici 2030 selon le World Economic Forum." />
+              <ImpactItem icon={<Users size={20} />} title="41% du code" desc="est déjà généré par l'IA en 2025. Les développeurs classiques sont en première ligne." />
+              <ImpactItem icon={<Shield size={20} />} title="234 milliards $" desc="de dépenses SaaS menacées. Les logiciels traditionnels seront remplacés par des agents IA." />
+              <ImpactItem icon={<Zap size={20} />} title="Ne subissez pas." desc="Devenez l'acteur de cette transformation. Passez du côté de ceux qui déploient l'IA." />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Partenariats (Sage Band) ─── */}
+      <section id="partenaires" className="wise-hero-band">
+        <div className="container py-20">
+          <div className="text-center mb-12">
+            <h2 className="wise-display-md mb-4">Partenariats Stratégiques</h2>
+            <p className="wise-body-lg max-w-2xl mx-auto">
+              Neopolis Development a noué des partenariats avec les leaders mondiaux de l'IA pour conquérir le marché africain.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="wise-card-dark">
+              <h3 className="text-2xl font-bold mb-3" style={{ color: "var(--wise-primary)" }}>Anthropic</h3>
+              <p className="text-base" style={{ color: "var(--wise-canvas-soft)" }}>
+                Créateur de Claude, l'un des LLM les plus avancés au monde. Notre partenariat offre un accès exclusif à la certification CCA et aux outils de développement d'agents IA de nouvelle génération.
+              </p>
+            </div>
+            <div className="wise-card-dark">
+              <h3 className="text-2xl font-bold mb-3" style={{ color: "var(--wise-primary)" }}>Alibaba Cloud</h3>
+              <p className="text-base" style={{ color: "var(--wise-canvas-soft)" }}>
+                Infrastructure cloud mondiale. Notre partenariat garantit des ressources de calcul puissantes, des modèles ML complémentaires et une infrastructure on-premise pour l'Afrique.
+              </p>
+            </div>
+          </div>
+          <div className="mt-12 grid md:grid-cols-2 gap-8 items-center">
+            <img src={PARTNER_IMG} alt="Partenariats globaux" className="w-full max-w-sm mx-auto object-contain rounded-3xl" />
+            <div>
+              <h3 className="wise-display-xs mb-4">Ce que nous fournissons</h3>
+              <ul className="space-y-3">
+                {["Ressources humaines et techniques dédiées", "Agents IA prêts à l'emploi (ready-to-use)", "Accès multi-LLM (Claude, Qwen, DeepSeek...)", "Infrastructure serveurs on-premise puissante", "Accompagnement commercial et marketing", "Support technique continu"].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <span className="mt-1 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "var(--wise-primary)" }}>
+                      <ChevronRight size={12} style={{ color: "var(--wise-ink)" }} />
+                    </span>
+                    <span className="wise-body-md">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── AI Solutions Partner Section ─── */}
+      <section className="wise-content-band">
+        <div className="container py-20">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="wise-display-md mb-6">Devenez AI Solutions Partner</h2>
+              <p className="wise-body-lg mb-6">
+                Après votre certification, vous obtenez le statut d'<strong>AI Solutions Partner — Ambassadeur Certifié</strong>. Vous devenez un entrepreneur indépendant qui distribue des solutions IA auprès des PME/TPE de votre secteur d'activité.
+              </p>
+              <div className="wise-card-sage p-6">
+                <h4 className="font-semibold text-lg mb-3" style={{ color: "var(--wise-ink)" }}>Votre mission :</h4>
+                <p className="wise-body-md">
+                  Identifier les entreprises de votre secteur dont les processus peuvent être automatisés par des agents IA, leur proposer des solutions concrètes, et les accompagner dans leur transformation digitale — avec tout le soutien de Neopolis Development.
+                </p>
+              </div>
+            </div>
+            <img src={AFRICA_IMG} alt="Réseau Afrique" className="w-full max-w-sm mx-auto object-contain rounded-3xl" />
+          </div>
+        </div>
+      </section>
+
+      {/* ─── CTA Band ─── */}
+      <section style={{ backgroundColor: "var(--wise-ink)" }}>
+        <div className="container py-16 text-center">
+          <h2 className="text-3xl md:text-4xl font-black mb-4" style={{ color: "var(--wise-primary)" }}>
+            Ne subissez pas la disruption. Devenez-en l'acteur.
+          </h2>
+          <p className="text-lg mb-8" style={{ color: "var(--wise-canvas-soft)" }}>
+            Formation et certification 100% gratuites — 296 places seulement
+          </p>
+          <Link href="/apply">
+            <button className="wise-btn-primary text-lg px-10 py-4 flex items-center gap-2 mx-auto">
+              Postuler maintenant <ArrowRight size={20} />
+            </button>
+          </Link>
+        </div>
+      </section>
+
+      {/* ─── FAQ Section ─── */}
+      <section id="faq" className="wise-hero-band">
+        <div className="container py-20">
+          <h2 className="wise-display-md text-center mb-12">Questions fréquentes</h2>
+          <div className="max-w-3xl mx-auto space-y-3">
+            {faqItems.map((item, i) => (
+              <FAQItem key={i} question={item.q} answer={item.a} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Footer (Dark) ─── */}
+      <footer className="wise-footer">
+        <div className="container py-12">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div>
+              <img src={LOGO_URL} alt="Neopolis Akademy" className="h-8 object-contain mb-4 brightness-0 invert" />
+              <p className="text-sm" style={{ color: "var(--wise-mute)" }}>
+                Neopolis Development — Transformer la menace de l'IA en opportunité pour l'Afrique.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3" style={{ color: "var(--wise-canvas-soft)" }}>Programme</h4>
+              <ul className="space-y-2 text-sm" style={{ color: "var(--wise-mute)" }}>
+                <li><a href="#formule" className="hover:text-white transition-colors">La Formule</a></li>
+                <li><a href="#pourquoi" className="hover:text-white transition-colors">Pourquoi maintenant</a></li>
+                <li><a href="#partenaires" className="hover:text-white transition-colors">Partenaires</a></li>
+                <li><a href="#faq" className="hover:text-white transition-colors">FAQ</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3" style={{ color: "var(--wise-canvas-soft)" }}>Contact</h4>
+              <ul className="space-y-2 text-sm" style={{ color: "var(--wise-mute)" }}>
+                <li>info@neopolis-dev.com</li>
+                <li>www.neopolis-dev.com</li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-12 pt-8" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+            <p className="text-center text-sm" style={{ color: "var(--wise-mute)" }}>
+              © 2026 Neopolis Development. Tous droits réservés.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
 }
 
-// FAQ Item component
+/* ─── Sub-Components ─── */
+
+function StatCard({ value, label, source, highlight }: { value: string; label: string; source: string; highlight?: boolean }) {
+  return (
+    <div className={highlight ? "wise-card-green text-center" : "wise-card-sage text-center"}>
+      <p className="text-4xl md:text-5xl font-black mb-2" style={{ color: highlight ? "var(--wise-positive-deep)" : "var(--wise-ink)" }}>{value}</p>
+      <p className="wise-body-md mb-2">{label}</p>
+      <p className="text-xs" style={{ color: "var(--wise-mute)" }}>{source}</p>
+    </div>
+  );
+}
+
+function ImpactItem({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
+  return (
+    <div className="flex gap-4">
+      <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "var(--wise-primary)" }}>
+        {icon}
+      </div>
+      <div>
+        <p className="font-semibold text-base" style={{ color: "var(--wise-canvas-soft)" }}>{title}</p>
+        <p className="text-sm" style={{ color: "var(--wise-mute)" }}>{desc}</p>
+      </div>
+    </div>
+  );
+}
+
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="surface-1 rounded-xl overflow-hidden card-hover">
+    <div className="wise-card">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-6 text-left cursor-pointer"
+        className="w-full flex items-center justify-between text-left"
       >
-        <span className="display-md text-foreground pr-4">{question}</span>
-        <span className="text-muted-foreground shrink-0">
-          {open ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-        </span>
+        <span className="font-semibold text-base pr-4" style={{ color: "var(--wise-ink)" }}>{question}</span>
+        <ChevronDown size={20} className={`flex-shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`} style={{ color: "var(--wise-mute)" }} />
       </button>
       {open && (
-        <div className="px-6 pb-6 pt-0">
-          <p className="body-lg text-muted-foreground">{answer}</p>
-        </div>
+        <p className="mt-4 pt-4 wise-body-md" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
+          {answer}
+        </p>
       )}
     </div>
   );
 }
 
-export default function Home() {
-  const stat1 = useCountUp(234, 2500);
-  const stat2 = useCountUp(92, 2000);
-  const stat3 = useCountUp(300, 2000);
+function JobLossChart() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const chartRef = useRef<Chart | null>(null);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    if (chartRef.current) chartRef.current.destroy();
+
+    const ctx = canvasRef.current.getContext("2d");
+    if (!ctx) return;
+
+    chartRef.current = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["2025", "2026", "2027", "2028", "2029", "2030"],
+        datasets: [
+          { label: "Saisie de données", data: [100, 82, 65, 48, 35, 22], borderColor: "#9fe870", backgroundColor: "rgba(159,232,112,0.1)", tension: 0.4, borderWidth: 2 },
+          { label: "Service client", data: [100, 85, 70, 55, 42, 30], borderColor: "#38c8ff", backgroundColor: "rgba(56,200,255,0.1)", tension: 0.4, borderWidth: 2 },
+          { label: "Comptabilité", data: [100, 88, 75, 62, 50, 40], borderColor: "#ffc091", backgroundColor: "rgba(255,192,145,0.1)", tension: 0.4, borderWidth: 2 },
+          { label: "Développeurs", data: [100, 90, 78, 65, 55, 45], borderColor: "#ffd11a", backgroundColor: "rgba(255,209,26,0.1)", tension: 0.4, borderWidth: 2 },
+          { label: "Traduction", data: [100, 78, 58, 40, 28, 18], borderColor: "#d03238", backgroundColor: "rgba(208,50,56,0.1)", tension: 0.4, borderWidth: 2 },
+          { label: "Juridique", data: [100, 92, 82, 72, 62, 52], borderColor: "#c5edab", backgroundColor: "rgba(197,237,171,0.1)", tension: 0.4, borderWidth: 2 },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "bottom", labels: { color: "#e8ebe6", font: { size: 11 }, boxWidth: 12, padding: 16 } },
+          title: { display: true, text: "Emplois restants (%) — Projection 2025-2030", color: "#e8ebe6", font: { size: 14, weight: "bold" } },
+        },
+        scales: {
+          x: { ticks: { color: "#868685" }, grid: { color: "rgba(255,255,255,0.05)" } },
+          y: { ticks: { color: "#868685", callback: (v) => v + "%" }, grid: { color: "rgba(255,255,255,0.05)" }, min: 0, max: 110 },
+        },
+      },
+    });
+
+    return () => { chartRef.current?.destroy(); };
+  }, []);
 
   return (
-    <div className="min-h-screen bg-background noise-overlay">
-      {/* ═══ NAVIGATION ═══ */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50">
-        <div className="container flex items-center justify-between h-16">
-          <div className="flex items-center gap-3">
-            <img src="/manus-storage/logo_neopolis_akademy_0d0427ea.png" alt="Neopolis Akademy" className="h-8 object-contain" />
-          </div>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#formule" className="text-sm text-muted-foreground hover:text-foreground transition-colors">La Formule</a>
-            <a href="#urgence" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Pourquoi maintenant</a>
-            <a href="#partenaires" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Partenaires</a>
-            <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">FAQ</a>
-          </div>
-          <Link href="/apply" className="btn-primary text-sm px-5 py-2.5 rounded-lg inline-flex items-center gap-2">
-            Postuler <ArrowRight size={14} />
-          </Link>
-        </div>
-      </nav>
-
-      {/* ═══ HERO SECTION ═══ */}
-      <section className="relative min-h-screen flex items-center mesh-gradient pt-16">
-        <div className="container relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Eyebrow */}
-            <div className="animate-fade-up inline-flex items-center gap-2 px-4 py-2 rounded-full surface-2 mb-8">
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-              <span className="eyebrow text-muted-foreground">Programme 2026 — Places limitées</span>
-            </div>
-
-            {/* Main headline */}
-            <h1 className="animate-fade-up delay-100 display-hero text-foreground mb-6">
-              Transformez la menace de l'IA<br />
-              <span className="gradient-text">en opportunité</span>
-            </h1>
-
-            {/* Subtitle */}
-            <p className="animate-fade-up delay-200 body-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-              Formation certifiante 100% gratuite. Devenez <strong className="text-foreground">AI Solutions Partner — Ambassadeur Certifié</strong> et conquérez le marché africain de l'IA agentique.
-            </p>
-
-            {/* Free badge */}
-            <div className="animate-fade-up delay-300 inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-green-500/10 border border-green-500/20 mb-10">
-              <Shield className="text-green-400" size={20} />
-              <span className="text-green-400 font-semibold text-lg">100% GRATUIT</span>
-              <span className="text-muted-foreground text-sm">— Formation, certification et accompagnement</span>
-            </div>
-
-            {/* CTA buttons */}
-            <div className="animate-fade-up delay-400 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/apply" className="btn-primary text-base px-8 py-4 rounded-xl inline-flex items-center gap-3 glow-primary">
-                Déposer ma candidature <ArrowRight size={18} />
-              </Link>
-              <a href="#formule" className="btn-secondary text-base px-8 py-4 rounded-xl inline-flex items-center gap-3">
-                Découvrir le programme
-              </a>
-            </div>
-
-            {/* Deadline */}
-            <p className="animate-fade-up delay-500 mt-8 text-sm text-muted-foreground">
-              Date limite de candidature : <span className="text-accent font-semibold">31 août 2026</span>
-            </p>
-          </div>
-        </div>
-
-        {/* Hero background image */}
-        <div className="absolute inset-0 z-0 opacity-20">
-          <img src="/manus-storage/hero_ai_network_679ae43a.png" alt="" className="w-full h-full object-cover" />
-        </div>
-
-        {/* Bottom gradient fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent z-10"></div>
-      </section>
-
-      {/* ═══ STATS BAR ═══ */}
-      <section className="relative z-10 -mt-16 pb-24">
-        <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <div ref={stat1.ref} className="surface-1 rounded-xl p-6 text-center card-hover">
-              <p className="display-xl gradient-text">{stat1.count}Mds$</p>
-              <p className="text-sm text-muted-foreground mt-2">de SaaS menacés d'ici 2030</p>
-              <p className="text-xs text-muted-foreground/60 mt-1">Source : Gartner 2025</p>
-            </div>
-            <div ref={stat2.ref} className="surface-1 rounded-xl p-6 text-center card-hover">
-              <p className="display-xl gradient-text">{stat2.count}M</p>
-              <p className="text-sm text-muted-foreground mt-2">d'emplois menacés dans le monde</p>
-              <p className="text-xs text-muted-foreground/60 mt-1">Source : WEF 2025</p>
-            </div>
-            <div ref={stat3.ref} className="surface-1 rounded-xl p-6 text-center card-hover">
-              <p className="display-xl gradient-text">{stat3.count}</p>
-              <p className="text-sm text-muted-foreground mt-2">places disponibles — Afrique entière</p>
-              <p className="text-xs text-muted-foreground/60 mt-1">Sélection sur dossier</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ LA FORMULE ═══ */}
-      <section id="formule" className="py-24">
-        <div className="container">
-          <div className="text-center mb-16">
-            <span className="eyebrow text-primary mb-4 block">Le Programme</span>
-            <h2 className="display-xl text-foreground mb-4">Une formule complète,<br /><span className="gradient-text">entièrement gratuite</span></h2>
-            <p className="body-lg text-muted-foreground max-w-2xl mx-auto">
-              De la formation à la certification, puis au lancement de votre activité d'AI Solutions Partner sur le marché africain.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Card 1 */}
-            <div className="surface-1 rounded-xl p-8 card-hover group relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-all"></div>
-              <div className="relative z-10">
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6">
-                  <GraduationCap className="text-primary" size={24} />
-                </div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 mb-4">
-                  <span className="text-green-400 text-xs font-medium">GRATUIT</span>
-                </div>
-                <h3 className="display-md text-foreground mb-3">E-Learning 7 jours</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  Formation intensive sur les fondamentaux de l'IA, les LLM, les agents IA et leur déploiement en entreprise.
-                </p>
-              </div>
-            </div>
-
-            {/* Card 2 */}
-            <div className="surface-1 rounded-xl p-8 card-hover group relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-3xl group-hover:bg-accent/10 transition-all"></div>
-              <div className="relative z-10">
-                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-6">
-                  <Brain className="text-accent" size={24} />
-                </div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 mb-4">
-                  <span className="text-green-400 text-xs font-medium">GRATUIT</span>
-                </div>
-                <h3 className="display-md text-foreground mb-3">Certification CCA</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  Accès à la plateforme Anthropic + voucher pour passer la certification <strong className="text-foreground">Claude Certified Architect</strong>.
-                </p>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="surface-1 rounded-xl p-8 card-hover group relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-chart-3/5 rounded-full blur-3xl group-hover:bg-chart-3/10 transition-all"></div>
-              <div className="relative z-10">
-                <div className="w-12 h-12 rounded-lg bg-chart-3/10 flex items-center justify-center mb-6">
-                  <Rocket className="text-chart-3" size={24} />
-                </div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 mb-4">
-                  <span className="text-green-400 text-xs font-medium">GRATUIT</span>
-                </div>
-                <h3 className="display-md text-foreground mb-3">Lancement Business</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  Statut d'AI Solutions Partner avec accompagnement complet, ressources techniques et accès au marché africain.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ POURQUOI MAINTENANT — URGENCE ═══ */}
-      <section id="urgence" className="py-24 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-red-950/5 to-background"></div>
-        <div className="container relative z-10">
-          <div className="text-center mb-16">
-            <span className="eyebrow text-destructive mb-4 block">Pourquoi se transformer ?</span>
-            <h2 className="display-xl text-foreground mb-4">L'IA ne menace pas l'avenir.<br /><span className="text-destructive">Elle menace le présent.</span></h2>
-            <p className="body-lg text-muted-foreground max-w-2xl mx-auto">
-              Les chiffres sont sans appel. Les métiers traditionnels disparaissent à un rythme sans précédent.
-            </p>
-          </div>
-
-          {/* Jobs at risk chart */}
-          <div className="max-w-4xl mx-auto surface-1 rounded-xl p-8 mb-12">
-            <h3 className="display-md text-foreground mb-6 text-center">Postes les plus menacés par l'IA (2025–2030)</h3>
-            <div className="space-y-4">
-              {[
-                { job: "Saisie de données", risk: 95, loss: "-4.7M postes" },
-                { job: "Service client / Support", risk: 88, loss: "-3.2M postes" },
-                { job: "Comptabilité / Finance", risk: 82, loss: "-2.8M postes" },
-                { job: "Développeurs logiciels", risk: 75, loss: "-2.1M postes" },
-                { job: "Traduction / Rédaction", risk: 72, loss: "-1.9M postes" },
-                { job: "Juridique / Paralegal", risk: 65, loss: "-1.4M postes" },
-              ].map((item, i) => (
-                <div key={i} className="group">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-foreground font-medium">{item.job}</span>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-destructive font-mono">{item.loss}</span>
-                      <span className="text-sm font-semibold text-foreground">{item.risk}%</span>
-                    </div>
-                  </div>
-                  <div className="h-2 rounded-full bg-muted overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-1000"
-                      style={{
-                        width: `${item.risk}%`,
-                        background: item.risk > 80
-                          ? "linear-gradient(90deg, #ef4444, #f97316)"
-                          : item.risk > 70
-                          ? "linear-gradient(90deg, #f97316, #eab308)"
-                          : "linear-gradient(90deg, #eab308, #22c55e)"
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="text-xs text-muted-foreground/60 mt-6 text-center">Sources : World Economic Forum (Future of Jobs 2025), Goldman Sachs, Bureau of Labor Statistics</p>
-          </div>
-
-          {/* Impact statement */}
-          <div className="max-w-3xl mx-auto text-center surface-2 rounded-xl p-10 glow-accent">
-            <TrendingDown className="text-destructive mx-auto mb-4" size={32} />
-            <p className="display-md text-foreground mb-4">
-              "D'ici 2030, <span className="text-destructive font-semibold">33%</span> des tâches actuelles seront automatisées par l'IA agentique"
-            </p>
-            <p className="text-sm text-muted-foreground">— World Economic Forum, Future of Jobs Report 2025</p>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ PARTENARIATS ═══ */}
-      <section id="partenaires" className="py-24">
-        <div className="container">
-          <div className="text-center mb-16">
-            <span className="eyebrow text-primary mb-4 block">Partenariats Stratégiques</span>
-            <h2 className="display-xl text-foreground mb-4">Soutenus par des<br /><span className="gradient-text">leaders mondiaux</span></h2>
-            <p className="body-lg text-muted-foreground max-w-2xl mx-auto">
-              Neopolis Development a noué des partenariats stratégiques avec les géants de l'IA pour déployer leurs solutions en Afrique.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {/* Anthropic */}
-            <div className="surface-1 rounded-xl p-8 card-hover relative overflow-hidden">
-              <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/5 rounded-full blur-3xl"></div>
-              <div className="relative z-10">
-                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
-                  <Brain className="text-primary" size={28} />
-                </div>
-                <h3 className="display-md text-foreground mb-3">Anthropic</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                  Partenaire officiel pour la certification Claude Certified Architect (CCA). Accès privilégié à la plateforme Claude et aux outils de développement d'agents IA.
-                </p>
-                <div className="flex items-center gap-2 text-primary text-sm font-medium">
-                  <Award size={16} />
-                  <span>Certification officielle</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Alibaba Cloud */}
-            <div className="surface-1 rounded-xl p-8 card-hover relative overflow-hidden">
-              <div className="absolute -top-20 -right-20 w-40 h-40 bg-accent/5 rounded-full blur-3xl"></div>
-              <div className="relative z-10">
-                <div className="w-14 h-14 rounded-xl bg-accent/10 flex items-center justify-center mb-6">
-                  <Globe className="text-accent" size={28} />
-                </div>
-                <h3 className="display-md text-foreground mb-3">Alibaba Cloud</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                  Infrastructure cloud de pointe pour l'hébergement on-premise des LLM et appliances IA. Serveurs haute performance dédiés au marché africain.
-                </p>
-                <div className="flex items-center gap-2 text-accent text-sm font-medium">
-                  <Zap size={16} />
-                  <span>Infrastructure on-premise</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ AI SOLUTIONS PARTNER ═══ */}
-      <section className="py-24 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/3 to-background"></div>
-        <div className="container relative z-10">
-          <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <span className="eyebrow text-primary mb-4 block">Votre nouveau rôle</span>
-              <h2 className="display-xl text-foreground mb-6">AI Solutions Partner<br /><span className="gradient-text">Ambassadeur Certifié</span></h2>
-              <p className="body-lg text-muted-foreground mb-8">
-                Après votre certification, devenez un entrepreneur indépendant spécialisé dans le déploiement de solutions IA pour les PME/TPE de votre secteur d'activité, sur l'ensemble du continent africain.
-              </p>
-              <div className="space-y-4">
-                {[
-                  { icon: Network, text: "Accès aux agents IA ready-to-deploy de Neopolis" },
-                  { icon: Users, text: "Support technique, humain et matériel complet" },
-                  { icon: Globe, text: "Marché cible : toute l'Afrique (54 pays)" },
-                  { icon: Zap, text: "Accès multi-LLM : Claude, Qwen, DeepSeek et plus" },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      <item.icon className="text-primary" size={18} />
-                    </div>
-                    <span className="text-foreground text-sm">{item.text}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="flex justify-center">
-              <img src="/manus-storage/africa_network_a07280c9.png" alt="Réseau IA Afrique" className="w-80 h-auto object-contain animate-float" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ CTA BANNER ═══ */}
-      <section className="py-16">
-        <div className="container">
-          <div className="max-w-4xl mx-auto surface-2 rounded-2xl p-12 text-center relative overflow-hidden glow-primary">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5"></div>
-            <div className="relative z-10">
-              <h2 className="display-lg text-foreground mb-4">Ne subissez pas la disruption.</h2>
-              <p className="display-md gradient-text mb-8">Devenez-en l'acteur.</p>
-              <Link href="/apply" className="btn-primary text-lg px-10 py-5 rounded-xl inline-flex items-center gap-3">
-                Déposer ma candidature maintenant <ArrowRight size={20} />
-              </Link>
-              <p className="text-sm text-muted-foreground mt-6">
-                Seulement <strong className="text-foreground">300 places</strong> disponibles — Date limite : <strong className="text-accent">31 août 2026</strong>
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ FAQ ═══ */}
-      <section id="faq" className="py-24">
-        <div className="container">
-          <div className="text-center mb-16">
-            <span className="eyebrow text-primary mb-4 block">Questions fréquentes</span>
-            <h2 className="display-xl text-foreground">Tout ce que vous<br />devez savoir</h2>
-          </div>
-
-          <div className="max-w-3xl mx-auto space-y-4">
-            <FAQItem
-              question="Quels sont les prérequis ?"
-              answer="Aucun prérequis technique n'est exigé. Nous recherchons des profils motivés avec une expertise métier dans un secteur menacé par l'IA (finance, juridique, santé, commerce, etc.), une capacité d'apprentissage rapide et un esprit entrepreneurial. La formation couvre les bases techniques nécessaires."
-            />
-            <FAQItem
-              question="Le programme est-il vraiment 100% gratuit ?"
-              answer="Oui, entièrement. La formation e-learning, l'accès à la plateforme Anthropic, le voucher de certification CCA et l'accompagnement au lancement sont pris en charge par Neopolis Development grâce à nos partenariats avec Anthropic et Alibaba Cloud."
-            />
-            <FAQItem
-              question="Comment fonctionne le processus de sélection ?"
-              answer="Votre candidature est évaluée sur 3 axes : compétences techniques (40%), expertise métier (35%) et capacités de communication/entrepreneuriat (25%). Un score est calculé automatiquement. Les 200 à 300 meilleurs profils sont sélectionnés pour intégrer le programme."
-            />
-            <FAQItem
-              question="Quelle est la durée totale du programme ?"
-              answer="La formation e-learning dure 7 jours intensifs. Ensuite, vous disposez de plusieurs semaines pour préparer et passer la certification CCA (avant le 31 août 2026). Le lancement de votre activité d'AI Solutions Partner est accompagné sans limite de durée."
-            />
-            <FAQItem
-              question="Quels pays africains sont concernés ?"
-              answer="L'ensemble des 54 pays africains sont éligibles. Le programme vise à créer un réseau d'ambassadeurs IA couvrant tout le continent, avec un focus sur les marchés francophones, anglophones et lusophones."
-            />
-            <FAQItem
-              question="Que se passe-t-il après la certification ?"
-              answer="Vous obtenez le statut d'AI Solutions Partner — Ambassadeur Certifié. Neopolis Development vous fournit : des agents IA prêts à déployer, un support technique continu, des ressources commerciales, et un accès à l'infrastructure cloud (LLM multiples, serveurs on-premise). Vous opérez en indépendant sur votre marché."
-            />
-            <FAQItem
-              question="Quelles ressources techniques sont fournies ?"
-              answer="Accès multi-LLM (Claude, Qwen, DeepSeek, etc.), infrastructure serveurs on-premise via Alibaba Cloud, bibliothèque d'agents IA ready-to-deploy, outils de développement, documentation technique, et support d'une équipe d'ingénieurs Neopolis."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ FOOTER ═══ */}
-      <footer className="py-16 border-t border-border">
-        <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div>
-              <img src="/manus-storage/logo_neopolis_akademy_0d0427ea.png" alt="Neopolis Akademy" className="h-8 object-contain mb-4" />
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Programme de formation et certification IA pour l'Afrique, porté par Neopolis Development en partenariat avec Anthropic et Alibaba Cloud.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-sm font-semibold text-foreground mb-4">Programme</h4>
-              <div className="space-y-2">
-                <a href="#formule" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">La Formule</a>
-                <a href="#urgence" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Pourquoi se transformer</a>
-                <a href="#partenaires" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Partenariats</a>
-                <Link href="/apply" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Postuler</Link>
-              </div>
-            </div>
-            <div>
-              <h4 className="text-sm font-semibold text-foreground mb-4">Contact</h4>
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">info@neopolis-dev.com</p>
-                <a href="https://www.neopolis-dev.com" target="_blank" rel="noopener" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">www.neopolis-dev.com</a>
-              </div>
-            </div>
-          </div>
-          <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-muted-foreground">&copy; 2026 Neopolis Development. Tous droits réservés.</p>
-            <p className="text-xs text-muted-foreground">Programme soutenu par Anthropic & Alibaba Cloud</p>
-          </div>
-        </div>
-      </footer>
+    <div className="wise-card-dark" style={{ height: "320px", padding: "16px" }}>
+      <canvas ref={canvasRef}></canvas>
     </div>
   );
 }

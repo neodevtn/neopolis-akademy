@@ -13,7 +13,7 @@ import {
   step6Schema, step7Schema, step8Schema, step9Schema, step10Schema, applicationSchema, getFieldErrors
 } from "@shared/validation";
 
-const LOGO_URL = "/manus-storage/logo_neopolis_akademy_0d0427ea.png";
+const LOGO_URL = "/manus-storage/logo_neopolis_akademy_9c9a0823.png";
 
 const africanCountries = [
   "Algérie", "Angola", "Bénin", "Botswana", "Burkina Faso", "Burundi", "Cameroun",
@@ -425,55 +425,57 @@ export default function Apply() {
   // Result page
   if (step === 11 && result) {
     return (
-      <div className="min-h-screen bg-background text-foreground noise-overlay flex items-center justify-center p-4">
-        <div className="max-w-lg w-full text-center">
-          <div className="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="w-10 h-10 text-green-400" />
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
+        <div className="max-w-lg w-full text-center wise-card p-8">
+          <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
+            <CheckCircle className="w-10 h-10" style={{ color: "var(--wise-positive)" }} />
           </div>
-          <h1 className="display-lg text-foreground mb-4">Candidature soumise !</h1>
-          <p className="body-md text-muted-foreground mb-8">Votre score a été calculé automatiquement.</p>
-          <div className="surface-1 rounded-xl p-8 mb-8 glow-primary">
-            <div className="display-xxl text-primary mb-2">{Number(result.scoreTotal).toFixed(1)}%</div>
-            <p className="text-sm text-muted-foreground mb-6">Score global</p>
+          <h1 className="wise-display-md mb-4">Candidature soumise !</h1>
+          <p className="wise-body-md mb-8">Votre score a été calculé automatiquement.</p>
+          <div className="wise-card-green p-8 mb-8">
+            <div className="text-5xl font-black mb-2" style={{ color: "var(--wise-positive-deep)" }}>{Number(result.scoreTotal).toFixed(1)}%</div>
+            <p className="text-sm mb-6" style={{ color: "var(--wise-mute)" }}>Score global</p>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="display-md text-foreground">{Number(result.scoreTechnique).toFixed(1)}%</div>
-                <div className="text-xs text-muted-foreground">Technique (40%)</div>
+                <div className="text-2xl font-bold" style={{ color: "var(--wise-ink)" }}>{Number(result.scoreTechnique).toFixed(1)}%</div>
+                <div className="text-xs" style={{ color: "var(--wise-mute)" }}>Technique (40%)</div>
               </div>
               <div>
-                <div className="display-md text-foreground">{Number(result.scoreMetier).toFixed(1)}%</div>
-                <div className="text-xs text-muted-foreground">Métier (35%)</div>
+                <div className="text-2xl font-bold" style={{ color: "var(--wise-ink)" }}>{Number(result.scoreMetier).toFixed(1)}%</div>
+                <div className="text-xs" style={{ color: "var(--wise-mute)" }}>Métier (35%)</div>
               </div>
               <div>
-                <div className="display-md text-foreground">{Number(result.scoreCommunication).toFixed(1)}%</div>
-                <div className="text-xs text-muted-foreground">Communication (25%)</div>
+                <div className="text-2xl font-bold" style={{ color: "var(--wise-ink)" }}>{Number(result.scoreCommunication).toFixed(1)}%</div>
+                <div className="text-xs" style={{ color: "var(--wise-mute)" }}>Communication (25%)</div>
               </div>
             </div>
           </div>
-          <p className="body-md text-muted-foreground mb-6">Si votre profil est retenu, vous serez contacté sous 48h.</p>
-          <Link href="/" className="btn-secondary text-sm px-6 py-3 rounded-lg inline-flex items-center gap-2">Retour à l'accueil</Link>
+          <p className="wise-body-md mb-6">Si votre profil est retenu, vous serez contacté sous 48h.</p>
+          <Link href="/"><button className="wise-btn-secondary">Retour à l'accueil</button></Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground noise-overlay">
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50">
+    <div className="min-h-screen" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
+      <nav className="sticky top-0 z-50" style={{ backgroundColor: "var(--wise-canvas)", borderBottom: "1px solid var(--wise-canvas-soft)" }}>
         <div className="container flex items-center justify-between h-16">
           <Link href="/"><div className="flex items-center gap-2 cursor-pointer"><img src={LOGO_URL} alt="Neopolis Akademy" className="h-8 object-contain" /></div></Link>
-          <Link href="/"><Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground"><ArrowLeft className="w-4 h-4 mr-2" /> Retour</Button></Link>
+          <Link href="/"><button className="wise-btn-tertiary text-sm px-4 py-2 flex items-center gap-2"><ArrowLeft className="w-4 h-4" /> Retour</button></Link>
         </div>
       </nav>
 
-      <div className="container py-12 pt-24 max-w-2xl mx-auto relative z-10">
+      <div className="container py-12 max-w-2xl mx-auto">
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-2">
-            {stepTitles[step - 1] && (() => { const Icon = stepTitles[step - 1].icon; return <Icon className="w-5 h-5 text-primary" />; })()}
-            <h1 className="display-lg text-foreground">{stepTitles[step - 1]?.title}</h1>
+            {stepTitles[step - 1] && (() => { const Icon = stepTitles[step - 1].icon; return <Icon className="w-5 h-5" style={{ color: "var(--wise-positive)" }} />; })()}
+            <h1 className="wise-display-xs">{stepTitles[step - 1]?.title}</h1>
           </div>
-          <p className="body-md text-muted-foreground">Étape {step} sur {totalSteps}</p>
-          <Progress value={progress} className="mt-4 h-1.5" />
+          <p className="wise-body-sm">Étape {step} sur {totalSteps}</p>
+          <div className="mt-4 h-2 rounded-full overflow-hidden" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
+            <div className="h-full rounded-full transition-all duration-300" style={{ width: `${progress}%`, backgroundColor: "var(--wise-primary)" }}></div>
+          </div>
         </div>
 
         {serverError && (
@@ -906,21 +908,21 @@ export default function Apply() {
         )}
 
         {/* Navigation */}
-        <div className="flex justify-between mt-10 pt-6 border-t border-border">
+        <div className="flex justify-between mt-10 pt-6" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
           {step > 1 ? (
-            <Button variant="outline" onClick={handleBack} className="btn-pill">
-              <ArrowLeft className="w-4 h-4 mr-2" /> Précédent
-            </Button>
+            <button onClick={handleBack} className="wise-btn-tertiary flex items-center gap-2">
+              <ArrowLeft className="w-4 h-4" /> Précédent
+            </button>
           ) : <div />}
 
           {step < totalSteps ? (
-            <Button onClick={handleNext} className="btn-pill bg-primary text-primary-foreground hover:bg-primary/90">
-              Suivant <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+            <button onClick={handleNext} className="wise-btn-primary flex items-center gap-2">
+              Suivant <ArrowRight className="w-4 h-4" />
+            </button>
           ) : (
-            <Button onClick={handleSubmit} disabled={submitMutation.isPending || uploading} className="btn-pill bg-primary text-primary-foreground hover:bg-primary/90">
-              {(submitMutation.isPending || uploading) ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Envoi en cours...</> : <>Soumettre ma candidature <CheckCircle className="w-4 h-4 ml-2" /></>}
-            </Button>
+            <button onClick={handleSubmit} disabled={submitMutation.isPending || uploading} className="wise-btn-primary flex items-center gap-2" style={{ opacity: (submitMutation.isPending || uploading) ? 0.6 : 1 }}>
+              {(submitMutation.isPending || uploading) ? <><Loader2 className="w-4 h-4 animate-spin" /> Envoi en cours...</> : <>Soumettre ma candidature <CheckCircle className="w-4 h-4" /></>}
+            </button>
           )}
         </div>
       </div>

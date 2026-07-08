@@ -128,3 +128,10 @@
 - [x] Refonte AdminDashboard.tsx : badges dark, surface-1, header fixed blur
 - [x] Tests unitaires passent (7/7)
 - [x] Vérification visuelle complète
+
+## Refonte Design Wise-Inspired
+- [x] Refonte index.css avec design system Wise (lime-green, sage canvas, Inter 900/600, rounded-xl)
+- [x] Refonte Home.tsx style Wise (hero band sage, cards blanches, CTA lime-green)
+- [x] Adapter Apply.tsx au style Wise (inputs bordurés, cards sage, boutons pill)
+- [x] Adapter AdminDashboard.tsx au style Wise
+- [x] Vérification visuelle et tests

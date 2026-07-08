@@ -8,7 +8,7 @@ import { Link } from "wouter";
 import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video } from "lucide-react";
 import { getLoginUrl } from "@/const";
 
-const LOGO_URL = "/manus-storage/logo_neopolis_akademy_0d0427ea.png";
+const LOGO_URL = "/manus-storage/logo_neopolis_akademy_9c9a0823.png";
 
 export default function AdminDashboard() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -29,20 +29,20 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background noise-overlay flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
+        <Loader2 className="w-8 h-8 animate-spin" style={{ color: "var(--wise-positive)" }} />
       </div>
     );
   }
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background text-foreground noise-overlay flex items-center justify-center p-4">
-        <div className="text-center">
-          <h1 className="display-lg mb-4">Accès restreint</h1>
-          <p className="body-md text-muted-foreground mb-6">Vous devez être connecté en tant qu'administrateur.</p>
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
+        <div className="text-center wise-card p-8">
+          <h1 className="wise-display-md mb-4">Accès restreint</h1>
+          <p className="wise-body-md mb-6">Vous devez être connecté en tant qu'administrateur.</p>
           <a href={getLoginUrl()}>
-            <Button className="btn-pill bg-primary text-primary-foreground">Se connecter</Button>
+            <button className="wise-btn-primary">Se connecter</button>
           </a>
         </div>
       </div>
@@ -51,12 +51,12 @@ export default function AdminDashboard() {
 
   if (user?.role !== "admin") {
     return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
-        <div className="text-center">
-          <h1 className="display-lg mb-4">Accès refusé</h1>
-          <p className="body-md text-muted-foreground mb-6">Cette page est réservée aux administrateurs.</p>
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
+        <div className="text-center wise-card p-8">
+          <h1 className="wise-display-md mb-4">Accès refusé</h1>
+          <p className="wise-body-md mb-6">Cette page est réservée aux administrateurs.</p>
           <Link href="/">
-            <Button variant="outline" className="btn-pill">Retour à l'accueil</Button>
+            <button className="wise-btn-tertiary">Retour à l'accueil</button>
           </Link>
         </div>
       </div>
@@ -100,16 +100,16 @@ export default function AdminDashboard() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "selectionne": return <Badge className="bg-green-500/10 text-green-400 border border-green-500/20 font-normal">Sélectionné</Badge>;
-      case "refuse": return <Badge className="bg-red-500/10 text-red-400 border border-red-500/20 font-normal">Refusé</Badge>;
-      default: return <Badge className="bg-amber-500/10 text-amber-400 border border-amber-500/20 font-normal">En attente</Badge>;
+      case "selectionne": return <span className="wise-badge-positive">Sélectionné</span>;
+      case "refuse": return <span className="wise-badge-negative">Refusé</span>;
+      default: return <span className="wise-badge-warning">En attente</span>;
     }
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 70) return "text-green-400";
-    if (score >= 50) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 70) return "var(--wise-positive)";
+    if (score >= 50) return "#b8860b";
+    return "var(--wise-negative)";
   };
 
   const labelMap: Record<string, string> = {
@@ -126,24 +126,24 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground noise-overlay">
+    <div className="min-h-screen" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
       {/* Header */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50">
+      <nav className="sticky top-0 z-50" style={{ backgroundColor: "var(--wise-canvas)", borderBottom: "1px solid var(--wise-canvas-soft)" }}>
         <div className="container flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
             <img src={LOGO_URL} alt="Neopolis Akademy" className="h-8 object-contain" />
-            <span className="text-sm font-medium text-muted-foreground ml-2 px-2 py-0.5 rounded bg-primary/10 text-primary">Admin</span>
+            <span className="text-xs font-semibold ml-2 px-2 py-0.5 rounded-full" style={{ backgroundColor: "var(--wise-primary-pale)", color: "var(--wise-positive-deep)" }}>Admin</span>
           </div>
           <Link href="/">
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-              <ArrowLeft className="w-4 h-4 mr-2" /> Retour au site
-            </Button>
+            <button className="wise-btn-tertiary text-sm flex items-center gap-2">
+              <ArrowLeft className="w-4 h-4" /> Retour au site
+            </button>
           </Link>
         </div>
       </nav>
 
-      <div className="container py-10 pt-24 relative z-10">
-        <h1 className="display-lg text-foreground mb-10">Tableau de bord — Candidatures</h1>
+      <div className="container py-10">
+        <h1 className="wise-display-md mb-10">Tableau de bord — Candidatures</h1>
 
         {/* Stats */}
         {stats && (
@@ -168,15 +168,15 @@ export default function AdminDashboard() {
                 <SelectItem value="refuse">Refusés</SelectItem>
               </SelectContent>
             </Select>
-            <span className="text-sm text-muted-foreground">{applications.length} candidature(s)</span>
+            <span className="text-sm" style={{ color: "var(--wise-mute)" }}>{applications.length} candidature(s)</span>
           </div>
-          <Button variant="outline" onClick={handleExport} disabled={!applications.length} className="btn-pill">
-            <Download className="w-4 h-4 mr-2" /> Exporter CSV
-          </Button>
+          <button onClick={handleExport} disabled={!applications.length} className="wise-btn-secondary flex items-center gap-2 text-sm">
+            <Download className="w-4 h-4" /> Exporter CSV
+          </button>
         </div>
 
         {/* Table */}
-        <div className="surface-1 rounded-xl overflow-hidden">
+        <div className="wise-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -406,9 +406,9 @@ export default function AdminDashboard() {
 
 function StatCard({ icon, value, label }: { icon: React.ReactNode; value: number | string; label: string }) {
   return (
-    <div className="surface-1 p-5 rounded-xl card-hover">
-      <div className="flex items-center gap-2 mb-2 text-muted-foreground">{icon}<span className="text-xs uppercase tracking-wider">{label}</span></div>
-      <div className="display-md text-foreground">{value}</div>
+    <div className="wise-card p-5">
+      <div className="flex items-center gap-2 mb-2" style={{ color: "var(--wise-mute)" }}>{icon}<span className="text-xs uppercase tracking-wider">{label}</span></div>
+      <div className="text-2xl font-bold" style={{ color: "var(--wise-ink)" }}>{value}</div>
     </div>
   );
 }
@@ -416,7 +416,7 @@ function StatCard({ icon, value, label }: { icon: React.ReactNode; value: number
 function DetailSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">{title}</h4>
+      <h4 className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--wise-positive)" }}>{title}</h4>
       <div className="space-y-1">{children}</div>
     </div>
   );
@@ -425,8 +425,8 @@ function DetailSection({ title, children }: { title: string; children: React.Rea
 function DetailItem({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between text-xs">
-      <span className="text-muted-foreground">{label}</span>
-      <span className="text-foreground font-medium">{value}</span>
+      <span style={{ color: "var(--wise-mute)" }}>{label}</span>
+      <span className="font-medium" style={{ color: "var(--wise-ink)" }}>{value}</span>
     </div>
   );
 }
