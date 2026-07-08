@@ -27,9 +27,9 @@ Chart.register(...registerables);
 /* ─── Asset URLs ─── */
 const LOGO_URL = "/manus-storage/logo_neopolis_akademy_wise_ede57803.png";
 const HERO_IMG = "/manus-storage/hero_tunisian_ai_08a6f956.png";
-const CERT_IMG = "/manus-storage/wise_certification_badge_c2e19576.png";
-const ELEARNING_IMG = "/manus-storage/wise_elearning_illustration_a269c91a.png";
-const AFRICA_IMG = "/manus-storage/wise_africa_network_650980bb.png";
+const CERT_IMG = "/manus-storage/step2_certification_b2f65035.png";
+const ELEARNING_IMG = "/manus-storage/step1_elearning_d87a7198.png";
+const AFRICA_IMG = "/manus-storage/step3_ambassador_91fc256d.png";
 const PARTNER_IMG = "/manus-storage/wise_partnership_illustration_b3c56284.png";
 
 /* ─── Animation Variants ─── */
@@ -537,24 +537,42 @@ function StatCard({ value, label, source, highlight }: { value: string; label: s
 function FormulaCard({ icon, step, title, description, badge, image }: { icon: React.ReactNode; step: string; title: string; description: string; badge: string; image: string }) {
   return (
     <motion.div
-      whileHover={{ y: -6, transition: { duration: 0.25 } }}
-      className="wise-card h-full flex flex-col shadow-sm"
+      whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3, ease: [0.23, 1, 0.32, 1] } }}
+      className="wise-card h-full flex flex-col shadow-sm overflow-hidden group cursor-pointer"
+      style={{ transition: "box-shadow 0.3s ease" }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
-          <span style={{ color: "var(--wise-positive-deep)" }}>{icon}</span>
-        </div>
-        <span className="text-xs font-bold px-3 py-1 rounded-full" style={{ backgroundColor: "var(--wise-canvas-soft)", color: "var(--wise-mute)" }}>
+      {/* Image en haut avec overlay au hover */}
+      <div className="relative w-full h-44 -mx-6 -mt-6 mb-5 overflow-hidden" style={{ width: "calc(100% + 48px)" }}>
+        <motion.img
+          src={image}
+          alt={title}
+          className="w-full h-full object-cover"
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <span className="absolute top-3 right-3 text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm" style={{ backgroundColor: "rgba(255,255,255,0.9)", color: "var(--wise-ink)" }}>
           ÉTAPE {step}
         </span>
       </div>
-      <h3 className="wise-display-xs mb-3">{title}</h3>
-      <p className="wise-body-md flex-1">{description}</p>
-      <div className="mt-5">
-        <img src={image} alt={title} className="w-full h-32 object-contain rounded-xl mb-4" />
+
+      {/* Contenu */}
+      <div className="flex items-center gap-3 mb-3">
+        <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
+          <span style={{ color: "var(--wise-positive-deep)" }}>{icon}</span>
+        </div>
+        <h3 className="wise-display-xs">{title}</h3>
       </div>
-      <div className="pt-4" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
-        <span className="wise-badge-positive">{badge}</span>
+      <p className="wise-body-md flex-1 mb-4">{description}</p>
+
+      {/* Badge en bas */}
+      <div className="pt-4 mt-auto" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
+        <motion.span
+          className="wise-badge-positive inline-block"
+          whileHover={{ scale: 1.05 }}
+        >
+          {badge}
+        </motion.span>
       </div>
     </motion.div>
   );
