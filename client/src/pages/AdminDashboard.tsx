@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2 } from "lucide-react";
+import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter } from "lucide-react";
 import { getLoginUrl } from "@/const";
 
 const LOGO_URL = "/manus-storage/logo_neopolis_dev_04585f1b.png";
@@ -13,6 +13,7 @@ const LOGO_URL = "/manus-storage/logo_neopolis_dev_04585f1b.png";
 export default function AdminDashboard() {
   const { user, loading, isAuthenticated } = useAuth();
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const statsQuery = trpc.applications.stats.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
   const applicationsQuery = trpc.applications.list.useQuery(
@@ -67,13 +68,28 @@ export default function AdminDashboard() {
 
   const handleExport = () => {
     if (!applications.length) return;
-    const headers = ["ID", "Prénom", "Nom", "Email", "Téléphone", "Pays", "Ville", "Secteur", "Poste", "Expérience", "Score Total", "Score Technique", "Score Métier", "Score Communication", "Statut", "Date"];
-    const rows = applications.map(a => [
+    const headers = [
+      "ID", "Prénom", "Nom", "Email", "Téléphone", "Pays", "Ville", "Secteur", "Poste", "Expérience",
+      "Score Total", "Score Technique", "Score Métier", "Score Communication",
+      "Contacts Industrie", "Connaissance Marché", "Réseau Distribution", "Partenariats",
+      "Tolérance Risque", "Autonomie", "Résilience", "Leadership", "Expérience Entrepreneuriale",
+      "Scénario IA", "Secteur IA", "Impact IA",
+      "LinkedIn", "Twitter", "GitHub", "Site Web",
+      "CV", "Photo",
+      "Statut", "Date"
+    ];
+    const rows = applications.map((a: any) => [
       a.id, a.firstName, a.lastName, a.email, a.phone, a.country, a.city, a.sector, a.currentRole, a.yearsExperience,
-      a.scoreTotal, a.scoreTechnique, a.scoreMetier, a.scoreCommunication, a.status, new Date(a.createdAt).toLocaleDateString("fr-FR")
+      a.scoreTotal, a.scoreTechnique, a.scoreMetier, a.scoreCommunication,
+      a.industryContacts || "", a.targetMarketKnowledge || "", a.distributionNetwork || "", a.existingPartnerships || "",
+      a.riskTolerance || "", a.autonomyLevel || "", a.resilienceLevel || "", a.leadershipStyle || "", a.entrepreneurialExperience || "",
+      a.aiAgentScenario || "", a.aiAgentSector || "", a.aiAgentImpact || "",
+      a.linkedinUrl || "", a.twitterUrl || "", a.githubUrl || "", a.websiteUrl || "",
+      a.cvFileUrl || "", a.photoFileUrl || "",
+      a.status, new Date(a.createdAt).toLocaleDateString("fr-FR")
     ]);
-    const csv = [headers.join(","), ...rows.map(r => r.map(v => `"${v}"`).join(","))].join("\n");
-    const blob = new Blob([csv], { type: "text/csv" });
+    const csv = [headers.join(","), ...rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))].join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -88,6 +104,25 @@ export default function AdminDashboard() {
       case "refuse": return <Badge className="bg-red-50 text-red-700 border border-red-200 font-normal">Refusé</Badge>;
       default: return <Badge className="bg-amber-50 text-amber-700 border border-amber-200 font-normal">En attente</Badge>;
     }
+  };
+
+  const getScoreColor = (score: number) => {
+    if (score >= 70) return "text-green-600";
+    if (score >= 50) return "text-amber-600";
+    return "text-red-600";
+  };
+
+  const labelMap: Record<string, string> = {
+    none: "Aucun", few: "Quelques", moderate: "Modéré", extensive: "Étendu", very_extensive: "Très étendu",
+    basic: "Basique", good: "Bon", excellent: "Excellent", expert: "Expert",
+    very_low: "Très faible", low: "Faible", high: "Élevé", very_high: "Très élevé",
+    needs_guidance: "Besoin d'encadrement", somewhat_autonomous: "Assez autonome", autonomous: "Autonome", very_autonomous: "Très autonome", fully_independent: "Totalement indépendant",
+    follower: "Suiveur", collaborative: "Collaboratif", situational: "Situationnel", visionary: "Visionnaire", transformational: "Transformationnel",
+  };
+
+  const getLabel = (value: string | null | undefined) => {
+    if (!value) return "—";
+    return labelMap[value] || value;
   };
 
   return (
@@ -133,6 +168,7 @@ export default function AdminDashboard() {
                 <SelectItem value="refuse">Refusés</SelectItem>
               </SelectContent>
             </Select>
+            <span className="text-sm text-muted-foreground">{applications.length} candidature(s)</span>
           </div>
           <Button variant="outline" onClick={handleExport} disabled={!applications.length} className="btn-pill">
             <Download className="w-4 h-4 mr-2" /> Exporter CSV
@@ -148,55 +184,204 @@ export default function AdminDashboard() {
                   <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Candidat</th>
                   <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Pays</th>
                   <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Secteur</th>
-                  <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Score</th>
+                  <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Scores</th>
                   <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Statut</th>
                   <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Date</th>
                   <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {applications.map((app) => (
-                  <tr key={app.id} className="border-t border-border hover:bg-secondary/50 transition-colors">
-                    <td className="p-4">
-                      <div className="font-medium text-foreground">{app.firstName} {app.lastName}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5">{app.email}</div>
-                    </td>
-                    <td className="p-4 text-foreground">{app.country}</td>
-                    <td className="p-4 text-xs text-foreground">{app.sector}</td>
-                    <td className="p-4">
-                      <span className="font-medium text-primary">{Number(app.scoreTotal).toFixed(1)}%</span>
-                    </td>
-                    <td className="p-4">{getStatusBadge(app.status)}</td>
-                    <td className="p-4 text-xs text-muted-foreground">
-                      {new Date(app.createdAt).toLocaleDateString("fr-FR")}
-                    </td>
-                    <td className="p-4">
-                      <div className="flex gap-1">
-                        {app.status !== "selectionne" && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="text-green-700 hover:text-green-600 hover:bg-green-50 text-xs"
-                            onClick={() => updateStatusMutation.mutate({ id: app.id, status: "selectionne" })}
-                            disabled={updateStatusMutation.isPending}
-                          >
-                            Sélectionner
+                {applications.map((app: any) => (
+                  <>
+                    <tr key={app.id} className="border-t border-border hover:bg-secondary/50 transition-colors cursor-pointer" onClick={() => setExpandedId(expandedId === app.id ? null : app.id)}>
+                      <td className="p-4">
+                        <div className="flex items-center gap-3">
+                          {app.photoFileUrl ? (
+                            <img src={app.photoFileUrl} alt="" className="w-9 h-9 rounded-full object-cover border border-border" />
+                          ) : (
+                            <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-medium">
+                              {app.firstName?.[0]}{app.lastName?.[0]}
+                            </div>
+                          )}
+                          <div>
+                            <div className="font-medium text-foreground">{app.firstName} {app.lastName}</div>
+                            <div className="text-xs text-muted-foreground mt-0.5">{app.email}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="p-4 text-foreground">{app.country}</td>
+                      <td className="p-4 text-xs text-foreground">{app.sector}</td>
+                      <td className="p-4">
+                        <div className={`font-semibold ${getScoreColor(Number(app.scoreTotal))}`}>{Number(app.scoreTotal).toFixed(1)}%</div>
+                        <div className="text-[10px] text-muted-foreground mt-0.5">
+                          T:{Number(app.scoreTechnique).toFixed(0)} | M:{Number(app.scoreMetier).toFixed(0)} | C:{Number(app.scoreCommunication).toFixed(0)}
+                        </div>
+                      </td>
+                      <td className="p-4">{getStatusBadge(app.status)}</td>
+                      <td className="p-4 text-xs text-muted-foreground">
+                        {new Date(app.createdAt).toLocaleDateString("fr-FR")}
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-1">
+                          {app.status !== "selectionne" && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="text-green-700 hover:text-green-600 hover:bg-green-50 text-xs"
+                              onClick={(e) => { e.stopPropagation(); updateStatusMutation.mutate({ id: app.id, status: "selectionne" }); }}
+                              disabled={updateStatusMutation.isPending}
+                            >
+                              Sélectionner
+                            </Button>
+                          )}
+                          {app.status !== "refuse" && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="text-red-700 hover:text-red-600 hover:bg-red-50 text-xs"
+                              onClick={(e) => { e.stopPropagation(); updateStatusMutation.mutate({ id: app.id, status: "refuse" }); }}
+                              disabled={updateStatusMutation.isPending}
+                            >
+                              Refuser
+                            </Button>
+                          )}
+                          <Button size="sm" variant="ghost" className="text-muted-foreground" onClick={(e) => { e.stopPropagation(); setExpandedId(expandedId === app.id ? null : app.id); }}>
+                            {expandedId === app.id ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                           </Button>
-                        )}
-                        {app.status !== "refuse" && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="text-red-700 hover:text-red-600 hover:bg-red-50 text-xs"
-                            onClick={() => updateStatusMutation.mutate({ id: app.id, status: "refuse" })}
-                            disabled={updateStatusMutation.isPending}
-                          >
-                            Refuser
-                          </Button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
+                        </div>
+                      </td>
+                    </tr>
+                    {expandedId === app.id && (
+                      <tr key={`${app.id}-detail`} className="bg-secondary/30">
+                        <td colSpan={7} className="p-6">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {/* Informations de base */}
+                            <DetailSection title="Informations de base">
+                              <DetailItem label="Téléphone" value={app.phone} />
+                              <DetailItem label="Ville" value={app.city} />
+                              <DetailItem label="Poste actuel" value={app.currentRole} />
+                              <DetailItem label="Années d'expérience" value={`${app.yearsExperience} ans`} />
+                            </DetailSection>
+
+                            {/* Compétences techniques */}
+                            <DetailSection title="Compétences techniques">
+                              <DetailItem label="Programmation" value={getLabel(app.programmingLevel)} />
+                              <DetailItem label="Connaissances IA" value={getLabel(app.aiKnowledge)} />
+                              <DetailItem label="Cloud" value={getLabel(app.cloudExperience)} />
+                              <DetailItem label="Outils" value={app.technicalTools || "—"} />
+                              <DetailItem label="Certifications" value={app.certifications || "—"} />
+                            </DetailSection>
+
+                            {/* Communication */}
+                            <DetailSection title="Communication">
+                              <DetailItem label="Prise de parole" value={getLabel(app.publicSpeaking)} />
+                              <DetailItem label="Exp. commerciale" value={getLabel(app.salesExperience)} />
+                              <DetailItem label="Langues" value={app.languages || "—"} />
+                            </DetailSection>
+
+                            {/* Réseau de distribution */}
+                            <DetailSection title="Réseau de distribution">
+                              <DetailItem label="Contacts industrie" value={getLabel(app.industryContacts)} />
+                              <DetailItem label="Connaissance marché" value={getLabel(app.targetMarketKnowledge)} />
+                              {app.distributionNetwork && (
+                                <div className="mt-2">
+                                  <span className="text-xs text-muted-foreground">Réseau :</span>
+                                  <p className="text-xs text-foreground mt-1 bg-background p-2 rounded border border-border">{app.distributionNetwork}</p>
+                                </div>
+                              )}
+                              {app.existingPartnerships && (
+                                <div className="mt-2">
+                                  <span className="text-xs text-muted-foreground">Partenariats :</span>
+                                  <p className="text-xs text-foreground mt-1 bg-background p-2 rounded border border-border">{app.existingPartnerships}</p>
+                                </div>
+                              )}
+                            </DetailSection>
+
+                            {/* Profil entrepreneurial */}
+                            <DetailSection title="Profil entrepreneurial">
+                              <DetailItem label="Tolérance au risque" value={getLabel(app.riskTolerance)} />
+                              <DetailItem label="Autonomie" value={getLabel(app.autonomyLevel)} />
+                              <DetailItem label="Résilience" value={getLabel(app.resilienceLevel)} />
+                              <DetailItem label="Leadership" value={getLabel(app.leadershipStyle)} />
+                              {app.entrepreneurialExperience && (
+                                <div className="mt-2">
+                                  <span className="text-xs text-muted-foreground">Expérience :</span>
+                                  <p className="text-xs text-foreground mt-1 bg-background p-2 rounded border border-border">{app.entrepreneurialExperience}</p>
+                                </div>
+                              )}
+                            </DetailSection>
+
+                            {/* Scénario IA */}
+                            <DetailSection title="Scénario Agent IA">
+                              <DetailItem label="Secteur cible" value={app.aiAgentSector || "—"} />
+                              {app.aiAgentScenario && (
+                                <div className="mt-2">
+                                  <span className="text-xs text-muted-foreground">Scénario :</span>
+                                  <p className="text-xs text-foreground mt-1 bg-background p-2 rounded border border-border max-h-32 overflow-y-auto">{app.aiAgentScenario}</p>
+                                </div>
+                              )}
+                              {app.aiAgentImpact && (
+                                <div className="mt-2">
+                                  <span className="text-xs text-muted-foreground">Impact estimé :</span>
+                                  <p className="text-xs text-foreground mt-1 bg-background p-2 rounded border border-border">{app.aiAgentImpact}</p>
+                                </div>
+                              )}
+                            </DetailSection>
+
+                            {/* Motivation */}
+                            <div className="md:col-span-2">
+                              <DetailSection title="Motivation">
+                                <p className="text-xs text-foreground bg-background p-3 rounded border border-border max-h-32 overflow-y-auto">{app.motivation}</p>
+                              </DetailSection>
+                            </div>
+
+                            {/* Liens & Documents */}
+                            <DetailSection title="Liens & Documents">
+                              <div className="flex flex-wrap gap-2 mt-1">
+                                {app.linkedinUrl && (
+                                  <a href={app.linkedinUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline">
+                                    <Linkedin className="w-3 h-3" /> LinkedIn
+                                  </a>
+                                )}
+                                {app.twitterUrl && (
+                                  <a href={app.twitterUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline">
+                                    <Twitter className="w-3 h-3" /> Twitter/X
+                                  </a>
+                                )}
+                                {app.githubUrl && (
+                                  <a href={app.githubUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline">
+                                    <Github className="w-3 h-3" /> GitHub
+                                  </a>
+                                )}
+                                {app.websiteUrl && (
+                                  <a href={app.websiteUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline">
+                                    <Globe className="w-3 h-3" /> Site web
+                                  </a>
+                                )}
+                                {app.otherSocialUrl && (
+                                  <a href={app.otherSocialUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline">
+                                    <ExternalLink className="w-3 h-3" /> Autre
+                                  </a>
+                                )}
+                              </div>
+                              <div className="flex gap-3 mt-3">
+                                {app.cvFileUrl && (
+                                  <a href={app.cvFileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-lg text-xs text-primary hover:bg-primary/10 transition-colors">
+                                    <FileText className="w-3.5 h-3.5" /> Voir le CV
+                                  </a>
+                                )}
+                                {app.photoFileUrl && (
+                                  <a href={app.photoFileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-lg text-xs text-primary hover:bg-primary/10 transition-colors">
+                                    <Camera className="w-3.5 h-3.5" /> Voir la photo
+                                  </a>
+                                )}
+                              </div>
+                            </DetailSection>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </>
                 ))}
                 {applications.length === 0 && (
                   <tr>
@@ -219,6 +404,24 @@ function StatCard({ icon, value, label }: { icon: React.ReactNode; value: number
     <div className="p-5 rounded-xl border border-border bg-background">
       <div className="flex items-center gap-2 mb-2 text-muted-foreground">{icon}<span className="text-xs uppercase tracking-wider">{label}</span></div>
       <div className="display-md text-foreground">{value}</div>
+    </div>
+  );
+}
+
+function DetailSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <h4 className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">{title}</h4>
+      <div className="space-y-1">{children}</div>
+    </div>
+  );
+}
+
+function DetailItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between text-xs">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="text-foreground font-medium">{value}</span>
     </div>
   );
 }

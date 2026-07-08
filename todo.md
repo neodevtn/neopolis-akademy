@@ -98,4 +98,4 @@
 - [x] Mettre à jour le schéma DB pour les nouveaux champs
 - [x] Mettre à jour la validation partagée (shared/validation.ts)
 - [x] Mettre à jour le scoring pour intégrer les nouveaux critères
-- [ ] Mettre à jour le dashboard admin pour afficher les nouveaux champs (en cours)
+- [x] Mettre à jour le dashboard admin pour afficher les nouveaux champs
