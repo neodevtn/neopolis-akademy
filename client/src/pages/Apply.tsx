@@ -123,34 +123,34 @@ export default function Apply() {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
         <div className="max-w-lg w-full text-center">
-          <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-6" />
-          <h1 className="text-3xl font-bold font-[Montserrat] mb-4">Candidature soumise !</h1>
-          <p className="text-muted-foreground mb-8">Votre score a été calculé automatiquement.</p>
-          <div className="p-6 rounded-xl border border-border bg-card mb-8">
-            <div className="text-5xl font-bold text-primary font-[Montserrat] mb-2">
+          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
+          <h1 className="display-lg text-foreground mb-4">Candidature soumise !</h1>
+          <p className="body-md text-muted-foreground mb-8">Votre score a été calculé automatiquement.</p>
+          <div className="card-stripe mb-8">
+            <div className="display-xxl text-primary mb-2">
               {Number(result.scoreTotal).toFixed(1)}%
             </div>
             <p className="text-sm text-muted-foreground mb-6">Score global</p>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-xl font-bold text-foreground">{Number(result.scoreTechnique).toFixed(1)}%</div>
+                <div className="display-md text-foreground">{Number(result.scoreTechnique).toFixed(1)}%</div>
                 <div className="text-xs text-muted-foreground">Technique (40%)</div>
               </div>
               <div>
-                <div className="text-xl font-bold text-foreground">{Number(result.scoreMetier).toFixed(1)}%</div>
+                <div className="display-md text-foreground">{Number(result.scoreMetier).toFixed(1)}%</div>
                 <div className="text-xs text-muted-foreground">Métier (35%)</div>
               </div>
               <div>
-                <div className="text-xl font-bold text-foreground">{Number(result.scoreCommunication).toFixed(1)}%</div>
+                <div className="display-md text-foreground">{Number(result.scoreCommunication).toFixed(1)}%</div>
                 <div className="text-xs text-muted-foreground">Communication (25%)</div>
               </div>
             </div>
           </div>
-          <p className="text-sm text-muted-foreground mb-6">
+          <p className="body-md text-muted-foreground mb-6">
             Si votre profil est retenu, vous serez contacté sous 48h à l'adresse email fournie.
           </p>
           <Link href="/">
-            <Button variant="outline">Retour à l'accueil</Button>
+            <Button variant="outline" className="btn-pill">Retour à l'accueil</Button>
           </Link>
         </div>
       </div>
@@ -160,16 +160,16 @@ export default function Apply() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
-      <nav className="border-b border-border">
+      <nav className="border-b border-border bg-background/90 backdrop-blur-md">
         <div className="container flex items-center justify-between h-16">
           <Link href="/">
-            <div className="flex items-center gap-3 cursor-pointer">
-              <img src={LOGO_URL} alt="Neopolis Development" className="h-8" />
-              <span className="font-bold text-lg font-[Montserrat]">Akademy</span>
+            <div className="flex items-center gap-2 cursor-pointer">
+              <img src={LOGO_URL} alt="Neopolis Development" className="h-7" />
+              <span className="text-lg font-light tracking-tight">Akademy</span>
             </div>
           </Link>
           <Link href="/">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
               <ArrowLeft className="w-4 h-4 mr-2" /> Retour
             </Button>
           </Link>
@@ -177,16 +177,16 @@ export default function Apply() {
       </nav>
 
       <div className="container py-12 max-w-2xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold font-[Montserrat] mb-2">Formulaire de candidature</h1>
-          <p className="text-muted-foreground">Étape {step} sur {totalSteps}</p>
-          <Progress value={progress} className="mt-4 h-2" />
+        <div className="mb-10">
+          <h1 className="display-lg text-foreground mb-2">Formulaire de candidature</h1>
+          <p className="body-md text-muted-foreground">Étape {step} sur {totalSteps}</p>
+          <Progress value={progress} className="mt-4 h-1.5" />
         </div>
 
         {/* Step 1: Personal Info */}
         {step === 1 && (
           <div className="space-y-6">
-            <h2 className="text-xl font-bold">Informations personnelles</h2>
+            <h2 className="heading-lg text-foreground">Informations personnelles</h2>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Prénom *</Label>
@@ -211,7 +211,7 @@ export default function Apply() {
         {/* Step 2: Location & Sector */}
         {step === 2 && (
           <div className="space-y-6">
-            <h2 className="text-xl font-bold">Localisation & Secteur</h2>
+            <h2 className="heading-lg text-foreground">Localisation & Secteur</h2>
             <div className="space-y-2">
               <Label>Pays de résidence *</Label>
               <Select value={formData.country} onValueChange={v => updateField("country", v)}>
@@ -248,7 +248,7 @@ export default function Apply() {
         {/* Step 3: Technical Skills */}
         {step === 3 && (
           <div className="space-y-6">
-            <h2 className="text-xl font-bold">Compétences techniques</h2>
+            <h2 className="heading-lg text-foreground">Compétences techniques</h2>
             <div className="space-y-2">
               <Label>Niveau en programmation *</Label>
               <Select value={formData.programmingLevel} onValueChange={v => updateField("programmingLevel", v)}>
@@ -302,7 +302,7 @@ export default function Apply() {
         {/* Step 4: Business Skills */}
         {step === 4 && (
           <div className="space-y-6">
-            <h2 className="text-xl font-bold">Compétences métier</h2>
+            <h2 className="heading-lg text-foreground">Compétences métier</h2>
             <div className="space-y-2">
               <Label>Expertise dans votre secteur *</Label>
               <Select value={formData.sectorExpertise} onValueChange={v => updateField("sectorExpertise", v)}>
@@ -345,7 +345,7 @@ export default function Apply() {
         {/* Step 5: Communication */}
         {step === 5 && (
           <div className="space-y-6">
-            <h2 className="text-xl font-bold">Communication & Motivation</h2>
+            <h2 className="heading-lg text-foreground">Communication & Motivation</h2>
             <div className="space-y-2">
               <Label>Langues parlées</Label>
               <Textarea value={formData.languages} onChange={e => updateField("languages", e.target.value)} placeholder="Ex: Français (natif), Anglais (courant), Arabe (intermédiaire)..." rows={3} />
@@ -389,18 +389,18 @@ export default function Apply() {
         )}
 
         {/* Navigation */}
-        <div className="flex justify-between mt-8 pt-6 border-t border-border">
+        <div className="flex justify-between mt-10 pt-6 border-t border-border">
           {step > 1 ? (
-            <Button variant="outline" onClick={() => setStep(s => s - 1)}>
+            <Button variant="outline" onClick={() => setStep(s => s - 1)} className="btn-pill">
               <ArrowLeft className="w-4 h-4 mr-2" /> Précédent
             </Button>
           ) : <div />}
           {step < totalSteps ? (
-            <Button onClick={() => setStep(s => s + 1)} disabled={!canGoNext()} className="bg-primary hover:bg-primary/90">
+            <Button onClick={() => setStep(s => s + 1)} disabled={!canGoNext()} className="btn-pill bg-primary hover:bg-primary/90 text-primary-foreground">
               Suivant <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           ) : (
-            <Button onClick={handleSubmit} disabled={!canGoNext() || submitMutation.isPending} className="bg-primary hover:bg-primary/90">
+            <Button onClick={handleSubmit} disabled={!canGoNext() || submitMutation.isPending} className="btn-pill bg-primary hover:bg-primary/90 text-primary-foreground">
               {submitMutation.isPending ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Envoi...</> : "Soumettre ma candidature"}
             </Button>
           )}

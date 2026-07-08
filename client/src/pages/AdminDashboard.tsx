@@ -38,10 +38,10 @@ export default function AdminDashboard() {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Accès restreint</h1>
-          <p className="text-muted-foreground mb-6">Vous devez être connecté en tant qu'administrateur.</p>
+          <h1 className="display-lg mb-4">Accès restreint</h1>
+          <p className="body-md text-muted-foreground mb-6">Vous devez être connecté en tant qu'administrateur.</p>
           <a href={getLoginUrl()}>
-            <Button className="bg-primary">Se connecter</Button>
+            <Button className="btn-pill bg-primary text-primary-foreground">Se connecter</Button>
           </a>
         </div>
       </div>
@@ -52,10 +52,10 @@ export default function AdminDashboard() {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Accès refusé</h1>
-          <p className="text-muted-foreground mb-6">Cette page est réservée aux administrateurs.</p>
+          <h1 className="display-lg mb-4">Accès refusé</h1>
+          <p className="body-md text-muted-foreground mb-6">Cette page est réservée aux administrateurs.</p>
           <Link href="/">
-            <Button variant="outline">Retour à l'accueil</Button>
+            <Button variant="outline" className="btn-pill">Retour à l'accueil</Button>
           </Link>
         </div>
       </div>
@@ -84,38 +84,40 @@ export default function AdminDashboard() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "selectionne": return <Badge className="bg-green-100 text-green-700 border-green-200">Sélectionné</Badge>;
-      case "refuse": return <Badge className="bg-red-100 text-red-700 border-red-200">Refusé</Badge>;
-      default: return <Badge className="bg-amber-100 text-amber-700 border-amber-200">En attente</Badge>;
+      case "selectionne": return <Badge className="bg-green-50 text-green-700 border border-green-200 font-normal">Sélectionné</Badge>;
+      case "refuse": return <Badge className="bg-red-50 text-red-700 border border-red-200 font-normal">Refusé</Badge>;
+      default: return <Badge className="bg-amber-50 text-amber-700 border border-amber-200 font-normal">En attente</Badge>;
     }
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-secondary text-foreground">
       {/* Header */}
-      <nav className="border-b border-border">
+      <nav className="border-b border-border bg-background">
         <div className="container flex items-center justify-between h-16">
-          <div className="flex items-center gap-3">
-            <img src={LOGO_URL} alt="Neopolis" className="h-8" />
-            <span className="font-bold text-lg font-[Montserrat]">Admin</span>
+          <div className="flex items-center gap-2">
+            <img src={LOGO_URL} alt="Neopolis" className="h-7" />
+            <span className="text-lg font-light tracking-tight">Admin</span>
           </div>
           <Link href="/">
-            <Button variant="ghost" size="sm"><ArrowLeft className="w-4 h-4 mr-2" /> Retour au site</Button>
+            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+              <ArrowLeft className="w-4 h-4 mr-2" /> Retour au site
+            </Button>
           </Link>
         </div>
       </nav>
 
-      <div className="container py-8">
-        <h1 className="text-3xl font-bold font-[Montserrat] mb-8">Tableau de bord — Candidatures</h1>
+      <div className="container py-10">
+        <h1 className="display-lg text-foreground mb-10">Tableau de bord — Candidatures</h1>
 
         {/* Stats */}
         {stats && (
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-            <StatCard icon={<Users className="w-5 h-5" />} value={stats.total} label="Total" />
-            <StatCard icon={<Clock className="w-5 h-5" />} value={stats.enAttente} label="En attente" />
-            <StatCard icon={<CheckCircle className="w-5 h-5" />} value={stats.selectionne} label="Sélectionnés" />
-            <StatCard icon={<XCircle className="w-5 h-5" />} value={stats.refuse} label="Refusés" />
-            <StatCard icon={<TrendingUp className="w-5 h-5" />} value={`${stats.avgScore.toFixed(1)}%`} label="Score moyen" />
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">
+            <StatCard icon={<Users className="w-4 h-4" />} value={stats.total} label="Total" />
+            <StatCard icon={<Clock className="w-4 h-4" />} value={stats.enAttente} label="En attente" />
+            <StatCard icon={<CheckCircle className="w-4 h-4" />} value={stats.selectionne} label="Sélectionnés" />
+            <StatCard icon={<XCircle className="w-4 h-4" />} value={stats.refuse} label="Refusés" />
+            <StatCard icon={<TrendingUp className="w-4 h-4" />} value={`${stats.avgScore.toFixed(1)}%`} label="Score moyen" />
           </div>
         )}
 
@@ -132,37 +134,37 @@ export default function AdminDashboard() {
               </SelectContent>
             </Select>
           </div>
-          <Button variant="outline" onClick={handleExport} disabled={!applications.length}>
+          <Button variant="outline" onClick={handleExport} disabled={!applications.length} className="btn-pill">
             <Download className="w-4 h-4 mr-2" /> Exporter CSV
           </Button>
         </div>
 
         {/* Table */}
-        <div className="border border-border rounded-xl overflow-hidden">
+        <div className="bg-background border border-border rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-muted/50">
-                <tr>
-                  <th className="text-left p-4 font-medium">Candidat</th>
-                  <th className="text-left p-4 font-medium">Pays</th>
-                  <th className="text-left p-4 font-medium">Secteur</th>
-                  <th className="text-left p-4 font-medium">Score</th>
-                  <th className="text-left p-4 font-medium">Statut</th>
-                  <th className="text-left p-4 font-medium">Date</th>
-                  <th className="text-left p-4 font-medium">Actions</th>
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Candidat</th>
+                  <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Pays</th>
+                  <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Secteur</th>
+                  <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Score</th>
+                  <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Statut</th>
+                  <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Date</th>
+                  <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {applications.map((app) => (
-                  <tr key={app.id} className="border-t border-border hover:bg-muted/20">
+                  <tr key={app.id} className="border-t border-border hover:bg-secondary/50 transition-colors">
                     <td className="p-4">
-                      <div className="font-medium">{app.firstName} {app.lastName}</div>
-                      <div className="text-xs text-muted-foreground">{app.email}</div>
+                      <div className="font-medium text-foreground">{app.firstName} {app.lastName}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5">{app.email}</div>
                     </td>
-                    <td className="p-4">{app.country}</td>
-                    <td className="p-4 text-xs">{app.sector}</td>
+                    <td className="p-4 text-foreground">{app.country}</td>
+                    <td className="p-4 text-xs text-foreground">{app.sector}</td>
                     <td className="p-4">
-                      <span className="font-bold text-primary">{Number(app.scoreTotal).toFixed(1)}%</span>
+                      <span className="font-medium text-primary">{Number(app.scoreTotal).toFixed(1)}%</span>
                     </td>
                     <td className="p-4">{getStatusBadge(app.status)}</td>
                     <td className="p-4 text-xs text-muted-foreground">
@@ -174,7 +176,7 @@ export default function AdminDashboard() {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="text-green-700 hover:text-green-600 text-xs"
+                            className="text-green-700 hover:text-green-600 hover:bg-green-50 text-xs"
                             onClick={() => updateStatusMutation.mutate({ id: app.id, status: "selectionne" })}
                             disabled={updateStatusMutation.isPending}
                           >
@@ -185,7 +187,7 @@ export default function AdminDashboard() {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="text-red-700 hover:text-red-600 text-xs"
+                            className="text-red-700 hover:text-red-600 hover:bg-red-50 text-xs"
                             onClick={() => updateStatusMutation.mutate({ id: app.id, status: "refuse" })}
                             disabled={updateStatusMutation.isPending}
                           >
@@ -198,7 +200,7 @@ export default function AdminDashboard() {
                 ))}
                 {applications.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="p-8 text-center text-muted-foreground">
+                    <td colSpan={7} className="p-12 text-center text-muted-foreground body-md">
                       Aucune candidature pour le moment.
                     </td>
                   </tr>
@@ -214,9 +216,9 @@ export default function AdminDashboard() {
 
 function StatCard({ icon, value, label }: { icon: React.ReactNode; value: number | string; label: string }) {
   return (
-    <div className="p-4 rounded-xl border border-border bg-card">
-      <div className="flex items-center gap-2 mb-2 text-muted-foreground">{icon}<span className="text-xs">{label}</span></div>
-      <div className="text-2xl font-bold font-[Montserrat]">{value}</div>
+    <div className="p-5 rounded-xl border border-border bg-background">
+      <div className="flex items-center gap-2 mb-2 text-muted-foreground">{icon}<span className="text-xs uppercase tracking-wider">{label}</span></div>
+      <div className="display-md text-foreground">{value}</div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, Brain, Globe, Shield, Clock, TrendingDown, Users, Award, Zap, BookOpen, CheckCircle } from "lucide-react";
+import { ArrowRight, Clock, TrendingDown, Users, Zap, Globe, Brain, Award, BookOpen, CheckCircle, Shield } from "lucide-react";
 
 const LOGO_URL = "/manus-storage/logo_neopolis_dev_04585f1b.png";
 const HERO_IMG = "/manus-storage/hero_illustration_94c39ea2.png";
@@ -9,178 +9,175 @@ const FORMULE_CERT_IMG = "/manus-storage/formule_certification_370fa46d.png";
 const FORMULE_AMBASSADOR_IMG = "/manus-storage/formule_ambassador_75216851.png";
 const PARTENARIATS_IMG = "/manus-storage/partenariats_illustration_c658992c.png";
 
-const africanCountries = [
-  "Algérie", "Angola", "Bénin", "Botswana", "Burkina Faso", "Burundi", "Cameroun",
-  "Cap-Vert", "Centrafrique", "Comores", "Congo", "Côte d'Ivoire", "Djibouti",
-  "Égypte", "Érythrée", "Eswatini", "Éthiopie", "Gabon", "Gambie", "Ghana",
-  "Guinée", "Guinée-Bissau", "Guinée équatoriale", "Kenya", "Lesotho", "Libéria",
-  "Libye", "Madagascar", "Malawi", "Mali", "Maroc", "Maurice", "Mauritanie",
-  "Mozambique", "Namibie", "Niger", "Nigéria", "Ouganda", "RD Congo", "Rwanda",
-  "São Tomé-et-Príncipe", "Sénégal", "Seychelles", "Sierra Leone", "Somalie",
-  "Soudan", "Soudan du Sud", "Tanzanie", "Tchad", "Togo", "Tunisie", "Zambie", "Zimbabwe"
-];
-
 export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+      {/* Navigation — Stripe-style: clean, minimal, pill CTA */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
         <div className="container flex items-center justify-between h-16">
-          <div className="flex items-center gap-3">
-            <img src={LOGO_URL} alt="Neopolis Development" className="h-8" />
-            <span className="font-bold text-lg font-[Montserrat]">Akademy</span>
+          <div className="flex items-center gap-2">
+            <img src={LOGO_URL} alt="Neopolis Development" className="h-7" />
+            <span className="text-lg font-light tracking-tight">Akademy</span>
           </div>
-          <div className="hidden md:flex items-center gap-6 text-sm">
-            <a href="#formule" className="hover:text-primary transition-colors">La Formule</a>
-            <a href="#pourquoi" className="hover:text-primary transition-colors">Pourquoi se transformer ?</a>
-            <a href="#partenariats" className="hover:text-primary transition-colors">Partenariats</a>
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#formule" className="body-md text-muted-foreground hover:text-foreground transition-colors">La Formule</a>
+            <a href="#pourquoi" className="body-md text-muted-foreground hover:text-foreground transition-colors">Pourquoi ?</a>
+            <a href="#partenariats" className="body-md text-muted-foreground hover:text-foreground transition-colors">Partenariats</a>
             <Link href="/apply">
-              <Button size="sm" className="bg-primary hover:bg-primary/90">
-                Postuler maintenant
+              <Button className="btn-pill bg-primary text-primary-foreground hover:bg-primary/90">
+                Postuler
               </Button>
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#f0f4ff] via-[#f8faff] to-[#fff5f5]" />
+      {/* Hero — Gradient Mesh backdrop + asymmetric layout */}
+      <section className="relative pt-32 pb-24 overflow-hidden">
+        <div className="absolute inset-0 gradient-mesh" />
         <div className="container relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-8">
-                <Clock className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-primary">Date limite : 31 Août 2026</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/20 mb-8">
+                <Clock className="w-3.5 h-3.5 text-primary" />
+                <span className="text-xs font-medium text-primary tracking-wide uppercase">Date limite : 31 Août 2026</span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold font-[Montserrat] leading-tight mb-6">
-                Devenez <span className="text-accent">Architecte d'Agents IA</span> certifié
+              <h1 className="display-xxl text-foreground mb-6">
+                Devenez{" "}
+                <span className="text-primary">Architecte<br />d'Agents IA</span>{" "}
+                certifié
               </h1>
-              <p className="text-lg text-muted-foreground mb-8">
+              <p className="body-lg text-muted-foreground mb-10 max-w-lg">
                 Formation e-learning + Certification Claude Certified Architect (CCA) + Statut de technico-commercial indépendant ambassadeur pour conquérir le marché africain de l'IA.
               </p>
-              <div className="flex flex-col sm:flex-row items-start gap-4">
+              <div className="flex items-center gap-4">
                 <Link href="/apply">
-                  <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg px-8 py-6">
-                    Soumettre ma candidature <ArrowRight className="ml-2 w-5 h-5" />
+                  <Button size="lg" className="btn-pill bg-primary text-primary-foreground hover:bg-primary/90 text-base px-8 py-5">
+                    Soumettre ma candidature <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
                 </Link>
                 <a href="#formule">
-                  <Button size="lg" variant="outline" className="text-lg px-8 py-6">
+                  <Button size="lg" variant="outline" className="btn-pill text-base px-8 py-5 border-border hover:border-foreground/20">
                     Découvrir la formule
                   </Button>
                 </a>
               </div>
-              <p className="mt-6 text-sm text-muted-foreground">
-                200 à 300 profils sélectionnés parmi les secteurs les plus impactés par l'IA
+              <p className="mt-8 text-xs text-muted-foreground tracking-wide">
+                200 à 300 profils sélectionnés · Tous secteurs · Toute l'Afrique
               </p>
             </div>
             <div className="hidden md:flex items-center justify-center">
-              <img src={HERO_IMG} alt="Professionnels africains en formation IA" className="w-full max-w-md object-contain" />
+              <img 
+                src={HERO_IMG} 
+                alt="Professionnels africains en formation IA" 
+                className="w-full max-w-lg object-contain drop-shadow-xl" 
+              />
             </div>
           </div>
         </div>
       </section>
 
-      {/* La Formule Section */}
-      <section id="formule" className="py-20 border-t border-border">
+      {/* La Formule — 3 cards with illustrations */}
+      <section id="formule" className="py-24 section-soft">
         <div className="container">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-[Montserrat] mb-4">La Formule Complète</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <p className="text-xs font-medium text-primary tracking-widest uppercase mb-3">Parcours complet</p>
+            <h2 className="display-xl text-foreground mb-4">La Formule Complète</h2>
+            <p className="body-lg text-muted-foreground max-w-xl mx-auto">
               Un parcours intensif en 3 étapes pour vous transformer en expert certifié de l'IA Agentique
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Step 1 */}
-            <div className="relative p-8 rounded-xl border border-border bg-card hover:border-primary/50 transition-colors text-center">
-              <img src={FORMULE_ELEARNING_IMG} alt="E-Learning IA" className="w-24 h-24 mx-auto mb-4 object-contain" />
-              <div className="absolute top-4 right-4 text-5xl font-bold text-primary/10 font-[Montserrat]">01</div>
-              <h3 className="text-xl font-bold mb-3">E-Learning 7 jours</h3>
-              <p className="text-muted-foreground">
-                Formation intensive sur l'IA générative, les LLMs, les architectures multi-agents et les cas d'usage métier.
-              </p>
-            </div>
-            {/* Step 2 */}
-            <div className="relative p-8 rounded-xl border border-border bg-card hover:border-primary/50 transition-colors text-center">
-              <img src={FORMULE_CERT_IMG} alt="Certification CCA" className="w-24 h-24 mx-auto mb-4 object-contain" />
-              <div className="absolute top-4 right-4 text-5xl font-bold text-primary/10 font-[Montserrat]">02</div>
-              <h3 className="text-xl font-bold mb-3">Accès Plateforme Anthropic</h3>
-              <p className="text-muted-foreground">
-                Accès dédié à la plateforme Anthropic pour préparer la certification Claude Certified Architect (CCA).
-              </p>
-            </div>
-            {/* Step 3 */}
-            <div className="relative p-8 rounded-xl border border-border bg-card hover:border-primary/50 transition-colors text-center">
-              <img src={FORMULE_AMBASSADOR_IMG} alt="Ambassadeur Afrique" className="w-24 h-24 mx-auto mb-4 object-contain" />
-              <div className="absolute top-4 right-4 text-5xl font-bold text-primary/10 font-[Montserrat]">03</div>
-              <h3 className="text-xl font-bold mb-3">Voucher Certification CCA</h3>
-              <p className="text-muted-foreground">
-                Voucher offert pour passer la certification Claude Certified Architect (CCA) avant le <strong className="text-accent">31 Août 2026</strong>.
-              </p>
-            </div>
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <FormulaCard
+              number="01"
+              image={FORMULE_ELEARNING_IMG}
+              title="E-Learning 7 jours"
+              description="Formation intensive sur l'IA générative, les LLMs, les architectures multi-agents et les cas d'usage métier."
+            />
+            <FormulaCard
+              number="02"
+              image={FORMULE_CERT_IMG}
+              title="Accès Plateforme Anthropic"
+              description="Accès dédié à la plateforme Anthropic pour préparer la certification Claude Certified Architect (CCA)."
+            />
+            <FormulaCard
+              number="03"
+              image={FORMULE_AMBASSADOR_IMG}
+              title="Voucher Certification CCA"
+              description="Voucher offert pour passer la certification avant le 31 Août 2026. Devenez ambassadeur certifié."
+              highlight
+            />
           </div>
         </div>
       </section>
 
-      {/* Pourquoi se transformer Section */}
-      <section id="pourquoi" className="py-20 bg-card border-t border-border">
+      {/* Pourquoi se transformer — Stats grid */}
+      <section id="pourquoi" className="py-24">
         <div className="container">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-[Montserrat] mb-4">Pourquoi se transformer ?</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <p className="text-xs font-medium text-primary tracking-widest uppercase mb-3">L'urgence</p>
+            <h2 className="display-xl text-foreground mb-4">Pourquoi se transformer ?</h2>
+            <p className="body-lg text-muted-foreground max-w-xl mx-auto">
               Les chiffres sont sans appel. L'IA agentique bouleverse tous les secteurs.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
             <StatCard
-              icon={<TrendingDown className="w-6 h-6" />}
+              icon={<TrendingDown className="w-5 h-5" />}
               value="234 Mds $"
               label="de dépenses SaaS menacées d'ici 2030"
-              source="Gartner, Juillet 2026"
+              source="Gartner, 2026"
             />
             <StatCard
-              icon={<Users className="w-6 h-6" />}
+              icon={<Users className="w-5 h-5" />}
               value="92 millions"
               label="d'emplois déplacés par l'IA d'ici 2030"
-              source="World Economic Forum, 2025"
+              source="World Economic Forum"
             />
             <StatCard
-              icon={<TrendingDown className="w-6 h-6" />}
+              icon={<TrendingDown className="w-5 h-5" />}
               value="-36%"
               label="d'offres d'emploi développeur vs 2020"
-              source="Indeed Hiring Lab, 2025"
+              source="Indeed Hiring Lab"
             />
             <StatCard
-              icon={<Zap className="w-6 h-6" />}
+              icon={<Zap className="w-5 h-5" />}
               value="9/10"
               label="Score d'exposition IA des développeurs"
-              source="Karpathy, Mars 2026"
+              source="Karpathy, 2026"
             />
             <StatCard
-              icon={<Globe className="w-6 h-6" />}
+              icon={<Globe className="w-5 h-5" />}
               value="700 000+"
               label="emplois tech perdus entre 2022-2025"
               source="Layoffs.fyi"
             />
             <StatCard
-              icon={<Brain className="w-6 h-6" />}
+              icon={<Brain className="w-5 h-5" />}
               value="50%"
               label="du code sera généré par l'IA fin 2026"
               source="Goldman Sachs / BLS"
             />
           </div>
-          <div className="mt-12 max-w-3xl mx-auto text-center">
-            <blockquote className="text-lg italic text-muted-foreground border-l-4 border-primary pl-6 text-left">
-              « Vous n'achetez plus un logiciel pour des humains, vous l'achetez pour des agents. »
-              <footer className="mt-2 text-sm not-italic text-primary">— George Brocklehurst, Gartner (2026)</footer>
+
+          {/* Quote */}
+          <div className="max-w-3xl mx-auto mb-12">
+            <blockquote className="border-l-2 border-primary pl-6 py-2">
+              <p className="heading-md text-foreground italic">
+                « Vous n'achetez plus un logiciel pour des humains, vous l'achetez pour des agents. »
+              </p>
+              <footer className="mt-3 text-sm text-muted-foreground">
+                — George Brocklehurst, Gartner (2026)
+              </footer>
             </blockquote>
           </div>
-          <div className="mt-12 text-center">
-            <h3 className="text-xl font-bold mb-6">Secteurs les plus menacés</h3>
-            <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
-              {["Développement logiciel", "Service client", "Comptabilité & Finance", "Juridique & Paralégal", "Administration", "Marketing & Rédaction", "Traduction", "Support technique", "Assurance", "Banque"].map((sector) => (
-                <span key={sector} className="px-4 py-2 rounded-full border border-primary/30 bg-primary/5 text-sm font-medium">
+
+          {/* Threatened sectors */}
+          <div className="text-center">
+            <p className="heading-md text-foreground mb-6">Secteurs les plus menacés</p>
+            <div className="flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
+              {["Développement logiciel", "Service client", "Comptabilité & Finance", "Juridique", "Administration", "Marketing & Rédaction", "Traduction", "Support technique", "Assurance", "Banque"].map((sector) => (
+                <span key={sector} className="px-4 py-1.5 rounded-full bg-primary/5 border border-primary/15 text-xs font-medium text-foreground">
                   {sector}
                 </span>
               ))}
@@ -189,107 +186,96 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Partenariats Section */}
-      <section id="partenariats" className="py-20 border-t border-border">
+      {/* Partenariats — Cream band section */}
+      <section id="partenariats" className="py-24 section-cream">
         <div className="container">
           <div className="text-center mb-16">
-            <img src={PARTENARIATS_IMG} alt="Partenariats technologiques Afrique" className="w-48 h-32 mx-auto mb-6 object-contain" />
-            <h2 className="text-3xl md:text-4xl font-bold font-[Montserrat] mb-4">Partenariats Stratégiques</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <img src={PARTENARIATS_IMG} alt="Partenariats technologiques" className="w-36 h-24 mx-auto mb-6 object-contain" />
+            <p className="text-xs font-medium text-primary tracking-widest uppercase mb-3">Écosystème</p>
+            <h2 className="display-xl text-foreground mb-4">Partenariats Stratégiques</h2>
+            <p className="body-lg text-muted-foreground max-w-xl mx-auto">
               Neopolis Development construit des partenariats avec les leaders mondiaux de l'IA pour l'Afrique
             </p>
           </div>
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="p-8 rounded-xl border border-border bg-card">
-              <div className="w-16 h-16 rounded-xl bg-[#ff6a00]/10 flex items-center justify-center mb-6">
-                <Globe className="w-8 h-8 text-[#ff6a00]" />
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Alibaba Cloud */}
+            <div className="card-stripe">
+              <div className="w-12 h-12 rounded-lg bg-[#ff6a00]/10 flex items-center justify-center mb-6">
+                <Globe className="w-6 h-6 text-[#ff6a00]" />
               </div>
-              <h3 className="text-2xl font-bold mb-3">Alibaba Cloud</h3>
-              <p className="text-muted-foreground mb-4">
+              <h3 className="display-md text-foreground mb-3">Alibaba Cloud</h3>
+              <p className="body-md text-muted-foreground mb-6">
                 Infrastructure IA de classe mondiale et modèles Qwen. Partenariat stratégique pour déployer des solutions IA à grande échelle sur le continent africain.
               </p>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Infrastructure cloud haute performance</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Modèles Qwen (LLM)</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Appliances IA on-premise</li>
+              <ul className="space-y-2.5">
+                <li className="flex items-center gap-2.5 text-sm text-foreground">
+                  <CheckCircle className="w-4 h-4 text-green-600 shrink-0" /> Infrastructure cloud haute performance
+                </li>
+                <li className="flex items-center gap-2.5 text-sm text-foreground">
+                  <CheckCircle className="w-4 h-4 text-green-600 shrink-0" /> Modèles Qwen (LLM)
+                </li>
+                <li className="flex items-center gap-2.5 text-sm text-foreground">
+                  <CheckCircle className="w-4 h-4 text-green-600 shrink-0" /> Appliances IA on-premise
+                </li>
               </ul>
             </div>
-            <div className="p-8 rounded-xl border border-border bg-card">
-              <div className="w-16 h-16 rounded-xl bg-[#d4a574]/10 flex items-center justify-center mb-6">
-                <Brain className="w-8 h-8 text-[#d4a574]" />
+            {/* Anthropic */}
+            <div className="card-stripe">
+              <div className="w-12 h-12 rounded-lg bg-[#d4a574]/10 flex items-center justify-center mb-6">
+                <Brain className="w-6 h-6 text-[#d4a574]" />
               </div>
-              <h3 className="text-2xl font-bold mb-3">Anthropic</h3>
-              <p className="text-muted-foreground mb-4">
-                Créateur de Claude, l'IA la plus avancée au monde. Partenariat pour la certification CCA et le déploiement d'agents IA de nouvelle génération en Afrique.
+              <h3 className="display-md text-foreground mb-3">Anthropic</h3>
+              <p className="body-md text-muted-foreground mb-6">
+                Créateur de Claude, l'IA la plus avancée au monde. Partenariat pour la certification CCA et le déploiement d'agents IA en Afrique.
               </p>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Certification Claude Certified Architect</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Agents IA autonomes (Claude)</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-green-500" /> Model Context Protocol (MCP)</li>
+              <ul className="space-y-2.5">
+                <li className="flex items-center gap-2.5 text-sm text-foreground">
+                  <CheckCircle className="w-4 h-4 text-green-600 shrink-0" /> Certification Claude Certified Architect
+                </li>
+                <li className="flex items-center gap-2.5 text-sm text-foreground">
+                  <CheckCircle className="w-4 h-4 text-green-600 shrink-0" /> Agents IA autonomes (Claude)
+                </li>
+                <li className="flex items-center gap-2.5 text-sm text-foreground">
+                  <CheckCircle className="w-4 h-4 text-green-600 shrink-0" /> Model Context Protocol (MCP)
+                </li>
               </ul>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Statut Ambassadeur Section */}
-      <section className="py-20 bg-card border-t border-border">
+      {/* Statut Ambassadeur */}
+      <section className="py-24">
         <div className="container">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <img src={FORMULE_AMBASSADOR_IMG} alt="Ambassadeur IA Afrique" className="w-32 h-32 mx-auto mb-6 object-contain" />
-              <h2 className="text-3xl md:text-4xl font-bold font-[Montserrat] mb-4">
+              <img src={FORMULE_AMBASSADOR_IMG} alt="Ambassadeur IA" className="w-28 h-28 mx-auto mb-6 object-contain" />
+              <p className="text-xs font-medium text-primary tracking-widest uppercase mb-3">Votre futur rôle</p>
+              <h2 className="display-xl text-foreground mb-4">
                 Technico-commercial indépendant ambassadeur
               </h2>
-              <p className="text-muted-foreground text-lg">
+              <p className="body-lg text-muted-foreground">
                 Après votre certification CCA, devenez un acteur clé de la révolution IA en Afrique
               </p>
             </div>
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-12">
               <div>
-                <h3 className="text-xl font-bold mb-4 text-primary">Ce que vous recevez</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                    <span>Statut d'ambassadeur officiel Anthropic via Neopolis Development</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                    <span>Ressources humaines, techniques et matérielles fournies par Neopolis</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                    <span>Agents IA "ready to use" pour vos clients PME/TPE</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                    <span>Accès à d'autres LLMs et appliances hébergés on-premise sur infrastructure dédiée</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                    <span>Assistance complète pour attaquer votre marché cible en Afrique</span>
-                  </li>
+                <h3 className="heading-lg text-primary mb-6">Ce que vous recevez</h3>
+                <ul className="space-y-4">
+                  <BenefitItem text="Statut d'ambassadeur officiel Anthropic via Neopolis Development" />
+                  <BenefitItem text="Ressources humaines, techniques et matérielles fournies par Neopolis" />
+                  <BenefitItem text="Agents IA « ready to use » pour vos clients PME/TPE" />
+                  <BenefitItem text="Accès à d'autres LLMs et appliances hébergés on-premise sur infrastructure dédiée" />
+                  <BenefitItem text="Assistance complète pour attaquer votre marché cible en Afrique" />
                 </ul>
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-4 text-primary">Votre mission</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-3">
-                    <ArrowRight className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                    <span>Identifier les PME/TPE de votre secteur prêtes pour la transformation IA</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <ArrowRight className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                    <span>Proposer et déployer des agents IA adaptés à leurs besoins métier</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <ArrowRight className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                    <span>Accompagner la transition logiciel classique → agents IA</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <ArrowRight className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                    <span>Couvrir un ou plusieurs pays africains selon votre expertise</span>
-                  </li>
+                <h3 className="heading-lg text-primary mb-6">Votre mission</h3>
+                <ul className="space-y-4">
+                  <MissionItem text="Identifier les PME/TPE de votre secteur prêtes pour la transformation IA" />
+                  <MissionItem text="Proposer et déployer des agents IA adaptés à leurs besoins métier" />
+                  <MissionItem text="Accompagner la transition logiciel classique → agents IA" />
+                  <MissionItem text="Couvrir un ou plusieurs pays africains selon votre expertise" />
                 </ul>
               </div>
             </div>
@@ -297,26 +283,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 border-t border-border">
+      {/* CTA Final */}
+      <section className="py-24 section-soft border-t border-border">
         <div className="container">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-6">
-              <Shield className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-primary">200-300 profils sélectionnés uniquement</span>
+          <div className="max-w-2xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/20 mb-6">
+              <Shield className="w-3.5 h-3.5 text-primary" />
+              <span className="text-xs font-medium text-primary">200-300 profils sélectionnés uniquement</span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold font-[Montserrat] mb-6">
+            <h2 className="display-lg text-foreground mb-6">
               Prêt à transformer votre carrière ?
             </h2>
-            <p className="text-lg text-muted-foreground mb-8">
+            <p className="body-lg text-muted-foreground mb-10">
               Soumettez votre candidature maintenant. Votre score sera calculé immédiatement et les meilleurs profils seront contactés sous 48h.
             </p>
             <Link href="/apply">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg px-10 py-6">
-                Soumettre ma candidature <ArrowRight className="ml-2 w-5 h-5" />
+              <Button size="lg" className="btn-pill bg-primary text-primary-foreground hover:bg-primary/90 text-base px-10 py-5">
+                Soumettre ma candidature <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </Link>
-            <p className="mt-4 text-sm text-muted-foreground">
+            <p className="mt-6 text-xs text-muted-foreground">
               Date limite de certification : <strong className="text-primary">31 Août 2026</strong>
             </p>
           </div>
@@ -324,18 +310,18 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-border bg-card">
+      <footer className="py-12 border-t border-border">
         <div className="container">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <img src={LOGO_URL} alt="Neopolis Development" className="h-6" />
-              <span className="text-sm text-muted-foreground">Akademy</span>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <img src={LOGO_URL} alt="Neopolis Development" className="h-5" />
+              <span className="text-sm text-muted-foreground font-light">Akademy</span>
             </div>
-            <p className="text-sm text-muted-foreground text-center">
-              Neopolis Development — FINTECH & Editeur d'Intelligence | Plus de 15 ans d'expérience à l'international
+            <p className="text-xs text-muted-foreground text-center">
+              Neopolis Development — FINTECH & Editeur d'Intelligence · Plus de 15 ans d'expérience à l'international
             </p>
-            <p className="text-sm text-muted-foreground">
-              © 2026 Neopolis Development. Tous droits réservés.
+            <p className="text-xs text-muted-foreground">
+              © 2026 Neopolis Development
             </p>
           </div>
         </div>
@@ -344,17 +330,56 @@ export default function Home() {
   );
 }
 
+/* Sub-components */
+
+function FormulaCard({ number, image, title, description, highlight }: { 
+  number: string; image: string; title: string; description: string; highlight?: boolean 
+}) {
+  return (
+    <div className={`card-stripe relative text-center ${highlight ? 'border-primary/30' : ''}`}>
+      <span className="absolute top-4 right-4 text-4xl font-extralight text-border">{number}</span>
+      <img src={image} alt={title} className="w-20 h-20 mx-auto mb-5 object-contain" />
+      <h3 className="heading-md text-foreground mb-3">{title}</h3>
+      <p className="body-md text-muted-foreground">{description}</p>
+      {highlight && (
+        <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/5 border border-primary/20">
+          <Award className="w-3.5 h-3.5 text-primary" />
+          <span className="text-xs font-medium text-primary">Avant le 31 Août 2026</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function StatCard({ icon, value, label, source }: { icon: React.ReactNode; value: string; label: string; source: string }) {
   return (
-    <div className="p-6 rounded-xl border border-border bg-background hover:border-primary/30 transition-colors">
+    <div className="card-stripe">
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+        <div className="w-9 h-9 rounded-lg bg-primary/5 flex items-center justify-center text-primary">
           {icon}
         </div>
-        <span className="text-2xl font-bold text-primary font-[Montserrat]">{value}</span>
+        <span className="display-md text-primary">{value}</span>
       </div>
-      <p className="text-sm text-foreground mb-2">{label}</p>
+      <p className="body-md text-foreground mb-1.5">{label}</p>
       <p className="text-xs text-muted-foreground">Source : {source}</p>
     </div>
+  );
+}
+
+function BenefitItem({ text }: { text: string }) {
+  return (
+    <li className="flex items-start gap-3">
+      <CheckCircle className="w-4.5 h-4.5 text-primary mt-0.5 shrink-0" />
+      <span className="body-md text-foreground">{text}</span>
+    </li>
+  );
+}
+
+function MissionItem({ text }: { text: string }) {
+  return (
+    <li className="flex items-start gap-3">
+      <ArrowRight className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+      <span className="body-md text-foreground">{text}</span>
+    </li>
   );
 }

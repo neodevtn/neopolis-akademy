@@ -68,3 +68,10 @@
 - [x] Intégrer des visuels dans la section La Formule
 - [x] Intégrer des visuels dans la section Partenariats
 - [x] Intégrer des visuels dans la section Ambassadeur
+
+## Refonte Design (Stripe-inspired via awesome-design-md)
+- [x] Refonte index.css avec typographie Inter thin (300) + tracking négatif + palette Stripe adaptée
+- [x] Refonte Home.tsx avec gradient mesh hero, pill buttons, cards premium, spacing Stripe
+- [x] Refonte Apply.tsx avec le nouveau design system
+- [x] Refonte AdminDashboard.tsx avec le nouveau design system
+- [x] Vérification visuelle et tests
