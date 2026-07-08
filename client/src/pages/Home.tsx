@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { ArrowRight, Clock, TrendingDown, Users, Zap, Globe, Brain, Award, BookOpen, CheckCircle, Shield, Gift, BadgeCheck } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { ArrowRight, Clock, TrendingDown, Users, Zap, Globe, Brain, Award, BookOpen, CheckCircle, Shield, Gift, BadgeCheck, ChevronDown } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 
 const LOGO_URL = "/manus-storage/logo_neopolis_dev_04585f1b.png";
 const HERO_IMG = "/manus-storage/hero_illustration_94c39ea2.png";
@@ -377,6 +377,46 @@ export default function Home() {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <section id="faq" className="py-24 bg-muted/30">
+        <div className="container max-w-3xl">
+          <div className="text-center mb-12">
+            <p className="text-sm font-medium text-primary tracking-wide uppercase mb-3">Questions fréquentes</p>
+            <h2 className="display-lg text-foreground">Tout ce que vous devez savoir</h2>
+          </div>
+          <div className="space-y-3">
+            <FAQItem
+              question="Quels sont les prérequis pour postuler ?"
+              answer="Aucun prérequis technique spécifique n'est exigé. Nous recherchons des profils motivés issus de tous secteurs (finance, santé, juridique, commerce, RH, etc.) avec une bonne compréhension de leur métier et un esprit entrepreneurial. La formation e-learning de 7 jours vous mettra à niveau sur l'IA avant la préparation à la certification."
+            />
+            <FAQItem
+              question="Comment fonctionne le processus de sélection ?"
+              answer="Après soumission de votre candidature, un score est calculé automatiquement basé sur vos compétences techniques (40%), votre expertise métier (35%) et vos capacités de communication (25%). Les 200 à 300 meilleurs profils sont sélectionnés. La vidéo pitch est un atout majeur dans la sélection. Vous recevrez un email de confirmation immédiatement après votre soumission."
+            />
+            <FAQItem
+              question="Combien de temps dure le programme complet ?"
+              answer="La formation e-learning dure 7 jours. Ensuite, vous accédez à la plateforme Anthropic pour préparer la certification Claude Certified Architect (CCA) à votre rythme. La date limite pour passer la certification est le 31 août 2026. Au total, comptez 4 à 8 semaines selon votre disponibilité."
+            />
+            <FAQItem
+              question="Est-ce vraiment 100% gratuit ?"
+              answer="Oui, l'intégralité du programme est entièrement gratuite : la formation e-learning de 7 jours, l'accès à la plateforme Anthropic, et le voucher pour passer la certification CCA. Aucun frais caché. C'est un investissement de Neopolis Development et de ses partenaires (Anthropic, Alibaba Cloud) pour développer l'écosystème IA en Afrique."
+            />
+            <FAQItem
+              question="Que se passe-t-il après la certification ?"
+              answer="Une fois certifié Claude Certified Architect (CCA), vous obtenez le statut d'AI Solutions Partner — Ambassadeur Certifié. Vous devenez un partenaire indépendant de Neopolis Development pour distribuer des solutions IA (agents, appliances, intégrations) auprès des PME/TPE de votre secteur en Afrique. Neopolis vous fournit les ressources techniques, humaines et matérielles."
+            />
+            <FAQItem
+              question="Quels pays africains sont concernés ?"
+              answer="Le programme est ouvert à l'ensemble des 54 pays africains. Que vous soyez au Maroc, en Côte d'Ivoire, au Sénégal, au Nigeria, en Égypte, en Afrique du Sud ou ailleurs sur le continent, vous pouvez postuler. L'objectif est de couvrir tout le marché africain à travers un réseau d'ambassadeurs locaux."
+            />
+            <FAQItem
+              question="Quelles ressources Neopolis fournit-elle aux ambassadeurs ?"
+              answer="Neopolis Development met à disposition : des agents IA 'ready to use', un accès à une infrastructure de serveurs puissants (hébergement on-premise), des LLM et modèles ML complémentaires à Anthropic, un support technique et humain, du matériel et des appliances, ainsi qu'une assistance commerciale pour attaquer votre marché cible."
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-12 border-t border-border">
         <div className="container">
@@ -634,5 +674,25 @@ function MissionItem({ text }: { text: string }) {
       <ArrowRight className="w-4 h-4 text-primary mt-0.5 shrink-0" />
       <span className="body-md text-foreground">{text}</span>
     </li>
+  );
+}
+
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-border rounded-xl overflow-hidden bg-background transition-shadow hover:shadow-sm">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between p-5 text-left"
+      >
+        <span className="font-medium text-foreground pr-4">{question}</span>
+        <ChevronDown className={`w-5 h-5 text-muted-foreground shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div className="px-5 pb-5 pt-0">
+          <p className="body-md text-muted-foreground leading-relaxed">{answer}</p>
+        </div>
+      )}
+    </div>
   );
 }

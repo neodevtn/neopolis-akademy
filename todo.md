@@ -112,3 +112,9 @@
 - [x] Ajouter un indicateur de niveau audio en temps réel (VU-mètre)
 - [x] Ajouter des conseils visuels dynamiques pendant l'enregistrement (prompts)
 - [x] Améliorer le feedback visuel global (countdown, états clairs)
+
+## FAQ + Email de confirmation
+- [x] Ajouter une section FAQ déroulante (accordion) sur la landing page
+- [x] Questions : prérequis, processus de sélection, durée, débouchés, gratuité, certification
+- [x] Ajouter un email de confirmation automatique envoyé au candidat après soumission
+- [x] Contenu email : récapitulatif candidature + score obtenu

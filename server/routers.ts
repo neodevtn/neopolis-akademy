@@ -9,6 +9,7 @@ import { TRPCError } from "@trpc/server";
 import { notifyOwner } from "./_core/notification";
 import { applicationSchema } from "@shared/validation";
 import { storagePut } from "./storage";
+import { sendConfirmationEmail } from "./email";
 
 export const appRouter = router({
   system: systemRouter,
@@ -140,6 +141,21 @@ export const appRouter = router({
           });
         } catch (e) {
           console.error("Failed to send notification:", e);
+        }
+
+        // Send confirmation email to candidate
+        try {
+          await sendConfirmationEmail({
+            to: input.email,
+            firstName: input.firstName,
+            lastName: input.lastName,
+            country: input.country,
+            sector: input.sector,
+            currentRole: input.currentRole,
+            scores,
+          });
+        } catch (e) {
+          console.error("Failed to send confirmation email:", e);
         }
 
         return {
