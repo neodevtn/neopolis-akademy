@@ -384,51 +384,35 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div
-              variants={fadeInLeft}
-              className="relative"
-            >
-              <motion.div
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <img src="/manus-storage/partnership_tunisian_6fd91acb.png" alt="Équipe Neopolis - Partenariats technologiques" className="w-full max-w-md mx-auto object-contain rounded-3xl" />
-              </motion.div>
-              {/* Glow effect derrière l'image */}
-              <div className="absolute -inset-4 rounded-3xl blur-2xl opacity-20 -z-10" style={{ background: "radial-gradient(circle, var(--wise-primary) 0%, transparent 70%)" }} />
+          <div className="grid md:grid-cols-2 gap-10 items-center">
+            {/* Graphique animé - Réseau de nœuds */}
+            <motion.div variants={fadeInLeft} className="relative flex items-center justify-center">
+              <NetworkGraph />
             </motion.div>
             <motion.div variants={fadeInRight}>
-              <h3 className="wise-display-xs mb-6">Ce que nous fournissons</h3>
-              <div className="space-y-4">
+              <h3 className="wise-display-xs mb-4">Ce que nous fournissons</h3>
+              <div className="space-y-2">
                 {[
-                  { text: "Ressources humaines et techniques dédiées", icon: "team" },
-                  { text: "Agents IA prêts à l'emploi (ready-to-use)", icon: "ai" },
-                  { text: "Accès multi-LLM (Claude, Qwen, DeepSeek...)", icon: "llm" },
-                  { text: "Infrastructure serveurs on-premise puissante", icon: "server" },
-                  { text: "Accompagnement commercial et marketing", icon: "marketing" },
-                  { text: "Support technique continu", icon: "support" },
+                  "Ressources humaines et techniques dédiées",
+                  "Agents IA prêts à l'emploi (ready-to-use)",
+                  "Accès multi-LLM (Claude, Qwen, DeepSeek...)",
+                  "Infrastructure serveurs on-premise puissante",
+                  "Accompagnement commercial et marketing",
+                  "Support technique continu",
                 ].map((item, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, x: 30 }}
+                    initial={{ opacity: 0, x: 20 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+                    transition={{ delay: i * 0.08, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
                     viewport={{ once: true }}
-                    whileHover={{ x: 6, transition: { duration: 0.2 } }}
-                    className="flex items-center gap-4 p-3 rounded-xl cursor-default transition-colors"
-                    style={{ backgroundColor: "transparent" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(159,232,112,0.06)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; }}
+                    whileHover={{ x: 4, transition: { duration: 0.2 } }}
+                    className="flex items-center gap-3 py-2 px-3 rounded-lg cursor-default"
                   >
-                    <motion.span
-                      className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: "var(--wise-primary)" }}
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                    >
-                      <CheckCircle2 size={16} style={{ color: "var(--wise-ink)" }} />
-                    </motion.span>
-                    <span className="wise-body-md font-medium">{item.text}</span>
+                    <span className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "var(--wise-primary)" }}>
+                      <CheckCircle2 size={14} style={{ color: "var(--wise-ink)" }} />
+                    </span>
+                    <span className="text-sm font-medium" style={{ color: "var(--wise-ink)" }}>{item}</span>
                   </motion.div>
                 ))}
               </div>
@@ -745,6 +729,114 @@ function JobLossChart() {
   return (
     <div ref={containerRef} className="wise-card-dark" style={{ height: "340px", padding: "20px" }}>
       <canvas ref={canvasRef}></canvas>
+    </div>
+  );
+}
+
+function NetworkGraph() {
+  const nodes = [
+    { id: "neopolis", label: "Neopolis", x: 50, y: 50, size: 28, color: "#9fe870" },
+    { id: "anthropic", label: "Anthropic", x: 20, y: 20, size: 22, color: "#d4a574" },
+    { id: "alibaba", label: "Alibaba Cloud", x: 80, y: 20, size: 22, color: "#ff8c42" },
+    { id: "agents", label: "Agents IA", x: 15, y: 70, size: 18, color: "#38c8ff" },
+    { id: "llm", label: "Multi-LLM", x: 85, y: 70, size: 18, color: "#a78bfa" },
+    { id: "infra", label: "Infra", x: 30, y: 90, size: 16, color: "#34d399" },
+    { id: "support", label: "Support", x: 70, y: 90, size: 16, color: "#fbbf24" },
+  ];
+
+  const edges = [
+    { from: "neopolis", to: "anthropic" },
+    { from: "neopolis", to: "alibaba" },
+    { from: "neopolis", to: "agents" },
+    { from: "neopolis", to: "llm" },
+    { from: "neopolis", to: "infra" },
+    { from: "neopolis", to: "support" },
+    { from: "anthropic", to: "agents" },
+    { from: "alibaba", to: "llm" },
+    { from: "alibaba", to: "infra" },
+  ];
+
+  return (
+    <div className="relative w-full" style={{ height: "320px" }}>
+      {/* Lignes de connexion animées */}
+      <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
+        {edges.map((edge, i) => {
+          const fromNode = nodes.find(n => n.id === edge.from)!;
+          const toNode = nodes.find(n => n.id === edge.to)!;
+          return (
+            <motion.line
+              key={i}
+              x1={`${fromNode.x}%`}
+              y1={`${fromNode.y}%`}
+              x2={`${toNode.x}%`}
+              y2={`${toNode.y}%`}
+              stroke="rgba(159,232,112,0.3)"
+              strokeWidth="1.5"
+              initial={{ pathLength: 0, opacity: 0 }}
+              whileInView={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 1, delay: i * 0.1, ease: "easeOut" }}
+              viewport={{ once: true }}
+            />
+          );
+        })}
+        {/* Particules animées sur les lignes */}
+        {edges.slice(0, 4).map((edge, i) => {
+          const fromNode = nodes.find(n => n.id === edge.from)!;
+          const toNode = nodes.find(n => n.id === edge.to)!;
+          return (
+            <motion.circle
+              key={`particle-${i}`}
+              r="3"
+              fill="#9fe870"
+              initial={{ opacity: 0.8 }}
+              animate={{
+                cx: [`${fromNode.x}%`, `${toNode.x}%`],
+                cy: [`${fromNode.y}%`, `${toNode.y}%`],
+              }}
+              transition={{
+                duration: 2.5 + i * 0.5,
+                repeat: Infinity,
+                repeatType: "reverse",
+                ease: "easeInOut",
+                delay: i * 0.8,
+              }}
+            />
+          );
+        })}
+      </svg>
+
+      {/* Nœuds */}
+      {nodes.map((node, i) => (
+        <motion.div
+          key={node.id}
+          className="absolute flex flex-col items-center"
+          style={{
+            left: `${node.x}%`,
+            top: `${node.y}%`,
+            transform: "translate(-50%, -50%)",
+            zIndex: 1,
+          }}
+          initial={{ scale: 0, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 + i * 0.1, ease: [0.23, 1, 0.32, 1] }}
+          viewport={{ once: true }}
+        >
+          <motion.div
+            className="rounded-full flex items-center justify-center shadow-lg"
+            style={{
+              width: node.size * 2,
+              height: node.size * 2,
+              backgroundColor: node.color,
+              boxShadow: `0 0 20px ${node.color}40`,
+            }}
+            animate={{ scale: [1, 1.08, 1] }}
+            transition={{ duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <span className="text-xs font-semibold mt-1 whitespace-nowrap" style={{ color: "var(--wise-ink)" }}>
+            {node.label}
+          </span>
+        </motion.div>
+      ))}
     </div>
   );
 }
