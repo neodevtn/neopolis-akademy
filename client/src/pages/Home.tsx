@@ -611,7 +611,7 @@ function PartnerCard({ name, description, logo }: { name: string; description: s
       className="wise-card-dark h-full"
     >
       <div className="flex items-center gap-4 mb-5">
-        <div className="w-14 h-14 rounded-xl flex items-center justify-center overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.08)" }}>
+        <div className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden" style={{ backgroundColor: "#ffffff" }}>
           <img src={logo} alt={name} className="w-10 h-10 object-contain" />
         </div>
         <h3 className="text-2xl font-bold" style={{ color: "var(--wise-primary)" }}>{name}</h3>
