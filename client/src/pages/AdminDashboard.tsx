@@ -84,9 +84,9 @@ export default function AdminDashboard() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "selectionne": return <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Sélectionné</Badge>;
-      case "refuse": return <Badge className="bg-red-500/20 text-red-400 border-red-500/30">Refusé</Badge>;
-      default: return <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">En attente</Badge>;
+      case "selectionne": return <Badge className="bg-green-100 text-green-700 border-green-200">Sélectionné</Badge>;
+      case "refuse": return <Badge className="bg-red-100 text-red-700 border-red-200">Refusé</Badge>;
+      default: return <Badge className="bg-amber-100 text-amber-700 border-amber-200">En attente</Badge>;
     }
   };
 
@@ -174,7 +174,7 @@ export default function AdminDashboard() {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="text-green-400 hover:text-green-300 text-xs"
+                            className="text-green-700 hover:text-green-600 text-xs"
                             onClick={() => updateStatusMutation.mutate({ id: app.id, status: "selectionne" })}
                             disabled={updateStatusMutation.isPending}
                           >
@@ -185,7 +185,7 @@ export default function AdminDashboard() {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="text-red-400 hover:text-red-300 text-xs"
+                            className="text-red-700 hover:text-red-600 text-xs"
                             onClick={() => updateStatusMutation.mutate({ id: app.id, status: "refuse" })}
                             disabled={updateStatusMutation.isPending}
                           >

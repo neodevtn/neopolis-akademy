@@ -53,3 +53,11 @@
 - [x] Test unitaire du calcul de scoring
 - [x] Test de l'API de soumission (couvert par scoring.test.ts)
 - [x] Test de l'API admin (couvert par auth.logout.test.ts)
+
+## Changement de thème
+- [x] Passer en thème clair style learning/académique
+- [x] Mettre à jour index.css avec palette claire
+- [x] Mettre à jour ThemeProvider en mode light
+- [x] Adapter la landing page au thème clair
+- [x] Adapter le formulaire au thème clair
+- [x] Adapter le dashboard admin au thème clair

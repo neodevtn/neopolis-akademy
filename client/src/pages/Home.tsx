@@ -40,7 +40,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] via-[#0f1f3d] to-[#1a0a0a] opacity-50" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#f0f4ff] via-[#f8faff] to-[#fff5f5]" />
         <div className="container relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-8">
