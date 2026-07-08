@@ -573,7 +573,7 @@ export default function Apply() {
               <Textarea
                 value={formData.motivation}
                 onChange={e => updateField("motivation", e.target.value)}
-                placeholder="Expliquez pourquoi vous souhaitez devenir technico-commercial indépendant ambassadeur et comment vous comptez contribuer à la transformation IA en Afrique..."
+                placeholder="Expliquez pourquoi vous souhaitez devenir AI Solutions Partner — Ambassadeur Certifié et comment vous comptez contribuer à la transformation IA en Afrique..."
                 rows={6}
                 className={errors.motivation ? "border-destructive" : ""}
               />

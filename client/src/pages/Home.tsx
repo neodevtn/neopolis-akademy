@@ -51,7 +51,7 @@ export default function Home() {
                 en opportunité
               </h1>
               <p className="body-lg text-muted-foreground mb-4 max-w-lg">
-                Formation e-learning <strong>gratuite</strong> + Certification Claude Certified Architect (CCA) <strong>offerte</strong> + Statut de technico-commercial indépendant ambassadeur pour conquérir le marché africain de l'IA.
+                Formation e-learning <strong>gratuite</strong> + Certification Claude Certified Architect (CCA) <strong>offerte</strong> + Statut d'AI Solutions Partner — Ambassadeur Certifié pour conquérir le marché africain de l'IA.
               </p>
               
               {/* Badges gratuité */}
@@ -320,7 +320,7 @@ export default function Home() {
               <img src={FORMULE_AMBASSADOR_IMG} alt="Ambassadeur IA" className="w-28 h-28 mx-auto mb-6 object-contain" />
               <p className="text-xs font-medium text-primary tracking-widest uppercase mb-3">Votre futur rôle</p>
               <h2 className="display-xl text-foreground mb-4">
-                Technico-commercial indépendant ambassadeur
+                AI Solutions Partner — Ambassadeur Certifié
               </h2>
               <p className="body-lg text-muted-foreground">
                 Après votre certification CCA, devenez un acteur clé de la révolution IA en Afrique
