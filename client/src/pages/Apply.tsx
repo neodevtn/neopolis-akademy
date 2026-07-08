@@ -7,10 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui/progress";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
-import { ArrowLeft, ArrowRight, CheckCircle, Loader2, AlertCircle, Upload, User, Globe, Brain, Network, Lightbulb, MessageSquare, Link2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, Loader2, AlertCircle, Upload, User, Globe, Brain, Network, Lightbulb, MessageSquare, Link2, Video, Square, Circle } from "lucide-react";
 import {
   step1Schema, step2Schema, step3Schema, step4Schema, step5Schema,
-  step6Schema, step7Schema, step8Schema, step9Schema, applicationSchema, getFieldErrors
+  step6Schema, step7Schema, step8Schema, step9Schema, step10Schema, applicationSchema, getFieldErrors
 } from "@shared/validation";
 
 const LOGO_URL = "/manus-storage/logo_neopolis_dev_04585f1b.png";
@@ -79,6 +79,7 @@ const stepTitles = [
   { icon: Brain, title: "Scénario Agent IA" },
   { icon: MessageSquare, title: "Communication & Motivation" },
   { icon: Link2, title: "Profil en ligne & Documents" },
+  { icon: Video, title: "Vidéo Pitch" },
 ];
 
 export default function Apply() {
@@ -93,10 +94,76 @@ export default function Apply() {
   const cvInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
 
+  // Video recording state
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [cameraError, setCameraError] = useState("");
+  const videoPreviewRef = useRef<HTMLVideoElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const MAX_VIDEO_SECONDS = 90;
+
+  const startRecording = async () => {
+    try {
+      setCameraError("");
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      streamRef.current = stream;
+      if (videoPreviewRef.current) {
+        videoPreviewRef.current.srcObject = stream;
+        videoPreviewRef.current.play();
+      }
+      chunksRef.current = [];
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data); };
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: "video/webm" });
+        setRecordedBlob(blob);
+        if (videoPreviewRef.current) {
+          videoPreviewRef.current.srcObject = null;
+          videoPreviewRef.current.src = URL.createObjectURL(blob);
+        }
+        stream.getTracks().forEach(t => t.stop());
+      };
+      mediaRecorder.start(1000);
+      setIsRecording(true);
+      setRecordingTime(0);
+      timerRef.current = setInterval(() => {
+        setRecordingTime(prev => {
+          if (prev >= MAX_VIDEO_SECONDS - 1) {
+            stopRecording();
+            return MAX_VIDEO_SECONDS;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+    } catch (err: any) {
+      setCameraError("Impossible d'accéder à la caméra. Vérifiez les permissions de votre navigateur.");
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
+    setIsRecording(false);
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+  };
+
+  const resetRecording = () => {
+    setRecordedBlob(null);
+    setRecordingTime(0);
+    if (videoPreviewRef.current) { videoPreviewRef.current.src = ""; videoPreviewRef.current.srcObject = null; }
+  };
+
   const submitMutation = trpc.applications.submit.useMutation({
     onSuccess: (data) => {
       setResult(data);
-      setStep(10); // result step
+      setStep(11); // result step
       setServerError("");
     },
     onError: (err) => {
@@ -123,7 +190,7 @@ export default function Apply() {
 
   const uploadFileMutation = trpc.applications.uploadFile.useMutation();
 
-  const totalSteps = 9;
+  const totalSteps = 10;
   const progress = Math.min((step / totalSteps) * 100, 100);
 
   const updateField = (field: keyof FormData, value: string) => {
@@ -174,6 +241,10 @@ export default function Apply() {
         schema = step9Schema;
         data = { linkedinUrl: formData.linkedinUrl, twitterUrl: formData.twitterUrl, githubUrl: formData.githubUrl, websiteUrl: formData.websiteUrl, otherSocialUrl: formData.otherSocialUrl };
         break;
+      case 10:
+        schema = step10Schema;
+        data = {};
+        break;
       default:
         return false;
     }
@@ -198,6 +269,8 @@ export default function Apply() {
     let cvFileKey = "";
     let photoFileUrl = "";
     let photoFileKey = "";
+    let videoFileUrl = "";
+    let videoFileKey = "";
 
     try {
       // Upload CV if provided
@@ -233,6 +306,23 @@ export default function Apply() {
         photoFileUrl = photoResult.url;
         photoFileKey = photoResult.key;
       }
+
+      // Upload video if recorded
+      if (recordedBlob) {
+        const videoBase64 = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve((reader.result as string).split(",")[1]);
+          reader.readAsDataURL(recordedBlob);
+        });
+        const videoResult = await uploadFileMutation.mutateAsync({
+          fileName: `pitch_${Date.now()}.webm`,
+          fileData: videoBase64,
+          contentType: "video/webm",
+          type: "video",
+        });
+        videoFileUrl = videoResult.url;
+        videoFileKey = videoResult.key;
+      }
     } catch (e) {
       console.error("File upload error:", e);
     }
@@ -256,7 +346,7 @@ export default function Apply() {
       motivation: formData.motivation,
       linkedinUrl: formData.linkedinUrl, twitterUrl: formData.twitterUrl, githubUrl: formData.githubUrl,
       websiteUrl: formData.websiteUrl, otherSocialUrl: formData.otherSocialUrl,
-      cvFileUrl, cvFileKey, photoFileUrl, photoFileKey,
+      cvFileUrl, cvFileKey, photoFileUrl, photoFileKey, videoFileUrl, videoFileKey,
     };
 
     const validationResult = applicationSchema.safeParse(fullData);
@@ -272,7 +362,7 @@ export default function Apply() {
   };
 
   // Result page
-  if (step === 10 && result) {
+  if (step === 11 && result) {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
         <div className="max-w-lg w-full text-center">
@@ -593,6 +683,79 @@ export default function Apply() {
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Step 10: Video Pitch */}
+        {step === 10 && (
+          <div className="space-y-6">
+            <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 mb-4">
+              <p className="text-sm text-primary font-medium">Enregistrez une courte vidéo (90 secondes max) pour vous présenter et nous convaincre de vous sélectionner. Parlez librement de votre motivation, votre vision et ce que vous apporteriez au programme.</p>
+            </div>
+
+            <div className="relative rounded-xl overflow-hidden bg-black aspect-video">
+              <video
+                ref={videoPreviewRef}
+                className="w-full h-full object-cover"
+                muted={isRecording}
+                controls={!isRecording && !!recordedBlob}
+                playsInline
+              />
+              {!isRecording && !recordedBlob && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-white/70">
+                  <Video className="w-16 h-16 mb-4" />
+                  <p className="text-lg font-medium">Prêt à enregistrer</p>
+                  <p className="text-sm">Cliquez sur le bouton ci-dessous pour démarrer</p>
+                </div>
+              )}
+              {isRecording && (
+                <div className="absolute top-4 right-4 flex items-center gap-2 bg-red-600 text-white px-3 py-1.5 rounded-full text-sm font-medium">
+                  <Circle className="w-3 h-3 fill-white animate-pulse" />
+                  {Math.floor(recordingTime / 60)}:{(recordingTime % 60).toString().padStart(2, "0")} / 1:30
+                </div>
+              )}
+            </div>
+
+            {cameraError && (
+              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" /> {cameraError}
+              </div>
+            )}
+
+            <div className="flex items-center justify-center gap-4">
+              {!isRecording && !recordedBlob && (
+                <Button onClick={startRecording} className="btn-pill bg-red-600 hover:bg-red-700 text-white">
+                  <Circle className="w-4 h-4 mr-2 fill-white" /> Démarrer l'enregistrement
+                </Button>
+              )}
+              {isRecording && (
+                <Button onClick={stopRecording} className="btn-pill bg-gray-800 hover:bg-gray-900 text-white">
+                  <Square className="w-4 h-4 mr-2 fill-white" /> Arrêter
+                </Button>
+              )}
+              {!isRecording && recordedBlob && (
+                <>
+                  <Button variant="outline" onClick={resetRecording} className="btn-pill">
+                    Recommencer
+                  </Button>
+                  <div className="text-sm text-green-600 font-medium flex items-center gap-1">
+                    <CheckCircle className="w-4 h-4" /> Vidéo enregistrée ({Math.round(recordedBlob.size / 1024 / 1024 * 10) / 10} Mo)
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="p-3 rounded-lg bg-muted/50 text-sm text-muted-foreground">
+              <p><strong>Conseils :</strong></p>
+              <ul className="list-disc list-inside mt-1 space-y-1">
+                <li>Présentez-vous brièvement (nom, parcours, secteur)</li>
+                <li>Expliquez pourquoi vous êtes le bon candidat</li>
+                <li>Décrivez un cas concret où un agent IA pourrait remplacer un processus humain dans votre secteur</li>
+                <li>Soyez naturel et convaincant !</li>
+              </ul>
+            </div>
+
+            <p className="text-xs text-muted-foreground text-center">Cette étape est optionnelle mais fortement recommandée. Les candidats avec vidéo sont prioritaires dans la sélection.</p>
           </div>
         )}
 

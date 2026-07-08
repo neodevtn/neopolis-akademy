@@ -105,6 +105,8 @@ export const applicationSchema = z.object({
   cvFileKey: z.string().max(500).optional().default(""),
   photoFileUrl: z.string().max(500).optional().default(""),
   photoFileKey: z.string().max(500).optional().default(""),
+  videoFileUrl: z.string().max(500).optional().default(""),
+  videoFileKey: z.string().max(500).optional().default(""),
 });
 
 export type ApplicationInput = z.infer<typeof applicationSchema>;
@@ -179,6 +181,9 @@ export const step9Schema = z.object({
   websiteUrl: applicationSchema.shape.websiteUrl,
   otherSocialUrl: applicationSchema.shape.otherSocialUrl,
 });
+
+// NEW: Step 10 - Video pitch (no validation needed, optional upload)
+export const step10Schema = z.object({});
 
 // Helper pour extraire les erreurs par champ depuis un ZodError
 export function getFieldErrors(error: z.ZodError): Record<string, string> {

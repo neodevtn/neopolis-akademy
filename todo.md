@@ -99,3 +99,11 @@
 - [x] Mettre à jour la validation partagée (shared/validation.ts)
 - [x] Mettre à jour le scoring pour intégrer les nouveaux critères
 - [x] Mettre à jour le dashboard admin pour afficher les nouveaux champs
+
+## Étape vidéo pitch
+- [x] Ajouter une 10ème étape au formulaire : enregistrement vidéo pitch (webcam)
+- [x] Implémenter l'enregistrement vidéo via MediaRecorder API dans le navigateur
+- [x] Limiter la durée (60-90 secondes max)
+- [x] Upload de la vidéo vers S3
+- [x] Ajouter le champ videoFileUrl dans le schéma DB
+- [x] Afficher le lien vidéo dans le dashboard admin

@@ -27,40 +27,45 @@ export const appRouter = router({
         fileName: z.string().min(1).max(255),
         fileData: z.string(), // base64 encoded
         contentType: z.string(),
-        type: z.enum(["cv", "photo"]),
+        type: z.enum(["cv", "photo", "video"]),
       }))
       .mutation(async ({ input }) => {
         // Validate content type
         const allowedCvTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
         const allowedPhotoTypes = ["image/jpeg", "image/png", "image/webp"];
-        const allowed = input.type === "cv" ? allowedCvTypes : allowedPhotoTypes;
+        const allowedVideoTypes = ["video/webm", "video/mp4", "video/ogg"];
+        const allowed = input.type === "cv" ? allowedCvTypes : input.type === "photo" ? allowedPhotoTypes : allowedVideoTypes;
         
         if (!allowed.includes(input.contentType)) {
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: input.type === "cv" 
               ? "Format de CV non autorisé. Formats acceptés : PDF, DOC, DOCX" 
-              : "Format de photo non autorisé. Formats acceptés : JPEG, PNG, WEBP",
+              : input.type === "photo"
+              ? "Format de photo non autorisé. Formats acceptés : JPEG, PNG, WEBP"
+              : "Format de vidéo non autorisé. Formats acceptés : WebM, MP4, OGG",
           });
         }
 
         const buffer = Buffer.from(input.fileData, "base64");
         
-        // Validate file size (CV: 10MB max, Photo: 5MB max)
-        const maxSize = input.type === "cv" ? 10 * 1024 * 1024 : 5 * 1024 * 1024;
+        // Validate file size (CV: 10MB max, Photo: 5MB max, Video: 50MB max)
+        const maxSize = input.type === "cv" ? 10 * 1024 * 1024 : input.type === "photo" ? 5 * 1024 * 1024 : 50 * 1024 * 1024;
         if (buffer.length > maxSize) {
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: input.type === "cv" 
               ? "Le CV ne doit pas dépasser 10 Mo" 
-              : "La photo ne doit pas dépasser 5 Mo",
+              : input.type === "photo"
+              ? "La photo ne doit pas dépasser 5 Mo"
+              : "La vidéo ne doit pas dépasser 50 Mo",
           });
         }
 
         // Generate unique filename
         const ext = input.fileName.split(".").pop() || "bin";
         const uniqueName = `${Date.now()}_${Math.random().toString(36).slice(2, 10)}.${ext}`;
-        const prefix = input.type === "cv" ? "cv" : "photos";
+        const prefix = input.type === "cv" ? "cv" : input.type === "photo" ? "photos" : "videos";
         const key = `applications/${prefix}/${uniqueName}`;
         const result = await storagePut(key, buffer, input.contentType);
         return { key: result.key, url: result.url };
@@ -119,6 +124,8 @@ export const appRouter = router({
           cvFileUrl: input.cvFileUrl || null,
           photoFileKey: input.photoFileKey || null,
           photoFileUrl: input.photoFileUrl || null,
+          videoFileKey: input.videoFileKey || null,
+          videoFileUrl: input.videoFileUrl || null,
           scoreTechnique: scores.scoreTechnique.toString(),
           scoreMetier: scores.scoreMetier.toString(),
           scoreCommunication: scores.scoreCommunication.toString(),

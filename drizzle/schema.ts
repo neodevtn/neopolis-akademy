@@ -87,6 +87,8 @@ export const applications = mysqlTable("applications", {
   cvFileUrl: varchar("cvFileUrl", { length: 500 }),
   photoFileKey: varchar("photoFileKey", { length: 500 }),
   photoFileUrl: varchar("photoFileUrl", { length: 500 }),
+  videoFileKey: varchar("videoFileKey", { length: 500 }),
+  videoFileUrl: varchar("videoFileUrl", { length: 500 }),
   
   // Scoring
   scoreTechnique: decimal("scoreTechnique", { precision: 5, scale: 2 }).notNull(),

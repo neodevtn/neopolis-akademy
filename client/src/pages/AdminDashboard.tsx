@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter } from "lucide-react";
+import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video } from "lucide-react";
 import { getLoginUrl } from "@/const";
 
 const LOGO_URL = "/manus-storage/logo_neopolis_dev_04585f1b.png";
@@ -85,7 +85,7 @@ export default function AdminDashboard() {
       a.riskTolerance || "", a.autonomyLevel || "", a.resilienceLevel || "", a.leadershipStyle || "", a.entrepreneurialExperience || "",
       a.aiAgentScenario || "", a.aiAgentSector || "", a.aiAgentImpact || "",
       a.linkedinUrl || "", a.twitterUrl || "", a.githubUrl || "", a.websiteUrl || "",
-      a.cvFileUrl || "", a.photoFileUrl || "",
+      a.cvFileUrl || "", a.photoFileUrl || "", (a as any).videoFileUrl || "",
       a.status, new Date(a.createdAt).toLocaleDateString("fr-FR")
     ]);
     const csv = [headers.join(","), ...rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))].join("\n");
@@ -370,11 +370,16 @@ export default function AdminDashboard() {
                                     <FileText className="w-3.5 h-3.5" /> Voir le CV
                                   </a>
                                 )}
-                                {app.photoFileUrl && (
-                                  <a href={app.photoFileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-lg text-xs text-primary hover:bg-primary/10 transition-colors">
-                                    <Camera className="w-3.5 h-3.5" /> Voir la photo
-                                  </a>
-                                )}
+                {app.photoFileUrl && (
+                                   <a href={app.photoFileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-lg text-xs text-primary hover:bg-primary/10 transition-colors">
+                                     <Camera className="w-3.5 h-3.5" /> Voir la photo
+                                   </a>
+                                 )}
+                                 {(app as any).videoFileUrl && (
+                                   <a href={(app as any).videoFileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg text-xs text-red-600 hover:bg-red-100 transition-colors">
+                                     <Video className="w-3.5 h-3.5" /> Voir la vidéo pitch
+                                   </a>
+                                 )}
                               </div>
                             </DetailSection>
                           </div>
