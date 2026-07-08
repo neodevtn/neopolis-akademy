@@ -149,3 +149,16 @@
 - [x] Navbar glassmorphism (backdrop-blur)
 - [x] TypeScript 0 erreurs
 - [x] Tests vitest passent (7/7)
+
+## Audit UX/UI Senior — Corrections conversion
+- [x] Réécrire le hero : titre plus direct (QUI + QUOI + COMBIEN DE TEMPS), sous-titre clair
+- [x] Amplifier la GRATUITÉ (badge géant visible immédiatement)
+- [x] Transformer "La Formule" en timeline/parcours visuel (1→2→3→Résultat)
+- [x] Simplifier "Pourquoi maintenant" (1 stat choc + 1 phrase + CTA)
+- [x] Ajouter urgence visuelle (compteur places restantes, deadline amplifiée)
+- [x] Simplifier section partenariats (1 ligne par partenaire max)
+- [x] Réduire texte section Ambassadeur, montrer le gain concret
+- [x] Simplifier la navbar (2-3 liens max)
+- [x] Améliorer le CTA final avec urgence
+- [x] Ajouter compteur de places restantes dynamique (296 - nombre de candidatures soumises)
+- [x] Ajouter section gains concrets (revenus potentiels, commissions, types de missions)
