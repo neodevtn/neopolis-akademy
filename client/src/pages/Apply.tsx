@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui/progress";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
-import { ArrowLeft, ArrowRight, CheckCircle, Loader2, AlertCircle, Upload, User, Globe, Brain, Network, Lightbulb, MessageSquare, Link2, Video, Square, Circle } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, Loader2, AlertCircle, Upload, User, Globe, Brain, Network, Lightbulb, MessageSquare, Link2, Video, Square, Circle, Mic } from "lucide-react";
 import {
   step1Schema, step2Schema, step3Schema, step4Schema, step5Schema,
   step6Schema, step7Schema, step8Schema, step9Schema, step10Schema, applicationSchema, getFieldErrors
@@ -99,23 +99,82 @@ export default function Apply() {
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
   const [cameraError, setCameraError] = useState("");
+  const [audioLevel, setAudioLevel] = useState(0);
+  const [countdown, setCountdown] = useState(0);
   const videoPreviewRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const audioAnimRef = useRef<number | null>(null);
 
   const MAX_VIDEO_SECONDS = 90;
+
+  const pitchPrompts = [
+    { time: 0, text: "Présentez-vous (nom, parcours)" },
+    { time: 20, text: "Parlez de votre secteur d'expertise" },
+    { time: 40, text: "Décrivez votre cas d'usage agent IA" },
+    { time: 60, text: "Expliquez pourquoi vous êtes le bon candidat" },
+    { time: 75, text: "Concluez avec votre vision" },
+  ];
+
+  const getCurrentPrompt = () => {
+    for (let i = pitchPrompts.length - 1; i >= 0; i--) {
+      if (recordingTime >= pitchPrompts[i].time) return pitchPrompts[i].text;
+    }
+    return pitchPrompts[0].text;
+  };
+
+  const startAudioMonitoring = (stream: MediaStream) => {
+    try {
+      const audioContext = new AudioContext();
+      const analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+      const source = audioContext.createMediaStreamSource(stream);
+      source.connect(analyser);
+      audioContextRef.current = audioContext;
+      analyserRef.current = analyser;
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+      const updateLevel = () => {
+        analyser.getByteFrequencyData(dataArray);
+        const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+        setAudioLevel(Math.min(avg / 128, 1));
+        audioAnimRef.current = requestAnimationFrame(updateLevel);
+      };
+      updateLevel();
+    } catch (e) { /* audio monitoring is non-critical */ }
+  };
+
+  const stopAudioMonitoring = () => {
+    if (audioAnimRef.current) { cancelAnimationFrame(audioAnimRef.current); audioAnimRef.current = null; }
+    if (audioContextRef.current) { audioContextRef.current.close(); audioContextRef.current = null; }
+    setAudioLevel(0);
+  };
 
   const startRecording = async () => {
     try {
       setCameraError("");
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720, facingMode: "user" }, audio: true });
       streamRef.current = stream;
       if (videoPreviewRef.current) {
         videoPreviewRef.current.srcObject = stream;
         videoPreviewRef.current.play();
       }
+      // 3-second countdown
+      setCountdown(3);
+      await new Promise<void>(resolve => {
+        let c = 3;
+        const interval = setInterval(() => {
+          c--;
+          setCountdown(c);
+          if (c === 0) { clearInterval(interval); resolve(); }
+        }, 1000);
+      });
+      setCountdown(0);
+      // Start audio monitoring
+      startAudioMonitoring(stream);
       chunksRef.current = [];
       const mediaRecorder = new MediaRecorder(stream, { mimeType: "video/webm" });
       mediaRecorderRef.current = mediaRecorder;
@@ -128,6 +187,7 @@ export default function Apply() {
           videoPreviewRef.current.src = URL.createObjectURL(blob);
         }
         stream.getTracks().forEach(t => t.stop());
+        stopAudioMonitoring();
       };
       mediaRecorder.start(1000);
       setIsRecording(true);
@@ -142,7 +202,7 @@ export default function Apply() {
         });
       }, 1000);
     } catch (err: any) {
-      setCameraError("Impossible d'accéder à la caméra. Vérifiez les permissions de votre navigateur.");
+      setCameraError("Impossible d'accéder à la caméra/micro. Vérifiez les permissions de votre navigateur.");
     }
   };
 
@@ -152,6 +212,7 @@ export default function Apply() {
     }
     setIsRecording(false);
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+    stopAudioMonitoring();
   };
 
   const resetRecording = () => {
@@ -690,10 +751,11 @@ export default function Apply() {
         {step === 10 && (
           <div className="space-y-6">
             <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 mb-4">
-              <p className="text-sm text-primary font-medium">Enregistrez une courte vidéo (90 secondes max) pour vous présenter et nous convaincre de vous sélectionner. Parlez librement de votre motivation, votre vision et ce que vous apporteriez au programme.</p>
+              <p className="text-sm text-primary font-medium">Enregistrez une courte vidéo (90 secondes max) pour vous présenter et nous convaincre de vous sélectionner. Un compte à rebours de 3 secondes vous laissera le temps de vous préparer.</p>
             </div>
 
-            <div className="relative rounded-xl overflow-hidden bg-black aspect-video">
+            {/* Video preview area */}
+            <div className="relative rounded-xl overflow-hidden bg-gray-900 aspect-video shadow-lg">
               <video
                 ref={videoPreviewRef}
                 className="w-full h-full object-cover"
@@ -701,59 +763,141 @@ export default function Apply() {
                 controls={!isRecording && !!recordedBlob}
                 playsInline
               />
-              {!isRecording && !recordedBlob && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-white/70">
-                  <Video className="w-16 h-16 mb-4" />
-                  <p className="text-lg font-medium">Prêt à enregistrer</p>
-                  <p className="text-sm">Cliquez sur le bouton ci-dessous pour démarrer</p>
+
+              {/* Idle state */}
+              {!isRecording && !recordedBlob && countdown === 0 && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-gray-800 to-gray-900">
+                  <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-4 border-2 border-white/20">
+                    <Video className="w-10 h-10 text-white/70" />
+                  </div>
+                  <p className="text-lg font-medium text-white">Prêt à enregistrer votre pitch</p>
+                  <p className="text-sm text-white/50 mt-1">Assurez-vous d'être dans un endroit calme et bien éclairé</p>
                 </div>
               )}
-              {isRecording && (
-                <div className="absolute top-4 right-4 flex items-center gap-2 bg-red-600 text-white px-3 py-1.5 rounded-full text-sm font-medium">
-                  <Circle className="w-3 h-3 fill-white animate-pulse" />
-                  {Math.floor(recordingTime / 60)}:{(recordingTime % 60).toString().padStart(2, "0")} / 1:30
+
+              {/* Countdown overlay */}
+              {countdown > 0 && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
+                  <div className="text-center">
+                    <div className="text-7xl font-bold text-white animate-pulse">{countdown}</div>
+                    <p className="text-white/70 mt-2 text-lg">Préparez-vous...</p>
+                  </div>
                 </div>
+              )}
+
+              {/* Recording overlay - timer + prompt */}
+              {isRecording && (
+                <>
+                  {/* Timer badge */}
+                  <div className="absolute top-4 right-4 flex items-center gap-2 bg-red-600 text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-lg">
+                    <Circle className="w-3 h-3 fill-white animate-pulse" />
+                    {Math.floor(recordingTime / 60)}:{(recordingTime % 60).toString().padStart(2, "0")} / 1:30
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-black/30">
+                    <div
+                      className="h-full bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 transition-all duration-1000"
+                      style={{ width: `${(recordingTime / MAX_VIDEO_SECONDS) * 100}%` }}
+                    />
+                  </div>
+
+                  {/* Dynamic prompt */}
+                  <div className="absolute bottom-6 left-4 right-4">
+                    <div className="bg-black/60 backdrop-blur-sm rounded-lg px-4 py-2 text-center">
+                      <p className="text-white text-sm font-medium">💡 {getCurrentPrompt()}</p>
+                    </div>
+                  </div>
+                </>
               )}
             </div>
 
+            {/* Audio level indicator */}
+            {isRecording && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                    <Mic className="w-3.5 h-3.5" /> Niveau audio
+                  </span>
+                  <span className={`text-xs font-medium ${audioLevel > 0.1 ? 'text-green-600' : 'text-amber-500'}`}>
+                    {audioLevel > 0.1 ? '✓ Audio détecté' : '⚠ Parlez plus fort'}
+                  </span>
+                </div>
+                <div className="h-3 bg-gray-100 rounded-full overflow-hidden border border-gray-200">
+                  <div
+                    className={`h-full rounded-full transition-all duration-100 ${audioLevel > 0.6 ? 'bg-red-400' : audioLevel > 0.3 ? 'bg-green-400' : audioLevel > 0.1 ? 'bg-green-300' : 'bg-amber-300'}`}
+                    style={{ width: `${Math.max(audioLevel * 100, 2)}%` }}
+                  />
+                </div>
+                <div className="flex justify-between text-[10px] text-muted-foreground">
+                  <span>Faible</span>
+                  <span>Optimal</span>
+                  <span>Fort</span>
+                </div>
+              </div>
+            )}
+
+            {/* Error message */}
             {cameraError && (
               <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0" /> {cameraError}
               </div>
             )}
 
+            {/* Controls */}
             <div className="flex items-center justify-center gap-4">
-              {!isRecording && !recordedBlob && (
-                <Button onClick={startRecording} className="btn-pill bg-red-600 hover:bg-red-700 text-white">
-                  <Circle className="w-4 h-4 mr-2 fill-white" /> Démarrer l'enregistrement
+              {!isRecording && !recordedBlob && countdown === 0 && (
+                <Button onClick={startRecording} className="btn-pill bg-red-600 hover:bg-red-700 text-white px-6 py-3 text-base">
+                  <Circle className="w-5 h-5 mr-2 fill-white" /> Démarrer l'enregistrement
                 </Button>
               )}
               {isRecording && (
-                <Button onClick={stopRecording} className="btn-pill bg-gray-800 hover:bg-gray-900 text-white">
-                  <Square className="w-4 h-4 mr-2 fill-white" /> Arrêter
+                <Button onClick={stopRecording} className="btn-pill bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 text-base">
+                  <Square className="w-5 h-5 mr-2 fill-white" /> Arrêter l'enregistrement
                 </Button>
               )}
               {!isRecording && recordedBlob && (
-                <>
-                  <Button variant="outline" onClick={resetRecording} className="btn-pill">
-                    Recommencer
-                  </Button>
-                  <div className="text-sm text-green-600 font-medium flex items-center gap-1">
-                    <CheckCircle className="w-4 h-4" /> Vidéo enregistrée ({Math.round(recordedBlob.size / 1024 / 1024 * 10) / 10} Mo)
+                <div className="flex flex-col items-center gap-3">
+                  <div className="flex items-center gap-3">
+                    <Button variant="outline" onClick={resetRecording} className="btn-pill">
+                      Recommencer
+                    </Button>
+                    <div className="text-sm text-green-600 font-medium flex items-center gap-1 bg-green-50 px-3 py-1.5 rounded-full">
+                      <CheckCircle className="w-4 h-4" /> Vidéo enregistrée ({Math.round(recordedBlob.size / 1024 / 1024 * 10) / 10} Mo)
+                    </div>
                   </div>
-                </>
+                  <p className="text-xs text-muted-foreground">Vous pouvez relire votre vidéo ci-dessus avant de soumettre</p>
+                </div>
               )}
             </div>
 
-            <div className="p-3 rounded-lg bg-muted/50 text-sm text-muted-foreground">
-              <p><strong>Conseils :</strong></p>
-              <ul className="list-disc list-inside mt-1 space-y-1">
-                <li>Présentez-vous brièvement (nom, parcours, secteur)</li>
-                <li>Expliquez pourquoi vous êtes le bon candidat</li>
-                <li>Décrivez un cas concret où un agent IA pourrait remplacer un processus humain dans votre secteur</li>
-                <li>Soyez naturel et convaincant !</li>
-              </ul>
-            </div>
+            {/* Structured tips */}
+            {!isRecording && !recordedBlob && (
+              <div className="p-4 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/10">
+                <p className="font-semibold text-foreground mb-3 flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">?</span>
+                  Guide de votre pitch (90 secondes)
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="flex items-start gap-2 p-2 rounded-lg bg-white/60">
+                    <span className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-primary text-[10px] font-bold shrink-0 mt-0.5">1</span>
+                    <div><p className="text-xs font-medium text-foreground">0-20s : Présentation</p><p className="text-[11px] text-muted-foreground">Nom, parcours, secteur</p></div>
+                  </div>
+                  <div className="flex items-start gap-2 p-2 rounded-lg bg-white/60">
+                    <span className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-primary text-[10px] font-bold shrink-0 mt-0.5">2</span>
+                    <div><p className="text-xs font-medium text-foreground">20-40s : Expertise</p><p className="text-[11px] text-muted-foreground">Votre secteur et réseau</p></div>
+                  </div>
+                  <div className="flex items-start gap-2 p-2 rounded-lg bg-white/60">
+                    <span className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-primary text-[10px] font-bold shrink-0 mt-0.5">3</span>
+                    <div><p className="text-xs font-medium text-foreground">40-60s : Cas d'usage IA</p><p className="text-[11px] text-muted-foreground">Scénario concret d'agent IA</p></div>
+                  </div>
+                  <div className="flex items-start gap-2 p-2 rounded-lg bg-white/60">
+                    <span className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-primary text-[10px] font-bold shrink-0 mt-0.5">4</span>
+                    <div><p className="text-xs font-medium text-foreground">60-90s : Conclusion</p><p className="text-[11px] text-muted-foreground">Pourquoi vous, votre vision</p></div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <p className="text-xs text-muted-foreground text-center">Cette étape est optionnelle mais fortement recommandée. Les candidats avec vidéo sont prioritaires dans la sélection.</p>
           </div>

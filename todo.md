@@ -107,3 +107,8 @@
 - [x] Upload de la vidéo vers S3
 - [x] Ajouter le champ videoFileUrl dans le schéma DB
 - [x] Afficher le lien vidéo dans le dashboard admin
+
+## Amélioration interface vidéo
+- [x] Ajouter un indicateur de niveau audio en temps réel (VU-mètre)
+- [x] Ajouter des conseils visuels dynamiques pendant l'enregistrement (prompts)
+- [x] Améliorer le feedback visuel global (countdown, états clairs)
