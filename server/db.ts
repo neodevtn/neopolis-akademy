@@ -1,11 +1,10 @@
-import { eq } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
-// Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
@@ -89,4 +88,67 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// ============ Applications ============
+
+export async function createApplication(data: InsertApplication): Promise<Application> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(applications).values(data);
+  const insertId = result[0].insertId;
+  
+  const [app] = await db.select().from(applications).where(eq(applications.id, insertId)).limit(1);
+  return app;
+}
+
+export async function getApplications(filters?: { status?: string; country?: string; sector?: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const conditions = [];
+  if (filters?.status) {
+    conditions.push(eq(applications.status, filters.status as any));
+  }
+  if (filters?.country) {
+    conditions.push(eq(applications.country, filters.country));
+  }
+  if (filters?.sector) {
+    conditions.push(eq(applications.sector, filters.sector));
+  }
+  
+  if (conditions.length > 0) {
+    return await db.select().from(applications).where(sql`${sql.join(conditions, sql` AND `)}` as any).orderBy(desc(applications.createdAt));
+  }
+  
+  return await db.select().from(applications).orderBy(desc(applications.createdAt));
+}
+
+export async function getApplicationById(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const [app] = await db.select().from(applications).where(eq(applications.id, id)).limit(1);
+  return app;
+}
+
+export async function updateApplicationStatus(id: number, status: "en_attente" | "selectionne" | "refuse") {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(applications).set({ status }).where(eq(applications.id, id));
+  return await getApplicationById(id);
+}
+
+export async function getApplicationStats() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const all = await db.select().from(applications);
+  const total = all.length;
+  const enAttente = all.filter(a => a.status === "en_attente").length;
+  const selectionne = all.filter(a => a.status === "selectionne").length;
+  const refuse = all.filter(a => a.status === "refuse").length;
+  const avgScore = total > 0 ? all.reduce((sum, a) => sum + Number(a.scoreTotal), 0) / total : 0;
+  
+  return { total, enAttente, selectionne, refuse, avgScore };
+}
