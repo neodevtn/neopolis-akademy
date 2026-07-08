@@ -135,3 +135,17 @@
 - [x] Adapter Apply.tsx au style Wise (inputs bordurés, cards sage, boutons pill)
 - [x] Adapter AdminDashboard.tsx au style Wise
 - [x] Vérification visuelle et tests
+
+## Refonte UX/UI Ultra-Moderne (Wise + Framer Motion)
+- [x] Création du nouveau logo Neopolis Akademy adapté au thème Wise (lime-green, minimaliste)
+- [x] Génération d'images contextuelles (hero, certification, e-learning, réseau Afrique, partenariats)
+- [x] Refonte complète Home.tsx avec framer-motion (fadeInUp, fadeInLeft, fadeInRight, staggerContainer, scaleIn)
+- [x] Intégration des nouvelles images dans toutes les sections de la landing page
+- [x] Ajout d'un compteur animé (CountUp) pour les statistiques clés
+- [x] FAQ interactive avec animations d'ouverture/fermeture
+- [x] Refonte Apply.tsx avec AnimatePresence pour transitions entre étapes
+- [x] Progress bar animée avec motion.div
+- [x] Indicateurs d'étapes visuels (barres segmentées)
+- [x] Navbar glassmorphism (backdrop-blur)
+- [x] TypeScript 0 erreurs
+- [x] Tests vitest passent (7/7)

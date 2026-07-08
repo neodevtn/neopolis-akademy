@@ -8,12 +8,13 @@ import { Progress } from "@/components/ui/progress";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
 import { ArrowLeft, ArrowRight, CheckCircle, Loader2, AlertCircle, Upload, User, Globe, Brain, Network, Lightbulb, MessageSquare, Link2, Video, Square, Circle, Mic } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   step1Schema, step2Schema, step3Schema, step4Schema, step5Schema,
   step6Schema, step7Schema, step8Schema, step9Schema, step10Schema, applicationSchema, getFieldErrors
 } from "@shared/validation";
 
-const LOGO_URL = "/manus-storage/logo_neopolis_akademy_9c9a0823.png";
+const LOGO_URL = "/manus-storage/logo_neopolis_akademy_wise_ede57803.png";
 
 const africanCountries = [
   "Algérie", "Angola", "Bénin", "Botswana", "Burkina Faso", "Burundi", "Cameroun",
@@ -459,7 +460,7 @@ export default function Apply() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
-      <nav className="sticky top-0 z-50" style={{ backgroundColor: "var(--wise-canvas)", borderBottom: "1px solid var(--wise-canvas-soft)" }}>
+      <nav className="sticky top-0 z-50 backdrop-blur-md" style={{ backgroundColor: "rgba(255,255,255,0.85)", borderBottom: "1px solid var(--wise-canvas-soft)" }}>
         <div className="container flex items-center justify-between h-16">
           <Link href="/"><div className="flex items-center gap-2 cursor-pointer"><img src={LOGO_URL} alt="Neopolis Akademy" className="h-8 object-contain" /></div></Link>
           <Link href="/"><button className="wise-btn-tertiary text-sm px-4 py-2 flex items-center gap-2"><ArrowLeft className="w-4 h-4" /> Retour</button></Link>
@@ -467,26 +468,65 @@ export default function Apply() {
       </nav>
 
       <div className="container py-12 max-w-2xl mx-auto">
-        <div className="mb-10">
+        <motion.div
+          className="mb-10"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
+        >
           <div className="flex items-center gap-3 mb-2">
             {stepTitles[step - 1] && (() => { const Icon = stepTitles[step - 1].icon; return <Icon className="w-5 h-5" style={{ color: "var(--wise-positive)" }} />; })()}
             <h1 className="wise-display-xs">{stepTitles[step - 1]?.title}</h1>
           </div>
           <p className="wise-body-sm">Étape {step} sur {totalSteps}</p>
           <div className="mt-4 h-2 rounded-full overflow-hidden" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
-            <div className="h-full rounded-full transition-all duration-300" style={{ width: `${progress}%`, backgroundColor: "var(--wise-primary)" }}></div>
+            <motion.div
+              className="h-full rounded-full"
+              style={{ backgroundColor: "var(--wise-primary)" }}
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
+            />
           </div>
-        </div>
 
-        {serverError && (
-          <div className="mb-6 p-4 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" /> {serverError}
+          {/* Step indicators */}
+          <div className="flex items-center gap-1 mt-4">
+            {Array.from({ length: totalSteps }, (_, i) => (
+              <div
+                key={i}
+                className="h-1.5 flex-1 rounded-full transition-all duration-300"
+                style={{
+                  backgroundColor: i < step ? "var(--wise-primary)" : i === step - 1 ? "var(--wise-positive)" : "var(--wise-canvas-soft)",
+                  opacity: i < step ? 1 : 0.5,
+                }}
+              />
+            ))}
           </div>
-        )}
+        </motion.div>
+
+        <AnimatePresence mode="wait">
+          {serverError && (
+            <motion.div
+              initial={{ opacity: 0, y: -10, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: "auto" }}
+              exit={{ opacity: 0, y: -10, height: 0 }}
+              className="mb-6 p-4 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-center gap-2"
+            >
+              <AlertCircle className="w-4 h-4 shrink-0" /> {serverError}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Step 1: Personal Info */}
+        <AnimatePresence mode="wait">
         {step === 1 && (
-          <div className="space-y-6">
+          <motion.div
+            key="step1"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
+            className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Prénom *</Label>
@@ -509,12 +549,18 @@ export default function Apply() {
               <Input value={formData.phone} onChange={e => updateField("phone", e.target.value)} placeholder="+212 6XX XXX XXX" className={errors.phone ? "border-destructive" : ""} />
               <FieldError error={errors.phone} />
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Step 2: Location & Sector */}
         {step === 2 && (
-          <div className="space-y-6">
+          <motion.div
+            key="step2"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
+            className="space-y-6">
             <div className="space-y-2">
               <Label>Pays de résidence *</Label>
               <Select value={formData.country} onValueChange={v => updateField("country", v)}>
@@ -546,12 +592,18 @@ export default function Apply() {
               <Input type="number" min="0" max="50" value={formData.yearsExperience} onChange={e => updateField("yearsExperience", e.target.value)} placeholder="Ex: 5" className={errors.yearsExperience ? "border-destructive" : ""} />
               <FieldError error={errors.yearsExperience} />
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Step 3: Technical Skills */}
         {step === 3 && (
-          <div className="space-y-6">
+          <motion.div
+            key="step3"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
+            className="space-y-6">
             <SelectField label="Niveau en programmation *" value={formData.programmingLevel} onChange={v => updateField("programmingLevel", v)} error={errors.programmingLevel}
               options={[["none","Aucun"],["beginner","Débutant"],["intermediate","Intermédiaire"],["advanced","Avancé"],["expert","Expert"]]} />
             <SelectField label="Connaissances en IA *" value={formData.aiKnowledge} onChange={v => updateField("aiKnowledge", v)} error={errors.aiKnowledge}
@@ -566,24 +618,36 @@ export default function Apply() {
               <Label>Certifications existantes</Label>
               <Textarea value={formData.certifications} onChange={e => updateField("certifications", e.target.value)} placeholder="Ex: AWS Certified, Google Cloud, PMP..." rows={3} />
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Step 4: Business Skills */}
         {step === 4 && (
-          <div className="space-y-6">
+          <motion.div
+            key="step4"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
+            className="space-y-6">
             <SelectField label="Expertise sectorielle *" value={formData.sectorExpertise} onChange={v => updateField("sectorExpertise", v)} error={errors.sectorExpertise}
               options={[["junior","Junior (< 2 ans)"],["intermediate","Intermédiaire (2-5 ans)"],["senior","Senior (5-10 ans)"],["expert","Expert (10+ ans)"]]} />
             <SelectField label="Réseau client existant *" value={formData.clientNetwork} onChange={v => updateField("clientNetwork", v)} error={errors.clientNetwork}
               options={[["none","Aucun"],["small","Petit (< 10 contacts)"],["medium","Moyen (10-50 contacts)"],["large","Large (50+ contacts)"]]} />
             <SelectField label="Expérience en développement commercial *" value={formData.businessDevelopment} onChange={v => updateField("businessDevelopment", v)} error={errors.businessDevelopment}
               options={[["none","Aucune"],["basic","Basique"],["intermediate","Intermédiaire"],["advanced","Avancé"]]} />
-          </div>
+          </motion.div>
         )}
 
         {/* Step 5: Distribution Network (NEW) */}
         {step === 5 && (
-          <div className="space-y-6">
+          <motion.div
+            key="step5"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
+            className="space-y-6">
             <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 mb-4">
               <p className="text-sm text-primary font-medium">Cette section évalue votre capacité à distribuer des solutions IA auprès de PME/TPE dans votre secteur.</p>
             </div>
@@ -603,12 +667,18 @@ export default function Apply() {
             </div>
             <SelectField label="Connaissance du marché cible *" value={formData.targetMarketKnowledge} onChange={v => updateField("targetMarketKnowledge", v)} error={errors.targetMarketKnowledge}
               options={[["none","Aucune"],["basic","Basique"],["good","Bonne"],["excellent","Excellente"],["expert","Expert du marché"]]} />
-          </div>
+          </motion.div>
         )}
 
         {/* Step 6: Entrepreneurial Psychology (NEW) */}
         {step === 6 && (
-          <div className="space-y-6">
+          <motion.div
+            key="step6"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
+            className="space-y-6">
             <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 mb-4">
               <p className="text-sm text-primary font-medium">Cette section évalue votre profil psychologique d'entrepreneur. Soyez honnête, il n'y a pas de mauvaise réponse.</p>
             </div>
@@ -626,12 +696,18 @@ export default function Apply() {
                 placeholder="Décrivez vos expériences entrepreneuriales : création d'entreprise, projets personnels, freelance, side projects, initiatives dans votre entreprise actuelle..." rows={5} className={errors.entrepreneurialExperience ? "border-destructive" : ""} />
               <FieldError error={errors.entrepreneurialExperience} />
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Step 7: AI Agent Scenario (NEW) */}
         {step === 7 && (
-          <div className="space-y-6">
+          <motion.div
+            key="step7"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
+            className="space-y-6">
             <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 mb-4">
               <p className="text-sm text-primary font-medium">Décrivez un scénario concret où un agent IA pourrait remplacer un humain dans un processus métier que vous maîtrisez. C'est le cœur de votre candidature.</p>
             </div>
@@ -659,12 +735,18 @@ export default function Apply() {
                 <span className="text-xs text-muted-foreground">{formData.aiAgentImpact.length}/3000</span>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Step 8: Communication & Motivation */}
         {step === 8 && (
-          <div className="space-y-6">
+          <motion.div
+            key="step8"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
+            className="space-y-6">
             <div className="space-y-2">
               <Label>Langues parlées</Label>
               <Input value={formData.languages} onChange={e => updateField("languages", e.target.value)} placeholder="Ex: Français (natif), Anglais (courant), Arabe (intermédiaire)" />
@@ -682,12 +764,18 @@ export default function Apply() {
                 <span className="text-xs text-muted-foreground">{formData.motivation.length}/5000</span>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Step 9: Social Links & Files (NEW) */}
         {step === 9 && (
-          <div className="space-y-6">
+          <motion.div
+            key="step9"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
+            className="space-y-6">
             <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 mb-4">
               <p className="text-sm text-primary font-medium">Partagez vos profils en ligne et documents pour compléter votre candidature.</p>
             </div>
@@ -713,14 +801,14 @@ export default function Apply() {
             </div>
 
             {/* File uploads */}
-            <div className="border-t border-border pt-6 mt-6">
+            <div className="border-t pt-6 mt-6" style={{ borderColor: "var(--wise-canvas-soft)" }}>
               <h3 className="heading-md text-foreground mb-4">Documents</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label>CV (PDF, DOC, DOCX)</Label>
                   <input ref={cvInputRef} type="file" accept=".pdf,.doc,.docx" className="hidden" onChange={e => { if (e.target.files?.[0]) setCvFile(e.target.files[0]); }} />
                   <div
-                    className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 transition-colors"
+                    className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors" style={{ borderColor: "var(--wise-canvas-soft)" }}
                     onClick={() => cvInputRef.current?.click()}
                   >
                     <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
@@ -735,7 +823,7 @@ export default function Apply() {
                   <Label>Photo de profil (JPG, PNG)</Label>
                   <input ref={photoInputRef} type="file" accept=".jpg,.jpeg,.png,.webp" className="hidden" onChange={e => { if (e.target.files?.[0]) setPhotoFile(e.target.files[0]); }} />
                   <div
-                    className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 transition-colors"
+                    className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors" style={{ borderColor: "var(--wise-canvas-soft)" }}
                     onClick={() => photoInputRef.current?.click()}
                   >
                     <User className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
@@ -748,12 +836,18 @@ export default function Apply() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Step 10: Video Pitch */}
         {step === 10 && (
-          <div className="space-y-6">
+          <motion.div
+            key="step10"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
+            className="space-y-6">
             <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 mb-4">
               <p className="text-sm text-primary font-medium">Enregistrez une courte vidéo (90 secondes max) pour vous présenter et nous convaincre de vous sélectionner. Un compte à rebours de 3 secondes vous laissera le temps de vous préparer.</p>
             </div>
@@ -904,8 +998,9 @@ export default function Apply() {
             )}
 
             <p className="text-xs text-muted-foreground text-center">Cette étape est optionnelle mais fortement recommandée. Les candidats avec vidéo sont prioritaires dans la sélection.</p>
-          </div>
+          </motion.div>
         )}
+        </AnimatePresence>
 
         {/* Navigation */}
         <div className="flex justify-between mt-10 pt-6" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>

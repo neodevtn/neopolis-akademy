@@ -1,16 +1,64 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
-import { ChevronRight, GraduationCap, Award, Globe, Users, TrendingDown, Shield, Zap, BookOpen, ArrowRight, ChevronDown } from "lucide-react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import {
+  ChevronRight,
+  GraduationCap,
+  Award,
+  Globe,
+  Users,
+  TrendingDown,
+  Shield,
+  Zap,
+  BookOpen,
+  ArrowRight,
+  ChevronDown,
+  Play,
+  CheckCircle2,
+  Sparkles,
+  Target,
+  Rocket,
+} from "lucide-react";
 
 // Chart.js
 import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
 
-const LOGO_URL = "/manus-storage/logo_neopolis_akademy_9c9a0823.png";
-const HERO_IMG = "/manus-storage/hero_ai_network_cb2c2cf9.png";
-const AFRICA_IMG = "/manus-storage/africa_network_fb63ec75.png";
-const CERT_IMG = "/manus-storage/certification_badge_35220f38.png";
-const PARTNER_IMG = "/manus-storage/partnership_globe_2c18a400.png";
+/* ─── Asset URLs ─── */
+const LOGO_URL = "/manus-storage/logo_neopolis_akademy_wise_ede57803.png";
+const HERO_IMG = "/manus-storage/wise_hero_illustration_0a3cf474.png";
+const CERT_IMG = "/manus-storage/wise_certification_badge_c2e19576.png";
+const ELEARNING_IMG = "/manus-storage/wise_elearning_illustration_a269c91a.png";
+const AFRICA_IMG = "/manus-storage/wise_africa_network_650980bb.png";
+const PARTNER_IMG = "/manus-storage/wise_partnership_illustration_b3c56284.png";
+
+/* ─── Animation Variants ─── */
+const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeOut } },
+};
+
+const fadeInLeft = {
+  hidden: { opacity: 0, x: -40 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: easeOut } },
+};
+
+const fadeInRight = {
+  hidden: { opacity: 0, x: 40 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: easeOut } },
+};
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.92 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: easeOut } },
+};
 
 /* ─── FAQ Data ─── */
 const faqItems = [
@@ -23,195 +71,335 @@ const faqItems = [
   { q: "Quelles ressources Neopolis Development fournit-elle aux ambassadeurs ?", a: "Neopolis fournit : ressources humaines et techniques, matériel et appliances, agents IA prêts à l'emploi, accès à des LLM multiples (pas seulement Anthropic), infrastructure de serveurs puissants hébergés on-premise, et toute l'assistance nécessaire pour attaquer votre marché cible." },
 ];
 
+/* ─── Animated Section Wrapper ─── */
+function AnimatedSection({ children, className, style, id }: { children: React.ReactNode; className?: string; style?: React.CSSProperties; id?: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  return (
+    <motion.section
+      ref={ref}
+      id={id}
+      className={className}
+      style={style}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={staggerContainer}
+    >
+      {children}
+    </motion.section>
+  );
+}
+
 export default function Home() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--wise-canvas)" }}>
       {/* ─── Navigation ─── */}
-      <nav className="sticky top-0 z-50" style={{ backgroundColor: "var(--wise-canvas)", borderBottom: "1px solid var(--wise-canvas-soft)" }}>
-        <div className="container flex items-center justify-between py-3">
-          <div className="flex items-center gap-2">
-            <img src={LOGO_URL} alt="Neopolis Akademy" className="h-9 object-contain" />
+      <motion.nav
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+        className="sticky top-0 z-50 transition-all duration-300"
+        style={{
+          backgroundColor: scrolled ? "rgba(255,255,255,0.95)" : "var(--wise-canvas-soft)",
+          backdropFilter: scrolled ? "blur(12px)" : "none",
+          boxShadow: scrolled ? "0 1px 3px rgba(14,15,12,0.08)" : "none",
+        }}
+      >
+        <div className="container flex items-center justify-between py-4">
+          <div className="flex items-center gap-3">
+            <img src={LOGO_URL} alt="Neopolis Akademy" className="h-10 object-contain" />
           </div>
           <div className="hidden md:flex items-center gap-8">
-            <a href="#formule" className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>La Formule</a>
-            <a href="#pourquoi" className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>Pourquoi maintenant</a>
-            <a href="#partenaires" className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>Partenaires</a>
-            <a href="#faq" className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>FAQ</a>
+            <NavLink href="#formule">La Formule</NavLink>
+            <NavLink href="#pourquoi">Pourquoi maintenant</NavLink>
+            <NavLink href="#partenaires">Partenaires</NavLink>
+            <NavLink href="#faq">FAQ</NavLink>
           </div>
           <Link href="/apply">
-            <button className="wise-btn-primary flex items-center gap-2">
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="wise-btn-primary flex items-center gap-2"
+            >
               Postuler <ChevronRight size={16} />
-            </button>
+            </motion.button>
           </Link>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* ─── Hero Band (Sage) ─── */}
-      <section className="wise-hero-band">
-        <div className="container py-16 md:py-24">
+      <section className="wise-hero-band overflow-hidden">
+        <div className="container py-16 md:py-28">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: "var(--wise-positive)" }}></span>
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
+            >
+              <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
+                <motion.span
+                  animate={{ scale: [1, 1.4, 1] }}
+                  transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: "var(--wise-positive)" }}
+                />
                 <span className="text-sm font-semibold" style={{ color: "var(--wise-positive-deep)" }}>Programme 2026 — Places limitées</span>
-              </div>
-              <h1 className="wise-display-xl mb-6">
-                Transformez la menace de l'IA<br />
-                <span style={{ color: "var(--wise-positive)" }}>en opportunité</span>
-              </h1>
-              <p className="wise-body-lg mb-8 max-w-lg">
-                Formation certifiante <strong>100% gratuite</strong>. Devenez <strong>AI Solutions Partner — Ambassadeur Certifié</strong> et conquérez le marché africain de l'IA agentique.
-              </p>
-              <div className="flex flex-wrap gap-4 mb-6">
+              </motion.div>
+
+              <motion.h1 variants={fadeInUp} className="wise-display-xl mb-6" style={{ lineHeight: 1.05 }}>
+                Transformez la menace de l'IA{" "}
+                <span className="relative inline-block">
+                  <span style={{ color: "var(--wise-positive)" }}>en opportunité</span>
+                  <motion.span
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: 0.8, duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+                    className="absolute bottom-0 left-0 w-full h-1 rounded-full origin-left"
+                    style={{ backgroundColor: "var(--wise-primary)" }}
+                  />
+                </span>
+              </motion.h1>
+
+              <motion.p variants={fadeInUp} className="wise-body-lg mb-8 max-w-lg">
+                Formation certifiante <strong>100% gratuite</strong>. Devenez{" "}
+                <strong>AI Solutions Partner — Ambassadeur Certifié</strong> et conquérez le marché africain de l'IA agentique.
+              </motion.p>
+
+              <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 mb-6">
                 <Link href="/apply">
-                  <button className="wise-btn-primary flex items-center gap-2 text-lg px-8 py-4">
+                  <motion.button
+                    whileHover={{ scale: 1.04, boxShadow: "0 8px 30px rgba(159,232,112,0.3)" }}
+                    whileTap={{ scale: 0.97 }}
+                    className="wise-btn-primary flex items-center gap-2 text-lg px-8 py-4"
+                  >
                     Déposer ma candidature <ArrowRight size={20} />
-                  </button>
+                  </motion.button>
                 </Link>
                 <a href="#formule">
-                  <button className="wise-btn-secondary flex items-center gap-2 text-lg px-8 py-4">
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="wise-btn-secondary flex items-center gap-2 text-lg px-8 py-4"
+                  >
                     Découvrir le programme
-                  </button>
+                  </motion.button>
                 </a>
+              </motion.div>
+
+              <motion.div variants={fadeInUp} className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={16} style={{ color: "var(--wise-positive)" }} />
+                  <span className="text-sm font-medium" style={{ color: "var(--wise-body)" }}>100% Gratuit</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={16} style={{ color: "var(--wise-positive)" }} />
+                  <span className="text-sm font-medium" style={{ color: "var(--wise-body)" }}>296 places</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={16} style={{ color: "var(--wise-negative)" }} />
+                  <span className="text-sm font-semibold" style={{ color: "var(--wise-negative)" }}>Avant le 31 août 2026</span>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, x: 40 }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
+              className="hidden md:block relative"
+            >
+              <div className="relative">
+                <motion.div
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                >
+                  <img src={HERO_IMG} alt="Professionnels africains en formation IA" className="w-full max-w-lg mx-auto object-contain rounded-3xl" />
+                </motion.div>
+                {/* Floating badges */}
+                <motion.div
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", delay: 0.5 }}
+                  className="absolute -top-4 -right-4 wise-card px-4 py-2 shadow-lg"
+                >
+                  <div className="flex items-center gap-2">
+                    <Sparkles size={16} style={{ color: "var(--wise-primary)" }} />
+                    <span className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>Certification CCA</span>
+                  </div>
+                </motion.div>
+                <motion.div
+                  animate={{ y: [0, 6, 0] }}
+                  transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 1 }}
+                  className="absolute -bottom-4 -left-4 wise-card px-4 py-2 shadow-lg"
+                >
+                  <div className="flex items-center gap-2">
+                    <Globe size={16} style={{ color: "var(--wise-accent-cyan)" }} />
+                    <span className="text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>54 pays africains</span>
+                  </div>
+                </motion.div>
               </div>
-              <p className="text-sm" style={{ color: "var(--wise-mute)" }}>
-                Date limite de candidature : <strong style={{ color: "var(--wise-negative)" }}>31 août 2026</strong>
-              </p>
-            </div>
-            <div className="hidden md:block">
-              <img src={HERO_IMG} alt="Réseau IA Afrique" className="w-full max-w-md mx-auto object-contain rounded-3xl" />
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* ─── Stats Band ─── */}
-      <section className="wise-content-band">
+      <AnimatedSection className="wise-content-band">
         <div className="container py-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <StatCard value="220Mds$" label="Dépenses SaaS menacées par l'IA agentique d'ici 2030" source="Gartner, 2025" />
-            <StatCard value="90M" label="Emplois à risque dans le monde d'ici 2030" source="WEF Future of Jobs, 2025" />
-            <StatCard value="296" label="Candidats sélectionnés pour ce programme exclusif" source="Places disponibles" highlight />
-          </div>
+          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div variants={scaleIn}><StatCard value="220Mds$" label="Dépenses SaaS menacées par l'IA agentique d'ici 2030" source="Gartner, 2025" /></motion.div>
+            <motion.div variants={scaleIn}><StatCard value="90M" label="Emplois à risque dans le monde d'ici 2030" source="WEF Future of Jobs, 2025" /></motion.div>
+            <motion.div variants={scaleIn}><StatCard value="296" label="Candidats sélectionnés pour ce programme exclusif" source="Places disponibles" highlight /></motion.div>
+          </motion.div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ─── La Formule (Green Band) ─── */}
-      <section id="formule" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
+      <AnimatedSection id="formule" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
         <div className="container py-20">
-          <div className="text-center mb-12">
+          <motion.div variants={fadeInUp} className="text-center mb-14">
             <span className="wise-badge-positive inline-block mb-4">100% GRATUIT</span>
             <h2 className="wise-display-md mb-4">La Formule Complète</h2>
             <p className="wise-body-lg max-w-2xl mx-auto">
               Un parcours en 3 étapes pour devenir AI Solutions Partner — Ambassadeur Certifié
             </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="wise-card">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
-                <BookOpen size={24} style={{ color: "var(--wise-positive-deep)" }} />
-              </div>
-              <h3 className="wise-display-xs mb-2">E-Learning 7 jours</h3>
-              <p className="wise-body-md">Formation intensive sur l'IA générale, les LLM, les agents IA et leurs applications métier concrètes.</p>
-              <div className="mt-4 pt-4" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
-                <span className="wise-badge-positive">Gratuit</span>
-              </div>
-            </div>
-            <div className="wise-card">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
-                <Award size={24} style={{ color: "var(--wise-positive-deep)" }} />
-              </div>
-              <h3 className="wise-display-xs mb-2">Certification CCA</h3>
-              <p className="wise-body-md">Accès à la plateforme Anthropic + voucher pour passer la certification Claude Certified Architect avant le 31 août 2026.</p>
-              <div className="mt-4 pt-4" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
-                <span className="wise-badge-positive">Gratuit</span>
-              </div>
-            </div>
-            <div className="wise-card">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
-                <Globe size={24} style={{ color: "var(--wise-positive-deep)" }} />
-              </div>
-              <h3 className="wise-display-xs mb-2">Statut Ambassadeur</h3>
-              <p className="wise-body-md">Devenez AI Solutions Partner indépendant et distribuez des solutions IA sur tout le continent africain.</p>
-              <div className="mt-4 pt-4" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
-                <span className="wise-badge-positive">Accompagnement complet</span>
-              </div>
-            </div>
-          </div>
+          </motion.div>
+
+          <motion.div variants={staggerContainer} className="grid md:grid-cols-3 gap-8">
+            <motion.div variants={fadeInUp}>
+              <FormulaCard
+                icon={<BookOpen size={28} />}
+                step="01"
+                title="E-Learning 7 jours"
+                description="Formation intensive sur l'IA générale, les LLM, les agents IA et leurs applications métier concrètes."
+                badge="Gratuit"
+                image={ELEARNING_IMG}
+              />
+            </motion.div>
+            <motion.div variants={fadeInUp}>
+              <FormulaCard
+                icon={<Award size={28} />}
+                step="02"
+                title="Certification CCA"
+                description="Accès à la plateforme Anthropic + voucher pour passer la certification Claude Certified Architect avant le 31 août 2026."
+                badge="Gratuit"
+                image={CERT_IMG}
+              />
+            </motion.div>
+            <motion.div variants={fadeInUp}>
+              <FormulaCard
+                icon={<Globe size={28} />}
+                step="03"
+                title="Statut Ambassadeur"
+                description="Devenez AI Solutions Partner indépendant et distribuez des solutions IA sur tout le continent africain."
+                badge="Accompagnement complet"
+                image={AFRICA_IMG}
+              />
+            </motion.div>
+          </motion.div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ─── Pourquoi maintenant (Dark Band) ─── */}
-      <section id="pourquoi" className="wise-hero-band-dark">
+      <AnimatedSection id="pourquoi" className="wise-hero-band-dark">
         <div className="container py-20">
-          <div className="text-center mb-12">
+          <motion.div variants={fadeInUp} className="text-center mb-14">
             <h2 className="wise-display-md mb-4" style={{ color: "var(--wise-primary)" }}>Pourquoi se transformer maintenant ?</h2>
             <p className="wise-body-lg" style={{ color: "var(--wise-canvas-soft)" }}>
               L'IA agentique ne menace pas seulement les développeurs. Elle redéfinit l'ensemble du marché du travail.
             </p>
-          </div>
+          </motion.div>
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
+            <motion.div variants={fadeInLeft}>
               <JobLossChart />
               <p className="text-xs mt-3" style={{ color: "var(--wise-mute)" }}>Sources : WEF Future of Jobs 2025, Goldman Sachs, BLS</p>
-            </div>
-            <div className="space-y-6">
-              <ImpactItem icon={<TrendingDown size={20} />} title="92 millions d'emplois" desc="seront déplacés par l'IA d'ici 2030 selon le World Economic Forum." />
-              <ImpactItem icon={<Users size={20} />} title="41% du code" desc="est déjà généré par l'IA en 2025. Les développeurs classiques sont en première ligne." />
-              <ImpactItem icon={<Shield size={20} />} title="234 milliards $" desc="de dépenses SaaS menacées. Les logiciels traditionnels seront remplacés par des agents IA." />
-              <ImpactItem icon={<Zap size={20} />} title="Ne subissez pas." desc="Devenez l'acteur de cette transformation. Passez du côté de ceux qui déploient l'IA." />
-            </div>
+            </motion.div>
+            <motion.div variants={staggerContainer} className="space-y-5">
+              <motion.div variants={fadeInRight}><ImpactItem icon={<TrendingDown size={20} />} title="92 millions d'emplois" desc="seront déplacés par l'IA d'ici 2030 selon le World Economic Forum." /></motion.div>
+              <motion.div variants={fadeInRight}><ImpactItem icon={<Users size={20} />} title="41% du code" desc="est déjà généré par l'IA en 2025. Les développeurs classiques sont en première ligne." /></motion.div>
+              <motion.div variants={fadeInRight}><ImpactItem icon={<Shield size={20} />} title="234 milliards $" desc="de dépenses SaaS menacées. Les logiciels traditionnels seront remplacés par des agents IA." /></motion.div>
+              <motion.div variants={fadeInRight}><ImpactItem icon={<Zap size={20} />} title="Ne subissez pas." desc="Devenez l'acteur de cette transformation. Passez du côté de ceux qui déploient l'IA." /></motion.div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ─── Partenariats (Sage Band) ─── */}
-      <section id="partenaires" className="wise-hero-band">
+      <AnimatedSection id="partenaires" className="wise-hero-band">
         <div className="container py-20">
-          <div className="text-center mb-12">
+          <motion.div variants={fadeInUp} className="text-center mb-14">
             <h2 className="wise-display-md mb-4">Partenariats Stratégiques</h2>
             <p className="wise-body-lg max-w-2xl mx-auto">
               Neopolis Development a noué des partenariats avec les leaders mondiaux de l'IA pour conquérir le marché africain.
             </p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="wise-card-dark">
-              <h3 className="text-2xl font-bold mb-3" style={{ color: "var(--wise-primary)" }}>Anthropic</h3>
-              <p className="text-base" style={{ color: "var(--wise-canvas-soft)" }}>
-                Créateur de Claude, l'un des LLM les plus avancés au monde. Notre partenariat offre un accès exclusif à la certification CCA et aux outils de développement d'agents IA de nouvelle génération.
-              </p>
-            </div>
-            <div className="wise-card-dark">
-              <h3 className="text-2xl font-bold mb-3" style={{ color: "var(--wise-primary)" }}>Alibaba Cloud</h3>
-              <p className="text-base" style={{ color: "var(--wise-canvas-soft)" }}>
-                Infrastructure cloud mondiale. Notre partenariat garantit des ressources de calcul puissantes, des modèles ML complémentaires et une infrastructure on-premise pour l'Afrique.
-              </p>
-            </div>
-          </div>
-          <div className="mt-12 grid md:grid-cols-2 gap-8 items-center">
-            <img src={PARTNER_IMG} alt="Partenariats globaux" className="w-full max-w-sm mx-auto object-contain rounded-3xl" />
-            <div>
-              <h3 className="wise-display-xs mb-4">Ce que nous fournissons</h3>
-              <ul className="space-y-3">
-                {["Ressources humaines et techniques dédiées", "Agents IA prêts à l'emploi (ready-to-use)", "Accès multi-LLM (Claude, Qwen, DeepSeek...)", "Infrastructure serveurs on-premise puissante", "Accompagnement commercial et marketing", "Support technique continu"].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span className="mt-1 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "var(--wise-primary)" }}>
-                      <ChevronRight size={12} style={{ color: "var(--wise-ink)" }} />
+          </motion.div>
+
+          <motion.div variants={staggerContainer} className="grid md:grid-cols-2 gap-8 mb-12">
+            <motion.div variants={scaleIn}>
+              <PartnerCard
+                name="Anthropic"
+                description="Créateur de Claude, l'un des LLM les plus avancés au monde. Notre partenariat offre un accès exclusif à la certification CCA et aux outils de développement d'agents IA de nouvelle génération."
+              />
+            </motion.div>
+            <motion.div variants={scaleIn}>
+              <PartnerCard
+                name="Alibaba Cloud"
+                description="Infrastructure cloud mondiale. Notre partenariat garantit des ressources de calcul puissantes, des modèles ML complémentaires et une infrastructure on-premise pour l'Afrique."
+              />
+            </motion.div>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <motion.div variants={fadeInLeft}>
+              <img src={PARTNER_IMG} alt="Partenariats globaux" className="w-full max-w-md mx-auto object-contain rounded-3xl" />
+            </motion.div>
+            <motion.div variants={fadeInRight}>
+              <h3 className="wise-display-xs mb-6">Ce que nous fournissons</h3>
+              <div className="space-y-4">
+                {[
+                  "Ressources humaines et techniques dédiées",
+                  "Agents IA prêts à l'emploi (ready-to-use)",
+                  "Accès multi-LLM (Claude, Qwen, DeepSeek...)",
+                  "Infrastructure serveurs on-premise puissante",
+                  "Accompagnement commercial et marketing",
+                  "Support technique continu",
+                ].map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.08, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                    viewport={{ once: true }}
+                    className="flex items-center gap-3"
+                  >
+                    <span className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "var(--wise-primary)" }}>
+                      <CheckCircle2 size={14} style={{ color: "var(--wise-ink)" }} />
                     </span>
-                    <span className="wise-body-md">{item}</span>
-                  </li>
+                    <span className="wise-body-md font-medium">{item}</span>
+                  </motion.div>
                 ))}
-              </ul>
-            </div>
+              </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ─── AI Solutions Partner Section ─── */}
-      <section className="wise-content-band">
+      <AnimatedSection className="wise-content-band">
         <div className="container py-20">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
+            <motion.div variants={fadeInLeft}>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
+                <Target size={14} style={{ color: "var(--wise-positive-deep)" }} />
+                <span className="text-xs font-semibold" style={{ color: "var(--wise-positive-deep)" }}>VOTRE FUTUR STATUT</span>
+              </div>
               <h2 className="wise-display-md mb-6">Devenez AI Solutions Partner</h2>
               <p className="wise-body-lg mb-6">
                 Après votre certification, vous obtenez le statut d'<strong>AI Solutions Partner — Ambassadeur Certifié</strong>. Vous devenez un entrepreneur indépendant qui distribue des solutions IA auprès des PME/TPE de votre secteur d'activité.
@@ -222,69 +410,88 @@ export default function Home() {
                   Identifier les entreprises de votre secteur dont les processus peuvent être automatisés par des agents IA, leur proposer des solutions concrètes, et les accompagner dans leur transformation digitale — avec tout le soutien de Neopolis Development.
                 </p>
               </div>
-            </div>
-            <img src={AFRICA_IMG} alt="Réseau Afrique" className="w-full max-w-sm mx-auto object-contain rounded-3xl" />
+            </motion.div>
+            <motion.div variants={fadeInRight}>
+              <img src={AFRICA_IMG} alt="Réseau Afrique" className="w-full max-w-sm mx-auto object-contain rounded-3xl" />
+            </motion.div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ─── CTA Band ─── */}
-      <section style={{ backgroundColor: "var(--wise-ink)" }}>
-        <div className="container py-16 text-center">
-          <h2 className="text-3xl md:text-4xl font-black mb-4" style={{ color: "var(--wise-primary)" }}>
-            Ne subissez pas la disruption. Devenez-en l'acteur.
-          </h2>
-          <p className="text-lg mb-8" style={{ color: "var(--wise-canvas-soft)" }}>
-            Formation et certification 100% gratuites — 296 places seulement
-          </p>
-          <Link href="/apply">
-            <button className="wise-btn-primary text-lg px-10 py-4 flex items-center gap-2 mx-auto">
-              Postuler maintenant <ArrowRight size={20} />
-            </button>
-          </Link>
+      <AnimatedSection style={{ backgroundColor: "var(--wise-ink)" }}>
+        <div className="container py-20 text-center">
+          <motion.div variants={fadeInUp}>
+            <motion.div
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              className="inline-block mb-6"
+            >
+              <Rocket size={40} style={{ color: "var(--wise-primary)" }} />
+            </motion.div>
+            <h2 className="text-3xl md:text-5xl font-black mb-5" style={{ color: "var(--wise-primary)", lineHeight: 1.1 }}>
+              Ne subissez pas la disruption.<br />Devenez-en l'acteur.
+            </h2>
+            <p className="text-lg mb-10" style={{ color: "var(--wise-canvas-soft)" }}>
+              Formation et certification 100% gratuites — 296 places seulement
+            </p>
+            <Link href="/apply">
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: "0 12px 40px rgba(159,232,112,0.35)" }}
+                whileTap={{ scale: 0.97 }}
+                className="wise-btn-primary text-lg px-10 py-5 flex items-center gap-3 mx-auto"
+              >
+                Postuler maintenant <ArrowRight size={22} />
+              </motion.button>
+            </Link>
+          </motion.div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ─── FAQ Section ─── */}
-      <section id="faq" className="wise-hero-band">
+      <AnimatedSection id="faq" className="wise-hero-band">
         <div className="container py-20">
-          <h2 className="wise-display-md text-center mb-12">Questions fréquentes</h2>
-          <div className="max-w-3xl mx-auto space-y-3">
+          <motion.div variants={fadeInUp}>
+            <h2 className="wise-display-md text-center mb-14">Questions fréquentes</h2>
+          </motion.div>
+          <motion.div variants={staggerContainer} className="max-w-3xl mx-auto space-y-3">
             {faqItems.map((item, i) => (
-              <FAQItem key={i} question={item.q} answer={item.a} />
+              <motion.div key={i} variants={fadeInUp}>
+                <FAQItem question={item.q} answer={item.a} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* ─── Footer (Dark) ─── */}
       <footer className="wise-footer">
-        <div className="container py-12">
+        <div className="container py-14">
           <div className="grid md:grid-cols-3 gap-8">
             <div>
-              <img src={LOGO_URL} alt="Neopolis Akademy" className="h-8 object-contain mb-4 brightness-0 invert" />
+              <img src={LOGO_URL} alt="Neopolis Akademy" className="h-9 object-contain mb-4 brightness-0 invert" />
               <p className="text-sm" style={{ color: "var(--wise-mute)" }}>
                 Neopolis Development — Transformer la menace de l'IA en opportunité pour l'Afrique.
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-3" style={{ color: "var(--wise-canvas-soft)" }}>Programme</h4>
-              <ul className="space-y-2 text-sm" style={{ color: "var(--wise-mute)" }}>
-                <li><a href="#formule" className="hover:text-white transition-colors">La Formule</a></li>
-                <li><a href="#pourquoi" className="hover:text-white transition-colors">Pourquoi maintenant</a></li>
-                <li><a href="#partenaires" className="hover:text-white transition-colors">Partenaires</a></li>
-                <li><a href="#faq" className="hover:text-white transition-colors">FAQ</a></li>
+              <h4 className="font-semibold mb-4" style={{ color: "var(--wise-canvas-soft)" }}>Programme</h4>
+              <ul className="space-y-3 text-sm" style={{ color: "var(--wise-mute)" }}>
+                <li><a href="#formule" className="hover:text-white transition-colors duration-200">La Formule</a></li>
+                <li><a href="#pourquoi" className="hover:text-white transition-colors duration-200">Pourquoi maintenant</a></li>
+                <li><a href="#partenaires" className="hover:text-white transition-colors duration-200">Partenaires</a></li>
+                <li><a href="#faq" className="hover:text-white transition-colors duration-200">FAQ</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-3" style={{ color: "var(--wise-canvas-soft)" }}>Contact</h4>
-              <ul className="space-y-2 text-sm" style={{ color: "var(--wise-mute)" }}>
+              <h4 className="font-semibold mb-4" style={{ color: "var(--wise-canvas-soft)" }}>Contact</h4>
+              <ul className="space-y-3 text-sm" style={{ color: "var(--wise-mute)" }}>
                 <li>info@neopolis-dev.com</li>
                 <li>www.neopolis-dev.com</li>
               </ul>
             </div>
           </div>
-          <div className="mt-12 pt-8" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+          <div className="mt-12 pt-8" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
             <p className="text-center text-sm" style={{ color: "var(--wise-mute)" }}>
               © 2026 Neopolis Development. Tous droits réservés.
             </p>
@@ -295,58 +502,145 @@ export default function Home() {
   );
 }
 
-/* ─── Sub-Components ─── */
+/* ═══════════════════════════════════════════════════════════
+   SUB-COMPONENTS
+   ═══════════════════════════════════════════════════════════ */
+
+function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a
+      href={href}
+      className="text-sm font-semibold relative group"
+      style={{ color: "var(--wise-ink)" }}
+    >
+      {children}
+      <span className="absolute -bottom-1 left-0 w-0 h-0.5 rounded-full group-hover:w-full transition-all duration-300" style={{ backgroundColor: "var(--wise-primary)" }} />
+    </a>
+  );
+}
 
 function StatCard({ value, label, source, highlight }: { value: string; label: string; source: string; highlight?: boolean }) {
   return (
-    <div className={highlight ? "wise-card-green text-center" : "wise-card-sage text-center"}>
-      <p className="text-4xl md:text-5xl font-black mb-2" style={{ color: highlight ? "var(--wise-positive-deep)" : "var(--wise-ink)" }}>{value}</p>
+    <motion.div
+      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      className={highlight ? "wise-card-green text-center h-full" : "wise-card-sage text-center h-full"}
+    >
+      <p className="text-4xl md:text-5xl font-black mb-3" style={{ color: highlight ? "var(--wise-positive-deep)" : "var(--wise-ink)" }}>{value}</p>
       <p className="wise-body-md mb-2">{label}</p>
       <p className="text-xs" style={{ color: "var(--wise-mute)" }}>{source}</p>
-    </div>
+    </motion.div>
+  );
+}
+
+function FormulaCard({ icon, step, title, description, badge, image }: { icon: React.ReactNode; step: string; title: string; description: string; badge: string; image: string }) {
+  return (
+    <motion.div
+      whileHover={{ y: -6, transition: { duration: 0.25 } }}
+      className="wise-card h-full flex flex-col shadow-sm"
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
+          <span style={{ color: "var(--wise-positive-deep)" }}>{icon}</span>
+        </div>
+        <span className="text-xs font-bold px-3 py-1 rounded-full" style={{ backgroundColor: "var(--wise-canvas-soft)", color: "var(--wise-mute)" }}>
+          ÉTAPE {step}
+        </span>
+      </div>
+      <h3 className="wise-display-xs mb-3">{title}</h3>
+      <p className="wise-body-md flex-1">{description}</p>
+      <div className="mt-5">
+        <img src={image} alt={title} className="w-full h-32 object-contain rounded-xl mb-4" />
+      </div>
+      <div className="pt-4" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
+        <span className="wise-badge-positive">{badge}</span>
+      </div>
+    </motion.div>
+  );
+}
+
+function PartnerCard({ name, description }: { name: string; description: string }) {
+  return (
+    <motion.div
+      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      className="wise-card-dark h-full"
+    >
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(159,232,112,0.15)" }}>
+          <Sparkles size={20} style={{ color: "var(--wise-primary)" }} />
+        </div>
+        <h3 className="text-2xl font-bold" style={{ color: "var(--wise-primary)" }}>{name}</h3>
+      </div>
+      <p className="text-base leading-relaxed" style={{ color: "var(--wise-canvas-soft)" }}>
+        {description}
+      </p>
+    </motion.div>
   );
 }
 
 function ImpactItem({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
-    <div className="flex gap-4">
+    <motion.div
+      whileHover={{ x: 4, transition: { duration: 0.2 } }}
+      className="flex gap-4 p-4 rounded-xl transition-colors"
+      style={{ backgroundColor: "rgba(159,232,112,0.05)" }}
+    >
       <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "var(--wise-primary)" }}>
-        {icon}
+        <span style={{ color: "var(--wise-ink)" }}>{icon}</span>
       </div>
       <div>
         <p className="font-semibold text-base" style={{ color: "var(--wise-canvas-soft)" }}>{title}</p>
         <p className="text-sm" style={{ color: "var(--wise-mute)" }}>{desc}</p>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="wise-card">
+    <motion.div
+      whileHover={{ scale: 1.005 }}
+      className="wise-card overflow-hidden"
+    >
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between text-left"
       >
         <span className="font-semibold text-base pr-4" style={{ color: "var(--wise-ink)" }}>{question}</span>
-        <ChevronDown size={20} className={`flex-shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`} style={{ color: "var(--wise-mute)" }} />
+        <motion.span
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
+          className="flex-shrink-0"
+        >
+          <ChevronDown size={20} style={{ color: "var(--wise-mute)" }} />
+        </motion.span>
       </button>
-      {open && (
-        <p className="mt-4 pt-4 wise-body-md" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
-          {answer}
-        </p>
-      )}
-    </div>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <p className="mt-4 pt-4 wise-body-md" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
+              {answer}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
 function JobLossChart() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<Chart | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { once: true });
 
   useEffect(() => {
-    if (!canvasRef.current) return;
+    if (!canvasRef.current || !isInView) return;
     if (chartRef.current) chartRef.current.destroy();
 
     const ctx = canvasRef.current.getContext("2d");
@@ -357,33 +651,35 @@ function JobLossChart() {
       data: {
         labels: ["2025", "2026", "2027", "2028", "2029", "2030"],
         datasets: [
-          { label: "Saisie de données", data: [100, 82, 65, 48, 35, 22], borderColor: "#9fe870", backgroundColor: "rgba(159,232,112,0.1)", tension: 0.4, borderWidth: 2 },
-          { label: "Service client", data: [100, 85, 70, 55, 42, 30], borderColor: "#38c8ff", backgroundColor: "rgba(56,200,255,0.1)", tension: 0.4, borderWidth: 2 },
-          { label: "Comptabilité", data: [100, 88, 75, 62, 50, 40], borderColor: "#ffc091", backgroundColor: "rgba(255,192,145,0.1)", tension: 0.4, borderWidth: 2 },
-          { label: "Développeurs", data: [100, 90, 78, 65, 55, 45], borderColor: "#ffd11a", backgroundColor: "rgba(255,209,26,0.1)", tension: 0.4, borderWidth: 2 },
-          { label: "Traduction", data: [100, 78, 58, 40, 28, 18], borderColor: "#d03238", backgroundColor: "rgba(208,50,56,0.1)", tension: 0.4, borderWidth: 2 },
-          { label: "Juridique", data: [100, 92, 82, 72, 62, 52], borderColor: "#c5edab", backgroundColor: "rgba(197,237,171,0.1)", tension: 0.4, borderWidth: 2 },
+          { label: "Saisie de données", data: [100, 82, 65, 48, 35, 22], borderColor: "#9fe870", backgroundColor: "rgba(159,232,112,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#9fe870" },
+          { label: "Service client", data: [100, 85, 70, 55, 42, 30], borderColor: "#38c8ff", backgroundColor: "rgba(56,200,255,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#38c8ff" },
+          { label: "Comptabilité", data: [100, 88, 75, 62, 50, 40], borderColor: "#ffc091", backgroundColor: "rgba(255,192,145,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#ffc091" },
+          { label: "Développeurs", data: [100, 90, 78, 65, 55, 45], borderColor: "#ffd11a", backgroundColor: "rgba(255,209,26,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#ffd11a" },
+          { label: "Traduction", data: [100, 78, 58, 40, 28, 18], borderColor: "#d03238", backgroundColor: "rgba(208,50,56,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#d03238" },
+          { label: "Juridique", data: [100, 92, 82, 72, 62, 52], borderColor: "#c5edab", backgroundColor: "rgba(197,237,171,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#c5edab" },
         ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        animation: { duration: 1500, easing: "easeOutQuart" },
         plugins: {
-          legend: { position: "bottom", labels: { color: "#e8ebe6", font: { size: 11 }, boxWidth: 12, padding: 16 } },
-          title: { display: true, text: "Emplois restants (%) — Projection 2025-2030", color: "#e8ebe6", font: { size: 14, weight: "bold" } },
+          legend: { position: "bottom", labels: { color: "#e8ebe6", font: { size: 11, family: "Inter" }, boxWidth: 12, padding: 16, usePointStyle: true } },
+          title: { display: true, text: "Emplois restants (%) — Projection 2025-2030", color: "#e8ebe6", font: { size: 14, weight: "bold", family: "Inter" }, padding: { bottom: 16 } },
         },
         scales: {
-          x: { ticks: { color: "#868685" }, grid: { color: "rgba(255,255,255,0.05)" } },
-          y: { ticks: { color: "#868685", callback: (v) => v + "%" }, grid: { color: "rgba(255,255,255,0.05)" }, min: 0, max: 110 },
+          x: { ticks: { color: "#868685", font: { family: "Inter" } }, grid: { color: "rgba(255,255,255,0.04)" } },
+          y: { ticks: { color: "#868685", font: { family: "Inter" }, callback: (v) => v + "%" }, grid: { color: "rgba(255,255,255,0.04)" }, min: 0, max: 110 },
         },
+        interaction: { intersect: false, mode: "index" },
       },
     });
 
     return () => { chartRef.current?.destroy(); };
-  }, []);
+  }, [isInView]);
 
   return (
-    <div className="wise-card-dark" style={{ height: "320px", padding: "16px" }}>
+    <div ref={containerRef} className="wise-card-dark" style={{ height: "340px", padding: "20px" }}>
       <canvas ref={canvasRef}></canvas>
     </div>
   );
