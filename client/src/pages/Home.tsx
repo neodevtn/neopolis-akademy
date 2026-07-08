@@ -496,17 +496,17 @@ export default function Home() {
 
       {/* ─── Footer (Dark) ─── */}
       <footer className="wise-footer">
-        <div className="container py-14">
-          <div className="grid md:grid-cols-3 gap-8">
+        <div className="container py-6">
+          <div className="grid md:grid-cols-3 gap-6">
             <div>
-              <img src={LOGO_URL} alt="Neopolis Akademy" className="h-9 object-contain mb-4 brightness-0 invert" />
+              <img src={LOGO_URL} alt="Neopolis Akademy" className="h-14 object-contain mb-2 brightness-0 invert" />
               <p className="text-sm" style={{ color: "var(--wise-mute)" }}>
-                Neopolis Development - Transformer la menace de l'IA en opportunité pour l'Afrique.
+                Neopolis Development - Transformer la menace de l'IA en opportunité.
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4" style={{ color: "var(--wise-canvas-soft)" }}>Programme</h4>
-              <ul className="space-y-3 text-sm" style={{ color: "var(--wise-mute)" }}>
+              <h4 className="font-semibold mb-2" style={{ color: "var(--wise-canvas-soft)" }}>Programme</h4>
+              <ul className="space-y-1 text-sm" style={{ color: "var(--wise-mute)" }}>
                 <li><a href="#formule" className="hover:text-white transition-colors duration-200">La Formule</a></li>
                 <li><a href="#pourquoi" className="hover:text-white transition-colors duration-200">Pourquoi maintenant</a></li>
                 <li><a href="#partenaires" className="hover:text-white transition-colors duration-200">Partenaires</a></li>
@@ -514,14 +514,14 @@ export default function Home() {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4" style={{ color: "var(--wise-canvas-soft)" }}>Contact</h4>
-              <ul className="space-y-3 text-sm" style={{ color: "var(--wise-mute)" }}>
-                <li>info@neopolis-dev.com</li>
-                <li>www.neopolis-dev.com</li>
+              <h4 className="font-semibold mb-2" style={{ color: "var(--wise-canvas-soft)" }}>Contact</h4>
+              <ul className="space-y-1 text-sm" style={{ color: "var(--wise-mute)" }}>
+                <li><a href="mailto:info@neopolis-dev.com" className="hover:text-white transition-colors duration-200">info@neopolis-dev.com</a></li>
+                <li><a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">www.neopolis-dev.com</a></li>
               </ul>
             </div>
           </div>
-          <div className="mt-12 pt-8" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+          <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
             <p className="text-center text-sm" style={{ color: "var(--wise-mute)" }}>
               © 2026 Neopolis Development. Tous droits réservés.
             </p>
