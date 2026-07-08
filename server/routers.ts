@@ -7,6 +7,7 @@ import { createApplication, getApplications, getApplicationById, updateApplicati
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
 import { notifyOwner } from "./_core/notification";
+import { applicationSchema } from "@shared/validation";
 
 export const appRouter = router({
   system: systemRouter,
@@ -21,29 +22,7 @@ export const appRouter = router({
 
   applications: router({
     submit: publicProcedure
-      .input(z.object({
-        firstName: z.string().min(1),
-        lastName: z.string().min(1),
-        email: z.string().email(),
-        phone: z.string().min(5),
-        country: z.string().min(1),
-        city: z.string().min(1),
-        sector: z.string().min(1),
-        currentRole: z.string().min(1),
-        yearsExperience: z.number().min(0).max(50),
-        programmingLevel: z.enum(["none", "beginner", "intermediate", "advanced", "expert"]),
-        aiKnowledge: z.enum(["none", "basic", "intermediate", "advanced", "expert"]),
-        cloudExperience: z.enum(["none", "basic", "intermediate", "advanced", "expert"]),
-        technicalTools: z.string().optional().default(""),
-        certifications: z.string().optional().default(""),
-        sectorExpertise: z.enum(["junior", "intermediate", "senior", "expert"]),
-        clientNetwork: z.enum(["none", "small", "medium", "large"]),
-        businessDevelopment: z.enum(["none", "basic", "intermediate", "advanced"]),
-        languages: z.string().optional().default(""),
-        publicSpeaking: z.enum(["none", "basic", "intermediate", "advanced"]),
-        salesExperience: z.enum(["none", "less_1y", "1_3y", "3_5y", "more_5y"]),
-        motivation: z.string().min(50),
-      }))
+      .input(applicationSchema)
       .mutation(async ({ input }) => {
         // Calculate score
         const scores = calculateScore({

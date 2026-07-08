@@ -75,3 +75,9 @@
 - [x] Refonte Apply.tsx avec le nouveau design system
 - [x] Refonte AdminDashboard.tsx avec le nouveau design system
 - [x] Vérification visuelle et tests
+
+## Validation robuste front + back
+- [x] Créer un schéma de validation partagé (shared) entre front et back
+- [x] Validation frontend : messages d'erreur explicites par champ, validation en temps réel
+- [x] Validation backend : schéma Zod renforcé avec messages personnalisés en français
+- [x] Affichage des erreurs serveur côté client si la validation front est contournée
