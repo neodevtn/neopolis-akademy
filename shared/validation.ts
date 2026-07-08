@@ -43,7 +43,7 @@ export const applicationSchema = z.object({
   phone: z.string()
     .min(5, "Le numéro doit contenir au moins 5 caractères")
     .max(20, "Le numéro ne doit pas dépasser 20 caractères")
-    .regex(PHONE_REGEX, "Format de téléphone invalide (ex: +212 6XX XXX XXX)"),
+    .regex(PHONE_REGEX, "Format de téléphone invalide (ex: +216 XX XXX XXX)"),
 
   // Step 2: Location & sector
   country: z.string().min(1, "Le pays est requis"),

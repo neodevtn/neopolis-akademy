@@ -1,3 +1,4 @@
+import React from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -192,8 +193,8 @@ export default function AdminDashboard() {
               </thead>
               <tbody>
                 {applications.map((app: any) => (
-                  <>
-                    <tr key={app.id} className="border-t border-border hover:bg-secondary/50 transition-colors cursor-pointer" onClick={() => setExpandedId(expandedId === app.id ? null : app.id)}>
+                  <React.Fragment key={app.id}>
+                    <tr className="border-t border-border hover:bg-secondary/50 transition-colors cursor-pointer" onClick={() => setExpandedId(expandedId === app.id ? null : app.id)}>
                       <td className="p-4">
                         <div className="flex items-center gap-3">
                           {app.photoFileUrl ? (
@@ -386,7 +387,7 @@ export default function AdminDashboard() {
                         </td>
                       </tr>
                     )}
-                  </>
+                  </React.Fragment>
                 ))}
                 {applications.length === 0 && (
                   <tr>

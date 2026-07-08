@@ -149,3 +149,10 @@
 - [x] Navbar glassmorphism (backdrop-blur)
 - [x] TypeScript 0 erreurs
 - [x] Tests vitest passent (7/7)
+
+## Corrections UX/UI
+- [x] Rendre l'enregistrement vidéo obligatoire avant soumission de candidature
+- [x] Corriger contraste des alertes dans le formulaire (texte vert sur fond vert)
+- [x] Corriger format téléphone +216 au lieu de +212
+- [x] Tunisie sélectionnée par défaut dans le pays de résidence
+- [x] Corriger erreur React key dans AdminDashboard

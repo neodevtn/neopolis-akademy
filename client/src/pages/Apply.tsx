@@ -50,7 +50,7 @@ type FormData = {
 
 const initialFormData: FormData = {
   firstName: "", lastName: "", email: "", phone: "",
-  country: "", city: "", sector: "", currentRole: "", yearsExperience: "",
+  country: "Tunisie", city: "", sector: "", currentRole: "", yearsExperience: "",
   programmingLevel: "", aiKnowledge: "", cloudExperience: "", technicalTools: "", certifications: "",
   sectorExpertise: "", clientNetwork: "", businessDevelopment: "",
   distributionNetwork: "", industryContacts: "", existingPartnerships: "", targetMarketKnowledge: "",
@@ -326,6 +326,12 @@ export default function Apply() {
   const handleSubmit = async () => {
     if (!validateStep()) return;
 
+    // Vidéo obligatoire
+    if (!recordedBlob) {
+      setServerError("L'enregistrement vidéo est obligatoire. Veuillez enregistrer votre vidéo pitch avant de soumettre.");
+      return;
+    }
+
     setUploading(true);
     let cvFileUrl = "";
     let cvFileKey = "";
@@ -546,7 +552,7 @@ export default function Apply() {
             </div>
             <div className="space-y-2">
               <Label>Téléphone *</Label>
-              <Input value={formData.phone} onChange={e => updateField("phone", e.target.value)} placeholder="+212 6XX XXX XXX" className={errors.phone ? "border-destructive" : ""} />
+              <Input value={formData.phone} onChange={e => updateField("phone", e.target.value)} placeholder="+216 XX XXX XXX" className={errors.phone ? "border-destructive" : ""} />
               <FieldError error={errors.phone} />
             </div>
           </motion.div>
@@ -648,8 +654,8 @@ export default function Apply() {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
             className="space-y-6">
-            <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 mb-4">
-              <p className="text-sm text-primary font-medium">Cette section évalue votre capacité à distribuer des solutions IA auprès de PME/TPE dans votre secteur.</p>
+            <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-200 mb-4">
+              <p className="text-sm text-emerald-800 font-medium">Cette section évalue votre capacité à distribuer des solutions IA auprès de PME/TPE dans votre secteur.</p>
             </div>
             <div className="space-y-2">
               <Label>Décrivez votre réseau de distribution potentiel</Label>
@@ -679,8 +685,8 @@ export default function Apply() {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
             className="space-y-6">
-            <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 mb-4">
-              <p className="text-sm text-primary font-medium">Cette section évalue votre profil psychologique d'entrepreneur. Soyez honnête, il n'y a pas de mauvaise réponse.</p>
+            <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-200 mb-4">
+              <p className="text-sm text-emerald-800 font-medium">Cette section évalue votre profil psychologique d'entrepreneur. Soyez honnête, il n'y a pas de mauvaise réponse.</p>
             </div>
             <SelectField label="Tolérance au risque *" value={formData.riskTolerance} onChange={v => updateField("riskTolerance", v)} error={errors.riskTolerance}
               options={[["very_low","Très faible - J'évite tout risque"],["low","Faible - Je préfère la sécurité"],["moderate","Modérée - Risques calculés"],["high","Élevée - J'accepte les risques importants"],["very_high","Très élevée - Je recherche le risque"]]} />
@@ -1015,8 +1021,8 @@ export default function Apply() {
               Suivant <ArrowRight className="w-4 h-4" />
             </button>
           ) : (
-            <button onClick={handleSubmit} disabled={submitMutation.isPending || uploading} className="wise-btn-primary flex items-center gap-2" style={{ opacity: (submitMutation.isPending || uploading) ? 0.6 : 1 }}>
-              {(submitMutation.isPending || uploading) ? <><Loader2 className="w-4 h-4 animate-spin" /> Envoi en cours...</> : <>Soumettre ma candidature <CheckCircle className="w-4 h-4" /></>}
+            <button onClick={handleSubmit} disabled={submitMutation.isPending || uploading || !recordedBlob} className="wise-btn-primary flex items-center gap-2" style={{ opacity: (submitMutation.isPending || uploading || !recordedBlob) ? 0.6 : 1 }}>
+              {(submitMutation.isPending || uploading) ? <><Loader2 className="w-4 h-4 animate-spin" /> Envoi en cours...</> : !recordedBlob ? <>Enregistrez votre vidéo d'abord <Video className="w-4 h-4" /></> : <>Soumettre ma candidature <CheckCircle className="w-4 h-4" /></>}
             </button>
           )}
         </div>

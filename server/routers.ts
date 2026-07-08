@@ -75,6 +75,14 @@ export const appRouter = router({
     submit: publicProcedure
       .input(applicationSchema)
       .mutation(async ({ input }) => {
+        // Vidéo obligatoire
+        if (!input.videoFileUrl || input.videoFileUrl.trim() === "") {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "L'enregistrement vidéo est obligatoire. Veuillez enregistrer votre vidéo pitch avant de soumettre.",
+          });
+        }
+
         // Calculate score with all new fields
         const scores = calculateScore({
           programmingLevel: input.programmingLevel,
