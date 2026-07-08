@@ -210,18 +210,6 @@ export const appRouter = router({
       }
       return await getApplicationStats();
     }),
-
-    // Public endpoint: remaining spots
-    remainingSpots: publicProcedure.query(async () => {
-      try {
-        const stats = await getApplicationStats();
-        const totalSpots = 296;
-        const remaining = Math.max(0, totalSpots - stats.total);
-        return { totalSpots, remaining, submitted: stats.total };
-      } catch {
-        return { totalSpots: 296, remaining: 296, submitted: 0 };
-      }
-    }),
   }),
 });
 
