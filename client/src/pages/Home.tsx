@@ -371,12 +371,14 @@ export default function Home() {
             <motion.div variants={scaleIn}>
               <PartnerCard
                 name="Anthropic"
+                logo="/manus-storage/logo_anthropic_e6ab4160.png"
                 description="Créateur de Claude, l'un des LLM les plus avancés au monde. Notre partenariat offre un accès exclusif à la certification CCA et aux outils de développement d'agents IA de nouvelle génération."
               />
             </motion.div>
             <motion.div variants={scaleIn}>
               <PartnerCard
                 name="Alibaba Cloud"
+                logo="/manus-storage/logo_alibaba_cloud_847f5740.png"
                 description="Infrastructure cloud mondiale. Notre partenariat garantit des ressources de calcul puissantes, des modèles ML complémentaires et une infrastructure on-premise pour l'Afrique."
               />
             </motion.div>
@@ -602,15 +604,15 @@ function FormulaCard({ icon, step, title, description, badge, image }: { icon: R
   );
 }
 
-function PartnerCard({ name, description }: { name: string; description: string }) {
+function PartnerCard({ name, description, logo }: { name: string; description: string; logo: string }) {
   return (
     <motion.div
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
       className="wise-card-dark h-full"
     >
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(159,232,112,0.15)" }}>
-          <Sparkles size={20} style={{ color: "var(--wise-primary)" }} />
+      <div className="flex items-center gap-4 mb-5">
+        <div className="w-14 h-14 rounded-xl flex items-center justify-center overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.08)" }}>
+          <img src={logo} alt={name} className="w-10 h-10 object-contain" />
         </div>
         <h3 className="text-2xl font-bold" style={{ color: "var(--wise-primary)" }}>{name}</h3>
       </div>
