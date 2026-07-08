@@ -8,6 +8,7 @@ import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
 import { notifyOwner } from "./_core/notification";
 import { applicationSchema } from "@shared/validation";
+import { storagePut } from "./storage";
 
 export const appRouter = router({
   system: systemRouter,
@@ -21,10 +22,54 @@ export const appRouter = router({
   }),
 
   applications: router({
+    uploadFile: publicProcedure
+      .input(z.object({
+        fileName: z.string().min(1).max(255),
+        fileData: z.string(), // base64 encoded
+        contentType: z.string(),
+        type: z.enum(["cv", "photo"]),
+      }))
+      .mutation(async ({ input }) => {
+        // Validate content type
+        const allowedCvTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+        const allowedPhotoTypes = ["image/jpeg", "image/png", "image/webp"];
+        const allowed = input.type === "cv" ? allowedCvTypes : allowedPhotoTypes;
+        
+        if (!allowed.includes(input.contentType)) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: input.type === "cv" 
+              ? "Format de CV non autorisé. Formats acceptés : PDF, DOC, DOCX" 
+              : "Format de photo non autorisé. Formats acceptés : JPEG, PNG, WEBP",
+          });
+        }
+
+        const buffer = Buffer.from(input.fileData, "base64");
+        
+        // Validate file size (CV: 10MB max, Photo: 5MB max)
+        const maxSize = input.type === "cv" ? 10 * 1024 * 1024 : 5 * 1024 * 1024;
+        if (buffer.length > maxSize) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: input.type === "cv" 
+              ? "Le CV ne doit pas dépasser 10 Mo" 
+              : "La photo ne doit pas dépasser 5 Mo",
+          });
+        }
+
+        // Generate unique filename
+        const ext = input.fileName.split(".").pop() || "bin";
+        const uniqueName = `${Date.now()}_${Math.random().toString(36).slice(2, 10)}.${ext}`;
+        const prefix = input.type === "cv" ? "cv" : "photos";
+        const key = `applications/${prefix}/${uniqueName}`;
+        const result = await storagePut(key, buffer, input.contentType);
+        return { key: result.key, url: result.url };
+      }),
+
     submit: publicProcedure
       .input(applicationSchema)
       .mutation(async ({ input }) => {
-        // Calculate score
+        // Calculate score with all new fields
         const scores = calculateScore({
           programmingLevel: input.programmingLevel,
           aiKnowledge: input.aiKnowledge,
@@ -39,6 +84,18 @@ export const appRouter = router({
           salesExperience: input.salesExperience,
           languages: input.languages,
           motivation: input.motivation,
+          // New fields for enhanced scoring
+          industryContacts: input.industryContacts,
+          targetMarketKnowledge: input.targetMarketKnowledge,
+          distributionNetwork: input.distributionNetwork,
+          existingPartnerships: input.existingPartnerships,
+          riskTolerance: input.riskTolerance,
+          autonomyLevel: input.autonomyLevel,
+          resilienceLevel: input.resilienceLevel,
+          leadershipStyle: input.leadershipStyle,
+          entrepreneurialExperience: input.entrepreneurialExperience,
+          aiAgentScenario: input.aiAgentScenario,
+          aiAgentImpact: input.aiAgentImpact,
         });
 
         // Save to database
@@ -47,6 +104,21 @@ export const appRouter = router({
           technicalTools: input.technicalTools || null,
           certifications: input.certifications || null,
           languages: input.languages || null,
+          distributionNetwork: input.distributionNetwork || null,
+          existingPartnerships: input.existingPartnerships || null,
+          entrepreneurialExperience: input.entrepreneurialExperience || null,
+          aiAgentScenario: input.aiAgentScenario || null,
+          aiAgentSector: input.aiAgentSector || null,
+          aiAgentImpact: input.aiAgentImpact || null,
+          linkedinUrl: input.linkedinUrl || null,
+          twitterUrl: input.twitterUrl || null,
+          githubUrl: input.githubUrl || null,
+          websiteUrl: input.websiteUrl || null,
+          otherSocialUrl: input.otherSocialUrl || null,
+          cvFileKey: input.cvFileKey || null,
+          cvFileUrl: input.cvFileUrl || null,
+          photoFileKey: input.photoFileKey || null,
+          photoFileUrl: input.photoFileUrl || null,
           scoreTechnique: scores.scoreTechnique.toString(),
           scoreMetier: scores.scoreMetier.toString(),
           scoreCommunication: scores.scoreCommunication.toString(),
@@ -57,7 +129,7 @@ export const appRouter = router({
         try {
           await notifyOwner({
             title: `Nouvelle candidature : ${input.firstName} ${input.lastName}`,
-            content: `Score: ${scores.scoreTotal.toFixed(1)}% | Pays: ${input.country} | Secteur: ${input.sector} | Poste: ${input.currentRole}`,
+            content: `Score: ${scores.scoreTotal.toFixed(1)}% | Pays: ${input.country} | Secteur: ${input.sector} | Poste: ${input.currentRole} | Scénario IA: ${input.aiAgentSector || "N/A"}`,
           });
         } catch (e) {
           console.error("Failed to send notification:", e);

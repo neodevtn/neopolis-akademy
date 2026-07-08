@@ -86,3 +86,16 @@
 - [x] Mettre en avant la GRATUITÉ des formations et certifications (badge, texte prominent)
 - [x] Renforcer le message "Transformez la menace de l'IA en opportunité" sur la landing page
 - [x] Ajouter un graphique (courbe) montrant la perte d'emplois 2025-2030 pour les postes les plus impactés
+
+## Enrichissement du formulaire de candidature
+- [x] Ajouter section "Réseau de distribution" (contacts B2B, partenaires potentiels, réseau professionnel)
+- [x] Ajouter section "Profil psychologique entrepreneurial" (prise de risque, autonomie, résilience, leadership)
+- [x] Ajouter section "Scénario concret d'agent IA" (cas d'usage maîtrisé par le candidat)
+- [x] Ajouter champs réseaux sociaux (LinkedIn, Twitter/X, GitHub, autre)
+- [x] Ajouter champ site web personnel
+- [x] Ajouter upload CV (fichier)
+- [x] Ajouter upload photo de profil
+- [x] Mettre à jour le schéma DB pour les nouveaux champs
+- [x] Mettre à jour la validation partagée (shared/validation.ts)
+- [x] Mettre à jour le scoring pour intégrer les nouveaux critères
+- [ ] Mettre à jour le dashboard admin pour afficher les nouveaux champs (en cours)

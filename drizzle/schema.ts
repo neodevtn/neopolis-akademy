@@ -37,12 +37,12 @@ export const applications = mysqlTable("applications", {
   currentRole: varchar("currentRole", { length: 200 }).notNull(),
   yearsExperience: int("yearsExperience").notNull(),
   
-  // Technical skills (JSON stored)
+  // Technical skills
   programmingLevel: mysqlEnum("programmingLevel", ["none", "beginner", "intermediate", "advanced", "expert"]).notNull(),
   aiKnowledge: mysqlEnum("aiKnowledge", ["none", "basic", "intermediate", "advanced", "expert"]).notNull(),
   cloudExperience: mysqlEnum("cloudExperience", ["none", "basic", "intermediate", "advanced", "expert"]).notNull(),
-  technicalTools: text("technicalTools"), // JSON array of tools known
-  certifications: text("certifications"), // existing certifications
+  technicalTools: text("technicalTools"),
+  certifications: text("certifications"),
   
   // Business/métier skills
   sectorExpertise: mysqlEnum("sectorExpertise", ["junior", "intermediate", "senior", "expert"]).notNull(),
@@ -50,10 +50,43 @@ export const applications = mysqlTable("applications", {
   businessDevelopment: mysqlEnum("businessDevelopment", ["none", "basic", "intermediate", "advanced"]).notNull(),
   
   // Communication skills
-  languages: text("languages"), // JSON array: [{lang, level}]
+  languages: text("languages"),
   publicSpeaking: mysqlEnum("publicSpeaking", ["none", "basic", "intermediate", "advanced"]).notNull(),
   salesExperience: mysqlEnum("salesExperience", ["none", "less_1y", "1_3y", "3_5y", "more_5y"]).notNull(),
-  motivation: text("motivation").notNull(), // free text motivation letter
+  motivation: text("motivation").notNull(),
+  
+  // === NEW FIELDS ===
+  
+  // Distribution network
+  distributionNetwork: text("distributionNetwork"), // Description of B2B contacts, partners, channels
+  industryContacts: mysqlEnum("industryContacts", ["none", "few", "moderate", "extensive", "very_extensive"]),
+  existingPartnerships: text("existingPartnerships"), // Current business partnerships
+  targetMarketKnowledge: mysqlEnum("targetMarketKnowledge", ["none", "basic", "good", "excellent", "expert"]),
+  
+  // Entrepreneurial psychology profile
+  riskTolerance: mysqlEnum("riskTolerance", ["very_low", "low", "moderate", "high", "very_high"]),
+  autonomyLevel: mysqlEnum("autonomyLevel", ["needs_guidance", "somewhat_autonomous", "autonomous", "very_autonomous", "fully_independent"]),
+  resilienceLevel: mysqlEnum("resilienceLevel", ["low", "moderate", "high", "very_high"]),
+  leadershipStyle: mysqlEnum("leadershipStyle", ["follower", "collaborative", "situational", "visionary", "transformational"]),
+  entrepreneurialExperience: text("entrepreneurialExperience"), // Free text about past ventures
+  
+  // AI Agent scenario
+  aiAgentScenario: text("aiAgentScenario"), // Concrete scenario where AI agent replaces human
+  aiAgentSector: varchar("aiAgentSector", { length: 200 }), // Target sector for the scenario
+  aiAgentImpact: text("aiAgentImpact"), // Expected impact and distribution potential
+  
+  // Social links & profile
+  linkedinUrl: varchar("linkedinUrl", { length: 500 }),
+  twitterUrl: varchar("twitterUrl", { length: 500 }),
+  githubUrl: varchar("githubUrl", { length: 500 }),
+  websiteUrl: varchar("websiteUrl", { length: 500 }),
+  otherSocialUrl: varchar("otherSocialUrl", { length: 500 }),
+  
+  // File uploads (S3 keys)
+  cvFileKey: varchar("cvFileKey", { length: 500 }),
+  cvFileUrl: varchar("cvFileUrl", { length: 500 }),
+  photoFileKey: varchar("photoFileKey", { length: 500 }),
+  photoFileUrl: varchar("photoFileUrl", { length: 500 }),
   
   // Scoring
   scoreTechnique: decimal("scoreTechnique", { precision: 5, scale: 2 }).notNull(),

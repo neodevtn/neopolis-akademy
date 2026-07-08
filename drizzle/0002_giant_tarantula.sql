@@ -1,0 +1,21 @@
+ALTER TABLE `applications` ADD `distributionNetwork` text;--> statement-breakpoint
+ALTER TABLE `applications` ADD `industryContacts` enum('none','few','moderate','extensive','very_extensive');--> statement-breakpoint
+ALTER TABLE `applications` ADD `existingPartnerships` text;--> statement-breakpoint
+ALTER TABLE `applications` ADD `targetMarketKnowledge` enum('none','basic','good','excellent','expert');--> statement-breakpoint
+ALTER TABLE `applications` ADD `riskTolerance` enum('very_low','low','moderate','high','very_high');--> statement-breakpoint
+ALTER TABLE `applications` ADD `autonomyLevel` enum('needs_guidance','somewhat_autonomous','autonomous','very_autonomous','fully_independent');--> statement-breakpoint
+ALTER TABLE `applications` ADD `resilienceLevel` enum('low','moderate','high','very_high');--> statement-breakpoint
+ALTER TABLE `applications` ADD `leadershipStyle` enum('follower','collaborative','situational','visionary','transformational');--> statement-breakpoint
+ALTER TABLE `applications` ADD `entrepreneurialExperience` text;--> statement-breakpoint
+ALTER TABLE `applications` ADD `aiAgentScenario` text;--> statement-breakpoint
+ALTER TABLE `applications` ADD `aiAgentSector` varchar(200);--> statement-breakpoint
+ALTER TABLE `applications` ADD `aiAgentImpact` text;--> statement-breakpoint
+ALTER TABLE `applications` ADD `linkedinUrl` varchar(500);--> statement-breakpoint
+ALTER TABLE `applications` ADD `twitterUrl` varchar(500);--> statement-breakpoint
+ALTER TABLE `applications` ADD `githubUrl` varchar(500);--> statement-breakpoint
+ALTER TABLE `applications` ADD `websiteUrl` varchar(500);--> statement-breakpoint
+ALTER TABLE `applications` ADD `otherSocialUrl` varchar(500);--> statement-breakpoint
+ALTER TABLE `applications` ADD `cvFileKey` varchar(500);--> statement-breakpoint
+ALTER TABLE `applications` ADD `cvFileUrl` varchar(500);--> statement-breakpoint
+ALTER TABLE `applications` ADD `photoFileKey` varchar(500);--> statement-breakpoint
+ALTER TABLE `applications` ADD `photoFileUrl` varchar(500);
