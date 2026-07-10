@@ -28,7 +28,7 @@ import { Line } from "react-chartjs-2";
 ChartJS.register(...registerables);
 
 /* ─── Asset URLs ─── */
-const LOGO_URL = "/manus-storage/logo_neopolis_akademy_wise_ede57803.png";
+const LOGO_URL = "/manus-storage/logo_neopolis_akademy_new_963ba831.png";
 const HERO_IMG = "/manus-storage/hero_tunisian_ai_08a6f956.png";
 const CERT_IMG = "/manus-storage/step2_certification_b2f65035.png";
 const ELEARNING_IMG = "/manus-storage/step1_elearning_d87a7198.png";
@@ -334,7 +334,7 @@ export default function Home() {
 
               <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-mint)" }}>
                 <TrendingDown size={20} style={{ color: "var(--wise-positive-deep)" }} className="mb-3" />
-                <p className="wise-display-sm mb-1">220Mds$</p>
+                <p className="wise-display-sm mb-1">220 Mds$</p>
                 <p className="wise-body-sm" style={{ color: "var(--wise-positive-deep)", fontWeight: 600 }}>de SaaS menacés par les agents IA</p>
                 <p className="wise-label mt-2">Gartner, 2025</p>
               </motion.div>
