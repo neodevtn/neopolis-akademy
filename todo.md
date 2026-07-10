@@ -192,3 +192,15 @@
 - [x] Style dark/sombre pour toute la section (comme l'image de référence)
 - [x] Données sourcées et vérifiables (WEF, Goldman Sachs, McKinsey, Gartner)
 - [x] Message d'urgence impactant ("Ne subissez pas la disruption")
+
+## Réorganisation et harmonisation des couleurs
+- [x] Supprimer la barre de stats (220Mds$, 90M, 296) entre le hero et La Formule
+- [x] Déplacer la section "Pourquoi se transformer maintenant" AVANT "La Formule Complète"
+- [x] Harmoniser les fonds : gris clair / blanc / vert doux (pas de noir)
+- [x] Section Pourquoi maintenant : fond gris clair au lieu de noir
+- [x] Section La Formule : fond vert très pâle (#f0f7eb)
+- [x] Section Partenariats : fond blanc
+- [x] Section Ambassadeur : fond gris très clair (#f9fafb)
+- [x] Section CTA final : fond vert doux (#e2f6d5)
+- [x] PartnerCards : fond vert pâle au lieu de noir
+- [x] Footer : gris foncé (#374151) au lieu de noir pur

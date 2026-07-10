@@ -230,69 +230,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── Stats Band ─── */}
-      <AnimatedSection className="wise-content-band">
-        <div className="container py-10">
-          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div variants={scaleIn}><StatCard value="220Mds$" label="Dépenses SaaS menacées par l'IA agentique d'ici 2030" source="Gartner, 2025" /></motion.div>
-            <motion.div variants={scaleIn}><StatCard value="90M" label="Emplois à risque dans le monde d'ici 2030" source="WEF Future of Jobs, 2025" /></motion.div>
-            <motion.div variants={scaleIn}><StatCard value="296" label="Candidats sélectionnés pour ce programme exclusif" source="Places disponibles" highlight /></motion.div>
-          </motion.div>
-        </div>
-      </AnimatedSection>
 
-      {/* ─── La Formule (Green Band) ─── */}
-      <AnimatedSection id="formule" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
-        <div className="container py-12">
-          <motion.div variants={fadeInUp} className="text-center mb-14">
-            <span className="wise-badge-positive inline-block mb-4">100% GRATUIT</span>
-            <h2 className="wise-display-md mb-4">La Formule Complète</h2>
-            <p className="wise-body-lg max-w-2xl mx-auto">
-              Un parcours en 3 étapes pour devenir AI Solutions Partner - Ambassadeur Certifié
-            </p>
-          </motion.div>
 
-          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
-            <motion.div variants={fadeInUp}>
-              <FormulaCard
-                icon={<BookOpen size={28} />}
-                step="01"
-                title="E-Learning 7 jours"
-                description="Formation intensive sur l'IA générale, les LLM, les agents IA et leurs applications métier concrètes."
-                badge="Gratuit"
-                image={ELEARNING_IMG}
-              />
-            </motion.div>
-            <motion.div variants={fadeInUp}>
-              <FormulaCard
-                icon={<Award size={28} />}
-                step="02"
-                title="Certification CCA"
-                description="Accès à la plateforme Anthropic + voucher pour passer la certification Claude Certified Architect avant le 31 août 2026."
-                badge="Gratuit"
-                image={CERT_IMG}
-              />
-            </motion.div>
-            <motion.div variants={fadeInUp}>
-              <FormulaCard
-                icon={<Globe size={28} />}
-                step="03"
-                title="Statut Ambassadeur"
-                description="Devenez AI Solutions Partner indépendant et distribuez des solutions IA auprès des entreprises de votre secteur."
-                badge="Accompagnement complet"
-                image={AFRICA_IMG}
-              />
-            </motion.div>
-          </motion.div>
-        </div>
-      </AnimatedSection>
-
-      {/* ─── Pourquoi maintenant (Dark Band) ─── */}
-      <AnimatedSection id="pourquoi" className="wise-hero-band-dark">
+      {/* ─── Pourquoi maintenant (Gris Band) ─── */}
+      <AnimatedSection id="pourquoi" style={{ backgroundColor: "#f3f4f6", padding: "48px 24px" }}>
         <div className="container py-12 md:py-20">
           <motion.div variants={fadeInUp} className="text-center mb-10 md:mb-14">
-            <h2 className="wise-display-md mb-3" style={{ color: "var(--wise-primary)" }}>Pourquoi se transformer maintenant ?</h2>
-            <p className="wise-body-lg max-w-2xl mx-auto" style={{ color: "var(--wise-canvas-soft)" }}>
+            <h2 className="wise-display-md mb-3" style={{ color: "var(--wise-ink)" }}>Pourquoi se transformer maintenant ?</h2>
+            <p className="wise-body-lg max-w-2xl mx-auto" style={{ color: "var(--wise-body)" }}>
               L'IA agentique redéfinit le marché du travail. Ceux qui ne s'adaptent pas seront remplacés.
             </p>
           </motion.div>
@@ -300,8 +245,8 @@ export default function Home() {
           {/* Chart + Stats layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-8 md:mb-12">
             {/* Left: Chart */}
-            <motion.div variants={fadeInLeft} className="relative rounded-2xl p-4 md:p-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
-              <h3 className="text-sm font-semibold mb-1" style={{ color: "#ff6b6b" }}>Emplois exposés à l'automatisation IA (en millions)</h3>
+            <motion.div variants={fadeInLeft} className="relative rounded-2xl p-4 md:p-6" style={{ background: "#ffffff", border: "1px solid #e5e7eb", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+              <h3 className="text-sm font-semibold mb-1" style={{ color: "#dc2626" }}>Emplois exposés à l'automatisation IA (en millions)</h3>
               <p className="text-xs mb-4" style={{ color: "var(--wise-mute)" }}>Données : WEF (85M/2025, 92M/2030), Goldman Sachs (300M/2030), McKinsey (400-800M/2030)</p>
               <div className="h-[220px] md:h-[260px]">
                 <Line
@@ -357,7 +302,7 @@ export default function Home() {
                       legend: {
                         display: true,
                         position: "bottom" as const,
-                        labels: { color: "rgba(255,255,255,0.6)", font: { size: 11 }, boxWidth: 12, padding: 16 },
+                        labels: { color: "#454745", font: { size: 11 }, boxWidth: 12, padding: 16 },
                       },
                       tooltip: {
                         backgroundColor: "rgba(0,0,0,0.85)",
@@ -369,12 +314,12 @@ export default function Home() {
                     },
                     scales: {
                       x: {
-                        grid: { color: "rgba(255,255,255,0.05)" },
-                        ticks: { color: "rgba(255,255,255,0.5)", font: { size: 11 } },
+                        grid: { color: "rgba(0,0,0,0.06)" },
+                        ticks: { color: "#454745", font: { size: 11 } },
                       },
                       y: {
-                        grid: { color: "rgba(255,255,255,0.05)" },
-                        ticks: { color: "rgba(255,255,255,0.5)", font: { size: 11 } },
+                        grid: { color: "rgba(0,0,0,0.06)" },
+                        ticks: { color: "#454745", font: { size: 11 } },
                         beginAtZero: true,
                       },
                     },
@@ -385,35 +330,35 @@ export default function Home() {
 
             {/* Right: Stats cards */}
             <motion.div variants={staggerContainer} className="flex flex-col gap-4">
-              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "linear-gradient(135deg, rgba(255,107,107,0.15) 0%, rgba(255,107,107,0.03) 100%)", border: "1px solid rgba(255,107,107,0.25)" }}>
-                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(255,107,107,0.15)" }} />
-                <TrendingDown size={22} style={{ color: "#ff6b6b" }} className="mb-2" />
-                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "#fff" }}>300M</p>
-                <p className="text-sm font-semibold mb-1" style={{ color: "#ff6b6b" }}>d'emplois exposés à l'automatisation</p>
+              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "#ffffff", border: "1px solid #fecaca", boxShadow: "0 2px 8px rgba(220,38,38,0.06)" }}>
+                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(255,107,107,0.08)" }} />
+                <TrendingDown size={22} style={{ color: "#dc2626" }} className="mb-2" />
+                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "var(--wise-ink)" }}>300M</p>
+                <p className="text-sm font-semibold mb-1" style={{ color: "#dc2626" }}>d'emplois exposés à l'automatisation</p>
                 <p className="text-xs" style={{ color: "var(--wise-mute)" }}>Goldman Sachs, 2023 — confirmé en 2026</p>
               </motion.div>
 
-              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "linear-gradient(135deg, rgba(56,200,255,0.12) 0%, rgba(56,200,255,0.03) 100%)", border: "1px solid rgba(56,200,255,0.2)" }}>
-                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(56,200,255,0.15)" }} />
-                <Users size={22} style={{ color: "#38c8ff" }} className="mb-2" />
-                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "#fff" }}>92M</p>
-                <p className="text-sm font-semibold mb-1" style={{ color: "#38c8ff" }}>d'emplois déplacés d'ici 2030</p>
+              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "#ffffff", border: "1px solid #bfdbfe", boxShadow: "0 2px 8px rgba(37,99,235,0.06)" }}>
+                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(56,200,255,0.08)" }} />
+                <Users size={22} style={{ color: "#2563eb" }} className="mb-2" />
+                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "var(--wise-ink)" }}>92M</p>
+                <p className="text-sm font-semibold mb-1" style={{ color: "#2563eb" }}>d'emplois déplacés d'ici 2030</p>
                 <p className="text-xs" style={{ color: "var(--wise-mute)" }}>WEF Future of Jobs Report 2025</p>
               </motion.div>
 
-              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "linear-gradient(135deg, rgba(255,192,145,0.12) 0%, rgba(255,192,145,0.03) 100%)", border: "1px solid rgba(255,192,145,0.2)" }}>
-                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(255,192,145,0.15)" }} />
-                <Shield size={22} style={{ color: "#ffc091" }} className="mb-2" />
-                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "#fff" }}>30%</p>
-                <p className="text-sm font-semibold mb-1" style={{ color: "#ffc091" }}>des heures de travail automatisées</p>
+              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "#ffffff", border: "1px solid #fed7aa", boxShadow: "0 2px 8px rgba(234,88,12,0.06)" }}>
+                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(255,192,145,0.08)" }} />
+                <Shield size={22} style={{ color: "#ea580c" }} className="mb-2" />
+                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "var(--wise-ink)" }}>30%</p>
+                <p className="text-sm font-semibold mb-1" style={{ color: "#ea580c" }}>des heures de travail automatisées</p>
                 <p className="text-xs" style={{ color: "var(--wise-mute)" }}>McKinsey — accéléré par l'IA générative</p>
               </motion.div>
 
-              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "linear-gradient(135deg, rgba(159,232,112,0.12) 0%, rgba(159,232,112,0.03) 100%)", border: "1px solid rgba(159,232,112,0.2)" }}>
-                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(159,232,112,0.15)" }} />
-                <TrendingDown size={22} style={{ color: "#9fe870" }} className="mb-2" />
-                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "#fff" }}>220Mds$</p>
-                <p className="text-sm font-semibold mb-1" style={{ color: "#9fe870" }}>de SaaS menacés par les agents IA</p>
+              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "#ffffff", border: "1px solid #bbf7d0", boxShadow: "0 2px 8px rgba(22,163,74,0.06)" }}>
+                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(159,232,112,0.08)" }} />
+                <TrendingDown size={22} style={{ color: "#16a34a" }} className="mb-2" />
+                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "var(--wise-ink)" }}>220Mds$</p>
+                <p className="text-sm font-semibold mb-1" style={{ color: "#16a34a" }}>de SaaS menacés par les agents IA</p>
                 <p className="text-xs" style={{ color: "var(--wise-mute)" }}>Gartner, 2025 — logiciels remplacés par l'IA agentique</p>
               </motion.div>
             </motion.div>
@@ -421,17 +366,63 @@ export default function Home() {
 
           {/* CTA bottom */}
           <motion.div variants={fadeInUp} className="text-center">
-            <div className="inline-flex items-center gap-2 md:gap-3 px-5 md:px-8 py-3 md:py-4 rounded-full" style={{ background: "linear-gradient(135deg, rgba(255,107,107,0.2) 0%, rgba(255,60,60,0.08) 100%)", border: "1px solid rgba(255,107,107,0.4)" }}>
-              <Zap size={20} style={{ color: "#ff6b6b" }} />
-              <span className="text-sm md:text-base font-bold" style={{ color: "#fff" }}>Ne subissez pas la disruption. Devenez l'acteur du changement.</span>
+            <div className="inline-flex items-center gap-2 md:gap-3 px-5 md:px-8 py-3 md:py-4 rounded-full" style={{ background: "linear-gradient(135deg, rgba(220,38,38,0.08) 0%, rgba(220,38,38,0.03) 100%)", border: "1px solid #fecaca" }}>
+              <Zap size={20} style={{ color: "#dc2626" }} />
+              <span className="text-sm md:text-base font-bold" style={{ color: "var(--wise-ink)" }}>Ne subissez pas la disruption. Devenez l'acteur du changement.</span>
             </div>
             <p className="text-xs mt-4" style={{ color: "var(--wise-mute)" }}>Sources : WEF Future of Jobs 2025, Goldman Sachs 2023/2026, McKinsey Global Institute, Gartner 2025</p>
           </motion.div>
         </div>
       </AnimatedSection>
 
+      {/* ─── La Formule (Green Band) ─── */}
+      <AnimatedSection id="formule" style={{ backgroundColor: "#f0f7eb", padding: "48px 24px" }}>
+        <div className="container py-12">
+          <motion.div variants={fadeInUp} className="text-center mb-14">
+            <span className="wise-badge-positive inline-block mb-4">100% GRATUIT</span>
+            <h2 className="wise-display-md mb-4">La Formule Complète</h2>
+            <p className="wise-body-lg max-w-2xl mx-auto">
+              Un parcours en 3 étapes pour devenir AI Solutions Partner - Ambassadeur Certifié
+            </p>
+          </motion.div>
+
+          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
+            <motion.div variants={fadeInUp}>
+              <FormulaCard
+                icon={<BookOpen size={28} />}
+                step="01"
+                title="E-Learning 7 jours"
+                description="Formation intensive sur l'IA générale, les LLM, les agents IA et leurs applications métier concrètes."
+                badge="Gratuit"
+                image={ELEARNING_IMG}
+              />
+            </motion.div>
+            <motion.div variants={fadeInUp}>
+              <FormulaCard
+                icon={<Award size={28} />}
+                step="02"
+                title="Certification CCA"
+                description="Accès à la plateforme Anthropic + voucher pour passer la certification Claude Certified Architect avant le 31 août 2026."
+                badge="Gratuit"
+                image={CERT_IMG}
+              />
+            </motion.div>
+            <motion.div variants={fadeInUp}>
+              <FormulaCard
+                icon={<Globe size={28} />}
+                step="03"
+                title="Statut Ambassadeur"
+                description="Devenez AI Solutions Partner indépendant et distribuez des solutions IA auprès des entreprises de votre secteur."
+                badge="Accompagnement complet"
+                image={AFRICA_IMG}
+              />
+            </motion.div>
+          </motion.div>
+        </div>
+      </AnimatedSection>
+
       {/* ─── Partenariats (Sage Band) ─── */}
-      <AnimatedSection id="partenaires" className="wise-hero-band">
+      <AnimatedSection id="partenaires" style={{ backgroundColor: "#ffffff", padding: "48px 24px" }}>
         <div className="container py-12">
           <motion.div variants={fadeInUp} className="text-center mb-14">
             <h2 className="wise-display-md mb-4">Partenariats Stratégiques</h2>
@@ -495,7 +486,7 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── AI Solutions Partner Section ─── */}
-      <AnimatedSection className="wise-content-band">
+      <AnimatedSection style={{ backgroundColor: "#f9fafb", padding: "48px 24px" }}>
         <div className="container py-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
             <motion.div variants={fadeInLeft}>
@@ -522,7 +513,7 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── CTA Band ─── */}
-      <AnimatedSection style={{ backgroundColor: "var(--wise-ink)" }}>
+      <AnimatedSection style={{ backgroundColor: "#e2f6d5" }}>
         <div className="container py-10 md:py-20 text-center px-4 md:px-6">
           <motion.div variants={fadeInUp}>
             <motion.div
@@ -530,12 +521,12 @@ export default function Home() {
               transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
               className="inline-block mb-6"
             >
-              <Rocket size={40} style={{ color: "var(--wise-primary)" }} />
+              <Rocket size={40} style={{ color: "var(--wise-positive-deep)" }} />
             </motion.div>
-            <h2 className="text-2xl md:text-3xl lg:text-5xl font-black mb-4 md:mb-5" style={{ color: "var(--wise-primary)", lineHeight: 1.1 }}>
+            <h2 className="text-2xl md:text-3xl lg:text-5xl font-black mb-4 md:mb-5" style={{ color: "var(--wise-ink)", lineHeight: 1.1 }}>
               Ne subissez pas la disruption.<br />Devenez-en l'acteur.
             </h2>
-            <p className="text-lg mb-10" style={{ color: "var(--wise-canvas-soft)" }}>
+            <p className="text-lg mb-10" style={{ color: "var(--wise-body)" }}>
               Formation et certification 100% gratuites - 296 places seulement
             </p>
             <Link href="/apply">
@@ -552,7 +543,7 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── FAQ Section ─── */}
-      <AnimatedSection id="faq" className="wise-hero-band">
+      <AnimatedSection id="faq" style={{ backgroundColor: "#ffffff", padding: "48px 24px" }}>
         <div className="container py-12">
           <motion.div variants={fadeInUp}>
             <h2 className="wise-display-md text-center mb-14">Questions fréquentes</h2>
@@ -568,11 +559,11 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── Footer (Dark) ─── */}
-      <footer className="wise-footer">
+      <footer style={{ backgroundColor: "#374151", color: "#e5e7eb", padding: "48px 24px" }}>
         <div className="container py-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             <div>
-              <img src={LOGO_URL} alt="Neopolis Akademy" className="h-14 object-contain mb-2 brightness-0 invert" />
+              <img src={LOGO_URL} alt="Neopolis Akademy" className="h-14 object-contain mb-2 brightness-0 invert opacity-90" />
               <p className="text-sm" style={{ color: "var(--wise-mute)" }}>
                 Neopolis Development - Transformer la menace de l'IA en opportunité.
               </p>
@@ -594,7 +585,7 @@ export default function Home() {
               </ul>
             </div>
           </div>
-          <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+          <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.15)" }}>
             <p className="text-center text-sm" style={{ color: "var(--wise-mute)" }}>
               © 2026 Neopolis Development. Tous droits réservés.
             </p>
@@ -683,15 +674,16 @@ function PartnerCard({ name, description, logo }: { name: string; description: s
   return (
     <motion.div
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="wise-card-dark h-full"
+      className="h-full rounded-3xl p-6"
+      style={{ backgroundColor: "#f0f7eb", border: "1px solid #c5edab" }}
     >
       <div className="flex items-center gap-4 mb-5">
-        <div className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden" style={{ backgroundColor: "#ffffff" }}>
+        <div className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden" style={{ backgroundColor: "#ffffff", border: "1px solid #e5e7eb" }}>
           <img src={logo} alt={name} className="w-10 h-10 object-contain" />
         </div>
-        <h3 className="text-2xl font-bold" style={{ color: "var(--wise-primary)" }}>{name}</h3>
+        <h3 className="text-2xl font-bold" style={{ color: "var(--wise-ink)" }}>{name}</h3>
       </div>
-      <p className="text-base leading-relaxed" style={{ color: "var(--wise-canvas-soft)" }}>
+      <p className="text-base leading-relaxed" style={{ color: "var(--wise-body)" }}>
         {description}
       </p>
     </motion.div>
