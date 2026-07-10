@@ -242,13 +242,11 @@ export default function Home() {
             </p>
           </motion.div>
 
-          {/* Chart + Stats layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-8 md:mb-12">
-            {/* Left: Chart */}
-            <motion.div variants={fadeInLeft} className="relative rounded-2xl p-4 md:p-6" style={{ background: "#ffffff", border: "1px solid #e5e7eb", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-              <h3 className="text-sm font-semibold mb-1" style={{ color: "#dc2626" }}>Emplois exposés à l'automatisation IA (en millions)</h3>
-              <p className="text-xs mb-4" style={{ color: "var(--wise-mute)" }}>Données : WEF (85M/2025, 92M/2030), Goldman Sachs (300M/2030), McKinsey (400-800M/2030)</p>
-              <div className="h-[220px] md:h-[260px]">
+          {/* Chart full width */}
+          <motion.div variants={fadeInUp} className="relative rounded-2xl p-4 md:p-8 mb-8 md:mb-12" style={{ background: "#ffffff", border: "1px solid #e5e7eb", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+            <h3 className="text-sm md:text-base font-semibold mb-1" style={{ color: "#dc2626" }}>Emplois exposés à l'automatisation IA (en millions)</h3>
+            <p className="text-xs mb-4" style={{ color: "var(--wise-mute)" }}>Données : WEF (85M/2025, 92M/2030), Goldman Sachs (300M/2030), McKinsey (400-800M/2030)</p>
+            <div className="h-[280px] md:h-[340px]">
                 <Line
                   data={{
                     labels: ["2020", "2023", "2025", "2027", "2030"],
@@ -325,11 +323,11 @@ export default function Home() {
                     },
                   }}
                 />
-              </div>
-            </motion.div>
+            </div>
+          </motion.div>
 
-            {/* Right: Stats cards */}
-            <motion.div variants={staggerContainer} className="flex flex-col gap-4">
+          {/* Stats cards grid */}
+          <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 md:mb-12">
               <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "#ffffff", border: "1px solid #fecaca", boxShadow: "0 2px 8px rgba(220,38,38,0.06)" }}>
                 <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(255,107,107,0.08)" }} />
                 <TrendingDown size={22} style={{ color: "#dc2626" }} className="mb-2" />
@@ -361,8 +359,7 @@ export default function Home() {
                 <p className="text-sm font-semibold mb-1" style={{ color: "#16a34a" }}>de SaaS menacés par les agents IA</p>
                 <p className="text-xs" style={{ color: "var(--wise-mute)" }}>Gartner, 2025 — logiciels remplacés par l'IA agentique</p>
               </motion.div>
-            </motion.div>
-          </div>
+          </motion.div>
 
           {/* CTA bottom */}
           <motion.div variants={fadeInUp} className="text-center">
