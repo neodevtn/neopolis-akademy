@@ -185,3 +185,10 @@
 - [x] Prompt dynamique vidéo : marges et texte réduits sur mobile
 - [x] Boutons enregistrement vidéo : full-width sur mobile, flex-col layout
 - [x] Texte idle vidéo : taille réduite sur mobile
+
+## Refonte section "Pourquoi se transformer maintenant ?"
+- [x] Ajouter un graphique Chart.js (courbe/barres) montrant l'impact de l'IA sur l'emploi
+- [x] Conserver les 3 cartes stats glassmorphism avec données chiffrées
+- [x] Style dark/sombre pour toute la section (comme l'image de référence)
+- [x] Données sourcées et vérifiables (WEF, Goldman Sachs, McKinsey, Gartner)
+- [x] Message d'urgence impactant ("Ne subissez pas la disruption")

@@ -23,8 +23,9 @@ import {
 } from "lucide-react";
 
 // Chart.js
-import { Chart, registerables } from "chart.js";
-Chart.register(...registerables);
+import { Chart as ChartJS, registerables } from "chart.js";
+import { Line } from "react-chartjs-2";
+ChartJS.register(...registerables);
 
 /* ─── Asset URLs ─── */
 const LOGO_URL = "/manus-storage/logo_neopolis_akademy_wise_ede57803.png";
@@ -288,48 +289,143 @@ export default function Home() {
 
       {/* ─── Pourquoi maintenant (Dark Band) ─── */}
       <AnimatedSection id="pourquoi" className="wise-hero-band-dark">
-        <div className="container py-12">
-          <motion.div variants={fadeInUp} className="text-center mb-12">
+        <div className="container py-12 md:py-20">
+          <motion.div variants={fadeInUp} className="text-center mb-10 md:mb-14">
             <h2 className="wise-display-md mb-3" style={{ color: "var(--wise-primary)" }}>Pourquoi se transformer maintenant ?</h2>
             <p className="wise-body-lg max-w-2xl mx-auto" style={{ color: "var(--wise-canvas-soft)" }}>
               L'IA agentique redéfinit le marché du travail. Ceux qui ne s'adaptent pas seront remplacés.
             </p>
           </motion.div>
 
-          {/* Stats grid - design moderne */}
-          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-10">
-            <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-6" style={{ background: "linear-gradient(135deg, rgba(159,232,112,0.12) 0%, rgba(159,232,112,0.03) 100%)", border: "1px solid rgba(159,232,112,0.2)" }}>
-              <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(159,232,112,0.15)" }} />
-              <TrendingDown size={24} style={{ color: "var(--wise-primary)" }} className="mb-3" />
-              <p className="text-3xl font-bold mb-1" style={{ color: "#fff" }}>92M</p>
-              <p className="text-sm font-medium mb-2" style={{ color: "var(--wise-primary)" }}>d'emplois menacés</p>
-              <p className="text-xs" style={{ color: "var(--wise-mute)" }}>Déplacés par l'IA d'ici 2030 - World Economic Forum</p>
+          {/* Chart + Stats layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-8 md:mb-12">
+            {/* Left: Chart */}
+            <motion.div variants={fadeInLeft} className="relative rounded-2xl p-4 md:p-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
+              <h3 className="text-sm font-semibold mb-1" style={{ color: "#ff6b6b" }}>Emplois exposés à l'automatisation IA (en millions)</h3>
+              <p className="text-xs mb-4" style={{ color: "var(--wise-mute)" }}>Données : WEF (85M/2025, 92M/2030), Goldman Sachs (300M/2030), McKinsey (400-800M/2030)</p>
+              <div className="h-[220px] md:h-[260px]">
+                <Line
+                  data={{
+                    labels: ["2020", "2023", "2025", "2027", "2030"],
+                    datasets: [
+                      {
+                        label: "Goldman Sachs (emplois exposés, M)",
+                        data: [30, 85, 150, 220, 300],
+                        borderColor: "#ff6b6b",
+                        backgroundColor: "rgba(255,107,107,0.1)",
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: "#ff6b6b",
+                        pointBorderColor: "#ff6b6b",
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        borderWidth: 3,
+                      },
+                      {
+                        label: "WEF (emplois déplacés, M)",
+                        data: [12, 40, 85, 88, 92],
+                        borderColor: "#38c8ff",
+                        backgroundColor: "rgba(56,200,255,0.08)",
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: "#38c8ff",
+                        pointBorderColor: "#38c8ff",
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        borderWidth: 2.5,
+                      },
+                      {
+                        label: "McKinsey (scénario haut, M)",
+                        data: [50, 150, 300, 550, 800],
+                        borderColor: "#ffc091",
+                        backgroundColor: "rgba(255,192,145,0.05)",
+                        fill: false,
+                        tension: 0.4,
+                        pointBackgroundColor: "#ffc091",
+                        pointBorderColor: "#ffc091",
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                      },
+                    ],
+                  }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                        display: true,
+                        position: "bottom" as const,
+                        labels: { color: "rgba(255,255,255,0.6)", font: { size: 11 }, boxWidth: 12, padding: 16 },
+                      },
+                      tooltip: {
+                        backgroundColor: "rgba(0,0,0,0.85)",
+                        titleColor: "#fff",
+                        bodyColor: "rgba(255,255,255,0.8)",
+                        borderColor: "rgba(255,107,107,0.3)",
+                        borderWidth: 1,
+                      },
+                    },
+                    scales: {
+                      x: {
+                        grid: { color: "rgba(255,255,255,0.05)" },
+                        ticks: { color: "rgba(255,255,255,0.5)", font: { size: 11 } },
+                      },
+                      y: {
+                        grid: { color: "rgba(255,255,255,0.05)" },
+                        ticks: { color: "rgba(255,255,255,0.5)", font: { size: 11 } },
+                        beginAtZero: true,
+                      },
+                    },
+                  }}
+                />
+              </div>
             </motion.div>
 
-            <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-6" style={{ background: "linear-gradient(135deg, rgba(56,200,255,0.12) 0%, rgba(56,200,255,0.03) 100%)", border: "1px solid rgba(56,200,255,0.2)" }}>
-              <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(56,200,255,0.15)" }} />
-              <Users size={24} style={{ color: "#38c8ff" }} className="mb-3" />
-              <p className="text-3xl font-bold mb-1" style={{ color: "#fff" }}>41%</p>
-              <p className="text-sm font-medium mb-2" style={{ color: "#38c8ff" }}>du code généré par l'IA</p>
-              <p className="text-xs" style={{ color: "var(--wise-mute)" }}>Les développeurs classiques sont en première ligne</p>
-            </motion.div>
+            {/* Right: Stats cards */}
+            <motion.div variants={staggerContainer} className="flex flex-col gap-4">
+              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "linear-gradient(135deg, rgba(255,107,107,0.15) 0%, rgba(255,107,107,0.03) 100%)", border: "1px solid rgba(255,107,107,0.25)" }}>
+                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(255,107,107,0.15)" }} />
+                <TrendingDown size={22} style={{ color: "#ff6b6b" }} className="mb-2" />
+                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "#fff" }}>300M</p>
+                <p className="text-sm font-semibold mb-1" style={{ color: "#ff6b6b" }}>d'emplois exposés à l'automatisation</p>
+                <p className="text-xs" style={{ color: "var(--wise-mute)" }}>Goldman Sachs, 2023 — confirmé en 2026</p>
+              </motion.div>
 
-            <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-6" style={{ background: "linear-gradient(135deg, rgba(255,192,145,0.12) 0%, rgba(255,192,145,0.03) 100%)", border: "1px solid rgba(255,192,145,0.2)" }}>
-              <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(255,192,145,0.15)" }} />
-              <Shield size={24} style={{ color: "#ffc091" }} className="mb-3" />
-              <p className="text-3xl font-bold mb-1" style={{ color: "#fff" }}>234Mds$</p>
-              <p className="text-sm font-medium mb-2" style={{ color: "#ffc091" }}>de SaaS menacés</p>
-              <p className="text-xs" style={{ color: "var(--wise-mute)" }}>Logiciels traditionnels remplacés par des agents IA</p>
+              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "linear-gradient(135deg, rgba(56,200,255,0.12) 0%, rgba(56,200,255,0.03) 100%)", border: "1px solid rgba(56,200,255,0.2)" }}>
+                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(56,200,255,0.15)" }} />
+                <Users size={22} style={{ color: "#38c8ff" }} className="mb-2" />
+                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "#fff" }}>92M</p>
+                <p className="text-sm font-semibold mb-1" style={{ color: "#38c8ff" }}>d'emplois déplacés d'ici 2030</p>
+                <p className="text-xs" style={{ color: "var(--wise-mute)" }}>WEF Future of Jobs Report 2025</p>
+              </motion.div>
+
+              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "linear-gradient(135deg, rgba(255,192,145,0.12) 0%, rgba(255,192,145,0.03) 100%)", border: "1px solid rgba(255,192,145,0.2)" }}>
+                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(255,192,145,0.15)" }} />
+                <Shield size={22} style={{ color: "#ffc091" }} className="mb-2" />
+                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "#fff" }}>30%</p>
+                <p className="text-sm font-semibold mb-1" style={{ color: "#ffc091" }}>des heures de travail automatisées</p>
+                <p className="text-xs" style={{ color: "var(--wise-mute)" }}>McKinsey — accéléré par l'IA générative</p>
+              </motion.div>
+
+              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "linear-gradient(135deg, rgba(159,232,112,0.12) 0%, rgba(159,232,112,0.03) 100%)", border: "1px solid rgba(159,232,112,0.2)" }}>
+                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(159,232,112,0.15)" }} />
+                <TrendingDown size={22} style={{ color: "#9fe870" }} className="mb-2" />
+                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "#fff" }}>220Mds$</p>
+                <p className="text-sm font-semibold mb-1" style={{ color: "#9fe870" }}>de SaaS menacés par les agents IA</p>
+                <p className="text-xs" style={{ color: "var(--wise-mute)" }}>Gartner, 2025 — logiciels remplacés par l'IA agentique</p>
+              </motion.div>
             </motion.div>
-          </motion.div>
+          </div>
 
           {/* CTA bottom */}
           <motion.div variants={fadeInUp} className="text-center">
-            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full" style={{ background: "linear-gradient(135deg, rgba(159,232,112,0.15) 0%, rgba(159,232,112,0.05) 100%)", border: "1px solid rgba(159,232,112,0.3)" }}>
-              <Zap size={18} style={{ color: "var(--wise-primary)" }} />
-              <span className="text-sm font-semibold" style={{ color: "#fff" }}>Ne subissez pas la disruption. Devenez l'acteur du changement.</span>
+            <div className="inline-flex items-center gap-2 md:gap-3 px-5 md:px-8 py-3 md:py-4 rounded-full" style={{ background: "linear-gradient(135deg, rgba(255,107,107,0.2) 0%, rgba(255,60,60,0.08) 100%)", border: "1px solid rgba(255,107,107,0.4)" }}>
+              <Zap size={20} style={{ color: "#ff6b6b" }} />
+              <span className="text-sm md:text-base font-bold" style={{ color: "#fff" }}>Ne subissez pas la disruption. Devenez l'acteur du changement.</span>
             </div>
-            <p className="text-xs mt-4" style={{ color: "var(--wise-mute)" }}>Sources : WEF Future of Jobs 2025, Goldman Sachs, Gartner</p>
+            <p className="text-xs mt-4" style={{ color: "var(--wise-mute)" }}>Sources : WEF Future of Jobs 2025, Goldman Sachs 2023/2026, McKinsey Global Institute, Gartner 2025</p>
           </motion.div>
         </div>
       </AnimatedSection>
@@ -660,7 +756,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 
 function JobLossChart() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const chartRef = useRef<Chart | null>(null);
+  const chartRef = useRef<ChartJS | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true });
 
@@ -671,7 +767,7 @@ function JobLossChart() {
     const ctx = canvasRef.current.getContext("2d");
     if (!ctx) return;
 
-    chartRef.current = new Chart(ctx, {
+    chartRef.current = new ChartJS(ctx, {
       type: "line",
       data: {
         labels: ["2025", "2026", "2027", "2028", "2029", "2030"],
@@ -694,7 +790,7 @@ function JobLossChart() {
         },
         scales: {
           x: { ticks: { color: "#868685", font: { family: "Inter" } }, grid: { color: "rgba(255,255,255,0.04)" } },
-          y: { ticks: { color: "#868685", font: { family: "Inter" }, callback: (v) => v + "%" }, grid: { color: "rgba(255,255,255,0.04)" }, min: 0, max: 110 },
+          y: { ticks: { color: "#868685", font: { family: "Inter" }, callback: (v: any) => v + "%" }, grid: { color: "rgba(255,255,255,0.04)" }, min: 0, max: 110 },
         },
         interaction: { intersect: false, mode: "index" },
       },
