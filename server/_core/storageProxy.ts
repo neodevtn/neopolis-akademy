@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { ENV } from "./env";
+import { sdk } from "./sdk";
 
 export function registerStorageProxy(app: Express) {
   app.get("/manus-storage/*", async (req, res) => {
@@ -7,6 +8,20 @@ export function registerStorageProxy(app: Express) {
     if (!key) {
       res.status(400).send("Missing storage key");
       return;
+    }
+
+    // F-014: Protect application files (CV, photos, videos) - require admin auth
+    if (key.startsWith("applications/")) {
+      try {
+        const user = await sdk.authenticateRequest(req);
+        if (!user || user.role !== "admin") {
+          res.status(403).json({ error: "Acc\u00e8s r\u00e9serv\u00e9 aux administrateurs" });
+          return;
+        }
+      } catch {
+        res.status(401).json({ error: "Authentification requise pour acc\u00e9der aux fichiers de candidature" });
+        return;
+      }
     }
 
     if (!ENV.forgeApiUrl || !ENV.forgeApiKey) {

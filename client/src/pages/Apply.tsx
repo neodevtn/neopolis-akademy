@@ -91,7 +91,7 @@ export default function Apply() {
   const [cvFile, setCvFile] = useState<File | null>(null);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [result, setResult] = useState<{ scoreTotal: number; scoreTechnique: number; scoreMetier: number; scoreCommunication: number } | null>(null);
+  const [result, setResult] = useState<{ id: number; success: boolean; message: string } | null>(null);
   const cvInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
 
@@ -438,24 +438,11 @@ export default function Apply() {
             <CheckCircle className="w-10 h-10" style={{ color: "var(--wise-positive)" }} />
           </div>
           <h1 className="wise-display-md mb-4">Candidature soumise !</h1>
-          <p className="wise-body-md mb-8">Votre score a été calculé automatiquement.</p>
+          <p className="wise-body-md mb-8">{result.message}</p>
           <div className="wise-card-green p-8 mb-8">
-            <div className="text-5xl font-black mb-2" style={{ color: "var(--wise-positive-deep)" }}>{Number(result.scoreTotal).toFixed(1)}%</div>
-            <p className="text-sm mb-6" style={{ color: "var(--wise-mute)" }}>Score global</p>
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <div className="text-2xl font-bold" style={{ color: "var(--wise-ink)" }}>{Number(result.scoreTechnique).toFixed(1)}%</div>
-                <div className="text-xs" style={{ color: "var(--wise-mute)" }}>Technique (40%)</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold" style={{ color: "var(--wise-ink)" }}>{Number(result.scoreMetier).toFixed(1)}%</div>
-                <div className="text-xs" style={{ color: "var(--wise-mute)" }}>Métier (35%)</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold" style={{ color: "var(--wise-ink)" }}>{Number(result.scoreCommunication).toFixed(1)}%</div>
-                <div className="text-xs" style={{ color: "var(--wise-mute)" }}>Communication (25%)</div>
-              </div>
-            </div>
+            <div className="text-3xl font-black mb-2" style={{ color: "var(--wise-positive-deep)" }}>Merci !</div>
+            <p className="text-sm mb-4" style={{ color: "var(--wise-mute)" }}>Votre candidature a bien été enregistrée</p>
+            <p className="text-base" style={{ color: "var(--wise-body)" }}>Notre équipe analysera votre profil et vous recevrez un email de confirmation avec les prochaines étapes.</p>
           </div>
           <p className="wise-body-md mb-6">Si votre profil est retenu, vous serez contacté sous 48h.</p>
           <Link href="/"><button className="wise-btn-secondary">Retour à l'accueil</button></Link>

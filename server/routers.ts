@@ -10,6 +10,7 @@ import { notifyOwner } from "./_core/notification";
 import { applicationSchema } from "@shared/validation";
 import { storagePut } from "./storage";
 import { sendConfirmationEmail } from "./email";
+import { uploadRateLimit, submitRateLimit, getClientIp } from "./security";
 
 export const appRouter = router({
   system: systemRouter,
@@ -30,7 +31,16 @@ export const appRouter = router({
         contentType: z.string(),
         type: z.enum(["cv", "photo", "video"]),
       }))
-      .mutation(async ({ input }) => {
+      .mutation(async ({ input, ctx }) => {
+        // Rate limit per IP (F-006: max 10 uploads/hour)
+        const ip = getClientIp(ctx.req);
+        if (!uploadRateLimit(ip)) {
+          throw new TRPCError({
+            code: "TOO_MANY_REQUESTS",
+            message: "Trop de fichiers envoyés. Veuillez réessayer dans quelques minutes.",
+          });
+        }
+
         // Validate content type
         const allowedCvTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
         const allowedPhotoTypes = ["image/jpeg", "image/png", "image/webp"];
@@ -45,6 +55,20 @@ export const appRouter = router({
               : input.type === "photo"
               ? "Format de photo non autorisé. Formats acceptés : JPEG, PNG, WEBP"
               : "Format de vidéo non autorisé. Formats acceptés : WebM, MP4, OGG",
+          });
+        }
+
+        // Validate file extension against whitelist (F-013)
+        const allowedExtensions: Record<string, string[]> = {
+          cv: ["pdf", "doc", "docx"],
+          photo: ["jpg", "jpeg", "png", "webp"],
+          video: ["webm", "mp4", "ogg"],
+        };
+        const ext = (input.fileName.split(".").pop() || "").toLowerCase();
+        if (!allowedExtensions[input.type].includes(ext)) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Extension de fichier non autorisée (.${ext}). Extensions acceptées : ${allowedExtensions[input.type].join(", ")}`,
           });
         }
 
@@ -63,8 +87,7 @@ export const appRouter = router({
           });
         }
 
-        // Generate unique filename
-        const ext = input.fileName.split(".").pop() || "bin";
+        // Generate unique filename with validated extension
         const uniqueName = `${Date.now()}_${Math.random().toString(36).slice(2, 10)}.${ext}`;
         const prefix = input.type === "cv" ? "cv" : input.type === "photo" ? "photos" : "videos";
         const key = `applications/${prefix}/${uniqueName}`;
@@ -74,8 +97,17 @@ export const appRouter = router({
 
     submit: publicProcedure
       .input(applicationSchema)
-      .mutation(async ({ input }) => {
-        // Vidéo obligatoire
+      .mutation(async ({ input, ctx }) => {
+        // Rate limit per IP (F-007: max 3 submissions/hour)
+        const ip = getClientIp(ctx.req);
+        if (!submitRateLimit(ip)) {
+          throw new TRPCError({
+            code: "TOO_MANY_REQUESTS",
+            message: "Trop de candidatures soumises. Veuillez r\u00e9essayer plus tard.",
+          });
+        }
+
+        // Vid\u00e9o obligatoire
         if (!input.videoFileUrl || input.videoFileUrl.trim() === "") {
           throw new TRPCError({
             code: "BAD_REQUEST",
@@ -166,12 +198,11 @@ export const appRouter = router({
           console.error("Failed to send confirmation email:", e);
         }
 
+        // F-009: Ne pas exposer les scores détaillés au client (risque de reverse-engineering)
         return {
           id: application.id,
-          scoreTotal: scores.scoreTotal,
-          scoreTechnique: scores.scoreTechnique,
-          scoreMetier: scores.scoreMetier,
-          scoreCommunication: scores.scoreCommunication,
+          success: true,
+          message: "Votre candidature a été soumise avec succès. Vous recevrez un email de confirmation.",
         };
       }),
 

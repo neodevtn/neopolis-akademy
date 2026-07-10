@@ -204,3 +204,12 @@
 - [x] Section CTA final : fond vert doux (#e2f6d5)
 - [x] PartnerCards : fond vert pâle au lieu de noir
 - [x] Footer : gris foncé (#374151) au lieu de noir pur
+
+## Corrections de sécurité (Audit)
+- [x] F-001/F-002 : Ajouter headers de sécurité (CSP, X-Frame-Options, Referrer-Policy, Permissions-Policy) + supprimer X-Powered-By
+- [x] F-006/F-013 : Rate limit sur upload + validation extension fichier (whitelist)
+- [x] F-014 : Protéger /manus-storage/applications/* (auth admin requise)
+- [x] F-003/F-007 : Rate limiting global + anti-spam sur submit (IP-based)
+- [x] F-005 : Réduire durée session JWT (1 an → 30 jours)
+- [x] F-009 : Ne plus exposer les scores détaillés dans la réponse submit
+- [x] F-011 : Limiter le batching tRPC (max 10 procédures par batch)

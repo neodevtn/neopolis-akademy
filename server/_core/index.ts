@@ -8,6 +8,7 @@ import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { securityHeaders, globalRateLimit, tRPCBatchLimit } from "../security";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -31,12 +32,19 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
+
+  // Security middlewares (F-001, F-002, F-003)
+  app.disable("x-powered-by");
+  app.use(securityHeaders);
+  app.use(globalRateLimit);
+
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
   registerOAuthRoutes(app);
-  // tRPC API
+  // tRPC API with batch limit (F-011)
+  app.use("/api/trpc", tRPCBatchLimit);
   app.use(
     "/api/trpc",
     createExpressMiddleware({
