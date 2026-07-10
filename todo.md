@@ -213,3 +213,17 @@
 - [x] F-005 : Réduire durée session JWT (1 an → 30 jours)
 - [x] F-009 : Ne plus exposer les scores détaillés dans la réponse submit
 - [x] F-011 : Limiter le batching tRPC (max 10 procédures par batch)
+
+## Thème Bubble (nutlope/hallmark)
+- [x] Palette cream/mint/sage avec tokens CSS variables
+- [x] Typographie Plus Jakarta Sans + JetBrains Mono
+- [x] Cards rounded-xl avec lift au hover
+- [x] Navigation floating pill on scroll
+- [x] Boutons push (scale 0.97 on active)
+- [x] Eyebrow labels sur chaque section
+- [x] Footer en style Bubble (canvas-soft)
+- [x] Sections alternées canvas/canvas-soft
+- [x] Tint colors pour les stats cards (coral, cyan, pear, mint)
+- [x] PartnerCards et FormulaCards en wise-card
+- [x] CTA band avec tint-mint background
+- [x] FAQ avec wise-card et animations smooth

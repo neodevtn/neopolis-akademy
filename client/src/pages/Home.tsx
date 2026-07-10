@@ -104,125 +104,105 @@ export default function Home() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--wise-canvas)" }}>
-      {/* ─── Navigation ─── */}
+      {/* ─── Navigation (Bubble N10 floating-on-scroll morph) ─── */}
       <motion.nav
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-        className="sticky top-0 z-50 transition-all duration-300"
-        style={{
-          backgroundColor: "#ffffff",
-          backdropFilter: "blur(12px)",
-          boxShadow: scrolled ? "0 1px 3px rgba(14,15,12,0.08)" : "none",
-        }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed top-0 left-0 right-0 z-50 flex justify-center"
+        style={{ height: "66px" }}
       >
-        <div className="container flex items-center justify-between py-3 md:py-4 px-4 md:px-6">
+        <div
+          className="flex items-center gap-5 w-full transition-all duration-[420ms]"
+          style={{
+            maxWidth: scrolled ? "min(64rem, calc(100% - 1.5rem))" : "100%",
+            height: "66px",
+            paddingInline: scrolled ? "1.1rem" : "clamp(1.25rem, 4vw, 3rem)",
+            background: scrolled ? "oklch(97% 0.012 95 / 0.9)" : "oklch(97% 0.012 95 / 0.82)",
+            backdropFilter: "blur(18px) saturate(160%)",
+            WebkitBackdropFilter: "blur(18px) saturate(160%)",
+            border: "1px solid transparent",
+            borderBottomColor: scrolled ? "oklch(86% 0.014 90)" : "oklch(86% 0.014 90)",
+            borderRadius: scrolled ? "999px" : "0",
+            transform: scrolled ? "translateY(0.7rem)" : "translateY(0)",
+            boxShadow: scrolled ? "0 24px 56px -20px oklch(20% 0.012 250 / 0.18), 0 2px 6px oklch(20% 0.012 250 / 0.08)" : "none",
+            transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
+        >
           <div className="flex items-center gap-3">
-            <img src={LOGO_URL} alt="Neopolis Akademy" className="h-10 md:h-14 object-contain" />
+            <img src={LOGO_URL} alt="Neopolis Akademy" className="h-9 md:h-11 object-contain" />
           </div>
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-1 ml-auto">
             <NavLink href="#formule">La Formule</NavLink>
             <NavLink href="#pourquoi">Pourquoi maintenant</NavLink>
             <NavLink href="#partenaires">Partenaires</NavLink>
             <NavLink href="#faq">FAQ</NavLink>
           </div>
-          <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex items-center gap-2 ml-auto md:ml-2">
             <Link href="/apply">
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="wise-btn-primary flex items-center gap-1 md:gap-2 text-xs md:text-base px-3 md:px-6 py-2 md:py-3"
-              >
+              <button className="wise-btn-primary flex items-center gap-1.5 text-xs md:text-sm px-3 md:px-5 py-2 md:py-2.5">
                 Postuler <ChevronRight size={14} />
-              </motion.button>
+              </button>
             </Link>
             <MobileMenuButton />
           </div>
         </div>
       </motion.nav>
 
-      {/* ─── Hero Band (Sage) ─── */}
-      <section className="wise-hero-band overflow-hidden">
-        <div className="container py-6 md:py-14 px-4 md:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
+      {/* ─── Hero Band (Bubble cream paper) ─── */}
+      <section className="overflow-hidden pt-[66px]" style={{ background: "var(--wise-canvas)" }}>
+        <div className="container" style={{ padding: "clamp(2.5rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
+          <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-6 lg:gap-12 items-center">
             <motion.div
               initial="hidden"
               animate="visible"
               variants={staggerContainer}
             >
-              <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
-                <motion.span
-                  animate={{ scale: [1, 1.4, 1] }}
-                  transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                  className="w-2 h-2 rounded-full"
-                  style={{ backgroundColor: "var(--wise-positive)" }}
-                />
-                <span className="text-sm font-semibold" style={{ color: "var(--wise-positive-deep)" }}>Programme 2026 - Places limitées</span>
+              {/* Eyebrow */}
+              <motion.div variants={fadeInUp} className="wise-eyebrow mb-6">
+                <span className="w-2 h-2 rounded-full" style={{ background: "var(--wise-primary)" }} />
+                <span>Programme 2026 · Places limitées</span>
               </motion.div>
 
-              <motion.h1 variants={fadeInUp} className="text-3xl md:text-5xl lg:text-6xl font-black mb-4 md:mb-6" style={{ lineHeight: 1.05 }}>
+              {/* Title */}
+              <motion.h1 variants={fadeInUp} className="wise-display-mega mb-5" style={{ textWrap: "balance" }}>
                 Transformez la menace de l'IA{" "}
-                <span className="relative inline-block">
-                  <span style={{ color: "var(--wise-positive)" }}>en opportunité</span>
-                  <motion.span
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    transition={{ delay: 0.8, duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-                    className="absolute bottom-0 left-0 w-full h-1 rounded-full origin-left"
-                    style={{ backgroundColor: "var(--wise-primary)" }}
-                  />
-                </span>
+                <span className="wise-highlight">en opportunité</span>
               </motion.h1>
 
-              <motion.p variants={fadeInUp} className="text-sm md:text-base mb-5 md:mb-8 max-w-lg" style={{ color: "var(--wise-ink-soft)" }}>
-                Formation certifiante <strong>100% gratuite</strong>. Devenez{" "}
-                <strong>AI Solutions Partner - Ambassadeur Certifié</strong> et conquérez le marché de l'IA agentique.
+              {/* Lede */}
+              <motion.p variants={fadeInUp} className="wise-body-lg max-w-[46ch] mb-8">
+                Formation certifiante <strong style={{ fontWeight: 600, color: "var(--wise-ink)" }}>100% gratuite</strong>. Devenez{" "}
+                <strong style={{ fontWeight: 600, color: "var(--wise-ink)" }}>AI Solutions Partner</strong> et conquérez le marché de l'IA agentique.
               </motion.p>
 
-              <motion.div variants={fadeInUp} className="flex flex-wrap gap-3 md:gap-4 mb-4 md:mb-6">
+              {/* CTA buttons */}
+              <motion.div variants={fadeInUp} className="flex flex-wrap gap-3 mb-6">
                 <Link href="/apply">
-                  <motion.button
-                    whileHover={{ scale: 1.04, boxShadow: "0 8px 30px rgba(159,232,112,0.3)" }}
-                    whileTap={{ scale: 0.97 }}
-                    className="wise-btn-primary flex items-center gap-2 text-sm md:text-lg px-5 md:px-8 py-3 md:py-4"
-                  >
-                    Déposer ma candidature <ArrowRight size={20} />
-                  </motion.button>
+                  <button className="wise-btn-primary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">
+                    Déposer ma candidature <ArrowRight size={18} />
+                  </button>
                 </Link>
                 <a href="#formule">
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="wise-btn-secondary flex items-center gap-2 text-sm md:text-lg px-5 md:px-8 py-3 md:py-4"
-                  >
+                  <button className="wise-btn-secondary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">
                     Découvrir le programme
-                  </motion.button>
+                  </button>
                 </a>
               </motion.div>
 
-              <motion.div variants={fadeInUp} className="inline-flex flex-wrap items-center gap-2 md:gap-3 px-3 md:px-4 py-2 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.7)", border: "1px solid rgba(0,0,0,0.06)" }}>
-                <div className="flex items-center gap-1 whitespace-nowrap">
-                  <CheckCircle2 size={13} style={{ color: "var(--wise-positive)" }} />
-                  <span className="text-xs md:text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>100% Gratuit</span>
-                </div>
-                <div className="w-px h-3 md:h-4" style={{ backgroundColor: "rgba(0,0,0,0.12)" }} />
-                <div className="flex items-center gap-1 whitespace-nowrap">
-                  <CheckCircle2 size={13} style={{ color: "var(--wise-positive)" }} />
-                  <span className="text-xs md:text-sm font-semibold" style={{ color: "var(--wise-ink)" }}>296 places</span>
-                </div>
-                <div className="w-px h-3 md:h-4" style={{ backgroundColor: "rgba(0,0,0,0.12)" }} />
-                <div className="flex items-center gap-1 whitespace-nowrap">
-                  <CheckCircle2 size={13} style={{ color: "var(--wise-negative)" }} />
-                  <span className="text-xs md:text-sm font-semibold" style={{ color: "var(--wise-negative)" }}>Avant le 31 août 2026</span>
-                </div>
+              {/* Hero note (chips) */}
+              <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-2">
+                <span className="wise-badge-positive">100% Gratuit</span>
+                <span className="wise-badge-positive">296 places</span>
+                <span className="wise-badge-negative">Avant le 31 août 2026</span>
               </motion.div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, x: 40 }}
+              initial={{ opacity: 0, scale: 0.92, x: 28 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
-              className="hidden md:block relative"
+              transition={{ duration: 0.62, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="hidden lg:block relative"
             >
               <HeroGraphic />
             </motion.div>
@@ -233,19 +213,20 @@ export default function Home() {
 
 
       {/* ─── Pourquoi maintenant (Gris Band) ─── */}
-      <AnimatedSection id="pourquoi" style={{ backgroundColor: "#f3f4f6", padding: "48px 24px" }}>
+      <AnimatedSection id="pourquoi" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-12 md:py-20">
           <motion.div variants={fadeInUp} className="text-center mb-10 md:mb-14">
-            <h2 className="wise-display-md mb-3" style={{ color: "var(--wise-ink)" }}>Pourquoi se transformer maintenant ?</h2>
-            <p className="wise-body-lg max-w-2xl mx-auto" style={{ color: "var(--wise-body)" }}>
+            <span className="wise-eyebrow mb-4 inline-flex">Urgence du marché</span>
+            <h2 className="wise-display-md mb-4">Pourquoi se transformer maintenant ?</h2>
+            <p className="wise-body-lg max-w-[52ch] mx-auto">
               L'IA agentique redéfinit le marché du travail. Ceux qui ne s'adaptent pas seront remplacés.
             </p>
           </motion.div>
 
           {/* Chart full width */}
-          <motion.div variants={fadeInUp} className="relative rounded-2xl p-4 md:p-8 mb-8 md:mb-12" style={{ background: "#ffffff", border: "1px solid #e5e7eb", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-            <h3 className="text-sm md:text-base font-semibold mb-1" style={{ color: "#dc2626" }}>Emplois exposés à l'automatisation IA (en millions)</h3>
-            <p className="text-xs mb-4" style={{ color: "var(--wise-mute)" }}>Données : WEF (85M/2025, 92M/2030), Goldman Sachs (300M/2030), McKinsey (400-800M/2030)</p>
+          <motion.div variants={fadeInUp} className="wise-card mb-8 md:mb-12">
+            <h3 className="wise-display-xs mb-1" style={{ color: "var(--wise-accent-coral)" }}>Emplois exposés à l'automatisation IA (en millions)</h3>
+            <p className="wise-label mb-4">WEF (85M/2025, 92M/2030) · Goldman Sachs (300M/2030) · McKinsey (400-800M/2030)</p>
             <div className="h-[280px] md:h-[340px]">
                 <Line
                   data={{
@@ -328,58 +309,54 @@ export default function Home() {
 
           {/* Stats cards grid */}
           <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 md:mb-12">
-              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "#ffffff", border: "1px solid #fecaca", boxShadow: "0 2px 8px rgba(220,38,38,0.06)" }}>
-                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(255,107,107,0.08)" }} />
-                <TrendingDown size={22} style={{ color: "#dc2626" }} className="mb-2" />
-                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "var(--wise-ink)" }}>300M</p>
-                <p className="text-sm font-semibold mb-1" style={{ color: "#dc2626" }}>d'emplois exposés à l'automatisation</p>
-                <p className="text-xs" style={{ color: "var(--wise-mute)" }}>Goldman Sachs, 2023 — confirmé en 2026</p>
+              <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-coral)" }}>
+                <TrendingDown size={20} style={{ color: "var(--wise-accent-coral)" }} className="mb-3" />
+                <p className="wise-display-sm mb-1">300M</p>
+                <p className="wise-body-sm" style={{ color: "var(--wise-accent-coral)", fontWeight: 600 }}>d'emplois exposés à l'automatisation</p>
+                <p className="wise-label mt-2">Goldman Sachs, 2023</p>
               </motion.div>
 
-              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "#ffffff", border: "1px solid #bfdbfe", boxShadow: "0 2px 8px rgba(37,99,235,0.06)" }}>
-                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(56,200,255,0.08)" }} />
-                <Users size={22} style={{ color: "#2563eb" }} className="mb-2" />
-                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "var(--wise-ink)" }}>92M</p>
-                <p className="text-sm font-semibold mb-1" style={{ color: "#2563eb" }}>d'emplois déplacés d'ici 2030</p>
-                <p className="text-xs" style={{ color: "var(--wise-mute)" }}>WEF Future of Jobs Report 2025</p>
+              <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-cyan)" }}>
+                <Users size={20} style={{ color: "var(--wise-accent-cyan)" }} className="mb-3" />
+                <p className="wise-display-sm mb-1">92M</p>
+                <p className="wise-body-sm" style={{ color: "var(--wise-accent-cyan)", fontWeight: 600 }}>d'emplois déplacés d'ici 2030</p>
+                <p className="wise-label mt-2">WEF Future of Jobs 2025</p>
               </motion.div>
 
-              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "#ffffff", border: "1px solid #fed7aa", boxShadow: "0 2px 8px rgba(234,88,12,0.06)" }}>
-                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(255,192,145,0.08)" }} />
-                <Shield size={22} style={{ color: "#ea580c" }} className="mb-2" />
-                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "var(--wise-ink)" }}>30%</p>
-                <p className="text-sm font-semibold mb-1" style={{ color: "#ea580c" }}>des heures de travail automatisées</p>
-                <p className="text-xs" style={{ color: "var(--wise-mute)" }}>McKinsey — accéléré par l'IA générative</p>
+              <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-pear)" }}>
+                <Shield size={20} style={{ color: "oklch(64% 0.18 95)" }} className="mb-3" />
+                <p className="wise-display-sm mb-1">30%</p>
+                <p className="wise-body-sm" style={{ color: "oklch(52% 0.14 95)", fontWeight: 600 }}>des heures de travail automatisées</p>
+                <p className="wise-label mt-2">McKinsey Global Institute</p>
               </motion.div>
 
-              <motion.div variants={scaleIn} className="relative overflow-hidden rounded-2xl p-5 md:p-6 flex-1" style={{ background: "#ffffff", border: "1px solid #bbf7d0", boxShadow: "0 2px 8px rgba(22,163,74,0.06)" }}>
-                <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl" style={{ backgroundColor: "rgba(159,232,112,0.08)" }} />
-                <TrendingDown size={22} style={{ color: "#16a34a" }} className="mb-2" />
-                <p className="text-3xl md:text-4xl font-black mb-1" style={{ color: "var(--wise-ink)" }}>220Mds$</p>
-                <p className="text-sm font-semibold mb-1" style={{ color: "#16a34a" }}>de SaaS menacés par les agents IA</p>
-                <p className="text-xs" style={{ color: "var(--wise-mute)" }}>Gartner, 2025 — logiciels remplacés par l'IA agentique</p>
+              <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-mint)" }}>
+                <TrendingDown size={20} style={{ color: "var(--wise-positive-deep)" }} className="mb-3" />
+                <p className="wise-display-sm mb-1">220Mds$</p>
+                <p className="wise-body-sm" style={{ color: "var(--wise-positive-deep)", fontWeight: 600 }}>de SaaS menacés par les agents IA</p>
+                <p className="wise-label mt-2">Gartner, 2025</p>
               </motion.div>
           </motion.div>
 
           {/* CTA bottom */}
           <motion.div variants={fadeInUp} className="text-center">
-            <div className="inline-flex items-center gap-2 md:gap-3 px-5 md:px-8 py-3 md:py-4 rounded-full" style={{ background: "linear-gradient(135deg, rgba(220,38,38,0.08) 0%, rgba(220,38,38,0.03) 100%)", border: "1px solid #fecaca" }}>
-              <Zap size={20} style={{ color: "#dc2626" }} />
-              <span className="text-sm md:text-base font-bold" style={{ color: "var(--wise-ink)" }}>Ne subissez pas la disruption. Devenez l'acteur du changement.</span>
-            </div>
-            <p className="text-xs mt-4" style={{ color: "var(--wise-mute)" }}>Sources : WEF Future of Jobs 2025, Goldman Sachs 2023/2026, McKinsey Global Institute, Gartner 2025</p>
+            <button className="wise-btn-tertiary">
+              <Zap size={16} />
+              Ne subissez pas la disruption. Devenez l'acteur du changement.
+            </button>
+            <p className="wise-label mt-4">Sources : WEF Future of Jobs 2025, Goldman Sachs 2023/2026, McKinsey Global Institute, Gartner 2025</p>
           </motion.div>
         </div>
       </AnimatedSection>
 
       {/* ─── La Formule (Green Band) ─── */}
-      <AnimatedSection id="formule" style={{ backgroundColor: "#f0f7eb", padding: "48px 24px" }}>
+      <AnimatedSection id="formule" style={{ background: "var(--wise-canvas)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-12">
           <motion.div variants={fadeInUp} className="text-center mb-14">
-            <span className="wise-badge-positive inline-block mb-4">100% GRATUIT</span>
+            <span className="wise-badge-positive mb-4">100% Gratuit</span>
             <h2 className="wise-display-md mb-4">La Formule Complète</h2>
-            <p className="wise-body-lg max-w-2xl mx-auto">
-              Un parcours en 3 étapes pour devenir AI Solutions Partner - Ambassadeur Certifié
+            <p className="wise-body-lg max-w-[52ch] mx-auto">
+              Un parcours en 3 étapes pour devenir AI Solutions Partner – Ambassadeur Certifié
             </p>
           </motion.div>
 
@@ -419,11 +396,12 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── Partenariats (Sage Band) ─── */}
-      <AnimatedSection id="partenaires" style={{ backgroundColor: "#ffffff", padding: "48px 24px" }}>
+      <AnimatedSection id="partenaires" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-12">
           <motion.div variants={fadeInUp} className="text-center mb-14">
+            <span className="wise-eyebrow mb-4 inline-flex">Écosystème</span>
             <h2 className="wise-display-md mb-4">Partenariats Stratégiques</h2>
-            <p className="wise-body-lg max-w-2xl mx-auto">
+            <p className="wise-body-lg max-w-[52ch] mx-auto">
               Neopolis Development a noué des partenariats avec les leaders mondiaux de l'IA pour conquérir le marché de l'IA agentique.
             </p>
           </motion.div>
@@ -483,14 +461,14 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── AI Solutions Partner Section ─── */}
-      <AnimatedSection style={{ backgroundColor: "#f9fafb", padding: "48px 24px" }}>
+      <AnimatedSection style={{ background: "var(--wise-canvas)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
             <motion.div variants={fadeInLeft}>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
-                <Target size={14} style={{ color: "var(--wise-positive-deep)" }} />
-                <span className="text-xs font-semibold" style={{ color: "var(--wise-positive-deep)" }}>VOTRE FUTUR STATUT</span>
-              </div>
+              <span className="wise-eyebrow mb-6 inline-flex">
+                <Target size={12} />
+                Votre futur statut
+              </span>
               <h2 className="wise-display-md mb-6">Devenez AI Solutions Partner</h2>
               <p className="wise-body-lg mb-6">
                 Après votre certification, vous obtenez le statut d'<strong>AI Solutions Partner - Ambassadeur Certifié</strong>. Vous devenez un entrepreneur indépendant qui distribue des solutions IA auprès des PME/TPE de votre secteur d'activité.
@@ -510,40 +488,31 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── CTA Band ─── */}
-      <AnimatedSection style={{ backgroundColor: "#e2f6d5" }}>
-        <div className="container py-10 md:py-20 text-center px-4 md:px-6">
+      <AnimatedSection style={{ background: "var(--tint-mint)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
+        <div className="container py-10 md:py-20 text-center">
           <motion.div variants={fadeInUp}>
-            <motion.div
-              animate={{ rotate: [0, 5, -5, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              className="inline-block mb-6"
-            >
-              <Rocket size={40} style={{ color: "var(--wise-positive-deep)" }} />
-            </motion.div>
-            <h2 className="text-2xl md:text-3xl lg:text-5xl font-black mb-4 md:mb-5" style={{ color: "var(--wise-ink)", lineHeight: 1.1 }}>
+            <Rocket size={36} style={{ color: "var(--wise-positive-deep)" }} className="mx-auto mb-6" />
+            <h2 className="wise-display-xl mb-5" style={{ textWrap: "balance" }}>
               Ne subissez pas la disruption.<br />Devenez-en l'acteur.
             </h2>
-            <p className="text-lg mb-10" style={{ color: "var(--wise-body)" }}>
-              Formation et certification 100% gratuites - 296 places seulement
+            <p className="wise-body-lg mb-10 max-w-[42ch] mx-auto">
+              Formation et certification 100% gratuites – 296 places seulement
             </p>
             <Link href="/apply">
-              <motion.button
-                whileHover={{ scale: 1.05, boxShadow: "0 12px 40px rgba(159,232,112,0.35)" }}
-                whileTap={{ scale: 0.97 }}
-                className="wise-btn-primary text-lg px-10 py-5 flex items-center gap-3 mx-auto"
-              >
-                Postuler maintenant <ArrowRight size={22} />
-              </motion.button>
+              <button className="wise-btn-primary text-base md:text-lg px-8 md:px-10 py-4 md:py-5 flex items-center gap-3 mx-auto">
+                Postuler maintenant <ArrowRight size={20} />
+              </button>
             </Link>
           </motion.div>
         </div>
       </AnimatedSection>
 
       {/* ─── FAQ Section ─── */}
-      <AnimatedSection id="faq" style={{ backgroundColor: "#ffffff", padding: "48px 24px" }}>
+      <AnimatedSection id="faq" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-12">
-          <motion.div variants={fadeInUp}>
-            <h2 className="wise-display-md text-center mb-14">Questions fréquentes</h2>
+          <motion.div variants={fadeInUp} className="text-center mb-14">
+            <span className="wise-eyebrow mb-4 inline-flex">Support</span>
+            <h2 className="wise-display-md">Questions fréquentes</h2>
           </motion.div>
           <motion.div variants={staggerContainer} className="max-w-3xl mx-auto space-y-3">
             {faqItems.map((item, i) => (
@@ -556,34 +525,34 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── Footer (Dark) ─── */}
-      <footer style={{ backgroundColor: "#374151", color: "#e5e7eb", padding: "48px 24px" }}>
+      <footer className="wise-footer">
         <div className="container py-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <img src={LOGO_URL} alt="Neopolis Akademy" className="h-14 object-contain mb-2 brightness-0 invert opacity-90" />
-              <p className="text-sm" style={{ color: "var(--wise-mute)" }}>
-                Neopolis Development - Transformer la menace de l'IA en opportunité.
+              <img src={LOGO_URL} alt="Neopolis Akademy" className="h-12 object-contain mb-3" />
+              <p className="wise-body-sm">
+                Neopolis Development – Transformer la menace de l'IA en opportunité.
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-2" style={{ color: "var(--wise-canvas-soft)" }}>Programme</h4>
-              <ul className="space-y-1 text-sm" style={{ color: "var(--wise-mute)" }}>
-                <li><a href="#formule" className="hover:text-white transition-colors duration-200">La Formule</a></li>
-                <li><a href="#pourquoi" className="hover:text-white transition-colors duration-200">Pourquoi maintenant</a></li>
-                <li><a href="#partenaires" className="hover:text-white transition-colors duration-200">Partenaires</a></li>
-                <li><a href="#faq" className="hover:text-white transition-colors duration-200">FAQ</a></li>
+              <h4 className="wise-label mb-3">Programme</h4>
+              <ul className="space-y-1.5">
+                <li><a href="#formule" className="wise-body-sm hover:underline">La Formule</a></li>
+                <li><a href="#pourquoi" className="wise-body-sm hover:underline">Pourquoi maintenant</a></li>
+                <li><a href="#partenaires" className="wise-body-sm hover:underline">Partenaires</a></li>
+                <li><a href="#faq" className="wise-body-sm hover:underline">FAQ</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-2" style={{ color: "var(--wise-canvas-soft)" }}>Contact</h4>
-              <ul className="space-y-1 text-sm" style={{ color: "var(--wise-mute)" }}>
-                <li><a href="mailto:info@neopolis-dev.com" className="hover:text-white transition-colors duration-200">info@neopolis-dev.com</a></li>
-                <li><a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">www.neopolis-dev.com</a></li>
+              <h4 className="wise-label mb-3">Contact</h4>
+              <ul className="space-y-1.5">
+                <li><a href="mailto:info@neopolis-dev.com" className="wise-body-sm hover:underline">info@neopolis-dev.com</a></li>
+                <li><a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="wise-body-sm hover:underline">www.neopolis-dev.com</a></li>
               </ul>
             </div>
           </div>
-          <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.15)" }}>
-            <p className="text-center text-sm" style={{ color: "var(--wise-mute)" }}>
+          <div className="mt-6 pt-6" style={{ borderTop: "1px solid var(--wise-rule)" }}>
+            <p className="text-center wise-body-sm" style={{ color: "var(--wise-mute)" }}>
               © 2026 Neopolis Development. Tous droits réservés.
             </p>
           </div>
@@ -670,19 +639,16 @@ function FormulaCard({ icon, step, title, description, badge, image }: { icon: R
 function PartnerCard({ name, description, logo }: { name: string; description: string; logo: string }) {
   return (
     <motion.div
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="h-full rounded-3xl p-6"
-      style={{ backgroundColor: "#f0f7eb", border: "1px solid #c5edab" }}
+      whileHover={{ y: -4, transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] } }}
+      className="wise-card h-full"
     >
       <div className="flex items-center gap-4 mb-5">
-        <div className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden" style={{ backgroundColor: "#ffffff", border: "1px solid #e5e7eb" }}>
-          <img src={logo} alt={name} className="w-10 h-10 object-contain" />
+        <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden" style={{ background: "var(--wise-canvas-soft)" }}>
+          <img src={logo} alt={name} className="w-8 h-8 object-contain" />
         </div>
-        <h3 className="text-2xl font-bold" style={{ color: "var(--wise-ink)" }}>{name}</h3>
+        <h3 className="wise-display-xs">{name}</h3>
       </div>
-      <p className="text-base leading-relaxed" style={{ color: "var(--wise-body)" }}>
-        {description}
-      </p>
+      <p className="wise-body-md">{description}</p>
     </motion.div>
   );
 }
@@ -690,16 +656,16 @@ function PartnerCard({ name, description, logo }: { name: string; description: s
 function ImpactItem({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
     <motion.div
-      whileHover={{ x: 4, transition: { duration: 0.2 } }}
-      className="flex gap-4 p-4 rounded-xl transition-colors"
-      style={{ backgroundColor: "rgba(159,232,112,0.05)" }}
+      whileHover={{ x: 4, transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] } }}
+      className="flex gap-4 p-4 rounded-xl"
+      style={{ background: "var(--tint-mint)" }}
     >
-      <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "var(--wise-primary)" }}>
+      <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "var(--wise-primary)" }}>
         <span style={{ color: "var(--wise-ink)" }}>{icon}</span>
       </div>
       <div>
-        <p className="font-semibold text-base" style={{ color: "var(--wise-canvas-soft)" }}>{title}</p>
-        <p className="text-sm" style={{ color: "var(--wise-mute)" }}>{desc}</p>
+        <p className="wise-body-sm" style={{ fontWeight: 600 }}>{title}</p>
+        <p className="wise-label">{desc}</p>
       </div>
     </motion.div>
   );
