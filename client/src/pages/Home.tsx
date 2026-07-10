@@ -255,89 +255,8 @@ export default function Home() {
             </p>
           </motion.div>
 
-          {/* Chart full width */}
-          <motion.div variants={fadeInUp} className="wise-card mb-8 md:mb-12">
-            <h3 className="wise-display-xs mb-1" style={{ color: "var(--wise-accent-coral)" }}>Emplois exposés à l'automatisation IA (en millions)</h3>
-            <p className="wise-label mb-4">WEF (85M/2025, 92M/2030) · Goldman Sachs (300M/2030) · McKinsey (400-800M/2030)</p>
-            <div className="h-[280px] md:h-[340px]">
-                <Line
-                  data={{
-                    labels: ["2020", "2023", "2025", "2027", "2030"],
-                    datasets: [
-                      {
-                        label: "Goldman Sachs (emplois exposés, M)",
-                        data: [30, 85, 150, 220, 300],
-                        borderColor: "#ff6b6b",
-                        backgroundColor: "rgba(255,107,107,0.1)",
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: "#ff6b6b",
-                        pointBorderColor: "#ff6b6b",
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        borderWidth: 3,
-                      },
-                      {
-                        label: "WEF (emplois déplacés, M)",
-                        data: [12, 40, 85, 88, 92],
-                        borderColor: "#38c8ff",
-                        backgroundColor: "rgba(56,200,255,0.08)",
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: "#38c8ff",
-                        pointBorderColor: "#38c8ff",
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        borderWidth: 2.5,
-                      },
-                      {
-                        label: "McKinsey (scénario haut, M)",
-                        data: [50, 150, 300, 550, 800],
-                        borderColor: "#ffc091",
-                        backgroundColor: "rgba(255,192,145,0.05)",
-                        fill: false,
-                        tension: 0.4,
-                        pointBackgroundColor: "#ffc091",
-                        pointBorderColor: "#ffc091",
-                        pointRadius: 3,
-                        pointHoverRadius: 5,
-                        borderWidth: 2,
-                        borderDash: [5, 5],
-                      },
-                    ],
-                  }}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                      legend: {
-                        display: true,
-                        position: "bottom" as const,
-                        labels: { color: "#454745", font: { size: 11 }, boxWidth: 12, padding: 16 },
-                      },
-                      tooltip: {
-                        backgroundColor: "rgba(0,0,0,0.85)",
-                        titleColor: "#fff",
-                        bodyColor: "rgba(255,255,255,0.8)",
-                        borderColor: "rgba(255,107,107,0.3)",
-                        borderWidth: 1,
-                      },
-                    },
-                    scales: {
-                      x: {
-                        grid: { color: "rgba(0,0,0,0.06)" },
-                        ticks: { color: "#454745", font: { size: 11 } },
-                      },
-                      y: {
-                        grid: { color: "rgba(0,0,0,0.06)" },
-                        ticks: { color: "#454745", font: { size: 11 } },
-                        beginAtZero: true,
-                      },
-                    },
-                  }}
-                />
-            </div>
-          </motion.div>
+          {/* Chart full width — animated draw on scroll */}
+          <AnimatedChart />
 
           {/* Stats cards grid */}
           <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 md:mb-12">
@@ -760,6 +679,126 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
           </motion.div>
         )}
       </AnimatePresence>
+    </motion.div>
+  );
+}
+
+function AnimatedChart() {
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const chartInstanceRef = useRef<ChartJS | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isInView = useInView(chartContainerRef, { once: true, margin: "-100px" });
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    if (!isInView || !canvasRef.current || hasAnimated.current) return;
+    hasAnimated.current = true;
+
+    if (chartInstanceRef.current) chartInstanceRef.current.destroy();
+
+    const ctx = canvasRef.current.getContext("2d");
+    if (!ctx) return;
+
+    chartInstanceRef.current = new ChartJS(ctx, {
+      type: "line",
+      data: {
+        labels: ["2020", "2023", "2025", "2027", "2030"],
+        datasets: [
+          {
+            label: "Goldman Sachs (emplois expos\u00e9s, M)",
+            data: [30, 85, 150, 220, 300],
+            borderColor: "#ff6b6b",
+            backgroundColor: "rgba(255,107,107,0.1)",
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: "#ff6b6b",
+            pointBorderColor: "#ff6b6b",
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            borderWidth: 3,
+          },
+          {
+            label: "WEF (emplois d\u00e9plac\u00e9s, M)",
+            data: [12, 40, 85, 88, 92],
+            borderColor: "#38c8ff",
+            backgroundColor: "rgba(56,200,255,0.08)",
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: "#38c8ff",
+            pointBorderColor: "#38c8ff",
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            borderWidth: 2.5,
+          },
+          {
+            label: "McKinsey (sc\u00e9nario haut, M)",
+            data: [50, 150, 300, 550, 800],
+            borderColor: "#ffc091",
+            backgroundColor: "rgba(255,192,145,0.05)",
+            fill: false,
+            tension: 0.4,
+            pointBackgroundColor: "#ffc091",
+            pointBorderColor: "#ffc091",
+            pointRadius: 3,
+            pointHoverRadius: 5,
+            borderWidth: 2,
+            borderDash: [5, 5],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+          duration: 2000,
+          easing: "easeOutQuart" as const,
+          delay: (ctx: any) => {
+            let delay = 0;
+            if (ctx.type === "data" && ctx.mode === "default") {
+              delay = ctx.dataIndex * 200 + ctx.datasetIndex * 100;
+            }
+            return delay;
+          },
+        },
+        plugins: {
+          legend: {
+            display: true,
+            position: "bottom" as const,
+            labels: { color: "#454745", font: { size: 11 }, boxWidth: 12, padding: 16 },
+          },
+          tooltip: {
+            backgroundColor: "rgba(0,0,0,0.85)",
+            titleColor: "#fff",
+            bodyColor: "rgba(255,255,255,0.8)",
+            borderColor: "rgba(255,107,107,0.3)",
+            borderWidth: 1,
+          },
+        },
+        scales: {
+          x: {
+            grid: { color: "rgba(0,0,0,0.06)" },
+            ticks: { color: "#454745", font: { size: 11 } },
+          },
+          y: {
+            grid: { color: "rgba(0,0,0,0.06)" },
+            ticks: { color: "#454745", font: { size: 11 } },
+            beginAtZero: true,
+          },
+        },
+        interaction: { intersect: false, mode: "index" as const },
+      },
+    });
+
+    return () => { chartInstanceRef.current?.destroy(); };
+  }, [isInView]);
+
+  return (
+    <motion.div variants={fadeInUp} className="wise-card mb-8 md:mb-12">
+      <h3 className="wise-display-xs mb-1" style={{ color: "var(--wise-accent-coral)" }}>Emplois exposés à l'automatisation IA (en millions)</h3>
+      <p className="wise-label mb-4">WEF (85M/2025, 92M/2030) · Goldman Sachs (300M/2030) · McKinsey (400-800M/2030)</p>
+      <div ref={chartContainerRef} className="h-[280px] md:h-[340px]">
+        <canvas ref={canvasRef}></canvas>
+      </div>
     </motion.div>
   );
 }

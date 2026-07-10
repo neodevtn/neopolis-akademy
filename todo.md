@@ -233,3 +233,9 @@
 - [x] 10 logos : Anthropic, Alibaba Cloud, Claude, Qwen, DeepSeek, OpenAI, Gemini, LangChain, CrewAI, n8n
 - [x] Marquee positionné juste avant le footer (après FAQ/CTA)
 - [x] Logos en opacity-60 avec hover:opacity-100 transition
+
+## Animation graphique Chart.js au scroll
+- [x] Courbes se dessinent progressivement (draw-in) quand la section devient visible au scroll
+- [x] Animation avec délai progressif par point de donnée (200ms) et par dataset (100ms)
+- [x] Easing easeOutQuart pour un effet fluide et naturel
+- [x] Déclenchement unique (once: true) via useInView de framer-motion
