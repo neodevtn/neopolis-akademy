@@ -27,8 +27,39 @@ import { Chart as ChartJS, registerables } from "chart.js";
 import { Line } from "react-chartjs-2";
 ChartJS.register(...registerables);
 
+/* ─── Animated Counter Hook ─── */
+function useCountUp(end: number, duration = 2000, startOnView = true) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref as React.RefObject<Element>, { once: true, margin: "-100px" });
+  const started = useRef(false);
+
+  useEffect(() => {
+    if (!startOnView || !inView || started.current) return;
+    started.current = true;
+    const startTime = performance.now();
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.round(eased * end));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [inView, end, duration, startOnView]);
+
+  return { count, ref };
+}
+
+function AnimatedStat({ value, suffix = "", prefix = "" }: { value: number; suffix?: string; prefix?: string }) {
+  const { count, ref } = useCountUp(value);
+  return <span ref={ref}>{prefix}{count}{suffix}</span>;
+}
+
 /* ─── Asset URLs ─── */
-const LOGO_URL = "/manus-storage/logo_neopolis_akademy_new_963ba831.png";
+const LOGO_URL = "/manus-storage/neopolis_logo_transparent_0b0de1c9.png";
+const LOGO_ICON = "/manus-storage/favicon_neopolis_d1316b46.png";
 const HERO_IMG = "/manus-storage/hero_tunisian_ai_08a6f956.png";
 const CERT_IMG = "/manus-storage/step2_certification_b2f65035.png";
 const ELEARNING_IMG = "/manus-storage/step1_elearning_d87a7198.png";
@@ -130,7 +161,8 @@ export default function Home() {
           }}
         >
           <div className="flex items-center gap-3">
-            <img src={LOGO_URL} alt="Neopolis Akademy" className="h-9 md:h-11 object-contain" />
+            <img src={LOGO_ICON} alt="Neopolis Akademy" className="h-9 md:hidden object-contain" />
+            <img src={LOGO_URL} alt="Neopolis Akademy" className="hidden md:block h-11 object-contain" />
           </div>
           <div className="hidden md:flex items-center gap-1 ml-auto">
             <NavLink href="#formule">La Formule</NavLink>
@@ -213,6 +245,29 @@ export default function Home() {
       </section>
 
 
+
+      {/* ─── Bandeau Marquee Partenaires ─── */}
+      <div className="py-6 md:py-10 overflow-hidden" style={{ background: "var(--wise-canvas)" }}>
+        <p className="wise-label text-center mb-4 tracking-widest uppercase">Nos partenaires technologiques</p>
+        <div className="marquee-container">
+          <div className="marquee-track">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="marquee-content">
+                <img src="/manus-storage/logo_anthropic_e6ab4160.png" alt="Anthropic" className="h-8 md:h-10 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                <img src="/manus-storage/logo_alibaba_cloud_847f5740.png" alt="Alibaba Cloud" className="h-8 md:h-10 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                <span className="wise-body-sm font-semibold opacity-70">Claude</span>
+                <span className="wise-body-sm font-semibold opacity-70">Qwen</span>
+                <span className="wise-body-sm font-semibold opacity-70">DeepSeek</span>
+                <span className="wise-body-sm font-semibold opacity-70">GPT</span>
+                <span className="wise-body-sm font-semibold opacity-70">Gemini</span>
+                <span className="wise-body-sm font-semibold opacity-70">LangChain</span>
+                <span className="wise-body-sm font-semibold opacity-70">CrewAI</span>
+                <span className="wise-body-sm font-semibold opacity-70">n8n</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* ─── Pourquoi maintenant (Gris Band) ─── */}
       <AnimatedSection id="pourquoi" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
@@ -313,28 +368,28 @@ export default function Home() {
           <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 md:mb-12">
               <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-coral)" }}>
                 <TrendingDown size={20} style={{ color: "var(--wise-accent-coral)" }} className="mb-3" />
-                <p className="wise-display-sm mb-1">300M</p>
+                <p className="wise-display-sm mb-1"><AnimatedStat value={300} suffix="M" /></p>
                 <p className="wise-body-sm" style={{ color: "var(--wise-accent-coral)", fontWeight: 600 }}>d'emplois exposés à l'automatisation</p>
                 <p className="wise-label mt-2">Goldman Sachs, 2023</p>
               </motion.div>
 
               <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-cyan)" }}>
                 <Users size={20} style={{ color: "var(--wise-accent-cyan)" }} className="mb-3" />
-                <p className="wise-display-sm mb-1">92M</p>
+                <p className="wise-display-sm mb-1"><AnimatedStat value={92} suffix="M" /></p>
                 <p className="wise-body-sm" style={{ color: "var(--wise-accent-cyan)", fontWeight: 600 }}>d'emplois déplacés d'ici 2030</p>
                 <p className="wise-label mt-2">WEF Future of Jobs 2025</p>
               </motion.div>
 
               <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-pear)" }}>
                 <Shield size={20} style={{ color: "oklch(64% 0.18 95)" }} className="mb-3" />
-                <p className="wise-display-sm mb-1">30%</p>
+                <p className="wise-display-sm mb-1"><AnimatedStat value={30} suffix="%" /></p>
                 <p className="wise-body-sm" style={{ color: "oklch(52% 0.14 95)", fontWeight: 600 }}>des heures de travail automatisées</p>
                 <p className="wise-label mt-2">McKinsey Global Institute</p>
               </motion.div>
 
               <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-mint)" }}>
                 <TrendingDown size={20} style={{ color: "var(--wise-positive-deep)" }} className="mb-3" />
-                <p className="wise-display-sm mb-1">220 Mds$</p>
+                <p className="wise-display-sm mb-1"><AnimatedStat value={220} suffix=" Milliards $" /></p>
                 <p className="wise-body-sm" style={{ color: "var(--wise-positive-deep)", fontWeight: 600 }}>de SaaS menacés par les agents IA</p>
                 <p className="wise-label mt-2">Gartner, 2025</p>
               </motion.div>
