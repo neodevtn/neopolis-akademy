@@ -227,3 +227,9 @@
 - [x] PartnerCards et FormulaCards en wise-card
 - [x] CTA band avec tint-mint background
 - [x] FAQ avec wise-card et animations smooth
+
+## Marquee logos partenaires
+- [x] Bandeau marquee avec logos réels (images) au lieu de texte (spans)
+- [x] 10 logos : Anthropic, Alibaba Cloud, Claude, Qwen, DeepSeek, OpenAI, Gemini, LangChain, CrewAI, n8n
+- [x] Marquee positionné juste avant le footer (après FAQ/CTA)
+- [x] Logos en opacity-60 avec hover:opacity-100 transition

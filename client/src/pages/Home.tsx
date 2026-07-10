@@ -244,31 +244,6 @@ export default function Home() {
         </div>
       </section>
 
-
-
-      {/* ─── Bandeau Marquee Partenaires ─── */}
-      <div className="py-6 md:py-10 overflow-hidden" style={{ background: "var(--wise-canvas)" }}>
-        <p className="wise-label text-center mb-4 tracking-widest uppercase">Nos partenaires technologiques</p>
-        <div className="marquee-container">
-          <div className="marquee-track">
-            {[...Array(2)].map((_, i) => (
-              <div key={i} className="marquee-content">
-                <img src="/manus-storage/logo_anthropic_e6ab4160.png" alt="Anthropic" className="h-8 md:h-10 object-contain opacity-70 hover:opacity-100 transition-opacity" />
-                <img src="/manus-storage/logo_alibaba_cloud_847f5740.png" alt="Alibaba Cloud" className="h-8 md:h-10 object-contain opacity-70 hover:opacity-100 transition-opacity" />
-                <span className="wise-body-sm font-semibold opacity-70">Claude</span>
-                <span className="wise-body-sm font-semibold opacity-70">Qwen</span>
-                <span className="wise-body-sm font-semibold opacity-70">DeepSeek</span>
-                <span className="wise-body-sm font-semibold opacity-70">GPT</span>
-                <span className="wise-body-sm font-semibold opacity-70">Gemini</span>
-                <span className="wise-body-sm font-semibold opacity-70">LangChain</span>
-                <span className="wise-body-sm font-semibold opacity-70">CrewAI</span>
-                <span className="wise-body-sm font-semibold opacity-70">n8n</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* ─── Pourquoi maintenant (Gris Band) ─── */}
       <AnimatedSection id="pourquoi" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-12 md:py-20">
@@ -580,6 +555,29 @@ export default function Home() {
           </motion.div>
         </div>
       </AnimatedSection>
+
+      {/* ─── Bandeau Marquee Partenaires ─── */}
+      <div className="py-10 md:py-14 overflow-hidden" style={{ background: "var(--wise-canvas-soft)" }}>
+        <p className="wise-label text-center mb-8 tracking-widest uppercase">Nos partenaires technologiques</p>
+        <div className="marquee-container">
+          <div className="marquee-track">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="marquee-content">
+                <img src="/manus-storage/logo_anthropic_e6ab4160.png" alt="Anthropic" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/manus-storage/logo_alibaba_cloud_847f5740.png" alt="Alibaba Cloud" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/manus-storage/claude_ba4537f3.png" alt="Claude" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/manus-storage/qwen_16966e0b.png" alt="Qwen" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/manus-storage/deepseek_e0aeb5f8.png" alt="DeepSeek" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/manus-storage/openai_73a9a1b1.png" alt="OpenAI" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/manus-storage/gemini_c13269e9.png" alt="Gemini" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/manus-storage/langchain_9c5e065b.png" alt="LangChain" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/manus-storage/crewai_7df89ab8.png" alt="CrewAI" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/manus-storage/n8n_7ff20c9e.png" alt="n8n" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* ─── Footer (Dark) ─── */}
       <footer className="wise-footer">
