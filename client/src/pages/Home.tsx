@@ -172,7 +172,9 @@ export default function Home() {
 
               {/* Lede */}
               <motion.p variants={fadeInUp} className="wise-body-lg max-w-[46ch] mb-8">
-                Formation certifiante <strong style={{ fontWeight: 600, color: "var(--wise-ink)" }}>100% gratuite</strong>. Devenez{" "}
+                Formation certifiante <strong style={{ fontWeight: 600, color: "var(--wise-ink)" }}>100% gratuite</strong>.
+                <br />
+                Devenez{" "}
                 <strong style={{ fontWeight: 600, color: "var(--wise-ink)" }}>AI Solutions Partner</strong> et conquérez le marché de l'IA agentique.
               </motion.p>
 
