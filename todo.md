@@ -271,3 +271,9 @@
 - [x] Ajouter mention "Statut Select en cours d'obtention" dans la section partenaires
 - [x] Corriger FAQ : "partenariats stratégiques" → "Registered Partner du CPN"
 - [x] Mention "Porté par NeoDev" dans le copyright
+
+## Badge Registered Partner + Mentions légales
+- [x] Badge "Registered Partner" cliquable à côté du logo dans le header → lien CPN Anthropic
+- [x] Page /mentions-legales avec CGU, politique de confidentialité, informations légales
+- [x] Lien vers mentions légales dans le footer
+- [x] Correction lien À propos : neodev.click → www.neopolis-dev.com

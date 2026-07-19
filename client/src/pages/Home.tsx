@@ -163,6 +163,10 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <img src={LOGO_ICON} alt="Neopolis Akademy" className="h-9 md:hidden object-contain" />
             <img src={LOGO_URL} alt="Neopolis Akademy" className="hidden md:block h-11 object-contain" />
+            <a href="https://www.anthropic.com/news/claude-partner-network" target="_blank" rel="noopener noreferrer" className="hidden md:inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full transition-all hover:scale-105" style={{ background: "rgba(45, 183, 105, 0.1)", color: "var(--wise-positive-deep)", border: "1px solid rgba(45, 183, 105, 0.3)" }}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Registered Partner
+            </a>
           </div>
           <div className="hidden md:flex items-center gap-1 ml-auto">
             <NavLink href="#formule">La Formule</NavLink>
@@ -170,7 +174,7 @@ export default function Home() {
             <NavLink href="#partenaires">Partenaires</NavLink>
             <NavLink href="#process">Process Commercial</NavLink>
             <NavLink href="#faq">FAQ</NavLink>
-            <a href="https://neodev.click" target="_blank" rel="noopener noreferrer" className="text-xs font-semibold px-3 py-1.5 rounded-full transition-colors" style={{ color: "var(--wise-positive-deep)", border: "1px solid var(--wise-positive-deep)" }}>À propos</a>
+            <a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="text-xs font-semibold px-3 py-1.5 rounded-full transition-colors" style={{ color: "var(--wise-positive-deep)", border: "1px solid var(--wise-positive-deep)" }}>À propos</a>
           </div>
           <div className="flex items-center gap-2 ml-auto md:ml-2">
             <Link href="/apply">
@@ -685,14 +689,14 @@ export default function Home() {
               <h4 className="wise-label mb-3">Contact</h4>
               <ul className="space-y-1.5">
                 <li><a href="mailto:info@neopolis-dev.com" className="wise-body-sm hover:underline">info@neopolis-dev.com</a></li>
-                <li><a href="https://neodev.click" target="_blank" rel="noopener noreferrer" className="wise-body-sm hover:underline">neodev.click</a></li>
+                <li><a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="wise-body-sm hover:underline">www.neopolis-dev.com</a></li>
                 <li><a href="https://www.anthropic.com/news/claude-partner-network" target="_blank" rel="noopener noreferrer" className="wise-body-sm hover:underline">Claude Partner Network</a></li>
               </ul>
             </div>
           </div>
           <div className="mt-6 pt-6" style={{ borderTop: "1px solid var(--wise-rule)" }}>
             <p className="text-center wise-body-sm" style={{ color: "var(--wise-mute)" }}>
-              © 2026 <a href="https://neodev.click" target="_blank" rel="noopener noreferrer" className="hover:underline">Neopolis Development</a>. Tous droits réservés. · Porté par <a href="https://neodev.click" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--wise-positive-deep)" }}>NeoDev</a>
+              © 2026 <a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="hover:underline">Neopolis Development</a>. Tous droits réservés. · <Link href="/mentions-legales" className="hover:underline">Mentions légales</Link>
             </p>
           </div>
         </div>
@@ -1391,7 +1395,7 @@ function MobileMenuButton() {
                 <a href="#partenaires" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>Partenaires</a>
                 <a href="#process" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>Process Commercial</a>
                 <a href="#faq" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>FAQ</a>
-                <a href="https://neodev.click" target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg" style={{ color: "var(--wise-positive-deep)" }}>À propos de Neopolis Dev ↗</a>
+                <a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg" style={{ color: "var(--wise-positive-deep)" }}>À propos de Neopolis Dev ↗</a>
               </nav>
             </div>
           </motion.div>
