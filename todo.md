@@ -277,3 +277,10 @@
 - [x] Page /mentions-legales avec CGU, politique de confidentialité, informations légales
 - [x] Lien vers mentions légales dans le footer
 - [x] Correction lien À propos : neodev.click → www.neopolis-dev.com
+
+## Bandeau Cookie Consent RGPD
+- [x] Composant CookieConsent avec Accepter/Refuser
+- [x] Mémorisation du choix dans localStorage
+- [x] Affichage uniquement au premier chargement (délai 1.5s)
+- [x] Lien vers la politique de confidentialité (/mentions-legales)
+- [x] Design cohérent avec le thème du site (backdrop blur, couleurs Wise)

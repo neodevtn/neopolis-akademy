@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Apply from "./pages/Apply";
 import AdminDashboard from "./pages/AdminDashboard";
 import MentionsLegales from "./pages/MentionsLegales";
+import CookieConsent from "./components/CookieConsent";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -38,6 +39,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
+          <CookieConsent />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
