@@ -261,3 +261,13 @@
 - [x] Secteurs : Agence de voyage, Agence marketing, Assurance, Banque, Cabinet médecin, Import-Export, Promoteur immobilier, École privée
 - [x] Ajouter le ROI pour chaque projet
 - [x] Descriptions adaptées au contexte régional (Casablanca, Alger, Tanger Med, Abidjan, Sénégal, Tunisie)
+
+## Conformité Claude Partner Network
+- [x] Remplacer "Partenariats Stratégiques" par "Nos Partenaires Technologiques" + mention Registered Partner
+- [x] Remplacer "accès exclusif" par "accès facilité" dans la description Anthropic
+- [x] Ajouter lien vers neodev.click dans le footer (contact + copyright)
+- [x] Ajouter lien vers le Claude Partner Network dans le footer
+- [x] Ajouter mention "Registered Partner du CPN" dans le footer
+- [x] Ajouter mention "Statut Select en cours d'obtention" dans la section partenaires
+- [x] Corriger FAQ : "partenariats stratégiques" → "Registered Partner du CPN"
+- [x] Mention "Porté par NeoDev" dans le copyright

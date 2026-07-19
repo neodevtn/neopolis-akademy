@@ -97,7 +97,7 @@ const scaleIn = {
 /* ─── FAQ Data ─── */
 const faqItems = [
   { q: "Quels sont les prérequis pour postuler ?", a: "Aucun prérequis technique n'est exigé. Le programme est ouvert à tous les professionnels dont le métier est menacé par l'IA : développeurs, comptables, juristes, traducteurs, agents de service client, etc. Une motivation forte et une capacité d'apprentissage sont les seuls critères essentiels." },
-  { q: "La formation et la certification sont-elles vraiment gratuites ?", a: "Oui, 100% gratuites. La formation e-learning de 7 jours, l'accès à la plateforme Anthropic, et le voucher pour la certification Claude Certified Architect (CCA) sont entièrement pris en charge par Neopolis Development grâce à nos partenariats stratégiques." },
+  { q: "La formation et la certification sont-elles vraiment gratuites ?", a: "Oui, 100% gratuites. La formation e-learning de 7 jours, l'accès à la plateforme Anthropic Academy, et le voucher pour la certification Claude Certified Architect (CCA) sont entièrement pris en charge par Neopolis Development en tant que Registered Partner du Claude Partner Network." },
   { q: "Combien de temps dure le programme complet ?", a: "La formation e-learning dure 7 jours intensifs. Ensuite, vous disposez d'un accès à la plateforme Anthropic pour préparer la certification CCA à votre rythme, avec une date limite de passage fixée au 31 août 2026." },
   { q: "Quels sont les débouchés après la certification ?", a: "Les candidats certifiés obtiennent le statut d'AI Solutions Partner - Ambassadeur Certifié. Vous devenez un entrepreneur indépendant distribuant des solutions IA auprès des entreprises de votre secteur d'activité, avec le soutien technique et commercial complet de Neopolis Development." },
   { q: "Quels pays sont concernés ?", a: "Le programme est ouvert aux professionnels tunisiens. Il vise à créer un réseau d'ambassadeurs certifiés couvrant tous les secteurs d'activité en Tunisie et dans la région MENA." },
@@ -352,9 +352,12 @@ export default function Home() {
         <div className="container py-12">
           <motion.div variants={fadeInUp} className="text-center mb-14">
             <span className="wise-eyebrow mb-4 inline-flex">Écosystème</span>
-            <h2 className="wise-display-md mb-4">Partenariats Stratégiques</h2>
+            <h2 className="wise-display-md mb-4">Nos Partenaires Technologiques</h2>
             <p className="wise-body-lg max-w-[52ch] mx-auto">
-              Neopolis Development a noué des partenariats avec les leaders mondiaux de l'IA pour conquérir le marché de l'IA agentique.
+              Neopolis Development, Registered Partner du <a href="https://www.anthropic.com/news/claude-partner-network" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "var(--wise-positive-deep)" }}>Claude Partner Network</a>, construit un écosystème pour déployer l'IA agentique en Afrique et MENA.
+            </p>
+            <p className="wise-body-sm mt-2" style={{ color: "var(--wise-mute)" }}>
+              Statut Select en cours d'obtention
             </p>
           </motion.div>
 
@@ -363,7 +366,7 @@ export default function Home() {
               <PartnerCard
                 name="Anthropic"
                 logo="/manus-storage/logo_anthropic_e6ab4160.png"
-                description="Créateur de Claude, l'un des LLM les plus avancés au monde. Notre partenariat offre un accès exclusif à la certification CCA et aux outils de développement d'agents IA de nouvelle génération."
+                description="Créateur de Claude, l'un des LLM les plus avancés au monde. En tant que Registered Partner du CPN, nous offrons un accès facilité à la certification Claude Certified Architect (CCA) via un voucher gratuit pour nos candidats."
               />
             </motion.div>
             <motion.div variants={scaleIn}>
@@ -664,6 +667,9 @@ export default function Home() {
               <p className="wise-body-sm">
                 Neopolis Development – Transformer la menace de l'IA en opportunité.
               </p>
+              <p className="wise-body-sm mt-1" style={{ color: "var(--wise-mute)" }}>
+                Registered Partner du Claude Partner Network
+              </p>
             </div>
             <div>
               <h4 className="wise-label mb-3">Programme</h4>
@@ -678,13 +684,14 @@ export default function Home() {
               <h4 className="wise-label mb-3">Contact</h4>
               <ul className="space-y-1.5">
                 <li><a href="mailto:info@neopolis-dev.com" className="wise-body-sm hover:underline">info@neopolis-dev.com</a></li>
-                <li><a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="wise-body-sm hover:underline">www.neopolis-dev.com</a></li>
+                <li><a href="https://neodev.click" target="_blank" rel="noopener noreferrer" className="wise-body-sm hover:underline">neodev.click</a></li>
+                <li><a href="https://www.anthropic.com/news/claude-partner-network" target="_blank" rel="noopener noreferrer" className="wise-body-sm hover:underline">Claude Partner Network</a></li>
               </ul>
             </div>
           </div>
           <div className="mt-6 pt-6" style={{ borderTop: "1px solid var(--wise-rule)" }}>
             <p className="text-center wise-body-sm" style={{ color: "var(--wise-mute)" }}>
-              © 2026 Neopolis Development. Tous droits réservés.
+              © 2026 <a href="https://neodev.click" target="_blank" rel="noopener noreferrer" className="hover:underline">Neopolis Development</a>. Tous droits réservés. · Porté par <a href="https://neodev.click" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--wise-positive-deep)" }}>NeoDev</a>
             </p>
           </div>
         </div>
