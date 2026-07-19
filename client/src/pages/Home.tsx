@@ -1725,15 +1725,15 @@ function RevenueSimulator() {
             <div className="space-y-1">
               <div className="flex justify-between">
                 <span className="wise-label">Setup</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>22 000 €</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>45 000 €</span>
               </div>
               <div className="flex justify-between">
                 <span className="wise-label">Tokens/mois</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>3 500 €</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>8 000 €</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
                 <span className="wise-label">Votre gain (50%)</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>11 000 € + 350 €/mois</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>22 500 € + 800 €/mois</span>
               </div>
               <div className="flex justify-between pt-1">
                 <span className="wise-label">ROI client</span>
@@ -1752,15 +1752,15 @@ function RevenueSimulator() {
             <div className="space-y-1">
               <div className="flex justify-between">
                 <span className="wise-label">Setup</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>30 000 €</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>60 000 €</span>
               </div>
               <div className="flex justify-between">
                 <span className="wise-label">Tokens/mois</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>5 000 €</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>12 000 €</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
                 <span className="wise-label">Votre gain (55%)</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>16 500 € + 500 €/mois</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>33 000 € + 1 200 €/mois</span>
               </div>
               <div className="flex justify-between pt-1">
                 <span className="wise-label">ROI client</span>
@@ -1806,15 +1806,15 @@ function RevenueSimulator() {
             <div className="space-y-1">
               <div className="flex justify-between">
                 <span className="wise-label">Setup</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>18 000 €</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>35 000 €</span>
               </div>
               <div className="flex justify-between">
                 <span className="wise-label">Tokens/mois</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>2 200 €</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>6 000 €</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
                 <span className="wise-label">Votre gain (50%)</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>9 000 € + 220 €/mois</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>17 500 € + 600 €/mois</span>
               </div>
               <div className="flex justify-between pt-1">
                 <span className="wise-label">ROI client</span>
