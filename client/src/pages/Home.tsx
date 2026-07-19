@@ -1393,8 +1393,11 @@ function MobileMenuButton() {
 }
 
 
-/* ─── Flow Diagram ─── */
+/* ─── Flow Diagram (animated on scroll) ─── */
 function FlowDiagram() {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+
   const steps = [
     { id: "ambassadeur", label: "Ambassadeur", sub: "Prospection B2B", color: "var(--wise-primary)", icon: "🎯" },
     { id: "centrale", label: "Centrale", sub: "Étude & Évaluation", color: "var(--wise-sage)", icon: "🔬" },
@@ -1403,13 +1406,46 @@ function FlowDiagram() {
     { id: "client", label: "Client", sub: "Monitoring & Run", color: "var(--wise-accent-pear)", icon: "🏢" },
   ];
 
+  const stepVariant = {
+    hidden: { opacity: 0, y: 20, scale: 0.9 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        delay: i * 0.18,
+        duration: 0.5,
+        ease: [0.23, 1, 0.32, 1] as [number, number, number, number],
+      },
+    }),
+  };
+
+  const arrowVariant = {
+    hidden: { opacity: 0, scaleX: 0 },
+    visible: (i: number) => ({
+      opacity: 1,
+      scaleX: 1,
+      transition: {
+        delay: i * 0.18 + 0.12,
+        duration: 0.35,
+        ease: [0.23, 1, 0.32, 1] as [number, number, number, number],
+      },
+    }),
+  };
+
   return (
-    <div className="wise-card p-6 md:p-10">
+    <div ref={ref} className="wise-card p-6 md:p-10">
       {/* Desktop flow */}
       <div className="hidden md:flex items-center justify-between gap-2">
         {steps.map((step, i) => (
           <div key={step.id} className="flex items-center gap-2 flex-1">
-            <div className="flex flex-col items-center text-center flex-1">
+            <motion.div
+              className="flex flex-col items-center text-center flex-1"
+              custom={i}
+              initial="hidden"
+              animate={isInView ? "visible" : "hidden"}
+              variants={stepVariant}
+            >
               <div
                 className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-3 shadow-sm"
                 style={{ backgroundColor: step.color, opacity: 0.9 }}
@@ -1418,12 +1454,18 @@ function FlowDiagram() {
               </div>
               <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{step.label}</p>
               <p className="wise-label text-[10px] mt-0.5">{step.sub}</p>
-            </div>
+            </motion.div>
             {i < steps.length - 1 && (
-              <div className="flex-shrink-0 flex items-center">
+              <motion.div
+                className="flex-shrink-0 flex items-center origin-left"
+                custom={i}
+                initial="hidden"
+                animate={isInView ? "visible" : "hidden"}
+                variants={arrowVariant}
+              >
                 <div className="w-6 h-0.5" style={{ background: "var(--wise-sage)", opacity: 0.5 }}></div>
                 <ChevronRight size={14} style={{ color: "var(--wise-sage)" }} />
-              </div>
+              </motion.div>
             )}
           </div>
         ))}
@@ -1432,7 +1474,13 @@ function FlowDiagram() {
       {/* Mobile flow (vertical) */}
       <div className="md:hidden flex flex-col gap-4">
         {steps.map((step, i) => (
-          <div key={step.id}>
+          <motion.div
+            key={step.id}
+            custom={i}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+            variants={stepVariant}
+          >
             <div className="flex items-center gap-4">
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0 shadow-sm"
@@ -1448,12 +1496,18 @@ function FlowDiagram() {
             {i < steps.length - 1 && (
               <div className="ml-6 h-4 border-l-2 border-dashed" style={{ borderColor: "var(--wise-sage)", opacity: 0.4 }}></div>
             )}
-          </div>
+          </motion.div>
         ))}
       </div>
 
       {/* Legend */}
-      <div className="mt-8 pt-6 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+      <motion.div
+        className="mt-8 pt-6 border-t"
+        style={{ borderColor: "rgba(0,0,0,0.06)" }}
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ delay: 1.0, duration: 0.5 }}
+      >
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
           <div className="flex items-center gap-2 justify-center">
             <div className="w-3 h-3 rounded-full" style={{ background: "var(--wise-primary)" }}></div>
@@ -1468,7 +1522,7 @@ function FlowDiagram() {
             <span className="wise-body-sm">Client bénéficie de la solution</span>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -1600,6 +1654,81 @@ function RevenueSimulator() {
             * Estimation indicative basée sur vos paramètres
           </p>
         </div>
+      </div>
+
+      {/* Exemples concrets */}
+      <div className="mt-10 pt-8 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+        <h4 className="wise-display-xs text-center mb-6">Exemples concrets de projets</h4>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="wise-card-sage p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-lg">🍽️</span>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>PME Restauration</p>
+            </div>
+            <p className="wise-body-sm mb-3">Automatisation des commandes fournisseurs et gestion des stocks par agent IA</p>
+            <div className="space-y-1">
+              <div className="flex justify-between">
+                <span className="wise-label">Setup</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>8 000 €</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="wise-label">Tokens/mois</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>1 200 €</span>
+              </div>
+              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                <span className="wise-label">Votre gain (40%)</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>3 200 € + 120 €/mois</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="wise-card-sage p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-lg">🏭</span>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Industrie PME</p>
+            </div>
+            <p className="wise-body-sm mb-3">Workflow automation pour le contrôle qualité et la maintenance prédictive</p>
+            <div className="space-y-1">
+              <div className="flex justify-between">
+                <span className="wise-label">Setup</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>15 000 €</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="wise-label">Tokens/mois</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>2 500 €</span>
+              </div>
+              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                <span className="wise-label">Votre gain (50%)</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>7 500 € + 250 €/mois</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="wise-card-sage p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-lg">🏢</span>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Cabinet Conseil</p>
+            </div>
+            <p className="wise-body-sm mb-3">Agent full autonome pour l'analyse de documents juridiques et la rédaction de rapports</p>
+            <div className="space-y-1">
+              <div className="flex justify-between">
+                <span className="wise-label">Setup</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>25 000 €</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="wise-label">Tokens/mois</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>4 000 €</span>
+              </div>
+              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                <span className="wise-label">Votre gain (60%)</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>15 000 € + 400 €/mois</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p className="wise-label text-center mt-4">
+          Ces exemples illustrent des scénarios réalistes — les montants varient selon la complexité du projet.
+        </p>
       </div>
     </div>
   );

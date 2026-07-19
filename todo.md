@@ -251,3 +251,7 @@
 - [x] Diagramme de flux visuel (Ambassadeur → Centrale → Client) type flowchart simplifié
 - [x] Simulateur de revenus interactif (estimation gains selon nombre de projets)
 - [x] Lien "Process Commercial" dans la navigation principale (desktop + mobile)
+
+## Exemples concrets et animation diagramme
+- [x] Exemples concrets de projets types avec montants sous le simulateur (Restauration, Industrie, Cabinet Conseil)
+- [x] Animation séquentielle du diagramme de flux au scroll (apparition étape par étape avec délai 180ms)
