@@ -255,3 +255,9 @@
 ## Exemples concrets et animation diagramme
 - [x] Exemples concrets de projets types avec montants sous le simulateur (Restauration, Industrie, Cabinet Conseil)
 - [x] Animation séquentielle du diagramme de flux au scroll (apparition étape par étape avec délai 180ms)
+
+## Refonte exemples de projets
+- [x] Remplacer les 3 exemples par 8 projets réalistes contexte Afrique/MENA
+- [x] Secteurs : Agence de voyage, Agence marketing, Assurance, Banque, Cabinet médecin, Import-Export, Promoteur immobilier, École privée
+- [x] Ajouter le ROI pour chaque projet
+- [x] Descriptions adaptées au contexte régional (Casablanca, Alger, Tanger Med, Abidjan, Sénégal, Tunisie)

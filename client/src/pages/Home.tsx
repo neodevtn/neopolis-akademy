@@ -1659,13 +1659,123 @@ function RevenueSimulator() {
       {/* Exemples concrets */}
       <div className="mt-10 pt-8 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
         <h4 className="wise-display-xs text-center mb-6">Exemples concrets de projets</h4>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <p className="wise-body-sm text-center mb-8 max-w-[56ch] mx-auto">Scénarios réalistes dans le contexte Afrique / MENA — les montants varient selon la complexité.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Agence de voyage */}
           <div className="wise-card-sage p-5">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">🍽️</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>PME Restauration</p>
+              <span className="text-lg">✈️</span>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Agence de Voyage</p>
             </div>
-            <p className="wise-body-sm mb-3">Automatisation des commandes fournisseurs et gestion des stocks par agent IA</p>
+            <p className="wise-body-sm mb-3">Chatbot IA multilingue (arabe/français) pour devis Omra & circuits touristiques, avec relance automatique des prospects inactifs</p>
+            <div className="space-y-1">
+              <div className="flex justify-between">
+                <span className="wise-label">Setup</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>6 000 €</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="wise-label">Tokens/mois</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>800 €</span>
+              </div>
+              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                <span className="wise-label">Votre gain (40%)</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>2 400 € + 80 €/mois</span>
+              </div>
+              <div className="flex justify-between pt-1">
+                <span className="wise-label">ROI client</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>+35% de conversions</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Agence marketing */}
+          <div className="wise-card-sage p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-lg">📣</span>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Agence Marketing</p>
+            </div>
+            <p className="wise-body-sm mb-3">Agent autonome de création de contenu social media (posts, visuels, planning) pour clients PME au Maghreb</p>
+            <div className="space-y-1">
+              <div className="flex justify-between">
+                <span className="wise-label">Setup</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>10 000 €</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="wise-label">Tokens/mois</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>1 500 €</span>
+              </div>
+              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                <span className="wise-label">Votre gain (45%)</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>4 500 € + 150 €/mois</span>
+              </div>
+              <div className="flex justify-between pt-1">
+                <span className="wise-label">ROI client</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>3 employés remplacés</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Assurance */}
+          <div className="wise-card-sage p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-lg">🛡️</span>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Compagnie d'Assurance</p>
+            </div>
+            <p className="wise-body-sm mb-3">Workflow automation pour le traitement des sinistres : extraction documents, vérification fraude, calcul indemnités</p>
+            <div className="space-y-1">
+              <div className="flex justify-between">
+                <span className="wise-label">Setup</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>22 000 €</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="wise-label">Tokens/mois</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>3 500 €</span>
+              </div>
+              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                <span className="wise-label">Votre gain (50%)</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>11 000 € + 350 €/mois</span>
+              </div>
+              <div className="flex justify-between pt-1">
+                <span className="wise-label">ROI client</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>-60% temps traitement</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Banque */}
+          <div className="wise-card-sage p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-lg">🏦</span>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Banque Régionale</p>
+            </div>
+            <p className="wise-body-sm mb-3">Agent IA d'analyse de dossiers de crédit PME/TPE : scoring automatisé, vérification KYC et recommandation d'offres</p>
+            <div className="space-y-1">
+              <div className="flex justify-between">
+                <span className="wise-label">Setup</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>30 000 €</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="wise-label">Tokens/mois</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>5 000 €</span>
+              </div>
+              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                <span className="wise-label">Votre gain (55%)</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>16 500 € + 500 €/mois</span>
+              </div>
+              <div className="flex justify-between pt-1">
+                <span className="wise-label">ROI client</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>x4 dossiers traités/jour</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Cabinet médecin */}
+          <div className="wise-card-sage p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-lg">🩺</span>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Cabinet Médical</p>
+            </div>
+            <p className="wise-body-sm mb-3">Assistant IA pour prise de RDV, tri des urgences, rappels patients et pré-diagnostic orienté (cliniques privées Casablanca/Alger)</p>
             <div className="space-y-1">
               <div className="flex justify-between">
                 <span className="wise-label">Setup</span>
@@ -1673,61 +1783,102 @@ function RevenueSimulator() {
               </div>
               <div className="flex justify-between">
                 <span className="wise-label">Tokens/mois</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>1 200 €</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>600 €</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
                 <span className="wise-label">Votre gain (40%)</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>3 200 € + 120 €/mois</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>3 200 € + 60 €/mois</span>
+              </div>
+              <div className="flex justify-between pt-1">
+                <span className="wise-label">ROI client</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>-70% appels manqués</span>
               </div>
             </div>
           </div>
 
+          {/* Import-Export */}
           <div className="wise-card-sage p-5">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">🏭</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Industrie PME</p>
+              <span className="text-lg">🚢</span>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Société Import-Export</p>
             </div>
-            <p className="wise-body-sm mb-3">Workflow automation pour le contrôle qualité et la maintenance prédictive</p>
+            <p className="wise-body-sm mb-3">Agent de suivi logistique : tracking conteneurs, alertes douanes, génération documents d'import (ports Tanger Med, Abidjan)</p>
             <div className="space-y-1">
               <div className="flex justify-between">
                 <span className="wise-label">Setup</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>15 000 €</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>18 000 €</span>
               </div>
               <div className="flex justify-between">
                 <span className="wise-label">Tokens/mois</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>2 500 €</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>2 200 €</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
                 <span className="wise-label">Votre gain (50%)</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>7 500 € + 250 €/mois</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>9 000 € + 220 €/mois</span>
+              </div>
+              <div className="flex justify-between pt-1">
+                <span className="wise-label">ROI client</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>-45% retards douane</span>
               </div>
             </div>
           </div>
 
+          {/* Promoteur immobilier */}
           <div className="wise-card-sage p-5">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">🏢</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Cabinet Conseil</p>
+              <span className="text-lg">🏗️</span>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Promoteur Immobilier</p>
             </div>
-            <p className="wise-body-sm mb-3">Agent full autonome pour l'analyse de documents juridiques et la rédaction de rapports</p>
+            <p className="wise-body-sm mb-3">Chatbot de qualification acheteurs, visite virtuelle IA et génération de compromis (programmes neufs Maroc/Tunisie)</p>
             <div className="space-y-1">
               <div className="flex justify-between">
                 <span className="wise-label">Setup</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>25 000 €</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>14 000 €</span>
               </div>
               <div className="flex justify-between">
                 <span className="wise-label">Tokens/mois</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>4 000 €</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>1 800 €</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">Votre gain (60%)</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>15 000 € + 400 €/mois</span>
+                <span className="wise-label">Votre gain (45%)</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>6 300 € + 180 €/mois</span>
+              </div>
+              <div className="flex justify-between pt-1">
+                <span className="wise-label">ROI client</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>+50% leads qualifiés</span>
+              </div>
+            </div>
+          </div>
+
+          {/* École privée */}
+          <div className="wise-card-sage p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-lg">🎓</span>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>École Privée / Université</p>
+            </div>
+            <p className="wise-body-sm mb-3">Plateforme de tutorat IA personnalisé et correction automatique d'examens pour établissements privés (Sénégal, Côte d'Ivoire)</p>
+            <div className="space-y-1">
+              <div className="flex justify-between">
+                <span className="wise-label">Setup</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>12 000 €</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="wise-label">Tokens/mois</span>
+                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>1 200 €</span>
+              </div>
+              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                <span className="wise-label">Votre gain (45%)</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>5 400 € + 120 €/mois</span>
+              </div>
+              <div className="flex justify-between pt-1">
+                <span className="wise-label">ROI client</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>-80% temps correction</span>
               </div>
             </div>
           </div>
         </div>
-        <p className="wise-label text-center mt-4">
-          Ces exemples illustrent des scénarios réalistes — les montants varient selon la complexité du projet.
+        <p className="wise-label text-center mt-6">
+          Tous les scénarios sont basés sur des cas réels du marché Afrique/MENA — les montants varient selon la taille et la complexité du projet.
         </p>
       </div>
     </div>
