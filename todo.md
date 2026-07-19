@@ -246,3 +246,8 @@
 - [x] Détailler la classification des projets (taille, besoin, solution)
 - [x] Expliquer la rémunération (20-60% setup + 10% tokens run)
 - [x] Design cohérent avec le thème Bubble existant
+
+## Améliorations section Process Commercial
+- [x] Diagramme de flux visuel (Ambassadeur → Centrale → Client) type flowchart simplifié
+- [x] Simulateur de revenus interactif (estimation gains selon nombre de projets)
+- [x] Lien "Process Commercial" dans la navigation principale (desktop + mobile)

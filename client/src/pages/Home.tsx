@@ -168,6 +168,7 @@ export default function Home() {
             <NavLink href="#formule">La Formule</NavLink>
             <NavLink href="#pourquoi">Pourquoi maintenant</NavLink>
             <NavLink href="#partenaires">Partenaires</NavLink>
+            <NavLink href="#process">Process Commercial</NavLink>
             <NavLink href="#faq">FAQ</NavLink>
           </div>
           <div className="flex items-center gap-2 ml-auto md:ml-2">
@@ -579,6 +580,17 @@ export default function Home() {
                 Plus vous apportez de projets et plus vous êtes impliqué, plus vos revenus augmentent — avec un effet cumulatif sur le long terme.
               </p>
             </div>
+          </motion.div>
+
+          {/* Diagramme de flux */}
+          <motion.div variants={fadeInUp} className="max-w-4xl mx-auto mt-14 mb-14">
+            <h3 className="wise-display-sm text-center mb-8">Le flux d'un projet</h3>
+            <FlowDiagram />
+          </motion.div>
+
+          {/* Simulateur de revenus */}
+          <motion.div variants={fadeInUp} className="max-w-4xl mx-auto">
+            <RevenueSimulator />
           </motion.div>
         </div>
       </AnimatedSection>
@@ -1369,6 +1381,7 @@ function MobileMenuButton() {
                 <a href="#formule" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>La Formule</a>
                 <a href="#pourquoi" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>Pourquoi maintenant</a>
                 <a href="#partenaires" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>Partenaires</a>
+                <a href="#process" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>Process Commercial</a>
                 <a href="#faq" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>FAQ</a>
               </nav>
             </div>
@@ -1376,5 +1389,218 @@ function MobileMenuButton() {
         )}
       </AnimatePresence>
     </>
+  );
+}
+
+
+/* ─── Flow Diagram ─── */
+function FlowDiagram() {
+  const steps = [
+    { id: "ambassadeur", label: "Ambassadeur", sub: "Prospection B2B", color: "var(--wise-primary)", icon: "🎯" },
+    { id: "centrale", label: "Centrale", sub: "Étude & Évaluation", color: "var(--wise-sage)", icon: "🔬" },
+    { id: "contrat", label: "Contrat", sub: "Contractualisation", color: "var(--wise-accent-cyan)", icon: "📋" },
+    { id: "implementation", label: "Neopolis", sub: "Implémentation", color: "var(--wise-accent-coral)", icon: "⚙️" },
+    { id: "client", label: "Client", sub: "Monitoring & Run", color: "var(--wise-accent-pear)", icon: "🏢" },
+  ];
+
+  return (
+    <div className="wise-card p-6 md:p-10">
+      {/* Desktop flow */}
+      <div className="hidden md:flex items-center justify-between gap-2">
+        {steps.map((step, i) => (
+          <div key={step.id} className="flex items-center gap-2 flex-1">
+            <div className="flex flex-col items-center text-center flex-1">
+              <div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-3 shadow-sm"
+                style={{ backgroundColor: step.color, opacity: 0.9 }}
+              >
+                {step.icon}
+              </div>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{step.label}</p>
+              <p className="wise-label text-[10px] mt-0.5">{step.sub}</p>
+            </div>
+            {i < steps.length - 1 && (
+              <div className="flex-shrink-0 flex items-center">
+                <div className="w-6 h-0.5" style={{ background: "var(--wise-sage)", opacity: 0.5 }}></div>
+                <ChevronRight size={14} style={{ color: "var(--wise-sage)" }} />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Mobile flow (vertical) */}
+      <div className="md:hidden flex flex-col gap-4">
+        {steps.map((step, i) => (
+          <div key={step.id}>
+            <div className="flex items-center gap-4">
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0 shadow-sm"
+                style={{ backgroundColor: step.color, opacity: 0.9 }}
+              >
+                {step.icon}
+              </div>
+              <div>
+                <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{step.label}</p>
+                <p className="wise-label text-xs">{step.sub}</p>
+              </div>
+            </div>
+            {i < steps.length - 1 && (
+              <div className="ml-6 h-4 border-l-2 border-dashed" style={{ borderColor: "var(--wise-sage)", opacity: 0.4 }}></div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Legend */}
+      <div className="mt-8 pt-6 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+          <div className="flex items-center gap-2 justify-center">
+            <div className="w-3 h-3 rounded-full" style={{ background: "var(--wise-primary)" }}></div>
+            <span className="wise-body-sm">Ambassadeur apporte le lead</span>
+          </div>
+          <div className="flex items-center gap-2 justify-center">
+            <div className="w-3 h-3 rounded-full" style={{ background: "var(--wise-sage)" }}></div>
+            <span className="wise-body-sm">Neopolis évalue & implémente</span>
+          </div>
+          <div className="flex items-center gap-2 justify-center">
+            <div className="w-3 h-3 rounded-full" style={{ background: "var(--wise-accent-pear)" }}></div>
+            <span className="wise-body-sm">Client bénéficie de la solution</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Revenue Simulator ─── */
+function RevenueSimulator() {
+  const [projects, setProjects] = useState(3);
+  const [avgSetup, setAvgSetup] = useState(5000);
+  const [implication, setImplication] = useState(40);
+  const [monthlyTokens, setMonthlyTokens] = useState(500);
+
+  const setupRevenue = projects * avgSetup * (implication / 100);
+  const monthlyRecurring = projects * monthlyTokens * 0.10;
+  const annualRecurring = monthlyRecurring * 12;
+  const totalFirstYear = setupRevenue + annualRecurring;
+
+  return (
+    <div className="wise-card p-6 md:p-10" style={{ background: "var(--wise-canvas)" }}>
+      <div className="text-center mb-8">
+        <span className="wise-eyebrow mb-3 inline-flex">
+          <Sparkles size={12} />
+          Simulateur
+        </span>
+        <h3 className="wise-display-sm">Estimez vos revenus potentiels</h3>
+        <p className="wise-body-sm mt-2 max-w-[48ch] mx-auto">Ajustez les paramètres pour simuler vos gains en tant qu'Ambassadeur certifié.</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Inputs */}
+        <div className="space-y-6">
+          <div>
+            <label className="wise-label mb-2 block">Nombre de projets apportés / an</label>
+            <input
+              type="range"
+              min={1}
+              max={20}
+              value={projects}
+              onChange={(e) => setProjects(Number(e.target.value))}
+              className="w-full accent-[var(--wise-primary)]"
+            />
+            <div className="flex justify-between mt-1">
+              <span className="wise-label">1</span>
+              <span className="font-semibold text-sm" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>{projects} projets</span>
+              <span className="wise-label">20</span>
+            </div>
+          </div>
+
+          <div>
+            <label className="wise-label mb-2 block">Frais de setup moyen par projet (€)</label>
+            <input
+              type="range"
+              min={1000}
+              max={30000}
+              step={1000}
+              value={avgSetup}
+              onChange={(e) => setAvgSetup(Number(e.target.value))}
+              className="w-full accent-[var(--wise-primary)]"
+            />
+            <div className="flex justify-between mt-1">
+              <span className="wise-label">1 000€</span>
+              <span className="font-semibold text-sm" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>{avgSetup.toLocaleString("fr-FR")} €</span>
+              <span className="wise-label">30 000€</span>
+            </div>
+          </div>
+
+          <div>
+            <label className="wise-label mb-2 block">Votre taux d'implication (%)</label>
+            <input
+              type="range"
+              min={20}
+              max={60}
+              step={5}
+              value={implication}
+              onChange={(e) => setImplication(Number(e.target.value))}
+              className="w-full accent-[var(--wise-primary)]"
+            />
+            <div className="flex justify-between mt-1">
+              <span className="wise-label">20%</span>
+              <span className="font-semibold text-sm" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>{implication}%</span>
+              <span className="wise-label">60%</span>
+            </div>
+          </div>
+
+          <div>
+            <label className="wise-label mb-2 block">Consommation tokens mensuelle / projet (€)</label>
+            <input
+              type="range"
+              min={100}
+              max={5000}
+              step={100}
+              value={monthlyTokens}
+              onChange={(e) => setMonthlyTokens(Number(e.target.value))}
+              className="w-full accent-[var(--wise-primary)]"
+            />
+            <div className="flex justify-between mt-1">
+              <span className="wise-label">100€</span>
+              <span className="font-semibold text-sm" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>{monthlyTokens.toLocaleString("fr-FR")} €/mois</span>
+              <span className="wise-label">5 000€</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Results */}
+        <div className="flex flex-col justify-center">
+          <div className="wise-card-sage p-6 md:p-8 space-y-5">
+            <div>
+              <p className="wise-label mb-1">Revenus Setup (one-shot)</p>
+              <p className="wise-display-sm" style={{ color: "var(--wise-ink)", fontFamily: "var(--font-mono)" }}>
+                {setupRevenue.toLocaleString("fr-FR")} €
+              </p>
+              <p className="wise-body-sm mt-1">{projects} projets × {avgSetup.toLocaleString("fr-FR")}€ × {implication}%</p>
+            </div>
+            <div className="border-t pt-5" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
+              <p className="wise-label mb-1">Revenus récurrents (10% tokens)</p>
+              <p className="wise-display-sm" style={{ color: "var(--wise-ink)", fontFamily: "var(--font-mono)" }}>
+                {monthlyRecurring.toLocaleString("fr-FR")} €<span className="text-sm font-normal"> /mois</span>
+              </p>
+              <p className="wise-body-sm mt-1">{projects} × {monthlyTokens.toLocaleString("fr-FR")}€ × 10% = {annualRecurring.toLocaleString("fr-FR")} €/an</p>
+            </div>
+            <div className="border-t pt-5" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
+              <p className="wise-label mb-1">Total 1ère année estimé</p>
+              <p className="wise-display-md" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>
+                {totalFirstYear.toLocaleString("fr-FR")} €
+              </p>
+              <p className="wise-body-sm mt-1">Setup + 12 mois de récurrent</p>
+            </div>
+          </div>
+          <p className="wise-label text-center mt-4">
+            * Estimation indicative basée sur vos paramètres
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }
