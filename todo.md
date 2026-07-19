@@ -239,3 +239,10 @@
 - [x] Animation avec délai progressif par point de donnée (200ms) et par dataset (100ms)
 - [x] Easing easeOutQuart pour un effet fluide et naturel
 - [x] Déclenchement unique (once: true) via useInView de framer-motion
+
+## Section Process Commercial Ambassadeur
+- [x] Ajouter une section détaillée "Modèle économique de l'Ambassadeur" sur la landing page
+- [x] Afficher les 5 phases du projet : Génération de leads, Étude et évaluation, Contractualisation, Implémentation, Monitoring
+- [x] Détailler la classification des projets (taille, besoin, solution)
+- [x] Expliquer la rémunération (20-60% setup + 10% tokens run)
+- [x] Design cohérent avec le thème Bubble existant

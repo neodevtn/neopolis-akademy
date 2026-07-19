@@ -438,6 +438,151 @@ export default function Home() {
         </div>
       </AnimatedSection>
 
+      {/* ─── Process Commercial & Modèle Économique ─── */}
+      <AnimatedSection id="process" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
+        <div className="container py-12 md:py-20">
+          <motion.div variants={fadeInUp} className="text-center mb-12 md:mb-16">
+            <span className="wise-eyebrow mb-4 inline-flex">
+              <Zap size={12} />
+              Modèle économique
+            </span>
+            <h2 className="wise-display-md mb-4">Le Process Commercial de l'Ambassadeur</h2>
+            <p className="wise-body-lg max-w-[56ch] mx-auto">
+              Un parcours structuré en 5 phases, de la prospection au monitoring, avec une rémunération attractive à chaque étape.
+            </p>
+          </motion.div>
+
+          {/* Timeline des 5 phases */}
+          <motion.div variants={staggerContainer} className="max-w-4xl mx-auto space-y-6 mb-14">
+            {/* Phase 1 */}
+            <motion.div variants={fadeInUp} className="wise-card p-6 md:p-8 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-1.5 h-full" style={{ background: "var(--wise-primary)" }}></div>
+              <div className="flex flex-col md:flex-row md:items-start gap-4">
+                <div className="flex-shrink-0">
+                  <span className="inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm" style={{ background: "var(--wise-primary)", color: "var(--wise-ink)" }}>1</span>
+                </div>
+                <div>
+                  <h3 className="wise-display-xs mb-2">Génération de Leads</h3>
+                  <p className="wise-body-md mb-3">
+                    L'Ambassadeur prospecte en <strong>B2B</strong> par tous les moyens (réseau, événements, cold outreach, recommandations) pour identifier des projets IA potentiels auprès des entreprises de son secteur.
+                  </p>
+                  <div className="wise-card-sage p-4 inline-block">
+                    <p className="wise-body-sm font-medium">→ Le projet identifié est envoyé vers <strong>la Centrale d'Étude et d'Évaluation</strong> de Neopolis</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Phase 2 */}
+            <motion.div variants={fadeInUp} className="wise-card p-6 md:p-8 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-1.5 h-full" style={{ background: "var(--wise-sage)" }}></div>
+              <div className="flex flex-col md:flex-row md:items-start gap-4">
+                <div className="flex-shrink-0">
+                  <span className="inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm" style={{ background: "var(--wise-sage)", color: "#fff" }}>2</span>
+                </div>
+                <div>
+                  <h3 className="wise-display-xs mb-2">Étude & Évaluation</h3>
+                  <p className="wise-body-md mb-4">
+                    La Centrale classe le projet selon 3 axes pour déterminer la solution optimale :
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                    <div className="wise-card-sage p-4 text-center">
+                      <p className="wise-label mb-1">Taille du projet</p>
+                      <p className="wise-body-sm font-semibold">Petit · Moyen · Grand</p>
+                    </div>
+                    <div className="wise-card-sage p-4 text-center">
+                      <p className="wise-label mb-1">Besoin identifié</p>
+                      <p className="wise-body-sm font-semibold">Smarter Employees · Faster Processes · Transformational Products</p>
+                    </div>
+                    <div className="wise-card-sage p-4 text-center">
+                      <p className="wise-label mb-1">Solution proposée</p>
+                      <p className="wise-body-sm font-semibold">Logiciel sans IA · Outils standard · Workflow automation · Agent full autonome</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2 p-3 rounded-lg" style={{ background: "var(--tint-mint)" }}>
+                    <Users size={16} className="flex-shrink-0 mt-0.5" style={{ color: "var(--wise-positive-deep)" }} />
+                    <p className="wise-body-sm">La Centrale peut <strong>affilier d'autres Ambassadeurs ou experts en renfort</strong> au projet selon sa complexité.</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Phase 3 */}
+            <motion.div variants={fadeInUp} className="wise-card p-6 md:p-8 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-1.5 h-full" style={{ background: "var(--wise-accent-cyan)" }}></div>
+              <div className="flex flex-col md:flex-row md:items-start gap-4">
+                <div className="flex-shrink-0">
+                  <span className="inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm" style={{ background: "var(--wise-accent-cyan)", color: "#fff" }}>3</span>
+                </div>
+                <div>
+                  <h3 className="wise-display-xs mb-2">Contractualisation</h3>
+                  <p className="wise-body-md">
+                    Signature du contrat avec le client. Définition du périmètre, des livrables, du calendrier et des conditions commerciales. L'Ambassadeur est impliqué dans la relation client.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Phase 4 */}
+            <motion.div variants={fadeInUp} className="wise-card p-6 md:p-8 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-1.5 h-full" style={{ background: "var(--wise-accent-coral)" }}></div>
+              <div className="flex flex-col md:flex-row md:items-start gap-4">
+                <div className="flex-shrink-0">
+                  <span className="inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm" style={{ background: "var(--wise-accent-coral)", color: "#fff" }}>4</span>
+                </div>
+                <div>
+                  <h3 className="wise-display-xs mb-2">Implémentation</h3>
+                  <p className="wise-body-md">
+                    Déploiement de la solution IA par l'équipe technique de Neopolis Development. L'Ambassadeur assure le lien avec le client et facilite l'adoption de la solution.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Phase 5 */}
+            <motion.div variants={fadeInUp} className="wise-card p-6 md:p-8 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-1.5 h-full" style={{ background: "var(--wise-accent-pear)" }}></div>
+              <div className="flex flex-col md:flex-row md:items-start gap-4">
+                <div className="flex-shrink-0">
+                  <span className="inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm" style={{ background: "var(--wise-accent-pear)", color: "var(--wise-ink)" }}>5</span>
+                </div>
+                <div>
+                  <h3 className="wise-display-xs mb-2">Monitoring & Revenus Récurrents</h3>
+                  <p className="wise-body-md">
+                    Suivi de la solution en production. L'Ambassadeur génère des <strong>revenus récurrents passifs</strong> sur la consommation de tokens du client pendant toute la durée de vie du projet.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Rémunération */}
+          <motion.div variants={fadeInUp} className="max-w-4xl mx-auto">
+            <div className="wise-card p-8 md:p-10" style={{ background: "var(--tint-mint)" }}>
+              <div className="text-center mb-8">
+                <span className="wise-eyebrow mb-3 inline-flex">Rémunération</span>
+                <h3 className="wise-display-sm">Votre modèle de revenus</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="wise-card p-6 text-center">
+                  <p className="wise-display-md mb-2" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>20% à 60%</p>
+                  <p className="wise-body-md font-semibold mb-2">Frais de Setup</p>
+                  <p className="wise-body-sm">Selon votre niveau d'implication dans le projet (prospection, accompagnement, coordination)</p>
+                </div>
+                <div className="wise-card p-6 text-center">
+                  <p className="wise-display-md mb-2" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>10%</p>
+                  <p className="wise-body-md font-semibold mb-2">Tokens consommés (Run)</p>
+                  <p className="wise-body-sm">Revenus récurrents sur la consommation de tokens pendant toute la vie du projet client</p>
+                </div>
+              </div>
+              <p className="wise-body-sm text-center mt-6" style={{ color: "var(--wise-sage)" }}>
+                Plus vous apportez de projets et plus vous êtes impliqué, plus vos revenus augmentent — avec un effet cumulatif sur le long terme.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </AnimatedSection>
+
       {/* ─── CTA Band ─── */}
       <AnimatedSection style={{ background: "var(--tint-mint)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-10 md:py-20 text-center">
