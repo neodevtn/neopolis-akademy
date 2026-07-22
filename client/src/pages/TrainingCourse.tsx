@@ -75,7 +75,7 @@ function QuizSection({ certId, lang, t }: { certId: string; lang: string; t: (ob
         </p>
         {q.domain && (
           <span className="inline-block mt-2 text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">
-            {q.domain}
+            {typeof q.domain === 'string' ? q.domain : (lang === 'fr' ? q.domain.fr : q.domain.en)}
           </span>
         )}
       </div>

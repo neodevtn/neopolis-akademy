@@ -3,7 +3,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import trainingIndex from "@/data/trainingIndex.json";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Circle, PlayCircle, BookOpen, ArrowLeft } from "lucide-react";
+import { CheckCircle2, Circle, PlayCircle, BookOpen, ArrowLeft, Clock } from "lucide-react";
 
 export default function TrainingCertification() {
   const { certId } = useParams<{ certId: string }>();
@@ -65,6 +65,25 @@ export default function TrainingCertification() {
             {cert.totalVideos > 0 && <span>{cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}</span>}
           </div>
         </div>
+
+        {/* Mock Exam CTA */}
+        <Link
+          href={`/mock-exam/${certId}`}
+          className="flex items-center gap-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-5 mb-6 hover:shadow-md hover:border-amber-300 transition-all group"
+        >
+          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-amber-100 text-amber-600 shrink-0">
+            <Clock className="w-6 h-6" />
+          </div>
+          <div className="flex-1">
+            <h3 className="font-semibold text-slate-900 group-hover:text-amber-700 transition-colors">
+              {t({ en: "Take Mock Exam", fr: "Passer l'examen blanc" })}
+            </h3>
+            <p className="text-sm text-slate-500">
+              {t({ en: "Timed practice exam simulating real certification conditions", fr: "Examen blanc chronométré simulant les conditions réelles de certification" })}
+            </p>
+          </div>
+          <span className="text-amber-500 group-hover:translate-x-1 transition-transform">→</span>
+        </Link>
 
         {/* Course List */}
         <h2 className="text-lg font-semibold text-slate-800 mb-4">

@@ -298,3 +298,15 @@
 - [x] Intégrer le contenu pédagogique réel bilingue EN/FR (77+ leçons, lazy-loaded par cours)
 - [x] Implémenter quiz interactif avec 40 questions par certification, scoring et explications
 - [x] Lazy-loading des données de cours (fichiers JSON séparés dans /public/data/courses/)
+
+## Corrections Espace Training v2
+- [x] Remplir les cours avec le vrai contenu pédagogique (pas seulement exercices)
+- [x] Corriger les erreurs vidéo sur les pages de cours (embedUrl ajouté dans trainingIndex)
+- [x] Ajouter un mock exam chronométré par certification basé sur les exam guides
+- [x] Fix: domain object rendering error (Objects are not valid as React child)
+- [x] Supprimer les fichiers de cours orphelins (exam guide content mal parsé)
+- [x] Mock exam: page intro avec détails examen, domaines, notice
+- [x] Mock exam: timer chronométré avec navigation par question
+- [x] Mock exam: scoring avec score pondéré (100-1000), performance par domaine
+- [x] Mock exam: revue détaillée des réponses avec explications
+- [x] Mock exam: bouton CTA sur chaque page de certification
