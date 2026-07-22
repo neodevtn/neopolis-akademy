@@ -289,8 +289,27 @@ export default function TrainingCourse() {
                   );
                 }
 
+                // Completed lessons cannot be re-opened (no relecture)
+                if (lessonCompleted && !isCurrent) {
+                  return (
+                    <div key={lesson.id || idx} className="border border-emerald-200 rounded-lg p-4 bg-emerald-50/20">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                          <span className="font-medium text-slate-600 text-sm">
+                            {resolveI18n(lesson.title, lang)}
+                          </span>
+                        </div>
+                        <span className="text-xs text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">
+                          {t({ en: "Completed", fr: "Termin\u00e9" })}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                }
+
                 return (
-                  <div key={lesson.id || idx} className={`border rounded-lg overflow-hidden ${isCurrent ? "border-emerald-300 bg-emerald-50/30" : lessonCompleted ? "border-emerald-200" : "border-slate-100"}`}>
+                  <div key={lesson.id || idx} className={`border rounded-lg overflow-hidden ${isCurrent ? "border-emerald-300 bg-emerald-50/30" : "border-slate-100"}`}>
                     <button
                       onClick={() => toggleLesson(lesson.id || `lesson-${idx}`)}
                       className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors text-left"

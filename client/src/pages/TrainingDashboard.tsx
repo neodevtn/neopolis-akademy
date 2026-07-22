@@ -1,8 +1,12 @@
 import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
 import { Progress } from "@/components/ui/progress";
+import { LogIn } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const levelColors = {
   beginner: "bg-green-100 text-green-800",
@@ -19,6 +23,59 @@ const levelLabels = {
 export default function TrainingDashboard() {
   const { lang, toggleLang, t } = useLanguage();
   const { getCertProgress } = useTrainingProgress();
+  const { isAuthenticated, loading: authLoading } = useAuth();
+
+  // Loading state
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-sm text-slate-500">{t({ en: "Loading...", fr: "Chargement..." })}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Auth gate
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+        <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+          <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2">
+              <span className="text-xl font-bold text-slate-800">Neopolis</span>
+              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">Training</span>
+            </Link>
+            <button
+              onClick={toggleLang}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 hover:bg-slate-50 text-sm font-medium transition-colors"
+            >
+              <span className="text-base">{lang === "en" ? "🇬🇧" : "🇫🇷"}</span>
+              {lang === "en" ? "EN" : "FR"}
+            </button>
+          </div>
+        </header>
+        <main className="max-w-lg mx-auto px-4 py-20 text-center">
+          <div className="bg-white rounded-xl border border-slate-200 p-8">
+            <LogIn className="w-12 h-12 text-emerald-600 mx-auto mb-4" />
+            <h2 className="text-xl font-bold text-slate-900 mb-2">
+              {t({ en: "Authentication Required", fr: "Authentification requise" })}
+            </h2>
+            <p className="text-sm text-slate-500 mb-6">
+              {t({ en: "You must be logged in to access the training platform and track your progress.", fr: "Vous devez être connecté pour accéder à la plateforme de formation et suivre votre progression." })}
+            </p>
+            <Button
+              onClick={() => { window.location.href = getLoginUrl(); }}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
+              {t({ en: "Log in to continue", fr: "Se connecter pour continuer" })}
+            </Button>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -66,7 +123,7 @@ export default function TrainingDashboard() {
             <div className="text-sm text-slate-500">{t({ en: "Certifications", fr: "Certifications" })}</div>
           </div>
           <div className="bg-white rounded-xl p-4 border border-slate-200">
-            <div className="text-2xl font-bold text-slate-900">29</div>
+            <div className="text-2xl font-bold text-slate-900">25</div>
             <div className="text-sm text-slate-500">{t({ en: "Courses", fr: "Cours" })}</div>
           </div>
           <div className="bg-white rounded-xl p-4 border border-slate-200">
@@ -87,9 +144,8 @@ export default function TrainingDashboard() {
           {trainingIndex.certifications.map((cert) => {
             const courses = trainingIndex.courses.filter((c) => c.certId === cert.id);
             const courseIds = courses.map((c) => c.id);
-            // Estimate lesson count from exercise count (each course has roughly exerciseCount lessons)
             const totalLessonsMap: Record<string, number> = {};
-            courses.forEach((c) => { totalLessonsMap[c.id] = c.exerciseCount || 5; });
+            courses.forEach((c) => { totalLessonsMap[c.id] = c.lessonCount || 1; });
             const progressPct = getCertProgress(courseIds, totalLessonsMap);
             const level = ((cert.level as any).en as string).toLowerCase() as keyof typeof levelColors;
             return (

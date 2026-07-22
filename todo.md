@@ -332,3 +332,8 @@
 - [x] Historique des tentatives d'examen sauvegardé en DB
 - [x] Fix: loading spinner pendant auth loading (pages blanches)
 - [x] Fix: resolveI18n pour les titres/contenus de leçons ({en, fr} objects)
+
+## Corrections post-audit
+- [x] Fix: exerciseCount → lessonCount dans TrainingDashboard et TrainingCertification
+- [x] Fix: Bloquer la relecture des leçons terminées (ne pas permettre l'expansion)
+- [x] Fix: Ajouter un auth gate au TrainingDashboard

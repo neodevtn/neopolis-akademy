@@ -6,7 +6,7 @@ import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, Lock, PlayCircle, BookOpen, ArrowLeft, Clock, LogIn } from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 
 export default function TrainingCertification() {
@@ -27,34 +27,18 @@ export default function TrainingCertification() {
   const courses = trainingIndex.courses.filter((c) => c.certId === certId);
   const courseIds = courses.map((c) => c.id);
 
-  // Build totalLessonsMap from course data (we need to fetch lesson counts)
-  const [totalLessonsMap, setTotalLessonsMap] = useState<Record<string, number>>({});
-  
-  useEffect(() => {
-    // Load lesson counts for each course
-    const loadCounts = async () => {
-      const map: Record<string, number> = {};
-      for (const course of courses) {
-        try {
-          const res = await fetch(`/data/courses/${course.id}.json`);
-          const data = await res.json();
-          map[course.id] = (data.lessons || []).length;
-        } catch {
-          map[course.id] = 0;
-        }
-      }
-      setTotalLessonsMap(map);
-    };
-    loadCounts();
-  }, [certId]);
+  // Build totalLessonsMap from course metadata (lessonCount in trainingIndex)
+  const totalLessonsMap = useMemo(() => {
+    const map: Record<string, number> = {};
+    courses.forEach((c) => { map[c.id] = c.lessonCount || 1; });
+    return map;
+  }, [courses]);
 
   const progressPct = useMemo(() => {
-    if (Object.keys(totalLessonsMap).length === 0) return 0;
     return getCertProgress(courseIds, totalLessonsMap);
   }, [courseIds, totalLessonsMap, getCertProgress]);
 
   const certComplete = useMemo(() => {
-    if (Object.keys(totalLessonsMap).length === 0) return false;
     return isCertComplete(certId || "", courseIds, totalLessonsMap);
   }, [certId, courseIds, totalLessonsMap, isCertComplete]);
 
