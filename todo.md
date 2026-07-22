@@ -337,3 +337,10 @@
 - [x] Fix: exerciseCount → lessonCount dans TrainingDashboard et TrainingCertification
 - [x] Fix: Bloquer la relecture des leçons terminées (ne pas permettre l'expansion)
 - [x] Fix: Ajouter un auth gate au TrainingDashboard
+
+## Nouvelles fonctionnalités (historique + certificat + progression globale)
+- [x] Backend: procédure tRPC getExamHistory (retourne tentatives avec date, score, durée)
+- [x] Backend: endpoint génération certificat PDF (pdfkit, score ≥ 720)
+- [x] Frontend: tableau historique tentatives sur page certification
+- [x] Frontend: bouton téléchargement certificat PDF conditionnel (score ≥ 720)
+- [x] Frontend: barre de progression globale cross-certifications sur le dashboard

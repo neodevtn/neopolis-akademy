@@ -5,9 +5,10 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Lock, PlayCircle, BookOpen, ArrowLeft, Clock, LogIn } from "lucide-react";
+import { CheckCircle2, Lock, PlayCircle, BookOpen, ArrowLeft, Clock, LogIn, Download, Trophy, History } from "lucide-react";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
+import { trpc } from "@/lib/trpc";
 
 export default function TrainingCertification() {
   const { certId } = useParams<{ certId: string }>();
@@ -41,6 +42,20 @@ export default function TrainingCertification() {
   const certComplete = useMemo(() => {
     return isCertComplete(certId || "", courseIds, totalLessonsMap);
   }, [certId, courseIds, totalLessonsMap, isCertComplete]);
+
+  // Fetch exam history
+  const { data: examHistory } = trpc.training.getExamHistory.useQuery(
+    { certificationId: certId },
+    { enabled: isAuthenticated && !!certId }
+  );
+
+  // Check if user has a passing score
+  const bestPassingScore = useMemo(() => {
+    if (!examHistory || examHistory.length === 0) return null;
+    const passing = examHistory.filter((a: any) => a.score >= 720);
+    if (passing.length === 0) return null;
+    return passing.reduce((best: any, curr: any) => curr.score > best.score ? curr : best);
+  }, [examHistory]);
 
   // Sequential locking: a course is unlocked only if the previous one is complete
   const isCourseUnlocked = (idx: number) => {
@@ -132,6 +147,34 @@ export default function TrainingCertification() {
           </div>
         </div>
 
+        {/* Certificate Download - Conditional on passing score */}
+        {bestPassingScore && (
+          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-5 mb-6">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 shrink-0">
+                <Trophy className="w-6 h-6" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-emerald-900">
+                  {t({ en: "Certification Passed!", fr: "Certification réussie !" })}
+                </h3>
+                <p className="text-sm text-emerald-700">
+                  {t({ en: `Best score: ${bestPassingScore.score}/1000`, fr: `Meilleur score : ${bestPassingScore.score}/1000` })}
+                </p>
+              </div>
+              <Button
+                onClick={() => {
+                  window.open(`/api/certificate/${certId}`, "_blank");
+                }}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
+              >
+                <Download className="w-4 h-4" />
+                {t({ en: "Download Certificate", fr: "Télécharger le certificat" })}
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Mock Exam CTA - Conditional */}
         {certComplete ? (
           <Link
@@ -165,6 +208,84 @@ export default function TrainingCertification() {
               </p>
             </div>
             <Lock className="w-5 h-5 text-slate-300" />
+          </div>
+        )}
+
+        {/* Exam History */}
+        {examHistory && examHistory.length > 0 && (
+          <div className="bg-white rounded-xl border border-slate-200 p-6 mb-6">
+            <h2 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+              <History className="w-5 h-5 text-blue-600" />
+              {t({ en: "Exam History", fr: "Historique des examens" })}
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-slate-100">
+                    <th className="text-left py-3 px-2 font-medium text-slate-500">
+                      {t({ en: "Date", fr: "Date" })}
+                    </th>
+                    <th className="text-center py-3 px-2 font-medium text-slate-500">
+                      {t({ en: "Score", fr: "Score" })}
+                    </th>
+                    <th className="text-center py-3 px-2 font-medium text-slate-500">
+                      {t({ en: "Duration", fr: "Durée" })}
+                    </th>
+                    <th className="text-center py-3 px-2 font-medium text-slate-500">
+                      {t({ en: "Result", fr: "Résultat" })}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {examHistory.map((attempt: any, idx: number) => {
+                    const startedAt = new Date(attempt.startedAt);
+                    const finishedAt = new Date(attempt.finishedAt);
+                    const durationMs = finishedAt.getTime() - startedAt.getTime();
+                    const durationMin = Math.floor(durationMs / 60000);
+                    const durationSec = Math.floor((durationMs % 60000) / 1000);
+                    const passed = attempt.score >= 720;
+
+                    return (
+                      <tr key={attempt.id || idx} className="border-b border-slate-50 last:border-0">
+                        <td className="py-3 px-2 text-slate-700">
+                          {startedAt.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                          <span className="text-xs text-slate-400 ml-2">
+                            {startedAt.toLocaleTimeString(lang === "fr" ? "fr-FR" : "en-US", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
+                        </td>
+                        <td className="py-3 px-2 text-center">
+                          <span className={`font-semibold ${passed ? "text-emerald-600" : "text-red-500"}`}>
+                            {attempt.score}/1000
+                          </span>
+                        </td>
+                        <td className="py-3 px-2 text-center text-slate-600">
+                          {durationMin}m {durationSec}s
+                        </td>
+                        <td className="py-3 px-2 text-center">
+                          {passed ? (
+                            <span className="inline-flex items-center gap-1 text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
+                              <CheckCircle2 className="w-3 h-3" />
+                              {t({ en: "Passed", fr: "Réussi" })}
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">
+                              {t({ en: "Failed", fr: "Échoué" })}
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 

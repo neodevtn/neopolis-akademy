@@ -5,8 +5,9 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
 import { Progress } from "@/components/ui/progress";
-import { LogIn } from "lucide-react";
+import { LogIn, Trophy, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useMemo } from "react";
 
 const levelColors = {
   beginner: "bg-green-100 text-green-800",
@@ -19,6 +20,66 @@ const levelLabels = {
   intermediate: { en: "Intermediate", fr: "Intermédiaire" },
   advanced: { en: "Advanced", fr: "Avancé" },
 };
+
+function GlobalProgressBar({ getCertProgress, t }: { getCertProgress: any; t: (obj: { en: string; fr: string }) => string }) {
+  const certCompletionData = useMemo(() => {
+    return trainingIndex.certifications.map((cert) => {
+      const courses = trainingIndex.courses.filter((c) => c.certId === cert.id);
+      const courseIds = courses.map((c) => c.id);
+      const totalLessonsMap: Record<string, number> = {};
+      courses.forEach((c) => { totalLessonsMap[c.id] = c.lessonCount || 1; });
+      const progressPct = getCertProgress(courseIds, totalLessonsMap);
+      return { id: cert.id, title: cert.title, icon: cert.icon, progress: progressPct, completed: progressPct >= 100 };
+    });
+  }, [getCertProgress]);
+
+  const completedCount = certCompletionData.filter((c) => c.completed).length;
+  const totalCount = certCompletionData.length;
+  const overallPct = Math.round(certCompletionData.reduce((sum, c) => sum + c.progress, 0) / totalCount);
+
+  return (
+    <div className="bg-white rounded-xl border border-slate-200 p-6 mb-8">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 text-emerald-600">
+            <Target className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">
+              {t({ en: "Overall Progress", fr: "Progression globale" })}
+            </h2>
+            <p className="text-sm text-slate-500">
+              {completedCount}/{totalCount} {t({ en: "certifications completed", fr: "certifications compl\u00e9t\u00e9es" })}
+            </p>
+          </div>
+        </div>
+        {completedCount === totalCount && (
+          <div className="flex items-center gap-2 text-amber-600">
+            <Trophy className="w-5 h-5" />
+            <span className="text-sm font-semibold">{t({ en: "All Complete!", fr: "Tout termin\u00e9 !" })}</span>
+          </div>
+        )}
+      </div>
+      <div className="flex items-center gap-3 mb-3">
+        <Progress value={overallPct} className="flex-1 h-3" />
+        <span className="text-sm font-semibold text-slate-700">{overallPct}%</span>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {certCompletionData.map((cert) => (
+          <div key={cert.id} className={`flex items-center gap-2 p-2 rounded-lg ${cert.completed ? "bg-emerald-50" : "bg-slate-50"}`}>
+            <span className="text-lg">{cert.icon}</span>
+            <div className="flex-1 min-w-0">
+              <div className="text-xs font-medium text-slate-700 truncate">{t(cert.title)}</div>
+              <div className={`text-xs font-semibold ${cert.completed ? "text-emerald-600" : "text-slate-500"}`}>
+                {cert.progress}%
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function TrainingDashboard() {
   const { lang, toggleLang, t } = useLanguage();
@@ -115,6 +176,9 @@ export default function TrainingDashboard() {
             })}
           </p>
         </div>
+
+        {/* Global Progress */}
+        <GlobalProgressBar getCertProgress={getCertProgress} t={t} />
 
         {/* Stats bar */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
