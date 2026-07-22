@@ -106,3 +106,37 @@ export const applications = mysqlTable("applications", {
 
 export type Application = typeof applications.$inferSelect;
 export type InsertApplication = typeof applications.$inferInsert;
+
+/**
+ * Training progress - tracks which lessons a user has completed
+ */
+export const trainingProgress = mysqlTable("training_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  certificationId: varchar("certificationId", { length: 200 }).notNull(),
+  courseId: varchar("courseId", { length: 200 }).notNull(),
+  lessonIndex: int("lessonIndex").notNull(),
+  completedAt: timestamp("completedAt").defaultNow().notNull(),
+});
+
+export type TrainingProgress = typeof trainingProgress.$inferSelect;
+export type InsertTrainingProgress = typeof trainingProgress.$inferInsert;
+
+/**
+ * Exam attempts - stores each mock exam attempt with score and answers
+ */
+export const examAttempts = mysqlTable("exam_attempts", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  certificationId: varchar("certificationId", { length: 200 }).notNull(),
+  score: int("score").notNull(), // 100-1000 scale
+  totalQuestions: int("totalQuestions").notNull(),
+  correctAnswers: int("correctAnswers").notNull(),
+  passed: int("passed").notNull().default(0), // 0 or 1
+  domainScores: json("domainScores"), // JSON object with per-domain scores
+  startedAt: timestamp("startedAt").notNull(),
+  finishedAt: timestamp("finishedAt").defaultNow().notNull(),
+});
+
+export type ExamAttempt = typeof examAttempts.$inferSelect;
+export type InsertExamAttempt = typeof examAttempts.$inferInsert;

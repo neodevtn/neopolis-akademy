@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts } from "./db";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
 import { notifyOwner } from "./_core/notification";
@@ -249,6 +249,64 @@ export const appRouter = router({
       }
       return await getApplicationStats();
     }),
+  }),
+
+  // ============ Training Progress ============
+  training: router({
+    getProgress: protectedProcedure
+      .input(z.object({ certificationId: z.string().optional() }).optional())
+      .query(async ({ ctx, input }) => {
+        return await getUserProgress(ctx.user.id, input?.certificationId);
+      }),
+
+    markLessonComplete: protectedProcedure
+      .input(z.object({
+        certificationId: z.string(),
+        courseId: z.string(),
+        lessonIndex: z.number(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        return await markLessonComplete(ctx.user.id, input.certificationId, input.courseId, input.lessonIndex);
+      }),
+
+    checkCertCompletion: protectedProcedure
+      .input(z.object({
+        certificationId: z.string(),
+        totalLessonsPerCourse: z.record(z.string(), z.number()),
+      }))
+      .query(async ({ ctx, input }) => {
+        const complete = await isCertificationComplete(ctx.user.id, input.certificationId, input.totalLessonsPerCourse);
+        return { complete };
+      }),
+
+    submitExamAttempt: protectedProcedure
+      .input(z.object({
+        certificationId: z.string(),
+        score: z.number().min(100).max(1000),
+        totalQuestions: z.number(),
+        correctAnswers: z.number(),
+        passed: z.number().min(0).max(1),
+        domainScores: z.any(),
+        startedAt: z.date(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        return await createExamAttempt({
+          userId: ctx.user.id,
+          certificationId: input.certificationId,
+          score: input.score,
+          totalQuestions: input.totalQuestions,
+          correctAnswers: input.correctAnswers,
+          passed: input.passed,
+          domainScores: input.domainScores,
+          startedAt: input.startedAt,
+        });
+      }),
+
+    getExamHistory: protectedProcedure
+      .input(z.object({ certificationId: z.string().optional() }).optional())
+      .query(async ({ ctx, input }) => {
+        return await getExamAttempts(ctx.user.id, input?.certificationId);
+      }),
   }),
 });
 

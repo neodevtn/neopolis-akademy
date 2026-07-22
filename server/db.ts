@@ -1,6 +1,6 @@
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, sql, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -151,4 +151,77 @@ export async function getApplicationStats() {
   const avgScore = total > 0 ? all.reduce((sum, a) => sum + Number(a.scoreTotal), 0) / total : 0;
   
   return { total, enAttente, selectionne, refuse, avgScore };
+}
+
+// ============ Training Progress ============
+
+export async function getUserProgress(userId: number, certificationId?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  if (certificationId) {
+    return await db.select().from(trainingProgress)
+      .where(and(eq(trainingProgress.userId, userId), eq(trainingProgress.certificationId, certificationId)));
+  }
+  return await db.select().from(trainingProgress).where(eq(trainingProgress.userId, userId));
+}
+
+export async function markLessonComplete(userId: number, certificationId: string, courseId: string, lessonIndex: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Check if already completed (idempotent)
+  const existing = await db.select().from(trainingProgress)
+    .where(and(
+      eq(trainingProgress.userId, userId),
+      eq(trainingProgress.certificationId, certificationId),
+      eq(trainingProgress.courseId, courseId),
+      eq(trainingProgress.lessonIndex, lessonIndex)
+    )).limit(1);
+  
+  if (existing.length > 0) return existing[0];
+  
+  const result = await db.insert(trainingProgress).values({
+    userId,
+    certificationId,
+    courseId,
+    lessonIndex,
+  });
+  
+  return { id: result[0].insertId, userId, certificationId, courseId, lessonIndex, completedAt: new Date() };
+}
+
+export async function isCertificationComplete(userId: number, certificationId: string, totalLessonsPerCourse: Record<string, number>): Promise<boolean> {
+  const progress = await getUserProgress(userId, certificationId);
+  
+  // Check each course has all its lessons completed
+  for (const [courseId, totalLessons] of Object.entries(totalLessonsPerCourse)) {
+    const completedLessons = progress.filter(p => p.courseId === courseId);
+    if (completedLessons.length < totalLessons) return false;
+  }
+  return true;
+}
+
+// ============ Exam Attempts ============
+
+export async function createExamAttempt(data: InsertExamAttempt) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(examAttempts).values(data);
+  return { id: result[0].insertId, ...data };
+}
+
+export async function getExamAttempts(userId: number, certificationId?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  if (certificationId) {
+    return await db.select().from(examAttempts)
+      .where(and(eq(examAttempts.userId, userId), eq(examAttempts.certificationId, certificationId)))
+      .orderBy(desc(examAttempts.finishedAt));
+  }
+  return await db.select().from(examAttempts)
+    .where(eq(examAttempts.userId, userId))
+    .orderBy(desc(examAttempts.finishedAt));
 }

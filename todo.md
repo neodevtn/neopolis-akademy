@@ -319,3 +319,16 @@
 - [x] Mettre à jour examConfig dans trainingIndex.json (totalQuestions par session)
 - [x] Séparer les questions dans un fichier JSON dédié (mockExamQuestions.json) pour performance
 - [x] Vérifier le rendu du mock exam avec les nouvelles questions
+
+## Refonte UX Formation (authentification + progression DB + parcours séquentiel)
+- [x] Créer tables DB : training_progress (user_id, course_id, lesson_index, completed_at) + exam_attempts (user_id, cert_id, score, started_at, finished_at, answers)
+- [x] Authentification obligatoire pour accéder à l'espace formation
+- [x] Procédures tRPC : markLessonComplete, getProgress, getCertCompletion, submitExamAttempt, getExamHistory
+- [x] Parcours séquentiel : leçons verrouillées (la suivante se débloque après la précédente)
+- [x] Pas de retour en arrière sur les leçons terminées
+- [x] Mock exam conditionnel : bouton désactivé tant que tous les cours de la certification ne sont pas terminés
+- [x] Mock exam strictement séquentiel : pas de retour en arrière sur les questions
+- [x] Mock exam repassable : l'utilisateur peut repasser l'examen autant de fois qu'il veut
+- [x] Historique des tentatives d'examen sauvegardé en DB
+- [x] Fix: loading spinner pendant auth loading (pages blanches)
+- [x] Fix: resolveI18n pour les titres/contenus de leçons ({en, fr} objects)

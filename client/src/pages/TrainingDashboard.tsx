@@ -85,8 +85,12 @@ export default function TrainingDashboard() {
         </h2>
         <div className="grid md:grid-cols-2 gap-6">
           {trainingIndex.certifications.map((cert) => {
-            const courseIds = trainingIndex.courses.filter((c) => c.certId === cert.id).map((c) => c.id);
-            const progressPct = getCertProgress(courseIds);
+            const courses = trainingIndex.courses.filter((c) => c.certId === cert.id);
+            const courseIds = courses.map((c) => c.id);
+            // Estimate lesson count from exercise count (each course has roughly exerciseCount lessons)
+            const totalLessonsMap: Record<string, number> = {};
+            courses.forEach((c) => { totalLessonsMap[c.id] = c.exerciseCount || 5; });
+            const progressPct = getCertProgress(courseIds, totalLessonsMap);
             const level = ((cert.level as any).en as string).toLowerCase() as keyof typeof levelColors;
             return (
               <Link
