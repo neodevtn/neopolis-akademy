@@ -174,6 +174,7 @@ export default function Home() {
             <NavLink href="#partenaires">Partenaires</NavLink>
             <NavLink href="#process">Process Commercial</NavLink>
             <NavLink href="#faq">FAQ</NavLink>
+            <Link href="/training" className="text-xs font-semibold px-3 py-1.5 rounded-full transition-colors bg-emerald-600 text-white hover:bg-emerald-700">Training</Link>
             <a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="text-xs font-semibold px-3 py-1.5 rounded-full transition-colors" style={{ color: "var(--wise-positive-deep)", border: "1px solid var(--wise-positive-deep)" }}>À propos</a>
           </div>
           <div className="flex items-center gap-2 ml-auto md:ml-2">
@@ -1395,6 +1396,7 @@ function MobileMenuButton() {
                 <a href="#partenaires" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>Partenaires</a>
                 <a href="#process" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>Process Commercial</a>
                 <a href="#faq" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg hover:bg-gray-50" style={{ color: "var(--wise-ink)" }}>FAQ</a>
+                <a href="/training" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg bg-emerald-50 text-emerald-700">Training 🎓</a>
                 <a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="text-sm font-semibold py-2 px-3 rounded-lg" style={{ color: "var(--wise-positive-deep)" }}>À propos de Neopolis Dev ↗</a>
               </nav>
             </div>

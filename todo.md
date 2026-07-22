@@ -284,3 +284,17 @@
 - [x] Affichage uniquement au premier chargement (délai 1.5s)
 - [x] Lien vers la politique de confidentialité (/mentions-legales)
 - [x] Design cohérent avec le thème du site (backdrop blur, couleurs Wise)
+
+## Espace Training (Claude Certification)
+- [x] Créer le fichier de données structurées (trainingData.json : 4 certifications, 29 cours, 26 vidéos, 480+ exercices)
+- [x] Page Dashboard Training (/training) avec les 4 certifications et stats
+- [x] Pages cours par certification (/training/:certId) avec liste et progression
+- [x] Pages leçons individuelles (/training/:certId/:courseId) avec vidéos et exercices
+- [x] Système de progression locale (TrainingProgressContext + localStorage)
+- [x] Toggle bilingue EN/FR (LanguageContext)
+- [x] Exercices et checkpoints interactifs (affichage + bouton Terminer)
+- [x] Navigation Training dans le header principal (desktop + mobile)
+- [x] Design cohérent avec le thème existant (slate/emerald, rounded-xl, backdrop-blur)
+- [x] Intégrer le contenu pédagogique réel bilingue EN/FR (77+ leçons, lazy-loaded par cours)
+- [x] Implémenter quiz interactif avec 40 questions par certification, scoring et explications
+- [x] Lazy-loading des données de cours (fichiers JSON séparés dans /public/data/courses/)
