@@ -8,9 +8,16 @@ import { Button } from "@/components/ui/button";
 
 // Quiz component for interactive exercises
 function QuizSection({ certId, lang, t }: { certId: string; lang: string; t: (obj: { en: string; fr: string }) => string }) {
+  const [allQs, setAllQs] = useState<any[]>([]);
+  useEffect(() => {
+    fetch("/data/mockExamQuestions.json")
+      .then(res => res.json())
+      .then(data => setAllQs(data))
+      .catch(() => {});
+  }, []);
   const questions = useMemo(
-    () => (trainingIndex.questions as any[]).filter((q) => q.certificationId === certId),
-    [certId]
+    () => allQs.filter((q) => q.certificationId === certId),
+    [certId, allQs]
   );
   const [currentQ, setCurrentQ] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);

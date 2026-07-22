@@ -310,3 +310,12 @@
 - [x] Mock exam: scoring avec score pondéré (100-1000), performance par domaine
 - [x] Mock exam: revue détaillée des réponses avec explications
 - [x] Mock exam: bouton CTA sur chaque page de certification
+
+## Augmentation banque de questions Mock Exam (5x session size)
+- [x] Générer 300 questions pour Claude Certified Associate Foundations (7 domaines, 60/session)
+- [x] Générer 265 questions pour Claude Certified Developer Foundations (8 domaines, 53/session)
+- [x] Générer 300 questions pour Claude Certified Architect Foundations (5 domaines, 60/session)
+- [x] Générer 300 questions pour Claude Certified Architect Professional (7 domaines, 63/session)
+- [x] Mettre à jour examConfig dans trainingIndex.json (totalQuestions par session)
+- [x] Séparer les questions dans un fichier JSON dédié (mockExamQuestions.json) pour performance
+- [x] Vérifier le rendu du mock exam avec les nouvelles questions

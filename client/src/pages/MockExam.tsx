@@ -4,8 +4,9 @@ import trainingIndex from "@/data/trainingIndex.json";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { ArrowLeft, Clock, CheckCircle2, XCircle, AlertTriangle, ChevronLeft, ChevronRight, Flag } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { Spinner } from "@/components/ui/spinner";
 
-type ExamState = "intro" | "active" | "review";
+type ExamState = "intro" | "active" | "review" | "loading";
 
 interface Answer {
   questionId: string;
@@ -17,17 +18,35 @@ export default function MockExam() {
   const { lang, toggleLang, t } = useLanguage();
   const [, navigate] = useLocation();
 
-  // Get exam config and questions for this certification
+  // Get exam config from static import (small file)
   const examConfig = (trainingIndex as any).examConfig?.[certId || ""];
-  const allQuestions = (trainingIndex as any).questions || [];
+
+  // Load questions dynamically from public JSON
+  const [allQuestions, setAllQuestions] = useState<any[]>([]);
+  const [questionsLoaded, setQuestionsLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch("/data/mockExamQuestions.json")
+      .then(res => res.json())
+      .then(data => {
+        setAllQuestions(data);
+        setQuestionsLoaded(true);
+      })
+      .catch(() => setQuestionsLoaded(true));
+  }, []);
+
   const certQuestions = allQuestions.filter((q: any) => q.certificationId === certId);
 
   // Shuffle and select questions for this exam session
-  const [examQuestions] = useState(() => {
-    const shuffled = [...certQuestions].sort(() => Math.random() - 0.5);
-    const count = examConfig?.totalQuestions || Math.min(certQuestions.length, 20);
-    return shuffled.slice(0, count);
-  });
+  const [examQuestions, setExamQuestions] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (questionsLoaded && certQuestions.length > 0 && examQuestions.length === 0) {
+      const shuffled = [...certQuestions].sort(() => Math.random() - 0.5);
+      const count = examConfig?.totalQuestions || Math.min(certQuestions.length, 20);
+      setExamQuestions(shuffled.slice(0, count));
+    }
+  }, [questionsLoaded, certQuestions.length]);
 
   const [examState, setExamState] = useState<ExamState>("intro");
   const [currentIndex, setCurrentIndex] = useState(0);
