@@ -35,18 +35,46 @@ function resolveI18n(val: any, lang: string): string {
   return String(val);
 }
 
-// Markdown-like content renderer for a single page
+// Smart content renderer with heuristic structure detection
 function PageContent({ content, lang }: { content: string; lang: string }) {
   const lines = content.split("\n");
   const elements: React.ReactNode[] = [];
   let inCodeBlock = false;
   let codeLines: string[] = [];
   let codeKey = 0;
-  let isFirstTextLine = true; // Track first non-empty text line as section title
+  let isFirstTextLine = true;
+
+  // Heuristic helpers
+  const isShortLine = (line: string) => line.trim().length > 0 && line.trim().length <= 60;
+  const isMetaLine = (line: string) => /^(Estimated time|Instructions|Duration|Time|Note|Tip|Warning|Important|Example|Exercise|Step \d):/i.test(line.trim());
+  const isSectionHeading = (line: string, nextLine: string | undefined) => {
+    const trimmed = line.trim();
+    if (trimmed.length === 0) return false;
+    if (trimmed.length > 80) return false;
+    // Short line (< 50 chars) that doesn't end with punctuation and is followed by empty line or longer text
+    if (trimmed.length <= 50 && !/[.,:;!?)]$/.test(trimmed)) {
+      if (!nextLine || nextLine.trim() === "" || nextLine.trim().length > trimmed.length) {
+        return true;
+      }
+    }
+    return false;
+  };
+  const isImplicitListItem = (line: string, prevLines: string[]) => {
+    const trimmed = line.trim();
+    // Detect lines that are part of a list pattern: short, similar structure, in sequence
+    if (trimmed.length > 0 && trimmed.length <= 80) {
+      // Check if it starts with a parenthetical pattern like "Clear product description (what...)"
+      if (/^[A-Z][^.]*\([^)]+\)$/.test(trimmed)) return true;
+    }
+    return false;
+  };
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
+    const nextLine = i < lines.length - 1 ? lines[i + 1] : undefined;
+    const prevLine = i > 0 ? lines[i - 1] : undefined;
 
+    // Code blocks
     if (line.startsWith("```")) {
       if (inCodeBlock) {
         elements.push(
@@ -61,12 +89,9 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
       }
       continue;
     }
+    if (inCodeBlock) { codeLines.push(line); continue; }
 
-    if (inCodeBlock) {
-      codeLines.push(line);
-      continue;
-    }
-
+    // Markdown headings
     if (line.startsWith("### ")) {
       elements.push(<h4 key={i} className="text-base font-semibold mt-5 mb-2 text-foreground">{line.replace("### ", "")}</h4>);
     } else if (line.startsWith("## ")) {
@@ -74,7 +99,7 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     } else if (line.startsWith("# ")) {
       elements.push(<h2 key={i} className="text-xl font-bold mt-6 mb-3 text-foreground">{line.replace("# ", "")}</h2>);
     } else if (line.match(/^\*\*.*\*\*$/)) {
-      // Sub-section title (e.g. "**Property 1**") — styled as integrated subtitle
+      // Bold-only line as sub-section title
       elements.push(
         <h4 key={i} className="text-base font-bold mt-8 mb-2 text-foreground border-l-3 border-primary pl-3">
           {line.replace(/\*\*/g, "")}
@@ -82,34 +107,57 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
       );
     } else if (line.startsWith("- ") || line.startsWith("• ")) {
       elements.push(
-        <li key={i} className="text-sm ml-4 mb-1 leading-relaxed list-disc text-muted-foreground">
+        <li key={i} className="text-sm ml-5 mb-1.5 leading-relaxed list-disc text-muted-foreground">
           {renderInlineFormatting(line.replace(/^[-•]\s*/, ""))}
         </li>
       );
     } else if (line.match(/^\d+\.\s/)) {
       elements.push(
-        <li key={i} className="text-sm ml-4 mb-1 leading-relaxed list-decimal text-muted-foreground">
+        <li key={i} className="text-sm ml-5 mb-1.5 leading-relaxed list-decimal text-muted-foreground">
           {renderInlineFormatting(line.replace(/^\d+\.\s*/, ""))}
         </li>
       );
     } else if (line.trim() === "") {
-      elements.push(<div key={i} className="h-3" />);
+      elements.push(<div key={i} className="h-2" />);
+    } else if (isMetaLine(line)) {
+      // Metadata line (e.g. "Estimated time: 10 minutes", "Instructions:")
+      const [label, ...rest] = line.split(":");
+      const value = rest.join(":").trim();
+      elements.push(
+        <div key={i} className="flex items-baseline gap-2 mt-3 mb-2 py-1.5 px-3 rounded-lg bg-primary/5 border border-primary/10">
+          <span className="text-xs font-bold uppercase tracking-wider text-primary">{label.trim()}:</span>
+          {value && <span className="text-sm text-foreground">{value}</span>}
+        </div>
+      );
+    } else if (isFirstTextLine) {
+      // First text line = main title
+      isFirstTextLine = false;
+      elements.push(
+        <h3 key={i} className="text-lg font-bold mb-4 pb-3 border-b-2 border-primary/30 text-foreground">
+          {renderInlineFormatting(line)}
+        </h3>
+      );
+    } else if (isSectionHeading(line, nextLine) && (prevLine?.trim() === "" || i === 1)) {
+      // Heuristic: short line after empty line, not ending with punctuation = sub-heading
+      elements.push(
+        <h4 key={i} className="text-base font-bold mt-6 mb-2 text-foreground">
+          {renderInlineFormatting(line)}
+        </h4>
+      );
+    } else if (isImplicitListItem(line, lines.slice(Math.max(0, i - 3), i))) {
+      // Implicit list item (short line with parenthetical explanation)
+      elements.push(
+        <li key={i} className="text-sm ml-5 mb-1.5 leading-relaxed list-disc text-muted-foreground">
+          {renderInlineFormatting(line)}
+        </li>
+      );
     } else {
-      // First non-empty text line is rendered as a prominent section title
-      if (isFirstTextLine) {
-        isFirstTextLine = false;
-        elements.push(
-          <h3 key={i} className="text-lg font-bold mb-4 pb-3 border-b border-border text-foreground">
-            {renderInlineFormatting(line)}
-          </h3>
-        );
-      } else {
-        elements.push(
-          <p key={i} className="text-sm leading-relaxed mb-2 text-muted-foreground">
-            {renderInlineFormatting(line)}
-          </p>
-        );
-      }
+      // Regular paragraph
+      elements.push(
+        <p key={i} className="text-sm leading-relaxed mb-2 text-muted-foreground">
+          {renderInlineFormatting(line)}
+        </p>
+      );
     }
   }
 
@@ -353,10 +401,14 @@ function LessonViewer({
   toggleVideoComplete: (id: string) => void;
   getYouTubeThumbnail: (id: string) => string;
 }) {
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
   const [showQuiz, setShowQuiz] = useState(false);
-  const pages = lesson.pages?.[lang] || lesson.pages?.en || [];
-  const totalPages = pages.length || 1;
+  const textPages = lesson.pages?.[lang] || lesson.pages?.en || [];
+  // Video is step 0 if there are matched videos, then text pages follow
+  const hasVideo = matchedVideos.length > 0;
+  const totalSteps = (hasVideo ? 1 : 0) + textPages.length;
+  const isVideoStep = hasVideo && currentStep === 0;
+  const textPageIndex = hasVideo ? currentStep - 1 : currentStep;
 
   // Detect if content is displayed in English (either no fr translation, or fr is same as en)
   const isEnglishContent = (() => {
@@ -367,19 +419,19 @@ function LessonViewer({
   })();
 
   useEffect(() => {
-    setCurrentPage(0);
+    setCurrentStep(0);
     setShowQuiz(false);
   }, [lesson.id]);
 
-  const isLastPage = currentPage >= totalPages - 1;
+  const isLastStep = currentStep >= totalSteps - 1;
 
   return (
     <div className="mt-2">
       {!showQuiz ? (
         <>
-          {/* Video step - displayed fully as part of the lesson flow */}
-          {matchedVideos.length > 0 && (
-            <div className="mb-6 space-y-4">
+          {/* Step content: either video or text page */}
+          {isVideoStep ? (
+            <div className="space-y-4">
               {matchedVideos.map((video: any) => {
                 const videoKey = video.youtube_id || video.videoId || video.title;
                 const isVideoComplete = completedVideos.has(videoKey);
@@ -409,13 +461,16 @@ function LessonViewer({
                         <span className="font-medium text-sm text-foreground">
                           {video.title}
                         </span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 font-semibold uppercase">
+                          {t({ en: "Video Step", fr: "Étape vidéo" })}
+                        </span>
                       </div>
                       <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">
                         <Clock className="w-3 h-3" />
                         {duration}
                       </span>
                     </div>
-                    {/* Video player - always visible */}
+                    {/* Video player */}
                     <div className="px-3 pt-3 pb-3">
                       {!isPlaying ? (
                         <div
@@ -483,54 +538,56 @@ function LessonViewer({
                 );
               })}
             </div>
+          ) : (
+            <>
+              {/* Language badge */}
+              {isEnglishContent && (
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 font-semibold uppercase tracking-wider">
+                    EN
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {t({ en: "Content in English", fr: "Contenu en anglais" })}
+                  </span>
+                </div>
+              )}
+
+              {/* Text page content */}
+              <div className="rounded-xl p-6 min-h-[200px] bg-secondary/30">
+                {textPages[textPageIndex] ? (
+                  <PageContent content={textPages[textPageIndex]} lang={lang} />
+                ) : (
+                  <p className="text-sm italic text-muted-foreground">
+                    {t({ en: "No content available", fr: "Aucun contenu disponible" })}
+                  </p>
+                )}
+              </div>
+            </>
           )}
 
-          {/* Language badge */}
-          {isEnglishContent && (
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 font-semibold uppercase tracking-wider">
-                EN
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {t({ en: "Content in English", fr: "Contenu en anglais" })}
-              </span>
-            </div>
-          )}
-
-          {/* Page content */}
-          <div className="rounded-xl p-6 min-h-[200px] bg-secondary/30">
-            {pages[currentPage] ? (
-              <PageContent content={pages[currentPage]} lang={lang} />
-            ) : (
-              <p className="text-sm italic text-muted-foreground">
-                {t({ en: "No content available", fr: "Aucun contenu disponible" })}
-              </p>
-            )}
-          </div>
-
-          {/* Page navigation */}
+          {/* Step navigation */}
           <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentPage((p) => p - 1)}
-              disabled={currentPage === 0}
+              onClick={() => setCurrentStep((p) => p - 1)}
+              disabled={currentStep === 0}
               className="gap-1.5"
             >
               <ChevronLeft className="w-4 h-4" />
               {t({ en: "Previous", fr: "Précédent" })}
             </Button>
 
-            {/* Page indicator */}
+            {/* Step indicator */}
             <div className="flex items-center gap-2">
               <div className="flex gap-1">
-                {Array.from({ length: totalPages }).map((_, i) => (
+                {Array.from({ length: totalSteps }).map((_, i) => (
                   <div
                     key={i}
                     className={`w-2 h-2 rounded-full transition-all ${
-                      i === currentPage
-                        ? "bg-primary w-4"
-                        : i < currentPage
+                      i === currentStep
+                        ? (i === 0 && hasVideo ? "bg-red-500 w-4" : "bg-primary w-4")
+                        : i < currentStep
                         ? "bg-primary/50"
                         : "bg-secondary"
                     }`}
@@ -538,14 +595,14 @@ function LessonViewer({
                 ))}
               </div>
               <span className="text-xs ml-2 text-muted-foreground">
-                {currentPage + 1}/{totalPages}
+                {currentStep + 1}/{totalSteps}
               </span>
             </div>
 
-            {!isLastPage ? (
+            {!isLastStep ? (
               <Button
                 size="sm"
-                onClick={() => setCurrentPage((p) => p + 1)}
+                onClick={() => setCurrentStep((p) => p + 1)}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground gap-1.5"
               >
                 {t({ en: "Next", fr: "Suivant" })}

@@ -417,3 +417,11 @@
 ## Vidéo comme étape du cours (non clipsée)
 - [x] Afficher la vidéo directement (non réduite/clipsée) comme une étape à part entière dans le flux de la leçon
 - [x] Supprimer le mécanisme expand/collapse sur les vidéos — elles doivent être visibles par défaut
+
+## Vidéo comme page/étape dans la pagination
+- [x] La vidéo doit être une page dans la séquence de navigation (ex: Page 1 = Vidéo, Page 2 = Contenu), pas un élément fixe au-dessus
+- [x] Quand on passe à la page suivante, la vidéo disparaît (c'est une étape comme les autres)
+- [ ] Vérifier que les vidéos sont correctement associées aux bons cours
+
+## Formatage du contenu des leçons
+- [x] Améliorer le composant PageContent avec heuristiques intelligentes (détection auto titres, métadonnées, listes implicites, sous-sections)
