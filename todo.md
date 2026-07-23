@@ -413,3 +413,7 @@
 ## Indicateur sidebar + Résumé progression
 - [x] Ajouter icône caméra dans la sidebar pour les leçons ayant une vidéo associée
 - [x] Ajouter un résumé de progression global en haut du cours (X/Y leçons + X/Y vidéos terminées, barres animées)
+
+## Vidéo comme étape du cours (non clipsée)
+- [x] Afficher la vidéo directement (non réduite/clipsée) comme une étape à part entière dans le flux de la leçon
+- [x] Supprimer le mécanisme expand/collapse sur les vidéos — elles doivent être visibles par défaut

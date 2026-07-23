@@ -377,13 +377,12 @@ function LessonViewer({
     <div className="mt-2">
       {!showQuiz ? (
         <>
-          {/* Matched video(s) for this lesson */}
+          {/* Video step - displayed fully as part of the lesson flow */}
           {matchedVideos.length > 0 && (
-            <div className="mb-4 space-y-3">
+            <div className="mb-6 space-y-4">
               {matchedVideos.map((video: any) => {
                 const videoKey = video.youtube_id || video.videoId || video.title;
                 const isVideoComplete = completedVideos.has(videoKey);
-                const isExpanded = expandedVideos.has(videoKey);
                 const isPlaying = playingVideos.has(videoKey);
                 const durationSec = video.duration_seconds;
                 const duration = durationSec
@@ -399,10 +398,8 @@ function LessonViewer({
                         : "border-border bg-card"
                     }`}
                   >
-                    <button
-                      onClick={() => toggleVideo(videoKey)}
-                      className="w-full flex items-center justify-between p-3 transition-colors text-left hover:bg-secondary/50"
-                    >
+                    {/* Video header */}
+                    <div className="flex items-center justify-between p-3 border-b border-border/50">
                       <div className="flex items-center gap-3">
                         {isVideoComplete ? (
                           <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
@@ -413,83 +410,75 @@ function LessonViewer({
                           {video.title}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">
-                          <Clock className="w-3 h-3" />
-                          {duration}
-                        </span>
-                        {isExpanded ? (
-                          <ChevronLeft className="w-4 h-4 text-muted-foreground rotate-90" />
-                        ) : (
-                          <ChevronRight className="w-4 h-4 text-muted-foreground rotate-90" />
-                        )}
-                      </div>
-                    </button>
-                    {isExpanded && (
-                      <div className="px-3 pb-3">
-                        {!isPlaying ? (
-                          <div
-                            className="aspect-video rounded-lg overflow-hidden bg-black relative cursor-pointer group"
-                            onClick={() => startPlayingVideo(videoKey)}
-                          >
-                            <img
-                              src={getYouTubeThumbnail(video.youtube_id || "")}
-                              alt={video.title}
-                              className="w-full h-full object-cover"
-                              loading="lazy"
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
-                              <div className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                <PlayCircle className="w-7 h-7 text-white fill-white" />
-                              </div>
-                            </div>
-                            <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/80 text-white text-xs font-medium">
-                              {duration}
+                      <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        {duration}
+                      </span>
+                    </div>
+                    {/* Video player - always visible */}
+                    <div className="px-3 pt-3 pb-3">
+                      {!isPlaying ? (
+                        <div
+                          className="aspect-video rounded-lg overflow-hidden bg-black relative cursor-pointer group"
+                          onClick={() => startPlayingVideo(videoKey)}
+                        >
+                          <img
+                            src={getYouTubeThumbnail(video.youtube_id || "")}
+                            alt={video.title}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
+                            <div className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                              <PlayCircle className="w-7 h-7 text-white fill-white" />
                             </div>
                           </div>
-                        ) : (
-                          <div className="aspect-video rounded-lg overflow-hidden bg-black">
-                            <iframe
-                              src={`https://www.youtube-nocookie.com/embed/${video.youtube_id}?rel=0&modestbranding=1&autoplay=1`}
-                              title={video.title}
-                              className="w-full h-full"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                              referrerPolicy="no-referrer-when-downgrade"
-                              allowFullScreen
-                            />
+                          <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/80 text-white text-xs font-medium">
+                            {duration}
                           </div>
-                        )}
-                        <div className="flex items-center justify-between mt-2">
-                          <Button
-                            variant={isVideoComplete ? "outline" : "default"}
-                            size="sm"
-                            onClick={() => toggleVideoComplete(videoKey)}
-                            className={`gap-1.5 text-xs ${
-                              isVideoComplete
-                                ? "border-emerald-300 text-emerald-700 dark:border-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
-                                : "bg-primary hover:bg-primary/90 text-primary-foreground"
-                            }`}
-                          >
-                            <Check className="w-3.5 h-3.5" />
-                            {isVideoComplete
-                              ? t({ en: "Completed", fr: "Terminée" })
-                              : t({ en: "Mark as watched", fr: "Marquer comme vue" })
-                            }
-                          </Button>
-                          {video.watch_url && (
-                            <a
-                              href={video.watch_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
-                            >
-                              <PlayCircle className="w-3.5 h-3.5" />
-                              {t({ en: "Watch on YouTube", fr: "Regarder sur YouTube" })}
-                            </a>
-                          )}
                         </div>
+                      ) : (
+                        <div className="aspect-video rounded-lg overflow-hidden bg-black">
+                          <iframe
+                            src={`https://www.youtube-nocookie.com/embed/${video.youtube_id}?rel=0&modestbranding=1&autoplay=1`}
+                            title={video.title}
+                            className="w-full h-full"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerPolicy="no-referrer-when-downgrade"
+                            allowFullScreen
+                          />
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between mt-3">
+                        <Button
+                          variant={isVideoComplete ? "outline" : "default"}
+                          size="sm"
+                          onClick={() => toggleVideoComplete(videoKey)}
+                          className={`gap-1.5 text-xs ${
+                            isVideoComplete
+                              ? "border-emerald-300 text-emerald-700 dark:border-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+                              : "bg-primary hover:bg-primary/90 text-primary-foreground"
+                          }`}
+                        >
+                          <Check className="w-3.5 h-3.5" />
+                          {isVideoComplete
+                            ? t({ en: "Completed", fr: "Terminée" })
+                            : t({ en: "Mark as watched", fr: "Marquer comme vue" })
+                          }
+                        </Button>
+                        {video.watch_url && (
+                          <a
+                            href={video.watch_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
+                          >
+                            <PlayCircle className="w-3.5 h-3.5" />
+                            {t({ en: "Watch on YouTube", fr: "Regarder sur YouTube" })}
+                          </a>
+                        )}
                       </div>
-                    )}
+                    </div>
                   </div>
                 );
               })}
