@@ -8,7 +8,7 @@ import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
-  BookOpen, Lock, LogIn, ArrowRight, Moon, Sun, Menu, X
+  BookOpen, Lock, LogIn, ArrowRight, Moon, Sun, Menu, X, Clock, Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -552,6 +552,13 @@ export default function TrainingCourse() {
   const { theme, toggleTheme } = useTheme();
   const { isLessonComplete, markLessonComplete, getNextUnlockedLesson, isCourseComplete } = useTrainingProgress();
   const [expandedVideos, setExpandedVideos] = useState<Set<string>>(new Set());
+  const [playingVideos, setPlayingVideos] = useState<Set<string>>(new Set());
+  const [completedVideos, setCompletedVideos] = useState<Set<string>>(() => {
+    try {
+      const stored = localStorage.getItem(`video_progress_${courseId}`);
+      return stored ? new Set(JSON.parse(stored)) : new Set();
+    } catch { return new Set(); }
+  });
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const course = trainingIndex.courses.find((c: any) => c.id === courseId);
@@ -642,6 +649,26 @@ export default function TrainingCourse() {
       else next.add(videoId);
       return next;
     });
+  };
+
+  const startPlayingVideo = (videoId: string) => {
+    setPlayingVideos((prev) => new Set(prev).add(videoId));
+  };
+
+  const toggleVideoComplete = (videoId: string) => {
+    setCompletedVideos((prev) => {
+      const next = new Set(prev);
+      if (next.has(videoId)) next.delete(videoId);
+      else next.add(videoId);
+      // Persist to localStorage
+      localStorage.setItem(`video_progress_${courseId}`, JSON.stringify(Array.from(next)));
+      return next;
+    });
+  };
+
+  // Get YouTube thumbnail URL from youtube_id
+  const getYouTubeThumbnail = (youtubeId: string) => {
+    return `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`;
   };
 
   const handleMarkLessonComplete = (lessonIndex: number) => {
@@ -746,67 +773,150 @@ export default function TrainingCourse() {
           {/* Videos Section */}
           {videos.length > 0 && (
             <motion.div variants={fadeInUp} className="bg-card rounded-2xl border border-border p-6 mb-6 shadow-sm">
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-foreground">
-                <PlayCircle className="w-5 h-5 text-primary" />
-                {t({ en: "Video Lessons", fr: "Leçons vidéo" })}
-              </h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold flex items-center gap-2 text-foreground">
+                  <PlayCircle className="w-5 h-5 text-primary" />
+                  {t({ en: "Video Lessons", fr: "Leçons vidéo" })}
+                </h2>
+                <span className="text-xs text-muted-foreground">
+                  {completedVideos.size}/{videos.length} {t({ en: "watched", fr: "vues" })}
+                </span>
+              </div>
               <div className="space-y-3">
-                {videos.map((video: any) => (
-                  <div key={video.videoId || video.title} className="border border-border rounded-xl overflow-hidden">
-                    <button
-                      onClick={() => toggleVideo(video.videoId || video.title)}
-                      className="w-full flex items-center justify-between p-4 transition-colors text-left hover:bg-secondary/50"
+                {videos.map((video: any) => {
+                  const videoKey = video.youtube_id || video.videoId || video.title;
+                  const isVideoComplete = completedVideos.has(videoKey);
+                  const isExpanded = expandedVideos.has(videoKey);
+                  const isPlaying = playingVideos.has(videoKey);
+                  const duration = video.duration || null;
+
+                  return (
+                    <div
+                      key={videoKey}
+                      className={`border rounded-xl overflow-hidden transition-colors ${
+                        isVideoComplete
+                          ? "border-primary/30 bg-primary/5"
+                          : "border-border"
+                      }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <PlayCircle className="w-5 h-5 text-red-500 shrink-0" />
-                        <span className="font-medium text-sm text-foreground">{video.title}</span>
-                      </div>
-                      {expandedVideos.has(video.videoId || video.title) ? (
-                        <ChevronLeft className="w-4 h-4 text-muted-foreground rotate-90" />
-                      ) : (
-                        <ChevronRight className="w-4 h-4 text-muted-foreground rotate-90" />
-                      )}
-                    </button>
-                    {expandedVideos.has(video.videoId || video.title) && (
-                      <div className="px-4 pb-4">
-                        <div className="aspect-video rounded-lg overflow-hidden bg-black">
-                          <iframe
-                            src={(() => {
-                              // Convert youtube.com/embed to youtube-nocookie.com/embed for privacy & unblocking
-                              let url = video.embedUrl || video.embed_url || "";
-                              url = url.replace("www.youtube.com/embed", "www.youtube-nocookie.com/embed");
-                              // Add origin param if not present
-                              if (url && !url.includes("?")) {
-                                url += "?rel=0&modestbranding=1";
-                              } else if (url && !url.includes("rel=")) {
-                                url += "&rel=0&modestbranding=1";
-                              }
-                              return url;
-                            })()}
-                            title={video.title}
-                            className="w-full h-full"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            allowFullScreen
-                            sandbox="allow-same-origin allow-scripts allow-popups allow-presentation"
-                          />
+                      <button
+                        onClick={() => toggleVideo(videoKey)}
+                        className="w-full flex items-center justify-between p-4 transition-colors text-left hover:bg-secondary/50"
+                      >
+                        <div className="flex items-center gap-3">
+                          {isVideoComplete ? (
+                            <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+                          ) : (
+                            <PlayCircle className="w-5 h-5 text-red-500 shrink-0" />
+                          )}
+                          <span className={`font-medium text-sm ${isVideoComplete ? "text-foreground" : "text-foreground"}`}>
+                            {video.title}
+                          </span>
                         </div>
-                        {/* Fallback link if embed is blocked */}
-                        {video.watch_url && (
-                          <a
-                            href={video.watch_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-2 inline-flex items-center gap-1.5 text-xs text-primary hover:underline"
-                          >
-                            <PlayCircle className="w-3.5 h-3.5" />
-                            {t({ en: "Watch on YouTube", fr: "Regarder sur YouTube" })}
-                          </a>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                        <div className="flex items-center gap-2">
+                          {/* Duration badge */}
+                          {duration && (
+                            <span className="hidden sm:inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">
+                              <Clock className="w-3 h-3" />
+                              {duration}
+                            </span>
+                          )}
+                          {!duration && (
+                            <span className="hidden sm:inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">
+                              <Clock className="w-3 h-3" />
+                              ~5 min
+                            </span>
+                          )}
+                          {isExpanded ? (
+                            <ChevronLeft className="w-4 h-4 text-muted-foreground rotate-90" />
+                          ) : (
+                            <ChevronRight className="w-4 h-4 text-muted-foreground rotate-90" />
+                          )}
+                        </div>
+                      </button>
+                      {isExpanded && (
+                        <div className="px-4 pb-4">
+                          {/* Lazy loading: show thumbnail until user clicks play */}
+                          {!isPlaying ? (
+                            <div
+                              className="aspect-video rounded-lg overflow-hidden bg-black relative cursor-pointer group"
+                              onClick={() => startPlayingVideo(videoKey)}
+                            >
+                              <img
+                                src={getYouTubeThumbnail(video.youtube_id || "")}
+                                alt={video.title}
+                                className="w-full h-full object-cover"
+                                loading="lazy"
+                              />
+                              {/* Play overlay */}
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
+                                <div className="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                  <PlayCircle className="w-8 h-8 text-white fill-white" />
+                                </div>
+                              </div>
+                              {/* Duration badge on thumbnail */}
+                              <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/80 text-white text-xs font-medium">
+                                {duration || "~5 min"}
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="aspect-video rounded-lg overflow-hidden bg-black">
+                              <iframe
+                                src={(() => {
+                                  let url = video.embedUrl || video.embed_url || "";
+                                  url = url.replace("www.youtube.com/embed", "www.youtube-nocookie.com/embed");
+                                  if (url && !url.includes("?")) {
+                                    url += "?rel=0&modestbranding=1&autoplay=1";
+                                  } else if (url) {
+                                    url += "&rel=0&modestbranding=1&autoplay=1";
+                                  }
+                                  return url;
+                                })()}
+                                title={video.title}
+                                className="w-full h-full"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerPolicy="strict-origin-when-cross-origin"
+                                allowFullScreen
+                                sandbox="allow-same-origin allow-scripts allow-popups allow-presentation"
+                              />
+                            </div>
+                          )}
+
+                          {/* Action bar: mark complete + YouTube link */}
+                          <div className="flex items-center justify-between mt-3">
+                            <Button
+                              variant={isVideoComplete ? "outline" : "default"}
+                              size="sm"
+                              onClick={() => toggleVideoComplete(videoKey)}
+                              className={`gap-1.5 text-xs ${
+                                isVideoComplete
+                                  ? "border-emerald-300 text-emerald-700 dark:border-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+                                  : "bg-primary hover:bg-primary/90 text-primary-foreground"
+                              }`}
+                            >
+                              <Check className="w-3.5 h-3.5" />
+                              {isVideoComplete
+                                ? t({ en: "Completed", fr: "Terminée" })
+                                : t({ en: "Mark as watched", fr: "Marquer comme vue" })
+                              }
+                            </Button>
+                            {video.watch_url && (
+                              <a
+                                href={video.watch_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
+                              >
+                                <PlayCircle className="w-3.5 h-3.5" />
+                                {t({ en: "Watch on YouTube", fr: "Regarder sur YouTube" })}
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </motion.div>
           )}

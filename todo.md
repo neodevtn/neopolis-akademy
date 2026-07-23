@@ -388,3 +388,8 @@
 - [x] Augmenter l'espacement entre les sections de contenu (intro vs properties)
 - [x] Supprimer la liste redondante des leçons dans la zone principale (garder uniquement la sidebar + leçon active)
 - [x] Fix vidéo YouTube bloquée : utiliser youtube-nocookie.com, ajouter sandbox/referrerPolicy, lien fallback "Regarder sur YouTube"
+
+## Améliorations vidéos
+- [x] Badge durée sur chaque vidéo (~5 min par défaut, personnalisable via champ duration)
+- [x] Bouton interactif "Marquer comme vue" pour chaque vidéo (persisté localStorage)
+- [x] Lazy loading avec miniature YouTube (thumbnail mqdefault) avant chargement de l'iframe
