@@ -403,3 +403,9 @@
 - [x] Créer procédures tRPC pour get/set video progress (videoProgress.get + videoProgress.toggle)
 - [x] Mettre à jour le frontend pour utiliser les durées réelles et la synchro serveur (fallback localStorage si non-auth)
 - [x] Ajouter un filtre rapide (Toutes / Non vues / Vues) au-dessus de la liste vidéo
+
+## Intégration vidéos dans le flux des leçons
+- [x] Supprimer la section vidéo séparée en haut de page
+- [x] Intégrer chaque vidéo directement dans la leçon correspondante (matching par titre)
+- [x] Afficher la vidéo en haut de la leçon avant le contenu textuel
+- [x] Conserver le badge durée, le bouton marquer comme vue, et le lazy loading thumbnail
