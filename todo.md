@@ -354,3 +354,8 @@
 - [x] Améliorer le rendu du contenu (titres, listes, code blocks, bold/italic/inline code)
 - [x] Leçon active mise en évidence (bordure verte, badge 'En cours')
 - [x] Leçons verrouillées/terminées clairement identifiées visuellement
+
+## Améliorations UX Formation v4
+- [x] Sidebar fixe à gauche avec état d'avancement des leçons (terminé/en cours/verrouillé)
+- [x] Quiz interactif de validation en fin de leçon (avant bouton Terminer)
+- [x] Mode sombre pour l'espace formation (toggle dark/light)
