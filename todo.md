@@ -441,3 +441,7 @@
 - [x] Afficher un résumé détaillé de chaque question (question, réponse donnée, bonne réponse, explication) avant le bouton retry
 - [x] Coder les réponses en couleur (vert correct, rouge incorrect) avec icônes (✓/✗)
 - [x] Ajouter un bouton "J'ai compris, réessayer" en bas du résumé + bouton "Réessayer directement" pour skip
+
+## Indicateur progression par domaine + Lien "Revoir cette section"
+- [x] Ajouter un indicateur visuel de progression par domaine en haut de l'écran de révision (barres animées colorées rouge/vert avec score par domaine + message "Concentrez-vous sur les domaines en rouge")
+- [x] Intégrer un lien "Revoir cette section" sous chaque question ratée (matching intelligent domaine→cours par mots-clés, lien avec icône BookOpen)

@@ -202,12 +202,14 @@ function renderInlineFormatting(text: string): React.ReactNode {
 // Quiz component for lesson validation with visual feedback and retry
 function LessonQuiz({
   certId,
+  courseId,
   lessonIndex,
   lang,
   t,
   onPass,
 }: {
   certId: string;
+  courseId: string;
   lessonIndex: number;
   lang: string;
   t: (obj: { en: string; fr: string }) => string;
@@ -374,18 +376,84 @@ function LessonQuiz({
                   <ChevronLeft className="w-5 h-5" />
                 </button>
                 <h3 className="text-sm font-bold uppercase tracking-wide text-primary">
-                  {t({ en: "Error Review", fr: "R\u00e9vision des erreurs" })}
+                  {t({ en: "Error Review", fr: "Révision des erreurs" })}
                 </h3>
                 <span className="text-xs ml-auto px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 font-medium">
                   {answers.filter(a => !a.correct).length} {t({ en: "error(s)", fr: "erreur(s)" })}
                 </span>
               </div>
 
+              {/* Domain progress indicator */}
+              {(() => {
+                const domainStats: Record<string, { total: number; correct: number }> = {};
+                questions.forEach((question, idx) => {
+                  const answer = answers[idx];
+                  if (!answer) return;
+                  const domainName = resolveI18n(question.domain, lang);
+                  if (!domainStats[domainName]) domainStats[domainName] = { total: 0, correct: 0 };
+                  domainStats[domainName].total++;
+                  if (answer.correct) domainStats[domainName].correct++;
+                });
+                return (
+                  <motion.div
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-5 p-3 rounded-xl bg-secondary/50 border border-border"
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2.5">
+                      {t({ en: "Performance by domain", fr: "Performance par domaine" })}
+                    </p>
+                    <div className="space-y-2">
+                      {Object.entries(domainStats).map(([domain, stats]) => {
+                        const pct = Math.round((stats.correct / stats.total) * 100);
+                        const isWeak = pct < 50;
+                        return (
+                          <div key={domain}>
+                            <div className="flex items-center justify-between mb-0.5">
+                              <span className={`text-xs font-medium ${isWeak ? "text-red-600 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"}`}>
+                                {domain}
+                              </span>
+                              <span className={`text-[10px] font-bold ${isWeak ? "text-red-500" : "text-emerald-500"}`}>
+                                {stats.correct}/{stats.total}
+                              </span>
+                            </div>
+                            <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
+                              <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: `${pct}%` }}
+                                transition={{ duration: 0.5, delay: 0.2 }}
+                                className={`h-full rounded-full ${isWeak ? "bg-red-400" : "bg-emerald-400"}`}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {Object.entries(domainStats).some(([, s]) => s.correct / s.total < 0.5) && (
+                      <p className="text-[10px] mt-2.5 text-red-600 dark:text-red-400 flex items-center gap-1">
+                        <Filter className="w-3 h-3" />
+                        {t({ en: "Focus on red domains to improve your score", fr: "Concentrez-vous sur les domaines en rouge pour am\u00e9liorer votre score" })}
+                      </p>
+                    )}
+                  </motion.div>
+                );
+              })()}
+
               <div className="space-y-4 mb-5">
                 {questions.map((question, idx) => {
                   const answer = answers[idx];
                   if (!answer) return null;
                   const isQCorrect = answer.correct;
+                  // Find matching course for this domain to build review link
+                  const domainEn = typeof question.domain === "object" ? question.domain.en : question.domain;
+                  const matchingCourse = (trainingIndex as any).courses.find((c: any) => {
+                    if (!c.id.startsWith(certId)) return false;
+                    const titleEn = typeof c.title === "object" ? c.title.en : c.title;
+                    // Match by keyword overlap between domain and course title
+                    const domainWords = domainEn.toLowerCase().split(/[\s,&]+/).filter((w: string) => w.length > 3);
+                    const titleLower = titleEn.toLowerCase();
+                    return domainWords.some((w: string) => titleLower.includes(w));
+                  });
                   return (
                     <motion.div
                       key={idx}
@@ -398,15 +466,20 @@ function LessonQuiz({
                           : "border-red-200 dark:border-red-800 bg-red-50/50 dark:bg-red-900/10"
                       }`}
                     >
-                      <div className="flex items-start gap-2 mb-2">
+                      <div className="flex items-start gap-2 mb-1">
                         <span className={`flex items-center justify-center w-6 h-6 rounded-full shrink-0 text-xs font-bold text-white ${
                           isQCorrect ? "bg-emerald-500" : "bg-red-400"
                         }`}>
                           {isQCorrect ? "\u2713" : "\u2717"}
                         </span>
-                        <p className="text-sm font-medium text-foreground flex-1">
-                          {resolveI18n(question.question, lang)}
-                        </p>
+                        <div className="flex-1">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-secondary text-muted-foreground">
+                            {resolveI18n(question.domain, lang)}
+                          </span>
+                          <p className="text-sm font-medium text-foreground mt-1">
+                            {resolveI18n(question.question, lang)}
+                          </p>
+                        </div>
                       </div>
 
                       <div className="ml-8 space-y-1.5">
@@ -431,6 +504,19 @@ function LessonQuiz({
                         <div className="ml-8 mt-2.5 p-2.5 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-xs text-blue-800 dark:text-blue-300 border border-blue-100 dark:border-blue-800">
                           <span className="font-semibold">{t({ en: "Explanation:", fr: "Explication :" })}</span>{" "}
                           {resolveI18n(question.explanation, lang)}
+                        </div>
+                      )}
+
+                      {!isQCorrect && matchingCourse && (
+                        <div className="ml-8 mt-2">
+                          <Link
+                            href={`/training/${certId}/${matchingCourse.id}`}
+                            className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors hover:underline"
+                          >
+                            <BookOpen className="w-3.5 h-3.5" />
+                            {t({ en: "Review this section", fr: "Revoir cette section" })}
+                            <ChevronRight className="w-3 h-3" />
+                          </Link>
                         </div>
                       )}
                     </motion.div>
@@ -643,6 +729,7 @@ function LessonViewer({
   lang,
   t,
   certId,
+  courseId,
   onComplete,
   matchedVideos,
   completedVideos,
@@ -659,6 +746,7 @@ function LessonViewer({
   lang: string;
   t: (obj: { en: string; fr: string }) => string;
   certId: string;
+  courseId: string;
   onComplete: () => void;
   matchedVideos: any[];
   completedVideos: Set<string>;
@@ -896,6 +984,7 @@ function LessonViewer({
       ) : (
         <LessonQuiz
           certId={certId}
+          courseId={courseId}
           lessonIndex={lessonIndex}
           lang={lang}
           t={t}
@@ -1426,6 +1515,7 @@ export default function TrainingCourse() {
                     lang={lang}
                     t={t}
                     certId={certId || ""}
+                    courseId={courseId || ""}
                     onComplete={() => handleMarkLessonComplete(displayedIndex)}
                     matchedVideos={lessonVideos}
                     completedVideos={completedVideos}
