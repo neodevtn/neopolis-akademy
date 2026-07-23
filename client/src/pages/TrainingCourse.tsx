@@ -221,8 +221,9 @@ function LessonQuiz({
   const [quizComplete, setQuizComplete] = useState(false);
   const [quizPassed, setQuizPassed] = useState(false);
   const [attemptCount, setAttemptCount] = useState(1);
-  const [answers, setAnswers] = useState<Array<{ correct: boolean; questionIdx: number }>>([]);
+  const [answers, setAnswers] = useState<Array<{ correct: boolean; questionIdx: number; selectedId: string | null }>>([]);
   const [shakeError, setShakeError] = useState(false);
+  const [showErrorReview, setShowErrorReview] = useState(false);
 
   useEffect(() => {
     fetch("/data/mockExamQuestions.json")
@@ -287,7 +288,7 @@ function LessonQuiz({
                 {t({ en: "Complete Lesson", fr: "Terminer la le\u00e7on" })}
               </Button>
             </>
-          ) : (
+          ) : !showErrorReview ? (
             <>
               <motion.div
                 initial={{ scale: 0 }}
@@ -303,7 +304,7 @@ function LessonQuiz({
                 {t({ en: `You got ${correctCount}/3. You need at least 2/3 to pass.`, fr: `Vous avez obtenu ${correctCount}/3. Il faut au moins 2/3 pour r\u00e9ussir.` })}
               </p>
               <p className="text-xs mb-4 text-muted-foreground/70">
-                {t({ en: `Attempt #${attemptCount} — Don't worry, you can try again with new questions!`, fr: `Tentative n\u00b0${attemptCount} \u2014 Pas de souci, vous pouvez r\u00e9essayer avec de nouvelles questions !` })}
+                {t({ en: `Attempt #${attemptCount}`, fr: `Tentative n\u00b0${attemptCount}` })}
               </p>
               {/* Visual score dots */}
               <div className="flex items-center justify-center gap-2 mb-5">
@@ -324,8 +325,17 @@ function LessonQuiz({
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: 0.3 }}
+                className="flex flex-col gap-2"
               >
+                <Button
+                  onClick={() => setShowErrorReview(true)}
+                  variant="outline"
+                  className="w-full gap-2 border-primary/30 text-primary hover:bg-primary/5"
+                >
+                  <Eye className="w-4 h-4" />
+                  {t({ en: "Review my errors", fr: "Revoir mes erreurs" })}
+                </Button>
                 <Button
                   onClick={() => {
                     setAttemptCount((c) => c + 1);
@@ -336,7 +346,7 @@ function LessonQuiz({
                     setQuizComplete(false);
                     setQuizPassed(false);
                     setAnswers([]);
-                    // Fetch fresh questions for retry
+                    setShowErrorReview(false);
                     fetch("/data/mockExamQuestions.json")
                       .then((r) => r.json())
                       .then((allQ: any[]) => {
@@ -349,10 +359,111 @@ function LessonQuiz({
                   className="bg-amber-600 hover:bg-amber-700 text-white gap-2 w-full py-3 text-base font-semibold"
                 >
                   <ArrowRight className="w-4 h-4" />
-                  {t({ en: `Retry (Attempt #${attemptCount + 1})`, fr: `R\u00e9essayer (Tentative n\u00b0${attemptCount + 1})` })}
+                  {t({ en: `Retry directly (Attempt #${attemptCount + 1})`, fr: `R\u00e9essayer directement (Tentative n\u00b0${attemptCount + 1})` })}
                 </Button>
               </motion.div>
             </>
+          ) : (
+            /* Detailed error review screen */
+            <div className="text-left">
+              <div className="flex items-center gap-2 mb-4">
+                <button
+                  onClick={() => setShowErrorReview(false)}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <h3 className="text-sm font-bold uppercase tracking-wide text-primary">
+                  {t({ en: "Error Review", fr: "R\u00e9vision des erreurs" })}
+                </h3>
+                <span className="text-xs ml-auto px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 font-medium">
+                  {answers.filter(a => !a.correct).length} {t({ en: "error(s)", fr: "erreur(s)" })}
+                </span>
+              </div>
+
+              <div className="space-y-4 mb-5">
+                {questions.map((question, idx) => {
+                  const answer = answers[idx];
+                  if (!answer) return null;
+                  const isQCorrect = answer.correct;
+                  return (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.1 }}
+                      className={`rounded-xl border p-4 ${
+                        isQCorrect
+                          ? "border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-900/10"
+                          : "border-red-200 dark:border-red-800 bg-red-50/50 dark:bg-red-900/10"
+                      }`}
+                    >
+                      <div className="flex items-start gap-2 mb-2">
+                        <span className={`flex items-center justify-center w-6 h-6 rounded-full shrink-0 text-xs font-bold text-white ${
+                          isQCorrect ? "bg-emerald-500" : "bg-red-400"
+                        }`}>
+                          {isQCorrect ? "\u2713" : "\u2717"}
+                        </span>
+                        <p className="text-sm font-medium text-foreground flex-1">
+                          {resolveI18n(question.question, lang)}
+                        </p>
+                      </div>
+
+                      <div className="ml-8 space-y-1.5">
+                        {question.choices.map((choice: any) => {
+                          const wasSelected = answer.selectedId === choice.id;
+                          const isCorrectChoice = question.correctChoiceIds.includes(choice.id);
+                          let style = "bg-secondary/50 text-muted-foreground";
+                          if (isCorrectChoice) style = "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700";
+                          else if (wasSelected && !isCorrectChoice) style = "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700 line-through";
+                          return (
+                            <div key={choice.id} className={`text-xs p-2 rounded-lg ${style}`}>
+                              <span className="font-bold mr-1.5">{choice.id.toUpperCase()}.</span>
+                              {resolveI18n(choice.text, lang)}
+                              {isCorrectChoice && <span className="ml-2 font-medium">\u2713</span>}
+                              {wasSelected && !isCorrectChoice && <span className="ml-2 font-medium">\u2717</span>}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {!isQCorrect && question.explanation && (
+                        <div className="ml-8 mt-2.5 p-2.5 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-xs text-blue-800 dark:text-blue-300 border border-blue-100 dark:border-blue-800">
+                          <span className="font-semibold">{t({ en: "Explanation:", fr: "Explication :" })}</span>{" "}
+                          {resolveI18n(question.explanation, lang)}
+                        </div>
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              <Button
+                onClick={() => {
+                  setAttemptCount((c) => c + 1);
+                  setCurrentQ(0);
+                  setSelected(null);
+                  setShowResult(false);
+                  setCorrectCount(0);
+                  setQuizComplete(false);
+                  setQuizPassed(false);
+                  setAnswers([]);
+                  setShowErrorReview(false);
+                  fetch("/data/mockExamQuestions.json")
+                    .then((r) => r.json())
+                    .then((allQ: any[]) => {
+                      const certQuestions = allQ.filter((q: any) => q.certificationId === certId);
+                      const shuffled = [...certQuestions].sort(() => Math.random() - 0.5);
+                      setQuestions(shuffled.slice(0, 3));
+                    })
+                    .catch(() => {});
+                }}
+                className="bg-amber-600 hover:bg-amber-700 text-white gap-2 w-full py-3 text-base font-semibold"
+              >
+                <ArrowRight className="w-4 h-4" />
+                {t({ en: `I understand, retry (Attempt #${attemptCount + 1})`, fr: `J'ai compris, r\u00e9essayer (Tentative n\u00b0${attemptCount + 1})` })}
+              </Button>
+            </div>
           )}
         </div>
       </motion.div>
@@ -504,7 +615,7 @@ function LessonQuiz({
             const correct = !!(selected && q.correctChoiceIds.includes(selected));
             const newCorrect = correctCount + (correct ? 1 : 0);
             setCorrectCount(newCorrect);
-            setAnswers((prev) => [...prev, { correct, questionIdx: currentQ }]);
+            setAnswers((prev) => [...prev, { correct, questionIdx: currentQ, selectedId: selected }]);
             if (currentQ >= 2) {
               setQuizComplete(true);
               setQuizPassed(newCorrect >= 2);

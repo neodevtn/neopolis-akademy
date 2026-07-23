@@ -436,3 +436,8 @@
 - [x] Améliorer l'écran d'échec avec un bouton retry plus visible (full-width, amber, numéro tentative) et résumé visuel (dots vert/rouge)
 - [x] Ajouter une animation de transition entre les tentatives (shake sur échec, spring scale sur succès, motion.div transitions)
 - [x] Afficher le nombre de tentatives effectuées (badge #N dans le header + mention sur l'écran résultat)
+
+## Écran résumé détaillé des erreurs avant retry
+- [x] Afficher un résumé détaillé de chaque question (question, réponse donnée, bonne réponse, explication) avant le bouton retry
+- [x] Coder les réponses en couleur (vert correct, rouge incorrect) avec icônes (✓/✗)
+- [x] Ajouter un bouton "J'ai compris, réessayer" en bas du résumé + bouton "Réessayer directement" pour skip
