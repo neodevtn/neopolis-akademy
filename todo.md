@@ -393,3 +393,6 @@
 - [x] Badge durée sur chaque vidéo (~5 min par défaut, personnalisable via champ duration)
 - [x] Bouton interactif "Marquer comme vue" pour chaque vidéo (persisté localStorage)
 - [x] Lazy loading avec miniature YouTube (thumbnail mqdefault) avant chargement de l'iframe
+
+## Barre de progression vidéo animée
+- [x] Ajouter une barre de progression visuelle animée dans la section vidéo qui se met à jour dynamiquement quand une vidéo est marquée comme vue

@@ -773,14 +773,35 @@ export default function TrainingCourse() {
           {/* Videos Section */}
           {videos.length > 0 && (
             <motion.div variants={fadeInUp} className="bg-card rounded-2xl border border-border p-6 mb-6 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-2">
                 <h2 className="text-lg font-semibold flex items-center gap-2 text-foreground">
                   <PlayCircle className="w-5 h-5 text-primary" />
                   {t({ en: "Video Lessons", fr: "Leçons vidéo" })}
                 </h2>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs font-medium text-muted-foreground">
                   {completedVideos.size}/{videos.length} {t({ en: "watched", fr: "vues" })}
                 </span>
+              </div>
+              {/* Animated progress bar */}
+              <div className="mb-4">
+                <div className="h-2 w-full rounded-full bg-secondary overflow-hidden">
+                  <motion.div
+                    className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-primary"
+                    initial={{ width: 0 }}
+                    animate={{ width: videos.length > 0 ? `${(completedVideos.size / videos.length) * 100}%` : "0%" }}
+                    transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+                  />
+                </div>
+                {completedVideos.size === videos.length && videos.length > 0 && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-1.5 flex items-center gap-1"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    {t({ en: "All videos watched!", fr: "Toutes les vidéos vues !" })}
+                  </motion.p>
+                )}
               </div>
               <div className="space-y-3">
                 {videos.map((video: any) => {
