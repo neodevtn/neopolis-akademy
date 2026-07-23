@@ -409,3 +409,7 @@
 - [x] Intégrer chaque vidéo directement dans la leçon correspondante (matching par titre)
 - [x] Afficher la vidéo en haut de la leçon avant le contenu textuel
 - [x] Conserver le badge durée, le bouton marquer comme vue, et le lazy loading thumbnail
+
+## Indicateur sidebar + Résumé progression
+- [x] Ajouter icône caméra dans la sidebar pour les leçons ayant une vidéo associée
+- [x] Ajouter un résumé de progression global en haut du cours (X/Y leçons + X/Y vidéos terminées, barres animées)

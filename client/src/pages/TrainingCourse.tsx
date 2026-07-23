@@ -8,7 +8,7 @@ import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
-  BookOpen, Lock, LogIn, ArrowRight, Moon, Sun, Menu, X, Clock, Check, Filter
+  BookOpen, Lock, LogIn, ArrowRight, Moon, Sun, Menu, X, Clock, Check, Filter, Video
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -597,6 +597,7 @@ function LessonSidebar({
   courseId,
   sidebarOpen,
   onClose,
+  videos,
 }: {
   lessons: any[];
   lang: string;
@@ -606,6 +607,7 @@ function LessonSidebar({
   courseId: string;
   sidebarOpen: boolean;
   onClose: () => void;
+  videos: any[];
 }) {
   return (
     <>
@@ -662,6 +664,10 @@ function LessonSidebar({
               statusIcon = <div className="w-4 h-4 rounded-full border-2 border-border shrink-0" />;
             }
 
+            // Check if this lesson has a matching video
+            const lessonTitle = resolveI18n(lesson.title, "en").toLowerCase().trim();
+            const hasVideo = videos.some((v: any) => (v.title || "").toLowerCase().trim() === lessonTitle);
+
             return (
               <div
                 key={lesson.id || idx}
@@ -671,6 +677,9 @@ function LessonSidebar({
                 <span className={`truncate font-medium ${textClass}`}>
                   {resolveI18n(lesson.title, lang)}
                 </span>
+                {hasVideo && (
+                  <Video className="w-3.5 h-3.5 text-red-400 shrink-0 ml-auto" />
+                )}
               </div>
             );
           })}
@@ -883,6 +892,7 @@ export default function TrainingCourse() {
             courseId={course.id}
             sidebarOpen={sidebarOpen}
             onClose={() => setSidebarOpen(false)}
+            videos={videos}
           />
         )}
 
@@ -905,22 +915,56 @@ export default function TrainingCourse() {
               </Link>
             </div>
             <h1 className="text-2xl font-bold mb-2 text-foreground">{t(course.title)}</h1>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              {totalLessons > 0 && <span>{totalLessons} {t({ en: "lessons", fr: "leçons" })}</span>}
-              {videos.length > 0 && <span>{videos.length} {t({ en: "videos", fr: "vidéos" })}</span>}
-            </div>
-            {/* Progress bar */}
-            {totalLessons > 0 && (
-              <div className="mt-4 flex items-center gap-3">
-                <div className="flex-1 rounded-full h-2.5 bg-secondary">
-                  <div
-                    className="bg-primary h-2.5 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.min(100, (nextUnlocked / totalLessons) * 100)}%` }}
-                  />
+            {/* Global progress summary */}
+            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1.5">
+                <BookOpen className="w-4 h-4 text-primary" />
+                <span className="font-medium text-foreground">{Math.min(nextUnlocked, totalLessons)}</span>
+                <span>/ {totalLessons} {t({ en: "lessons", fr: "leçons" })}</span>
+              </div>
+              {videos.length > 0 && (
+                <div className="flex items-center gap-1.5">
+                  <Video className="w-4 h-4 text-red-400" />
+                  <span className="font-medium text-foreground">{completedVideos.size}</span>
+                  <span>/ {videos.length} {t({ en: "videos", fr: "vidéos" })}</span>
                 </div>
-                <span className="text-xs font-medium whitespace-nowrap text-muted-foreground">
-                  {Math.min(nextUnlocked, totalLessons)}/{totalLessons} {t({ en: "completed", fr: "terminées" })}
-                </span>
+              )}
+            </div>
+            {/* Combined progress bar */}
+            {totalLessons > 0 && (
+              <div className="mt-4 space-y-2">
+                {/* Lessons progress */}
+                <div className="flex items-center gap-3">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground w-14">{t({ en: "Lessons", fr: "Leçons" })}</span>
+                  <div className="flex-1 rounded-full h-2 bg-secondary">
+                    <motion.div
+                      className="bg-primary h-2 rounded-full"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${Math.min(100, (nextUnlocked / totalLessons) * 100)}%` }}
+                      transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+                    />
+                  </div>
+                  <span className="text-xs font-medium whitespace-nowrap text-muted-foreground">
+                    {Math.min(nextUnlocked, totalLessons)}/{totalLessons}
+                  </span>
+                </div>
+                {/* Videos progress */}
+                {videos.length > 0 && (
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground w-14">{t({ en: "Videos", fr: "Vidéos" })}</span>
+                    <div className="flex-1 rounded-full h-2 bg-secondary">
+                      <motion.div
+                        className="bg-red-400 h-2 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${videos.length > 0 ? (completedVideos.size / videos.length) * 100 : 0}%` }}
+                        transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+                      />
+                    </div>
+                    <span className="text-xs font-medium whitespace-nowrap text-muted-foreground">
+                      {completedVideos.size}/{videos.length}
+                    </span>
+                  </div>
+                )}
               </div>
             )}
           </motion.div>
