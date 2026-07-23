@@ -359,3 +359,11 @@
 - [x] Sidebar fixe à gauche avec état d'avancement des leçons (terminé/en cours/verrouillé)
 - [x] Quiz interactif de validation en fin de leçon (avant bouton Terminer)
 - [x] Mode sombre pour l'espace formation (toggle dark/light)
+
+## Refonte UX/UI TrainingDashboard
+- [x] Redesign premium du TrainingDashboard (cercle de progression SVG, cartes certification, stats row, ordre d'étude recommandé)
+- [x] Header avec toggle dark mode, toggle langue, navigation retour
+- [x] Auth gate avec design cohérent
+- [x] Badges de niveau (Débutant/Intermédiaire/Avancé) avec couleurs distinctes
+- [x] Progression globale avec mini-barres par certification
+- [x] TypeScript 0 erreurs, tests passent (7/7)

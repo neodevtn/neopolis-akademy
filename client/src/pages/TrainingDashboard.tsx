@@ -5,23 +5,46 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
 import { Progress } from "@/components/ui/progress";
-import { LogIn, Trophy, Target } from "lucide-react";
+import {
+  LogIn,
+  Trophy,
+  BookOpen,
+  Play,
+  Dumbbell,
+  ChevronRight,
+  GraduationCap,
+  Moon,
+  Sun,
+  ArrowLeft,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 
-const levelColors = {
-  beginner: "bg-green-100 text-green-800",
-  intermediate: "bg-blue-100 text-blue-800",
-  advanced: "bg-purple-100 text-purple-800",
+const levelConfig = {
+  beginner: {
+    color: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+    label: { en: "Beginner", fr: "Débutant" },
+    dot: "bg-emerald-500",
+  },
+  intermediate: {
+    color: "bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+    label: { en: "Intermediate", fr: "Intermédiaire" },
+    dot: "bg-blue-500",
+  },
+  advanced: {
+    color: "bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
+    label: { en: "Advanced", fr: "Avancé" },
+    dot: "bg-purple-500",
+  },
 };
 
-const levelLabels = {
-  beginner: { en: "Beginner", fr: "Débutant" },
-  intermediate: { en: "Intermediate", fr: "Intermédiaire" },
-  advanced: { en: "Advanced", fr: "Avancé" },
-};
+export default function TrainingDashboard() {
+  const { lang, toggleLang, t } = useLanguage();
+  const { getCertProgress } = useTrainingProgress();
+  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
-function GlobalProgressBar({ getCertProgress, t }: { getCertProgress: any; t: (obj: { en: string; fr: string }) => string }) {
   const certCompletionData = useMemo(() => {
     return trainingIndex.certifications.map((cert) => {
       const courses = trainingIndex.courses.filter((c) => c.certId === cert.id);
@@ -29,7 +52,7 @@ function GlobalProgressBar({ getCertProgress, t }: { getCertProgress: any; t: (o
       const totalLessonsMap: Record<string, number> = {};
       courses.forEach((c) => { totalLessonsMap[c.id] = c.lessonCount || 1; });
       const progressPct = getCertProgress(courseIds, totalLessonsMap);
-      return { id: cert.id, title: cert.title, icon: cert.icon, progress: progressPct, completed: progressPct >= 100 };
+      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, courseCount: cert.courseCount, totalExercises: cert.totalExercises, totalVideos: cert.totalVideos, progress: progressPct, completed: progressPct >= 100 };
     });
   }, [getCertProgress]);
 
@@ -37,62 +60,13 @@ function GlobalProgressBar({ getCertProgress, t }: { getCertProgress: any; t: (o
   const totalCount = certCompletionData.length;
   const overallPct = Math.round(certCompletionData.reduce((sum, c) => sum + c.progress, 0) / totalCount);
 
-  return (
-    <div className="bg-white rounded-xl border border-slate-200 p-6 mb-8">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 text-emerald-600">
-            <Target className="w-5 h-5" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold text-slate-900">
-              {t({ en: "Overall Progress", fr: "Progression globale" })}
-            </h2>
-            <p className="text-sm text-slate-500">
-              {completedCount}/{totalCount} {t({ en: "certifications completed", fr: "certifications compl\u00e9t\u00e9es" })}
-            </p>
-          </div>
-        </div>
-        {completedCount === totalCount && (
-          <div className="flex items-center gap-2 text-amber-600">
-            <Trophy className="w-5 h-5" />
-            <span className="text-sm font-semibold">{t({ en: "All Complete!", fr: "Tout termin\u00e9 !" })}</span>
-          </div>
-        )}
-      </div>
-      <div className="flex items-center gap-3 mb-3">
-        <Progress value={overallPct} className="flex-1 h-3" />
-        <span className="text-sm font-semibold text-slate-700">{overallPct}%</span>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {certCompletionData.map((cert) => (
-          <div key={cert.id} className={`flex items-center gap-2 p-2 rounded-lg ${cert.completed ? "bg-emerald-50" : "bg-slate-50"}`}>
-            <span className="text-lg">{cert.icon}</span>
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-medium text-slate-700 truncate">{t(cert.title)}</div>
-              <div className={`text-xs font-semibold ${cert.completed ? "text-emerald-600" : "text-slate-500"}`}>
-                {cert.progress}%
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-export default function TrainingDashboard() {
-  const { lang, toggleLang, t } = useLanguage();
-  const { getCertProgress } = useTrainingProgress();
-  const { isAuthenticated, loading: authLoading } = useAuth();
-
   // Loading state
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-sm text-slate-500">{t({ en: "Loading...", fr: "Chargement..." })}</p>
+          <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-sm text-muted-foreground">{t({ en: "Loading...", fr: "Chargement..." })}</p>
         </div>
       </div>
     );
@@ -101,36 +75,46 @@ export default function TrainingDashboard() {
   // Auth gate
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-        <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <span className="text-xl font-bold text-slate-800">Neopolis</span>
-              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">Training</span>
+      <div className="min-h-screen bg-background">
+        <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2.5">
+              <span className="text-xl font-bold text-foreground">Neopolis</span>
+              <span className="text-xs bg-primary/15 text-primary px-2.5 py-1 rounded-full font-semibold tracking-wide uppercase">Training</span>
             </Link>
-            <button
-              onClick={toggleLang}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 hover:bg-slate-50 text-sm font-medium transition-colors"
-            >
-              <span className="text-base">{lang === "en" ? "🇬🇧" : "🇫🇷"}</span>
-              {lang === "en" ? "EN" : "FR"}
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground"
+              >
+                {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </button>
+              <button
+                onClick={toggleLang}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border hover:bg-secondary text-sm font-medium transition-colors"
+              >
+                <span>{lang === "en" ? "🇬🇧" : "🇫🇷"}</span>
+                {lang === "en" ? "EN" : "FR"}
+              </button>
+            </div>
           </div>
         </header>
-        <main className="max-w-lg mx-auto px-4 py-20 text-center">
-          <div className="bg-white rounded-xl border border-slate-200 p-8">
-            <LogIn className="w-12 h-12 text-emerald-600 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-slate-900 mb-2">
+        <main className="max-w-md mx-auto px-4 py-24 text-center">
+          <div className="bg-card rounded-2xl border border-border p-10 shadow-sm">
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
+              <LogIn className="w-8 h-8 text-primary" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground mb-3">
               {t({ en: "Authentication Required", fr: "Authentification requise" })}
             </h2>
-            <p className="text-sm text-slate-500 mb-6">
-              {t({ en: "You must be logged in to access the training platform and track your progress.", fr: "Vous devez être connecté pour accéder à la plateforme de formation et suivre votre progression." })}
+            <p className="text-muted-foreground mb-8 leading-relaxed">
+              {t({ en: "Log in to access the training platform and track your progress.", fr: "Connectez-vous pour accéder à la plateforme de formation et suivre votre progression." })}
             </p>
             <Button
               onClick={() => { window.location.href = getLoginUrl(); }}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 rounded-xl"
             >
-              {t({ en: "Log in to continue", fr: "Se connecter pour continuer" })}
+              {t({ en: "Log in to continue", fr: "Se connecter" })}
             </Button>
           </div>
         </main>
@@ -139,37 +123,54 @@ export default function TrainingDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold text-slate-800">Neopolis</span>
-            <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">Training</span>
-          </Link>
+      <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
+            <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+            </Link>
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl font-bold text-foreground">Neopolis</span>
+              <span className="text-xs bg-primary/15 text-primary px-2.5 py-1 rounded-full font-semibold tracking-wide uppercase">Training</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground"
+            >
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
             <button
               onClick={toggleLang}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 hover:bg-slate-50 text-sm font-medium transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border hover:bg-secondary text-sm font-medium transition-colors"
             >
-              <span className="text-base">{lang === "en" ? "🇬🇧" : "🇫🇷"}</span>
+              <span>{lang === "en" ? "🇬🇧" : "🇫🇷"}</span>
               {lang === "en" ? "EN" : "FR"}
             </button>
-            <Link href="/" className="text-sm text-slate-500 hover:text-slate-700">
+            <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
               {t({ en: "Back to site", fr: "Retour au site" })}
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Main */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Title */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
-            {t({ en: "Claude Certification Training", fr: "Formation Certification Claude" })}
-          </h1>
-          <p className="text-slate-600 text-lg">
+      <main className="max-w-7xl mx-auto px-6 py-10">
+        {/* Hero Section */}
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+              <GraduationCap className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+                {t({ en: "Claude Certification Training", fr: "Formation Certification Claude" })}
+              </h1>
+            </div>
+          </div>
+          <p className="text-muted-foreground ml-[52px]">
             {t({
               en: "Prepare for your Claude certifications with structured courses, exercises, and mock exams.",
               fr: "Préparez vos certifications Claude avec des cours structurés, exercices et examens blancs.",
@@ -177,67 +178,149 @@ export default function TrainingDashboard() {
           </p>
         </div>
 
-        {/* Global Progress */}
-        <GlobalProgressBar getCertProgress={getCertProgress} t={t} />
-
-        {/* Stats bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-xl p-4 border border-slate-200">
-            <div className="text-2xl font-bold text-slate-900">4</div>
-            <div className="text-sm text-slate-500">{t({ en: "Certifications", fr: "Certifications" })}</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 border border-slate-200">
-            <div className="text-2xl font-bold text-slate-900">25</div>
-            <div className="text-sm text-slate-500">{t({ en: "Courses", fr: "Cours" })}</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 border border-slate-200">
-            <div className="text-2xl font-bold text-slate-900">26</div>
-            <div className="text-sm text-slate-500">{t({ en: "Videos", fr: "Vidéos" })}</div>
-          </div>
-          <div className="bg-white rounded-xl p-4 border border-slate-200">
-            <div className="text-2xl font-bold text-slate-900">480+</div>
-            <div className="text-sm text-slate-500">{t({ en: "Exercises", fr: "Exercices" })}</div>
+        {/* Progress Overview Card */}
+        <div className="bg-card rounded-2xl border border-border p-6 md:p-8 mb-8 shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            {/* Left: Progress circle + text */}
+            <div className="flex items-center gap-5">
+              <div className="relative w-20 h-20 flex-shrink-0">
+                <svg className="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
+                  <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="6" className="text-secondary" />
+                  <circle
+                    cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="6"
+                    className="text-primary"
+                    strokeDasharray={`${2 * Math.PI * 34}`}
+                    strokeDashoffset={`${2 * Math.PI * 34 * (1 - overallPct / 100)}`}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-lg font-bold text-foreground">{overallPct}%</span>
+                </div>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-foreground mb-1">
+                  {t({ en: "Overall Progress", fr: "Progression globale" })}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {completedCount}/{totalCount} {t({ en: "certifications completed", fr: "certifications complétées" })}
+                </p>
+                {completedCount === totalCount && completedCount > 0 && (
+                  <div className="flex items-center gap-1.5 mt-2 text-amber-600 dark:text-amber-400">
+                    <Trophy className="w-4 h-4" />
+                    <span className="text-sm font-semibold">{t({ en: "All Complete!", fr: "Tout terminé !" })}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* Right: Mini progress per cert */}
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
+              {certCompletionData.map((cert) => (
+                <div key={cert.id} className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-secondary/50">
+                  <span className="text-xl flex-shrink-0">{cert.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs font-medium text-foreground truncate">{t(cert.title)}</div>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <div className="flex-1 h-1.5 rounded-full bg-secondary overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-primary transition-all duration-500"
+                          style={{ width: `${cert.progress}%` }}
+                        />
+                      </div>
+                      <span className="text-[10px] font-semibold text-muted-foreground">{cert.progress}%</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Certifications Grid */}
-        <h2 className="text-xl font-semibold text-slate-800 mb-4">
-          {t({ en: "Certification Paths", fr: "Parcours de certification" })}
-        </h2>
-        <div className="grid md:grid-cols-2 gap-6">
-          {trainingIndex.certifications.map((cert) => {
-            const courses = trainingIndex.courses.filter((c) => c.certId === cert.id);
-            const courseIds = courses.map((c) => c.id);
-            const totalLessonsMap: Record<string, number> = {};
-            courses.forEach((c) => { totalLessonsMap[c.id] = c.lessonCount || 1; });
-            const progressPct = getCertProgress(courseIds, totalLessonsMap);
-            const level = ((cert.level as any).en as string).toLowerCase() as keyof typeof levelColors;
+        {/* Stats Row */}
+        <div className="grid grid-cols-4 gap-3 md:gap-4 mb-10">
+          {[
+            { value: "4", label: { en: "Certifications", fr: "Certifications" }, icon: <GraduationCap className="w-4 h-4" /> },
+            { value: "25", label: { en: "Courses", fr: "Cours" }, icon: <BookOpen className="w-4 h-4" /> },
+            { value: "26", label: { en: "Videos", fr: "Vidéos" }, icon: <Play className="w-4 h-4" /> },
+            { value: "480+", label: { en: "Exercises", fr: "Exercices" }, icon: <Dumbbell className="w-4 h-4" /> },
+          ].map((stat, i) => (
+            <div key={i} className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary mx-auto mb-2">
+                {stat.icon}
+              </div>
+              <div className="text-xl md:text-2xl font-bold text-foreground">{stat.value}</div>
+              <div className="text-[11px] md:text-xs text-muted-foreground font-medium">{t(stat.label)}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Certification Paths */}
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-foreground">
+            {t({ en: "Certification Paths", fr: "Parcours de certification" })}
+          </h2>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-5 mb-10">
+          {certCompletionData.map((cert) => {
+            const level = ((cert.level as any).en as string).toLowerCase() as keyof typeof levelConfig;
+            const config = levelConfig[level] || levelConfig.beginner;
             return (
               <Link
                 key={cert.id}
                 href={`/training/${cert.id}`}
-                className="block bg-white rounded-xl border border-slate-200 p-6 hover:shadow-lg hover:border-emerald-200 transition-all group"
+                className="group block bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-200"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <span className="text-3xl">{cert.icon}</span>
-                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${levelColors[level]}`}>
-                    {t(levelLabels[level])}
+                {/* Top row: icon + level badge */}
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-2xl">
+                    {cert.icon}
+                  </div>
+                  <span className={`text-[11px] px-2.5 py-1 rounded-full font-semibold ${config.color}`}>
+                    {t(config.label)}
                   </span>
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900 group-hover:text-emerald-700 transition-colors mb-2">
+
+                {/* Title */}
+                <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors mb-2 leading-tight">
                   {t(cert.title)}
                 </h3>
-                <p className="text-sm text-slate-500 mb-4">
+
+                {/* Description */}
+                <p className="text-sm text-muted-foreground mb-4 line-clamp-2 leading-relaxed">
                   {t(cert.description)}
                 </p>
-                <div className="flex items-center gap-4 text-xs text-slate-400 mb-3">
-                  <span>{cert.courseCount} {t({ en: "courses", fr: "cours" })}</span>
-                  <span>{cert.totalExercises} {t({ en: "exercises", fr: "exercices" })}</span>
-                  {cert.totalVideos > 0 && <span>{cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}</span>}
+
+                {/* Meta row */}
+                <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
+                  <span className="flex items-center gap-1">
+                    <BookOpen className="w-3.5 h-3.5" />
+                    {cert.courseCount} {t({ en: "courses", fr: "cours" })}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Dumbbell className="w-3.5 h-3.5" />
+                    {cert.totalExercises} {t({ en: "exercises", fr: "exercices" })}
+                  </span>
+                  {cert.totalVideos > 0 && (
+                    <span className="flex items-center gap-1">
+                      <Play className="w-3.5 h-3.5" />
+                      {cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}
+                    </span>
+                  )}
                 </div>
+
+                {/* Progress bar */}
                 <div className="flex items-center gap-3">
-                  <Progress value={progressPct} className="flex-1 h-2" />
-                  <span className="text-xs font-medium text-slate-600">{progressPct}%</span>
+                  <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${cert.completed ? "bg-emerald-500" : "bg-primary"}`}
+                      style={{ width: `${cert.progress}%` }}
+                    />
+                  </div>
+                  <span className={`text-xs font-semibold ${cert.completed ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"}`}>
+                    {cert.progress}%
+                  </span>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                 </div>
               </Link>
             );
@@ -245,19 +328,24 @@ export default function TrainingDashboard() {
         </div>
 
         {/* Recommended Study Order */}
-        <div className="mt-10 bg-white rounded-xl border border-slate-200 p-6">
-          <h2 className="text-lg font-semibold text-slate-800 mb-3">
+        <div className="bg-card rounded-2xl border border-border p-6 shadow-sm">
+          <h2 className="text-base font-semibold text-foreground mb-5">
             {t({ en: "Recommended Study Order", fr: "Ordre d'étude recommandé" })}
           </h2>
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-3">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-0">
             {trainingIndex.certifications.map((cert, i) => (
-              <div key={cert.id} className="flex items-center gap-2">
-                <span className="flex items-center justify-center w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold">
-                  {i + 1}
-                </span>
-                <span className="text-sm text-slate-700">{t(cert.title)}</span>
+              <div key={cert.id} className="flex items-center gap-0">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary text-sm font-bold">
+                    {i + 1}
+                  </div>
+                  <span className="text-sm font-medium text-foreground whitespace-nowrap">{t(cert.title)}</span>
+                </div>
                 {i < trainingIndex.certifications.length - 1 && (
-                  <span className="hidden md:inline text-slate-300 mx-2">→</span>
+                  <div className="hidden md:flex items-center mx-4">
+                    <div className="w-8 h-px bg-border" />
+                    <ChevronRight className="w-3.5 h-3.5 text-muted-foreground -ml-0.5" />
+                  </div>
                 )}
               </div>
             ))}
