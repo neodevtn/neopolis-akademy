@@ -786,105 +786,44 @@ export default function TrainingCourse() {
             </motion.div>
           )}
 
-          {/* Lessons */}
+          {/* Active Lesson Viewer */}
           {lessonsLoading ? (
             <div className="bg-card rounded-2xl border border-border p-8 text-center shadow-sm">
               <div className="w-6 h-6 border-3 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">{t({ en: "Loading lessons...", fr: "Chargement des leçons..." })}</p>
             </div>
-          ) : courseLessons.length > 0 && (
-            <motion.div variants={fadeInUp} className="bg-card rounded-2xl border border-border p-6 mb-6 shadow-sm">
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-foreground">
-                <BookOpen className="w-5 h-5 text-primary" />
-                {t({ en: "Course Content", fr: "Contenu du cours" })}
-              </h2>
-              <div className="space-y-3">
-                {courseLessons.map((lesson, idx) => {
-                  const lessonCompleted = isLessonComplete(course.id, idx);
-                  const isUnlocked = idx <= nextUnlocked;
-                  const isCurrent = idx === nextUnlocked && !lessonCompleted;
-
-                  // Locked lesson
-                  if (!isUnlocked) {
-                    return (
-                      <div key={lesson.id || idx} className="border border-border rounded-xl p-4 opacity-40">
-                        <div className="flex items-center gap-3">
-                          <Lock className="w-4 h-4 shrink-0 text-muted-foreground" />
-                          <span className="font-medium text-sm text-muted-foreground">
-                            {resolveI18n(lesson.title, lang)}
-                          </span>
-                          <span className="ml-auto text-xs text-muted-foreground">
-                            {t({ en: "Locked", fr: "Verrouillé" })}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  // Completed lesson
-                  if (lessonCompleted) {
-                    return (
-                      <div key={lesson.id || idx} className="border border-primary/30 rounded-xl p-4 bg-primary/5">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
-                            <span className="font-medium text-sm text-foreground">
-                              {resolveI18n(lesson.title, lang)}
-                            </span>
-                          </div>
-                          <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
-                            {t({ en: "Completed", fr: "Terminé" })}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  // Current active lesson
-                  if (isCurrent) {
-                    return (
-                      <div key={lesson.id || idx} className="border-2 border-primary rounded-2xl overflow-hidden shadow-sm">
-                        <div className="p-4 border-b border-primary/30 bg-primary/5">
-                          <div className="flex items-center gap-3">
-                            <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                              <span className="text-white text-xs font-bold">{idx + 1}</span>
-                            </div>
-                            <span className="font-semibold text-sm text-foreground">
-                              {resolveI18n(lesson.title, lang)}
-                            </span>
-                            <span className="ml-auto text-xs px-2.5 py-1 rounded-full font-medium bg-primary/10 text-primary">
-                              {t({ en: "In Progress", fr: "En cours" })}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="p-4">
-                          <LessonViewer
-                            lesson={lesson}
-                            lessonIndex={idx}
-                            lang={lang}
-                            t={t}
-                            certId={certId || ""}
-                            onComplete={() => handleMarkLessonComplete(idx)}
-                          />
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <div key={lesson.id || idx} className="border border-border rounded-xl p-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-4 h-4 rounded-full border-2 border-border shrink-0" />
-                        <span className="font-medium text-sm text-muted-foreground">
-                          {resolveI18n(lesson.title, lang)}
-                        </span>
-                      </div>
+          ) : courseLessons.length > 0 && (() => {
+            const currentLesson = courseLessons[nextUnlocked];
+            const currentLessonCompleted = currentLesson ? isLessonComplete(course.id, nextUnlocked) : false;
+            if (!currentLesson || currentLessonCompleted) return null;
+            return (
+              <motion.div variants={fadeInUp} className="border-2 border-primary rounded-2xl overflow-hidden shadow-sm">
+                <div className="p-4 border-b border-primary/30 bg-primary/5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">{nextUnlocked + 1}</span>
                     </div>
-                  );
-                })}
-              </div>
-            </motion.div>
-          )}
+                    <span className="font-semibold text-sm text-foreground">
+                      {resolveI18n(currentLesson.title, lang)}
+                    </span>
+                    <span className="ml-auto text-xs px-2.5 py-1 rounded-full font-medium bg-primary/10 text-primary">
+                      {t({ en: "In Progress", fr: "En cours" })}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <LessonViewer
+                    lesson={currentLesson}
+                    lessonIndex={nextUnlocked}
+                    lang={lang}
+                    t={t}
+                    certId={certId || ""}
+                    onComplete={() => handleMarkLessonComplete(nextUnlocked)}
+                  />
+                </div>
+              </motion.div>
+            );
+          })()}
 
           {/* Course Completion */}
           {completed && (

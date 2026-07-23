@@ -386,3 +386,4 @@
 - [x] Corriger le style "PROPERTY X" : remplacer par un sous-titre intégré (gras, taille supérieure, sans couleur verte)
 - [x] Améliorer la hiérarchie du titre de section (ex: "What to Expect...") : taille plus grande, gras, séparation nette
 - [x] Augmenter l'espacement entre les sections de contenu (intro vs properties)
+- [x] Supprimer la liste redondante des leçons dans la zone principale (garder uniquement la sidebar + leçon active)
