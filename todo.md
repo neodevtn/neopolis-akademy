@@ -421,7 +421,12 @@
 ## Vidéo comme page/étape dans la pagination
 - [x] La vidéo doit être une page dans la séquence de navigation (ex: Page 1 = Vidéo, Page 2 = Contenu), pas un élément fixe au-dessus
 - [x] Quand on passe à la page suivante, la vidéo disparaît (c'est une étape comme les autres)
-- [ ] Vérifier que les vidéos sont correctement associées aux bons cours
+- [x] Vérifier que les vidéos sont correctement associées aux bons cours (3 cours avec vidéos, 26/36 lessons matchées)
 
 ## Formatage du contenu des leçons
 - [x] Améliorer le composant PageContent avec heuristiques intelligentes (détection auto titres, métadonnées, listes implicites, sous-sections)
+
+## Sidebar cliquable + Drawer mobile + Mini-quiz
+- [x] Rendre les leçons terminées cliquables dans la sidebar pour mode révision (activeLessonIndex state, badge "Mode Révision", bouton retour)
+- [x] Transformer la sidebar en drawer rétractable sur mobile (Sheet component de shadcn/ui, side="left")
+- [x] Mini-quiz interactif de validation en fin de leçon (LessonQuiz avec 3 questions, 2/3 requis, intégré dans le flux de pagination)

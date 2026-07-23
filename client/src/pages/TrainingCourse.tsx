@@ -8,9 +8,10 @@ import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
-  BookOpen, Lock, LogIn, ArrowRight, Moon, Sun, Menu, X, Clock, Check, Filter, Video
+  BookOpen, Lock, LogIn, ArrowRight, Moon, Sun, Menu, X, Clock, Check, Filter, Video, Eye
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { motion } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 
@@ -385,6 +386,7 @@ function LessonViewer({
   startPlayingVideo,
   toggleVideoComplete,
   getYouTubeThumbnail,
+  isReviewMode = false,
 }: {
   lesson: any;
   lessonIndex: number;
@@ -400,6 +402,7 @@ function LessonViewer({
   startPlayingVideo: (id: string) => void;
   toggleVideoComplete: (id: string) => void;
   getYouTubeThumbnail: (id: string) => string;
+  isReviewMode?: boolean;
 }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [showQuiz, setShowQuiz] = useState(false);
@@ -608,6 +611,10 @@ function LessonViewer({
                 {t({ en: "Next", fr: "Suivant" })}
                 <ChevronRight className="w-4 h-4" />
               </Button>
+            ) : isReviewMode ? (
+              <span className="text-xs text-muted-foreground italic">
+                {t({ en: "End of review", fr: "Fin de la révision" })}
+              </span>
             ) : (
               <Button
                 size="sm"
@@ -633,7 +640,98 @@ function LessonViewer({
   );
 }
 
-// Sidebar component
+// Sidebar content (shared between desktop and mobile drawer)
+function LessonSidebarContent({
+  lessons,
+  lang,
+  t,
+  nextUnlocked,
+  isLessonComplete,
+  courseId,
+  videos,
+  activeLessonIndex,
+  onLessonClick,
+}: {
+  lessons: any[];
+  lang: string;
+  t: (obj: { en: string; fr: string }) => string;
+  nextUnlocked: number;
+  isLessonComplete: (courseId: string, idx: number) => boolean;
+  courseId: string;
+  videos: any[];
+  activeLessonIndex: number | null;
+  onLessonClick: (idx: number) => void;
+}) {
+  return (
+    <div className="p-3 space-y-1">
+      <p className="text-xs font-bold uppercase tracking-wider px-3 py-2 text-muted-foreground">
+        {t({ en: "Progress", fr: "Progression" })}
+      </p>
+      {lessons.map((lesson, idx) => {
+        const completed = isLessonComplete(courseId, idx);
+        const isCurrent = idx === nextUnlocked && !completed;
+        const isLocked = idx > nextUnlocked;
+        const isActive = activeLessonIndex === idx;
+
+        let statusIcon: React.ReactNode;
+        let bgClass = "";
+        let textClass = "text-muted-foreground";
+
+        if (completed) {
+          statusIcon = <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />;
+          textClass = "text-foreground";
+        } else if (isCurrent) {
+          statusIcon = (
+            <div className="w-4 h-4 rounded-full bg-primary shrink-0 flex items-center justify-center">
+              <div className="w-1.5 h-1.5 bg-white rounded-full" />
+            </div>
+          );
+          bgClass = "bg-primary/5 border border-primary/30";
+          textClass = "text-foreground";
+        } else if (isLocked) {
+          statusIcon = <Lock className="w-3.5 h-3.5 text-muted-foreground shrink-0" />;
+          textClass = "text-muted-foreground";
+        } else {
+          statusIcon = <div className="w-4 h-4 rounded-full border-2 border-border shrink-0" />;
+        }
+
+        // Override bg for active review item
+        if (isActive && completed) {
+          bgClass = "bg-amber-500/10 border border-amber-500/30";
+        }
+
+        // Check if this lesson has a matching video
+        const lessonTitle = resolveI18n(lesson.title, "en").toLowerCase().trim();
+        const hasVideo = videos.some((v: any) => (v.title || "").toLowerCase().trim() === lessonTitle);
+
+        // Clickable if completed or current
+        const isClickable = completed || isCurrent;
+
+        return (
+          <button
+            key={lesson.id || idx}
+            onClick={() => isClickable && onLessonClick(idx)}
+            disabled={isLocked}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-left ${bgClass} ${isLocked ? "opacity-50 cursor-not-allowed" : ""} ${isClickable && !isActive ? "hover:bg-secondary/50 cursor-pointer" : ""}`}
+          >
+            {statusIcon}
+            <span className={`truncate font-medium ${textClass}`}>
+              {resolveI18n(lesson.title, lang)}
+            </span>
+            {hasVideo && (
+              <Video className="w-3.5 h-3.5 text-red-400 shrink-0 ml-auto" />
+            )}
+            {isActive && completed && (
+              <Eye className="w-3.5 h-3.5 text-amber-500 shrink-0 ml-auto" />
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// Sidebar component with Sheet for mobile, sticky aside for desktop
 function LessonSidebar({
   lessons,
   lang,
@@ -644,6 +742,8 @@ function LessonSidebar({
   sidebarOpen,
   onClose,
   videos,
+  activeLessonIndex,
+  onLessonClick,
 }: {
   lessons: any[];
   lang: string;
@@ -654,82 +754,42 @@ function LessonSidebar({
   sidebarOpen: boolean;
   onClose: () => void;
   videos: any[];
+  activeLessonIndex: number | null;
+  onLessonClick: (idx: number) => void;
 }) {
+  const sidebarContent = (
+    <LessonSidebarContent
+      lessons={lessons}
+      lang={lang}
+      t={t}
+      nextUnlocked={nextUnlocked}
+      isLessonComplete={isLessonComplete}
+      courseId={courseId}
+      videos={videos}
+      activeLessonIndex={activeLessonIndex}
+      onLessonClick={(idx) => { onLessonClick(idx); onClose(); }}
+    />
+  );
+
   return (
     <>
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-40 bg-black/50 lg:hidden" onClick={onClose} />
-      )}
+      {/* Mobile drawer using Sheet */}
+      <div className="lg:hidden">
+        <Sheet open={sidebarOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+          <SheetContent side="left" className="w-72 p-0 overflow-y-auto">
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <span className="text-sm font-bold text-foreground">
+                {t({ en: "Lessons", fr: "Leçons" })}
+              </span>
+            </div>
+            {sidebarContent}
+          </SheetContent>
+        </Sheet>
+      </div>
 
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 z-50 h-full w-72 transition-transform duration-300 ease-out lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] lg:translate-x-0 lg:z-10 overflow-y-auto bg-card border-r border-border ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        {/* Mobile close button */}
-        <div className="lg:hidden flex items-center justify-between p-4 border-b border-border">
-          <span className="text-sm font-bold text-foreground">
-            {t({ en: "Lessons", fr: "Leçons" })}
-          </span>
-          <button onClick={onClose} className="p-1 rounded hover:bg-secondary">
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Lesson list */}
-        <div className="p-3 space-y-1">
-          <p className="text-xs font-bold uppercase tracking-wider px-3 py-2 text-muted-foreground">
-            {t({ en: "Progress", fr: "Progression" })}
-          </p>
-          {lessons.map((lesson, idx) => {
-            const completed = isLessonComplete(courseId, idx);
-            const isCurrent = idx === nextUnlocked && !completed;
-            const isLocked = idx > nextUnlocked;
-
-            let statusIcon: React.ReactNode;
-            let bgClass = "";
-            let textClass = "text-muted-foreground";
-
-            if (completed) {
-              statusIcon = <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />;
-              textClass = "text-foreground";
-            } else if (isCurrent) {
-              statusIcon = (
-                <div className="w-4 h-4 rounded-full bg-primary shrink-0 flex items-center justify-center">
-                  <div className="w-1.5 h-1.5 bg-white rounded-full" />
-                </div>
-              );
-              bgClass = "bg-primary/5 border border-primary/30";
-              textClass = "text-foreground";
-            } else if (isLocked) {
-              statusIcon = <Lock className="w-3.5 h-3.5 text-muted-foreground shrink-0" />;
-              textClass = "text-muted-foreground";
-            } else {
-              statusIcon = <div className="w-4 h-4 rounded-full border-2 border-border shrink-0" />;
-            }
-
-            // Check if this lesson has a matching video
-            const lessonTitle = resolveI18n(lesson.title, "en").toLowerCase().trim();
-            const hasVideo = videos.some((v: any) => (v.title || "").toLowerCase().trim() === lessonTitle);
-
-            return (
-              <div
-                key={lesson.id || idx}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${bgClass} ${isLocked ? "opacity-50" : ""}`}
-              >
-                {statusIcon}
-                <span className={`truncate font-medium ${textClass}`}>
-                  {resolveI18n(lesson.title, lang)}
-                </span>
-                {hasVideo && (
-                  <Video className="w-3.5 h-3.5 text-red-400 shrink-0 ml-auto" />
-                )}
-              </div>
-            );
-          })}
-        </div>
+      {/* Desktop sticky sidebar */}
+      <aside className="hidden lg:block sticky top-16 h-[calc(100vh-4rem)] w-72 overflow-y-auto bg-card border-r border-border">
+        {sidebarContent}
       </aside>
     </>
   );
@@ -744,6 +804,7 @@ export default function TrainingCourse() {
   const [expandedVideos, setExpandedVideos] = useState<Set<string>>(new Set());
   const [playingVideos, setPlayingVideos] = useState<Set<string>>(new Set());
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
 
 
   // Server-synced video progress
@@ -939,6 +1000,8 @@ export default function TrainingCourse() {
             sidebarOpen={sidebarOpen}
             onClose={() => setSidebarOpen(false)}
             videos={videos}
+            activeLessonIndex={activeLessonIndex}
+            onLessonClick={(idx) => setActiveLessonIndex(idx)}
           />
         )}
 
@@ -1022,26 +1085,42 @@ export default function TrainingCourse() {
               <p className="text-sm text-muted-foreground">{t({ en: "Loading lessons...", fr: "Chargement des leçons..." })}</p>
             </div>
           ) : courseLessons.length > 0 && (() => {
-            const currentLesson = courseLessons[nextUnlocked];
-            const currentLessonCompleted = currentLesson ? isLessonComplete(course.id, nextUnlocked) : false;
-            if (!currentLesson || currentLessonCompleted) return null;
+            // Determine which lesson to display: review mode or current
+            const displayedIndex = activeLessonIndex ?? nextUnlocked;
+            const displayedLesson = courseLessons[displayedIndex];
+            const isReviewMode = activeLessonIndex !== null && isLessonComplete(course.id, activeLessonIndex);
+            const isCurrentLesson = displayedIndex === nextUnlocked && !isLessonComplete(course.id, nextUnlocked);
+
+            // If no active review and current lesson is completed, show nothing (course complete state handles it)
+            if (!displayedLesson) return null;
+            if (!isReviewMode && !isCurrentLesson) return null;
 
             // Match videos to this lesson by title
-            const lessonTitle = resolveI18n(currentLesson.title, "en").toLowerCase().trim();
+            const lessonTitle = resolveI18n(displayedLesson.title, "en").toLowerCase().trim();
             const lessonVideos = videos.filter((v: any) => {
               const vTitle = (v.title || "").toLowerCase().trim();
               return vTitle === lessonTitle;
             });
 
             return (
-              <motion.div variants={fadeInUp} className="border-2 border-primary rounded-2xl overflow-hidden shadow-sm">
-                <div className="p-4 border-b border-primary/30 bg-primary/5">
+              <motion.div
+                key={displayedIndex}
+                variants={fadeInUp}
+                className={`border-2 rounded-2xl overflow-hidden shadow-sm ${
+                  isReviewMode ? "border-amber-500/50" : "border-primary"
+                }`}
+              >
+                <div className={`p-4 border-b ${
+                  isReviewMode ? "border-amber-500/30 bg-amber-500/5" : "border-primary/30 bg-primary/5"
+                }`}>
                   <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">{nextUnlocked + 1}</span>
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                      isReviewMode ? "bg-amber-500" : "bg-primary"
+                    }`}>
+                      <span className="text-white text-xs font-bold">{displayedIndex + 1}</span>
                     </div>
                     <span className="font-semibold text-sm text-foreground">
-                      {resolveI18n(currentLesson.title, lang)}
+                      {resolveI18n(displayedLesson.title, lang)}
                     </span>
                     {lessonVideos.length > 0 && (
                       <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300">
@@ -1049,19 +1128,39 @@ export default function TrainingCourse() {
                         {lessonVideos.length} {lessonVideos.length > 1 ? "vidéos" : "vidéo"}
                       </span>
                     )}
-                    <span className="ml-auto text-xs px-2.5 py-1 rounded-full font-medium bg-primary/10 text-primary">
-                      {t({ en: "In Progress", fr: "En cours" })}
-                    </span>
+                    {isReviewMode ? (
+                      <span className="ml-auto inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                        <Eye className="w-3 h-3" />
+                        {t({ en: "Review Mode", fr: "Mode Révision" })}
+                      </span>
+                    ) : (
+                      <span className="ml-auto text-xs px-2.5 py-1 rounded-full font-medium bg-primary/10 text-primary">
+                        {t({ en: "In Progress", fr: "En cours" })}
+                      </span>
+                    )}
                   </div>
+                  {isReviewMode && (
+                    <div className="mt-3 flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setActiveLessonIndex(null)}
+                        className="text-xs gap-1.5 border-amber-500/30 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10"
+                      >
+                        <ArrowLeft className="w-3 h-3" />
+                        {t({ en: "Back to current lesson", fr: "Retour au cours actuel" })}
+                      </Button>
+                    </div>
+                  )}
                 </div>
                 <div className="p-4">
                   <LessonViewer
-                    lesson={currentLesson}
-                    lessonIndex={nextUnlocked}
+                    lesson={displayedLesson}
+                    lessonIndex={displayedIndex}
                     lang={lang}
                     t={t}
                     certId={certId || ""}
-                    onComplete={() => handleMarkLessonComplete(nextUnlocked)}
+                    onComplete={() => handleMarkLessonComplete(displayedIndex)}
                     matchedVideos={lessonVideos}
                     completedVideos={completedVideos}
                     expandedVideos={expandedVideos}
@@ -1070,6 +1169,7 @@ export default function TrainingCourse() {
                     startPlayingVideo={startPlayingVideo}
                     toggleVideoComplete={toggleVideoComplete}
                     getYouTubeThumbnail={getYouTubeThumbnail}
+                    isReviewMode={isReviewMode}
                   />
                 </div>
               </motion.div>
