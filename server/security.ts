@@ -81,6 +81,7 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
       "img-src 'self' data: https: blob:",
       "media-src 'self' blob: https:",
       "connect-src 'self' https: wss:", // needed for tRPC, OAuth, analytics, Vite HMR
+      "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://youtube.com",
       "frame-ancestors 'none'",
     ].join("; ")
   );

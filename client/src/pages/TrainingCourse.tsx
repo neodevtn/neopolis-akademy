@@ -934,22 +934,12 @@ export default function TrainingCourse() {
                           ) : (
                             <div className="aspect-video rounded-lg overflow-hidden bg-black">
                               <iframe
-                                src={(() => {
-                                  let url = video.embedUrl || video.embed_url || "";
-                                  url = url.replace("www.youtube.com/embed", "www.youtube-nocookie.com/embed");
-                                  if (url && !url.includes("?")) {
-                                    url += "?rel=0&modestbranding=1&autoplay=1";
-                                  } else if (url) {
-                                    url += "&rel=0&modestbranding=1&autoplay=1";
-                                  }
-                                  return url;
-                                })()}
+                                src={`https://www.youtube-nocookie.com/embed/${video.youtube_id}?rel=0&modestbranding=1&autoplay=1`}
                                 title={video.title}
                                 className="w-full h-full"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerPolicy="strict-origin-when-cross-origin"
+                                referrerPolicy="no-referrer-when-downgrade"
                                 allowFullScreen
-                                sandbox="allow-same-origin allow-scripts allow-popups allow-presentation"
                               />
                             </div>
                           )}
