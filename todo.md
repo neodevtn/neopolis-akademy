@@ -430,3 +430,9 @@
 - [x] Rendre les leçons terminées cliquables dans la sidebar pour mode révision (activeLessonIndex state, badge "Mode Révision", bouton retour)
 - [x] Transformer la sidebar en drawer rétractable sur mobile (Sheet component de shadcn/ui, side="left")
 - [x] Mini-quiz interactif de validation en fin de leçon (LessonQuiz avec 3 questions, 2/3 requis, intégré dans le flux de pagination)
+
+## Amélioration Quiz - Retry avec feedback visuel
+- [x] Ajouter un feedback visuel immédiat après chaque réponse (correct/incorrect avec animation, bannière colorée + icône)
+- [x] Améliorer l'écran d'échec avec un bouton retry plus visible (full-width, amber, numéro tentative) et résumé visuel (dots vert/rouge)
+- [x] Ajouter une animation de transition entre les tentatives (shake sur échec, spring scale sur succès, motion.div transitions)
+- [x] Afficher le nombre de tentatives effectuées (badge #N dans le header + mention sur l'écran résultat)
