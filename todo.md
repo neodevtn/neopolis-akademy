@@ -380,3 +380,9 @@
 - [x] Tableau de bord admin : procédure tRPC adminProcedure pour lister tous les apprenants
 - [x] Tableau de bord admin : page AdminTraining avec tableau paginé, recherche, progression par apprenant
 - [x] Route /admin/training protégée par rôle admin
+
+## Corrections UX page TrainingCourse (contenu leçon)
+- [x] Ajouter un badge "EN" sur les leçons en anglais pour indiquer clairement la langue
+- [x] Corriger le style "PROPERTY X" : remplacer par un sous-titre intégré (gras, taille supérieure, sans couleur verte)
+- [x] Améliorer la hiérarchie du titre de section (ex: "What to Expect...") : taille plus grande, gras, séparation nette
+- [x] Augmenter l'espacement entre les sections de contenu (intro vs properties)

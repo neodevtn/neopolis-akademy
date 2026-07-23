@@ -41,6 +41,7 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
   let inCodeBlock = false;
   let codeLines: string[] = [];
   let codeKey = 0;
+  let isFirstTextLine = true; // Track first non-empty text line as section title
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -72,10 +73,11 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     } else if (line.startsWith("# ")) {
       elements.push(<h2 key={i} className="text-xl font-bold mt-6 mb-3 text-foreground">{line.replace("# ", "")}</h2>);
     } else if (line.match(/^\*\*.*\*\*$/)) {
+      // Sub-section title (e.g. "**Property 1**") — styled as integrated subtitle
       elements.push(
-        <p key={i} className="text-sm font-bold mt-4 mb-1 uppercase tracking-wide text-primary">
+        <h4 key={i} className="text-base font-bold mt-8 mb-2 text-foreground border-l-3 border-primary pl-3">
           {line.replace(/\*\*/g, "")}
-        </p>
+        </h4>
       );
     } else if (line.startsWith("- ") || line.startsWith("• ")) {
       elements.push(
@@ -90,13 +92,23 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
         </li>
       );
     } else if (line.trim() === "") {
-      elements.push(<div key={i} className="h-2" />);
+      elements.push(<div key={i} className="h-3" />);
     } else {
-      elements.push(
-        <p key={i} className="text-sm leading-relaxed mb-2 text-muted-foreground">
-          {renderInlineFormatting(line)}
-        </p>
-      );
+      // First non-empty text line is rendered as a prominent section title
+      if (isFirstTextLine) {
+        isFirstTextLine = false;
+        elements.push(
+          <h3 key={i} className="text-lg font-bold mb-4 pb-3 border-b border-border text-foreground">
+            {renderInlineFormatting(line)}
+          </h3>
+        );
+      } else {
+        elements.push(
+          <p key={i} className="text-sm leading-relaxed mb-2 text-muted-foreground">
+            {renderInlineFormatting(line)}
+          </p>
+        );
+      }
     }
   }
 
@@ -329,6 +341,15 @@ function LessonViewer({
   const pages = lesson.pages?.[lang] || lesson.pages?.en || [];
   const totalPages = pages.length || 1;
 
+  // Detect if content is displayed in English (either no fr translation, or fr is same as en)
+  const isEnglishContent = (() => {
+    if (lang === "en") return false; // Already in English mode, no need for badge
+    if (!lesson.pages?.fr || lesson.pages.fr.length === 0) return true;
+    // Check if fr content is identical to en (not really translated)
+    if (lesson.pages?.en && lesson.pages.fr[0] === lesson.pages.en[0]) return true;
+    return false;
+  })();
+
   useEffect(() => {
     setCurrentPage(0);
     setShowQuiz(false);
@@ -340,6 +361,18 @@ function LessonViewer({
     <div className="mt-2">
       {!showQuiz ? (
         <>
+          {/* Language badge */}
+          {isEnglishContent && (
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 font-semibold uppercase tracking-wider">
+                EN
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {t({ en: "Content in English", fr: "Contenu en anglais" })}
+              </span>
+            </div>
+          )}
+
           {/* Page content */}
           <div className="rounded-xl p-6 min-h-[200px] bg-secondary/30">
             {pages[currentPage] ? (
