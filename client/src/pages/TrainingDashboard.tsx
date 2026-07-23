@@ -328,25 +328,17 @@ export default function TrainingDashboard() {
         </div>
 
         {/* Recommended Study Order */}
-        <div className="bg-card rounded-2xl border border-border p-6 shadow-sm">
+        <div className="bg-card rounded-2xl border border-border p-6 shadow-sm overflow-hidden">
           <h2 className="text-base font-semibold text-foreground mb-5">
             {t({ en: "Recommended Study Order", fr: "Ordre d'étude recommandé" })}
           </h2>
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {trainingIndex.certifications.map((cert, i) => (
-              <div key={cert.id} className="flex items-center gap-0">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary text-sm font-bold">
-                    {i + 1}
-                  </div>
-                  <span className="text-sm font-medium text-foreground whitespace-nowrap">{t(cert.title)}</span>
+              <div key={cert.id} className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-secondary/40">
+                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/15 text-primary text-xs font-bold flex-shrink-0">
+                  {i + 1}
                 </div>
-                {i < trainingIndex.certifications.length - 1 && (
-                  <div className="hidden md:flex items-center mx-4">
-                    <div className="w-8 h-px bg-border" />
-                    <ChevronRight className="w-3.5 h-3.5 text-muted-foreground -ml-0.5" />
-                  </div>
-                )}
+                <span className="text-sm font-medium text-foreground leading-tight">{t(cert.title)}</span>
               </div>
             ))}
           </div>
