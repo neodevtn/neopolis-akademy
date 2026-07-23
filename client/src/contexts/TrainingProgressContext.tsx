@@ -1,6 +1,8 @@
-import { createContext, useContext, useCallback, ReactNode, useMemo } from "react";
+import { createContext, useContext, useCallback, ReactNode, useMemo, useRef } from "react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { toast } from "sonner";
+import trainingIndex from "@/data/trainingIndex.json";
 
 interface TrainingProgressContextType {
   // Lesson-level progress
@@ -25,13 +27,67 @@ const TrainingProgressContext = createContext<TrainingProgressContextType | unde
 export function TrainingProgressProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated, loading: authLoading } = useAuth();
   
+  // Track previous progress data to detect transitions
+  const prevProgressRef = useRef<any[]>([]);
+
   const progressQuery = trpc.training.getProgress.useQuery(undefined, {
     enabled: isAuthenticated,
     refetchOnWindowFocus: false,
   });
 
   const markLessonMutation = trpc.training.markLessonComplete.useMutation({
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
+      const { certificationId, courseId, lessonIndex } = variables;
+      
+      // Check if this lesson completion unlocks the next course or completes the certification
+      const course = trainingIndex.courses.find((c) => c.id === courseId);
+      if (course) {
+        const totalLessons = course.lessonCount || 1;
+        const currentCompletedCount = (progressQuery.data || []).filter(
+          (p) => p.courseId === courseId
+        ).length;
+        
+        // If this was the last lesson in the course
+        if (currentCompletedCount + 1 >= totalLessons) {
+          // Course completed notification
+          toast.success("Cours terminé !", {
+            description: `Vous avez terminé "${resolveTitle(course.title)}". Bravo !`,
+            duration: 5000,
+          });
+
+          // Check if next course is now unlocked
+          const certCourses = trainingIndex.courses.filter((c) => c.certId === certificationId);
+          const courseIndex = certCourses.findIndex((c) => c.id === courseId);
+          if (courseIndex >= 0 && courseIndex < certCourses.length - 1) {
+            const nextCourse = certCourses[courseIndex + 1];
+            setTimeout(() => {
+              toast.info("Nouveau cours débloqué !", {
+                description: `"${resolveTitle(nextCourse.title)}" est maintenant accessible.`,
+                duration: 5000,
+              });
+            }, 1500);
+          }
+
+          // Check if all courses in the cert are now complete
+          const allCertCoursesComplete = certCourses.every((c) => {
+            if (c.id === courseId) return true; // current one just completed
+            const total = c.lessonCount || 1;
+            const completed = (progressQuery.data || []).filter((p) => p.courseId === c.id).length;
+            return completed >= total;
+          });
+
+          if (allCertCoursesComplete) {
+            const cert = trainingIndex.certifications.find((c) => c.id === certificationId);
+            setTimeout(() => {
+              toast.success("Certification disponible !", {
+                description: `Tous les cours de "${resolveTitle(cert?.title)}" sont terminés. L'examen blanc est maintenant débloqué !`,
+                duration: 7000,
+              });
+            }, 3000);
+          }
+        }
+      }
+
       progressQuery.refetch();
     },
   });
@@ -50,14 +106,13 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
   }, [isAuthenticated, markLessonMutation]);
 
   const getNextUnlockedLesson = useCallback((courseId: string, totalLessons: number) => {
-    // Find the first lesson that is not complete
     for (let i = 0; i < totalLessons; i++) {
       const completed = progressData.some(
         (p) => p.courseId === courseId && p.lessonIndex === i
       );
       if (!completed) return i;
     }
-    return totalLessons; // All complete
+    return totalLessons;
   }, [progressData]);
 
   const isCourseComplete = useCallback((courseId: string, totalLessons: number) => {
@@ -105,4 +160,12 @@ export function useTrainingProgress() {
   const ctx = useContext(TrainingProgressContext);
   if (!ctx) throw new Error("useTrainingProgress must be used within TrainingProgressProvider");
   return ctx;
+}
+
+// Helper to resolve i18n title
+function resolveTitle(val: any): string {
+  if (!val) return "";
+  if (typeof val === "string") return val;
+  if (typeof val === "object") return val.fr || val.en || "";
+  return String(val);
 }

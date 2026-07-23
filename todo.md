@@ -367,3 +367,10 @@
 - [x] Badges de niveau (Débutant/Intermédiaire/Avancé) avec couleurs distinctes
 - [x] Progression globale avec mini-barres par certification
 - [x] TypeScript 0 erreurs, tests passent (7/7)
+
+## Harmonisation design + animations + notifications
+- [x] Ajouter animations d'entrée (fade-in, stagger) sur les cartes du TrainingDashboard (framer-motion)
+- [x] Harmoniser TrainingCertification avec le design premium (tokens CSS, cards, badges, dark mode)
+- [x] Harmoniser TrainingCourse avec le design premium (tokens CSS, header, cards, sidebar)
+- [x] Système de notifications toast quand un nouveau cours se débloque
+- [x] Notification toast quand un certificat est disponible (score ≥ 720)

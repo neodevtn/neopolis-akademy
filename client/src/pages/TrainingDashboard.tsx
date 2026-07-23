@@ -4,7 +4,6 @@ import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
-import { Progress } from "@/components/ui/progress";
 import {
   LogIn,
   Trophy,
@@ -20,6 +19,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { motion } from "framer-motion";
+
+/* ─── Animation Variants ─── */
+const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: easeOut } },
+};
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.4, ease: easeOut } },
+};
+
+const staggerContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: easeOut } },
+};
 
 const levelConfig = {
   beginner: {
@@ -100,7 +123,12 @@ export default function TrainingDashboard() {
           </div>
         </header>
         <main className="max-w-md mx-auto px-4 py-24 text-center">
-          <div className="bg-card rounded-2xl border border-border p-10 shadow-sm">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={scaleIn}
+            className="bg-card rounded-2xl border border-border p-10 shadow-sm"
+          >
             <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
               <LogIn className="w-8 h-8 text-primary" />
             </div>
@@ -116,7 +144,7 @@ export default function TrainingDashboard() {
             >
               {t({ en: "Log in to continue", fr: "Se connecter" })}
             </Button>
-          </div>
+          </motion.div>
         </main>
       </div>
     );
@@ -157,9 +185,14 @@ export default function TrainingDashboard() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-10">
+      <motion.main
+        className="max-w-7xl mx-auto px-6 py-10"
+        initial="hidden"
+        animate="visible"
+        variants={staggerContainer}
+      >
         {/* Hero Section */}
-        <div className="mb-10">
+        <motion.div variants={fadeInUp} className="mb-10">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
               <GraduationCap className="w-5 h-5 text-primary" />
@@ -176,10 +209,10 @@ export default function TrainingDashboard() {
               fr: "Préparez vos certifications Claude avec des cours structurés, exercices et examens blancs.",
             })}
           </p>
-        </div>
+        </motion.div>
 
         {/* Progress Overview Card */}
-        <div className="bg-card rounded-2xl border border-border p-6 md:p-8 mb-8 shadow-sm">
+        <motion.div variants={fadeInUp} className="bg-card rounded-2xl border border-border p-6 md:p-8 mb-8 shadow-sm">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             {/* Left: Progress circle + text */}
             <div className="flex items-center gap-5">
@@ -234,101 +267,106 @@ export default function TrainingDashboard() {
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-4 gap-3 md:gap-4 mb-10">
+        <motion.div variants={fadeInUp} className="grid grid-cols-4 gap-3 md:gap-4 mb-10">
           {[
             { value: "4", label: { en: "Certifications", fr: "Certifications" }, icon: <GraduationCap className="w-4 h-4" /> },
             { value: "25", label: { en: "Courses", fr: "Cours" }, icon: <BookOpen className="w-4 h-4" /> },
             { value: "26", label: { en: "Videos", fr: "Vidéos" }, icon: <Play className="w-4 h-4" /> },
             { value: "480+", label: { en: "Exercises", fr: "Exercices" }, icon: <Dumbbell className="w-4 h-4" /> },
           ].map((stat, i) => (
-            <div key={i} className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
+            <motion.div
+              key={i}
+              variants={scaleIn}
+              className="bg-card rounded-xl border border-border p-4 text-center shadow-sm"
+            >
               <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary mx-auto mb-2">
                 {stat.icon}
               </div>
               <div className="text-xl md:text-2xl font-bold text-foreground">{stat.value}</div>
               <div className="text-[11px] md:text-xs text-muted-foreground font-medium">{t(stat.label)}</div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Certification Paths */}
-        <div className="mb-4 flex items-center justify-between">
+        <motion.div variants={fadeIn} className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-foreground">
             {t({ en: "Certification Paths", fr: "Parcours de certification" })}
           </h2>
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-5 mb-10">
+        <motion.div variants={staggerContainer} className="grid md:grid-cols-2 gap-5 mb-10">
           {certCompletionData.map((cert) => {
             const level = ((cert.level as any).en as string).toLowerCase() as keyof typeof levelConfig;
             const config = levelConfig[level] || levelConfig.beginner;
             return (
-              <Link
-                key={cert.id}
-                href={`/training/${cert.id}`}
-                className="group block bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-200"
-              >
-                {/* Top row: icon + level badge */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-2xl">
-                    {cert.icon}
-                  </div>
-                  <span className={`text-[11px] px-2.5 py-1 rounded-full font-semibold ${config.color}`}>
-                    {t(config.label)}
-                  </span>
-                </div>
-
-                {/* Title */}
-                <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors mb-2 leading-tight">
-                  {t(cert.title)}
-                </h3>
-
-                {/* Description */}
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-2 leading-relaxed">
-                  {t(cert.description)}
-                </p>
-
-                {/* Meta row */}
-                <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
-                  <span className="flex items-center gap-1">
-                    <BookOpen className="w-3.5 h-3.5" />
-                    {cert.courseCount} {t({ en: "courses", fr: "cours" })}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Dumbbell className="w-3.5 h-3.5" />
-                    {cert.totalExercises} {t({ en: "exercises", fr: "exercices" })}
-                  </span>
-                  {cert.totalVideos > 0 && (
-                    <span className="flex items-center gap-1">
-                      <Play className="w-3.5 h-3.5" />
-                      {cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}
+              <motion.div key={cert.id} variants={fadeInUp}>
+                <Link
+                  href={`/training/${cert.id}`}
+                  className="group block bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-200"
+                >
+                  {/* Top row: icon + level badge */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-2xl">
+                      {cert.icon}
+                    </div>
+                    <span className={`text-[11px] px-2.5 py-1 rounded-full font-semibold ${config.color}`}>
+                      {t(config.label)}
                     </span>
-                  )}
-                </div>
-
-                {/* Progress bar */}
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-500 ${cert.completed ? "bg-emerald-500" : "bg-primary"}`}
-                      style={{ width: `${cert.progress}%` }}
-                    />
                   </div>
-                  <span className={`text-xs font-semibold ${cert.completed ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"}`}>
-                    {cert.progress}%
-                  </span>
-                  <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                </div>
-              </Link>
+
+                  {/* Title */}
+                  <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors mb-2 leading-tight">
+                    {t(cert.title)}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2 leading-relaxed">
+                    {t(cert.description)}
+                  </p>
+
+                  {/* Meta row */}
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
+                    <span className="flex items-center gap-1">
+                      <BookOpen className="w-3.5 h-3.5" />
+                      {cert.courseCount} {t({ en: "courses", fr: "cours" })}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Dumbbell className="w-3.5 h-3.5" />
+                      {cert.totalExercises} {t({ en: "exercises", fr: "exercices" })}
+                    </span>
+                    {cert.totalVideos > 0 && (
+                      <span className="flex items-center gap-1">
+                        <Play className="w-3.5 h-3.5" />
+                        {cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${cert.completed ? "bg-emerald-500" : "bg-primary"}`}
+                        style={{ width: `${cert.progress}%` }}
+                      />
+                    </div>
+                    <span className={`text-xs font-semibold ${cert.completed ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"}`}>
+                      {cert.progress}%
+                    </span>
+                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </div>
+                </Link>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Recommended Study Order */}
-        <div className="bg-card rounded-2xl border border-border p-6 shadow-sm overflow-hidden">
+        <motion.div variants={fadeInUp} className="bg-card rounded-2xl border border-border p-6 shadow-sm overflow-hidden">
           <h2 className="text-base font-semibold text-foreground mb-5">
             {t({ en: "Recommended Study Order", fr: "Ordre d'étude recommandé" })}
           </h2>
@@ -342,8 +380,8 @@ export default function TrainingDashboard() {
               </div>
             ))}
           </div>
-        </div>
-      </main>
+        </motion.div>
+      </motion.main>
     </div>
   );
 }
