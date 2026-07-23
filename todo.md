@@ -344,3 +344,13 @@
 - [x] Frontend: tableau historique tentatives sur page certification
 - [x] Frontend: bouton téléchargement certificat PDF conditionnel (score ≥ 720)
 - [x] Frontend: barre de progression globale cross-certifications sur le dashboard
+
+## Refonte UX Cours (nettoyage + segmentation + navigation)
+- [x] Nettoyer les artefacts UI (Flip, numéros de page, éléments de navigation)
+- [x] Segmenter les leçons en pages navigables (2-6 pages par leçon)
+- [x] Navigation page par page dans chaque leçon (Précédent/Suivant/Terminer)
+- [x] Indicateur de progression intra-leçon (dots + compteur page X/Y)
+- [x] Marquer la leçon complète seulement après la dernière page
+- [x] Améliorer le rendu du contenu (titres, listes, code blocks, bold/italic/inline code)
+- [x] Leçon active mise en évidence (bordure verte, badge 'En cours')
+- [x] Leçons verrouillées/terminées clairement identifiées visuellement
