@@ -396,3 +396,10 @@
 
 ## Barre de progression vidéo animée
 - [x] Ajouter une barre de progression visuelle animée dans la section vidéo qui se met à jour dynamiquement quand une vidéo est marquée comme vue
+
+## Durées YouTube + Synchro serveur + Filtre vidéo
+- [x] Récupérer les durées réelles des vidéos YouTube et les stocker dans trainingIndex.json (via recherche Anthropic/HumanCo)
+- [x] Créer table videoProgress côté serveur pour persistance multi-appareils (unique index userId+courseId+youtubeId)
+- [x] Créer procédures tRPC pour get/set video progress (videoProgress.get + videoProgress.toggle)
+- [x] Mettre à jour le frontend pour utiliser les durées réelles et la synchro serveur (fallback localStorage si non-auth)
+- [x] Ajouter un filtre rapide (Toutes / Non vues / Vues) au-dessus de la liste vidéo

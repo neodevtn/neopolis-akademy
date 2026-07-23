@@ -1,6 +1,6 @@
 import { eq, desc, sql, and, count } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -292,4 +292,47 @@ export async function getAllLearnersStats() {
     totalExamAttempts: totalAttempts[0].total,
     totalExamsPassed: passedAttempts[0].total,
   };
+}
+
+// ============ Video Progress ============
+
+export async function getVideoProgress(userId: number, courseId?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  if (courseId) {
+    return await db.select().from(videoProgress)
+      .where(and(eq(videoProgress.userId, userId), eq(videoProgress.courseId, courseId)));
+  }
+  return await db.select().from(videoProgress)
+    .where(eq(videoProgress.userId, userId));
+}
+
+export async function toggleVideoProgress(userId: number, courseId: string, youtubeId: string): Promise<{ watched: boolean }> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Check if already watched
+  const existing = await db.select().from(videoProgress)
+    .where(and(
+      eq(videoProgress.userId, userId),
+      eq(videoProgress.courseId, courseId),
+      eq(videoProgress.youtubeId, youtubeId)
+    ));
+
+  if (existing.length > 0) {
+    // Remove (unmark)
+    await db.delete(videoProgress).where(
+      and(
+        eq(videoProgress.userId, userId),
+        eq(videoProgress.courseId, courseId),
+        eq(videoProgress.youtubeId, youtubeId)
+      )
+    );
+    return { watched: false };
+  } else {
+    // Add (mark as watched)
+    await db.insert(videoProgress).values({ userId, courseId, youtubeId });
+    return { watched: true };
+  }
 }

@@ -8,10 +8,11 @@ import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
-  BookOpen, Lock, LogIn, ArrowRight, Moon, Sun, Menu, X, Clock, Check
+  BookOpen, Lock, LogIn, ArrowRight, Moon, Sun, Menu, X, Clock, Check, Filter
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { trpc } from "@/lib/trpc";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -553,13 +554,29 @@ export default function TrainingCourse() {
   const { isLessonComplete, markLessonComplete, getNextUnlockedLesson, isCourseComplete } = useTrainingProgress();
   const [expandedVideos, setExpandedVideos] = useState<Set<string>>(new Set());
   const [playingVideos, setPlayingVideos] = useState<Set<string>>(new Set());
-  const [completedVideos, setCompletedVideos] = useState<Set<string>>(() => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [videoFilter, setVideoFilter] = useState<"all" | "watched" | "unwatched">("all");
+
+  // Server-synced video progress
+  const videoProgressQuery = trpc.videoProgress.get.useQuery(
+    { courseId: courseId || "" },
+    { enabled: isAuthenticated && !!courseId }
+  );
+  const toggleVideoMutation = trpc.videoProgress.toggle.useMutation({
+    onSuccess: () => { videoProgressQuery.refetch(); },
+  });
+
+  // Derive completed set from server data (fallback to localStorage for non-auth)
+  const completedVideos = useMemo(() => {
+    if (videoProgressQuery.data) {
+      return new Set(videoProgressQuery.data.map((vp: any) => vp.youtubeId));
+    }
+    // Fallback to localStorage if not authenticated
     try {
       const stored = localStorage.getItem(`video_progress_${courseId}`);
-      return stored ? new Set(JSON.parse(stored)) : new Set();
-    } catch { return new Set(); }
-  });
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+      return stored ? new Set<string>(JSON.parse(stored)) : new Set<string>();
+    } catch { return new Set<string>(); }
+  }, [videoProgressQuery.data, courseId]);
 
   const course = trainingIndex.courses.find((c: any) => c.id === courseId);
   const cert = trainingIndex.certifications.find((c: any) => c.id === certId);
@@ -656,14 +673,18 @@ export default function TrainingCourse() {
   };
 
   const toggleVideoComplete = (videoId: string) => {
-    setCompletedVideos((prev) => {
-      const next = new Set(prev);
-      if (next.has(videoId)) next.delete(videoId);
-      else next.add(videoId);
-      // Persist to localStorage
-      localStorage.setItem(`video_progress_${courseId}`, JSON.stringify(Array.from(next)));
-      return next;
-    });
+    if (isAuthenticated && courseId) {
+      toggleVideoMutation.mutate({ courseId, youtubeId: videoId });
+    } else {
+      // Fallback to localStorage for non-authenticated users
+      try {
+        const stored = localStorage.getItem(`video_progress_${courseId}`);
+        const set = stored ? new Set<string>(JSON.parse(stored)) : new Set<string>();
+        if (set.has(videoId)) set.delete(videoId);
+        else set.add(videoId);
+        localStorage.setItem(`video_progress_${courseId}`, JSON.stringify(Array.from(set)));
+      } catch {}
+    }
   };
 
   // Get YouTube thumbnail URL from youtube_id
@@ -803,13 +824,43 @@ export default function TrainingCourse() {
                   </motion.p>
                 )}
               </div>
+              {/* Filter buttons */}
+              <div className="flex items-center gap-2 mb-4">
+                <Filter className="w-3.5 h-3.5 text-muted-foreground" />
+                {(["all", "unwatched", "watched"] as const).map((f) => (
+                  <button
+                    key={f}
+                    onClick={() => setVideoFilter(f)}
+                    className={`text-xs px-3 py-1.5 rounded-full font-medium transition-colors ${
+                      videoFilter === f
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                    }`}
+                  >
+                    {f === "all" ? t({ en: "All", fr: "Toutes" })
+                      : f === "unwatched" ? t({ en: "Unwatched", fr: "Non vues" })
+                      : t({ en: "Watched", fr: "Vues" })}
+                  </button>
+                ))}
+              </div>
               <div className="space-y-3">
-                {videos.map((video: any) => {
+                {videos
+                  .filter((video: any) => {
+                    if (videoFilter === "all") return true;
+                    const vk = video.youtube_id || video.videoId || video.title;
+                    const isComplete = completedVideos.has(vk);
+                    return videoFilter === "watched" ? isComplete : !isComplete;
+                  })
+                  .map((video: any) => {
                   const videoKey = video.youtube_id || video.videoId || video.title;
                   const isVideoComplete = completedVideos.has(videoKey);
                   const isExpanded = expandedVideos.has(videoKey);
                   const isPlaying = playingVideos.has(videoKey);
-                  const duration = video.duration || null;
+                  // Use duration_seconds from JSON data for real durations
+                  const durationSec = video.duration_seconds;
+                  const duration = durationSec
+                    ? `${Math.floor(durationSec / 60)} min`
+                    : (video.duration || null);
 
                   return (
                     <div

@@ -140,3 +140,17 @@ export const examAttempts = mysqlTable("exam_attempts", {
 
 export type ExamAttempt = typeof examAttempts.$inferSelect;
 export type InsertExamAttempt = typeof examAttempts.$inferInsert;
+
+/**
+ * Video progress - tracks which videos a user has watched
+ */
+export const videoProgress = mysqlTable("video_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  courseId: varchar("courseId", { length: 200 }).notNull(),
+  youtubeId: varchar("youtubeId", { length: 50 }).notNull(),
+  watchedAt: timestamp("watchedAt").defaultNow().notNull(),
+});
+
+export type VideoProgress = typeof videoProgress.$inferSelect;
+export type InsertVideoProgress = typeof videoProgress.$inferInsert;

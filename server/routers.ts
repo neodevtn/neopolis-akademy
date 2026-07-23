@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress } from "./db";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
 import { notifyOwner } from "./_core/notification";
@@ -306,6 +306,24 @@ export const appRouter = router({
       .input(z.object({ certificationId: z.string().optional() }).optional())
       .query(async ({ ctx, input }) => {
         return await getExamAttempts(ctx.user.id, input?.certificationId);
+      }),
+  }),
+
+  // ============ Video Progress ============
+  videoProgress: router({
+    get: protectedProcedure
+      .input(z.object({ courseId: z.string().optional() }).optional())
+      .query(async ({ ctx, input }) => {
+        return await getVideoProgress(ctx.user.id, input?.courseId);
+      }),
+
+    toggle: protectedProcedure
+      .input(z.object({
+        courseId: z.string(),
+        youtubeId: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        return await toggleVideoProgress(ctx.user.id, input.courseId, input.youtubeId);
       }),
   }),
 
