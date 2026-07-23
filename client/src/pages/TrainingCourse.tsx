@@ -771,13 +771,38 @@ export default function TrainingCourse() {
                       <div className="px-4 pb-4">
                         <div className="aspect-video rounded-lg overflow-hidden bg-black">
                           <iframe
-                            src={video.embedUrl || video.embed_url}
+                            src={(() => {
+                              // Convert youtube.com/embed to youtube-nocookie.com/embed for privacy & unblocking
+                              let url = video.embedUrl || video.embed_url || "";
+                              url = url.replace("www.youtube.com/embed", "www.youtube-nocookie.com/embed");
+                              // Add origin param if not present
+                              if (url && !url.includes("?")) {
+                                url += "?rel=0&modestbranding=1";
+                              } else if (url && !url.includes("rel=")) {
+                                url += "&rel=0&modestbranding=1";
+                              }
+                              return url;
+                            })()}
                             title={video.title}
                             className="w-full h-full"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerPolicy="strict-origin-when-cross-origin"
                             allowFullScreen
+                            sandbox="allow-same-origin allow-scripts allow-popups allow-presentation"
                           />
                         </div>
+                        {/* Fallback link if embed is blocked */}
+                        {video.watch_url && (
+                          <a
+                            href={video.watch_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-2 inline-flex items-center gap-1.5 text-xs text-primary hover:underline"
+                          >
+                            <PlayCircle className="w-3.5 h-3.5" />
+                            {t({ en: "Watch on YouTube", fr: "Regarder sur YouTube" })}
+                          </a>
+                        )}
                       </div>
                     )}
                   </div>
