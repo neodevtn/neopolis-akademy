@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats } from "./db";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
 import { notifyOwner } from "./_core/notification";
@@ -306,6 +306,39 @@ export const appRouter = router({
       .input(z.object({ certificationId: z.string().optional() }).optional())
       .query(async ({ ctx, input }) => {
         return await getExamAttempts(ctx.user.id, input?.certificationId);
+      }),
+  }),
+
+  // ============ Admin Dashboard ============
+  admin: router({
+    getLearners: protectedProcedure
+      .input(z.object({
+        page: z.number().min(1).default(1),
+        pageSize: z.number().min(1).max(100).default(20),
+        search: z.string().optional(),
+      }).optional())
+      .query(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        return await getAllLearners(input?.page || 1, input?.pageSize || 20, input?.search);
+      }),
+
+    getLearnerDetail: protectedProcedure
+      .input(z.object({ userId: z.number() }))
+      .query(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        return await getLearnerProgress(input.userId);
+      }),
+
+    getStats: protectedProcedure
+      .query(async ({ ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        return await getAllLearnersStats();
       }),
   }),
 });

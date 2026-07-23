@@ -374,3 +374,9 @@
 - [x] Harmoniser TrainingCourse avec le design premium (tokens CSS, header, cards, sidebar)
 - [x] Système de notifications toast quand un nouveau cours se débloque
 - [x] Notification toast quand un certificat est disponible (score ≥ 720)
+
+## Confetti + Admin Dashboard
+- [x] Animation confetti (canvas-confetti) lors de la réussite d'un examen blanc (score >= 720)
+- [x] Tableau de bord admin : procédure tRPC adminProcedure pour lister tous les apprenants
+- [x] Tableau de bord admin : page AdminTraining avec tableau paginé, recherche, progression par apprenant
+- [x] Route /admin/training protégée par rôle admin

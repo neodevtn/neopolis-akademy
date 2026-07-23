@@ -5,7 +5,8 @@ import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 import trainingIndex from "@/data/trainingIndex.json";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import confetti from "canvas-confetti";
 import { ArrowLeft, Clock, CheckCircle2, XCircle, AlertTriangle, ChevronRight, Lock, LogIn, Shield } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -181,6 +182,9 @@ export default function MockExam() {
   }, [examState, answers, examQuestions, examConfig, lang]);
 
   // Submit score to server when review state is reached
+  // Track if confetti was already fired for this exam session
+  const confettiFired = useRef(false);
+
   useEffect(() => {
     if (examState === "review" && score && startTime && certId) {
       submitAttemptMutation.mutate({
@@ -192,6 +196,44 @@ export default function MockExam() {
         domainScores: score.domainResults,
         startedAt: startTime,
       });
+
+      // Fire confetti celebration if passed
+      if (score.passed && !confettiFired.current) {
+        confettiFired.current = true;
+        // First burst
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ["#10b981", "#059669", "#34d399", "#6ee7b7", "#fbbf24", "#f59e0b"],
+        });
+        // Second burst with delay
+        setTimeout(() => {
+          confetti({
+            particleCount: 60,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0, y: 0.6 },
+            colors: ["#10b981", "#059669", "#34d399", "#fbbf24"],
+          });
+          confetti({
+            particleCount: 60,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1, y: 0.6 },
+            colors: ["#10b981", "#059669", "#34d399", "#fbbf24"],
+          });
+        }, 400);
+        // Third burst
+        setTimeout(() => {
+          confetti({
+            particleCount: 40,
+            spread: 100,
+            origin: { y: 0.4 },
+            colors: ["#10b981", "#fbbf24", "#8b5cf6", "#ec4899"],
+          });
+        }, 800);
+      }
     }
   }, [examState]);
 

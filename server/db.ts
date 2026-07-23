@@ -1,4 +1,4 @@
-import { eq, desc, sql, and } from "drizzle-orm";
+import { eq, desc, sql, and, count } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -224,4 +224,72 @@ export async function getExamAttempts(userId: number, certificationId?: string) 
   return await db.select().from(examAttempts)
     .where(eq(examAttempts.userId, userId))
     .orderBy(desc(examAttempts.finishedAt));
+}
+
+// ============ Admin: All Learners ============
+
+export async function getAllLearners(page: number = 1, pageSize: number = 20, search?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const offset = (page - 1) * pageSize;
+
+  // Get users who have at least one training progress entry OR exam attempt
+  let baseQuery = db.select({
+    id: users.id,
+    openId: users.openId,
+    name: users.name,
+    email: users.email,
+    role: users.role,
+    createdAt: users.createdAt,
+    lastSignedIn: users.lastSignedIn,
+  }).from(users);
+
+  if (search && search.trim()) {
+    const searchTerm = `%${search.trim()}%`;
+    baseQuery = baseQuery.where(
+      sql`(${users.name} LIKE ${searchTerm} OR ${users.email} LIKE ${searchTerm})`
+    ) as any;
+  }
+
+  const allUsers = await (baseQuery as any).orderBy(desc(users.lastSignedIn)).limit(pageSize).offset(offset);
+
+  // Get total count
+  let countQuery = db.select({ total: count() }).from(users);
+  if (search && search.trim()) {
+    const searchTerm = `%${search.trim()}%`;
+    countQuery = countQuery.where(
+      sql`(${users.name} LIKE ${searchTerm} OR ${users.email} LIKE ${searchTerm})`
+    ) as any;
+  }
+  const [{ total }] = await countQuery;
+
+  return { users: allUsers, total, page, pageSize };
+}
+
+export async function getLearnerProgress(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const progress = await db.select().from(trainingProgress).where(eq(trainingProgress.userId, userId));
+  const attempts = await db.select().from(examAttempts).where(eq(examAttempts.userId, userId)).orderBy(desc(examAttempts.finishedAt));
+
+  return { progress, attempts };
+}
+
+export async function getAllLearnersStats() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const totalUsers = await db.select({ total: count() }).from(users);
+  const totalProgress = await db.select({ total: count() }).from(trainingProgress);
+  const totalAttempts = await db.select({ total: count() }).from(examAttempts);
+  const passedAttempts = await db.select({ total: count() }).from(examAttempts).where(eq(examAttempts.passed, 1));
+
+  return {
+    totalUsers: totalUsers[0].total,
+    totalLessonsCompleted: totalProgress[0].total,
+    totalExamAttempts: totalAttempts[0].total,
+    totalExamsPassed: passedAttempts[0].total,
+  };
 }
