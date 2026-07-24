@@ -1,163 +1,163 @@
 {
-  "courseId": "claude_certified_associate_foundations__07",
-  "lessons": [
-    {
-      "id": "lesson_01",
-      "title": {
-        "en": "Diagnosing Underperformance",
-        "fr": "Diagnosing Underperformance"
-      },
-      "type": "teaching",
-      "duration": "10 min",
-      "pages": {
-        "en": [
-          "Diagnosing Underperforming Prompts and Outputs\n\nWhen an output disappoints, most people do one of two unproductive things: give up and conclude \"Claude can't do this,\" or thrash, changing random things until something works. Diagnostic skill replaces both with a sequence. Underperformance has findable root causes, and running the sequence usually turns a dead end into a five-minute fix.\n\nBy the end of this module, you will be able to:\n\n1Diagnose why a prompt or output is underperforming and trace it to its root cause: under-specification, context overload, the wrong feature or model, or stale configuration.\n\n2Adjust your approach based on the output you get, turning recurring corrections into fixes that persist instead of repeating the same manual work.",
-          "3Optimize a workflow for efficiency by promoting shared context, format, and verification steps into Projects, Skills, and standing instructions.\n\nCommon failure patterns and their root causes\n\nThe four produce similar-looking bad output, so read the symptom timing for which one you are in. Flip each card.\n\nFirst response wrong\n\nUnder-specification\n\nUnder-specification. The prompt left out context, constraints, or the format. The most common cause, and the cheapest to fix: add what was missing.\n\nDegraded over time\n\nContext overload\n\nContext overload. A long conversation has approached the context limit, and earlier content has been automatically summarized to make room; detail can compress, so early instructions lose force. The fix is a restart or a summary, not a better prompt.\n\nSpecific error type",
-          "Wrong feature or model\n\nWrong feature or model. Asking for a calculation in prose instead of code execution, or a deep analysis from a model tier chosen for speed. The fix is the right tool, not more prompting.\n\nUsed to work\n\nStale configuration\n\nStale configuration. A standing instruction, knowledge source, or Skill has drifted out of date and is degrading output silently. The fix is maintenance, covered in Module 5.",
-          "The four patterns produce similar-looking bad output, so the skill is reading the symptom for which one you are in. Under-specification shows up from the very first response: the output was never right, because the prompt never carried what it needed. Context overload shows up partway through a good session: it started fine and degraded as the conversation grew. Wrong features show up as specific, repeatable error types: numbers that are subtly off (needs code execution) or shallow analysis on a task that needs depth (wrong model tier). Stale configuration shows up as \"it used to work\": the same setup that produced good output last month now does not, because something it depends on drifted. The timing and pattern: first response-wrong, degraded-over-time, specific-error-type, or used-to-work. Each points at a different fix.",
-          "Isolating the cause\n\nBefore blaming the tool, locate the failure. Is it the prompt (specification), the context (window full or wrong material loaded), the feature choice (wrong entry point, model, or no code execution), or an expectation mismatch (the task was never one Claude could do well)? Naming which of the four it is points straight to the fix.\n\nA diagnostic sequence\n\nRun these in order before concluding Claude cannot do the task:\n\nRe-read the prompt against the five components: is anything under-specified?\n\nCheck the conversation length: is context overloaded and in need of a restart or summary?\n\nCheck the feature and model: is this a calculation that needs code execution, or a complex task on a speed-tier model?\n\nCheck the configuration: are the instructions, knowledge, and Skills current?",
-          "Only then question whether the task is a fit at all.\n\nThe sequence runs cheapest-fix-first on purpose. Re-reading the prompt costs seconds and resolves the most common failure, so it goes first. Restarting from a summary costs a little more effort, so it comes second. Switching features or model and checking configuration cost even more. Questioning whether the task fits at all is last because it is the most expensive conclusion, it ends the attempt and you should only reach it after the cheaper causes are ruled out. Most people invert this: they jump to \"switch to the most capable model\" or \"this task is impossible\" first, which is the expensive move that usually was not needed. Discipline here is resisting the urge to skip to step 5.\n\nWorked example: a failure gallery",
-          "Four failures, four diagnoses\n\n\"The summary keeps missing key points.\" Diagnosis: under-specification. The prompt never said which points matter. Fix: name the criteria for 'key.'\n\n\"It stopped following my format halfway through.\" Diagnosis: context overload in a long session. Fix: restart from a summary, or persist the format to a standing instruction.\n\n\"The numbers are subtly wrong.\" Diagnosis: wrong feature. Fix: move the calculation to code execution.\n\n\"It worked last month, now it's off.\" Diagnosis: stale configuration. Fix: run t\n\n[...]"
-        ],
-        "fr": [
-          "Diagnosing Underperforming Prompts and Outputs\n\nWhen an output disappoints, most people do one of two unproductive things: give up and conclude \"Claude can't do this,\" or thrash, changing random things until something works. Diagnostic skill replaces both with a sequence. Underperformance has findable root causes, and running the sequence usually turns a dead end into a five-minute fix.\n\nBy the end of this module, you will be able to:\n\n1Diagnose why a prompt or output is underperforming and trace it to its root cause: under-specification, context overload, the wrong feature or model, or stale configuration.\n\n2Adjust your approach based on the output you get, turning recurring corrections into fixes that persist instead of repeating the same manual work.",
-          "3Optimize a workflow for efficiency by promoting shared context, format, and verification steps into Projects, Skills, and standing instructions.\n\nCommon failure patterns and their root causes\n\nThe four produce similar-looking bad output, so read the symptom timing for which one you are in. Flip each card.\n\nFirst response wrong\n\nUnder-specification\n\nUnder-specification. The prompt left out context, constraints, or the format. The most common cause, and the cheapest to fix: add what was missing.\n\nDegraded over time\n\nContext overload\n\nContext overload. A long conversation has approached the context limit, and earlier content has been automatically summarized to make room; detail can compress, so early instructions lose force. The fix is a restart or a summary, not a better prompt.\n\nSpecific error type",
-          "Wrong feature or model\n\nWrong feature or model. Asking for a calculation in prose instead of code execution, or a deep analysis from a model tier chosen for speed. The fix is the right tool, not more prompting.\n\nUsed to work\n\nStale configuration\n\nStale configuration. A standing instruction, knowledge source, or Skill has drifted out of date and is degrading output silently. The fix is maintenance, covered in Module 5.",
-          "The four patterns produce similar-looking bad output, so the skill is reading the symptom for which one you are in. Under-specification shows up from the very first response: the output was never right, because the prompt never carried what it needed. Context overload shows up partway through a good session: it started fine and degraded as the conversation grew. Wrong features show up as specific, repeatable error types: numbers that are subtly off (needs code execution) or shallow analysis on a task that needs depth (wrong model tier). Stale configuration shows up as \"it used to work\": the same setup that produced good output last month now does not, because something it depends on drifted. The timing and pattern: first response-wrong, degraded-over-time, specific-error-type, or used-to-work. Each points at a different fix.",
-          "Isolating the cause\n\nBefore blaming the tool, locate the failure. Is it the prompt (specification), the context (window full or wrong material loaded), the feature choice (wrong entry point, model, or no code execution), or an expectation mismatch (the task was never one Claude could do well)? Naming which of the four it is points straight to the fix.\n\nA diagnostic sequence\n\nRun these in order before concluding Claude cannot do the task:\n\nRe-read the prompt against the five components: is anything under-specified?\n\nCheck the conversation length: is context overloaded and in need of a restart or summary?\n\nCheck the feature and model: is this a calculation that needs code execution, or a complex task on a speed-tier model?\n\nCheck the configuration: are the instructions, knowledge, and Skills current?",
-          "Only then question whether the task is a fit at all.\n\nThe sequence runs cheapest-fix-first on purpose. Re-reading the prompt costs seconds and resolves the most common failure, so it goes first. Restarting from a summary costs a little more effort, so it comes second. Switching features or model and checking configuration cost even more. Questioning whether the task fits at all is last because it is the most expensive conclusion, it ends the attempt and you should only reach it after the cheaper causes are ruled out. Most people invert this: they jump to \"switch to the most capable model\" or \"this task is impossible\" first, which is the expensive move that usually was not needed. Discipline here is resisting the urge to skip to step 5.\n\nWorked example: a failure gallery",
-          "Four failures, four diagnoses\n\n\"The summary keeps missing key points.\" Diagnosis: under-specification. The prompt never said which points matter. Fix: name the criteria for 'key.'\n\n\"It stopped following my format halfway through.\" Diagnosis: context overload in a long session. Fix: restart from a summary, or persist the format to a standing instruction.\n\n\"The numbers are subtly wrong.\" Diagnosis: wrong feature. Fix: move the calculation to code execution.\n\n\"It worked last month, now it's off.\" Diagnosis: stale configuration. Fix: run t\n\n[...]"
-        ]
-      },
-      "totalPages": 7
-    },
-    {
-      "id": "lesson_02",
-      "title": {
-        "en": "Adjusting from Feedback",
-        "fr": "Adjusting from Feedback"
-      },
-      "type": "teaching",
-      "duration": "7 min",
-      "pages": {
-        "en": [
-          "Adjusting Approach from Feedback and Results\n\nEvery disappointing output is diagnostic data. Letting that data evaporate, fixing the same problem by hand each time it recurs, represents a missed opportunity. The skill is translating output critique into a specific adjustment and then capturing the fix so it persists.\n\nBuild feedback loops into recurring work\n\nFor work you do repeatedly, treat each round's output as a signal about the setup. A recurring report that needs the same manual correction every week is telling you the prompt, context, or configuration is missing something. Build a quick habit of asking, after each round, what the output revealed about the system that produced it.\n\nTranslate critique into a specific adjustment",
-          "A vague \"this isn't quite right\" does not improve anything. Convert it into the precise change: which component, which context, which configuration setting. \"Too generic\" becomes \"add the audience to the context.\" \"Wrong tone\" becomes \"add a tone constraint to the standing instruction.\" The adjustment is specific enough to act on and to check.",
-          "The skill here is turning a reaction into an instruction. A reaction names how the output feels (\"too generic,\" \"not quite right,\" \"missed the point\"), while an instruction names what to change so the next output is different. The reliable way to make the jump is to ask: what specifically would have to be present for this to be right, and which part of the setup controls that? \"Too generic\" becomes \"name the audience and the one action I want them to take.\" \"Missed the point\" becomes \"state the single question the output must answer up front.\" Each translation points at a specific lever, the prompt, the context loaded, or a configuration setting and that lever is where the fix goes. If you cannot name the lever, the critique is still a reaction, and the next attempt will be a guess.",
-          "Capture what worked\n\nWhen a fix works, do not leave it in a one-off conversation where it will be lost. Promote it: a phrasing that reliably produces the right output becomes a standing instruction; a multi-step fix becomes a Skill. Capturing the fix is what turns a lucky round into a permanent improvement.",
-          "The expensive failure mode is finding the fix and then losing it. A correction discovered in Monday's session and not captured will be rediscovered next Monday and by whoever runs the task. Each rediscovery costs the same time the first one did, multiplied by every person and every cycle. Capturing the fix once, as a standing instruction in the Project or as a Skill, converts a repeated cost into a one-time cost. The test for whether a fix is worth promoting is simple: will this same correction be needed again, by me or someone else? If yes, it belongs in configuration. Claude's Memory may pick up patterns you repeat, but it is per-user and best-effort; configuration is the deliberate, shared, reliable home for a fix.\n\nWorked example: a recurring fix promoted",
-          "Toggle to compare the same fix captured versus left in a one-off conversation.\n\nCaptured\nLost\n\nCaptured\n\nA marketer notices that every campaign-brief draft needs the same two corrections: it omits the target segment and buries the call to action. Instead of fixing both by hand each week, she adds two standing instructions to the briefs Project: \"Always state the target segment in the first line\" and \"Place the call to action in its own closing section.\" The next draft arrives correct. One round of feedback, captured into configuration, removes a recurring weekly correction.\n\nLost",
-          "Contrast that with the analyst who, every month, manually reminds Claude that the report should exclude internal test accounts. They found the right instructions on month one but kept it in conversation. Six months later they are still typing it, and when a colleague covers for them, the colleague does not know to, so a report ships with test data in it. The fix existed the whole time; the failure was leaving it un-captured."
-        ],
-        "fr": [
-          "Adjusting Approach from Feedback and Results\n\nEvery disappointing output is diagnostic data. Letting that data evaporate, fixing the same problem by hand each time it recurs, represents a missed opportunity. The skill is translating output critique into a specific adjustment and then capturing the fix so it persists.\n\nBuild feedback loops into recurring work\n\nFor work you do repeatedly, treat each round's output as a signal about the setup. A recurring report that needs the same manual correction every week is telling you the prompt, context, or configuration is missing something. Build a quick habit of asking, after each round, what the output revealed about the system that produced it.\n\nTranslate critique into a specific adjustment",
-          "A vague \"this isn't quite right\" does not improve anything. Convert it into the precise change: which component, which context, which configuration setting. \"Too generic\" becomes \"add the audience to the context.\" \"Wrong tone\" becomes \"add a tone constraint to the standing instruction.\" The adjustment is specific enough to act on and to check.",
-          "The skill here is turning a reaction into an instruction. A reaction names how the output feels (\"too generic,\" \"not quite right,\" \"missed the point\"), while an instruction names what to change so the next output is different. The reliable way to make the jump is to ask: what specifically would have to be present for this to be right, and which part of the setup controls that? \"Too generic\" becomes \"name the audience and the one action I want them to take.\" \"Missed the point\" becomes \"state the single question the output must answer up front.\" Each translation points at a specific lever, the prompt, the context loaded, or a configuration setting and that lever is where the fix goes. If you cannot name the lever, the critique is still a reaction, and the next attempt will be a guess.",
-          "Capture what worked\n\nWhen a fix works, do not leave it in a one-off conversation where it will be lost. Promote it: a phrasing that reliably produces the right output becomes a standing instruction; a multi-step fix becomes a Skill. Capturing the fix is what turns a lucky round into a permanent improvement.",
-          "The expensive failure mode is finding the fix and then losing it. A correction discovered in Monday's session and not captured will be rediscovered next Monday and by whoever runs the task. Each rediscovery costs the same time the first one did, multiplied by every person and every cycle. Capturing the fix once, as a standing instruction in the Project or as a Skill, converts a repeated cost into a one-time cost. The test for whether a fix is worth promoting is simple: will this same correction be needed again, by me or someone else? If yes, it belongs in configuration. Claude's Memory may pick up patterns you repeat, but it is per-user and best-effort; configuration is the deliberate, shared, reliable home for a fix.\n\nWorked example: a recurring fix promoted",
-          "Toggle to compare the same fix captured versus left in a one-off conversation.\n\nCaptured\nLost\n\nCaptured\n\nA marketer notices that every campaign-brief draft needs the same two corrections: it omits the target segment and buries the call to action. Instead of fixing both by hand each week, she adds two standing instructions to the briefs Project: \"Always state the target segment in the first line\" and \"Place the call to action in its own closing section.\" The next draft arrives correct. One round of feedback, captured into configuration, removes a recurring weekly correction.\n\nLost",
-          "Contrast that with the analyst who, every month, manually reminds Claude that the report should exclude internal test accounts. They found the right instructions on month one but kept it in conversation. Six months later they are still typing it, and when a colleague covers for them, the colleague does not know to, so a report ships with test data in it. The fix existed the whole time; the failure was leaving it un-captured."
-        ]
-      },
-      "totalPages": 7
-    },
-    {
-      "id": "lesson_03",
-      "title": {
-        "en": "Optimizing Workflows",
-        "fr": "Optimizing Workflows"
-      },
-      "type": "teaching",
-      "duration": "8 min",
-      "pages": {
-        "en": [
-          "Optimizing Workflows for Efficiency and Effectiveness\n\nOptimization is deliberate, not accidental. You instrument the workflow, find the friction, and promote the fix into configuration. Done well, it compounds: each redundancy removed and each pattern promoted makes the workflow faster and more consistent for everyone who uses it.\n\nFind redundancy and friction",
-          "Look at a recurring AI-assisted workflow for the steps that repeat unnecessarily: the same context pasted every session, the same correction made every round, the same manual reformatting at the end. Each is friction that configuration can remove. Friction is easy to live with and hard to see, because you absorb it one session at a time. The way to identify it is to watch one full cycle of the workflow and note every step you do by hand that you also did last time. Three signals point at removable friction. Flip each to see the fix. If you cannot see the friction, run the workflow once with the explicit job of writing down every manual step. This list is your optimization backlog.\n\nSignal\n\nRepetition\n\nYou paste or type the same thing every run.\n\nFix: saved context or a standing instruction.\n\nSignal",
-          "Correction\n\nYou fix the same flaw in every output.\n\nFix: a configuration change so the flaw stops appearing.\n\nSignal\n\nVariance\n\nDifferent people running the same task get different results.\n\nFix: a shared Skill or knowledge base so everyone runs the same setup.\n\nConsolidate and promote\n\nTwo moves do most of the work. Consolidate steps that can run together rather than as separate prompts. And promote repeated patterns into Projects and Skills: context that you paste every time belongs in the knowledge base or standing instructions; a procedure you run every time belongs in a Skill. Promotion is how a personal workaround becomes a team-wide efficiency.",
-          "Promotion only helps if the fix lands in the right place. A standing instruction is for a rule that should always apply within a Project (\"always include the target segment\"). The Project knowledge base is for reference material every run needs (\"our brand voice guide,\" \"the current product list\"). A Skill is for a repeatable procedure with steps (\"generate the weekly report in this exact format and order\"). The quick test: is it a rule, a reference, or a procedure? Rules go to instructions, references go to knowledge, procedures go to Skills. Putting a fix in the wrong home is why some \"optimizations\" do not stick. A procedure pasted as a one-line instruction loses its steps, and reference material crammed into an instruction bloats every prompt.",
-          "Not every change is an improvement, so promote with a little caution. When you move a fix into configuration, run the workflow a few cycles with the old approach still available before you fully rely on the new setup. If the optimized version produces worse or less predictable outputs, you want to catch it before it has shipped several times. The compounding benefit of optimization is real, but so is the compounding cost of a bad change baked into a workflow everyone uses. Prove the gain on a few runs, then commit to it.\n\nMeasure the improvement",
-          "Optimization you cannot measure is hard to justify or sustain. Track the concrete gains: time saved per cycle, revision cycles reduced, consistency improved across people doing the same task. A workflow that dropped from 40 minutes to 25, or from three revision rounds to one, is an improvement you can point to.",
-          "Time saved is the easiest metric, but it is not always the one that matters most. For some workflows the real gain is consistency (every output now follows the same format and catches the same issues, regardless of who runs it) or quality (fewer errors reach the final product). Pick the metric that matches why the workflow mattered: a customer-facing report optimizes consistency and accuracy more than raw speed; an internal draft optimizes for time. Identifying the right metric up front also tells you when to stop, optimization has diminishing returns, and once the metric you care about is good enough, further tuning is its own kind of friction.\n\nWorked example: a workflow efficiency audit\n\n45 minutes → 25 minutes",
-          "A team's weekly reporting workflow takes about 45 minutes per analyst, and outputs vary by who runs it. The audit finds three frictions: each analyst re-pastes the same background, each reformats the output by hand, and each catches different things.\n\nThe optimization: move the background into a shared Project knowledge base, add a Skill for the report format, and set a standing instruction for the verification step. Result: about 25 minutes per analyst, consistent format across the team, and one fewer revision round. The friction was found by instrumenting the workflow; the gain came from promoting the fixes into configuration.\n\nNotice how the example maps cleanly onto the three promotion homes: the repeated background (a reference) went to the knowledge base, the report format (\n\n[...]"
-        ],
-        "fr": [
-          "Optimizing Workflows for Efficiency and Effectiveness\n\nOptimization is deliberate, not accidental. You instrument the workflow, find the friction, and promote the fix into configuration. Done well, it compounds: each redundancy removed and each pattern promoted makes the workflow faster and more consistent for everyone who uses it.\n\nFind redundancy and friction",
-          "Look at a recurring AI-assisted workflow for the steps that repeat unnecessarily: the same context pasted every session, the same correction made every round, the same manual reformatting at the end. Each is friction that configuration can remove. Friction is easy to live with and hard to see, because you absorb it one session at a time. The way to identify it is to watch one full cycle of the workflow and note every step you do by hand that you also did last time. Three signals point at removable friction. Flip each to see the fix. If you cannot see the friction, run the workflow once with the explicit job of writing down every manual step. This list is your optimization backlog.\n\nSignal\n\nRepetition\n\nYou paste or type the same thing every run.\n\nFix: saved context or a standing instruction.\n\nSignal",
-          "Correction\n\nYou fix the same flaw in every output.\n\nFix: a configuration change so the flaw stops appearing.\n\nSignal\n\nVariance\n\nDifferent people running the same task get different results.\n\nFix: a shared Skill or knowledge base so everyone runs the same setup.\n\nConsolidate and promote\n\nTwo moves do most of the work. Consolidate steps that can run together rather than as separate prompts. And promote repeated patterns into Projects and Skills: context that you paste every time belongs in the knowledge base or standing instructions; a procedure you run every time belongs in a Skill. Promotion is how a personal workaround becomes a team-wide efficiency.",
-          "Promotion only helps if the fix lands in the right place. A standing instruction is for a rule that should always apply within a Project (\"always include the target segment\"). The Project knowledge base is for reference material every run needs (\"our brand voice guide,\" \"the current product list\"). A Skill is for a repeatable procedure with steps (\"generate the weekly report in this exact format and order\"). The quick test: is it a rule, a reference, or a procedure? Rules go to instructions, references go to knowledge, procedures go to Skills. Putting a fix in the wrong home is why some \"optimizations\" do not stick. A procedure pasted as a one-line instruction loses its steps, and reference material crammed into an instruction bloats every prompt.",
-          "Not every change is an improvement, so promote with a little caution. When you move a fix into configuration, run the workflow a few cycles with the old approach still available before you fully rely on the new setup. If the optimized version produces worse or less predictable outputs, you want to catch it before it has shipped several times. The compounding benefit of optimization is real, but so is the compounding cost of a bad change baked into a workflow everyone uses. Prove the gain on a few runs, then commit to it.\n\nMeasure the improvement",
-          "Optimization you cannot measure is hard to justify or sustain. Track the concrete gains: time saved per cycle, revision cycles reduced, consistency improved across people doing the same task. A workflow that dropped from 40 minutes to 25, or from three revision rounds to one, is an improvement you can point to.",
-          "Time saved is the easiest metric, but it is not always the one that matters most. For some workflows the real gain is consistency (every output now follows the same format and catches the same issues, regardless of who runs it) or quality (fewer errors reach the final product). Pick the metric that matches why the workflow mattered: a customer-facing report optimizes consistency and accuracy more than raw speed; an internal draft optimizes for time. Identifying the right metric up front also tells you when to stop, optimization has diminishing returns, and once the metric you care about is good enough, further tuning is its own kind of friction.\n\nWorked example: a workflow efficiency audit\n\n45 minutes → 25 minutes",
-          "A team's weekly reporting workflow takes about 45 minutes per analyst, and outputs vary by who runs it. The audit finds three frictions: each analyst re-pastes the same background, each reformats the output by hand, and each catches different things.\n\nThe optimization: move the background into a shared Project knowledge base, add a Skill for the report format, and set a standing instruction for the verification step. Result: about 25 minutes per analyst, consistent format across the team, and one fewer revision round. The friction was found by instrumenting the workflow; the gain came from promoting the fixes into configuration.\n\nNotice how the example maps cleanly onto the three promotion homes: the repeated background (a reference) went to the knowledge base, the report format (\n\n[...]"
-        ]
-      },
-      "totalPages": 8
-    }
-  ],
-  "exercises": [
-    {
-      "id": "ex_1",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_2",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_3",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_4",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_5",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_6",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_7",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_8",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_9",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_10",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_11",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_12",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_13",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_14",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_15",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_16",
-      "type": "exercise"
-    }
-  ]
+ "courseId": "claude_certified_associate_foundations__07",
+ "lessons": [
+  {
+   "id": "lesson_01",
+   "title": {
+    "en": "Diagnosing Underperformance",
+    "fr": "Diagnostiquer la sous-performance"
+   },
+   "type": "teaching",
+   "duration": "10 min",
+   "pages": {
+    "en": [
+     "Diagnosing Underperforming Prompts and Outputs\n\nWhen an output disappoints, most people do one of two unproductive things: give up and conclude \"Claude can't do this,\" or thrash, changing random things until something works. Diagnostic skill replaces both with a sequence. Underperformance has findable root causes, and running the sequence usually turns a dead end into a five-minute fix.\n\nBy the end of this module, you will be able to:\n\n1Diagnose why a prompt or output is underperforming and trace it to its root cause: under-specification, context overload, the wrong feature or model, or stale configuration.\n\n2Adjust your approach based on the output you get, turning recurring corrections into fixes that persist instead of repeating the same manual work.",
+     "3Optimize a workflow for efficiency by promoting shared context, format, and verification steps into Projects, Skills, and standing instructions.\n\nCommon failure patterns and their root causes\n\nThe four produce similar-looking bad output, so read the symptom timing for which one you are in. Flip each card.\n\nFirst response wrong\n\nUnder-specification\n\nUnder-specification. The prompt left out context, constraints, or the format. The most common cause, and the cheapest to fix: add what was missing.\n\nDegraded over time\n\nContext overload\n\nContext overload. A long conversation has approached the context limit, and earlier content has been automatically summarized to make room; detail can compress, so early instructions lose force. The fix is a restart or a summary, not a better prompt.\n\nSpecific error type",
+     "Wrong feature or model\n\nWrong feature or model. Asking for a calculation in prose instead of code execution, or a deep analysis from a model tier chosen for speed. The fix is the right tool, not more prompting.\n\nUsed to work\n\nStale configuration\n\nStale configuration. A standing instruction, knowledge source, or Skill has drifted out of date and is degrading output silently. The fix is maintenance, covered in Module 5.",
+     "The four patterns produce similar-looking bad output, so the skill is reading the symptom for which one you are in. Under-specification shows up from the very first response: the output was never right, because the prompt never carried what it needed. Context overload shows up partway through a good session: it started fine and degraded as the conversation grew. Wrong features show up as specific, repeatable error types: numbers that are subtly off (needs code execution) or shallow analysis on a task that needs depth (wrong model tier). Stale configuration shows up as \"it used to work\": the same setup that produced good output last month now does not, because something it depends on drifted. The timing and pattern: first response-wrong, degraded-over-time, specific-error-type, or used-to-work. Each points at a different fix.",
+     "Isolating the cause\n\nBefore blaming the tool, locate the failure. Is it the prompt (specification), the context (window full or wrong material loaded), the feature choice (wrong entry point, model, or no code execution), or an expectation mismatch (the task was never one Claude could do well)? Naming which of the four it is points straight to the fix.\n\nA diagnostic sequence\n\nRun these in order before concluding Claude cannot do the task:\n\nRe-read the prompt against the five components: is anything under-specified?\n\nCheck the conversation length: is context overloaded and in need of a restart or summary?\n\nCheck the feature and model: is this a calculation that needs code execution, or a complex task on a speed-tier model?\n\nCheck the configuration: are the instructions, knowledge, and Skills current?",
+     "Only then question whether the task is a fit at all.\n\nThe sequence runs cheapest-fix-first on purpose. Re-reading the prompt costs seconds and resolves the most common failure, so it goes first. Restarting from a summary costs a little more effort, so it comes second. Switching features or model and checking configuration cost even more. Questioning whether the task fits at all is last because it is the most expensive conclusion, it ends the attempt and you should only reach it after the cheaper causes are ruled out. Most people invert this: they jump to \"switch to the most capable model\" or \"this task is impossible\" first, which is the expensive move that usually was not needed. Discipline here is resisting the urge to skip to step 5.\n\nWorked example: a failure gallery",
+     "Four failures, four diagnoses\n\n\"The summary keeps missing key points.\" Diagnosis: under-specification. The prompt never said which points matter. Fix: name the criteria for 'key.'\n\n\"It stopped following my format halfway through.\" Diagnosis: context overload in a long session. Fix: restart from a summary, or persist the format to a standing instruction.\n\n\"The numbers are subtly wrong.\" Diagnosis: wrong feature. Fix: move the calculation to code execution.\n\n\"It worked last month, now it's off.\" Diagnosis: stale configuration. Fix: run t\n\n[...]"
+    ],
+    "fr": [
+     "Diagnostiquer les invites et sorties sous-performantes\n\nQuand un résultat déçoit, la plupart des gens font l'une des deux choses improductives : abandonner en concluant « Claude ne peut pas faire ça », ou patauger en changeant des éléments au hasard jusqu'à ce que ça marche. La compétence de diagnostic remplace les deux par une séquence. La sous-performance a des causes profondes identifiables, et exécuter la séquence transforme généralement une impasse en une solution de cinq minutes.\n\nÀ la fin de ce module, vous serez capable de :\n\n1 Diagnostiquer pourquoi une invite ou un résultat est sous-performant et en retrouver la cause racine : sous-spécification, surcharge de contexte, mauvaise fonctionnalité ou modèle, ou configuration obsolète.\n\n2 Adapter votre approche selon le résultat obtenu, en transformant les corrections récurrentes en correctifs durables plutôt qu'en répétant le même travail manuel.",
+     "3 Optimiser un flux de travail pour l'efficacité en élevant le contexte partagé, le format et les étapes de vérification en Projects, Skills et consignes permanentes.\n\nSchémas d'échec courants et leurs causes profondes\n\nLes quatre produisent des sorties dégradées qui se ressemblent, donc lisez le timing des symptômes pour savoir dans lequel vous vous trouvez. Retournez chaque carte.\n\nPremière réponse incorrecte\n\nSous-spécification\n\nSous-spécification. L'invite a omis du contexte, des contraintes ou le format. La cause la plus fréquente et la moins coûteuse à corriger : ajouter ce qui manquait.\n\nDégradé au fil du temps\n\nSurcharge de contexte\n\nSurcharge de contexte. Une longue conversation a atteint la limite de contexte, et le contenu antérieur a été automatiquement résumé pour faire de la place ; les détails peuvent être compressés, si bien que les instructions initiales perdent de leur force. La solution est de redémarrer ou de fournir un résumé, pas d'écrire une meilleure invite.\n\nType d'erreur spécifique",
+     "Mauvaise fonctionnalité ou modèle\n\nMauvaise fonctionnalité ou modèle. Demander un calcul en prose au lieu d'exécuter du code, ou une analyse approfondie à un niveau de modèle choisi pour la rapidité. La solution est d'utiliser le bon outil, pas de multiplier les invites.\n\nFonctionnait auparavant\n\nConfiguration obsolète\n\nConfiguration obsolète. Une instruction permanente, une source de connaissance ou une Skill est devenue obsolète et dégrade silencieusement les résultats. La solution est la maintenance, abordée dans le Module 5.",
+     "Les quatre motifs produisent des sorties erronées qui se ressemblent, donc l'habileté consiste à lire le symptôme auquel vous êtes confronté. La sous-spécification apparaît dès la première réponse : la sortie n'a jamais été correcte parce que le prompt n'apportait pas ce qu'il fallait. La surcharge de contexte se manifeste en cours de session : ça a bien commencé puis s'est dégradé à mesure que la conversation s'allongeait. Le mauvais choix de fonctionnalités se traduit par des types d'erreurs spécifiques et répétables : des chiffres légèrement faux (nécessite l'exécution de code) ou des analyses superficielles sur une tâche qui demande de la profondeur (mauvais niveau de modèle). Une configuration obsolète se manifeste par « ça marchait avant » : la même configuration qui produisait de bons résultats le mois dernier ne fonctionne plus, parce que quelque chose dont elle dépend a dérivé. Le timing et le motif : mauvaise dès la première réponse, dégradation dans le temps, type d'erreur spécifique, ou « ça marchait avant ». Chacun indique une correction différente.",
+     "Isoler la cause\n\nAvant d'accuser l'outil, localisez la défaillance. Est-ce le prompt (spécification), le contexte (fenêtre pleine ou mauvais matériel chargé), le choix de fonctionnalité (mauvais point d'entrée, modèle, ou absence d'exécution de code), ou un décalage d'attentes (la tâche n'a jamais été une tâche que Claude pouvait bien faire) ? Nommer lequel des quatre c'est pointe directement vers le correctif.\n\nUne séquence diagnostique\n\nExécutez ces étapes dans l'ordre avant de conclure que Claude ne peut pas faire la tâche :\n\nRelisez le prompt en regard des cinq composantes : quelque chose est-il sous-spécifié ?\n\nVérifiez la longueur de la conversation : le contexte est-il surchargé et nécessite-t-il un redémarrage ou un résumé ?\n\nVérifiez la fonctionnalité et le modèle : s'agit-il d'un calcul qui nécessite l'exécution de code, ou d'une tâche complexe sur un modèle speed-tier ?\n\nVérifiez la configuration : les instructions, la base de connaissances et les Skills sont-elles à jour ?",
+     "Ce n'est qu'ensuite qu'il faut se demander si la tâche convient du tout.\n\nLa séquence est organisée volontairement pour appliquer d'abord la solution la moins coûteuse. Relire le prompt prend quelques secondes et résout la défaillance la plus courante, donc cela vient en premier. Redémarrer à partir d'un résumé demande un peu plus d'effort, donc cela vient en second. Changer de fonctionnalités ou de modèle et vérifier la configuration coûtent encore plus. Se demander si la tâche convient du tout est la dernière étape parce que c'est la conclusion la plus coûteuse : elle met fin à la tentative et vous ne devriez y parvenir qu'après avoir exclu les causes moins onéreuses. La plupart des gens font l'inverse : ils sautent d'abord à « passer au modèle le plus performant » ou à « cette tâche est impossible », ce qui est le geste coûteux qui, en général, n'était pas nécessaire. La discipline consiste ici à résister à l'envie de passer directement à l'étape 5.\n\nExemple détaillé : galerie de cas de défaillance",
+     "Quatre échecs, quatre diagnostics\n\n\"The summary keeps missing key points.\" Diagnostic : sous-spécification. Le prompt n'a jamais précisé quels points importent. Correctif : nommer les critères des « points clés ».\n\n\"It stopped following my format halfway through.\" Diagnostic : surcharge de contexte dans une longue session. Correctif : repartir d'un résumé, ou faire perdurer le format via une instruction permanente.\n\n\"The numbers are subtly wrong.\" Diagnostic : mauvaise fonctionnalité. Correctif : déplacer le calcul vers une exécution de code.\n\n\"It worked last month, now it's off.\" Diagnostic : configuration obsolète. Correctif : exécuter t\n\n[...]"
+    ]
+   },
+   "totalPages": 7
+  },
+  {
+   "id": "lesson_02",
+   "title": {
+    "en": "Adjusting from Feedback",
+    "fr": "S'ajuster en fonction des retours"
+   },
+   "type": "teaching",
+   "duration": "7 min",
+   "pages": {
+    "en": [
+     "Adjusting Approach from Feedback and Results\n\nEvery disappointing output is diagnostic data. Letting that data evaporate, fixing the same problem by hand each time it recurs, represents a missed opportunity. The skill is translating output critique into a specific adjustment and then capturing the fix so it persists.\n\nBuild feedback loops into recurring work\n\nFor work you do repeatedly, treat each round's output as a signal about the setup. A recurring report that needs the same manual correction every week is telling you the prompt, context, or configuration is missing something. Build a quick habit of asking, after each round, what the output revealed about the system that produced it.\n\nTranslate critique into a specific adjustment",
+     "A vague \"this isn't quite right\" does not improve anything. Convert it into the precise change: which component, which context, which configuration setting. \"Too generic\" becomes \"add the audience to the context.\" \"Wrong tone\" becomes \"add a tone constraint to the standing instruction.\" The adjustment is specific enough to act on and to check.",
+     "The skill here is turning a reaction into an instruction. A reaction names how the output feels (\"too generic,\" \"not quite right,\" \"missed the point\"), while an instruction names what to change so the next output is different. The reliable way to make the jump is to ask: what specifically would have to be present for this to be right, and which part of the setup controls that? \"Too generic\" becomes \"name the audience and the one action I want them to take.\" \"Missed the point\" becomes \"state the single question the output must answer up front.\" Each translation points at a specific lever, the prompt, the context loaded, or a configuration setting and that lever is where the fix goes. If you cannot name the lever, the critique is still a reaction, and the next attempt will be a guess.",
+     "Capture what worked\n\nWhen a fix works, do not leave it in a one-off conversation where it will be lost. Promote it: a phrasing that reliably produces the right output becomes a standing instruction; a multi-step fix becomes a Skill. Capturing the fix is what turns a lucky round into a permanent improvement.",
+     "The expensive failure mode is finding the fix and then losing it. A correction discovered in Monday's session and not captured will be rediscovered next Monday and by whoever runs the task. Each rediscovery costs the same time the first one did, multiplied by every person and every cycle. Capturing the fix once, as a standing instruction in the Project or as a Skill, converts a repeated cost into a one-time cost. The test for whether a fix is worth promoting is simple: will this same correction be needed again, by me or someone else? If yes, it belongs in configuration. Claude's Memory may pick up patterns you repeat, but it is per-user and best-effort; configuration is the deliberate, shared, reliable home for a fix.\n\nWorked example: a recurring fix promoted",
+     "Toggle to compare the same fix captured versus left in a one-off conversation.\n\nCaptured\nLost\n\nCaptured\n\nA marketer notices that every campaign-brief draft needs the same two corrections: it omits the target segment and buries the call to action. Instead of fixing both by hand each week, she adds two standing instructions to the briefs Project: \"Always state the target segment in the first line\" and \"Place the call to action in its own closing section.\" The next draft arrives correct. One round of feedback, captured into configuration, removes a recurring weekly correction.\n\nLost",
+     "Contrast that with the analyst who, every month, manually reminds Claude that the report should exclude internal test accounts. They found the right instructions on month one but kept it in conversation. Six months later they are still typing it, and when a colleague covers for them, the colleague does not know to, so a report ships with test data in it. The fix existed the whole time; the failure was leaving it un-captured."
+    ],
+    "fr": [
+     "Adapter l'approche à partir des retours et des résultats\n\nChaque sortie décevante est une donnée diagnostique. Laisser ces données s'évaporer, corriger manuellement le même problème à chaque récurrence, représente une occasion manquée. L'habileté consiste à traduire la critique d'une sortie en un ajustement précis, puis à capturer la correction pour qu'elle perdure.\n\nIntégrez des boucles de rétroaction dans le travail récurrent\n\nPour un travail que vous effectuez de manière répétée, considérez la sortie de chaque itération comme un signal sur la configuration. Un rapport récurrent qui nécessite la même correction manuelle chaque semaine vous dit que le prompt, le contexte ou la configuration manque de quelque chose. Prenez l'habitude, après chaque cycle, de vous demander ce que la sortie a révélé sur le système qui l'a produite.\n\nTransformez la critique en un ajustement précis",
+     "Un vague « ce n'est pas tout à fait juste » n'améliore rien. Convertissez-le en le changement précis : quel composant, quel contexte, quel paramètre de configuration. « Trop générique » devient « ajoutez le public au contexte ». « Ton inapproprié » devient « ajoutez une contrainte de ton à l'instruction permanente ». L'ajustement doit être suffisamment précis pour être mis en œuvre et vérifié.",
+     "L'habileté ici est de transformer une réaction en une instruction. Une réaction nomme la sensation de la sortie (« trop générique », « pas tout à fait correct », « a manqué le point »), tandis qu'une instruction indique ce qu'il faut changer pour que la sortie suivante soit différente. La façon fiable de faire la transition est de se demander : qu'est-ce qui devrait être présent, de façon précise, pour que cela soit correct, et quelle partie de la configuration contrôle cela ? « Trop générique » devient « nommez le public et l'action unique que je veux qu'il accomplisse ». « A manqué le point » devient « énoncez d'emblée la question unique à laquelle la sortie doit répondre ». Chaque traduction pointe vers un levier précis — le prompt, le contexte chargé ou un paramètre de configuration — et c'est sur ce levier que la correction doit être appliquée. Si vous ne pouvez pas nommer le levier, la critique reste une réaction, et la tentative suivante ne sera qu'une supposition.",
+     "Capturer ce qui a fonctionné\n\nLorsqu'une correction fonctionne, ne la laissez pas dans une conversation ponctuelle où elle sera perdue. Faites-la évoluer : une formulation qui produit systématiquement le bon résultat devient une instruction permanente ; une correction en plusieurs étapes devient une Skill. Enregistrer la correction est ce qui transforme une réussite due au hasard en une amélioration durable.",
+     "Le mode d'échec le plus coûteux, c'est de trouver la correction puis de la perdre. Une correction découverte lors de la session de lundi et non enregistrée sera redécouverte le lundi suivant et par quiconque exécute la tâche. Chaque redécouverte coûte le même temps que la première, multiplié par le nombre de personnes et de cycles. Enregistrer la correction une fois, comme instruction permanente dans le Project ou comme Skill, transforme un coût récurrent en un coût unique. Le test pour savoir si une correction mérite d'être promue est simple : cette même correction sera-t-elle nécessaire à nouveau, pour moi ou pour quelqu'un d'autre ? Si oui, elle appartient à la configuration. Claude's Memory peut repérer les schémas que vous répétez, mais elle est liée à chaque utilisateur et fournie en best-effort ; la configuration est le lieu délibéré, partagé et fiable pour une correction.",
+     "Exemple concret : une correction récurrente promue\n\nBasculer pour comparer la même correction enregistrée par rapport à celle laissée dans une conversation ponctuelle.\n\nEnregistrée\nPerdue\n\nEnregistrée\n\nUne marketeuse remarque que chaque brouillon de brief de campagne nécessite les mêmes deux corrections : il omet le segment cible et relègue l'appel à l'action au second plan. Plutôt que de corriger les deux manuellement chaque semaine, elle ajoute deux instructions permanentes au briefs Project : \"Indiquez toujours le segment cible dans la première ligne\" et \"Placez l'appel à l'action dans sa propre section de conclusion.\" Le brouillon suivant arrive correct. Un cycle de retours, capturé dans la configuration, élimine la correction hebdomadaire récurrente.\n\nPerdue",
+     "Comparez cela avec l'analyste qui, chaque mois, rappelle manuellement à Claude que le rapport doit exclure les comptes de test internes. La personne a trouvé les bonnes instructions le premier mois mais les a laissées uniquement dans la conversation. Six mois plus tard, elle les retape encore, et quand un collègue la remplace, ce collègue ne sait pas qu'il faut le faire, si bien qu'un rapport est envoyé avec des données de test. La correction existait depuis le début ; l'échec venait du fait de ne pas l'avoir consignée."
+    ]
+   },
+   "totalPages": 7
+  },
+  {
+   "id": "lesson_03",
+   "title": {
+    "en": "Optimizing Workflows",
+    "fr": "Optimisation des Workflows"
+   },
+   "type": "teaching",
+   "duration": "8 min",
+   "pages": {
+    "en": [
+     "Optimizing Workflows for Efficiency and Effectiveness\n\nOptimization is deliberate, not accidental. You instrument the workflow, find the friction, and promote the fix into configuration. Done well, it compounds: each redundancy removed and each pattern promoted makes the workflow faster and more consistent for everyone who uses it.\n\nFind redundancy and friction",
+     "Look at a recurring AI-assisted workflow for the steps that repeat unnecessarily: the same context pasted every session, the same correction made every round, the same manual reformatting at the end. Each is friction that configuration can remove. Friction is easy to live with and hard to see, because you absorb it one session at a time. The way to identify it is to watch one full cycle of the workflow and note every step you do by hand that you also did last time. Three signals point at removable friction. Flip each to see the fix. If you cannot see the friction, run the workflow once with the explicit job of writing down every manual step. This list is your optimization backlog.\n\nSignal\n\nRepetition\n\nYou paste or type the same thing every run.\n\nFix: saved context or a standing instruction.\n\nSignal",
+     "Correction\n\nYou fix the same flaw in every output.\n\nFix: a configuration change so the flaw stops appearing.\n\nSignal\n\nVariance\n\nDifferent people running the same task get different results.\n\nFix: a shared Skill or knowledge base so everyone runs the same setup.\n\nConsolidate and promote\n\nTwo moves do most of the work. Consolidate steps that can run together rather than as separate prompts. And promote repeated patterns into Projects and Skills: context that you paste every time belongs in the knowledge base or standing instructions; a procedure you run every time belongs in a Skill. Promotion is how a personal workaround becomes a team-wide efficiency.",
+     "Promotion only helps if the fix lands in the right place. A standing instruction is for a rule that should always apply within a Project (\"always include the target segment\"). The Project knowledge base is for reference material every run needs (\"our brand voice guide,\" \"the current product list\"). A Skill is for a repeatable procedure with steps (\"generate the weekly report in this exact format and order\"). The quick test: is it a rule, a reference, or a procedure? Rules go to instructions, references go to knowledge, procedures go to Skills. Putting a fix in the wrong home is why some \"optimizations\" do not stick. A procedure pasted as a one-line instruction loses its steps, and reference material crammed into an instruction bloats every prompt.",
+     "Not every change is an improvement, so promote with a little caution. When you move a fix into configuration, run the workflow a few cycles with the old approach still available before you fully rely on the new setup. If the optimized version produces worse or less predictable outputs, you want to catch it before it has shipped several times. The compounding benefit of optimization is real, but so is the compounding cost of a bad change baked into a workflow everyone uses. Prove the gain on a few runs, then commit to it.\n\nMeasure the improvement",
+     "Optimization you cannot measure is hard to justify or sustain. Track the concrete gains: time saved per cycle, revision cycles reduced, consistency improved across people doing the same task. A workflow that dropped from 40 minutes to 25, or from three revision rounds to one, is an improvement you can point to.",
+     "Time saved is the easiest metric, but it is not always the one that matters most. For some workflows the real gain is consistency (every output now follows the same format and catches the same issues, regardless of who runs it) or quality (fewer errors reach the final product). Pick the metric that matches why the workflow mattered: a customer-facing report optimizes consistency and accuracy more than raw speed; an internal draft optimizes for time. Identifying the right metric up front also tells you when to stop, optimization has diminishing returns, and once the metric you care about is good enough, further tuning is its own kind of friction.\n\nWorked example: a workflow efficiency audit\n\n45 minutes → 25 minutes",
+     "A team's weekly reporting workflow takes about 45 minutes per analyst, and outputs vary by who runs it. The audit finds three frictions: each analyst re-pastes the same background, each reformats the output by hand, and each catches different things.\n\nThe optimization: move the background into a shared Project knowledge base, add a Skill for the report format, and set a standing instruction for the verification step. Result: about 25 minutes per analyst, consistent format across the team, and one fewer revision round. The friction was found by instrumenting the workflow; the gain came from promoting the fixes into configuration.\n\nNotice how the example maps cleanly onto the three promotion homes: the repeated background (a reference) went to the knowledge base, the report format (\n\n[...]"
+    ],
+    "fr": [
+     "Optimisation des workflows pour l'efficacité et l'efficience\n\nL'optimisation est délibérée, pas accidentelle. Vous instrumentez le workflow, décelez la friction et intégrez la correction dans la configuration. Bien faite, elle se cumule : chaque redondance supprimée et chaque modèle promu rend le workflow plus rapide et plus cohérent pour tous ceux qui l'utilisent.\n\nRepérer les redondances et les frictions",
+     "Examinez un workflow récurrent assisté par l'IA pour repérer les étapes qui se répètent inutilement : le même contexte collé à chaque session, la même correction appliquée à chaque tour, le même retraitement manuel à la fin. Chacune est une friction que la configuration peut supprimer. La friction est facile à accepter et difficile à voir, parce que vous l'absorbez session après session. Pour l'identifier, observez un cycle complet du workflow et notez chaque étape manuelle que vous avez aussi faite la fois précédente. Trois indicateurs pointent vers une friction supprimable. Inversez chacun pour voir la solution. Si vous ne voyez pas la friction, exécutez le workflow une fois avec la mission explicite d'écrire chaque étape manuelle. Cette liste constitue votre backlog d'optimisation.\n\nSignal\n\nRépétition\n\nVous collez ou tapez la même chose à chaque exécution.\n\nSolution : contexte sauvegardé ou instruction permanente.\n\nSignal",
+     "Correction\n\nVous corrigez la même erreur à chaque sortie.\n\nSolution : modification de configuration pour que l'erreur cesse d'apparaître.\n\nSignal\n\nVariabilité\n\nDifférentes personnes effectuant la même tâche obtiennent des résultats différents.\n\nSolution : une Skill partagée ou une base de connaissances pour que tout le monde utilise la même configuration.\n\nConsolider et promouvoir\n\nDeux actions font la majorité du travail. Consolidez les étapes qui peuvent s'exécuter ensemble plutôt que comme des prompts séparés. Et promouvez les modèles répétitifs en Projects and Skills : le contexte que vous collez à chaque fois appartient à la base de connaissances ou aux instructions permanentes ; une procédure que vous exécutez à chaque fois appartient à une Skill. Promouvoir, c'est la manière dont un contournement personnel devient une efficacité à l'échelle de l'équipe.",
+     "La promotion d'un correctif n'aide que si celui-ci atterrit au bon endroit. Une instruction permanente sert pour une règle qui doit toujours s'appliquer au sein d'un Project (\"toujours inclure le segment cible\"). La base de connaissances du Project est destinée au matériel de référence dont chaque exécution a besoin (\"notre guide de ton de marque\", \"la liste actuelle des produits\"). Une Skill sert pour une procédure répétable avec des étapes (\"générer le rapport hebdomadaire dans ce format et cet ordre exacts\"). Le test rapide : est-ce une règle, une référence ou une procédure ? Les règles vont dans les instructions, les références vont dans la base de connaissances, les procédures vont dans les Skills. Placer un correctif dans le mauvais emplacement explique pourquoi certaines \"optimisations\" ne tiennent pas. Une procédure collée sous forme d'instruction en une seule ligne perd ses étapes, et le fait d'entasser du matériel de référence dans une instruction alourdit chaque prompt.",
+     "Tout changement n'est pas une amélioration, donc promouvez avec un peu de prudence. Lorsque vous intégrez un correctif dans la configuration, exécutez le flux de travail plusieurs cycles en laissant l'ancienne approche disponible avant de vous reposer entièrement sur la nouvelle configuration. Si la version optimisée produit des sorties pires ou moins prévisibles, vous voulez le détecter avant qu'elle n'ait été déployée plusieurs fois. Le bénéfice cumulatif de l'optimisation est réel, mais il en va de même pour le coût cumulatif d'un mauvais changement incorporé dans un flux de travail utilisé par tous. Prouvez le gain sur quelques exécutions, puis engagez-vous.",
+     "Mesurer l'amélioration\n\nUne optimisation que vous ne pouvez pas mesurer est difficile à justifier ou à maintenir. Suivez les gains concrets : temps économisé par cycle, cycles de révision réduits, cohérence améliorée entre les personnes réalisant la même tâche. Un flux de travail passé de 40 minutes à 25, ou de trois cycles de révision à un seul, est une amélioration tangible que vous pouvez démontrer.",
+     "Le temps économisé est la métrique la plus simple, mais ce n'est pas toujours celle qui compte le plus. Pour certains flux de travail, le vrai gain est la cohérence (chaque sortie suit désormais le même format et détecte les mêmes problèmes, quel que soit l'exécutant) ou la qualité (moins d'erreurs atteignent le produit final). Choisissez la métrique qui correspond à la raison pour laquelle le flux de travail était important : un rapport destiné aux clients privilégie la cohérence et l'exactitude plus que la vitesse brute ; un brouillon interne privilégie le temps. Identifier la bonne métrique dès le départ vous indique aussi quand arrêter : l'optimisation a des rendements décroissants, et une fois que la métrique qui vous importe est suffisamment bonne, affiner davantage devient en soi une forme de friction.\n\nExemple concret : audit d'efficacité d'un flux de travail\n\n45 minutes → 25 minutes",
+     "Le flux de reporting hebdomadaire d'une équipe prend environ 45 minutes par analyste, et les résultats varient selon qui l'exécute. L'audit identifie trois frictions : chaque analyste recolle le même contexte, chacun reformatte la sortie à la main, et chacun relève des choses différentes.\n\nL'optimisation : déplacer le contexte dans une base de connaissances Project partagée, ajouter une Skill pour le format du rapport, et définir une instruction permanente pour l'étape de vérification. Résultat : environ 25 minutes par analyste, un format cohérent au sein de l'équipe, et un tour de révision en moins. La friction a été identifiée en instrumentant le flux de travail ; le gain est venu de la promotion des corrections en configuration.\n\nRemarquez comment l'exemple se recoupe proprement avec les trois lieux de promotion : le contexte répété (une référence) est allé dans la base de connaissances, le format du rapport ("
+    ]
+   },
+   "totalPages": 8
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex_1",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_2",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_3",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_4",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_5",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_6",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_7",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_8",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_9",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_10",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_11",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_12",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_13",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_14",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_15",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_16",
+   "type": "exercise"
+  }
+ ]
 }

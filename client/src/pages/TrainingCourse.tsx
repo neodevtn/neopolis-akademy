@@ -228,15 +228,46 @@ function LessonQuiz({
   const [showErrorReview, setShowErrorReview] = useState(false);
 
   useEffect(() => {
-    fetch("/data/mockExamQuestions.json")
+    // Try lesson-specific quizzes first, fall back to cert-level questions
+    fetch("/data/lessonQuizzes.json")
       .then((r) => r.json())
-      .then((allQ: any[]) => {
-        const certQuestions = allQ.filter((q: any) => q.certificationId === certId);
-        const shuffled = [...certQuestions].sort(() => Math.random() - 0.5);
-        setQuestions(shuffled.slice(0, 3));
+      .then((allQuizzes: any) => {
+        const courseQuizzes = allQuizzes[courseId];
+        if (courseQuizzes && courseQuizzes[String(lessonIndex)]) {
+          const lessonQs = courseQuizzes[String(lessonIndex)];
+          // Map to expected format
+          const mapped = lessonQs.map((q: any, idx: number) => ({
+            id: `lq_${courseId}_${lessonIndex}_${idx}`,
+            question: { en: q.question, fr: q.question },
+            choices: q.choices.map((c: any) => ({ id: c.id, text: { en: c.text, fr: c.text } })),
+            correctChoiceIds: [q.correctId],
+            explanation: { en: q.explanation, fr: q.explanation },
+          }));
+          setQuestions(mapped);
+        } else {
+          // Fallback to cert-level questions
+          fetch("/data/mockExamQuestions.json")
+            .then((r2) => r2.json())
+            .then((allQ: any[]) => {
+              const certQuestions = allQ.filter((q: any) => q.certificationId === certId);
+              const shuffled = [...certQuestions].sort(() => Math.random() - 0.5);
+              setQuestions(shuffled.slice(0, 3));
+            })
+            .catch(() => setQuestions([]));
+        }
       })
-      .catch(() => setQuestions([]));
-  }, [certId, lessonIndex]);
+      .catch(() => {
+        // Fallback to cert-level questions
+        fetch("/data/mockExamQuestions.json")
+          .then((r) => r.json())
+          .then((allQ: any[]) => {
+            const certQuestions = allQ.filter((q: any) => q.certificationId === certId);
+            const shuffled = [...certQuestions].sort(() => Math.random() - 0.5);
+            setQuestions(shuffled.slice(0, 3));
+          })
+          .catch(() => setQuestions([]));
+      });
+  }, [certId, courseId, lessonIndex]);
 
   if (questions.length === 0) return null;
 
@@ -349,12 +380,21 @@ function LessonQuiz({
                     setQuizPassed(false);
                     setAnswers([]);
                     setShowErrorReview(false);
-                    fetch("/data/mockExamQuestions.json")
+                    fetch("/data/lessonQuizzes.json")
                       .then((r) => r.json())
-                      .then((allQ: any[]) => {
-                        const certQuestions = allQ.filter((q: any) => q.certificationId === certId);
-                        const shuffled = [...certQuestions].sort(() => Math.random() - 0.5);
-                        setQuestions(shuffled.slice(0, 3));
+                      .then((allQuizzes: any) => {
+                        const cq = allQuizzes[courseId];
+                        if (cq && cq[String(lessonIndex)]) {
+                          const lessonQs = cq[String(lessonIndex)];
+                          const mapped = lessonQs.map((q: any, idx: number) => ({
+                            id: `lq_${courseId}_${lessonIndex}_${idx}_${Date.now()}`,
+                            question: { en: q.question, fr: q.question },
+                            choices: q.choices.map((c: any) => ({ id: c.id, text: { en: c.text, fr: c.text } })),
+                            correctChoiceIds: [q.correctId],
+                            explanation: { en: q.explanation, fr: q.explanation },
+                          }));
+                          setQuestions(mapped);
+                        }
                       })
                       .catch(() => {});
                   }}
@@ -535,12 +575,21 @@ function LessonQuiz({
                   setQuizPassed(false);
                   setAnswers([]);
                   setShowErrorReview(false);
-                  fetch("/data/mockExamQuestions.json")
+                  fetch("/data/lessonQuizzes.json")
                     .then((r) => r.json())
-                    .then((allQ: any[]) => {
-                      const certQuestions = allQ.filter((q: any) => q.certificationId === certId);
-                      const shuffled = [...certQuestions].sort(() => Math.random() - 0.5);
-                      setQuestions(shuffled.slice(0, 3));
+                    .then((allQuizzes: any) => {
+                      const cq = allQuizzes[courseId];
+                      if (cq && cq[String(lessonIndex)]) {
+                        const lessonQs = cq[String(lessonIndex)];
+                        const mapped = lessonQs.map((q: any, idx: number) => ({
+                          id: `lq_${courseId}_${lessonIndex}_${idx}_${Date.now()}`,
+                          question: { en: q.question, fr: q.question },
+                          choices: q.choices.map((c: any) => ({ id: c.id, text: { en: c.text, fr: c.text } })),
+                          correctChoiceIds: [q.correctId],
+                          explanation: { en: q.explanation, fr: q.explanation },
+                        }));
+                        setQuestions(mapped);
+                      }
                     })
                     .catch(() => {});
                 }}
@@ -1342,7 +1391,7 @@ export default function TrainingCourse() {
         </div>
       </header>
 
-      <div className="flex">
+      <div className="flex overflow-x-hidden">
         {/* Sidebar */}
         {!lessonsLoading && courseLessons.length > 0 && (
           <LessonSidebar
@@ -1362,7 +1411,7 @@ export default function TrainingCourse() {
 
         {/* Main content */}
         <motion.main
-          className="flex-1 max-w-4xl mx-auto px-4 py-8 lg:px-8"
+          className="flex-1 max-w-4xl mx-auto px-4 py-8 lg:px-8 min-w-0"
           initial="hidden"
           animate="visible"
           variants={staggerContainer}

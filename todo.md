@@ -451,3 +451,11 @@
 - [x] Insérer l'utilisateur démo en base de données (upsert automatique au login)
 - [x] Créer une page /demo-login avec formulaire email/mot de passe démo
 - [x] Préparer un document d'instructions pour l'apprenant
+
+## Corrections Audit 2026-07-24
+- [x] Écart 8: Corriger les titres/acronymes (MSO, MCP, AI, GTM, Claude's) dans trainingIndex.json et les JSON de cours
+- [x] Écart 7: Corriger le débordement mobile sur les pages de cours (overflow-x-hidden, min-w-0, word-break)
+- [x] Écart 6: Déverrouiller l'examen blanc pour le compte démo (bypass openId demo_learner_001)
+- [x] Écart 5: Générer des quiz spécifiques par leçon (501 questions générées via LLM pour 167 leçons, lessonQuizzes.json)
+- [x] Écart 3: Traduire les pages FR correctement (892 pages + titres traduits via LLM en 18 min)
+- [ ] Écarts 1/2/4: En attente des fichiers source (contenu complet, exercices, transcripts)

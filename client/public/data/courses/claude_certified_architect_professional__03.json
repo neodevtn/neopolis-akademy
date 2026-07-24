@@ -1,437 +1,437 @@
 {
-  "courseId": "claude_certified_architect_professional__03",
-  "lessons": [
-    {
-      "id": "lesson_01",
-      "title": {
-        "en": "Alignment",
-        "fr": "Alignment"
-      },
-      "type": "teaching",
-      "duration": "11 min",
-      "pages": {
-        "en": [
-          "What the model's training enforces versus what you own\n\nEarlier work established the architecture, the model, and the integration. Here we answer: before you start adding controls, how much safe behavior is already handled by the model, and how much is still yours to build? You need to understand this boundary clearly to avoid creating duplicate protections or assuming the model is enforcing a rule it has never seen.",
-          "Anthropic trains Claude against a constitution: a written document that describes the values and behavior the model should exhibit, so the model is deployed with broad safety behavior already in place. Anthropic revises this document over time, and the most recent published version is from January 2026. The document is used during training to generate examples the model learns from and to rank candidate responses. This shapes how the model responds to ambiguous or sensitive requests but does not necessarily catch bad outputs. It sets a priority order for the model to follow when goals conflict: be broadly safe, be ethical, comply with guidelines, and be genuinely helpful to operators and users. That ordering matters because a helpful answer is sometimes unsafe. The ordering is holistic rather than strict, so higher-priority goals generally take precedence when they conflict, though the model weighs them together rather than applying them in a rigid sequence. The model arrives with a class of harmful output already reduced before you write a single prompt. The built-in layer handles broad, general-purpose harm, but does not cover your specific domain: any policies specific to your users and product are still yours to enforce.",
-          "Training-time alignment and inference-time control are two layers with distinct purposes\n\nTraining-time alignment shapes model behavior before deployment. It reduces broad classes of harmful output by steering Claude to refuse dangerous requests and default toward safer responses. Because it is set before any deployment exists, it is general by design. This is both a strength and a weakness: it does not know your partner's domain policy, data-handling rules, or authorization model. A request can fit Claude's general alignment and still violate a deployment-specific rule, such as disclosing another customer's order information or advising outside an approved script. Remember, Claude cannot enforce a rule it was never given.",
-          "Deployment-specific rules are enforced by the second layer: inference-time control. This includes the runtime guardrails you configure for your deployment, such as system instructions, input and output checks, tool permissions, and human review gates. System instructions shape the model's behavior, but deployment-specific policy is enforced only when those instructions are paired with runtime controls such as screening, authorization, and review. Training-time alignment lowers baseline risk, and inference-time control enforces the rules specific to your deployment.\n\nA layered view: each layer has a job and a blind spot\n\nTreat safety as four layers stacked from Claude outward. Each one covers something the layer below cannot, and each one fails in a way the next must catch.",
-          "Select each layer to see what it reliably covers, what it does not, and who owns it.\n\nTrained behavior\nSystem-prompt instruction\nRuntime screening\nAuthorization\n\nWhat it reliably covers: Broad classes of harmful or unsafe output, applied to every request without configuration.\n\nWhat it does not cover: Your domain policy, your data rules, your authorization model.\n\nWho owns it: Anthropic.\n\nWhat it reliably covers: Role, tone, and stated constraints that steer Claude inside one request.\n\nWhat it does not cover: Anything an adversarial or unusual input can talk Claude out of, since instructions are not enforcement.\n\nWho owns it: Architect.\n\nWhat it reliably covers: Input and output screening that detects disallowed content.",
-          "What it does not cover: Actions with side effects, which screening does not authorize, and novel attacks that a classifier misses.\n\nWho owns it: Architect.\n\nWhat it reliably covers: Whether a specific action with a side effect is permitted for this caller in this context.\n\nWhat it does not cover: Content quality and fairness.\n\nWho owns it: Architect.\n\nCost  Complexity  Risk\n\nCost: Each added layer costs latency and engineering. A pre-screen on input and a check on output add two extra calls or rules to every request.\n\nComplexity: Four layers means four places to design, version, and test. The system prompt and the screening logic drift independently if not governed.",
-          "Risk: The most dangerous failure is a silent one: assuming Claude enforces a domain rule that it was never given. Since the rule doesn't exist in any layer, nothing prevents a violation.\n\nWatch OutAlignment3 min\n\nWhen trained refusals are mistaken for a domain policy\n\nSetup hook\n\nYou are a strong systems Architect. Claude already refuses broadly harmful requests in testing, so you assume its training\n\n[...]"
-        ],
-        "fr": [
-          "What the model's training enforces versus what you own\n\nEarlier work established the architecture, the model, and the integration. Here we answer: before you start adding controls, how much safe behavior is already handled by the model, and how much is still yours to build? You need to understand this boundary clearly to avoid creating duplicate protections or assuming the model is enforcing a rule it has never seen.",
-          "Anthropic trains Claude against a constitution: a written document that describes the values and behavior the model should exhibit, so the model is deployed with broad safety behavior already in place. Anthropic revises this document over time, and the most recent published version is from January 2026. The document is used during training to generate examples the model learns from and to rank candidate responses. This shapes how the model responds to ambiguous or sensitive requests but does not necessarily catch bad outputs. It sets a priority order for the model to follow when goals conflict: be broadly safe, be ethical, comply with guidelines, and be genuinely helpful to operators and users. That ordering matters because a helpful answer is sometimes unsafe. The ordering is holistic rather than strict, so higher-priority goals generally take precedence when they conflict, though the model weighs them together rather than applying them in a rigid sequence. The model arrives with a class of harmful output already reduced before you write a single prompt. The built-in layer handles broad, general-purpose harm, but does not cover your specific domain: any policies specific to your users and product are still yours to enforce.",
-          "Training-time alignment and inference-time control are two layers with distinct purposes\n\nTraining-time alignment shapes model behavior before deployment. It reduces broad classes of harmful output by steering Claude to refuse dangerous requests and default toward safer responses. Because it is set before any deployment exists, it is general by design. This is both a strength and a weakness: it does not know your partner's domain policy, data-handling rules, or authorization model. A request can fit Claude's general alignment and still violate a deployment-specific rule, such as disclosing another customer's order information or advising outside an approved script. Remember, Claude cannot enforce a rule it was never given.",
-          "Deployment-specific rules are enforced by the second layer: inference-time control. This includes the runtime guardrails you configure for your deployment, such as system instructions, input and output checks, tool permissions, and human review gates. System instructions shape the model's behavior, but deployment-specific policy is enforced only when those instructions are paired with runtime controls such as screening, authorization, and review. Training-time alignment lowers baseline risk, and inference-time control enforces the rules specific to your deployment.\n\nA layered view: each layer has a job and a blind spot\n\nTreat safety as four layers stacked from Claude outward. Each one covers something the layer below cannot, and each one fails in a way the next must catch.",
-          "Select each layer to see what it reliably covers, what it does not, and who owns it.\n\nTrained behavior\nSystem-prompt instruction\nRuntime screening\nAuthorization\n\nWhat it reliably covers: Broad classes of harmful or unsafe output, applied to every request without configuration.\n\nWhat it does not cover: Your domain policy, your data rules, your authorization model.\n\nWho owns it: Anthropic.\n\nWhat it reliably covers: Role, tone, and stated constraints that steer Claude inside one request.\n\nWhat it does not cover: Anything an adversarial or unusual input can talk Claude out of, since instructions are not enforcement.\n\nWho owns it: Architect.\n\nWhat it reliably covers: Input and output screening that detects disallowed content.",
-          "What it does not cover: Actions with side effects, which screening does not authorize, and novel attacks that a classifier misses.\n\nWho owns it: Architect.\n\nWhat it reliably covers: Whether a specific action with a side effect is permitted for this caller in this context.\n\nWhat it does not cover: Content quality and fairness.\n\nWho owns it: Architect.\n\nCost  Complexity  Risk\n\nCost: Each added layer costs latency and engineering. A pre-screen on input and a check on output add two extra calls or rules to every request.\n\nComplexity: Four layers means four places to design, version, and test. The system prompt and the screening logic drift independently if not governed.",
-          "Risk: The most dangerous failure is a silent one: assuming Claude enforces a domain rule that it was never given. Since the rule doesn't exist in any layer, nothing prevents a violation.\n\nWatch OutAlignment3 min\n\nWhen trained refusals are mistaken for a domain policy\n\nSetup hook\n\nYou are a strong systems Architect. Claude already refuses broadly harmful requests in testing, so you assume its training\n\n[...]"
-        ]
-      },
-      "totalPages": 7
-    },
-    {
-      "id": "lesson_02",
-      "title": {
-        "en": "Alignment",
-        "fr": "Alignment"
-      },
-      "type": "checkpoint",
-      "duration": "3 min",
-      "pages": {
-        "en": [
-          "Sort the responsibility\n\nTry it now. You are reviewing the safety design for a partner's Claude assistant. Drag each obligation into the bucket that should enforce it: either Claude's trained behavior, or the application layer. The feedback explains why each one falls where it does.\n\nRefusing to help synthesize a dangerous weapon\n\nNever returning another tenant's data\n\nDeclining to produce plainly hateful content\n\nBlocking advice outside the partner's approved script\n\nRequiring a sign off before a refund is issued\n\nClaude's trained behavior\n\nApplication layer (you own it)\n\nCheck answers\nSkip for now"
-        ],
-        "fr": [
-          "Sort the responsibility\n\nTry it now. You are reviewing the safety design for a partner's Claude assistant. Drag each obligation into the bucket that should enforce it: either Claude's trained behavior, or the application layer. The feedback explains why each one falls where it does.\n\nRefusing to help synthesize a dangerous weapon\n\nNever returning another tenant's data\n\nDeclining to produce plainly hateful content\n\nBlocking advice outside the partner's approved script\n\nRequiring a sign off before a refund is issued\n\nClaude's trained behavior\n\nApplication layer (you own it)\n\nCheck answers\nSkip for now"
-        ]
-      },
-      "totalPages": 1
-    },
-    {
-      "id": "lesson_03",
-      "title": {
-        "en": "Guardrails",
-        "fr": "Guardrails"
-      },
-      "type": "teaching",
-      "duration": "9 min",
-      "pages": {
-        "en": [
-          "Risks, limitations, and failure modes of LLM systems\n\nYou have placed the controls; now identify what they defend against. An Architect is expected to conduct and document a risk assessment for a proposed system as part of a security deliverable. This screen covers the risk categories that recur in LLM systems and turns them into a written assessment that you can run.\n\nThe risk categories that recur in LLM systems\n\nMost LLM-system risk falls into a small set of categories. Identify these categories and check your designs against each:\n\nDirect prompt injection: A user crafts input that overrides the system's instructions and redirects its behavior.",
-          "Indirect prompt injection: Malicious instructions arrive through retrieved content or tool outputs that the model treats as trusted and the vector input screening does not catch.\n\nToken-budget exhaustion: Oversized or adversely padded inputs consume the context or output budget, truncating work or inflating cost.\n\nTool and action abuse: The model is induced to call a side-effecting tool outside policy, the failure the action-authorization control exists to stop.\n\nData exposure: Sensitive fields enter the context window or the logs where they should not, creating a leak independent of model behavior.\n\nSystem vulnerability assessment: where to look",
-          "Walk the request and data paths together. At each entry point, user input, retrieved content, tool outputs, the model's own output, and the logs, ask what an adversary could do and which control stands in the way. Look for anywhere without a control where there could be a plausible attack.\n\nDocumenting the risk assessment as a deliverable\n\nThe risk assessment should be a written artifact. For each identified risk, record the category, the affected component, a likelihood-and-impact judgment, and the mitigation control with an owner and an evidence artifact. That document is what the security reviewer will sign off on, and it is what the cumulative exercise at the end of this module expects you to be able to produce."
-        ],
-        "fr": [
-          "Risks, limitations, and failure modes of LLM systems\n\nYou have placed the controls; now identify what they defend against. An Architect is expected to conduct and document a risk assessment for a proposed system as part of a security deliverable. This screen covers the risk categories that recur in LLM systems and turns them into a written assessment that you can run.\n\nThe risk categories that recur in LLM systems\n\nMost LLM-system risk falls into a small set of categories. Identify these categories and check your designs against each:\n\nDirect prompt injection: A user crafts input that overrides the system's instructions and redirects its behavior.",
-          "Indirect prompt injection: Malicious instructions arrive through retrieved content or tool outputs that the model treats as trusted and the vector input screening does not catch.\n\nToken-budget exhaustion: Oversized or adversely padded inputs consume the context or output budget, truncating work or inflating cost.\n\nTool and action abuse: The model is induced to call a side-effecting tool outside policy, the failure the action-authorization control exists to stop.\n\nData exposure: Sensitive fields enter the context window or the logs where they should not, creating a leak independent of model behavior.\n\nSystem vulnerability assessment: where to look",
-          "Walk the request and data paths together. At each entry point, user input, retrieved content, tool outputs, the model's own output, and the logs, ask what an adversary could do and which control stands in the way. Look for anywhere without a control where there could be a plausible attack.\n\nDocumenting the risk assessment as a deliverable\n\nThe risk assessment should be a written artifact. For each identified risk, record the category, the affected component, a likelihood-and-impact judgment, and the mitigation control with an owner and an evidence artifact. That document is what the security reviewer will sign off on, and it is what the cumulative exercise at the end of this module expects you to be able to produce."
-        ]
-      },
-      "totalPages": 3
-    },
-    {
-      "id": "lesson_04",
-      "title": {
-        "en": "Guardrails",
-        "fr": "Guardrails"
-      },
-      "type": "checkpoint",
-      "duration": "4 min",
-      "pages": {
-        "en": [
-          "Assess the risks in a proposed architecture\n\nTry it now. You are reviewing a proposed architecture: a customer-support agent that retrieves answers from a partner knowledge base and issues refunds through a connected tool, with all activity written to a request log. Identify at least three risk categories present in this design, and for each one name a workable mitigation. Both the risk and a mitigation that addresses it are required.\n\nIdentify the risk categories present in this design and pair each with a mitigation.\n\nReveal model answer\nSkip for now\n\nModel answer\n\n1. Indirect prompt injection via the knowledge base. Retrieved content can carry instructions; mitigation is to treat retrieved text as untrusted and screen tool/content inputs, not just user input.",
-          "2. Tool and action abuse on the refund tool. Mitigation is an action-authorization check that runs before the refund tool executes, independent of the model's output.\n\n3. Token-budget exhaustion on large knowledge-base documents. Mitigation is chunking and input limits plus budget monitoring so a large document cannot truncate the work silently.\n\n4. Data exposure in the request log. Mitigation is server-side redaction of sensitive fields before anything is logged."
-        ],
-        "fr": [
-          "Assess the risks in a proposed architecture\n\nTry it now. You are reviewing a proposed architecture: a customer-support agent that retrieves answers from a partner knowledge base and issues refunds through a connected tool, with all activity written to a request log. Identify at least three risk categories present in this design, and for each one name a workable mitigation. Both the risk and a mitigation that addresses it are required.\n\nIdentify the risk categories present in this design and pair each with a mitigation.\n\nReveal model answer\nSkip for now\n\nModel answer\n\n1. Indirect prompt injection via the knowledge base. Retrieved content can carry instructions; mitigation is to treat retrieved text as untrusted and screen tool/content inputs, not just user input.",
-          "2. Tool and action abuse on the refund tool. Mitigation is an action-authorization check that runs before the refund tool executes, independent of the model's output.\n\n3. Token-budget exhaustion on large knowledge-base documents. Mitigation is chunking and input limits plus budget monitoring so a large document cannot truncate the work silently.\n\n4. Data exposure in the request log. Mitigation is server-side redaction of sensitive fields before anything is logged."
-        ]
-      },
-      "totalPages": 2
-    },
-    {
-      "id": "lesson_05",
-      "title": {
-        "en": "Guardrails",
-        "fr": "Guardrails"
-      },
-      "type": "teaching",
-      "duration": "14 min",
-      "pages": {
-        "en": [
-          "Placing screening and authorization so the system degrades safely",
-          "A control that screens requests can fail the same way any dependency fails. It can time out, return an error, or become unreachable under load. The difference is that a failing guardrail can still look healthy: when a screening service errors but still passes traffic through, requests keep flowing while the control does none of the work it was placed there to do. So, when a guardrail errors, the system must do one of two things: let it through or block it. If you have not made that choice explicitly, the surrounding code decides for you. The default is almost always to let the request through, which means falling back to the unprotected path. The same reasoning that put retries and circuit breakers around your model calls applies here: decide how the control behaves when it fails, rather than inheriting whatever behavior happens to keep requests flowing.",
-          "Where guardrails sit in a request path\n\nA guarded request path has a few decision points, each answering a different question.\n\nInput screening runs before the model call and decides whether the request should reach the model at all.\n\nOutput screening runs before the response reaches the user and decides whether what the model produced is safe to return.\n\nTool-call authorization runs before any action with side effects, such as sending an email, writing to a database, or issuing a refund, and determines whether this caller may perform this action in this context.\n\nBecause they sit at different points and check different things, a control at one place does nothing for the others, which is why a single filter cannot cover the whole path.",
-          "Where each check fits: model-based vs deterministic by decision point\n\nDecision pointA model-based check is needed whenA deterministic check is better when\n\nInput screening (before the model call)Intent is ambiguous and you are catching jailbreak or prompt-injection patterns that cannot be exhaustively captured with rules. A lightweight model classifies the input.The rule is clear and defined: a blocklist, a regex, a length or format check. It is faster, predictable, and cannot be talked out of its decision.",
-          "Output screening (before the response reaches the user)You are evaluating qualities like toxicity or policy compliance that need language understanding. A judge model scores the output.You are checking for a known string, a forbidden field, or a schema violation that a validator catches with certainty.\n\nTool-call authorization (before any side-effecting action)Rarely. Authorization should be deterministic, so it is auditable.Almost always: an allowlist of permitted actions, identity checks, and scope validation. Authorization must be a decision you can prove and replay, so it must be deterministic.\n\nWhy model-based and deterministic checks fail differently, and why you chain them",
-          "A model-based classifier can be evaded: a user can phrase an input in a way that bypasses even the strongest of judge models. A deterministic rule is brittle: it blocks exactly what it is programmed to detect and nothing more. It misses anything it did not anticipate and over-blocks anything that resembles a restricted pattern. There is no control that catches everything, so these controls are deployed in series. Identifying what each one misses ensures each gap is deliberately covered by a different control rather than left open.\n\nA second injection vector: instructions arriving through retrieved content and tool outputs",
-          "User-input screening catches instructions the user sends directly. It does not catch instructions embedded in content the system retrieves or receives from tools. In a RAG system, a malicious instruction in a retrieved document reaches the model after input screening has already passed the request. In an agentic system, a tool response can carry instructions the model treats as authoritative. This is the dominant injection vector in enterprise deployments with retrieval or tool use, and it requires a separate control: screen retrieved content and tool outputs before they are appended to the model's context, using the same model-based classifier you apply to user input. The blind spot is different because the source is different; identify it explicitly in your control design to ensure coverage.",
-          "On the API, responses return a refusal when streaming classifiers intervene. The Messages API reports this as stop_reason: \"refusal\" accompanied by a stop_details object (available since Claude Opus 4.7). That object carries a policy category along with a readable explanation; both fields are null when the refusal does not map to a named category. The category set is enumerated in the stop-reasons documentation on platform.claude.com. As of this writing it includes cyber, bio, frontier_llm, and reasoning_extraction. Re-check the list at publish time rather than hardcoding it. Your application should read the category and route different refusal classes accordingly, ra\n\n[...]"
-        ],
-        "fr": [
-          "Placing screening and authorization so the system degrades safely",
-          "A control that screens requests can fail the same way any dependency fails. It can time out, return an error, or become unreachable under load. The difference is that a failing guardrail can still look healthy: when a screening service errors but still passes traffic through, requests keep flowing while the control does none of the work it was placed there to do. So, when a guardrail errors, the system must do one of two things: let it through or block it. If you have not made that choice explicitly, the surrounding code decides for you. The default is almost always to let the request through, which means falling back to the unprotected path. The same reasoning that put retries and circuit breakers around your model calls applies here: decide how the control behaves when it fails, rather than inheriting whatever behavior happens to keep requests flowing.",
-          "Where guardrails sit in a request path\n\nA guarded request path has a few decision points, each answering a different question.\n\nInput screening runs before the model call and decides whether the request should reach the model at all.\n\nOutput screening runs before the response reaches the user and decides whether what the model produced is safe to return.\n\nTool-call authorization runs before any action with side effects, such as sending an email, writing to a database, or issuing a refund, and determines whether this caller may perform this action in this context.\n\nBecause they sit at different points and check different things, a control at one place does nothing for the others, which is why a single filter cannot cover the whole path.",
-          "Where each check fits: model-based vs deterministic by decision point\n\nDecision pointA model-based check is needed whenA deterministic check is better when\n\nInput screening (before the model call)Intent is ambiguous and you are catching jailbreak or prompt-injection patterns that cannot be exhaustively captured with rules. A lightweight model classifies the input.The rule is clear and defined: a blocklist, a regex, a length or format check. It is faster, predictable, and cannot be talked out of its decision.",
-          "Output screening (before the response reaches the user)You are evaluating qualities like toxicity or policy compliance that need language understanding. A judge model scores the output.You are checking for a known string, a forbidden field, or a schema violation that a validator catches with certainty.\n\nTool-call authorization (before any side-effecting action)Rarely. Authorization should be deterministic, so it is auditable.Almost always: an allowlist of permitted actions, identity checks, and scope validation. Authorization must be a decision you can prove and replay, so it must be deterministic.\n\nWhy model-based and deterministic checks fail differently, and why you chain them",
-          "A model-based classifier can be evaded: a user can phrase an input in a way that bypasses even the strongest of judge models. A deterministic rule is brittle: it blocks exactly what it is programmed to detect and nothing more. It misses anything it did not anticipate and over-blocks anything that resembles a restricted pattern. There is no control that catches everything, so these controls are deployed in series. Identifying what each one misses ensures each gap is deliberately covered by a different control rather than left open.\n\nA second injection vector: instructions arriving through retrieved content and tool outputs",
-          "User-input screening catches instructions the user sends directly. It does not catch instructions embedded in content the system retrieves or receives from tools. In a RAG system, a malicious instruction in a retrieved document reaches the model after input screening has already passed the request. In an agentic system, a tool response can carry instructions the model treats as authoritative. This is the dominant injection vector in enterprise deployments with retrieval or tool use, and it requires a separate control: screen retrieved content and tool outputs before they are appended to the model's context, using the same model-based classifier you apply to user input. The blind spot is different because the source is different; identify it explicitly in your control design to ensure coverage.",
-          "On the API, responses return a refusal when streaming classifiers intervene. The Messages API reports this as stop_reason: \"refusal\" accompanied by a stop_details object (available since Claude Opus 4.7). That object carries a policy category along with a readable explanation; both fields are null when the refusal does not map to a named category. The category set is enumerated in the stop-reasons documentation on platform.claude.com. As of this writing it includes cyber, bio, frontier_llm, and reasoning_extraction. Re-check the list at publish time rather than hardcoding it. Your application should read the category and route different refusal classes accordingly, ra\n\n[...]"
-        ]
-      },
-      "totalPages": 8
-    },
-    {
-      "id": "lesson_06",
-      "title": {
-        "en": "Guardrails",
-        "fr": "Guardrails"
-      },
-      "type": "checkpoint",
-      "duration": "4 min",
-      "pages": {
-        "en": [
-          "Place the controls on the path\n\nTry it now. You are given four controls. Each one answers two questions: where it sits on the request path, and what kind of check it is. Drop each control onto a grid. The horizontal axis is the placement point, from input screening to action authorization before a tool runs, to output filtering. The vertical axis is whether a deterministic check or a model-based check fit. Correct placement reveals the reasoning. Not every zone will be filled, two cells will remain empty.\n\nA. Jailbreak and prompt-injection screen\n\nB. Banned term blocklist on the user message\n\nC. Toxicity judge on the generated response\n\nD. Refund authorization policy check before the tool runs\n\nModel-based\n\nDeterministic\n\nInput Screening\n\nOutput Screening\n\nAction Authorization\n\nCheck answers\nSkip for now"
-        ],
-        "fr": [
-          "Place the controls on the path\n\nTry it now. You are given four controls. Each one answers two questions: where it sits on the request path, and what kind of check it is. Drop each control onto a grid. The horizontal axis is the placement point, from input screening to action authorization before a tool runs, to output filtering. The vertical axis is whether a deterministic check or a model-based check fit. Correct placement reveals the reasoning. Not every zone will be filled, two cells will remain empty.\n\nA. Jailbreak and prompt-injection screen\n\nB. Banned term blocklist on the user message\n\nC. Toxicity judge on the generated response\n\nD. Refund authorization policy check before the tool runs\n\nModel-based\n\nDeterministic\n\nInput Screening\n\nOutput Screening\n\nAction Authorization\n\nCheck answers\nSkip for now"
-        ]
-      },
-      "totalPages": 1
-    },
-    {
-      "id": "lesson_07",
-      "title": {
-        "en": "Fairness",
-        "fr": "Fairness"
-      },
-      "type": "teaching",
-      "duration": "11 min",
-      "pages": {
-        "en": [
-          "Where unequal outcomes enter, and what the system must explain\n\nRuntime controls stop disallowed outputs from leaving the system, ensuring users never see them. However, runtime controls don't account for an output that technically passes every check but produces different outcomes for different people. That failure is harder to detect and harder to attribute, because, on its surface, it looks like a normal output.\n\nUnequal outcomes enter at identifiable points\n\nFairness becomes easier to design for once you stop treating it as a single attribute of the model and start treating it as something that enters at specific, identifiable points. In a Claude system there are four common entry points:",
-          "The retrieval corpus can over-represent or under-represent groups, so the context the model sees is already skewed.\n\nThe framing of the prompt can encode an assumption that pushes outcomes in one direction.\n\nThe examples used in few-shot prompting can carry the same skew the corpus does.\n\nAnd the downstream routing, what happens to the model's output after it is produced, can direct some groups down different paths.\n\nEach of these is an injection point you can inspect, which is what makes fairness a true architectural property.\n\nWho asks determines what the system explains\n\nAudienceWhat they needWhat that requires you to capture",
-          "An affected userA clear explanation of why a decision affecting them was made or expressed in terms they can act on.The inputs that drove the decision and the reason the outcome was reached, in a digestible form.\n\nA regulatorEvidence that the system treats comparable cases consistently and that a specific decision can be reconstructed on demand.A durable, queryable record of inputs, outputs, and decision path.\n\nYour build teamEnough detail to find why a flagged decision went wrong and fix it.The full trace: prompt, retrieved context, model output, and every routing step, tied to the existing observability.\n\nDecision logging is what makes those explanations possible",
-          "To replay and explain a single decision, capture the inputs that drove it, the retrieved context, the model output, and the routing it went through. This is the same observable instrumentation from the production work, applied to a different question. This time, instead of asking whether the system is healthy, we're asking why a specific decision happened. The instrumentation is the same, but the retention and the query path are different.\n\nA fairness-and-transparency checklist in action\n\nConsider a credit-decision support system. Review the checklist once and the criteria stop being abstract:\n\nWhich of the four entry points could skew this outcome, and is each instrumented?\n\nFor an adverse decision, can you produce the inputs and the reason in terms the applicant can act on?",
-          "If a regulator asks whether similar applicants were treated comparably, can you query the log and provide an answer?\n\nCan your team pull the full trace for any flagged decision?\n\nA 'no' anywhere is a design gap.\n\nDiscernment: judging outputs for unequal treatment\n\nDiscernment is one of the four AI Fluency competencies: evaluating AI outputs and behaviors. In practice it means judging whether a model output is acceptable, needs revision, or needs override rather than accepting it. Applied to fairness, discernment is what lets a reviewer recognize a skewed or unjustified outcome instead of only confirming that a value was produced. A transparency record is what makes that recognition possible in the first place.\n\nCost  Complexity  Risk",
-          "Cost: Capturing and retaining decision-level logs on every request adds storage and a query path, and the cost grows with traffic rather than staying fixed.\n\nComplexity: Instrumenting four entry points and serving three audiences is more design work than a single audit log, because each audience needs a different slice of the same record. On top of that, the retention policy now must be governed, since you are holding decision-level data longer and for a specific purpose.\n\nRisk: The outcome metric can look fine overall while harm is concentrated in one subgroup. An unlogged or unmeasured injection point can hide unfairness until someone outside the team finds it.",
-          "Data handling: The decision log is itself in scope for the compliance register. In HIPAA or GDPR contexts, logged inputs and retrieved context contain sensitive personal data. Apply minimization, retention limits, and access controls to the log, and map it as a named control in your compliance register. Logging everything for transparency and pinning data for compliance are not in conflict, as they require the same log, governed differently.\n\nWatch OutFairness3 min\n\nWhen fairness is treated as the model provider's problem\n\nSetup hook\n\nFairness may seem like a property of the model. The model provider trained it, ran the bias evaluations, and published the results, so it feels reasonable to treat fairness as something handled upstream before the model reaches your ar\n\n[...]"
-        ],
-        "fr": [
-          "Where unequal outcomes enter, and what the system must explain\n\nRuntime controls stop disallowed outputs from leaving the system, ensuring users never see them. However, runtime controls don't account for an output that technically passes every check but produces different outcomes for different people. That failure is harder to detect and harder to attribute, because, on its surface, it looks like a normal output.\n\nUnequal outcomes enter at identifiable points\n\nFairness becomes easier to design for once you stop treating it as a single attribute of the model and start treating it as something that enters at specific, identifiable points. In a Claude system there are four common entry points:",
-          "The retrieval corpus can over-represent or under-represent groups, so the context the model sees is already skewed.\n\nThe framing of the prompt can encode an assumption that pushes outcomes in one direction.\n\nThe examples used in few-shot prompting can carry the same skew the corpus does.\n\nAnd the downstream routing, what happens to the model's output after it is produced, can direct some groups down different paths.\n\nEach of these is an injection point you can inspect, which is what makes fairness a true architectural property.\n\nWho asks determines what the system explains\n\nAudienceWhat they needWhat that requires you to capture",
-          "An affected userA clear explanation of why a decision affecting them was made or expressed in terms they can act on.The inputs that drove the decision and the reason the outcome was reached, in a digestible form.\n\nA regulatorEvidence that the system treats comparable cases consistently and that a specific decision can be reconstructed on demand.A durable, queryable record of inputs, outputs, and decision path.\n\nYour build teamEnough detail to find why a flagged decision went wrong and fix it.The full trace: prompt, retrieved context, model output, and every routing step, tied to the existing observability.\n\nDecision logging is what makes those explanations possible",
-          "To replay and explain a single decision, capture the inputs that drove it, the retrieved context, the model output, and the routing it went through. This is the same observable instrumentation from the production work, applied to a different question. This time, instead of asking whether the system is healthy, we're asking why a specific decision happened. The instrumentation is the same, but the retention and the query path are different.\n\nA fairness-and-transparency checklist in action\n\nConsider a credit-decision support system. Review the checklist once and the criteria stop being abstract:\n\nWhich of the four entry points could skew this outcome, and is each instrumented?\n\nFor an adverse decision, can you produce the inputs and the reason in terms the applicant can act on?",
-          "If a regulator asks whether similar applicants were treated comparably, can you query the log and provide an answer?\n\nCan your team pull the full trace for any flagged decision?\n\nA 'no' anywhere is a design gap.\n\nDiscernment: judging outputs for unequal treatment\n\nDiscernment is one of the four AI Fluency competencies: evaluating AI outputs and behaviors. In practice it means judging whether a model output is acceptable, needs revision, or needs override rather than accepting it. Applied to fairness, discernment is what lets a reviewer recognize a skewed or unjustified outcome instead of only confirming that a value was produced. A transparency record is what makes that recognition possible in the first place.\n\nCost  Complexity  Risk",
-          "Cost: Capturing and retaining decision-level logs on every request adds storage and a query path, and the cost grows with traffic rather than staying fixed.\n\nComplexity: Instrumenting four entry points and serving three audiences is more design work than a single audit log, because each audience needs a different slice of the same record. On top of that, the retention policy now must be governed, since you are holding decision-level data longer and for a specific purpose.\n\nRisk: The outcome metric can look fine overall while harm is concentrated in one subgroup. An unlogged or unmeasured injection point can hide unfairness until someone outside the team finds it.",
-          "Data handling: The decision log is itself in scope for the compliance register. In HIPAA or GDPR contexts, logged inputs and retrieved context contain sensitive personal data. Apply minimization, retention limits, and access controls to the log, and map it as a named control in your compliance register. Logging everything for transparency and pinning data for compliance are not in conflict, as they require the same log, governed differently.\n\nWatch OutFairness3 min\n\nWhen fairness is treated as the model provider's problem\n\nSetup hook\n\nFairness may seem like a property of the model. The model provider trained it, ran the bias evaluations, and published the results, so it feels reasonable to treat fairness as something handled upstream before the model reaches your ar\n\n[...]"
-        ]
-      },
-      "totalPages": 7
-    },
-    {
-      "id": "lesson_08",
-      "title": {
-        "en": "Fairness",
-        "fr": "Fairness"
-      },
-      "type": "checkpoint",
-      "duration": "3 min",
-      "pages": {
-        "en": [
-          "Critique the decision-logging design\n\nTry it now. You are looking at a system sketch for a decision-support flow. Click the components where transparency is missing or insufficient, such as a routing step that is never logged or a decision that cannot be reconstructed. Each click reveals what that gap means for an affected user or a regulator.\n\nSelect all gaps. Leave adequately logged components unselected.\n\n✓\n\nGap\nA routing step that sends some cases down a different path with no log entry.\n\n↓\n\n✓\n\nGap\nA retrieval step whose returned context is not captured.\n\n↓\n\n✓\n\nGap\nA model output stored without the inputs that produced it.\n\n↓\n\n✓\n\nAdequate\nInputs, outputs, and routing are all logged and tied to a session ID.\n\n✓\n\nAdequate\nThe log is queryable per decision and retained for 90 days.\n\n✓\n\nGap\nAn aggregate accuracy dashboard with no per-subgroup breakdown.\n\nCheck answers\nSkip for now"
-        ],
-        "fr": [
-          "Critique the decision-logging design\n\nTry it now. You are looking at a system sketch for a decision-support flow. Click the components where transparency is missing or insufficient, such as a routing step that is never logged or a decision that cannot be reconstructed. Each click reveals what that gap means for an affected user or a regulator.\n\nSelect all gaps. Leave adequately logged components unselected.\n\n✓\n\nGap\nA routing step that sends some cases down a different path with no log entry.\n\n↓\n\n✓\n\nGap\nA retrieval step whose returned context is not captured.\n\n↓\n\n✓\n\nGap\nA model output stored without the inputs that produced it.\n\n↓\n\n✓\n\nAdequate\nInputs, outputs, and routing are all logged and tied to a session ID.\n\n✓\n\nAdequate\nThe log is queryable per decision and retained for 90 days.\n\n✓\n\nGap\nAn aggregate accuracy dashboard with no per-subgroup breakdown.\n\nCheck answers\nSkip for now"
-        ]
-      },
-      "totalPages": 1
-    },
-    {
-      "id": "lesson_09",
-      "title": {
-        "en": "Review routing",
-        "fr": "Review routing"
-      },
-      "type": "teaching",
-      "duration": "10 min",
-      "pages": {
-        "en": [
-          "Routing decisions to people by stakes, not by volume\n\nDecision logging gave you a record of what each automated decision was based on: the inputs it saw, the path it took, and the output it produced. A logged decision can be explained after the fact, but a log alone does not decide which decisions a person should weigh in on before they take effect. A log explains decisions after the fact. A routing rule stops the wrong ones from taking effect at all. You will work out which decisions warrant a human review step and what that reviewer must see on the screen to make the call quickly. The log you have already built is the raw material for that view, so this is a matter of deciding what to surface from it and when, rather than instrumenting the system again from the start.",
-          "What sets the stakes of a decision\n\nThink of human review as a budget: you have a finite amount of reviewer attention, and you must focus it on the highest-stakes items. The following variables work together to set the stakes of a decision.\n\nReversibility is how easily a wrong decision can be undone.\n\nThe cost of a wrong decision is what the mistake causes if it goes through uncorrected. These two set the stakes of the decision: a choice that is hard to reverse and expensive when wrong is high stakes, regardless of how the system arrives at it.",
-          "Confidence is the third variable that sits on top of the other two. It is the score the system produces about its own output, and it is useful only to the degree it is calibrated, because a model can be confidently wrong. Confidence does not change the stakes of a decision; it estimates how likely this output is to be wrong, which tells you how much of your volume should be routed to a person for review.\n\nCombine these variables into one rule: route decisions to a person when they are low-confidence and either irreversible or high-cost; let confident, reversible, low-cost decisions through. A confident, easily reversed, low-cost decision can usually run without a human. A low-confidence, irreversible, high-cost decision almost always needs human review.",
-          "The decisions that consume your review budget are the ones where these variables disagree. A case can be high cost but easily reversed, or low confidence on something trivial to undo. When they conflict, give greater weight to cost and reversibility, because they determine the consequences of a mistake. Let confidence decide how much of that high-stakes volume you can safely let through unreviewed. Routing on confidence carries one assumption worth identifying: the confidence signal must be calibrated for the rule to hold, and confirming that calibration is a task of its own.\n\nWhere the human sits is a tradeoff between safety and speed\n\nOnce a decision is routed to a person, you choose where they sit in the flow. Involving a human earlier is safer and slower.",
-          "PlacementWhat it gives youWhat it costs\n\nPre-action approvalThe action cannot take effect until a person approves it, so nothing irreversible happens unreviewed.It adds latency to every routed decision and a person must be available, so it does not scale to high volume.\n\nPost-action auditThe action runs immediately and a person reviews it afterward, so throughput stays high.A wrong action has already taken effect by the time it is caught, so it only suits reversible, lower-cost decisions.\n\nSampled reviewA fraction of decisions are reviewed to monitor quality without slowing the overall process.A bad decision can slip through unsampled, it monitors the system rather than guarding individual outcomes.\n\nWhat the reviewer sees decides whether review is accurate",
-          "A reviewer who cannot see why a decision landed in their queue may approve without reviewing with the judgement it needed. Ensure your reviewers have three things: the inputs that drove the decision, the model's output, and the reason it was flagged. Without this reason, they cannot tell the difference between an edge case and routine traffic. Without the inputs, they cannot tell if the output is correct. What you put in front of the reviewer determines whether the review is accurate.",
-          "Anthropic's research on agent autonomy found that requiring sign-off on every action adds friction without meaningful safety gain. A better approach is to have a person monitor what is happening and step in when needed. One Anthropic pattern in agent workflows is to reduce per-step approvals and move review to higher-value checkpoints such as plan review or exception handling, to avoid consent fatigue; the exact review design depends on the risk of the workflow. Without this discernment, consent fatigue can happen. Consent fatigue is when a system asks for approval dozens of times in a row, and reviewers start clicking through and approving items without reading or providing the quality of review needed. That pattern is what led to plan-level review in Claude Code, where a person approves the plan rather than each step. Verify current framing against anthrop\n\n[...]"
-        ],
-        "fr": [
-          "Routing decisions to people by stakes, not by volume\n\nDecision logging gave you a record of what each automated decision was based on: the inputs it saw, the path it took, and the output it produced. A logged decision can be explained after the fact, but a log alone does not decide which decisions a person should weigh in on before they take effect. A log explains decisions after the fact. A routing rule stops the wrong ones from taking effect at all. You will work out which decisions warrant a human review step and what that reviewer must see on the screen to make the call quickly. The log you have already built is the raw material for that view, so this is a matter of deciding what to surface from it and when, rather than instrumenting the system again from the start.",
-          "What sets the stakes of a decision\n\nThink of human review as a budget: you have a finite amount of reviewer attention, and you must focus it on the highest-stakes items. The following variables work together to set the stakes of a decision.\n\nReversibility is how easily a wrong decision can be undone.\n\nThe cost of a wrong decision is what the mistake causes if it goes through uncorrected. These two set the stakes of the decision: a choice that is hard to reverse and expensive when wrong is high stakes, regardless of how the system arrives at it.",
-          "Confidence is the third variable that sits on top of the other two. It is the score the system produces about its own output, and it is useful only to the degree it is calibrated, because a model can be confidently wrong. Confidence does not change the stakes of a decision; it estimates how likely this output is to be wrong, which tells you how much of your volume should be routed to a person for review.\n\nCombine these variables into one rule: route decisions to a person when they are low-confidence and either irreversible or high-cost; let confident, reversible, low-cost decisions through. A confident, easily reversed, low-cost decision can usually run without a human. A low-confidence, irreversible, high-cost decision almost always needs human review.",
-          "The decisions that consume your review budget are the ones where these variables disagree. A case can be high cost but easily reversed, or low confidence on something trivial to undo. When they conflict, give greater weight to cost and reversibility, because they determine the consequences of a mistake. Let confidence decide how much of that high-stakes volume you can safely let through unreviewed. Routing on confidence carries one assumption worth identifying: the confidence signal must be calibrated for the rule to hold, and confirming that calibration is a task of its own.\n\nWhere the human sits is a tradeoff between safety and speed\n\nOnce a decision is routed to a person, you choose where they sit in the flow. Involving a human earlier is safer and slower.",
-          "PlacementWhat it gives youWhat it costs\n\nPre-action approvalThe action cannot take effect until a person approves it, so nothing irreversible happens unreviewed.It adds latency to every routed decision and a person must be available, so it does not scale to high volume.\n\nPost-action auditThe action runs immediately and a person reviews it afterward, so throughput stays high.A wrong action has already taken effect by the time it is caught, so it only suits reversible, lower-cost decisions.\n\nSampled reviewA fraction of decisions are reviewed to monitor quality without slowing the overall process.A bad decision can slip through unsampled, it monitors the system rather than guarding individual outcomes.\n\nWhat the reviewer sees decides whether review is accurate",
-          "A reviewer who cannot see why a decision landed in their queue may approve without reviewing with the judgement it needed. Ensure your reviewers have three things: the inputs that drove the decision, the model's output, and the reason it was flagged. Without this reason, they cannot tell the difference between an edge case and routine traffic. Without the inputs, they cannot tell if the output is correct. What you put in front of the reviewer determines whether the review is accurate.",
-          "Anthropic's research on agent autonomy found that requiring sign-off on every action adds friction without meaningful safety gain. A better approach is to have a person monitor what is happening and step in when needed. One Anthropic pattern in agent workflows is to reduce per-step approvals and move review to higher-value checkpoints such as plan review or exception handling, to avoid consent fatigue; the exact review design depends on the risk of the workflow. Without this discernment, consent fatigue can happen. Consent fatigue is when a system asks for approval dozens of times in a row, and reviewers start clicking through and approving items without reading or providing the quality of review needed. That pattern is what led to plan-level review in Claude Code, where a person approves the plan rather than each step. Verify current framing against anthrop\n\n[...]"
-        ]
-      },
-      "totalPages": 7
-    },
-    {
-      "id": "lesson_10",
-      "title": {
-        "en": "Review routing",
-        "fr": "Review routing"
-      },
-      "type": "checkpoint",
-      "duration": "3 min",
-      "pages": {
-        "en": [
-          "Build the review-routing rule\n\nTry it now. A routing rule has three controls: a confidence threshold, the cost of a wrong answer, and a reversibility setting. The goal is to route high-stakes, low-confidence decisions to a person before they take effect, while keeping the review queue under the reviewer ceiling. Choose the rule that meets both targets at once.\n\nA. Route everything below a high confidence threshold to review, regardless of stakes.\n\nB. Route decisions that are low-confidence AND either irreversible or high-cost to pre-action review; let confident, reversible, low-cost decisions through.\n\nC. Route by confidence alone, set low enough to keep the queue small.\n\nD. Send every decision to review to be safe.",
-          "Now complete this step: In 1–2 sentences, name the single deciding control, what makes a low-confidence case still route to a person even when confidence is within tolerance?\n\nReveal model answer\n\nModel answer\n\nReversibility and the cost of a wrong answer are the deciding controls, not confidence. Confidence filters the volume you route, but it does not change the stakes of the decision. A case can be confident and still route to a human if it is irreversible or high-cost enough to warrant it.\n\nMark complete\n\nSkip for now"
-        ],
-        "fr": [
-          "Build the review-routing rule\n\nTry it now. A routing rule has three controls: a confidence threshold, the cost of a wrong answer, and a reversibility setting. The goal is to route high-stakes, low-confidence decisions to a person before they take effect, while keeping the review queue under the reviewer ceiling. Choose the rule that meets both targets at once.\n\nA. Route everything below a high confidence threshold to review, regardless of stakes.\n\nB. Route decisions that are low-confidence AND either irreversible or high-cost to pre-action review; let confident, reversible, low-cost decisions through.\n\nC. Route by confidence alone, set low enough to keep the queue small.\n\nD. Send every decision to review to be safe.",
-          "Now complete this step: In 1–2 sentences, name the single deciding control, what makes a low-confidence case still route to a person even when confidence is within tolerance?\n\nReveal model answer\n\nModel answer\n\nReversibility and the cost of a wrong answer are the deciding controls, not confidence. Confidence filters the volume you route, but it does not change the stakes of the decision. A case can be confident and still route to a human if it is irreversible or high-cost enough to warrant it.\n\nMark complete\n\nSkip for now"
-        ]
-      },
-      "totalPages": 2
-    },
-    {
-      "id": "lesson_11",
-      "title": {
-        "en": "Compliance",
-        "fr": "Compliance"
-      },
-      "type": "teaching",
-      "duration": "10 min",
-      "pages": {
-        "en": [
-          "Turning each compliance obligation into a control with evidence\n\nThe compliance layer of the integration model used the governing obligation as a pre-filter: HIPAA, GDPR, FedRAMP, attorney-client privilege, or a data-residency policy each ruled delivery routes and entry points in or out before cost or engineering preference entered the conversation. That work gets you to an entry point and a route that survives the obligation, but the next step is narrower and harder. Each surviving obligation must now become a control with a named owner. A reviewer does not treat a compliant entry point alone as proof that the rule is being followed. They also ask who owns the control and what evidence shows its holding in practice.",
-          "A regulation states an outcome, but you supply the control and the proof it is operating\n\nFrameworks such as GDPR, HIPAA, and FedRAMP state outcomes, not implementations. They say what must be true: that protected data must be handled a certain way, that access must be controlled, and that processing must happen in an authorized environment, but they leave the technical control to you. Each obligation becomes three things you own: a specific technical control that achieves the outcome, an owner accountable for it, and an evidence artifact that shows it is live. Always remember to include the evidence artifact; this is what the reviewer will check and is the most often missed.\n\nMapping obligations to controls, owners, and evidence\n\nMapping obligations to controls, owners, and evidence",
-          "Obligation (framework)Technical controlEvidence a reviewer acceptsOwner\n\nProtected health data handled under an agreement (HIPAA)Use only a HIPAA-ready Enterprise plan or first-party API configuration covered by a signed Business Associate Agreement, with HIPAA compliance enabled and only eligible features in scope.The signed BAA and the admin setting showing HIPAA compliance enabled, plus the eligible-feature list.Security lead\n\nUS government workload at the required impact level (FedRAMP)Deliver through an Anthropic-documented authorized route that meets the required impact level, not a non-authorized entry point.The authorization record for the chosen route and confirmation that the workload runs exclusively on it.Platform owner",
-          "Data handled and stored in an approved region (data residency)Configure supported regional processing and storage for the approved region, and validate whether logs, caches, monitoring, and retention paths remain within the approved boundary.The residency configuration and a data-flow record showing where every copy lives.Data owner\n\nDecisions reconstructable on demand (transparency, cross-framework)The decision logging built in the fairness cluster, retained and queryable for the required period.A sample reconstruction of one decision from the live log.Architect\n\nTraining use vs retention, two distinct claims",
-          "Do not collapse training use and retention into the same claim: data may be excluded from model training by default while still being retained or monitored for logging, abuse prevention, legal compliance, or configured audit purposes.\n\nThe evidence artifact is what makes the handoff effective\n\nThe constraint-elimination reasoning from the integration work carries forward here. Back then you eliminated delivery routes that could not survive a constraint. Now you record, for each obligation, the control that satisfies it and the artifact that proves it.",
-          "A security and legal reviewer accepts proof that a control is live: a signed agreement, a configuration screen, an authorization record, or a returned log query. What they do not accept is a design document that identifies a control with no owner and no evidence; a control no one can demonstrate is indistinguishable from one that is not running.\n\nCost  Complexity  Risk\n\nCost: Producing and maintaining evidence for every obligation is ongoing work. Configurations drift and artifacts go stale, so the register is revalidated on a regular cadence.\n\nComplexity: A control, an owner, and a living evidence artifact per obligation is more governance than an entry point choice, and it spans security, legal, and platform owners who each must agree on who holds what.",
-          "Risk: A control specified with no owner and no evidence is invisible at the audit. It can stop operating with no one accountable, and the gap surfaces in review rather than in design, which is the most expensive place to find it.\n\nWatch OutCompliance3 min\n\nWhen passing entry point selection feels like finishing compliance\n\nSetup hook\n\nPassing the constraint pre-filter and being able to prove compliance are two different things. The pre-filter gives you a clean signal. Choosing a delivery route that survives HIPAA, GDPR, or FedRAMP produces an immediate, visible result: the route is allowed, the entry point is cleared, the design can move. Proving that each obligation is being met produces nothing visible at design time, because the proof is an artifact you must build, attach\n\n[...]"
-        ],
-        "fr": [
-          "Turning each compliance obligation into a control with evidence\n\nThe compliance layer of the integration model used the governing obligation as a pre-filter: HIPAA, GDPR, FedRAMP, attorney-client privilege, or a data-residency policy each ruled delivery routes and entry points in or out before cost or engineering preference entered the conversation. That work gets you to an entry point and a route that survives the obligation, but the next step is narrower and harder. Each surviving obligation must now become a control with a named owner. A reviewer does not treat a compliant entry point alone as proof that the rule is being followed. They also ask who owns the control and what evidence shows its holding in practice.",
-          "A regulation states an outcome, but you supply the control and the proof it is operating\n\nFrameworks such as GDPR, HIPAA, and FedRAMP state outcomes, not implementations. They say what must be true: that protected data must be handled a certain way, that access must be controlled, and that processing must happen in an authorized environment, but they leave the technical control to you. Each obligation becomes three things you own: a specific technical control that achieves the outcome, an owner accountable for it, and an evidence artifact that shows it is live. Always remember to include the evidence artifact; this is what the reviewer will check and is the most often missed.\n\nMapping obligations to controls, owners, and evidence\n\nMapping obligations to controls, owners, and evidence",
-          "Obligation (framework)Technical controlEvidence a reviewer acceptsOwner\n\nProtected health data handled under an agreement (HIPAA)Use only a HIPAA-ready Enterprise plan or first-party API configuration covered by a signed Business Associate Agreement, with HIPAA compliance enabled and only eligible features in scope.The signed BAA and the admin setting showing HIPAA compliance enabled, plus the eligible-feature list.Security lead\n\nUS government workload at the required impact level (FedRAMP)Deliver through an Anthropic-documented authorized route that meets the required impact level, not a non-authorized entry point.The authorization record for the chosen route and confirmation that the workload runs exclusively on it.Platform owner",
-          "Data handled and stored in an approved region (data residency)Configure supported regional processing and storage for the approved region, and validate whether logs, caches, monitoring, and retention paths remain within the approved boundary.The residency configuration and a data-flow record showing where every copy lives.Data owner\n\nDecisions reconstructable on demand (transparency, cross-framework)The decision logging built in the fairness cluster, retained and queryable for the required period.A sample reconstruction of one decision from the live log.Architect\n\nTraining use vs retention, two distinct claims",
-          "Do not collapse training use and retention into the same claim: data may be excluded from model training by default while still being retained or monitored for logging, abuse prevention, legal compliance, or configured audit purposes.\n\nThe evidence artifact is what makes the handoff effective\n\nThe constraint-elimination reasoning from the integration work carries forward here. Back then you eliminated delivery routes that could not survive a constraint. Now you record, for each obligation, the control that satisfies it and the artifact that proves it.",
-          "A security and legal reviewer accepts proof that a control is live: a signed agreement, a configuration screen, an authorization record, or a returned log query. What they do not accept is a design document that identifies a control with no owner and no evidence; a control no one can demonstrate is indistinguishable from one that is not running.\n\nCost  Complexity  Risk\n\nCost: Producing and maintaining evidence for every obligation is ongoing work. Configurations drift and artifacts go stale, so the register is revalidated on a regular cadence.\n\nComplexity: A control, an owner, and a living evidence artifact per obligation is more governance than an entry point choice, and it spans security, legal, and platform owners who each must agree on who holds what.",
-          "Risk: A control specified with no owner and no evidence is invisible at the audit. It can stop operating with no one accountable, and the gap surfaces in review rather than in design, which is the most expensive place to find it.\n\nWatch OutCompliance3 min\n\nWhen passing entry point selection feels like finishing compliance\n\nSetup hook\n\nPassing the constraint pre-filter and being able to prove compliance are two different things. The pre-filter gives you a clean signal. Choosing a delivery route that survives HIPAA, GDPR, or FedRAMP produces an immediate, visible result: the route is allowed, the entry point is cleared, the design can move. Proving that each obligation is being met produces nothing visible at design time, because the proof is an artifact you must build, attach\n\n[...]"
-        ]
-      },
-      "totalPages": 7
-    },
-    {
-      "id": "lesson_12",
-      "title": {
-        "en": "Compliance",
-        "fr": "Compliance"
-      },
-      "type": "checkpoint",
-      "duration": "3 min",
-      "pages": {
-        "en": [
-          "Justify the control choice\n\nTry it now. You are given one compliance obligation for a regulated deployment. Pick the technical control that evidences it, then select the single load-bearing reason a security and legal reviewer would accept that control as proof. You pass only when both land: the control must fit the obligation, and you must name why it counts as evidence a reviewer can inspect.\n\nObligation: Protected health data must be handled under a formal agreement (HIPAA).\n\nA. A HIPAA-ready plan or first-party API under a signed BAA, because the signed agreement plus the enabled configuration is the artifact a reviewer can inspect as proof.\n\nB. A HIPAA-ready plan under a signed BAA, because the model is instructed to handle health data carefully.",
-          "C. A model-based content filter on health terms, because it catches sensitive data at runtime.\n\nCheck answer\nSkip for now\n\nCumulativeModule8 min\n\nAssemble a responsible deployment\n\nTry it now. You are handed a self-contained brief, and you make five sequenced decisions that build a responsible deployment. The decisions run in order because each one sets the conditions for the next. A weak early choice narrows what the later ones can do. If you leave a domain rule in trained behavior in decision one, there is no layer downstream that can put it back.\n\nYou built each layer on its own across the module. Here is the stack you are assembling, in order:",
-          "Trained behavior shapes baseline safety; your application policy defines domain-specific rules; the runtime controls below enforce those rules in operation.\n\nRuntime screening and authorization sit on the request path and stop disallowed content and unpermitted actions.\n\nFairness and transparency controls address unequal outcomes at their source and ensure each decision can be reconstructed. They depend on effective logging.\n\nHuman-review routing sends the decisions a model should not finalize alone to a person, by stakes. It depends on the same logging.\n\nThe control register ties each obligation to a control, an owner, and an evidence artifact.\n\nThe brief",
-          "A public-sector benefits assistant helps an agency determine program eligibility, recommending whether to approve, deny, or refer. The brief gives you what the decisions need and nothing more:\n\nFramework: FedRAMP at the agency's required impact level, plus the agency's rule that a denied applicant gets the specific reason.\n\nHigh-stakes, low-confidence case: An applicant near the eligibility threshold with incomplete documentation, where a wrong denial removes someone's benefits.\n\nSkew-prone output: The recommendation and the reason attached to a denial.\n\nData: Applicant-submitted fields, agency records retrieved at decision time, and any derived features.\n\n1. Set the boundary between trained behavior and your application layer.\n\n2. Place the runtime controls.",
-          "3. Specify the fairness and transparency controls.\n\n4. Define the human-review routing.\n\n5. Build the control register.\n\nReveal model answer\nSkip for now\n\nModel answer\n\n1. Set the boundary between trained behavior and your application layer. Trained behavior refuses broad harm classes but never saw this program's eligibility rules, so those belong to the application layer. Leave them in trained behavior and no control downstream can reach them.\n\n2. Place the runtime controls. Position input screening, output screening, and tool-call authorization, choose model-based or deterministic at each, and set the failure direction. Fail closed, because a screen that fails open lets an unscreened denial reach an applicant.",
-          "3. Specify the fairness and transparency controls. Name which of the four injection points (corpus, prompt framing, examples, routing) could skew this outcome, and build the decision logging once, since the affected applicant, the regulator, the build team, and the control register all draw on it.\n\n4. Define the human-review routing. Route by confidence, reversibility, and cost of a wrong answer, and pick a placement: pre-action approval, post-action audit, or sampled review. Send a low-confidence, hard-to-reverse denial to pre-action approval. Key the rule to stakes, not volume, or a quiet queue waves a high-stakes denial through.",
-          "5. Build the control register. Map each FedRAMP obligation to a control, an owner, and the evidence a reviewer accepts. A control with no evidence artifact is a claim you cannot prove operated.\n\nStrong answers are specific: they name which injection points, name the failure direction, name the routing rule variables, and name the evidence artifact. Weak answers describe the general concept without applying it to this deployment. Check each decision against the brief, the compliance framework and the high-stakes case details should show up in your answers.\n\nMark complete\n\nReferenceWrap-up\n\nGlossary\n\nThe key terms used across this module, in alphabetical order. Click a term to expand its definition.\n\nBAA (Business Associate Agreement)\nA contract under HIPAA that permits\n\n[...]"
-        ],
-        "fr": [
-          "Justify the control choice\n\nTry it now. You are given one compliance obligation for a regulated deployment. Pick the technical control that evidences it, then select the single load-bearing reason a security and legal reviewer would accept that control as proof. You pass only when both land: the control must fit the obligation, and you must name why it counts as evidence a reviewer can inspect.\n\nObligation: Protected health data must be handled under a formal agreement (HIPAA).\n\nA. A HIPAA-ready plan or first-party API under a signed BAA, because the signed agreement plus the enabled configuration is the artifact a reviewer can inspect as proof.\n\nB. A HIPAA-ready plan under a signed BAA, because the model is instructed to handle health data carefully.",
-          "C. A model-based content filter on health terms, because it catches sensitive data at runtime.\n\nCheck answer\nSkip for now\n\nCumulativeModule8 min\n\nAssemble a responsible deployment\n\nTry it now. You are handed a self-contained brief, and you make five sequenced decisions that build a responsible deployment. The decisions run in order because each one sets the conditions for the next. A weak early choice narrows what the later ones can do. If you leave a domain rule in trained behavior in decision one, there is no layer downstream that can put it back.\n\nYou built each layer on its own across the module. Here is the stack you are assembling, in order:",
-          "Trained behavior shapes baseline safety; your application policy defines domain-specific rules; the runtime controls below enforce those rules in operation.\n\nRuntime screening and authorization sit on the request path and stop disallowed content and unpermitted actions.\n\nFairness and transparency controls address unequal outcomes at their source and ensure each decision can be reconstructed. They depend on effective logging.\n\nHuman-review routing sends the decisions a model should not finalize alone to a person, by stakes. It depends on the same logging.\n\nThe control register ties each obligation to a control, an owner, and an evidence artifact.\n\nThe brief",
-          "A public-sector benefits assistant helps an agency determine program eligibility, recommending whether to approve, deny, or refer. The brief gives you what the decisions need and nothing more:\n\nFramework: FedRAMP at the agency's required impact level, plus the agency's rule that a denied applicant gets the specific reason.\n\nHigh-stakes, low-confidence case: An applicant near the eligibility threshold with incomplete documentation, where a wrong denial removes someone's benefits.\n\nSkew-prone output: The recommendation and the reason attached to a denial.\n\nData: Applicant-submitted fields, agency records retrieved at decision time, and any derived features.\n\n1. Set the boundary between trained behavior and your application layer.\n\n2. Place the runtime controls.",
-          "3. Specify the fairness and transparency controls.\n\n4. Define the human-review routing.\n\n5. Build the control register.\n\nReveal model answer\nSkip for now\n\nModel answer\n\n1. Set the boundary between trained behavior and your application layer. Trained behavior refuses broad harm classes but never saw this program's eligibility rules, so those belong to the application layer. Leave them in trained behavior and no control downstream can reach them.\n\n2. Place the runtime controls. Position input screening, output screening, and tool-call authorization, choose model-based or deterministic at each, and set the failure direction. Fail closed, because a screen that fails open lets an unscreened denial reach an applicant.",
-          "3. Specify the fairness and transparency controls. Name which of the four injection points (corpus, prompt framing, examples, routing) could skew this outcome, and build the decision logging once, since the affected applicant, the regulator, the build team, and the control register all draw on it.\n\n4. Define the human-review routing. Route by confidence, reversibility, and cost of a wrong answer, and pick a placement: pre-action approval, post-action audit, or sampled review. Send a low-confidence, hard-to-reverse denial to pre-action approval. Key the rule to stakes, not volume, or a quiet queue waves a high-stakes denial through.",
-          "5. Build the control register. Map each FedRAMP obligation to a control, an owner, and the evidence a reviewer accepts. A control with no evidence artifact is a claim you cannot prove operated.\n\nStrong answers are specific: they name which injection points, name the failure direction, name the routing rule variables, and name the evidence artifact. Weak answers describe the general concept without applying it to this deployment. Check each decision against the brief, the compliance framework and the high-stakes case details should show up in your answers.\n\nMark complete\n\nReferenceWrap-up\n\nGlossary\n\nThe key terms used across this module, in alphabetical order. Click a term to expand its definition.\n\nBAA (Business Associate Agreement)\nA contract under HIPAA that permits\n\n[...]"
-        ]
-      },
-      "totalPages": 7
-    }
-  ],
-  "exercises": [
-    {
-      "id": "ex_1",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_2",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_3",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_4",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_5",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_6",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_7",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_8",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_9",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_10",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_11",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_12",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_13",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_14",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_15",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_16",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_17",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_18",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_19",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_20",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_21",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_22",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_23",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_24",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_25",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_26",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_27",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_28",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_29",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_30",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_31",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_32",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_33",
-      "type": "exercise"
-    }
-  ]
+ "courseId": "claude_certified_architect_professional__03",
+ "lessons": [
+  {
+   "id": "lesson_01",
+   "title": {
+    "en": "Alignment",
+    "fr": "Alignement"
+   },
+   "type": "teaching",
+   "duration": "11 min",
+   "pages": {
+    "en": [
+     "What the model's training enforces versus what you own\n\nEarlier work established the architecture, the model, and the integration. Here we answer: before you start adding controls, how much safe behavior is already handled by the model, and how much is still yours to build? You need to understand this boundary clearly to avoid creating duplicate protections or assuming the model is enforcing a rule it has never seen.",
+     "Anthropic trains Claude against a constitution: a written document that describes the values and behavior the model should exhibit, so the model is deployed with broad safety behavior already in place. Anthropic revises this document over time, and the most recent published version is from January 2026. The document is used during training to generate examples the model learns from and to rank candidate responses. This shapes how the model responds to ambiguous or sensitive requests but does not necessarily catch bad outputs. It sets a priority order for the model to follow when goals conflict: be broadly safe, be ethical, comply with guidelines, and be genuinely helpful to operators and users. That ordering matters because a helpful answer is sometimes unsafe. The ordering is holistic rather than strict, so higher-priority goals generally take precedence when they conflict, though the model weighs them together rather than applying them in a rigid sequence. The model arrives with a class of harmful output already reduced before you write a single prompt. The built-in layer handles broad, general-purpose harm, but does not cover your specific domain: any policies specific to your users and product are still yours to enforce.",
+     "Training-time alignment and inference-time control are two layers with distinct purposes\n\nTraining-time alignment shapes model behavior before deployment. It reduces broad classes of harmful output by steering Claude to refuse dangerous requests and default toward safer responses. Because it is set before any deployment exists, it is general by design. This is both a strength and a weakness: it does not know your partner's domain policy, data-handling rules, or authorization model. A request can fit Claude's general alignment and still violate a deployment-specific rule, such as disclosing another customer's order information or advising outside an approved script. Remember, Claude cannot enforce a rule it was never given.",
+     "Deployment-specific rules are enforced by the second layer: inference-time control. This includes the runtime guardrails you configure for your deployment, such as system instructions, input and output checks, tool permissions, and human review gates. System instructions shape the model's behavior, but deployment-specific policy is enforced only when those instructions are paired with runtime controls such as screening, authorization, and review. Training-time alignment lowers baseline risk, and inference-time control enforces the rules specific to your deployment.\n\nA layered view: each layer has a job and a blind spot\n\nTreat safety as four layers stacked from Claude outward. Each one covers something the layer below cannot, and each one fails in a way the next must catch.",
+     "Select each layer to see what it reliably covers, what it does not, and who owns it.\n\nTrained behavior\nSystem-prompt instruction\nRuntime screening\nAuthorization\n\nWhat it reliably covers: Broad classes of harmful or unsafe output, applied to every request without configuration.\n\nWhat it does not cover: Your domain policy, your data rules, your authorization model.\n\nWho owns it: Anthropic.\n\nWhat it reliably covers: Role, tone, and stated constraints that steer Claude inside one request.\n\nWhat it does not cover: Anything an adversarial or unusual input can talk Claude out of, since instructions are not enforcement.\n\nWho owns it: Architect.\n\nWhat it reliably covers: Input and output screening that detects disallowed content.",
+     "What it does not cover: Actions with side effects, which screening does not authorize, and novel attacks that a classifier misses.\n\nWho owns it: Architect.\n\nWhat it reliably covers: Whether a specific action with a side effect is permitted for this caller in this context.\n\nWhat it does not cover: Content quality and fairness.\n\nWho owns it: Architect.\n\nCost  Complexity  Risk\n\nCost: Each added layer costs latency and engineering. A pre-screen on input and a check on output add two extra calls or rules to every request.\n\nComplexity: Four layers means four places to design, version, and test. The system prompt and the screening logic drift independently if not governed.",
+     "Risk: The most dangerous failure is a silent one: assuming Claude enforces a domain rule that it was never given. Since the rule doesn't exist in any layer, nothing prevents a violation.\n\nWatch OutAlignment3 min\n\nWhen trained refusals are mistaken for a domain policy\n\nSetup hook\n\nYou are a strong systems Architect. Claude already refuses broadly harmful requests in testing, so you assume its training\n\n[...]"
+    ],
+    "fr": [
+     "Ce que l'entraînement du modèle garantit et ce qui reste de votre responsabilité\n\nDes travaux antérieurs ont établi l'architecture, le modèle et l'intégration. Ici, nous répondons à la question : avant de commencer à ajouter des contrôles, quelle part du comportement sûr est déjà prise en charge par le modèle, et qu'est-ce qui reste à construire de votre côté ? Vous devez comprendre clairement cette frontière pour éviter de créer des protections redondantes ou de supposer que le modèle applique une règle qu'il n'a jamais vue.",
+     "Anthropic entraîne Claude en s'appuyant sur une constitution : un document écrit qui décrit les valeurs et le comportement que le modèle doit adopter, de sorte que le modèle soit déployé avec un comportement de sécurité général déjà en place. Anthropic révise ce document au fil du temps, et la version publiée la plus récente date de janvier 2026. Le document est utilisé pendant l'entraînement pour générer des exemples dont le modèle apprend et pour classer les réponses candidates. Cela façonne la manière dont le modèle répond aux demandes ambiguës ou sensibles, mais n'élimine pas nécessairement les sorties problématiques. Il établit un ordre de priorité que le modèle doit suivre lorsque des objectifs entrent en conflit : être globalement sûr, être éthique, se conformer aux directives et être véritablement utile aux opérateurs et aux utilisateurs. Cet ordre a de l'importance car une réponse utile peut parfois être dangereuse. L'approche est holistique plutôt que stricte : les objectifs de plus haute priorité prévalent généralement en cas de conflit, bien que le modèle les pondère ensemble plutôt que de les appliquer dans une séquence rigide. Le modèle arrive avec une certaine classe de sorties nuisibles déjà réduite avant même que vous ne rédigiez une seule requête. La couche intégrée gère des préjudices généraux et d'usage courant, mais ne couvre pas votre domaine spécifique : toute politique propre à vos utilisateurs et à votre produit reste de votre responsabilité.",
+     "L'alignement en phase d'entraînement et le contrôle en phase d'inférence sont deux couches aux objectifs distincts\n\nL'alignement réalisé pendant l'entraînement façonne le comportement du modèle avant le déploiement. Il réduit les grandes catégories de sorties nuisibles en orientant Claude à refuser les requêtes dangereuses et à privilégier, par défaut, des réponses plus sûres. Comme il est établi avant tout déploiement, il est général par conception. C'est à la fois une force et une faiblesse : il ne connaît pas la politique de domaine de votre partenaire, les règles de traitement des données, ni le modèle d'autorisation. Une requête peut être conforme à l'alignement général de Claude et néanmoins violer une règle spécifique au déploiement, par exemple divulguer les informations de commande d'un autre client ou donner des conseils en dehors d'un script approuvé. Rappelez-vous : Claude ne peut pas faire respecter une règle qu'on ne lui a jamais donnée.",
+     "Les règles spécifiques au déploiement sont appliquées par la deuxième couche : le contrôle au moment de l'inférence. Cela inclut les garde-fous runtime que vous configurez pour votre déploiement, comme les instructions système, les contrôles d'entrée et de sortie, les permissions d'outils et les étapes de revue humaine. Les instructions système façonnent le comportement du modèle, mais la politique spécifique au déploiement n'est appliquée que lorsque ces instructions sont associées à des contrôles d'exécution tels que le filtrage, l'autorisation et la revue. L'alignement pendant l'entraînement réduit le risque de base, et le contrôle à l'inférence impose les règles spécifiques à votre déploiement.\n\nUne vue en couches : chaque couche a un rôle et un angle mort\n\nConsidérez la sécurité comme quatre couches empilées depuis Claude vers l'extérieur. Chacune couvre quelque chose que la couche inférieure ne peut pas, et chacune échoue d'une manière que la suivante doit rattraper.",
+     "Sélectionnez chaque couche pour voir ce qu'elle couvre de manière fiable, ce qu'elle ne couvre pas et qui en est responsable.\n\nComportement entraîné\nInstruction du prompt système\nFiltrage à l'exécution\nAutorisation\n\nCe qu'elle couvre de manière fiable : De larges catégories de sorties nuisibles ou dangereuses, appliquées à chaque requête sans configuration.\n\nCe qu'elle ne couvre pas : Votre politique de domaine, vos règles de données, votre modèle d'autorisation.\n\nResponsable : Anthropic.\n\nCe qu'elle couvre de manière fiable : Le rôle, le ton et les contraintes énoncées qui dirigent Claude au sein d'une seule requête.\n\nCe qu'elle ne couvre pas : Tout ce qu'une entrée adversariale ou inhabituelle peut convaincre Claude d'ignorer, puisque les instructions ne font pas office d'application contraignante.\n\nResponsable : Architecte.\n\nCe qu'elle couvre de manière fiable : Le filtrage des entrées et des sorties qui détecte le contenu interdit.",
+     "Ce qu'elle ne couvre pas : Les actions ayant des effets secondaires, que le filtrage n'autorise pas, et les attaques inédites qu'un classifieur ne détecte pas.\n\nResponsable : Architecte.\n\nCe qu'elle couvre de manière fiable : Si une action spécifique avec effet secondaire est autorisée pour cet appelant dans ce contexte.\n\nCe qu'elle ne couvre pas : La qualité et l'équité du contenu.\n\nResponsable : Architecte.\n\nCoût  Complexité  Risque\n\nCoût : Chaque couche ajoutée coûte en latence et en ingénierie. Un pré-filtrage sur l'entrée et une vérification sur la sortie ajoutent deux appels ou règles supplémentaires à chaque requête.\n\nComplexité : Quatre couches signifient quatre endroits où concevoir, versionner et tester. Le prompt système et la logique de filtrage dérivent indépendamment s'ils ne sont pas gouvernés.",
+     "Risque : La défaillance la plus dangereuse est une défaillance silencieuse : supposer que Claude applique une règle de domaine qui ne lui a jamais été donnée. Puisque la règle n'existe dans aucune couche, rien n'empêche une violation.\n\nAttention — Alignement — 3 min\n\nQuand des refus appris lors de l'entraînement sont pris pour une politique de domaine\n\nAccroche de configuration\n\nVous êtes un architecte systèmes chevronné. Claude refuse déjà, lors des tests, les requêtes largement nuisibles, donc vous supposez que sa formation\n\n[...]"
+    ]
+   },
+   "totalPages": 7
+  },
+  {
+   "id": "lesson_02",
+   "title": {
+    "en": "Alignment",
+    "fr": "Alignement"
+   },
+   "type": "checkpoint",
+   "duration": "3 min",
+   "pages": {
+    "en": [
+     "Sort the responsibility\n\nTry it now. You are reviewing the safety design for a partner's Claude assistant. Drag each obligation into the bucket that should enforce it: either Claude's trained behavior, or the application layer. The feedback explains why each one falls where it does.\n\nRefusing to help synthesize a dangerous weapon\n\nNever returning another tenant's data\n\nDeclining to produce plainly hateful content\n\nBlocking advice outside the partner's approved script\n\nRequiring a sign off before a refund is issued\n\nClaude's trained behavior\n\nApplication layer (you own it)\n\nCheck answers\nSkip for now"
+    ],
+    "fr": [
+     "Répartir les responsabilités\n\nEssayez maintenant. Vous examinez la conception de sécurité de l'assistant Claude d'un partenaire. Faites glisser chaque obligation dans le compartiment qui doit l'appliquer : soit le comportement entraîné de Claude, soit la couche applicative. Le retour explique pourquoi chaque élément est placé ainsi.\n\nRefuser d'aider à concevoir une arme dangereuse\n\nNe jamais renvoyer les données d'un autre locataire\n\nRefuser de produire un contenu manifestement haineux\n\nBloquer des conseils en dehors du script approuvé par le partenaire\n\nExiger une validation avant l'émission d'un remboursement\n\nComportement entraîné de Claude\n\nCouche applicative (vous en êtes le propriétaire)\n\nVérifier les réponses\nPasser pour l'instant"
+    ]
+   },
+   "totalPages": 1
+  },
+  {
+   "id": "lesson_03",
+   "title": {
+    "en": "Guardrails",
+    "fr": "Garde-fous"
+   },
+   "type": "teaching",
+   "duration": "9 min",
+   "pages": {
+    "en": [
+     "Risks, limitations, and failure modes of LLM systems\n\nYou have placed the controls; now identify what they defend against. An Architect is expected to conduct and document a risk assessment for a proposed system as part of a security deliverable. This screen covers the risk categories that recur in LLM systems and turns them into a written assessment that you can run.\n\nThe risk categories that recur in LLM systems\n\nMost LLM-system risk falls into a small set of categories. Identify these categories and check your designs against each:\n\nDirect prompt injection: A user crafts input that overrides the system's instructions and redirects its behavior.",
+     "Indirect prompt injection: Malicious instructions arrive through retrieved content or tool outputs that the model treats as trusted and the vector input screening does not catch.\n\nToken-budget exhaustion: Oversized or adversely padded inputs consume the context or output budget, truncating work or inflating cost.\n\nTool and action abuse: The model is induced to call a side-effecting tool outside policy, the failure the action-authorization control exists to stop.\n\nData exposure: Sensitive fields enter the context window or the logs where they should not, creating a leak independent of model behavior.\n\nSystem vulnerability assessment: where to look",
+     "Walk the request and data paths together. At each entry point, user input, retrieved content, tool outputs, the model's own output, and the logs, ask what an adversary could do and which control stands in the way. Look for anywhere without a control where there could be a plausible attack.\n\nDocumenting the risk assessment as a deliverable\n\nThe risk assessment should be a written artifact. For each identified risk, record the category, the affected component, a likelihood-and-impact judgment, and the mitigation control with an owner and an evidence artifact. That document is what the security reviewer will sign off on, and it is what the cumulative exercise at the end of this module expects you to be able to produce."
+    ],
+    "fr": [
+     "Risques, limites et modes de défaillance des systèmes LLM\n\nVous avez mis en place des contrôles ; identifiez maintenant contre quoi ils protègent. On attend d'un Architecte qu'il réalise et documente une évaluation des risques pour un système proposé dans le cadre d'un livrable de sécurité. Cet écran couvre les catégories de risques récurrentes dans les systèmes LLM et les transforme en une évaluation écrite que vous pouvez exécuter.\n\nLes catégories de risques récurrentes dans les systèmes LLM\n\nLa plupart des risques des systèmes LLM appartiennent à un petit nombre de catégories. Identifiez ces catégories et vérifiez vos conceptions par rapport à chacune :\n\nInjection de prompt directe : un utilisateur conçoit une entrée qui outrepasse les instructions du système et redirige son comportement.",
+     "Injection de prompt indirecte : des instructions malveillantes arrivent via du contenu récupéré ou des sorties d'outils que le modèle considère comme fiables et que le filtrage d'entrée vectorielle ne détecte pas.\n\nÉpuisement du budget de tokens : des entrées surdimensionnées ou remplies de manière adverse consomment le budget de contexte ou de sortie, tronquant le travail ou augmentant les coûts.\n\nAbus d'outils et d'actions : le modèle est incité à appeler un outil ayant des effets de bord en dehors de la politique, ce que le contrôle d'autorisation d'action est censé empêcher.\n\nExposition de données : des champs sensibles pénètrent la fenêtre de contexte ou les logs là où ils ne devraient pas, créant une fuite indépendante du comportement du modèle.\n\nÉvaluation des vulnérabilités du système : où regarder",
+     "Parcourez ensemble les chemins des requêtes et des données. À chaque point d'entrée — saisie utilisateur, contenu récupéré, sorties d'outils, sortie du modèle et logs — demandez-vous ce qu'un adversaire pourrait faire et quel contrôle s'y oppose. Recherchez tout endroit sans contrôle où une attaque plausible pourrait survenir.\n\nDocumenter l'évaluation des risques en tant que livrable\n\nL'évaluation des risques doit être un artefact écrit. Pour chaque risque identifié, consignez la catégorie, le composant affecté, une appréciation de probabilité et d'impact, ainsi que le contrôle d'atténuation avec un responsable et une pièce justificative. Ce document est ce que le réviseur sécurité approuvera, et c'est ce que l'exercice cumulatif à la fin de ce module s'attend à ce que vous soyez capable de produire."
+    ]
+   },
+   "totalPages": 3
+  },
+  {
+   "id": "lesson_04",
+   "title": {
+    "en": "Guardrails",
+    "fr": "Garde-fous"
+   },
+   "type": "checkpoint",
+   "duration": "4 min",
+   "pages": {
+    "en": [
+     "Assess the risks in a proposed architecture\n\nTry it now. You are reviewing a proposed architecture: a customer-support agent that retrieves answers from a partner knowledge base and issues refunds through a connected tool, with all activity written to a request log. Identify at least three risk categories present in this design, and for each one name a workable mitigation. Both the risk and a mitigation that addresses it are required.\n\nIdentify the risk categories present in this design and pair each with a mitigation.\n\nReveal model answer\nSkip for now\n\nModel answer\n\n1. Indirect prompt injection via the knowledge base. Retrieved content can carry instructions; mitigation is to treat retrieved text as untrusted and screen tool/content inputs, not just user input.",
+     "2. Tool and action abuse on the refund tool. Mitigation is an action-authorization check that runs before the refund tool executes, independent of the model's output.\n\n3. Token-budget exhaustion on large knowledge-base documents. Mitigation is chunking and input limits plus budget monitoring so a large document cannot truncate the work silently.\n\n4. Data exposure in the request log. Mitigation is server-side redaction of sensitive fields before anything is logged."
+    ],
+    "fr": [
+     "Évaluez les risques d'une architecture proposée\n\nEssayez maintenant. Vous examinez une architecture proposée : un agent de support client qui récupère des réponses depuis une base de connaissances partenaire et émet des remboursements via un outil connecté, avec toutes les activités écrites dans un journal de requêtes. Identifiez au moins trois catégories de risques présentes dans ce design, et pour chacune nommez une mesure d'atténuation réalisable. Il faut à la fois le risque et une atténuation qui y répond.\n\nIdentifiez les catégories de risque présentes dans ce design et associez à chacune une mesure d'atténuation.\n\nAfficher la réponse modèle\nPasser pour l'instant\n\nRéponse modèle\n\n1. Injection d'invite indirecte via la base de connaissances. Le contenu récupéré peut contenir des instructions ; la mesure d'atténuation consiste à considérer le texte récupéré comme non fiable et à filtrer les entrées des outils/contenus, pas seulement celles des utilisateurs.",
+     "2. Abus d'outils et d'actions via l'outil de remboursement. La mesure d'atténuation est une vérification d'autorisation d'action qui s'exécute avant que l'outil de remboursement n'intervienne, indépendante de la sortie du modèle.\n\n3. Épuisement du budget de tokens sur de longs documents de la base de connaissances. La mesure d'atténuation est le découpage (chunking) et des limites d'entrée ainsi qu'une surveillance du budget pour qu'un document volumineux ne tronque pas silencieusement le travail.\n\n4. Exposition de données dans le journal de requêtes. La mesure d'atténuation consiste à effectuer un masquage côté serveur des champs sensibles avant toute journalisation."
+    ]
+   },
+   "totalPages": 2
+  },
+  {
+   "id": "lesson_05",
+   "title": {
+    "en": "Guardrails",
+    "fr": "Garde-fous"
+   },
+   "type": "teaching",
+   "duration": "14 min",
+   "pages": {
+    "en": [
+     "Placing screening and authorization so the system degrades safely",
+     "A control that screens requests can fail the same way any dependency fails. It can time out, return an error, or become unreachable under load. The difference is that a failing guardrail can still look healthy: when a screening service errors but still passes traffic through, requests keep flowing while the control does none of the work it was placed there to do. So, when a guardrail errors, the system must do one of two things: let it through or block it. If you have not made that choice explicitly, the surrounding code decides for you. The default is almost always to let the request through, which means falling back to the unprotected path. The same reasoning that put retries and circuit breakers around your model calls applies here: decide how the control behaves when it fails, rather than inheriting whatever behavior happens to keep requests flowing.",
+     "Where guardrails sit in a request path\n\nA guarded request path has a few decision points, each answering a different question.\n\nInput screening runs before the model call and decides whether the request should reach the model at all.\n\nOutput screening runs before the response reaches the user and decides whether what the model produced is safe to return.\n\nTool-call authorization runs before any action with side effects, such as sending an email, writing to a database, or issuing a refund, and determines whether this caller may perform this action in this context.\n\nBecause they sit at different points and check different things, a control at one place does nothing for the others, which is why a single filter cannot cover the whole path.",
+     "Where each check fits: model-based vs deterministic by decision point\n\nDecision pointA model-based check is needed whenA deterministic check is better when\n\nInput screening (before the model call)Intent is ambiguous and you are catching jailbreak or prompt-injection patterns that cannot be exhaustively captured with rules. A lightweight model classifies the input.The rule is clear and defined: a blocklist, a regex, a length or format check. It is faster, predictable, and cannot be talked out of its decision.",
+     "Output screening (before the response reaches the user)You are evaluating qualities like toxicity or policy compliance that need language understanding. A judge model scores the output.You are checking for a known string, a forbidden field, or a schema violation that a validator catches with certainty.\n\nTool-call authorization (before any side-effecting action)Rarely. Authorization should be deterministic, so it is auditable.Almost always: an allowlist of permitted actions, identity checks, and scope validation. Authorization must be a decision you can prove and replay, so it must be deterministic.\n\nWhy model-based and deterministic checks fail differently, and why you chain them",
+     "A model-based classifier can be evaded: a user can phrase an input in a way that bypasses even the strongest of judge models. A deterministic rule is brittle: it blocks exactly what it is programmed to detect and nothing more. It misses anything it did not anticipate and over-blocks anything that resembles a restricted pattern. There is no control that catches everything, so these controls are deployed in series. Identifying what each one misses ensures each gap is deliberately covered by a different control rather than left open.\n\nA second injection vector: instructions arriving through retrieved content and tool outputs",
+     "User-input screening catches instructions the user sends directly. It does not catch instructions embedded in content the system retrieves or receives from tools. In a RAG system, a malicious instruction in a retrieved document reaches the model after input screening has already passed the request. In an agentic system, a tool response can carry instructions the model treats as authoritative. This is the dominant injection vector in enterprise deployments with retrieval or tool use, and it requires a separate control: screen retrieved content and tool outputs before they are appended to the model's context, using the same model-based classifier you apply to user input. The blind spot is different because the source is different; identify it explicitly in your control design to ensure coverage.",
+     "On the API, responses return a refusal when streaming classifiers intervene. The Messages API reports this as stop_reason: \"refusal\" accompanied by a stop_details object (available since Claude Opus 4.7). That object carries a policy category along with a readable explanation; both fields are null when the refusal does not map to a named category. The category set is enumerated in the stop-reasons documentation on platform.claude.com. As of this writing it includes cyber, bio, frontier_llm, and reasoning_extraction. Re-check the list at publish time rather than hardcoding it. Your application should read the category and route different refusal classes accordingly, ra\n\n[...]"
+    ],
+    "fr": [
+     "Placer le filtrage et l'autorisation pour que le système se dégrade en toute sécurité",
+     "Un contrôle qui filtre les requêtes peut échouer de la même manière que n'importe quelle dépendance. Il peut expirer, renvoyer une erreur ou devenir inaccessible sous charge. La différence, c'est qu'un garde-fou défaillant peut encore donner l'apparence d'être opérationnel : lorsqu'un service de filtrage renvoie une erreur tout en continuant à laisser passer le trafic, les requêtes continuent de circuler alors que le contrôle n'accomplit rien de ce pour quoi il a été mis en place. Ainsi, lorsqu'un garde-fou tombe en erreur, le système doit faire l'un des deux choix suivants : le laisser passer ou le bloquer. Si vous n'avez pas pris cette décision explicitement, le code environnant décidera pour vous. Par défaut, on laisse presque toujours la requête passer, ce qui revient à retomber sur le chemin non protégé. Le même raisonnement qui vous a conduit à placer des réessais et des mécanismes de type circuit breaker autour de vos appels au modèle s'applique ici : décidez du comportement du contrôle en cas de panne, plutôt que d'hériter du comportement qui maintient simplement le flux des requêtes.",
+     "Où se situent les garde-fous dans le parcours d'une requête\n\nUn parcours de requête protégé comporte plusieurs points de décision, chacun répondant à une question différente.\n\nLe filtrage d'entrée s'exécute avant l'appel au modèle et décide si la requête doit atteindre le modèle.\n\nLe filtrage de sortie s'exécute avant que la réponse n'atteigne l'utilisateur et décide si ce que le modèle a produit est sûr à renvoyer.\n\nL'autorisation d'appel d'outil s'exécute avant toute action ayant des effets de bord, comme l'envoi d'un e-mail, l'écriture dans une base de données ou l'émission d'un remboursement, et détermine si cet appelant peut effectuer cette action dans ce contexte.\n\nParce qu'ils interviennent à des points différents et vérifient des choses différentes, un contrôle placé à un endroit n'a aucun effet pour les autres, ce qui explique pourquoi un filtre unique ne peut pas couvrir l'ensemble du parcours.",
+     "Où chaque contrôle se situe : contrôles basés sur un modèle vs déterministes selon le point de décision\n\nPoint de décisionUn contrôle basé sur un modèle est nécessaire lorsqueUn contrôle déterministe est préférable lorsque\n\nFiltrage d'entrée (avant l'appel au modèle)L'intention est ambiguë et vous cherchez à détecter des jailbreaks ou des schémas d'injection de prompt qui ne peuvent pas être capturés de façon exhaustive par des règles. Un modèle léger classifie l'entrée.La règle est claire et définie : une blocklist, une regex, une vérification de longueur ou de format. C'est plus rapide, prévisible, et on ne peut pas le faire revenir sur sa décision.",
+     "Filtrage de sortie (avant que la réponse n'atteigne l'utilisateur)Vous évaluez des qualités comme la toxicité ou la conformité aux politiques qui nécessitent une compréhension du langage. Un modèle juge attribue un score à la sortie.Vous vérifiez une chaîne connue, un champ interdit, ou une violation de schéma qu'un validateur détecte avec certitude.\n\nAutorisation d'appel d'outil (avant toute action ayant des effets de bord)Rarement. L'autorisation doit être déterministe, donc auditable.Presque toujours : une allowlist d'actions permises, des vérifications d'identité et une validation des scopes. L'autorisation doit être une décision que vous pouvez prouver et rejouer, elle doit donc être déterministe.\n\nPourquoi les contrôles basés sur un modèle et les contrôles déterministes échouent différemment, et pourquoi vous les enchaînez",
+     "Un classificateur basé sur un modèle peut être contourné : un utilisateur peut formuler une entrée de manière à passer outre même les meilleurs modèles juge. Une règle déterministe est fragile : elle bloque exactement ce pour quoi elle a été programmée et rien d'autre. Elle manque tout ce qu'elle n'a pas anticipé et surbloque tout ce qui ressemble à un schéma restreint. Il n'existe pas de contrôle qui attrape tout, c'est pourquoi ces contrôles sont déployés en série. Identifier ce que chacun manque garantit que chaque faille est intentionnellement couverte par un contrôle différent plutôt que laissée ouverte.\n\nUn second vecteur d'injection : des instructions arrivant via du contenu récupéré et les sorties d'outils",
+     "Le filtrage des entrées utilisateur attrape les instructions envoyées directement par l'utilisateur. Il ne détecte pas les instructions intégrées dans du contenu que le système récupère ou reçoit via des outils. Dans un système RAG, une instruction malveillante contenue dans un document récupéré atteint le modèle après que le filtrage des entrées a déjà validé la requête. Dans un système agentif, la réponse d'un outil peut contenir des instructions que le modèle considère comme faisant autorité. C'est le vecteur d'injection dominant dans les déploiements d'entreprise qui utilisent la récupération ou des outils, et il nécessite un contrôle séparé : filtrer le contenu récupéré et les sorties des outils avant de les ajouter au contexte du modèle, en utilisant le même classificateur basé sur un modèle que vous appliquez aux entrées utilisateur. Le point aveugle est différent parce que la source est différente ; identifiez-le explicitement dans la conception de votre dispositif de contrôle pour assurer une couverture.",
+     "Sur l'API, les réponses renvoient un refus lorsque des classificateurs en streaming interviennent. La Messages API rapporte cela sous stop_reason: \"refusal\" accompagné d'un stop_details object (disponible depuis Claude Opus 4.7). Cet objet porte une policy category ainsi qu'une explication lisible ; les deux champs sont null lorsque le refus ne correspond pas à une catégorie nommée. L'ensemble des catégories est énuméré dans la documentation stop-reasons sur platform.claude.com. À la date de rédaction, il inclut cyber, bio, frontier_llm et reasoning_extraction. Vérifiez la liste au moment de la publication plutôt que de la coder en dur. Votre application devrait lire la catégorie et acheminer les différentes classes de refus en conséquence, ra\n\n[...]"
+    ]
+   },
+   "totalPages": 8
+  },
+  {
+   "id": "lesson_06",
+   "title": {
+    "en": "Guardrails",
+    "fr": "Garde-fous"
+   },
+   "type": "checkpoint",
+   "duration": "4 min",
+   "pages": {
+    "en": [
+     "Place the controls on the path\n\nTry it now. You are given four controls. Each one answers two questions: where it sits on the request path, and what kind of check it is. Drop each control onto a grid. The horizontal axis is the placement point, from input screening to action authorization before a tool runs, to output filtering. The vertical axis is whether a deterministic check or a model-based check fit. Correct placement reveals the reasoning. Not every zone will be filled, two cells will remain empty.\n\nA. Jailbreak and prompt-injection screen\n\nB. Banned term blocklist on the user message\n\nC. Toxicity judge on the generated response\n\nD. Refund authorization policy check before the tool runs\n\nModel-based\n\nDeterministic\n\nInput Screening\n\nOutput Screening\n\nAction Authorization\n\nCheck answers\nSkip for now"
+    ],
+    "fr": [
+     "Placez les contrôles sur le parcours\n\nEssayez maintenant. On vous donne quatre contrôles. Chacun répond à deux questions : où il se situe sur le trajet de la requête, et quel type de contrôle c'est. Déposez chaque contrôle sur une grille. L'axe horizontal correspond au point de placement, depuis le filtrage d'entrée jusqu'à l'autorisation d'action avant l'exécution d'un outil, puis le filtrage de sortie. L'axe vertical indique s'il s'agit d'un contrôle déterministe ou d'un contrôle basé sur un modèle. Un placement correct révèle le raisonnement. Toutes les zones ne seront pas remplies : deux cases resteront vides.\n\nA. Filtre anti-jailbreak et contre l'injection de prompt\n\nB. Liste de blocage des termes interdits sur le message utilisateur\n\nC. Évaluation de la toxicité sur la réponse générée\n\nD. Vérification de la politique d'autorisation de remboursement avant l'exécution de l'outil\n\nBasé sur un modèle\n\nDéterministe\n\nFiltrage d'entrée\n\nFiltrage de sortie\n\nAutorisation d'action\n\nVérifier les réponses\nPasser pour l'instant"
+    ]
+   },
+   "totalPages": 1
+  },
+  {
+   "id": "lesson_07",
+   "title": {
+    "en": "Fairness",
+    "fr": "Équité"
+   },
+   "type": "teaching",
+   "duration": "11 min",
+   "pages": {
+    "en": [
+     "Where unequal outcomes enter, and what the system must explain\n\nRuntime controls stop disallowed outputs from leaving the system, ensuring users never see them. However, runtime controls don't account for an output that technically passes every check but produces different outcomes for different people. That failure is harder to detect and harder to attribute, because, on its surface, it looks like a normal output.\n\nUnequal outcomes enter at identifiable points\n\nFairness becomes easier to design for once you stop treating it as a single attribute of the model and start treating it as something that enters at specific, identifiable points. In a Claude system there are four common entry points:",
+     "The retrieval corpus can over-represent or under-represent groups, so the context the model sees is already skewed.\n\nThe framing of the prompt can encode an assumption that pushes outcomes in one direction.\n\nThe examples used in few-shot prompting can carry the same skew the corpus does.\n\nAnd the downstream routing, what happens to the model's output after it is produced, can direct some groups down different paths.\n\nEach of these is an injection point you can inspect, which is what makes fairness a true architectural property.\n\nWho asks determines what the system explains\n\nAudienceWhat they needWhat that requires you to capture",
+     "An affected userA clear explanation of why a decision affecting them was made or expressed in terms they can act on.The inputs that drove the decision and the reason the outcome was reached, in a digestible form.\n\nA regulatorEvidence that the system treats comparable cases consistently and that a specific decision can be reconstructed on demand.A durable, queryable record of inputs, outputs, and decision path.\n\nYour build teamEnough detail to find why a flagged decision went wrong and fix it.The full trace: prompt, retrieved context, model output, and every routing step, tied to the existing observability.\n\nDecision logging is what makes those explanations possible",
+     "To replay and explain a single decision, capture the inputs that drove it, the retrieved context, the model output, and the routing it went through. This is the same observable instrumentation from the production work, applied to a different question. This time, instead of asking whether the system is healthy, we're asking why a specific decision happened. The instrumentation is the same, but the retention and the query path are different.\n\nA fairness-and-transparency checklist in action\n\nConsider a credit-decision support system. Review the checklist once and the criteria stop being abstract:\n\nWhich of the four entry points could skew this outcome, and is each instrumented?\n\nFor an adverse decision, can you produce the inputs and the reason in terms the applicant can act on?",
+     "If a regulator asks whether similar applicants were treated comparably, can you query the log and provide an answer?\n\nCan your team pull the full trace for any flagged decision?\n\nA 'no' anywhere is a design gap.\n\nDiscernment: judging outputs for unequal treatment\n\nDiscernment is one of the four AI Fluency competencies: evaluating AI outputs and behaviors. In practice it means judging whether a model output is acceptable, needs revision, or needs override rather than accepting it. Applied to fairness, discernment is what lets a reviewer recognize a skewed or unjustified outcome instead of only confirming that a value was produced. A transparency record is what makes that recognition possible in the first place.\n\nCost  Complexity  Risk",
+     "Cost: Capturing and retaining decision-level logs on every request adds storage and a query path, and the cost grows with traffic rather than staying fixed.\n\nComplexity: Instrumenting four entry points and serving three audiences is more design work than a single audit log, because each audience needs a different slice of the same record. On top of that, the retention policy now must be governed, since you are holding decision-level data longer and for a specific purpose.\n\nRisk: The outcome metric can look fine overall while harm is concentrated in one subgroup. An unlogged or unmeasured injection point can hide unfairness until someone outside the team finds it.",
+     "Data handling: The decision log is itself in scope for the compliance register. In HIPAA or GDPR contexts, logged inputs and retrieved context contain sensitive personal data. Apply minimization, retention limits, and access controls to the log, and map it as a named control in your compliance register. Logging everything for transparency and pinning data for compliance are not in conflict, as they require the same log, governed differently.\n\nWatch OutFairness3 min\n\nWhen fairness is treated as the model provider's problem\n\nSetup hook\n\nFairness may seem like a property of the model. The model provider trained it, ran the bias evaluations, and published the results, so it feels reasonable to treat fairness as something handled upstream before the model reaches your ar\n\n[...]"
+    ],
+    "fr": [
+     "Où les résultats inégaux apparaissent, et ce que le système doit expliquer\n\nLes contrôles d'exécution empêchent les sorties interdites de quitter le système, garantissant que les utilisateurs ne les voient jamais. Cependant, les contrôles d'exécution ne prennent pas en compte une sortie qui, techniquement, passe toutes les vérifications mais produit des résultats différents selon les personnes. Cette défaillance est plus difficile à détecter et plus difficile à attribuer, car, en surface, elle ressemble à une sortie normale.\n\nLes résultats inégaux apparaissent à des points identifiables\n\nLa conception pour l'équité devient plus simple dès que vous cessez de la considérer comme un attribut unique du modèle et que vous la voyez comme quelque chose qui entre à des points spécifiques et identifiables. Dans un système Claude, il existe quatre points d'entrée courants :",
+     "Le corpus de récupération peut surreprésenter ou sous-représenter des groupes, si bien que le contexte que le modèle voit est déjà biaisé.\n\nLe cadrage du prompt peut encoder une hypothèse qui oriente les résultats dans une direction.\n\nLes exemples utilisés dans le few-shot prompting peuvent véhiculer le même biais que le corpus.\n\nEt le routage en aval, ce qui arrive à la sortie du modèle après sa production, peut diriger certains groupes vers des chemins différents.\n\nChacun de ces éléments est un point d'injection que vous pouvez inspecter, ce qui fait de l'équité une véritable propriété architecturale.",
+     "Audience  Ce dont ils ont besoin  Ce que cela exige que vous capturiez\n\nUn utilisateur concerné  Une explication claire des raisons pour lesquelles une décision les concernant a été prise, formulée en termes qu'ils peuvent exploiter.  Les entrées qui ont conduit à la décision et la raison pour laquelle le résultat a été atteint, sous une forme compréhensible.\n\nUn régulateur  Des preuves que le système traite de manière cohérente des cas comparables et qu'une décision spécifique peut être reconstituée à la demande.  Un enregistrement durable et interrogeable des entrées, sorties et du cheminement décisionnel.\n\nVotre équipe de développement  Assez de détails pour comprendre pourquoi une décision signalée a mal tourné et la corriger.  La trace complète : prompt, contexte récupéré, sortie du modèle, et chaque étape de routage, reliés à l'observabilité existante.\n\nLa journalisation des décisions est ce qui rend ces explications possibles.",
+     "Pour rejouer et expliquer une décision unique, capturez les entrées qui l'ont provoquée, le contexte récupéré, la sortie du modèle et le routage qu'elle a suivi. C'est la même instrumentation observable que pour le travail en production, appliquée à une question différente. Cette fois, au lieu de demander si le système est sain, on demande pourquoi une décision spécifique est survenue. L'instrumentation est la même, mais la rétention et le chemin de requête sont différents.\n\nUne liste de contrôle équité-et-transparence en action\n\nConsidérez un système d'aide à la décision de crédit. Parcourez la liste une fois et les critères cessent d'être abstraits :\n\nLesquels des quatre points d'entrée pourraient fausser ce résultat, et chacun est-il instrumenté ?\n\nPour une décision défavorable, pouvez-vous fournir les entrées et la raison dans des termes que le demandeur peut exploiter ?",
+     "Si un régulateur demande si des demandeurs similaires ont été traités de façon comparable, pouvez-vous interroger le journal et fournir une réponse ?\n\nVotre équipe peut-elle extraire la trace complète pour toute décision signalée ?\n\nUn 'non' n'importe où est une lacune de conception.\n\nDiscernement : évaluer les sorties pour déceler un traitement inégal\n\nLe discernement est l'une des quatre compétences d'AI Fluency : évaluer les sorties et les comportements de l'IA. Concrètement, cela signifie juger si la sortie d'un modèle est acceptable, nécessite une révision, ou doit être annulée plutôt que de l'accepter. Appliqué à l'équité, le discernement permet au réviseur de reconnaître un résultat biaisé ou injustifié au lieu de se contenter de confirmer qu'une valeur a été produite. Un enregistrement de transparence est ce qui rend cette reconnaissance possible en premier lieu.",
+     "Coût  Complexité  Risque\n\nCoût : Capturer et conserver des journaux au niveau des décisions pour chaque requête ajoute du stockage et un chemin de requête, et le coût augmente avec le trafic plutôt que de rester fixe.\n\nComplexité : Instrumenter quatre points d'entrée et servir trois publics demande plus de travail de conception qu'un journal d'audit unique, car chaque public a besoin d'une tranche différente du même enregistrement. De plus, la politique de rétention doit désormais être encadrée, puisque vous conservez des données au niveau des décisions plus longtemps et pour un objectif spécifique.\n\nRisque : La métrique de résultat peut sembler correcte globalement alors que le préjudice est concentré sur un sous-groupe. Un point d'injection non journalisé ou non mesuré peut masquer une injustice jusqu'à ce que quelqu'un en dehors de l'équipe la découvre.",
+     "Gestion des données : le journal de décision entre lui‑même dans le périmètre du registre de conformité. Dans les contextes HIPAA ou GDPR, les entrées consignées et le contexte récupéré contiennent des données personnelles sensibles. Appliquez le principe de minimisation, des limites de conservation et des contrôles d'accès au journal, et cartographiez‑le comme un contrôle nommé dans votre registre de conformité. Consigner tout pour la transparence et conserver des données pour la conformité ne sont pas incompatibles, car ils reposent sur le même journal, gouverné différemment.\n\nAttention — Équité — 3 min\n\nQuand l'équité est considérée comme le problème du fournisseur du modèle\n\nAccroche\n\nL'équité peut sembler être une propriété du modèle. Le fournisseur du modèle l'a entraîné, a réalisé les évaluations de biais et a publié les résultats, donc il paraît raisonnable de considérer que l'équité est prise en charge en amont, avant que le modèle n'atteigne votre ar\n\n[...]"
+    ]
+   },
+   "totalPages": 7
+  },
+  {
+   "id": "lesson_08",
+   "title": {
+    "en": "Fairness",
+    "fr": "Équité"
+   },
+   "type": "checkpoint",
+   "duration": "3 min",
+   "pages": {
+    "en": [
+     "Critique the decision-logging design\n\nTry it now. You are looking at a system sketch for a decision-support flow. Click the components where transparency is missing or insufficient, such as a routing step that is never logged or a decision that cannot be reconstructed. Each click reveals what that gap means for an affected user or a regulator.\n\nSelect all gaps. Leave adequately logged components unselected.\n\n✓\n\nGap\nA routing step that sends some cases down a different path with no log entry.\n\n↓\n\n✓\n\nGap\nA retrieval step whose returned context is not captured.\n\n↓\n\n✓\n\nGap\nA model output stored without the inputs that produced it.\n\n↓\n\n✓\n\nAdequate\nInputs, outputs, and routing are all logged and tied to a session ID.\n\n✓\n\nAdequate\nThe log is queryable per decision and retained for 90 days.\n\n✓\n\nGap\nAn aggregate accuracy dashboard with no per-subgroup breakdown.\n\nCheck answers\nSkip for now"
+    ],
+    "fr": [
+     "Critiquez la conception de la journalisation des décisions\n\nEssayez maintenant. Vous regardez un croquis système pour un flux d'aide à la décision. Cliquez sur les composants où la transparence fait défaut ou est insuffisante, par exemple une étape de routage qui n'est jamais journalisée ou une décision qui ne peut pas être reconstruite. Chaque clic révèle ce que cette lacune implique pour un utilisateur concerné ou un régulateur.\n\nSélectionnez toutes les lacunes. Laissez non sélectionnés les composants correctement journalisés.\n\n✓\n\nLacune\nUne étape de routage qui envoie certains cas sur un chemin différent sans aucune entrée de journal.\n\n↓\n\n✓\n\nLacune\nUne étape de récupération dont le contexte renvoyé n'est pas capturé.\n\n↓\n\n✓\n\nLacune\nUne sortie de modèle stockée sans les entrées qui l'ont produite.\n\n↓\n\n✓\n\nAdéquat\nEntrées, sorties et routage sont tous journalisés et liés à un identifiant de session.\n\n✓\n\nAdéquat\nLe journal est consultable par décision et conservé pendant 90 jours.\n\n✓\n\nLacune\nUn tableau de bord d'exactitude agrégé sans ventilation par sous-groupe.\n\nVérifier les réponses\nPasser pour l'instant"
+    ]
+   },
+   "totalPages": 1
+  },
+  {
+   "id": "lesson_09",
+   "title": {
+    "en": "Review routing",
+    "fr": "Revoir le routage"
+   },
+   "type": "teaching",
+   "duration": "10 min",
+   "pages": {
+    "en": [
+     "Routing decisions to people by stakes, not by volume\n\nDecision logging gave you a record of what each automated decision was based on: the inputs it saw, the path it took, and the output it produced. A logged decision can be explained after the fact, but a log alone does not decide which decisions a person should weigh in on before they take effect. A log explains decisions after the fact. A routing rule stops the wrong ones from taking effect at all. You will work out which decisions warrant a human review step and what that reviewer must see on the screen to make the call quickly. The log you have already built is the raw material for that view, so this is a matter of deciding what to surface from it and when, rather than instrumenting the system again from the start.",
+     "What sets the stakes of a decision\n\nThink of human review as a budget: you have a finite amount of reviewer attention, and you must focus it on the highest-stakes items. The following variables work together to set the stakes of a decision.\n\nReversibility is how easily a wrong decision can be undone.\n\nThe cost of a wrong decision is what the mistake causes if it goes through uncorrected. These two set the stakes of the decision: a choice that is hard to reverse and expensive when wrong is high stakes, regardless of how the system arrives at it.",
+     "Confidence is the third variable that sits on top of the other two. It is the score the system produces about its own output, and it is useful only to the degree it is calibrated, because a model can be confidently wrong. Confidence does not change the stakes of a decision; it estimates how likely this output is to be wrong, which tells you how much of your volume should be routed to a person for review.\n\nCombine these variables into one rule: route decisions to a person when they are low-confidence and either irreversible or high-cost; let confident, reversible, low-cost decisions through. A confident, easily reversed, low-cost decision can usually run without a human. A low-confidence, irreversible, high-cost decision almost always needs human review.",
+     "The decisions that consume your review budget are the ones where these variables disagree. A case can be high cost but easily reversed, or low confidence on something trivial to undo. When they conflict, give greater weight to cost and reversibility, because they determine the consequences of a mistake. Let confidence decide how much of that high-stakes volume you can safely let through unreviewed. Routing on confidence carries one assumption worth identifying: the confidence signal must be calibrated for the rule to hold, and confirming that calibration is a task of its own.\n\nWhere the human sits is a tradeoff between safety and speed\n\nOnce a decision is routed to a person, you choose where they sit in the flow. Involving a human earlier is safer and slower.",
+     "PlacementWhat it gives youWhat it costs\n\nPre-action approvalThe action cannot take effect until a person approves it, so nothing irreversible happens unreviewed.It adds latency to every routed decision and a person must be available, so it does not scale to high volume.\n\nPost-action auditThe action runs immediately and a person reviews it afterward, so throughput stays high.A wrong action has already taken effect by the time it is caught, so it only suits reversible, lower-cost decisions.\n\nSampled reviewA fraction of decisions are reviewed to monitor quality without slowing the overall process.A bad decision can slip through unsampled, it monitors the system rather than guarding individual outcomes.\n\nWhat the reviewer sees decides whether review is accurate",
+     "A reviewer who cannot see why a decision landed in their queue may approve without reviewing with the judgement it needed. Ensure your reviewers have three things: the inputs that drove the decision, the model's output, and the reason it was flagged. Without this reason, they cannot tell the difference between an edge case and routine traffic. Without the inputs, they cannot tell if the output is correct. What you put in front of the reviewer determines whether the review is accurate.",
+     "Anthropic's research on agent autonomy found that requiring sign-off on every action adds friction without meaningful safety gain. A better approach is to have a person monitor what is happening and step in when needed. One Anthropic pattern in agent workflows is to reduce per-step approvals and move review to higher-value checkpoints such as plan review or exception handling, to avoid consent fatigue; the exact review design depends on the risk of the workflow. Without this discernment, consent fatigue can happen. Consent fatigue is when a system asks for approval dozens of times in a row, and reviewers start clicking through and approving items without reading or providing the quality of review needed. That pattern is what led to plan-level review in Claude Code, where a person approves the plan rather than each step. Verify current framing against anthrop\n\n[...]"
+    ],
+    "fr": [
+     "Acheminer les décisions vers des personnes en fonction des enjeux, pas du volume\n\nLa journalisation des décisions vous a donné un enregistrement de ce sur quoi chaque décision automatisée s'est fondée : les entrées qu'elle a vues, le chemin qu'elle a emprunté et la sortie qu'elle a produite. Une décision journalisée peut être expliquée après coup, mais un simple journal ne décide pas quelles décisions doivent être soumises à l'avis d'une personne avant leur mise en œuvre. Un journal explique les décisions après coup. Une règle de routage empêche que les mauvaises décisions prennent effet. Vous déterminerez quelles décisions méritent une étape d'examen humain et ce que ce réviseur doit voir à l'écran pour trancher rapidement. Le journal que vous avez déjà construit est la matière première pour cette vue, il s'agit donc de décider quelles informations en extraire et quand, plutôt que d'instrumenter à nouveau le système depuis le départ.",
+     "Ce qui fixe les enjeux d'une décision\n\nConsidérez l'examen humain comme un budget : vous disposez d'une quantité limitée d'attention des réviseurs, et vous devez la concentrer sur les éléments les plus importants. Les variables suivantes agissent ensemble pour fixer les enjeux d'une décision.\n\nLa réversibilité est la facilité avec laquelle une décision erronée peut être annulée.\n\nLe coût d'une mauvaise décision est ce que l'erreur entraîne si elle est laissée telle quelle. Ces deux éléments déterminent les enjeux de la décision : un choix difficile à inverser et coûteux en cas d'erreur est à forts enjeux, indépendamment de la manière dont le système y est parvenu.",
+     "La confiance est la troisième variable qui vient s'ajouter aux deux autres. C'est le score que le système produit au sujet de sa propre sortie, et il n'est utile que dans la mesure où il est calibré, car un modèle peut être sûr de lui tout en se trompant. La confiance ne change pas les enjeux d'une décision ; elle estime la probabilité que cette sortie soit erronée, ce qui vous indique quelle part de votre volume doit être routée vers une personne pour examen.\n\nCombinez ces variables en une règle unique : acheminer une décision vers une personne lorsqu'elle a une faible confiance et est soit irréversible soit coûteuse ; laisser passer les décisions confiantes, réversibles et peu coûteuses. Une décision confiante, facilement réversible et peu coûteuse peut généralement être exécutée sans intervention humaine. Une décision à faible confiance, irréversible et coûteuse nécessite presque toujours un examen humain.",
+     "Contexte de la leçon : Routage des revues\n\nLes décisions qui consomment votre budget de revue sont celles où ces variables sont en désaccord. Un cas peut être coûteux mais facilement réversible, ou présenter une faible confiance pour quelque chose de trivial à annuler. Lorsqu'elles sont en conflit, donnez plus de poids au coût et à la réversibilité, car ce sont eux qui déterminent les conséquences d'une erreur. Laissez la confiance décider quelle part de ce volume à enjeux élevés vous pouvez laisser passer sans revue. Le routage basé sur la confiance comporte une hypothèse qu'il vaut la peine d'identifier : le signal de confiance doit être calibré pour que la règle s'applique, et confirmer cette calibration est une tâche à part entière.\n\nL'emplacement de l'intervention humaine est un compromis entre sécurité et rapidité\n\nUne fois qu'une décision est routée vers une personne, vous choisissez où elle intervient dans le flux. Impliquer un humain plus tôt est plus sûr mais plus lent.",
+     "Placement Ce que cela vous apporte Ce que cela coûte\n\nApprobation avant action L'action ne peut pas être exécutée tant qu'une personne ne l'a pas approuvée, donc rien d'irréversible ne se produit sans revue. Cela ajoute de la latence à chaque décision routée et une personne doit être disponible, donc cela ne s'adapte pas à un volume élevé.\n\nAudit après action L'action s'exécute immédiatement et une personne la vérifie ensuite, donc le débit reste élevé. Une action erronée a déjà eu lieu au moment où elle est détectée, donc cela ne convient qu'aux décisions réversibles et peu coûteuses.\n\nRevue échantillonnée Une fraction des décisions est examinée pour contrôler la qualité sans ralentir le processus global. Une mauvaise décision peut passer si elle n'est pas échantillonnée ; ce mode surveille le système plutôt que de protéger chaque résultat individuellement.\n\nCe que voit le réviseur détermine si la revue est précise",
+     "Un réviseur qui ne voit pas pourquoi une décision est arrivée dans sa file peut approuver sans l'examiner avec le jugement nécessaire. Assurez-vous que vos réviseurs disposent de trois éléments : les entrées qui ont motivé la décision, la sortie du modèle, et la raison pour laquelle elle a été signalée. Sans cette raison, ils ne peuvent pas distinguer un cas limite d'un flux habituel. Sans les entrées, ils ne peuvent pas dire si la sortie est correcte. Ce que vous présentez au réviseur détermine si la revue est précise.",
+     "Les recherches d'Anthropic sur l'autonomie des agents ont montré que demander une approbation pour chaque action ajoute de la friction sans gain significatif en matière de sécurité. Une meilleure approche consiste à faire surveiller ce qui se passe par une personne et à intervenir quand nécessaire. Un schéma utilisé par Anthropic dans les flux de travail des agents consiste à réduire les approbations à chaque étape et à déplacer la revue vers des points de contrôle à plus forte valeur ajoutée, tels que la revue du plan ou la gestion des exceptions, afin d'éviter la fatigue du consentement ; la conception exacte de la revue dépend du risque du flux de travail. Sans ce discernement, la fatigue du consentement peut survenir. La fatigue du consentement se produit lorsqu'un système demande une approbation des dizaines de fois d'affilée, et que les réviseurs commencent à cliquer et approuver sans lire ni fournir la qualité de revue nécessaire. Ce schéma est ce qui a conduit à la revue au niveau du plan dans Claude Code, où une personne approuve le plan plutôt que chaque étape. Vérifier le cadrage actuel par rapport à anthrop\n\n[...]"
+    ]
+   },
+   "totalPages": 7
+  },
+  {
+   "id": "lesson_10",
+   "title": {
+    "en": "Review routing",
+    "fr": "Examiner le routage"
+   },
+   "type": "checkpoint",
+   "duration": "3 min",
+   "pages": {
+    "en": [
+     "Build the review-routing rule\n\nTry it now. A routing rule has three controls: a confidence threshold, the cost of a wrong answer, and a reversibility setting. The goal is to route high-stakes, low-confidence decisions to a person before they take effect, while keeping the review queue under the reviewer ceiling. Choose the rule that meets both targets at once.\n\nA. Route everything below a high confidence threshold to review, regardless of stakes.\n\nB. Route decisions that are low-confidence AND either irreversible or high-cost to pre-action review; let confident, reversible, low-cost decisions through.\n\nC. Route by confidence alone, set low enough to keep the queue small.\n\nD. Send every decision to review to be safe.",
+     "Now complete this step: In 1–2 sentences, name the single deciding control, what makes a low-confidence case still route to a person even when confidence is within tolerance?\n\nReveal model answer\n\nModel answer\n\nReversibility and the cost of a wrong answer are the deciding controls, not confidence. Confidence filters the volume you route, but it does not change the stakes of the decision. A case can be confident and still route to a human if it is irreversible or high-cost enough to warrant it.\n\nMark complete\n\nSkip for now"
+    ],
+    "fr": [
+     "Construire la règle de routage pour la révision\n\nEssayez maintenant. Une règle de routage comporte trois paramètres : un seuil de confiance, le coût d'une mauvaise réponse, et un réglage de réversibilité. L'objectif est d'acheminer vers une personne, avant qu'elles n'entrent en vigueur, les décisions à fort enjeu et à faible confiance, tout en maintenant la file de révision sous le plafond de réviseurs. Choisissez la règle qui satisfait ces deux objectifs en même temps.\n\nA. Acheminer tout ce qui est en dessous d'un seuil de confiance élevé vers la révision, indépendamment des enjeux.\n\nB. Acheminer en pré-action les décisions à faible confiance ET soit irréversibles soit à coût élevé ; laisser passer les décisions confiantes, réversibles et à faible coût.\n\nC. Router uniquement selon la confiance, en la fixant assez bas pour maintenir la file petite.\n\nD. Envoyer chaque décision en révision par mesure de sécurité.",
+     "Maintenant complétez cette étape : en 1–2 phrases, nommez le seul critère décisif — qu'est-ce qui fait qu'un cas à faible confiance soit quand même acheminé vers une personne même lorsque la confiance est dans la tolérance ?\n\nAfficher la réponse modèle\n\nRéponse modèle\n\nLa réversibilité et le coût d'une mauvaise réponse sont les critères décisifs, pas la confiance. La confiance filtre le volume que vous acheminez, mais elle ne change pas les enjeux de la décision. Un cas peut être évalué avec confiance et être quand même adressé à un humain s'il est irréversible ou si son coût en cas d'erreur est suffisamment élevé pour le justifier.\n\nMarquer comme terminé\n\nPasser pour l'instant"
+    ]
+   },
+   "totalPages": 2
+  },
+  {
+   "id": "lesson_11",
+   "title": {
+    "en": "Compliance",
+    "fr": "Conformité"
+   },
+   "type": "teaching",
+   "duration": "10 min",
+   "pages": {
+    "en": [
+     "Turning each compliance obligation into a control with evidence\n\nThe compliance layer of the integration model used the governing obligation as a pre-filter: HIPAA, GDPR, FedRAMP, attorney-client privilege, or a data-residency policy each ruled delivery routes and entry points in or out before cost or engineering preference entered the conversation. That work gets you to an entry point and a route that survives the obligation, but the next step is narrower and harder. Each surviving obligation must now become a control with a named owner. A reviewer does not treat a compliant entry point alone as proof that the rule is being followed. They also ask who owns the control and what evidence shows its holding in practice.",
+     "A regulation states an outcome, but you supply the control and the proof it is operating\n\nFrameworks such as GDPR, HIPAA, and FedRAMP state outcomes, not implementations. They say what must be true: that protected data must be handled a certain way, that access must be controlled, and that processing must happen in an authorized environment, but they leave the technical control to you. Each obligation becomes three things you own: a specific technical control that achieves the outcome, an owner accountable for it, and an evidence artifact that shows it is live. Always remember to include the evidence artifact; this is what the reviewer will check and is the most often missed.\n\nMapping obligations to controls, owners, and evidence\n\nMapping obligations to controls, owners, and evidence",
+     "Obligation (framework)Technical controlEvidence a reviewer acceptsOwner\n\nProtected health data handled under an agreement (HIPAA)Use only a HIPAA-ready Enterprise plan or first-party API configuration covered by a signed Business Associate Agreement, with HIPAA compliance enabled and only eligible features in scope.The signed BAA and the admin setting showing HIPAA compliance enabled, plus the eligible-feature list.Security lead\n\nUS government workload at the required impact level (FedRAMP)Deliver through an Anthropic-documented authorized route that meets the required impact level, not a non-authorized entry point.The authorization record for the chosen route and confirmation that the workload runs exclusively on it.Platform owner",
+     "Data handled and stored in an approved region (data residency)Configure supported regional processing and storage for the approved region, and validate whether logs, caches, monitoring, and retention paths remain within the approved boundary.The residency configuration and a data-flow record showing where every copy lives.Data owner\n\nDecisions reconstructable on demand (transparency, cross-framework)The decision logging built in the fairness cluster, retained and queryable for the required period.A sample reconstruction of one decision from the live log.Architect\n\nTraining use vs retention, two distinct claims",
+     "Do not collapse training use and retention into the same claim: data may be excluded from model training by default while still being retained or monitored for logging, abuse prevention, legal compliance, or configured audit purposes.\n\nThe evidence artifact is what makes the handoff effective\n\nThe constraint-elimination reasoning from the integration work carries forward here. Back then you eliminated delivery routes that could not survive a constraint. Now you record, for each obligation, the control that satisfies it and the artifact that proves it.",
+     "A security and legal reviewer accepts proof that a control is live: a signed agreement, a configuration screen, an authorization record, or a returned log query. What they do not accept is a design document that identifies a control with no owner and no evidence; a control no one can demonstrate is indistinguishable from one that is not running.\n\nCost  Complexity  Risk\n\nCost: Producing and maintaining evidence for every obligation is ongoing work. Configurations drift and artifacts go stale, so the register is revalidated on a regular cadence.\n\nComplexity: A control, an owner, and a living evidence artifact per obligation is more governance than an entry point choice, and it spans security, legal, and platform owners who each must agree on who holds what.",
+     "Risk: A control specified with no owner and no evidence is invisible at the audit. It can stop operating with no one accountable, and the gap surfaces in review rather than in design, which is the most expensive place to find it.\n\nWatch OutCompliance3 min\n\nWhen passing entry point selection feels like finishing compliance\n\nSetup hook\n\nPassing the constraint pre-filter and being able to prove compliance are two different things. The pre-filter gives you a clean signal. Choosing a delivery route that survives HIPAA, GDPR, or FedRAMP produces an immediate, visible result: the route is allowed, the entry point is cleared, the design can move. Proving that each obligation is being met produces nothing visible at design time, because the proof is an artifact you must build, attach\n\n[...]"
+    ],
+    "fr": [
+     "Transformer chaque obligation de conformité en un contrôle avec preuve\n\nLa couche de conformité du modèle d'intégration utilisait l'obligation gouvernante comme préfiltre : HIPAA, GDPR, FedRAMP, attorney-client privilege ou une politique de résidence des données déterminaient chacune les routes de livraison et les points d'entrée avant que le coût ou la préférence d'ingénierie n'entre en jeu. Ce travail vous amène à un point d'entrée et à une route qui respectent l'obligation, mais l'étape suivante est plus précise et plus difficile. Chaque obligation survivante doit maintenant devenir un contrôle avec un responsable nommé. Un auditeur ne considère pas qu'un point d'entrée conforme suffit à prouver que la règle est respectée. Il demandera aussi qui est responsable du contrôle et quelles preuves montrent son application en pratique.",
+     "Un règlement énonce un résultat, mais c'est vous qui fournissez le contrôle et la preuve de son fonctionnement\n\nDes cadres tels que GDPR, HIPAA et FedRAMP définissent des résultats, pas des implémentations. Ils indiquent ce qui doit être vrai : que les données protégées doivent être traitées d'une certaine manière, que l'accès doit être contrôlé, et que le traitement doit se dérouler dans un environnement autorisé, mais ils laissent le contrôle technique à votre charge. Chaque obligation devient trois choses que vous détenez : un contrôle technique spécifique qui atteint le résultat, un responsable qui en répond, et un élément de preuve montrant qu'il est en place. N'oubliez jamais d'inclure l'élément de preuve ; c'est ce que l'auditeur vérifiera et ce qui est le plus souvent omis.\n\nFaire correspondre les obligations aux contrôles, aux responsables et aux preuves\n\nFaire correspondre les obligations aux contrôles, aux responsables et aux preuves",
+     "Obligation (cadre)Contrôle techniquePreuve acceptée par un auditeurResponsable\n\nDonnées de santé protégées traitées dans le cadre d'un accord (HIPAA)N'utiliser que le plan Enterprise prêt pour HIPAA ou une configuration API first-party couverte par un Business Associate Agreement signé, avec la conformité HIPAA activée et seules les fonctionnalités éligibles dans le périmètre.Le BAA signé et le paramètre d'administration montrant que la conformité HIPAA est activée, ainsi que la liste des fonctionnalités éligibles.Responsable de la sécurité\n\nCharge de travail du gouvernement américain au niveau d'impact requis (FedRAMP)Livrer via une route autorisée documentée par Anthropic qui atteint le niveau d'impact requis, et non via un point d'entrée non autorisé.Le registre d'autorisation pour la route choisie et la confirmation que la charge de travail s'exécute exclusivement dessus.Responsable de la plateforme",
+     "Données traitées et stockées dans une région approuvée (résidence des données)\nConfigurer le traitement et le stockage régionaux pris en charge pour la région approuvée, et valider si les logs, les caches, la supervision et les chemins de rétention restent à l'intérieur de la limite approuvée.\nLa configuration de résidence et un registre de flux de données montrant où chaque copie est stockée.\nResponsable des données\n\nDécisions reconstituables à la demande (transparence, compatible entre frameworks)\nLa journalisation des décisions intégrée au fairness cluster, conservée et interrogeable pendant la période requise.\nUn exemple de reconstitution d'une décision à partir du journal en direct.\nArchitecte\n\nUtilisation pour l'entraînement vs rétention, deux affirmations distinctes",
+     "Ne regroupez pas l'utilisation pour l'entraînement et la rétention dans une même affirmation : les données peuvent être exclues de l'entraînement des modèles par défaut tout en étant conservées ou surveillées pour la journalisation, la prévention des abus, la conformité légale ou des besoins d'audit configurés.\n\nL'artefact de preuve est ce qui rend le transfert effectif\n\nLe raisonnement d'élimination de contraintes issu du travail d'intégration se poursuit ici. À l'époque, vous éliminiez les voies de livraison qui ne pouvaient pas survivre à une contrainte. Maintenant, vous enregistrez, pour chaque obligation, le contrôle qui la satisfait et l'artefact qui le prouve.",
+     "Un relecteur sécurité et juridique accepte comme preuve qu'un contrôle est actif : un accord signé, un écran de configuration, un enregistrement d'autorisation ou le résultat d'une requête de journal. Ce qu'il n'accepte pas, c'est un document de conception qui identifie un contrôle sans propriétaire et sans preuve ; un contrôle que personne ne peut démontrer est indiscernable d'un contrôle qui n'est pas opérationnel.\n\nCoût  Complexité  Risque\n\nCoût : Produire et maintenir des preuves pour chaque obligation est un travail continu. Les configurations dérivent et les artefacts deviennent obsolètes, donc le registre est revérifié à un rythme régulier.\n\nComplexité : Un contrôle, un propriétaire et un artefact de preuve vivant par obligation représentent plus de gouvernance qu'un simple choix de point d'entrée, et cela implique les responsables de la sécurité, du juridique et de la plateforme, qui doivent chacun s'accorder sur qui détient quoi.",
+     "Risque : Un contrôle spécifié sans propriétaire ni preuve est invisible lors d'un audit. Il peut cesser de fonctionner sans que personne ne soit responsable, et l'écart n'apparaît qu'au moment de la revue plutôt qu'en phase de conception, ce qui est l'endroit le plus coûteux pour le découvrir.\n\nAttention — Conformité • 3 min\n\nQuand réussir la sélection du point d'entrée donne l'impression d'avoir terminé la conformité\n\nAccroche\n\nRéussir le pré-filtre de contraintes et être capable de prouver la conformité sont deux choses différentes. Le pré-filtre vous donne un signal clair. Choisir une voie de livraison qui résiste aux exigences HIPAA, GDPR ou FedRAMP produit un résultat immédiat et visible : la voie est autorisée, le point d'entrée est validé, la conception peut aller de l'avant. Prouver que chaque obligation est respectée ne produit rien de visible en phase de conception, car la preuve est un artefact que vous devez créer et attacher\n\n[...]"
+    ]
+   },
+   "totalPages": 7
+  },
+  {
+   "id": "lesson_12",
+   "title": {
+    "en": "Compliance",
+    "fr": "Conformité"
+   },
+   "type": "checkpoint",
+   "duration": "3 min",
+   "pages": {
+    "en": [
+     "Justify the control choice\n\nTry it now. You are given one compliance obligation for a regulated deployment. Pick the technical control that evidences it, then select the single load-bearing reason a security and legal reviewer would accept that control as proof. You pass only when both land: the control must fit the obligation, and you must name why it counts as evidence a reviewer can inspect.\n\nObligation: Protected health data must be handled under a formal agreement (HIPAA).\n\nA. A HIPAA-ready plan or first-party API under a signed BAA, because the signed agreement plus the enabled configuration is the artifact a reviewer can inspect as proof.\n\nB. A HIPAA-ready plan under a signed BAA, because the model is instructed to handle health data carefully.",
+     "C. A model-based content filter on health terms, because it catches sensitive data at runtime.\n\nCheck answer\nSkip for now\n\nCumulativeModule8 min\n\nAssemble a responsible deployment\n\nTry it now. You are handed a self-contained brief, and you make five sequenced decisions that build a responsible deployment. The decisions run in order because each one sets the conditions for the next. A weak early choice narrows what the later ones can do. If you leave a domain rule in trained behavior in decision one, there is no layer downstream that can put it back.\n\nYou built each layer on its own across the module. Here is the stack you are assembling, in order:",
+     "Trained behavior shapes baseline safety; your application policy defines domain-specific rules; the runtime controls below enforce those rules in operation.\n\nRuntime screening and authorization sit on the request path and stop disallowed content and unpermitted actions.\n\nFairness and transparency controls address unequal outcomes at their source and ensure each decision can be reconstructed. They depend on effective logging.\n\nHuman-review routing sends the decisions a model should not finalize alone to a person, by stakes. It depends on the same logging.\n\nThe control register ties each obligation to a control, an owner, and an evidence artifact.\n\nThe brief",
+     "A public-sector benefits assistant helps an agency determine program eligibility, recommending whether to approve, deny, or refer. The brief gives you what the decisions need and nothing more:\n\nFramework: FedRAMP at the agency's required impact level, plus the agency's rule that a denied applicant gets the specific reason.\n\nHigh-stakes, low-confidence case: An applicant near the eligibility threshold with incomplete documentation, where a wrong denial removes someone's benefits.\n\nSkew-prone output: The recommendation and the reason attached to a denial.\n\nData: Applicant-submitted fields, agency records retrieved at decision time, and any derived features.\n\n1. Set the boundary between trained behavior and your application layer.\n\n2. Place the runtime controls.",
+     "3. Specify the fairness and transparency controls.\n\n4. Define the human-review routing.\n\n5. Build the control register.\n\nReveal model answer\nSkip for now\n\nModel answer\n\n1. Set the boundary between trained behavior and your application layer. Trained behavior refuses broad harm classes but never saw this program's eligibility rules, so those belong to the application layer. Leave them in trained behavior and no control downstream can reach them.\n\n2. Place the runtime controls. Position input screening, output screening, and tool-call authorization, choose model-based or deterministic at each, and set the failure direction. Fail closed, because a screen that fails open lets an unscreened denial reach an applicant.",
+     "3. Specify the fairness and transparency controls. Name which of the four injection points (corpus, prompt framing, examples, routing) could skew this outcome, and build the decision logging once, since the affected applicant, the regulator, the build team, and the control register all draw on it.\n\n4. Define the human-review routing. Route by confidence, reversibility, and cost of a wrong answer, and pick a placement: pre-action approval, post-action audit, or sampled review. Send a low-confidence, hard-to-reverse denial to pre-action approval. Key the rule to stakes, not volume, or a quiet queue waves a high-stakes denial through.",
+     "5. Build the control register. Map each FedRAMP obligation to a control, an owner, and the evidence a reviewer accepts. A control with no evidence artifact is a claim you cannot prove operated.\n\nStrong answers are specific: they name which injection points, name the failure direction, name the routing rule variables, and name the evidence artifact. Weak answers describe the general concept without applying it to this deployment. Check each decision against the brief, the compliance framework and the high-stakes case details should show up in your answers.\n\nMark complete\n\nReferenceWrap-up\n\nGlossary\n\nThe key terms used across this module, in alphabetical order. Click a term to expand its definition.\n\nBAA (Business Associate Agreement)\nA contract under HIPAA that permits\n\n[...]"
+    ],
+    "fr": [
+     "Justifiez le choix du contrôle\n\nEssayez maintenant. On vous donne une obligation de conformité pour un déploiement régulé. Choisissez le contrôle technique qui l'atteste, puis sélectionnez la seule raison déterminante qu'un examinateur sécurité et juridique accepterait comme preuve. Vous ne réussissez que si les deux sont justes : le contrôle doit correspondre à l'obligation, et vous devez indiquer pourquoi il constitue une preuve que le réviseur peut vérifier.\n\nObligation : Les données de santé protégées doivent être traitées dans le cadre d'un accord formel (HIPAA).\n\nA. Un plan HIPAA-ready ou un first-party API sous un BAA signé, parce que l'accord signé, combiné à la configuration activée, constitue l'artefact que le réviseur peut examiner comme preuve.\n\nB. Un plan HIPAA-ready sous un BAA signé, parce que le model est instruit pour traiter les données de santé avec précaution.",
+     "C. Un filtre de contenu basé sur le model pour les termes de santé, parce qu'il capture les données sensibles au moment de l'exécution.\n\nVérifier la réponse\nPasser pour l'instant\n\nModule cumulatif — 8 min\n\nAssembler un déploiement responsable\n\nEssayez maintenant. On vous remet un brief autonome, et vous prenez cinq décisions séquencées qui construisent un déploiement responsable. Les décisions s'enchaînent dans cet ordre parce que chacune fixe les conditions pour la suivante. Un choix précoce faible restreint ce que les suivants peuvent faire. Si vous laissez une règle de domaine dans le comportement entraîné à la décision une, aucune couche en aval ne pourra la réintroduire.\n\nVous avez construit chaque couche séparément au cours du module. Voici la pile que vous assemblez, dans l'ordre :",
+     "Le comportement entraîné façonne la sécurité de base ; votre politique d'application définit des règles spécifiques au domaine ; les contrôles d'exécution ci-dessous appliquent ces règles en opération.\n\nLe filtrage et l'autorisation d'exécution se placent sur le chemin de la requête et bloquent le contenu interdit et les actions non autorisées.\n\nLes contrôles d'équité et de transparence traitent les résultats inégaux à leur source et garantissent que chaque décision peut être reconstituée. Ils dépendent d'une journalisation effective.\n\nLe routage vers revue humaine envoie à une personne les décisions que le model ne doit pas finaliser seul, selon les enjeux. Il dépend de la même journalisation.\n\nLe registre des contrôles relie chaque obligation à un contrôle, à un responsable et à un artefact de preuve.\n\nLe brief",
+     "Un assistant des prestations du secteur public aide une agence à déterminer l'éligibilité à un programme, en recommandant d'approuver, de refuser ou d'orienter. Le bref vous donne ce dont les décisions ont besoin et rien de plus :\n\nCadre : FedRAMP au niveau d'impact requis par l'agence, plus la règle de l'agence selon laquelle un candidat refusé reçoit la raison spécifique.\n\nCas à forts enjeux et faible confiance : un candidat proche du seuil d'éligibilité avec une documentation incomplète, où un refus erroné prive quelqu'un de ses prestations.\n\nSortie susceptible de biais : la recommandation et la raison associée à un refus.\n\nDonnées : champs soumis par le candidat, dossiers de l'agence récupérés au moment de la décision, et toutes caractéristiques dérivées.\n\n1. Définir la frontière entre le comportement entraîné et la couche applicative.\n\n2. Placer les contrôles d'exécution.",
+     "3. Spécifier les contrôles d'équité et de transparence.\n\n4. Définir le routage pour la revue humaine.\n\n5. Construire le registre des contrôles.\n\nRévéler la réponse du modèle\nPasser pour l'instant\n\nRéponse du modèle\n\n1. Définir la frontière entre le comportement entraîné et la couche applicative. Le comportement entraîné refuse les grandes classes de préjudice mais n'a jamais vu les règles d'éligibilité de ce programme, donc celles-ci appartiennent à la couche applicative. Laissez-les dans le comportement entraîné et aucun contrôle en aval ne pourra y accéder.\n\n2. Placer les contrôles d'exécution. Positionnez le filtrage d'entrée, le filtrage de sortie et l'autorisation d'appel d'outils, choisissez pour chacun s'ils sont basés sur le modèle ou déterministes, et définissez la direction d'échec. Échouer fermé, car un filtre qui échoue en s'ouvrant laisse passer un refus non filtré vers un candidat.",
+     "3. Spécifier les contrôles d'équité et de transparence. Nommez lesquels des quatre points d'injection (corpus, cadrage de l'invite, exemples, routage) pourraient fausser ce résultat, et construisez la journalisation des décisions une seule fois, puisque le candidat concerné, le régulateur, l'équipe de développement et le registre des contrôles s'en servent tous.\n\n4. Définir le routage pour la revue humaine. Orientez selon la confiance, la réversibilité et le coût d'une mauvaise réponse, et choisissez un emplacement : approbation préalable à l'action, audit après action, ou revue échantillonnée. Envoyez un refus à faible confiance et difficile à inverser vers une approbation préalable à l'action. Calibrez la règle sur les enjeux, pas sur le volume, sinon une file tranquille laissera passer un refus à forts enjeux.",
+     "Contexte de la leçon : Conformité\n\n5. Établissez le registre des contrôles. Faites correspondre chaque obligation FedRAMP à un contrôle, un responsable et aux éléments de preuve acceptés par un examinateur. Un contrôle sans artefact de preuve est une affirmation que vous ne pouvez pas démontrer avoir été mis en œuvre.\n\nLes bonnes réponses sont précises : elles nomment quels points d'injection, indiquent le sens de la défaillance, nomment les variables de la règle de routage et précisent l'artefact de preuve. Les réponses faibles décrivent le concept général sans l'appliquer à ce déploiement. Vérifiez chaque décision au regard du brief et du cadre de conformité ; les détails du cas à enjeux élevés doivent apparaître dans vos réponses.\n\nMarquer comme terminé\n\nRéférences / Récapitulatif\n\nGlossaire\n\nLes principaux termes utilisés dans ce module, par ordre alphabétique. Cliquez sur un terme pour développer sa définition.\n\nBAA (Business Associate Agreement)\nUn contrat dans le cadre de HIPAA qui permet\n\n[...]"
+    ]
+   },
+   "totalPages": 7
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex_1",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_2",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_3",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_4",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_5",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_6",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_7",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_8",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_9",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_10",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_11",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_12",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_13",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_14",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_15",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_16",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_17",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_18",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_19",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_20",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_21",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_22",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_23",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_24",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_25",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_26",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_27",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_28",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_29",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_30",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_31",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_32",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_33",
+   "type": "exercise"
+  }
+ ]
 }

@@ -22,7 +22,7 @@ export default function MockExam() {
   const { certId } = useParams<{ certId: string }>();
   const { lang, toggleLang, t } = useLanguage();
   const [, navigate] = useLocation();
-  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { isAuthenticated, loading: authLoading, user } = useAuth();
   const { isCertComplete } = useTrainingProgress();
 
   // Get exam config
@@ -295,8 +295,9 @@ export default function MockExam() {
     );
   }
 
-  // Certification completion gate
-  if (lessonsLoaded && !certComplete) {
+  // Certification completion gate (bypass for demo account)
+  const isDemoUser = user?.openId === "demo_learner_001";
+  if (lessonsLoaded && !certComplete && !isDemoUser) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
         <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">

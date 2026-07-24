@@ -1,307 +1,307 @@
 {
-  "courseId": "claude_certified_developer_foundations__03",
-  "lessons": [
-    {
-      "id": "lesson_01",
-      "title": {
-        "en": "Permission Modes & Human Gates",
-        "fr": "Permission Modes & Human Gates"
-      },
-      "type": "teaching",
-      "duration": "17 min",
-      "pages": {
-        "en": [
-          "Claude Code agent loop, permission modes, settings, and where a human gate goes\n\nModule 2 established how the agent loop works at the API level: the model calls tools, gets results back, and continues until the task is done.\n\nClaude Code runs that same loop in your terminal but adds an additional layer: a permission system that gates every action the agent wants to take. Before you can configure anything, you need to understand how the loop runs and what the permission modes control.\n\nHow Claude Code works through a task: explore, plan, and code",
-          "When you hand Claude Code a task, it does not start writing immediately. It reads files, traces the relevant logic, and builds a picture of the codebase first; this is the exploration phase. Then, once it understands enough to propose a change, it creates a plan. A plan is a structured description of the edits it intends to make. Only after you review and approve the plan does it move into the code phase, where it writes and executes the changes.",
-          "This sequence matters for two reasons. First, it produces better output: Claude Code understands the codebase before touching anything, so it makes fewer assumptions and catches more downstream effects. Second, it is where the permission modes plug in: plan mode holds Claude Code in the explore phase, blocking all file edits and shell commands until you release it, making it a useful default for unfamiliar codebases or high-stakes work.\n\nPermission modes: approvals, gates, and constraints\n\nPermission modes control how often Claude Code stops to ask for confirmation. Each mode makes a different tradeoff between speed and oversight. The right choice depends on how well you know the codebase and how reversible the changes are.",
-          "Select each tab for what that mode auto-approves, what it still gates, and its limitations.\n\ndefault\nacceptEdits\nplan\nauto\ndontAsk\nbypassPermissions\n\nWhat it auto-approves: Reads only. Prompts before nearly every edit or command.\n\nWhat it still gates: All file edits and shell commands require confirmation.\n\nLimitations: Safe but slow on trusted work. The baseline for any new project or unfamiliar codebase.\n\nWhat it auto-approves: Reads, file edits, and common filesystem commands (mkdir, touch, rm, rmdir, mv, cp, and sed) inside the working directory. Auto-approval is scoped to paths inside the working directory, and protected paths still prompt.\n\nWhat it still gates: All other shell commands; writes outside the working directory; writes to protected paths.",
-          "Limitations: Trusted local work where shell execution still needs a human eye. Not appropriate if the agent must run scripts.\n\nWhat it auto-approves: Reads only. Research and proposes; makes no edits.\n\nWhat it still gates: All file edits and shell commands until you approve a plan.\n\nLimitations: Exploration and planning on sensitive or unfamiliar codebases. Not appropriate for tasks that must write output.\n\nWhat it auto-approves: Everything, but a separate classifier reviews each action first and blocks anything that escalates beyond your request, targets unrecognized infrastructure, or appears driven by hostile or inappropriate content.\n\nWhat it still gates: Production deploys and migrations, mass deletes, credential exfiltration, and force-push to main are blocked by default.",
-          "Limitations: Reduces prompts but does not guarantee safety; this is a research preview, not a substitute for reviewing sensitive operations. Availability depends on plan, model version, and admin settings. Always verify current requirements before build.\n\nWhat it auto-approves: Only tools you pre-approved in an allow rule, plus read-only commands. Auto-DENIES everything else.\n\nWhat it still gates: Every tool call not on the allow list is denied. There is no queue for confirmation.\n\nLimitations: Built for locked-down CI and scripts. It restricts well, but it is not a way to reduce friction on local interactive work.\n\nWhat it auto-approves: All tool calls. No confirmation prompts and no safety checks.",
-          "What it still gates: Nothing in normal operation. The standard permission checks are bypassed; only catastrophic delete commands such as rm -rf / and rm -rf ~ still trigger a last-resort prompt.\n\nLimitations: Only inside an isolated container or VM where the environment is disposable. Never on a developer workstation against a live codebase.\n\nWhere does the configuration live and who it applies to\n\nSettings can be placed at several levels, and each level determines the scope of the rules it contains.\n\nUser level (~/.claude/settings.json): Applies to every project on the machine. This is the right place for preferences that should follow you everywhere, such as a preferred default mode for exploration work.",
-          "Project level (.claude/settings.json, committed to the repo): Applies to everyone who clones the repository. This is the right place for team-wide conventions, allow rules for the tools your project uses, and deny rules for paths that should not be touched.\n\nLocal project le\n\n[...]"
-        ],
-        "fr": [
-          "Claude Code agent loop, permission modes, settings, and where a human gate goes\n\nModule 2 established how the agent loop works at the API level: the model calls tools, gets results back, and continues until the task is done.\n\nClaude Code runs that same loop in your terminal but adds an additional layer: a permission system that gates every action the agent wants to take. Before you can configure anything, you need to understand how the loop runs and what the permission modes control.\n\nHow Claude Code works through a task: explore, plan, and code",
-          "When you hand Claude Code a task, it does not start writing immediately. It reads files, traces the relevant logic, and builds a picture of the codebase first; this is the exploration phase. Then, once it understands enough to propose a change, it creates a plan. A plan is a structured description of the edits it intends to make. Only after you review and approve the plan does it move into the code phase, where it writes and executes the changes.",
-          "This sequence matters for two reasons. First, it produces better output: Claude Code understands the codebase before touching anything, so it makes fewer assumptions and catches more downstream effects. Second, it is where the permission modes plug in: plan mode holds Claude Code in the explore phase, blocking all file edits and shell commands until you release it, making it a useful default for unfamiliar codebases or high-stakes work.\n\nPermission modes: approvals, gates, and constraints\n\nPermission modes control how often Claude Code stops to ask for confirmation. Each mode makes a different tradeoff between speed and oversight. The right choice depends on how well you know the codebase and how reversible the changes are.",
-          "Select each tab for what that mode auto-approves, what it still gates, and its limitations.\n\ndefault\nacceptEdits\nplan\nauto\ndontAsk\nbypassPermissions\n\nWhat it auto-approves: Reads only. Prompts before nearly every edit or command.\n\nWhat it still gates: All file edits and shell commands require confirmation.\n\nLimitations: Safe but slow on trusted work. The baseline for any new project or unfamiliar codebase.\n\nWhat it auto-approves: Reads, file edits, and common filesystem commands (mkdir, touch, rm, rmdir, mv, cp, and sed) inside the working directory. Auto-approval is scoped to paths inside the working directory, and protected paths still prompt.\n\nWhat it still gates: All other shell commands; writes outside the working directory; writes to protected paths.",
-          "Limitations: Trusted local work where shell execution still needs a human eye. Not appropriate if the agent must run scripts.\n\nWhat it auto-approves: Reads only. Research and proposes; makes no edits.\n\nWhat it still gates: All file edits and shell commands until you approve a plan.\n\nLimitations: Exploration and planning on sensitive or unfamiliar codebases. Not appropriate for tasks that must write output.\n\nWhat it auto-approves: Everything, but a separate classifier reviews each action first and blocks anything that escalates beyond your request, targets unrecognized infrastructure, or appears driven by hostile or inappropriate content.\n\nWhat it still gates: Production deploys and migrations, mass deletes, credential exfiltration, and force-push to main are blocked by default.",
-          "Limitations: Reduces prompts but does not guarantee safety; this is a research preview, not a substitute for reviewing sensitive operations. Availability depends on plan, model version, and admin settings. Always verify current requirements before build.\n\nWhat it auto-approves: Only tools you pre-approved in an allow rule, plus read-only commands. Auto-DENIES everything else.\n\nWhat it still gates: Every tool call not on the allow list is denied. There is no queue for confirmation.\n\nLimitations: Built for locked-down CI and scripts. It restricts well, but it is not a way to reduce friction on local interactive work.\n\nWhat it auto-approves: All tool calls. No confirmation prompts and no safety checks.",
-          "What it still gates: Nothing in normal operation. The standard permission checks are bypassed; only catastrophic delete commands such as rm -rf / and rm -rf ~ still trigger a last-resort prompt.\n\nLimitations: Only inside an isolated container or VM where the environment is disposable. Never on a developer workstation against a live codebase.\n\nWhere does the configuration live and who it applies to\n\nSettings can be placed at several levels, and each level determines the scope of the rules it contains.\n\nUser level (~/.claude/settings.json): Applies to every project on the machine. This is the right place for preferences that should follow you everywhere, such as a preferred default mode for exploration work.",
-          "Project level (.claude/settings.json, committed to the repo): Applies to everyone who clones the repository. This is the right place for team-wide conventions, allow rules for the tools your project uses, and deny rules for paths that should not be touched.\n\nLocal project le\n\n[...]"
-        ]
-      },
-      "totalPages": 8
-    },
-    {
-      "id": "lesson_02",
-      "title": {
-        "en": "Permission Modes & Human Gates",
-        "fr": "Permission Modes & Human Gates"
-      },
-      "type": "checkpoint",
-      "duration": "4 min",
-      "pages": {
-        "en": [
-          "Checkpoint 1: assemble the settings file and place the human gate\n\nTry it now. You are configuring Claude Code for a trusted local refactor of the payments module.\n\nThe refactor should auto-approve file edits but must never run destructive shell commands, and the file .env.production must never be readable by the agent. Below are settings.json pieces.\n\nPart 1: Select the setting.json pieces that assemble the correct configuration\n\nSelect two pieces.\n\n✓\nPiece A. { \"permissions\": { \"defaultMode\": \"default\"} }\n\n✓\nPiece B. { \"permissions\": { \"defaultMode\": \"bypassPermissions\" } }\n\n✓\nPiece C. { \"permissions\": { \"allow\": [\"Bash(npm run:*)\"], \"deny\": [\"Bash(rm:*)\", \"Bash(git push:*)\"] } }\n\n✓\nPiece D. { \"permissions\": { \"deny\": [\"Read(.env.production)\"] } }",
-          "✓\nPiece E. { \"permissions\": { \"allow\": [\"Bash(*)\", \"Edit(*)\"] } }\n\nPart 2\n\nYour settings allow the agent to edit files automatically. During the refactor the agent proposes a change to a deployment configuration file that several production services read. Where should a human gate sit for that one action? Choose the single best answer.\n\naNowhere: the settings already auto-approve edits, so let it run.\n\nbA human reviews and approves the change to the deployment configuration file before the write executes, because a wrong value there is hard to undo and reaches systems outside the file.\n\ncAdd bypassPermissions so the agent never pauses.\n\ndReview the change only after the write, during the next pull request.\n\nSubmit\nSkip for now"
-        ],
-        "fr": [
-          "Checkpoint 1: assemble the settings file and place the human gate\n\nTry it now. You are configuring Claude Code for a trusted local refactor of the payments module.\n\nThe refactor should auto-approve file edits but must never run destructive shell commands, and the file .env.production must never be readable by the agent. Below are settings.json pieces.\n\nPart 1: Select the setting.json pieces that assemble the correct configuration\n\nSelect two pieces.\n\n✓\nPiece A. { \"permissions\": { \"defaultMode\": \"default\"} }\n\n✓\nPiece B. { \"permissions\": { \"defaultMode\": \"bypassPermissions\" } }\n\n✓\nPiece C. { \"permissions\": { \"allow\": [\"Bash(npm run:*)\"], \"deny\": [\"Bash(rm:*)\", \"Bash(git push:*)\"] } }\n\n✓\nPiece D. { \"permissions\": { \"deny\": [\"Read(.env.production)\"] } }",
-          "✓\nPiece E. { \"permissions\": { \"allow\": [\"Bash(*)\", \"Edit(*)\"] } }\n\nPart 2\n\nYour settings allow the agent to edit files automatically. During the refactor the agent proposes a change to a deployment configuration file that several production services read. Where should a human gate sit for that one action? Choose the single best answer.\n\naNowhere: the settings already auto-approve edits, so let it run.\n\nbA human reviews and approves the change to the deployment configuration file before the write executes, because a wrong value there is hard to undo and reaches systems outside the file.\n\ncAdd bypassPermissions so the agent never pauses.\n\ndReview the change only after the write, during the next pull request.\n\nSubmit\nSkip for now"
-        ]
-      },
-      "totalPages": 2
-    },
-    {
-      "id": "lesson_03",
-      "title": {
-        "en": "Durable Project Context",
-        "fr": "Durable Project Context"
-      },
-      "type": "teaching",
-      "duration": "20 min",
-      "pages": {
-        "en": [
-          "Durable project context with CLAUDE.md, rules files, hooks, and subagents\n\nPreviously we saw how Claude Code gates actions through permission modes and settings files. That configuration layer controls what the agent is allowed to do.\n\nThis cluster builds on top of it: now you’ll learn how to configure what the agent knows and how it behaves, so the rules and project context you define in a session are still in effect at the start of the next one.\n\nCLAUDE.md: the project file that loads into every session",
-          "Every time Claude Code starts in a project directory, it looks for a file named CLAUDE.md at the root and reads it. The contents are appended to your prompt before any message from you arrives. This means every convention, constraint, and command you put in CLAUDE.md is present from the first prompt of every session, without you having to re-state it.\n\nThe /init command scans your codebase and generates a starter CLAUDE.md. The generated file is a great baseline but should be validated before using. Refine it to hold the rules that control the outcome of your prompts: your testing commands, your framework conventions, the paths the agent should not touch, and the style decisions that differ from defaults.",
-          "Size is the main failure mode. A CLAUDE.md that keeps growing with every new instruction can dilute the rules that matter most. A larger file consumes more of the context window, which makes any single instruction a smaller fraction of what loads, and that reduces the chance that the agent follows the one rule that catches a real mistake. Hold CLAUDE.md to the constraints that change behavior and move everything else into Skills that load on demand.\n\nRules instruction files: scoping guidance to where it applies",
-          "In the previous section, we established that CLAUDE.md loads into every session and should hold the instructions that apply across the whole project. The next question is what to do with guidance that matters only in one part of the codebase. That is where rules instruction files come in: they let you apply instructions only where they are relevant, instead of loading them into every session.",
-          "CLAUDE.md is always on, and rules files add a narrower layer on top of that baseline. They live in the project’s .claude/rules/ directory and can be scoped to specific paths using a paths glob in their YAML frontmatter. A rule scoped this way loads into context only when Claude Code works with files matching the pattern, this allows a rule to be applied to one part of the codebase without cluttering the rest of the context.\n\nNote that the scoping comes from the frontmatter, not from file placement. Rules files can be organized into subdirectories of .claude/rules/ (e.g., .claude/rules/database/), but that structure is organizational only; a rules file without a paths field loads unconditionally at launch, with the same priority as CLAUDE.md, no matter where it sits inside .claude/rules/.",
-          "In practice, put broad project memory and universal constraints in CLAUDE.md, and put narrow, path-specific guidance in rules files scoped with paths. A constraint like “never modify the database schema” lives in CLAUDE.md because it applies everywhere. A constraint like “all SQL in the database module must include an explicit transaction boundary” lives in .claude/rules/database.md with frontmatter such as:\n\n---\npaths:\n- \"src/db/**/*.sql\"\n---\n\nso it enters context only when Claude is working with those files.\n\nHooks: running your own scripts at fixed points in the lifecycle",
-          "A Hook allows you to intercept and control tool calls before or after they execute. When you write a specific rule in CLAUDE.md telling the agent to run Prettier after every file edited, the agent will follow it most of the time. Alternatively, a hook makes it happen every single time without exceptions because the hook fires independently of what the model decides to do.\n\nHooks are defined in settings files and configured using the /hooks command. Each hook is bound to a lifecycle event, an optional matcher that scopes it to specific tool types, and a command that runs when the event fires. The core events for most guardrail and automation use cases are:",
-          "PreToolUse: Runs before a tool call executes. Because it runs first, a PreToolUse hook can examine the tool call and exit with code 2 to block it, writing the reason to stderr as feedback the agent sees. This is how you enforce access controls at the configuration layer rather than hoping the agent respects a CLAUDE.md instruction.\n\nPostToolUse: Runs after a tool call completes. Since the call has already happened, this event cannot block it, which makes it the right place for automated side effects: running a code formatter after an edit, triggering tests after a file change, or logging the operation for an audit trail.\n\nUserPromptSubmit: Runs when you submit a prompt, before the model processes it. Use it when you need to inject context or validate the request before any work starts.\n\nStop: Runs\n\n[...]"
-        ],
-        "fr": [
-          "Durable project context with CLAUDE.md, rules files, hooks, and subagents\n\nPreviously we saw how Claude Code gates actions through permission modes and settings files. That configuration layer controls what the agent is allowed to do.\n\nThis cluster builds on top of it: now you’ll learn how to configure what the agent knows and how it behaves, so the rules and project context you define in a session are still in effect at the start of the next one.\n\nCLAUDE.md: the project file that loads into every session",
-          "Every time Claude Code starts in a project directory, it looks for a file named CLAUDE.md at the root and reads it. The contents are appended to your prompt before any message from you arrives. This means every convention, constraint, and command you put in CLAUDE.md is present from the first prompt of every session, without you having to re-state it.\n\nThe /init command scans your codebase and generates a starter CLAUDE.md. The generated file is a great baseline but should be validated before using. Refine it to hold the rules that control the outcome of your prompts: your testing commands, your framework conventions, the paths the agent should not touch, and the style decisions that differ from defaults.",
-          "Size is the main failure mode. A CLAUDE.md that keeps growing with every new instruction can dilute the rules that matter most. A larger file consumes more of the context window, which makes any single instruction a smaller fraction of what loads, and that reduces the chance that the agent follows the one rule that catches a real mistake. Hold CLAUDE.md to the constraints that change behavior and move everything else into Skills that load on demand.\n\nRules instruction files: scoping guidance to where it applies",
-          "In the previous section, we established that CLAUDE.md loads into every session and should hold the instructions that apply across the whole project. The next question is what to do with guidance that matters only in one part of the codebase. That is where rules instruction files come in: they let you apply instructions only where they are relevant, instead of loading them into every session.",
-          "CLAUDE.md is always on, and rules files add a narrower layer on top of that baseline. They live in the project’s .claude/rules/ directory and can be scoped to specific paths using a paths glob in their YAML frontmatter. A rule scoped this way loads into context only when Claude Code works with files matching the pattern, this allows a rule to be applied to one part of the codebase without cluttering the rest of the context.\n\nNote that the scoping comes from the frontmatter, not from file placement. Rules files can be organized into subdirectories of .claude/rules/ (e.g., .claude/rules/database/), but that structure is organizational only; a rules file without a paths field loads unconditionally at launch, with the same priority as CLAUDE.md, no matter where it sits inside .claude/rules/.",
-          "In practice, put broad project memory and universal constraints in CLAUDE.md, and put narrow, path-specific guidance in rules files scoped with paths. A constraint like “never modify the database schema” lives in CLAUDE.md because it applies everywhere. A constraint like “all SQL in the database module must include an explicit transaction boundary” lives in .claude/rules/database.md with frontmatter such as:\n\n---\npaths:\n- \"src/db/**/*.sql\"\n---\n\nso it enters context only when Claude is working with those files.\n\nHooks: running your own scripts at fixed points in the lifecycle",
-          "A Hook allows you to intercept and control tool calls before or after they execute. When you write a specific rule in CLAUDE.md telling the agent to run Prettier after every file edited, the agent will follow it most of the time. Alternatively, a hook makes it happen every single time without exceptions because the hook fires independently of what the model decides to do.\n\nHooks are defined in settings files and configured using the /hooks command. Each hook is bound to a lifecycle event, an optional matcher that scopes it to specific tool types, and a command that runs when the event fires. The core events for most guardrail and automation use cases are:",
-          "PreToolUse: Runs before a tool call executes. Because it runs first, a PreToolUse hook can examine the tool call and exit with code 2 to block it, writing the reason to stderr as feedback the agent sees. This is how you enforce access controls at the configuration layer rather than hoping the agent respects a CLAUDE.md instruction.\n\nPostToolUse: Runs after a tool call completes. Since the call has already happened, this event cannot block it, which makes it the right place for automated side effects: running a code formatter after an edit, triggering tests after a file change, or logging the operation for an audit trail.\n\nUserPromptSubmit: Runs when you submit a prompt, before the model processes it. Use it when you need to inject context or validate the request before any work starts.\n\nStop: Runs\n\n[...]"
-        ]
-      },
-      "totalPages": 8
-    },
-    {
-      "id": "lesson_04",
-      "title": {
-        "en": "Durable Project Context",
-        "fr": "Durable Project Context"
-      },
-      "type": "checkpoint",
-      "duration": "3 min",
-      "pages": {
-        "en": [
-          "Checkpoint 2: drag the correct value\n\nTry it now. You are setting up a hook that enforces a path restriction, and the configuration below has two blanks.\n\nSelect the correct one: the lifecycle event that runs before a tool call executes, and the command the hook runs to block reads of .env.production.\n\n{\n\"hooks\": {\n\"________\": [\n{\n\"matcher\": \"Read\",\n\"hooks\": [{ \"type\": \"command\", \"command\": \"________\" }]\n}\n]\n}\n}\n\nBlank 1: the lifecycle event\n\nPreToolUse\n\nPostToolUse\n\nUserPromptSubmit\n\nSessionStart\n\nBlank 2: the command\n\nA script that reads the tool call from stdin, checks the file path, and exits with code 2 when the path is .env.production (writing the reason to stderr).\n\nA script that logs the tool call to an audit file and exits 0.\n\nA script that prints a warning and exits 0 unconditionally.\n\nSubmit\nSkip for now"
-        ],
-        "fr": [
-          "Checkpoint 2: drag the correct value\n\nTry it now. You are setting up a hook that enforces a path restriction, and the configuration below has two blanks.\n\nSelect the correct one: the lifecycle event that runs before a tool call executes, and the command the hook runs to block reads of .env.production.\n\n{\n\"hooks\": {\n\"________\": [\n{\n\"matcher\": \"Read\",\n\"hooks\": [{ \"type\": \"command\", \"command\": \"________\" }]\n}\n]\n}\n}\n\nBlank 1: the lifecycle event\n\nPreToolUse\n\nPostToolUse\n\nUserPromptSubmit\n\nSessionStart\n\nBlank 2: the command\n\nA script that reads the tool call from stdin, checks the file path, and exits with code 2 when the path is .env.production (writing the reason to stderr).\n\nA script that logs the tool call to an audit file and exits 0.\n\nA script that prints a warning and exits 0 unconditionally.\n\nSubmit\nSkip for now"
-        ]
-      },
-      "totalPages": 1
-    },
-    {
-      "id": "lesson_05",
-      "title": {
-        "en": "Packaging Workflows",
-        "fr": "Packaging Workflows"
-      },
-      "type": "teaching",
-      "duration": "8 min",
-      "pages": {
-        "en": [
-          "Packaging a workflow as a plugin: skills, custom commands, and marketplace install\n\nPreviously, we covered the mechanisms that give Claude Code durable context and enforce behavior: CLAUDE.md for always-on project memory, rules files for scoped guidance, hooks for deterministic guardrails, and subagents for isolated task delegation.\n\nThese mechanisms live in your .claude directory and are version-controlled with the project. Now we turn to the next question: how can you package that setup so a teammate can install it simply in one step instead of repeating your manual configuration by hand?\n\nSkills are reusable workflows the agent loads on demand",
-          "A skill is a portable Markdown file (SKILL.md file) placed in .claude/skills. The front matter identifies the skill and describes when it applies, and the body holds the steps. The same skill can run in Claude Code, be invoked through Messages API, or be loaded by the Agent SDK. What changes across the three isn’t the file itself; it’s where the skill runs, how it gets loaded, and what it’s allowed to touch. A developer who has only ever seen skills in Claude Code may assume things that don’t hold true on the API, so this section outlines the differences.\n\nHow the skill loads and runs in each\n\nSelect each tab for how the skill loads, where the steps run, and what you need to know.\n\nClaude Code\nMessages API\nAgent SDK\nClaude Managed Agents",
-          "How the skill loads: Discovered from .claude/skills on the filesystem. Loads on a description match or when you invoke it by name.\n\nWhere the steps run: In your terminal session, against your local files, under the active permission mode and deny rules.\n\nWhat you need to know: It’s filesystem-based and is governed by the settings layer.\n\nHow the skill loads: Sent along with the request and run inside the code execution container, not your application’s environment. Requires code-execution and skills beta headers.\n\nWhere the steps run: Inside Anthropic’s code execution container, not on your machine. The skill’s filesystem and tool access are whatever that container provides.",
-          "What you need to know: A skill that assumes local files or local tools won’t behave the same way here, because it isn’t running where those files are.\n\nHow the skill loads: Loaded by the agent the SDK runs, but whether filesystem settings (CLAUDE.md, skills) load is controlled by the settingSources configuration. Do not rely on a default: always set it explicitly to the sources you intend, and confirm current default behavior against the Agent SDK reference at build time. You set it through the “settingSources” (TypeScript) / “setting_sources” (Python).\n\nWhere the steps run: In the process the SDK runs, which is your environment, once you’ve told it to load filesystem sources.",
-          "What you need to know: The common surprise: a skill that worked in Claude Code does nothing under the SDK because settingSources was never set, so the skill never loaded.\n\nHow the skill loads: Defined once as an API resource that names the model, system prompt, tools, MCP servers, and skills. Anthropic loads the skill server-side when the agent runs, so there is no filesystem discovery step on your side.\n\nWhere the steps run: Inside a sandbox Anthropic provisions and runs, not your environment. Your application sends user events and reads streamed results back. The skill has access to whatever that managed sandbox provides, not your local files.",
-          "What you need to know: Currently a public beta that requires the managed-agents-2026-04-01 beta header, and sessions are stored server-side, which means Managed Agents are not currently eligible for Zero Data Retention or HIPAA BAA coverage. Skills are attached when defining the agent resource, not at session time. Update the agent definition to change which skills are available.\n\nThree portability rules\n\nWrite the description as the matching criterion. The model loads a skill by comparing your request to its description, so a description that identifies when the skill applies works in every runtime, but a vague one fails to load in all of them.",
-          "Don’t assume a local filesystem or local tools exist inside the skill body. A skill that shells out to a local command works in Claude Code but breaks on the Messages API, where it runs in a container without a command. Keep the skill’s steps confined to what the runtime is guaranteed to provide, or document the dependency.\n\nRemember that subagents don’t inherit skills. This was true in Module 2, and is still true here: a subagent starts clean, so a skill the parent relied on has to be listed for the subagent explicitly, in every runtime that supports subagents.",
-          "The practical takeaway is that you can author a skill once and reuse it, but you must specifically design for the ability to use it across terminals. A skill that’s scoped to a clear description and free of local-environment assumptions ports cleanly across runtimes, but one that assumes a specific local environment does not.\n\nHandles wellAd\n\n[...]"
-        ],
-        "fr": [
-          "Packaging a workflow as a plugin: skills, custom commands, and marketplace install\n\nPreviously, we covered the mechanisms that give Claude Code durable context and enforce behavior: CLAUDE.md for always-on project memory, rules files for scoped guidance, hooks for deterministic guardrails, and subagents for isolated task delegation.\n\nThese mechanisms live in your .claude directory and are version-controlled with the project. Now we turn to the next question: how can you package that setup so a teammate can install it simply in one step instead of repeating your manual configuration by hand?\n\nSkills are reusable workflows the agent loads on demand",
-          "A skill is a portable Markdown file (SKILL.md file) placed in .claude/skills. The front matter identifies the skill and describes when it applies, and the body holds the steps. The same skill can run in Claude Code, be invoked through Messages API, or be loaded by the Agent SDK. What changes across the three isn’t the file itself; it’s where the skill runs, how it gets loaded, and what it’s allowed to touch. A developer who has only ever seen skills in Claude Code may assume things that don’t hold true on the API, so this section outlines the differences.\n\nHow the skill loads and runs in each\n\nSelect each tab for how the skill loads, where the steps run, and what you need to know.\n\nClaude Code\nMessages API\nAgent SDK\nClaude Managed Agents",
-          "How the skill loads: Discovered from .claude/skills on the filesystem. Loads on a description match or when you invoke it by name.\n\nWhere the steps run: In your terminal session, against your local files, under the active permission mode and deny rules.\n\nWhat you need to know: It’s filesystem-based and is governed by the settings layer.\n\nHow the skill loads: Sent along with the request and run inside the code execution container, not your application’s environment. Requires code-execution and skills beta headers.\n\nWhere the steps run: Inside Anthropic’s code execution container, not on your machine. The skill’s filesystem and tool access are whatever that container provides.",
-          "What you need to know: A skill that assumes local files or local tools won’t behave the same way here, because it isn’t running where those files are.\n\nHow the skill loads: Loaded by the agent the SDK runs, but whether filesystem settings (CLAUDE.md, skills) load is controlled by the settingSources configuration. Do not rely on a default: always set it explicitly to the sources you intend, and confirm current default behavior against the Agent SDK reference at build time. You set it through the “settingSources” (TypeScript) / “setting_sources” (Python).\n\nWhere the steps run: In the process the SDK runs, which is your environment, once you’ve told it to load filesystem sources.",
-          "What you need to know: The common surprise: a skill that worked in Claude Code does nothing under the SDK because settingSources was never set, so the skill never loaded.\n\nHow the skill loads: Defined once as an API resource that names the model, system prompt, tools, MCP servers, and skills. Anthropic loads the skill server-side when the agent runs, so there is no filesystem discovery step on your side.\n\nWhere the steps run: Inside a sandbox Anthropic provisions and runs, not your environment. Your application sends user events and reads streamed results back. The skill has access to whatever that managed sandbox provides, not your local files.",
-          "What you need to know: Currently a public beta that requires the managed-agents-2026-04-01 beta header, and sessions are stored server-side, which means Managed Agents are not currently eligible for Zero Data Retention or HIPAA BAA coverage. Skills are attached when defining the agent resource, not at session time. Update the agent definition to change which skills are available.\n\nThree portability rules\n\nWrite the description as the matching criterion. The model loads a skill by comparing your request to its description, so a description that identifies when the skill applies works in every runtime, but a vague one fails to load in all of them.",
-          "Don’t assume a local filesystem or local tools exist inside the skill body. A skill that shells out to a local command works in Claude Code but breaks on the Messages API, where it runs in a container without a command. Keep the skill’s steps confined to what the runtime is guaranteed to provide, or document the dependency.\n\nRemember that subagents don’t inherit skills. This was true in Module 2, and is still true here: a subagent starts clean, so a skill the parent relied on has to be listed for the subagent explicitly, in every runtime that supports subagents.",
-          "The practical takeaway is that you can author a skill once and reuse it, but you must specifically design for the ability to use it across terminals. A skill that’s scoped to a clear description and free of local-environment assumptions ports cleanly across runtimes, but one that assumes a specific local environment does not.\n\nHandles wellAd\n\n[...]"
-        ]
-      },
-      "totalPages": 8
-    },
-    {
-      "id": "lesson_06",
-      "title": {
-        "en": "Packaging Workflows",
-        "fr": "Packaging Workflows"
-      },
-      "type": "checkpoint",
-      "duration": "3 min",
-      "pages": {
-        "en": [
-          "Checkpoint 3: place the skill in the right runtime\n\nTry it now. Three teams want to reuse the same review-checklist skill in different places.\n\nFor each, match what must be configured for the skill to load and run. Note: the source presents four runtime situations. All four are included here so the match stays complete.\n\nA developer wants the skill to load when they ask for a review in the Claude Code terminal.",
-          "Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nA service calls the Messages API and wants the skill to run as part of the request.",
-          "Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nA scheduled headless job uses Agent SDK and expects the skill from the repo to load.",
-          "Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nA product team wants the same review-checklist skill to run inside a long-running agent that Anthropic hosts, reachable by an agent ID across sessions.",
-          "Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nSubmit\nSkip for now\n\nWatch OutPackaging Workflows3 min\n\nThe plugin that installed on your machine and failed on everyone else’s\n\nSetup",
-          "A plugin installed cleanly tells you the package was assembled correctly; however, it does not tell you the plugin will run effectively, because installation and execution are different things. The install copies files into place. Execution resolves the paths and variables those files point at, against the machine where they are running. When a plugin author bakes their own machine’s layout into a skill, the install still succeeds everywhere, but the execution fails everywhere except the author’s own setup. This gap occurs because it’s something the author can’t see.\n\nWhat happened",
-          "A developer built a deployment workflow skill, packaged it as a plugin, and tested it locally. Local testing passed, the plugin went out to the team through the internal marketplace, and every teammate’s install succeeded, but the moment any teammate ran the skill, it failed.\n\nThe root cause sat in the skill’s SKILL.md, in a command that pointed at /Users/alexmorgan/projects/deploy-utils/validate.sh.\n\nThat directory existed on the author’s machine and nowhere else. The skill carried an absolute path to the author’s home directory, so every teammate’s run looked for a file that was on their system or included in the skill.",
-          "A second skill in the same plugin leaned on an environment variable, DEPLOY_TOKEN, that the author had set in their own shell profile, and the plugin’s README never mentioned it. Three teammates spent two hours debugging before they traced the second failure to the missing variable.\n\nThe plugin incorrectly treate\n\n[...]"
-        ],
-        "fr": [
-          "Checkpoint 3: place the skill in the right runtime\n\nTry it now. Three teams want to reuse the same review-checklist skill in different places.\n\nFor each, match what must be configured for the skill to load and run. Note: the source presents four runtime situations. All four are included here so the match stays complete.\n\nA developer wants the skill to load when they ask for a review in the Claude Code terminal.",
-          "Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nA service calls the Messages API and wants the skill to run as part of the request.",
-          "Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nA scheduled headless job uses Agent SDK and expects the skill from the repo to load.",
-          "Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nA product team wants the same review-checklist skill to run inside a long-running agent that Anthropic hosts, reachable by an agent ID across sessions.",
-          "Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nSubmit\nSkip for now\n\nWatch OutPackaging Workflows3 min\n\nThe plugin that installed on your machine and failed on everyone else’s\n\nSetup",
-          "A plugin installed cleanly tells you the package was assembled correctly; however, it does not tell you the plugin will run effectively, because installation and execution are different things. The install copies files into place. Execution resolves the paths and variables those files point at, against the machine where they are running. When a plugin author bakes their own machine’s layout into a skill, the install still succeeds everywhere, but the execution fails everywhere except the author’s own setup. This gap occurs because it’s something the author can’t see.\n\nWhat happened",
-          "A developer built a deployment workflow skill, packaged it as a plugin, and tested it locally. Local testing passed, the plugin went out to the team through the internal marketplace, and every teammate’s install succeeded, but the moment any teammate ran the skill, it failed.\n\nThe root cause sat in the skill’s SKILL.md, in a command that pointed at /Users/alexmorgan/projects/deploy-utils/validate.sh.\n\nThat directory existed on the author’s machine and nowhere else. The skill carried an absolute path to the author’s home directory, so every teammate’s run looked for a file that was on their system or included in the skill.",
-          "A second skill in the same plugin leaned on an environment variable, DEPLOY_TOKEN, that the author had set in their own shell profile, and the plugin’s README never mentioned it. Three teammates spent two hours debugging before they traced the second failure to the missing variable.\n\nThe plugin incorrectly treate\n\n[...]"
-        ]
-      },
-      "totalPages": 8
-    },
-    {
-      "id": "lesson_07",
-      "title": {
-        "en": "Packaging Workflows",
-        "fr": "Packaging Workflows"
-      },
-      "type": "checkpoint",
-      "duration": "4 min",
-      "pages": {
-        "en": [
-          "Checkpoint 4: fix the broken plugin definition\n\nTry it now. The following SKILL.md works on the author’s machine but will fail when a teammate clones the project and installs the plugin.\n\nSelect the single defect, then select the correct fix.\n\n---\nname: deploy-validate\ndescription: Validates a deployment configuration before release.\n---"
-        ],
-        "fr": [
-          "Checkpoint 4: fix the broken plugin definition\n\nTry it now. The following SKILL.md works on the author’s machine but will fail when a teammate clones the project and installs the plugin.\n\nSelect the single defect, then select the correct fix.\n\n---\nname: deploy-validate\ndescription: Validates a deployment configuration before release.\n---"
-        ]
-      },
-      "totalPages": 1
-    }
-  ],
-  "exercises": [
-    {
-      "id": "ex_1",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_2",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_3",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_4",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_5",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_6",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_7",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_8",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_9",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_10",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_11",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_12",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_13",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_14",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_15",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_16",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_17",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_18",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_19",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_20",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_21",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_22",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_23",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_24",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_25",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_26",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_27",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_28",
-      "type": "exercise"
-    },
-    {
-      "id": "ex_29",
-      "type": "exercise"
-    }
-  ]
+ "courseId": "claude_certified_developer_foundations__03",
+ "lessons": [
+  {
+   "id": "lesson_01",
+   "title": {
+    "en": "Permission Modes & Human Gates",
+    "fr": "Modes d'autorisation & Contrôles humains"
+   },
+   "type": "teaching",
+   "duration": "17 min",
+   "pages": {
+    "en": [
+     "Claude Code agent loop, permission modes, settings, and where a human gate goes\n\nModule 2 established how the agent loop works at the API level: the model calls tools, gets results back, and continues until the task is done.\n\nClaude Code runs that same loop in your terminal but adds an additional layer: a permission system that gates every action the agent wants to take. Before you can configure anything, you need to understand how the loop runs and what the permission modes control.\n\nHow Claude Code works through a task: explore, plan, and code",
+     "When you hand Claude Code a task, it does not start writing immediately. It reads files, traces the relevant logic, and builds a picture of the codebase first; this is the exploration phase. Then, once it understands enough to propose a change, it creates a plan. A plan is a structured description of the edits it intends to make. Only after you review and approve the plan does it move into the code phase, where it writes and executes the changes.",
+     "This sequence matters for two reasons. First, it produces better output: Claude Code understands the codebase before touching anything, so it makes fewer assumptions and catches more downstream effects. Second, it is where the permission modes plug in: plan mode holds Claude Code in the explore phase, blocking all file edits and shell commands until you release it, making it a useful default for unfamiliar codebases or high-stakes work.\n\nPermission modes: approvals, gates, and constraints\n\nPermission modes control how often Claude Code stops to ask for confirmation. Each mode makes a different tradeoff between speed and oversight. The right choice depends on how well you know the codebase and how reversible the changes are.",
+     "Select each tab for what that mode auto-approves, what it still gates, and its limitations.\n\ndefault\nacceptEdits\nplan\nauto\ndontAsk\nbypassPermissions\n\nWhat it auto-approves: Reads only. Prompts before nearly every edit or command.\n\nWhat it still gates: All file edits and shell commands require confirmation.\n\nLimitations: Safe but slow on trusted work. The baseline for any new project or unfamiliar codebase.\n\nWhat it auto-approves: Reads, file edits, and common filesystem commands (mkdir, touch, rm, rmdir, mv, cp, and sed) inside the working directory. Auto-approval is scoped to paths inside the working directory, and protected paths still prompt.\n\nWhat it still gates: All other shell commands; writes outside the working directory; writes to protected paths.",
+     "Limitations: Trusted local work where shell execution still needs a human eye. Not appropriate if the agent must run scripts.\n\nWhat it auto-approves: Reads only. Research and proposes; makes no edits.\n\nWhat it still gates: All file edits and shell commands until you approve a plan.\n\nLimitations: Exploration and planning on sensitive or unfamiliar codebases. Not appropriate for tasks that must write output.\n\nWhat it auto-approves: Everything, but a separate classifier reviews each action first and blocks anything that escalates beyond your request, targets unrecognized infrastructure, or appears driven by hostile or inappropriate content.\n\nWhat it still gates: Production deploys and migrations, mass deletes, credential exfiltration, and force-push to main are blocked by default.",
+     "Limitations: Reduces prompts but does not guarantee safety; this is a research preview, not a substitute for reviewing sensitive operations. Availability depends on plan, model version, and admin settings. Always verify current requirements before build.\n\nWhat it auto-approves: Only tools you pre-approved in an allow rule, plus read-only commands. Auto-DENIES everything else.\n\nWhat it still gates: Every tool call not on the allow list is denied. There is no queue for confirmation.\n\nLimitations: Built for locked-down CI and scripts. It restricts well, but it is not a way to reduce friction on local interactive work.\n\nWhat it auto-approves: All tool calls. No confirmation prompts and no safety checks.",
+     "What it still gates: Nothing in normal operation. The standard permission checks are bypassed; only catastrophic delete commands such as rm -rf / and rm -rf ~ still trigger a last-resort prompt.\n\nLimitations: Only inside an isolated container or VM where the environment is disposable. Never on a developer workstation against a live codebase.\n\nWhere does the configuration live and who it applies to\n\nSettings can be placed at several levels, and each level determines the scope of the rules it contains.\n\nUser level (~/.claude/settings.json): Applies to every project on the machine. This is the right place for preferences that should follow you everywhere, such as a preferred default mode for exploration work.",
+     "Project level (.claude/settings.json, committed to the repo): Applies to everyone who clones the repository. This is the right place for team-wide conventions, allow rules for the tools your project uses, and deny rules for paths that should not be touched.\n\nLocal project le\n\n[...]"
+    ],
+    "fr": [
+     "Boucle d'agent Claude Code, modes d'autorisation, paramètres et où placer un contrôle humain\n\nLe module 2 a expliqué comment la boucle d'agent fonctionne au niveau de l'API : le modèle appelle des outils, reçoit des résultats, et continue jusqu'à ce que la tâche soit terminée.\n\nClaude Code exécute cette même boucle dans votre terminal mais ajoute une couche supplémentaire : un système d'autorisation qui contrôle chaque action que l'agent souhaite effectuer. Avant de pouvoir configurer quoi que ce soit, vous devez comprendre comment la boucle fonctionne et ce que contrôlent les modes d'autorisation.",
+     "Comment Claude Code exécute une tâche : explorer, planifier et coder\n\nLorsque vous confiez une tâche à Claude Code, il ne se met pas à écrire immédiatement. Il lit les fichiers, retrace la logique pertinente et se construit d'abord une vue d'ensemble de la base de code ; c'est la phase d'exploration. Ensuite, une fois qu'il en sait assez pour proposer un changement, il élabore un plan. Un plan est une description structurée des modifications qu'il a l'intention d'apporter. Ce n'est qu'après que vous avez examiné et approuvé le plan qu'il passe à la phase de codage, où il rédige et exécute les modifications.",
+     "Cette séquence est importante pour deux raisons. D'abord, elle produit de meilleurs résultats : Claude Code comprend la base de code avant d'intervenir, ce qui réduit les hypothèses et permet de détecter davantage d'effets en aval. Ensuite, c'est là que les modes d'autorisation interviennent : le mode plan maintient Claude Code dans la phase d'exploration, bloquant toutes les modifications de fichiers et les commandes shell jusqu'à ce que vous l'autorisiez, ce qui en fait un choix par défaut utile pour des bases de code inconnues ou des travaux à enjeux élevés.\n\nModes d'autorisation : approbations, contrôles et contraintes\n\nLes modes d'autorisation régulent la fréquence à laquelle Claude Code s'arrête pour demander confirmation. Chaque mode fait un compromis différent entre rapidité et supervision. Le bon choix dépend de votre connaissance de la base de code et de la réversibilité des modifications.",
+     "Sélectionnez chaque onglet pour voir ce que ce mode approuve automatiquement, ce qu'il bloque encore et ses limitations.\n\ndefault\nacceptEdits\nplan\nauto\ndontAsk\nbypassPermissions\n\nCe qu'il approuve automatiquement : Lecture uniquement. Demande une confirmation avant presque chaque modification ou commande.\n\nCe qu'il bloque encore : Toutes les modifications de fichiers et commandes shell nécessitent une confirmation.\n\nLimitations : Sûr mais lent pour du travail de confiance. Le point de référence pour tout nouveau projet ou base de code non familière.\n\nCe qu'il approuve automatiquement : Lecture, modifications de fichiers et commandes filesystem courantes (mkdir, touch, rm, rmdir, mv, cp et sed) à l'intérieur du répertoire de travail. L'approbation automatique est limitée aux chemins à l'intérieur du répertoire de travail, et les chemins protégés demandent toujours une confirmation.\n\nCe qu'il bloque encore : Toutes les autres commandes shell ; écritures en dehors du répertoire de travail ; écritures vers des chemins protégés.",
+     "Limitations : Travail local de confiance où l'exécution shell nécessite encore une vérification humaine. Pas approprié si l'agent doit exécuter des scripts.\n\nCe qu'il approuve automatiquement : Lecture uniquement. Recherche et propositions ; ne fait aucune modification.\n\nCe qu'il bloque encore : Toutes les modifications de fichiers et commandes shell jusqu'à ce que vous approuviez un plan.\n\nLimitations : Exploration et planification sur des bases de code sensibles ou non familières. Pas adapté aux tâches qui doivent produire des sorties.\n\nCe qu'il approuve automatiquement : Tout, mais un classificateur séparé examine d'abord chaque action et bloque tout ce qui dépasse votre demande, cible une infrastructure non reconnue, ou semble motivé par du contenu hostile ou inapproprié.\n\nCe qu'il bloque encore : Les déploiements et migrations en production, les suppressions massives, l'exfiltration d'identifiants et le force-push vers main sont bloqués par défaut.",
+     "Limitations : Réduit les demandes de confirmation mais ne garantit pas la sécurité ; il s'agit d'une preview de recherche, pas d'un substitut à la revue des opérations sensibles. La disponibilité dépend du plan, de la version du modèle et des paramètres administrateur. Vérifiez toujours les exigences actuelles avant de construire.\n\nCe qu'il approuve automatiquement : Uniquement les outils que vous avez préapprouvés dans une règle d'autorisation, plus les commandes en lecture seule. Refuse automatiquement tout le reste.\n\nCe qu'il bloque encore : Tout appel d'outil qui ne figure pas sur la liste d'autorisation est refusé. Il n'y a pas de file d'attente pour confirmation.\n\nLimitations : Conçu pour des CI et des scripts verrouillés. Il restreint efficacement, mais ce n'est pas un moyen de réduire les frictions du travail interactif local.\n\nCe qu'il approuve automatiquement : Tous les appels d'outils. Aucune demande de confirmation et aucune vérification de sécurité.",
+     "Ce que cela continue de protéger : Rien en fonctionnement normal. Les contrôles d'autorisation standard sont contournés ; seules les commandes de suppression catastrophiques comme rm -rf / et rm -rf ~ déclenchent encore une invite de dernière chance.\n\nLimitations : Uniquement à l'intérieur d'un conteneur isolé ou d'une VM où l'environnement est jetable. Jamais sur une station de travail développeur contre une base de code active.\n\nOù se trouve la configuration et à qui s'applique-t-elle\n\nLes paramètres peuvent être placés à plusieurs niveaux, et chaque niveau détermine la portée des règles qu'il contient.\n\nNiveau utilisateur (~/.claude/settings.json) : S'applique à tous les projets sur la machine. C'est l'endroit approprié pour les préférences qui doivent vous suivre partout, comme un mode par défaut préféré pour le travail exploratoire.",
+     "Niveau projet (.claude/settings.json, commité dans le dépôt) : S'applique à tous ceux qui clonent le dépôt. C'est l'endroit approprié pour les conventions d'équipe, les règles d'autorisation pour les outils utilisés par votre projet, et les règles de refus pour les chemins qui ne doivent pas être touchés.\n\nNiveau de projet local\n\n[...]"
+    ]
+   },
+   "totalPages": 8
+  },
+  {
+   "id": "lesson_02",
+   "title": {
+    "en": "Permission Modes & Human Gates",
+    "fr": "Modes d'autorisation et contrôles humains"
+   },
+   "type": "checkpoint",
+   "duration": "4 min",
+   "pages": {
+    "en": [
+     "Checkpoint 1: assemble the settings file and place the human gate\n\nTry it now. You are configuring Claude Code for a trusted local refactor of the payments module.\n\nThe refactor should auto-approve file edits but must never run destructive shell commands, and the file .env.production must never be readable by the agent. Below are settings.json pieces.\n\nPart 1: Select the setting.json pieces that assemble the correct configuration\n\nSelect two pieces.\n\n✓\nPiece A. { \"permissions\": { \"defaultMode\": \"default\"} }\n\n✓\nPiece B. { \"permissions\": { \"defaultMode\": \"bypassPermissions\" } }\n\n✓\nPiece C. { \"permissions\": { \"allow\": [\"Bash(npm run:*)\"], \"deny\": [\"Bash(rm:*)\", \"Bash(git push:*)\"] } }\n\n✓\nPiece D. { \"permissions\": { \"deny\": [\"Read(.env.production)\"] } }",
+     "✓\nPiece E. { \"permissions\": { \"allow\": [\"Bash(*)\", \"Edit(*)\"] } }\n\nPart 2\n\nYour settings allow the agent to edit files automatically. During the refactor the agent proposes a change to a deployment configuration file that several production services read. Where should a human gate sit for that one action? Choose the single best answer.\n\naNowhere: the settings already auto-approve edits, so let it run.\n\nbA human reviews and approves the change to the deployment configuration file before the write executes, because a wrong value there is hard to undo and reaches systems outside the file.\n\ncAdd bypassPermissions so the agent never pauses.\n\ndReview the change only after the write, during the next pull request.\n\nSubmit\nSkip for now"
+    ],
+    "fr": [
+     "Checkpoint 1 : assembler le fichier de paramètres et placer le contrôle humain\n\nEssayez maintenant. Vous configurez Claude Code pour une refactorisation locale de confiance du module de paiements.\n\nLa refactorisation doit approuver automatiquement les modifications de fichiers mais ne doit jamais exécuter de commandes shell destructrices, et le fichier .env.production ne doit jamais être lisible par l'agent. Voici des extraits de settings.json.\n\nPartie 1 : Sélectionnez les extraits de settings.json qui composent la configuration correcte\n\nSélectionnez deux extraits.\n\n✓\nPiece A. { \"permissions\": { \"defaultMode\": \"default\"} }\n\n✓\nPiece B. { \"permissions\": { \"defaultMode\": \"bypassPermissions\" } }\n\n✓\nPiece C. { \"permissions\": { \"allow\": [\"Bash(npm run:*)\"], \"deny\": [\"Bash(rm:*)\", \"Bash(git push:*)\"] } }\n\n✓\nPiece D. { \"permissions\": { \"deny\": [\"Read(.env.production)\"] } }",
+     "✓\nPiece E. { \"permissions\": { \"allow\": [\"Bash(*)\", \"Edit(*)\"] } }\n\nPartie 2\n\nVos paramètres permettent à l'agent de modifier les fichiers automatiquement. Lors de la refactorisation, l'agent propose un changement dans un fichier de configuration de déploiement lu par plusieurs services en production. Où devrait se situer un contrôle humain pour cette action ? Choisissez la meilleure réponse unique.\n\na Aucun endroit : les paramètres approuvent déjà automatiquement les modifications, laissez faire.\n\nb Un humain examine et approuve le changement du fichier de configuration de déploiement avant l'exécution de l'écriture, car une valeur erronée y est difficile à annuler et affecte des systèmes au-delà du fichier.\n\nc Ajouter bypassPermissions pour que l'agent ne fasse jamais de pause.\n\nd Revoir le changement seulement après l'écriture, lors de la prochaine pull request.\n\nSoumettre\nPasser pour l'instant"
+    ]
+   },
+   "totalPages": 2
+  },
+  {
+   "id": "lesson_03",
+   "title": {
+    "en": "Durable Project Context",
+    "fr": "Contexte du projet Durable"
+   },
+   "type": "teaching",
+   "duration": "20 min",
+   "pages": {
+    "en": [
+     "Durable project context with CLAUDE.md, rules files, hooks, and subagents\n\nPreviously we saw how Claude Code gates actions through permission modes and settings files. That configuration layer controls what the agent is allowed to do.\n\nThis cluster builds on top of it: now you’ll learn how to configure what the agent knows and how it behaves, so the rules and project context you define in a session are still in effect at the start of the next one.\n\nCLAUDE.md: the project file that loads into every session",
+     "Every time Claude Code starts in a project directory, it looks for a file named CLAUDE.md at the root and reads it. The contents are appended to your prompt before any message from you arrives. This means every convention, constraint, and command you put in CLAUDE.md is present from the first prompt of every session, without you having to re-state it.\n\nThe /init command scans your codebase and generates a starter CLAUDE.md. The generated file is a great baseline but should be validated before using. Refine it to hold the rules that control the outcome of your prompts: your testing commands, your framework conventions, the paths the agent should not touch, and the style decisions that differ from defaults.",
+     "Size is the main failure mode. A CLAUDE.md that keeps growing with every new instruction can dilute the rules that matter most. A larger file consumes more of the context window, which makes any single instruction a smaller fraction of what loads, and that reduces the chance that the agent follows the one rule that catches a real mistake. Hold CLAUDE.md to the constraints that change behavior and move everything else into Skills that load on demand.\n\nRules instruction files: scoping guidance to where it applies",
+     "In the previous section, we established that CLAUDE.md loads into every session and should hold the instructions that apply across the whole project. The next question is what to do with guidance that matters only in one part of the codebase. That is where rules instruction files come in: they let you apply instructions only where they are relevant, instead of loading them into every session.",
+     "CLAUDE.md is always on, and rules files add a narrower layer on top of that baseline. They live in the project’s .claude/rules/ directory and can be scoped to specific paths using a paths glob in their YAML frontmatter. A rule scoped this way loads into context only when Claude Code works with files matching the pattern, this allows a rule to be applied to one part of the codebase without cluttering the rest of the context.\n\nNote that the scoping comes from the frontmatter, not from file placement. Rules files can be organized into subdirectories of .claude/rules/ (e.g., .claude/rules/database/), but that structure is organizational only; a rules file without a paths field loads unconditionally at launch, with the same priority as CLAUDE.md, no matter where it sits inside .claude/rules/.",
+     "In practice, put broad project memory and universal constraints in CLAUDE.md, and put narrow, path-specific guidance in rules files scoped with paths. A constraint like “never modify the database schema” lives in CLAUDE.md because it applies everywhere. A constraint like “all SQL in the database module must include an explicit transaction boundary” lives in .claude/rules/database.md with frontmatter such as:\n\n---\npaths:\n- \"src/db/**/*.sql\"\n---\n\nso it enters context only when Claude is working with those files.\n\nHooks: running your own scripts at fixed points in the lifecycle",
+     "A Hook allows you to intercept and control tool calls before or after they execute. When you write a specific rule in CLAUDE.md telling the agent to run Prettier after every file edited, the agent will follow it most of the time. Alternatively, a hook makes it happen every single time without exceptions because the hook fires independently of what the model decides to do.\n\nHooks are defined in settings files and configured using the /hooks command. Each hook is bound to a lifecycle event, an optional matcher that scopes it to specific tool types, and a command that runs when the event fires. The core events for most guardrail and automation use cases are:",
+     "PreToolUse: Runs before a tool call executes. Because it runs first, a PreToolUse hook can examine the tool call and exit with code 2 to block it, writing the reason to stderr as feedback the agent sees. This is how you enforce access controls at the configuration layer rather than hoping the agent respects a CLAUDE.md instruction.\n\nPostToolUse: Runs after a tool call completes. Since the call has already happened, this event cannot block it, which makes it the right place for automated side effects: running a code formatter after an edit, triggering tests after a file change, or logging the operation for an audit trail.\n\nUserPromptSubmit: Runs when you submit a prompt, before the model processes it. Use it when you need to inject context or validate the request before any work starts.\n\nStop: Runs\n\n[...]"
+    ],
+    "fr": [
+     "Contexte de projet durable avec CLAUDE.md, fichiers de règles, hooks et sous-agents\n\nNous avons vu précédemment comment Claude Code régule les actions via des modes d'autorisation et des fichiers de configuration. Cette couche de configuration contrôle ce que l'agent est autorisé à faire.\n\nCe cluster s'appuie dessus : vous allez maintenant apprendre à configurer ce que l'agent sait et comment il se comporte, de sorte que les règles et le contexte de projet que vous définissez dans une session restent en vigueur au début de la suivante.\n\nCLAUDE.md : le fichier de projet qui se charge à chaque session",
+     "Chaque fois que Claude Code démarre dans un répertoire de projet, il cherche un fichier nommé CLAUDE.md à la racine et le lit. Son contenu est ajouté à votre prompt avant qu'aucun message de votre part n'arrive. Cela signifie que chaque convention, contrainte et commande que vous placez dans CLAUDE.md est présente dès le premier prompt de chaque session, sans que vous ayez à la répéter.\n\nLa commande /init analyse votre base de code et génère un CLAUDE.md de départ. Le fichier généré constitue une excellente base mais doit être validé avant utilisation. Affinez-le pour y conserver les règles qui déterminent le résultat de vos prompts : vos commandes de test, vos conventions de framework, les chemins que l'agent ne doit pas toucher, et les décisions de style qui diffèrent des paramètres par défaut.",
+     "La taille est le principal mode de défaillance. Un CLAUDE.md qui ne cesse de grossir à chaque nouvelle instruction peut diluer les règles qui comptent le plus. Un fichier plus volumineux consomme davantage la fenêtre de contexte, ce qui fait qu'une instruction isolée représente une fraction moindre de ce qui est chargé, et réduit ainsi la probabilité que l'agent respecte la règle unique qui permet d'attraper une vraie erreur. Limitez CLAUDE.md aux contraintes qui changent le comportement et déplacez tout le reste dans des Skills qui se chargent à la demande.\n\nFichiers d'instructions de règles : cadrer leur périmètre d'application",
+     "Dans la section précédente, nous avons établi que CLAUDE.md se charge dans chaque session et doit contenir les instructions qui s'appliquent à l'ensemble du projet. La question suivante est de savoir quoi faire des directives qui ne concernent qu'une seule partie du code. C'est là qu'interviennent les fichiers d'instructions de règles : ils permettent d'appliquer des instructions uniquement là où elles sont pertinentes, au lieu de les charger dans chaque session.",
+     "CLAUDE.md est toujours actif, et les fichiers de règles ajoutent une couche plus restreinte par-dessus cette base. Ils résident dans le répertoire .claude/rules/ du projet et peuvent être limités à des chemins spécifiques en utilisant un glob paths dans leur YAML frontmatter. Une règle limitée de cette manière ne se charge dans le contexte que lorsque Claude Code travaille sur des fichiers correspondant au motif. Cela permet d'appliquer une règle à une partie du code sans encombrer le reste du contexte.\n\nNotez que la portée est définie par le frontmatter, et non par l'emplacement du fichier. Les fichiers de règles peuvent être organisés en sous-répertoires de .claude/rules/ (par ex. .claude/rules/database/), mais cette structure n'est que d'organisation ; un fichier de règles sans champ paths se charge de manière inconditionnelle au lancement, avec la même priorité que CLAUDE.md, peu importe où il se trouve dans .claude/rules/.",
+     "En pratique, mettez la mémoire de projet large et les contraintes universelles dans CLAUDE.md, et placez les directives étroites et spécifiques à un chemin dans des fichiers de règles limités avec paths. Une contrainte comme « ne jamais modifier le schéma de la base de données » appartient à CLAUDE.md parce qu'elle s'applique partout. Une contrainte comme « tout SQL dans le module database doit inclure une frontière de transaction explicite » appartient à .claude/rules/database.md avec un frontmatter tel que :\n\n---\npaths:\n- \"src/db/**/*.sql\"\n---\n\nainsi elle n'entre en contexte que lorsque Claude travaille sur ces fichiers.\n\nHooks : exécuter vos propres scripts à des points fixes du cycle de vie",
+     "Un hook vous permet d'intercepter et de contrôler les appels d'outils avant ou après leur exécution. Lorsque vous écrivez une règle spécifique dans CLAUDE.md demandant à l'agent d'exécuter Prettier après chaque fichier édité, l'agent la suivra la plupart du temps. À l'inverse, un hook le fera à chaque fois, sans exception, car il se déclenche indépendamment de ce que le modèle décide de faire.\n\nLes hooks sont définis dans des fichiers de configuration et configurés à l'aide de la commande /hooks. Chaque hook est lié à un événement du cycle de vie, à un matcher optionnel qui le restreint à des types d'outils spécifiques, et à une commande qui s'exécute lorsque l'événement se déclenche. Les événements principaux pour la plupart des cas d'utilisation de garde-fous et d'automatisation sont :",
+     "PreToolUse: S'exécute avant l'exécution d'un appel d'outil. Comme il s'exécute en premier, un hook PreToolUse peut examiner l'appel d'outil et se terminer avec le code 2 pour le bloquer, en écrivant la raison dans stderr comme retour que l'agent voit. C'est ainsi que vous appliquez des contrôles d'accès au niveau de la configuration plutôt que d'espérer que l'agent respecte une instruction dans CLAUDE.md.\n\nPostToolUse: S'exécute après la fin d'un appel d'outil. Comme l'appel a déjà eu lieu, cet événement ne peut pas le bloquer, ce qui en fait l'endroit approprié pour des effets secondaires automatisés : lancer un formateur de code après une modification, déclencher des tests après un changement de fichier, ou consigner l'opération pour une piste d'audit.\n\nUserPromptSubmit: S'exécute lorsque vous soumettez un prompt, avant que le modèle ne le traite. Utilisez-le lorsque vous devez injecter du contexte ou valider la demande avant le début de tout travail.\n\nStop : S'exécute\n\n[...]"
+    ]
+   },
+   "totalPages": 8
+  },
+  {
+   "id": "lesson_04",
+   "title": {
+    "en": "Durable Project Context",
+    "fr": "Contexte du projet Durable"
+   },
+   "type": "checkpoint",
+   "duration": "3 min",
+   "pages": {
+    "en": [
+     "Checkpoint 2: drag the correct value\n\nTry it now. You are setting up a hook that enforces a path restriction, and the configuration below has two blanks.\n\nSelect the correct one: the lifecycle event that runs before a tool call executes, and the command the hook runs to block reads of .env.production.\n\n{\n\"hooks\": {\n\"________\": [\n{\n\"matcher\": \"Read\",\n\"hooks\": [{ \"type\": \"command\", \"command\": \"________\" }]\n}\n]\n}\n}\n\nBlank 1: the lifecycle event\n\nPreToolUse\n\nPostToolUse\n\nUserPromptSubmit\n\nSessionStart\n\nBlank 2: the command\n\nA script that reads the tool call from stdin, checks the file path, and exits with code 2 when the path is .env.production (writing the reason to stderr).\n\nA script that logs the tool call to an audit file and exits 0.\n\nA script that prints a warning and exits 0 unconditionally.\n\nSubmit\nSkip for now"
+    ],
+    "fr": [
+     "Checkpoint 2 : faites glisser la valeur correcte\n\nEssayez maintenant. Vous configurez un hook qui applique une restriction de chemin, et la configuration ci‑dessous comporte deux champs vides.\n\nSélectionnez la bonne option : l'événement du cycle de vie qui s'exécute avant l'appel d'un outil, et la commande que le hook exécute pour bloquer les lectures de .env.production.\n\n{\n\"hooks\": {\n\"________\": [\n{\n\"matcher\": \"Read\",\n\"hooks\": [{ \"type\": \"command\", \"command\": \"________\" }]\n}\n]\n}\n}\n\nChamp 1 : l'événement du cycle de vie\n\nPreToolUse\n\nPostToolUse\n\nUserPromptSubmit\n\nSessionStart\n\nChamp 2 : la commande\n\nUn script qui lit l'appel d'outil depuis stdin, vérifie le chemin du fichier, et se termine avec le code 2 lorsque le chemin est .env.production (écrit la raison sur stderr).\n\nUn script qui enregistre l'appel d'outil dans un fichier d'audit et se termine avec le code 0.\n\nUn script qui affiche un avertissement et se termine avec le code 0 de manière inconditionnelle.\n\nSoumettre\nPasser pour l'instant"
+    ]
+   },
+   "totalPages": 1
+  },
+  {
+   "id": "lesson_05",
+   "title": {
+    "en": "Packaging Workflows",
+    "fr": "Flux de packaging"
+   },
+   "type": "teaching",
+   "duration": "8 min",
+   "pages": {
+    "en": [
+     "Packaging a workflow as a plugin: skills, custom commands, and marketplace install\n\nPreviously, we covered the mechanisms that give Claude Code durable context and enforce behavior: CLAUDE.md for always-on project memory, rules files for scoped guidance, hooks for deterministic guardrails, and subagents for isolated task delegation.\n\nThese mechanisms live in your .claude directory and are version-controlled with the project. Now we turn to the next question: how can you package that setup so a teammate can install it simply in one step instead of repeating your manual configuration by hand?\n\nSkills are reusable workflows the agent loads on demand",
+     "A skill is a portable Markdown file (SKILL.md file) placed in .claude/skills. The front matter identifies the skill and describes when it applies, and the body holds the steps. The same skill can run in Claude Code, be invoked through Messages API, or be loaded by the Agent SDK. What changes across the three isn’t the file itself; it’s where the skill runs, how it gets loaded, and what it’s allowed to touch. A developer who has only ever seen skills in Claude Code may assume things that don’t hold true on the API, so this section outlines the differences.\n\nHow the skill loads and runs in each\n\nSelect each tab for how the skill loads, where the steps run, and what you need to know.\n\nClaude Code\nMessages API\nAgent SDK\nClaude Managed Agents",
+     "How the skill loads: Discovered from .claude/skills on the filesystem. Loads on a description match or when you invoke it by name.\n\nWhere the steps run: In your terminal session, against your local files, under the active permission mode and deny rules.\n\nWhat you need to know: It’s filesystem-based and is governed by the settings layer.\n\nHow the skill loads: Sent along with the request and run inside the code execution container, not your application’s environment. Requires code-execution and skills beta headers.\n\nWhere the steps run: Inside Anthropic’s code execution container, not on your machine. The skill’s filesystem and tool access are whatever that container provides.",
+     "What you need to know: A skill that assumes local files or local tools won’t behave the same way here, because it isn’t running where those files are.\n\nHow the skill loads: Loaded by the agent the SDK runs, but whether filesystem settings (CLAUDE.md, skills) load is controlled by the settingSources configuration. Do not rely on a default: always set it explicitly to the sources you intend, and confirm current default behavior against the Agent SDK reference at build time. You set it through the “settingSources” (TypeScript) / “setting_sources” (Python).\n\nWhere the steps run: In the process the SDK runs, which is your environment, once you’ve told it to load filesystem sources.",
+     "What you need to know: The common surprise: a skill that worked in Claude Code does nothing under the SDK because settingSources was never set, so the skill never loaded.\n\nHow the skill loads: Defined once as an API resource that names the model, system prompt, tools, MCP servers, and skills. Anthropic loads the skill server-side when the agent runs, so there is no filesystem discovery step on your side.\n\nWhere the steps run: Inside a sandbox Anthropic provisions and runs, not your environment. Your application sends user events and reads streamed results back. The skill has access to whatever that managed sandbox provides, not your local files.",
+     "What you need to know: Currently a public beta that requires the managed-agents-2026-04-01 beta header, and sessions are stored server-side, which means Managed Agents are not currently eligible for Zero Data Retention or HIPAA BAA coverage. Skills are attached when defining the agent resource, not at session time. Update the agent definition to change which skills are available.\n\nThree portability rules\n\nWrite the description as the matching criterion. The model loads a skill by comparing your request to its description, so a description that identifies when the skill applies works in every runtime, but a vague one fails to load in all of them.",
+     "Don’t assume a local filesystem or local tools exist inside the skill body. A skill that shells out to a local command works in Claude Code but breaks on the Messages API, where it runs in a container without a command. Keep the skill’s steps confined to what the runtime is guaranteed to provide, or document the dependency.\n\nRemember that subagents don’t inherit skills. This was true in Module 2, and is still true here: a subagent starts clean, so a skill the parent relied on has to be listed for the subagent explicitly, in every runtime that supports subagents.",
+     "The practical takeaway is that you can author a skill once and reuse it, but you must specifically design for the ability to use it across terminals. A skill that’s scoped to a clear description and free of local-environment assumptions ports cleanly across runtimes, but one that assumes a specific local environment does not.\n\nHandles wellAd\n\n[...]"
+    ],
+    "fr": [
+     "Packager un workflow en tant que plugin : skills, commandes personnalisées et installation depuis le marketplace\n\nPrécédemment, nous avons couvert les mécanismes qui donnent à Claude Code un contexte durable et font respecter le comportement : CLAUDE.md pour la mémoire de projet toujours active, des fichiers de règles pour des directives ciblées, des hooks pour des garde-fous déterministes, et des subagents pour la délégation de tâches isolée.\n\nCes mécanismes résident dans votre répertoire .claude et sont versionnés avec le projet. La question suivante est : comment empaqueter cette configuration pour qu’un coéquipier puisse l’installer en une seule étape, au lieu de répéter manuellement votre configuration ?\n\nLes skills sont des workflows réutilisables que l’agent charge à la demande",
+     "Une skill est un fichier Markdown portable (fichier SKILL.md) placé dans .claude/skills. Le front matter identifie la skill et décrit quand elle s’applique, et le corps contient les étapes. La même skill peut s’exécuter dans Claude Code, être invoquée via Messages API, ou être chargée par l’Agent SDK. Ce qui change entre les trois n’est pas le fichier lui‑même ; c’est l’endroit où la skill s’exécute, comment elle est chargée et ce qu’elle est autorisée à manipuler. Un développeur qui n’a vu des skills que dans Claude Code peut partir d’hypothèses qui ne sont pas valides via l’API, donc cette section présente les différences.\n\nComment la skill se charge et s’exécute dans chaque environnement\n\nSélectionnez chaque onglet pour savoir comment la skill se charge, où les étapes s’exécutent, et ce que vous devez savoir.\n\nClaude Code\nMessages API\nAgent SDK\nClaude Managed Agents",
+     "How the skill loads: Découverte depuis .claude/skills sur le système de fichiers. Chargée lors d’une correspondance de description ou lorsque vous l’invoquez par son nom.\n\nWhere the steps run: Dans votre session terminal, sur vos fichiers locaux, sous le mode de permissions actif et les règles de refus.\n\nWhat you need to know: C’est basé sur le système de fichiers et régi par la couche de paramètres.\n\nHow the skill loads: Envoyée avec la requête et exécutée à l’intérieur du code execution container, pas dans l’environnement de votre application. Nécessite code-execution et skills beta headers.\n\nWhere the steps run: À l’intérieur du conteneur d’exécution de code d’Anthropic, pas sur votre machine. Le système de fichiers de la skill et l’accès aux outils sont ceux que fournit ce conteneur.",
+     "Ce qu'il faut savoir : une skill qui suppose que des fichiers ou des outils locaux se comporteront de la même façon ne fonctionnera pas de la même manière ici, car elle ne s'exécute pas là où se trouvent ces fichiers.\n\nComment la skill est chargée : Elle est chargée par l'agent exécuté par le SDK, mais le fait que les paramètres du système de fichiers (CLAUDE.md, skills) soient chargés est contrôlé par la configuration settingSources. Ne comptez pas sur une valeur par défaut : définissez-la toujours explicitement sur les sources que vous souhaitez, et vérifiez le comportement par défaut actuel dans la référence Agent SDK au moment de la compilation. Vous la définissez via “settingSources” (TypeScript) / “setting_sources” (Python).\n\nOù les étapes s'exécutent : dans le processus lancé par le SDK, c'est-à-dire dans votre environnement, une fois que vous lui avez indiqué de charger les sources du système de fichiers.",
+     "Ce qu'il faut savoir : la surprise fréquente : une skill qui fonctionnait dans Claude Code ne fait rien sous le SDK parce que settingSources n'a jamais été défini, donc la skill ne s'est jamais chargée.\n\nComment la skill est chargée : définie une fois comme une ressource API qui nomme le modèle, le system prompt, les outils, les serveurs MCP et les skills. Anthropic charge la skill côté serveur quand l'agent s'exécute, donc il n'y a pas d'étape de découverte du système de fichiers de votre côté.\n\nOù les étapes s'exécutent : à l'intérieur d'un sandbox que Anthropic provisionne et exécute, et non dans votre environnement. Votre application envoie des événements utilisateur et lit les résultats streamés en retour. La skill a accès à ce que ce sandbox géré fournit, pas à vos fichiers locaux.",
+     "Ce qu'il faut savoir : actuellement en beta publique nécessitant l'en-tête beta managed-agents-2026-04-01, et les sessions sont stockées côté serveur, ce qui signifie que Managed Agents ne sont pas actuellement éligibles à Zero Data Retention ni à la couverture HIPAA BAA. Les skills sont attachées lors de la définition de la ressource agent, pas au moment de la session. Mettez à jour la définition de l'agent pour changer les skills disponibles.\n\nTrois règles de portabilité\n\nRédigez la description comme critère d'appariement. Le modèle charge une skill en comparant votre requête à sa description, donc une description qui identifie clairement quand la skill s'applique fonctionne dans tous les environnements d'exécution, tandis qu'une description vague échouera à se charger dans chacun d'eux.",
+     "Ne supposez pas qu'un système de fichiers local ou des outils locaux existent à l'intérieur du corps de la skill. Une skill qui lance une commande locale fonctionne dans Claude Code mais échoue avec la Messages API, où elle s'exécute dans un conteneur sans commande. Limitez les étapes de la skill à ce que le runtime garantit de fournir, ou documentez la dépendance.\n\nSouvenez-vous que les subagents n'héritent pas des skills. Cela était vrai dans le Module 2, et l'est toujours ici : un subagent démarre propre, donc une skill dont le parent dépend doit être listée explicitement pour le subagent, dans chaque runtime qui prend en charge les subagents.",
+     "La conclusion pratique est que vous pouvez créer une skill une fois et la réutiliser, mais vous devez la concevoir spécifiquement pour pouvoir l'utiliser sur différents terminaux. Une skill dont la portée est définie par une description claire et qui est exempte d'hypothèses sur l'environnement local se transpose facilement entre les runtimes, mais une skill qui suppose un environnement local spécifique ne le permet pas.\n\nFonctionne bienAd\n\n[...]"
+    ]
+   },
+   "totalPages": 8
+  },
+  {
+   "id": "lesson_06",
+   "title": {
+    "en": "Packaging Workflows",
+    "fr": "Flux de travail de packaging"
+   },
+   "type": "checkpoint",
+   "duration": "3 min",
+   "pages": {
+    "en": [
+     "Checkpoint 3: place the skill in the right runtime\n\nTry it now. Three teams want to reuse the same review-checklist skill in different places.\n\nFor each, match what must be configured for the skill to load and run. Note: the source presents four runtime situations. All four are included here so the match stays complete.\n\nA developer wants the skill to load when they ask for a review in the Claude Code terminal.",
+     "Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nA service calls the Messages API and wants the skill to run as part of the request.",
+     "Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nA scheduled headless job uses Agent SDK and expects the skill from the repo to load.",
+     "Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nA product team wants the same review-checklist skill to run inside a long-running agent that Anthropic hosts, reachable by an agent ID across sessions.",
+     "Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nSubmit\nSkip for now\n\nWatch OutPackaging Workflows3 min\n\nThe plugin that installed on your machine and failed on everyone else’s\n\nSetup",
+     "A plugin installed cleanly tells you the package was assembled correctly; however, it does not tell you the plugin will run effectively, because installation and execution are different things. The install copies files into place. Execution resolves the paths and variables those files point at, against the machine where they are running. When a plugin author bakes their own machine’s layout into a skill, the install still succeeds everywhere, but the execution fails everywhere except the author’s own setup. This gap occurs because it’s something the author can’t see.\n\nWhat happened",
+     "A developer built a deployment workflow skill, packaged it as a plugin, and tested it locally. Local testing passed, the plugin went out to the team through the internal marketplace, and every teammate’s install succeeded, but the moment any teammate ran the skill, it failed.\n\nThe root cause sat in the skill’s SKILL.md, in a command that pointed at /Users/alexmorgan/projects/deploy-utils/validate.sh.\n\nThat directory existed on the author’s machine and nowhere else. The skill carried an absolute path to the author’s home directory, so every teammate’s run looked for a file that was on their system or included in the skill.",
+     "A second skill in the same plugin leaned on an environment variable, DEPLOY_TOKEN, that the author had set in their own shell profile, and the plugin’s README never mentioned it. Three teammates spent two hours debugging before they traced the second failure to the missing variable.\n\nThe plugin incorrectly treate\n\n[...]"
+    ],
+    "fr": [
+     "Checkpoint 3 : placer le skill dans le bon runtime\n\nEssayez maintenant. Trois équipes veulent réutiliser le même review-checklist skill à différents endroits.\n\nPour chacune, associez ce qui doit être configuré pour que le skill soit chargé et s’exécute. Remarque : la source présente quatre situations de runtime. Les quatre sont incluses ici pour que l’association reste complète.\n\nUn développeur veut que le skill se charge lorsqu’il demande une revue dans le terminal Claude Code.",
+     "Placez SKILL.md dans .claude/skills avec une description qui correspond aux demandes de révision. Envoyez les en-têtes beta code-execution et skills et écrivez le skill de manière à ce que ses étapes ne dépendent ni de fichiers locaux ni d’outils locaux. Activez les sources filesystem en définissant explicitement settingSources afin que l’agent charge les skills depuis le projet. Ne comptez pas sur un comportement par défaut et vérifiez le comportement par défaut actuel dans la référence Agent SDK au moment de la compilation. Définissez l’agent comme une ressource API qui liste le skill et ajoutez l’en-tête beta managed-agents-2026-04-01 aux appels. Écrivez le skill de sorte que ses étapes ne dépendent pas de fichiers locaux, car il s’exécutera dans le sandbox d’Anthropic.\n\nUn service appelle la Messages API et veut que le skill s’exécute dans le cadre de la requête.",
+     "Placez SKILL.md dans .claude/skills avec une description qui correspond aux demandes de révision. Envoyez les en-têtes beta code-execution et skills et écrivez le skill de manière à ce que ses étapes ne dépendent ni de fichiers locaux ni d’outils locaux. Activez les sources filesystem en définissant explicitement settingSources afin que l’agent charge les skills depuis le projet. Ne comptez pas sur un comportement par défaut et vérifiez le comportement par défaut actuel dans la référence Agent SDK au moment de la compilation. Définissez l’agent comme une ressource API qui liste le skill et ajoutez l’en-tête beta managed-agents-2026-04-01 aux appels. Écrivez le skill de sorte que ses étapes ne dépendent pas de fichiers locaux, car il s’exécutera dans le sandbox d’Anthropic.\n\nUn job planifié headless utilise Agent SDK et attend que le skill du dépôt soit chargé.",
+     "Place SKILL.md dans .claude/skills avec une description correspondant aux demandes de revue. Envoyez les en-têtes beta code-execution et skills et écrivez le skill de façon que ses étapes ne dépendent pas de fichiers locaux ni d'outils locaux. Activez les sources du système de fichiers en définissant settingSources explicitement afin que l'agent charge les skills depuis le projet. Ne vous fiez pas à une valeur par défaut : vérifiez le comportement par défaut actuel avec la référence Agent SDK au moment de la construction. Définissez l'agent comme une ressource API qui répertorie le skill et ajoutez l'en-tête beta managed-agents-2026-04-01 aux appels. Écrivez le skill de façon que ses étapes ne dépendent pas de fichiers locaux, car il s'exécutera dans le sandbox d'Anthropic.\n\nUne équipe produit souhaite que le même review-checklist skill s'exécute au sein d'un agent longue durée hébergé par Anthropic, accessible via un agent ID à travers les sessions.",
+     "Place SKILL.md dans .claude/skills avec une description correspondant aux demandes de revue. Envoyez les en-têtes beta code-execution et skills et écrivez le skill de façon que ses étapes ne dépendent pas de fichiers locaux ni d'outils locaux. Activez les sources du système de fichiers en définissant settingSources explicitement afin que l'agent charge les skills depuis le projet. Ne vous fiez pas à une valeur par défaut : vérifiez le comportement par défaut actuel avec la référence Agent SDK au moment de la construction. Définissez l'agent comme une ressource API qui répertorie le skill et ajoutez l'en-tête beta managed-agents-2026-04-01 aux appels. Écrivez le skill de façon que ses étapes ne dépendent pas de fichiers locaux, car il s'exécutera dans le sandbox d'Anthropic.\n\nSoumettre\nIgnorer pour l'instant\n\nAttention\nFlux d'empaquetage\n3 min\n\nLe plugin qui s'est installé correctement sur votre machine et qui a échoué chez tout le monde\n\nConfiguration",
+     "Un plugin installé proprement vous indique que le package a été assemblé correctement ; cependant, cela ne vous dit pas si le plugin fonctionnera correctement, car installation et exécution sont deux choses distinctes. L'installation copie les fichiers à leur emplacement. L'exécution résout les chemins et les variables auxquels ces fichiers font référence, en fonction de la machine sur laquelle ils s'exécutent. Lorsqu'un auteur de plugin incorpore la configuration de sa propre machine dans un skill, l'installation réussit partout, mais l'exécution échoue partout sauf sur la machine de l'auteur. Cet écart se produit parce que c'est quelque chose que l'auteur ne peut pas voir.\n\nQue s'est-il passé ?",
+     "Un développeur a créé une skill de workflow de déploiement, l’a empaquetée en plugin et testée localement. Les tests locaux ont réussi, le plugin a été mis à disposition de l’équipe via le marketplace interne, et l’installation a réussi pour tous les coéquipiers, mais dès qu’un coéquipier a exécuté la skill, elle a échoué.\n\nLa cause racine se trouvait dans le SKILL.md de la skill, dans une commande qui pointait vers /Users/alexmorgan/projects/deploy-utils/validate.sh.\n\nCe répertoire existait sur la machine de l’auteur et nulle part ailleurs. La skill contenait un chemin absolu vers le répertoire personnel de l’auteur, si bien que chaque exécution cherchait un fichier qui n’était présent que sur la machine de l’auteur ou inclus dans la skill.",
+     "Une seconde skill dans le même plugin dépendait d’une variable d’environnement, DEPLOY_TOKEN, que l’auteur avait définie dans son propre profil shell, et le README du plugin ne la mentionnait jamais. Trois coéquipiers ont passé deux heures à déboguer avant d’attribuer la seconde panne à la variable manquante.\n\nLe plugin a été incorrectement traité\n\n[...]"
+    ]
+   },
+   "totalPages": 8
+  },
+  {
+   "id": "lesson_07",
+   "title": {
+    "en": "Packaging Workflows",
+    "fr": "Packaging des workflows"
+   },
+   "type": "checkpoint",
+   "duration": "4 min",
+   "pages": {
+    "en": [
+     "Checkpoint 4: fix the broken plugin definition\n\nTry it now. The following SKILL.md works on the author’s machine but will fail when a teammate clones the project and installs the plugin.\n\nSelect the single defect, then select the correct fix.\n\n---\nname: deploy-validate\ndescription: Validates a deployment configuration before release.\n---"
+    ],
+    "fr": [
+     "Point de contrôle 4 : corriger la définition du plugin cassée\n\nEssayez maintenant. Le fichier SKILL.md ci-dessous fonctionne sur la machine de l'auteur mais échouera lorsqu'un coéquipier clonera le projet et installera le plugin.\n\nIdentifiez le seul défaut, puis choisissez la correction appropriée.\n\n---\nname: deploy-validate\ndescription: Validates a deployment configuration before release.\n---"
+    ]
+   },
+   "totalPages": 1
+  }
+ ],
+ "exercises": [
+  {
+   "id": "ex_1",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_2",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_3",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_4",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_5",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_6",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_7",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_8",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_9",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_10",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_11",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_12",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_13",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_14",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_15",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_16",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_17",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_18",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_19",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_20",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_21",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_22",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_23",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_24",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_25",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_26",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_27",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_28",
+   "type": "exercise"
+  },
+  {
+   "id": "ex_29",
+   "type": "exercise"
+  }
+ ]
 }
