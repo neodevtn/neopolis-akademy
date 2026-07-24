@@ -8,7 +8,8 @@ import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
-  BookOpen, Lock, LogIn, ArrowRight, Moon, Sun, Menu, X, Clock, Check, Filter, Video, Eye
+  BookOpen, Lock, LogIn, ArrowRight, Moon, Sun, Menu, X, Clock, Check, Filter, Video, Eye,
+  Dumbbell, FileText, ChevronDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -1238,6 +1239,9 @@ export default function TrainingCourse() {
   const [courseLessons, setCourseLessons] = useState<any[]>([]);
   const [lessonsLoading, setLessonsLoading] = useState(true);
 
+  const [courseExercises, setCourseExercises] = useState<any[]>([]);
+  const [courseTranscripts, setCourseTranscripts] = useState<any[]>([]);
+
   useEffect(() => {
     if (!courseId) return;
     setLessonsLoading(true);
@@ -1245,10 +1249,14 @@ export default function TrainingCourse() {
       .then((res) => res.json())
       .then((data) => {
         setCourseLessons(data.lessons || []);
+        setCourseExercises(data.exercises || []);
+        setCourseTranscripts(data.videoTranscripts || []);
         setLessonsLoading(false);
       })
       .catch(() => {
         setCourseLessons([]);
+        setCourseExercises([]);
+        setCourseTranscripts([]);
         setLessonsLoading(false);
       });
   }, [courseId]);
@@ -1580,6 +1588,74 @@ export default function TrainingCourse() {
               </motion.div>
             );
           })()}
+
+          {/* Exercises Section */}
+          {courseExercises.length > 0 && (
+            <motion.div variants={fadeInUp} className="border border-border rounded-2xl overflow-hidden bg-card">
+              <div className="p-4 border-b border-border bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <Dumbbell className="w-5 h-5 text-amber-500" />
+                  <h3 className="font-semibold text-foreground">
+                    {t({ en: "Exercises & Checkpoints", fr: "Exercices & Checkpoints" })}
+                  </h3>
+                  <span className="text-xs bg-amber-500/15 text-amber-600 px-2 py-0.5 rounded-full font-medium">
+                    {courseExercises.length}
+                  </span>
+                </div>
+              </div>
+              <div className="p-4 space-y-3 max-h-[500px] overflow-y-auto">
+                {courseExercises.map((ex: any, idx: number) => (
+                  <details key={ex.id || idx} className="group border border-border/50 rounded-lg">
+                    <summary className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/30 transition-colors">
+                      <span className="w-7 h-7 rounded-full bg-amber-500/15 text-amber-600 flex items-center justify-center text-xs font-bold shrink-0">
+                        {idx + 1}
+                      </span>
+                      <span className="text-sm font-medium text-foreground truncate">
+                        {t({ en: `Exercise ${idx + 1}`, fr: `Exercice ${idx + 1}` })}
+                      </span>
+                      <ChevronDown className="w-4 h-4 text-muted-foreground ml-auto group-open:rotate-180 transition-transform" />
+                    </summary>
+                    <div className="px-4 pb-3 text-sm text-muted-foreground whitespace-pre-wrap">
+                      {ex.content?.[lang] || ex.content?.en || t({ en: "No content available", fr: "Contenu non disponible" })}
+                    </div>
+                  </details>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Video Transcripts Section */}
+          {courseTranscripts.length > 0 && (
+            <motion.div variants={fadeInUp} className="border border-border rounded-2xl overflow-hidden bg-card">
+              <div className="p-4 border-b border-border bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-blue-500" />
+                  <h3 className="font-semibold text-foreground">
+                    {t({ en: "Video Transcripts", fr: "Transcriptions vidéo" })}
+                  </h3>
+                  <span className="text-xs bg-blue-500/15 text-blue-600 px-2 py-0.5 rounded-full font-medium">
+                    {courseTranscripts.length}
+                  </span>
+                </div>
+              </div>
+              <div className="p-4 space-y-3 max-h-[500px] overflow-y-auto">
+                {courseTranscripts.map((vt: any, idx: number) => (
+                  <details key={idx} className="group border border-border/50 rounded-lg">
+                    <summary className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/30 transition-colors">
+                      <Video className="w-4 h-4 text-blue-500 shrink-0" />
+                      <span className="text-sm font-medium text-foreground truncate">
+                        {vt.title}
+                      </span>
+                      <ChevronDown className="w-4 h-4 text-muted-foreground ml-auto group-open:rotate-180 transition-transform" />
+                    </summary>
+                    <div className="px-4 pb-3 text-sm text-muted-foreground whitespace-pre-wrap max-h-[300px] overflow-y-auto">
+                      {vt.text}
+                    </div>
+                  </details>
+                ))}
+              </div>
+            </motion.div>
+          )}
 
           {/* Course Completion */}
           {completed && (

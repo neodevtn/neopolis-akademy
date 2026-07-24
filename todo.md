@@ -458,4 +458,7 @@
 - [x] Écart 6: Déverrouiller l'examen blanc pour le compte démo (bypass openId demo_learner_001)
 - [x] Écart 5: Générer des quiz spécifiques par leçon (501 questions générées via LLM pour 167 leçons, lessonQuizzes.json)
 - [x] Écart 3: Traduire les pages FR correctement (892 pages + titres traduits via LLM en 18 min)
-- [ ] Écarts 1/2/4: En attente des fichiers source (contenu complet, exercices, transcripts)
+- [x] Écart 1: Contenu source complet intégré (789 pages sans troncature, rebuild_from_source_v2.py)
+- [x] Écart 2: 497 exercices avec contenu complet (section collapsible "Exercices & Checkpoints" dans l'UI)
+- [x] Écart 4: 26 transcripts vidéo intégrés (section collapsible "Transcriptions vidéo" dans l'UI)
+- [x] Re-traduction FR complète après rebuild (783 pages en 25 min)
