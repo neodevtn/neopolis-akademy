@@ -15,6 +15,7 @@ import TrainingDashboard from "./pages/TrainingDashboard";
 import TrainingCertification from "./pages/TrainingCertification";
 import TrainingCourse from "./pages/TrainingCourse";
 import MockExam from "./pages/MockExam";
+import DemoLogin from "./pages/DemoLogin";
 import CookieConsent from "./components/CookieConsent";
 
 function Router() {
@@ -29,6 +30,7 @@ function Router() {
       <Route path={"/training/:certId"} component={TrainingCertification} />
       <Route path={"/training/:certId/:courseId"} component={TrainingCourse} />
       <Route path={"/mock-exam/:certId"} component={MockExam} />
+      <Route path={"/demo-login"} component={DemoLogin} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

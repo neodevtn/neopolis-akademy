@@ -445,3 +445,9 @@
 ## Indicateur progression par domaine + Lien "Revoir cette section"
 - [x] Ajouter un indicateur visuel de progression par domaine en haut de l'écran de révision (barres animées colorées rouge/vert avec score par domaine + message "Concentrez-vous sur les domaines en rouge")
 - [x] Intégrer un lien "Revoir cette section" sous chaque question ratée (matching intelligent domaine→cours par mots-clés, lien avec icône BookOpen)
+
+## Compte démo apprenant
+- [x] Créer une route /api/demo-login qui génère une session JWT pour un utilisateur démo prédéfini
+- [x] Insérer l'utilisateur démo en base de données (upsert automatique au login)
+- [x] Créer une page /demo-login avec formulaire email/mot de passe démo
+- [x] Préparer un document d'instructions pour l'apprenant
