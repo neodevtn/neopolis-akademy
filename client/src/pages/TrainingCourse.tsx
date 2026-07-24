@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { ExerciseRenderer } from "@/components/ExerciseRenderer";
 import { motion } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 
@@ -1603,22 +1604,14 @@ export default function TrainingCourse() {
                   </span>
                 </div>
               </div>
-              <div className="p-4 space-y-3 max-h-[500px] overflow-y-auto">
+              <div className="p-4 space-y-4 max-h-[700px] overflow-y-auto">
                 {courseExercises.map((ex: any, idx: number) => (
-                  <details key={ex.id || idx} className="group border border-border/50 rounded-lg">
-                    <summary className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/30 transition-colors">
-                      <span className="w-7 h-7 rounded-full bg-amber-500/15 text-amber-600 flex items-center justify-center text-xs font-bold shrink-0">
-                        {idx + 1}
-                      </span>
-                      <span className="text-sm font-medium text-foreground truncate">
-                        {t({ en: `Exercise ${idx + 1}`, fr: `Exercice ${idx + 1}` })}
-                      </span>
-                      <ChevronDown className="w-4 h-4 text-muted-foreground ml-auto group-open:rotate-180 transition-transform" />
-                    </summary>
-                    <div className="px-4 pb-3 text-sm text-muted-foreground whitespace-pre-wrap">
-                      {ex.content?.[lang] || ex.content?.en || t({ en: "No content available", fr: "Contenu non disponible" })}
-                    </div>
-                  </details>
+                  <ExerciseRenderer
+                    key={ex.id || idx}
+                    exercise={ex}
+                    index={idx}
+                    lang={lang}
+                  />
                 ))}
               </div>
             </motion.div>

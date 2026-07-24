@@ -462,3 +462,10 @@
 - [x] Écart 2: 497 exercices avec contenu complet (section collapsible "Exercices & Checkpoints" dans l'UI)
 - [x] Écart 4: 26 transcripts vidéo intégrés (section collapsible "Transcriptions vidéo" dans l'UI)
 - [x] Re-traduction FR complète après rebuild (783 pages en 25 min)
+
+## Audit P0 - Nettoyage artefacts + Exercices interactifs (2026-07-24)
+- [x] P0: Nettoyer Flip ↻ (92 occ), ↻ (111 occ), mojibake (9 occ), fragments HTML/CSS/JS (104 occ) des 25 JSON — 0 restant
+- [x] P0: Restructurer les 497 exercices avec schema exploitable (337 LLM + 160 déterministe, 6 interactionTypes)
+- [x] P0: Créer composant ExerciseRenderer interactif (free_text, single_choice, multi_choice, code, checklist, scenario)
+- [x] P1: Persistance des tentatives (localStorage save/load/clear par exercice)
+- [x] P1: Tests qualité bloquants (vitest) — 8 tests courseQuality, 15 total pass
