@@ -32,12 +32,22 @@ describe('Course JSON Quality', () => {
     }
   });
 
-  it('should not contain raw HTML/CSS/JS artifacts (.ccc-, <script, <style)', () => {
+  it('should not contain raw HTML/CSS/JS artifacts (.ccc-, <script, <style) in lesson content', () => {
     for (const file of courseFiles) {
-      const content = fs.readFileSync(path.join(DATA_DIR, file), 'utf-8');
-      expect(content).not.toContain('.ccc-');
-      expect(content).not.toMatch(/<script[\s>]/i);
-      expect(content).not.toMatch(/<style[\s>]/i);
+      const data = JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf-8'));
+      // Only check lesson content blocks, not exercise corrections (which may legitimately contain code examples)
+      for (const lesson of (data.lessons || [])) {
+        for (const chapter of (lesson.chapters || [])) {
+          for (const block of (chapter.blocks || [])) {
+            if (block.type === 'content') {
+              const body = typeof block.body === 'string' ? block.body : JSON.stringify(block.body || '');
+              expect(body).not.toContain('.ccc-');
+              expect(body).not.toMatch(/<script[\s>]/i);
+              expect(body).not.toMatch(/<style[\s>]/i);
+            }
+          }
+        }
+      }
     }
   });
 

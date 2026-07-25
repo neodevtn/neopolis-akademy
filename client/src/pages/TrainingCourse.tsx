@@ -792,6 +792,7 @@ function LessonViewer({
   getYouTubeThumbnail,
   isReviewMode = false,
   courseExercises = [],
+  onChapterChange,
 }: {
   lesson: any;
   lessonIndex: number;
@@ -810,6 +811,7 @@ function LessonViewer({
   getYouTubeThumbnail: (id: string) => string;
   isReviewMode?: boolean;
   courseExercises?: any[];
+  onChapterChange?: (current: number, total: number) => void;
 }) {
   const [currentChapter, setCurrentChapter] = useState(0);
   const [showQuiz, setShowQuiz] = useState(false);
@@ -822,7 +824,12 @@ function LessonViewer({
     setCurrentChapter(0);
     setShowQuiz(false);
     setShowTranscript(false);
+    onChapterChange?.(0, chapters.length);
   }, [lesson.id]);
+
+  useEffect(() => {
+    onChapterChange?.(currentChapter, totalChapters);
+  }, [currentChapter, totalChapters]);
 
   const isLastChapter = currentChapter >= totalChapters - 1;
   const chapter = chapters[currentChapter];
@@ -1094,6 +1101,8 @@ function LessonSidebarContent({
   videos,
   activeLessonIndex,
   onLessonClick,
+  chapterProgress,
+  displayedLessonIndex,
 }: {
   lessons: any[];
   lang: string;
@@ -1104,6 +1113,8 @@ function LessonSidebarContent({
   videos: any[];
   activeLessonIndex: number | null;
   onLessonClick: (idx: number) => void;
+  chapterProgress: { current: number; total: number } | null;
+  displayedLessonIndex: number;
 }) {
   return (
     <div className="p-3 space-y-1">
@@ -1151,23 +1162,46 @@ function LessonSidebarContent({
         const isClickable = completed || isCurrent;
 
         return (
-          <button
-            key={lesson.id || idx}
-            onClick={() => isClickable && onLessonClick(idx)}
-            disabled={isLocked}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-left ${bgClass} ${isLocked ? "opacity-50 cursor-not-allowed" : ""} ${isClickable && !isActive ? "hover:bg-secondary/50 cursor-pointer" : ""}`}
-          >
-            {statusIcon}
-            <span className={`truncate font-medium ${textClass}`}>
-              {resolveI18n(lesson.title, lang)}
-            </span>
-            {hasVideo && (
-              <Video className="w-3.5 h-3.5 text-red-400 shrink-0 ml-auto" />
+          <div key={lesson.id || idx}>
+            <button
+              onClick={() => isClickable && onLessonClick(idx)}
+              disabled={isLocked}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-left ${bgClass} ${isLocked ? "opacity-50 cursor-not-allowed" : ""} ${isClickable && !isActive ? "hover:bg-secondary/50 cursor-pointer" : ""}`}
+            >
+              {statusIcon}
+              <span className={`truncate font-medium ${textClass}`}>
+                {resolveI18n(lesson.title, lang)}
+              </span>
+              {hasVideo && (
+                <Video className="w-3.5 h-3.5 text-red-400 shrink-0 ml-auto" />
+              )}
+              {isActive && completed && (
+                <Eye className="w-3.5 h-3.5 text-amber-500 shrink-0 ml-auto" />
+              )}
+            </button>
+            {/* Chapter progress indicator for the currently displayed lesson */}
+            {idx === displayedLessonIndex && chapterProgress && chapterProgress.total > 1 && !completed && (
+              <div className="ml-7 mr-3 mt-0.5 mb-1">
+                <div className="flex items-center gap-1.5">
+                  <div className="flex-1 flex gap-0.5">
+                    {Array.from({ length: chapterProgress.total }).map((_, ci) => (
+                      <div
+                        key={ci}
+                        className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+                          ci <= chapterProgress.current
+                            ? "bg-primary"
+                            : "bg-border"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-[10px] text-muted-foreground font-medium whitespace-nowrap">
+                    {chapterProgress.current + 1}/{chapterProgress.total}
+                  </span>
+                </div>
+              </div>
             )}
-            {isActive && completed && (
-              <Eye className="w-3.5 h-3.5 text-amber-500 shrink-0 ml-auto" />
-            )}
-          </button>
+          </div>
         );
       })}
     </div>
@@ -1187,6 +1221,8 @@ function LessonSidebar({
   videos,
   activeLessonIndex,
   onLessonClick,
+  chapterProgress,
+  displayedLessonIndex,
 }: {
   lessons: any[];
   lang: string;
@@ -1199,6 +1235,8 @@ function LessonSidebar({
   videos: any[];
   activeLessonIndex: number | null;
   onLessonClick: (idx: number) => void;
+  chapterProgress: { current: number; total: number } | null;
+  displayedLessonIndex: number;
 }) {
   const sidebarContent = (
     <LessonSidebarContent
@@ -1211,6 +1249,8 @@ function LessonSidebar({
       videos={videos}
       activeLessonIndex={activeLessonIndex}
       onLessonClick={(idx) => { onLessonClick(idx); onClose(); }}
+      chapterProgress={chapterProgress}
+      displayedLessonIndex={displayedLessonIndex}
     />
   );
 
@@ -1248,6 +1288,7 @@ export default function TrainingCourse() {
   const [playingVideos, setPlayingVideos] = useState<Set<string>>(new Set());
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
+  const [chapterProgress, setChapterProgress] = useState<{ current: number; total: number } | null>(null);
 
 
   // Server-synced video progress
@@ -1452,6 +1493,8 @@ export default function TrainingCourse() {
             videos={videos}
             activeLessonIndex={activeLessonIndex}
             onLessonClick={(idx) => setActiveLessonIndex(idx)}
+            chapterProgress={chapterProgress}
+            displayedLessonIndex={activeLessonIndex ?? nextUnlocked}
           />
         )}
 
@@ -1622,6 +1665,7 @@ export default function TrainingCourse() {
                     getYouTubeThumbnail={getYouTubeThumbnail}
                     isReviewMode={isReviewMode}
                     courseExercises={courseExercises}
+                    onChapterChange={(current, total) => setChapterProgress({ current, total })}
                   />
                 </div>
               </motion.div>

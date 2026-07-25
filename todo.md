@@ -484,3 +484,7 @@
 - [x] Nettoyer artefact CSS .ccc- dans architect_foundations__05
 - [x] Mettre à jour test courseQuality (correction vide OK pour free_text)
 - [x] Tests passent (15/15)
+
+## Corrections modèles LLM pour exercices + Progression par chapitre (2026-07-25)
+- [x] Générer les corrections LLM pour les 500 exercices free_text (correction modèle en FR et EN)
+- [x] Ajouter un indicateur de progression par chapitre dans la sidebar (pas seulement par leçon)
