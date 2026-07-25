@@ -469,3 +469,18 @@
 - [x] P0: Créer composant ExerciseRenderer interactif (free_text, single_choice, multi_choice, code, checklist, scenario)
 - [x] P1: Persistance des tentatives (localStorage save/load/clear par exercice)
 - [x] P1: Tests qualité bloquants (vitest) — 8 tests courseQuality, 15 total pass
+
+## Audit V2 - Redistribution exercices + Traduction + Refonte renderer (2026-07-25)
+- [x] Redistribuer les 500 exercices dans les chapitres des cours JSON (distribute_exercises.py)
+- [x] Traduire EN→FR tous les contenus (1663/1663 items : titres, blocs, exercices)
+- [x] Refactorer LessonViewer → ChapterBasedLessonViewer (chapitres/blocs au lieu de pages)
+- [x] Blocs content → PageContent inline
+- [x] Blocs video → YouTube player avec marquer comme vue
+- [x] Blocs transcript → section collapsible
+- [x] Blocs checkpoint → ExerciseRenderer inline
+- [x] Navigation par chapitre (dots indicator)
+- [x] Vérifier la cohérence avec Skilljar (25/25 cours, 4/4 certifications, titres matchent)
+- [x] Corriger titre Architect Professional #5 (Developer Productivity → Team Enablement & Operational Productivity)
+- [x] Nettoyer artefact CSS .ccc- dans architect_foundations__05
+- [x] Mettre à jour test courseQuality (correction vide OK pour free_text)
+- [x] Tests passent (15/15)

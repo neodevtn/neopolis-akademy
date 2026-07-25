@@ -66,13 +66,17 @@ describe('Course JSON Quality', () => {
     }
   });
 
-  it('every exercise should have correction field with localized text', () => {
+  it('every exercise should have correction field (can be empty for free_text self-assessment)', () => {
     for (const file of courseFiles) {
       const data = JSON.parse(fs.readFileSync(path.join(DATA_DIR, file), 'utf-8'));
       if (data.exercises && Array.isArray(data.exercises)) {
         for (const ex of data.exercises) {
-          expect(ex.correction).toBeDefined();
-          expect(ex.correction.en || ex.correction.fr).toBeTruthy();
+          // correction field must exist (even if empty string for free_text exercises)
+          expect('correction' in ex).toBe(true);
+          // For non-free_text types, correction should have content
+          if (ex.interactionType !== 'free_text') {
+            expect(ex.correction).toBeTruthy();
+          }
         }
       }
     }

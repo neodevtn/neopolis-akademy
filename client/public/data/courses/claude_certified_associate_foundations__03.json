@@ -1,847 +1,531 @@
 {
   "courseId": "claude_certified_associate_foundations__03",
+  "sourceCourseTitle": "Claude Certified Associate - Foundations / Evaluating Validating Claudes Output",
   "lessons": [
-    {
-      "id": "lesson_00",
-      "title": {
-        "en": "Discernment",
-        "fr": "Discernement"
-      },
-      "type": "teaching",
-      "duration": 12,
-      "pages": {
-        "en": [
-          "Discernment: Evaluating Accuracy, Completeness, and Fitness\n\nEvaluation is not a feeling about whether output looks good. It is a check against three fixed references: the requirements you set, the source material, and the professional standards of your field. The discernment protocol is running that check the same way every time, so quality does not depend on how rushed you happen to be.\n\nThree evaluation references\n\nRequirements. Does the output reflect what you asked for? Re-read your own request and confirm each part is addressed, not just the easy parts.\n\nSource material. Where the output relies on documents you supplied, does it match them? Trace specific claims back to the source rather than trusting that Claude read carefully.\n\nProfessional standards. Would this pass in your field? A number without units, a recommendation without reasoning, a citation you cannot locate. These fail professional standards even when they read fluently.\n\nStakes calibration\n\nHow deeply you review depends on the stakes, and the stakes are domain-dependent, not universal. In zero-tolerance work (legal analysis, financial figures, compliance reporting), accuracy outranks speed entirely, and every claim gets verified. In low-stakes internal brainstorming, a lighter review is appropriate. The risk is applying the same casual review to both. Determine the stakes before you decide the depth of review.\n\nA three-way triage\n\nAfter review, sort each output into one of three states, with documented reasoning:\n\nVerdictWhen it applies\n\nReady to useMeets requirements, matches sources, clears professional standards. Ship it.\n\nNeeds revisionClose, but a specific gap remains. Note the gap and iterate.\n\nNeeds human overrideThe stakes, the errors, or the uncertainty mean this should not go out on Claude's draft alone. Escalate to a person.\n\nCompleteness is a separate review\n\nAccuracy asks whether what is present is correct. Completeness asks whether anything is missing. They fail independently: an output can be entirely accurate and still omit the one factor that impacts a decision. Review for both. Missing elements are harder to spot than wrong ones, because nothing on the screen draws your eye to them.\n\nThe protocol on three real outputs\n\nThe protocol is most effective on outputs that are not obviously good or bad. Here it is applied to three, each a different verdict.",
-          "Output 1: a competitor-pricing summary. You asked Claude to summarize three competitors' published pricing from PDFs you uploaded. The summary is clean and well-organized. Running the three references: requirements met (it covers all three competitors), but the source review fails: one price is listed as \"$40/user\" when the uploaded PDF says \"$40/user, minimum 10 seats.\" The omission changes the comparison. Verdict: needs revision. The fix is a source-restricted re-prompt, not a rewrite.\n\nOutput 2: an internal process recommendation. You asked for three options to reduce invoice-processing time. The output gives three sensible options with trade-offs. Requirements met, no sources to check against, professional standards cleared, low stakes (internal discussion starter). Verdict: ready to use. Over-verifying this one wastes the time the tool saved.\n\nOutput 3: a compliance-gap analysis. You asked Claude to compare your data-handling policy against a regulation and flag gaps. It flags four gaps confidently. Requirements appear met, but the regulation was not uploaded, so Claude worked from training-data recall of a rule that may have changed, and the stakes are regulatory. Verdict: needs human override. The output is a useful prompt for a compliance expert, not a substitute for one.\n\nSame protocol, three verdicts. The difference is never how polished the output looks; it is what the three references and the stakes return."
-        ],
-        "fr": [
-          "Discernement : évaluer l'exactitude, l'exhaustivité et l'adéquation\n\nL'évaluation n'est pas une impression subjective sur l'apparence d'une sortie. C'est une vérification par rapport à trois références fixes : les exigences que vous avez définies, le matériel source et les normes professionnelles de votre domaine. Le protocole de discernement exécute cette vérification de la même manière à chaque fois, de sorte que la qualité ne dépende pas de l'empressement dont vous faites preuve.\n\nTrois références d'évaluation\n\nExigences. La sortie reflète-t-elle ce que vous avez demandé ? Relisez votre propre demande et confirmez que chaque partie est traitée, pas seulement les éléments faciles.\n\nMatériel source. Lorsque la sortie s'appuie sur des documents que vous avez fournis, correspond-elle à ces documents ? Retracez les affirmations spécifiques jusqu'à la source plutôt que de supposer que Claude a tout lu attentivement.\n\nNormes professionnelles. Cela passerait-il dans votre domaine ? Un nombre sans unité, une recommandation sans justification, une citation que vous ne retrouvez pas : ces éléments échouent aux normes professionnelles même s'ils sont bien rédigés.\n\nCalibration des enjeux\n\nLa profondeur de votre revue dépend des enjeux, et les enjeux dépendent du domaine, pas d'une règle universelle. Dans les travaux à tolérance zéro (analyse juridique, chiffres financiers, rapports de conformité), l'exactitude prime totalement sur la rapidité, et chaque affirmation doit être vérifiée. Dans un brainstorming interne à faible enjeu, une relecture plus légère est appropriée. Le risque est d'appliquer la même relecture occasionnelle aux deux cas. Déterminez les enjeux avant de choisir la profondeur de la revue.\n\nUn triage en trois niveaux\n\nAprès la revue, classez chaque sortie dans l'un des trois états suivants, avec un raisonnement documenté :\n\nVerdict — Quand cela s'applique\n\n- Prêt à l'emploi\n  Remplit les exigences, correspond aux sources, respecte les normes professionnelles. Déployez-le.\n\n- Doit être révisé\n  Presque bon, mais un point précis manque. Notez l'écart et itérez.\n\n- Nécessite intervention humaine\n  Les enjeux, les erreurs ou l'incertitude font que l'on ne doit pas diffuser ce brouillon de Claude seul. Escaladez vers une personne.\n\nL'exhaustivité est une revue distincte\n\nL'exactitude demande si ce qui est présent est correct. L'exhaustivité demande si quelque chose manque. Elles échouent indépendamment : une sortie peut être entièrement exacte et omettre néanmoins l'élément unique qui influence une décision. Vérifiez les deux. Les éléments manquants sont plus difficiles à repérer que les erreurs, car rien à l'écran n'attire votre attention sur eux.\n\nLe protocole appliqué à trois sorties réelles\n\nLe protocole est le plus efficace sur des sorties qui ne sont pas manifestement bonnes ou mauvaises. Voici son application à trois exemples, chacun donnant un verdict différent.",
-          "Sortie 1 : un résumé des tarifs d'un concurrent.\nVous avez demandé à Claude de résumer les tarifs publiés de trois concurrents à partir des PDF que vous avez fournis. Le résumé est clair et bien organisé. En appliquant les trois références : exigences remplies (il couvre les trois concurrents), mais la vérification des sources échoue : un prix est indiqué \"$40/user\" alors que le PDF téléchargé précise \"$40/user, minimum 10 seats.\" L'omission change la comparaison. Verdict : doit être révisé. La correction nécessite une relance restreinte aux sources (source-restricted re-prompt), pas une réécriture complète.\n\nSortie 2 : une recommandation de processus interne.\nVous avez demandé trois options pour réduire le temps de traitement des factures. La sortie propose trois options sensées avec leurs compromis. Exigences remplies, pas de sources à vérifier, normes professionnelles respectées, faible enjeu (point de départ pour une discussion interne). Verdict : prêt à l'emploi. Sur-vérifier celle-ci reviendrait à perdre le temps que l'outil vous a fait gagner.\n\nSortie 3 : une analyse des écarts de conformité.\nVous avez demandé à Claude de comparer votre politique de gestion des données à une réglementation et de signaler les écarts. Il identifie quatre écarts avec assurance. Les exigences semblent remplies, mais la réglementation n'a pas été fournie, donc Claude s'est appuyé sur sa mémoire issue des données d'entraînement d'une règle susceptible d'avoir changé, et les enjeux sont réglementaires. Verdict : nécessite intervention humaine. La sortie constitue un bon point de départ pour un expert conformité, mais ne le remplace pas.\n\nMême protocole, trois verdicts. La différence n'est jamais liée au degré de finition du texte ; elle résulte de ce que renvoient les trois références et de l'importance des enjeux."
-        ]
-      },
-      "totalPages": 2
-    },
     {
       "id": "lesson_01",
       "title": {
-        "en": "Failure Patterns",
-        "fr": "Modèles de défaillance"
+        "en": "Evaluating & Validating Claude's Output",
+        "fr": "Évaluer et valider la sortie de Claude"
       },
-      "type": "teaching",
-      "duration": 10,
-      "pages": {
-        "en": [
-          "Hallucinations, Inconsistencies & Bias\n\nPlausible is not the same as verified. Claude writes fluently whether it is right or wrong, so you cannot rely on tone or confidence to flag an error.\n\nKnowing the specific signatures of failure lets you spot them quickly instead of reading every line with equal suspicion.\n\nHallucination patterns\n\nPlausible-but-unsupported claims. A statement that sounds reasonable and fits the topic, with no basis in the source or in fact. The most dangerous kind, because nothing about it looks wrong.\n\nFabricated specifics. Invented statistics, dates, names, quotations, or citations. Specificity reads as authority, which is exactly why fabricated specifics are persuasive.\n\nConfident tone masking uncertainty. Claude rarely hedges in proportion to its actual certainty. A guess and a well-grounded fact arrive in the same assured voice.\n\nInconsistencies and bias\n\nInternal contradictions. In a long output, a claim early on can conflict with one later. Long documents are where contradictions hide, because you rarely hold the whole thing in view at once.\n\nConfirmation bias in framing. If your prompt implies a preferred answer, Claude may lean toward it. Watch for output that agrees with you a little too readily on a question that should be genuinely open.\n\nA completeness failure worth remembering\n\nA common, anonymized field pattern: a professional asks Claude to compare a batch of documents and identify the differences. The output lists several differences and reads as thorough. It missed differences in the single most important file in the batch. Completeness failures concentrate where attention is lowest, and a confident summary of the easy files can mask silence on the hard one.\n\nCapability hallucination\n\nClaude can claim to have taken an action it cannot actually take, such as \"I've emailed that to your team\" or \"I've saved the file.\" Within claude.ai, Claude works with the conversation, connected tools, and uploaded files; it does not perform external actions it was not given a tool for. Treat any claimed external action as unverified until you confirm it happened.\n\nA failure-pattern gallery\n\nEach pattern below is shown the way it can actually appear, so you recognize the signature rather than the label.\n\nFabricated specific, in the wild",
-          "Prompt: \"What share of mid-market SaaS firms adopted AI tools in 2025?\" Output: \"Approximately 63 percent of mid-market SaaS firms adopted at least one AI tool in 2025, up from 41 percent in 2024.\" The numbers are precise, the trend is plausible, and there is no source. The precision is the tell. Real figures this specific come with a citation; an uncited 63 percent is a number-shaped guess.\n\nConfident tone masking uncertainty\n\nPrompt: \"Is this clause enforceable in our state?\" Output: a four-sentence answer stating it is enforceable, in the same assured voice Claude uses for arithmetic. Legal enforceability is jurisdiction-specific and date-sensitive, exactly the kind of claim that should hedge and does not. Assurance is not evidence.\n\nInternal contradiction across a long output\n\nIn a ten-page market analysis, page two states the addressable market is \"roughly $2 billion\" and page eight builds a projection on \"the $2.6 billion market.\" Both read fine in isolation. The contradiction only becomes visible if you hold the whole document in view, which is why long outputs need a consistency pass, not just a paragraph-by-paragraph read.\n\nHow to read the gallery\n\nNone of these outputs looks broken. That is the point of the lesson: the failure modes are designed, by the nature of fluent generation, to pass a casual read. You catch them by knowing the signatures and checking against sources, not by waiting for something to look wrong."
-        ],
-        "fr": [
-          "Hallucinations, incohérences et biais\n\nPlausible n'est pas synonyme de vérifié. Claude écrit de manière fluide qu'il ait raison ou tort, donc vous ne pouvez pas vous fier au ton ou à l'assurance pour détecter une erreur.\n\nConnaître les signatures spécifiques des échecs vous permet de les repérer rapidement plutôt que de lire chaque ligne avec le même niveau de suspicion.\n\nSchémas d'hallucination\n\nAffirmations plausibles mais non étayées. Une déclaration qui semble raisonnable et en accord avec le sujet, sans aucun fondement dans la source ou dans les faits. C'est le type le plus dangereux, car rien ne la fait paraître erronée.\n\nDétails fabriqués. Statistiques, dates, noms, citations ou références inventés. La précision se lit comme de l'autorité, ce qui explique pourquoi des détails fabriqués sont convaincants.\n\nTon assuré masquant l'incertitude. Claude tempère rarement son propos proportionnellement à sa certitude réelle. Une supposition et un fait bien étayé arrivent avec la même voix confiante.\n\nIncohérences et biais\n\nContradictions internes. Dans une longue sortie, une affirmation en début peut entrer en conflit avec une autre plus tard. Ce sont les documents longs où les contradictions se cachent, parce que vous ne gardez rarement l'intégralité du document en vue à la fois.\n\nBiais de confirmation dans la formulation. Si votre prompt implique une réponse préférée, Claude peut s'y orienter. Méfiez-vous des sorties qui sont d'accord avec vous un peu trop facilement sur une question qui devrait rester véritablement ouverte.\n\nUne défaillance de complétude à garder en mémoire\n\nUn schéma courant et anonymisé sur le terrain : un professionnel demande à Claude de comparer un lot de documents et d'identifier les différences. La sortie énumère plusieurs différences et paraît exhaustive. Elle a cependant raté des différences dans le seul fichier le plus important du lot. Les échecs de complétude se concentrent là où l'attention est la plus faible, et un résumé confiant des fichiers faciles peut masquer le silence sur le fichier difficile.\n\nHallucination de capacité\n\nClaude peut prétendre avoir effectué une action qu'il ne peut en réalité pas accomplir, par exemple «I've emailed that to your team» ou «I've saved the file.» Sur claude.ai, Claude travaille avec la conversation, les outils connectés et les fichiers téléchargés ; il n'effectue pas d'actions externes pour lesquelles il n'a pas reçu d'outil. Considérez toute action externe revendiquée comme non vérifiée tant que vous n'avez pas confirmé qu'elle a eu lieu.\n\nUne galerie de schémas d'échec\n\nChaque schéma ci‑dessous est présenté telle qu'il peut réellement apparaître, afin que vous reconnaissiez la signature plutôt que l'étiquette.\n\nDétail fabriqué, en conditions réelles",
-          "Invite : \"Quel pourcentage d'entreprises SaaS de taille intermédiaire ont adopté des outils d'IA en 2025 ?\"\nRéponse : \"Environ 63 % des entreprises SaaS de taille intermédiaire ont adopté au moins un outil d'IA en 2025, contre 41 % en 2024.\" Les chiffres sont précis, la tendance est plausible, et il n'y a pas de source. La précision est le signe révélateur. De vraies données aussi spécifiques s'accompagnent d'une citation ; un 63 % non sourcé est un nombre en forme d'hypothèse.\n\nTon assuré masquant l'incertitude\n\nInvite : \"Cette clause est‑elle exécutoire dans notre État ?\"\nRéponse : une réponse de quatre phrases affirmant qu'elle est exécutoire, dans la même voix assurée que Claude utilise pour l'arithmétique. L'applicabilité juridique dépend de la juridiction et de la date, c'est exactement le type d'affirmation qui devrait être tempéré et ne l'est pas. L'assurance n'est pas une preuve.\n\nContradiction interne sur une longue sortie\n\nDans une analyse de marché de dix pages, la page deux indique que le marché adressable est « d'environ 2 milliards de dollars » et la page huit fonde une projection sur « le marché de 2,6 milliards de dollars ». Les deux tiennent bien isolément. La contradiction n'apparaît que si vous avez l'ensemble du document en vue, ce qui explique pourquoi les longues sorties ont besoin d'une passe de cohérence, pas seulement d'une lecture paragraphe par paragraphe.\n\nComment lire la galerie\n\nAucune de ces sorties ne semble cassée. C'est le sens de la leçon : les modes d'échec sont conçus, par la nature de la génération fluide, pour passer une lecture superficielle. Vous les repérez en connaissant les signatures et en vérifiant les sources, pas en attendant que quelque chose ait l'air erroné."
+      "chapters": [
+        {
+          "id": "chapter_01",
+          "title": {
+            "en": "Discernment",
+            "fr": "discernement"
+          },
+          "type": "teaching",
+          "durationMinutes": 12,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Discernment: Evaluating Accuracy, Completeness, and Fitness\n\nEvaluation is not a feeling about whether output looks good. It is a check against three fixed references: the requirements you set, the source material, and the professional standards of your field. The discernment protocol is running that check the same way every time, so quality does not depend on how rushed you happen to be.\n\nThree evaluation references\n\nRequirements. Does the output reflect what you asked for? Re-read your own request and confirm each part is addressed, not just the easy parts.\n\nSource material. Where the output relies on documents you supplied, does it match them? Trace specific claims back to the source rather than trusting that Claude read carefully.\n\nProfessional standards. Would this pass in your field? A number without units, a recommendation without reasoning, a citation you cannot locate. These fail professional standards even when they read fluently.\n\nStakes calibration\n\nHow deeply you review depends on the stakes, and the stakes are domain-dependent, not universal. In zero-tolerance work (legal analysis, financial figures, compliance reporting), accuracy outranks speed entirely, and every claim gets verified. In low-stakes internal brainstorming, a lighter review is appropriate. The risk is applying the same casual review to both. Determine the stakes before you decide the depth of review.\n\nA three-way triage\n\nAfter review, sort each output into one of three states, with documented reasoning:\n\nVerdictWhen it applies\n\nReady to useMeets requirements, matches sources, clears professional standards. Ship it.\n\nNeeds revisionClose, but a specific gap remains. Note the gap and iterate.\n\nNeeds human overrideThe stakes, the errors, or the uncertainty mean this should not go out on Claude's draft alone. Escalate to a person.\n\nCompleteness is a separate review\n\nAccuracy asks whether what is present is correct. Completeness asks whether anything is missing. They fail independently: an output can be entirely accurate and still omit the one factor that impacts a decision. Review for both. Missing elements are harder to spot than wrong ones, because nothing on the screen draws your eye to them.\n\nThe protocol on three real outputs\n\nThe protocol is most effective on outputs that are not obviously good or bad. Here it is applied to three, each a different verdict.\n\nOutput 1: a competitor-pricing summary. You asked Claude to summarize three competitors' published pricing from PDFs you uploaded. The summary is clean and well-organized. Running the three references: requirements met (it covers all three competitors), but the source review fails: one price is listed as \"$40/user\" when the uploaded PDF says \"$40/user, minimum 10 seats.\" The omission changes the comparison. Verdict: needs revision. The fix is a source-restricted re-prompt, not a rewrite.\n\nOutput 2: an internal process recommendation. You asked for three options to reduce invoice-processing time. The output gives three sensible options with trade-offs. Requirements met, no sources to check against, professional standards cleared, low stakes (internal discussion starter). Verdict: ready to use. Over-verifying this one wastes the time the tool saved.\n\nOutput 3: a compliance-gap analysis. You asked Claude to compare your data-handling policy against a regulation and flag gaps. It flags four gaps confidently. Requirements appear met, but the regulation was not uploaded, so Claude worked from training-data recall of a rule that may have changed, and the stakes are regulatory. Verdict: needs human override. The output is a useful prompt for a compliance expert, not a substitute for one.\n\nSame protocol, three verdicts. The difference is never how polished the output looks; it is what the three references and the stakes return.",
+                "fr": "Discernement : Évaluer l'exactitude, l'exhaustivité et l'adéquation\n\nL'évaluation n'est pas une impression sur l'apparence des résultats. Il s'agit d'une vérification par rapport à trois références fixes : les exigences que vous avez définies, le matériel source et les normes professionnelles de votre domaine. Le protocole de discernement effectue cette vérification de la même manière à chaque fois, de sorte que la qualité ne dépend pas de la précipitation dans laquelle vous vous trouvez.\n\nTrois références d'évaluation\n\nExigences. La sortie reflète-t-elle ce que vous avez demandé ? Relisez votre propre demande et confirmez que chaque partie est traitée, pas seulement les parties faciles.\n\nMatériel source. Lorsque la sortie s'appuie sur des documents que vous avez fournis, est-elle en accord avec eux ? Retracez les revendications spécifiques jusqu'à la source plutôt que de supposer que Claude a lu attentivement.\n\nNormes professionnelles. Cela passerait-il dans votre domaine ? Un chiffre sans unités, une recommandation sans raisonnement, une citation que vous ne pouvez pas localiser. Ceux-ci échouent aux normes professionnelles même s'ils se lisent avec fluidité.\n\nCalibration des enjeux\n\nÀ quel point vous révisez dépend des enjeux, et les enjeux dépendent du domaine, pas universels. Dans les travaux à tolérance zéro (analyse juridique, chiffres financiers, reporting de conformité), l'exactitude prévaut totalement sur la rapidité, et chaque affirmation est vérifiée. Dans le brainstorming interne à faible enjeu, une révision plus légère est appropriée. Le risque est d'appliquer le même type de révision décontractée aux deux cas. Déterminez les enjeux avant de décider de la profondeur de la révision.\n\nUn triage en trois volets\n\nAprès la révision, triez chaque sortie dans l'un des trois états, avec un raisonnement documenté :\n\nAvis Quand il s'applique\n\nPrêt à l'emploi Répond aux exigences, correspond aux sources, respecte les normes professionnelles. Livrez-le.\n\nNécessite une révision Fermer, mais une lacune spécifique subsiste. Notez-la et itérez.\n\nNécessite une intervention humaine Les enjeux, les erreurs ou l'incertitude signifient que cela ne devrait pas sortir du brouillon de Claude seul. Faites remonter à une personne.\n\nL'exhaustivité fait l'objet d'une revue distincte\n\nL'exactitude demande si ce qui est présent est correct. L'exhaustivité demande si quelque chose manque. Ils échouent indépendamment : une sortie peut être entièrement exacte et omettre le facteur unique qui influence une décision. Vérifiez les deux. Les éléments manquants sont plus difficiles à repérer que les éléments incorrects, car rien à l'écran n'attire votre regard dessus.\n\nLe protocole sur trois sorties réelles\n\nLe protocole est le plus efficace sur des sorties qui ne sont pas évidemment bonnes ou mauvaises. Ici, il est appliqué à trois sorties, chacune avec un verdict différent.\n\nSortie 1 : un résumé des tarifications des concurrents. Vous avez demandé à Claude de résumer les tarifs publiés de trois concurrents à partir des PDFs que vous avez téléchargés. Le résumé est clair et bien organisé. En utilisant les trois références : exigences satisfaites (il couvre les trois concurrents), mais l'examen des sources échoue : un prix est indiqué comme « $40/utilisateur » alors que le PDF téléchargé indique « $40/utilisateur, minimum 10 places ». L'omission modifie la comparaison. Avis : nécessite une révision. La correction consiste en une reformulation restreinte à la source, et non à une réécriture.\n\nSortie 2 : une recommandation de processus interne. Vous avez demandé trois options pour réduire le temps de traitement des factures. La sortie donne trois options sensées avec des compromis. Exigences satisfaites, aucune source à vérifier, normes professionnelles respectées, faible enjeu (outil de discussion interne). Avis : prêt à l'emploi. Trop de vérification de ce résultat gaspille le temps que l'outil a économisé.\n\nSortie 3 : une analyse des lacunes de conformité. Vous avez demandé à Claude de comparer votre politique de gestion des données à une réglementation et de repérer les lacunes. Elle identifie quatre lacunes avec certitude. Les exigences semblent satisfaites, mais la réglementation n'a pas été téléchargée, donc Claude s'est basé sur un rappel des données d'entraînement d'une règle qui peut avoir changé, et les enjeux sont réglementaires. Avis : nécessite une intervention humaine. La sortie est un prompt utile pour un expert en conformité, et non un substitut à un expert.\n\nMême protocole, trois verdicts. La différence ne réside pas dans le degré de polissage de la sortie ; c'est ce que les trois références et les enjeux renvoient."
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_02",
+          "title": {
+            "en": "Failure Patterns",
+            "fr": "Schémas d'échec"
+          },
+          "type": "teaching",
+          "durationMinutes": 10,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Hallucinations, Inconsistencies & Bias\n\nPlausible is not the same as verified. Claude writes fluently whether it is right or wrong, so you cannot rely on tone or confidence to flag an error.\n\nKnowing the specific signatures of failure lets you spot them quickly instead of reading every line with equal suspicion.\n\nHallucination patterns\n\nPlausible-but-unsupported claims. A statement that sounds reasonable and fits the topic, with no basis in the source or in fact. The most dangerous kind, because nothing about it looks wrong.\n\nFabricated specifics. Invented statistics, dates, names, quotations, or citations. Specificity reads as authority, which is exactly why fabricated specifics are persuasive.\n\nConfident tone masking uncertainty. Claude rarely hedges in proportion to its actual certainty. A guess and a well-grounded fact arrive in the same assured voice.\n\nInconsistencies and bias\n\nInternal contradictions. In a long output, a claim early on can conflict with one later. Long documents are where contradictions hide, because you rarely hold the whole thing in view at once.\n\nConfirmation bias in framing. If your prompt implies a preferred answer, Claude may lean toward it. Watch for output that agrees with you a little too readily on a question that should be genuinely open.\n\nA completeness failure worth remembering\n\nA common, anonymized field pattern: a professional asks Claude to compare a batch of documents and identify the differences. The output lists several differences and reads as thorough. It missed differences in the single most important file in the batch. Completeness failures concentrate where attention is lowest, and a confident summary of the easy files can mask silence on the hard one.\n\nCapability hallucination\n\nClaude can claim to have taken an action it cannot actually take, such as \"I've emailed that to your team\" or \"I've saved the file.\" Within claude.ai, Claude works with the conversation, connected tools, and uploaded files; it does not perform external actions it was not given a tool for. Treat any claimed external action as unverified until you confirm it happened.\n\nA failure-pattern gallery\n\nEach pattern below is shown the way it can actually appear, so you recognize the signature rather than the label.\n\nFabricated specific, in the wild\n\nPrompt: \"What share of mid-market SaaS firms adopted AI tools in 2025?\" Output: \"Approximately 63 percent of mid-market SaaS firms adopted at least one AI tool in 2025, up from 41 percent in 2024.\" The numbers are precise, the trend is plausible, and there is no source. The precision is the tell. Real figures this specific come with a citation; an uncited 63 percent is a number-shaped guess.\n\nConfident tone masking uncertainty\n\nPrompt: \"Is this clause enforceable in our state?\" Output: a four-sentence answer stating it is enforceable, in the same assured voice Claude uses for arithmetic. Legal enforceability is jurisdiction-specific and date-sensitive, exactly the kind of claim that should hedge and does not. Assurance is not evidence.\n\nInternal contradiction across a long output\n\nIn a ten-page market analysis, page two states the addressable market is \"roughly $2 billion\" and page eight builds a projection on \"the $2.6 billion market.\" Both read fine in isolation. The contradiction only becomes visible if you hold the whole document in view, which is why long outputs need a consistency pass, not just a paragraph-by-paragraph read.\n\nHow to read the gallery\n\nNone of these outputs looks broken. That is the point of the lesson: the failure modes are designed, by the nature of fluent generation, to pass a casual read. You catch them by knowing the signatures and checking against sources, not by waiting for something to look wrong.",
+                "fr": "Hallucinations, incohérences et biais\n\nPlausible n'est pas la même chose que ce qui est vérifié. Claude écrit couramment, que ce soit vrai ou faux, donc vous ne pouvez pas vous fier au ton ou à la confiance pour repérer une erreur.\n\nConnaître les signatures spécifiques des échecs vous permet de les repérer rapidement plutôt que de lire chaque ligne avec le même niveau de méfiance.\n\nSchémas d'hallucination\n\nAffirmations plausibles mais non étayées. Une affirmation qui semble raisonnable et adaptée au sujet, sans aucune base dans la source ni dans les faits. Le type le plus dangereux, car rien dans cela ne paraît faux.\n\nSpécificités fabriquées. Statistiques, dates, noms, citations ou références inventés. La spécificité est perçue comme une autorité, ce qui explique exactement pourquoi les détails fabriqués sont persuasifs.\n\nUn ton confiant qui masque l'incertitude. Claude hésite rarement à proportionner son degré de certitude réel. Une supposition et un fait bien étayé arrivent sous la même voix assurée.\n\nIncohérences et biais\n\nContradictions internes. Dans une sortie longue, une affirmation formulée au début peut entrer en conflit avec une autre plus tard. Les documents longs sont les endroits où les contradictions se cachent, car vous tenez rarement tout le document en vue d'un seul coup.\n\nBiais de confirmation dans le cadrage. Si votre prompt implique une réponse préférée, Claude peut s'y orienter. Surveillez les sorties qui vous donnent trop rapidement raison sur une question qui devrait rester véritablement ouverte.\n\nUne défaillance de complétude à retenir\n\nUn motif de champ courant et anonymisé : un professionnel demande à Claude de comparer un lot de documents et d’identifier les différences. La sortie énumère plusieurs différences et paraît exhaustive. Elle a manqué des différences dans le fichier le plus important du lot. Les défaillances de complétude se concentrent là où l’attention est la plus faible, et un résumé confiant des fichiers faciles peut masquer l’absence de réponse sur le fichier difficile.\n\nHallucination de capacité\n\n Claude peut prétendre avoir effectué une action qu'il ne peut en réalité pas effectuer, comme « J'ai envoyé cela à votre équipe » ou « J'ai enregistré le fichier ». Dans claude.ai, Claude travaille avec la conversation, les outils connectés et les fichiers téléversés; il n'effectue pas d'actions externes pour lesquelles on ne lui a pas donné d'outil. Considérez toute action externe prétendue comme non vérifiée jusqu'à ce que vous confirmiez qu'elle a bien eu lieu.\n\nGalerie des motifs d'échec\n\nChaque motif ci-dessous est montré tel qu'il peut réellement apparaître, afin que vous reconnaissiez la signature plutôt que l'étiquette.\n\nSpécificités fabriquées, dans le monde réel\n\nPrompt : « Quelle part des entreprises SaaS de taille moyenne ont adopté des outils AI en 2025 ? » Sortie : « Environ 63 pour cent des entreprises SaaS de taille moyenne ont adopté au moins un outil AI en 2025, contre 41 pour cent en 2024. » Les chiffres sont précis, la tendance est plausible, et il n’y a pas de source. La précision est révélatrice. Des chiffres aussi spécifiques nécessitent une citation ; un 63 pour cent sans source est une estimation en forme de chiffre.\n\nUn ton confiant qui masque l'incertitude\n\nPrompt : « Cette clause est‑elle applicable dans notre État ? » Sortie : une réponse en quatre phrases affirmant qu’elle est applicable, dans la même voix assurée que Claude emploie pour les calculs. L’applicabilité légale dépend de la juridiction et de la date; exactement le genre d’affirmation qui devrait être nuancé et ne l’est pas. L’assurance n’est pas une preuve.\n\nContradiction interne sur une longue sortie\n\nDans une analyse de marché de dix pages, la page deux indique que le marché addressable est « approximativement 2 milliards de dollars » et la page huit élabore une projection sur « le marché de 2,6 milliards de dollars ». Les deux se lisent bien isolément. La contradiction n’apparaît que si vous avez l’ensemble du document en vue, ce qui explique pourquoi les sorties longues nécessitent une passe de cohérence, et non une lecture paragraphe par paragraphe.\n\nComment lire la galerie\n\nAucun de ces résultats ne paraît défaillant. C’est l’objectif de la leçon : les modes d’échec sont conçus, par la nature de la génération fluide, pour passer inaperçus lors d’une lecture rapide. Vous les repérez en connaissant les signatures et en vérifiant les sources, et non en attendant que quelque chose paraisse incorrect."
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_03",
+          "title": {
+            "en": "Fact-Checking & Grounding",
+            "fr": "Vérification des faits et ancrage"
+          },
+          "type": "teaching",
+          "durationMinutes": 10,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Fact-Checking and Grounding Techniques\n\nThe strongest verification is built into the prompt, before the output exists.\n\nA few prompt habits cut hallucinations at the source rather than catching them after the fact, and they make whatever remains far easier to audit.\n\nPrompt for verifiability\nGrounding techniques\nVerbatim prompts\n\nPermit \"I don't know.\" Tell Claude explicitly that admitting uncertainty is acceptable. Without that permission, a model under pressure to answer is more likely to fill the gap with something invented.\n\nRestrict to provided sources. For document work, instruct Claude to answer only from the materials you supplied and to flag anything those materials do not cover. This converts open-ended generation into bounded retrieval.\n\nRequire auditable citations. Ask for the specific source and location behind each claim, in a form you can check. A citation you cannot trace is not a citation.\n\nQuote first, then analyze. For long documents, ask Claude to extract the supporting quotes before drawing conclusions. Grounding the analysis in pulled quotes makes both the reasoning and the errors visible.\n\nBest-of-N comparison. Re-run the same request and compare. Where the runs agree, confidence rises; where they diverge, you have found the soft spots that need a human look.\n\nValidate against authoritative sources. For claims that matter, check against a trusted external reference rather than a second Claude response. In-product aids help here: Claude for Excel can produce cell-level citations that tie figures back to their inputs.\n\nThe techniques as verbatim prompts\n\nEach technique is a phrase you can paste. The wording is the skill.\n\nPermission to not know\n\n\"If the answer is not supported by the documents I provided, say so explicitly rather than estimating. It is acceptable to answer 'the provided materials do not cover this.'\"\n\nSource restriction\n\n\"Answer using only the attached contract. Do not use general knowledge. For anything the contract does not address, list it under 'Not covered by this document.'\"\n\nAuditable citation\n\n\"For every claim, cite the section and clause number it comes from, in parentheses, so I can verify it against the source.\"\n\nQuote-grounding\n\n\"Before you analyze, extract the exact sentences from the document that bear on my question. Then base your analysis only on those quotes.\"\n\nThe verification checklist\n\nBefore relying on an output: did I allow uncertainty, restrict to sources where appropriate, require citations I can audit, and check the high-stakes claims against something authoritative? Building these into the prompt is cheaper than rebuilding trust in the output afterward.",
+                "fr": "Techniques de vérification et d’ancrage\n\nLa vérification la plus robuste est intégrée dans le prompt, avant l’existence de la sortie.\n\nQuelques habitudes liées au prompt éliminent les hallucinations à la source plutôt que de les repérer après coup, et elles facilitent l’audit de ce qui demeure.\n\nPrompt for verifiability\nTechniques d’ancrage\nPrompts verbatim\n\nAutoriser « I don't know. » Dites explicitement à Claude qu’admettre l’incertitude est acceptable. Sans cette permission, un modèle sous pression pour répondre est plus susceptible de combler le vide par quelque chose d’inventé.\n\nRestreindre aux sources fournies. Pour le travail sur des documents, demandez à Claude de répondre uniquement à partir des matériaux que vous avez fournis et de signaler tout ce que ces matériaux ne couvrent pas. Cela transforme une génération ouverte en récupération bornée.\n\nExiger des citations auditable. Demandez la source et l’emplacement précis derrière chaque affirmation, dans une forme que vous pouvez vérifier. Une citation que vous ne pouvez pas retracer n’est pas une citation.\n\nCiter d’abord, puis analyser. Pour les documents longs, demandez à Claude d’extraire les citations de soutien avant de tirer des conclusions. Ancrer l’analyse dans les citations extraites rend le raisonnement et les erreurs visibles.\n\nComparaison Best-of-N. Relancez la même demande et comparez. Là où les exécutions s’accordent, la confiance augmente ; là où elles divergent, vous avez repéré les points sensibles qui nécessitent un regard humain.\n\nValider par rapport à des sources faisant autorité. Pour les affirmations qui comptent, vérifiez-les par rapport à une référence externe fiable plutôt que par une seconde réponse de Claude. Les aides intégrées au produit aident ici : Claude for Excel peut produire des citations au niveau des cellules qui lient les chiffres à leurs entrées.\n\nLes techniques sous forme de prompts verbatim\n\nChaque technique est une phrase que vous pouvez coller. La formulation est la compétence.\n\nAutorisation de ne pas savoir\n\n« Si la réponse n’est pas étayée par les documents que j’ai fournis, dites-le explicitement plutôt que d’estimer. Il est acceptable de répondre « les matériaux fournis ne couvrent pas cela. » »\n\nRestriction de sources\n\n« Répondez en utilisant uniquement le contrat ci-joint. N’utilisez pas de connaissances générales. Pour tout ce que le contrat n’aborde pas, indiquez-le sous « Non couvert par ce document. » »\n\nCitation auditable\n\n« Pour chaque affirmation, citez la section et le numéro de clause d’où elle provient, entre parenthèses, afin que je puisse le vérifier par rapport à la source. »\n\nCiter et ancrer\n\n« Avant d’analyser, extrayez les phrases exactes du document qui se rapportent à ma question. Puis basez votre analyse uniquement sur ces citations. »\n\nLa liste de contrôle de vérification\n\nAvant de vous fier à une sortie : ai-je autorisé l’incertitude, restreint les sources lorsque cela était approprié, exigé des citations auditables et vérifié les affirmations à haut risque contre une source faisant autorité ? Les intégrer dans le prompt est moins coûteux que de reconstruire la confiance dans la sortie par la suite."
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_04",
+          "title": {
+            "en": "Diligence",
+            "fr": "assiduité"
+          },
+          "type": "teaching",
+          "durationMinutes": 10,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Diligence: When Human Review Is Non-Negotiable\n\nSome outputs must never go out as a Claude draft alone, no matter how good they look.\n\nDiligence means knowing those thresholds in advance, so the decision to escalate is made by policy, not in the moment after something has already gone wrong.\n\nFour risk thresholds\n\nThresholdWhat to ask\n\nStakesWhat is the cost if this is wrong? High-cost errors demand human review regardless of how confident the output appears.\n\nReversibilityCan the action be undone? An irreversible step (a sent client deliverable, a filed report) clears a higher bar than a draft you can revise.\n\nAudienceWho sees it? External, executive, and regulatory audiences raise the review requirement above internal working drafts.\n\nRegulatory exposureDoes a rule, contract, or law govern this? Regulated content carries obligations that AI assistance does not remove.\n\nThe do-not-ship-without-review list\n\nDecide these in advance and treat them as fixed:\n\nFinal client deliverables\n\nAudit-critical or financially material calculations\n\nAnything involving regulated, confidential, or highly sensitive data\n\nPublic or legal communications where a misstatement carries lasting consequence\n\nIteration versus escalation\n\nProductive iteration improves the output each round. When rounds stop improving it, you have diminishing returns, and the right move is not another prompt; it is a human expert. Recognizing that line is part of Diligence: more prompting cannot manufacture judgment the situation requires.\n\nOwning the output\n\nThe accountability does not transfer to the tool. Work produced with Claude is your work when you ship it, and the professional standard is the same as if you had produced it unaided. Diligence is the habit of acting as though that is true, because it is.\n\nThree escalation scenarios\n\nThe fast \"yes.\" Claude drafts an internal meeting agenda. Low stakes, reversible, internal audience, no regulatory exposure. All four thresholds say ship. No escalation; this is the routine case you can move quickly on.\n\nThe deceptive \"looks fine.\" Claude produces a board-deck financial summary that reads cleanly. The stakes are high, there's an executive audience, and the result will be partly irreversible once presented, tripping three of the risk thresholds. The clean appearance is irrelevant; this goes to a human reviewer and the figures get recomputed with code execution.\n\nThe slow creep. You have iterated a client proposal five times. Rounds three through five changed almost nothing. Diminishing returns plus a high-stakes external deliverable: stop prompting, escalate to a colleague for a fresh read. The signal to escalate is the flat improvement curve, not a visible error.",
+                "fr": "Diligence : Lorsque la révision humaine est non négociable\n\nCertaines sorties ne doivent jamais sortir telles quelles en tant que brouillon Claude seul, peu importe leur apparence.\n\nDiligence signifie connaître ces seuils à l'avance, de sorte que la décision d'escalader soit prise par la politique, et non au moment où quelque chose a mal tourné.\n\nQuatre seuils de risque\n\nSeuils — Ce qu'il faut demander\n\nEngagements — Quel est le coût si cela se trompe ? Les erreurs à coût élevé exigent une révision humaine, peu importe la confiance affichée par la sortie.\n\nRéversibilité — L'action peut-elle être annulée ? Une étape irréversible (un livrable envoyé au client, un rapport déposé) établit une barre plus haute qu'un brouillon que vous pouvez réviser.\n\nAudience — Qui le voit ? Les audiences externes, exécutives et réglementaires augmentent l'exigence de révision par rapport aux brouillons internes.\n\nRisque réglementaire — Une règle, un contrat ou une loi régit-elle cela ? Le contenu réglementé comporte des obligations que l’aide IA ne peut pas supprimer.\n\nLa liste à ne pas expédier sans révision\n\nDécidez-les à l'avance et traitez-les comme fixes :\n\nLivrables finaux destinés au client\n\nCalculs critiques pour l'audit ou d'importance financière\n\nTout ce qui implique des données réglementées, confidentielles ou hautement sensibles\n\nCommunications publiques ou juridiques où une inexactitude entraîne des conséquences durables\n\nItération versus escalade\n\nL'itération productive améliore le contenu à chaque tour. Lorsque les tours n'apportent plus d'amélioration, les rendements décroissent, et la bonne action n'est pas un autre prompt ; c'est un expert humain. Reconnaître cette ligne fait partie de la Diligence : davantage de prompting ne peut pas fabriquer le jugement que la situation exige.\n\nPossession du résultat\n\nLa responsabilité ne se transfère pas à l'outil. Le travail produit avec Claude est votre travail lorsque vous le livrez, et la norme professionnelle est la même que si vous l'aviez produit sans aide. Diligence est l'habitude d'agir comme si cela était vrai, car cela l'est.\n\nTrois scénarios d'escalade\n\nLe « oui » rapide. Claude rédige un ordre du jour pour une réunion interne. Peu risqué, réversible, audience interne, pas d'exposition réglementaire. Tous les quatre seuils indiquent expédier. Pas d'escalade ; il s'agit du cas routinier sur lequel vous pouvez avancer rapidement.\n\nLe « looks fine » trompeur. Claude produit un résumé financier sous forme de board-deck qui se lit clairement. Les enjeux sont élevés, il y a une audience exécutive, et le résultat sera en partie irréversible une fois présenté, déclenchant trois des seuils de risque. L'apparence nette n'est pas pertinente ; ceci est transmis à un relecteur humain et les chiffres sont recomputés grâce à l'exécution du code.\n\nLa lente dérive. Vous avez itéré une proposition client cinq fois. Les tours trois à cinq n'ont presque rien changé. Des rendements décroissants plus un livrable externe à enjeu élevé : cessez le prompting, escaladez vers un collègue pour une lecture fraîche. Le signal d'escalade est la courbe d'amélioration plate, et non une erreur visible."
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_05",
+          "title": {
+            "en": "Editing for Audience",
+            "fr": "Édition pour le public"
+          },
+          "type": "teaching",
+          "durationMinutes": 8,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Editing and Adapting Output for Your Audience\n\nClaude drafts; you deliver. The gap between a raw draft and a finished deliverable is the editing pass, and that pass is where your professional standards and your knowledge of the audience get applied. A draft that is accurate is still not finished.\n\nFrom raw output to deliverable\n\nThree passes turn a draft into something you would put your name on:\n\nClarity. Cut hedging, tighten loose sentences, remove anything that does not earn its place. Claude tends toward thoroughness; editing tends toward precision.\n\nTone. Match the register to the relationship and the occasion. The same content reads differently to a peer, a client, and a regulator.\n\nFormatting. Shape the output for how it will be read: scannable for an executive, detailed for a working team, clean for an external recipient.\n\nAudience calibration\n\nOne analysis often needs to become several deliverables. An executive summary leads with the decision and the impact. A working-team version keeps the detail and the method. An external communication controls what is disclosed and how it is framed. The underlying facts hold steady; the selection, depth, and tone change with who is reading.\n\nComparing outputs before you edit\n\nWhen quality matters, generate more than one draft (across runs or across models) and choose the strongest base to edit from, rather than committing to the first response. Comparing candidates is cheaper than rescuing a weak draft, and it invites framing you might not have prompted for.\n\nOne analysis, two audiences: a transformation\n\nRaw output (excerpt)\n\n\"The analysis indicates that processing time increased by approximately 18 percent in Q3, which may be attributable to a combination of higher volume and the onboarding of three new staff members who were still onboarding during the period, and it is recommended that the team consider whether additional process documentation might help mitigate similar effects in future onboarding cycles.\"\n\nExecutive version\n\n\"Q3 processing time rose 18 percent, driven by volume plus onboarding three new hires. Recommend standardized onboarding docs to limit the effect next time.\" Leads with the number and the decision; one sentence.\n\nWorking-team version\n\n\"Processing time was up ~18% in Q3. Two drivers: higher volume and three new staff still onboarding. Action: draft onboarding documentation so the next cohort ramps faster (owner and timeline to confirm in standup).\" Keeps the method and adds the operational next step.\n\nSame facts, same 18 percent. The executive cut strips method and leads with impact; the working cut keeps detail and assigns action. Neither is a raw draft, which would not serve either audience.",
+                "fr": "Éditer et adapter la sortie pour votre public\n\nClaude rédige ; vous livrez. L’écart entre un brouillon brut et un livrable fini se comble lors de la passe de révision, et c’est à ce moment que vos normes professionnelles et votre connaissance du public s’appliquent. Un brouillon précis n’est pas encore terminé.\n\nDe la sortie brute au livrable\n\nTrois passes transforment un brouillon en quelque chose sur lequel vous mettriez votre nom :\n\nClarté. Supprimer les hésitations, resserrer les phrases lâches, supprimer tout ce qui ne mérite pas sa place. Claude a tendance à la minutie ; l’édition tend vers la précision.\n\nTon. Adapter le registre à la relation et à l’occasion. Le même contenu se lit différemment pour un pair, un client et un régulateur.\n\nMise en forme. Façonner la sortie selon la façon dont elle sera lue : lisible en un coup d’œil pour un cadre exécutif, détaillée pour une équipe de travail, épurée pour un destinataire externe.\n\nCalibration de l’audience\n\nUne analyse souvent doit devenir plusieurs livrables. Un résumé exécutif commence par la décision et son impact. Une version pour l’équipe de travail conserve le détail et la méthode. Une communication externe contrôle ce qui est divulgué et la manière dont c’est cadré. Les faits sous-jacents restent constants ; la sélection, la profondeur et le ton évoluent selon qui lit.\n\nComparer les sorties avant d’éditer\n\nLorsque la qualité compte, générez plus d’un brouillon (au cours des exécutions ou parmi différents modèles) et choisissez la base la plus robuste sur laquelle éditer, plutôt que de vous engager sur la première réponse. Comparer les candidats est moins coûteux que de sauver un brouillon faible, et cela invite un cadrage auquel vous n’auriez peut-être pas pensé.\n\nUne analyse, deux publics : une transformation\n\nSortie brute (extrait)\n\n\"L’analyse indique que le temps de traitement a augmenté d’environ 18 pour cent au Q3, ce qui pourrait être attribué à une combinaison d’un volume plus élevé et de l’onboarding de trois nouveaux membres du personnel qui étaient encore en onboarding au cours de cette période, et il est recommandé que l’équipe envisage si une documentation de processus supplémentaire pourrait aider à atténuer des effets similaires lors de futurs cycles d’intégration.\"\n\nVersion exécutive\n\n\"Le temps de traitement du Q3 a augmenté de 18 pour cent, dû au volume et à l’onboarding de trois nouveaux embauchés. Recommander des documents d’onboarding standardisés pour limiter l’effet lors de la prochaine occasion.\" Mets l’accent sur le chiffre et la décision ; une phrase.\n\nVersion destinée à l’équipe de travail\n\n\"Le temps de traitement a augmenté d’environ 18 % au Q3. Deux moteurs : un volume plus élevé et trois nouveaux employés encore en cours d’intégration. Action : rédiger une documentation d’onboarding afin que la prochaine cohorte monte en puissance plus rapidement (responsable et calendrier à confirmer lors du stand-up).\" Conserve la méthode et ajoute l’étape opérationnelle suivante.\n\nLes mêmes faits, les mêmes 18 pour cent. La coupe exécutive retire la méthode et met en avant l’impact ; la coupe pour l’équipe conserve le détail et attribue une action. Aucun des deux n’est un brouillon brut, ce qui ne servirait ni l’un ni l’autre public."
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_06",
+          "title": {
+            "en": "Output Formats",
+            "fr": "Formats de sortie"
+          },
+          "type": "teaching",
+          "durationMinutes": 8,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Choosing Output Formats: Inline, Artifacts, Structured, Code-Executed\n\nThe output format is a reliability decision, not just a presentation choice. The right format depends on what the result is intended for and, above all, on how much the numbers have to be trusted.\n\nFormat by purpose\n\nInline. For conversational responses you will act on within the chat. Quick, contextual, not meant to be a standalone artifact.\n\nArtifacts. For documents and code: a separate, editable block you will refine and reuse. The right home for a deliverable rather than a reply.\n\nStructured formats. For data: tables and defined schemas that downstream tools or readers can consume directly.\n\nCode execution as the verified-output path\n\nWhen numbers must be right, have Claude compute them rather than write them. Prose generation produces a plausible-looking figure; code execution runs the calculation and returns a computed, checkable result, along with charts and processed files. Determinism attaches to the executed computation; Claude writes the code, so the logic itself can still contain a bug. The guarantee is that you can read, verify, and re-run the calculation, but the code is not automatically correct. The same data task done two ways shows the difference: a number generated in prose is a guess in the shape of an answer, while a number from code execution is a computed result you can trace and check.\n\nProse versus code-executed: the same task\n\nTask: from an uploaded sales spreadsheet, report total Q3 revenue and the three top accounts.\n\nProse path: \"Total Q3 revenue was about $4.7 million, with the largest accounts being Northwind, Contoso, and Globex.\" Fluent, fast, and unverifiable. The total is the model's best guess at summing a column it cannot actually add reliably, and a wrong total here propagates into every downstream slide.\n\nCode-executed path: Claude writes and runs code over the actual file, returning $4,712,380 as a computed sum, the three top accounts ranked by their real totals, and a bar chart. The number is traceable to the rows that produced it. When the figure feeds a decision, this is the only path that earns trust.\n\nThe prose answer is not lazy; it is a different kind of output. For a low-stakes gut-check it may be fine. For anything that gets reported, the reliability requirement points to code execution.\n\nCurate the inputs to shape the output\n\nOrganized inputs produce organized outputs. Supplying clean, well-labeled source material and stating the structure you want back is what lets Claude return something structured rather than something you have to restructure. The selection rule is simple: pick the output modality by the reliability the task requires. Curating inputs means removing the wrong material, in addition to adding the right material. Three techniques do most of the work: de-duplicate your sources so Claude is not reconciling three near-identical copies of the same document; label and structure what you supply so each input's role is explicit (\"this is the approved policy; these are the draft responses\"); and prune material that is not relevant to the question, because noise in the input becomes noise in the output. Clean, well-labeled, minimal inputs produce a cleaner result than a large undifferentiated pile.",
+                "fr": "Choisir les formats de sortie : Inline, Artifacts, Structured, Code-Executed\n\nLe format de sortie est une décision de fiabilité, et non pas seulement un choix de présentation. Le format adapté dépend de l’usage prévu du résultat et, surtout, du niveau de fiabilité que les chiffres doivent avoir.\n\nFormat par objectif\n\nInline. Pour les réponses conversationnelles sur lesquelles vous interviendrez dans le cadre du chat. Rapide, contextuel, et non destiné à être un artefact autonome.\n\nArtifacts. Pour les documents et le code : un bloc séparé et éditable que vous allez affiner et réutiliser. Le bon endroit pour un livrable plutôt que pour une réponse.\n\nStructured formats. Pour les données : des tableaux et des schémas définis que les outils en aval ou les lecteurs peuvent consommer directement.\n\nCode-Executed: chemin de sortie vérifiée\n\nLorsque les chiffres doivent être exacts, faites-les calculer par Claude plutôt que de les écrire. La génération en prose produit un chiffre qui semble plausible ; l’exécution du code effectue le calcul et renvoie un résultat calculé et vérifiable, accompagné de graphiques et de fichiers traités. Le déterminisme s’attache au calcul exécuté ; Claude écrit le code, donc la logique elle-même peut encore contenir une erreur. La garantie est que vous pouvez lire, vérifier et relancer le calcul, mais le code n’est pas automatiquement correct. La même tâche de données effectuée de deux manières montre la différence : un chiffre généré en prose est une estimation sous la forme d’une réponse, alors qu’un chiffre issu de l’exécution du code est un résultat calculé que vous pouvez tracer et vérifier.\n\nProse versus code-executed: la même tâche\n\nTâche : à partir d’une feuille de calcul des ventes téléchargée, rapporter le chiffre d’affaires total du Q3 et les trois comptes les plus importants.\n\nVoie en prose : « Le chiffre d’affaires total du Q3 était d’environ 4,7 millions de dollars, les plus grands comptes étant Northwind, Contoso et Globex. » Fluide, rapide et invérifiable. Le total est la meilleure estimation du modèle pour sommer une colonne qu’il ne peut pas additionner de manière fiable, et un total erroné ici se propage dans chaque diapositive en aval.\n\nVoie code-executed : Claude écrit et exécute du code sur le fichier réel, renvoyant 4 712 380 $ comme somme calculée, les trois plus gros comptes classés par leurs totaux réels et un graphique en barres. Le chiffre est traçable jusqu’aux lignes qui l’ont produit. Lorsque le chiffre guide une décision, c’est le seul chemin qui mérite la confiance.\n\nLa réponse en prose n’est pas paresseuse ; c’est un autre type de sortie. Pour une vérification rapide et sans enjeu, cela peut être acceptable. Pour tout ce qui est rapporté, l’exigence de fiabilité pointe vers l’exécution du code.\n\nSoignez les entrées pour façonner la sortie\n\nDes entrées bien organisées donnent des sorties bien organisées. Fournir des matériaux sources propres et bien étiquetés et indiquer la structure que vous souhaitez obtenir est ce qui permet à Claude de renvoyer quelque chose de structuré plutôt que quelque chose que vous devrez restructurer. La règle de sélection est simple : choisissez la modalité de sortie en fonction de la fiabilité requise par la tâche. Soigner les entrées signifie retirer le matériel incorrect, en plus d’ajouter le bon matériel. Trois techniques font la majeure partie du travail : éliminer les doublons dans vos sources afin que Claude n’ait pas à réconcilier trois copies presque identiques du même document ; étiqueter et structurer ce que vous fournissez afin que le rôle de chaque entrée soit explicite (« ceci est la politique approuvée ; ce sont les réponses préliminaires ») ; et élaguer le matériel non pertinent par rapport à la question, car le bruit dans l’entrée devient du bruit dans la sortie. Des entrées propres, bien étiquetées et minimales produisent un résultat plus clair qu’un grand tas indifférencié.\n\nDes entrées organisées produisent des sorties organisées. Fournir des matériaux sources propres et bien étiquetés et indiquer la structure que vous souhaitez obtenir est ce qui permet à Claude de renvoyer quelque chose de structuré plutôt que quelque chose que vous devrez restructurer. La règle de sélection est simple : choisissez la modalité de sortie en fonction de la fiabilité requise par la tâche. Soigner les entrées signifie retirer le matériel incorrect, en plus d’ajouter le bon matériel. Trois techniques font la majeure partie du travail : éliminer les doublons dans vos sources afin que Claude n’ait pas à réconcilier trois copies presque identiques du même document ; étiqueter et structurer ce que vous fournissez afin que le rôle de chaque entrée soit explicite (« ceci est la politique approuvée ; ce sont les réponses préliminaires ») ; et élaguer le matériel non pertinent par rapport à la question, car le bruit dans l’entrée devient du bruit dans la sortie. Des entrées propres, bien étiquetées et minimales produisent un résultat plus propre qu’un grand tas indifférencié."
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_07",
+          "title": {
+            "en": "Triage the Output Set",
+            "fr": "Trier l'ensemble des sorties"
+          },
+          "type": "exercise",
+          "durationMinutes": 7,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Exercise: Triage the Output Set\n\nTriage is the daily muscle of responsible AI use. This exercise applies the Discernment protocol and the Diligence thresholds to a set of outputs, the way you would in real work.\n\nFour Claude outputs follow. Classify each as ready to use, needs revision, or needs human override, and state the reason. Then compare against the model answers.\n\nOutputs to triage\n\nSubmit all four\nSkip for now\n\nOptionalSelf-Assessment·3 min\n\nVariant: Score Your Own Conversation\n\nPick one of your own recent Claude conversations. Score it against the Discernment and Diligence behavioral indicators from this module: did you check the output before using it (Diligence), and did you judge whether the response actually fit the question you asked (Discernment)? Type one sentence on where you were strong and one on where you would tighten up, then reveal the indicator checklist to compare.\n\nReveal indicator checklist\nSkip for now",
+                "fr": "Exercice : Triage de l'ensemble des sorties\n\nLe tri est le muscle quotidien de l'utilisation responsable de l'IA. Cet exercice applique le protocole Discernment et les seuils de Diligence à un ensemble de sorties, comme vous le feriez dans votre travail réel.\n\nQuatre sorties Claude suivent. Classez chacune comme prêt à l'emploi, nécessite une révision ou nécessite une intervention humaine, et indiquez la raison. Puis comparez avec les réponses du modèle.\n\nSorties à trier\n\nSoumettez les quatre\nPasser pour l'instant\n\nAuto-évaluation optionnelle · 3 min\n\nVariante : Évaluez votre propre conversation\n\nChoisissez l'une de vos propres conversations récentes avec Claude. Évaluez-la par rapport aux indicateurs comportementaux Discernment et Diligence de ce module : avez-vous vérifié la sortie avant de l'utiliser (Diligence), et avez-vous jugé si la réponse correspondait effectivement à la question que vous avez posée (Discernment) ? Rédigez une phrase sur les points forts et une phrase sur les points à améliorer, puis révélez la checklist des indicateurs pour comparer.\n\nRévélez la checklist des indicateurs\nPasser pour l'instant"
+              }
+            },
+            {
+              "type": "checkpoint",
+              "exerciseId": "ex_claude_certified_associate_foundations__03_001"
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed",
+              "requiredExercisesPassed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_08",
+          "title": {
+            "en": "Module 3",
+            "fr": "Module 3"
+          },
+          "type": "quiz",
+          "durationMinutes": 5,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Module 3 Quiz: Output Evaluation & Validation\n\nSeven scenario-style questions emphasizing judgment calls. Each presents a situation; select the response that best applies the module's evaluation framework. Approximately five minutes.\n\nSubmit quiz\nSkip for now\n\nModule 3Key Takeaways\n\nKey Takeaways\n\nSix things that hold across this module:\n\n01\n\nAccountability stays with you.\n\nYou own every claim in what you ship, whether you wrote it or Claude did. That is why this is the exam's largest section.\n\n02\n\nEvaluate against three references.\n\nRequirements, source material, and professional standards. Run the same check every time and calibrate depth of review to what is at stake.\n\n03\n\nPlausible is not verified.\n\nFabricated specifics, confident uncertainty, and completeness gaps all read as competent. Learn the signs so you can spot them fast.\n\n04\n\nBuild verification into the prompt.\n\nPermit \"I don't know,\" restrict to sources, and require auditable citations. Prevention is cheaper than reconstruction.\n\n05\n\nKnow the thresholds in advance.\n\nStakes, reversibility, audience, and regulatory exposure decide when human review is mandatory. Set the line before the moment, not after.\n\n06\n\nPick the format by reliability.\n\nWhen numbers must be right, compute them with code execution rather than generating them as prose.\n\nSources\n\nAll product behavior descriptions are based on claude.ai features as of June 2026. Feature availability and behavior should be verified against current Anthropic documentation at publish:\n\nAI Fluency Framework: Discernment and Diligence competencies and behavioral indicators\n\nAnthropic docs: reducing hallucinations, citations, and verification guidance, platform.claude.com/docs\n\nClaude Help Center: Code execution and Claude for Excel cell-level citations, support.claude.com\n\nModule CompleteAssociate Path·2 min\n\nCongrats! You’ve successfully completed this module.\n\nYou can now validate Claude’s output and recognize when human review is non-negotiable. Catch the gaps, and Claude becomes a trusted collaborator, not a liability.\n\n0\nof ? checkpoints passed\n\nM1\n\nM1: Product & Model Selection\n\nChoose the right entry point, model, and features for any given task.\n\nM2\n\nM2: Prompting\n\nBuild structured prompts and adapt them to the task type.\n\nM3\n\nM3: Output Evaluation\n\nValidate output and know when human review is non-negotiable.\n\nYou Are Here\n\nM4\n\nM4: Workflow Integration\n\nMap a workflow against Delegation criteria and redesign it safely.\n\nUp Next\n\nM5\n\nM5: Configuration\n\nConfigure and maintain Projects, instructions, and knowledge.\n\nM6\n\nM6: Governance\n\nApply use-case, data, policy, and ethics judgment responsibly.\n\nM7\n\nM7: Troubleshooting\n\nDiagnose underperformance and optimize workflows when results fall short.\n\nM8\n\nM8: Course Summary & Next Steps\n\nRecap the journey, prepare for the exam, and recognize escalation boundaries to the Developer and Architect tracks.\n\nReview module\nStart over\nStart Module 4 →\nReturn to course home\n\nModule 3 complete.\n\n← Previous\n\n Contents\n\nNext →",
+                "fr": "Module 3 Quiz : Output Evaluation & Validation\n\nSept questions au style scénario mettant l'accent sur le jugement. Chacune présente une situation ; sélectionnez la réponse qui applique le mieux le cadre d'évaluation du module. Environ cinq minutes.\n\nSoumettre le quiz\nIgnorer pour l'instant\n\nModule 3 : Points clés\n\nPoints clés\n\nSix éléments qui reviennent tout au long de ce module :\n\n01\n\nLa responsabilité vous incombe.\n\nVous détenez chaque affirmation dans ce que vous livrez, que vous l’ayez écrite ou que Claude l’ait fait. C’est pourquoi il s’agit de la plus grande section de l’examen.\n\n02\n\nÉvaluer par rapport à trois références.\n\nExigences, matériel source et normes professionnelles. Effectuez la même vérification à chaque fois et calibrez la profondeur de l’examen en fonction de ce qui est en jeu.\n\n03\n\nPlausible n'est pas vérifié.\n\nDes détails fabriqués, une incertitude affichée avec assurance et des lacunes de complétude se lisent tous comme compétents. Apprenez à repérer les signes pour les déceler rapidement.\n\n04\n\nIntégrez la vérification dans le prompt.\n\nAutorisez « I don't know », limitez les sources et exigez des citations vérifiables. La prévention est moins coûteuse que la reconstruction.\n\n05\n\nConnaître les seuils à l'avance.\n\nL’enjeu, la réversibilité, l’audience et l’exposition réglementaire déterminent quand une révision humaine est obligatoire. Fixez la ligne avant l’instant critique, pas après.\n\n06\n\nChoisissez le format en fonction de la fiabilité.\n\nLorsque les chiffres doivent être exacts, calculez-les par l’exécution de code plutôt que de les générer sous forme de prose.\n\nSources\n\nToutes les descriptions de comportement des produits se basent sur les fonctionnalités de claude.ai en date de juin 2026. La disponibilité des fonctionnalités et leur comportement doivent être vérifiés par rapport à la documentation Anthropic actuelle lors de la publication :\n\nAI Fluency Framework : compétences Discernment et Diligence et indicateurs comportementaux\n\nAnthropic docs : réduire les hallucinations, les citations et les directives de vérification, platform.claude.com/docs\n\nClaude Help Center : Code execution et Claude pour Excel citations au niveau cellule, support.claude.com\n\nModule CompleteAssociate Path·2 min\n\nFélicitations ! Vous avez terminé avec succès ce module.\n\nVous pouvez désormais valider la sortie de Claude et reconnaître quand une révision humaine est non négociable. Détectez les lacunes, et Claude devient un collaborateur de confiance, et non une source de responsabilité.\n\n0\nsur ? points de contrôle passés\n\nM1\n\nM1 : Product & Model Selection\n\nChoisissez le bon point d’entrée, le modèle et les fonctionnalités pour une tâche donnée.\n\nM2\n\nM2 : Prompting\n\nÉlaborez des prompts structurés et adaptez-les au type de tâche.\n\nM3\n\nM3 : Output Evaluation\n\nValidez les résultats et sachez quand une révision humaine est non négociable.\n\nVous êtes ici\n\nM4\n\nM4 : Workflow Integration\n\nCartographiez un flux de travail par rapport aux critères de Délégation et repensez-le en toute sécurité.\n\nÀ venir\n\nM5\n\nM5 : Configuration\n\nConfigurez et maintenez Projects, instructions et connaissances.\n\nM6\n\nM6 : Governance\n\nAppliquez de manière responsable les jugements relatifs au use-case, aux données, à la politique et à l’éthique.\n\nM7\n\nM7 : Troubleshooting\n\nDiagnostiquez les sous-performances et optimisez les workflows lorsque les résultats ne suffisent pas.\n\nM8\n\nM8 : Course Summary & Next Steps\n\nRécapituler le parcours, se préparer à l’examen et reconnaître les limites d’escalade vers les parcours Developer et Architect.\n\nRéviser le module\nRecommencer\nDémarrer le Module 4 →\nRetour à l'accueil du cours\n\nModule 3 terminé.\n\n← Précédent\n\n Contenu\n\nSuivant →"
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        }
+      ],
+      "completionRule": {
+        "requires": [
+          "allChaptersComplete"
         ]
-      },
-      "totalPages": 2
-    },
-    {
-      "id": "lesson_02",
-      "title": {
-        "en": "Fact-Checking & Grounding",
-        "fr": "Vérification des faits & Grounding"
-      },
-      "type": "teaching",
-      "duration": 10,
-      "pages": {
-        "en": [
-          "Fact-Checking and Grounding Techniques\n\nThe strongest verification is built into the prompt, before the output exists.\n\nA few prompt habits cut hallucinations at the source rather than catching them after the fact, and they make whatever remains far easier to audit.\n\nPrompt for verifiability\nGrounding techniques\nVerbatim prompts\n\nPermit \"I don't know.\" Tell Claude explicitly that admitting uncertainty is acceptable. Without that permission, a model under pressure to answer is more likely to fill the gap with something invented.\n\nRestrict to provided sources. For document work, instruct Claude to answer only from the materials you supplied and to flag anything those materials do not cover. This converts open-ended generation into bounded retrieval.\n\nRequire auditable citations. Ask for the specific source and location behind each claim, in a form you can check. A citation you cannot trace is not a citation.\n\nQuote first, then analyze. For long documents, ask Claude to extract the supporting quotes before drawing conclusions. Grounding the analysis in pulled quotes makes both the reasoning and the errors visible.\n\nBest-of-N comparison. Re-run the same request and compare. Where the runs agree, confidence rises; where they diverge, you have found the soft spots that need a human look.\n\nValidate against authoritative sources. For claims that matter, check against a trusted external reference rather than a second Claude response. In-product aids help here: Claude for Excel can produce cell-level citations that tie figures back to their inputs.\n\nThe techniques as verbatim prompts\n\nEach technique is a phrase you can paste. The wording is the skill.\n\nPermission to not know\n\n\"If the answer is not supported by the documents I provided, say so explicitly rather than estimating. It is acceptable to answer 'the provided materials do not cover this.'\"\n\nSource restriction\n\n\"Answer using only the attached contract. Do not use general knowledge. For anything the contract does not address, list it under 'Not covered by this document.'\"\n\nAuditable citation\n\n\"For every claim, cite the section and clause number it comes from, in parentheses, so I can verify it against the source.\"\n\nQuote-grounding\n\n\"Before you analyze, extract the exact sentences from the document that bear on my question. Then base your analysis only on those quotes.\"\n\nThe verification checklist",
-          "Before relying on an output: did I allow uncertainty, restrict to sources where appropriate, require citations I can audit, and check the high-stakes claims against something authoritative? Building these into the prompt is cheaper than rebuilding trust in the output afterward."
-        ],
-        "fr": [
-          "Techniques de vérification des faits et d'ancrage\n\nLa vérification la plus solide s'intègre au prompt, avant même que la sortie n'existe.\n\nQuelques bonnes habitudes de prompt coupent les hallucinations à la source plutôt que d'essayer de les rattraper a posteriori, et elles rendent ce qui subsiste beaucoup plus facile à auditer.\n\n- Rédiger le prompt pour la vérifiabilité\n- Techniques d'ancrage\n- Formulations exactes (verbatim prompts)\n\nAutoriser \"Je ne sais pas.\" Dites explicitement à Claude qu'admettre l'incertitude est acceptable. Sans cette permission, un modèle sous pression pour répondre est plus susceptible de combler le vide par une invention.\n\nSe restreindre aux sources fournies. Pour le travail sur documents, demandez à Claude de répondre uniquement à partir des matériaux que vous avez fournis et d'indiquer tout ce que ces matériaux ne couvrent pas. Cela transforme une génération ouverte en une récupération limitée.\n\nExiger des citations auditables. Demandez la source précise et l'emplacement derrière chaque affirmation, sous une forme vérifiable. Une citation que vous ne pouvez pas retracer n'est pas une citation.\n\nCiter d'abord, puis analyser. Pour les documents longs, demandez à Claude d'extraire d'abord les citations pertinentes avant de tirer des conclusions. Ancrer l'analyse sur des citations extraites rend à la fois le raisonnement et les erreurs visibles.\n\nComparaison Best-of-N. Relancez la même requête et comparez les réponses. Là où les réponses s'accordent, la confiance augmente ; là où elles divergent, vous avez repéré les points faibles qui nécessitent un examen humain.\n\nValider contre des sources faisant autorité. Pour les affirmations importantes, vérifiez-les contre une référence externe de confiance plutôt que contre une deuxième réponse de Claude. Des aides intégrées au produit aident ici : Claude for Excel peut produire des citations au niveau des cellules qui relient les chiffres à leurs entrées.\n\nLes techniques sous forme de formulations exactes\n\nChaque technique est une phrase que vous pouvez coller. La formulation est la compétence.\n\nPermission de ne pas savoir\n\n\"Si la réponse n'est pas étayée par les documents que j'ai fournis, dites-le explicitement plutôt que d'estimer. Il est acceptable de répondre 'les documents fournis ne couvrent pas cela.'\"\n\nRestriction aux sources\n\n\"Répondez en utilisant uniquement le contrat ci-joint. N'utilisez pas les connaissances générales. Pour tout ce que le contrat n'aborde pas, inscrivez-le sous 'Non couvert par ce document.'\"\n\nCitation auditable\n\n\"Pour chaque affirmation, citez la section et le numéro de clause d'où elle provient, entre parenthèses, afin que je puisse la vérifier par rapport à la source.\"\n\nAncrage par citations\n\n\"Avant d'analyser, extrayez les phrases exactes du document qui concernent ma question. Ensuite, basez votre analyse uniquement sur ces citations.\"\n\nLa liste de vérification",
-          "Avant de vous fier à une sortie : ai-je autorisé l'incertitude, limité aux sources appropriées, exigé des citations que je peux auditer, et vérifié les affirmations à fort enjeu contre une source faisant autorité ? Intégrer ces éléments dans le prompt coûte moins cher que de reconstruire la confiance dans la sortie par la suite."
-        ]
-      },
-      "totalPages": 2
-    },
-    {
-      "id": "lesson_03",
-      "title": {
-        "en": "Diligence",
-        "fr": "Assiduité"
-      },
-      "type": "teaching",
-      "duration": 10,
-      "pages": {
-        "en": [
-          "Diligence: When Human Review Is Non-Negotiable\n\nSome outputs must never go out as a Claude draft alone, no matter how good they look.\n\nDiligence means knowing those thresholds in advance, so the decision to escalate is made by policy, not in the moment after something has already gone wrong.\n\nFour risk thresholds\n\nThresholdWhat to ask\n\nStakesWhat is the cost if this is wrong? High-cost errors demand human review regardless of how confident the output appears.\n\nReversibilityCan the action be undone? An irreversible step (a sent client deliverable, a filed report) clears a higher bar than a draft you can revise.\n\nAudienceWho sees it? External, executive, and regulatory audiences raise the review requirement above internal working drafts.\n\nRegulatory exposureDoes a rule, contract, or law govern this? Regulated content carries obligations that AI assistance does not remove.\n\nThe do-not-ship-without-review list\n\nDecide these in advance and treat them as fixed:\n\nFinal client deliverables\n\nAudit-critical or financially material calculations\n\nAnything involving regulated, confidential, or highly sensitive data\n\nPublic or legal communications where a misstatement carries lasting consequence\n\nIteration versus escalation\n\nProductive iteration improves the output each round. When rounds stop improving it, you have diminishing returns, and the right move is not another prompt; it is a human expert. Recognizing that line is part of Diligence: more prompting cannot manufacture judgment the situation requires.\n\nOwning the output\n\nThe accountability does not transfer to the tool. Work produced with Claude is your work when you ship it, and the professional standard is the same as if you had produced it unaided. Diligence is the habit of acting as though that is true, because it is.\n\nThree escalation scenarios\n\nThe fast \"yes.\" Claude drafts an internal meeting agenda. Low stakes, reversible, internal audience, no regulatory exposure. All four thresholds say ship. No escalation; this is the routine case you can move quickly on.\n\nThe deceptive \"looks fine.\" Claude produces a board-deck financial summary that reads cleanly. The stakes are high, there's an executive audience, and the result will be partly irreversible once presented, tripping three of the risk thresholds. The clean appearance is irrelevant; this goes to a human reviewer and the figures get recomputed with code execution.",
-          "The slow creep. You have iterated a client proposal five times. Rounds three through five changed almost nothing. Diminishing returns plus a high-stakes external deliverable: stop prompting, escalate to a colleague for a fresh read. The signal to escalate is the flat improvement curve, not a visible error."
-        ],
-        "fr": [
-          "Diligence : quand la revue humaine est non négociable\n\nCertaines productions ne doivent jamais être diffusées comme un simple brouillon généré par Claude, peu importe leur apparence.\n\nLa diligence, c’est connaître ces seuils à l’avance, de sorte que la décision d’escalader soit dictée par la politique et non prise à la va-vite après qu’un problème est déjà survenu.\n\nQuatre seuils de risque\n\nSeuil — Question à poser\n\nEnjeuxQuel est le coût si c’est incorrect ? Les erreurs coûteuses exigent une revue humaine, quelle que soit la confiance apparente dans le résultat.\n\nRéversibilitéL’action peut-elle être annulée ? Une étape irréversible (un livrable client envoyé, un rapport déposé) impose une exigence plus élevée qu’un brouillon que l’on peut réviser.\n\nPublicQui le voit ? Les publics externes, dirigeants et réglementaires augmentent l’exigence de revue au-delà des brouillons internes.\n\nExposition réglementaireUne règle, un contrat ou une loi s’applique-t-il ? Le contenu réglementé impose des obligations que l’assistance IA ne supprime pas.\n\nLa liste « ne pas expédier sans revue »\n\nDécidez-en à l’avance et traitez-les comme fixes :\n\n- Livrables finaux pour les clients\n- Calculs critiques pour un audit ou matériellement significatifs\n- Tout ce qui concerne des données réglementées, confidentielles ou hautement sensibles\n- Communications publiques ou juridiques dont une erreur aurait des conséquences durables\n\nItération vs. escalade\n\nUne itération productive améliore le résultat à chaque tour. Quand les tours cessent d’améliorer le résultat, on arrive à des rendements décroissants, et la bonne décision n’est pas un nouveau prompt ; c’est un expert humain. Reconnaître cette limite fait partie de la Diligence : davantage de prompts ne peuvent pas fabriquer le jugement requis par la situation.\n\nAssumer le résultat\n\nLa responsabilité ne se transfère pas à l’outil. Le travail produit avec Claude est votre travail lorsque vous le livrez, et la norme professionnelle est la même que si vous l’aviez produit sans assistance. La diligence, c’est l’habitude d’agir comme si c’était vrai, parce que c’est le cas.\n\nTrois scénarios d’escalade\n\nLe « oui » rapide. Claude rédige l’ordre du jour d’une réunion interne. Faibles enjeux, réversible, public interne, pas d’exposition réglementaire. Les quatre seuils indiquent d’envoyer. Pas d’escalade ; c’est le cas de routine sur lequel on peut aller vite.\n\nLe « ça a l’air bien » trompeur. Claude produit un résumé financier pour une présentation au conseil qui semble propre. Les enjeux sont élevés, le public est exécutif, et le résultat sera en partie irréversible une fois présenté, faisant tomber trois des seuils de risque. L’apparence de propreté est irrélevant ; cela doit être examiné par un humain et les chiffres doivent être recalculés par exécution de code.",
-          "La lente montée. Vous avez itéré une proposition client cinq fois. Les itérations trois à cinq ont presque rien changé. Rendements décroissants plus un livrable externe à forts enjeux : arrêtez de relancer, escaladez à un collègue pour une relecture fraîche. Le signal d’escalade, c’est la courbe d’amélioration plate, pas une erreur visible."
-        ]
-      },
-      "totalPages": 2
-    },
-    {
-      "id": "lesson_04",
-      "title": {
-        "en": "Editing for Audience",
-        "fr": "Adapter au public"
-      },
-      "type": "teaching",
-      "duration": 8,
-      "pages": {
-        "en": [
-          "Editing and Adapting Output for Your Audience\n\nClaude drafts; you deliver. The gap between a raw draft and a finished deliverable is the editing pass, and that pass is where your professional standards and your knowledge of the audience get applied. A draft that is accurate is still not finished.\n\nFrom raw output to deliverable\n\nThree passes turn a draft into something you would put your name on:\n\nClarity. Cut hedging, tighten loose sentences, remove anything that does not earn its place. Claude tends toward thoroughness; editing tends toward precision.\n\nTone. Match the register to the relationship and the occasion. The same content reads differently to a peer, a client, and a regulator.\n\nFormatting. Shape the output for how it will be read: scannable for an executive, detailed for a working team, clean for an external recipient.\n\nAudience calibration\n\nOne analysis often needs to become several deliverables. An executive summary leads with the decision and the impact. A working-team version keeps the detail and the method. An external communication controls what is disclosed and how it is framed. The underlying facts hold steady; the selection, depth, and tone change with who is reading.\n\nComparing outputs before you edit\n\nWhen quality matters, generate more than one draft (across runs or across models) and choose the strongest base to edit from, rather than committing to the first response. Comparing candidates is cheaper than rescuing a weak draft, and it invites framing you might not have prompted for.\n\nOne analysis, two audiences: a transformation\n\nRaw output (excerpt)\n\n\"The analysis indicates that processing time increased by approximately 18 percent in Q3, which may be attributable to a combination of higher volume and the onboarding of three new staff members who were still onboarding during the period, and it is recommended that the team consider whether additional process documentation might help mitigate similar effects in future onboarding cycles.\"\n\nExecutive version\n\n\"Q3 processing time rose 18 percent, driven by volume plus onboarding three new hires. Recommend standardized onboarding docs to limit the effect next time.\" Leads with the number and the decision; one sentence.\n\nWorking-team version",
-          "\"Processing time was up ~18% in Q3. Two drivers: higher volume and three new staff still onboarding. Action: draft onboarding documentation so the next cohort ramps faster (owner and timeline to confirm in standup).\" Keeps the method and adds the operational next step.\n\nSame facts, same 18 percent. The executive cut strips method and leads with impact; the working cut keeps detail and assigns action. Neither is a raw draft, which would not serve either audience."
-        ],
-        "fr": [
-          "Édition et adaptation des résultats pour votre public\n\nClaude rédige ; vous livrez. L'écart entre un brouillon brut et un livrable finalisé se comble par la passe d'édition, et c'est là que s'appliquent vos standards professionnels et votre connaissance du public. Un brouillon exact n'est pas encore fini.\n\nDu rendu brut au livrable\n\nTrois relectures transforment un brouillon en quelque chose sur lequel vous apposeriez votre nom :\n\nClarté. Supprimez les formulations prudentes, resserrez les phrases lâches, enlevez tout ce qui n'a pas sa raison d'être. Claude a tendance à l'exhaustivité ; l'édition vise la précision.\n\nTon. Adaptez le registre à la relation et à l'occasion. Un même contenu se lit différemment par un pair, un client ou un régulateur.\n\nMise en forme. Adaptez la présentation selon la façon dont elle sera lue : facilement consultable pour un dirigeant, détaillée pour une équipe opérationnelle, épurée pour un destinataire externe.\n\nCalibrage de l'audience\n\nUne analyse doit souvent devenir plusieurs livrables. Un résumé exécutif présente la décision et ses impacts. Une version pour l'équipe opérationnelle conserve le détail et la méthode. Une communication externe contrôle ce qui est divulgué et la manière dont c'est présenté. Les faits sous-jacents restent les mêmes ; la sélection, la profondeur et le ton varient selon le lecteur.\n\nComparer les sorties avant d'éditer\n\nQuand la qualité compte, générez plus d'un brouillon (sur plusieurs exécutions ou modèles) et choisissez la base la plus solide à éditer, plutôt que de vous engager sur la première réponse. Comparer les candidats coûte moins cher que de sauver un brouillon faible, et cela peut révéler des cadrages auxquels vous n'aviez pas pensé.\n\nOne analysis, two audiences: a transformation\n\nRaw output (excerpt)\n\n\"La présente analyse indique que le temps de traitement a augmenté d'environ 18 % au T3, ce qui peut être attribuable à une combinaison d'un volume plus important et de l'intégration de trois nouveaux collaborateurs qui étaient encore en phase d'intégration pendant la période, et il est recommandé que l'équipe envisage si une documentation de processus supplémentaire pourrait aider à atténuer des effets similaires lors de futurs cycles d'intégration.\"\n\nVersion exécutive\n\n\"Le temps de traitement a augmenté de 18 % au T3, dû au volume et à l'intégration de trois nouvelles recrues. Recommandation : standardiser la documentation d'onboarding pour limiter l'impact la prochaine fois.\" Lead with the number and the decision; one sentence.\n\nVersion pour l'équipe opérationnelle",
-          "\"Le temps de traitement a augmenté d'environ 18 % au T3. Deux facteurs : un volume plus élevé et trois nouveaux collaborateurs encore en intégration. Action : rédiger la documentation d'onboarding afin que la prochaine cohorte monte en compétence plus rapidement (responsable et calendrier à confirmer lors du stand-up).\" Conserve la méthode et ajoute l'étape opérationnelle suivante.\n\nMêmes faits, mêmes 18 %. La version pour la direction retire la méthode et met l'impact en avant ; la version opérationnelle conserve le détail et assigne une action. Aucune des deux n'est un brouillon brut, qui ne conviendrait à aucun des deux publics."
-        ]
-      },
-      "totalPages": 2
-    },
-    {
-      "id": "lesson_05",
-      "title": {
-        "en": "Output Formats",
-        "fr": "Formats de sortie"
-      },
-      "type": "teaching",
-      "duration": 8,
-      "pages": {
-        "en": [
-          "Choosing Output Formats: Inline, Artifacts, Structured, Code-Executed\n\nThe output format is a reliability decision, not just a presentation choice. The right format depends on what the result is intended for and, above all, on how much the numbers have to be trusted.\n\nFormat by purpose\n\nInline. For conversational responses you will act on within the chat. Quick, contextual, not meant to be a standalone artifact.\n\nArtifacts. For documents and code: a separate, editable block you will refine and reuse. The right home for a deliverable rather than a reply.\n\nStructured formats. For data: tables and defined schemas that downstream tools or readers can consume directly.\n\nCode execution as the verified-output path\n\nWhen numbers must be right, have Claude compute them rather than write them. Prose generation produces a plausible-looking figure; code execution runs the calculation and returns a computed, checkable result, along with charts and processed files. Determinism attaches to the executed computation; Claude writes the code, so the logic itself can still contain a bug. The guarantee is that you can read, verify, and re-run the calculation, but the code is not automatically correct. The same data task done two ways shows the difference: a number generated in prose is a guess in the shape of an answer, while a number from code execution is a computed result you can trace and check.\n\nProse versus code-executed: the same task\n\nTask: from an uploaded sales spreadsheet, report total Q3 revenue and the three top accounts.\n\nProse path: \"Total Q3 revenue was about $4.7 million, with the largest accounts being Northwind, Contoso, and Globex.\" Fluent, fast, and unverifiable. The total is the model's best guess at summing a column it cannot actually add reliably, and a wrong total here propagates into every downstream slide.\n\nCode-executed path: Claude writes and runs code over the actual file, returning $4,712,380 as a computed sum, the three top accounts ranked by their real totals, and a bar chart. The number is traceable to the rows that produced it. When the figure feeds a decision, this is the only path that earns trust.\n\nThe prose answer is not lazy; it is a different kind of output. For a low-stakes gut-check it may be fine. For anything that gets reported, the reliability requirement points to code execution.\n\nCurate the inputs to shape the output",
-          "Organized inputs produce organized outputs. Supplying clean, well-labeled source material and stating the structure you want back is what lets Claude return something structured rather than something you have to restructure. The selection rule is simple: pick the output modality by the reliability the task requires. Curating inputs means removing the wrong material, in addition to adding the right material. Three techniques do most of the work: de-duplicate your sources so Claude is not reconciling three near-identical copies of the same document; label and structure what you supply so each input's role is explicit (\"this is the approved policy; these are the draft responses\"); and prune material that is not relevant to the question, because noise in the input becomes noise in the output. Clean, well-labeled, minimal inputs produce a cleaner result than a large undifferentiated pile."
-        ],
-        "fr": [
-          "Choisir les formats de sortie : Inline, Artifacts, Structured, Code-Executed\n\nLe format de sortie est une décision de fiabilité, pas seulement un choix de présentation. Le bon format dépend de l'usage prévu du résultat et, surtout, du degré de confiance requis dans les chiffres.\n\nFormat selon l'objectif\n\nInline. Pour des réponses conversationnelles sur lesquelles vous agirez dans le chat. Rapide, contextuel, pas destiné à être un artefact autonome.\n\nArtifacts. Pour des documents et du code : un bloc séparé et modifiable que vous raffinerez et réutiliserez. Le bon emplacement pour un livrable plutôt que pour une simple réponse.\n\nStructured formats. Pour les données : des tableaux et des schémas définis que des outils en aval ou des lecteurs peuvent consommer directement.\n\nL'exécution de code comme voie de sortie vérifiée\n\nLorsque les chiffres doivent être exacts, faites calculer Claude plutôt que les laisser écrits. La génération en prose produit une valeur qui a l'air plausible ; l'exécution de code réalise le calcul et renvoie un résultat calculé et vérifiable, avec des graphiques et des fichiers traités. Le déterminisme s'applique au calcul exécuté ; Claude écrit le code, donc la logique peut toujours contenir un bug. La garantie est que vous pouvez lire, vérifier et relancer le calcul, mais le code n'est pas automatiquement correct. La même tâche effectuée de deux façons montre la différence : un nombre généré en prose est une estimation déguisée en réponse, tandis qu'un nombre issu de l'exécution de code est un résultat calculé que vous pouvez tracer et contrôler.\n\nProse versus exécution de code : la même tâche\n\nTâche : à partir d'un tableur de ventes téléchargé, indiquer le chiffre d'affaires total du T3 et les trois principaux comptes.\n\nVoie en prose : « Le chiffre d'affaires total du T3 était d'environ 4,7 millions de dollars, les plus gros comptes étant Northwind, Contoso et Globex. » Fluide, rapide et invérifiable. Le total est la meilleure estimation du modèle pour sommer une colonne qu'il ne peut pas réellement additionner de façon fiable, et un total erroné ici se répercute sur toutes les diapositives suivantes.\n\nVoie par exécution de code : Claude écrit et exécute du code sur le fichier réel, retournant 4 712 380 $ comme somme calculée, les trois principaux comptes classés selon leurs totaux réels, et un diagramme à barres. Le chiffre est traçable jusqu'aux lignes qui l'ont produit. Quand la valeur alimente une décision, c'est la seule voie qui mérite confiance.\n\nLa réponse en prose n'est pas paresseuse ; c'est un type de sortie différent. Pour une vérification rapide et sans enjeux, elle peut convenir. Pour tout ce qui est rapporté, l'exigence de fiabilité oriente vers l'exécution de code.\n\nSélectionnez les entrées pour façonner la sortie",
-          "Des entrées organisées produisent des sorties organisées. Fournir des sources propres et bien étiquetées et indiquer la structure que vous voulez en retour permet à Claude de renvoyer quelque chose de structuré plutôt que quelque chose que vous devrez restructurer. La règle de sélection est simple : choisissez la modalité de sortie en fonction de la fiabilité requise par la tâche. Curater les entrées signifie aussi bien retirer le mauvais matériel que fournir le bon. Trois techniques font la majorité du travail : supprimer les doublons dans vos sources pour que Claude n'essaie pas de réconcilier trois copies presque identiques d'un même document ; étiqueter et structurer ce que vous fournissez afin que le rôle de chaque entrée soit explicite (« ceci est la politique approuvée ; voici les réponses de brouillon ») ; et élaguer le contenu non pertinent à la question, car le bruit dans l'entrée devient du bruit dans la sortie. Des entrées propres, bien étiquetées et minimales produisent un résultat plus net qu'un grand amas indifférencié."
-        ]
-      },
-      "totalPages": 2
-    },
-    {
-      "id": "lesson_06",
-      "title": {
-        "en": "Triage the Output Set",
-        "fr": "Trier l'Output Set"
-      },
-      "type": "exercise",
-      "duration": 7,
-      "pages": {
-        "en": [
-          "Exercise: Triage the Output Set\n\nTriage is the daily muscle of responsible AI use. This exercise applies the Discernment protocol and the Diligence thresholds to a set of outputs, the way you would in real work.\n\nFour Claude outputs follow. Classify each as ready to use, needs revision, or needs human override, and state the reason. Then compare against the model answers.\n\nOutputs to triage\n\nSubmit all four\nSkip for now\n\nOptionalSelf-Assessment·3 min\n\nVariant: Score Your Own Conversation\n\nPick one of your own recent Claude conversations. Score it against the Discernment and Diligence behavioral indicators from this module: did you check the output before using it (Diligence), and did you judge whether the response actually fit the question you asked (Discernment)? Type one sentence on where you were strong and one on where you would tighten up, then reveal the indicator checklist to compare.\n\nReveal indicator checklist\nSkip for now\n\nQuizModule 3·5 min\n\nModule 3 Quiz: Output Evaluation & Validation\n\nSeven scenario-style questions emphasizing judgment calls. Each presents a situation; select the response that best applies the module's evaluation framework. Approximately five minutes.\n\nSubmit quiz\nSkip for now\n\nModule 3Key Takeaways\n\nKey Takeaways\n\nSix things that hold across this module:\n\n01\n\nAccountability stays with you.\n\nYou own every claim in what you ship, whether you wrote it or Claude did. That is why this is the exam's largest section.\n\n02\n\nEvaluate against three references.\n\nRequirements, source material, and professional standards. Run the same check every time and calibrate depth of review to what is at stake.\n\n03\n\nPlausible is not verified.\n\nFabricated specifics, confident uncertainty, and completeness gaps all read as competent. Learn the signs so you can spot them fast.\n\n04\n\nBuild verification into the prompt.\n\nPermit \"I don't know,\" restrict to sources, and require auditable citations. Prevention is cheaper than reconstruction.\n\n05\n\nKnow the thresholds in advance.\n\nStakes, reversibility, audience, and regulatory exposure decide when human review is mandatory. Set the line before the moment, not after.\n\n06\n\nPick the format by reliability.\n\nWhen numbers must be right, compute them with code execution rather than generating them as prose.\n\nSources\n\nAll product behavior descriptions are based on claude.ai features as of June 2026. Feature availability and behavior should be verified against current Anthropic documentation at publish:",
-          "AI Fluency Framework: Discernment and Diligence competencies and behavioral indicators\n\nAnthropic docs: reducing hallucinations, citations, and verification guidance, platform.claude.com/docs\n\nClaude Help Center: Code execution and Claude for Excel cell-level citations, support.claude.com\n\nModule CompleteAssociate Path·2 min\n\nCongrats! You’ve successfully completed this module.\n\nYou can now validate Claude’s output and recognize when human review is non-negotiable. Catch the gaps, and Claude becomes a trusted collaborator, not a liability.\n\n0\nof ? checkpoints passed\n\nM1\n\nM1: Product & Model Selection\n\nChoose the right entry point, model, and features for any given task.\n\nM2\n\nM2: Prompting\n\nBuild structured prompts and adapt them to the task type.\n\nM3\n\nM3: Output Evaluation\n\nValidate output and know when human review is non-negotiable.\n\nYou Are Here\n\nM4\n\nM4: Workflow Integration\n\nMap a workflow against Delegation criteria and redesign it safely.\n\nUp Next\n\nM5\n\nM5: Configuration\n\nConfigure and maintain Projects, instructions, and knowledge.\n\nM6\n\nM6: Governance\n\nApply use-case, data, policy, and ethics judgment responsibly.\n\nM7\n\nM7: Troubleshooting\n\nDiagnose underperformance and optimize workflows when results fall short.\n\nM8\n\nM8: Course Summary & Next Steps\n\nRecap the journey, prepare for the exam, and recognize escalation boundaries to the Developer and Architect tracks.\n\nReview module\nStart over\nStart Module 4 →\nReturn to course home\n\nModule 3 complete.\n\n← Previous\n\n☰ Contents\n\nNext →"
-        ],
-        "fr": [
-          "Exercice : Trier l’ensemble des réponses\n\nLe tri est le muscle quotidien d’une utilisation responsable de l’IA. Cet exercice applique le protocole Discernment et les seuils Diligence à un ensemble de sorties, comme vous le feriez dans un travail réel.\n\nQuatre sorties de Claude suivent. Classez chacune comme prête à l’emploi, nécessitant une révision, ou nécessitant une intervention humaine, et indiquez la raison. Puis comparez avec les réponses du modèle.\n\nSorties à trier\n\nSoumettre les quatre\nPasser pour le moment\n\nAuto-évaluation optionnelle · 3 min\n\nVariante : Notez votre propre conversation\n\nChoisissez l’une de vos récentes conversations avec Claude. Évaluez-la selon les indicateurs comportementaux Discernment et Diligence présentés dans ce module : avez-vous vérifié la sortie avant de l’utiliser (Diligence), et avez-vous jugé si la réponse correspondait réellement à la question posée (Discernment) ? Tapez une phrase sur ce qui a été solide et une phrase sur ce que vous amélioreriez, puis affichez la liste de contrôle des indicateurs pour comparer.\n\nAfficher la liste de contrôle des indicateurs\nPasser pour le moment\n\nQuiz Module 3 · 5 min\n\nQuiz du Module 3 : Évaluation et validation des sorties\n\nSept questions de type scénario mettant l’accent sur des choix de jugement. Chacune présente une situation ; sélectionnez la réponse qui s’applique le mieux au cadre d’évaluation du module. Environ cinq minutes.\n\nSoumettre le quiz\nPasser pour le moment\n\nModule 3 — Points clés\n\nPoints clés\n\nSix éléments qui s’appliquent tout au long de ce module :\n\n01\n\nLa responsabilité vous incombe.\n\nVous assumez chaque affirmation dans ce que vous livrez, que vous l’ayez rédigée ou que ce soit Claude qui l’ait faite. C’est pourquoi cette section est la plus large de l’examen.\n\n02\n\nÉvaluez par rapport à trois références.\n\nExigences, matériel source et normes professionnelles. Faites la même vérification à chaque fois et calibrez la profondeur de la revue selon ce qui est en jeu.\n\n03\n\nPlausible n’est pas vérifié.\n\nDes éléments fabriqués, des incertitudes présentées avec assurance et des lacunes de complétude donnent l’impression de compétence. Apprenez les signes pour les repérer rapidement.\n\n04\n\nIntégrez la vérification dans le prompt.\n\nAutorisez « Je ne sais pas », limitez aux sources et exigez des citations auditables. La prévention coûte moins cher que la reconstruction.\n\n05\n\nConnaissez les seuils à l’avance.\n\nEnjeux, réversibilité, public et exposition réglementaire déterminent quand la revue humaine est obligatoire. Fixez la ligne avant le moment décisif, pas après.\n\n06\n\nChoisissez le format selon la fiabilité.\n\nQuand les chiffres doivent être exacts, calculez-les avec l’exécution de code plutôt que de les générer en prose.\n\nSources\n\nToutes les descriptions de comportement produit sont basées sur les fonctionnalités de claude.ai en date de juin 2026. La disponibilité et le comportement des fonctionnalités doivent être vérifiés par rapport à la documentation Anthropic en vigueur lors de la publication :",
-          "AI Fluency Framework : compétences Discernment et Diligence et indicateurs comportementaux\n\nAnthropic docs : reducing hallucinations, citations, and verification guidance, platform.claude.com/docs\n\nClaude Help Center : Code execution and Claude for Excel cell-level citations, support.claude.com\n\nModule terminé — Parcours Associé · 2 min\n\nFélicitations ! Vous avez terminé ce module avec succès.\n\nVous pouvez désormais valider la sortie de Claude et reconnaître quand la revue humaine est non négociable. Repérez les lacunes, et Claude devient un collaborateur de confiance, non une source de risque.\n\n0 sur ? points de contrôle réussis\n\nM1\n\nM1 : Sélection du produit et du modèle\n\nChoisir le bon point d’entrée, modèle et fonctionnalités pour chaque tâche.\n\nM2\n\nM2 : Prompting\n\nConstruire des prompts structurés et les adapter au type de tâche.\n\nM3\n\nM3 : Évaluation des sorties\n\nValider les sorties et savoir quand la revue humaine est non négociable.\n\nVous êtes ici\n\nM4\n\nM4 : Intégration au flux de travail\n\nCartographier un flux de travail selon les critères de Délégation et le redessiner en toute sécurité.\n\nÀ suivre\n\nM5\n\nM5 : Configuration\n\nConfigurer et maintenir les Projets, instructions et connaissances.\n\nM6\n\nM6 : Gouvernance\n\nAppliquer le jugement relatif au cas d’usage, aux données, aux politiques et à l’éthique de manière responsable.\n\nM7\n\nM7 : Dépannage\n\nDiagnostiquer les sous-performances et optimiser les flux de travail lorsque les résultats sont insuffisants.\n\nM8\n\nM8 : Récapitulatif du cours et étapes suivantes\n\nRevenir sur le parcours, se préparer à l’examen et reconnaître les limites d’escalade vers les parcours Développeur et Architecte.\n\nRevoir le module\nRecommencer\nDémarrer le Module 4 →\nRetour à l’accueil du cours\n\nModule 3 terminé.\n\n← Précédent\n\n☰ Contenu\n\nSuivant →"
-        ]
-      },
-      "totalPages": 2
+      }
     }
   ],
   "exercises": [
     {
-      "id": "ex_1",
+      "id": "ex_claude_certified_associate_foundations__03_001",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 1",
-        "fr": "Exercice 1"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Discernment\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Discernement\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Internal contradictions. In a long output, a claim early on can conflict with one later. Long documents are where contradictions hide, because you rarely hold the whole thing in view at once.\nConfirmation bias in framing. If your prompt implies a preferred answer, Claude may lean toward it. Watch for output that agrees with you a little too readily on a question that should be genuinely open.\nA completeness failure worth remembering\nA common, anonymized field pattern: a professional asks Claude to compare a batch of documents and identify the differences. The output lists several differences and reads as thorough. It missed differences in the single most important file in the batch. Completeness failures concentrate where attention is lowest, and a confident summary of the easy files can mask silence on the hard one.\nCapability hallucination",
+        "fr": "Contradictions internes.\nDans une sortie longue, une affirmation formulée tôt peut entrer en conflit avec une autre plus tard.\nLes documents longs sont l'endroit où se cachent les contradictions, car on ne voit rarement l'ensemble d'un seul coup.\nBiais de confirmation dans le cadrage.\nSi votre prompt implique une réponse privilégiée, Claude peut s'y orienter.\nSurveillez les sorties qui vous donnent une réponse un peu trop facile sur une question qui devrait rester véritablement ouverte.\nUn échec d'exhaustivité qui mérite d'être retenu.\nUn schéma de champ anonymisé courant : un professionnel demande à Claude de comparer un lot de docs et d'identifier les différences.\nLa sortie répertorie plusieurs différences et paraît exhaustive.\nElle a manqué des différences dans le fichier le plus important du lot.\nLes échecs d'exhaustivité se concentrent là où l'attention est la plus faible, et un résumé confiant des fichiers faciles peut masquer le silence sur le fichier difficile.\nHallucination de capacités."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_2",
+      "id": "ex_claude_certified_associate_foundations__03_002",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_02",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 2",
-        "fr": "Exercice 2"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Failure Patterns\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Modèles de défaillance\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Quote-grounding\n\"Before you analyze, extract the exact sentences from the document that bear on my question. Then base your analysis only on those quotes.\"\nThe verification checklist\nBefore relying on an output: did I allow uncertainty, restrict to sources where appropriate, require citations I can audit, and check the high-stakes claims against something authoritative? Building these into the prompt is cheaper than rebuilding trust in the output afterward.\nTeachingDiligence·10 min",
+        "fr": "Ancrage par citations\n\"Avant d'analyser, extrayez les phrases exactes du document qui portent sur ma question. Puis basez votre analyse uniquement sur ces citations.\"\nLa liste de contrôle\nAvant de se fier à une sortie : ai-je autorisé l'incertitude, restreint les sources lorsque cela est approprié, exigé des citations que je peux auditer et vérifié les affirmations à enjeux élevés par rapport à une source faisant autorité ? Intégrer ces éléments dans le prompt est moins coûteux que de reconstruire la confiance dans la sortie par la suite.\nTeachingDiligence·10 min"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_3",
+      "id": "ex_claude_certified_associate_foundations__03_003",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_03",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 3",
-        "fr": "Exercice 3"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Fact-Checking & Grounding\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Vérification des faits & Grounding\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Curate the inputs to shape the output\nOrganized inputs produce organized outputs. Supplying clean, well-labeled source material and stating the structure you want back is what lets Claude return something structured rather than something you have to restructure. The selection rule is simple: pick the output modality by the reliability the task requires. Curating inputs means removing the wrong material, in addition to adding the right material. Three techniques do most of the work: de-duplicate your sources so Claude is not reconciling three near-identical copies of the same document; label and structure what you supply so each input's role is explicit (\"this is the approved policy; these are the draft responses\"); and prune material that is not relevant to the question, because noise in the input becomes noise in the output. Clean, well-labeled, minimal inputs produce a cleaner result than a large undifferentiated pile.\nExerciseTriage the Output Set·7 min\nExercise: Triage the Output Set\nTriage is the daily muscle of responsible AI use. This exercise applies the Discernment protocol and the Diligence thresholds to a set of outputs, the way you would in real work.",
+        "fr": "Sélectionner les entrées pour façonner la sortie\nDes entrées organisées produisent des sorties organisées. Fournir des sources propres et bien étiquetées et indiquer la structure que vous attendez est ce qui permet à Claude de retourner quelque chose de structuré plutôt que quelque chose que vous devrez restructurer. La règle de sélection est simple : choisissez la modalité de sortie en fonction de la fiabilité que la tâche exige. La préparation des entrées consiste à retirer le matériel incorrect, en plus d’ajouter le matériel approprié. Trois techniques font la majeure partie du travail : dédupliquer vos sources afin que Claude ne soit pas amené à concilier trois copies presque identiques du même document ; étiqueter et structurer ce que vous fournissez afin que le rôle de chaque entrée soit explicite (« ceci est la politique approuvée ; ce sont les réponses brouillonnes ») ; et élaguer le matériel qui n'est pas pertinent par rapport à la question, car le bruit dans l'entrée devient du bruit dans la sortie. Des entrées propres, bien étiquetées et minimales produisent un résultat plus propre qu'un grand ensemble indifférencié.\nExercice : Triage du Output Set · 7 min\nExercice : Triage du Output Set\nLe triage est le muscle quotidien de l'utilisation responsable de l'IA. Cet exercice applique le Discernment protocol et les Diligence thresholds à un ensemble de sorties, comme vous le feriez dans le monde réel."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_4",
+      "id": "ex_claude_certified_associate_foundations__03_004",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_04",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 4",
-        "fr": "Exercice 4"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Diligence\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Assiduité\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "ExerciseTriage the Output Set·7 min\nExercise: Triage the Output Set\nTriage is the daily muscle of responsible AI use. This exercise applies the Discernment protocol and the Diligence thresholds to a set of outputs, the way you would in real work.\nFour Claude outputs follow. Classify each as ready to use, needs revision, or needs human override, and state the reason. Then compare against the model answers.\nOutputs to triage",
+        "fr": "Exercice : Triage de l’ensemble de sorties · 7 min\nExercice : Triage de l’ensemble de sorties\nLe triage est le muscle quotidien d'une utilisation responsable de l'IA. Cet exercice applique le protocole Discernment et les seuils de Diligence à un ensemble de sorties, comme vous le feriez dans le cadre réel.\nQuatre sorties Claude suivent. Classez chacune comme prête à l'emploi, nécessite une révision ou nécessite une intervention humaine, et indiquez la raison. Puis comparez avec les réponses du modèle.\nSorties à trier"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_5",
+      "id": "ex_claude_certified_associate_foundations__03_005",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_05",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 5",
-        "fr": "Exercice 5"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Editing for Audience\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Adapter au public\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Exercise: Triage the Output Set\nTriage is the daily muscle of responsible AI use. This exercise applies the Discernment protocol and the Diligence thresholds to a set of outputs, the way you would in real work.\nFour Claude outputs follow. Classify each as ready to use, needs revision, or needs human override, and state the reason. Then compare against the model answers.\nOutputs to triage\nSubmit all four\nSkip for now",
+        "fr": "Exercice : Triage de l'ensemble des sorties\nLe triage est l'outil quotidien d'une utilisation responsable de l’IA. Cet exercice applique le protocole Discernment et les seuils de Diligence à un ensemble de sorties, comme vous le feriez en conditions réelles.\nQuatre sorties de Claude suivent. Classez chaque sortie comme prête à l'emploi, nécessitant une révision ou nécessitant une intervention humaine, et indiquez la raison. Puis comparez-les aux réponses du modèle.\nSorties à trier\nSoumettez les quatre sorties\nIgnorer pour le moment"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_6",
+      "id": "ex_claude_certified_associate_foundations__03_006",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_06",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 6",
-        "fr": "Exercice 6"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Output Formats\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Formats de sortie\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Variant: Score Your Own Conversation\nPick one of your own recent Claude conversations. Score it against the Discernment and Diligence behavioral indicators from this module: did you check the output before using it (Diligence), and did you judge whether the response actually fit the question you asked (Discernment)? Type one sentence on where you were strong and one on where you would tighten up, then reveal the indicator checklist to compare.\nReveal indicator checklist\nSkip for now\nQuizModule 3·5 min\nModule 3 Quiz: Output Evaluation & Validation",
+        "fr": "Variant : Évaluez votre propre conversation\nChoisissez l'une de vos conversations récentes avec Claude.\nÉvaluez-la selon les indicateurs comportementaux Discernment et Diligence de ce module : avez-vous vérifié la sortie avant de l'utiliser (Diligence), et avez-vous jugé si la réponse correspondait réellement à la question que vous avez posée (Discernment) ? Tapez une phrase sur vos points forts et une phrase sur les points à améliorer, puis révélez la liste de contrôle des indicateurs pour comparaison.\nRévélez la liste de contrôle des indicateurs\nPasser pour le moment\nQuizModule 3·5 min\nModule 3 Quiz : Évaluation et Validation de la sortie"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_7",
+      "id": "ex_claude_certified_associate_foundations__03_007",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_08",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 7",
-        "fr": "Exercice 7"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Triage the Output Set\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Trier l'Output Set\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "QuizModule 3·5 min\nModule 3 Quiz: Output Evaluation & Validation\nSeven scenario-style questions emphasizing judgment calls. Each presents a situation; select the response that best applies the module's evaluation framework. Approximately five minutes.\nSubmit quiz\nSkip for now\nModule 3Key Takeaways",
+        "fr": "Quiz Module 3 · 5 min\nQuiz du module 3 : Évaluation et Validation de la sortie\nSept questions au style scénario axées sur des choix de jugement. Chaque question présente une situation ; sélectionnez la réponse qui correspond le mieux au cadre d'évaluation du module. Environ cinq minutes.\nSoumettre le quiz\nPasser pour l'instant\nModule 3 – Points clés"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_8",
+      "id": "ex_claude_certified_associate_foundations__03_008",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 8",
-        "fr": "Exercice 8"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Discernment\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Discernement\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Module 3 Quiz: Output Evaluation & Validation\nSeven scenario-style questions emphasizing judgment calls. Each presents a situation; select the response that best applies the module's evaluation framework. Approximately five minutes.\nSubmit quiz\nSkip for now\nModule 3Key Takeaways\nKey Takeaways",
+        "fr": "Module 3 Quiz: Évaluation et validation de la sortie\nSept questions au style scénario mettant l'accent sur le jugement. Chaque question présente une situation ; sélectionnez la réponse qui correspond le mieux au cadre d'évaluation du module. Environ cinq minutes.\nSoumettre le quiz\nPasser pour l'instant\nModule 3 : Points clés\nPoints clés"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_9",
+      "id": "ex_claude_certified_associate_foundations__03_009",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_02",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 9",
-        "fr": "Exercice 9"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Failure Patterns\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Modèles de défaillance\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Seven scenario-style questions emphasizing judgment calls. Each presents a situation; select the response that best applies the module's evaluation framework. Approximately five minutes.\nSubmit quiz\nSkip for now\nModule 3Key Takeaways\nKey Takeaways\nSix things that hold across this module:",
+        "fr": "Sept questions au style scénario mettant l'accent sur des décisions à prendre. Chacune présente une situation ; choisissez la réponse qui correspond le mieux au cadre d'évaluation du module. Environ cinq minutes.\nSoumettre le quiz\nIgnorer pour le moment\nModule 3 – Points clés\nPoints clés\nSix éléments qui reviennent tout au long de ce module :"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_10",
+      "id": "ex_claude_certified_associate_foundations__03_010",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_03",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 10",
-        "fr": "Exercice 10"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Fact-Checking & Grounding\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Vérification des faits & Grounding\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Model answers revealed: You separated stakes from output quality. Notice that the cleanest-looking output (D) carries the highest review requirement, and the messiest (A) the lowest; appearance and risk are not the same axis.",
+        "fr": "Réponses du modèle révélées : Vous avez séparé les enjeux de la qualité de la sortie. Notez que la sortie qui semble la plus propre (D) exige la révision la plus élevée, et celle qui est la plus désordonnée (A) la moins élevée ; l'apparence et le risque ne constituent pas le même axe."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_11",
+      "id": "ex_claude_certified_associate_foundations__03_011",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_04",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 11",
-        "fr": "Exercice 11"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Diligence\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Assiduité\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Model answers revealed: Re-read the ones you missed against the thresholds. The common error is letting a polished draft (D) pass and over-flagging a low-stakes one (A). Stakes drive the call, not polish.",
+        "fr": "Réponses modèles révélées : relisez celles que vous avez manquées par rapport aux seuils. L'erreur courante est de laisser passer un brouillon soigné (D) et de sur-signaler un cas à faible enjeu (A). Ce sont les enjeux qui guident la décision, pas le polissage."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_12",
+      "id": "ex_claude_certified_associate_foundations__03_012",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_05",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 12",
-        "fr": "Exercice 12"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Editing for Audience\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Adapter au public\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Model answers revealed: Return to Lessons 2 and 5. Run each output through the three references first, then apply the four risk thresholds before classifying.",
+        "fr": "Réponses modèles dévoilées : Retour aux Leçons 2 et 5. Faites passer chaque sortie par les trois références d'abord, puis appliquez les quatre seuils de risque avant de les classer."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_13",
+      "id": "ex_claude_certified_associate_foundations__03_013",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_06",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 13",
-        "fr": "Exercice 13"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Output Formats\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Formats de sortie\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Skipped: Come back to this exercise before the quiz. The quiz scenarios apply the same triage logic, stakes over polish, the three references, and the four risk thresholds.",
+        "fr": "Ignoré : Revenez à cet exercice avant le quiz. Les scénarios du quiz appliquent la même logique de triage, les enjeux priment sur le polissage, les trois références et les quatre seuils de risque."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_14",
+      "id": "ex_claude_certified_associate_foundations__03_014",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_08",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 14",
-        "fr": "Exercice 14"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Triage the Output Set\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Trier l'Output Set\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Indicator checklist: `Diligence: did you check the output before using it",
+        "fr": "Checklist des indicateurs : `Diligence: did you check the output before using it."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_15",
+      "id": "ex_claude_certified_associate_foundations__03_015",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 15",
-        "fr": "Exercice 15"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Discernment\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Discernement\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Skipped: Optional activity; come back to it any time before the quiz.",
+        "fr": "Ignoré : activité optionnelle ; revenez-y à tout moment avant le quiz."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_16",
+      "id": "ex_claude_certified_associate_foundations__03_016",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_02",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 16",
-        "fr": "Exercice 16"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Failure Patterns\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Modèles de défaillance\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Full marks · 7/7: Full command of the evaluation framework: accuracy and completeness, failure patterns, fact-checking, review thresholds, audience editing, format by reliability, and input curation.",
+        "fr": "Note maximale · 7/7 : Maîtrise complète du cadre d'évaluation : précision et exhaustivité, schémas d'échec, vérification des faits, seuils de révision, édition par le public, formatage selon la fiabilité et sélection des entrées."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_17",
+      "id": "ex_claude_certified_associate_foundations__03_017",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_03",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 17",
-        "fr": "Exercice 17"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Fact-Checking & Grounding\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Vérification des faits & Grounding\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "6/7: Review the questions you missed: Q1 to Lesson 2, Q2 to Lesson 3, Q3 to Lesson 4, Q4 to Lesson 5, Q5 to Lesson 6, Q6 to Lesson 7, Q7 to Lesson 7.",
+        "fr": "6/7 : Revoyez les questions que vous avez manquées : Q1 vers la leçon 2, Q2 vers la leçon 3, Q3 vers la leçon 4, Q4 vers la leçon 5, Q5 vers la leçon 6, Q6 vers la leçon 7, Q7 vers la leçon 7."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_18",
+      "id": "ex_claude_certified_associate_foundations__03_018",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_04",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 18",
-        "fr": "Exercice 18"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Diligence\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Assiduité\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Feedback: Review the questions you missed: Q1 to Lesson 2, Q2 to Lesson 3, Q3 to Lesson 4, Q4 to Lesson 5, Q5 to Lesson 6, Q6 to Lesson 7, Q7 to Lesson 7.",
+        "fr": "Retour : Passez en revue les questions que vous avez manquées : Q1 vers la leçon 2, Q2 vers la leçon 3, Q3 vers la leçon 4, Q4 vers la leçon 5, Q5 vers la leçon 6, Q6 vers la leçon 7, Q7 vers la leçon 7."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_19",
+      "id": "ex_claude_certified_associate_foundations__03_019",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_05",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 19",
-        "fr": "Exercice 19"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Editing for Audience\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Adapter au public\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "incorrect: Revisit the module before continuing. This is the exam's heaviest section and the discipline every later module assumes. Re-run the triage exercise before retrying.",
+        "fr": "faux : Revisitez le module avant de continuer. Ceci est la section la plus lourde de l'examen et la discipline que chaque module ultérieur suppose. Réexécutez l'exercice de triage avant de réessayer."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_20",
+      "id": "ex_claude_certified_associate_foundations__03_020",
+      "courseId": "claude_certified_associate_foundations__03",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_06",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 20",
-        "fr": "Exercice 20"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Output Formats\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Formats de sortie\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Skipped: Return to complete the quiz before advancing.",
+        "fr": "Ignoré : Revenez pour compléter le quiz avant de continuer."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     }
   ]
 }

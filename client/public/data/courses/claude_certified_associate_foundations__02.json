@@ -1,1103 +1,687 @@
 {
   "courseId": "claude_certified_associate_foundations__02",
+  "sourceCourseTitle": "Claude Certified Associate - Foundations / Prompting Task Execution",
   "lessons": [
-    {
-      "id": "lesson_00",
-      "title": {
-        "en": "Anatomy of a Prompt",
-        "fr": "Anatomie d'un Prompt"
-      },
-      "type": "teaching",
-      "duration": 12,
-      "pages": {
-        "en": [
-          "Anatomy of an Effective Prompt\n\nA strong prompt is built from components, and most weak prompts are missing one or more of them.\n\nNaming the components turns prompting from guesswork into a checklist you can run before sending any non-trivial request.\n\nThe component stack\n\nFive components carry almost all the weight in a professional prompt.\nComponent\n\nRole\n\n\nWho you want Claude to be for this task: a financial analyst, an editor, a policy reviewer. Role sets the vocabulary, depth, and assumptions Claude brings.\n\nComponent\n\nContext\n\n\nThe background Claude cannot know unless you provide it: the audience, the situation, prior decisions, the source material. This is the component professionals most often omit.\n\nComponent\n\nTask\n\n\nThe specific action, stated as a clear instruction. \"Summarize,\" \"compare,\" \"draft,\" \"identify\": one primary verb, stated unambiguously.\n\nComponent\n\nConstraints\n\n\nThe boundaries: length, tone, what to include, what to leave out, what to avoid. Constraints are how you keep the output usable without heavy editing.\n\nComponent\n\nOutput format\n\n\nThe shape of the result: a table, a bulleted list, a three-paragraph memo, a draft email. Stating the format up front saves an iteration.\n\nNot every prompt needs all five. A quick question needs a task and maybe a constraint. A client deliverable needs all five. The skill is noticing which components a given task requires.\n\nDescription in practice\n\nThe Description competency is the habit of making each component explicit instead of assuming Claude will infer it. Unless you connect a source through a Connector, Claude cannot see your inbox, your org chart, or last week's meeting, and even with a connector, Claude sees only what you have allowed it to access. Anything that lives only in your head or outside a connected source is a context gap, and context gaps are the single most common reason a prompt underperforms for new users.\n\nDiagnosing a weak prompt\n\nHold a disappointing prompt against the component stack and the gap usually becomes obvious. Missing context produces generic output. An ambiguous task verb produces the wrong action. Absent constraints produce output that is the wrong length or tone. The components are also a diagnostic checklist, which is why Lesson 4 returns to them when output falls short.\n\nTeachingAnatomy of a Prompt·included in L2\n\nA Worked Build\n\nWeak prompt: everything left implicit\n\nWeak prompt",
-          "\"Write a summary of our quarterly operations.\"\n\nClaude produces three plausible paragraphs that could describe almost any company. No audience, no figures, no format, no sense of what matters. The output is not wrong. It is unusable, because the prompt specified almost nothing.\n\nStrong prompt: components made explicit\n\nStrong prompt\n\n\"You are an operations analyst (role). I am preparing a one-page update for our regional director, who cares about throughput and cost, not process detail (context and audience). Summarize the attached Q3 operations data (task), covering only the three metrics that moved more than 10 percent against target (constraint). Format as a short headline followed by three bullet points, each one sentence (output format).\"\n\nSame model, same data. The second prompt produces a draft the analyst can refine in two minutes instead of rebuilding from scratch. The difference is entirely in the specification.\n\nThe habit to build\n\nBefore sending any prompt that matters\n\nRun the five components in your head: have I given Claude the role, the context it cannot infer, an unambiguous task, the constraints, and the format I want back? Thirty seconds of specification routinely saves several rounds of correction."
-        ],
-        "fr": [
-          "Anatomie d'un prompt efficace\n\nUn prompt solide est construit à partir de composants, et la plupart des prompts faibles en omettent un ou plusieurs.\n\nNommer les composants transforme le prompting du devinage en une checklist que vous pouvez passer en revue avant d'envoyer toute demande non triviale.\n\nLa pile de composants\n\nCinq composants portent presque tout le poids dans un prompt professionnel.\nComposant\n\nRôle\nRetourner\n\nQui vous voulez que Claude soit pour cette tâche : un analyste financier, un éditeur, un réviseur de politique. Le rôle détermine le vocabulaire, la profondeur et les hypothèses que Claude adopte.\n\nComposant\n\nContexte\nRetourner\n\nLes éléments de fond que Claude ne peut pas connaître à moins que vous ne les fournissiez : le public, la situation, les décisions antérieures, les sources. C'est le composant que les professionnels oublient le plus souvent.\n\nComposant\n\nTâche\nRetourner\n\nL'action spécifique, formulée comme une consigne claire. « Résumez », « comparez », « rédigez », « identifiez » : un verbe principal, exprimé sans ambiguïté.\n\nComposant\n\nContraintes\nRetourner\n\nLes limites : longueur, ton, ce qu'il faut inclure, ce qu'il faut omettre, ce qu'il faut éviter. Les contraintes sont la façon de garder la sortie utilisable sans lourdes retouches.\n\nComposant\n\nFormat de sortie\nRetourner\n\nLa forme du résultat : un tableau, une liste à puces, un mémo de trois paragraphes, un brouillon d'e-mail. Indiquer le format dès le départ évite une itération supplémentaire.\n\nTous les prompts n'ont pas besoin des cinq éléments. Une question rapide nécessite une tâche et peut‑être une contrainte. Un livrable client nécessite les cinq. L'habilité consiste à repérer quels composants sont requis pour une tâche donnée.\n\nDescription en pratique\n\nLa compétence « Description » consiste à rendre explicite chaque composant au lieu de supposer que Claude l'inférera. À moins que vous ne connectiez une source via un connecteur, Claude ne peut pas voir votre messagerie, votre organigramme, ou la réunion de la semaine dernière, et même avec un connecteur, Claude ne voit que ce que vous lui avez autorisé à accéder. Tout ce qui n'existe que dans votre tête ou en dehors d'une source connectée est un manque de contexte, et les manques de contexte sont la raison la plus fréquente pour laquelle un prompt sous‑performe chez les nouveaux utilisateurs.\n\nDiagnostiquer un prompt faible\n\nOpposez un prompt décevant à la pile de composants et l'écart devient généralement évident. L'absence de contexte produit une sortie générique. Un verbe de tâche ambigu produit la mauvaise action. Des contraintes absentes donnent une sortie de longueur ou de tonalité inappropriée. Les composants servent aussi de checklist diagnostique, c'est pourquoi la Leçon 4 y revient quand la sortie est insuffisante.\n\nEnseignement — Anatomie d'un prompt · inclus dans L2\n\nUne construction guidée\n\nPrompt faible : tout laissé implicite\n\nPrompt faible",
-          "« Rédigez un résumé de nos opérations trimestrielles. »\n\nClaude produit trois paragraphes plausibles qui pourraient décrire presque n'importe quelle entreprise. Aucun public, aucun chiffre, aucun format, aucun sens de ce qui importe. La sortie n'est pas fausse. Elle est inutilisable, parce que le prompt spécifiait presque rien.\n\nPrompt solide : composants explicités\n\nPrompt solide\n\n« Vous êtes un analyste des opérations (rôle). Je prépare une note d'une page pour notre directeur régional, qui s'intéresse au débit et aux coûts, pas aux détails de processus (contexte et public). Résumez les données opérationnelles jointes du T3 (tâche), en ne couvrant que les trois indicateurs qui ont évolué de plus de 10 % par rapport à l'objectif (contrainte). Formatez comme un court titre suivi de trois puces, chacune d'une phrase (format de sortie). »\n\nMême modèle, mêmes données. Le second prompt produit un brouillon que l'analyste peut affiner en deux minutes au lieu de tout reconstruire. La différence tient entièrement à la spécification.\n\nL'habitude à prendre\n\nAvant d'envoyer tout prompt important\n\nPassez en revue les cinq composants dans votre tête : ai‑je donné à Claude le rôle, le contexte qu'il ne peut pas inférer, une tâche non ambiguë, les contraintes et le format que je veux en retour ? Trente secondes de spécification sauvent souvent plusieurs allers‑retours de correction."
-        ]
-      },
-      "totalPages": 2
-    },
     {
       "id": "lesson_01",
       "title": {
-        "en": "Task Decomposition",
-        "fr": "Décomposition de la tâche"
+        "en": "Prompting & Task Execution",
+        "fr": "Prompting & Exécution de la tâche"
       },
-      "type": "teaching",
-      "duration": 10,
-      "pages": {
-        "en": [
-          "Task Decomposition for Complex Requests\n\nSome requests are too large to specify as a single instruction.\n\nWhen a task has several distinct stages, packing it into one prompt produces shallow work on every stage. Decomposition is how you break a complex request into a sequence Claude can execute well.\n\nDecomposition means splitting a multi-part problem into discrete, ordered steps, then running them in sequence rather than asking for everything at once. A vendor evaluation is a good example: it is really four tasks wearing one sentence.\n\nThe single-prompt version that underperforms\n\nSingle prompt\n\n\"Evaluate these three vendors and tell me which to pick.\"\n\nClaude has to invent criteria, apply them, weigh trade-offs, and recommend, all in one pass. It will do all four shallowly and you will not see the reasoning behind the recommendation.\n\nThe decomposed version\n\n1\n\nDerive criteria\n\n2\n\nScore vendors\n\n3\n\nRaise trade-offs\n\n4\n\nRecommend\n\nEach step produces a checkable intermediate result. If the criteria in Step 1 are wrong, you catch it before scoring, not after the recommendation. Decomposition also makes the work auditable, which matters when someone asks how the recommendation was reached.\n\nOne conversation or several\n\nKeep sequential steps that build on each other in one conversation, so each step sees the prior results. Move to a separate conversation when a step is genuinely independent, or when the conversation has grown long enough that early context is degrading. That judgment connects directly to the context-management skills from Module 1.\n\nTeachingTask Decomposition·included in L3\n\nDecompose a Parallel Case\n\nThree deliverables, one foundation: sequence the shared extraction first.\n\nScenario\n\nA communications manager needs to turn a dense 20-page policy change into an internal announcement, an FAQ for staff, and a short briefing for executives. Before reading on, decompose this into an ordered sequence of steps you would run with Claude.\n\nModel decomposition\n\nStep 1: Extract the substantive changes from the policy document and what each one means in practice.\n\nStep 2: Confirm the extraction is complete and accurate before building anything on top of it.\n\nStep 3: Draft the staff announcement from the confirmed change list, tuned to a general audience.\n\nStep 4: Draft the FAQ, anticipating the questions staff will likely ask about those changes.\n\nStep 5: Draft the executive briefing, compressed down to decisions and impact.\n\nWhy this order",
-          "Steps 1 and 2 build a verified foundation that the three deliverables all draw on. Drafting any deliverable before the change list is confirmed risks propagating the same misreading into three documents. Sequence the shared, high-stakes extraction first; let the parallel drafts follow."
-        ],
-        "fr": [
-          "Décomposition des tâches pour les requêtes complexes\n\nCertaines requêtes sont trop vastes pour être spécifiées par une seule instruction.\n\nQuand une tâche comporte plusieurs étapes distinctes, tout condenser dans un seul prompt produit un travail superficiel à chaque étape. La décomposition consiste à diviser une requête complexe en une séquence que Claude peut exécuter correctement.\n\nDécomposer signifie scinder un problème multipartite en étapes distinctes et ordonnées, puis les exécuter en séquence plutôt que de tout demander d'un coup. Une évaluation de fournisseurs est un bon exemple : c'est en réalité quatre tâches sous une seule phrase.\n\nLa version en un seul prompt qui sous-performe\n\nPrompt unique\n\n\"Évalue ces trois fournisseurs et dis-moi lequel choisir.\"\n\nClaude doit inventer des critères, les appliquer, peser les compromis et recommander, le tout en un seul passage. Il fera ces quatre choses de manière superficielle et vous ne verrez pas le raisonnement derrière la recommandation.\n\nLa version décomposée\n\n1\n\nDéterminer les critères\n\n2\n\nNoter les fournisseurs\n\n3\n\nSoulever les compromis\n\n4\n\nRecommander\n\nChaque étape produit un résultat intermédiaire vérifiable. Si les critères de l'étape 1 sont erronés, vous le repérez avant la notation, pas après la recommandation. La décomposition rend aussi le travail auditable, ce qui importe quand quelqu'un demande comment la recommandation a été établie.\n\nUne conversation ou plusieurs\n\nGardez les étapes séquentielles qui s'appuient les unes sur les autres dans une même conversation, afin que chaque étape voie les résultats antérieurs. Passez à une conversation séparée lorsqu'une étape est réellement indépendante, ou lorsque la conversation est devenue suffisamment longue pour que le contexte initial se dégrade. Ce jugement se relie directement aux compétences de gestion du contexte du Module 1.\n\nTâche pédagogique — Décomposition des tâches · incluse dans L3\n\nDécomposer un cas parallèle\n\nTrois livrables, une base commune : effectuez d'abord l'extraction partagée.\n\nScénario\n\nUn responsable communication doit transformer un changement de politique dense de 20 pages en une annonce interne, une FAQ pour le personnel et un bref briefing pour les cadres. Avant de continuer, décomposez cela en une séquence ordonnée d'étapes que vous exécuteriez avec Claude.\n\nDécomposition type\n\nÉtape 1 : Extraire les changements substantiels du document de politique et ce que chacun implique en pratique.\n\nÉtape 2 : Confirmer que l'extraction est complète et exacte avant de tout construire dessus.\n\nÉtape 3 : Rédiger l'annonce destinée au personnel à partir de la liste de changements confirmée, adaptée à un public général.\n\nÉtape 4 : Rédiger la FAQ en anticipant les questions que le personnel posera probablement à propos de ces changements.\n\nÉtape 5 : Rédiger le briefing exécutif, condensé sur les décisions et les impacts.\n\nPourquoi cet ordre",
-          "Les étapes 1 et 2 constituent une base vérifiée sur laquelle les trois livrables s'appuient. Rédiger un livrable avant que la liste de changements ne soit confirmée risque de propager la même mauvaise interprétation dans trois documents. Séquencez d'abord l'extraction partagée et à enjeu élevé ; laissez ensuite suivre les brouillons parallèles."
+      "chapters": [
+        {
+          "id": "chapter_01",
+          "title": {
+            "en": "Anatomy of a Prompt",
+            "fr": "Anatomie d'un prompt"
+          },
+          "type": "teaching",
+          "durationMinutes": 12,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Anatomy of an Effective Prompt\n\nA strong prompt is built from components, and most weak prompts are missing one or more of them.\n\nNaming the components turns prompting from guesswork into a checklist you can run before sending any non-trivial request.\n\nThe component stack\n\nFive components carry almost all the weight in a professional prompt. Flip each card to see what it controls.\n\nComponent\n\nRole\n\n\nWho you want Claude to be for this task: a financial analyst, an editor, a policy reviewer. Role sets the vocabulary, depth, and assumptions Claude brings.\n\nComponent\n\nContext\n\n\nThe background Claude cannot know unless you provide it: the audience, the situation, prior decisions, the source material. This is the component professionals most often omit.\n\nComponent\n\nTask\n\n\nThe specific action, stated as a clear instruction. \"Summarize,\" \"compare,\" \"draft,\" \"identify\": one primary verb, stated unambiguously.\n\nComponent\n\nConstraints\n\n\nThe boundaries: length, tone, what to include, what to leave out, what to avoid. Constraints are how you keep the output usable without heavy editing.\n\nComponent\n\nOutput format\n\n\nThe shape of the result: a table, a bulleted list, a three-paragraph memo, a draft email. Stating the format up front saves an iteration.\n\nNot every prompt needs all five. A quick question needs a task and maybe a constraint. A client deliverable needs all five. The skill is noticing which components a given task requires.\n\nDescription in practice\n\nThe Description competency is the habit of making each component explicit instead of assuming Claude will infer it. Unless you connect a source through a Connector, Claude cannot see your inbox, your org chart, or last week's meeting, and even with a connector, Claude sees only what you have allowed it to access. Anything that lives only in your head or outside a connected source is a context gap, and context gaps are the single most common reason a prompt underperforms for new users.\n\nDiagnosing a weak prompt\n\nHold a disappointing prompt against the component stack and the gap usually becomes obvious. Missing context produces generic output. An ambiguous task verb produces the wrong action. Absent constraints produce output that is the wrong length or tone. The components are also a diagnostic checklist, which is why Lesson 4 returns to them when output falls short.",
+                "fr": "Anatomie d’un prompt efficace\n\nUn prompt solide est construit à partir de composants, et la plupart des prompts faibles en omettent un ou plusieurs.\n\nNommer les composants transforme le prompting du tâtonnement en une liste de contrôle que vous pouvez exécuter avant d'envoyer toute demande non triviale.\n\nLa pile des composants\n\nCinq composants portent presque tout le poids d'un prompt professionnel. Retournez chaque carte pour voir ce qu'elle contrôle.\n\nComposant\n\nRôle\n\n\nQui vous voulez que Claude soit pour cette tâche : analyste financier, éditeur, réviseur de politiques. Le rôle détermine le vocabulaire, la profondeur et les hypothèses que Claude apporte.\n\nComposant\n\nContexte\n\n\nLe contexte que Claude ne peut pas connaître à moins que vous le fournissiez : le public, la situation, les décisions antérieures, le matériel source. C'est le composant que les professionnels omettent le plus souvent.\n\nComposant\n\nTâche\n\n\nL'action spécifique, formulée comme une instruction claire. \"Summarize,\" \"compare,\" \"draft,\" \"identify\" : un seul verbe principal, énoncé sans ambiguïté.\n\nComposant\n\nContraintes\n\n\nLes limites : longueur, ton, ce qu'il faut inclure, ce qu'il faut laisser de côté, ce qu'il faut éviter. Les contraintes permettent de maintenir la sortie utilisable sans retouches lourdes.\n\nComposant\n\nFormat de sortie\n\n\nLa forme du résultat : un tableau, une liste à puces, un mémo de trois paragraphes, un brouillon de courriel. Indiquer le format d'emblée évite une itération.\n\nTous les prompts n'ont pas besoin des cinq. Une question rapide nécessite une tâche et peut-être une contrainte. Un livrable client nécessite les cinq. La compétence consiste à repérer quels composants une tâche donnée nécessite.\n\nDescription en pratique\n\nLa compétence Description est l'habitude de rendre explicite chaque composant au lieu de supposer que Claude le déduira. À moins que vous ne connectiez une source via un Connector, Claude ne peut pas voir votre boîte de réception, votre organigramme, ou la réunion de la semaine dernière, et même avec un connecteur, Claude ne voit que ce à quoi vous avez autorisé l'accès. Tout ce qui vit uniquement dans votre tête ou en dehors d'une source connectée est une lacune de contexte, et les lacunes de contexte sont la raison la plus fréquente pour laquelle un prompt sous-performe chez les nouveaux utilisateurs.\n\nDiagnostiquer un prompt faible\n\nMettez un prompt décevant en regard de la pile de composants et l'écart devient généralement évident. Le manque de contexte produit une sortie générique. Un verbe de tâche ambigu produit la mauvaise action. L'absence de contraintes produit une sortie de la mauvaise longueur ou du mauvais ton. Les composants constituent aussi une liste de vérification de diagnostic, c'est pourquoi la Leçon 4 y revient lorsque la sortie est insuffisante."
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_02",
+          "title": {
+            "en": "Anatomy of a Prompt·included in L2",
+            "fr": "Anatomie d'un prompt·inclus dans L2"
+          },
+          "type": "teaching",
+          "durationMinutes": null,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "A Worked Build\n\nWeak prompt: everything left implicit\n\nWeak prompt\n\n\"Write a summary of our quarterly operations.\"\n\nClaude produces three plausible paragraphs that could describe almost any company. No audience, no figures, no format, no sense of what matters. The output is not wrong. It is unusable, because the prompt specified almost nothing.\n\nStrong prompt: components made explicit\n\nStrong prompt\n\n\"You are an operations analyst (role). I am preparing a one-page update for our regional director, who cares about throughput and cost, not process detail (context and audience). Summarize the attached Q3 operations data (task), covering only the three metrics that moved more than 10 percent against target (constraint). Format as a short headline followed by three bullet points, each one sentence (output format).\"\n\nSame model, same data. The second prompt produces a draft the analyst can refine in two minutes instead of rebuilding from scratch. The difference is entirely in the specification.\n\nThe habit to build\n\nBefore sending any prompt that matters\n\nRun the five components in your head: have I given Claude the role, the context it cannot infer, an unambiguous task, the constraints, and the format I want back? Thirty seconds of specification routinely saves several rounds of correction.",
+                "fr": "Une build fonctionnelle\n\nWeak prompt: tout est laissé implicite\n\nWeak prompt\n\n\"Write a summary of our quarterly operations.\"\n\nClaude produit trois paragraphes plausibles qui pourraient décrire presque n'importe quelle entreprise. Pas d'audience, pas de chiffres, pas de format, pas de notion de ce qui importe. La sortie n'est pas incorrecte. Elle est inutilisable, car le prompt a spécifié presque rien.\n\nStrong prompt: les composants rendus explicites\n\nStrong prompt\n\n\"You are an operations analyst (role). I am preparing a one-page update for our regional director, who cares about throughput and cost, not process detail (context and audience). Summarize the attached Q3 operations data (task), covering only the three metrics that moved more than 10 percent against target (constraint). Format as a short headline followed by three bullet points, each one sentence (output format).\"\n\nMême modèle, mêmes données. Le deuxième prompt produit un brouillon que l'analyste peut affiner en deux minutes au lieu de repartir de zéro. La différence réside entièrement dans la spécification.\n\nL'habitude à adopter\n\nAvant d'envoyer tout prompt qui compte\n\nPassez en tête les cinq composants : ai-je donné à Claude le rôle, le contexte qu'il ne peut pas inférer, une tâche sans ambiguïté, les contraintes et le format que je veux en retour ? Trente secondes de spécification permettent habituellement d'économiser plusieurs allers-retours de correction."
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_03",
+          "title": {
+            "en": "Task Decomposition",
+            "fr": "Décomposition des tâches"
+          },
+          "type": "teaching",
+          "durationMinutes": 10,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Task Decomposition for Complex Requests\n\nSome requests are too large to specify as a single instruction.\n\nWhen a task has several distinct stages, packing it into one prompt produces shallow work on every stage. Decomposition is how you break a complex request into a sequence Claude can execute well.\n\nDecomposition means splitting a multi-part problem into discrete, ordered steps, then running them in sequence rather than asking for everything at once. A vendor evaluation is a good example: it is really four tasks wearing one sentence.\n\nThe single-prompt version that underperforms\n\nSingle prompt\n\n\"Evaluate these three vendors and tell me which to pick.\"\n\nClaude has to invent criteria, apply them, weigh trade-offs, and recommend, all in one pass. It will do all four shallowly and you will not see the reasoning behind the recommendation.\n\nThe decomposed version\n\n1\n\nDerive criteria\n\n2\n\nScore vendors\n\n3\n\nRaise trade-offs\n\n4\n\nRecommend\n\nEach step produces a checkable intermediate result. If the criteria in Step 1 are wrong, you catch it before scoring, not after the recommendation. Decomposition also makes the work auditable, which matters when someone asks how the recommendation was reached.\n\nOne conversation or several\n\nKeep sequential steps that build on each other in one conversation, so each step sees the prior results. Move to a separate conversation when a step is genuinely independent, or when the conversation has grown long enough that early context is degrading. That judgment connects directly to the context-management skills from Module 1.",
+                "fr": "Décomposition des tâches pour des requêtes complexes\n\nCertaines demandes sont trop volumineuses pour être spécifiées en une seule instruction.\n\nLorsqu'une tâche comporte plusieurs étapes distinctes, l'enfermer dans un seul prompt produit un travail superficiel à chaque étape. La décomposition est la façon dont vous décomposez une requête complexe en une séquence que Claude peut exécuter efficacement.\n\nLa décomposition signifie diviser un problème multipartie en étapes discrètes et ordonnées, puis les exécuter en séquence plutôt que de tout demander en une seule fois. Une évaluation des fournisseurs est un bon exemple : en réalité, ce sont quatre tâches qui tiennent en une seule phrase.\n\nLa version à prompt unique qui sous-performe\n\nPrompt unique\n\n\"Évaluez ces trois fournisseurs et dites-moi lequel choisir.\"\n\nClaude doit inventer des critères, les appliquer, peser les arbitrages et recommander, tout en une seule passe. Il accomplira ces quatre tâches de manière superficielle et vous ne verrez pas le raisonnement derrière la recommandation.\n\nLa version décomposée\n\n1\n\nDéfinir les critères\n\n2\n\nAttribuer des scores aux fournisseurs\n\n3\n\nFaire apparaître les arbitrages\n\n4\n\nRecommander\n\nChaque étape produit un résultat intermédiaire vérifiable. Si les critères de l'étape 1 sont erronés, vous les repérez avant l'évaluation, et non après la recommandation. La décomposition rend également le travail auditable, ce qui est important lorsque quelqu'un demande comment la recommandation a été obtenue.\n\nUne conversation ou plusieurs\n\nConservez les étapes séquentielles qui s'appuient les unes sur les autres dans une même conversation, afin que chaque étape voie les résultats précédents. Passez à une conversation séparée lorsqu'une étape est véritablement indépendante, ou lorsque la conversation est devenue suffisamment longue pour que le contexte initial se dégrade. Ce jugement se connecte directement aux compétences de gestion du contexte du Module 1."
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_04",
+          "title": {
+            "en": "Task Decomposition·included in L3",
+            "fr": "Décomposition des tâches·incluse dans L3"
+          },
+          "type": "teaching",
+          "durationMinutes": null,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Decompose a Parallel Case\n\nThree deliverables, one foundation: sequence the shared extraction first.\n\nScenario\n\nA communications manager needs to turn a dense 20-page policy change into an internal announcement, an FAQ for staff, and a short briefing for executives. Before reading on, decompose this into an ordered sequence of steps you would run with Claude.\n\nModel decomposition\n\nStep 1: Extract the substantive changes from the policy document and what each one means in practice.\n\nStep 2: Confirm the extraction is complete and accurate before building anything on top of it.\n\nStep 3: Draft the staff announcement from the confirmed change list, tuned to a general audience.\n\nStep 4: Draft the FAQ, anticipating the questions staff will likely ask about those changes.\n\nStep 5: Draft the executive briefing, compressed down to decisions and impact.\n\nWhy this order\n\nSteps 1 and 2 build a verified foundation that the three deliverables all draw on. Drafting any deliverable before the change list is confirmed risks propagating the same misreading into three documents. Sequence the shared, high-stakes extraction first; let the parallel drafts follow.",
+                "fr": "Décomposer un cas parallèle\n\nTrois livrables, une fondation : séquencez l'extraction partagée en premier.\n\nScénario\n\nUn responsable communication doit transformer un changement de politique dense de 20 pages en une annonce interne, une FAQ pour le personnel et un bref briefing pour les dirigeants. Avant d’aller plus loin, décomposez ceci en une séquence ordonnée d’étapes que vous exécuteriez avec Claude.\n\nDécomposition du modèle\n\nÉtape 1 : Extraire les changements substantiels du document de politique et ce que chacun implique en pratique.\n\nÉtape 2 : Confirmer que l’extraction est complète et exacte avant de construire quoi que ce soit par-dessus.\n\nÉtape 3 : Rédiger l’annonce destinée au personnel à partir de la liste des changements confirmés, adaptée à un public général.\n\nÉtape 4 : Rédiger la FAQ, en anticipant les questions que le personnel est susceptible de poser au sujet de ces changements.\n\nÉtape 5 : Rédiger le briefing exécutif, condensé en décisions et impact.\n\nPourquoi cet ordre\n\nLes étapes 1 et 2 construisent une base vérifiée sur laquelle les trois livrables s’appuient. Rédiger un livrable avant que la liste des changements ne soit confirmée comporte le risque de propager la même mauvaise interprétation dans trois documents. Séquencer d’abord l’extraction partagée, à fort enjeu ; les brouillons parallèles suivront."
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_05",
+          "title": {
+            "en": "Iterating to Improve",
+            "fr": "Itérer pour améliorer"
+          },
+          "type": "teaching",
+          "durationMinutes": 8,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Iterating Prompts to Improve Output\n\nA first draft from Claude rarely lands perfectly. The skill is not rewriting the whole prompt when output disappoints. It is reading the output to diagnose which component fell short, then fixing that one thing.\n\nOutput deficiencies are prompt diagnostics\n\nEach kind of disappointment points back to a specific component:\n\nSymptomLikely causeFix\n\nOutput is generic or off-baseThe context was thinAdd the background Claude could not infer\n\nOutput answered the wrong questionThe task verb was ambiguousSharpen the instruction\n\nOutput is the wrong length, tone, or shapeA constraint or the format was missingAdd it\n\nOutput is close but misses on one sectionIterate on that section only; do not discard a draft that is mostly right\n\nTargeted revision, not wholesale rewriting\n\nWhen you rewrite the entire prompt, you lose the parts that worked and you cannot tell which change fixed the problem. Change the one component the output told you to change, resend, and compare. The same diagnostic discipline applies to troubleshooting any underperforming workflow, covered in depth in Module 7.\n\nA live iteration cycle\n\nWatch the diagnose-and-fix loop run on one deliberately weak prompt.\n\nRound 1 prompt\n\n\"Write a follow-up email to the client about the delayed deliverable.\"\n\nRound 1 output\n\nA generic, slightly defensive three-paragraph email that does not say when the deliverable will arrive or why it slipped. Diagnosis: the context is thin (no reason, no new date) and there is no tone constraint.\n\nRound 2 prompt\n\n\"Write a follow-up to the client about the two-day delay on the analytics deliverable. The cause was a data-quality issue we have now fixed; new delivery is Thursday. Tone: accountable, not over-apologetic. Keep it under 120 words.\"\n\nRound 2 output\n\nA tight, accountable note with the cause, the new date, and a confident close. Diagnosis: strong; only the subject line is missing.\n\nRound 3 prompt\n\n\"Good. Add a subject line that signals resolution, not just delay.\"\n\nThree rounds, each changing exactly the component the previous output exposed. No round threw away working text, and by round three the improvement was marginal, the signal to stop.\n\nKnowing when to stop\n\nIteration has converged when each additional round produces marginal change rather than improvement. At that point, further prompting yields less than a quick manual edit. Recognizing diminishing returns is part of the skill: the goal is a usable result, not a perfect prompt.",
+                "fr": "Itération des prompts pour améliorer le résultat\n\nUne première ébauche générée par Claude n’atteint que rarement la perfection. L’habileté n’est pas de réécrire l’intégralité du prompt lorsque le résultat déçoit. Il s’agit de lire la sortie pour diagnostiquer quel composant a manqué, puis de corriger ce seul élément.\n\nLes déficiences de sortie sont des diagnostics du prompt\n\nChaque type de déception renvoie à un composant spécifique :\n\nSymptôme — Cause probable — Correctif\nLe résultat est générique ou hors sujet — Le contexte était mince — Ajoutez le contexte que Claude ne pouvait pas inférer\nLe résultat a répondu à la mauvaise question — Le verbe de la tâche était ambigu — Affûtez l’instruction\nLe résultat est de la mauvaise longueur, tonalité, ou forme — Une contrainte ou le format manquait — Ajoutez-la\nLe résultat est proche mais manque sur une section — Itérer uniquement sur cette section ; ne pas éliminer un brouillon qui est en grande partie correct — Itérez sur cette section uniquement; ne jetez pas un brouillon qui est en grande partie correct\n\nRévision ciblée, pas réécriture en bloc\n\nLorsque vous réécrivez l’intégralité du prompt, vous perdez les parties qui fonctionnaient et vous ne pouvez pas dire quelle modification a résolu le problème. Changez le seul composant que la sortie vous a dit de changer, renvoyez, et comparez. La même discipline de diagnostic s’applique au dépannage de tout flux de travail sous-performant, couvert en profondeur dans Module 7.\n\nUn cycle d’itération en temps réel\n\nObservez la boucle diagnose-and-fix s’exécuter sur un prompt délibérément faible.\n\nRound 1 prompt\n\n\"Write a follow-up email to the client about the delayed deliverable.\"\n\nRound 1 output\n\nUn e-mail générique, légèrement défensif, en trois paragraphes, qui n’indique pas quand le livrable arrivera ni pourquoi il a pris du retard. Diagnostic : le contexte est mince (aucune raison, pas de nouvelle date) et il n’y a aucune contrainte de ton.\n\nRound 2 prompt\n\n\"Write a follow-up to the client about the two-day delay on the analytics deliverable. The cause was a data-quality issue we have now fixed; new delivery is Thursday. Tone: accountable, not over-apologetic. Keep it under 120 words.\"\n\nRound 2 output\n\nUne note concise et responsable avec la cause, la nouvelle date et une clôture confiante. Diagnostic : solide ; seule la ligne d’objet manque.\n\nRound 3 prompt\n\n\"Good. Add a subject line that signals resolution, not just delay.\"\n\nTrois tours, chacun modifiant exactement le composant que la sortie précédente a mis en évidence. Aucun tour n’a jeté le texte qui fonctionnait, et dès le round trois l’amélioration était marginale, le signal pour s’arrêter.\n\nSavoir quand s’arrêter\n\nL’itération converge lorsque chaque tour supplémentaire produit un changement marginal plutôt qu’une amélioration. À ce stade, des invites supplémentaires donnent moins qu’une édition manuelle rapide. Reconnaître les rendements décroissants fait partie de la compétence : l’objectif est un résultat utilisable, pas un prompt parfait."
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_06",
+          "title": {
+            "en": "Strategy by Task Type",
+            "fr": "Stratégie par type de tâche"
+          },
+          "type": "teaching",
+          "durationMinutes": 8,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Adapting Strategy by Task Type\n\nThe component stack applies to every prompt, but the emphasis shifts with the task.\n\nAnalysis, research, drafting, and brainstorming each reward a different balance of specificity and creative latitude. Using one fixed style across all four costs quality on every task it does not fit.\n\nAnalysis. Wants tight constraints and explicit criteria. Tell Claude what to measure, against what standard, and how to handle ambiguity. Low creative latitude; high specification.\n\nResearch. Wants clear scope and source discipline. Define the question, the boundaries, and whether current sources are required. Quick currency needs can be met by turning on web search in chat, while deep multi-source investigation points to Research (available on paid plans). Ask for citations so claims are checkable.\n\nDrafting. Wants audience, tone, and format specified, with room for Claude to find the phrasing. Medium latitude: you control the shape, Claude fills it.\n\nBrainstorming. Wants loose constraints and high latitude. Over-specifying kills the divergence you are after. Give the goal and the boundaries, then ask for volume and range before you narrow.\n\nStrategy quick reference\n\nTask typeWhat to tightenWhat to loosen\n\nAnalysisCriteria, standards, scopePhrasing\n\nResearchQuestion, sources, citationsSynthesis approach\n\nDraftingAudience, tone, formatWord choice\n\nBrainstormingGoal and guardrails onlyQuantity and direction\n\nFour mini-demos, one per task type\n\nAnalysis. \"Compare these two vendor contracts on payment terms, termination rights, and liability caps. For each, state which contract is more favorable to us and why, in a three-row table.\" Tight criteria, defined output, no room to wander.\n\nResearch. \"Using current sources, summarize how three named competitors positioned their Q2 launches. Cite each source. Flag anything you cannot verify.\" Scope and citation discipline up front; Research (or web search in chat for lighter needs) supplies the currency.\n\nNote: citations are checkable when they come from a grounded source (web search or Research results); citations produced from training memory alone can look equally confident and should be independently verified.\n\nDrafting. \"Draft a 150-word LinkedIn post announcing our new reporting feature, aimed at operations managers, in a confident but not salesy voice.\" Audience, length, and tone fixed; phrasing left open.\n\nBrainstorming. \"Give me 20 angles for a campaign around faster month-end close. Range widely; do not self-edit yet.\" Goal and one guardrail only; the constraints come later, after the range exists.\n\nThe same prompt structure underlies all four, but the dial between control and latitude moves with the task. The underlying move is the same each time: decide where you need control and where you need range, then set constraints accordingly. Matching strategy to task type is what separates a competent prompter from one who gets the same mediocre output on every task.",
+                "fr": "Adapter la stratégie par type de tâche\n\nLa pile de composants s’applique à chaque prompt, mais l’accent se déplace selon la tâche.\n\nAnalyse, recherche, rédaction et remue-méninges offrent chacun un équilibre différent entre spécificité et latitude créative. Utiliser un style fixe pour les quatre tâches dégrade la qualité sur chaque tâche.\n\nAnalyse. Requiert des contraintes serrées et des critères explicites. Dites à Claude quoi mesurer, selon quelle norme et comment gérer l’ambiguïté. Faible latitude créative; forte spécification.\n\nRecherche. Veut un cadre clair et une discipline des sources. Définissez la question, les limites et si les sources actuelles sont requises. Les besoins rapides d’actualité peuvent être satisfaits en activant la recherche sur le web dans le chat, tandis qu’une investigation approfondie à sources multiples pointe vers Recherche (disponible sur les plans payants). Demandez des citations afin que les affirmations puissent être vérifiées.\n\nNote : les citations sont vérifiables lorsqu’elles proviennent d’une source fondée (recherche sur le web ou résultats de Recherche); les citations produites à partir de la mémoire d’entraînement peuvent sembler tout aussi confiantes et doivent être vérifiables indépendamment.\n\nRédaction. Rédigez un post LinkedIn de 150 mots annonçant notre nouvelle fonctionnalité de reporting, destiné aux responsables des opérations, sur un ton confiant mais pas commercial.\n\nAudience, longueur et tonalité fixes; formulation laissée ouverte.\n\nRemue-méninges. Donnez-moi 20 angles pour une campagne autour d’une clôture de fin de mois plus rapide. Variez largement les angles; ne vous auto-modérez pas encore.\n\nObjectif et un seul garde-fou; les contraintes viennent ensuite, après que l’étendue soit définie.\n\nLa même structure de prompt sous-tend les quatre types de tâches, mais le niveau de contrôle et de latitude évolue avec la tâche. Le mouvement sous-jacent est le même à chaque fois : décider où vous avez besoin de contrôle et où vous avez besoin de latitude, puis fixer les contraintes en conséquence. Adapter la stratégie au type de tâche, c’est ce qui distingue un prompteur compétent de celui qui obtient chaque fois la même sortie médiocre pour chaque tâche."
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_07",
+          "title": {
+            "en": "Strategy by Task Type",
+            "fr": "Stratégie par type de tâche"
+          },
+          "type": "checkpoint",
+          "durationMinutes": 5,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Checkpoint: Diagnose the Prompts\n\nFour prompts below each have one dominant weakness. For each, identify the missing or mishandled component and state the single change that would most improve the output.\n\nSubmit\nSkip for now",
+                "fr": "Point de contrôle : diagnostiquer les prompts\n\nQuatre prompts ci-dessous présentent chacun une faiblesse dominante. Pour chacun, identifiez le composant manquant ou mal géré et indiquez le seul changement qui améliorerait le plus le résultat.\n\nSoumettre\nIgnorer pour le moment"
+              }
+            },
+            {
+              "type": "checkpoint",
+              "exerciseId": "ex_claude_certified_associate_foundations__02_001"
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed",
+              "requiredExercisesPassed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_08",
+          "title": {
+            "en": "Repair the Prompt",
+            "fr": "Réparer le prompt"
+          },
+          "type": "exercise",
+          "durationMinutes": 6,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Exercise: Repair the Underperforming Prompt\n\nThis exercise puts the whole module together: a weak prompt, its disappointing output, and your job to diagnose what is missing and repair it using the component stack.\n\nBelow is a prompt, the output it produced, and the author's actual goal. Work in three steps: find the specification gaps, match each fix to the component it repairs, then assemble the repaired prompt. The ideal answer is revealed at the end.\n\nThe weak prompt\n\n\"Summarize the customer feedback and tell me what to do.\"\n\nThe output it produced\n\nA generic five-bullet list of themes (\"customers want faster support,\" \"pricing is a concern\") with vague advice (\"consider improving response times\"). Nothing tied to the actual data, no priorities, nothing actionable.\n\nThe author's real goal\n\nA product manager has 200 survey responses and needs the top three issues by frequency, each with a representative quote, ranked so she can decide what to fix this quarter.\n\nStage 1 of 3 · Diagnose the gaps\n\nSelect every component the prompt is missing or under-specifies.\n\nConfirm gaps\n\nStage 2 of 3 · Match each fix to the component it repairs\n\nDrag each fragment to the component it satisfies. One fragment does not belong.\n\nCheck matches\n\nStage 3 of 3 · Assemble the repaired prompt\n\nOrder the five fragments into a clean prompt sequence.\n\nCheck order\nReveal model answer\n\nSkip for now",
+                "fr": "Exercice : réparer le prompt sous-performant\n\nCet exercice réunit l’ensemble du module : un prompt faible, sa sortie décevante, et votre tâche consistant à diagnostiquer ce qui manque et à le réparer en utilisant la pile de composants.\n\nCi-dessous se trouve un prompt, la sortie qu'il a produite, et l’objectif réel de l’auteur. Travaillez en trois étapes : trouver les écarts de spécification, associer chaque correctif au composant qu’il répare, puis assembler le prompt réparé. La réponse idéale est révélée à la fin.\n\nLe prompt faible\n\n\"Summarize the customer feedback and tell me what to do.\"\n\nLa sortie produite\n\nUne liste générique en cinq points des thèmes (\"les clients veulent un support plus rapide,\" \"le prix est une préoccupation\") avec des conseils vagues (\"envisagez d’améliorer les temps de réponse\"). Rien n’est lié aux données réelles, aucune priorité, rien d’actionnable.\n\nLe véritable objectif de l’auteur\n\nUne responsable produit dispose de 200 réponses d’enquête et a besoin des trois problèmes principaux par fréquence, chacun avec une citation représentative, classés afin qu’elle puisse décider de ce qu’il faut corriger ce trimestre.\n\nÉtape 1 sur 3 · Diagnostiquer les écarts\n\nSélectionnez chaque composant que le prompt manque ou sous-spécifie.\n\nConfirmer les écarts\n\nÉtape 2 sur 3 · Associer chaque correctif au composant qu’il répare\n\nFaites glisser chaque fragment vers le composant qu’il satisfait. Un fragment n’appartient pas.\n\nVérifier les correspondances\n\nÉtape 3 sur 3 · Assembler le prompt réparé\n\nOrdonnez les cinq fragments dans une séquence de prompt claire.\n\nVérifier l’ordre\nRévéler la réponse du modèle\n\nIgnorer pour l’instant"
+              }
+            },
+            {
+              "type": "checkpoint",
+              "exerciseId": "ex_claude_certified_associate_foundations__02_002"
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed",
+              "requiredExercisesPassed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_09",
+          "title": {
+            "en": "Module 2",
+            "fr": "Module 2"
+          },
+          "type": "quiz",
+          "durationMinutes": 5,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Module 2 Quiz: Prompting Foundations\n\nFive scenario-style questions. Each presents a situation; select the response that best applies the module's prompting framework. Approximately five minutes.\n\nSubmit quiz\nSkip for now\n\nModule 2Key Takeaways·5 min\n\nKey Takeaways\n\nFive things that hold across this module:\n\n01\n\nStructure drives quality, not cleverness.\n\nFive components (role, context, task, constraints, format) carry almost every professional prompt. Run them before sending anything that matters.\n\n02\n\nContext is the component you will forget.\n\nClaude cannot see what lives only in your head. The most common cause of generic output is a context gap, not a model limitation.\n\n03\n\nDecompose complex work into ordered steps.\n\nMulti-stage requests succeed when each step produces a checkable result and the high-stakes foundation is built first.\n\n04\n\nIterate on the component that failed.\n\nRead the output as a diagnostic, change the one thing it points to, and stop when rounds stop improving the result.\n\n05\n\nMatch strategy to task type.\n\nAnalysis wants constraints; brainstorming wants latitude. Decide where you need control and where you need range, then set constraints to fit.\n\nSources\n\nAll product behavior descriptions are based on claude.ai features as of June 2026. Feature availability and behavior should be verified against current Anthropic documentation at publish:\n\nAnthropic docs: prompt engineering overview and best practices, platform.claude.com/docs\n\nAI Fluency Framework: Description competency, for the prompting backbone framing\n\nClaude Help Center: Code execution for verified calculation, support.claude.com\n\nModule CompleteAssociate Path·2 min\n\nCongrats! You’ve successfully completed this module.\n\nYou can now structure prompts that get consistent, high-quality results from Claude. Master the prompt, and Claude does exactly what you need, every time.\n\n0\nof ? checkpoints passed\n\nM1\n\nM1: Product & Model Selection\n\nChoose the right entry point, model, and features for any given task.\n\nM2\n\nM2: Prompting\n\nBuild structured prompts and adapt them to the task type.\n\nYou Are Here\n\nM3\n\nM3: Output Evaluation\n\nValidate output and know when human review is non-negotiable.\n\nUp Next\n\nM4\n\nM4: Workflow Integration\n\nMap a workflow against Delegation criteria and redesign it safely.\n\nM5\n\nM5: Configuration\n\nConfigure and maintain Projects, instructions, and knowledge.\n\nM6\n\nM6: Governance\n\nApply use-case, data, policy, and ethics judgment responsibly.\n\nM7\n\nM7: Troubleshooting\n\nDiagnose underperformance and optimize workflows when results fall short.\n\nM8\n\nM8: Course Summary & Next Steps\n\nRecap the journey, prepare for the exam, and recognize escalation boundaries to the Developer and Architect tracks.\n\nReview module\nStart over\nStart Module 3 →\nReturn to course home\n\nModule 2 complete.\n\n← Previous\n\n Contents\n\nNext →",
+                "fr": "Quiz du Module 2 : Fondations du prompting\n\nCinq questions de style scénario. Chacune présente une situation ; sélectionnez la réponse qui s’applique le mieux au cadre de prompting du module. Environ cinq minutes.\n\nSoumettre le quiz\nPasser pour le moment\n\nModule 2 – Points clés · 5 min\n\nPoints clés\n\nCinq éléments qui restent valables tout au long de ce module :\n\n01\n\nLa structure détermine la qualité, pas l’ingéniosité.\n\nCinq composants (rôle, contexte, tâche, contraintes, format) accompagnent presque tous les prompts professionnels. Utilisez-les avant d’envoyer quoi que ce soit d’important.\n\n02\n\nLe contexte est le composant que vous oublierez.\n\nClaude ne peut pas voir ce qui vit uniquement dans votre tête. La cause la plus fréquente d’une sortie générique est un écart de contexte, et non une limitation du modèle.\n\n03\n\nDécomposez le travail complexe en étapes ordonnées.\n\nLes requêtes à plusieurs étapes réussissent lorsque chaque étape produit un résultat vérifiable et que la base à enjeux élevés est bâtie en premier.\n\n04\n\nItérez sur le composant qui a échoué.\n\nLisez la sortie comme un diagnostic, modifiez la seule chose sur laquelle elle pointe, et arrêtez-vous lorsque les itérations n’améliorent plus le résultat.\n\n05\n\nAdaptez la stratégie au type de tâche.\n\nL’analyse demande des contraintes ; le brainstorming demande de la latitude. Déterminez où vous avez besoin de contrôle et où vous avez besoin de marge, puis définissez des contraintes adaptées.\n\nSources\n\nToutes les descriptions de comportement des produits sont basées sur les fonctionnalités de claude.ai en date de juin 2026. La disponibilité des fonctionnalités et leur comportement doivent être vérifiés par rapport à la documentation Anthropic actuelle lors de la publication :\n\nAnthropic docs : aperçu de l’ingénierie de prompt et meilleures pratiques, platform.claude.com/docs\n\nAI Fluency Framework : compétence en description, pour l’encadrement du prompting\n\nClaude Help Center : exécution de code pour des calculs vérifiés, support.claude.com\n\nModule CompleteAssociate Path · 2 min\n\nFélicitations ! Vous avez terminé ce module avec succès.\n\nVous pouvez désormais structurer des prompts qui obtiennent des résultats cohérents et de haute qualité avec Claude. Maîtrisez le prompt, et Claude fera exactement ce dont vous avez besoin, à chaque fois.\n\n0 sur ? points de contrôle passés\n\nM1\n\nM1 : Sélection du produit et du modèle\n\nChoisissez le bon point d’entrée, le bon modèle et les fonctionnalités pour toute tâche donnée.\n\nM2\n\nM2 : Prompting\n\nConstruisez des prompts structurés et adaptez-les au type de tâche.\n\nVous êtes ici\n\nM3\n\nM3 : Évaluation de la sortie\n\nValidez la sortie et sachez quand une révision humaine est non négociable.\n\nÀ venir\n\nM4\n\nM4 : Intégration du flux de travail\n\nCartographiez un flux de travail par rapport aux critères de délégation et repensez-le en toute sécurité.\n\nM5\n\nM5 : Configuration\n\nConfigurez et entretenez les Projets, les instructions et les connaissances.\n\nM6\n\nM6 : Gouvernance\n\nAppliquez de manière responsable les cas d’utilisation, les données, les politiques et le jugement éthique.\n\nM7\n\nM7 : Dépannage\n\nDiagnostiquez les performances insuffisantes et optimisez les flux de travail lorsque les résultats ne suffisent pas.\n\nM8\n\nM8 : Résumé du cours et prochaines étapes\n\nRécapitulez le parcours, préparez l’examen et reconnaissez les limites d’escalade vers les pistes Développeur et Architecte.\n\nRevoir le module\nRecommencer\nDémarrer le Module 3 →\nRetour à l’accueil du cours\n\nModule 2 terminé.\n\n← Précédent\n\n Contenu\n\nSuivant →"
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        }
+      ],
+      "completionRule": {
+        "requires": [
+          "allChaptersComplete"
         ]
-      },
-      "totalPages": 2
-    },
-    {
-      "id": "lesson_02",
-      "title": {
-        "en": "Iterating to Improve",
-        "fr": "Itérer pour s'améliorer"
-      },
-      "type": "teaching",
-      "duration": 8,
-      "pages": {
-        "en": [
-          "Iterating Prompts to Improve Output\n\nA first draft from Claude rarely lands perfectly. The skill is not rewriting the whole prompt when output disappoints. It is reading the output to diagnose which component fell short, then fixing that one thing.\n\nOutput deficiencies are prompt diagnostics\n\nEach kind of disappointment points back to a specific component:\n\nSymptomLikely causeFix\n\nOutput is generic or off-baseThe context was thinAdd the background Claude could not infer\n\nOutput answered the wrong questionThe task verb was ambiguousSharpen the instruction\n\nOutput is the wrong length, tone, or shapeA constraint or the format was missingAdd it\n\nOutput is close but misses on one sectionIterate on that section only; do not discard a draft that is mostly right\n\nTargeted revision, not wholesale rewriting\n\nWhen you rewrite the entire prompt, you lose the parts that worked and you cannot tell which change fixed the problem. Change the one component the output told you to change, resend, and compare. The same diagnostic discipline applies to troubleshooting any underperforming workflow, covered in depth in Module 7.\n\nA live iteration cycle\n\nWatch the diagnose-and-fix loop run on one deliberately weak prompt.\n\nRound 1 prompt\n\n\"Write a follow-up email to the client about the delayed deliverable.\"\n\nRound 1 output\n\nA generic, slightly defensive three-paragraph email that does not say when the deliverable will arrive or why it slipped. Diagnosis: the context is thin (no reason, no new date) and there is no tone constraint.\n\nRound 2 prompt\n\n\"Write a follow-up to the client about the two-day delay on the analytics deliverable. The cause was a data-quality issue we have now fixed; new delivery is Thursday. Tone: accountable, not over-apologetic. Keep it under 120 words.\"\n\nRound 2 output\n\nA tight, accountable note with the cause, the new date, and a confident close. Diagnosis: strong; only the subject line is missing.\n\nRound 3 prompt\n\n\"Good. Add a subject line that signals resolution, not just delay.\"\n\nThree rounds, each changing exactly the component the previous output exposed. No round threw away working text, and by round three the improvement was marginal, the signal to stop.\n\nKnowing when to stop\n\nIteration has converged when each additional round produces marginal change rather than improvement. At that point, further prompting yields less than a quick manual edit. Recognizing diminishing returns is part of the skill: the goal is a usable result, not a perfect prompt."
-        ],
-        "fr": [
-          "Itérer les prompts pour améliorer la sortie\n\nUn premier brouillon de Claude est rarement parfait. La compétence n’est pas de réécrire tout le prompt quand la sortie déçoit, mais de lire la sortie pour diagnostiquer quel composant a failli, puis de corriger cette seule chose.\n\nLes déficiences de la sortie sont des diagnostics du prompt\n\nChaque type de déception renvoie à un composant précis :\n\nSymptôme — Cause probable — Correctif\n\nLa sortie est générique ou hors sujet — Le contexte était insuffisant — Ajoutez le contexte que Claude ne pouvait pas inférer\n\nLa sortie répond à la mauvaise question — Le verbe d’action était ambigu — Précisez l’instruction\n\nLa sortie a la mauvaise longueur, ton ou forme — Une contrainte ou le format manquait — Ajoutez-la\n\nLa sortie est proche mais manque une section — Itérez sur cette section uniquement ; ne jetez pas un brouillon qui est majoritairement correct\n\nRévision ciblée, pas réécriture totale\n\nQuand vous réécrivez tout le prompt, vous perdez les parties qui fonctionnaient et vous ne pouvez pas savoir quel changement a résolu le problème. Changez le seul composant que la sortie vous a indiqué, renvoyez, et comparez. La même discipline diagnostique s’applique au dépannage de tout flux de travail sous-performant, traité en profondeur dans Module 7.\n\nUn cycle d’itération en direct\n\nObservez la boucle diagnostiquer-et-corriger en action sur un prompt délibérément faible.\n\nTour 1 — prompt\n\n\"Write a follow-up email to the client about the delayed deliverable.\"\n\nTour 1 — sortie\n\nUn email générique, un peu sur la défensive, en trois paragraphes qui ne dit pas quand le livrable arrivera ni pourquoi il a été retardé. Diagnostic : le contexte est insuffisant (pas de raison, pas de nouvelle date) et il n’y a pas de contrainte de ton.\n\nTour 2 — prompt\n\n\"Write a follow-up to the client about the two-day delay on the analytics deliverable. The cause was a data-quality issue we have now fixed; new delivery is Thursday. Tone: accountable, not over-apologetic. Keep it under 120 words.\"\n\nTour 2 — sortie\n\nUne note concise et responsable avec la cause, la nouvelle date, et une conclusion confiante. Diagnostic : solide ; seule la ligne d’objet manque.\n\nTour 3 — prompt\n\n\"Good. Add a subject line that signals resolution, not just delay.\"\n\nTrois tours, chacun ne changeant exactement que le composant mis en évidence par la sortie précédente. Aucun tour n’a jeté le texte qui fonctionnait, et au troisième tour l’amélioration était marginale, signe qu’il fallait s’arrêter.\n\nSavoir quand s’arrêter\n\nL’itération a convergé quand chaque tour supplémentaire produit un changement marginal plutôt qu’une amélioration. À ce stade, pousser plus loin les prompts apporte moins qu’une simple correction manuelle rapide. Reconnaître les rendements décroissants fait partie de la compétence : l’objectif est un résultat utilisable, pas un prompt parfait."
-        ]
-      },
-      "totalPages": 1
-    },
-    {
-      "id": "lesson_03",
-      "title": {
-        "en": "Strategy by Task Type",
-        "fr": "Stratégie par type de tâche"
-      },
-      "type": "teaching",
-      "duration": 8,
-      "pages": {
-        "en": [
-          "Adapting Strategy by Task Type\n\nThe component stack applies to every prompt, but the emphasis shifts with the task.\n\nAnalysis, research, drafting, and brainstorming each reward a different balance of specificity and creative latitude. Using one fixed style across all four costs quality on every task it does not fit.\n\nAnalysis. Wants tight constraints and explicit criteria. Tell Claude what to measure, against what standard, and how to handle ambiguity. Low creative latitude; high specification.\n\nResearch. Wants clear scope and source discipline. Define the question, the boundaries, and whether current sources are required. Quick currency needs can be met by turning on web search in chat, while deep multi-source investigation points to Research (available on paid plans). Ask for citations so claims are checkable.\n\nDrafting. Wants audience, tone, and format specified, with room for Claude to find the phrasing. Medium latitude: you control the shape, Claude fills it.\n\nBrainstorming. Wants loose constraints and high latitude. Over-specifying kills the divergence you are after. Give the goal and the boundaries, then ask for volume and range before you narrow.\n\nStrategy quick reference\n\nTask typeWhat to tightenWhat to loosen\n\nAnalysisCriteria, standards, scopePhrasing\n\nResearchQuestion, sources, citationsSynthesis approach\n\nDraftingAudience, tone, formatWord choice\n\nBrainstormingGoal and guardrails onlyQuantity and direction\n\nFour mini-demos, one per task type\n\nAnalysis. \"Compare these two vendor contracts on payment terms, termination rights, and liability caps. For each, state which contract is more favorable to us and why, in a three-row table.\" Tight criteria, defined output, no room to wander.\n\nResearch. \"Using current sources, summarize how three named competitors positioned their Q2 launches. Cite each source. Flag anything you cannot verify.\" Scope and citation discipline up front; Research (or web search in chat for lighter needs) supplies the currency.\n\nNote: citations are checkable when they come from a grounded source (web search or Research results); citations produced from training memory alone can look equally confident and should be independently verified.\n\nDrafting. \"Draft a 150-word LinkedIn post announcing our new reporting feature, aimed at operations managers, in a confident but not salesy voice.\" Audience, length, and tone fixed; phrasing left open.",
-          "Brainstorming. \"Give me 20 angles for a campaign around faster month-end close. Range widely; do not self-edit yet.\" Goal and one guardrail only; the constraints come later, after the range exists.\n\nThe same prompt structure underlies all four, but the dial between control and latitude moves with the task. The underlying move is the same each time: decide where you need control and where you need range, then set constraints accordingly. Matching strategy to task type is what separates a competent prompter from one who gets the same mediocre output on every task."
-        ],
-        "fr": [
-          "Adapter la stratégie selon le type de tâche\n\nLa pile de composants s'applique à chaque prompt, mais l'accent change selon la tâche.\n\nL'analyse, la recherche, la rédaction et le brainstorming récompensent chacun un équilibre différent entre spécificité et latitude créative. Utiliser un style unique et fixe pour les quatre se traduit par une perte de qualité sur toutes les tâches pour lesquelles il ne convient pas.\n\nAnalyse. Exige des contraintes strictes et des critères explicites. Dites à Claude quoi mesurer, par rapport à quelle norme, et comment gérer l'ambiguïté. Faible latitude créative ; spécification élevée.\n\nRecherche. Exige un périmètre clair et une discipline des sources. Définissez la question, les limites et si des sources récentes sont requises. Les besoins de mise à jour rapide peuvent être comblés en activant la recherche web dans le chat, tandis qu'une enquête approfondie multi-sources renvoie à Research (disponible dans les plans payants). Demandez des citations pour que les affirmations soient vérifiables.\n\nRédaction. Exige que l'audience, le ton et le format soient spécifiés, en laissant de la place à Claude pour trouver la formulation. Latitude moyenne : vous contrôlez la forme, Claude comble le contenu.\n\nBrainstorming. Exige des contraintes lâches et une grande latitude. Une sur-spécification tue la divergence que vous recherchez. Donnez l'objectif et les limites, puis demandez du volume et de la diversité avant de restreindre.\n\nRéférence rapide de stratégie\n\nType de tâcheCe qu'il faut resserrerCe qu'il faut assouplir\n\nAnalyseCritères, normes, périmètreFormulation\n\nRechercheQuestion, sources, citationsApproche de synthèse\n\nRédactionAudience, ton, formatChoix des mots\n\nBrainstormingObjectif et seules limitesQuantité et orientation\n\nQuatre mini-démonstrations, une par type de tâche\n\nAnalyse. \"Comparez ces deux contrats fournisseurs sur les conditions de paiement, les droits de résiliation et les plafonds de responsabilité. Pour chacun, indiquez quel contrat est le plus favorable pour nous et pourquoi, dans un tableau de trois lignes.\" Critères stricts, sortie définie, pas de place pour s'éloigner.\n\nRecherche. \"En utilisant des sources récentes, résumez comment trois concurrents nommés ont positionné leurs lancements du T2. Citez chaque source. Signalez tout ce que vous ne pouvez pas vérifier.\" Périmètre et discipline de citation définis d'emblée ; Research (ou la recherche web dans le chat pour des besoins plus légers) fournit la mise à jour.\n\nRemarque : les citations sont vérifiables lorsqu'elles proviennent d'une source ancrée (recherche web ou résultats Research) ; les citations produites uniquement à partir de la mémoire d'entraînement peuvent paraître tout aussi assurées et doivent être vérifiées indépendamment.\n\nRédaction. \"Rédigez un post LinkedIn de 150 mots annonçant notre nouvelle fonctionnalité de reporting, destiné aux responsables des opérations, dans un ton confiant mais non commercial.\" Audience, longueur et ton fixés ; la formulation laissée ouverte.",
-          "Brainstorming. \"Donnez-moi 20 angles pour une campagne autour d'un rapprochement de fin de mois plus rapide. Étendez largement les idées ; ne vous auto-éditez pas encore.\" Objectif et une seule contrainte ; les limites viennent ensuite, une fois la variété établie.\n\nLa même structure de prompt sous-tend les quatre, mais le curseur entre contrôle et latitude varie selon la tâche. Le mouvement sous-jacent est le même à chaque fois : décidez où vous avez besoin de contrôle et où vous avez besoin d'amplitude, puis fixez les contraintes en conséquence. Adapter la stratégie au type de tâche est ce qui sépare un prompteur compétent de celui qui obtient le même résultat médiocre pour chaque tâche."
-        ]
-      },
-      "totalPages": 2
-    },
-    {
-      "id": "lesson_04",
-      "title": {
-        "en": "Strategy by Task Type",
-        "fr": "Stratégie par type de tâche"
-      },
-      "type": "checkpoint",
-      "duration": 5,
-      "pages": {
-        "en": [
-          "Checkpoint: Diagnose the Prompts\n\nFour prompts below each have one dominant weakness. For each, identify the missing or mishandled component and state the single change that would most improve the output.\n\nSubmit\nSkip for now"
-        ],
-        "fr": [
-          "Point de contrôle : Diagnostiquer les prompts\n\nLes quatre prompts ci-dessous présentent chacun une faiblesse dominante. Pour chacun, identifiez la composante manquante ou mal traitée et indiquez le seul changement qui améliorerait le plus le résultat.\n\nSoumettre\nPasser pour l'instant"
-        ]
-      },
-      "totalPages": 1
-    },
-    {
-      "id": "lesson_05",
-      "title": {
-        "en": "Repair the Prompt",
-        "fr": "Réparer le Prompt"
-      },
-      "type": "exercise",
-      "duration": 6,
-      "pages": {
-        "en": [
-          "Exercise: Repair the Underperforming Prompt\n\nThis exercise puts the whole module together: a weak prompt, its disappointing output, and your job to diagnose what is missing and repair it using the component stack.\n\nBelow is a prompt, the output it produced, and the author's actual goal. Work in three steps: find the specification gaps, match each fix to the component it repairs, then assemble the repaired prompt. The ideal answer is revealed at the end.\n\nThe weak prompt\n\n\"Summarize the customer feedback and tell me what to do.\"\n\nThe output it produced\n\nA generic five-bullet list of themes (\"customers want faster support,\" \"pricing is a concern\") with vague advice (\"consider improving response times\"). Nothing tied to the actual data, no priorities, nothing actionable.\n\nThe author's real goal\n\nA product manager has 200 survey responses and needs the top three issues by frequency, each with a representative quote, ranked so she can decide what to fix this quarter.\n\nStage 1 of 3 · Diagnose the gaps\n\nSelect every component the prompt is missing or under-specifies.\n\nConfirm gaps\n\nStage 2 of 3 · Match each fix to the component it repairs\n\nDrag each fragment to the component it satisfies. One fragment does not belong.\n\nCheck matches\n\nStage 3 of 3 · Assemble the repaired prompt\n\nOrder the five fragments into a clean prompt sequence.\n\nCheck order\nReveal model answer\n\nSkip for now\n\nQuizModule 2·5 min\n\nModule 2 Quiz: Prompting Foundations\n\nFive scenario-style questions. Each presents a situation; select the response that best applies the module's prompting framework. Approximately five minutes.\n\nSubmit quiz\nSkip for now\n\nModule 2Key Takeaways·5 min\n\nKey Takeaways\n\nFive things that hold across this module:\n\n01\n\nStructure drives quality, not cleverness.\n\nFive components (role, context, task, constraints, format) carry almost every professional prompt. Run them before sending anything that matters.\n\n02\n\nContext is the component you will forget.\n\nClaude cannot see what lives only in your head. The most common cause of generic output is a context gap, not a model limitation.\n\n03\n\nDecompose complex work into ordered steps.\n\nMulti-stage requests succeed when each step produces a checkable result and the high-stakes foundation is built first.\n\n04\n\nIterate on the component that failed.\n\nRead the output as a diagnostic, change the one thing it points to, and stop when rounds stop improving the result.\n\n05\n\nMatch strategy to task type.",
-          "Analysis wants constraints; brainstorming wants latitude. Decide where you need control and where you need range, then set constraints to fit.\n\nSources\n\nAll product behavior descriptions are based on claude.ai features as of June 2026. Feature availability and behavior should be verified against current Anthropic documentation at publish:\n\nAnthropic docs: prompt engineering overview and best practices, platform.claude.com/docs\n\nAI Fluency Framework: Description competency, for the prompting backbone framing\n\nClaude Help Center: Code execution for verified calculation, support.claude.com\n\nModule CompleteAssociate Path·2 min\n\nCongrats! You’ve successfully completed this module.\n\nYou can now structure prompts that get consistent, high-quality results from Claude. Master the prompt, and Claude does exactly what you need, every time.\n\n0\nof ? checkpoints passed\n\nM1\n\nM1: Product & Model Selection\n\nChoose the right entry point, model, and features for any given task.\n\nM2\n\nM2: Prompting\n\nBuild structured prompts and adapt them to the task type.\n\nYou Are Here\n\nM3\n\nM3: Output Evaluation\n\nValidate output and know when human review is non-negotiable.\n\nUp Next\n\nM4\n\nM4: Workflow Integration\n\nMap a workflow against Delegation criteria and redesign it safely.\n\nM5\n\nM5: Configuration\n\nConfigure and maintain Projects, instructions, and knowledge.\n\nM6\n\nM6: Governance\n\nApply use-case, data, policy, and ethics judgment responsibly.\n\nM7\n\nM7: Troubleshooting\n\nDiagnose underperformance and optimize workflows when results fall short.\n\nM8\n\nM8: Course Summary & Next Steps\n\nRecap the journey, prepare for the exam, and recognize escalation boundaries to the Developer and Architect tracks.\n\nReview module\nStart over\nStart Module 3 →\nReturn to course home\n\nModule 2 complete.\n\n← Previous\n\n☰ Contents\n\nNext →"
-        ],
-        "fr": [
-          "Exercise : Réparer le prompt sous-performant\n\nCet exercice rassemble tout le module : un prompt faible, sa sortie décevante, et votre travail pour diagnostiquer ce qui manque et le réparer en utilisant la pile de composants.\n\nCi‑dessous se trouvent un prompt, la sortie qu’il a produite, et l’objectif réel de l’auteur. Travaillez en trois étapes : trouvez les lacunes de spécification, associez chaque correction au composant qu’elle répare, puis assemblez le prompt réparé. La réponse idéale est révélée à la fin.\n\nLe prompt faible\n\n\"Résumez les retours clients et dites-moi quoi faire.\"\n\nLa sortie qu’il a produite\n\nUne liste générique de cinq puces sur des thèmes (« les clients veulent un support plus rapide », « le prix est un sujet de préoccupation ») avec des conseils vagues (« envisager d’améliorer les temps de réponse »). Rien n’est lié aux données réelles, aucune priorité, rien d’actionnable.\n\nL’objectif réel de l’auteur\n\nUne product manager a 200 réponses à une enquête et a besoin des trois principaux problèmes par fréquence, chacun avec une citation représentative, classés pour qu’elle puisse décider quoi corriger ce trimestre.\n\nÉtape 1 sur 3 · Diagnostiquer les lacunes\n\nSélectionnez chaque composant que le prompt omet ou sous‑spécifie.\n\nConfirmer les lacunes\n\nÉtape 2 sur 3 · Associer chaque correction au composant qu’elle répare\n\nFaites glisser chaque fragment vers le composant qu’il satisfait. Un fragment n’appartient pas.\n\nVérifier les correspondances\n\nÉtape 3 sur 3 · Assembler le prompt réparé\n\nOrdonnez les cinq fragments en une séquence de prompt claire.\n\nVérifier l’ordre\nAfficher la réponse du modèle\n\nPasser pour l'instant\n\nQuiz Module 2 · 5 min\n\nQuiz du Module 2 : Fondations du prompting\n\nCinq questions de type scénarios. Chacune présente une situation ; sélectionnez la réponse qui correspond le mieux au cadre de prompting du module. Environ cinq minutes.\n\nSoumettre le quiz\nPasser pour l'instant\n\nModule 2 Points clés · 5 min\n\nPoints clés\n\nCinq éléments qui valent pour tout le module :\n\n01\n\nLa structure détermine la qualité, pas la ruse.\n\nCinq composants (rôle, contexte, tâche, contraintes, format) couvrent presque tous les prompts professionnels. Passez-les en revue avant d’envoyer quoi que ce soit d’important.\n\n02\n\nLe contexte est le composant que vous oublierez.\n\nClaude ne peut pas voir ce qui ne vit que dans votre tête. La cause la plus fréquente d’une sortie générique est un manque de contexte, pas une limitation du modèle.\n\n03\n\nDécomposez un travail complexe en étapes ordonnées.\n\nLes requêtes à plusieurs étapes réussissent quand chaque étape produit un résultat vérifiable et que la fondation à fort enjeu est construite en premier.\n\n04\n\nItérez sur le composant qui a échoué.\n\nLisez la sortie comme un diagnostic, changez la seule chose qu’elle indique, et arrêtez-vous quand les itérations cessent d’améliorer le résultat.\n\n05\n\nFaites correspondre la stratégie au type de tâche.",
-          "L’analyse veut des contraintes ; le brainstorming veut de la latitude. Décidez où vous avez besoin de contrôle et où vous avez besoin d’amplitude, puis fixez des contraintes appropriées.\n\nSources\n\nToutes les descriptions du comportement produit sont basées sur les fonctionnalités de claude.ai en date de juin 2026. La disponibilité et le comportement des fonctionnalités doivent être vérifiés contre la documentation Anthropic publiée :\n\nAnthropic docs: prompt engineering overview and best practices, platform.claude.com/docs\n\nAI Fluency Framework: Description competency, for the prompting backbone framing\n\nClaude Help Center: Code execution for verified calculation, support.claude.com\n\nModule terminé — Parcours Associé · 2 min\n\nFélicitations ! Vous avez complété ce module avec succès.\n\nVous savez maintenant structurer des prompts qui produisent des résultats cohérents et de haute qualité avec Claude. Maîtrisez le prompt, et Claude fera exactement ce dont vous avez besoin, à chaque fois.\n\n0\nsur ? points de contrôle réussis\n\nM1\n\nM1 : Sélection du produit et du modèle\n\nChoisir le bon point d’entrée, modèle et fonctionnalités pour chaque tâche.\n\nM2\n\nM2 : Prompting\n\nConstruire des prompts structurés et les adapter au type de tâche.\n\nVous êtes ici\n\nM3\n\nM3 : Évaluation des sorties\n\nValider la sortie et savoir quand la relecture humaine est indispensable.\n\nÀ venir\n\nM4\n\nM4 : Intégration au flux de travail\n\nCartographier un flux de travail par rapport aux critères de Délégation et le repenser en toute sécurité.\n\nM5\n\nM5 : Configuration\n\nConfigurer et maintenir Projets, instructions et connaissances.\n\nM6\n\nM6 : Gouvernance\n\nAppliquer le jugement sur les cas d’usage, les données, les politiques et l’éthique de manière responsable.\n\nM7\n\nM7 : Dépannage\n\nDiagnostiquer les sous‑performances et optimiser les flux de travail lorsque les résultats sont insuffisants.\n\nM8\n\nM8 : Récapitulatif du cours et prochaines étapes\n\nReprendre le parcours, préparer l’examen et reconnaître les limites d’escalade vers les parcours Développeur et Architecte.\n\nRevoir le module\nRecommencer\nCommencer le Module 3 →\nRetour à l'accueil du cours\n\nModule 2 terminé.\n\n← Précédent\n\n☰ Contenu\n\nSuivant →"
-        ]
-      },
-      "totalPages": 2
+      }
     }
   ],
   "exercises": [
     {
-      "id": "ex_1",
+      "id": "ex_claude_certified_associate_foundations__02_001",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 1",
-        "fr": "Exercice 1"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Anatomy of a Prompt\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Anatomie d'un Prompt\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "The shape of the result: a table, a bulleted list, a three-paragraph memo, a draft email. Stating the format up front saves an iteration.\nNot every prompt needs all five. A quick question needs a task and maybe a constraint. A client deliverable needs all five. The skill is noticing which components a given task requires.\nDescription in practice\nThe Description competency is the habit of making each component explicit instead of assuming Claude will infer it. Unless you connect a source through a Connector, Claude cannot see your inbox, your org chart, or last week's meeting, and even with a connector, Claude sees only what you have allowed it to access. Anything that lives only in your head or outside a connected source is a context gap, and context gaps are the single most common reason a prompt underperforms for new users.\nDiagnosing a weak prompt",
+        "fr": "La forme du résultat : un tableau, une liste à puces, un mémo en trois paragraphes, un brouillon d’e-mail. Énoncer le format dès le départ permet d'économiser une itération.\nTous les prompts n'ont pas besoin des cinq éléments. Une question rapide nécessite une tâche et peut-être une contrainte. Un livrable client nécessite les cinq éléments. La compétence consiste à remarquer quels composants une tâche donnée nécessite.\nDescription en pratique\nLa compétence Description est l'habitude de rendre explicite chaque composant au lieu de supposer que Claude le déduira. À moins que vous ne connectiez une source via un Connector, Claude ne peut pas voir votre boîte de réception, votre organigramme, ou la réunion de la semaine dernière, et même avec un Connector, Claude ne voit que ce à quoi vous lui avez donné accès. Tout ce qui vit uniquement dans votre tête ou en dehors d'une source connectée est une lacune de contexte, et les lacunes de contexte sont la raison la plus fréquente pour laquelle un prompt sous-performe chez les nouveaux utilisateurs.\nDiagnostiquer un prompt faible"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_2",
+      "id": "ex_claude_certified_associate_foundations__02_002",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_02",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 2",
-        "fr": "Exercice 2"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Task Decomposition\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Décomposition de la tâche\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Not every prompt needs all five. A quick question needs a task and maybe a constraint. A client deliverable needs all five. The skill is noticing which components a given task requires.\nDescription in practice\nThe Description competency is the habit of making each component explicit instead of assuming Claude will infer it. Unless you connect a source through a Connector, Claude cannot see your inbox, your org chart, or last week's meeting, and even with a connector, Claude sees only what you have allowed it to access. Anything that lives only in your head or outside a connected source is a context gap, and context gaps are the single most common reason a prompt underperforms for new users.\nDiagnosing a weak prompt\nHold a disappointing prompt against the component stack and the gap usually becomes obvious. Missing context produces generic output. An ambiguous task verb produces the wrong action. Absent constraints produce output that is the wrong length or tone. The components are also a diagnostic checklist, which is why Lesson 4 returns to them when output falls short.",
+        "fr": "Tous les prompts n'ont pas besoin des cinq éléments. Une question rapide nécessite une tâche et peut-être une contrainte. Un livrable client nécessite les cinq éléments. La compétence consiste à repérer quels composants une tâche donnée nécessite.\nDescription en pratique\nLa compétence Description consiste à rendre explicite chaque composant au lieu de supposer que Claude l'inférera. À moins que vous ne connectiez une source via un Connector, Claude ne peut pas voir votre boîte de réception, votre organigramme ou la réunion de la semaine dernière, et même avec un Connector, Claude ne voit que ce que vous avez autorisé à accéder. Tout ce qui vit uniquement dans votre tête ou en dehors d'une source connectée est une lacune de contexte, et les lacunes de contexte constituent la raison la plus fréquente pour laquelle un prompt sous-performe chez les nouveaux utilisateurs.\nDiagnostic d'un prompt faible\nEn confrontant un prompt décevant à la pile de composants, l'écart devient généralement évident. Le contexte manquant produit une sortie générique. Un verbe de tâche ambigu produit l'action incorrecte. L'absence de contraintes produit une sortie de mauvaise longueur ou au mauvais ton. Les composants constituent également une liste de contrôle diagnostique, c'est pourquoi la leçon 4 y revient lorsque la sortie est insuffisante."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_3",
+      "id": "ex_claude_certified_associate_foundations__02_003",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_03",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 3",
-        "fr": "Exercice 3"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Iterating to Improve\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Itérer pour s'améliorer\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Before sending any prompt that matters\nRun the five components in your head: have I given Claude the role, the context it cannot infer, an unambiguous task, the constraints, and the format I want back? Thirty seconds of specification routinely saves several rounds of correction.\nTeachingTask Decomposition·10 min\nTask Decomposition for Complex Requests\nSome requests are too large to specify as a single instruction.",
+        "fr": "Avant d'envoyer tout prompt important\nPassez mentalement par les cinq éléments : ai-je donné à Claude le rôle, le contexte qu'il ne peut pas inférer, une tâche sans ambiguïté, les contraintes et le format que je veux en retour ? Trente secondes de spécification permettent généralement d'économiser plusieurs tours de correction.\nTeachingTask Decomposition·10 min\nDécomposition des tâches pour les demandes complexes\nCertaines demandes sont trop volumineuses pour être spécifiées en une seule instruction."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_4",
+      "id": "ex_claude_certified_associate_foundations__02_004",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_04",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 4",
-        "fr": "Exercice 4"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Strategy by Task Type\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Stratégie par type de tâche\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Three deliverables, one foundation: sequence the shared extraction first.\nScenario\nA communications manager needs to turn a dense 20-page policy change into an internal announcement, an FAQ for staff, and a short briefing for executives. Before reading on, decompose this into an ordered sequence of steps you would run with Claude.\nModel decomposition\nStep 1: Extract the substantive changes from the policy document and what each one means in practice.",
+        "fr": "Trois livrables, une seule fondation : séquencez l'extraction partagée en premier.\nScénario\nUn responsable des communications doit transformer un changement de politique dense de 20 pages en une annonce interne, une FAQ pour le personnel et un bref exposé pour les cadres. Avant d'aller plus loin, décomposez ceci en une séquence ordonnée d'étapes que vous exécuteriez avec Claude.\nDécomposition du modèle\nÉtape 1 : Extraire les changements substantiels du document de politique et ce que chacun implique en pratique."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_5",
+      "id": "ex_claude_certified_associate_foundations__02_005",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_05",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 5",
-        "fr": "Exercice 5"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Strategy by Task Type\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Stratégie par type de tâche\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Model decomposition\nStep 1: Extract the substantive changes from the policy document and what each one means in practice.\nStep 2: Confirm the extraction is complete and accurate before building anything on top of it.\nStep 3: Draft the staff announcement from the confirmed change list, tuned to a general audience.\nStep 4: Draft the FAQ, anticipating the questions staff will likely ask about those changes.",
+        "fr": "Décomposition du modèle\nÉtape 1 : Extraire les changements substantiels du document de politique et ce que chacun signifie en pratique.\nÉtape 2 : Vérifier que l'extraction est complète et exacte avant de construire quoi que ce soit dessus.\nÉtape 3 : Rédiger l'annonce au personnel à partir de la liste des changements confirmée, adaptée à un public général.\nÉtape 4 : Rédiger la FAQ, en anticipant les questions que le personnel est susceptible de poser à propos de ces changements."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_6",
+      "id": "ex_claude_certified_associate_foundations__02_006",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_06",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 6",
-        "fr": "Exercice 6"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Repair the Prompt\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Réparer le Prompt\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Analysis. Wants tight constraints and explicit criteria. Tell Claude what to measure, against what standard, and how to handle ambiguity. Low creative latitude; high specification.\nResearch. Wants clear scope and source discipline. Define the question, the boundaries, and whether current sources are required. Quick currency needs can be met by turning on web search in chat, while deep multi-source investigation points to Research (available on paid plans). Ask for citations so claims are checkable.\nDrafting. Wants audience, tone, and format specified, with room for Claude to find the phrasing. Medium latitude: you control the shape, Claude fills it.\nBrainstorming. Wants loose constraints and high latitude. Over-specifying kills the divergence you are after. Give the goal and the boundaries, then ask for volume and range before you narrow.\nStrategy quick reference",
+        "fr": "Analyse. Veut des contraintes serrées et des critères explicites. Dites à Claude quoi mesurer, selon quel standard, et comment gérer l'ambiguïté. Faible latitude créative; haute spécification.\nRecherche. Veut un périmètre clair et une discipline des sources. Définir la question, les limites, et si les sources actuelles sont requises. Les besoins de fraîcheur rapide peuvent être satisfaits en activant la recherche web dans le chat, tandis qu'une investigation approfondie multi-sources renvoie à Recherche (disponible sur les plans payants). Demander des citations afin que les affirmations soient vérifiables.\nRédaction. Veut que le public, le ton et le format soient spécifiés, avec une marge pour que Claude trouve la formulation. Latitude moyenne : vous contrôlez la forme, Claude la complète.\nRemue-méninges. Veut des contraintes lâches et une grande latitude. Trop en faire tue la divergence que vous recherchez. Donnez l'objectif et les limites, puis demandez le volume et l'éventail avant de resserrer.\nRéférence rapide de la stratégie"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_7",
+      "id": "ex_claude_certified_associate_foundations__02_007",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_07",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 7",
-        "fr": "Exercice 7"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Anatomy of a Prompt\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Anatomie d'un Prompt\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "CheckpointStrategy by Task Type·5 min\nCheckpoint: Diagnose the Prompts\nFour prompts below each have one dominant weakness. For each, identify the missing or mishandled component and state the single change that would most improve the output.\nSubmit\nSkip for now\nExerciseRepair the Prompt·6 min",
+        "fr": "CheckpointStrategy par type de tâche·5 min\nCheckpoint : Diagnostiquer les prompts\nQuatre prompts ci-dessous présentent chacun une faiblesse dominante. Pour chacun, identifiez le composant manquant ou mal géré et indiquez le seul changement qui améliorerait le plus la sortie.\nSoumettre\nIgnorer pour le moment\nExercice Réparer le Prompt·6 min"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_8",
+      "id": "ex_claude_certified_associate_foundations__02_008",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_09",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 8",
-        "fr": "Exercice 8"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Task Decomposition\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Décomposition de la tâche\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "ExerciseRepair the Prompt·6 min\nExercise: Repair the Underperforming Prompt\nThis exercise puts the whole module together: a weak prompt, its disappointing output, and your job to diagnose what is missing and repair it using the component stack.\nBelow is a prompt, the output it produced, and the author's actual goal. Work in three steps: find the specification gaps, match each fix to the component it repairs, then assemble the repaired prompt. The ideal answer is revealed at the end.\nThe weak prompt",
+        "fr": "Exercice : Réparer le prompt · 6 min\nExercice : Réparer le prompt sous-performant\nCet exercice réunit l'ensemble du module : un prompt faible, sa sortie décevante, et votre tâche consistant à diagnostiquer ce qui manque et le réparer en utilisant la pile de composants.\nCi-dessous se trouve un prompt, la sortie qu'il a produite, et le véritable objectif de l'auteur. Travaillez en trois étapes : repérez les écarts de spécification, associez chaque correctif au composant qu'il répare, puis assemblez le prompt réparé. La réponse idéale est révélée à la fin.\nLe prompt faible"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_9",
+      "id": "ex_claude_certified_associate_foundations__02_009",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 9",
-        "fr": "Exercice 9"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Iterating to Improve\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Itérer pour s'améliorer\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Exercise: Repair the Underperforming Prompt\nThis exercise puts the whole module together: a weak prompt, its disappointing output, and your job to diagnose what is missing and repair it using the component stack.\nBelow is a prompt, the output it produced, and the author's actual goal. Work in three steps: find the specification gaps, match each fix to the component it repairs, then assemble the repaired prompt. The ideal answer is revealed at the end.\nThe weak prompt\n\"Summarize the customer feedback and tell me what to do.\"",
+        "fr": "Exercice : réparer le prompt sous-performant\nCet exercice réunit l'ensemble du module : un prompt faible, sa sortie décevante, et votre tâche consistant à diagnostiquer ce qui manque et à le réparer en utilisant la pile de composants.\nCi-dessous se trouve un prompt, la sortie qu'il a générée, et le vrai objectif de l'auteur. Travaillez en trois étapes : repérer les lacunes de spécification, faire correspondre chaque correctif au composant qu'il répare, puis assembler le prompt réparé. La réponse idéale est révélée à la fin.\nLe prompt faible\n\"Résume les retours des clients et dis-moi quoi faire.\""
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_10",
+      "id": "ex_claude_certified_associate_foundations__02_010",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_02",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 10",
-        "fr": "Exercice 10"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Strategy by Task Type\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Stratégie par type de tâche\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "The weak prompt\n\"Summarize the customer feedback and tell me what to do.\"\nThe output it produced\nA generic five-bullet list of themes (\"customers want faster support,\" \"pricing is a concern\") with vague advice (\"consider improving response times\"). Nothing tied to the actual data, no priorities, nothing actionable.\nThe author's real goal",
+        "fr": "Le prompt faible\n\"Résumez les retours des clients et dites-moi ce qu'il faut faire.\"\nLa sortie qu'il a produite\nUne liste générique à cinq puces de thèmes (« les clients veulent un support plus rapide », « le prix est une préoccupation ») avec des conseils vagues (« envisagez d'améliorer les temps de réponse »). Rien n'est lié aux données réelles, pas de priorités, rien de concret à mettre en œuvre.\nLe véritable objectif de l’auteur"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_11",
+      "id": "ex_claude_certified_associate_foundations__02_011",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_03",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 11",
-        "fr": "Exercice 11"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Strategy by Task Type\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Stratégie par type de tâche\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Check order\nReveal model answer\nSkip for now\nQuizModule 2·5 min\nModule 2 Quiz: Prompting Foundations",
+        "fr": "Vérifier l'ordre\nAfficher la réponse du modèle\nIgnorer pour l'instant\nQuizModule 2·5 min\nQuiz du Module 2 : Fondements du prompting"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_12",
+      "id": "ex_claude_certified_associate_foundations__02_012",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_04",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 12",
-        "fr": "Exercice 12"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Repair the Prompt\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Réparer le Prompt\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "QuizModule 2·5 min\nModule 2 Quiz: Prompting Foundations\nFive scenario-style questions. Each presents a situation; select the response that best applies the module's prompting framework. Approximately five minutes.\nSubmit quiz\nSkip for now\nModule 2Key Takeaways·5 min",
+        "fr": "QuizModule 2·5 min\nQuiz du Module 2 : Fondations du prompting\nCinq questions au style scénario. Chacune présente une situation ; sélectionnez la réponse qui correspond le mieux au cadre de prompting du module. Environ cinq minutes.\nSoumettre le quiz\nPasser pour le moment\nModule 2 Points clés·5 min"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_13",
+      "id": "ex_claude_certified_associate_foundations__02_013",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_05",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 13",
-        "fr": "Exercice 13"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Anatomy of a Prompt\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Anatomie d'un Prompt\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Model answer (S09_MODEL):\n\"You are a product analyst (role). Attached are 200 customer survey responses (context). Identify the three most frequently raised issues (task), ranked by how many responses mention each, and for each issue include one representative verbatim quote and the approximate share of responses it appears in (constraints). Use code execution to count accurately rather than estimating. Format as a ranked list, most frequent first (output format).\"\nDocumented improvements\nAdded role and context so the analysis is grounded in the actual responses\nReplaced the vague task with a specific, ranked, countable instruction\nAdded constraints (representative quote, share of responses) that make the output actionable\nSpecified code execution so the frequency counts are verified, not guessed\nSpecified the output format so the result is decision-ready",
+        "fr": "Réponse modèle (S09_MODEL):\n« Vous êtes un analyste produit (rôle). Ci-joint 200 réponses d'enquête client (contexte). Identifiez les trois problèmes les plus fréquemment évoqués (tâche), classés par le nombre de réponses qui mentionnent chacun, et pour chaque problème incluez une citation mot à mot représentative et la part approximative des réponses dans lesquelles elle apparaît (contraintes). Utilisez l'exécution du code pour compter avec précision plutôt que d'estimer. Formatez sous forme de liste classée, la plus fréquente en premier (format de sortie). »\nAméliorations documentées\nAjout du rôle et du contexte afin que l'analyse soit ancrée dans les réponses réelles\nRemplacement de la tâche vague par une instruction précise, classable et dénombrable\nAjout de contraintes (citation représentative, part des réponses) qui rendent la sortie exploitable\nSpécification de l'exécution du code afin que les comptages de fréquence soient vérifiés, et non supposés\nSpécification du format de sortie afin que le résultat soit prêt à la prise de décision"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_14",
+      "id": "ex_claude_certified_associate_foundations__02_014",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_06",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 14",
-        "fr": "Exercice 14"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Task Decomposition\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Décomposition de la tâche\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "All correct: You can map each weakness to a component. Notice that two of the four are under-specified and one is over-specified; calibration runs in both directions.",
+        "fr": "Tout est correct : Vous pouvez faire correspondre chaque faiblesse à un composant. Notez que deux des quatre sont sous-spécifiés et l'un est sur-spécifié ; la calibration se fait dans les deux sens."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_15",
+      "id": "ex_claude_certified_associate_foundations__02_015",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_07",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 15",
-        "fr": "Exercice 15"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Iterating to Improve\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Itérer pour s'améliorer\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Feedback: Re-read the prompts against the five components and the task-type table. The over-constrained brainstorm is the one most learners miss, because more specification is not always better. Adjust your selections and submit again.",
+        "fr": "Commentaires : Relisez les prompts par rapport aux cinq composants et au tableau des types de tâches. Le brainstorming trop contraint est celui que la plupart des apprenants manquent, car plus de spécifications n'est pas toujours mieux. Ajustez vos sélections et soumettez à nouveau."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_16",
+      "id": "ex_claude_certified_associate_foundations__02_016",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_09",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 16",
-        "fr": "Exercice 16"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Strategy by Task Type\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Stratégie par type de tâche\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "incorrect: Return to Lessons 2 and 5. Run each prompt through the component stack first, then ask whether the strategy fits the task type.",
+        "fr": "faux : Revenez aux leçons 2 et 5. Exécutez chaque prompt d'abord par la pile de composants, puis demandez si la stratégie convient au type de tâche."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_17",
+      "id": "ex_claude_certified_associate_foundations__02_017",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 17",
-        "fr": "Exercice 17"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Strategy by Task Type\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Stratégie par type de tâche\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Skipped: Return to this checkpoint before the exercise at the end of the module. The five-component diagnosis you practice here is the same that you apply in the next exercise.",
+        "fr": "Sauté : retournez à ce point de contrôle avant l'exercice à la fin du module. Le diagnostic à cinq composants que vous pratiquez ici est le même que celui que vous appliquez dans l'exercice suivant."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_18",
+      "id": "ex_claude_certified_associate_foundations__02_018",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_02",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 18",
-        "fr": "Exercice 18"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Repair the Prompt\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Réparer le Prompt\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "All five gaps identified: Good. The context (200 responses) and role (analyst framing) are the easiest to miss because they exist in the author's head but never appear in the prompt.",
+        "fr": "Les cinq écarts identifiés : Bien. Le contexte (200 réponses) et le rôle (cadre d'analyste) sont les plus faciles à passer inaperçus car ils existent dans l'esprit de l'auteur mais n'apparaissent jamais dans le prompt."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_19",
+      "id": "ex_claude_certified_associate_foundations__02_019",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_03",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 19",
-        "fr": "Exercice 19"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Anatomy of a Prompt\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Anatomie d'un Prompt\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Partial · : +s09S1Sel.length+'/5'",
+        "fr": "Partial · : +s09S1Sel.length+'/5'"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_20",
+      "id": "ex_claude_certified_associate_foundations__02_020",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_04",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 20",
-        "fr": "Exercice 20"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Task Decomposition\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Décomposition de la tâche\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "All fragments placed correctly: You identified the tone instruction (\"professional and polished\") as the distractor; it closes no specification gap. Stage 3 is unlocked.",
+        "fr": "Tous les fragments placés correctement : Vous avez identifié l'instruction de ton (\"professional and polished\") comme le distracteur ; elle ne comble aucune lacune de spécification. L'étape 3 est déverrouillée."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_21",
+      "id": "ex_claude_certified_associate_foundations__02_021",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_05",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 21",
-        "fr": "Exercice 21"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Iterating to Improve\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Itérer pour s'améliorer\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Model answer: revised prompt: \"You are a product analyst (role). Attached are 200 customer survey responses (context). Identify the three most frequently raised issues (task), ranked by how many responses mention each, and for each issue include one representative verbatim quote and the approximate share of responses it appears in (constraints). Use code execution to count accurately rather than estimating. Format as a ranked list, most frequent first (output format).\"\nDocumented improvements\nAdded role and context so the analysis is grounded in the actual responses\nReplaced the vague task with a specific, ranked, countable instruction\nAdded constraints (representative quote, share of responses) that make the output actionable\nSpecified code execution so the frequency counts are verified, not guessed\nSpecified the output format so the result is decision-ready",
+        "fr": "Réponse du modèle : prompt révisé : « Vous êtes un analyste produit (rôle). Ci-joint, 200 réponses à des enquêtes clients (contexte). Identifiez les trois problématiques les plus fréquemment évoquées (tâche), classées en fonction du nombre de réponses qui les mentionnent, et pour chaque problématique, inclure une citation mot à mot représentative et la part approximative des réponses dans lesquelles elle apparaît (contraintes). Utilisez l'exécution de code pour compter avec précision plutôt que d'estimer. Formatez sous forme de liste classée, la plus fréquente en premier (format de sortie). »\nAméliorations documentées\n- Ajout du rôle et du contexte afin que l'analyse soit ancrée dans les réponses réelles\n- Remplacement de la tâche vague par une instruction spécifique, classée et dénombrable\n- Ajout de contraintes (citation représentative, part des réponses) qui rendent le résultat exploitable\n- Précisé l'exécution de code afin que les décomptes de fréquence soient vérifiés, et non estimés\n- Précisé le format de sortie afin que le résultat soit prêt à la prise de décision"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_22",
+      "id": "ex_claude_certified_associate_foundations__02_022",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_06",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 22",
-        "fr": "Exercice 22"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Strategy by Task Type\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Stratégie par type de tâche\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "All stages correct: You diagnosed all five gaps, mapped each fix to the right component, and rejected the tone distractor, a polished-sounding instruction that closes no gap. That is complete specification: every component carries weight the output depends on.\n\"You are a product analyst (role). Attached are 200 customer survey responses (context). Identify the three most frequently raised issues (task), ranked by how many responses mention each, and for each issue include one representative verbatim quote and the approximate share of responses it appears in (constraints). Use code execution to count accurately rather than estimating. Format as a ranked list, most frequent first (output format).\"\nDocumented improvements\nAdded role and context so the analysis is grounded in the actual responses\nReplaced the vague task with a specific, ranked, countable instruction\nAdded constraints (representative quote, share of responses) that make the output actionable\nSpecified code execution so the frequency counts are verified, not guessed\nSpecified the output format so the result is decision-ready",
+        "fr": "Toutes les étapes correctes : Vous avez diagnostiqué les cinq lacunes, attribué chaque correction au bon composant et rejeté le distracteur de ton, une instruction au ton poli qui ne comble aucune lacune. Cela constitue une spécification complète : chaque composant porte du poids dont dépend la sortie.\n« Vous êtes un analyste produit (rôle). 200 réponses d'enquêtes clients (contexte) sont jointes. Identifiez les trois problèmes les plus fréquemment évoqués (tâche), classés selon le nombre de réponses qui mentionnent chacun d'eux, et pour chaque problème, incluez une citation littérale représentative et la part approximative des réponses où elle apparaît (contraintes). Utilisez l'exécution de code pour compter avec précision plutôt que d'estimer. Formatez-le comme une liste classée, les plus fréquents en premier (format de sortie). »\nAméliorations documentées\nAjout du rôle et du contexte afin que l'analyse soit ancrée dans les réponses réelles\nRemplacement de la tâche vague par une instruction précise, classée et dénombrable\nAjout de contraintes (citation littérale, part des réponses) qui rendent la sortie exploitable\nPrécisé l'exécution de code afin que les décomptes de fréquence soient vérifiés et non déduits\nSpécifié le format de sortie afin que le résultat soit prêt à être utilisé pour la prise de décision"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_23",
+      "id": "ex_claude_certified_associate_foundations__02_023",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_07",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 23",
-        "fr": "Exercice 23"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Strategy by Task Type\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Stratégie par type de tâche\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Not yet: That order is not right yet. Reorder the blocks so each gives Claude what it needs before the next, then check again.",
+        "fr": "Pas encore : cet ordre n'est pas encore correct. Réorganise les blocs pour que chacun donne à Claude ce dont il a besoin avant le suivant, puis vérifie à nouveau."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_24",
+      "id": "ex_claude_certified_associate_foundations__02_024",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_09",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 24",
-        "fr": "Exercice 24"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Repair the Prompt\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Réparer le Prompt\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Skipped: Move on if you need to, but the end-of-module quiz assumes you can rebuild a weak prompt to full component coverage, not just spot what is missing.",
+        "fr": "Ignoré : Passez à autre chose si nécessaire, mais le quiz de fin de module suppose que vous pouvez reconstruire un prompt faible pour une couverture complète des composants, et pas seulement repérer ce qui manque."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_25",
+      "id": "ex_claude_certified_associate_foundations__02_025",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 25",
-        "fr": "Exercice 25"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Anatomy of a Prompt\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Anatomie d'un Prompt\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Full marks: Full coverage of the prompting framework: components, decomposition, diagnostic iteration, task-type strategy, and verified computation.",
+        "fr": "Note maximale : Couverture complète du prompting framework : composants, décomposition, itération diagnostique, stratégie par type de tâche et calculs vérifiés."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_26",
+      "id": "ex_claude_certified_associate_foundations__02_026",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_02",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 26",
-        "fr": "Exercice 26"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Task Decomposition\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Décomposition de la tâche\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Feedback: Review the questions you missed: Q1 maps to Lesson 2, Q2 to Lesson 3, Q3 to Lesson 4, Q4 to Lesson 5, Q5 to Lessons 2 and 4.",
+        "fr": "Retour d'information : Revoyez les questions que vous avez manquées : Q1 correspond à la Leçon 2, Q2 correspond à la Leçon 3, Q3 correspond à la Leçon 4, Q4 correspond à la Leçon 5, Q5 correspond aux Leçons 2 et 4."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_27",
+      "id": "ex_claude_certified_associate_foundations__02_027",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_03",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 27",
-        "fr": "Exercice 27"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Iterating to Improve\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Itérer pour s'améliorer\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "incorrect: Revisit the module before continuing. Prompting is the foundation every later module assumes. Run a prompt from your own work through the five components before retrying.",
+        "fr": "faux : Revoir le module avant de continuer. Le prompting est la base sur laquelle repose chaque module ultérieur. Faites passer un prompt issu de votre propre travail à travers les cinq composants avant de réessayer."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_28",
+      "id": "ex_claude_certified_associate_foundations__02_028",
+      "courseId": "claude_certified_associate_foundations__02",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_04",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 28",
-        "fr": "Exercice 28"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Strategy by Task Type\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Stratégie par type de tâche\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Skipped: Return to complete the quiz before advancing.",
+        "fr": "Ignoré : Revenez pour terminer le quiz avant de continuer."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     }
   ]
 }

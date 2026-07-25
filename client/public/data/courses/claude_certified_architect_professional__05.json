@@ -1,748 +1,342 @@
 {
   "courseId": "claude_certified_architect_professional__05",
+  "sourceCourseTitle": "Claude Certified Architect - Professional / Developer Productivity Enablement",
   "lessons": [
-    {
-      "id": "lesson_00",
-      "title": {
-        "en": "### Team Enablement and Operational Productivity: Architect Module 5",
-        "fr": "### Mise en capacité des équipes et productivité opérationnelle : Architect Module 5"
-      },
-      "type": "teaching",
-      "duration": 5,
-      "pages": {
-        "en": [
-          "### Team Enablement and Operational Productivity: Architect Module 5"
-        ],
-        "fr": [
-          "### Mise en capacité des équipes et productivité opérationnelle : Module Architecte 5"
-        ]
-      },
-      "totalPages": 1
-    },
     {
       "id": "lesson_01",
       "title": {
-        "en": "Module · Orientation",
-        "fr": "Module · Orientation"
+        "en": "Team Enablement and Operational Productivity: Architect Module 5",
+        "fr": "Accompagnement des équipes et productivité opérationnelle : Architect Module 5"
       },
-      "type": "teaching",
-      "duration": 15,
-      "pages": {
-        "en": [
-          "Module · Orientation\n\nOrientation: what you will be able to do by the end\n\nThe first four modules made you an Architect who can take a deployment from a stakeholder's first sentence through design, integration, governance, and handoff. This module is about the team around that deployment: getting people productive with Claude and keeping them productive once the system is live.\n\nBy the end of this module you will be able to:\n\n1Configure Claude tooling and environments for a team including the shared configuration, the rollout pattern, the Skills distribution strategy, and the spend controls that belong in team setup.\n\n2Improve developer workflows with AI tooling and define the review discipline that keeps AI-generated work trustworthy before it reaches production.\n\n3Support debugging and operational issue resolution by connecting symptoms to architecture causes and building the team toward self-sufficiency.\n\nThis module is about enablement\n\nEvery prior module taught you how to build and configure Claude. This one assumes the system is built and asks: how does a team adopt it well, and how does it stay healthy without pulling you into every issue? Team setup helps the team get the environment, the reusable assets, and the spend posture right before anyone logs in. Developer workflows raise the bar on how the team works day to day without lowering the bar on quality, and operational support is what you do when the team encounters something unexpected within the system.\n\nThese topics build on each other. The skills you distribute in setup are the same assets a developer workflow leans on; the review discipline you establish for those workflows is what an operational issue tests under pressure. The three run in order: set up the environment, raise the daily workflow, and keep the system healthy.\n\nDisclaimer / Notice for Educational Content",
-          "We built this Architect course Module 5: Team Enablement and Operational Productivity to help you get real work done with Claude. Treat it as educational content. It doesn't constitute legal, financial, or other professional advice, so adapt what you learn to your own situation. Our products and services evolve quickly, so certain content may contain errors or be outdated; remember to verify on Anthropic's website or docs. Examples and scenarios used in the course are illustrative and often fictitious. If the course material mentions a company or product, it doesn't mean Anthropic endorses them, they endorse Anthropic, or that we're affiliated. Also note your use of Anthropic products and services is covered by our terms, policies and documentation; if anything in this course conflicts with them, they control.\n\nTeam Setup\n\nConfiguring Claude tooling and environments for teams\n\nYou can configure Claude for yourself in minutes; however, configuring it for a team is different. When configuring for a team there are shared defaults so everyone starts from the same baseline, reusable assets that can be updated and revoked centrally, and spend that stays bounded as usage scales across dozens of people. This screen covers the four team-setup decisions an Architect owns: environment, rollout, skills distribution, and spend, and the failure that happens if one of these steps is skipped.\n\nDeploy the environment as a shared configuration\n\nA team environment is a shared configuration: a baseline every developer starts from rather than a set of personal setups. For Claude Code, that means the team agrees on a project-level baseline: a shared CLAUDE.md, an agreed set of tools and MCP servers, and a permission posture, so people start from the same place rather than discovering ad hoc settings and drifting apart. That baseline is something you can review, version, and improve once for everyone.\n\nRoll out through champions, then batches\n\nTeam adoption rarely succeeds as a single all-hands switch-on. The pattern that works best is identifying a champion per department or team who is granted access first, proves the workflow in practice, and then seeds adoption batch by batch. The champion absorbs the early friction, builds the local examples, and becomes the first line of support so the Architect is not the only person who can answer questions for the team.\n\nWorked example",
-          "A 200-person engineering org wants Claude Code across four departments. Instead of enabling all four at once, the Architect enables one champion in each department, gives them two weeks to convert a real workflow (e.g., a code-review assist, a test-generation step), and has each champion run a 45-minute session for their first batch that includes five of their peers. By the time the broad rollout happens, every department has a working example, a local expert, and a shared CLAUDE.md the champion has already tuned. The same rollout attempted as a single mass email would have produced a spike of confused first-time prompts and maybe even a quiet retreat to old habits.\n\nSkills distribution: the team-scale version of reuse\n\nWe've learned that skill packages are repeatable procedures that appear as versioned, reusable units. At team scale, the architectural question is: how should you distribute a skill to your entire team? Consider how you might create, version, and publish it so that the team can access it, how granting and revoking access might work, and how you might roll it back if a skill misbehaves. There are four main ways to distribute team skills, and the mechanism you choose accounts for what the tool is, who uses it, and who has access to govern it.",
-          "There are four ways to deploy a Skill to a team, and they differ in who can access it and how much control you retain. An owner-provisioned Skill, uploaded under Organization settings > Skills, becomes available to everyone in the organization at once. This is the simplest path when a capability genuinely should reach all members. When a Skill should reach only select members, you bundle one or more Skills into a plugin and assign that plugin to a group. Only the group's members are able to access those skills. Plugins are also where governed distribution lives: install preferences such as required, installed-by-default, available, or not available, group targeting, and version-controlled updates from a connected repository. The third mechanism is Claude Code project Skills: filesystem artifacts that live in the project repository (.claude/skills/), so they version with the repository itself and are scoped to the projects that carry them. The fourth is API Skills, called programmatically by the partner's own products. Centrally managed Claude Code configuration is a separate channel entirely: server-managed settings are delivered from Anthropic's servers when users authenticate and refresh on an hourly polling cycle - a settings mechanism, not a Skills distribution path.\n\nSkill distribution mechanisms\n\nDistribution mechanismBest whenGovernance and rollback\n\nOrg-provisioned Skill (Organization settings › Skills)A capability should reach everyone in the organization.Owner-managed availability and removal across the org; users can toggle individual skills off but cannot remove them. No version pinning or native rollback; updates require manual re-upload.\n\nPlugin assigned to a group / orgA procedure or tool set should reach specific teams, or that needs governed rollout.Group targeting, install preferences controlling whether a plugin is required, installed by default, or available to users (exact labels per the current admin UI, support article 13837433), and version-controlled updates from a connected repo. Strongest governance option for group-scoped distribution. It is not the only mechanism with a path back to a prior version: API Skills support explicit version pinning, and Claude Code project Skills roll back with the repository that carries them.",
-          "Claude Code project SkillA tool or convention one team shares across its own projects.A filesystem artifact in the project repository (.claude/skills/), versioning with the repository and scoped to the projects that carry it.\n\nAPI Skill (Messages API container)A capability called programmatically by the partner's own products.Governed in the calling system; supports explicit version pinning; reuse is machine-to-machine rather than human-facing.\n\nPackaging a team workflow as a distributable skill is how a good local practice becomes a team standard. The procedure travels as one governed artifact instead of as undocumented know-how, and updates propagate through versioning rather than through re-explaining.\n\nSet the spend posture before the first bill\n\nTeam setup also includes the cost guardrails. Admins should set these intentionally rather than inherit the defaults: model defaults (which model a session starts on), model allowlists and restrictions (which models the team may switch to), effort guidance (how hard the model works on a task), and spend, rate, and per-user caps that keep consumption within bounds. Module 2 showed that leaving model choice unmanaged can quietly route work to a more capable, more expensive tier than the task requires. At team scale that choice multiplies across every member and every request.\n\nWatch out for\n\nThe skill that shipped with no way back.\nA platform team packaged its release-notes procedure as a skill, bundled it into a plugin, and assigned it to its forty-engineer group. A week later a well-meaning edit changed the prompt and the skill began producing notes in the wrong format across every team that used it. The skills were pushed as a flat bundle without the version-controlled updates and rollback a plugin provides, so the fix required a manual re-edit while bad output kept shipping. The skill was a good idea distributed without the governance it required. A shared asset with no version and no way back is a liability the moment more than one person depends on it. When a shared asset needs versioning, group targeting, or rollback, distribute it inside an organization-managed plugin and identify an owner."
-        ],
-        "fr": [
-          "Module · Orientation\n\nOrientation : ce que vous saurez faire à la fin\n\nLes quatre premiers modules ont fait de vous un Architecte capable de prendre un déploiement depuis la première phrase d'un intervenant jusqu'à la conception, l'intégration, la gouvernance et la passation. Ce module porte sur l'équipe autour de ce déploiement : rendre les personnes productives avec Claude et les maintenir productives une fois le système en production.\n\nÀ la fin de ce module, vous serez capable de :\n\n1 Configurer les outils et environnements Claude pour une équipe, y compris la configuration partagée, le modèle de déploiement, la stratégie de distribution des Skills, et les contrôles de dépenses qui relèvent de la configuration d'équipe.\n\n2 Améliorer les workflows développeur avec des outils d'IA et définir la discipline de revue qui maintient la confiance dans le travail généré par l'IA avant qu'il n'atteigne la production.\n\n3 Soutenir le débogage et la résolution des incidents opérationnels en reliant les symptômes aux causes architecturales et en construisant l'équipe vers l'autonomie.\n\nCe module concerne la mise en capacité\n\nChaque module précédent vous a appris à construire et configurer Claude. Celui-ci part du principe que le système est construit et pose la question : comment une équipe l'adopte-t-elle correctement, et comment reste-t-elle saine sans vous entraîner dans chaque incident ? La configuration de l'équipe aide à donner à l'équipe l'environnement, les actifs réutilisables et la posture de dépenses corrects avant que quiconque ne se connecte. Les workflows développeur augmentent la qualité du travail quotidien sans en abaisser le niveau, et le support opérationnel intervient lorsque l'équipe rencontre quelque chose d'inattendu dans le système.\n\nCes sujets se construisent les uns sur les autres. Les Skills que vous distribuez lors de la configuration sont les mêmes actifs dont un workflow développeur s'appuie ; la discipline de revue que vous établissez pour ces workflows est ce qu'un incident opérationnel mettra à l'épreuve sous pression. Les trois s'enchaînent dans cet ordre : configurer l'environnement, élever le workflow quotidien, et maintenir le système en bonne santé.\n\nAvertissement / Notice pour le contenu éducatif",
-          "Nous avons construit ce cours Architect Module 5 : Team Enablement and Operational Productivity pour vous aider à effectuer un travail réel avec Claude. Considérez-le comme du contenu éducatif. Il ne constitue pas un conseil juridique, financier ou professionnel ; adaptez donc ce que vous apprenez à votre situation. Nos produits et services évoluent rapidement, donc certains contenus peuvent contenir des erreurs ou être obsolètes ; pensez à vérifier sur le site ou la documentation d'Anthropic. Les exemples et scénarios utilisés dans le cours sont illustratifs et souvent fictifs. Si le cours mentionne une entreprise ou un produit, cela ne signifie pas qu'Anthropic les approuve, qu'ils approuvent Anthropic, ni que nous sommes affiliés. Notez également que votre utilisation des produits et services d'Anthropic est couverte par nos conditions, politiques et documentations ; en cas de conflit entre ce cours et ces documents, ces derniers prévalent.\n\nTeam Setup\n\nConfiguration des outils et environnements Claude pour les équipes\n\nVous pouvez configurer Claude pour vous-même en quelques minutes ; cependant, le configurer pour une équipe est différent. Lors de la configuration pour une équipe, il existe des paramètres par défaut partagés afin que tout le monde démarre depuis la même base, des actifs réutilisables qui peuvent être mis à jour et révoqués de manière centralisée, et des dépenses qui restent limitées à mesure que l'utilisation s'étend à des dizaines de personnes. Cet écran couvre les quatre décisions de configuration d'équipe dont un Architecte est responsable : environnement, déploiement, distribution des Skills et dépenses, ainsi que l'échec qui survient si l'une de ces étapes est sautée.\n\nDéployer l'environnement en tant que configuration partagée\n\nUn environnement d'équipe est une configuration partagée : une base à partir de laquelle chaque développeur démarre plutôt qu'un ensemble de configurations personnelles. Pour Claude Code, cela signifie que l'équipe s'accorde sur une base au niveau du projet : un CLAUDE.md partagé, un ensemble convenu d'outils et de serveurs MCP, et une posture de permissions, afin que les personnes commencent du même endroit plutôt que de découvrir des paramètres ad hoc et de diverger. Cette base est quelque chose que vous pouvez revoir, versionner et améliorer une fois pour tous.\n\nDéployer via des référents, puis par vagues\n\nL'adoption par l'équipe réussit rarement comme une simple activation générale. Le modèle qui fonctionne le mieux consiste à identifier un référent par département ou équipe qui obtient l'accès en premier, démontre le workflow en pratique, puis propage l'adoption par vagues. Le référent absorbe la friction initiale, construit les exemples locaux et devient la première ligne de support afin que l'Architecte ne soit pas la seule personne à pouvoir répondre aux questions de l'équipe.\n\nExemple concret",
-          "Une organisation d'ingénierie de 200 personnes veut Claude Code dans quatre départements. Plutôt que d'activer les quatre en même temps, l'Architecte active un référent dans chaque département, leur donne deux semaines pour convertir un workflow réel (par ex. une assistance à la revue de code, une étape de génération de tests), et demande à chaque référent d'animer une session de 45 minutes pour leur première vague incluant cinq de leurs pairs. Au moment du déploiement large, chaque département dispose d'un exemple fonctionnel, d'un expert local et d'un CLAUDE.md partagé que le référent a déjà affiné. Le même déploiement tenté par un seul e-mail massif aurait produit un pic de premières instructions confuses et peut‑être même un retour silencieux aux anciennes habitudes.\n\nDistribution des Skills : la version à l'échelle équipe de la réutilisation\n\nNous avons appris que les skill packages sont des procédures répétables qui apparaissent comme des unités versionnées et réutilisables. À l'échelle de l'équipe, la question architecturale est : comment devriez-vous distribuer une Skill à l'ensemble de votre équipe ? Réfléchissez à la façon dont vous pourriez la créer, la versionner et la publier pour que l'équipe y accède, à la manière dont l'attribution et la révocation d'accès pourraient fonctionner, et à la façon dont vous pourriez effectuer un rollback si une Skill se comporte mal. Il existe quatre manières principales de distribuer des Skills en équipe, et le mécanisme que vous choisissez dépend de ce qu'est l'outil, qui l'utilise, et qui a la gouvernance dessus.",
-          "Il y a quatre façons de déployer une Skill auprès d’une équipe, et elles diffèrent selon qui peut y accéder et le degré de contrôle que vous conservez. Une Skill provisionnée par le propriétaire, téléversée sous Paramètres de l’organisation > Skills, devient immédiatement disponible pour toute l’organisation. C’est la voie la plus simple quand une fonctionnalité doit réellement atteindre tous les membres. Quand une Skill ne doit atteindre que certains membres, vous regroupez une ou plusieurs Skills dans un plugin et assignez ce plugin à un groupe. Seuls les membres du groupe peuvent accéder à ces skills. Les plugins sont aussi le lieu où se trouvent la distribution gouvernée : préférences d’installation comme requis, installé par défaut, disponible ou non disponible, ciblage de groupe, et mises à jour versionnées depuis un dépôt connecté. Le troisième mécanisme est les Claude Code project Skills : des artefacts du système de fichiers qui vivent dans le dépôt du projet (.claude/skills/), ils sont donc versionnés avec le dépôt lui-même et sont limités aux projets qui les embarquent. Le quatrième est les API Skills, appelées de manière programmatique par les propres produits du partenaire. La configuration Claude Code gérée centralement est un canal entièrement séparé : les réglages gérés côté serveur sont fournis par les serveurs d’Anthropic lorsque les utilisateurs s’authentifient et se rafraîchissent selon un cycle de sondage horaire — un mécanisme de paramètres, pas une voie de distribution de Skills.\n\nSkill distribution mechanisms\n\nDistribution mechanismBest whenGovernance and rollback\n\nOrg-provisioned Skill (Organization settings › Skills)Une fonctionnalité doit atteindre tout le monde dans l’organisation.Disponibilité et suppression gérées par le propriétaire au niveau de l’organisation ; les utilisateurs peuvent désactiver des skills individuellement mais ne peuvent pas les supprimer. Pas de verrouillage de version ni de rollback natif ; les mises à jour nécessitent un téléversement manuel.\n\nPlugin assigned to a group / orgUn procédé ou un ensemble d’outils doit atteindre des équipes spécifiques, ou nécessite un déploiement gouverné.Ciblage par groupe, préférences d’installation contrôlant si un plugin est requis, installé par défaut, ou disponible pour les utilisateurs (libellés exacts selon l’UI d’administration actuelle, support article 13837433), et mises à jour versionnées depuis un dépôt connecté. Option la plus forte en termes de gouvernance pour une distribution ciblée par groupe. Ce n’est pas le seul mécanisme offrant un chemin vers une version antérieure : les API Skills supportent le verrouillage explicite de version, et les Claude Code project Skills se rétablissent avec le dépôt qui les contient.",
-          "Claude Code project SkillUn outil ou une convention qu’une équipe partage à travers ses propres projets.Un artefact du système de fichiers dans le dépôt du projet (.claude/skills/), versionné avec le dépôt et limité aux projets qui l’embarquent.\n\nAPI Skill (Messages API container)Une fonctionnalité appelée de manière programmatique par les propres produits du partenaire.Gérée dans le système appelant ; supporte le verrouillage explicite de version ; la réutilisation est machine-à-machine plutôt qu’orientée utilisateur.\n\nPackager un workflow d’équipe comme une Skill distribuable est la façon dont une bonne pratique locale devient une norme d’équipe. La procédure circule comme un artefact gouverné plutôt qu’en tant que savoir-faire non documenté, et les mises à jour se propagent via la gestion des versions plutôt qu’en réexpliquant sans cesse.\n\nDéfinir la posture de dépense avant la première facture\n\nLa configuration d’équipe inclut aussi les garde-fous de coût. Les admins devraient définir ces paramètres de manière intentionnelle plutôt que d’hériter des valeurs par défaut : modèles par défaut (sur quel modèle une session démarre), allowlists et restrictions de modèles (vers quels modèles l’équipe peut basculer), guidance d’effort (à quel point le modèle s’implique sur une tâche), et plafonds de dépenses, de débit et par utilisateur qui maintiennent la consommation dans des limites. Le module 2 a montré que laisser le choix du modèle non géré peut silencieusement orienter le travail vers un niveau plus capable et plus coûteux que nécessaire pour la tâche. À l’échelle d’une équipe, ce choix se multiplie pour chaque membre et chaque requête.\n\nÀ surveiller\n\nLa Skill qui a été déployée sans possibilité de retour.\nUne équipe plateforme a packagé sa procédure de notes de version en une Skill, l’a intégrée dans un plugin, et l’a assignée à son groupe de quarante ingénieurs. Une semaine plus tard, une modification bien intentionnée a changé le prompt et la Skill a commencé à produire des notes dans le mauvais format pour toutes les équipes qui l’utilisaient. Les skills avaient été poussées comme un bundle plat sans les mises à jour versionnées et le rollback qu’un plugin fournit, donc la correction a nécessité une réédition manuelle tandis que la mauvaise sortie continuait d’être distribuée. La Skill était une bonne idée distribuée sans la gouvernance nécessaire. Un actif partagé sans version et sans possibilité de retour devient une responsabilité dès que plus d’une personne en dépend. Lorsqu’un actif partagé nécessite de la gestion de version, du ciblage de groupe ou une capacité de rollback, distribuez-le à l’intérieur d’un plugin géré par l’organisation et identifiez un propriétaire."
+      "chapters": [
+        {
+          "id": "chapter_01",
+          "title": {
+            "en": "Team Enablement and Operational Productivity: Architect Module 5",
+            "fr": "Autonomisation des équipes et productivité opérationnelle : Architect Module 5"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Module · Orientation\n\nOrientation: what you will be able to do by the end\n\nThe first four modules made you an Architect who can take a deployment from a stakeholder's first sentence through design, integration, governance, and handoff. This module is about the team around that deployment: getting people productive with Claude and keeping them productive once the system is live.\n\nBy the end of this module you will be able to:\n\n1Configure Claude tooling and environments for a team including the shared configuration, the rollout pattern, the Skills distribution strategy, and the spend controls that belong in team setup.\n\n2Improve developer workflows with AI tooling and define the review discipline that keeps AI-generated work trustworthy before it reaches production.\n\n3Support debugging and operational issue resolution by connecting symptoms to architecture causes and building the team toward self-sufficiency.\n\nThis module is about enablement\n\nEvery prior module taught you how to build and configure Claude. This one assumes the system is built and asks: how does a team adopt it well, and how does it stay healthy without pulling you into every issue? Team setup helps the team get the environment, the reusable assets, and the spend posture right before anyone logs in. Developer workflows raise the bar on how the team works day to day without lowering the bar on quality, and operational support is what you do when the team encounters something unexpected within the system.\n\nThese topics build on each other. The skills you distribute in setup are the same assets a developer workflow leans on; the review discipline you establish for those workflows is what an operational issue tests under pressure. The three run in order: set up the environment, raise the daily workflow, and keep the system healthy.\n\nDisclaimer / Notice for Educational Content\n\nWe built this Architect course Module 5: Team Enablement and Operational Productivity to help you get real work done with Claude. Treat it as educational content. It doesn't constitute legal, financial, or other professional advice, so adapt what you learn to your own situation. Our products and services evolve quickly, so certain content may contain errors or be outdated; remember to verify on Anthropic's website or docs. Examples and scenarios used in the course are illustrative and often fictitious. If the course material mentions a company or product, it doesn't mean Anthropic endorses them, they endorse Anthropic, or that we're affiliated. Also note your use of Anthropic products and services is covered by our terms, policies and documentation; if anything in this course conflicts with them, they control.\n\nTeam Setup\n\nConfiguring Claude tooling and environments for teams\n\nYou can configure Claude for yourself in minutes; however, configuring it for a team is different. When configuring for a team there are shared defaults so everyone starts from the same baseline, reusable assets that can be updated and revoked centrally, and spend that stays bounded as usage scales across dozens of people. This screen covers the four team-setup decisions an Architect owns: environment, rollout, skills distribution, and spend, and the failure that happens if one of these steps is skipped.\n\nDeploy the environment as a shared configuration\n\nA team environment is a shared configuration: a baseline every developer starts from rather than a set of personal setups. For Claude Code, that means the team agrees on a project-level baseline: a shared CLAUDE.md, an agreed set of tools and MCP servers, and a permission posture, so people start from the same place rather than discovering ad hoc settings and drifting apart. That baseline is something you can review, version, and improve once for everyone.\n\nRoll out through champions, then batches\n\nTeam adoption rarely succeeds as a single all-hands switch-on. The pattern that works best is identifying a champion per department or team who is granted access first, proves the workflow in practice, and then seeds adoption batch by batch. The champion absorbs the early friction, builds the local examples, and becomes the first line of support so the Architect is not the only person who can answer questions for the team.\n\nWorked example\n\nA 200-person engineering org wants Claude Code across four departments. Instead of enabling all four at once, the Architect enables one champion in each department, gives them two weeks to convert a real workflow (e.g., a code-review assist, a test-generation step), and has each champion run a 45-minute session for their first batch that includes five of their peers. By the time the broad rollout happens, every department has a working example, a local expert, and a shared CLAUDE.md the champion has already tuned. The same rollout attempted as a single mass email would have produced a spike of confused first-time prompts and maybe even a quiet retreat to old habits.\n\nSkills distribution: the team-scale version of reuse\n\nWe've learned that skill packages are repeatable procedures that appear as versioned, reusable units. At team scale, the architectural question is: how should you distribute a skill to your entire team? Consider how you might create, version, and publish it so that the team can access it, how granting and revoking access might work, and how you might roll it back if a skill misbehaves. There are four main ways to distribute team skills, and the mechanism you choose accounts for what the tool is, who uses it, and who has access to govern it.\n\nThere are four ways to deploy a Skill to a team, and they differ in who can access it and how much control you retain. An owner-provisioned Skill, uploaded under Organization settings > Skills, becomes available to everyone in the organization at once. This is the simplest path when a capability genuinely should reach all members. When a Skill should reach only select members, you bundle one or more Skills into a plugin and assign that plugin to a group. Only the group's members are able to access those skills. Plugins are also where governed distribution lives: install preferences such as required, installed-by-default, available, or not available, group targeting, and version-controlled updates from a connected repository. The third mechanism is Claude Code project Skills: filesystem artifacts that live in the project repository (.claude/skills/), so they version with the repository itself and are scoped to the projects that carry them. The fourth is API Skills, called programmatically by the partner's own products. Centrally managed Claude Code configuration is a separate channel entirely: server-managed settings are delivered from Anthropic's servers when users authenticate and refresh on an hourly polling cycle - a settings mechanism, not a Skills distribution path.\n\nSkill distribution mechanisms\n\nDistribution mechanismBest whenGovernance and rollback\n\nOrg-provisioned Skill (Organization settings › Skills)A capability should reach everyone in the organization.Owner-managed availability and removal across the org; users can toggle individual skills off but cannot remove them. No version pinning or native rollback; updates require manual re-upload.\n\nPlugin assigned to a group / orgA procedure or tool set should reach specific teams, or that needs governed rollout.Group targeting, install preferences controlling whether a plugin is required, installed by default, or available to users (exact labels per the current admin UI, support article 13837433), and version-controlled updates from a connected repo. Strongest governance option for group-scoped distribution. It is not the only mechanism with a path back to a prior version: API Skills support explicit version pinning, and Claude Code project Skills roll back with the repository that carries them.\n\nClaude Code project SkillA tool or convention one team shares across its own projects.A filesystem artifact in the project repository (.claude/skills/), versioning with the repository and scoped to the projects that carry it.\n\nAPI Skill (Messages API container)A capability called programmatically by the partner's own products.Governed in the calling system; supports explicit version pinning; reuse is machine-to-machine rather than human-facing.\n\nPackaging a team workflow as a distributable skill is how a good local practice becomes a team standard. The procedure travels as one governed artifact instead of as undocumented know-how, and updates propagate through versioning rather than through re-explaining.\n\nSet the spend posture before the first bill\n\nTeam setup also includes the cost guardrails. Admins should set these intentionally rather than inherit the defaults: model defaults (which model a session starts on), model allowlists and restrictions (which models the team may switch to), effort guidance (how hard the model works on a task), and spend, rate, and per-user caps that keep consumption within bounds. Module 2 showed that leaving model choice unmanaged can quietly route work to a more capable, more expensive tier than the task requires. At team scale that choice multiplies across every member and every request.\n\nWatch out for\n\nThe skill that shipped with no way back.\nA platform team packaged its release-notes procedure as a skill, bundled it into a plugin, and assigned it to its forty-engineer group. A week later a well-meaning edit changed the prompt and the skill began producing notes in the wrong format across every team that used it. The skills were pushed as a flat bundle without the version-controlled updates and rollback a plugin provides, so the fix required a manual re-edit while bad output kept shipping. The skill was a good idea distributed without the governance it required. A shared asset with no version and no way back is a liability the moment more than one person depends on it. When a shared asset needs versioning, group targeting, or rollback, distribute it inside an organization-managed plugin and identify an owner.\n\nCost · Complexity · Risk\n\nCost Standing up a team environment costs setup time: shared config, a rollout plan, and skills packaging up front, but it is far cheaper than later reconciling forty configurations that have drifted apart.\n\nComplexity The hard part is distribution governance: who can reach, update, and revoke each shared asset. Decide this on a per asset basis.\n\nRisk The biggest failure mode is a shared asset (e.g., a skill, a config) with no versioning or rollback, so one bad change propagates to the whole team before anyone can stop it.\n\nTeam Setup · Checkpoint\n\nCheckpoint: design the team distribution strategy\n\nTry it now. For each scenario below, choose how the team should receive the reusable asset, and identify the factor that makes that mechanism the right one. A correct mechanism paired with the wrong reason does not pass.\n\nA\nA compliance-review procedure every department must run identically, that must be centrally updatable and roll-back-able.\n\nSelect mechanism...\nOrg-provisioned Skill (Organization settings › Skills)\nClaude Code project Skill\nPlugin distributed org-wide (or to all relevant groups)\nAPI Skill (Messages API container)\n\nB\nA capability that genuinely should be available to every member, with no need for versioning or rollback.\n\nSelect mechanism...\nAPI Skill (Messages API container)\nOrg-provisioned Skill (Organization settings › Skills)\nPlugin distributed org-wide\nClaude Code project Skill\n\nC\nA coding convention and tool set the engineering team should share on every project.\n\nSelect mechanism...\nClaude Code project Skill\nAPI Skill (Messages API container)\nOrg-provisioned Skill\nPlugin distributed to the engineering group\n\nD\nA reusable capability several of the partner's own products must call programmatically.\n\nSelect mechanism...\nPlugin distributed org-wide\nClaude Code project Skill\nAPI Skill (Messages API container)\nOrg-provisioned Skill\n\nCheck selections\nSkip for now\n\nDev Workflows\n\nImproving developer workflows with AI tooling\n\nA team can have Claude configured perfectly and still get little from it. The difference is their workflow: how AI assistance is woven into the way developers work, and the discipline that keeps its output trustworthy. This screen is about raising the workflow bar without lowering the quality bar, and the failure that occurs when the second half is skipped.\n\nIntegrate assistance into the workflow that already exists\n\nAI tooling pays off when it lives inside the existing workflow: the editor, the review process, and the test loop, rather than in a separate chat window the developer visits occasionally. The Architect's job is to find where AI assistance has the opportunity to remove real friction and improve the overall process. Claude should be integrated into the team's current workflow. Integration is also how a team's knowledge and ways of working get encoded. The conventions, review standards, and repeated procedures that usually live in people's heads become Skills and project configuration Claude applies consistently, so good practice travels with the tooling rather than depending on who happens to be in the room.\n\nWhere Claude helps at each workflow stage, and the review discipline it still needs\n\nWorkflow stageWhere Claude can helpReview discipline it still needs\n\nWriting codeDrafting boilerplate, tests, and first-pass implementations from a clear spec.Correctness and security review; the author must understand what was generated.\n\nReviewing codeSummarizing a diff, flagging likely issues, explaining unfamiliar code.Human judgment on the call; AI flags are input, not a verdict.\n\nDebuggingProposing hypotheses from a symptom and a trace.Verify the hypothesis against evidence before acting on it.\n\nTwo failure modes show up again and again\n\n1Lumpy adoption: This occurs when a few developers use AI tooling heavily and the rest barely touch it, so the team never realizes the real gain of the tool and the practice never standardizes. The champion-and-batch rollout from the previous topic is a great way to avoid this: it spreads usage deliberately instead of leaving it all to early adopters.\n\n2Stalling at basic chat: The team uses Claude as a question-answering box and never advances to the higher-value workflows such as tool use, repository-aware assistance, packaged skills because no one enabled them past the first step. Providing a team with access is not adoption; you need to configure for real enablement within current workflows.\n\nDiligence: the discipline that keeps AI-generated work trustworthy\n\nDiligence is one of the four AI Fluency competencies. Anthropic defines it as taking responsibility for what we do with AI and how we do it. Deployment diligence specifically means taking responsibility for verifying and vouching for the outputs we use or share. Applied to developer workflows, that responsibility shows up as a concrete habit: holding AI-generated code to the same standards as any other code, meaning correctness, security, and maintainability, and watching for the subtle failure where engineers accept output they no longer fully understand because it looks right and passes a check.\n\nThe concrete deliverable that diligence produces is a verification checklist: the explicit set of checks an AI-generated output must pass before it reaches production. This verification checklist is something that a team produces internally based on their specific needs. The checklist should include questions that address all four dimensions of verification: correctness, security, maintainability, and human understanding.\n\nWherever a check can be made automatic, it should be. A regression test suite and an eval set turn correctness and behavior verification from a reviewer's judgment call into a gate that runs on every change. The checklist defines what must be true. Evals and tests are how a team proves it repeatably rather than re-deriving it by hand each time. A team with that checklist has turned a good intention into a repeatable gate; a team without it is trusting AI output by default and hoping the reviewer catches what matters.\n\nWatch out for\n\nThe merge nobody could explain.\nA team adopted AI-assisted coding and shipped noticeably faster. Three weeks in, a generated change passed code review and tests and went to production, where it leaked data through an input it never validated. In the post-incident review the author could not explain why the code handled that input the way it did; it looked plausible, the tests were green, and no one asked the question the checklist would have forced: can the person merging this explain what it does and why? Speed had quietly replaced understanding, which is exactly the judgment erosion diligence exists to catch.\n\nCost · Complexity · Risk\n\nCost AI assistance lowers the cost of producing code, which raises the volume that reaches review; the verification checklist is what keeps that volume from overwhelming the quality bar.\n\nComplexity The hard part is cultural, not technical: holding AI-generated code to the same review standard as hand-written code, especially when it ships faster and looks right.\n\nRisk The biggest failure mode is judgment erosion: a team that ships output it no longer understands because it passed shallow checks, until an input no one reasoned about reaches production.\n\nDev Workflows · Exercise\n\nExercise: define the verification checklist\n\nTry it now. Write the verification checklist that AI-generated code must pass before production. For each of the four dimensions below, write one concrete check in your own words. Write your checklist, then reveal the model answer below.\n\nCorrectness\n\nSecurity\n\nMaintainability\n\nHuman understanding\n\nReveal model answer\n\nCorrectness: Tests exist and pass, and the behavior matches the stated requirement including edge cases.\n\nSecurity: No secrets in code; inputs are validated; any tools or external calls use least-privilege access.\n\nMaintainability: The code reads clearly, follows team conventions, and contains no unexplained complexity.\n\nHuman understanding: The developer submitting the change can explain what the code does and why, including how it handles the inputs it was not explicitly tested against.\n\nMark checklist complete\nSkip for now\n\nOperational Support\n\nSupporting debugging and operational issue resolution\n\nThere's always a time when a live deployment surprises its team. When it does, the Architect is the person who connects what the team is seeing to why it is happening. The Architect is also responsible for upskilling the team, so next time they feel empowered to resolve the issue themselves. This screen is about the support role, the symptom-to-cause reasoning that defines it, and building the team toward self-sufficiency.\n\nThe support role is translation, not firefighting\n\nWhen an operational issue lands, the team usually identifies a symptom, not a cause. For example, they'll note that latency spiked, outputs degraded, or a tool started failing. The team then pulls in the Architect, whose value is connecting the operational symptom to its architecture cause: the same diagnostic discipline Module 2 built for production systems, now applied in support of a team that owns the deployment. Resolving one incident yourself is firefighting; teaching the team the symptom-to-cause path they can follow again in the future is support that lasts.\n\nConnect symptoms to architecture causes\n\nMany operational symptoms trace to a small set of architectural causes. Identifying these allows the team to reason clearly from what they see to where to look.\n\nSymptom → likely architecture cause → first action\n\nSymptomLikely architecture causeFirst action\n\nOutput quality degraded gradually, but there was no code changeA model or prompt change, or retrieval drift as the corpus grew.Compare against an eval set; check what changed in the model, prompt, or corpus.\n\nLatency spikedContext size grew, a tool got slow, or a cache stopped hitting.Use telemetry and request traces to find the slowest span: check token counts per request and the slowest tool call, and confirm cache behavior.\n\nIntermittent tool failuresAuthorization, rate limits, or an unhandled error path.Inspect the failing tool's auth and limits; trace one failed call end to end.\n\nCost rose without a usage changeModel tier crept up, or caching regressed.Check per-request model tier and cache hit rate against the budget model.\n\nBuild self-sufficiency: runbooks and escalation paths\n\nSelf-sufficiency is engineered into functioning teams. A runbook captures the known symptom-to-cause-to-action paths so the team can resolve recurring issues without the Architect. The table above is the foundation of a good runbook. An escalation path identifies who handles what and when an issue leaves the team, so people know the boundary of what they can resolve and what must get escalated. Always encourage a team to keep a runbook for their deployment and define a clear escalation path. The goal is a team that needs you only when new problems arise, not for ones you've already taught them how to face.\n\nWatch out for\n\nThe drift that waited for a quarterly review.\nA support team watched a deployment's dashboards stay green for an entire quarter while answer quality quietly slid. No one connected the slow decline to its cause: a growing retrieval corpus the index had not kept pace with. The symptoms were visible the whole time, but the runbook entry that says gradual quality decline with no code change points at the model, the prompt, or retrieval drift was missing. With that path written down, a first-line engineer could have resolved the issue in an afternoon; but without it, it waits for a review.\n\nCost · Complexity · Risk\n\nCost Teaching the symptom-to-cause path costs more of the Architect's time up front than fixing the incident directly, but it is the only version of support that reduces future load instead of repeating it.\n\nComplexity The hard part is resisting the urge to firefight: the fast fix is to resolve it yourself, but the durable fix is to help the team create a runbook entry and identify the escalation path that lets the team resolve the next issue without your help.\n\nRisk The biggest failure mode is a slow degradation no one connects to a cause, so it runs until a scheduled review catches it rather than the team catching it the day it starts.\n\nModule · Quiz\n\nModule quiz\n\nFive scenario questions across the three topics. Choose the best answer; the feedback names the principle.\n\nQuestion 1 · Team setup\n\nA team is rolling Claude out to four departments at once and adoption is uneven. What is the best next move?\n\nAMandate daily usage targets for everyone.\nBEnable a champion in each department first, prove the workflow, then seed adoption in batches.\nCWait until each department asks for help.\nDGive the strongest model to everyone to encourage use.\n\nQuestion 2 · Skills distribution\n\nA procedure must be run identically by every department and be revocable from one place. How should it be distributed?\n\nAPasted into each team's chat as a prompt.\nBBundled into an organization-managed plugin distributed to all departments, with group/org targeting, version-controlled updates, and rollback.\nCA Claude Code project config in one team's repo.\nDEmailed as a document for people to follow.\n\nQuestion 3 · Developer workflows\n\nA team ships AI-generated code faster but a security issue slips through. What was most likely missing?\n\nAA code-review SLA that exempted small AI-generated changes from security review.\nBA linter configured to flag known vulnerability patterns before merge.\nCA verification checklist that AI-generated code must pass before production, including a security dimension.\nDMore frequent model updates to incorporate recent security patterns.\n\nQuestion 4 · Judgment\n\nIn review, a developer cannot explain why an AI-generated change handles an input the way it does, but the tests pass. What should happen?\n\nAMerge it; the tests are green.\nBHold it until the author can explain the behavior and its rationale, the human-understanding check.\nCDelete the tests and rewrite by hand.\nDEscalate to the Architect for every merge.\n\nQuestion 5 · Operational support\n\nOutput quality on a live deployment has degraded over two months with no code changes. Where does the Architect look first?\n\nAIncrease the model tier; a more capable model will compensate for retrieval gaps.\nBA model or prompt change, or retrieval drift as the corpus grew, connect the symptom to an architecture cause.\nCDisable caching to ensure every call pulls fresh content.\nDRoll back the last code deployment and re-run integration tests.\n\nSubmit quiz\nSkip for now\n\nWrap-up · Reference\n\nGlossary\n\nThe key terms used across this module, in alphabetical order. Click a term to expand its definition.\n\nChampion-per-department rollout\nAn adoption pattern that enables one champion per team first to prove the workflow, then seeds adoption batch by batch.\n\nEscalation path\nA named definition of who handles what and when an operational issue leaves the team.\n\nRunbook\nA captured set of known symptom-to-cause-to-action paths that lets a team resolve recurring operational issues without the Architect.\n\nShared configuration\nA single team baseline (for example a project CLAUDE.md, agreed tools, and permission posture) that every member starts from, instead of individual setups that drift apart.\n\nSkills distribution\nGetting a Skill in front of the right people through one of four mechanisms, each with different access, versioning, and rollback behavior: org-provisioned Skills (Organization settings > Skills) for organization-wide availability; plugins assigned to a group or org for scoped distribution with install preferences, version-controlled updates, and rollback; Claude Code project Skills versioned with the repository and scoped to a team; and API Skills called programmatically with explicit version pinning.\n\nSpend posture\nThe model defaults, model allowlists and restrictions, effort guidance, and spend, rate, and per-user caps set as part of team configuration keep consumption within bounds.\n\nVerification checklist\nThe explicit set of correctness, security, maintainability, and human-understanding checks AI-generated output must pass before production.\n\nModule · Recap\n\nRecap: four things that hold across everything here\n\n01\n\nTeam setup is shared configuration, distribution, and spend posture decided up front\n\nA team environment is a shared baseline plus a Skills distribution approach: org-provisioned for everyone, plugins for group and org targeting with versioned updates and rollback, project Skills for one team, and API Skills for programmatic reuse, all bounded by model and budget guardrails.\n\n02\n\nAdoption is engineered through champions and batches\n\nA champion per team proves the workflow and seeds adoption; access without enablement stalls at basic chat, and lumpy adoption never standardizes the gain.\n\n03\n\nDiligence keeps AI-assisted work trustworthy\n\nHold AI-generated code to correctness, security, and maintainability standards, and require that the author can explain what shipped, captured as a verification checklist that gates before production.\n\n04\n\nOperational support is translation plus self-sufficiency\n\nConnect symptoms to architecture causes and leave behind runbooks and escalation paths so the team needs you for the new problem, not the familiar one.\n\nThat completes the Architect track.\n\nYou can take a deployment from a stakeholder's first sentence through design, integration, governance, handoff, and deliver it to the team that adopts and runs it.\n\nSources\n\nAnthropic Skilljar, Building with the Claude API: tool use, API integration mechanics, and baseline Skills concepts carried into team distribution.\n\nClaude Code configuration docs (code.claude.com): CLAUDE.md instructions vs. enforceable settings, permissions, hooks, MCP, and managed settings.\n\nClaude Code Skills and organization Skills provisioning docs: Skill package structure, project Skills, plugin-based distribution, and owner-provisioned org-wide availability.\n\nOrganization plugin management (support.code.com): Plugin marketplaces, group assignment, install preferences, required/default install, hide/deprecate behavior, manual upload, Github sync, update, and removal mechnics.\n\nModule Complete · Architect · 2 min\n\nCongratulations! You have successfully completed this module.\n\nModule 5 covers the team tooling configuration, developer workflow design, and operational support practices that sustain AI productivity once a deployment is live.\n\nA deployment that the team cannot operate, debug, and improve will not stay productive; you now have the patterns to keep it running.\n\n0\nof 0 checkpoints passed\n\nM1\n\nClaude Platform & Solution Design\n\nModel selection, prompt architecture, tool design, and platform-layer tradeoffs.\n\nM2\n\nEnterprise Integration & Production\n\nDeployment patterns, integration architecture, and production reliability.\n\nM3\n\nResponsible AI, Safety & Risk\n\nSafety frameworks, risk identification, and governance practices.\n\nM4\n\nStakeholder Engagement, Lifecycle & Go-to-Market\n\nStakeholder communication, lifecycle management, and go-to-market strategy.\n\nM5\n\nTeam Enablement and Operational Productivity\n\nTeam tooling configuration and operational support practices.\n\nYou Are Here\n\nReview module\nStart over",
+                "fr": "Module · Orientation\n\nOrientation: what you will be able to do by the end\n\nThe first four modules made you an Architect who can take a deployment from a stakeholder's first sentence through design, integration, governance, and handoff. This module is about the team around that deployment: getting people productive with Claude and keeping them productive once the system is live.\n\nBy the end of this module you will be able to:\n\n1Configure Claude tooling and environments for a team including the shared configuration, the rollout pattern, the Skills distribution strategy, and the spend controls that belong in team setup.\n\n2Improve developer workflows with AI tooling and define the review discipline that keeps AI-generated work trustworthy before it reaches production.\n\n3Support debugging and operational issue resolution by connecting symptoms to architecture causes and building the team toward self-sufficiency.\n\nThis module is about enablement\n\nEvery prior module taught you how to build and configure Claude. This one assumes the system is built and asks: how does a team adopt it well, and how does it stay healthy without pulling you into every issue? Team setup helps the team get the environment, the reusable assets, and the spend posture right before anyone logs in. Developer workflows raise the bar on how the team works day to day without lowering the bar on quality, and operational support is what you do when the team encounters something unexpected within the system.\n\nThese topics build on each other. The skills you distribute in setup are the same assets a developer workflow leans on; the review discipline you establish for those workflows is what an operational issue tests under pressure. The three run in order: set up the environment, raise the daily workflow, and keep the system healthy.\n\nDisclaimer / Notice for Educational Content\n\nWe built this Architect course Module 5: Team Enablement and Operational Productivity to help you get real work done with Claude. Treat it as educational content. It doesn't constitute legal, financial, or other professional advice, so adapt what you learn to your own situation. Our products and services evolve quickly, so certain content may contain errors or be outdated; remember to verify on Anthropic's website or docs. Examples and scenarios used in the course are illustrative and often fictitious. If the course material mentions a company or product, it doesn't mean Anthropic endorses them, they endorse Anthropic, or that we're affiliated. Also note your use of Anthropic products and services is covered by our terms, policies and documentation; if anything in this course conflicts with them, they control.\n\nTeam Setup\n\nConfiguring Claude tooling and environments for teams\n\nYou can configure Claude for yourself in minutes; however, configuring it for a team is different. When configuring for a team there are shared defaults so everyone starts from the same baseline, reusable assets that can be updated and revoked centrally, and spend that stays bounded as usage scales across dozens of people. This screen covers the four team-setup decisions an Architect owns: environment, rollout, skills distribution, and spend, and the failure that happens if one of these steps is skipped.\n\nDeploy the environment as a shared configuration\n\nA team environment is a shared configuration: a baseline every developer starts from rather than a set of personal setups. For Claude Code, that means the team agrees on a project-level baseline: a shared CLAUDE.md, an agreed set of tools and MCP servers, and a permission posture, so people start from the same place rather than discovering ad hoc settings and drifting apart. That baseline is something you can review, version, and improve once for everyone.\n\nRoll out through champions, then batches\n\nTeam adoption rarely succeeds as a single all-hands switch-on. The pattern that works best is identifying a champion per department or team who is granted access first, proves the workflow in practice, and then seeds adoption batch by batch. The champion absorbs the early friction, builds the local examples, and becomes the first line of support so the Architect is not the only person who can answer questions for the team.\n\nWorked example\n\nA 200-person engineering org wants Claude Code across four departments. Instead of enabling all four at once, the Architect enables one champion in each department, gives them two weeks to convert a real workflow (e.g., a code-review assist, a test-generation step), and has each champion run a 45-minute session for their first batch that includes five of their peers. By the time the broad rollout happens, every department has a working example, a local expert, and a shared CLAUDE.md the champion has already tuned. The same rollout attempted as a single mass email would have produced a spike of confused first-time prompts and maybe even a quiet retreat to old habits.\n\nSkills distribution: the team-scale version of reuse\n\nWe've learned that skill packages are repeatable procedures that appear as versioned, reusable units. At team scale, the architectural question is: how should you distribute a skill to your entire team? Consider how you might create, version, and publish it so that the team can access it, how granting and revoking access might work, and how you might roll it back if a skill misbehaves. There are four main ways to distribute team skills, and the mechanism you choose accounts for what the tool is, who uses it, and who has access to govern it.\n\nThere are four ways to deploy a Skill to a team, and they differ in who can access it and how much control you retain. An owner-provisioned Skill, uploaded under Organization settings > Skills, becomes available to everyone in the organization at once. This is the simplest path when a capability genuinely should reach all members. When a Skill should reach only select members, you bundle one or more Skills into a plugin and assign that plugin to a group. Only the group's members are able to access those skills. Plugins are also where governed distribution lives: install preferences such as required, installed-by-default, available, or not available, group targeting, and version-controlled updates from a connected repository. The third mechanism is Claude Code project Skills: filesystem artifacts that live in the project repository (.claude/skills/), so they version with the repository itself and are scoped to the projects that carry them. The fourth is API Skills, called programmatically by the partner's own products. Centrally managed Claude Code configuration is a separate channel entirely: server-managed settings are delivered from Anthropic's servers when users authenticate and refresh on an hourly polling cycle - a settings mechanism, not a Skills distribution path.\n\nSkill distribution mechanisms\n\nDistribution mechanismBest whenGovernance and rollback\n\nOrg-provisioned Skill (Organization settings › Skills)A capability should reach everyone in the organization.Owner-managed availability and removal across the org; users can toggle individual skills off but cannot remove them. No version pinning or native rollback; updates require manual re-upload.\n\nPlugin assigned to a group / orgA procedure or tool set should reach specific teams, or that needs governed rollout.Group targeting, install preferences controlling whether a plugin is required, installed by default, or available to users (exact labels per the current admin UI, support article 13837433), and version-controlled updates from a connected repo. Strongest governance option for group-scoped distribution. It is not the only mechanism with a path back to a prior version: API Skills support explicit version pinning, and Claude Code project Skills roll back with the repository that carries them.\n\nClaude Code project SkillA tool or convention one team shares across its own projects.A filesystem artifact in the project repository (.claude/skills/), versioning with the repository and scoped to the projects that carry it.\n\nAPI Skill (Messages API container)A capability called programmatically by the partner's own products.Governed in the calling system; supports explicit version pinning; reuse is machine-to-machine rather than human-facing.\n\nPackaging a team workflow as a distributable skill is how a good local practice becomes a team standard. The procedure travels as one governed artifact instead of as undocumented know-how, and updates propagate through versioning rather than through re-explaining.\n\nSet the spend posture before the first bill\n\nTeam setup also includes the cost guardrails. Admins should set these intentionally rather than inherit the defaults: model defaults (which model a session starts on), model allowlists and restrictions (which models the team may switch to), effort guidance (how hard the model works on a task), and spend, rate, and per-user caps that keep consumption within bounds. Module 2 showed that leaving model choice unmanaged can quietly route work to a more capable, more expensive tier than the task requires. At team scale that choice multiplies across every member and every request.\n\nWatch out for\n\nThe skill that shipped with no way back.\nA platform team packaged its release-notes procedure as a skill, bundled it into a plugin, and assigned it to its forty-engineer group. A week later a well-meaning edit changed the prompt and the skill began producing notes in the wrong format across every team that used it. The skills were pushed as a flat bundle without the version-controlled updates and rollback a plugin provides, so the fix required a manual re-edit while bad output kept shipping. The skill was a good idea distributed without the governance it required. A shared asset with no version and no way back is a liability the moment more than one person depends on it. When a shared asset needs versioning, group targeting, or rollback, distribute it inside an organization-managed plugin and identify an owner.\n\nCost · Complexity · Risk\n\nCost Standing up a team environment costs setup time: shared config, a rollout plan, and skills packaging up front, but it is far cheaper than later reconciling forty configurations that have drifted apart.\n\nComplexity The hard part is distribution governance: who can reach, update, and revoke each shared asset. Decide this on a per asset basis.\n\nRisk The biggest failure mode is a shared asset (e.g., a skill, a config) with no versioning or rollback, so one bad change propagates to the whole team before anyone can stop it.\n\nTeam Setup · Checkpoint\n\nCheckpoint: design the team distribution strategy\n\nTry it now. For each scenario below, choose how the team should receive the reusable asset, and identify the factor that makes that mechanism the right one. A correct mechanism paired with the wrong reason does not pass.\n\nA\nA compliance-review procedure every department must run identically, that must be centrally updatable and roll-back-able.\n\nSelect mechanism...\nOrg-provisioned Skill (Organization settings › Skills)\nClaude Code project Skill\nPlugin distributed org-wide (or to all relevant groups)\nAPI Skill (Messages API container)\n\nB\nA capability that genuinely should be available to every member, with no need for versioning or rollback.\n\nSelect mechanism...\nAPI Skill (Messages API container)\nOrg-provisioned Skill (Organization settings › Skills)\nPlugin distributed org-wide\nClaude Code project Skill\n\nC\nA coding convention and tool set the engineering team should share on every project.\n\nSelect mechanism...\nClaude Code project Skill\nAPI Skill (Messages API container)\nOrg-provisioned Skill\nPlugin distributed to the engineering group\n\nD\nA reusable capability several of the partner's own products must call programmatically.\n\nSelect mechanism...\nPlugin distributed org-wide\nClaude Code project Skill\nAPI Skill (Messages API container)\nOrg-provisioned Skill\n\nCheck selections\nSkip for now\n\nDev Workflows\n\nImproving developer workflows with AI tooling\n\nA team can have Claude configured perfectly and still get little from it. The difference is their workflow: how AI assistance is woven into the way developers work, and the discipline that keeps its output trustworthy. This screen is about raising the workflow bar without lowering the quality bar, and the failure that occurs when the second half is skipped.\n\nIntegrate assistance into the workflow that already exists\n\nAI tooling pays off when it lives inside the existing workflow: the editor, the review process, and the test loop, rather than in a separate chat window the developer visits occasionally. The Architect's job is to find where AI assistance has the opportunity to remove real friction and improve the overall process. Claude should be integrated into the team's current workflow. Integration is also how a team's knowledge and ways of working get encoded. The conventions, review standards, and repeated procedures that usually live in people's heads become Skills and project configuration Claude applies consistently, so good practice travels with the tooling rather than depending on who happens to be in the room.\n\nWhere Claude helps at each workflow stage, and the review discipline it still needs\n\nWorkflow stageWhere Claude can helpReview discipline it still needs\n\nWriting codeDrafting boilerplate, tests, and first-pass implementations from a clear spec.Correctness and security review; the author must understand what was generated.\n\nReviewing codeSummarizing a diff, flagging likely issues, explaining unfamiliar code.Human judgment on the call; AI flags are input, not a verdict.\n\nDebuggingProposing hypotheses from a symptom and a trace.Verify the hypothesis against evidence before acting on it.\n\nTwo failure modes show up again and again\n\n1Lumpy adoption: This occurs when a few developers use AI tooling heavily and the rest barely touch it, so the team never realizes the real gain of the tool and the practice never standardizes. The champion-and-batch rollout from the previous topic is a great way to avoid this: it spreads usage deliberately instead of leaving it all to early adopters.\n\n2Stalling at basic chat: The team uses Claude as a question-answering box and never advances to the higher-value workflows such as tool use, repository-aware assistance, packaged skills because no one enabled them past the first step. Providing a team with access is not adoption; you need to configure for real enablement within current workflows.\n\nDiligence: the discipline that keeps AI-generated work trustworthy\n\nDiligence is one of the four AI Fluency competencies. Anthropic defines it as taking responsibility for what we do with AI and how we do it. Deployment diligence specifically means taking responsibility for verifying and vouching for the outputs we use or share. Applied to developer workflows, that responsibility shows up as a concrete habit: holding AI-generated code to the same standards as any other code, meaning correctness, security, and maintainability, and watching for the subtle failure where engineers accept output they no longer fully understand because it looks right and passes a check.\n\nThe concrete deliverable that diligence produces is a verification checklist: the explicit set of checks an AI-generated output must pass before it reaches production. This verification checklist is something that a team produces internally based on their specific needs. The checklist should include questions that address all four dimensions of verification: correctness, security, maintainability, and human understanding.\n\nWherever a check can be made automatic, it should be. A regression test suite and an eval set turn correctness and behavior verification from a reviewer's judgment call into a gate that runs on every change. The checklist defines what must be true. Evals and tests are how a team proves it repeatably rather than re-deriving it by hand each time. A team with that checklist has turned a good intention into a repeatable gate; a team without it is trusting AI output by default and hoping the reviewer catches what matters.\n\nWatch out for\n\nThe merge nobody could explain.\nA team adopted AI-assisted coding and shipped noticeably faster. Three weeks in, a generated change passed code review and tests and went to production, where it leaked data through an input it never validated. In the post-incident review the author could not explain why the code handled that input the way it did; it looked plausible, the tests were green, and no one asked the question the checklist would have forced: can the person merging this explain what it does and why? Speed had quietly replaced understanding, which is exactly the judgment erosion diligence exists to catch.\n\nCost · Complexity · Risk\n\nCost AI assistance lowers the cost of producing code, which raises the volume that reaches review; the verification checklist is what keeps that volume from overwhelming the quality bar.\n\nComplexity The hard part is cultural, not technical: holding AI-generated code to the same review standard as hand-written code, especially when it ships faster and looks right.\n\nRisk The biggest failure mode is judgment erosion: a team that ships output it no longer understands because it passed shallow checks, until an input no one reasoned about reaches production.\n\nDev Workflows · Exercise\n\nExercise: define the verification checklist\n\nTry it now. Write the verification checklist that AI-generated code must pass before production. For each of the four dimensions below, write one concrete check in your own words. Write your checklist, then reveal the model answer below.\n\nCorrectness\n\nSecurity\n\nMaintainability\n\nHuman understanding\n\nReveal model answer\n\nCorrectness: Tests exist and pass, and the behavior matches the stated requirement including edge cases.\n\nSecurity: No secrets in code; inputs are validated; any tools or external calls use least-privilege access.\n\nMaintainability: The code reads clearly, follows team conventions, and contains no unexplained complexity.\n\nHuman understanding: The developer submitting the change can explain what the code does and why, including how it handles the inputs it was not explicitly tested against.\n\nMark checklist complete\nSkip for now\n\nOperational Support\n\nSupporting debugging and operational issue resolution\n\nThere's always a time when a live deployment surprises its team. When it does, the Architect is the person who connects what the team is seeing to why it is happening. The Architect is also responsible for upskilling the team, so next time they feel empowered to resolve the issue themselves. This screen is about the support role, the symptom-to-cause reasoning that defines it, and building the team toward self-sufficiency.\n\nThe support role is translation, not firefighting\n\nWhen an operational issue lands, the team usually identifies a symptom, not a cause. For example, they'll note that latency spiked, outputs degraded, or a tool started failing. The team then pulls in the Architect, whose value is connecting the operational symptom to its architecture cause: the same diagnostic discipline Module 2 built for production systems, now applied in support of a team that owns the deployment. Resolving one incident yourself is firefighting; teaching the team the symptom-to-cause path they can follow again in the future is support that lasts.\n\nConnect symptoms to architecture causes\n\nMany operational symptoms trace to a small set of architectural causes. Identifying these allows the team to reason clearly from what they see to where to look.\n\nSymptom → likely architecture cause → first action\n\nSymptomLikely architecture causeFirst action\n\nOutput quality degraded gradually, but there was no code changeA model or prompt change, or retrieval drift as the corpus grew.Compare against an eval set; check what changed in the model, prompt, or corpus.\n\nLatency spikedContext size grew, a tool got slow, or a cache stopped hitting.Use telemetry and request traces to find the slowest span: check token counts per request and the slowest tool call, and confirm cache behavior.\n\nIntermittent tool failuresAuthorization, rate limits, or an unhandled error path.Inspect the failing tool's auth and limits; trace one failed call end to end.\n\nCost rose without a usage changeModel tier crept up, or caching regressed.Check per-request model tier and cache hit rate against the budget model.\n\nBuild self-sufficiency: runbooks and escalation paths\n\nSelf-sufficiency is engineered into functioning teams. A runbook captures the known symptom-to-cause-to-action paths so the team can resolve recurring issues without the Architect. The table above is the foundation of a good runbook. An escalation path identifies who handles what and when an issue leaves the team, so people know the boundary of what they can resolve and what must get escalated. Always encourage a team to keep a runbook for their deployment and define a clear escalation path. The goal is a team that needs you only when new problems arise, not for ones you've already taught them how to face.\n\nWatch out for\n\nThe drift that waited for a quarterly review.\nA support team watched a deployment's dashboards stay green for an entire quarter while answer quality quietly slid. No one connected the slow decline to its cause: a growing retrieval corpus the index had not kept pace with. The symptoms were visible the whole time, but the runbook entry that says gradual quality decline with no code change points at the model, the prompt, or retrieval drift was missing. With that path written down, a first-line engineer could have resolved the issue in an afternoon; but without it, it waits for a review.\n\nCost · Complexity · Risk\n\nCost Teaching the symptom-to-cause path costs more of the Architect's time up front than fixing the incident directly, but it is the only version of support that reduces future load instead of repeating it.\n\nComplexity The hard part is resisting the urge to firefight: the fast fix is to resolve it yourself, but the durable fix is to help the team create a runbook entry and identify the escalation path that lets the team resolve the next issue without your help.\n\nRisk The biggest failure mode is a slow degradation no one connects to a cause, so it runs until a scheduled review catches it rather than the team catching it the day it starts.\n\nModule · Quiz\n\nModule quiz\n\nFive scenario questions across the three topics. Choose the best answer; the feedback names the principle.\n\nQuestion 1 · Team setup\n\nA team is rolling Claude out to four departments at once and adoption is uneven. What is the best next move?\n\nAMandate daily usage targets for everyone.\nBEnable a champion in each department first, prove the workflow, then seed adoption in batches.\nCWait until each department asks for help.\nDGive the strongest model to everyone to encourage use.\n\nQuestion 2 · Skills distribution\n\nA procedure must be run identically by every department and be revocable from one place. How should it be distributed?\n\nAPasted into each team's chat as a prompt.\nBBundled into an organization-managed plugin distributed to all departments, with group/org targeting, version-controlled updates, and rollback.\nCA Claude Code project config in one team's repo.\nDEmailed as a document for people to follow.\n\nQuestion 3 · Developer workflows\n\nA team ships AI-generated code faster but a security issue slips through. What was most likely missing?\n\nAA code-review SLA that exempted small AI-generated changes from security review.\nBA linter configured to flag known vulnerability patterns before merge.\nCA verification checklist that AI-generated code must pass before production, including a security dimension.\nDMore frequent model updates to incorporate recent security patterns.\n\nQuestion 4 · Judgment\n\nIn review, a developer cannot explain why an AI-generated change handles an input the way it does, but the tests pass. What should happen?\n\nAMerge it; the tests are green.\nBHold it until the author can explain the behavior and its rationale, the human-understanding check.\nCDelete the tests and rewrite by hand.\nDEscalate to the Architect for every merge.\n\nQuestion 5 · Operational support\n\nOutput quality on a live deployment has degraded over two months with no code changes. Where does the Architect look first?\n\nAIncrease the model tier; a more capable model will compensate for retrieval gaps.\nBA model or prompt change, or retrieval drift as the corpus grew, connect the symptom to an architecture cause.\nCDisable caching to ensure every call pulls fresh content.\nDRoll back the last code deployment and re-run integration tests.\n\nSubmit quiz\nSkip for now\n\nWrap-up · Reference\n\nGlossary\n\nThe key terms used across this module, in alphabetical order. Click a term to expand its definition.\n\nChampion-per-department rollout\nAn adoption pattern that enables one champion per team first to prove the workflow, then seeds adoption batch by batch.\n\nEscalation path\nA named definition of who handles what and when an operational issue leaves the team.\n\nRunbook\nA captured set of known symptom-to-cause-to-action paths that lets a team resolve recurring operational issues without the Architect.\n\nShared configuration\nA single team baseline (for example a project CLAUDE.md, agreed tools, and permission posture) that every member starts from, instead of individual setups that drift apart.\n\nSkills distribution\nGetting a Skill in front of the right people through one of four mechanisms, each with different access, versioning, and rollback behavior: org-provisioned Skills (Organization settings > Skills) for organization-wide availability; plugins assigned to a group or org for scoped distribution with install preferences, version-controlled updates, and rollback; Claude Code project Skills versioned with the repository and scoped to a team; and API Skills called programmatically with explicit version pinning.\n\nSpend posture\nThe model defaults, model allowlists and restrictions, effort guidance, and spend, rate, and per-user caps set as part of team configuration keep consumption within bounds.\n\nVerification checklist\nThe explicit set of correctness, security, maintainability, and human-understanding checks AI-generated output must pass before production.\n\nModule · Recap\n\nRecap: four things that hold across everything here\n\n01\n\nTeam setup is shared configuration, distribution, and spend posture decided up front\n\nA team environment is a shared baseline plus a Skills distribution approach: org-provisioned for everyone, plugins for group and org targeting with versioned updates and rollback, project Skills for one team, and API Skills for programmatic reuse, all bounded by model and budget guardrails.\n\n02\n\nAdoption is engineered through champions and batches\n\nA champion per team proves the workflow and seeds adoption; access without enablement stalls at basic chat, and lumpy adoption never standardizes the gain.\n\n03\n\nDiligence keeps AI-assisted work trustworthy\n\nHold AI-generated code to correctness, security, and maintainability standards, and require that the author can explain what shipped, captured as a verification checklist that gates before production.\n\n04\n\nOperational support is translation plus self-sufficiency\n\nConnect symptoms to architecture causes and leave behind runbooks and escalation paths so the team needs you for the new problem, not the familiar one.\n\nThat completes the Architect track.\n\nYou can take a deployment from a stakeholder's first sentence through design, integration, governance, handoff, and deliver it to the team that adopts and runs it.\n\nSources\n\nAnthropic Skilljar, Building with the Claude API: tool use, API integration mechanics, and baseline Skills concepts carried into team distribution.\n\nClaude Code configuration docs (code.claude.com): CLAUDE.md instructions vs. enforceable settings, permissions, hooks, MCP, and managed settings.\n\nClaude Code Skills and organization Skills provisioning docs: Skill package structure, project Skills, plugin-based distribution, and owner-provisioned org-wide availability.\n\nOrganization plugin management (support.code.com): Plugin marketplaces, group assignment, install preferences, required/default install, hide/deprecate behavior, manual upload, Github sync, update, and removal mechnics.\n\nModule Complete · Architect · 2 min\n\nCongratulations! You have successfully completed this module.\n\nModule 5 covers the team tooling configuration, developer workflow design, and operational support practices that sustain AI productivity once a deployment is live.\n\nA deployment that the team cannot operate, debug, and improve will not stay productive; you now have the patterns to keep it running.\n\n0\nof 0 checkpoints passed\n\nM1\n\nClaude Platform & Solution Design\n\nModel selection, prompt architecture, tool design, and platform-layer tradeoffs.\n\nM2\n\nEnterprise Integration & Production\n\nDeployment patterns, integration architecture, and production reliability.\n\nM3\n\nResponsible AI, Safety & Risk\n\nSafety frameworks, risk identification, and governance practices.\n\nM4\n\nStakeholder Engagement, Lifecycle & Go-to-Market\n\nStakeholder communication, lifecycle management, and go-to-market strategy.\n\nM5\n\nTeam Enablement and Operational Productivity\n\nTeam tooling configuration and operational support practices.\n\nYou Are Here\n\nReview module\nStart over"
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_02",
+          "title": {
+            "en": "Exercise: Team Enablement and Operational Productivity: Architect Module 5",
+            "fr": "Exercice : Activation des équipes et productivité opérationnelle : Module d'Architecture 5"
+          },
+          "type": "exercise",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Roll out through champions, then batches\nTeam adoption rarely succeeds as a single all-hands switch-on. The pattern that works best is identifying a champion per department or team who is granted access first, proves the workflow in practice, and then seeds adoption batch by batch. The champion abso",
+                "fr": "Déployer via des champions, puis par lots\nL'adoption par l'équipe échoue rarement lorsqu'elle se fait lors d'une activation générale impliquant tout le monde. Le modèle qui fonctionne le mieux consiste à identifier un champion par département ou par équipe qui obtient l'accès en premier, prouve le flux de travail en pratique, puis diffuse l'adoption par lots successifs. Le champion abso"
+              }
+            },
+            {
+              "type": "checkpoint",
+              "exerciseId": "ex_claude_certified_architect_professional__05_001"
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "requiredExercisesPassed"
+            ]
+          }
+        }
+      ],
+      "completionRule": {
+        "requires": [
+          "allChaptersComplete"
         ]
-      },
-      "totalPages": 5
-    },
-    {
-      "id": "lesson_02",
-      "title": {
-        "en": "Cost · Complexity · Risk",
-        "fr": "Coût · Complexité · Risque"
-      },
-      "type": "teaching",
-      "duration": 9,
-      "pages": {
-        "en": [
-          "Cost · Complexity · Risk\n\nCost Standing up a team environment costs setup time: shared config, a rollout plan, and skills packaging up front, but it is far cheaper than later reconciling forty configurations that have drifted apart.\n\nComplexity The hard part is distribution governance: who can reach, update, and revoke each shared asset. Decide this on a per asset basis.\n\nRisk The biggest failure mode is a shared asset (e.g., a skill, a config) with no versioning or rollback, so one bad change propagates to the whole team before anyone can stop it.\n\nTeam Setup · Checkpoint\n\nCheckpoint: design the team distribution strategy\n\nTry it now. For each scenario below, choose how the team should receive the reusable asset, and identify the factor that makes that mechanism the right one. A correct mechanism paired with the wrong reason does not pass.\n\nA\nA compliance-review procedure every department must run identically, that must be centrally updatable and roll-back-able.\n\nSelect mechanism...\nOrg-provisioned Skill (Organization settings › Skills)\nClaude Code project Skill\nPlugin distributed org-wide (or to all relevant groups)\nAPI Skill (Messages API container)\n\nB\nA capability that genuinely should be available to every member, with no need for versioning or rollback.\n\nSelect mechanism...\nAPI Skill (Messages API container)\nOrg-provisioned Skill (Organization settings › Skills)\nPlugin distributed org-wide\nClaude Code project Skill\n\nC\nA coding convention and tool set the engineering team should share on every project.\n\nSelect mechanism...\nClaude Code project Skill\nAPI Skill (Messages API container)\nOrg-provisioned Skill\nPlugin distributed to the engineering group\n\nD\nA reusable capability several of the partner's own products must call programmatically.\n\nSelect mechanism...\nPlugin distributed org-wide\nClaude Code project Skill\nAPI Skill (Messages API container)\nOrg-provisioned Skill\n\nCheck selections\nSkip for now\n\nDev Workflows\n\nImproving developer workflows with AI tooling\n\nA team can have Claude configured perfectly and still get little from it. The difference is their workflow: how AI assistance is woven into the way developers work, and the discipline that keeps its output trustworthy. This screen is about raising the workflow bar without lowering the quality bar, and the failure that occurs when the second half is skipped.\n\nIntegrate assistance into the workflow that already exists",
-          "AI tooling pays off when it lives inside the existing workflow: the editor, the review process, and the test loop, rather than in a separate chat window the developer visits occasionally. The Architect's job is to find where AI assistance has the opportunity to remove real friction and improve the overall process. Claude should be integrated into the team's current workflow. Integration is also how a team's knowledge and ways of working get encoded. The conventions, review standards, and repeated procedures that usually live in people's heads become Skills and project configuration Claude applies consistently, so good practice travels with the tooling rather than depending on who happens to be in the room.\n\nWhere Claude helps at each workflow stage, and the review discipline it still needs\n\nWorkflow stageWhere Claude can helpReview discipline it still needs\n\nWriting codeDrafting boilerplate, tests, and first-pass implementations from a clear spec.Correctness and security review; the author must understand what was generated.\n\nReviewing codeSummarizing a diff, flagging likely issues, explaining unfamiliar code.Human judgment on the call; AI flags are input, not a verdict.\n\nDebuggingProposing hypotheses from a symptom and a trace.Verify the hypothesis against evidence before acting on it.\n\nTwo failure modes show up again and again\n\n1Lumpy adoption: This occurs when a few developers use AI tooling heavily and the rest barely touch it, so the team never realizes the real gain of the tool and the practice never standardizes. The champion-and-batch rollout from the previous topic is a great way to avoid this: it spreads usage deliberately instead of leaving it all to early adopters.\n\n2Stalling at basic chat: The team uses Claude as a question-answering box and never advances to the higher-value workflows such as tool use, repository-aware assistance, packaged skills because no one enabled them past the first step. Providing a team with access is not adoption; you need to configure for real enablement within current workflows.\n\nDiligence: the discipline that keeps AI-generated work trustworthy",
-          "Diligence is one of the four AI Fluency competencies. Anthropic defines it as taking responsibility for what we do with AI and how we do it. Deployment diligence specifically means taking responsibility for verifying and vouching for the outputs we use or share. Applied to developer workflows, that responsibility shows up as a concrete habit: holding AI-generated code to the same standards as any other code, meaning correctness, security, and maintainability, and watching for the subtle failure where engineers accept output they no longer fully understand because it looks right and passes a check.\n\nThe concrete deliverable that diligence produces is a verification checklist: the explicit set of checks an AI-generated output must pass before it reaches production. This verification checklist is something that a team produces internally based on their specific needs. The checklist should include questions that address all four dimensions of verification: correctness, security, maintainability, and human understanding.\n\nWherever a check can be made automatic, it should be. A regression test suite and an eval set turn correctness and behavior verification from a reviewer's judgment call into a gate that runs on every change. The checklist defines what must be true. Evals and tests are how a team proves it repeatably rather than re-deriving it by hand each time. A team with that checklist has turned a good intention into a repeatable gate; a team without it is trusting AI output by default and hoping the reviewer catches what matters.\n\nWatch out for\n\nThe merge nobody could explain.\nA team adopted AI-assisted coding and shipped noticeably faster. Three weeks in, a generated change passed code review and tests and went to production, where it leaked data through an input it never validated. In the post-incident review the author could not explain why the code handled that input the way it did; it looked plausible, the tests were green, and no one asked the question the checklist would have forced: can the person merging this explain what it does and why? Speed had quietly replaced understanding, which is exactly the judgment erosion diligence exists to catch."
-        ],
-        "fr": [
-          "Coût · Complexité · Risque\n\nCoût Mettre en place un environnement d'équipe coûte du temps d'installation : configuration partagée, plan de déploiement et empaquetage des skills initialement, mais c'est bien moins cher que de recréer plus tard la cohérence entre quarante configurations qui ont dérivé.\n\nComplexité La partie difficile est la gouvernance de la distribution : qui peut atteindre, mettre à jour et révoquer chaque ressource partagée. Décidez cela au cas par cas pour chaque asset.\n\nRisque Le principal mode d'échec est une ressource partagée (par ex., un skill, une config) sans gestion de versions ni possibilité de rollback, de sorte qu'un mauvais changement se propage à toute l'équipe avant que quelqu'un ne puisse l'arrêter.\n\nTeam Setup · Checkpoint\n\nCheckpoint : concevoir la stratégie de distribution de l'équipe\n\nEssayez maintenant. Pour chaque scénario ci-dessous, choisissez comment l'équipe doit recevoir l'asset réutilisable, et identifiez le facteur qui rend ce mécanisme approprié. Un mécanisme correct associé à la mauvaise raison ne valide pas.\n\nA\nUne procédure de revue de conformité que chaque département doit exécuter de manière identique, qui doit pouvoir être mise à jour centralement et faire l'objet de rollback.\n\nSelect mechanism...\nOrg-provisioned Skill (Paramètres de l'organisation › Skills)\nClaude Code project Skill\nPlugin distributed org-wide (or to all relevant groups)\nAPI Skill (Messages API container)\n\nB\nUne capacité qui doit véritablement être disponible pour chaque membre, sans besoin de versioning ni de rollback.\n\nSelect mechanism...\nAPI Skill (Messages API container)\nOrg-provisioned Skill (Paramètres de l'organisation › Skills)\nPlugin distributed org-wide\nClaude Code project Skill\n\nC\nUne convention de codage et un ensemble d'outils que l'équipe d'ingénierie devrait partager sur chaque projet.\n\nSelect mechanism...\nClaude Code project Skill\nAPI Skill (Messages API container)\nOrg-provisioned Skill\nPlugin distributed to the engineering group\n\nD\nUne capacité réutilisable que plusieurs produits du partenaire doivent appeler de façon programmatique.\n\nSelect mechanism...\nPlugin distributed org-wide\nClaude Code project Skill\nAPI Skill (Messages API container)\nOrg-provisioned Skill\n\nCheck selections\nSkip for now\n\nDev Workflows\n\nAméliorer les flux de travail des développeurs avec des outils IA\n\nUne équipe peut avoir Claude parfaitement configuré et en tirer peu d'avantages. La différence tient à leur flux de travail : la manière dont l'assistance IA est tissée dans la façon dont les développeurs travaillent, et la discipline qui maintient la confiance dans ses résultats. Cet écran porte sur l'élévation du niveau du flux de travail sans abaisser le niveau de qualité, et sur l'échec qui survient quand la seconde moitié est ignorée.\n\nIntégrer l'assistance dans le flux de travail existant",
-          "Les outils IA rapportent lorsqu'ils vivent à l'intérieur du flux de travail existant : l'éditeur, le processus de revue et la boucle de tests, plutôt que dans une fenêtre de chat séparée que le développeur consulte occasionnellement. Le rôle de l'Architecte est de trouver où l'assistance IA peut supprimer de la friction réelle et améliorer le processus global. Claude doit être intégré dans le flux de travail actuel de l'équipe. L'intégration est aussi la façon dont le savoir et les façons de faire de l'équipe se codifient. Les conventions, normes de revue et procédures répétées qui vivent généralement dans la tête des gens deviennent des Skills et des configurations de projet que Claude applique de manière cohérente, de sorte que les bonnes pratiques voyagent avec les outils plutôt que dépendre de qui est présent dans la pièce.\n\nOù Claude aide à chaque étape du flux de travail, et la discipline de revue qu'il faut encore appliquer\n\nWorkflow stageWhere Claude can helpReview discipline it still needs\n\nWriting codeRédaction de boilerplate, de tests et d'implémentations de première passe à partir d'un cahier des charges clair.Revue de correction et de sécurité ; l'auteur doit comprendre ce qui a été généré.\n\nReviewing codeRésumé d'un diff, signalement des problèmes probables, explication de code inconnu.Jugement humain pour trancher ; les signaux de l'IA sont des inputs, pas un verdict.\n\nDebuggingProposition d'hypothèses à partir d'un symptôme et d'une trace.Vérifier l'hypothèse sur la base des éléments de preuve avant d'agir.\n\nDeux modes d'échec réapparaissent sans cesse\n\n1 Adoption inégale : Cela survient lorsque quelques développeurs utilisent intensément les outils IA et que le reste de l'équipe y touche à peine, de sorte que l'équipe ne réalise jamais le vrai bénéfice de l'outil et que la pratique ne se standardise pas. Le déploiement par champions et par lots vu précédemment est une excellente façon d'éviter cela : il diffuse l'usage de façon délibérée au lieu de tout laisser aux adopteurs précoces.\n\n2 Ralentissement au chat basique : L'équipe utilise Claude comme une boîte de questions-réponses et n'évolue jamais vers des workflows à plus forte valeur comme l'utilisation d'outils, l'assistance consciente du dépôt, ou les skills empaquetés parce que personne ne les a activés au-delà de la première étape. Fournir l'accès à une équipe n'est pas de l'adoption ; il faut configurer pour un véritable déploiement dans les workflows existants.\n\nDiligence : la discipline qui rend le travail généré par l'IA digne de confiance",
-          "La diligence est l'une des quatre compétences d'AI Fluency. Anthropic la définit comme la prise de responsabilité pour ce que nous faisons avec l'IA et comment nous le faisons. La diligence au déploiement signifie spécifiquement prendre la responsabilité de vérifier et d'attester des sorties que nous utilisons ou partageons. Appliquée aux flux de travail des développeurs, cette responsabilité se manifeste par une habitude concrète : soumettre le code généré par l'IA aux mêmes normes que tout autre code, c'est-à-dire correction, sécurité et maintenabilité, et rester attentif à l'échec subtil où les ingénieurs acceptent une sortie qu'ils ne comprennent plus complètement parce qu'elle \"semble\" correcte et passe une vérification.\n\nLe livrable concret que produit la diligence est une checklist de vérification : l'ensemble explicite de contrôles qu'une sortie générée par l'IA doit franchir avant d'atteindre la production. Cette checklist de vérification est quelque chose qu'une équipe construit en interne en fonction de ses besoins spécifiques. La checklist doit inclure des questions qui couvrent les quatre dimensions de la verification : correction, sécurité, maintenabilité et compréhension humaine.\n\nChaque fois qu'une vérification peut être automatisée, elle doit l'être. Une suite de tests de régression et un jeu d'évaluations transforment la vérification de la correction et du comportement d'un jugement de relecteur en une porte qui s'exécute à chaque changement. La checklist définit ce qui doit être vrai. Les evals et les tests sont la façon dont une équipe le prouve de manière répétable plutôt que de le redéterminer manuellement à chaque fois. Une équipe qui a cette checklist a transformé une bonne intention en un verrou répétable ; une équipe sans elle fait confiance aux sorties de l'IA par défaut en espérant que le relecteur attrapera ce qui compte.\n\nAttention à\n\nLa fusion que personne n'a pu expliquer.\nUne équipe a adopté le codage assisté par l'IA et a livré sensiblement plus vite. Trois semaines plus tard, un changement généré a passé la revue de code et les tests et est allé en production, où il a fuité des données via une entrée qu'il n'a jamais validée. Dans le post-mortem, l'auteur n'a pas su expliquer pourquoi le code traitait cette entrée de cette manière ; cela semblait plausible, les tests étaient verts, et personne n'a posé la question que la checklist aurait imposée : la personne qui fusionne peut-elle expliquer ce que cela fait et pourquoi ? La vitesse avait silencieusement remplacé la compréhension, ce qui est précisément l'érosion de jugement que la diligence est là pour détecter."
-        ]
-      },
-      "totalPages": 3
-    },
-    {
-      "id": "lesson_03",
-      "title": {
-        "en": "Cost · Complexity · Risk",
-        "fr": "Coût · Complexité · Risque"
-      },
-      "type": "teaching",
-      "duration": 9,
-      "pages": {
-        "en": [
-          "Cost · Complexity · Risk\n\nCost AI assistance lowers the cost of producing code, which raises the volume that reaches review; the verification checklist is what keeps that volume from overwhelming the quality bar.\n\nComplexity The hard part is cultural, not technical: holding AI-generated code to the same review standard as hand-written code, especially when it ships faster and looks right.\n\nRisk The biggest failure mode is judgment erosion: a team that ships output it no longer understands because it passed shallow checks, until an input no one reasoned about reaches production.\n\nDev Workflows · Exercise\n\nExercise: define the verification checklist\n\nTry it now. Write the verification checklist that AI-generated code must pass before production. For each of the four dimensions below, write one concrete check in your own words. Write your checklist, then reveal the model answer below.\n\nCorrectness\n\nSecurity\n\nMaintainability\n\nHuman understanding\n\nReveal model answer\n\nCorrectness: Tests exist and pass, and the behavior matches the stated requirement including edge cases.\n\nSecurity: No secrets in code; inputs are validated; any tools or external calls use least-privilege access.\n\nMaintainability: The code reads clearly, follows team conventions, and contains no unexplained complexity.\n\nHuman understanding: The developer submitting the change can explain what the code does and why, including how it handles the inputs it was not explicitly tested against.\n\nMark checklist complete\nSkip for now\n\nOperational Support\n\nSupporting debugging and operational issue resolution\n\nThere's always a time when a live deployment surprises its team. When it does, the Architect is the person who connects what the team is seeing to why it is happening. The Architect is also responsible for upskilling the team, so next time they feel empowered to resolve the issue themselves. This screen is about the support role, the symptom-to-cause reasoning that defines it, and building the team toward self-sufficiency.\n\nThe support role is translation, not firefighting",
-          "When an operational issue lands, the team usually identifies a symptom, not a cause. For example, they'll note that latency spiked, outputs degraded, or a tool started failing. The team then pulls in the Architect, whose value is connecting the operational symptom to its architecture cause: the same diagnostic discipline Module 2 built for production systems, now applied in support of a team that owns the deployment. Resolving one incident yourself is firefighting; teaching the team the symptom-to-cause path they can follow again in the future is support that lasts.\n\nConnect symptoms to architecture causes\n\nMany operational symptoms trace to a small set of architectural causes. Identifying these allows the team to reason clearly from what they see to where to look.\n\nSymptom → likely architecture cause → first action\n\nSymptomLikely architecture causeFirst action\n\nOutput quality degraded gradually, but there was no code changeA model or prompt change, or retrieval drift as the corpus grew.Compare against an eval set; check what changed in the model, prompt, or corpus.\n\nLatency spikedContext size grew, a tool got slow, or a cache stopped hitting.Use telemetry and request traces to find the slowest span: check token counts per request and the slowest tool call, and confirm cache behavior.\n\nIntermittent tool failuresAuthorization, rate limits, or an unhandled error path.Inspect the failing tool's auth and limits; trace one failed call end to end.\n\nCost rose without a usage changeModel tier crept up, or caching regressed.Check per-request model tier and cache hit rate against the budget model.\n\nBuild self-sufficiency: runbooks and escalation paths\n\nSelf-sufficiency is engineered into functioning teams. A runbook captures the known symptom-to-cause-to-action paths so the team can resolve recurring issues without the Architect. The table above is the foundation of a good runbook. An escalation path identifies who handles what and when an issue leaves the team, so people know the boundary of what they can resolve and what must get escalated. Always encourage a team to keep a runbook for their deployment and define a clear escalation path. The goal is a team that needs you only when new problems arise, not for ones you've already taught them how to face.\n\nWatch out for",
-          "The drift that waited for a quarterly review.\nA support team watched a deployment's dashboards stay green for an entire quarter while answer quality quietly slid. No one connected the slow decline to its cause: a growing retrieval corpus the index had not kept pace with. The symptoms were visible the whole time, but the runbook entry that says gradual quality decline with no code change points at the model, the prompt, or retrieval drift was missing. With that path written down, a first-line engineer could have resolved the issue in an afternoon; but without it, it waits for a review."
-        ],
-        "fr": [
-          "Contexte de la leçon : Coût · Complexité · Risque\n\nCoût L'assistance IA réduit le coût de production du code, ce qui augmente le volume soumis à la revue ; la checklist de vérification est ce qui empêche ce volume de faire chuter le niveau de qualité.\n\nComplexité La difficulté est culturelle, pas technique : soumettre le code généré par l'IA aux mêmes standards de revue que le code écrit à la main, surtout lorsqu'il est livré plus vite et a l'air correct.\n\nRisque Le principal mode d'échec est l'érosion du jugement : une équipe qui met en production des sorties qu'elle ne comprend plus parce qu'elles ont passé des vérifications superficielles, jusqu'à ce qu'une entrée sur laquelle personne n'a réfléchi atteigne la production.\n\nFlux de développement · Exercice\n\nExercice : définir la checklist de vérification\n\nEssayez maintenant. Rédigez la checklist de vérification que le code généré par l'IA doit passer avant la mise en production. Pour chacune des quatre dimensions ci-dessous, écrivez une vérification concrète avec vos propres mots. Écrivez votre checklist, puis affichez la réponse modèle ci-dessous.\n\nCorrectness\n\nSecurity\n\nMaintainability\n\nHuman understanding\n\nAfficher la réponse modèle\n\nCorrectness : Des tests existent et sont verts, et le comportement correspond au besoin déclaré, y compris les cas limites.\n\nSecurity : Aucun secret dans le code ; les entrées sont validées ; tout outil ou appel externe utilise un accès avec les privilèges minimums nécessaires.\n\nMaintainability : Le code est lisible, respecte les conventions de l'équipe et ne contient pas de complexité inexpliquée.\n\nHuman understanding : Le développeur soumettant le changement peut expliquer ce que fait le code et pourquoi, y compris comment il gère des entrées qui n'ont pas été explicitement testées.\n\nMarquer la checklist comme complète\nPasser pour l'instant\n\nSupport opérationnel\n\nSoutenir le débogage et la résolution des incidents opérationnels\n\nIl arrive toujours un moment où un déploiement en production surprend son équipe. Quand cela se produit, l'Architecte est la personne qui relie ce que l'équipe observe à la raison pour laquelle cela arrive. L'Architecte est également responsable de monter en compétence l'équipe, afin que la prochaine fois elle soit capable de résoudre le problème elle-même. Cet écran traite du rôle de support, du raisonnement symptôme→cause qui le définit, et de la construction d'une équipe autonome.\n\nLe rôle de support est de traduire, pas d'éteindre des incendies",
-          "Lorsqu'un incident opérationnel survient, l'équipe identifie généralement un symptôme, pas une cause. Par exemple, elle remarquera une hausse de latence, une dégradation des sorties ou qu'un outil commence à échouer. L'équipe fait alors appel à l'Architecte, dont la valeur ajoutée est de relier le symptôme opérationnel à sa cause architecturale : la même discipline diagnostique que le Module 2 a construite pour les systèmes de production, appliquée ici pour soutenir l'équipe propriétaire du déploiement. Résoudre un incident soi-même, c'est faire du « firefighting » ; apprendre à l'équipe la voie symptôme→cause qu'elle pourra suivre à nouveau à l'avenir, c'est un support durable.\n\nRelier les symptômes aux causes architecturales\n\nBeaucoup de symptômes opérationnels remontent à un petit ensemble de causes architecturales. Les identifier permet à l'équipe de raisonner clairement depuis ce qu'elle voit jusqu'à l'endroit où chercher.\n\nSymptôme → cause architecturale probable → première action\n\nSymptômeCause architecturale probablePremière action\n\nLa qualité des réponses s'est dégradée progressivement, sans changement de codeUn changement de modèle ou de prompt, ou une dérive de récupération (retrieval) au fur et à mesure que le corpus a grandi.Comparez avec un jeu d'évaluation ; vérifiez ce qui a changé dans le modèle, le prompt ou le corpus.\n\nLa latence a grimpéLa taille du contexte a augmenté, un outil est devenu lent, ou un cache a cessé de répondre.Utilisez la télémétrie et les traces de requêtes pour trouver l'étendue la plus lente : vérifiez le nombre de tokens par requête et l'appel d'outil le plus lent, et confirmez le comportement du cache.\n\nÉchecs intermittents d'un outilAuthentification, limites de taux, ou un chemin d'erreur non géré.Inspectez l'authentification et les limites de l'outil défaillant ; tracez un appel échoué de bout en bout.\n\nLes coûts ont augmenté sans changement d'usageLe niveau de modèle a été surclassé, ou la mise en cache a régressé.Vérifiez le niveau de modèle par requête et le taux de cache hit par rapport au modèle budgétaire.\n\nConstruire l'autonomie : runbooks et voies d'escalade\n\nL'autonomie est conçue dans les équipes qui fonctionnent. Un runbook capture les parcours symptôme→cause→action connus afin que l'équipe puisse résoudre les incidents récurrents sans l'Architecte. Le tableau ci-dessus est la base d'un bon runbook. Une voie d'escalade identifie qui gère quoi et quand un problème sort du périmètre de l'équipe, pour que chacun sache ce qu'il peut résoudre et ce qui doit être escaladé. Encouragez toujours une équipe à tenir un runbook pour son déploiement et à définir une voie d'escalade claire. L'objectif est d'avoir une équipe qui n'a besoin de vous que pour les nouveaux problèmes, pas pour ceux que vous leur avez déjà appris à traiter.\n\nAttention à",
-          "La dérive qui a attendu la revue trimestrielle.\nUne équipe de support a regardé les tableaux de bord d'un déploiement rester verts pendant tout un trimestre pendant que la qualité des réponses déclinait en silence. Personne n'a relié la lente dégradation à sa cause : un corpus de récupération en croissance que l'index n'avait pas suivi. Les symptômes étaient visibles tout du long, mais l'entrée du runbook qui dit que la dégradation progressive de la qualité sans changement de code pointe vers le modèle, le prompt ou une dérive de retrieval faisait défaut. Avec ce parcours consigné, un ingénieur de première ligne aurait pu résoudre le problème en une après-midi ; sans lui, il attend une revue."
-        ]
-      },
-      "totalPages": 3
-    },
-    {
-      "id": "lesson_04",
-      "title": {
-        "en": "Cost · Complexity · Risk",
-        "fr": "Coût · Complexité · Risque"
-      },
-      "type": "teaching",
-      "duration": 5,
-      "pages": {
-        "en": [
-          "Cost · Complexity · Risk\n\nCost Teaching the symptom-to-cause path costs more of the Architect's time up front than fixing the incident directly, but it is the only version of support that reduces future load instead of repeating it.\n\nComplexity The hard part is resisting the urge to firefight: the fast fix is to resolve it yourself, but the durable fix is to help the team create a runbook entry and identify the escalation path that lets the team resolve the next issue without your help.\n\nRisk The biggest failure mode is a slow degradation no one connects to a cause, so it runs until a scheduled review catches it rather than the team catching it the day it starts."
-        ],
-        "fr": [
-          "Coût · Complexité · Risque\n\nCoût Enseigner le trajet symptôme→cause demande plus de temps de l'Architecte au départ que de corriger l'incident directement, mais c'est la seule forme de support qui réduit la charge future au lieu de la répéter.\n\nComplexité La difficulté est de résister à l'envie de jouer les pompiers : la solution rapide est de le résoudre soi‑même, mais la solution durable est d'aider l'équipe à créer une entrée dans le runbook et à identifier le chemin d'escalade qui permet à l'équipe de résoudre le prochain incident sans votre aide.\n\nRisque Le principal mode d'échec est une dégradation lente que personne ne relie à une cause ; elle perdure jusqu'à ce qu'une revue programmée la détecte, plutôt que l'équipe ne la remarque le jour où elle commence."
-        ]
-      },
-      "totalPages": 1
-    },
-    {
-      "id": "lesson_05",
-      "title": {
-        "en": "Module · Quiz",
-        "fr": "Module · Quiz"
-      },
-      "type": "teaching",
-      "duration": 6,
-      "pages": {
-        "en": [
-          "Module · Quiz\n\nModule quiz\n\nFive scenario questions across the three topics. Choose the best answer; the feedback names the principle.\n\nQuestion 1 · Team setup\n\nA team is rolling Claude out to four departments at once and adoption is uneven. What is the best next move?\n\nAMandate daily usage targets for everyone.\nBEnable a champion in each department first, prove the workflow, then seed adoption in batches.\nCWait until each department asks for help.\nDGive the strongest model to everyone to encourage use.\n\nQuestion 2 · Skills distribution\n\nA procedure must be run identically by every department and be revocable from one place. How should it be distributed?\n\nAPasted into each team's chat as a prompt.\nBBundled into an organization-managed plugin distributed to all departments, with group/org targeting, version-controlled updates, and rollback.\nCA Claude Code project config in one team's repo.\nDEmailed as a document for people to follow.\n\nQuestion 3 · Developer workflows\n\nA team ships AI-generated code faster but a security issue slips through. What was most likely missing?\n\nAA code-review SLA that exempted small AI-generated changes from security review.\nBA linter configured to flag known vulnerability patterns before merge.\nCA verification checklist that AI-generated code must pass before production, including a security dimension.\nDMore frequent model updates to incorporate recent security patterns.\n\nQuestion 4 · Judgment\n\nIn review, a developer cannot explain why an AI-generated change handles an input the way it does, but the tests pass. What should happen?\n\nAMerge it; the tests are green.\nBHold it until the author can explain the behavior and its rationale, the human-understanding check.\nCDelete the tests and rewrite by hand.\nDEscalate to the Architect for every merge.\n\nQuestion 5 · Operational support\n\nOutput quality on a live deployment has degraded over two months with no code changes. Where does the Architect look first?\n\nAIncrease the model tier; a more capable model will compensate for retrieval gaps.\nBA model or prompt change, or retrieval drift as the corpus grew, connect the symptom to an architecture cause.\nCDisable caching to ensure every call pulls fresh content.\nDRoll back the last code deployment and re-run integration tests.\n\nSubmit quiz\nSkip for now\n\nWrap-up · Reference\n\nGlossary\n\nThe key terms used across this module, in alphabetical order. Click a term to expand its definition.",
-          "Champion-per-department rollout\nAn adoption pattern that enables one champion per team first to prove the workflow, then seeds adoption batch by batch.\n\nEscalation path\nA named definition of who handles what and when an operational issue leaves the team.\n\nRunbook\nA captured set of known symptom-to-cause-to-action paths that lets a team resolve recurring operational issues without the Architect.\n\nShared configuration\nA single team baseline (for example a project CLAUDE.md, agreed tools, and permission posture) that every member starts from, instead of individual setups that drift apart.\n\nSkills distribution\nGetting a Skill in front of the right people through one of four mechanisms, each with different access, versioning, and rollback behavior: org-provisioned Skills (Organization settings > Skills) for organization-wide availability; plugins assigned to a group or org for scoped distribution with install preferences, version-controlled updates, and rollback; Claude Code project Skills versioned with the repository and scoped to a team; and API Skills called programmatically with explicit version pinning.\n\nSpend posture\nThe model defaults, model allowlists and restrictions, effort guidance, and spend, rate, and per-user caps set as part of team configuration keep consumption within bounds.\n\nVerification checklist\nThe explicit set of correctness, security, maintainability, and human-understanding checks AI-generated output must pass before production."
-        ],
-        "fr": [
-          "Module · Quiz\n\nQuiz du module\n\nCinq questions scénarios couvrant les trois sujets. Choisissez la meilleure réponse ; le feedback indique le principe.\n\nQuestion 1 · Configuration de l'équipe\n\nUne équipe déploie Claude dans quatre départements en même temps et l'adoption est inégale. Quelle est la meilleure action suivante ?\n\nAMandater des objectifs d'utilisation quotidienne pour tout le monde.\nBActiver d'abord un champion dans chaque département, prouver le flux de travail, puis étendre l'adoption par vagues.\nCAttendre que chaque département demande de l'aide.\nDDonner le modèle le plus puissant à tout le monde pour encourager l'utilisation.\n\nQuestion 2 · Répartition des Skills\n\nUne procédure doit être exécutée de manière identique par chaque département et pouvoir être révoquée depuis un seul endroit. Comment doit-elle être distribuée ?\n\nACollée dans le chat de chaque équipe en tant que prompt.\nBBundled into an organization-managed plugin distributed to all departments, with group/org targeting, version-controlled updates, and rollback.\nCUne configuration de projet Claude Code dans le dépôt d'une seule équipe.\nDEnvoyée par e-mail sous forme de document à suivre.\n\nQuestion 3 · Flux de travail des développeurs\n\nUne équipe livre du code généré par l'IA plus rapidement mais un problème de sécurité passe entre les mailles. Qu'est-ce qui manquait très probablement ?\n\nUnerule de revue de code (SLA) qui exemptait les petites modifications générées par l'IA de la revue de sécurité.\nBUne linter configurée pour signaler les motifs de vulnérabilité connus avant la fusion.\nCUne checklist de vérification que le code généré par l'IA doit passer avant la mise en production, incluant un volet sécurité.\nDDes mises à jour de modèle plus fréquentes pour intégrer les motifs de sécurité récents.\n\nQuestion 4 · Jugement\n\nLors de la revue, un développeur ne peut pas expliquer pourquoi une modification générée par l'IA traite une entrée de cette manière, mais les tests passent. Que doit-on faire ?\n\nAFusionner ; les tests sont verts.\nBGarder en attente jusqu'à ce que l'auteur puisse expliquer le comportement et sa justification, le contrôle de compréhension humaine.\nCSupprimer les tests et réécrire à la main.\nDEscalader vers l'Architecte pour chaque fusion.\n\nQuestion 5 · Support opérationnel\n\nLa qualité des sorties d'un déploiement en production a décliné sur deux mois sans changement de code. Où l'Architecte regarde-t-il en premier ?\n\nAAugmenter le niveau de modèle ; un modèle plus capable compensera les lacunes de récupération.\nBUn changement de modèle ou de prompt, ou une dérive de récupération à mesure que le corpus a grandi — connecter le symptôme à une cause architecturale.\nCDésactiver le cache pour s'assurer que chaque appel récupère du contenu frais.\nDRetrograder le dernier déploiement de code et relancer les tests d'intégration.\n\nSoumettre le quiz\nPasser pour l'instant\n\nWrap-up · Reference\n\nGlossaire\n\nLes termes clés utilisés dans ce module, par ordre alphabétique. Cliquez sur un terme pour développer sa définition.",
-          "Déploiement avec un champion par département\nUn modèle d'adoption qui commence par un champion par équipe pour valider le flux de travail, puis étend l'adoption par vagues.\n\nChemin d'escalade\nUne définition nominative de qui gère quoi et à quel moment un incident opérationnel est transféré hors de l'équipe.\n\nRunbook\nUn ensemble documenté de chemins symptôme→cause→action connus qui permet à une équipe de résoudre des problèmes opérationnels récurrents sans l'Architecte.\n\nConfiguration partagée\nUne base unique d'équipe (par exemple un projet CLAUDE.md, des outils convenus et une posture de permissions) dont chaque membre part, plutôt que des configurations individuelles qui divergent.\n\nDistribution des Skills\nMettre un Skill à la disposition des bonnes personnes via l'un des quatre mécanismes, chacun ayant des comportements différents en matière d'accès, de gestion des versions et de retour en arrière : org-provisioned Skills (Organization settings > Skills) pour une disponibilité à l'échelle de l'organisation ; des plugins attribués à un groupe ou à l'organisation pour une distribution ciblée avec préférences d'installation, mises à jour versionnées et rollback ; des Skills de projet Claude Code versionnés avec le dépôt et limités à une équipe ; et des API Skills appelés par programme avec un verrouillage explicite de version.\n\nPosture de dépenses\nLes paramètres par défaut du modèle, les allowlists et restrictions de modèle, les consignes d'effort, ainsi que les limites de dépenses, de débit et par utilisateur définies dans la configuration d'équipe maintiennent la consommation dans des limites.\n\nChecklist de vérification\nL'ensemble explicite de contrôles de correction, sécurité, maintenabilité et compréhension humaine que la sortie générée par l'IA doit satisfaire avant la mise en production."
-        ]
-      },
-      "totalPages": 2
-    },
-    {
-      "id": "lesson_06",
-      "title": {
-        "en": "Module · Recap",
-        "fr": "Module · Récapitulatif"
-      },
-      "type": "teaching",
-      "duration": 6,
-      "pages": {
-        "en": [
-          "Module · Recap\n\nRecap: four things that hold across everything here\n\n01\n\nTeam setup is shared configuration, distribution, and spend posture decided up front\n\nA team environment is a shared baseline plus a Skills distribution approach: org-provisioned for everyone, plugins for group and org targeting with versioned updates and rollback, project Skills for one team, and API Skills for programmatic reuse, all bounded by model and budget guardrails.\n\n02\n\nAdoption is engineered through champions and batches\n\nA champion per team proves the workflow and seeds adoption; access without enablement stalls at basic chat, and lumpy adoption never standardizes the gain.\n\n03\n\nDiligence keeps AI-assisted work trustworthy\n\nHold AI-generated code to correctness, security, and maintainability standards, and require that the author can explain what shipped, captured as a verification checklist that gates before production.\n\n04\n\nOperational support is translation plus self-sufficiency\n\nConnect symptoms to architecture causes and leave behind runbooks and escalation paths so the team needs you for the new problem, not the familiar one.\n\nThat completes the Architect track.\n\nYou can take a deployment from a stakeholder's first sentence through design, integration, governance, handoff, and deliver it to the team that adopts and runs it.\n\nSources\n\nAnthropic Skilljar, Building with the Claude API: tool use, API integration mechanics, and baseline Skills concepts carried into team distribution.\n\nClaude Code configuration docs (code.claude.com): CLAUDE.md instructions vs. enforceable settings, permissions, hooks, MCP, and managed settings.\n\nClaude Code Skills and organization Skills provisioning docs: Skill package structure, project Skills, plugin-based distribution, and owner-provisioned org-wide availability.\n\nOrganization plugin management (support.code.com): Plugin marketplaces, group assignment, install preferences, required/default install, hide/deprecate behavior, manual upload, Github sync, update, and removal mechnics.\n\nModule Complete · Architect · 2 min\n\nCongratulations! You have successfully completed this module.\n\nModule 5 covers the team tooling configuration, developer workflow design, and operational support practices that sustain AI productivity once a deployment is live.\n\nA deployment that the team cannot operate, debug, and improve will not stay productive; you now have the patterns to keep it running.\n\n0\nof 0 checkpoints passed\n\nM1",
-          "Claude Platform & Solution Design\n\nModel selection, prompt architecture, tool design, and platform-layer tradeoffs.\n\nM2\n\nEnterprise Integration & Production\n\nDeployment patterns, integration architecture, and production reliability.\n\nM3\n\nResponsible AI, Safety & Risk\n\nSafety frameworks, risk identification, and governance practices.\n\nM4\n\nStakeholder Engagement, Lifecycle & Go-to-Market\n\nStakeholder communication, lifecycle management, and go-to-market strategy.\n\nM5\n\nTeam Enablement and Operational Productivity\n\nTeam tooling configuration and operational support practices.\n\nYou Are Here\n\nReview module\nStart over"
-        ],
-        "fr": [
-          "Module · Récapitulatif\n\nRécapitulatif : quatre constats valables partout ici\n\n01\n\nLa configuration d’équipe est une configuration partagée, une distribution et une posture de dépenses décidées en amont\n\nUn environnement d’équipe est une base partagée plus une approche de distribution des Skills : provisionnée par l’organisation pour tous, plugins pour des ciblages de groupe et d’organisation avec mises à jour versionnées et rollback, Skills de projet pour une équipe, et API Skills pour la réutilisation programmatique, le tout borné par des garde-fous de modèles et de budget.\n\n02\n\nL’adoption est conçue via des champions et des vagues\n\nUn champion par équipe prouve le flux de travail et amorce l’adoption ; un accès sans accompagnement stagne au chat de base, et une adoption en dents de scie ne standardise jamais le bénéfice.\n\n03\n\nLa diligence maintient la confiance dans le travail assisté par l’IA\n\nSoumettez le code généré par l’IA à des critères de correction, de sécurité et de maintenabilité, et exigez que l’auteur puisse expliquer ce qui a été livré, consigné sous forme d’une checklist de vérification qui fait office de garde avant la production.\n\n04\n\nLe support opérationnel est traduction plus autonomie\n\nReliez les symptômes aux causes architecturales et laissez des runbooks et des chemins d’escalade afin que l’équipe ait besoin de vous pour le nouveau problème, pas pour le problème connu.\n\nCela conclut la filière Architecte.\n\nVous pouvez prendre un déploiement depuis la première phrase d’un intervenant jusqu’à la conception, l’intégration, la gouvernance, le transfert, et le livrer à l’équipe qui l’adopte et l’exploite.\n\nSources\n\nAnthropic Skilljar, Building with the Claude API: tool use, API integration mechanics, and baseline Skills concepts carried into team distribution.\n\nClaude Code configuration docs (code.claude.com): CLAUDE.md instructions vs. enforceable settings, permissions, hooks, MCP, and managed settings.\n\nClaude Code Skills and organization Skills provisioning docs: Skill package structure, project Skills, plugin-based distribution, and owner-provisioned org-wide availability.\n\nOrganization plugin management (support.code.com): Plugin marketplaces, group assignment, install preferences, required/default install, hide/deprecate behavior, manual upload, Github sync, update, and removal mechnics.\n\nModule terminé · Architecte · 2 min\n\nFélicitations ! Vous avez terminé ce module avec succès.\n\nLe Module 5 couvre la configuration des outils d’équipe, la conception des workflows développeur et les pratiques de support opérationnel qui soutiennent la productivité IA une fois qu’un déploiement est en production.\n\nUn déploiement que l’équipe ne peut pas exploiter, déboguer et améliorer ne restera pas productif ; vous avez maintenant les schémas pour le maintenir en fonctionnement.\n\n0 sur 0 points de contrôle réussis\n\nM1",
-          "Plateforme Claude & Conception de solution\n\nSélection de modèle, architecture de prompt, conception d’outils et compromis au niveau plateforme.\n\nM2\n\nIntégration d’entreprise & Production\n\nSchémas de déploiement, architecture d’intégration et fiabilité en production.\n\nM3\n\nIA responsable, sécurité & risque\n\nCadres de sécurité, identification des risques et pratiques de gouvernance.\n\nM4\n\nEngagement des parties prenantes, cycle de vie & go-to-market\n\nCommunication avec les parties prenantes, gestion du cycle de vie et stratégie go-to-market.\n\nM5\n\nActivation d’équipe et productivité opérationnelle\n\nConfiguration des outils d’équipe et pratiques de support opérationnel.\n\nVous êtes ici\n\nRevoir le module\nRecommencer"
-        ]
-      },
-      "totalPages": 2
+      }
     }
   ],
   "exercises": [
     {
-      "id": "ex_1",
+      "id": "ex_claude_certified_architect_professional__05_001",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 1",
-        "fr": "Exercice 1"
-      },
       "prompt": {
-        "en": "Based on the lesson \"### Team Enablement and Operational Productivity: Architect Module 5\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"### Mise en capacité des équipes et productivité opérationnelle : Architect Module 5\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Roll out through champions, then batches\nTeam adoption rarely succeeds as a single all-hands switch-on. The pattern that works best is identifying a champion per department or team who is granted access first, proves the workflow in practice, and then seeds adoption batch by batch. The champion absorbs the early friction, builds the local examples, and becomes the first line of support so the Architect is not the only person who can answer questions for the team.\nWorked example\nA 200-person engineering org wants Claude Code across four departments. Instead of enabling all four at once, the Architect enables one champion in each department, gives them two weeks to convert a real workflow (e.g., a code-review assist, a test-generation step), and has each champion run a 45-minute session for their first batch that includes five of their peers. By the time the broad rollout happens, every department has a working example, a local expert, and a shared CLAUDE.md the champion has already tuned. The same rollout attempted as a single mass email would have produced a spike of confused first-time prompts and maybe even a quiet retreat to old habits.\nSkills distribution: the team-scale version of reuse",
+        "fr": "Déploiement via des champions, puis par lots\nL'adoption par l'équipe ne réussit pas souvent lorsqu'elle est déclenchée par une seule activation générale.\nLe schéma qui fonctionne le mieux consiste à identifier un champion par département ou par équipe qui obtient l'accès en premier, à prouver le flux de travail en pratique, puis à diffuser l'adoption par lots.\nLe champion absorbe les frictions initiales, construit les exemples locaux et devient le premier point de contact pour le support, afin que l'Architect ne soit pas la seule personne capable de répondre aux questions de l'équipe.\nExemple concret\nUne organisation d'ingénierie de 200 personnes veut Claude Code dans quatre départements. \nPlutôt que d'activer les quatre en même temps, l'Architect active un champion dans chaque département, leur donne deux semaines pour convertir un flux de travail réel (par exemple, une aide à la revue de code, une étape de génération de tests), et fait en sorte que chaque champion anime une session de 45 minutes pour leur premier lot, qui inclut cinq de leurs pairs.\nAu moment où le déploiement à grande échelle a lieu, chaque département dispose d'un exemple fonctionnel, d'un expert local et d'un CLAUDE.md partagé que le champion a déjà ajusté.\nLe même déploiement, tenté par un seul e-mail de masse, aurait provoqué une flambée de prompts initiaux confus et peut-être même un retour discret aux anciennes habitudes.\nDistribution des compétences : la version à l'échelle de l'équipe de la réutilisation"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_2",
+      "id": "ex_claude_certified_architect_professional__05_002",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 2",
-        "fr": "Exercice 2"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Module · Orientation\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Module · Orientation\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Skills distribution: the team-scale version of reuse\nWe've learned that skill packages are repeatable procedures that appear as versioned, reusable units. At team scale, the architectural question is: how should you distribute a skill to your entire team? Consider how you might create, version, and publish it so that the team can access it, how granting and revoking access might work, and how you might roll it back if a skill misbehaves. There are four main ways to distribute team skills, and the mechanism you choose accounts for what the tool is, who uses it, and who has access to govern it.\nThere are four ways to deploy a Skill to a team, and they differ in who can access it and how much control you retain. An owner-provisioned Skill, uploaded under Organization settings > Skills, becomes available to everyone in the organization at once. This is the simplest path when a capability genuinely should reach all members. When a Skill should reach only select members, you bundle one or more Skills into a plugin and assign that plugin to a group. Only the group's members are able to access those skills. Plugins are also where governed distribution lives: install preferences such as required, installed-by-default, available, or not available, group targeting, and version-controlled updates from a connected repository. The third mechanism is Claude Code project Skills: filesystem artifacts that live in the project repository (.claude/skills/), so they version with the repository itself and are scoped to the projects that carry them. The fourth is API Skills, called programmatically by the partner's own products. Centrally managed Claude Code configuration is a separate channel entirely: server-managed settings are delivered from Anthropic's servers when users authenticate and refresh on an hourly polling cycle - a settings mechanism, not a Skills distribution path.\nSkill distribution mechanisms\nDistribution mechanismBest whenGovernance and rollback",
+        "fr": "Distribution des Skills : la version à l’échelle de l’équipe pour la réutilisation\nNous avons appris que les Skill packages sont des procédures répétables qui apparaissent sous forme d’unités versionnées et réutilisables.\nÀ l’échelle de l’équipe, la question architecturale est : comment devriez-vous distribuer un Skill à l’ensemble de votre équipe ?\nConsidérez comment vous pourriez le créer, le versionner et le publier afin que l’équipe puisse y accéder, comment l’octroi et la révocation d’accès pourraient fonctionner, et comment vous pourriez le ramener à une version antérieure si un Skill se comporte mal.\nIl existe quatre façons principales de distribuer les Skills d’équipe, et le mécanisme que vous choisissez tient compte de ce qu’est l’outil, de qui l’utilise, et de qui a accès pour le gouverner.\nIl existe quatre façons de déployer un Skill à une équipe, et elles diffèrent selon qui peut y accéder et le niveau de contrôle que vous conservez.\nUn Skill provisionné par le propriétaire, téléversé sous Organization settings > Skills, devient disponible pour tous les membres de l’organisation en une fois.\nC’est le chemin le plus simple lorsque une capacité devrait réellement atteindre tous les membres.\nLorsqu’un Skill ne doit atteindre que des membres sélectionnés, vous regroupez un ou plusieurs Skills dans un plugin et assignez ce plugin à un groupe.\nSeuls les membres du groupe peuvent accéder à ces Skills.\nLes plugins constituent également le lieu où vit la distribution gouvernée : des préférences d’installation telles que required, installed-by-default, available, or not available, le ciblage par groupe et les mises à jour versionnées depuis un référentiel connecté.\nLe troisième mécanisme est Claude Code project Skills : des artefacts du système de fichiers qui vivent dans le repository du projet (.claude/skills/), de sorte qu’ils sont versionnés avec le repository lui-même et qu’ils soient limités aux projets qui les portent.\nLe quatrième est API Skills, appelé programmatiquement par les propres produits du partenaire.\nLa configuration Claude Code gérée centralement constitue un canal entièrement distinct : les paramètres gérés par le serveur sont fournis à partir des serveurs d’Anthropic lorsque les utilisateurs s’authentifient et se rafraîchissent selon un cycle de sondage horaire — un mécanisme de paramètres, et non pas un chemin de distribution de Skills.\n\nMécanismes de distribution des Skills\nMécanisme de distribution | Idéal lorsque | Gouvernance et rollback"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_3",
+      "id": "ex_claude_certified_architect_professional__05_003",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 3",
-        "fr": "Exercice 3"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Cost · Complexity · Risk\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Coût · Complexité · Risque\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "API Skill (Messages API container)A capability called programmatically by the partner's own products.Governed in the calling system; supports explicit version pinning; reuse is machine-to-machine rather than human-facing.\nPackaging a team workflow as a distributable skill is how a good local practice becomes a team standard. The procedure travels as one governed artifact instead of as undocumented know-how, and updates propagate through versioning rather than through re-explaining.\nSet the spend posture before the first bill\nTeam setup also includes the cost guardrails. Admins should set these intentionally rather than inherit the defaults: model defaults (which model a session starts on), model allowlists and restrictions (which models the team may switch to), effort guidance (how hard the model works on a task), and spend, rate, and per-user caps that keep consumption within bounds. Module 2 showed that leaving model choice unmanaged can quietly route work to a more capable, more expensive tier than the task requires. At team scale that choice multiplies across every member and every request.\nWatch out for",
+        "fr": "API Skill (Messages API container) Une capacité appelée de manière programmatique par les propres produits du partenaire. Gouverné dans le système appelant; prend en charge l'ancrage explicite des versions; la réutilisation est machine-à-machine plutôt que destinée à l'humain.\nMettre en emballage un flux de travail d'équipe sous forme de skill distribuable est la façon dont une bonne pratique locale devient une norme d'équipe. La procédure voyage comme un artefact gouverné plutôt que comme un savoir-faire non documenté, et les mises à jour se propagent par le versionnage plutôt que par une réexplication.\nDéfinir la posture de dépense avant la première facture\nLa configuration de l'équipe comprend également les guardrails relatifs aux coûts. Les administrateurs devraient les définir intentionnellement plutôt que d'hériter des defaults: model defaults (which model a session starts on), model allowlists and restrictions (which models the team may switch to), effort guidance (how hard the model works on a task), and spend, rate, and per-user caps that keep consumption within bounds. Module 2 a montré que laisser le choix du modèle sans gestion peut discrètement acheminer le travail vers une couche plus performante et plus coûteuse que ce que nécessite la tâche. À l'échelle de l'équipe, ce choix se multiplie pour chaque membre et chaque requête.\nAttention à"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_4",
+      "id": "ex_claude_certified_architect_professional__05_004",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 4",
-        "fr": "Exercice 4"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Cost · Complexity · Risk\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Coût · Complexité · Risque\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Risk The biggest failure mode is a shared asset (e.g., a skill, a config) with no versioning or rollback, so one bad change propagates to the whole team before anyone can stop it.\nTeam Setup · Checkpoint\nCheckpoint: design the team distribution strategy\nTry it now. For each scenario below, choose how the team should receive the reusable asset, and identify the factor that makes that mechanism the right one. A correct mechanism paired with the wrong reason does not pass.\nA\nA compliance-review procedure every department must run identically, that must be centrally updatable and roll-back-able.",
+        "fr": "Risque : Le plus grand mode d'échec est un actif partagé (par exemple, une compétence, une config) sans versioning ni rollback, de sorte qu'un mauvais changement se propage à toute l'équipe avant que quiconque puisse l'arrêter.\nConfiguration de l'équipe · Checkpoint\nCheckpoint : concevoir la stratégie de répartition de l'équipe\nEssayez-le maintenant. Pour chaque scénario ci-dessous, choisissez comment l'équipe devrait recevoir l'actif réutilisable, et identifiez le facteur qui rend ce mécanisme le bon choix. Un mécanisme correct accompagné d'une mauvaise raison ne suffit pas.\nA\nUne procédure de revue de conformité que chaque département doit exécuter de manière identique, qui doit être actualisable centralement et roll-back-able."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_5",
+      "id": "ex_claude_certified_architect_professional__05_005",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 5",
-        "fr": "Exercice 5"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Cost · Complexity · Risk\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Coût · Complexité · Risque\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Team Setup · Checkpoint\nCheckpoint: design the team distribution strategy\nTry it now. For each scenario below, choose how the team should receive the reusable asset, and identify the factor that makes that mechanism the right one. A correct mechanism paired with the wrong reason does not pass.\nA\nA compliance-review procedure every department must run identically, that must be centrally updatable and roll-back-able.\nSelect mechanism...",
+        "fr": "Mise en place de l'équipe · Point de contrôle\nPoint de contrôle : concevoir la stratégie de répartition de l'équipe\nEssayez-le dès maintenant. Pour chaque scénario ci-dessous, choisissez comment l'équipe devrait recevoir l'actif réutilisable, et identifiez le facteur qui fait que ce mécanisme est le bon. Un mécanisme correct assorti d'une mauvaise raison ne passe pas.\nA\nUne procédure de vérification de conformité que chaque département doit exécuter de manière identique, qui doit pouvoir être mise à jour centralement et restaurée à une version antérieure.\nSélectionner le mécanisme..."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_6",
+      "id": "ex_claude_certified_architect_professional__05_006",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 6",
-        "fr": "Exercice 6"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Module · Quiz\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Module · Quiz\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Checkpoint: design the team distribution strategy\nTry it now. For each scenario below, choose how the team should receive the reusable asset, and identify the factor that makes that mechanism the right one. A correct mechanism paired with the wrong reason does not pass.\nA\nA compliance-review procedure every department must run identically, that must be centrally updatable and roll-back-able.\nSelect mechanism...\nOrg-provisioned Skill (Organization settings › Skills)\nClaude Code project Skill",
+        "fr": "Point de contrôle : concevoir la stratégie de distribution de l'équipe\nEssayez-le maintenant. Pour chaque scénario ci-dessous, choisissez comment l'équipe doit recevoir l'actif réutilisable, et identifiez le facteur qui fait que ce mécanisme est le bon. Un mécanisme correct associé à une raison incorrecte ne passe pas.\nA\nUne procédure de révision de conformité que chaque département doit exécuter de manière identique, qui doit pouvoir être mise à jour centralement et faire l'objet d'un rollback.\nSélectionnez le mécanisme...\nCompétence fournie par l'organisation (Paramètres de l'organisation › Compétences)\nCompétence du projet Claude Code"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_7",
+      "id": "ex_claude_certified_architect_professional__05_007",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 7",
-        "fr": "Exercice 7"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Module · Recap\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Module · Récapitulatif\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Integrate assistance into the workflow that already exists\nAI tooling pays off when it lives inside the existing workflow: the editor, the review process, and the test loop, rather than in a separate chat window the developer visits occasionally. The Architect's job is to find where AI assistance has the opportunity to remove real friction and improve the overall process. Claude should be integrated into the team's current workflow. Integration is also how a team's knowledge and ways of working get encoded. The conventions, review standards, and repeated procedures that usually live in people's heads become Skills and project configuration Claude applies consistently, so good practice travels with the tooling rather than depending on who happens to be in the room.\nWhere Claude helps at each workflow stage, and the review discipline it still needs\nWorkflow stageWhere Claude can helpReview discipline it still needs\nWriting codeDrafting boilerplate, tests, and first-pass implementations from a clear spec.Correctness and security review; the author must understand what was generated.",
+        "fr": "Intégrer l’assistance dans le workflow qui existe déjà\nLes outils AI portent leurs fruits lorsqu'ils vivent dans le workflow existant : l’éditeur, le processus de revue et la boucle de tests, plutôt que dans une fenêtre de chat séparée que le développeur consulte occasionnellement. Le travail de l’Architect est de trouver où l’assistance AI peut éliminer de vrais freins et améliorer le processus global. Claude devrait être intégré dans le workflow actuel de l'équipe. L’intégration est aussi la manière dont les connaissances et les façons de travailler d’une équipe s’inscrivent. Les conventions, les normes de revue et les procédures répétées qui vivent habituellement dans la tête des gens deviennent des Skills et une configuration de projet que Claude applique de manière cohérente, de sorte que les bonnes pratiques voyagent avec l’outil plutôt que de dépendre de qui se trouve dans la pièce.\nOù Claude aide à chaque étape du workflow, et la discipline de revue dont il a encore besoin\nÉtape du workflow Où Claude peut aider La discipline de revue dont il a encore besoin\nÉcriture du code\nRédaction de boilerplate, tests, et premières implémentations à partir d’un spec clair. Revue d’exactitude et de sécurité ; l’auteur doit comprendre ce qui a été généré."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_8",
+      "id": "ex_claude_certified_architect_professional__05_008",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 8",
-        "fr": "Exercice 8"
-      },
       "prompt": {
-        "en": "Based on the lesson \"### Team Enablement and Operational Productivity: Architect Module 5\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"### Mise en capacité des équipes et productivité opérationnelle : Architect Module 5\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Two failure modes show up again and again\n1Lumpy adoption: This occurs when a few developers use AI tooling heavily and the rest barely touch it, so the team never realizes the real gain of the tool and the practice never standardizes. The champion-and-batch rollout from the previous topic is a great way to avoid this: it spreads usage deliberately instead of leaving it all to early adopters.\n2Stalling at basic chat: The team uses Claude as a question-answering box and never advances to the higher-value workflows such as tool use, repository-aware assistance, packaged skills because no one enabled them past the first step. Providing a team with access is not adoption; you need to configure for real enablement within current workflows.\nDiligence: the discipline that keeps AI-generated work trustworthy\nDiligence is one of the four AI Fluency competencies. Anthropic defines it as taking responsibility for what we do with AI and how we do it. Deployment diligence specifically means taking responsibility for verifying and vouching for the outputs we use or share. Applied to developer workflows, that responsibility shows up as a concrete habit: holding AI-generated code to the same standards as any other code, meaning correctness, security, and maintainability, and watching for the subtle failure where engineers accept output they no longer fully understand because it looks right and passes a check.",
+        "fr": "Deux modes d'échec se manifestent encore et encore\n1 Adoption brouillonne :\nCela se produit lorsque quelques développeurs utilisent fortement les outils AI et que les autres y touchent à peine, si bien que l'équipe ne réalise jamais le véritable gain de l'outil et la pratique ne se standardise jamais. Le déploiement champion-et-batch du sujet précédent est une excellente façon d'éviter cela : il répartit l'usage délibérément plutôt que de tout laisser aux premiers adopteurs.\n2 Blocage au chat basique :\nL'équipe utilise Claude comme une boîte de questions-réponses et n'évolue jamais vers des flux de travail à plus haute valeur ajoutée tels que l'utilisation d'outils, l'assistance au niveau du dépôt, les compétences packagées, car personne ne les a activés au-delà de la première étape. Donner l'accès à une équipe ne constitue pas une adoption ; il faut configurer une activation réelle au sein des flux de travail actuels.\nDiligence : la discipline qui garantit que le travail généré par l'IA reste fiable\nLa Diligence est l'une des quatre compétences AI Fluency. Anthropic la décrit comme prendre la responsabilité de ce que nous faisons avec AI et de la manière dont nous le faisons. La diligence de déploiement signifie plus précisément prendre la responsabilité de vérifier et de garantir les sorties que nous utilisons ou partageons. Appliquée aux flux de travail des développeurs, cette responsabilité se manifeste par une habitude concrète : faire en sorte que le code généré par AI réponde aux mêmes standards que tout autre code, à savoir exactitude, sécurité et maintenabilité, et surveiller l'éventuelle erreur subtile où des ingénieurs acceptent des sorties qu'ils ne comprennent plus tout à fait parce qu'elles semblent correctes et passent un contrôle."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_9",
+      "id": "ex_claude_certified_architect_professional__05_009",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 9",
-        "fr": "Exercice 9"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Module · Orientation\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Module · Orientation\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "1Lumpy adoption: This occurs when a few developers use AI tooling heavily and the rest barely touch it, so the team never realizes the real gain of the tool and the practice never standardizes. The champion-and-batch rollout from the previous topic is a great way to avoid this: it spreads usage deliberately instead of leaving it all to early adopters.\n2Stalling at basic chat: The team uses Claude as a question-answering box and never advances to the higher-value workflows such as tool use, repository-aware assistance, packaged skills because no one enabled them past the first step. Providing a team with access is not adoption; you need to configure for real enablement within current workflows.\nDiligence: the discipline that keeps AI-generated work trustworthy\nDiligence is one of the four AI Fluency competencies. Anthropic defines it as taking responsibility for what we do with AI and how we do it. Deployment diligence specifically means taking responsibility for verifying and vouching for the outputs we use or share. Applied to developer workflows, that responsibility shows up as a concrete habit: holding AI-generated code to the same standards as any other code, meaning correctness, security, and maintainability, and watching for the subtle failure where engineers accept output they no longer fully understand because it looks right and passes a check.\nThe concrete deliverable that diligence produces is a verification checklist: the explicit set of checks an AI-generated output must pass before it reaches production. This verification checklist is something that a team produces internally based on their specific needs. The checklist should include questions that address all four dimensions of verification: correctness, security, maintainability, and human understanding.",
+        "fr": "1 Adoption morcelée : Cela se produit lorsque quelques développeurs utilisent fortement les outils AI et que les autres y touchent à peine, de sorte que l'équipe ne réalise jamais le vrai gain de l'outil et que la pratique ne se standardise jamais. Le déploiement par champions et par lots du sujet précédent est une excellente façon d'éviter cela : il étend l'utilisation délibérément plutôt que de tout laisser aux premiers adopteurs.\n2 Blocage au chat de base : L'équipe utilise Claude comme une boîte de questions-réponses et n'évolue jamais vers des flux de travail à plus forte valeur ajoutée tels que l'utilisation d'outils, l'assistance prenant en compte le dépôt, les compétences packagées, car personne ne les a activés au-delà de la première étape. Donner un accès à une équipe ne constitue pas une adoption ; vous devez configurer pour une activation réelle au sein des workflows actuels.\nDiligence : la discipline qui garde le travail généré par AI fiable\nDiligence est l'une des quatre compétences de l'AI Fluency. Anthropic la définit comme prendre la responsabilité de ce que nous faisons avec AI et de la manière dont nous le faisons. La diligence de déploiement signifie précisément prendre la responsabilité de vérifier et d'attester les sorties que nous utilisons ou partageons. Appliquée aux workflows des développeurs, cette responsabilité se manifeste par une habitude concrète : appliquer les mêmes standards au code généré par AI qu'à tout autre code, c'est-à-dire exactitude, sécurité et maintenabilité, et surveiller l'échec subtil où les ingénieurs acceptent des sorties qu'ils ne comprennent plus pleinement parce qu'elles semblent correctes et passent une vérification.\nLe livrable concret que produit la diligence est une liste de vérification : l'ensemble explicite de vérifications qu'une sortie générée par AI doit passer avant d'atteindre la production. Cette liste de vérification est produite en interne par une équipe en fonction de ses besoins spécifiques. La liste devrait inclure des questions qui couvrent les quatre dimensions de la vérification : exactitude, sécurité, maintenabilité et compréhension humaine."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_10",
+      "id": "ex_claude_certified_architect_professional__05_010",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 10",
-        "fr": "Exercice 10"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Cost · Complexity · Risk\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Coût · Complexité · Risque\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "The merge nobody could explain.\nA team adopted AI-assisted coding and shipped noticeably faster. Three weeks in, a generated change passed code review and tests and went to production, where it leaked data through an input it never validated. In the post-incident review the author could not explain why the code handled that input the way it did; it looked plausible, the tests were green, and no one asked the question the checklist would have forced: can the person merging this explain what it does and why? Speed had quietly replaced understanding, which is exactly the judgment erosion diligence exists to catch.\nCost · Complexity · Risk\nCost AI assistance lowers the cost of producing code, which raises the volume that reaches review; the verification checklist is what keeps that volume from overwhelming the quality bar.\nComplexity The hard part is cultural, not technical: holding AI-generated code to the same review standard as hand-written code, especially when it ships faster and looks right.",
+        "fr": "La fusion que personne ne pouvait expliquer.\nUne équipe a adopté le développement assisté par AI et a livré nettement plus rapidement. Trois semaines plus tard, une modification générée a franchi la revue de code et les tests et est passée en production, où elle a fuité des données via une entrée qu'elle n'avait jamais validée. Lors de la revue post-incident, l'auteur n'a pas pu expliquer pourquoi le code gérait cette entrée de la manière dont il l'a fait; cela semblait plausible, les tests étaient verts, et personne n'a posé la question que la liste de contrôle aurait imposée: la personne qui fusionne ceci peut-elle expliquer ce que cela fait et pourquoi ? La vitesse avait discrètement remplacé la compréhension, ce qui est exactement l'érosion du jugement que la diligence a pour but de prévenir.\nCoût · Complexité · Risque\nCoût : l'assistance AI réduit le coût de production du code, ce qui augmente le volume qui atteint la revue ; la liste de vérification est ce qui empêche que ce volume n'écrase le seuil de qualité.\nComplexité Le plus difficile est culturel, pas technique : faire en sorte que le code généré par AI soit soumis au même standard de revue que le code écrit à la main, surtout lorsqu'il est expédié plus rapidement et semble correct."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_11",
+      "id": "ex_claude_certified_architect_professional__05_011",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 11",
-        "fr": "Exercice 11"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Cost · Complexity · Risk\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Coût · Complexité · Risque\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Risk The biggest failure mode is judgment erosion: a team that ships output it no longer understands because it passed shallow checks, until an input no one reasoned about reaches production.\nDev Workflows · Exercise\nExercise: define the verification checklist\nTry it now. Write the verification checklist that AI-generated code must pass before production. For each of the four dimensions below, write one concrete check in your own words. Write your checklist, then reveal the model answer below.\nCorrectness",
+        "fr": "Risque Le plus grand mode d'échec est l'érosion du jugement : une équipe qui expédie une sortie qu'elle ne comprend plus parce qu'elle a passé des vérifications superficielles, jusqu'à ce qu'une entrée sur laquelle personne n'a réfléchi n'atteigne la production.\nFlux de travail Dev · Exercice\nExercice : définir la checklist de vérification\nEssayez-le maintenant. Rédigez la checklist de vérification que le code généré par AI doit passer avant la production. Pour chacune des quatre dimensions ci-dessous, écrivez une vérification concrète dans vos propres mots. Rédigez votre checklist, puis révélez la réponse du modèle ci-dessous.\nExactitude"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_12",
+      "id": "ex_claude_certified_architect_professional__05_012",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 12",
-        "fr": "Exercice 12"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Cost · Complexity · Risk\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Coût · Complexité · Risque\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Dev Workflows · Exercise\nExercise: define the verification checklist\nTry it now. Write the verification checklist that AI-generated code must pass before production. For each of the four dimensions below, write one concrete check in your own words. Write your checklist, then reveal the model answer below.\nCorrectness\nSecurity",
+        "fr": "Workflows de développement · Exercice\nExercice : définir la liste de vérification\nEssayez-le maintenant. Rédigez la liste de vérification que le code généré par AI doit passer avant la mise en production. Pour chacune des quatre dimensions ci-dessous, écrivez une vérification concrète dans vos propres mots. Rédigez votre liste de vérification, puis révélez ci-dessous la réponse du modèle.\nExactitude\nSécurité"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_13",
+      "id": "ex_claude_certified_architect_professional__05_013",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 13",
-        "fr": "Exercice 13"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Module · Quiz\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Module · Quiz\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Correct.: Each mechanism matches the factor that governs it: org-wide governed distribution (plugin), universal reach (org-provisioned Skill), single-team reach (Claude Code project Skill), or programmatic reuse (API Skill).",
+        "fr": "Correct.: Chaque mécanisme correspond au facteur qui le régit : distribution gouvernée à l’échelle de l’organisation (plugin), portée universelle (org-provisioned Skill), portée d'une seule équipe (Claude Code project Skill), ou réutilisation programmatique (API Skill)."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_14",
+      "id": "ex_claude_certified_architect_professional__05_014",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 14",
-        "fr": "Exercice 14"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Module · Recap\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Module · Récapitulatif\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Partial.: `${correct}/4 correct. A correct choice with the wrong governing factor does not transfer to the next scenario. Identify what forces the choice: who must reach the asset",
+        "fr": "Partiel : `${correct}/4 correct. Un choix correct avec le mauvais facteur gouvernant ne se transmet pas au scénario suivant. Identifiez ce qui force le choix : qui doit atteindre l'actif`"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_15",
+      "id": "ex_claude_certified_architect_professional__05_015",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 15",
-        "fr": "Exercice 15"
-      },
       "prompt": {
-        "en": "Based on the lesson \"### Team Enablement and Operational Productivity: Architect Module 5\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"### Mise en capacité des équipes et productivité opérationnelle : Architect Module 5\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Incorrect.: Re-read the Skills-distribution table. Start from two questions: who needs to reach this asset, and who must be able to change or revoke it?",
+        "fr": "Faux : Relisez le tableau de distribution des compétences. Commencez par deux questions : qui doit avoir accès à cet actif, et qui doit pouvoir le modifier ou le révoquer ?"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_16",
+      "id": "ex_claude_certified_architect_professional__05_016",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 16",
-        "fr": "Exercice 16"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Module · Orientation\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Module · Orientation\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "Correct.: This checklist would let a reviewer trust AI-assisted output without re-deriving every line. The human-understanding check is the one that separates a quality gate from a rubber stamp, nothing ships that its author cannot account for.",
+        "fr": "Correct.: Cette liste de vérification permettrait à un relecteur de faire confiance à une sortie assistée par AI sans avoir à reconstituer la justification de chaque ligne. La vérification de la compréhension humaine est celle qui distingue une porte de contrôle qualité d'un simple tampon; rien n'est livré dont l'auteur ne peut en rendre compte."
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     },
     {
-      "id": "ex_17",
+      "id": "ex_claude_certified_architect_professional__05_017",
+      "courseId": "claude_certified_architect_professional__05",
+      "lessonId": "lesson_01",
+      "chapterId": "chapter_01",
+      "position": "after_content",
       "interactionType": "free_text",
-      "title": {
-        "en": "Exercise 17",
-        "fr": "Exercice 17"
-      },
       "prompt": {
-        "en": "Based on the lesson \"Cost · Complexity · Risk\", explain the key concepts and demonstrate your understanding through a detailed response.",
-        "fr": "En vous basant sur la leçon \"Coût · Complexité · Risque\", expliquez les concepts clés et démontrez votre compréhension à travers une réponse détaillée."
+        "en": "`<strong>${correct}/5 correct.</strong> The questions you missed are marked. Review the three topics and submit again: you need 4 of 5 to pass. (Answers are not shown so the retry stays meaningful.)`",
+        "fr": "`<strong>${correct}/5 bonnes réponses.</strong> Les questions que vous avez manquées sont marquées. Revoyez les trois sujets et soumettez à nouveau : vous devez obtenir 4 sur 5 pour réussir. (Les réponses ne sont pas affichées afin que la nouvelle tentative reste pertinente.)`"
       },
-      "instructions": {
-        "en": "Read the prompt carefully and provide a detailed answer.",
-        "fr": "Lisez attentivement l'énoncé et fournissez une réponse détaillée."
-      },
-      "options": null,
-      "inputSchema": {
-        "minWords": 30,
-        "maxWords": 300
-      },
-      "rubric": {
-        "keyPoints": [],
-        "commonMistakes": []
-      },
-      "sampleAnswer": {
-        "en": "",
-        "fr": ""
-      },
-      "correction": {
-        "en": "Review the lesson content for the complete answer. Focus on key concepts, their relationships, and practical applications.",
-        "fr": "Consultez le contenu de la leçon pour la réponse complète. Concentrez-vous sur les concepts clés, leurs relations et leurs applications pratiques."
-      },
-      "difficulty": "foundation",
-      "skillTags": []
+      "instructions": "",
+      "correction": "",
+      "rubric": "",
+      "required": false
     }
   ]
 }

@@ -773,7 +773,7 @@ function LessonQuiz({
   );
 }
 
-// Lesson viewer with page navigation + quiz at end
+// Chapter-based lesson viewer for V2 structure (chapters with blocks)
 function LessonViewer({
   lesson,
   lessonIndex,
@@ -791,6 +791,7 @@ function LessonViewer({
   toggleVideoComplete,
   getYouTubeThumbnail,
   isReviewMode = false,
+  courseExercises = [],
 }: {
   lesson: any;
   lessonIndex: number;
@@ -808,194 +809,230 @@ function LessonViewer({
   toggleVideoComplete: (id: string) => void;
   getYouTubeThumbnail: (id: string) => string;
   isReviewMode?: boolean;
+  courseExercises?: any[];
 }) {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentChapter, setCurrentChapter] = useState(0);
   const [showQuiz, setShowQuiz] = useState(false);
-  const textPages = lesson.pages?.[lang] || lesson.pages?.en || [];
-  // Video is step 0 if there are matched videos, then text pages follow
-  const hasVideo = matchedVideos.length > 0;
-  const totalSteps = (hasVideo ? 1 : 0) + textPages.length;
-  const isVideoStep = hasVideo && currentStep === 0;
-  const textPageIndex = hasVideo ? currentStep - 1 : currentStep;
+  const [showTranscript, setShowTranscript] = useState(false);
 
-  // Detect if content is displayed in English (either no fr translation, or fr is same as en)
-  const isEnglishContent = (() => {
-    if (lang === "en") return false;
-    if (!lesson.pages?.fr || lesson.pages.fr.length === 0) return true;
-    if (lesson.pages?.en && lesson.pages.fr[0] === lesson.pages.en[0]) return true;
-    return false;
-  })();
+  const chapters = lesson.chapters || [];
+  const totalChapters = chapters.length;
 
   useEffect(() => {
-    setCurrentStep(0);
+    setCurrentChapter(0);
     setShowQuiz(false);
+    setShowTranscript(false);
   }, [lesson.id]);
 
-  const isLastStep = currentStep >= totalSteps - 1;
+  const isLastChapter = currentChapter >= totalChapters - 1;
+  const chapter = chapters[currentChapter];
+
+  if (!chapter && !showQuiz) {
+    return (
+      <div className="mt-2 p-6 text-center">
+        <p className="text-sm italic text-muted-foreground">
+          {t({ en: "No content available", fr: "Aucun contenu disponible" })}
+        </p>
+      </div>
+    );
+  }
+
+  // Render a single block
+  const renderBlock = (block: any, blockIdx: number) => {
+    switch (block.type) {
+      case "content": {
+        const body = block.body || {};
+        const text = typeof body === "string" ? body : (body[lang] || body.en || "");
+        if (!text) return null;
+        return (
+          <div key={blockIdx} className="rounded-xl p-6 min-h-[100px] bg-secondary/30">
+            <PageContent content={text} lang={lang} />
+          </div>
+        );
+      }
+      case "video": {
+        const videoId = block.videoId || "";
+        const videoKey = videoId;
+        const isVideoComplete = completedVideos.has(videoKey);
+        const isPlaying = playingVideos.has(videoKey);
+        return (
+          <div
+            key={blockIdx}
+            className={`border rounded-xl overflow-hidden transition-colors ${
+              isVideoComplete
+                ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10"
+                : "border-border bg-card"
+            }`}
+          >
+            <div className="flex items-center justify-between p-3 border-b border-border/50">
+              <div className="flex items-center gap-3">
+                {isVideoComplete ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                ) : (
+                  <PlayCircle className="w-4 h-4 text-red-500 shrink-0" />
+                )}
+                <span className="font-medium text-sm text-foreground">
+                  {block.title || "Video"}
+                </span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 font-semibold uppercase">
+                  {t({ en: "Video", fr: "Vidéo" })}
+                </span>
+              </div>
+            </div>
+            <div className="px-3 pt-3 pb-3">
+              {!isPlaying ? (
+                <div
+                  className="aspect-video rounded-lg overflow-hidden bg-black relative cursor-pointer group"
+                  onClick={() => startPlayingVideo(videoKey)}
+                >
+                  <img
+                    src={getYouTubeThumbnail(videoId)}
+                    alt={block.title || "Video"}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
+                    <div className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                      <PlayCircle className="w-7 h-7 text-white fill-white" />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="aspect-video rounded-lg overflow-hidden bg-black">
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1`}
+                    title={block.title || "Video"}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    allowFullScreen
+                  />
+                </div>
+              )}
+              <div className="flex items-center justify-between mt-3">
+                <Button
+                  variant={isVideoComplete ? "outline" : "default"}
+                  size="sm"
+                  onClick={() => toggleVideoComplete(videoKey)}
+                  className={`gap-1.5 text-xs ${
+                    isVideoComplete
+                      ? "border-emerald-300 text-emerald-700 dark:border-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+                      : "bg-primary hover:bg-primary/90 text-primary-foreground"
+                  }`}
+                >
+                  <Check className="w-3.5 h-3.5" />
+                  {isVideoComplete
+                    ? t({ en: "Completed", fr: "Terminée" })
+                    : t({ en: "Mark as watched", fr: "Marquer comme vue" })
+                  }
+                </Button>
+                {block.watchUrl && (
+                  <a
+                    href={block.watchUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <PlayCircle className="w-3.5 h-3.5" />
+                    {t({ en: "Watch on YouTube", fr: "Regarder sur YouTube" })}
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      }
+      case "transcript": {
+        const body = block.body || {};
+        const text = typeof body === "string" ? body : (body[lang] || body.en || "");
+        if (!text) return null;
+        return (
+          <details key={blockIdx} className="group border border-border/50 rounded-lg" open={showTranscript}>
+            <summary
+              onClick={(e) => { e.preventDefault(); setShowTranscript(!showTranscript); }}
+              className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/30 transition-colors"
+            >
+              <FileText className="w-4 h-4 text-blue-500 shrink-0" />
+              <span className="text-sm font-medium text-foreground">
+                {t({ en: "Video Transcript", fr: "Transcription vidéo" })}
+              </span>
+              <ChevronDown className={`w-4 h-4 text-muted-foreground ml-auto transition-transform ${showTranscript ? "rotate-180" : ""}`} />
+            </summary>
+            <div className="px-4 pb-3 text-sm text-muted-foreground whitespace-pre-wrap max-h-[300px] overflow-y-auto">
+              {text}
+            </div>
+          </details>
+        );
+      }
+      case "checkpoint": {
+        const exerciseId = block.exerciseId;
+        const exercise = courseExercises.find((ex: any) => ex.id === exerciseId);
+        if (!exercise) return null;
+        return (
+          <div key={blockIdx} className="border-l-4 border-amber-500 pl-4">
+            <ExerciseRenderer
+              exercise={exercise}
+              index={0}
+              lang={lang as "en" | "fr"}
+            />
+          </div>
+        );
+      }
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="mt-2">
       {!showQuiz ? (
         <>
-          {/* Step content: either video or text page */}
-          {isVideoStep ? (
-            <div className="space-y-4">
-              {matchedVideos.map((video: any) => {
-                const videoKey = video.youtube_id || video.videoId || video.title;
-                const isVideoComplete = completedVideos.has(videoKey);
-                const isPlaying = playingVideos.has(videoKey);
-                const durationSec = video.duration_seconds;
-                const duration = durationSec
-                  ? `${Math.floor(durationSec / 60)} min`
-                  : (video.duration || "~5 min");
-
-                return (
-                  <div
-                    key={videoKey}
-                    className={`border rounded-xl overflow-hidden transition-colors ${
-                      isVideoComplete
-                        ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10"
-                        : "border-border bg-card"
-                    }`}
-                  >
-                    {/* Video header */}
-                    <div className="flex items-center justify-between p-3 border-b border-border/50">
-                      <div className="flex items-center gap-3">
-                        {isVideoComplete ? (
-                          <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                        ) : (
-                          <PlayCircle className="w-4 h-4 text-red-500 shrink-0" />
-                        )}
-                        <span className="font-medium text-sm text-foreground">
-                          {video.title}
-                        </span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 font-semibold uppercase">
-                          {t({ en: "Video Step", fr: "Étape vidéo" })}
-                        </span>
-                      </div>
-                      <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">
-                        <Clock className="w-3 h-3" />
-                        {duration}
-                      </span>
-                    </div>
-                    {/* Video player */}
-                    <div className="px-3 pt-3 pb-3">
-                      {!isPlaying ? (
-                        <div
-                          className="aspect-video rounded-lg overflow-hidden bg-black relative cursor-pointer group"
-                          onClick={() => startPlayingVideo(videoKey)}
-                        >
-                          <img
-                            src={getYouTubeThumbnail(video.youtube_id || "")}
-                            alt={video.title}
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                          />
-                          <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
-                            <div className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                              <PlayCircle className="w-7 h-7 text-white fill-white" />
-                            </div>
-                          </div>
-                          <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/80 text-white text-xs font-medium">
-                            {duration}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="aspect-video rounded-lg overflow-hidden bg-black">
-                          <iframe
-                            src={`https://www.youtube-nocookie.com/embed/${video.youtube_id}?rel=0&modestbranding=1&autoplay=1`}
-                            title={video.title}
-                            className="w-full h-full"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerPolicy="no-referrer-when-downgrade"
-                            allowFullScreen
-                          />
-                        </div>
-                      )}
-                      <div className="flex items-center justify-between mt-3">
-                        <Button
-                          variant={isVideoComplete ? "outline" : "default"}
-                          size="sm"
-                          onClick={() => toggleVideoComplete(videoKey)}
-                          className={`gap-1.5 text-xs ${
-                            isVideoComplete
-                              ? "border-emerald-300 text-emerald-700 dark:border-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
-                              : "bg-primary hover:bg-primary/90 text-primary-foreground"
-                          }`}
-                        >
-                          <Check className="w-3.5 h-3.5" />
-                          {isVideoComplete
-                            ? t({ en: "Completed", fr: "Terminée" })
-                            : t({ en: "Mark as watched", fr: "Marquer comme vue" })
-                          }
-                        </Button>
-                        {video.watch_url && (
-                          <a
-                            href={video.watch_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
-                          >
-                            <PlayCircle className="w-3.5 h-3.5" />
-                            {t({ en: "Watch on YouTube", fr: "Regarder sur YouTube" })}
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <>
-              {/* Language badge */}
-              {isEnglishContent && (
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 font-semibold uppercase tracking-wider">
-                    EN
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {t({ en: "Content in English", fr: "Contenu en anglais" })}
-                  </span>
-                </div>
-              )}
-
-              {/* Text page content */}
-              <div className="rounded-xl p-6 min-h-[200px] bg-secondary/30">
-                {textPages[textPageIndex] ? (
-                  <PageContent content={textPages[textPageIndex]} lang={lang} />
+          {/* Chapter title */}
+          {chapter && (
+            <div className="mb-4">
+              <div className="flex items-center gap-2 mb-1">
+                {chapter.type === "exercise" ? (
+                  <Dumbbell className="w-4 h-4 text-amber-500" />
                 ) : (
-                  <p className="text-sm italic text-muted-foreground">
-                    {t({ en: "No content available", fr: "Aucun contenu disponible" })}
-                  </p>
+                  <BookOpen className="w-4 h-4 text-primary" />
                 )}
+                <h3 className="text-base font-semibold text-foreground">
+                  {resolveI18n(chapter.title, lang)}
+                </h3>
               </div>
-            </>
+            </div>
           )}
 
-          {/* Step navigation */}
-          <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
+          {/* Render all blocks in the current chapter */}
+          {chapter && (
+            <div className="space-y-4">
+              {chapter.blocks.map((block: any, idx: number) => renderBlock(block, idx))}
+            </div>
+          )}
+
+          {/* Chapter navigation */}
+          <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentStep((p) => p - 1)}
-              disabled={currentStep === 0}
+              onClick={() => { setCurrentChapter((p) => p - 1); setShowTranscript(false); }}
+              disabled={currentChapter === 0}
               className="gap-1.5"
             >
               <ChevronLeft className="w-4 h-4" />
               {t({ en: "Previous", fr: "Précédent" })}
             </Button>
 
-            {/* Step indicator */}
+            {/* Chapter indicator */}
             <div className="flex items-center gap-2">
               <div className="flex gap-1">
-                {Array.from({ length: totalSteps }).map((_, i) => (
+                {Array.from({ length: totalChapters }).map((_, i) => (
                   <div
                     key={i}
                     className={`w-2 h-2 rounded-full transition-all ${
-                      i === currentStep
-                        ? (i === 0 && hasVideo ? "bg-red-500 w-4" : "bg-primary w-4")
-                        : i < currentStep
+                      i === currentChapter
+                        ? (chapters[i]?.type === "exercise" ? "bg-amber-500 w-4" : "bg-primary w-4")
+                        : i < currentChapter
                         ? "bg-primary/50"
                         : "bg-secondary"
                     }`}
@@ -1003,14 +1040,14 @@ function LessonViewer({
                 ))}
               </div>
               <span className="text-xs ml-2 text-muted-foreground">
-                {currentStep + 1}/{totalSteps}
+                {currentChapter + 1}/{totalChapters}
               </span>
             </div>
 
-            {!isLastStep ? (
+            {!isLastChapter ? (
               <Button
                 size="sm"
-                onClick={() => setCurrentStep((p) => p + 1)}
+                onClick={() => { setCurrentChapter((p) => p + 1); setShowTranscript(false); }}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground gap-1.5"
               >
                 {t({ en: "Next", fr: "Suivant" })}
@@ -1241,7 +1278,7 @@ export default function TrainingCourse() {
   const [lessonsLoading, setLessonsLoading] = useState(true);
 
   const [courseExercises, setCourseExercises] = useState<any[]>([]);
-  const [courseTranscripts, setCourseTranscripts] = useState<any[]>([]);
+
 
   useEffect(() => {
     if (!courseId) return;
@@ -1251,13 +1288,13 @@ export default function TrainingCourse() {
       .then((data) => {
         setCourseLessons(data.lessons || []);
         setCourseExercises(data.exercises || []);
-        setCourseTranscripts(data.videoTranscripts || []);
+
         setLessonsLoading(false);
       })
       .catch(() => {
         setCourseLessons([]);
         setCourseExercises([]);
-        setCourseTranscripts([]);
+
         setLessonsLoading(false);
       });
   }, [courseId]);
@@ -1584,71 +1621,14 @@ export default function TrainingCourse() {
                     toggleVideoComplete={toggleVideoComplete}
                     getYouTubeThumbnail={getYouTubeThumbnail}
                     isReviewMode={isReviewMode}
+                    courseExercises={courseExercises}
                   />
                 </div>
               </motion.div>
             );
           })()}
 
-          {/* Exercises Section */}
-          {courseExercises.length > 0 && (
-            <motion.div variants={fadeInUp} className="border border-border rounded-2xl overflow-hidden bg-card">
-              <div className="p-4 border-b border-border bg-muted/30">
-                <div className="flex items-center gap-2">
-                  <Dumbbell className="w-5 h-5 text-amber-500" />
-                  <h3 className="font-semibold text-foreground">
-                    {t({ en: "Exercises & Checkpoints", fr: "Exercices & Checkpoints" })}
-                  </h3>
-                  <span className="text-xs bg-amber-500/15 text-amber-600 px-2 py-0.5 rounded-full font-medium">
-                    {courseExercises.length}
-                  </span>
-                </div>
-              </div>
-              <div className="p-4 space-y-4 max-h-[700px] overflow-y-auto">
-                {courseExercises.map((ex: any, idx: number) => (
-                  <ExerciseRenderer
-                    key={ex.id || idx}
-                    exercise={ex}
-                    index={idx}
-                    lang={lang}
-                  />
-                ))}
-              </div>
-            </motion.div>
-          )}
 
-          {/* Video Transcripts Section */}
-          {courseTranscripts.length > 0 && (
-            <motion.div variants={fadeInUp} className="border border-border rounded-2xl overflow-hidden bg-card">
-              <div className="p-4 border-b border-border bg-muted/30">
-                <div className="flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-blue-500" />
-                  <h3 className="font-semibold text-foreground">
-                    {t({ en: "Video Transcripts", fr: "Transcriptions vidéo" })}
-                  </h3>
-                  <span className="text-xs bg-blue-500/15 text-blue-600 px-2 py-0.5 rounded-full font-medium">
-                    {courseTranscripts.length}
-                  </span>
-                </div>
-              </div>
-              <div className="p-4 space-y-3 max-h-[500px] overflow-y-auto">
-                {courseTranscripts.map((vt: any, idx: number) => (
-                  <details key={idx} className="group border border-border/50 rounded-lg">
-                    <summary className="flex items-center gap-3 p-3 cursor-pointer hover:bg-muted/30 transition-colors">
-                      <Video className="w-4 h-4 text-blue-500 shrink-0" />
-                      <span className="text-sm font-medium text-foreground truncate">
-                        {vt.title}
-                      </span>
-                      <ChevronDown className="w-4 h-4 text-muted-foreground ml-auto group-open:rotate-180 transition-transform" />
-                    </summary>
-                    <div className="px-4 pb-3 text-sm text-muted-foreground whitespace-pre-wrap max-h-[300px] overflow-y-auto">
-                      {vt.text}
-                    </div>
-                  </details>
-                ))}
-              </div>
-            </motion.div>
-          )}
 
           {/* Course Completion */}
           {completed && (
