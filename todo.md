@@ -488,3 +488,9 @@
 ## Corrections modèles LLM pour exercices + Progression par chapitre (2026-07-25)
 - [x] Générer les corrections LLM pour les 500 exercices free_text (correction modèle en FR et EN)
 - [x] Ajouter un indicateur de progression par chapitre dans la sidebar (pas seulement par leçon)
+
+## Restructuration architecture Training (CPN-like) (2026-07-26)
+- [x] Supprimer le verrouillage séquentiel des cours dans TrainingCertification (tous accessibles dès le départ)
+- [x] Nettoyer les titres des cours dans trainingIndex.json (supprimer le préfixe certification)
+- [x] Ajouter un indicateur de progression par cours (barre + pourcentage) dans la vue certification
+- [x] Améliorer la vue d'ensemble certification (progression globale = agrégat des cours)

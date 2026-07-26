@@ -5,7 +5,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { useTheme } from "@/contexts/ThemeContext";
 import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
-import { CheckCircle2, Lock, PlayCircle, BookOpen, ArrowLeft, Clock, LogIn, Download, Trophy, History, Moon, Sun, ChevronRight } from "lucide-react";
+import { CheckCircle2, PlayCircle, BookOpen, ArrowLeft, Clock, LogIn, Download, Trophy, History, Moon, Sun, ChevronRight, Layers } from "lucide-react";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -21,17 +21,13 @@ const staggerContainer = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 };
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: easeOut } },
-};
 
 export default function TrainingCertification() {
   const { certId } = useParams<{ certId: string }>();
   const { lang, toggleLang, t } = useLanguage();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const { isCourseComplete, getCertProgress, isCertComplete, isLoading: progressLoading } = useTrainingProgress();
+  const { isCourseComplete, getCertProgress, isCertComplete, isLoading: progressLoading, isLessonComplete } = useTrainingProgress();
 
   const cert = trainingIndex.certifications.find((c) => c.id === certId);
   if (!cert) {
@@ -59,6 +55,21 @@ export default function TrainingCertification() {
     return isCertComplete(certId || "", courseIds, totalLessonsMap);
   }, [certId, courseIds, totalLessonsMap, isCertComplete]);
 
+  // Per-course progress calculation
+  const courseProgressMap = useMemo(() => {
+    const map: Record<string, { completed: number; total: number; pct: number }> = {};
+    courses.forEach((c) => {
+      const total = c.lessonCount || 0;
+      let completed = 0;
+      for (let i = 0; i < total; i++) {
+        if (isLessonComplete(c.id, i)) completed++;
+      }
+      const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+      map[c.id] = { completed, total, pct };
+    });
+    return map;
+  }, [courses, isLessonComplete]);
+
   // Fetch exam history
   const { data: examHistory } = trpc.training.getExamHistory.useQuery(
     { certificationId: certId },
@@ -71,15 +82,6 @@ export default function TrainingCertification() {
     if (passing.length === 0) return null;
     return passing.reduce((best: any, curr: any) => curr.score > best.score ? curr : best);
   }, [examHistory]);
-
-  // Sequential locking
-  const isCourseUnlocked = (idx: number) => {
-    if (idx === 0) return true;
-    if (!isAuthenticated) return false;
-    const prevCourse = courses[idx - 1];
-    const prevTotal = totalLessonsMap[prevCourse.id] || 0;
-    return isCourseComplete(prevCourse.id, prevTotal);
-  };
 
   const isLoading = authLoading || progressLoading;
 
@@ -261,7 +263,7 @@ export default function TrainingCertification() {
           ) : (
             <div className="flex items-center gap-4 bg-card rounded-2xl border border-border p-5 mb-6 opacity-60">
               <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-secondary text-muted-foreground shrink-0">
-                <Lock className="w-6 h-6" />
+                <Clock className="w-6 h-6" />
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-muted-foreground">
@@ -271,7 +273,6 @@ export default function TrainingCertification() {
                   {t({ en: "Complete all courses to unlock the mock exam", fr: "Terminez tous les cours pour débloquer l'examen blanc" })}
                 </p>
               </div>
-              <Lock className="w-5 h-5 text-muted-foreground" />
             </div>
           )}
         </motion.div>
@@ -313,19 +314,10 @@ export default function TrainingCertification() {
                     return (
                       <tr key={attempt.id || idx} className="border-b border-border/50 last:border-0">
                         <td className="py-3 px-2 text-foreground">
-                          {startedAt.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", {
-                            year: "numeric", month: "short", day: "numeric",
-                          })}
-                          <span className="text-xs text-muted-foreground ml-2">
-                            {startedAt.toLocaleTimeString(lang === "fr" ? "fr-FR" : "en-US", {
-                              hour: "2-digit", minute: "2-digit",
-                            })}
-                          </span>
+                          {startedAt.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { day: "numeric", month: "short", year: "numeric" })}
                         </td>
-                        <td className="py-3 px-2 text-center">
-                          <span className={`font-semibold ${passed ? "text-emerald-600 dark:text-emerald-400" : "text-red-500"}`}>
-                            {attempt.score}/1000
-                          </span>
+                        <td className="py-3 px-2 text-center font-semibold text-foreground">
+                          {attempt.score}/1000
                         </td>
                         <td className="py-3 px-2 text-center text-muted-foreground">
                           {durationMin}m {durationSec}s
@@ -333,7 +325,6 @@ export default function TrainingCertification() {
                         <td className="py-3 px-2 text-center">
                           {passed ? (
                             <span className="inline-flex items-center gap-1 text-xs bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-2.5 py-1 rounded-full font-medium">
-                              <CheckCircle2 className="w-3 h-3" />
                               {t({ en: "Passed", fr: "Réussi" })}
                             </span>
                           ) : (
@@ -351,85 +342,97 @@ export default function TrainingCertification() {
           </motion.div>
         )}
 
-        {/* Course List */}
+        {/* Course List - NO sequential locking, all courses accessible */}
         <motion.div variants={fadeInUp}>
-          <h2 className="text-lg font-semibold text-foreground mb-4">
-            {t({ en: "Course List", fr: "Liste des cours" })}
+          <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Layers className="w-5 h-5 text-primary" />
+            {t({ en: "Prep Courses", fr: "Cours de préparation" })}
           </h2>
+          <p className="text-sm text-muted-foreground mb-5">
+            {t({ en: "Start any course in any order. Complete all courses to unlock the mock exam.", fr: "Commencez n'importe quel cours dans l'ordre de votre choix. Terminez tous les cours pour débloquer l'examen blanc." })}
+          </p>
         </motion.div>
         <motion.div variants={staggerContainer} className="space-y-3">
           {courses.map((course, idx) => {
-            const totalLessons = totalLessonsMap[course.id] || 0;
-            const completed = isCourseComplete(course.id, totalLessons);
-            const unlocked = isCourseUnlocked(idx);
-
-            if (!unlocked) {
-              return (
-                <motion.div
-                  key={course.id}
-                  variants={fadeInUp}
-                  className="flex items-center gap-4 bg-card rounded-2xl border border-border p-4 opacity-50 cursor-not-allowed"
-                >
-                  <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-secondary text-muted-foreground shrink-0">
-                    <Lock className="w-4 h-4" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-muted-foreground truncate">{t(course.title)}</h3>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {t({ en: "Complete the previous course to unlock", fr: "Terminez le cours précédent pour débloquer" })}
-                    </p>
-                  </div>
-                  <Lock className="w-5 h-5 text-muted-foreground shrink-0" />
-                </motion.div>
-              );
-            }
+            const progress = courseProgressMap[course.id] || { completed: 0, total: 0, pct: 0 };
+            const completed = progress.pct >= 100;
+            const started = progress.completed > 0;
 
             return (
               <motion.div key={course.id} variants={fadeInUp}>
                 <Link
                   href={`/training/${certId}/${course.id}`}
-                  className={`flex items-center gap-4 bg-card rounded-2xl border p-4 transition-all hover:shadow-md group ${
+                  className={`block bg-card rounded-2xl border p-5 transition-all hover:shadow-md group ${
                     completed ? "border-primary/30" : "border-border hover:border-primary/30"
                   }`}
                 >
-                  <div className={`flex items-center justify-center w-10 h-10 rounded-xl shrink-0 ${
-                    completed ? "bg-primary/10 text-primary" : "bg-secondary text-foreground"
-                  } font-semibold text-sm`}>
-                    {completed ? (
-                      <CheckCircle2 className="w-5 h-5" />
-                    ) : (
-                      <span>{idx + 1}</span>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-foreground group-hover:text-primary transition-colors truncate">{t(course.title)}</h3>
-                    <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                      {course.exerciseCount > 0 && (
-                        <span className="flex items-center gap-1">
-                          <BookOpen className="w-3 h-3" />
-                          {course.exerciseCount} {t({ en: "exercises", fr: "exercices" })}
-                        </span>
-                      )}
-                      {course.videos && course.videos.length > 0 && (
-                        <span className="flex items-center gap-1">
-                          <PlayCircle className="w-3 h-3" />
-                          {course.videos.length} {t({ en: "videos", fr: "vidéos" })}
-                        </span>
+                  <div className="flex items-center gap-4">
+                    <div className={`flex items-center justify-center w-11 h-11 rounded-xl shrink-0 ${
+                      completed ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400" : started ? "bg-primary/10 text-primary" : "bg-secondary text-foreground"
+                    } font-semibold text-sm`}>
+                      {completed ? (
+                        <CheckCircle2 className="w-5 h-5" />
+                      ) : (
+                        <span>{idx + 1}</span>
                       )}
                     </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-foreground group-hover:text-primary transition-colors">{t(course.title)}</h3>
+                      <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <BookOpen className="w-3 h-3" />
+                          {progress.total} {t({ en: "lessons", fr: "leçons" })}
+                        </span>
+                        {course.exerciseCount > 0 && (
+                          <span className="flex items-center gap-1">
+                            {course.exerciseCount} {t({ en: "exercises", fr: "exercices" })}
+                          </span>
+                        )}
+                        {course.videos && course.videos.length > 0 && (
+                          <span className="flex items-center gap-1">
+                            <PlayCircle className="w-3 h-3" />
+                            {course.videos.length} {t({ en: "videos", fr: "vidéos" })}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="shrink-0 flex items-center gap-2">
+                      {completed ? (
+                        <span className="text-xs bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-2.5 py-1 rounded-full font-medium">
+                          {t({ en: "Completed", fr: "Terminé" })}
+                        </span>
+                      ) : started ? (
+                        <span className="text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2.5 py-1 rounded-full font-medium">
+                          {progress.completed}/{progress.total}
+                        </span>
+                      ) : (
+                        <span className="text-xs bg-secondary text-muted-foreground px-2.5 py-1 rounded-full font-medium">
+                          {t({ en: "Not started", fr: "Non commencé" })}
+                        </span>
+                      )}
+                      <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </div>
                   </div>
-                  <div className="shrink-0 flex items-center gap-2">
-                    {completed ? (
-                      <span className="text-xs bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-2.5 py-1 rounded-full font-medium">
-                        {t({ en: "Completed", fr: "Terminé" })}
-                      </span>
-                    ) : (
-                      <span className="text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2.5 py-1 rounded-full font-medium">
-                        {t({ en: "In progress", fr: "En cours" })}
-                      </span>
-                    )}
-                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                  </div>
+                  {/* Per-course progress bar */}
+                  {started && !completed && (
+                    <div className="mt-3 flex items-center gap-2">
+                      <div className="flex-1 h-1.5 rounded-full bg-secondary overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-primary transition-all duration-500"
+                          style={{ width: `${progress.pct}%` }}
+                        />
+                      </div>
+                      <span className="text-[11px] text-muted-foreground font-medium">{progress.pct}%</span>
+                    </div>
+                  )}
+                  {completed && (
+                    <div className="mt-3 flex items-center gap-2">
+                      <div className="flex-1 h-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 overflow-hidden">
+                        <div className="h-full rounded-full bg-emerald-500" style={{ width: "100%" }} />
+                      </div>
+                      <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">100%</span>
+                    </div>
+                  )}
                 </Link>
               </motion.div>
             );
