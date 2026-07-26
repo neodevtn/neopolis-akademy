@@ -1,6 +1,6 @@
 import { eq, desc, sql, and, count } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -335,4 +335,175 @@ export async function toggleVideoProgress(userId: number, courseId: string, yout
     await db.insert(videoProgress).values({ userId, courseId, youtubeId });
     return { watched: true };
   }
+}
+
+// ============ Chapter Progress ============
+
+export async function getChapterProgress(userId: number, courseId?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  if (courseId) {
+    return await db.select().from(chapterProgress)
+      .where(and(eq(chapterProgress.userId, userId), eq(chapterProgress.courseId, courseId)));
+  }
+  return await db.select().from(chapterProgress).where(eq(chapterProgress.userId, userId));
+}
+
+export async function upsertChapterProgress(userId: number, courseId: string, lessonIndex: number, chapterIndex: number, totalChapters: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Check if entry exists
+  const existing = await db.select().from(chapterProgress)
+    .where(and(
+      eq(chapterProgress.userId, userId),
+      eq(chapterProgress.courseId, courseId),
+      eq(chapterProgress.lessonIndex, lessonIndex)
+    )).limit(1);
+
+  if (existing.length > 0) {
+    // Update only if advancing forward
+    if (chapterIndex >= existing[0].chapterIndex) {
+      await db.update(chapterProgress)
+        .set({ chapterIndex, totalChapters })
+        .where(eq(chapterProgress.id, existing[0].id));
+    }
+    return { ...existing[0], chapterIndex: Math.max(chapterIndex, existing[0].chapterIndex), totalChapters };
+  } else {
+    const result = await db.insert(chapterProgress).values({ userId, courseId, lessonIndex, chapterIndex, totalChapters });
+    return { id: result[0].insertId, userId, courseId, lessonIndex, chapterIndex, totalChapters };
+  }
+}
+
+// ============ Admin: User Management ============
+
+export async function blockUser(userId: number, blocked: boolean) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(users).set({ blocked: blocked ? 1 : 0 }).where(eq(users.id, userId));
+  return { userId, blocked };
+}
+
+export async function updateUserRole(userId: number, role: "user" | "admin") {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(users).set({ role }).where(eq(users.id, userId));
+  return { userId, role };
+}
+
+export async function createInvitation(email: string, name: string | null, invitedBy: number, expiresInDays: number = 7) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const token = crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '');
+  const expiresAt = new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000);
+
+  const result = await db.insert(userInvitations).values({
+    email,
+    name,
+    invitedBy,
+    token,
+    expiresAt,
+  });
+
+  return { id: result[0].insertId, email, name, token, expiresAt, status: 'pending' as const };
+}
+
+export async function getInvitations(page: number = 1, pageSize: number = 20) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const offset = (page - 1) * pageSize;
+  const invitations = await db.select().from(userInvitations).orderBy(desc(userInvitations.createdAt)).limit(pageSize).offset(offset);
+  const [{ total }] = await db.select({ total: count() }).from(userInvitations);
+
+  return { invitations, total, page, pageSize };
+}
+
+export async function getAdminAnalytics() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Users over time (last 30 days)
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  
+  const recentUsers = await db.select({
+    id: users.id,
+    createdAt: users.createdAt,
+    lastSignedIn: users.lastSignedIn,
+  }).from(users).where(sql`${users.createdAt} >= ${thirtyDaysAgo}`);
+
+  const recentProgress = await db.select({
+    id: trainingProgress.id,
+    completedAt: trainingProgress.completedAt,
+    certificationId: trainingProgress.certificationId,
+    courseId: trainingProgress.courseId,
+  }).from(trainingProgress).where(sql`${trainingProgress.completedAt} >= ${thirtyDaysAgo}`);
+
+  const recentExams = await db.select({
+    id: examAttempts.id,
+    finishedAt: examAttempts.finishedAt,
+    passed: examAttempts.passed,
+    score: examAttempts.score,
+    certificationId: examAttempts.certificationId,
+  }).from(examAttempts).where(sql`${examAttempts.finishedAt} >= ${thirtyDaysAgo}`);
+
+  // Active users (signed in last 7 days)
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const [{ activeCount }] = await db.select({ activeCount: count() }).from(users).where(sql`${users.lastSignedIn} >= ${sevenDaysAgo}`);
+
+  // Blocked users count
+  const [{ blockedCount }] = await db.select({ blockedCount: count() }).from(users).where(eq(users.blocked, 1));
+
+  return {
+    recentUsers,
+    recentProgress,
+    recentExams,
+    activeUsersLast7Days: activeCount,
+    blockedUsers: blockedCount,
+  };
+}
+
+export async function exportLearnersCSV() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Get all users with their progress summary
+  const allUsers = await db.select({
+    id: users.id,
+    name: users.name,
+    email: users.email,
+    role: users.role,
+    blocked: users.blocked,
+    createdAt: users.createdAt,
+    lastSignedIn: users.lastSignedIn,
+  }).from(users).orderBy(desc(users.createdAt));
+
+  // Get progress counts per user
+  const progressCounts = await db.select({
+    userId: trainingProgress.userId,
+    lessonsCompleted: count(),
+  }).from(trainingProgress).groupBy(trainingProgress.userId);
+
+  // Get exam stats per user
+  const examStats = await db.select({
+    userId: examAttempts.userId,
+    totalAttempts: count(),
+  }).from(examAttempts).groupBy(examAttempts.userId);
+
+  const progressMap = new Map(progressCounts.map(p => [p.userId, p.lessonsCompleted]));
+  const examMap = new Map(examStats.map(e => [e.userId, e.totalAttempts]));
+
+  return allUsers.map(u => ({
+    id: u.id,
+    name: u.name || '',
+    email: u.email || '',
+    role: u.role,
+    blocked: u.blocked ? 'Oui' : 'Non',
+    lessonsCompleted: progressMap.get(u.id) || 0,
+    examAttempts: examMap.get(u.id) || 0,
+    createdAt: u.createdAt?.toISOString() || '',
+    lastSignedIn: u.lastSignedIn?.toISOString() || '',
+  }));
 }

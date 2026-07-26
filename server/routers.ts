@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getAdminAnalytics, exportLearnersCSV } from "./db";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
 import { notifyOwner } from "./_core/notification";
@@ -307,6 +307,24 @@ export const appRouter = router({
       .query(async ({ ctx, input }) => {
         return await getExamAttempts(ctx.user.id, input?.certificationId);
       }),
+
+    // Chapter progress
+    getChapterProgress: protectedProcedure
+      .input(z.object({ courseId: z.string().optional() }).optional())
+      .query(async ({ ctx, input }) => {
+        return await getChapterProgress(ctx.user.id, input?.courseId);
+      }),
+
+    saveChapterProgress: protectedProcedure
+      .input(z.object({
+        courseId: z.string(),
+        lessonIndex: z.number(),
+        chapterIndex: z.number(),
+        totalChapters: z.number(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        return await upsertChapterProgress(ctx.user.id, input.courseId, input.lessonIndex, input.chapterIndex, input.totalChapters);
+      }),
   }),
 
   // ============ Video Progress ============
@@ -357,6 +375,61 @@ export const appRouter = router({
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await getAllLearnersStats();
+      }),
+
+    blockUser: protectedProcedure
+      .input(z.object({ userId: z.number(), blocked: z.boolean() }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        return await blockUser(input.userId, input.blocked);
+      }),
+
+    updateUserRole: protectedProcedure
+      .input(z.object({ userId: z.number(), role: z.enum(["user", "admin"]) }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        if (input.userId === ctx.user.id) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "Cannot change your own role" });
+        }
+        return await updateUserRole(input.userId, input.role);
+      }),
+
+    createInvitation: protectedProcedure
+      .input(z.object({ email: z.string().email(), name: z.string().optional() }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        return await createInvitation(input.email, input.name || null, ctx.user.id);
+      }),
+
+    getInvitations: protectedProcedure
+      .input(z.object({ page: z.number().min(1).default(1), pageSize: z.number().min(1).max(100).default(20) }).optional())
+      .query(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        return await getInvitations(input?.page || 1, input?.pageSize || 20);
+      }),
+
+    getAnalytics: protectedProcedure
+      .query(async ({ ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        return await getAdminAnalytics();
+      }),
+
+    exportLearners: protectedProcedure
+      .query(async ({ ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        return await exportLearnersCSV();
       }),
   }),
 });

@@ -17,6 +17,10 @@ interface TrainingProgressContextType {
   // Certification completion check
   isCertComplete: (certId: string, courseIds: string[], totalLessonsMap: Record<string, number>) => boolean;
   
+  // Chapter-level progress
+  getChapterProgress: (courseId: string, lessonIndex: number) => { chapterIndex: number; totalChapters: number } | null;
+  saveChapterProgress: (courseId: string, lessonIndex: number, chapterIndex: number, totalChapters: number) => void;
+  
   // Auth state
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -33,6 +37,17 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
   const progressQuery = trpc.training.getProgress.useQuery(undefined, {
     enabled: isAuthenticated,
     refetchOnWindowFocus: false,
+  });
+
+  const chapterProgressQuery = trpc.training.getChapterProgress.useQuery(undefined, {
+    enabled: isAuthenticated,
+    refetchOnWindowFocus: false,
+  });
+
+  const saveChapterMutation = trpc.training.saveChapterProgress.useMutation({
+    onSuccess: () => {
+      chapterProgressQuery.refetch();
+    },
   });
 
   const markLessonMutation = trpc.training.markLessonComplete.useMutation({
@@ -138,6 +153,21 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
     return true;
   }, [progressData]);
 
+  const chapterProgressData = chapterProgressQuery.data || [];
+
+  const getChapterProgressFn = useCallback((courseId: string, lessonIndex: number) => {
+    const entry = chapterProgressData.find(
+      (cp) => cp.courseId === courseId && cp.lessonIndex === lessonIndex
+    );
+    if (!entry) return null;
+    return { chapterIndex: entry.chapterIndex, totalChapters: entry.totalChapters };
+  }, [chapterProgressData]);
+
+  const saveChapterProgressFn = useCallback((courseId: string, lessonIndex: number, chapterIndex: number, totalChapters: number) => {
+    if (!isAuthenticated) return;
+    saveChapterMutation.mutate({ courseId, lessonIndex, chapterIndex, totalChapters });
+  }, [isAuthenticated, saveChapterMutation]);
+
   const value = useMemo(() => ({
     isLessonComplete,
     markLessonComplete,
@@ -145,9 +175,11 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
     isCourseComplete,
     getCertProgress,
     isCertComplete,
+    getChapterProgress: getChapterProgressFn,
+    saveChapterProgress: saveChapterProgressFn,
     isAuthenticated,
     isLoading: authLoading || progressQuery.isLoading,
-  }), [isLessonComplete, markLessonComplete, getNextUnlockedLesson, isCourseComplete, getCertProgress, isCertComplete, isAuthenticated, authLoading, progressQuery.isLoading]);
+  }), [isLessonComplete, markLessonComplete, getNextUnlockedLesson, isCourseComplete, getCertProgress, isCertComplete, getChapterProgressFn, saveChapterProgressFn, isAuthenticated, authLoading, progressQuery.isLoading]);
 
   return (
     <TrainingProgressContext.Provider value={value}>

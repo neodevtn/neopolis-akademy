@@ -10,6 +10,9 @@ export const users = mysqlTable("users", {
   email: varchar("email", { length: 320 }),
   loginMethod: varchar("loginMethod", { length: 64 }),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+  blocked: int("blocked").default(0).notNull(), // 0=active, 1=blocked
+  invitedAt: timestamp("invitedAt"),
+  invitedBy: int("invitedBy"), // admin userId who invited
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
@@ -154,3 +157,37 @@ export const videoProgress = mysqlTable("video_progress", {
 
 export type VideoProgress = typeof videoProgress.$inferSelect;
 export type InsertVideoProgress = typeof videoProgress.$inferInsert;
+
+/**
+ * Chapter progress - tracks the current chapter position within a lesson
+ */
+export const chapterProgress = mysqlTable("chapter_progress", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  courseId: varchar("courseId", { length: 200 }).notNull(),
+  lessonIndex: int("lessonIndex").notNull(),
+  chapterIndex: int("chapterIndex").notNull(), // last completed chapter index
+  totalChapters: int("totalChapters").notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ChapterProgress = typeof chapterProgress.$inferSelect;
+export type InsertChapterProgress = typeof chapterProgress.$inferInsert;
+
+/**
+ * User invitations - tracks pending invitations sent by admins
+ */
+export const userInvitations = mysqlTable("user_invitations", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull(),
+  name: varchar("name", { length: 200 }),
+  invitedBy: int("invitedBy").notNull(), // admin userId
+  status: mysqlEnum("status", ["pending", "accepted", "expired"]).default("pending").notNull(),
+  token: varchar("token", { length: 128 }).notNull().unique(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt").notNull(),
+  acceptedAt: timestamp("acceptedAt"),
+});
+
+export type UserInvitation = typeof userInvitations.$inferSelect;
+export type InsertUserInvitation = typeof userInvitations.$inferInsert;

@@ -516,3 +516,27 @@
 - [x] Créer la page de résultats (score, technologies recommandées, plan d'action)
 - [x] Ajouter la route /diagnostic et la navigation (Home, TrainingDashboard)
 - [x] Connecter l'outil à la formation (lien vers certification Transformation des Processus)
+
+## Modernisation UI e-learning (guidelines Justinmind)
+- [x] Analyser le guide Justinmind et extraire les principes design applicables
+- [x] Refondre le thème Training (couleurs indigo/emerald, typographie Inter, ombres modernes)
+- [x] Moderniser TrainingDashboard (hero, cards, stats, navigation)
+- [x] Moderniser TrainingCertification (layout cours, progression visuelle)
+- [x] Ajouter variables de compatibilité wise-* pour Home.tsx
+- [x] Vérification visuelle (Home + Training Dashboard OK)
+
+## Persistance progression en BDD
+- [x] Créer la table `chapter_progress` (userId, courseId, lessonIndex, chapterIndex, totalChapters)
+- [x] Créer les endpoints tRPC (getChapterProgress, saveChapterProgress)
+- [x] Intégrer dans TrainingProgressContext (getChapterProgress, saveChapterProgress)
+- [x] Progression leçon déjà persistée en BDD (table training_progress existante)
+
+## Admin Dashboard Apprenants
+- [x] Réutiliser table `user` avec rôle admin/user + champs blocked/invitedAt/invitedBy
+- [x] Créer table `user_invitations` (email, name, invitedBy, status, createdAt)
+- [x] Page admin : liste des apprenants avec recherche et filtrage
+- [x] Fonctionnalité : inviter un apprenant (dialog email + nom)
+- [x] Fonctionnalité : bloquer/débloquer un apprenant
+- [x] Fonctionnalité : changer le rôle (admin/user)
+- [x] Analytics : onglet avec statistiques (inscriptions, activité, complétion)
+- [x] Export : CSV des apprenants et de leur progression
