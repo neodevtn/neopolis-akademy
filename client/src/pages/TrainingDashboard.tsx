@@ -272,10 +272,10 @@ export default function TrainingDashboard() {
         {/* Stats Row */}
         <motion.div variants={fadeInUp} className="grid grid-cols-4 gap-3 md:gap-4 mb-10">
           {[
-            { value: "4", label: { en: "Certifications", fr: "Certifications" }, icon: <GraduationCap className="w-4 h-4" /> },
-            { value: "25", label: { en: "Courses", fr: "Cours" }, icon: <BookOpen className="w-4 h-4" /> },
-            { value: "26", label: { en: "Videos", fr: "Vidéos" }, icon: <Play className="w-4 h-4" /> },
-            { value: "480+", label: { en: "Exercises", fr: "Exercices" }, icon: <Dumbbell className="w-4 h-4" /> },
+            { value: String(trainingIndex.certifications.length), label: { en: "Certifications", fr: "Certifications" }, icon: <GraduationCap className="w-4 h-4" /> },
+            { value: String(trainingIndex.courses.length), label: { en: "Courses", fr: "Cours" }, icon: <BookOpen className="w-4 h-4" /> },
+            { value: String(trainingIndex.certifications.reduce((s, c) => s + c.totalVideos, 0)), label: { en: "Videos", fr: "Vidéos" }, icon: <Play className="w-4 h-4" /> },
+            { value: String(trainingIndex.certifications.reduce((s, c) => s + c.totalExercises, 0)) + "+", label: { en: "Exercises", fr: "Exercices" }, icon: <Dumbbell className="w-4 h-4" /> },
           ].map((stat, i) => (
             <motion.div
               key={i}
@@ -363,6 +363,26 @@ export default function TrainingDashboard() {
               </motion.div>
             );
           })}
+        </motion.div>
+
+        {/* Diagnostic IA CTA */}
+        <motion.div variants={fadeInUp} className="mb-10">
+          <Link href="/diagnostic" className="group block bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-2xl border border-blue-200 dark:border-blue-800 p-6 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-200">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center flex-shrink-0">
+                <BookOpen className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-foreground mb-0.5">
+                  {t({ en: "AI Automatability Diagnostic", fr: "Diagnostic d'automatisabilit\u00e9 IA" })}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {t({ en: "Evaluate the AI potential of your business processes using the DATAS-STD-BPM-AI-001 methodology.", fr: "\u00c9valuez le potentiel IA de vos processus m\u00e9tier selon la m\u00e9thodologie DATAS-STD-BPM-AI-001 de Data Services." })}
+                </p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-blue-600 transition-colors" />
+            </div>
+          </Link>
         </motion.div>
 
         {/* Recommended Study Order */}

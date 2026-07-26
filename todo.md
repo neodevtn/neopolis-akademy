@@ -494,3 +494,25 @@
 - [x] Nettoyer les titres des cours dans trainingIndex.json (supprimer le préfixe certification)
 - [x] Ajouter un indicateur de progression par cours (barre + pourcentage) dans la vue certification
 - [x] Améliorer la vue d'ensemble certification (progression globale = agrégat des cours)
+
+## Analyse du référentiel processus IA et exploitation pédagogique / produit (2026-07-26)
+- [x] Analyser le référentiel méthodologique PDF sur la transformation des processus par l'IA
+- [x] Cartographier les complémentarités avec la formation Claude Certified Associate – Foundations
+- [x] Identifier une structure de formation additionnelle fondée sur la classification des processus métier
+- [x] Définir un concept d'outil de diagnostic d'automatisabilité / agentabilité basé sur le référentiel
+- [x] Produire une synthèse exploitable pour décider du positionnement pédagogique et produit
+
+## Notes de lecture du référentiel processus IA
+- [x] Sauvegarder les constats structurants et citations clés issus du PDF dans un mémo de travail
+
+## Formation "Transformation des Processus par l'IA" (indépendante de Claude)
+- [x] Créer le contenu JSON des 5 modules (chapitres, blocs, exercices) basé sur le référentiel DATAS-STD-BPM-AI-001
+- [x] Ajouter la certification "Transformation des Processus par l'IA" dans trainingIndex.json
+- [x] Vérifier le rendu dans la page Training
+
+## Outil de diagnostic d'automatisabilité/agentabilité (indépendant de Claude)
+- [x] Créer la page DiagnosticIA.tsx avec formulaire multi-étapes et moteur de scoring
+- [x] Implémenter le moteur de scoring (potentiel IA, technologies applicables, complexité)
+- [x] Créer la page de résultats (score, technologies recommandées, plan d'action)
+- [x] Ajouter la route /diagnostic et la navigation (Home, TrainingDashboard)
+- [x] Connecter l'outil à la formation (lien vers certification Transformation des Processus)
