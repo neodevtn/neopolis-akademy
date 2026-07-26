@@ -793,6 +793,7 @@ function LessonViewer({
   isReviewMode = false,
   courseExercises = [],
   onChapterChange,
+  initialChapter,
 }: {
   lesson: any;
   lessonIndex: number;
@@ -812,8 +813,15 @@ function LessonViewer({
   isReviewMode?: boolean;
   courseExercises?: any[];
   onChapterChange?: (current: number, total: number) => void;
+  initialChapter?: number;
 }) {
   const [currentChapter, setCurrentChapter] = useState(0);
+  // Sync with initialChapter prop (for single-lesson courses navigating via sidebar)
+  useEffect(() => {
+    if (initialChapter !== undefined && initialChapter !== currentChapter) {
+      setCurrentChapter(initialChapter);
+    }
+  }, [initialChapter]);
   const [showQuiz, setShowQuiz] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
 
@@ -1395,7 +1403,12 @@ export default function TrainingCourse() {
     );
   }
 
-  const totalLessons = courseLessons.length;
+  // For single-lesson courses with multiple chapters, treat chapters as progression units
+  const isSingleLessonCourse = courseLessons.length === 1 && (courseLessons[0]?.chapters?.length || 0) > 1;
+  const totalProgressUnits = isSingleLessonCourse
+    ? (courseLessons[0]?.chapters?.length || 1)
+    : courseLessons.length;
+  const totalLessons = totalProgressUnits;
   const completed = isCourseComplete(course.id, totalLessons);
   const nextUnlocked = getNextUnlockedLesson(course.id, totalLessons);
   const videos = course.videos || [];
@@ -1482,19 +1495,46 @@ export default function TrainingCourse() {
         {/* Sidebar */}
         {!lessonsLoading && courseLessons.length > 0 && (
           <LessonSidebar
-            lessons={courseLessons}
+            lessons={isSingleLessonCourse
+              ? (courseLessons[0]?.chapters || []).map((ch: any, i: number) => ({
+                  id: ch.id || `chapter_${i}`,
+                  title: ch.title || { en: `Chapter ${i + 1}`, fr: `Chapitre ${i + 1}` },
+                }))
+              : courseLessons
+            }
             lang={lang}
             t={t}
             nextUnlocked={nextUnlocked}
-            isLessonComplete={isLessonComplete}
+            isLessonComplete={isSingleLessonCourse
+              ? (courseId: string, idx: number) => {
+                  // For single-lesson courses, chapter completion is tracked via chapterProgress
+                  if (chapterProgress && idx < chapterProgress.current) return true;
+                  return isLessonComplete(courseId, idx);
+                }
+              : isLessonComplete
+            }
             courseId={course.id}
             sidebarOpen={sidebarOpen}
             onClose={() => setSidebarOpen(false)}
             videos={videos}
-            activeLessonIndex={activeLessonIndex}
-            onLessonClick={(idx) => setActiveLessonIndex(idx)}
-            chapterProgress={chapterProgress}
-            displayedLessonIndex={activeLessonIndex ?? nextUnlocked}
+            activeLessonIndex={isSingleLessonCourse
+              ? (chapterProgress?.current ?? 0)
+              : activeLessonIndex
+            }
+            onLessonClick={(idx) => {
+              if (isSingleLessonCourse) {
+                // Navigate to the chapter within the single lesson
+                setActiveLessonIndex(0);
+                setChapterProgress({ current: idx, total: courseLessons[0]?.chapters?.length || 1 });
+              } else {
+                setActiveLessonIndex(idx);
+              }
+            }}
+            chapterProgress={isSingleLessonCourse ? null : chapterProgress}
+            displayedLessonIndex={isSingleLessonCourse
+              ? (chapterProgress?.current ?? 0)
+              : (activeLessonIndex ?? nextUnlocked)
+            }
           />
         )}
 
@@ -1522,7 +1562,7 @@ export default function TrainingCourse() {
               <div className="flex items-center gap-1.5">
                 <BookOpen className="w-4 h-4 text-primary" />
                 <span className="font-medium text-foreground">{Math.min(nextUnlocked, totalLessons)}</span>
-                <span>/ {totalLessons} {t({ en: "lessons", fr: "leçons" })}</span>
+                <span>/ {totalLessons} {isSingleLessonCourse ? t({ en: "chapters", fr: "chapitres" }) : t({ en: "lessons", fr: "leçons" })}</span>
               </div>
               {videos.length > 0 && (
                 <div className="flex items-center gap-1.5">
@@ -1537,7 +1577,7 @@ export default function TrainingCourse() {
               <div className="mt-4 space-y-2">
                 {/* Lessons progress */}
                 <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground w-14">{t({ en: "Lessons", fr: "Leçons" })}</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground w-14">{isSingleLessonCourse ? t({ en: "Chapters", fr: "Chapitres" }) : t({ en: "Lessons", fr: "Leçons" })}</span>
                   <div className="flex-1 rounded-full h-2 bg-secondary">
                     <motion.div
                       className="bg-primary h-2 rounded-full"
@@ -1666,6 +1706,7 @@ export default function TrainingCourse() {
                     isReviewMode={isReviewMode}
                     courseExercises={courseExercises}
                     onChapterChange={(current, total) => setChapterProgress({ current, total })}
+                    initialChapter={isSingleLessonCourse ? (chapterProgress?.current ?? 0) : undefined}
                   />
                 </div>
               </motion.div>

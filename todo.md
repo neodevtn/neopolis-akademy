@@ -540,3 +540,9 @@
 - [x] Fonctionnalité : changer le rôle (admin/user)
 - [x] Analytics : onglet avec statistiques (inscriptions, activité, complétion)
 - [x] Export : CSV des apprenants et de leur progression
+
+## Bug fix: Incohérence compteurs de leçons
+- [x] Corriger le compteur de leçons dans TrainingCertification (affiche chapitres au lieu de leçons)
+- [x] Corriger le compteur dans le header du cours (utilise chapitres pour cours mono-leçon)
+- [x] Corriger la sidebar (affiche chapitres comme items pour cours mono-leçon)
+- [x] Mettre à jour trainingIndex.json (lessonCount = nombre de chapitres pour cours mono-leçon)

@@ -381,7 +381,7 @@ export default function TrainingCertification() {
                       <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <BookOpen className="w-3 h-3" />
-                          {progress.total} {t({ en: "lessons", fr: "leçons" })}
+                          {progress.total} {t({ en: "chapters", fr: "chapitres" })}
                         </span>
                         {course.exerciseCount > 0 && (
                           <span className="flex items-center gap-1">
