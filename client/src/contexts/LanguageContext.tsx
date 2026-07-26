@@ -6,7 +6,7 @@ interface LanguageContextType {
   lang: Language;
   setLang: (lang: Language) => void;
   toggleLang: () => void;
-  t: (obj: { en: string; fr: string } | string) => string;
+  t: (obj: { en: string; fr: string } | string | undefined | null) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -30,9 +30,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const t = useCallback((obj: { en: string; fr: string } | string): string => {
+  const t = useCallback((obj: { en: string; fr: string } | string | undefined | null): string => {
+    if (!obj) return "";
     if (typeof obj === "string") return obj;
-    return obj[lang] || obj.en;
+    return obj[lang] || obj.en || "";
   }, [lang]);
 
   return (

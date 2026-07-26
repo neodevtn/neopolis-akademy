@@ -557,3 +557,8 @@
 - [x] Chapitre 5 (index 4) affiche un contenu vide quand on l'ouvre
 - [x] Impossible de revoir les chapitres précédents (chapitres complétés non cliquables ou contenu non affiché)
 - [x] Rate limit augmenté de 100 à 300 req/min pour éviter les blocages en usage normal
+
+## Bug fix: TypeError "Cannot read properties of undefined (reading 'fr')" (2026-07-26)
+- [x] Cliquer "Suivant" après avoir revu un chapitre terminé provoque un crash (ExerciseRenderer crash sur champs manquants)
+- [x] Rendu défensif du t() dans LanguageContext (null/undefined)
+- [x] ExerciseRenderer: tous les champs rendus optionnels, interactionType/difficulty/rubric avec fallbacks

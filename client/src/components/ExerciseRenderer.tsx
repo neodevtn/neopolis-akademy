@@ -39,17 +39,19 @@ interface ExerciseRubric {
 
 interface Exercise {
   id: string;
-  interactionType: 'free_text' | 'single_choice' | 'multi_choice' | 'code' | 'checklist' | 'scenario';
-  title: LocalizedText;
-  prompt: LocalizedText;
-  instructions: LocalizedText;
-  options: ExerciseOption[] | null;
-  inputSchema: { minWords?: number; maxWords?: number; language?: string } | null;
-  rubric: ExerciseRubric;
-  sampleAnswer: LocalizedText;
-  correction: LocalizedText;
-  difficulty: 'foundation' | 'intermediate' | 'advanced';
-  skillTags: string[];
+  interactionType?: 'free_text' | 'single_choice' | 'multi_choice' | 'code' | 'checklist' | 'scenario';
+  title?: LocalizedText;
+  prompt?: LocalizedText;
+  instructions?: LocalizedText;
+  options?: ExerciseOption[] | null;
+  inputSchema?: { minWords?: number; maxWords?: number; language?: string } | null;
+  rubric?: ExerciseRubric;
+  sampleAnswer?: LocalizedText;
+  correction?: LocalizedText;
+  difficulty?: 'foundation' | 'intermediate' | 'advanced';
+  skillTags?: string[];
+  // Additional fields from course JSON that may not match the strict interface
+  [key: string]: any;
 }
 
 interface ExerciseRendererProps {
@@ -128,7 +130,8 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
   const [showCorrection, setShowCorrection] = useState(false);
   const [showRubric, setShowRubric] = useState(false);
 
-  const TypeIcon = TYPE_ICONS[exercise.interactionType] || FileText;
+  const interactionType = exercise.interactionType || 'free_text';
+  const TypeIcon = TYPE_ICONS[interactionType] || FileText;
 
   const getText = (field: LocalizedText | undefined | null): string => {
     if (!field) return '';
@@ -141,7 +144,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
 
   const canSubmit = useMemo(() => {
     if (submitted) return false;
-    switch (exercise.interactionType) {
+    switch (interactionType) {
       case 'free_text':
       case 'scenario':
         return wordCount >= (exercise.inputSchema?.minWords || 5);
@@ -159,7 +162,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
 
   const handleSubmit = () => {
     setSubmitted(true);
-    const answer = exercise.interactionType === 'single_choice' || exercise.interactionType === 'multi_choice' || exercise.interactionType === 'checklist'
+    const answer = interactionType === 'single_choice' || interactionType === 'multi_choice' || interactionType === 'checklist'
       ? Array.from(selectedOptions).join(',')
       : userAnswer;
     saveAttempt(exercise.id, userAnswer, Array.from(selectedOptions));
@@ -178,7 +181,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
   const toggleOption = (optionId: string) => {
     if (submitted) return;
     const newSet = new Set(selectedOptions);
-    if (exercise.interactionType === 'single_choice') {
+    if (interactionType === 'single_choice') {
       newSet.clear();
       newSet.add(optionId);
     } else {
@@ -211,12 +214,16 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
           </span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <Badge variant="outline" className={`text-xs ${DIFFICULTY_COLORS[exercise.difficulty]}`}>
-            {DIFFICULTY_LABELS[exercise.difficulty][lang]}
-          </Badge>
-          <Badge variant="outline" className="text-xs">
-            {TYPE_LABELS[exercise.interactionType][lang]}
-          </Badge>
+          {exercise.difficulty && DIFFICULTY_LABELS[exercise.difficulty] && (
+            <Badge variant="outline" className={`text-xs ${DIFFICULTY_COLORS[exercise.difficulty] || ''}`}>
+              {DIFFICULTY_LABELS[exercise.difficulty][lang]}
+            </Badge>
+          )}
+          {interactionType && TYPE_LABELS[interactionType] && (
+            <Badge variant="outline" className="text-xs">
+              {TYPE_LABELS[interactionType][lang]}
+            </Badge>
+          )}
           {submitted && (
             <Badge className="bg-green-600 text-white text-xs">
               {lang === 'fr' ? 'Soumis' : 'Submitted'}
@@ -243,7 +250,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
         {!submitted ? (
           <div className="space-y-3">
             {/* Free text / Scenario */}
-            {(exercise.interactionType === 'free_text' || exercise.interactionType === 'scenario') && (
+            {(interactionType === 'free_text' || interactionType === 'scenario') && (
               <div>
                 <Textarea
                   value={userAnswer}
@@ -270,7 +277,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
             )}
 
             {/* Code */}
-            {exercise.interactionType === 'code' && (
+            {interactionType === 'code' && (
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <Code2 className="h-3 w-3 text-muted-foreground" />
@@ -288,7 +295,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
             )}
 
             {/* Single/Multi Choice */}
-            {(exercise.interactionType === 'single_choice' || exercise.interactionType === 'multi_choice') && exercise.options && (
+            {(interactionType === 'single_choice' || interactionType === 'multi_choice') && exercise.options && (
               <div className="space-y-2">
                 {exercise.options.map((option) => (
                   <button
@@ -308,7 +315,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
             )}
 
             {/* Checklist */}
-            {exercise.interactionType === 'checklist' && exercise.options && (
+            {interactionType === 'checklist' && exercise.options && (
               <div className="space-y-2">
                 {exercise.options.map((option) => (
                   <label
@@ -330,19 +337,19 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
           /* Submitted state - show answer summary */
           <div className="space-y-3">
             {/* Show user's answer */}
-            {(exercise.interactionType === 'free_text' || exercise.interactionType === 'scenario' || exercise.interactionType === 'code') && (
+            {(interactionType === 'free_text' || interactionType === 'scenario' || interactionType === 'code') && (
               <div className="bg-muted/30 rounded-md p-3 border border-border/50">
                 <p className="text-xs font-medium text-muted-foreground mb-1">
                   {lang === 'fr' ? 'Votre réponse :' : 'Your answer:'}
                 </p>
-                <p className={`text-sm whitespace-pre-wrap ${exercise.interactionType === 'code' ? 'font-mono' : ''}`}>
+                <p className={`text-sm whitespace-pre-wrap ${interactionType === 'code' ? 'font-mono' : ''}`}>
                   {userAnswer}
                 </p>
               </div>
             )}
 
             {/* Show option results */}
-            {(exercise.interactionType === 'single_choice' || exercise.interactionType === 'multi_choice') && exercise.options && (
+            {(interactionType === 'single_choice' || interactionType === 'multi_choice') && exercise.options && (
               <div className="space-y-2">
                 {exercise.options.map((option) => {
                   const result = getOptionResult(option);
@@ -371,7 +378,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
             )}
 
             {/* Checklist results */}
-            {exercise.interactionType === 'checklist' && exercise.options && (
+            {interactionType === 'checklist' && exercise.options && (
               <div className="space-y-2">
                 {exercise.options.map((option) => (
                   <div
@@ -462,7 +469,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
             )}
 
             {/* Rubric */}
-            {(exercise.rubric?.keyPoints?.length > 0 || exercise.rubric?.commonMistakes?.length > 0) && (
+            {((exercise.rubric?.keyPoints?.length ?? 0) > 0 || (exercise.rubric?.commonMistakes?.length ?? 0) > 0) && (
               <div>
                 <button
                   onClick={() => setShowRubric(!showRubric)}
@@ -473,7 +480,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
                 </button>
                 {showRubric && (
                   <div className="mt-2 space-y-2 animate-in fade-in slide-in-from-top-1 duration-150">
-                    {exercise.rubric.keyPoints?.length > 0 && (
+                    {exercise.rubric?.keyPoints && exercise.rubric.keyPoints.length > 0 && (
                       <div>
                         <p className="text-xs font-medium text-green-600 mb-1">
                           {lang === 'fr' ? 'Points clés :' : 'Key Points:'}
@@ -485,7 +492,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
                         </ul>
                       </div>
                     )}
-                    {exercise.rubric.commonMistakes?.length > 0 && (
+                    {exercise.rubric?.commonMistakes && exercise.rubric.commonMistakes.length > 0 && (
                       <div>
                         <p className="text-xs font-medium text-red-600 mb-1">
                           {lang === 'fr' ? 'Erreurs fréquentes :' : 'Common Mistakes:'}
