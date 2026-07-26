@@ -15,6 +15,7 @@ import {
   Moon,
   Sun,
   ArrowLeft,
+  PlayCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
@@ -64,7 +65,7 @@ const levelConfig = {
 
 export default function TrainingDashboard() {
   const { lang, toggleLang, t } = useLanguage();
-  const { getCertProgress } = useTrainingProgress();
+  const { getCertProgress, getLastVisitedCourse } = useTrainingProgress();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
@@ -290,6 +291,52 @@ export default function TrainingDashboard() {
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Resume Reading Widget */}
+        {(() => {
+          const lastVisited = getLastVisitedCourse();
+          if (!lastVisited) return null;
+          const course = trainingIndex.courses.find((c) => c.id === lastVisited.courseId);
+          if (!course) return null;
+          const cert = trainingIndex.certifications.find((c) => c.id === course.certId);
+          return (
+            <motion.div variants={fadeInUp} className="mb-8">
+              <Link
+                href={`/training/${course.certId}/${course.id}`}
+                className="group block bg-gradient-to-r from-primary/5 to-emerald-500/5 dark:from-primary/10 dark:to-emerald-500/10 rounded-2xl border border-primary/20 dark:border-primary/30 p-5 hover:shadow-md hover:border-primary/40 transition-all duration-200"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <PlayCircle className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                        {t({ en: "Continue reading", fr: "Reprendre la lecture" })}
+                      </span>
+                      {cert && <span className="text-xs text-muted-foreground">{cert.icon}</span>}
+                    </div>
+                    <h3 className="text-sm md:text-base font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                      {t(course.title)}
+                    </h3>
+                    <div className="flex items-center gap-3 mt-1.5">
+                      <div className="flex-1 max-w-[200px] h-1.5 rounded-full bg-secondary overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-primary transition-all duration-500"
+                          style={{ width: `${Math.round(((lastVisited.chapterIndex + 1) / lastVisited.totalChapters) * 100)}%` }}
+                        />
+                      </div>
+                      <span className="text-xs text-muted-foreground font-medium">
+                        {t({ en: `Chapter ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}`, fr: `Chapitre ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}` })}
+                      </span>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                </div>
+              </Link>
+            </motion.div>
+          );
+        })()}
 
         {/* Certification Paths */}
         <motion.div variants={fadeIn} className="mb-4 flex items-center justify-between">

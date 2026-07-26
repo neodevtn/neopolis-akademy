@@ -546,3 +546,8 @@
 - [x] Corriger le compteur dans le header du cours (utilise chapitres pour cours mono-leçon)
 - [x] Corriger la sidebar (affiche chapitres comme items pour cours mono-leçon)
 - [x] Mettre à jour trainingIndex.json (lessonCount = nombre de chapitres pour cours mono-leçon)
+
+## Améliorations UX sidebar + widget reprise
+- [x] Coche verte dans la sidebar pour les chapitres complétés
+- [x] Navigation directe par clic sur un chapitre dans la sidebar (scroll vers la section)
+- [x] Widget "Reprendre la lecture" sur la page d'accueil (dernier chapitre visité)

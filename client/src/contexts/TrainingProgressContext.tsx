@@ -4,6 +4,14 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { toast } from "sonner";
 import trainingIndex from "@/data/trainingIndex.json";
 
+interface LastVisitedInfo {
+  courseId: string;
+  lessonIndex: number;
+  chapterIndex: number;
+  totalChapters: number;
+  updatedAt: string;
+}
+
 interface TrainingProgressContextType {
   // Lesson-level progress
   isLessonComplete: (courseId: string, lessonIndex: number) => boolean;
@@ -20,6 +28,7 @@ interface TrainingProgressContextType {
   // Chapter-level progress
   getChapterProgress: (courseId: string, lessonIndex: number) => { chapterIndex: number; totalChapters: number } | null;
   saveChapterProgress: (courseId: string, lessonIndex: number, chapterIndex: number, totalChapters: number) => void;
+  getLastVisitedCourse: () => LastVisitedInfo | null;
   
   // Auth state
   isAuthenticated: boolean;
@@ -163,6 +172,25 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
     return { chapterIndex: entry.chapterIndex, totalChapters: entry.totalChapters };
   }, [chapterProgressData]);
 
+  const getLastVisitedCourse = useCallback((): LastVisitedInfo | null => {
+    if (chapterProgressData.length === 0) return null;
+    // Find the most recently updated chapter progress entry
+    const sorted = [...chapterProgressData].sort((a, b) => {
+      const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+      const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+      return dateB - dateA;
+    });
+    const latest = sorted[0];
+    if (!latest) return null;
+    return {
+      courseId: latest.courseId,
+      lessonIndex: latest.lessonIndex,
+      chapterIndex: latest.chapterIndex,
+      totalChapters: latest.totalChapters,
+      updatedAt: latest.updatedAt ? String(latest.updatedAt) : '',
+    };
+  }, [chapterProgressData]);
+
   const saveChapterProgressFn = useCallback((courseId: string, lessonIndex: number, chapterIndex: number, totalChapters: number) => {
     if (!isAuthenticated) return;
     saveChapterMutation.mutate({ courseId, lessonIndex, chapterIndex, totalChapters });
@@ -177,9 +205,10 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
     isCertComplete,
     getChapterProgress: getChapterProgressFn,
     saveChapterProgress: saveChapterProgressFn,
+    getLastVisitedCourse,
     isAuthenticated,
     isLoading: authLoading || progressQuery.isLoading,
-  }), [isLessonComplete, markLessonComplete, getNextUnlockedLesson, isCourseComplete, getCertProgress, isCertComplete, getChapterProgressFn, saveChapterProgressFn, isAuthenticated, authLoading, progressQuery.isLoading]);
+  }), [isLessonComplete, markLessonComplete, getNextUnlockedLesson, isCourseComplete, getCertProgress, isCertComplete, getChapterProgressFn, saveChapterProgressFn, getLastVisitedCourse, isAuthenticated, authLoading, progressQuery.isLoading]);
 
   return (
     <TrainingProgressContext.Provider value={value}>

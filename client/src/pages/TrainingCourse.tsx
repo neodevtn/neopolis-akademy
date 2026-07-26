@@ -837,6 +837,8 @@ function LessonViewer({
 
   useEffect(() => {
     onChapterChange?.(currentChapter, totalChapters);
+    // Scroll content area to top when chapter changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentChapter, totalChapters]);
 
   const isLastChapter = currentChapter >= totalChapters - 1;
@@ -1291,7 +1293,7 @@ export default function TrainingCourse() {
   const { lang, toggleLang, t } = useLanguage();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const { isLessonComplete, markLessonComplete, getNextUnlockedLesson, isCourseComplete } = useTrainingProgress();
+  const { isLessonComplete, markLessonComplete, getNextUnlockedLesson, isCourseComplete, getChapterProgress: getPersistedChapterProgress, saveChapterProgress: persistChapterProgress } = useTrainingProgress();
   const [expandedVideos, setExpandedVideos] = useState<Set<string>>(new Set());
   const [playingVideos, setPlayingVideos] = useState<Set<string>>(new Set());
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -1410,7 +1412,12 @@ export default function TrainingCourse() {
     : courseLessons.length;
   const totalLessons = totalProgressUnits;
   const completed = isCourseComplete(course.id, totalLessons);
-  const nextUnlocked = getNextUnlockedLesson(course.id, totalLessons);
+  const nextUnlocked = isSingleLessonCourse
+    ? (() => {
+        const persisted = getPersistedChapterProgress(course.id, 0);
+        return persisted ? Math.min(persisted.chapterIndex + 1, totalLessons) : 0;
+      })()
+    : getNextUnlockedLesson(course.id, totalLessons);
   const videos = course.videos || [];
 
   const toggleVideo = (videoId: string) => {
@@ -1506,10 +1513,13 @@ export default function TrainingCourse() {
             t={t}
             nextUnlocked={nextUnlocked}
             isLessonComplete={isSingleLessonCourse
-              ? (courseId: string, idx: number) => {
-                  // For single-lesson courses, chapter completion is tracked via chapterProgress
+              ? (cId: string, idx: number) => {
+                  // For single-lesson courses, use persisted chapter progress for completion
+                  // A chapter is complete if it's before the current reading position
+                  const persisted = getPersistedChapterProgress(cId, 0);
+                  if (persisted && idx < persisted.chapterIndex) return true;
                   if (chapterProgress && idx < chapterProgress.current) return true;
-                  return isLessonComplete(courseId, idx);
+                  return false;
                 }
               : isLessonComplete
             }
@@ -1705,7 +1715,14 @@ export default function TrainingCourse() {
                     getYouTubeThumbnail={getYouTubeThumbnail}
                     isReviewMode={isReviewMode}
                     courseExercises={courseExercises}
-                    onChapterChange={(current, total) => setChapterProgress({ current, total })}
+                    onChapterChange={(current, total) => {
+                      setChapterProgress({ current, total });
+                      // Persist chapter progress to database
+                      if (course?.id) {
+                        const lessonIdx = isSingleLessonCourse ? 0 : (activeLessonIndex ?? 0);
+                        persistChapterProgress(course.id, lessonIdx, current, total);
+                      }
+                    }}
                     initialChapter={isSingleLessonCourse ? (chapterProgress?.current ?? 0) : undefined}
                   />
                 </div>
