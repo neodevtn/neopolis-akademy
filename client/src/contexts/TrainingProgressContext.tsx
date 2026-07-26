@@ -117,12 +117,47 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
   });
 
   const progressData = progressQuery.data || [];
+  const chapterProgressData = chapterProgressQuery.data || [];
+
+  // Helper: for single-lesson courses (1 lesson with N chapters), chapter progress IS the progression unit
+  // Returns how many "units" are completed for a given course considering both lesson-level and chapter-level progress
+  const getCompletedUnits = useCallback((courseId: string, totalUnits: number): number => {
+    // First check lesson-level completions
+    const lessonCompletions = progressData.filter((p) => p.courseId === courseId).length;
+    if (lessonCompletions > 0) return lessonCompletions;
+    
+    // For single-lesson courses, check chapter progress
+    const chapterEntry = chapterProgressData.find(
+      (cp) => cp.courseId === courseId && cp.lessonIndex === 0
+    );
+    if (chapterEntry && chapterEntry.totalChapters === totalUnits) {
+      // chapterIndex is 0-based current position, chapters 0..chapterIndex-1 are completed
+      return chapterEntry.chapterIndex;
+    }
+    return 0;
+  }, [progressData, chapterProgressData]);
 
   const isLessonComplete = useCallback((courseId: string, lessonIndex: number) => {
-    return progressData.some(
+    // Check lesson-level completion first
+    const lessonDone = progressData.some(
       (p) => p.courseId === courseId && p.lessonIndex === lessonIndex
     );
-  }, [progressData]);
+    if (lessonDone) return lessonDone;
+    
+    // For single-lesson courses where chapters are the progression unit,
+    // check if this "lesson" (actually chapter index) is before the current reading position
+    const course = trainingIndex.courses.find((c) => c.id === courseId);
+    if (course) {
+      const chapterEntry = chapterProgressData.find(
+        (cp) => cp.courseId === courseId && cp.lessonIndex === 0
+      );
+      if (chapterEntry && chapterEntry.totalChapters === (course.lessonCount || 1)) {
+        // This is a single-lesson course using chapters as units
+        return lessonIndex < chapterEntry.chapterIndex;
+      }
+    }
+    return false;
+  }, [progressData, chapterProgressData]);
 
   const markLessonComplete = useCallback((certificationId: string, courseId: string, lessonIndex: number) => {
     if (!isAuthenticated) return;
@@ -130,39 +165,54 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
   }, [isAuthenticated, markLessonMutation]);
 
   const getNextUnlockedLesson = useCallback((courseId: string, totalLessons: number) => {
-    for (let i = 0; i < totalLessons; i++) {
-      const completed = progressData.some(
-        (p) => p.courseId === courseId && p.lessonIndex === i
-      );
-      if (!completed) return i;
+    // Check lesson-level completions first
+    const hasLessonCompletions = progressData.some((p) => p.courseId === courseId);
+    if (hasLessonCompletions) {
+      for (let i = 0; i < totalLessons; i++) {
+        const completed = progressData.some(
+          (p) => p.courseId === courseId && p.lessonIndex === i
+        );
+        if (!completed) return i;
+      }
+      return totalLessons;
     }
-    return totalLessons;
-  }, [progressData]);
+    
+    // For single-lesson courses, use chapter progress
+    const chapterEntry = chapterProgressData.find(
+      (cp) => cp.courseId === courseId && cp.lessonIndex === 0
+    );
+    if (chapterEntry && chapterEntry.totalChapters === totalLessons) {
+      return Math.min(chapterEntry.chapterIndex, totalLessons);
+    }
+    return 0;
+  }, [progressData, chapterProgressData]);
 
   const isCourseComplete = useCallback((courseId: string, totalLessons: number) => {
     if (totalLessons === 0) return false;
-    const completedCount = progressData.filter((p) => p.courseId === courseId).length;
+    const completedCount = getCompletedUnits(courseId, totalLessons);
     return completedCount >= totalLessons;
-  }, [progressData]);
+  }, [getCompletedUnits]);
 
   const getCertProgress = useCallback((courseIds: string[], totalLessonsMap: Record<string, number>) => {
     const totalLessons = Object.values(totalLessonsMap).reduce((a, b) => a + b, 0);
     if (totalLessons === 0) return 0;
-    const completedLessons = progressData.filter((p) => courseIds.includes(p.courseId)).length;
+    let completedLessons = 0;
+    for (const courseId of courseIds) {
+      const total = totalLessonsMap[courseId] || 0;
+      completedLessons += getCompletedUnits(courseId, total);
+    }
     return Math.round((completedLessons / totalLessons) * 100);
-  }, [progressData]);
+  }, [getCompletedUnits]);
 
   const isCertComplete = useCallback((certId: string, courseIds: string[], totalLessonsMap: Record<string, number>) => {
     for (const courseId of courseIds) {
       const total = totalLessonsMap[courseId] || 0;
       if (total === 0) continue;
-      const completed = progressData.filter((p) => p.courseId === courseId).length;
+      const completed = getCompletedUnits(courseId, total);
       if (completed < total) return false;
     }
     return true;
-  }, [progressData]);
-
-  const chapterProgressData = chapterProgressQuery.data || [];
+  }, [getCompletedUnits]);
 
   const getChapterProgressFn = useCallback((courseId: string, lessonIndex: number) => {
     const entry = chapterProgressData.find(

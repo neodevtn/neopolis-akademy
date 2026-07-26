@@ -551,3 +551,9 @@
 - [x] Coche verte dans la sidebar pour les chapitres complétés
 - [x] Navigation directe par clic sur un chapitre dans la sidebar (scroll vers la section)
 - [x] Widget "Reprendre la lecture" sur la page d'accueil (dernier chapitre visité)
+
+## Bug fix: Incohérences indicateurs d'avancement (2026-07-26)
+- [x] Tag "Not started" affiché sur la page certification alors que le cours a une progression chapitre (5/11)
+- [x] Chapitre 5 (index 4) affiche un contenu vide quand on l'ouvre
+- [x] Impossible de revoir les chapitres précédents (chapitres complétés non cliquables ou contenu non affiché)
+- [x] Rate limit augmenté de 100 à 300 req/min pour éviter les blocages en usage normal

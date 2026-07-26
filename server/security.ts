@@ -90,10 +90,10 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
 }
 
 // ─── Global Rate Limit Middleware (F-003) ───
-// 100 requests per minute per IP for all routes
+// 300 requests per minute per IP for all routes
 export function globalRateLimit(req: Request, res: Response, next: NextFunction) {
   const ip = getClientIp(req);
-  const allowed = checkRateLimit(ip, "global", 100, 60 * 1000);
+  const allowed = checkRateLimit(ip, "global", 300, 60 * 1000);
 
   if (!allowed) {
     res.status(429).json({ error: "Too many requests. Please try again later." });

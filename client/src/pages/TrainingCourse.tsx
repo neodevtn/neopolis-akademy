@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Link, useParams } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
@@ -829,10 +829,13 @@ function LessonViewer({
   const totalChapters = chapters.length;
 
   useEffect(() => {
-    setCurrentChapter(0);
+    // When lesson changes, reset chapter position
+    // But for single-lesson courses, use initialChapter if available (persisted progress)
+    const startChapter = initialChapter !== undefined ? initialChapter : 0;
+    setCurrentChapter(startChapter);
     setShowQuiz(false);
     setShowTranscript(false);
-    onChapterChange?.(0, chapters.length);
+    onChapterChange?.(startChapter, chapters.length);
   }, [lesson.id]);
 
   useEffect(() => {
@@ -1300,6 +1303,15 @@ export default function TrainingCourse() {
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
   const [chapterProgress, setChapterProgress] = useState<{ current: number; total: number } | null>(null);
 
+  // Initialize chapterProgress from persisted data for single-lesson courses
+  const persistedChapterInit = getPersistedChapterProgress(courseId || "", 0);
+  const hasInitializedChapter = useRef(false);
+  useEffect(() => {
+    if (persistedChapterInit && !hasInitializedChapter.current && !chapterProgress) {
+      setChapterProgress({ current: persistedChapterInit.chapterIndex, total: persistedChapterInit.totalChapters });
+      hasInitializedChapter.current = true;
+    }
+  }, [persistedChapterInit]);
 
   // Server-synced video progress
   const videoProgressQuery = trpc.videoProgress.get.useQuery(
@@ -1415,7 +1427,9 @@ export default function TrainingCourse() {
   const nextUnlocked = isSingleLessonCourse
     ? (() => {
         const persisted = getPersistedChapterProgress(course.id, 0);
-        return persisted ? Math.min(persisted.chapterIndex + 1, totalLessons) : 0;
+        // chapterIndex is the current reading position (0-based)
+        // Chapters 0..chapterIndex-1 are completed, chapterIndex is the "next unlocked" (current)
+        return persisted ? Math.min(persisted.chapterIndex, totalLessons) : 0;
       })()
     : getNextUnlockedLesson(course.id, totalLessons);
   const videos = course.videos || [];
@@ -1629,14 +1643,20 @@ export default function TrainingCourse() {
             </div>
           ) : courseLessons.length > 0 && (() => {
             // Determine which lesson to display: review mode or current
-            const displayedIndex = activeLessonIndex ?? nextUnlocked;
+            // For single-lesson courses, always display the single lesson (index 0)
+            // and use chapter-based navigation within it
+            const displayedIndex = isSingleLessonCourse ? 0 : (activeLessonIndex ?? nextUnlocked);
             const displayedLesson = courseLessons[displayedIndex];
-            const isReviewMode = activeLessonIndex !== null && isLessonComplete(course.id, activeLessonIndex);
-            const isCurrentLesson = displayedIndex === nextUnlocked && !isLessonComplete(course.id, nextUnlocked);
+            const isReviewMode = isSingleLessonCourse
+              ? (chapterProgress !== null && chapterProgress.current < nextUnlocked)
+              : (activeLessonIndex !== null && isLessonComplete(course.id, activeLessonIndex));
+            const isCurrentLesson = isSingleLessonCourse
+              ? !completed
+              : (displayedIndex === nextUnlocked && !isLessonComplete(course.id, nextUnlocked));
 
             // If no active review and current lesson is completed, show nothing (course complete state handles it)
             if (!displayedLesson) return null;
-            if (!isReviewMode && !isCurrentLesson) return null;
+            if (!isSingleLessonCourse && !isReviewMode && !isCurrentLesson) return null;
 
             // Match videos to this lesson by title
             const lessonTitle = resolveI18n(displayedLesson.title, "en").toLowerCase().trim();
@@ -1687,7 +1707,14 @@ export default function TrainingCourse() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => setActiveLessonIndex(null)}
+                        onClick={() => {
+                          if (isSingleLessonCourse) {
+                            // Return to the current chapter (nextUnlocked position)
+                            setChapterProgress({ current: nextUnlocked, total: totalLessons });
+                          } else {
+                            setActiveLessonIndex(null);
+                          }
+                        }}
                         className="text-xs gap-1.5 border-amber-500/30 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10"
                       >
                         <ArrowLeft className="w-3 h-3" />
