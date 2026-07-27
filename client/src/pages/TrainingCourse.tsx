@@ -17,6 +17,7 @@ import { ExerciseRenderer } from "@/components/ExerciseRenderer";
 import { FlipCardsGrid } from "@/components/FlipCard";
 import { TabbedContent } from "@/components/TabbedContent";
 import { ComparisonBox } from "@/components/ComparisonBox";
+import { MatchingExercise } from "@/components/MatchingExercise";
 import { motion } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 
@@ -1042,6 +1043,24 @@ function LessonViewer({
             <ComparisonBox
               items={items}
               conclusion={block.conclusion}
+              lang={lang as "en" | "fr"}
+            />
+          </div>
+        );
+      }
+      case "bucket_sort": {
+        if (!block.buckets || !block.cards) return null;
+        return (
+          <div key={blockIdx}>
+            <MatchingExercise
+              exercise={{
+                id: block.id || `bucket_${blockIdx}`,
+                title: block.title,
+                instructions: block.instructions,
+                buckets: block.buckets,
+                cards: block.cards,
+                correction: block.correction,
+              }}
               lang={lang as "en" | "fr"}
             />
           </div>

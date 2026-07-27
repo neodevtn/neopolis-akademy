@@ -626,3 +626,11 @@
 - [x] Convertir les contenus à onglets en blocs tabbed_content - 5 tabbed_content
 - [x] Convertir les cartes retournables en blocs flip_cards - 136 flip_cards
 - [x] Fix: useCallback Rules of Hooks violation (moved before conditional returns)
+## Restructuration structure des cours (2026-07-27)
+- [x] Ajout Module Introduction, Key Takeaways, Module Complete à tous les cours (24 chapitres ajoutés)
+- [x] Implémentation du composant MatchingExercise (bucket sort / drag & drop)
+- [x] Conversion des exercices checkpoint en bucket_sort interactifs (6 exercices)
+- [x] Suppression des doublons de chapitres dans tous les cours
+- [x] Nettoyage des blocs vides et checkpoint redondants
+- [x] Fusion des chapitres avec le même titre (Core Entry Points, Capability Layer)
+- [x] Ajout contenu aux chapitres structurels (intro, takeaways, complete)

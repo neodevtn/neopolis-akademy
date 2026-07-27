@@ -10,6 +10,22 @@
       },
       "chapters": [
         {
+          "title": {
+            "en": "Module Introduction",
+            "fr": "Introduction du module"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Welcome to Module 02: Prompt Engineering for Developers\n\nThis module covers the essential concepts and practical skills you need to master for this certification track.\n\n### What you'll learn\n\n- Prompting Craft\n- Extended Thinking\n- Tool-use and Schema Design\n- Streaming Responses\n- Context Engineering\n- Agent Construction\n\n### How this module works\n\nEach section builds on the previous one. You'll encounter:\n- **Teaching content** explaining core concepts\n- **Interactive exercises** to test your understanding\n- **Checkpoints** to verify your progress\n- **A quiz** at the end to assess your mastery\n\nTake your time with each section. You can revisit any chapter using the navigation on the left.\n\n**Estimated time:** 15-25 minutes",
+                "fr": "## Bienvenue au Module 02 : Ingénierie de prompts pour développeurs\n\nCe module couvre les concepts essentiels et les compétences pratiques que vous devez maîtriser pour cette certification.\n\n### Ce que vous allez apprendre\n\n- L'art du prompting\n- Réflexion approfondie\n- Utilisation des outils et conception du schéma\n- Réponses en streaming\n- Ingénierie du contexte\n- Conception d'un agent\n\n### Comment fonctionne ce module\n\nChaque section s'appuie sur la précédente. Vous rencontrerez :\n- **Du contenu pédagogique** expliquant les concepts clés\n- **Des exercices interactifs** pour tester votre compréhension\n- **Des points de contrôle** pour vérifier votre progression\n- **Un quiz** à la fin pour évaluer votre maîtrise\n\nPrenez votre temps avec chaque section. Vous pouvez revisiter n'importe quel chapitre en utilisant la navigation à gauche.\n\n**Durée estimée :** 15-25 minutes"
+              }
+            }
+          ]
+        },
+        {
           "id": "chapter_01",
           "title": {
             "en": "Prompting Craft",
@@ -59,23 +75,7 @@
                   }
                 }
               ]
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_02",
-          "title": {
-            "en": "Prompting Craft",
-            "fr": "L'art du prompting"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 4,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -90,8 +90,7 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
         },
@@ -145,23 +144,7 @@
                   }
                 }
               ]
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_04",
-          "title": {
-            "en": "Extended Thinking",
-            "fr": "Réflexion approfondie"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 3,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -176,8 +159,7 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
         },
@@ -281,23 +263,7 @@
                   }
                 }
               ]
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_06",
-          "title": {
-            "en": "Tool-use and Schema Design",
-            "fr": "Utilisation des outils et conception du schéma"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 4,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -312,8 +278,7 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
         },
@@ -332,23 +297,7 @@
                 "en": "Streaming responses and handling partial output without corrupting state\n\nEvery request so far has waited for the whole response to arrive before doing anything with it. That's fine, until the response is long, or a user is sitting there staring at a blank screen. Streaming sends the response in pieces, sending them along as the model generates them. That makes things feel faster, but it also gives your code a new job: now you are tasked with assembling the final content yourself based on the series of outputs, and you need to be prepared if the series stops early.\n\nWhat streaming changes about the response\n\nIn a non-streamed request, the API hands you one complete message with every content block, fully formed. In a streamed request, the API instead sends a series of events that describe the message as it's being built. Your code listens to that series and reassembles the blocks. The message you end up with is identical to what a non-streamed call would have given you, but the difference is that you have to assemble the pieces, and you decide what to do if the events stop before the message is finished.\n\nIt helps to know what's not happening: the model isn't holding some live object open for you. Each event is its own small message describing a single change, a block started, some text or input got added to it, a block finished, the whole message finished. Your handler takes each event and applies it to the partial state it's been building up.\n\nThe event sequence, and what your handler does with each\n\nEventWhat it signalsWhat your handler does\n\nmessage_startA new message is beginning. Carries the message shell with empty content and initial usage.Set up an empty content array to collect blocks in.\n\ncontent_block_startA new content block is opening, with its type (text, tool_use, or thinking) and index.Make a slot at that index for the named block type. A tool_use block opens with its name and id, but no input yet.\n\ncontent_block_deltaAn incremental piece of one block: a text fragment, a fragment of JSON input for a tool call, or a thinking fragment.Append the fragment to the block at that index. Tool-call inputs arrive as a partial JSON string spread across several deltas, you can't parse them until the block closes.\n\ncontent_block_stopThe block at this index is complete.Finalize the block. For a tool_use block, this is the first moment the accumulated JSON input is complete enough to parse.\n\nmessage_deltaTop-level changes to the message: the stop_reason and final usage counts.Record the stop_reason. It tells you whether the model finished or stopped for some other reason.\n\nmessage_stopThe stream is complete.The assembled content array is now the finished message. From here, treat it exactly like a non-streamed response.\n\nThe rule that keeps your state from getting corrupted: don't act on a partial block\n\nThe tool_use block is the one to watch. Its input shows up as a partial JSON string spread across many content_block_delta events, and that string isn't valid JSON until content_block_stop closes the block. If your code tries to parse the input or run the tool before the block closes, it either chokes on malformed JSON or runs with half the arguments missing. So, the rule is simple: collect the deltas, and act only after content_block_stop for that block.\n\nThe same discipline applies when you add a streamed assistant turn to your conversation history. Add it only after message_stop, with every block fully assembled. A turn built from a stream that got cut off partway is incomplete, and the tool_use pairing rules will reject your next request if a half-built tool_use block ends up in the history.\n\nWhen the stream stops early\n\nStreams sometimes fail in the middle. A dropped network connection, a timeout, or a client disconnect can end the event series before message_stop arrives. The failure that really bites is treating whatever you've collected so far as if it were complete. A partial text block shown to a user is just a cosmetic glitch and a partial tool_use block written into history is a structural problem that corrupts the next turn.\n\nTrack completion on purpose. A turn is usable only once message_stop has arrived. Until then, treat what you've accumulated as provisional.\n\nOn an interrupted stream, throw away the partial assistant turn instead of saving it to history, then retry the request. Committing a half-built turn is exactly what breaks the following request.\n\nCheck the stop_reason from message_delta before you continue a loop. A stop_reason of tool_use means your assembled tool calls are ready to run; any other value means you're on a different path, not the tool path.\n\nHandles well\nLong responses and user-facing interfaces where showing output as it generates removes the blank-screen wait.\n\nAdds cost or complexity\nYou assemble blocks yourself, you must not act on partial blocks, and you must handle mid-stream interruption explicitly.\n\nUse a different approach\nFor short responses or backend jobs where no one is waiting on the output, a non-streamed call is simpler and removes the partial-state risk entirely.\n\nWatch OutStreaming Responses·5 min\n\nThe stream that left a half-written tool call in the history\n\nSetup\n\nA streamed response can look fine on screen and still corrupt the next request. The text rendered, the user saw an answer, and the handler appended the turn to history. What the handler did not catch was that the stream dropped mid-block, so the tool_use call it stored was missing half its input. The next request fails validation, and the error points at the next turn and not the stream that caused it.\n\nPostmortem: partial tool_use block committed to history after a dropped stream\n\nAn agent used streaming so its operators could watch responses generate in real time. The handler accumulated content_block_delta events and appended the assistant turn to history when its read loop ended. In testing on a fast local connection, streams always ran to completion, so the loop always ended at message_stop and the stored turns were always complete.\n\nIn production, a network blip ended one stream after the tool_use block had opened and received part of its JSON input, but before content_block_stop. The read loop ended the same way it always had, so the handler appended the turn: an assistant turn containing a tool_use block whose input string was truncated JSON. The operator saw a partial answer and retried. The retry request included that corrupted turn in history, and the API rejected it with a validation error pointing at the malformed tool_use block.\n\nThe team spent an afternoon inspecting the schema and the retry logic, because the error surfaced on the retry request. However, the actual cause was upstream: the handler treated 'the read loop ended' as equivalent to 'the message is complete,' and those are not the same.\n\nWhat to Watch Out for\n\nA stream ending is not the same as a message completing. Only message_stop means the message is whole. If your handler commits a turn whenever its read loop exits, an interrupted stream writes a half-built block into history, and the failure shows up on the next request rather than the one that caused it. Gate the history append on message_stop, discard the partial turn on interruption, and retry from the last complete turn. When a tool-use error appears on a retry, check whether the prior turn was assembled from a stream before you touch the schema.",
                 "fr": "Réponses en streaming et gestion de sorties partielles sans corrompre l'état\n\nEvery request so far has waited for the whole response to arrive before doing anything with it. That's fine, until the response is long, or a user is sitting there staring at a blank screen. Streaming sends the response in pieces, sending them along as the model generates them. That makes things feel faster, but it also gives your code a new job: now you are tasked with assembling the final content yourself based on the series of outputs, and you need to be prepared if the series stops early.\n\nToutes les requêtes jusqu'à présent ont attendu que l'ensemble de la réponse arrive avant de faire quoi que ce soit avec elle. C'est acceptable, sauf si la réponse est longue, ou si un utilisateur reste là à regarder un écran blanc. Le streaming envoie la réponse par morceaux, au fur et à mesure que le modèle les génère. Cela donne une impression de rapidité, mais cela confère également à votre code une nouvelle tâche : vous devez maintenant assembler le contenu final vous-même à partir de la série de sorties, et vous devez être prêt si la série s'arrête prématurément.\n\nWhat streaming changes about the response\n\nCe que le streaming change concernant la réponse\n\nIn a non-streamed request, the API hands you one complete message with every content block, fully formed. In a streamed request, the API instead sends a series of events that describe the message as it's being built. Your code listens to that series and reassembles the blocks. The message you end up with is identical to what a non-streamed call would have given you, but the difference is that you have to assemble the pieces, and you decide what to do if the events stop before the message is finished.\n\nDans une requête non streamée, l'API vous transmet un seul message complet avec chaque bloc de contenu, entièrement formé. Dans une requête en streaming, l'API envoie plutôt une série d'événements qui décrivent le message au fur et à mesure de sa construction. Votre code écoute cette série et réassemble les blocs. Le message que vous obtenez est identique à celui qu'une appel non streamé vous aurait donné, mais la différence est que vous devez assembler les pièces vous-même, et vous décidez de ce qu'il faut faire si les événements s'arrêtent avant que le message soit terminé.\n\nIt helps to know what's not happening: the model isn't holding some live object open for you. Each event is its own small message describing a single change, a block started, some text or input got added to it, a block finished, the whole message finished. Your handler takes each event and applies it to the partial state it's been building up.\n\nIl est utile de savoir ce qui ne se passe pas : le modèle ne garde pas pour vous un objet vivant et ouvert. Chaque événement est son propre petit message décrivant un seul changement, un bloc a commencé, un peu de texte ou d'entrée a été ajouté, un bloc est terminé, le message entier est terminé. Votre gestionnaire applique chaque événement à l'état partiel qu'il est en train de construire.\n\nThe event sequence, and what your handler does with each\n\nLa séquence d'événements, et ce que fait votre handler avec chacun\n\nEventWhat it signalsWhat your handler does\n\nmessage_startA new message is beginning. Carries the message shell with empty content and initial usage.Set up an empty content array to collect blocks in.\n\nmessage_start : Un nouveau message commence. Porte l'enveloppe du message avec un contenu vide et une utilisation initiale. Configurez un tableau de contenu vide pour collecter les blocs.\n\ncontent_block_startA new content block is opening, with its type (text, tool_use, or thinking) and index.Make a slot at that index for the named block type. A tool_use block opens with its name and id, but no input yet.\n\ncontent_block_start : Un nouveau bloc de contenu s'ouvre, avec son type (text, tool_use, ou thinking) et son index. Créez un emplacement à cet index pour le type de bloc nommé. Un bloc tool_use s'ouvre avec son nom et son identifiant, mais sans entrée pour le moment.\n\ncontent_block_deltaAn incremental piece of one block: a text fragment, a fragment of JSON input for a tool call, or a thinking fragment.Append the fragment to the block at that index. Tool-call inputs arrive as a partial JSON string spread across several deltas, you can't parse them until the block closes.\n\ncontent_block_delta : Un morceau incrémental d'un bloc : un fragment de texte, un fragment d'entrée JSON pour un tool_call, ou un fragment de thinking. Ajoutez le fragment au bloc à cet index. Les entrées de tool_call arrivent sous forme d'une chaîne JSON partielle répartie sur plusieurs deltas; vous ne pouvez pas les analyser tant que le bloc n'est pas fermé.\n\ncontent_block_stopThe block at this index is complete.Finalize the block. For a tool_use block, this is the first moment the accumulated JSON input is complete enough to parse.\n\ncontent_block_stop : Le bloc à cet index est terminé. Finalisez le bloc. Pour un bloc tool_use, c'est le premier moment où l'entrée JSON accumulée est suffisamment complète pour être analysée.\n\nmessage_deltaTop-level changes to the message: the stop_reason and final usage counts.Record the stop_reason. It tells you whether the model finished or stopped for some other reason.\n\nmessage_delta : Changements de haut niveau du message : le stop_reason et les comptes d'utilisation finaux. Enregistrez le stop_reason. Il indique si le modèle a terminé ou s'il s'est arrêté pour une autre raison.\n\nmessage_stopThe stream is complete.The assembled content array is now the finished message. From here, treat it exactly like a non-streamed response.\n\nmessage_stop : Le flux est terminé. Le tableau de contenu assemblé devient le message fini. À partir de maintenant, traitez-le exactement comme une réponse non streamée.\n\nThe rule that keeps your state from getting corrupted: don't act on a partial block\n\nLa règle qui empêche votre état de se corrompre : ne pas agir sur un bloc partiel\n\nThe tool_use block is the one to watch. Its input shows up as a partial JSON string spread across many content_block_delta events, and that string isn't valid JSON until content_block_stop closes the block. If your code tries to parse the input or run the tool before the block closes, it either chokes on malformed JSON or runs with half the arguments missing. So, the rule is simple: collect the deltas, and act only after content_block_stop for that block.\n\nLe bloc tool_use est celui à surveiller. Son input apparaît sous forme d'une chaîne JSON partielle répartie sur de nombreux événements content_block_delta, et cette chaîne n'est pas un JSON valide tant que content_block_stop ne ferme pas le bloc. Si votre code tente d'analyser l'entrée ou d'exécuter le tool avant la fermeture du bloc, il échoue sur un JSON mal formé ou s'exécute avec la moitié des arguments manquants. La règle est donc simple : collectez les deltas, et n'agissez qu'après content_block_stop pour ce bloc.\n\nThe same discipline applies when you add a streamed assistant turn to your conversation history. Add it only after message_stop, with every block fully assembled. A turn built from a stream that got cut off partway is incomplete, and the tool_use pairing rules will reject your next request if a half-built tool_use block ends up in the history.\n\nLa même discipline s'applique lorsque vous ajoutez un tour d'assistant en streaming à votre historique de conversation. Ajoutez-le uniquement après message_stop, avec chaque bloc entièrement assemblé. Un tour construit à partir d'un flux interrompu en milieu de route est incomplet, et les règles d'association tool_use rejettent votre prochaine requête si un bloc tool_use partiellement construit se retrouve dans l'historique.\n\nWhen the stream stops early\n\nLorsque le flux s'arrête prématurément\n\nStreams sometimes fail in the middle. A dropped network connection, a timeout, or a client disconnect can end the event series before message_stop arrives. The failure that really bites is treating whatever you've collected so far as if it were complete. A partial text block shown to a user is just a cosmetic glitch and a partial tool_use block written into history is a structural problem that corrupts the next turn.\n\nLes flux peuvent parfois échouer en plein milieu. Une perte de connexion réseau, un timeout, ou une déconnexion du client peut mettre fin à la série d'événements avant que message_stop n'arrive. La défaillance qui pose vraiment problème est de traiter ce que vous avez collecté jusqu'à présent comme si c'était complet. Un bloc de texte partiel affiché à l'utilisateur n'est qu'un glitch cosmétique et un bloc tool_use partiel écrit dans l'historique est un problème structurel qui corrompt le tour suivant.\n\nTrack completion on purpose. A turn is usable only once message_stop has arrived. Until then, treat what you've accumulated as provisional.\n\nTraitez la complétion délibérément. Un tour n'est utilisable qu'une fois que message_stop est arrivé. D'ici là, traitez ce que vous avez accumulé comme provisoire.\n\nOn an interrupted stream, throw away the partial assistant turn instead of saving it to history, then retry the request. Committing a half-built turn is exactly what breaks the following request.\n\nEn cas d'interruption d'un stream, jetez le tour d'assistant partiel au lieu de le sauvegarder dans l'historique, puis réessayez la requête. Valider un tour partiellement construit est exactement ce qui casse la requête suivante.\n\nCheck the stop_reason from message_delta before you continue a loop. A stop_reason of tool_use means your assembled tool calls are ready to run; any other value means you're on a different path, not the tool path.\n\nVérifiez le stop_reason à partir de message_delta avant de continuer une boucle. Un stop_reason de tool_use signifie que vos appels tool_call assemblés sont prêts à être exécutés ; toute autre valeur signifie que vous empruntez une autre voie, pas celle des outils.\n\nHandles well\n\nGère bien\n\nLong responses and user-facing interfaces where showing output as it generates removes the blank-screen wait.\n\nLes longues réponses et les interfaces utilisateur où afficher la sortie au fur et à mesure éliminent l'attente d'un écran blanc.\n\nAdds cost or complexity\n\nAjoute du coût ou de la complexité\n\nYou assemble blocks yourself, you must not act on partial blocks, and you must handle mid-stream interruption explicitly.\n\nVous assemblez vous-même les blocs, vous ne devez pas agir sur des blocs partiels, et vous devez gérer explicitement les interruptions en plein streaming.\n\nUse a different approach\n\nUtilisez une approche différente\n\nFor short responses or backend jobs where no one is waiting on the output, a non-streamed call is simpler and removes the partial-state risk entirely.\n\nPour les réponses courtes ou les tâches back-end où personne n'attend la sortie, un appel non streamé est plus simple et élimine complètement le risque d'état partiel.\n\nWatch OutStreaming Responses·5 min\n\nÀ surveiller : Réponses en streaming · 5 min\n\nThe stream that left a half-written tool call in the history\n\nLe flux qui a laissé un appel tool_use partiellement écrit dans l'historique\n\nSetup\n\nMise en place\n\nA streamed response can look fine on screen and still corrupt the next request. The text rendered, the user saw an answer, and the handler appended the turn to history. What the handler did not catch was that the stream dropped mid-block, so the tool_use call it stored was missing half its input. The next request fails validation, and the error points at the next turn and not the stream that caused it.\n\nUne réponse en streaming peut sembler correcte à l'écran tout en corrompant la requête suivante. Le texte rendu, l'utilisateur a vu une réponse, et le handler a ajouté le tour à l'historique. Ce que le handler n'a pas repéré, c'est que le stream s'est arrêté en milieu de bloc, de sorte que l'appel tool_use qu'il a stocké était incomplet de la moitié de son input. La requête suivante échoue la validation, et l'erreur pointe vers le tour suivant et non vers le flux qui a causé le problème.\n\nPostmortem: partial tool_use block committed to history after a dropped stream\n\nAnalyse post-mortem : bloc tool_use partiel enregistré dans l'historique après une interruption de flux\n\nAn agent used streaming so its operators could watch responses generate in real time. The handler accumulated content_block_delta events and appended the assistant turn to history when its read loop ended. In testing on a fast local connection, streams always ran to completion, so the loop always ended at message_stop and the stored turns were always complete.\n\nUn agent utilisait le streaming afin que ses opérateurs puissent voir les réponses se générer en temps réel. Le handler a accumulé les events content_block_delta et a ajouté le tour d'assistant à l'historique lorsque sa boucle de lecture s'est terminée. Lors des tests sur une connexion locale rapide, les streams s'exécutaient toujours jusqu'au bout, donc la boucle se terminait toujours par message_stop et les tours stockés étaient toujours complets.\n\nIn production, a network blip ended one stream after the tool_use block had opened and received part of its JSON input, but before content_block_stop. The read loop ended the same way it always had, so the handler appended the turn: an assistant turn containing a tool_use block whose input string was truncated JSON. The operator saw a partial answer and retried. The retry request included that corrupted turn in history, and the API rejected it with a validation error pointing at the malformed tool_use block.\n\nEn production, un pépin réseau a interrompu un flux après l'ouverture du bloc tool_use et la réception d'une partie de son input JSON, mais avant content_block_stop. La boucle de lecture s'est terminée de la même manière qu'avant, si bien que le handler a ajouté le tour : un tour d'assistant contenant un bloc tool_use dont la chaîne d'entrée était un JSON tronqué. L'opérateur a vu une réponse partielle et a réessayé. La requête de réessai incluait ce tour corrompu dans l'historique, et l'API l'a rejetée avec une erreur de validation pointant vers le bloc tool_use mal formé.\n\nThe team spent an afternoon inspecting the schema and the retry logic, because the error surfaced on the retry request. However, the actual cause was upstream: the handler treated 'the read loop ended' as equivalent to 'the message is complete,' and those are not the same.\n\nL'équipe a passé un après-midi à inspecter le schéma et la logique de réessai, car l'erreur est apparue sur la requête de réessai. Cependant, la cause réelle venait d'en amont : le handler traitait « la boucle de lecture s'est terminée » comme équivalent à « le message est complet », et ce ne sont pas les mêmes choses.\n\nWhat to Watch Out for\n\nÀ surveiller\n\nA stream ending is not the same as a message completing. Only message_stop means the message is whole. If your handler commits a turn whenever its read loop exits, an interrupted stream writes a half-built block into history, and the failure shows up on the next request rather than the one that caused it. Gate the history append on message_stop, discard the partial turn on interruption, and retry from the last complete turn. When a tool-use error appears on a retry, check whether the prior turn was assembled from a stream before you touch the schema.\n\nLa fin d'un stream n'est pas la même chose que la fin d'un message. Seul message_stop signifie que le message est entier. Si votre handler valide un tour chaque fois que sa boucle de lecture se termine, un flux interrompu écrit un bloc partiellement construit dans l'historique, et l'échec apparaît sur la prochaine requête plutôt que sur celle qui l'a causé. Restreignez l'ajout à l'historique à message_stop, ignorez le tour partiel en cas d'interruption et réessayez à partir du dernier tour complet. Lorsqu'une erreur tool_use apparaît lors d'un réessai, vérifiez si le tour précédent a été assemblé à partir d'un stream avant de toucher le schéma."
               }
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_08",
-          "title": {
-            "en": "Streaming Responses",
-            "fr": "Réponses en streaming"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 4,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -363,8 +312,7 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
         },
@@ -448,23 +396,7 @@
                   }
                 }
               ]
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_10",
-          "title": {
-            "en": "Context Engineering",
-            "fr": "Ingénierie du contexte"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 3,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -479,8 +411,7 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
         },
@@ -564,23 +495,7 @@
                   }
                 }
               ]
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_12",
-          "title": {
-            "en": "Agent Construction",
-            "fr": "Conception d'un agent"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 4,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -595,8 +510,7 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
         },
@@ -650,23 +564,7 @@
                   }
                 }
               ]
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_14",
-          "title": {
-            "en": "Agent Memory",
-            "fr": "Mémoire de l’agent"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 3,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -716,8 +614,7 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
         },
@@ -801,23 +698,7 @@
                   }
                 }
               ]
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_16",
-          "title": {
-            "en": "Multimodal and Batch Ingestion",
-            "fr": "Ingestion multimodale et par lots"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 3,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -917,10 +798,41 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
+        },
+        {
+          "title": {
+            "en": "Key Takeaways",
+            "fr": "Points clés à retenir"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Key Takeaways\n\nIn this module, you've learned about:\n\n- Prompting Craft\n- Extended Thinking\n- Tool-use and Schema Design\n- Streaming Responses\n- Context Engineering\n- Agent Construction\n\n### Next Steps\n\nReview any sections where you feel less confident. When ready, proceed to the next module to continue building your expertise.",
+                "fr": "## Points clés à retenir\n\nDans ce module, vous avez appris :\n\n- Prompting Craft\n- Extended Thinking\n- Tool-use and Schema Design\n- Streaming Responses\n- Context Engineering\n- Agent Construction\n\n### Prochaines étapes\n\nRevisitez les sections où vous vous sentez moins confiant. Quand vous êtes prêt, passez au module suivant pour continuer à développer votre expertise."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete",
+            "fr": "Module terminé"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Module 02 Complete! 🎉\n\nCongratulations! You've completed **Prompt Engineering for Developers**.\n\nYou've demonstrated understanding of the core concepts covered in this module. Your progress has been saved.\n\n### What's next?\n\nContinue to the next module in the certification path to build on what you've learned here.\n\nKeep up the great work!",
+                "fr": "## Module 02 terminé ! 🎉\n\nFélicitations ! Vous avez terminé **Ingénierie de prompts pour développeurs**.\n\nVous avez démontré votre compréhension des concepts fondamentaux abordés dans ce module. Votre progression a été sauvegardée.\n\n### Et maintenant ?\n\nContinuez vers le module suivant dans le parcours de certification pour approfondir ce que vous avez appris ici.\n\nContinuez comme ça !"
+              }
+            }
+          ]
         }
       ],
       "completionRule": {

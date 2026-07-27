@@ -10,6 +10,22 @@
       },
       "chapters": [
         {
+          "title": {
+            "en": "Module Introduction",
+            "fr": "Introduction du module"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Welcome to Module 03: Tool Use & Function Calling\n\nThis module covers the essential concepts and practical skills you need to master for this certification track.\n\n### What you'll learn\n\n- Permission Modes & Human Gates\n- Durable Project Context\n- Packaging Workflows\n\n### How this module works\n\nEach section builds on the previous one. You'll encounter:\n- **Teaching content** explaining core concepts\n- **Interactive exercises** to test your understanding\n- **Checkpoints** to verify your progress\n- **A quiz** at the end to assess your mastery\n\nTake your time with each section. You can revisit any chapter using the navigation on the left.\n\n**Estimated time:** 15-25 minutes",
+                "fr": "## Bienvenue au Module 03 : Utilisation d'outils et appels de fonctions\n\nCe module couvre les concepts essentiels et les compétences pratiques que vous devez maîtriser pour cette certification.\n\n### Ce que vous allez apprendre\n\n- Modes d'autorisation et portes humaines\n- Contexte du projet durable\n- Flux de travail d'empaquetage\n\n### Comment fonctionne ce module\n\nChaque section s'appuie sur la précédente. Vous rencontrerez :\n- **Du contenu pédagogique** expliquant les concepts clés\n- **Des exercices interactifs** pour tester votre compréhension\n- **Des points de contrôle** pour vérifier votre progression\n- **Un quiz** à la fin pour évaluer votre maîtrise\n\nPrenez votre temps avec chaque section. Vous pouvez revisiter n'importe quel chapitre en utilisant la navigation à gauche.\n\n**Durée estimée :** 15-25 minutes"
+              }
+            }
+          ]
+        },
+        {
           "id": "chapter_01",
           "title": {
             "en": "Permission Modes & Human Gates",
@@ -59,23 +75,7 @@
                   }
                 }
               ]
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_02",
-          "title": {
-            "en": "Permission Modes & Human Gates",
-            "fr": "Modes d'autorisation et portes humaines"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 4,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -90,8 +90,7 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
         },
@@ -195,23 +194,7 @@
                   }
                 }
               ]
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_04",
-          "title": {
-            "en": "Durable Project Context",
-            "fr": "Contexte du projet durable"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 3,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -226,8 +209,7 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
         },
@@ -246,23 +228,7 @@
                 "en": "Packaging a workflow as a plugin: skills, custom commands, and marketplace install\n\nPreviously, we covered the mechanisms that give Claude Code durable context and enforce behavior: CLAUDE.md for always-on project memory, rules files for scoped guidance, hooks for deterministic guardrails, and subagents for isolated task delegation.\n\nThese mechanisms live in your .claude directory and are version-controlled with the project. Now we turn to the next question: how can you package that setup so a teammate can install it simply in one step instead of repeating your manual configuration by hand?\n\nSkills are reusable workflows the agent loads on demand\n\nA skill is a portable Markdown file (SKILL.md file) placed in .claude/skills. The front matter identifies the skill and describes when it applies, and the body holds the steps. The same skill can run in Claude Code, be invoked through Messages API, or be loaded by the Agent SDK. What changes across the three isn’t the file itself; it’s where the skill runs, how it gets loaded, and what it’s allowed to touch. A developer who has only ever seen skills in Claude Code may assume things that don’t hold true on the API, so this section outlines the differences.\n\nHow the skill loads and runs in each\n\nSelect each tab for how the skill loads, where the steps run, and what you need to know.\n\nClaude Code\nMessages API\nAgent SDK\nClaude Managed Agents\n\nHow the skill loads: Discovered from .claude/skills on the filesystem. Loads on a description match or when you invoke it by name.\n\nWhere the steps run: In your terminal session, against your local files, under the active permission mode and deny rules.\n\nWhat you need to know: It’s filesystem-based and is governed by the settings layer.\n\nHow the skill loads: Sent along with the request and run inside the code execution container, not your application’s environment. Requires code-execution and skills beta headers.\n\nWhere the steps run: Inside Anthropic’s code execution container, not on your machine. The skill’s filesystem and tool access are whatever that container provides.\n\nWhat you need to know: A skill that assumes local files or local tools won’t behave the same way here, because it isn’t running where those files are.\n\nHow the skill loads: Loaded by the agent the SDK runs, but whether filesystem settings (CLAUDE.md, skills) load is controlled by the settingSources configuration. Do not rely on a default: always set it explicitly to the sources you intend, and confirm current default behavior against the Agent SDK reference at build time. You set it through the “settingSources” (TypeScript) / “setting_sources” (Python).\n\nWhere the steps run: In the process the SDK runs, which is your environment, once you’ve told it to load filesystem sources.\n\nWhat you need to know: The common surprise: a skill that worked in Claude Code does nothing under the SDK because settingSources was never set, so the skill never loaded.\n\nHow the skill loads: Defined once as an API resource that names the model, system prompt, tools, MCP servers, and skills. Anthropic loads the skill server-side when the agent runs, so there is no filesystem discovery step on your side.\n\nWhere the steps run: Inside a sandbox Anthropic provisions and runs, not your environment. Your application sends user events and reads streamed results back. The skill has access to whatever that managed sandbox provides, not your local files.\n\nWhat you need to know: Currently a public beta that requires the managed-agents-2026-04-01 beta header, and sessions are stored server-side, which means Managed Agents are not currently eligible for Zero Data Retention or HIPAA BAA coverage. Skills are attached when defining the agent resource, not at session time. Update the agent definition to change which skills are available.\n\nThree portability rules\n\nWrite the description as the matching criterion. The model loads a skill by comparing your request to its description, so a description that identifies when the skill applies works in every runtime, but a vague one fails to load in all of them.\n\nDon’t assume a local filesystem or local tools exist inside the skill body. A skill that shells out to a local command works in Claude Code but breaks on the Messages API, where it runs in a container without a command. Keep the skill’s steps confined to what the runtime is guaranteed to provide, or document the dependency.\n\nRemember that subagents don’t inherit skills. This was true in Module 2, and is still true here: a subagent starts clean, so a skill the parent relied on has to be listed for the subagent explicitly, in every runtime that supports subagents.\n\nThe practical takeaway is that you can author a skill once and reuse it, but you must specifically design for the ability to use it across terminals. A skill that’s scoped to a clear description and free of local-environment assumptions ports cleanly across runtimes, but one that assumes a specific local environment does not.\n\nHandles wellAdds complexityUse a different approach\n\nA task-specific procedure authored once and reused across the interactive terminal, an API integration, and a headless SDK job.\nEach runtime loads and sandboxes the skill differently, so you must account for beta headers on the API and settingSources on the SDK.\nFor instructions that must apply to every session in a project, CLAUDE.md is still the right tool. Skills are for on-demand, portable procedures.\n\nGiving a workflow an explicit entry point\n\nA custom command is a shortcut for a defined procedure. In current Claude Code, skills are the recommended format for both explicit and automatic invocation: you invoke a skill directly with /skill-name, or Claude loads it automatically when relevant. The older .claude/commands/ directory format still works but is a legacy process. Use skills with disable-model-invocation: true in the frontmatter when you want a workflow that only runs when you explicitly call it.\n\nPlugin commands are namespaced automatically: the plugin’s name becomes the prefix, so a run-tests command in a plugin named payments is invoked as /payments:run-tests. This is why two plugins can both ship a run-tests command without colliding. Authors should treat the plugin name as part of the interface, since it prefixes every command you ship, and be aware that renaming the plugin renames them all.\n\nThe packaging layer that makes a setup installable\n\nA plugin bundles skills, hooks, subagents, and MCP servers into a single installable unit. Plugins can be packaged and distributed through a marketplace, which is a catalog of plugins that someone else has created and shared. The official Anthropic marketplace is available automatically when you start Claude Code, and you can add third-party marketplaces hosted in a GitHub repository with a command like /plugin marketplace add <owner/repo>. Teammates can then run one simple install command to get the same setup. The plugin replaces a page of manual setup steps with a versioned, auditable install. The plugin places components as follows:\n\nSkills go in a skills directory.\n\nHooks, subagents, and settings go in their respective locations.\n\nThe plugin manifest describes the bundle, and the install command wires it into the target installation. Plugins can be downloaded by individuals or at an enterprise-wide level.\n\nEnterprise administrators can deploy plugins organization-wide through managed settings. A managed marketplace allowlist gates which marketplace sources users are permitted to add, so the organization controls where plugins can come from. The allowlist restricts what users can add but does not register marketplaces automatically. If you would like to push a marketplace to all users without requiring them to run the add command themselves, pair the allowlist setting with extraKnownMarketplaces in managed settings. The precedence comes from the deployment scope: because managed settings sit above user and project settings in the configuration hierarchy, a plugin deployed at managed scope takes priority and cannot be overridden by users or project files. Review the reference layer for the exact setting names.\n\nThe packaging decision table\n\nThe table below identifies each layer, who it is for, and when to reach for it.\n\nLayerWhat it isWho it is forWhen to reach for it\n\nSkillA Markdown file in .claude/skills that loads when its description matches the task or when invoked by name.An individual developer or team using Claude Code interactively.Reach for a skill when a task-specific procedure should stay out of context until it is needed, such as a PR review or a deployment checklist that only loads when the work calls for it.\n\nCustom commandA named shortcut that runs a defined procedure when you invoke it explicitly.Developers who want a predictable, explicit entry point for high-frequency procedures.Reach for a custom command when the procedure has a clear name and you want to trigger it directly rather than relying on the description to match the task.\n\nPluginA versioned bundle of skills, hooks, subagents, and MCP servers distributed through a marketplace.A team that wants one-step installation of a shared, versioned setup.Reach for a plugin when a working setup currently lives on one machine and needs to be shared, versioned, and kept consistent across a team.\n\nCost · Complexity · Risk\n\nCost: Skills add context cost upon activation, but a plugin adds installation and maintenance overhead. The question to ask is whether you want to pay the setup cost once, as you do with a plugin install, or repeatedly, as you do when every developer runs the same manual steps by hand.\n\nComplexity: A plugin that hard-codes absolute paths in its skills will install correctly for the author and fail for everyone else, because any path or environment assumption baked into a skill or hook command is the thing most likely to break across machines.\n\nRisk: A plugin carries the components it bundles into every install. It’s important to remember that a deny rule or hook the author relied on locally is not included unless it is explicitly listed as part of the bundle. If the skills or hooks are tied to a guardrail that is not included in the bundle, then the protection does not carry over to a teammate’s machine.",
                 "fr": "Emballage d’un workflow en tant que plugin : skills, commandes personnalisées et installation via marketplace\n\nAuparavant, nous avons couvert les mécanismes qui donnent à Claude Code un contexte durable et qui imposent le comportement : CLAUDE.md pour la mémoire du projet toujours active, des fichiers de règles pour des directives ciblées, des hooks pour des garde-fous déterministes et des subagents pour une délégation de tâches isolée.\n\nCes mécanismes résident dans votre répertoire .claude et sont versionnés avec le projet. Nous passons maintenant à la question suivante : comment empaqueter cette configuration afin qu’un collègue puisse l’installer facilement en une seule étape, plutôt que de répéter votre configuration manuelle à la main ?\n\nLes Skills sont des workflows réutilisables que l’agent charge à la demande\n\nUne Skill est un fichier Markdown portable (fichier SKILL.md) placé dans .claude/skills. Les métadonnées en tête identifient la Skill et décrivent quand elle s’applique, et le corps contient les étapes. La même Skill peut s’exécuter dans Claude Code, être invoquée via Messages API, ou être chargée par l’Agent SDK. Ce qui change entre les trois n’est pas le fichier lui-même ; c’est où la Skill s’exécute, comment elle est chargée et ce qu’elle est autorisée à toucher. Un développeur qui n’a vu les Skills que dans Claude Code peut supposer des choses qui ne s’appliquent pas à l’API, aussi cette section décrit les différences.\n\nComment la Skill se charge et s’exécute dans chacun des environnements\n\nSélectionnez chaque onglet pour voir comment la Skill se charge, où les étapes s’exécutent et ce que vous devez savoir.\n\nClaude Code\nMessages API\nAgent SDK\nClaude Managed Agents\n\nComment la Skill se charge : Découverte à partir de .claude/skills sur le système de fichiers. Charge sur correspondance de description ou lorsque vous l’invoquez par son nom.\n\nOù les étapes s’exécutent : Dans votre session de terminal, sur vos fichiers locaux, sous le mode de permission actif et les règles de refus.\n\nCe qu’il faut savoir : C’est basé sur le système de fichiers et il est régi par la couche des paramètres.\n\nComment la Skill se charge : Envoyée avec la requête et s’exécute dans le conteneur d’exécution du code, pas dans l’environnement de votre application. Nécessite les en-têtes code-execution et skills beta.\n\nOù les étapes s’exécutent : À l’intérieur du conteneur d’exécution du code d’Anthropic, et non sur votre machine. L’accès au système de fichiers et aux outils de la Skill est ce que fournit ce conteneur.\n\nCe qu’il faut savoir : Une Skill qui suppose des fichiers locaux ou des outils locaux n’aura pas le même comportement ici, car elle n’est pas exécutée là où se trouvent ces fichiers.\n\nComment la Skill se charge : Chargée par l’agent que le SDK exécute, mais la charge des paramètres du système de fichiers (CLAUDE.md, skills) est contrôlée par la configuration settingSources. Ne vous fiez pas à une valeur par défaut : définissez-la toujours explicitement sur les sources que vous ciblez, et vérifiez le comportement par défaut actuel par rapport à la référence Agent SDK au moment de la compilation. Vous la définissez via “settingSources” (TypeScript) / “setting_sources” (Python).\n\nOù les étapes s’exécutent : Dans le processus que le SDK exécute, c’est‑à‑dire votre environnement, une fois que vous lui avez demandé de charger les sources du système de fichiers.\n\nCe qu’il faut savoir : La surprise courante : une Skill qui fonctionnait dans Claude Code ne fait rien sous le SDK parce que settingSources n’a jamais été défini, donc la Skill ne s’est jamais chargée.\n\nComment la Skill se charge : Définie une fois comme ressource API qui nomme le modèle, le prompt système, les outils, les serveurs MCP et les Skills. Anthropic charge la Skill côté serveur lorsque l’agent s’exécute, il n’y a donc pas d’étape de découverte du système de fichiers de votre côté.\n\nOù les étapes s’exécutent : Dans un sandbox géré et exécuté par Anthropic, et non dans votre environnement. Votre application envoie des événements utilisateur et lit les résultats en streaming. La Skill a accès à tout ce que ce sandbox géré fournit, pas à vos fichiers locaux.\n\nCe qu’il faut savoir : Actuellement en bêta publique nécessitant l’en-tête bêta managed-agents-2026-04-01, et les sessions sont stockées côté serveur, ce qui signifie que les Managed Agents ne sont pas actuellement éligibles à Zero Data Retention ni à la couverture HIPAA BAA. Les Skills sont attachées lors de la définition de la ressource agent, et non au moment de la session. Mettez à jour la définition de l’agent pour changer quelles Skills sont disponibles.\n\nTrois règles de portabilité\n\nÉcrivez la description comme le critère d’identification. Le modèle charge une Skill en comparant votre requête à sa description, donc une description qui identifie quand la Skill s’applique fonctionne dans chaque runtime, mais une description vague ne se charge pas dans tous les environnements.\n\nN’imaginez pas qu’un système de fichiers local ou des outils locaux existent à l’intérieur du corps de la Skill. Une Skill qui exécute une commande locale fonctionne dans Claude Code mais échoue sur l’Messages API, où elle s’exécute dans un conteneur sans commande. Limitez les étapes de la Skill à ce que le runtime garantit de fournir, ou documentez la dépendance.\n\nSouvenez-vous que les subagents n’héritent pas des Skills. Cela était vrai dans le Module 2, et c’est toujours vrai ici : un subagent démarre vierge, donc une Skill sur laquelle le parent comptait doit être listée explicitement pour le subagent, dans chaque runtime qui prend en charge les subagents.\n\nLa conclusion pratique est que vous pouvez écrire une Skill une fois et la réutiliser, mais vous devez concevoir explicitement pour la capacité de l’utiliser sur différents terminaux. Une Skill définie par une description claire et dénuée d’hypothèses sur l’environnement local se porte bien d’un runtime à l’autre, mais celle qui suppose un environnement local spécifique ne le fait pas.\n\nSe gère bien | Ajoute de la complexité | Utiliser une approche différente\n\nUne procédure spécifique à une tâche, rédigée une fois et réutilisée sur le terminal interactif, une intégration API et un travail headless SDK.\nChaque runtime charge et met en bac à sable la Skill différemment, vous devez donc tenir compte des en-têtes bêta sur l’API et des settingSources sur le SDK.\nPour les instructions qui doivent s’appliquer à chaque session d’un projet, CLAUDE.md reste l’outil approprié. Les Skills sont pour des procédures portables à la demande.\n\nDonner un point d’entrée explicite à un workflow\n\nUne commande personnalisée est un raccourci pour une procédure définie. Dans Claude Code actuel, les Skills sont le format recommandé pour les invocations explicites et automatiques : vous invoquez une Skill directement avec /skill-name, ou Claude la charge automatiquement lorsque cela est pertinent. Le format plus ancien .claude/commands/ répertoire fonctionne encore mais constitue un processus hérité. Utilisez les Skills avec disable-model-invocation: true dans le frontmatter lorsque vous souhaitez un workflow qui ne s’exécute que lorsque vous l’appelez explicitement.\n\nLes commandes de plugin sont automatiquement namespaced : le nom du plugin devient le préfixe, donc une commande run-tests dans un plugin nommé payments est invoquée comme /payments:run-tests. C’est pourquoi deux plugins peuvent tous deux livrer une commande run-tests sans collision. Les auteurs devraient traiter le nom du plugin comme faisant partie de l’interface, puisqu’il préfixe chaque commande que vous livrez, et être conscients que renommer le plugin renomme toutes les commandes.\n\nLa couche d’empaquetage qui rend une configuration installable\n\nUn plugin regroupe skills, hooks, subagents et MCP servers en une unité installable unique. Les plugins peuvent être empaquetés et distribués par le biais d’un marketplace, qui est un catalogue de plugins que quelqu’un d’autre a créés et partagés. Le marketplace officiel d’Anthropic est disponible automatiquement lorsque vous démarrez Claude Code, et vous pouvez ajouter des marketplaces tiers hébergés dans un dépôt GitHub avec une commande comme /plugin marketplace add <owner/repo>. Vos collègues peuvent alors exécuter une simple commande d’installation pour obtenir la même configuration. Le plugin remplace une page d’étapes de configuration manuelle par une installation versionnée et auditable. Le plugin place les composants comme suit :\n\nLes Skills vont dans un répertoire skills.\n\nLes Hooks, subagents et paramètres vont dans leurs emplacements respectifs.\n\nLe manifeste du plugin décrit le bundle, et la commande d’installation le raccorde à l’installation cible. Les plugins peuvent être téléchargés par des particuliers ou au niveau d’une entreprise.\n\nLes administrateurs d’entreprise peuvent déployer des plugins à l’échelle de l’organisation via des paramètres gérés (managed settings). Une liste blanche de marketplaces gérés (managed marketplace allowlist) détermine quelles sources de marketplace les utilisateurs sont autorisés à ajouter, de sorte que l’organisation contrôle d’où viennent les plugins. La liste blanche limite ce que les utilisateurs peuvent ajouter mais n’inscrit pas automatiquement les marketplaces. Si vous souhaitez pousser un marketplace à tous les utilisateurs sans qu’ils aient à exécuter eux-mêmes la commande add, associez le paramètre allowlist avec extraKnownMarketplaces dans les managed settings. La priorité vient de l’étendue du déploiement : comme les managed settings se situent au-dessus des paramètres utilisateur et du projet dans la hiérarchie de configuration, un plugin déployé à l’échelle gérée a priorité et ne peut pas être remplacé par les utilisateurs ou les fichiers de projet. Consultez la couche de référence pour les noms exacts des paramètres.\n\nTableau de décision de packaging\n\nLe tableau ci-dessous identifie chaque couche, à qui elle s’adresse et quand y recourir.\n\nCouche | Ce que c’est | Pour qui c’est | Quand y recourir\nSkill | Un fichier Markdown dans .claude/skills qui se charge lorsque sa description correspond à la tâche ou lorsqu’elle est invoquée par son nom. | Un développeur individuel ou une équipe utilisant Claude Code de manière interactive. | Faites appel à une Skill lorsque une procédure spécifique à une tâche doit rester hors contexte jusqu’à ce qu’elle soit nécessaire, par exemple pour une revue PR ou une checklist de déploiement qui ne se charge que lorsque le travail l’exige.\nCommande personnalisée | Un raccourci nommé qui exécute une procédure définie lorsque vous l’invoquez explicitement. | Les développeurs qui veulent un point d’entrée prévisible et explicite pour des procédures à haute fréquence. | Faites appel à une commande personnalisée lorsque la procédure a un nom clair et que vous souhaitez la déclencher directement plutôt que de vous fier à ce que la description corresponde à la tâche.\nPlugin | Un bundle versionné de skills, hooks, subagents et MCP servers distribué via un marketplace. | Une équipe qui veut une installation en une seule étape d’un setup partagé et versionné. | Faites appel à un plugin lorsque un setup fonctionnel se trouve actuellement sur une seule machine et doit être partagé, versionné et maintenu de manière cohérente au sein d’une équipe.\n\nCoût · Complexité · Risque\n\nCoût : Les Skills ajoutent un coût de contexte lors de l’activation, mais un plugin ajoute une surcharge d’installation et de maintenance. La question à se poser est de savoir si vous voulez payer le coût de configuration une fois, comme pour une installation de plugin, ou à répétition, comme lorsque chaque développeur exécute les mêmes étapes manuelles à la main.\n\nComplexité : Un plugin qui code en dur des chemins absolus dans ses Skills s’installera correctement pour l’auteur et échouera pour tout le monde, car toute hypothèse de chemin ou d’environnement intégrée dans une Skill ou une commande de hook est ce qui est le plus susceptible de casser d’une machine à l’autre.\n\nRisque : Un plugin porte les composants qu’il bundles dans chaque installation. Il est important de se rappeler qu’une règle de deny ou un hook sur lequel l’auteur comptait localement n’est pas inclus à moins qu’il soit explicitement listé comme faisant partie du bundle. Si les Skills ou les hooks dépendent d’un garde-fou qui n’est pas inclus dans le bundle, alors la protection ne se transfère pas à la machine d’un collègue."
               }
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_06",
-          "title": {
-            "en": "Packaging Workflows",
-            "fr": "Flux de travail de packaging"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 3,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -318,24 +284,7 @@
             {
               "type": "checkpoint",
               "exerciseId": "ex_claude_certified_developer_foundations__03_003"
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_07",
-          "title": {
-            "en": "Packaging Workflows",
-            "fr": "Emballage des flux de travail"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 4,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -350,10 +299,41 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
+        },
+        {
+          "title": {
+            "en": "Key Takeaways",
+            "fr": "Points clés à retenir"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Key Takeaways\n\nIn this module, you've learned about:\n\n- Permission Modes & Human Gates\n- Durable Project Context\n- Packaging Workflows\n\n### Next Steps\n\nReview any sections where you feel less confident. When ready, proceed to the next module to continue building your expertise.",
+                "fr": "## Points clés à retenir\n\nDans ce module, vous avez appris :\n\n- Permission Modes & Human Gates\n- Durable Project Context\n- Packaging Workflows\n\n### Prochaines étapes\n\nRevisitez les sections où vous vous sentez moins confiant. Quand vous êtes prêt, passez au module suivant pour continuer à développer votre expertise."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete",
+            "fr": "Module terminé"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Module 03 Complete! 🎉\n\nCongratulations! You've completed **Tool Use & Function Calling**.\n\nYou've demonstrated understanding of the core concepts covered in this module. Your progress has been saved.\n\n### What's next?\n\nContinue to the next module in the certification path to build on what you've learned here.\n\nKeep up the great work!",
+                "fr": "## Module 03 terminé ! 🎉\n\nFélicitations ! Vous avez terminé **Utilisation d'outils et appels de fonctions**.\n\nVous avez démontré votre compréhension des concepts fondamentaux abordés dans ce module. Votre progression a été sauvegardée.\n\n### Et maintenant ?\n\nContinuez vers le module suivant dans le parcours de certification pour approfondir ce que vous avez appris ici.\n\nContinuez comme ça !"
+              }
+            }
+          ]
         }
       ],
       "completionRule": {

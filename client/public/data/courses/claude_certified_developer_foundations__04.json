@@ -10,6 +10,22 @@
       },
       "chapters": [
         {
+          "title": {
+            "en": "Module Introduction",
+            "fr": "Introduction du module"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Welcome to Module 04: Evaluation & Testing\n\nThis module covers the essential concepts and practical skills you need to master for this certification track.\n\n### What you'll learn\n\n- Evals & Judges\n- Testing & Tracing\n- Failure Handling\n- Model Selection\n- Cost & Orchestration\n- Security\n\n### How this module works\n\nEach section builds on the previous one. You'll encounter:\n- **Teaching content** explaining core concepts\n- **Interactive exercises** to test your understanding\n- **Checkpoints** to verify your progress\n- **A quiz** at the end to assess your mastery\n\nTake your time with each section. You can revisit any chapter using the navigation on the left.\n\n**Estimated time:** 15-25 minutes",
+                "fr": "## Bienvenue au Module 04 : Évaluation et tests\n\nCe module couvre les concepts essentiels et les compétences pratiques que vous devez maîtriser pour cette certification.\n\n### Ce que vous allez apprendre\n\n- Évaluations et juges\n- Tests et traçage\n- Gestion des défaillances\n- Sélection des modèles\n- Coût et orchestration\n- Sécurité\n\n### Comment fonctionne ce module\n\nChaque section s'appuie sur la précédente. Vous rencontrerez :\n- **Du contenu pédagogique** expliquant les concepts clés\n- **Des exercices interactifs** pour tester votre compréhension\n- **Des points de contrôle** pour vérifier votre progression\n- **Un quiz** à la fin pour évaluer votre maîtrise\n\nPrenez votre temps avec chaque section. Vous pouvez revisiter n'importe quel chapitre en utilisant la navigation à gauche.\n\n**Durée estimée :** 15-25 minutes"
+              }
+            }
+          ]
+        },
+        {
           "id": "chapter_01",
           "title": {
             "en": "Evals & Judges",
@@ -69,23 +85,7 @@
                   }
                 }
               ]
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_02",
-          "title": {
-            "en": "Evals & Judges",
-            "fr": "Évaluations et juges"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 9,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -100,8 +100,7 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
         },
@@ -165,23 +164,7 @@
                   }
                 }
               ]
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_04",
-          "title": {
-            "en": "Testing & Tracing",
-            "fr": "Tests et traçage"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 10,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -196,8 +179,7 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
         },
@@ -251,23 +233,7 @@
                   }
                 }
               ]
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_06",
-          "title": {
-            "en": "Failure Handling",
-            "fr": "Gestion des erreurs"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 8,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -282,8 +248,7 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
         },
@@ -302,23 +267,7 @@
                 "en": "Model selection in production\n\nThe previous screens kept a system inside its cost budget once the model was chosen. This screen handles the choice that sets that budget in the first place: which Claude model runs the workload.\n\nCost management optimizes spend within a model. Model selection determines the baseline that optimization works from.\n\nThe model family and its capability tiers\n\nClaude is a family of models that trade cost, latency, and capability against each other: Fable is the most capable for the most demanding reasoning, coding, and agentic work; Opus handles demanding work above the Sonnet envelope; Sonnet is the balanced default for most production workloads; Haiku is built for speed and cost efficiency on tasks that fit its envelope. The same prompt runs on any of them, so model choice is a lever you set per workload and can change without rewriting the application. Confirm the current lineup and model IDs against platform.claude.com at build time.\n\nThe latency, cost, and quality trade-off\n\nUpgrading model tier trades quality at the price of higher per-token cost and usually higher latency. Downgrading the model tier buys speed and lower cost at the risk of a quality drop. A higher-tier model can also process a request faster and cheaper if it reaches a conclusion in fewer tokens than a lower-tier model would. The cost of a mistake belongs in that calculation: saving a few dollars a day on a lower-tier model is not a sound trade if the quality drop introduces errors that carry significant downstream cost. There is no globally correct choice, only the right choice for a task at a quality standard. The discipline is to make the trade-off measurable rather than reaching for the most capable model by default. This is the most common and most expensive model-selection mistake in production. The default is to start with Sonnet, move up to Opus only when an eval shows Sonnet missing the quality bar, and move down to Haiku only when an eval shows the quality drop is acceptable for the task.\n\nRouting: a default model plus an override on a task signal\n\nA system does not have to use one model for everything. A common production pattern is a default model with an override: route the bulk of traffic to a balanced default, and send specific request types to a larger or smaller model based on a cheap signal read from the request, such as task type, input length, or a difficulty classification. This is the same routing idea used for retrieval, applied to model choice: you pay for the more capable model only on the requests that need it. Where every request is the same shape, skip the router and pin one model.\n\nWhen to step up and when to step down\n\nStep up a tier when an eval shows the current model failing on the hardest cases your traffic contains and the cost of a wrong answer is high. Step down a tier when an eval shows a cheaper model holding the quality bar on the bulk of traffic, freeing budget and latency. In both directions the eval is the instrument: a model change is promoted on a measured score against your cases. This is why the eval you built earlier is also the gate for a model decision.\n\nHandles well\nMatching each workload to the cheapest model that meets its quality bar, measured on an eval rather than assumed.\n\nAdds cost or complexity\nRouting adds a classification step and a second model path to maintain.\n\nUse a different approach\nFor uniform traffic at one quality bar, pin a single model and skip the router.",
                 "fr": "Sélection du modèle en production\n\nLes écrans précédents garantissaient que le système restait dans son budget de coûts une fois le modèle choisi. Cet écran gère le choix qui fixe ce budget en premier lieu : quel modèle Claude exécute la charge de travail.\n\nLa gestion des coûts optimise les dépenses au sein d'un modèle. La sélection du modèle détermine la ligne de base à partir de laquelle l'optimisation agit.\n\nLa famille de modèles et ses niveaux de capacité\n\nClaude est une famille de modèles qui échangent coût, latence et capacité les uns par rapport aux autres : Fable est le plus capable pour les raisonnements, le codage et les travaux agentiques les plus exigeants ; Opus gère les travaux exigeants au-delà de l'enveloppe Sonnet ; Sonnet est le défaut équilibré pour la plupart des charges de production ; Haiku est conçu pour la vitesse et l'efficacité des coûts sur les tâches qui rentrent dans son enveloppe. Le même prompt s'exécute sur chacun d'eux, donc le choix du modèle est un levier que vous définissez pour chaque charge de travail et que vous pouvez changer sans réécrire l'application. Vérifiez la composition actuelle et les identifiants des modèles sur platform.claude.com au moment de la compilation.\n\nLe compromis entre latence, coût et qualité\n\nLa mise à niveau du niveau du modèle échange une meilleure qualité au prix d'un coût par token plus élevé et généralement d'une latence accrue. Rétrograder le niveau du modèle offre plus de vitesse et un coût moindre, au risque d'une chute de qualité. Un modèle de niveau supérieur peut aussi traiter une requête plus rapidement et à moindre coût s'il parvient à une conclusion en moins de tokens qu'un modèle de niveau inférieur. Le coût d'une erreur fait partie de ce calcul : économiser quelques dollars par jour sur un modèle de niveau inférieur n'est pas un compromis judicieux si la baisse de qualité entraîne des erreurs qui entraînent des coûts importants en aval. Il n'existe pas de choix universellement correct, seulement le bon choix pour une tâche selon un niveau de qualité. La discipline consiste à rendre le compromis mesurable plutôt que de viser par défaut le modèle le plus capable. C'est l'erreur de sélection de modèle la plus courante et la plus coûteuse en production. Le défaut est de commencer avec Sonnet, de passer à Opus uniquement lorsqu'une évaluation montre que Sonnet n'atteint pas le seuil de qualité, et de descendre à Haiku uniquement lorsqu'une évaluation montre que la baisse de qualité est acceptable pour la tâche.\n\nRoutage : un modèle par défaut plus une surcharge sur un signal de tâche\n\nUn système n'est pas obligé d'utiliser un seul modèle pour tout. Un schéma de production courant est un modèle par défaut avec une surcharge : diriger la majeure partie du trafic vers un modèle par défaut équilibré, et envoyer des types de requêtes spécifiques vers un modèle plus grand ou plus petit en fonction d'un signal peu coûteux lu dans la requête, tel que le type de tâche, la longueur de l'entrée ou une classification de difficulté. Il s'agit de la même idée de routage utilisée pour la récupération, appliquée au choix du modèle : vous payez pour le modèle plus capable uniquement sur les requêtes qui en ont besoin. Lorsque chaque requête a la même forme, ignorez le routeur et fixez un seul modèle.\n\nQuand monter d'un niveau et quand descendre d'un niveau\n\nMonter d'un niveau lorsqu'une évaluation montre que le modèle actuel échoue sur les cas les plus difficiles que votre trafic contient et que le coût d'une réponse incorrecte est élevé. Descendre d'un niveau lorsqu'une évaluation montre qu'un modèle moins cher maintient le seuil de qualité sur la majeure partie du trafic, tout en libérant le budget et en réduisant la latence. Dans les deux sens, l'évaluation est l'instrument : un changement de modèle est décidé sur la base d'un score mesuré par rapport à vos cas. C'est pourquoi l'évaluation que vous avez construite plus tôt sert aussi de critère pour la décision relative au modèle.\n\nGère bien\nAdapter chaque charge de travail au modèle le moins cher qui respecte son seuil de qualité, mesuré lors d'une évaluation plutôt que supposé.\n\nAjoute du coût ou de la complexité\nLe routage ajoute une étape de classification et une seconde voie vers les modèles à maintenir.\n\nUtilisez une approche différente\nPour un trafic uniforme à un seul niveau de qualité, fixez un seul modèle et ignorez le routeur."
               }
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_08",
-          "title": {
-            "en": "Model Selection",
-            "fr": "Sélection du modèle"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 2,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -333,8 +282,7 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
         },
@@ -418,23 +366,7 @@
                   }
                 }
               ]
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_10",
-          "title": {
-            "en": "Cost & Orchestration",
-            "fr": "Coût et Orchestration"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 8,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -449,8 +381,7 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
         },
@@ -554,23 +485,7 @@
                   }
                 }
               ]
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_12",
-          "title": {
-            "en": "Security",
-            "fr": "Sécurité"
-          },
-          "type": "checkpoint",
-          "durationMinutes": 10,
-          "blocks": [
+            },
             {
               "type": "content",
               "body": {
@@ -670,10 +585,41 @@
           ],
           "completionRule": {
             "requires": [
-              "contentViewed",
-              "requiredExercisesPassed"
+              "contentViewed"
             ]
           }
+        },
+        {
+          "title": {
+            "en": "Key Takeaways",
+            "fr": "Points clés à retenir"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Key Takeaways\n\nIn this module, you've learned about:\n\n- Evals & Judges\n- Testing & Tracing\n- Failure Handling\n- Model Selection\n- Cost & Orchestration\n- Security\n\n### Next Steps\n\nReview any sections where you feel less confident. When ready, proceed to the next module to continue building your expertise.",
+                "fr": "## Points clés à retenir\n\nDans ce module, vous avez appris :\n\n- Evals & Judges\n- Testing & Tracing\n- Failure Handling\n- Model Selection\n- Cost & Orchestration\n- Security\n\n### Prochaines étapes\n\nRevisitez les sections où vous vous sentez moins confiant. Quand vous êtes prêt, passez au module suivant pour continuer à développer votre expertise."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete",
+            "fr": "Module terminé"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Module 04 Complete! 🎉\n\nCongratulations! You've completed **Evaluation & Testing**.\n\nYou've demonstrated understanding of the core concepts covered in this module. Your progress has been saved.\n\n### What's next?\n\nContinue to the next module in the certification path to build on what you've learned here.\n\nKeep up the great work!",
+                "fr": "## Module 04 terminé ! 🎉\n\nFélicitations ! Vous avez terminé **Évaluation et tests**.\n\nVous avez démontré votre compréhension des concepts fondamentaux abordés dans ce module. Votre progression a été sauvegardée.\n\n### Et maintenant ?\n\nContinuez vers le module suivant dans le parcours de certification pour approfondir ce que vous avez appris ici.\n\nContinuez comme ça !"
+              }
+            }
+          ]
         }
       ],
       "completionRule": {
