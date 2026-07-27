@@ -318,7 +318,17 @@
         "fr": "Réponse modèle — quand utiliser évaluations basées sur le code vs basées sur le modèle\n\nRègles générales\n- Utilisez une évaluation basée sur le code quand la vérification est déterministe et formelle (validité JSON, schéma, longueur, présence/format d’un champ, correspondance exacte).\n- Utilisez une évaluation basée sur le modèle pour des jugements interprétatifs ou subjectifs (ton, pertinence, fidélité sémantique, qualité rédactionnelle, détection d’ambiguïté).\n\nExemples concrets\n- Validité JSON / schéma → code : JSON Schema validation (ajouter tests unitaires).\n- Format de date / adresse → code : regex + bibliothèque de parsing.\n- Ton / empathie / naturel → modèle : prompt avec rubric (échelle 1–5) + justification.\n- Alignement factuel complexe / hallucinations → hybride : modèle pour signaler, humain pour vérif.\n\nPipeline recommandé (actionnable)\n1. Code-checks rapides : syntaxe, schéma, toxicité simple → rejeter/accept.\n2. Si check = ambigu/subjectif ou règle métier complexe → appel modèle d’évaluation avec rubric structuré.\n3. Échantillonnage humain (p. ex. 1–5% des sorties, ou celles au seuil) pour calibration et métriques de précision.\n4. Cacher/journaliser verdicts pour coût/latence et audits.\n\nPrompt modèle type (extrait)\n- \"Évaluez la sortie par rapport à la référence sur 1–5 pour : a) fidélité factuelle, b) ton. Donnez justification brève et une étiquette PASS/FAIL selon la règle X.\"\n\nRisques et mitigations\n- Risque faux positifs/negatifs (modèle biaisé) → mitigation : calibration via échantillonnage humain.\n- Coût/latence élevés si tout passe au modèle → mitigation : cascade code d’abord.\n- Exploits adversariaux (forme valide mais mauvaise sémantique) → tests adversariaux + règles métier supplémentaires.\n\nChecklist pour une bonne solution\n- Identifier comportement : déterministe vs interprétatif.\n- Définir métrique claire (schema, rubric).\n- Prioriser code-checks, puis modèle si nécessaire.\n- Mettre en place calibration/human-in-loop et monitoring des coûts."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Model-based vs. code-based evals: when to use each",
+        "fr": "Model-based vs. code-based evals: when to use each"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_002",
@@ -337,7 +347,17 @@
         "fr": "Recommandation modèle (corrigé)\n\n1) Stratégie générale\n- Prioriser la notation par code pour tout vérifiable (schéma, longueur, présence, correspondances exactes). Puis modèle de jugement pour les évaluations subjectives. Enfin révision humaine uniquement pour cas à enjeu élevé, nouvelles capacités ou échantillonnage de calibration.\n- Risques concrets : coût élevé TPU/token, dérive/calibration du juge modèle, incohérences sur cas limites, attaques adversariales visant le juge, biais humains dans la révision.\n\n2) Prompt du modèle-juge (exemple à utiliser et tester)\n\"Tu es un évaluateur automatisé. Évalue la sortie ci‑dessous selon la grille fournie. Retourne strictement un JSON: {\\\"score\\\":0-100,\\\"breakdown\\\":{\\\"qualité_informations\\\":0-40,\\\"instructions_respectées\\\":0-30,\\\"sécurité\\\":0-30},\\\"reasoning\\\":string(>=30 mots),\\\"fail_modes\\\": [strings]}. Données: {\\\"prompt_original\\\":...,\\\"system_output\\\":...,\\\"grille\\\":...}. Donne exemples d'éléments manquants et 3 tests rapides pour vérifier.\"\n\n3) Grille et poids (exemple)\n- Qualité factualité 0–40\n- Respect des instructions 0–30\n- Sécurité/risques 0–30\n\n4) Processus de calibration et QA\n- Exiger obligatoire un \"reasoning\" pour chaque note pour détecter incohérences.\n- Échantillonnage humain: 5% aléatoire + 100% des sorties flaggées (score<50 ou indicateurs de risque). Minimum 500 revues humaines/mois pour production critique.\n- Mesures: taux de désaccord humain/modèle, cohérence intra‑modèle sur perturbations (paraphrases), temps/ coût/token. Seuils: désaccord >15% → recalibrer et ajouter exemples d’entraînement.\n\n5) Tests automatiques\n- Invariance (paraphrase), sensibilité (ajout de biais), tests adversariaux, et évaluation de calibration (platt scaling si nécessaire).\n\nCes éléments constituent une solution testable, auditée et économiquement graduée."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Model-based evalA judge model receives the orig...",
+        "fr": "Model-based evalA judge model receives the orig..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_003",
@@ -356,7 +376,17 @@
         "fr": "Entrées minimales (à chiffrer avant l’architecture)\n- Volume (req/mois).\n- Budget de tokens par requête (tokens_in + tokens_out) mais modéliser la distribution (p50/p90/p99), pas seulement la moyenne.\n- Niveau de modèle (prix/token différent par modèle).\n\nFormules et méthode\n- Coût mensuel ≈ Σ over buckets [reqs_bucket * (tokens_in_bucket + tokens_out_bucket) / 1000 * price_per_1k_tokens(model)].\n- Exemple simple : 100 000 req/mois × 1 000 tokens/req × $0.50/1k = $50 000/mois.\n- Scénarios : calculer 3 scénarios (typique=p50, conservateur=p90, worst=p99) et comparer au plafond budgétaire.\n\nPrise en compte de la queue longue\n- Mesurer la distribution réelle de tokens ; si tail heavy, utiliser p90/p99 pour dimensionner coût et SLA (sous-estimation fréquente ×2–3).\n\nMise en cache de prompt (levier majeur)\n- Évaluer : prefix_tokens, reuse_rate (fraction de requêtes qui réutilisent le préfixe), cache_read_cost_ratio (ex : 10%).\n- Économie ≈ prefix_tokens * reuse_rate * (1 - cache_read_cost_ratio) * price_per_token * volume.\n- Risques : fenêtre de cohérence, invalidation, complexité de versioning du prompt, sécurité des données dans le cache.\n\nContrôles de fiabilité à intégrer par appel\n- Validation d’entrée + limitation tokens (reject/trim).\n- Timeout strict + retry exponentiel avec Idempotency-Key.\n- Circuit breaker et rate limiting.\n- Enregistrement métriques p50/p95/p99 latence, tokens par requête, erreurs, taux cache hit.\n- Prompt versioning et cache TTL/invalidation.\n- Fallback léger (response synthétique) si SLA menacé.\n- Alerting sur dépassement budgétaire/p95 SLA."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Architecture"
+      ],
+      "title": {
+        "en": "The cost and latency model is built before you ...",
+        "fr": "The cost and latency model is built before you ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_004",
@@ -375,7 +405,17 @@
         "fr": "Cause racine attendue\nLe POC a été utilisé comme si c’était déjà une solution de production : il n’a pas été séparé en objectifs distincts (capacité vs coût vs fiabilité). Cela a conduit à un modèle de coût construit à la mauvaise échelle, à une estimation de la distribution d’entrées basée sur des données erronées, et à l’absence de tests de fiabilité.\n\nRisques concrets\n- Sous-estimation du coût opérationnel → dépassements budgétaires.\n- Mauvaise capacité/partitionnement → latences et erreurs en production.\n- Défaillance non détectée d’une dépendance → interruption de service.\n- SLAs non tenus, impact réputationnel et légal.\n\nChecklist de production (actions concrètes)\n1. Redéfinir le POC : objectifs strictement “peut-on faire ceci ?” et non coûts/fiabilité.\n2. Modélisation des coûts à l’échelle : Cost = calls_month * avg_tokens_per_call * cost_per_token. Simuler scénarios (x1, x5, x10 volume) et appliquer un facteur de sécurité (×2).\n3. Valider distribution d’entrées : comparer corpus POC vs logs réels; corriger hypothèses; instrumenter capture d’échantillons en prod.\n4. Tests de fiabilité : tests de charge (2–5× trafic prévu), tests de panne (simuler 5–10% d’échecs de dépendances), injection de latence, tests de résilience (circuit breaker, retries, backoff).\n5. Déploiement graduel : staging → canary → rollout progressif avec métriques surveillées.\n6. Observabilité & alerting : métriques tokens/appel, coût/min, RPS, erreurs 5xx, P99 latence, taux de retries; alertes pour écarts >20% vs baseline.\n7. Plan de mitigation : fallbacks dégradés, quotas, throttling, accord SLAs avec dépendances.\n\nTests à inclure dans le plan d’acceptation\n- Charge à 2–5× trafic attendu, vérifier erreurs<1% et P99 latence acceptable.\n- Scénario d’échec de dépendance (5–10%): vérifier comportement dégradé et récupération.\n- Vérification mensuelle des distributions de tokens vs modèle de coût."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Agentic Design"
+      ],
+      "title": {
+        "en": "Each quote names a distinct failure, but they c...",
+        "fr": "Each quote names a distinct failure, but they c..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_005",
@@ -394,7 +434,17 @@
         "fr": "Recommandation finale (configuration à viser)\n- Modèle : Haiku\n- Mise en cache du prompt système : activée\n- max_tokens (plafond) : 450 (limiter les sorties excessives tout en gardant marge)\n- Multiplicateur du volume d'appels : 1 (aucune multiplication)\n\nCalcul et justification (méthode + exemple chiffré représentatif)\n1. Tokens par requête si prompt caché = 300 (entrée) + 400 (sortie moyenne) = 700 tokens.\n2. Volume mensuel = 50 000 * 700 = 35 000 000 tokens = 35 000k tokens.\n3. Avec un tarif représentatif Haiku ≈ $0.02 / 1k tokens → coût ≈ 35 000 * $0.02 = $700/mois (< $800).\n4. Latence p95 représentative Haiku ≈ 1.2s → respecte la cible 3s.\n\nPourquoi ceci fonctionne\n- La mise en cache retire les 5 000 tokens stables du bilan par requête (réduction majeure de coût).\n- Haiku est choisi pour coût/latence plus faibles ; max_tokens 450 évite débordement de coût et sorties trop longues.\n- Multiplicateur =1 évite augmentation linéaire du coût.\n\nRisques concrets et actions mitigantes\n- Invalidation du cache si le prompt système change → automatiser versionning du prompt et invalider proprement.\n- Troncation des réponses si max_tokens trop bas → monitorer taux de troncation et augmenter progressivement si nécessaire.\n- Hypothèses tarifaires/latences différentes en production → valider les tarifs actuels et faire tests de charge p95 à 50k req/mois.\n- Pics/burst → prévoir RBQ ou file d’attente, et rollback vers modèle plus rapide si latence augmente.\n\nÉtapes suivantes\n- Entrer cette configuration dans le calculateur réel, confirmer coût/latence avec tarifs actuels.\n- Exécuter test de charge simulé et mesurer p95 et taux de troncation."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Use the calculator to explore configurations. A...",
+        "fr": "Use the calculator to explore configurations. A..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_006",
@@ -413,7 +463,17 @@
         "fr": "Next-token prediction — Question de faisabilité : la tâche demande-t‑elle une génération probabiliste ou une exactitude sur des valeurs spécifiques ?  \nCompensations concrètes : utiliser RAG (retrieval-augmented generation) pour extraire valeurs exactes; contraindre la sortie par templates/format strict (CSV, JSON) et validation regex; vérifier chaque valeur contre la source de vérité et afficher provenance + horodatage. Risques : hallucinations numériques, arrondi et formatage incorrects.\n\nKnowledge — Question de faisabilité : l’information requise est‑elle dans la base de connaissances du modèle et à jour ?  \nCompensations concrètes : requérir accès à sources externes à jour (bases de données, API), signaler l’âge des connaissances, exiger double vérification humaine pour décisions critiques, versionner les sources. Risques : info obsolète, contradictions entre sources.\n\nWorking memory — Question de faisabilité : la tâche exige‑t‑elle de garder un grand historique ou états complexes ?  \nCompensations concrètes : externaliser l’état (stockage session), maintenir résumés canoniques et ID de référence, chunking du contexte, rafraîchir le résumé périodiquement, vérifier cohérence par tests automatisés. Risques : perte de contexte, incohérences de session.\n\nSteerability — Question de faisabilité : la sortie doit‑elle suivre contraintes, style, ou règles de sécurité strictes ?  \nCompensations concrètes : instruction tuning + prompt templates, filtres/safe‑guards automatiques, classifiers de conformité, rejection sampling, workflow humain pour exceptions, logs d’audit. Risques : injection de prompt, déviation de consignes, contournement des filtres."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "A feasibility assessment that only asks \"can Cl...",
+        "fr": "A feasibility assessment that only asks \"can Cl..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_007",
@@ -432,7 +492,17 @@
         "fr": "Correction modèle — Contrôlabilité\n\nPoints clés à couvrir (actionnables)\n- Définir la nature de la tâche : probabiliste (classification, synthèse, rédaction) vs déterministe (extraction de valeurs faisant autorité : numéros de compte, montants, dates). Préciser conséquence : les valeurs autoritatives exigent vérification extérieure.\n- Mécanismes concrets pour compenser :\n  - Generator–verifier loop : le modèle produit une réponse candidate; un verificateur programmatique (regex, parsers structurés, assertions) compare et validera contre la source de vérité ; en cas d’échec, relancer le générateur ou escalader à humain.\n  - Evals basés sur code : tests unitaires/pytest qui valident extraction et formats (ex. IBAN regex, date ISO, montant décimal) et contrôlent régression.\n  - Appels d’outils pour données quantitatives : interrogation d’APIs/BD (SQL), recherche full‑text, RAG (vector DB + top‑k docs) pour injecter preuves récentes.\n  - Injection de connaissances dans la fenêtre de contexte (doc snippets) pour infos rares/techniques.\n- Traitement de l’incertitude : afficher sources, score de confiance, seuils explicites; poser questions clarificatrices si insuffisance de contexte.\n\nRisques concrets à signaler\n- Hallucinations numériques (montants, numéros) ; données obsolètes ; fuite de données sensibles via contexte ; fausses citations ; décisions automatisées non vérifiées.\n\nExigences opérationnelles\n- Journaliser entrées/sorties, garder piste d’audit, définir SLAs d’escalade humaine, et réaliser tests de bout en bout en production."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Steerability",
+        "fr": "Steerability"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_008",
@@ -451,7 +521,17 @@
         "fr": "Réponse modèle (ce qu’un bon élève doit produire)\n\n1) Questions de faisabilité à poser (concrètes)\n- La tâche dépend-elle d’informations rares/contestées/récentes/spécialisées ? Si oui, ne pas compter sur le modèle seul ; inclure ces connaissances dans le contexte (ex. extraction de normes juridiques 2024, données cliniques spécifiques).\n- Les entrées totales dépassent‑elles la fenêtre de contexte ? Si oui, prévoir chunking/synthèse/progressive loading.\n- La tâche exige‑t‑elle des valeurs quantitatives exactes ou temps réel ? Si oui, prévoir appels d’outils/APIs et recomputation.\n\n2) Stratégies de conception (actionnables)\n- Generator–verifier loop : (a) Générer N candidates (N=3–5). (b) Vérifier par exécution de code, tests unitaires, checks de schéma et recomputation des valeurs. (c) Si échec, itérer jusqu’à 3 cycles puis escalader.\n- RAG & sources : indexer documents pertinents (vector store), récupérer top‑k (k=3–5), joindre les extraits cités dans la réponse. Toujours afficher sources et date.\n- Appels d’outils : séparer logique (ex. SQL/API call) pour extraire valeurs, puis valider numériquement (recompute sums, unit checks).\n- Long inputs : chunk size ~2000–3000 tokens, overlap 200–500, résumer chaque chunk, ensuite synthétiser résumés. Utiliser retrieval + progressive context loading pour itérations.\n- Signaler incertitude : pour assertions contestées, inclure confidence level, option de vérification humaine et pointer sources contradictoires.\n\n3) Pipeline minimal recommandé\nPreprocess (split, embed) → Retrieve (top‑k) → Generate (N candidates) → Verify (code/tests/API verify) → Postprocess (merge, cite, note incertitude).\n\n4) Checklist de validation finale\n- Sources citées et datées ? Oui/Non\n- Valeurs numériques recomputées ? Oui/Non\n- Assertions contestées marquées ? Oui/No\n- Entrées > fenêtre traitées par chunking/synthèse ? Oui/No\n- Boucle vérification implémentée (max itérations) ? Oui/No"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Where design compensates: Generator-verifier lo...",
+        "fr": "Where design compensates: Generator-verifier lo..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_009",
@@ -470,7 +550,17 @@
         "fr": "Bonne réponse cible : identifiez clairement les deux questions de faisabilité et associez des stratégies concrètes, mesurables et vérifiables.\n\n1) Fenêtre de contexte (documents longs, multi-documents, conversations)  \n- Stratégies concrètes : RAG avec index vectoriel + retrieval par passage ; chunking à 1 500–3 000 tokens par chunk avec chevauchement 10–20 % (ex. overlap 200–500 tokens) ; stratégie sliding-window pour conversations ; résumé incrémental toutes les N interactions (N=3–5) ; architecture pipeline : ingestion → indexation → retrieval → synthèse finale.  \n- Vérification : mesurer couverture (fraction de documents référencés), test de rappel/precision sur requêtes clés.  \n- Risques & mitigations : perte de contexte → augmenter overlap/synthèse; incohérence entre chunks → phase de fusion + vérificateur d’arguments.\n\n2) Instructionnalité et précision (instructions vagues, calculs)  \n- Stratégies concrètes : prompt système avec schéma de sortie JSON strict ; exécution de code pour calculs (sandboxed Python) ; boucle évaluateur-optimiseur (assistant génère → évaluateur vérifie et corrige).  \n- Exemple de schéma système : {\"answer\": \"...\", \"sources\":[...], \"confidence\":0-1, \"uncertainty_reason\":\"...\"}  \n- Vérification : tests unitaires numériques, checksums, cross-source corroboration.  \n- Risques & mitigations : hallucinations → exiger citations vérifiables; latence outils → cache + fallback; fuite de données sensibles → redaction/PPI filters.\n\nPoints attendus : paramètres chiffrés (taille chunks, overlap, fréquence de résumé), exemples de prompt/schéma, pipeline concret et méthodes de validation."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Where design compensates: Retrieval-augmented g...",
+        "fr": "Where design compensates: Retrieval-augmented g..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_010",
@@ -489,7 +579,17 @@
         "fr": "Checklist de correction modèle (actionnable)\n\n1) Vérifier la spécificité des instructions\n- Exiger exemples d’entrée/sortie, formats, tolérances numériques.  \n- Transformer toute consigne vague en critères mesurables (p.ex. \"arrondir à 3 décimales\", \"JSON avec clés X,Y,Z\").\n\n2) Identifier risques concrets\n- Dérive sur instructions abstraites ou ouvertes.  \n- Échecs sur longues chaînes de raisonnement.  \n- Erreurs de calculs / logique (arrondi, overflow).  \n- Perte d’information lors du découpage du contexte.  \n- Non-respect du schéma de sortie.\n\n3) Stratégies de conception pour compenser\n- Découpage + chargement progressif : segmenter document par unités logiques; prioriser segments pertinents via retrieval score; reconstituer par assembleur/summarizer.  \n- Résumés entre tours : maintenir mémoire compacte (résumés cumulés, métadonnées).  \n- Schémas de sortie explicites : imposer JSON/CSV avec validation automatique.  \n- Exécution de code pour précision : calculs via sandbox (Python/JS) et retourner résultats vérifiés.  \n- Boucle evaluator-optimizer : evaluator (tests unitaires, métriques) → ajustement automatique du prompt/pipeline.\n\n4) Architecture pipeline recommandée (concrète)\n- Ingest → Chunker → Retriever (score) → Per-chunk LLM + Summarizer → Composer (reconstruit le contexte) → Executor (code) → Validator (schéma, tests) → Finalizer (formatage, humain si low confidence).\n\n5) Critères d’issue de faisabilité\n- A — Faisable : passe tests automatiques, erreurs < seuil.  \n- B — Faisable avec mitigations : nécessite exécution de code, validations supplémentaires ou revue humaine. Documenter coûts/latence.  \n- C — Non faisable : exigences imprécises/contradictoires ou besoin de preuves mathématiques exactes ; recommander redesign du besoin ou escalade humaine.\n\nActions immédiates à fournir par l’étudiant : jeux de tests représentatifs, spécification formelle du schéma de sortie, seuils de confiance, et plan d’intégration du validateur/executor."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Where design compensates: Chunking strategies; ...",
+        "fr": "Where design compensates: Chunking strategies; ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_011",
@@ -508,7 +608,17 @@
         "fr": "1) Définir l’état de référence (mesures concrètes)\n- Donnez l’unité métier (heures, erreurs, temps de cycle, € de perte/réclamation).\n- Mesurez aujourd’hui (période, sources, coût unitaire : salaire/h, coût d’erreur).\n- Exemple attendu : \"1 000 tickets/mois × 30 min = 500 h/mois ; coût moyen = 35 €/h → 17 500 €/mois\".\n\n2) Décrire l’état cible avec Claude (hypothèses chiffrées)\n- Indiquez gains attendus par unité (réduction % du temps, erreurs évitées, montée en volume).\n- Précisez adoption, qualité (précision %), latence, SLA.\n- Exemple : \"Réduction du temps de traitement de 20% → 400 h/mois\".\n\n3) Calculer la valeur et la monétiser\n- Formules clés :\n  - Gain brut = (État base − État cible) × coût unitaire.\n  - Valeur nette = Gain brut − Coût opérationnel Claude (coûts d’infra, licences, support).\n  - ROI = Valeur nette annuelle / Coût annuel du projet (ou (Bénéfice−Coût)/Coût).\n  - Payback = Coût initial / Économie mensuelle nette.\n- Mini-ex. : économie brute 3 500 €/mois − coût Claude 500 €/mois = 3 000 €/mois → ROI annuel = 36 000 / 6 000 = 6x.\n\n4) Présenter, tester et atténuer les risques\n- Restitution au décisionnaire : 1 page avec hypothèses, NPV/ROI/payback, 3 scénarios (pessimiste/base/optimiste).\n- Tests de sensibilité : varier adoption ±20%, précision ±10%.\n- Risques concrets à inclure : sous-adoption, dégradation de la précision, coût d’intégration plus élevé, conformité/données, maintenance continue.\n\nCartographiez chaque bénéfice au pilier correspondant :\n- Efficacité → heures économisées ; Productivité → volumes ajoutés ; Transformation → nouveaux services rendus possibles ; Coût de solution → licences/infra/support ; Niveaux de service → temps de réponse/SLA améliorés.\n\nLivrables attendus : tableau chiffré état base/état cible, calculs ROI/NPV/payback, hypothèses, analyses de sensibilité, plan d’atténuation des risques."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Business value and ROI mapping: turning a feasi...",
+        "fr": "Business value and ROI mapping: turning a feasi..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_012",
@@ -527,7 +637,17 @@
         "fr": "Risque : Sous-estimation du coût d’exécution\n- Pourquoi : hypothèses optimistes sur le prix des tokens, SLA ou usage.\n- Où : Étape 3 (coût récurrent).\n- Mitigation : utiliser trois scénarios (Pessimiste/Attendu/Optimiste), inclure buffer de 15–30 %, valider prix fournisseurs actuels.\n\nRisque : Omission des coûts de construction\n- Pourquoi : confondre coût d’exécution et coût d’intégration/développement.\n- Où : Transition entre Étape 3 et Étape 4.\n- Mitigation : séparer clairement CAPEX vs OPEX, estimer heures/FTE et externalisation, inclure licences et tests.\n\nRisque : Gains opérationnels surestimés\n- Pourquoi : mesures de productivité non vérifiées, biais d’optimisme.\n- Où : Calcul des gains (Étape 2) et ROI.\n- Mitigation : valider gains avec pilotes, utiliser métriques historiques, appliquer facteur d’ajustement conservateur (p.ex. 60–80 %).\n\nRisque : Volume d’usage incertain\n- Pourquoi : projections non testées par charge réelle.\n- Où : Étapes 2–4.\n- Mitigation : modéliser sensibilité sur volume ±25–100 %, définir seuils d’alerte et plans d’escalade.\n\nRisque : Ignorer coûts périphériques\n- Pourquoi : négliger support, sécurité, conformité, monitoring.\n- Où : Étape 3 et plan de construction.\n- Mitigation : ajouter lignes budgétaires pour SRE, audits, formation et maintenance.\n\nRisque : Pas d’analyse de sensibilité\n- Pourquoi : décision basée sur un seul scénario.\n- Où : Étape 4.\n- Mitigation : présenter courbe de ROI pour scénarios et point mort; identifier variables clés.\n\nRisque : Mauvaise traçabilité vers métriques business\n- Pourquoi : gains non reliés aux KPIs existants.\n- Où : Résumé final (valeur + faisabilité).\n- Mitigation : lier gains à KPIs financiers/operational de l’entreprise et fournir par ex. cashflow mensuel cumulé.\n\nConclusion actionnable : produire un tableau synthétique listant hypothèses, three-case costs/gains, période ROI par scénario et variables sensibles avec seuils d’action."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Agentic Design",
+        "Architecture",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Step 3: Subtract the run cost from the sizing m...",
+        "fr": "Step 3: Subtract the run cost from the sizing m..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_013",
@@ -546,7 +666,17 @@
         "fr": "Version corrigée (proposition) :\nVous disposez du cadre de base. Notez que tout élément placé dans la catégorie « basée sur le code » correspond soit à une vérification structurelle, soit à une comparaison avec une valeur quantitative connue. Tout élément placé dans la catégorie « basée sur le modèle » nécessite une décision humaine que la fonction ne peut prendre. Ce critère de distinction est déterminant.\n\nCritères opérationnels (à appliquer concrètement) :\n- Vérification structurelle = contrôle déterministe (schéma, type, format, présence obligatoire, longueur exacte, regex). Exemple : valider un JSON contre un schema, vérifier qu’un numéro de téléphone a 10 chiffres.\n- Comparaison quantitative = comparaison numérique déterministe (seuils, maxima/minima, ratios). Exemple : « avertir si la latence > 200 ms », « rejeter si le montant > plafond connu ».\n- Basée sur le modèle = nécessite jugement, interprétation, contexte ou valeurs non spécifiées (intention, ambiguïté, éthique, qualité stylistique, confiance). Exemple : décider si un texte est offensant, prioriser requêtes clientèles conflictuelles.\n\nRègle implémentable :\n1) Appliquer d’abord les contrôles déterministes (structure + quantitatif). Si un contrôle ok/false → catégorie “code”.\n2) Si la décision demande nuance, contexte ou valeurs non définies → catégorie “modèle” → escalade humaine.\n\nChecklist de validation :\n- Chaque règle déterministe a un test unitaire.\n- Les seuils sont documentés et modifiables.\n- Les cas ambigus sont loggés et routés vers revue humaine."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Correct: You have the core framework. Notice th...",
+        "fr": "Correct: You have the core framework. Notice th..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_014",
@@ -565,7 +695,17 @@
         "fr": "Critère clair pour reclasser les réponses manquées — méthode actionnable :\n\n1) Définissez les deux catégories en une phrase :\n- Model-based : la sortie attendue est déterministe ou vérifiable par une valeur de référence (chiffre exact, énoncé factuel unique, format strict).\n- Code-based : la validation nécessite un jugement ou une interprétation humaine (qualité, pertinence, conformité à une politique).\n\n2) Checklist pour chaque élément manqué :\n- Peut-on produire une réponse unique et exacte automatiquement ? (oui → model-based)\n- La décision requiert-elle nuance, contexte ou règles interprétées par un humain ? (oui → code-based)\n- Existe-t-il un oracle/fixture (base de données, calcul) pour vérifier la réponse ? (si oui → model-based)\n- L’évaluation demande-elle exemples positifs/négatifs et justification ? (si oui → code-based)\n\n3) Exemples concrets :\n- Model-based : somme de nombres, date d’un événement historique, format JSON exact.\n- Code-based : modération de contenu, classement de pertinence, annotation d’intention.\n\n4) Actions correctives :\n- Pour model-based : créez tests unitaires/fixtures et seuils de tolérance; automatisez la vérification.\n- Pour code-based : rédigez un guide d’évaluation avec exemples (3+ cas positifs/négatifs), temps moyen par évaluation, et consignes d’arbitrage.\n\n5) Risques à surveiller : fausses automatisations (placer en model-based trop tôt), surcoût humain (trop en code-based), inconsistance d’étiquetage."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Partial: The missed answers tend to cluster in ...",
+        "fr": "Partial: The missed answers tend to cluster in ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_015",
@@ -584,7 +724,17 @@
         "fr": "Procédure actionnable — traiter chaque élément du tableau un par un :\n1) Définir critère de décision : « existe-t-il UNE seule réponse correcte vérifiable automatiquement ? »\n   - Oui → considérer comme objectif. Exemples : exactitude d’un calcul, présence/absence d’un token, sortie JSON valide, conformité à un schéma.\n   - Non → considérer comme subjectif. Ex. : qualité rédactionnelle, pertinence d’argument, jugement éthique.\n\n2) Pour les items objectifs (automatisables) :\n   - Écrire assertions unitaires précises (ex. equality check, regex, schéma JSON, tolérance numérique).\n   - Couvrir cas limites et données adversariales.\n   - Automatiser exécution et signaler erreurs reproductibles.\n\n3) Pour les items subjectifs (nécessitent jugement) :\n   - Créer une grille d’évaluation (rubric) avec critères mesurables et exemples d’ancrage (exemples acceptables / inacceptables).\n   - Former évaluateurs, mesurer inter-annotateur (Cohen’s kappa) et fixer seuils d’acceptation.\n   - Mettre en place double-review + arbitrage en cas de désaccord.\n\n4) Point de contrôle / boucle rétro :\n   - Journaliser décisions, taux d’accord, erreurs automatiques.\n   - Réviser rubriques/tests périodiquement à partir d’échantillons d’audit.\n   - Versionner critères et cas tests, et revalider les éléments modifiés.\n\nRisques concrets : tests trop stricts (faux négatifs), validations fragiles (brittle), dérive des évaluateurs, biais d’ancrage, attaques adversariales. Mitigations : tolérances explicites, robustesse des tests, calibration régulière, audits aléatoires."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Compliance"
+      ],
+      "title": {
+        "en": "Incorrect: Return to the Model-based vs. Code-b...",
+        "fr": "Incorrect: Return to the Model-based vs. Code-b..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_016",
@@ -603,7 +753,17 @@
         "fr": "Interprétation attendue et bonnes pratiques — que doit contenir une réponse de qualité\n\n1) Compréhension : reconnaître qu’on peut mettre de côté une tâche non cruciale mais qu’il faut la réintégrer avant la « tâche cumulée ». Expliquer brièvement pourquoi (priorisation, efficacité, dépendances).\n\n2) Actions concrètes à exécuter quand on « ignore » une tâche :\n- Marquer la tâche comme « différée » dans le gestionnaire de tâches.\n- Capturer le contexte minimal (objectif, état actuel, points ouverts, dépendances).\n- Estimer le temps nécessaire pour la reprise et une date/échéance de révision.\n- Créer un rappel/calendrier ou ticket avec notification avant la tâche cumulée.\n- Informer les parties prenantes si la tâche affecte d’autres personnes.\n\n3) Risques concrets à lister :\n- Oublier la tâche (perte de travail).\n- Perte de contexte rendant la reprise plus lente.\n- Blocage d’autres activités dépendantes.\n- Mauvaise coordination avec l’équipe.\n\n4) Checklist pour la réintégration (avant la tâche cumulée) :\n- Relire le contexte capturé.\n- Actualiser l’estimation et l’état des dépendances.\n- Tester/valider les résultats nécessaires pour la tâche cumulée.\n- Marquer « prêt » ou escalader si obstacles.\n\nExemple de note rapide à laisser : « Différé — raison : priorité X. État : 40% (tests manquants). Dépendances : API Y. Reprendre avant 2026-08-01. Temps estimé : 2h. »"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Computer Vision"
+      ],
+      "title": {
+        "en": "Skipped: Move on if you need to but come back b...",
+        "fr": "Skipped: Move on if you need to but come back b..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_017",
@@ -622,7 +782,17 @@
         "fr": "Correction proposée (phrasing + justification et actions concrètes) :\n\nPhrase corrigée :\n« Exact. Le prompt système fixe de 5 000 tokens est relu à chacun des 50 000 appels : mettre ce prompt en cache est le levier le plus efficace pour réduire le coût. Avec la mise en cache activée au niveau Haiku ou Sonnet, le plafond de dépenses et l’objectif p95 de 3 secondes deviennent atteignables. »\n\nJustification et actions concrètes :\n- Pourquoi : sans cache, vous retraiterez 50 000 × 5 000 = 250 M tokens inutiles, augmentant coûts et latence. Le cache évite ces lectures répétées.\n- Mise en œuvre : stocker le prompt en mémoire (cache distribué ou edge cache Haiku/Sonnet), exposer un identifiant de version (prompt_v1) plutôt que le texte brut à chaque requête.\n- Invalidation/versioning : incrémenter l’ID à chaque modification du prompt pour éviter incohérences.\n- Pré‑chaufage : pré-remplir le cache au démarrage et après déploiement.\n- Résilience : fallback lisant le prompt depuis le stockage persistant en cas d’échec du cache.\n- Mesures : instrumenter métriques (coût token, p95 latence, taux de cache hit) et vérifier p95 ≤ 3 s après déploiement.\n\nChecklist rapide : cache distribué edge, ID de version, TTL raisonnable, pré‑warm, fallback, métriques et alertes."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Caching Strategy"
+      ],
+      "title": {
+        "en": "Correct: Right. The stable 5,000-token system p...",
+        "fr": "Correct: Right. The stable 5,000-token system p..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_018",
@@ -641,7 +811,17 @@
         "fr": "Points concrets à vérifier et comment prouver que la mise en cache du system prompt est le levier principal\n\n1) Hypothèse et formule simple\n- Si vous avez N appels, un préfixe fixe de T tokens (ici T = 5000) et un coût par token d’entrée c_in, l’économie attendue ≈ N × T × c_in × hit_rate. Utilisez cette formule pour estimer les gains attendus avant test.\n\n2) Test expérimental reproductible\n- Préparez deux séries de tests identiques (même prompt, mêmes entrées) : avec cache activé vs cache désactivé.\n- Exécutez suffisamment d’appels (ex. N = 50 000). Mesurez : coût total, coût input vs output, nombre total de tokens facturés, et taux de cache hit.\n- Assurez-vous que le system prompt est strictement identique (même encodage, pas d’espaces/retours) pour permettre le cache.\n\n3) Ce que doit afficher l’interface/le log\n- Avec cache ON : baisse importante du coût input; le tableau doit montrer des “cache hits” ou une valeur de tokens d’entrée beaucoup plus faible par appel.\n- Avec cache OFF : tokens d’entrée ≈ T par appel, coût input élevé.\n- Comparez coûts totaux et calculez hit_rate observé. Les économies réelles = différence de coût mesurée, et doivent être proches de la valeur estimée par la formule.\n\n4) Risques et vérifications\n- Risque : préfixe qui change subtilement (horodatage, identifiants dynamiques) casse le cache → vérifier stabilisation du prompt.\n- Risque : cache local/serveur non partagé entre instances → tester sur l’environnement de production cible.\n- Vérifier \"warm-up\" : premiers appels peuvent ne pas être mis en cache; excluez ou notez cette période.\n\n5) Conclusion attendue d’une bonne réponse\n- Montrer la formule chiffrée, fournir les résultats expérimentaux (N, T, hit_rate, coûts ON vs OFF) et conclure que la réduction de coût provient principalement des cache hits sur le system prompt, pas du niveau du modèle."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Batch Processing",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Partially correct: You found a working setup, b...",
+        "fr": "Partially correct: You found a working setup, b..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_019",
@@ -660,7 +840,17 @@
         "fr": "Faux — vous n’avez pas besoin que \"deux cibles soient vertes en même temps\". Priorisez la cible principale (p. ex. latence) puis vérifiez que les autres restent acceptables. Correction modèle (actions concrètes) :\n\n1) Cachez le stable system prompt :\n   - Stockez localement le texte du prompt système et ne le renvoyez que s’il change.\n   - En pratique : envoyer le system prompt une fois lors d’une session ou passer un ID/template côté serveur, et joindre seulement l’input utilisateur ensuite.\n\n2) Choisissez le niveau le plus bas respectant la cible de latence :\n   - Mesurez p50/p95/p99 pour chaque niveau de modèle avec votre payload réel.\n   - Sélectionnez le niveau le moins coûteux dont le p95 < SLA.\n\n3) Réglez max_tokens intelligemment :\n   - Estimez la taille moyenne de réponse + marge (ex. +20 %), fixez max_tokens à cette valeur minimale.\n   - Pourquoi : max_tokens augmente le coût (coût ∝ tokens) et la latence maximale (décodage séquentiel).\n\n4) Refaire le calculateur (coûts & fiabilité) :\n   - Formule : coût_par_requête = (input_tokens + expected_output_tokens) * coût_par_token.\n   - Calculez coût horaire = coût_par_requête * QPS * 3600, ajoutez 30% de buffer pour pics/retentatives.\n   - Vérifiez p95 latency × QPS pour détecter contention.\n\nChecklist à fournir dans une bonne réponse :\n- emplacement du cache du prompt et logique d’invalidation\n- tokens estimés (in/out), max_tokens choisi et justification\n- mesures p50/p95/p99 par niveau de modèle\n- coût calculé et buffer de fiabilité\n- décision finale et trade-offs acceptés."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Batch Processing",
+        "Benchmarking"
+      ],
+      "title": {
+        "en": "Incorrect: Two targets must be green at once. S...",
+        "fr": "Incorrect: Two targets must be green at once. S..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_020",
@@ -679,7 +869,17 @@
         "fr": "Réponse attendue — correction modèle (français)\n\nReconnaître l’instruction et la gérer explicitement : noter que l’optimisation coût‑latence est différée, mais préparer tout ce qui permettra de la reprendre efficacement. Une bonne réponse doit contenir ces éléments concrets et actionnables :\n\n1. Action immédiate (ce qu’on fait maintenant)\n   - Marquer la tâche “différée” dans le backlog avec priorité et deadline pour la tâche cumulée.\n   - Ne pas effectuer d’optimisations immédiates qui modifieraient les baselines.\n\n2. Capturer un baseline reproductible (obligatoire)\n   - Enregistrer configuration exacte : modèle, version, quantization, instance HW, batch size, payload type.\n   - Mesurer et stocker : P50/P95/P99 latences, throughput, coût par requête et coût horaire, précision/metric métier.\n   - Méthodologie : nombre d’échantillons, warm‑up, variance, environnement (région, réseau).\n\n3. Plan d’expérimentation pour la tâche cumulée\n   - Variables à balayer : taille du modèle, quantize/ prune, batching, autoscaling, types d’instances, caching.\n   - Critères de succès : courbe coût vs latence, seuils acceptables (ex : P95 < X ms à coût ≤ Y €/1000 req).\n   - Scripts/automatisation : CI pour reproduire tests, logs pour audit.\n\n4. Risques à signaler\n   - Oublier de revenir au ticket, perte de baselines, dérive de configuration, instrumentation insuffisante.\n\nExemple de template à joindre au ticket : {env, modèle, commit, métriques P50/P95/P99, coût/unité, date, contact}."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Batch Processing"
+      ],
+      "title": {
+        "en": "Skipped: Move on if you need to, but the cost-a...",
+        "fr": "Skipped: Move on if you need to, but the cost-a..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_021",
@@ -698,7 +898,17 @@
         "fr": "Attendu d’une bonne réponse\n- Interpréter fbData.verdict comme un code d’état (enum) et fbData.msg comme texte d’accompagnement ; afficher sous la forme \"VERDICT: message\" ou mapper le verdict à un libellé lisible.\n- Valider et normaliser : verdict ∈ {approved, rejected, pending} (ou autre ensemble défini) ; message non vide, longueur limitée, échappement HTML.\n- Gérer les cas invalides : valeurs manquantes → fallback clair (\"unknown\", \"Aucun message\").\n- Séparer logique (validation/mapping) et présentation (UI/formatage).\n- Prévoir internationalisation et accessibilité (libellés traduits, rôles ARIA).\n\nRisques concrets\n- Injection XSS si fbData.msg affiché sans échappement.\n- Valeurs inattendues provoquant plantages ou comportements incohérents.\n- Messages trop longs rompant le layout.\n- Mauvaise interprétation du verdict entraînant actions erronées.\n\nExemple JavaScript (Node/Frontend) — fonction sûre et testable\nconst VALID = ['approved','rejected','pending'];\nfunction formatFeedback(fbData){\n  const verdict = (fbData && VALID.includes(fbData.verdict)) ? fbData.verdict : 'unknown';\n  let msg = (fbData && typeof fbData.msg === 'string') ? fbData.msg.trim() : '';\n  if(!msg) msg = 'No message provided';\n  // simple truncation + HTML-escape\n  const escaped = msg.replace(/[&<>\"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;' }[c]));\n  return `${verdict.toUpperCase()}: ${escaped.slice(0,500)}`;\n}\n\nTests à inclure\n- verdict valide/invalide, msg vide, msg contenant HTML, msg très long."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Error Handling",
+        "Testing"
+      ],
+      "title": {
+        "en": "fbData.verdict: fbData.msg",
+        "fr": "fbData.verdict: fbData.msg"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_022",
@@ -717,7 +927,17 @@
         "fr": "Points clés à couvrir — correction modèle\n\nProblèmes identifiés (concrets)\n- Clé partagée : fuite/usage non autorisé, impossibilité d’auditer par client.\n- Rôle falsifié : élévation de privilèges en fournissant role dans la requête.\n- PII dans le message : exfiltration ou conservation non souhaitée.\n- Réponse non journalisée : pas d’audit ni de traçabilité.\n- Point d’entrée incorrect (ex. Claude Code) : routage vers backend inadapté / sans politiques.\n\nCorrections serveur (actionnables)\n- Authentification : n’accepter que des JWT/mTLS par client, rotation de clés, vérification d’émetteur et de scopes. Rejeter clés partagées détectées par anomalie d’utilisation.\n- Autorisation : ignorer tout champ role fourni par le client. Déduire rôle depuis le token (claims.scopes) et appliquer contrôles d’accès RBAC server-side.\n- Gestion PII : valider messages par pipeline server-side — scanner regex/ML pour PII ; refuser ou redigerer (mask/hash) avant persistance/transmission ; enregistrer uniquement les métadonnées nécessaires.\n- Journalisation : log structured des métadonnées et réponses redigées ; horodatage, client_id, backend_used ; retention et accès limités.\n- Sélection de backend : whitelist des backends autorisés côté serveur ; policy table (capabilities, coût, data residency) et routage server-side.\n\nExemple de schéma JSON minimal (validation côté serveur)\n{\n  \"auth\": {\"type\":\"jwt\",\"required\":true},\n  \"backend\":{\"enum\":[\"claude-2\",\"claude-instant\"],\"required\":true},\n  \"message\":{\"type\":\"string\",\"no_pii\":true},\n  \"client_role\":{\"forbidden\":true}\n}\n\nUne bonne réponse joint ces règles à des tests automatisés (unit/contract) et des alertes sur anomalies d’usage."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "All correct.: You read the integration cleanly....",
+        "fr": "All correct.: You read the integration cleanly...."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_023",
@@ -736,7 +956,17 @@
         "fr": "Points précis à vérifier et corriger (réponse que doit contenir une bonne solution) :\n\n1) Pour chaque frontière de la matrice, posez et documentez ces trois questions :\n   - Qui affirme l’identité à cette frontière ? (utilisateur, service tiers, token inter-service)\n   - Quelles données franchissent la frontière ? (nom d’utilisateur, token JWT, payload PHI/PII, métadonnées)\n   - Ces événements sont-ils journalisés ? (oui/non + emplacement du log)\n\n2) Risques silencieux à identifier et tests pratiques :\n   - Identité falsifiée : tester la rejouabilité et la falsification de tokens (replay d’un JWT expiré, modification du champ sub, signature invalide). Vérifier validation de signature + audience + expiration.\n   - Chemin de réponse non journalisé : simuler un cas où la réponse passe par un cache ou un proxy non instrumenté ; confirmer absence/presence d’entrée d’audit.\n\n3) Logs requis (format minimal/actionnable) :\n   - timestamp, boundary_id, correlation_id, source_ip, claimed_identity, auth_method, token_id/hash, action (accept/deny), data_hash, outcome.\n   - Stocker en append-only, horodatage centralisé (SIEM), rétention et contrôle d’accès.\n\n4) Contrôles à mettre en place :\n   - Auth mutualisée entre services, validation stricte des tokens, signature/nonce, enchaînement des logs via correlation_id, détection d’anomalies (replay, chemins sans logs).\n   - Marquage des données sensibles et règles de filtrage avant franchissement.\n\n4) Exemple d’action corrective : pour chaque ligne de la matrice, ajouter colonnes “claimant”, “data_items”, “logged? (path & location)”; exécuter tests d’injection/falsification et corriger les frontières où logged? = non."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Partially correct: You found most of them. The ...",
+        "fr": "Partially correct: You found most of them. The ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_024",
@@ -755,7 +985,17 @@
         "fr": "Pour chaque connexion, procédez en une passe structurée et documentée. Pour chaque connexion (IP/URL, port, service) notez :\n\n1) Identité : comment est-elle vérifiée côté serveur ?\n- Examinez en clair : JWT (vérifier signature, issuer, exp), OAuth2 token introspection, cookies HttpOnly+Secure, mTLS (client cert vérifiée par CA), session backend lookup.  \n- Indicateur de risque : l’identité n’est que dans le message (header/body) sans vérification serveur → marquer comme non fiable.\n\n2) PII non essentiel traversant la frontière :\n- Listez PII types exposés (nom, email, téléphone, SSN, carte, données santé, géoloc).  \n- Vérifiez nécessité métier : si non requis pour la fonctionnalité, refuser/enlever. Mesures : minimisation, pseudonymisation, hashing côté client, encryption in transit+at rest.\n\n3) Enregistrement du chemin (logging) :\n- Localisez logs applicatifs, reverse proxy/CDN, firewall, SIEM. Cherchez enregistrements de headers, payloads, query strings.  \n- Risque : logs contiennent PII non masqué ou retention excessive. Actions : redaction, filtre au bord, rotation/retention policies, accès restreint.\n\nPoint d’entrée :\n- Confirmez que l’interface client utilise API/SDK publics (HTTP(S) calls avec API key/OAuth) et non un environnement d’exécution de code (Claude Code). Si découverte de Claude Code ou équivalent côté client, remplacer par API/SDK côté serveur ou sandboxer strict.\n\nRéalisez une réévaluation et catégorisez chaque connexion : Accept (ok), Mitigate (corriger avec actions concrètes listées) ou Reject (bloquer). Fournissez preuves : endpoints testés, logs modifiés, JWT validation test cases."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Not yet: Work one connection at a time and ask ...",
+        "fr": "Not yet: Work one connection at a time and ask ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_025",
@@ -774,7 +1014,17 @@
         "fr": "Correction modèle — ce que doit contenir une bonne réponse\n\n1) Définitions claires des axes\n- Axe X = taille d’effet attendue (quantitative : différence de proportions ou size d Cohen d).\n- Axe Y = confiance / criticité (risque de conséquences sévères si erreur).\nExpliquez pourquoi on lit les axes indépendamment.\n\n2) Justification des placements\n- Medical summarizer : petit effet attendu (d≈0.2) mais haute criticité → haut sur l’axe confiance. Concret : erreurs cliniques entraînent préjudice → exiger forte assurance.\n- Model-swap (remplacement de modèle) : grand effet attendu (ex. réduction coût ou latence de 5–10%) → large-effet sur X car facile à mesurer financièrement.\n\n3) Comment la zone détermine la taille d’échantillon\n- Règle : plus petite l’effet et plus haute la confiance → n augmente.\n- Formule (proportions) : n ≈ (Z1−α/2 + Z1−β)^2 * (p1(1−p1)+p2(1−p2)) / (p1−p2)^2.\n- Exemple : p1=0.90 → p2=0.95, α=0.05, power=0.8 ⇒ n≈430 par bras.\n- Exemple small-effect (d=0.2), α=0.05, power=0.9 ⇒ n≈500+/bras.\n\n4) Plan d’évaluation et métriques\n- Endpoints primaires, tests statistiques, seuils non-infériorité si applicable.\n- Procédure d’adjudication des erreurs cliniques et mesures de sécurité (human-in-loop).\n\n5) Risques concrets et mitigations\n- Sous-puissance → simulation et réestimation d’intervalle.\n- Biais de sélection → randomisation/stratification.\n- Metric mismatch → aligner métrique sur impact clinique/coûts.\n- Déploiement imprudent → rollout progressif, monitoring en temps réel.\n\nChecklist finale : définir axes+justifier placements, calcul de n avec hypothèses chiffrées, plan statistique, contrôles sécurité, mitigation des risques."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Cost Optimization"
+      ],
+      "title": {
+        "en": "All placed correctly.: `You read both axes inde...",
+        "fr": "All placed correctly.: `You read both axes inde..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_026",
@@ -793,7 +1043,17 @@
         "fr": "Placement attendu (lire chaque axe séparément) :\n- Résumé médical : axe « conséquence/gravité » = élevé ; axe « confiance » = élevé. Justification : un « small effect » statistique peut tout de même entraîner des conséquences cliniques majeures (erreur de diagnostic, harm patient). On ne doit pas traduire « petit effet » par « faible confiance ». Actions concrètes : validation clinique indépendante (panel de médecins), seuils stricts d’acceptation (sensibilité/spécificité minimales), double lecture humaine obligatoire pour cas à risque, essais en conditions réelles (prospective) avant déploiement, suivi post-déploiement et déclencheurs d’arrêt automatique si détection d’erreurs rares mais sévères.\n\n- Remplacement du modèle : axe « impact » principalement = coût élevé ; axe « confiance » = modérée. Justification : le changement influence coûts opérationnels, latence, licences — impact majeur sur budget/exploitation — mais l’estimation est souvent basée sur métriques historiques/plausibles (confiance moyenne). Actions concrètes : réaliser une analyse coût-bénéfice détaillée (inférence, retraining, infra), pilote A/B avec période de rollback, métriques économiques définies (TCO, coût par inference), plan de migration progressif (canary), et monitorer coûts réels vs estimés.  \n\nRappel méthodologique : traiter indépendamment « gravité/impact » et « confiance » ; ne pas inférer l’un de l’autre."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Partially correct.: Close. The two most-missed ...",
+        "fr": "Partially correct.: Close. The two most-missed ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__02_027",
@@ -812,7 +1072,17 @@
         "fr": "1) Définissez clairement les critères (évite le chevauchement)\n- Effet : choisir un seuil par métrique (ex. small = <5% variation relative ou d <0.2 ; large = >20% ou d >0.8 ; unknown = pas d’estimations préalables fiables). Documenter la métrique primaire et les calculs.\n- Confiance : classer par combinaison de conséquence d’un mauvais appel (faible/modérée/critique) et réversibilité (réversible/non réversible). Exemple : critique+non réversible → exigence de confiance élevée.\n\n2) Processus en deux passes (appliquer à chaque scénario)\n- Passe A — taille d’effet seule : attribuer small / large / unknown selon les seuils documentés ; noter l’incertitude.\n- Passe B — exigence de confiance seule : évaluer conséquences (sécurité, juridique, réputation, coût), évaluer réversibilité (rollback simple ou non), puis classer confiance requise (basse/moyenne/haute). Ne pas mêler critères d’effet.\n\n3) Exemples rapides\n- Scénario 1 (changement de libellé bouton) : Passe A = small ; Passe B = basse (faible conséquence, réversible) → test A/B rapide, N petit, alpha relaxé.\n- Scénario 2 (modèle de tarification automatique) : Passe A = unknown ; Passe B = haute (fortes conséquences, peu réversible) → RCT à grande échelle, pré-enregistrement, surveillance, plans de rollback.\n\n4) Réorganisation recommandée de la section experiment-design\n- Introduction & objectifs\n- Définitions et seuils (effet, confiance, métriques)\n- Méthode de classification en deux passes (procédure et template)\n- Exemples appliqués\n- Plan d’expérience par classe (taille d’échantillon, alpha, power, monitoring, critères d’arrêt)\n- Gouvernance (pré-enregistrement, logs, QA, rollback)\n- Checklist opérationnelle pour lancer chaque scénario\n\nPoints clés attendus dans une bonne réponse : seuils chiffrés, justification des classes, procédure étape-par-étape, exemples concrets, et actions d’atténuation (pilot, staged rollout, rollback)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Some items need adjustment.: The axes are runni...",
+        "fr": "Some items need adjustment.: The axes are runni..."
+      }
     }
   ]
 }

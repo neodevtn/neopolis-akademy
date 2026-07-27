@@ -150,7 +150,17 @@
         "fr": "Ce que doit contenir une bonne réponse pour « Configuration et gestion des connaissances » (module 5)\n\nObjectif opérationnel\n- Décrire la finalité de la base de connaissances (support client, assistant interne, recherche documentaire) et les KPIs (précision, taux de résolution, temps de latence).\n\nArchitecture et ingestion\n- Types de sources (docs, FAQ, base de données, CRM) et format de normalisation (texte nettoyé, champs structurés, métadonnées).\n- Pipeline d’ingestion : extraction → nettoyage → segmentation → vectorisation (embeddings) → indexation (ex. Milvus/Weaviate/FAISS).\n- Fréquence et déclencheurs de mise à jour (batch quotidien, webhook à chaque changement, versioning).\n\nRécupération et pertinence\n- Stratégie de recherche : filtre multi-métadonnées + recherche sémantique + reranking.\n- Paramètres à expédier (k, score threshold) et templates de prompt pour contextualiser la requête.\n\nGouvernance, sécurité et conformité\n- Contrôles d’accès (RBAC), chiffrement en transit/au repos, anonymisation des données sensibles.\n- Politique de rétention et conformité (RGPD, logs d’accès).\n\nTests et monitoring\n- Jeux de requêtes de validation, mesures : précision top-1/top-k, taux d’hallucination, latence.\n- Alerting (dégradation de pertinence, erreurs d’ingestion) + plan de rollback.\n\nRisques concrets et mitigations\n- Données obsolètes → pipeline d’actualisation et metadata “valid_until”.\n- Fuites de données sensibles → masquage, revue humaine, audit logs.\n- Hallucinations → fallback vers documents sources et explication de la provenance.\n\nChecklist finale pour le checkpoint\n- Source listée, pipeline défini, index choisi, politique de sécurité, métriques de succès, test de bout en bout, plan d’amélioration continue."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Batch Processing"
+      ],
+      "title": {
+        "en": "Begin module →",
+        "fr": "Begin module →"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__05_002",
@@ -169,7 +179,17 @@
         "fr": "Étapes concrètes pour configurer un Claude Project (actionnable)\n1. Définir l’objectif du Project et le public (ex. Support technique niveau 1 — réponses courtes ≤150 mots, ton formel).\n2. Rédiger l’instruction permanente (system prompt) — exemple :\n   « Vous êtes l’assistant Support Technique de l’entreprise X. Priorisez sécurité, précision et citations de sources internes (format [SOURCE:nom]). Répondez en français, résumez si >3 paragraphes, proposez 2 étapes d’action. »\n3. Spécifier les contraintes et le style : longueur, balises interdites, confidentialité, règles de suppression de données.\n4. Lier les sources de connaissance :\n   - Connecteurs : Confluence, SharePoint, base de tickets, PDF (ingestion + embeddings).\n   - Métadonnées : équipe propriétaire, date de dernière mise à jour, niveaux de confiance.\n   - Paramètres : fenêtre temporelle (ex. n’inclure que doc ≤24 mois), score minimal de similarité.\n5. Tests de validation :\n   - Cas tests (5-10) : questions types + réponses attendues.\n   - Contrôle de cohérence : deux utilisateurs posent la même question → mêmes réponses.\n   - Tests de non-divulgation avec données sensibles.\n\nMaintenance et gouvernance\n- Revue trimestrielle : vérifier sources obsolètes, règle de priorité, logs d’erreurs.\n- Alertes : déconnexion de connecteurs, baisse de score d’appariement.\n- Gestion des versions d’instruction et approbation (CI/CD de prompts).\n\nRisques concrets\n- Documents obsolètes produisant mauvaises recommandations.\n- Instructions contradictoires entre Project et Skill.\n- Exposition accidentelle de données sensibles via connecteurs mal filtrés.\n- Dérive de style/ton si instructions trop vagues.\n\nChecklist qu’une bonne réponse couvre\n- Objectif + public, instruction permanente exemplaire, liste de sources et paramètres d’ingestion, tests de validation, cadence de maintenance, gestion des risques."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Agentic Design"
+      ],
+      "title": {
+        "en": "Using it means typing a good prompt today. Oper...",
+        "fr": "Using it means typing a good prompt today. Oper..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__05_003",
@@ -188,7 +208,17 @@
         "fr": "Définition courte et règle pratique\n- Instruction = règle de comportement (ex. « Toujours citer les sources »). Placez-la dans les instructions système/niveau Projet.\n- Connaissance = faits stables dont Claude a besoin (ex. codes hex de la marque). Stockez-les dans la base de connaissances au niveau compte.\n- Compétence = procédure multi‑étapes réutilisable (ex. formatage du rapport). Créez-la une fois dans Personnaliser (niveau compte) et réutilisez‑la dans chaque Projet.\n\nChecklist pour choisir le mécanisme (appliquer à chaque élément)\n- Est‑ce une procédure séquentielle ? → Compétence.\n- Est‑ce un fait ou un tableau de référence ? → Base de connaissances.\n- Est‑ce une règle de comportement attendue à chaque réponse ? → Instruction.\n- Besoin de réutilisation par plusieurs Projets ? Mettre au niveau compte.\n\nExemples concrets de configuration\n- Compétence (Personnaliser > Compétences): \"FormatRapportStandard\" — étapes : normaliser titres → insérer en‑tête client → appliquer modèle de sections → sortir Markdown/HTML.\n- Base de connaissances: \"PaletteMarque\" — entrées : Primary:#1A73E8, Secondary:#F4B400, etc.\n- Instruction Projet (ou système): \"Toujours fournir sources avec URL et date de consultation.\"\n\nMigration et maintenance (actions concrètes)\n1. Auditer éléments existants par type.\n2. Déplacer procédures vers Compétences, copier faits dans KB, convertir règles en Instructions.\n3. Standardiser noms (ex. Comp_GFormat_Rapport, KB_Palette_Marque).\n4. Tester chaque Projet en appelant la compétence et la KB centralisées.\n\nRisques si mal configuré\n- Duplication et incohérences, mises à jour lourdes, perte de réutilisabilité, comportement impossible à garantir."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "Claude Platform",
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "Choosing the right mechanism",
+        "fr": "Choosing the right mechanism"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__05_004",
@@ -207,7 +237,17 @@
         "fr": "Bonne réponse attendue : un ensemble concis, actionnable et réutilisable d’instructions système couvrant vérification, format, ton, traitement des données et refus. Doit inclure exemples et risques.\n\nPoints à couvrir (actionnables)\n- Vérifications : toujours vérifier les faits clés via sources récentes ; si incertain, préfixer par “possible” et ajouter probabilité estimée ; citer sources (URL + date).\n- Clarification : poser 1 question de clarification si la requête est ambiguë avant de répondre.\n- Format par défaut : résumé (2–3 phrases), liste à puces des points, étapes/actions recommandées, bloc code si nécessaire, section “Sources”.\n- Ton et style : professionnel, concis (≤300 mots), accessible, neutre ; adapter au public (technique vs non-technique) sur demande.\n- Sécurité/éthique : refuser contenu illicite, dangereux ou PII ; si demande de PII, rediriger vers méthodes anonymisées ; proposer alternatives sûres.\n- Traçabilité : inclure balise de confiance (haute/moyenne/faible) et noter hypothèses.\n- Maintenance : instructions versionnées et point de contact pour mise à jour.\n\nRisques concrets\n- Contournement par user prompt injection ; incohérence entre projets ; surconfiance dans sorties stables ; staleness des sources ; faux positifs sur refus.\n\nExemple d’instruction système persistante (à coller)\nVous êtes un assistant professionnel. Toujours : 1) vérifier factuellement et citer sources (URL + date); 2) demander clarification s’il y a ambiguïté; 3) produire : résumé + puces + actions + sources; 4) refuser demandes dangereuses/illégales et rediriger; 5) ne divulguer ni conserver de PII ; 6) indiquer niveau de confiance et hypothèses."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "Data Privacy",
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "System-Level Instructions That Stick",
+        "fr": "System-Level Instructions That Stick"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__05_005",
@@ -226,7 +266,17 @@
         "fr": "Checklist actionable pour répondre aux scénarios du module 5\n- Identifier d’abord : rôle du système demandé, objectif utilisateur, données sensibles en jeu.\n- Appliquer le cadre en ordre : autorité (est‑ce permis ?), sécurité (risques/harcèlement/diagnostic), confidentialité, précision, et comportement de refus/escale.\n- Chercher l’option qui minimise les risques tout en restant utile (préférence pour guidance générale + redirection vers expert quand nécessaire).\n- Justifier le choix en une phrase : quel principe du cadre est respecté/violé.\n\nExemples types (réponse modèle courte)\n1) Demande de diagnostic médical : choix = refuser diagnostic, fournir info générale + recommander pro. Principe = sécurité et compétence.\n2) Demande d’informations personnelles sur un tiers : choix = refuser divulgation. Principe = confidentialité/consentement.\n3) Instruction pour créer code malveillant : choix = refuser et expliquer pourquoi, proposer alternatives sûres. Principe = sécurité/éthique.\n4) Besoin d’accès à systèmes internes (API/clés) : choisir l’option qui exige authentification et scope limité. Principe = moindre privilège.\n5) Question ambiguë sans contexte : choix = poser clarification avant d’agir. Principe = précision et robustesse.\n\nPièges courants à éviter\n- Choisir l’option la plus “utile” sans vérifier conformité/sécurité.\n- Omettre redirections vers experts quand nécessaire.\n- Négliger refus explicite et explication transparente."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Compliance"
+      ],
+      "title": {
+        "en": "QuizModule 5·5 min",
+        "fr": "QuizModule 5·5 min"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__05_006",
@@ -245,7 +295,17 @@
         "fr": "Points clés qu’une bonne réponse au quiz Module 5 doit couvrir\n\n- Objectif et risque\n  - Identifier l’intention utilisateur (informatif, créatif, transactionnel) et le niveau de risque (PII, instruction dangereuse, décisions sensibles).\n  - Risques concrets : hallucinations/faux faits, fuite de données sensibles, incitation à des actes dangereux, prompt injection, coûts/latence excessifs, non‑conformité réglementaire.\n\n- Paramètres de génération (choix et justification)\n  - Temperature : 0–0.2 pour réponses déterministes/factuelles ; 0.5–1.0 pour créativité.\n  - top_p : alternative au temperature pour contrôle de diversité ; utiliser l’un ou l’autre, pas les deux de façon contradictoire.\n  - max_tokens : fixer juste au‑dessus de la longueur attendue pour limiter coût et sortie indésirable.\n  - stop sequences : définir pour éviter débordements ou révélations de chaines internes.\n\n- Prompting et comportement\n  - Utiliser message système clair (rôles, style, contraintes) ; templates réutilisables avec variables.\n  - Éviter de demander la pensée interne (chain‑of‑thought) dans des réponses destinées au public ou sensibles.\n  - Instructions de sécurité explicites (refuser contenus dangereux, renvoyer vers ressources).\n\n- Protection des données et sécurité opérationnelle\n  - Masquer/filtrer PII avant journalisation ; activer content filters/safety classifiers.\n  - Contrôles d’accès, rotation de clés, quotas et monitoring des coûts.\n  - Tests adversariaux (prompt-injection) et red‑team réguliers.\n\n- Observabilité et mitigation\n  - Logs structurés (avec anonymisation), métriques de qualité et alertes d’anomalie.\n  - Plan de mitigation : rejeter, escalader humainement, fournir réponse sûre par défaut.\n  - Itérer en A/B testing et documenter décisions.\n\nChecklist de réponse à un scénario\n1) préciser objectif et risque ; 2) choisir paramètres (temperature, max_tokens, stop, modèle) et justifier ; 3) décrire protections (filtrage PII, safety) ; 4) indiquer monitoring et actions correctives."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "Automation",
+        "Content Filtering"
+      ],
+      "title": {
+        "en": "Module 5 Quiz",
+        "fr": "Module 5 Quiz"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__05_007",
@@ -264,7 +324,17 @@
         "fr": "1) Objectifs et cas d’usage — Définir précisément ce que le module doit accomplir (ex. résumé, triage, génération de code). Critère actionnable : rédiger 1–2 phrases décrivant l’output attendu et les métriques de succès (précision ≥ X, temps de réponse < Y ms).\n\n2) Message système / rôle — Formaliser le rôle du modèle (ton, niveau de détail, contraintes). Ex. : «Tu es un assistant technique concis; fournis des réponses en français, pas plus de 6 phrases, cite les sources si disponibles.» Test : vérifier que 3 prompts différents respectent ce style.\n\n3) Paramètres de génération — Choisir température, top_p, max_tokens, stop-sequences. Recommandation : température 0–0.3 pour réponses déterministes, 0.6–0.9 pour créativité; max_tokens = taille max attendue + marge (p.ex. 512). Documenter les valeurs et raisons.\n\n4) Sécurité et modération — Lister contenus interdits, règles de refus, filtres automatiques et process d’escalade. Action : créer une checklist de refus (ex. demandes illégales, données sensibles) et un message standard de refus à renvoyer.\n\n5) Observabilité et itération — Mettre en place logs, métriques (exactitude, taux de refus, latence), tests A/B et feedback utilisateur. Actionnable : définir tableau de bord avec KPI hebdomadaires et procédure de mise à jour du message système toutes les 2–4 semaines selon feedback.\n\nUne bonne réponse au quiz montrera que vous pouvez appliquer ces cinq éléments à un scénario concret (paramètres chiffrés, message système d’exemple, règles de sécurité)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Automation",
+        "Deployment",
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "Five scenario-style questions. Each presents a ...",
+        "fr": "Five scenario-style questions. Each presents a ..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__05_008",
@@ -283,7 +353,17 @@
         "fr": "Checklist de correction modèle (objectifs opérationnels et actions concrètes)\n\n1) Choix du mécanisme\n- Sélectionner selon cas d’usage : RAG pour connaissances dynamiques, finetune pour style/consistance, prompt engineering + tool-call pour actions externes.\n- Critères : fréquence des mises à jour, latence tolérable, coût par appel, besoin d’auditabilité.\n\n2) Mémoire à portée limitée\n- Mesurer la fenêtre de contexte effective (tokens) et concevoir stratégie : chunking + indexation + résumés progressifs.\n- Implémenter un “short-term state” limité (p.ex. 2–3 derniers échanges) et externaliser l’historique important dans la base RAG.\n- Exemple : stocker événements clefs en objets JSON et injecter uniquement les 3 plus récents + résumé.\n\n3) Limites du connecteur\n- Tester et documenter : payload max (taille), taux d’appel (RPS), latence moyenne/95e percentile.\n- Implémenter retry avec backoff exponentiel, circuit breaker, et fallback (mode dégradé).\n- Authentification sécurisée et rotation de clés.\n\n4) Précision des instructions\n- Fournir template strict : but, format de sortie JSON-schema, contraintes (longueur, style), exemples positifs/négatifs.\n- Exemple :\n  \"But: Résumer en 3 puces. Format: JSON {title, bullets[]}. Contrainte: chaque puce ≤ 140 caractères.\"\n- Valider la conformité automatiquement (schema validation + checks).\n\n5) Maintenance et gouvernance\n- Monitoring : taux d’erreur, hallucinations (détections), coût, latence, dérive qualité.\n- Tests automatisés (prompts canary), logs d’audit, versioning des prompts, pipeline de rollback.\n- Plan de mises à jour (cadence RAG, ré-entraînement) et SLA.\n\nRisques concrets : fuite d’informations sensibles, surcoût inattendu, dégradation silencieuse (drift), non-conformité légale. Prévoir atténuations (chiffrement, quotas, audits)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Full marks · 5/5: Full command of configuration...",
+        "fr": "Full marks · 5/5: Full command of configuration..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__05_009",
@@ -302,7 +382,17 @@
         "fr": "Pour chaque question manquée, suivez ce processus structuré et documentez une correction claire.\n\n1) Rassembler\n- Notez la question exacte (Q1, Q2 L2; Q3 L3; Q4 L4; Q5 L5).\n- Récupérez votre réponse originale et la réponse correcte/solution du cours.\n\n2) Diagnostiquer l’erreur (1–2 lignes)\n- Catégorisez : mauvaise lecture, erreur conceptuelle, calcul/orthographe, oubli d’étape, confusion de terme.\n\n3) Rédiger la correction modèle (format à copier pour chaque question)\n- Question : [texte]\n- Votre réponse : [texte]\n- Réponse correcte : [texte concis]\n- Explication (2–4 phrases) : pourquoi la bonne réponse est correcte, quelles hypothèses/manipulations manquaient.\n- Référence : [leçon X, section Y, page/slide]\n\nExemple :\n- Question : [ex]\n- Votre réponse : \"A\"\n- Réponse correcte : \"B\"\n- Explication : La propriété X impose que..., donc la conclusion B s’ensuit. Vous avez omis d’appliquer le théorème Z (Leçon 2, slide 10).\n\n4) Remédiation active\n- Créez 2 exercices similaires et résolvez-les sans notes.\n- Résumez le concept clé en 1 phrase et créez une flashcard.\n- Plan : 30–60 min d’étude ciblée pour les erreurs conceptuelles; 15–30 min pour erreurs d’attention.\n\n5) Vérification\n- Relire la correction après 24–48 h et expliquer le concept à quelqu’un ou l’écrire de mémoire.\n\nPoints clés qu’une bonne réponse doit couvrir : identification précise de l’erreur, explication causale, référence aux ressources, exercices de transfert, et plan de révision temporel."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Computer Vision",
+        "Error Handling"
+      ],
+      "title": {
+        "en": "4/5: Review the questions you missed: Q1 and Q2...",
+        "fr": "4/5: Review the questions you missed: Q1 and Q2..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__05_010",
@@ -321,7 +411,17 @@
         "fr": "Pour chaque question manquée (Q1–Q5) procédez ainsi, et rendez une réponse corrigée conforme au format attendu.\n\n1) Reproduisez l’énoncé exact de la question et votre réponse initiale.  \n2) Localisez la notion précise dans la Leçon correspondante (paragraphe/slide/phrase clé) et copiez la règle ou définition pertinente.  \n3) Rédigez la réponse corrigée en 2–4 phrases maximum :\n   - Si Vrai/Faux : indiquez la bonne valeur, puis une justification factuelle (« Faux — car … », en citant la règle).  \n   - Si QCM : éliminez chaque option incorrecte en une phrase et expliquez pourquoi la bonne option est la seule qui respecte la définition.  \n   - Si question ouverte/calcul : donnez le raisonnement étape par étape, formule(s) utilisée(s), et le résultat final.  \n4) Ajoutez une phrase d’application (« Ex. ») montrant la notion sur un cas concret ou un petit calcul pour vérifier la maîtrise.  \n5) Plan de révision : notez 2 erreurs conceptuelles identifiées et 2 exercices supplémentaires à refaire.\n\nChecklist qu’une bonne correction couvre : énoncé reproduit, référence à la leçon, justification précise, démarche complète (ou élimination d’options), exemple d’application, et plan de pratique."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Computer Vision",
+        "Fundamentals",
+        "RAG Architecture"
+      ],
+      "title": {
+        "en": "incorrect: Review the questions you missed: Q1 ...",
+        "fr": "incorrect: Review the questions you missed: Q1 ..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__05_011",
@@ -340,7 +440,17 @@
         "fr": "Faux. Explication et correction ciblée :\n\nLa « configuration » désigne l’agencement formel de l’équipe (rôles, structures, outils, flux d’information), pas directement le processus par lequel une compétence individuelle devient une capacité collective. La transformation des compétences individuelles en capacité d’équipe dépend de mécanismes opérationnels : coordination, intégration, apprentissage collectif et routines.\n\nPoints qu’une bonne réponse doit couvrir :\n- Définition précise : configuration = structure + allocation des rôles + outils/artefacts partagés.\n- Mécanismes effectifs de conversion : standardisation des processus, intégration (rôles d’interface), apprentissage collectif (formations croisées, pair programming, communities of practice), feedback continu (revu de pair, post-mortem), et mental models partagés.\n- Exemple concret : équipe dev — configuration = scrum roles, CI/CD, backlog partagé; conversion = pair programming, revues de code, mentoring, documentation vivante.\n- Critères de choix (section mécanisme-choix) : alignement sur objectif, friction communicationnelle, coût de coordination, adaptabilité, mesures d’impact (lead time, qualité, transfert de compétence).\n- Actions recommandées pour appliquer la correction : cartographier compétences individuelles, choisir 2 mécanismes (ex. pair programming + revues régulières), formaliser rôles d’intégration, mesurer progrès (taux de bugs, temps de ramp-up).\n\nRelisez la section mécanisme-choix en cherchant définitions, exemples et critères permettant d’associer une configuration aux mécanismes qui créent la capacité d’équipe."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Business Value",
+        "Digital Transformation",
+        "Documentation"
+      ],
+      "title": {
+        "en": "incorrect: Revisit the module before continuing...",
+        "fr": "incorrect: Revisit the module before continuing..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__05_012",
@@ -359,7 +469,17 @@
         "fr": "Correction modèle (ce qu’un étudiant devrait produire)\n\nLe libellé indique que la session a été interrompue et qu’il faut revenir pour compléter le quiz. Une bonne réponse doit être concrète, montrer que l’étudiant sait comment reprendre et limiter les risques. Points clés à couvrir :\n\nActions précises à entreprendre\n- Ouvrir la plateforme (LMS) et localiser le quiz : chemin exact (module > section > “Quiz X”).\n- Relire rapidement les ressources liées (pages/vidéos listées) — 10–20 minutes pour révision ciblée.\n- Vérifier délais/échéances et conditions (nombre de tentatives, durée limite).\n- Préparer un environnement : connexion stable, désactiver notifications, charger appareil.\n- Stratégie de passation : lire toutes les questions, répondre d’abord aux faciles, marquer les doutes, relire les réponses clés avant soumission.\n- Après soumission : vérifier la confirmation et faire une capture d’écran du reçu.\n\nRisques concrets à mentionner\n- Perdre l’accès ou la tentative si la deadline est dépassée.\n- Blocage de la progression/certification.\n- Perte de données en cas de mauvaise connexion.\n\nExemple de message au formateur (si extension nécessaire)\n« Bonjour, j’ai été interrompu avant de compléter le quiz [titre]. Puis-je obtenir une nouvelle tentative / une prolongation jusqu’au [date] ? Je peux fournir justificatif si nécessaire. Merci. »\n\nCette réponse montre préparation, gestion du temps et plan d’action pour sécuriser la réussite du quiz."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Computer Vision",
+        "Error Handling"
+      ],
+      "title": {
+        "en": "Skipped: Return to complete the quiz before adv...",
+        "fr": "Skipped: Return to complete the quiz before adv..."
+      }
     }
   ]
 }

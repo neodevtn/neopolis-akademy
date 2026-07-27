@@ -2389,7 +2389,17 @@
         "fr": "Correction modèle (actionnable)\n\nImplémentation technique (pas-à-pas)\n1. Charger le system_prompt depuis une source configurable (fichier JSON/YAML, variables d'environnement, DB, UI d'administration). Ne pas hardcoder.\n2. Valider et normaliser: system_prompt = (value or \"\").strip(); si vide, considérer comme absent.\n3. Construire le payload messages en ajoutant la message système uniquement si system_prompt != \"\".\n4. Envoyer l'appel API avec la liste de messages résultante.\n\nExemple Python (fonctionnel)\n```python\ndef call_model(user_prompt, config):\n    system_prompt = (config.get(\"system_prompt\") or \"\").strip()\n    messages = []\n    if system_prompt:\n        messages.append({\"role\": \"system\", \"content\": system_prompt})\n    messages.append({\"role\": \"user\", \"content\": user_prompt})\n    return api_client.create(messages=messages)  # remplacez par client réel\n```\n\nBonnes pratiques de configuration\n- Variables par environnement / par cas d’usage (ex: \"onboarding_assistant\", \"legal_reviewer\").\n- Versionner chaque prompt et stocker métadonnées (auteur, date, usage).\n- Permettre templates avec placeholders et rendu sécurisé (ex: Jinja + échapper variables).\n\nTests et validations\n- Tests unitaires: cas avec prompt absent, vide, très long.\n- Contrôles runtime: longueur max, blacklist d’instructions dangereuses.\n\nRisques concrets et mitigations\n- Erreur API si None inclus → valider et filtrer.\n- Injection via prompts configurables → restreindre éditeurs, échapper/filtrer variables.\n- Prompts obsolètes ou contradictoires → contrôles de version et revue humaine.\n\nRésultat attendu\n- Flux adaptatif : l’agent devient un cadre guidé (rôle/tonalité) quand system_prompt présent, sinon comportement par défaut."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Technical consideration = system parameter cann...",
+        "fr": "Technical consideration = system parameter cann..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_002",
@@ -2408,7 +2418,17 @@
         "fr": "Pourquoi configurable: sépare le contenu métier de l’implémentation, permet réutilisation, tests A/B, localisation et évolution sans déploiement de code.\n\nImplémentation pratique (étapes actionnables)\n- Définir un schéma de template (id, version, slots, contraintes, métadonnées).\n- Stocker dans une config centralisée (DB/feature flags) avec contrôle d’accès et historique.\n- Fournir un renderer sûr qui remplace/échappe les variables et valide longueur/contraintes.\n- Prévoir profils par rôle/contexte (support, résumé, tutoriel) et fallback par défaut.\n- Versionner et fournir tests unitaires + scénarios d’intégration et métriques (cohérence, taux de réutilisation).\n\nExemple (template + rendu simple)\nTemplate JSON:\n{\"id\":\"agent_support_v1\",\"template\":\"Tu es un assistant {{role}} pour {{company}}. Ton ton: {{tone}}. Contrainte: {{constraints}}. Contexte: {{context}}\"}\nRendu (pseudo-JS):\nconst t=template.replace('{{role}}','agent').replace('{{company}}','Acme').replace('{{tone}}','empathetic').replace('{{constraints}}','pas de conseils médicaux').replace('{{context}}',userContext);\n\nRisques si codé en dur\n- Duplication, incohérences entre cas d’usage\n- Difficulté de mise à jour et rollback\n- Fuites d’informations sensibles dans le code\n- Tests et audits impossibles ou coûteux\n\nChecklist qu’une bonne réponse doit couvrir\n- schéma/versioning, stockage et contrôle d’accès, escaping/validation, profils de rôle, tests et monitoring, procédures de rollback."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Agentic Design"
+      ],
+      "title": {
+        "en": "Best practice = make system prompts configurabl...",
+        "fr": "Best practice = make system prompts configurabl..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_003",
@@ -2427,7 +2447,17 @@
         "fr": "Correction modèle — points qu’un étudiant doit couvrir précisément :\n\n- Définition claire : la température est un paramètre décimal [0,1] qui re-scale la distribution de probabilité des tokens avant échantillonnage (softmax/T^−1). Température = 0 → comportement « greedy » déterministe ; température élevée → plus d’aléa.\n- Processus : tokenization → modèle calcule logits → softmax ajusté par 1/temperature → échantillonnage (ou argmax si temp = 0).\n- Effets concrets et valeurs recommandées :\n  - 0 (ou 0.0–0.01) : extraction de faits, requêtes API, génération reproductible.\n  - 0.1–0.3 : tâches factuelles / résumés courts (moins de paraphrases, faible hallucination).\n  - 0.4–0.6 : rédaction fluide, réponses créatives contrôlées.\n  - 0.7–1.0 : créativité élevée, variations et reformulations.\n- Bonnes pratiques actionnables :\n  - Pour réduire hallucinations, baisser la température ET utiliser top-p (≈0.9) ou top-k (≈40).\n  - Tester plusieurs valeurs et comparer sorties (ex. 3–5 itérations par réglage).\n  - Temp=0 est greddy, pas un softmax strict ; vérifier répétition ou blocage lexical.\n- Risques concrets : température trop haute → hallucinations, incohérences, sorties offensantes ; trop basse → phrases robotiques, perte de diversité.\n- Remarque technique : la sensibilité peut varier selon le modèle — calibrer empiriquement."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Temperature = parameter controlling randomness ...",
+        "fr": "Temperature = parameter controlling randomness ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_004",
@@ -2446,7 +2476,17 @@
         "fr": "Objectif attendu — correction modèle (concis, actionnable) :\n\nProcédure d’implémentation\n- Initialiser l’état à la réception de message_start (ID conversation, horodatage).\n- Sur content_block_start, ouvrir un buffer pour ce bloc (métadonnées : rôle, format).\n- Sur chaque content_block_delta, concaténer le delta au buffer et pousser immédiatement au frontend (débit contrôlé, flush toutes N ms ou après X caractères).\n- Sur content_block_stop, marquer ce bloc comme complet et exécuter post-traitements locaux (HTML-escape, entités).\n- Sur message_delta, mettre à jour le statut global et afficher méta-incréments (scores, cursor).\n- Sur message_stop, finaliser la réponse : vérifier intégrité, exécuter filtres de sécurité/modération, stocker transcript.\n\nGestion des erreurs et UX\n- Timeout réseau / interruption : conserver l’état, informer l’utilisateur, permettre tentative de reprise ou recharge.\n- Annulation utilisateur : envoyer cancel au modèle (si supporté), fermer iterator, et rollback/metadata.\n- Dédoublonnage : éviter d’afficher deux fois des deltas en gardant un index de dernier_offset appliqué.\n- Backpressure : buffer côté serveur si frontend lent, tronquer ou prioriser texte critique.\n- Sécurité : n’afficher pas de PII tant que la réponse n’est pas validée; exécuter filtres asynchrones sur deltas sensibles.\n\nExemple Python minimal\nclient = ... \nit = client.messages.create(model=\"claude-2\", messages=msgs, stream=True)\nbuffers = {}\nfor event in it:\n    t = event[\"type\"]\n    if t == \"message_start\": buffers[event[\"id\"]] = {\"text\":\"\"}\n    elif t == \"content_block_delta\":\n        buffers[event[\"id\"]][\"text\"] += event[\"delta\"]\n        send_to_frontend(event[\"id\"], event[\"delta\"])\n    elif t == \"content_block_stop\":\n        finalize_block(event[\"id\"])\n    elif t == \"message_stop\":\n        verify_and_store(buffers.pop(event[\"id\"]))\n    elif event.get(\"error\"):\n        handle_error(event[\"error\"])\n\nPoints d’évaluation clés pour l’exercice : gestion fine des événements, robustesse (timeouts/annulation), affichage incrémental fluide, sécurité des données, et post-traitement fiable."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Response Streaming = technique to provide immed...",
+        "fr": "Response Streaming = technique to provide immed..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_005",
@@ -2465,7 +2505,17 @@
         "fr": "Correction modèle (FR)\n\nExplication courte\n- text.strip() supprime uniquement espaces et sauts de ligne en début/fin. Utile pour enlever padding.\n- json.loads() décode une chaîne JSON valide en objet Python. Nécessite JSON syntaxiquement correct (guillemets doubles, pas de virgule finale, true/false/null exacts).\n- En pratique on combine nettoyage léger + extraction + tentative de réparation avant de parser.\n\nExemple Python robuste (fonctionnelle)\n```python\nimport re, json\n\ndef parse_model_json(output: str):\n    s = output.strip()\n    # essai direct\n    try:\n        return json.loads(s)\n    except json.JSONDecodeError:\n        pass\n    # extraire premier bloc JSON (objet ou liste) non-gourmand\n    m = re.search(r'(\\{.*?\\}|\\[.*?\\])', s, re.DOTALL)\n    if not m:\n        raise ValueError(\"Aucun bloc JSON détecté\")\n    candidate = m.group(1)\n    # retirer virgules finales avant } ou ]\n    candidate = re.sub(r',\\s*(?=[}\\]])', '', candidate)\n    # remplacer guillemets simples convertibles (prudent)\n    candidate = re.sub(r\"(?<=[:\\[,]\\s*)'([^']*)'(?=\\s*[,\\]}])\", r'\"\\1\"', candidate)\n    try:\n        return json.loads(candidate)\n    except json.JSONDecodeError as e:\n        raise ValueError(f\"JSON invalide après nettoyage: {e.msg}\")\n```\n\nCas d'utilisation\n- Toute sortie attendue strictement structurée (API, ingestion DB, tests automatiques).\n\nRisques concrets\n- JSON partiel ou texte ajouté avant/après → échec de parsing.\n- Virgules finales, guillemets simples, ou caractères d’échappement invalides.\n- Perte d’informations utiles si on supprime le commentaire du modèle.\n- Injectation de contenu malicieux dans champs non validés.\n\nBonnes pratiques finales\n- Demander explicitement «Output ONLY valid JSON».\n- Valider le résultat avec jsonschema.\n- Logger la sortie brute pour audit et fallback humain."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Implementation: text.strip() or JSON.loads() ca...",
+        "fr": "Implementation: text.strip() or JSON.loads() ca..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_006",
@@ -2484,7 +2534,17 @@
         "fr": "Ce que doit contenir une bonne réponse (correction modèle) — concise et actionnable :\n\n1) Objectif et critères d'acceptation\n- Définir métriques claires avant ingénierie : pertinence/relevance (embedding cosine ≥ 0.8), exactitude/fact-check (taux d'assertions vérifiées ≥ 95%), taux d’hallucination acceptable < 2%, toxicité < seuil (ex. score Detoxify proche de 0), latence/throughput opérationnels.\n\n2) Pipeline d’évaluation reproductible\n- Jeu de test représentatif : cas typiques, cas limites, adversarial, données réelles, et sandboxing pour données sensibles.\n- Évaluations automatiques : similarité sémantique (cosine embeddings), fact-checker automatique, métriques de style/longueur, tests unitaires d’instructions.\n- Évaluations humaines : rubriques annotées (fidélité, utilité, sécurité), minimum 3 annotateurs, agreement (Cohen’s kappa ≥ 0.6).\n- Intégration CI : exécution automatique des tests à chaque itération de prompt + reports.\n\n3) Itération contrôlée\n- Mesurer baseline → formuler hypothèse → modifier prompt → A/B ou tests en shadow → n’accepter que si métriques surpassent le baseline et respectent critères de sécurité.\n- Déploiement progressif (canary), monitoring post-déploiement (alertes sur dérive, logs pour réexamen).\n\n4) Risques concrets si on saute l’évaluation\n- Hallucinations factuelles, biais non détectés, fuite de données, dommages réputationnels, non-conformité réglementaire, coûts d’intervention élevés.\n\nPoints attendus dans la réponse de l’étudiant : définition de métriques, construction du jeu de test, combinaison auto + humain, protocole d’itération (A/B, canary), seuils d’acceptation, et plan de monitoring post-déploiement."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Options 1 and 2 are common traps - engineers do...",
+        "fr": "Options 1 and 2 are common traps - engineers do..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_007",
@@ -2503,7 +2563,17 @@
         "fr": "Correction modèle — Workflow d’évaluation itératif (5 étapes)\n\n1) Ébauche initiale (exemple concret)\nPrompt template :\n\"Tu es un assistant expert. Réponds à la question de l'utilisateur [user_input] en 3 paragraphes : 1) réponse synthétique, 2) explication détaillée, 3) sources et étapes actionnables. Sois concis, neutre, et cite les hypothèses si nécessaire.\"\n\n2) Jeu de données d'évaluation (3+ exemples)\n- Input A : \"Comment réduire le temps de chargement d'une page web React ?\"\n- Input B : \"Explique la différence entre inflation et déflation pour un non-spécialiste.\"\n- Input C : \"Rédige un e-mail professionnel refusant une proposition commerciale sans heurter le contact.\"\nInclure cas simples, ambigus, et adversariaux/edge-cases.\n\n3) Exécution\nAutomatiser : injecter chaque input dans le template, fixer des paramètres (p.ex. top_p/temperature faibles pour cohérence), batcher les requêtes, versionner les prompts et paramètres.\n\n4) Évaluation (système de notation actionnable)\nCritères (échelle 1–10) : Exactitude (40%), Clarté (25%), Complétude (20%), Format/Style (10%), Sécurité/Conformité (5%).\nScore final = somme pondérée. Calculer moyenne et écart-type ; identifier inputs à faible score pour diagnostic. Seuil d’acceptation par défaut : moyenne ≥ 8/10.\n\n5) Itération & contrôle qualité\nActions si score <8 : ajouter exemples few-shot, préciser contraintes, réordonner instructions, restreindre hallucinations (demander sources), ou simplifier l’instruction. A/B tester variantes (au moins 100 exemples si possible), conserver logs, utiliser tests unitaires pour régressions, répéter cycles jusqu’à convergence. Risques à surveiller : sur-ajustement au jeu de test, biais de données, incohérence d’évaluateurs humains."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Batch Processing"
+      ],
+      "title": {
+        "en": "Typical Eval Workflow = 5-step iterative proces...",
+        "fr": "Typical Eval Workflow = 5-step iterative proces..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_008",
@@ -2522,7 +2592,17 @@
         "fr": "Étape 3 — Exécution\n- Implémenter une boucle qui assemble le prompt complet pour chaque entrée (template + variables), en fixant systématiquement les paramètres du modèle (model, temperature, max_tokens).  \n- Gérer la mise en lot, la ré-essai et les limites de débit (backoff exponentiel). Journaliser prompts, métadonnées (seed, paramètres), réponse brute et horodatage pour traçabilité.\n\nExemple Python (pseudocode minimal) :\n```\nfor item in dataset:\n    prompt = template.format(**item)\n    resp = client.generate(model=\"claude-2.1\", prompt=prompt, temperature=0.0)\n    save_record(item_id=item[\"id\"], prompt=prompt, response=resp.text)\n```\n\nÉtape 4 — Notation\n- Utiliser une grille de notation multi-critères (ex. précision, pertinence, exhaustivité, clarté, sécurité), chaque critère 1–10. Exemple de pondération : précision 0.4, pertinence 0.25, exhaustivité 0.2, clarté 0.1, sécurité veto.  \n- Calculer score par paire : score = sum(critère_score * poids). Moyenne et écart-type sur l’ensemble. Fournir aussi distribution (histogramme) et proportion au-dessus d’un seuil.  \n- Pour robustesse : 2 évaluateurs humains par exemple + adjudication en cas de >2 points d’écart, ou utiliser bootstrap pour intervalle de confiance.\n\nÉtape 5 — Itération\n- Modifier une variable à la fois (prompt wording, few-shot examples, instructions de format, temperature). Conserver un jeu témoin (control) pour comparaison.  \n- Exécuter N≥100 (idéal ≥300) exemples par version; comparer moyennes + test statistique (t-test/bootstrapping) pour significativité.  \n- Prioriser modifications à fort impact : clarifier l’intention, ajouter exemples négatifs/positifs, contraindre format de sortie.  \n- Automatiser tracking (versioning des prompts, métriques) et arrêter quand amélioration marginale < seuil défini."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Batch Processing"
+      ],
+      "title": {
+        "en": "Step 3: Prompt Execution = Feed each dataset in...",
+        "fr": "Step 3: Prompt Execution = Feed each dataset in..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_009",
@@ -2541,7 +2621,17 @@
         "fr": "Points clés d’une bonne réponse — spécifique et actionnable :\n\n1. Nommage descriptif et cohérent\n- Préférer des noms contextuels (sales_records, sales_record, customer, product, date, amount; athletes, athlete, stats, event) plutôt que data/records vagues.\n- Utiliser snake_case ou camelCase de manière consistante. Limiter la profondeur à ~3 niveaux quand possible.\n\n2. Séparation claire du code / documentation / données\n- Marquer explicitement les sections : <code language=\"python\">…</code>, <doc>…</doc>, <external_input source=\"csv\">…</external_input>.\n- Ajouter attributs pour métadonnées: <sales_record id=\"R123\" currency=\"EUR\" date=\"2026-07-25\">.\n\n3. Marquage des informations d’athlète et ventes (exemples)\n- Athlète :\n  <athletes>\n    <athlete id=\"A001\" country=\"FRA\">\n      <name>Marie Dupont</name>\n      <sport>athletics</sport>\n      <stats><event name=\"100m\" medal=\"silver\"/></stats>\n    </athlete>\n  </athletes>\n- Ventes :\n  <sales_records version=\"1.0\">\n    <sales_record id=\"S001\"><customer>ACME</customer><product>Widget</product><amount currency=\"EUR\">199.99</amount></sales_record>\n  </sales_records>\n\n4. Bonnes pratiques techniques\n- Toujours fermer les balises, indiquer la version/schema (version, schemaLocation).\n- Marquer l’origine des entrées externes (<external_input source=\"user/csv/api\">).\n- Indiquer unités et langue (currency, lang).\n- Eviter les noms ambigus et la sur-nesting; préférez attributs pour métadonnées.\n\nCes éléments permettent au modèle (surtout les plus simples) de comprendre le rôle de chaque bloc et de produire des sorties plus fiables."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Tag naming = use specific, descriptive names (s...",
+        "fr": "Tag naming = use specific, descriptive names (s..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_010",
@@ -2560,7 +2650,17 @@
         "fr": "Correction modèle (exemples et bonnes pratiques)\n\nAvantages concrets\n- Réduit l’ambiguïté en séparant rôle/instructions/contenu/format attendu.\n- Aide les modèles simples à repérer des segments (instruction vs données).\n- Améliore la qualité des réponses et la reproductibilité des prompts.\n\nBonnes pratiques actionnables\n1. Définir un petit jeu de balises constantes : <instruction>, <input>, <metadata>, <constraints>, <output_format>.\n2. Placer les balises dans un ordre fixe et documenté (ex. instruction → input → constraints → output_format).\n3. Pour courtes sections, toujours taguer (même une ligne) : <input>...</input> évite l’ambiguïté.\n4. Indiquer explicitement au modèle d’obéir aux balises (« Répond uniquement dans <output>…</output> »).\n5. Échapper les caractères spéciaux dans l’input ou valider/saniter les inputs externes.\n6. Utiliser des contraintes machine‑lisibles (ex. <max_sentences>2</max_sentences>) pour contrôler la forme.\n\nRisques et mitigations\n- Risque : le modèle ignore les balises → mitigation : instruction explicite et exemples.\n- Risque : injection via contenu tagué → mitigation : saniter/valider l’input avant inclusion.\n- Risque : balises inconsistantes → mitigation : choisir des noms simples et un schéma partagé.\n\nExemple de prompt (fonctionnel)\n<instruction>Résume le texte entre <input> en deux phrases.</instruction>\n<input>Le modèle doit apprendre à utiliser des balises XML pour structurer les prompts.</input>\n<constraints><max_sentences>2</max_sentences></constraints>\n<output_format><tag>summary</tag></output_format>\nRépond uniquement dans la balise <summary>...</summary>."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Architecture",
+        "Context Design",
+        "Output Formatting"
+      ],
+      "title": {
+        "en": "Benefits = reduces ambiguity about what text se...",
+        "fr": "Benefits = reduces ambiguity about what text se..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_011",
@@ -2579,7 +2679,17 @@
         "fr": "Le snippet donné illustre le principe, mais voici une correction modèle opérationnelle et des bonnes pratiques pour rendre les erreurs exploitables par Claude.\n\nPoints clés à couvrir\n- Valider rigoureusement (None, chaîne vide, espaces).\n- Lever des erreurs explicites et machine-parseables (code + message).\n- Ne pas divulguer d’informations sensibles dans les messages d’erreur.\n- Fournir un fallback ou des suggestions de correction (ex. format par défaut).\n- Exposer des erreurs structurées (JSON) pour permettre des réessais automatisés.\n- Protéger contre boucles de réessai infinies (max attempts/backoff).\n\nExemple de fonction améliorée (Python) :\n```\nfrom datetime import datetime\n\nclass InvalidParameterError(ValueError):\n    def __init__(self, code, message):\n        super().__init__(message)\n        self.code = code\n\ndef get_current_datetime(date_format=\"%Y%m%d %H:%M:%S\"):\n    if date_format is None or not str(date_format).strip():\n        raise InvalidParameterError(\"EMPTY_FORMAT\", \"date_format cannot be empty\")\n    try:\n        return datetime.now().strftime(date_format)\n    except Exception as e:\n        # fournir un code d'erreur clair pour le retry\n        raise InvalidParameterError(\"INVALID_FORMAT\", f\"invalid date_format: {e}\")\n```\n\nExemple d'utilisation côté assistant (logique de retry)\n- Si code == \"EMPTY_FORMAT\" => remplacer par format par défaut ou demander un format précis.\n- Si code == \"INVALID_FORMAT\" => renvoyer quelques formats valides et réessayer (max 3 tentatives).\n\nRisques concrets\n- Messages non structurés empêchent parsing automatique.\n- Révélations d’implémentation dans les erreurs.\n- Boucles de réessai infinies sans limites."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Error Handling Benefits:",
+        "fr": "Error Handling Benefits:"
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_012",
@@ -2598,7 +2708,17 @@
         "fr": "Exemple de correction modèle (TypeScript/JSON schema + prompt à Claude) — respecte les conventions demandées et descriptions de 3–4 phrases :\n\nimport { ToolParam } from \"anthropic.types\"\n\nexport const create_invoice_schema: ToolParam = {\n  name: \"create_invoice\",\n  description: \"Outil pour créer et valider une facture dans le système comptable. Il prend les métadonnées de la facture et les lignes d'articles, applique des règles de validation (montant non négatif, date au format ISO) et renvoie un objet prêt à persister. Utiliser cet outil uniquement après authentification et vérification des droits. Fournit des erreurs structurées en cas d'échec de validation.\",\n  type: \"object\",\n  properties: {\n    invoice_id: {\n      type: \"string\",\n      description: \"Identifiant unique de la facture (UUID recommandé). Doit être généré côté client ou backend avant appel et permet de dédupliquer les requêtes en cas de réessai. Exemples: 'inv_123e4567-e89b-12d3-a456-426614174000'.\"\n    },\n    amount: {\n      type: \"number\",\n      minimum: 0,\n      description: \"Montant total de la facture en unité monétaire minorée (ex. cents). Doit être la somme pondérée des lignes d'articles et correspondre à la devise fournie. Valeurs négatives interdites.\"\n    },\n    currency: {\n      type: \"string\",\n      description: \"Code ISO 4217 de la devise (ex. 'EUR', 'USD'). Utilisé pour validation et conversion éventuelle; doit être supportée par le système comptable. Si absent, le système applique la devise par défaut du client.\"\n    },\n    due_date: {\n      type: \"string\",\n      format: \"date\",\n      description: \"Date d'échéance au format ISO 8601 (YYYY-MM-DD). Sert pour calculer les relances et pénalités; ne peut être antérieure à la date d'émission. Valider le fuseau si nécessaire.\"\n    },\n    items: {\n      type: \"array\",\n      items: {\n        type: \"object\",\n        properties: {\n          description: { type: \"string\", description: \"Description de l'article ou service (courte). Fournir détails suffisants pour la facturation et l'audit.\" },\n          quantity: { type: \"number\", minimum: 0.01, description: \"Quantité facturée; valeurs décimales autorisées pour services/poids.\" },\n          unit_price: { type: \"number\", minimum: 0, description: \"Prix unitaire en même unité monétaire que amount.\" }\n        },\n        required: [\"description\", \"quantity\", \"unit_price\"]\n      },\n      description: \"Liste des lignes de facture détaillées. Doit couvrir tous les éléments contribuant au montant total.\"\n    }\n  },\n  required: [\"invoice_id\", \"amount\", \"currency\", \"due_date\", \"items\"]\n}\n\nPrompt recommandé pour demander à Claude de générer le schéma et joindre la doc Anthropic :\n\"Écris le JSON Schema complet pour la fonction create_invoice en suivant la convention function_name_schema, fournis des descriptions de 3–4 phrases pour l'outil et chaque champ, et encapsule le résultat dans le type ToolParam. Joins également un bref rappel des meilleures pratiques d'usage des outils Anthropic (validation, limites de taille, gestion d'erreurs).\"\n\nChecklist qu'une bonne réponse couvre :\n- Nommage: function_name_schema et function_name cohérents.\n- Schéma JSON complet et réaliste avec types, formats, contraintes (minimum, format).\n- Descriptions de 3–4 phrases pour l'outil et chaque argument.\n- Encapsulation dans ToolParam importé pour sécurité de type.\n- Champs required corrects et règles de validation.\n- Prompt à Claude incluant demande d'attacher la doc Anthropic et tests d'exemple."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Business Value"
+      ],
+      "title": {
+        "en": "input_schema: actual JSON schema describing fun...",
+        "fr": "input_schema: actual JSON schema describing fun..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_013",
@@ -2617,7 +2737,17 @@
         "fr": "Spécification et correction modèle — Batch Tool\n\nBut : implémenter un outil \"batch\" qui accepte \"invocations\": liste {tool: string, args: object} et exécute les outils en parallèle pour réduire les allers-retours.\n\nPoints clés à couvrir\n- Enregistrement : ajouter \"batch\" à la liste d'outils exposés.\n- Contrat d'entrée : invocations: [{ id?: string, tool: string, args: {...}, timeout_ms?: int }].\n- Contrat de sortie : [{ id?: string, tool: string, status: \"ok\"|\"error\"|\"timeout\", result?: any, error?: {code,message}, duration_ms }].\n- Validation : vérifier que chaque \"tool\" existe et que \"args\" correspond au schéma attendu.\n- Concurrence & timeouts : exécution concurrente (async/threads) avec timeout par invocation.\n- Robustesse : gérer échecs partiels, retenter selon stratégie, fournir erreurs explicites sans bloquer les autres invocations.\n- Sécurité & quotas : vérifier autorisations par outil, appliquer quotas et limites de payload.\n- Idempotence : accepter id/op-token pour éviter effets secondaires en cas de retry.\n- Logging & traçabilité : tracer id, durée, statut; ne renvoyer que données autorisées.\n\nExemple (Python asyncio minimal)\nasync def batch_tool(invocations):\n    results=[]\n    async def run(inv):\n        tool_fn = TOOLS.get(inv['tool'])\n        if not tool_fn: return {'id':inv.get('id'),'tool':inv['tool'],'status':'error','error':{'code':'NOT_FOUND'}}\n        try:\n            return {'id':inv.get('id'),'tool':inv['tool'],'status':'ok','result': await asyncio.wait_for(tool_fn(inv.get('args',{})), timeout=inv.get('timeout_ms',5)/1000)}\n        except asyncio.TimeoutError:\n            return {'id':inv.get('id'),'tool':inv['tool'],'status':'timeout','duration_ms':inv.get('timeout_ms')}\n        except Exception as e:\n            return {'id':inv.get('id'),'tool':inv['tool'],'status':'error','error':{'message':str(e)}}\n    tasks=[run(inv) for inv in invocations]\n    return await asyncio.gather(*tasks)\n\nExemple d'utilisation par l'Assistant : appeler uniquement tool=\"batch\" avec invocations regroupées; traiter la sortie structurée pour poursuivre la conversation."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Architecture",
+        "Batch Processing",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Batch Tool = workaround to make Claude call mul...",
+        "fr": "Batch Tool = workaround to make Claude call mul..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_014",
@@ -2636,7 +2766,17 @@
         "fr": "Correction modèle — Réponse attendue\n\nObservation synthétique\n- Oui : principal inconvénient = mise en place plus complexe que des méthodes purement basées sur des prompts. Explication attendue : complexité d’ingénierie (indexation, embeddings, recherche vectorielle, pipeline de concaténation, reranking), coûts et opérations (hébergement de DB vectorielle, mise à jour des index, monitoring), latence et risque d’erreurs d’intégration.\n\nRisques concrets à lister\n- Hallucinations si documents non pertinents sont récupérés.\n- Biais ou fuite d’information si corpus mal nettoyé.\n- Dégradation de performance (latence, coût) à grande échelle.\n- Problèmes de fraîcheur des données (index obsolète).\n- Complexité d’évaluation et de debugging (difficulté à isoler causes).\n\nMitigations pratiques et étapes actionnables\n- Construire un MVP : débuter par prompts affinés, puis activer RAG sur un sous-ensemble.\n- Choisir un vector store managé (ex. Pinecone, Milvus géré) et mesurer coût/latence.\n- Normaliser/segmenter le texte (chunking, métadonnées) et filtrer le corpus.\n- Utiliser un composant de reranking ou un seuil de similarité pour refuser réponses peu pertinentes.\n- Mettre en place logs et métriques (latence, taux de rappel, précision, taux d’hallucination) et tests A/B.\n- Plan de mise à jour des index (pipeline ETL automatisé) et contrôle d’accès.\n\nQuand choisir chaque technique\n- Prompt-only : cas simples, règles, petit domaine, faible besoin de données externes.\n- RAG : grande base documentaire, besoin de réponses factuelles/à jour, diversité du contenu.\n\nChecklist qu’une bonne réponse couvrirait\n- Détailler les sources de complexité, risques concrets, stratégies de mitigation, critères de choix, et étapes pratiques pour déployer et maintenir une solution RAG."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Disadvantage = More complex setup than prompt-b...",
+        "fr": "Disadvantage = More complex setup than prompt-b..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_015",
@@ -2655,7 +2795,17 @@
         "fr": "Critère de sélection des sources (actionnable)\n- Prioriser sources primaires et officielles (communiqués gouvernementaux, publications scientifiques, bases de données publiques) puis médias reconnus à long terme.  \n- Exiger date de publication/maj < 30 jours pour « current events ».  \n- Vérifier indépendance (éviter agrégateurs sans attribution) et présence d’auteurs/affiliations.  \n- Corroborer chaque affirmation clé avec ≥2 sources indépendantes.\n\nGabarit d’affichage UI (précis)\n- Réponse principale : bloc de texte brut, synthèse claire (2–4 phrases) avec incertitude explicitée.  \n- Références en ligne : bloc distinct visuellement (encadré), listées 1–5 résultats. Pour chaque résultat afficher : domaine, titre, URL cliquable, date, extrait cité (≤200 caractères) et label de crédibilité (ex. « officiel », « pair-reviewed », « presse reconnue »).  \n- Citations inline : utilisez [1], [2] dans le texte renvoyant aux blocs de résultat.  \n- Indiquer quelle phrase est soutenue par quelle source (ex. « Selon [1] … »).\n\nExemple de citation inline\n- Synthèse : « L’événement X a eu lieu le 10/07/2026 [1][2]. »  \n- Résultats :  \n  [1] domaine.com — Titre — URL — 10/07/2026 — “Extrait cité…”\n\nPoints que doit couvrir une bonne réponse\n- Source selection justifiée, dates, degré de corroboration, limitations/potentiel de biais, notes méthodologiques pour vérification.\n\nRisques concrets et atténuations\n- Risques : info périmée, biais d’échantillonnage (mêmes sources), paywalls, désinformation sophistiquée.  \n- Atténuations : horodatage, montrer sources multiples, marquer paywalls, signaler faible corroboration."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Architecture",
+        "Context Design",
+        "RAG Architecture"
+      ],
+      "title": {
+        "en": "Improves result quality by limiting to authorit...",
+        "fr": "Improves result quality by limiting to authorit..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_016",
@@ -2674,7 +2824,17 @@
         "fr": "Étape-par-étape opérationnelle (ce qu’une bonne réponse doit contenir)\n\n1) Stratégie de découpage\n- Choisir taille cible : 200–600 tokens par chunk (≈150–450 mots), recouvrement 50–100 tokens (10–20%) pour préserver le contexte.\n- Deux modes : découpage par structure (headings/paragraphes) si documents bien structurés ; découpage fixe si non-structuré.\n- Sauvegarder métadonnées : doc_id, heading, offset, longueur.\n\n2) Indexation & recherche\n- Calculer embeddings pour chaque chunk (modèle dense), stocker dans vector DB (FAISS/Pinecone/Milvus).\n- Utiliser similarité cosinus; hybrid search = BM25 (sparse) + dense pour robustesse sur termes précis et sémantique.\n- Paramètres initiaux : top_k_dense = 50, rerank_cross_encoder → sélectionner top_k_answer = 3–5.\n\n3) Assemblage du prompt\n- Inclure uniquement les top_k_answer chunks pertinents, avec leur provenance (doc_id, chunk_id, offset).\n- Prompt template : instruction system → question utilisateur → \"Utilise uniquement les extraits ci‑dessous; cite les sources\" → extraits numérotés.\n- Respecter la contrainte tokens du LLM ; tronquer si nécessaire en gardant diversité de sources.\n\n4) Détection et stratégies de secours\n- Définir seuil de similarité (ex. cosine < 0.6 → demander clarification ou élargir recherche).\n- Si réponses contradictoires entre chunks, demander vérification ou retourner les options avec provenance.\n\n5) Évaluation & itération\n- Mesures : recall@k, MRR, précision factuelle (F1 sur QA), latence & coût.\n- Tests : cas standards, questions exigeant contexte large, entrées adversariales.\n- Optimisation : ajuster taille/chunk overlap, hybrid vs dense, reranker, k.\n\nRisques concrets à adresser : pertes de contexte (trop petit chunk), hallucinations si sources insuffisantes, fuite de PII dans extraits, coût lié à large top_k, latence du reranker."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Caching Strategy"
+      ],
+      "title": {
+        "en": "Option 2 (RAG approach):",
+        "fr": "Option 2 (RAG approach):"
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_017",
@@ -2693,7 +2853,17 @@
         "fr": "Points qu’une bonne réponse doit couvrir (actionnable et spécifique)\n\n- Stockage\n  - Stocker les embeddings normalisés (vecteurs unitaires) pour que cosine(u,v) = dot(u,v).\n  - Format: float32, colonnes fixes, conserver métadonnées (document id, offset, source, timestamp).\n  - Choix DB: FAISS (on‑prem, configurable), Milvus/Weaviate/Pinecone (managed). Utiliser HNSW/IVF+PQ selon latence/stockage.\n\n- Ingestion et normalisation\n  - À l’ingestion : extraire texte → chunking cohérent → embed avec le modèle source → normaliser L2 (v/||v||) → stocker.\n  - Conserver version du modèle et dimension pour détection d’incompatibilités.\n\n- Recherche et re‑ranking\n  - Requête : embed + normaliser.\n  - Récupérer top‑K via index approximatif (e.g., HNSW) puis re‑classer par cosine exact sur ces K.\n  - Choisir K >= 50 si ré‑ranking, sinon K faible pour latence stricte.\n\n- Mesures et seuils pratiques\n  - Cosine similarity: 1 = identique. Règles empiriques : >0.8 très pertinente, 0.6–0.8 potentiellement utile, <0.5 généralement non pertinente (à valider par domaine).\n  - Cosine distance = 1 − cosine. Utiliser distance <0.2 pour filtre rapide si besoin.\n\n- Risques concrets\n  - Stocker embeddings non normalisés → métriques erronées.\n  - Mismatch de modèle/dimension → erreurs d’insertion/recherche.\n  - Index non reconstruit après mises à jour → réponses obsolètes.\n  - Fuite de données sensibles via métadonnées.\n  - Biais ou mauvaise couverture des documents → récupération non pertinente.\n\n- Validation/ops\n  - Tests: recall@k, MRR, latence P95, coût stockage.\n  - Automatiser rebuild d’index après bulk updates et monitorer drift d’embeddings.\n\nExemple Python (normalisation et distance)\n  v = emb / np.linalg.norm(emb)\n  q = q_emb / np.linalg.norm(q_emb)\n  cosine = np.dot(q, v)\n  cosine_distance = 1 - cosine"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Step 4: Vector Database Storage = Store normali...",
+        "fr": "Step 4: Vector Database Storage = Store normali..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_018",
@@ -2712,7 +2882,17 @@
         "fr": "Correction modèle (extrait concis et immédiatement réutilisable)\n\nRésumé : générez des embeddings cohérents pour chaque chunk, insérez-les avec un identifiant et un dictionnaire de métadonnées contenant le texte d’origine, puis recherchez par embedding de requête et retournez plusieurs chunks triés par distance cosinus (plus faible = plus similaire).\n\nExemple Python minimal (fonctionnel conceptuel) :\ndef normalize(v):\n    import numpy as np\n    return v / (np.linalg.norm(v) + 1e-12)\n\nclass VectorIndex:\n    def __init__(self):\n        self.vectors = {}  # id -> vector (numpy)\n        self.meta = {}     # id -> metadata\n    def add_vector(self, id, vector, metadata):\n        self.vectors[id] = normalize(vector)\n        self.meta[id] = metadata\n    def search(self, query_vector, k=5):\n        import numpy as np\n        q = normalize(query_vector)\n        items = []\n        for id, v in self.vectors.items():\n            # cosine distance = 1 - cosine_similarity\n            dist = 1.0 - float(np.dot(q, v))\n            items.append((id, dist, self.meta[id]))\n        items.sort(key=lambda x: x[1])  # plus petit = plus similaire\n        return items[:k]\n\n# Usage\n# 1) generate_embedding doit être la même fonction / modèle partout\n# 2) pour chaque chunk:\n#    emb = generate_embedding(chunk_text)\n#    store.add_vector(chunk_id, emb, {\"text\": chunk_text})\n# 3) pour la requête:\n#    q_emb = generate_embedding(user_question)\n#    results = store.search(q_emb, num_results)\n\nPoints clés à couvrir dans une bonne réponse :\n- Toujours utiliser le même modèle/fonction generate_embedding (cohérence).\n- Stocker embedding + metadata{\"text\": original_chunk, \"source\":..., \"offset\":...}.\n- Normaliser les vecteurs pour cosinus fiable.\n- Renvoyer plusieurs chunks et inclure la distance cosinus.\n- Gérer batching, vérification dimensionnelle et seuils de similarité (ex : dist < 0.25)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Architecture",
+        "Batch Processing",
+        "Context Design"
+      ],
+      "title": {
+        "en": "2. Generate Embeddings = Create embeddings for ...",
+        "fr": "2. Generate Embeddings = Create embeddings for ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_019",
@@ -2731,7 +2911,17 @@
         "fr": "Exemple de correction modèle (prompt ré‑ranker + bonnes pratiques)\n\nPrompt (à envoyer au LLM, temperature=0, max_tokens raisonnable) :\n\"Rôle : vous êtes un ré‑ranker qui juge la pertinence de documents fournis par rapport à une requête utilisateur.\nEntrées :\n1) Requête : « {user_query} »\n2) Documents candidats : liste JSON [{id: string, title: string, text: string}, ...] (inclure max 1000 tokens par doc, tronquer sinon)\nInstruction :\n- Ne vous basez que sur les documents fournis.\n- Pour chaque document, calculez une note de pertinence 0–100 relative à la requête.\n- Retournez les N documents les plus pertinents en ordre décroissant (N={N}).\nFormat de sortie (strict JSON) :\n[{ \"id\": \"...\", \"score\": 0-100, \"justification\": \"une phrase concise expliquant pourquoi ce doc est pertinent\" }]\nNe pas ajouter de texte hors JSON.\"\n\nExemples d'améliorations opérationnelles\n- Préfiltrer par similarité d'embeddings (top 50) avant appel LLM pour réduire latence/coût.\n- Mettre en cache les reranks pour requêtes fréquentes.\n- Limiter la taille des documents ou fournir des extraits.\nRisques concrets et mitigations\n- Hallucination : obliger \"Ne vous basez que sur les documents fournis\".\n- Fuite de données privées : filtrer/supprimer données sensibles avant envoi.\n- Coût/latence : préfiltre embeddings, batcher appels et limiter N.\n- Incohérence : temperature=0 et format JSON strict pour résultats déterministes."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Batch Processing"
+      ],
+      "title": {
+        "en": "Trade-offs: Increases search accuracy but adds ...",
+        "fr": "Trade-offs: Increases search accuracy but adds ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_020",
@@ -2750,7 +2940,17 @@
         "fr": "Correction modèle — ce que doit contenir une bonne réponse\n\nMéthode pas à pas (processus concret)\n1. Identifier et annoter les objets clés sur l’image : toitures, arbres, routes d’accès, cours d’eau, lignes électriques, végétation sèche.\n2. Mesurer/count : estimer la densité arborescente par quadrant (ex. % couverture par 10m²), compter obstacles >1 m près du bâtiment.\n3. Vérification croisée : refaire le comptage avec une grille différente ou méthode de segmentation (superpixels vs. détection d’objets).\n4. Agréger en scores normalisés (0–5) par facteur (densité, accès, débord de toit, combustible proche).\n5. Produire sortie structurée : table, score total (pondéré), et intervalle de confiance + images annotées.\n\nStructure du message (exemple de template utilisateur — alterner image/texte)\n- Image d’exemple (pièce jointe)\n- Texte : « Exemple : cette image → densité arbres=60% (score 4), accès=voie large (score 1). »\n- Image cible (pièce jointe)\n- Texte : « Instructions : appliquez la même méthode et renvoyez : (1) annotations, (2) scores [densité, accès, débord, combustible], (3) score global et confiance. »\n\nOne-shot prompting (exemple concret)\n« Voici un exemple annoté + résultat. Maintenant analyse l’image jointe en suivant exactement les mêmes définitions de score et format de sortie. »\n\nRisques concrets à signaler\n- Arbres à <3 m du toit, voies d’accès obstruées, absence de points d’eau, câbles électriques bas, pente favorisant la propagation, accumulation de débris sur toit.\n\nÀ retenir\n- Spécifier définitions de score, unités et format de sortie ; fournir un exemple annoté ; vérifier par méthode alternative. Prompt engineering = définitions + exemples + format strict."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Example Enhancement Methods =",
+        "fr": "Example Enhancement Methods ="
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_021",
@@ -2769,7 +2969,17 @@
         "fr": "Rèponse modèle (précise et actionnable)\n\n1) Règle générale\n- Le cache n’est pas activé par défaut. Il devient effectif uniquement lorsqu’un bloc de message contient explicitement un cache breakpoint (champ cache_control activé). Le contenu mis en cache comprend tout jusqu’à CE point d’arrêt inclus ; le contenu après n’est pas mis en cache.\n\n2) Format exigé (exemple concret)\n- Utiliser le format longhand pour tout bloc texte :\n{ \"type\": \"text\", \"text\": \"Résumé du client …\", \"cache_control\": { \"enabled\": true, \"cache_id\": \"chat-123\", \"created_by\": \"assistant_v1\" } }\n\n3) Règle d’identité du contenu\n- Toute requête de suivi réutilisant ce cache doit avoir un contenu byte‑à‑byte identique jusqu’au point d’arrêt. Sinon invalider le cache. Implémentation recommandée : calculer et stocker un hash (SHA256) du concaténé des blocs jusqu’au breakpoint ; comparer sur requête suivante.\n\n4) Emplacements valides pour point d’arrêt\n- Blocs texte (ex. message assistant), blocs image, invocation d’outil, résultat d’outil, schéma d’outil, prompts système. Un breakpoint peut être posé sur n’importe lequel.\n\n5) Tests/Checklist de validation\n- Vérifier qu’un cache n’existe pas sans cache_control.enabled=true.\n- Vérifier que le cache contient uniquement les blocs jusqu’au breakpoint inclus.\n- Tester invalidation : modifier un caractère avant breakpoint → cache non réutilisé.\n- Tester réutilisation : identique jusqu’au breakpoint → cache utilisé.\n\n6) Risques concrets et mitigations\n- Cache poisoning (injection de contenu) → signer/hash + validation d’origine.\n- Données sensibles exposées → refuser cache pour champs marqués PII.\n- Stale responses après outils externes → inclure TTL et invalidation par événement.\n\nRéponse attendue : fournir le longhand JSON pour chaque bloc avec cache_control, stocker hash du contenu jusqu’au breakpoint, et tests décrits."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Caching Strategy"
+      ],
+      "title": {
+        "en": "Activation = manual cache breakpoint required i...",
+        "fr": "Activation = manual cache breakpoint required i..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_022",
@@ -2788,7 +2998,17 @@
         "fr": "Étapes concrètes et exemple fonctionnel (JavaScript) :\n\n1) Protéger les schémas originaux : cloner en profondeur la liste d'outils (structuredClone ou JSON parse/stringify). Ne modifiez jamais l'array/objets originaux.\n2) Ne rajouter le champ cache_control que sur le DERNIER outil cloné, type \"ephemeral\".\n3) Convertir la chaîne système en une liste contenant un bloc {\"type\":\"text\", \"text\": system_content, \"cache_control\": {\"type\":\"ephemeral\"}}.\n4) Respecter l’ordre de cache : outils → system prompt → messages.\n\nExemple (Node-compatible) :\nconst originalTools = [...]; // votre liste d'outils\nconst systemContent = \"Contenu du system prompt\";\nconst messages = [...]; // messages existants\n\n// Deep clone (fallback si structuredClone absent)\nconst toolsCopy = (typeof structuredClone === \"function\") ?\n  structuredClone(originalTools) :\n  JSON.parse(JSON.stringify(originalTools));\n\nif (toolsCopy.length > 0) {\n  const lastIdx = toolsCopy.length - 1;\n  toolsCopy[lastIdx] = { ...toolsCopy[lastIdx], cache_control: { type: \"ephemeral\" } };\n}\n\n// System prompt -> liste avec cache_control\nconst cachedSystemPrompt = [{ type: \"text\", text: systemContent, cache_control: { type: \"ephemeral\" } }];\n\n// Assemblage final dans l'ordre requis\nconst cachePayload = {\n  tools: toolsCopy,\n  system_prompt: cachedSystemPrompt,\n  messages: messages // ne pas modifier ici si on veut préserver originaux\n};\n\nBonnes pratiques supplémentaires : vérifier outils non vides (sinon ne rien ajouter), utiliser cloneDeep (lodash) pour structures complexes, et éviter Object.assign() in-place sur objets originaux."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Caching Strategy",
+        "Prompt Engineering"
+      ],
+      "title": {
+        "en": "Tool Schema Caching:",
+        "fr": "Tool Schema Caching:"
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_023",
@@ -2807,7 +3027,17 @@
         "fr": "Correction modèle (objectif : boucle producer-evaluator avec rendu image et comparaison)\n\n1) Structure générale\n- Producer: fonction Python qui prend un vecteur de paramètres, construit le modèle CAD (cadquery), génère un rendu PNG à angle/illumination fixes.\n- Evaluator: compare le PNG rendu à l'image cible (automatiquement via métriques + Claude pour évaluation sémantique). Retourne un objet feedback structuré (diff_type, localisation, magnitude, suggestion_paramètres).\n- Boucle: tant que score < seuil et iterations < max_iter, appeler Producer avec paramètres mis à jour selon feedback.\n\n2) Exemple minimal (Python)\n```\nfrom cadquery import Workplane\nimport numpy as np\nfrom skimage.metrics import structural_similarity as ssim\nfrom PIL import Image\n\ndef build(params):\n    w = Workplane(\"XY\").box(params['x'], params['y'], params['z'])\n    w.val().exportStl('out.stl')  # ou pipeline de rendu\n    return 'out.png'\n\ndef compare(imgA_path, imgB_path):\n    A = np.array(Image.open(imgA_path).convert('L'))\n    B = np.array(Image.open(imgB_path).convert('L'))\n    score, diff = ssim(A, B, full=True)\n    return score, (diff*255).astype('uint8')\n\nparams = {'x':10,'y':20,'z':5}\ntarget = 'target.png'\nfor it in range(50):\n    out = build(params)\n    score, diff_img = compare(out, target)\n    if score > 0.98: break\n    # feedback heuristique: ajuster param selon zones de différence\n    # ex: si diff centroid à droite -> augmenter x\n    centroid = np.array(np.where(diff_img>128)).mean(axis=1)\n    if centroid[1] > A.shape[1]/2: params['x'] += 0.5\n    else: params['x'] -= 0.5\n```\n\n3) Intégration Claude pour feedback textuel\n- Prompt template: \"Compare ces images (base64) : donne 1) liste des différences visibles (forme, taille, position, trou manquant), 2) suggestions paramétriques précises (ex: augmenter x de 0.5 mm), 3) zone prioritaire à corriger.\"\n- Claude renvoie feedback structuré qui alimente l'update rule.\n\n4) Critères d'arrêt et logs\n- Score SSIM >= 0.98 OU aucune amélioration après N itérations OU divergences de paramètres.\n- Log: params, score, feedback, timestamp, diff image.\n\n5) Risques concrets et mitigations\n- Fausses différences dues à caméra/pose/illumination -> fixer paramètres de rendu identiques.\n- Overfitting au rendu (non physique) -> valider sur vues supplémentaires.\n- Boucle non convergente -> ajouter optimiseur (Bayesian, CMA-ES) et limites sur paramètres."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Step 3: Generate rendering of model as image",
+        "fr": "Step 3: Generate rendering of model as image"
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_024",
@@ -2826,7 +3056,17 @@
         "fr": "Objectif : montrer comment accepter une sortie imparfaite puis demander une correction ciblée.\n\nÉtapes concrètes\n1) Accepter la sortie initiale et repérer précisément les violations (numéroter et citer extraits).  \n2) Envoyer un prompt de suivi qui : a) inclut la sortie précédente entre balises, b) liste exactement les violations à corriger, c) demande uniquement les corrections (pas de réécriture complète), d) exige format de réponse minimal (texte corrigé + courtes annotations).  \n3) Valider automatiquement ou manuellement les corrections.\n\nExemples\n- Prompt initial (résumé) : \"Rédige une fiche produit de 150–200 mots, sans adjectifs superlatifs, en voix active, et avec mesures en SI.\"  \n- Sortie AI (extrait) : contient adjectifs superlatifs, phrases passives, unités impériales.\n\nPrompt de suivi (à copier) :\n\"Voici la sortie précédente entre <<< >>>. Corrige uniquement les violations listées ci‑dessous sans modifier le reste du texte. 1) Supprime tous les adjectifs superlatifs (ex. 'le meilleur'). 2) Convertis les unités impériales en SI. 3) Remplace les phrases passives indiquées par [PASSIF] par une voix active. Réponds uniquement en fournissant (a) le texte corrigé et (b) pour chaque changement, une note courte entre crochets expliquant la modification.\"\n\nExemple de sortie corrigée :\n- Texte corrigé + annotations concises (ex. \"[modif: '5 ft' → '1,52 m']\").\n\nChecklist pour une réponse excellente\n- Identification précise des violations + extrait cité.  \n- Prompt de suivi clair, limité aux corrections.  \n- Format de sortie restreint (texte corrigé + annotations).  \n- Méthode de validation proposée.\n\nRisques et atténuations\n- Risque d'altérer le sens : exiger que l'IA signale chaque changement.  \n- Risque d'erreurs de conversion/grammaire : automatiser vérifications (unités, longueur de phrase).  \n- Risque de boucles itératives : limiter le nombre d'itérations et conserver version initiale."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Output Formatting"
+      ],
+      "title": {
+        "en": "2. Accept imperfect output that violates some c...",
+        "fr": "2. Accept imperfect output that violates some c..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_025",
@@ -2845,7 +3085,17 @@
         "fr": "Objectif de la correction : concevoir un agent modulaire capable de demander des informations utilisateur et de combiner peu d’outils abstraits pour couvrir des workflows simples et complexes.\n\nOutils abstraits recommandés (interface minimale et retours) :\n- run_cmd(command: string) -> {stdout, stderr, code, artifacts[]} (sandboxé, timeout, limits).\n- generate_image(prompt: string, size: string) -> {image_id, url, thumbnail}.\n- text_to_speech(text: string, voice: string) -> {audio_id, url, duration}.\n- post_media(media_ids: [id], platform: string, metadata: dict) -> {post_url, status}.\n- ask_user(question: string, choices?: [string], required?: bool) -> {response}.\n\nFlux d’exemple — “créer une vidéo avec image de couverture pour approbation” :\n1) ask_user: précisions (durée, style, voix, texte de voix-off, vouloir approbation ?).\n2) generate_image(prompt) → proposer miniature; ask_user(“Approuvez ?”) si demandé.\n3) text_to_speech(voice, script) → obtenir audio.\n4) run_cmd(FFmpeg assemble: inputs image/audio, templates) → artifact vidéo.\n5) post_media(video_id, platform, metadata).\n\nBonnes pratiques opérationnelles :\n- Valider et normaliser les entrées (dates, formats, tailles).\n- Demander uniquement les informations nécessaires, utiliser choix pour réduire ambiguïté.\n- Idempotence et journalisation (replay/retry sûr).\n- Sécurité : sandboxer run_cmd, limiter commandes et tailles, vérifier médias uploadés.\n- Gestion d’erreurs claire : codes d’erreur, messages d’action (recommencer, modifier, annuler).\n- Option approbation humaine avant actions irréversibles.\n\nUne bonne réponse décrit ces interfaces, illustre un flux concret et couvre validation, sécurité et gestion d’erreurs."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Agentic Design",
+        "Architecture",
+        "Multimodal AI"
+      ],
+      "title": {
+        "en": "Dynamic interaction capability: Agents can requ...",
+        "fr": "Dynamic interaction capability: Agents can requ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__03_026",
@@ -2864,7 +3114,17 @@
         "fr": "Correction modèle — inspection de l’environnement\n\nPoints clés qu’une bonne réponse doit couvrir (actionnables)\n- Quand inspecter : lire l’état avant une action (précondition) et immédiatement après (postcondition). Documenter horodatage et source.\n- Modalités d’inspection selon contexte : capture d’écran/DOM pour UI, lecture de fichiers pour code, frames et pistes audio pour vidéo, logs et sorties d’API pour backend.\n- Méthode d’évaluation : comparaisons ciblées (hash/quelques pixels/DOM diff/grep), non comparaison brute, pour détecter changements pertinents.\n- Intégration au flux agent : boucle action → attendre événement/latence → inspection → mise à jour de la croyance interne → décision suivante.\n- Mécanismes de robustesse : retries, timeouts, détection de race conditions, validation des hypothèses.\n\nRisques concrets à mentionner\n- Données obsolètes / états intercalaires (race conditions)\n- Coût en latence et bande passante (captures fréquentes)\n- Fuites d’informations sensibles via captures/logs\n- Mauvaise interprétation (OCR/ASR erreurs)\n\nExemples pratiques\n- Selenium (screenshot après clic) :\n  driver.find_element(...).click()\n  time.sleep(0.5)\n  driver.save_screenshot(\"after_click.png\")\n- Lecture de fichier avant modification (Python) :\n  with open(\"config.py\",\"r\",encoding=\"utf-8\") as f: content=f.read()\n- Génération de sous-titres horodatés (Whisper CPP + ffmpeg) :\n  ./main -m models/ggml-base.bin -f audio.wav --output-srt output.srt\n  ffmpeg -i input.mp4 -i output.srt -c copy -c:s mov_text output_with_subs.mp4\n\nChecklist finale pour l’évaluation\n- A-t-il décrit quand/quoi/Comment inspecter ? Oui/Non\n- A-t-il géré latence/retries/validation ? Oui/Non\n- Les risques sont-ils identifiés et atténués ? Oui/No"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Environment Inspection = agents examining their...",
+        "fr": "Environment Inspection = agents examining their..."
+      }
     }
   ]
 }

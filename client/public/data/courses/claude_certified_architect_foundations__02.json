@@ -2333,7 +2333,17 @@
         "fr": "Structure (attendue)\n- Première ligne = rôle: e.g. \"You are a patient math tutor.\"\n- Lignes suivantes = instructions comportementales spécifiques: ton, niveau de détail, interdictions (pas donner la solution complète), méthode pédagogique.\n\nPrincipe clé\n- Le system prompt oriente la manière de répondre (approche), pas le contenu factuel. La même question aura un style et un niveau d'aide différents selon le rôle.\n\nImplémentation technique (exemple Python)\n- Construire params puis ajouter conditionnellement la clé system pour éviter d'envoyer None:\n```python\nparams = {\n    \"model\": \"claude-2.1\",\n    \"prompt\": user_prompt,\n    \"temperature\": 0.2,\n}\nif system_prompt:  # n'ajoute pas la clé si None ou vide\n    params[\"system\"] = system_prompt\n\nresponse = client.create(**params)\n```\n- Raison : certaines APIs traitent None comme null explicite; exclure la clé reproduit le comportement \"no system prompt\".\n\nExemple d'utilisation (Math tutor)\n- system_prompt exemple:\n  \"You are a patient math tutor. Provide stepwise hints and leading questions to help the student reason; do not give the final answer. If the student asks for the solution, first ask why they want it and offer another hint.\"\n- user_prompt exemple: \"Solve x^2 - 5x + 6 = 0.\"\n- assistant attendu (hint-only): \"Commencez par factoriser. Quels deux nombres se multiplient pour donner 6 et s'additionnent pour donner -5? Essayez de placer ces nombres comme facteurs.\"\n\nPoints de validation qu'une bonne réponse couvre\n- rôle clair + règles comportementales, code robuste excluant system quand None, et un exemple montrant différence de sortie (indices vs solution complète)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Structure = first line typically assigns role (...",
+        "fr": "Structure = first line typically assigns role (..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_002",
@@ -2352,7 +2362,17 @@
         "fr": "Correction modèle :\n\nDéfinition courte et processus\n- Température (0–1) ajuste l’aléa lors du choix du token suivant : tokenisation → distribution de probas → échantillonnage selon la température → itération.\n- À température 0 on prend l’argmax (déterministe). À température plus élevée on amplifie les queues de distribution (plus de choix rares).\n\nPlages pratiques et exemples concrets\n- 0.0 : sortie déterministe — idéal pour extraction de données, génération de code, tests automatisés.\n- 0.0–0.2 : très conservateur — réponses factuelles cohérentes, faible variation.\n- 0.2–0.5 : contrôle ± créativité — bonnes pour résumés, reformulations, Q&A.\n- 0.6–0.8 : créatif — stories, brainstorming, variantes de style.\n- 0.9–1.0 : très aléatoire — exploration créative, génération d’idées inattendues.\n\nRisques concrets et mitigations\n- Hallucinations et incohérences : baissez la température, ajoutez contraintes de prompt, vérification factuelle automatique.\n- Non-répétabilité des tests : utilisez temp = 0 pour reproductibilité ou faites plusieurs tirages et vote majoritaire.\n- Sorties inappropriées : restreignez le prompt, post-filtre, combinez avec top-p (nucleus) ou règles de sécurité.\n\nBonnes pratiques actionnables\n- Pour tâches factuelles : temperature 0–0.2 + exemples few-shot.\n- Pour créativité contrôlée : 0.4–0.6 + générer 3 variantes, puis sélectionner.\n- Combinez température avec top_p (ex. top_p = 0.9) pour mieux contrôler diversité.\n- Mesurez qualitativement (cohérence) et quantitativement (exactitude) sur un échantillon avant déploiement."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Temperature = parameter (0-1) that controls ran...",
+        "fr": "Temperature = parameter (0-1) that controls ran..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_003",
@@ -2371,7 +2391,17 @@
         "fr": "Correction modèle (ce qu’un bon élève doit produire)\n\nApproche correcte (résumé)\n- Implémenter un proxy serveur qui appelle l’API Claude en mode streaming, transmet immédiatement un ACK (0-length) puis relaie chaque \"delta\" reçu au client via SSE ou WebSocket pour affichage incrémental.\n\nImplémentation minimale (exemple fonctionnel)\n- Serveur (Node/Express + fetch avec body as stream):\nconst express = require('express');\napp.get('/stream', async (req, res) => {\n  res.writeHead(200, {'Content-Type':'text/event-stream','Cache-Control':'no-cache'});\n  const claudeResp = await fetch('https://api.claude/stream', { method:'POST', body: JSON.stringify(req.query), headers:{'Authorization':'Bearer ...'}});\n  // forward chunks as they arrive\n  claudeResp.body.on('data', chunk => res.write(`data: ${chunk.toString()}\\n\\n`));\n  claudeResp.body.on('end', ()=> res.write('data: [DONE]\\n\\n'));\n});\n- Frontend (EventSource):\nconst es = new EventSource('/stream?msg=bonjour');\nes.onmessage = e => { if (e.data==='[DONE]') es.close(); else appendText(e.data); };\n\nPoints techniques à couvrir\n- Backpressure et buffering: limiter taille des chunks, concaténation côté client pour éviter artefacts UI.\n- Ordonnancement/IDempotence: inclure IDs de fragment pour détecter duplications ou réordonnements.\n- Finalisation: envoyer un signal [DONE] + checksum/totalTokens pour assurer cohérence.\n- Sécurité: filtrage PII côté serveur, validation input, rate-limiting, authentication.\n- Reprise: mécanisme de reconnection et resume à partir d’un offset/lastToken.\n\nRisques concrets et mitigations\n- Hallucinations partielles : ne pas présenter le texte comme définitif avant [DONE]; marquer \"en cours\".\n- Fuite de données sensibles : appliquer redaction et logging minimal.\n- Overload/DoS : quotas, pool de connexions, circuit breaker.\n- Incohérences d’UI : déduplication, ordering par fragment ID.\n\nTests et métriques\n- Mesurer TTFB, Time-to-first-token, tokens/sec, taux d’erreur, % reconnections. Test de charge et UX (simuler latence, pertes de paquets)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Response Streaming = technique to display AI re...",
+        "fr": "Response Streaming = technique to display AI re..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_004",
@@ -2390,7 +2420,17 @@
         "fr": "class InputValidationError(Exception):\n    \"\"\"Exception levée pour les entrées invalides avec indication de champ et suggestion.\"\"\"\n    def __init__(self, field: str, message: str, hint: str = \"\"):\n        self.field = field\n        self.message = message\n        self.hint = hint\n        super().__init__(f\"{field}: {message} — Suggestion: {hint}\")\n\ndef validate_and_prepare_request(prompt: str,\n                                 temperature: float = 0.7,\n                                 max_tokens: int = 512,\n                                 model_name: str = \"claude-2\") -> dict:\n    # Validation descriptive et explicite\n    if not isinstance(prompt, str):\n        raise InputValidationError(\"prompt\",\n                                   f\"Type invalide (attendu str, obtenu {type(prompt).__name__}).\",\n                                   \"Fournir un texte. Exemple: 'Explique la théorie...'\")\n    prompt_len = len(prompt.strip())\n    if prompt_len == 0:\n        raise InputValidationError(\"prompt\",\n                                   \"Le prompt est vide.\",\n                                   \"Fournir une question ou instruction non vide (>=1 caractère).\")\n    if prompt_len > 10000:\n        raise InputValidationError(\"prompt\",\n                                   f\"Prompt trop long ({prompt_len} caractères).\",\n                                   \"Réduire à <=10000 caractères ou résumer le texte.\")\n    if not isinstance(temperature, (float, int)):\n        raise InputValidationError(\"temperature\",\n                                   f\"Type invalide (attendu float, obtenu {type(temperature).__name__}).\",\n                                   \"Utiliser un nombre entre 0.0 et 1.0, ex: 0.5\")\n    if not (0.0 <= float(temperature) <= 1.0):\n        raise InputValidationError(\"temperature\",\n                                   f\"Valeur hors plage ({temperature}).\",\n                                   \"Choisir une valeur dans [0.0, 1.0], ex: 0.7\")\n    if not isinstance(max_tokens, int):\n        raise InputValidationError(\"max_tokens\",\n                                   f\"Type invalide (attendu int, obtenu {type(max_tokens).__name__}).\",\n                                   \"Utiliser un entier positif, ex: 256\")\n    if not (1 <= max_tokens <= 100000):\n        raise InputValidationError(\"max_tokens\",\n                                   f\"Valeur hors plage ({max_tokens}).\",\n                                   \"Choisir un entier entre 1 et 100000, ex: 512\")\n    allowed_models = {\"claude-2\", \"claude-2.1\", \"claude-instant\"}\n    if model_name not in allowed_models:\n        raise InputValidationError(\"model_name\",\n                                   f\"Modèle inconnu ('{model_name}').\",\n                                   f\"Choisir parmi: {sorted(allowed_models)}\")\n\n    # Préparer le payload (exemple fonctionnel, substituer par appel API réel)\n    payload = {\n        \"model\": model_name,\n        \"input\": prompt,\n        \"temperature\": float(temperature),\n        \"max_tokens\": max_tokens\n    }\n    return payload\n\n# Exemple d'utilisation et gestion d'erreurs pour permettre à Claude de réessayer\ntry:\n    request_payload = validate_and_prepare_request(\"\", temperature=1.5, max_tokens=0)\nexcept InputValidationError as e:\n    # Le message est explicite pour permettre une correction et réessai\n    print(str(e))  # Visible par Claude / l'utilisateur : contient champ, erreur et suggestion\nelse:\n    # Ici on appellerait l'API avec request_payload\n    print(\"Payload prêt:\", request_payload)"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Must use descriptive function names and argumen...",
+        "fr": "Must use descriptive function names and argumen..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_005",
@@ -2409,7 +2449,17 @@
         "fr": "Principes clés : noms explicites, validation immédiate (TypeError/ValueError), messages d’erreur actionnables (indiquer la valeur reçue et le format attendu). Exemple fonctionnel réutilisable :\n\nfrom datetime import datetime\n\ndef _ensure_non_empty_str(name: str, value):\n    if not isinstance(value, str):\n        raise TypeError(f\"{name} must be a str, got {type(value).__name__}\")\n    if value.strip() == \"\":\n        raise ValueError(f\"{name} cannot be empty or whitespace\")\n\ndef get_current_datetime(date_format: str = \"%Y%m%d %H:%M:%S\") -> str:\n    _ensure_non_empty_str(\"date_format\", date_format)\n    try:\n        return datetime.now().strftime(date_format)\n    except Exception as exc:\n        # strftime raises ValueError on bad format codes in some implementations\n        raise ValueError(\n            f\"Invalid date_format '{date_format}'. Use strftime format tokens like '%Y-%m-%d %H:%M:%S'.\"\n        ) from exc\n\ndef parse_date(date_str: str, date_format: str = \"%Y-%m-%d\") -> datetime:\n    _ensure_non_empty_str(\"date_str\", date_str)\n    _ensure_non_empty_str(\"date_format\", date_format)\n    try:\n        return datetime.strptime(date_str, date_format)\n    except ValueError as exc:\n        raise ValueError(\n            f\"Cannot parse date_str='{date_str}' with date_format='{date_format}'. \"\n            f\"Expected example: {datetime.now().strftime(date_format)}\"\n        ) from exc\n\nPoints qu’une bonne réponse couvrirait :\n- vérifications de type et contenu (non vide) ;\n- messages indiquant la valeur reçue et le format attendu ;\n- levée immédiate d’erreurs spécifiques (TypeError vs ValueError) ;\n- tests unitaires montrant cas valides et erreurs attendues."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Architecture",
+        "Error Handling",
+        "Testing"
+      ],
+      "title": {
+        "en": "1. Well-named functions and arguments",
+        "fr": "1. Well-named functions and arguments"
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_006",
@@ -2428,7 +2478,17 @@
         "fr": "Correction modèle (français) — Exécution et sécurisation d’un chaînage d’outils multi‑tour\n\nComportement attendu\n- Format de message : chaque réponse assistant peut inclure un champ structured tool_use = {\"name\": \"tool_name\", \"input\": {...}}. Si absent, la réponse est finale.\n- run_conversation boucle : appeler Claude → si tool_use présent, exécuter l’outil correspondant → injecter le résultat comme nouveau message assistant/tool_result → relancer Claude → stopper quand plus de tool_use.\n\nExemple fonctionnel (Python simplifié)\n\ndef run_conversation(messages, tools, call_claude, max_iterations=10):\n    \"\"\"\n    messages: list of {\"role\": \"user\"|\"assistant\", \"content\": str}\n    tools: dict name->callable(tool_input)->str\n    call_claude: callable(messages)->assistant_response dict possibly with 'tool_use'\n    \"\"\"\n    for i in range(max_iterations):\n        resp = call_claude(messages)\n        messages.append({\"role\": \"assistant\", \"content\": resp.get(\"content\", \"\")})\n        tool_request = resp.get(\"tool_use\")\n        if not tool_request:\n            return messages[-1][\"content\"]\n        name = tool_request.get(\"name\")\n        inp = tool_request.get(\"input\", {})\n        if name not in tools:\n            raise ValueError(f\"Unknown tool: {name}\")\n        try:\n            result = tools[name](inp)\n        except Exception as e:\n            messages.append({\"role\": \"tool\", \"name\": name, \"content\": f\"ERROR: {e}\"})\n            return f\"Tool {name} failed: {e}\"\n        messages.append({\"role\": \"tool\", \"name\": name, \"content\": result})\n    raise RuntimeError(\"Max iterations reached; possible infinite tool loop\")\n\nPoints de correction attendus\n- Validation stricte du nom d’outil et des inputs (schémas JSON).\n- Limite d’itérations, timeout et logging d’audit.\n- Gestion d’erreurs : erreurs tools ajoutées à la conversation et renvoyées proprement.\n- Sanitation des résultats avant réinjection (échapper code, retirer secrets).\n- Demander confirmation utilisateur pour actions sensibles (ex. suppression, accès privé).\n- Tests unitaires simulant tool failures et boucles infinies.\n\nRisques concrets et mitigations\n- Boucle infinie → max_iterations + détection de répétitions d’état.\n- Injection via input/outputs → valider et échapper.\n- Fuite de données sensibles → masque/filtre des résultats, politique d’autorisation.\n- Ressources/DoS → quotas, timeouts, circuit breaker.\n- Erreurs d’outils tiers → backoff, retries limitées, message d’erreur clair à l’utilisateur."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Multi-Turn Tool Conversations = conversations w...",
+        "fr": "Multi-Turn Tool Conversations = conversations w..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_007",
@@ -2447,7 +2507,17 @@
         "fr": "Schéma Batch Tool (paramètre invocations)\n{\n  \"name\": \"BatchTool\",\n  \"description\": \"Exécute plusieurs outils en parallèle\",\n  \"parameters\": {\n    \"type\": \"object\",\n    \"properties\": {\n      \"invocations\": {\n        \"type\": \"array\",\n        \"items\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"tool\": { \"type\": \"string\" },\n            \"args\": { \"type\": \"object\" }   // arguments déjà en JSON\n          },\n          \"required\": [\"tool\",\"args\"]\n        }\n      }\n    },\n    \"required\": [\"invocations\"]\n  }\n}\n\nExemple d'appel attendu\n{\n  \"invocations\": [\n    { \"tool\": \"search\", \"args\": {\"q\":\"Claude batch\"} },\n    { \"tool\": \"summarize\", \"args\": {\"text\":\"...\"} }\n  ]\n}\n\nrun_batch — implémentation Python (asyncio)\n```python\nimport asyncio\nimport json\n\n# mapping des noms d'outils vers fonctions async\nTOOL_DISPATCH = {\n    \"search\": async_search,\n    \"summarize\": async_summarize,\n    # ajouter d'autres outils\n}\n\nasync def run_single(inv):\n    name = inv.get(\"tool\")\n    args = inv.get(\"args\", {})\n    if name not in TOOL_DISPATCH:\n        return {\"tool\": name, \"status\":\"error\", \"error\":\"unknown_tool\"}\n    try:\n        # validation/normalisation d'args si besoin\n        result = await TOOL_DISPATCH[name](**args)\n        return {\"tool\": name, \"status\":\"ok\", \"result\": result}\n    except Exception as e:\n        return {\"tool\": name, \"status\":\"error\", \"error\": str(e)}\n\nasync def run_batch(invocations):\n    tasks = [asyncio.create_task(run_single(inv)) for inv in invocations]\n    return await asyncio.gather(*tasks)\n\n# Exemple d'utilisation\n# results = asyncio.run(run_batch(payload[\"invocations\"]))\n```\n\nPoints clés d’une bonne implémentation\n- Valider schéma d’entrée (outil existant, args type object)\n- Exécuter en parallèle (asyncio/futures) pour gains de latence\n- Retour structuré par invocation (status, result/error)\n- Timeout/limite de concurrence et journalisation des erreurs\n- Ne pas permettre l'exécution d'outils non autorisés (whitelist)"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Architecture",
+        "Batch Processing",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Batch Tool = tool that enables Claude to run mu...",
+        "fr": "Batch Tool = tool that enables Claude to run mu..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_008",
@@ -2466,7 +2536,17 @@
         "fr": "Format recommandé (remplaçable selon rendu) :\n1) Mettre le texte cité entre guillemets et/ou dans un bloc visuel distinct.\n2) Immédiatement sous la citation, fournir une attribution structurée : Domaine · Titre · URL · Date d’accès (et section/numéro de paragraphe si utile).\n\nModèle :\n\"…texte cité exact…\"  \nnih.gov · Titre exact de la page · https://www.nih.gov/chemin/vers-la-page · consulté le JJ/MM/AAAA\n\nExemple (remplacer par l’extrait exact de la page) :\n\"Les adultes doivent pratiquer au moins 150 minutes d'activité aérobique d'intensité modérée par semaine.\"  \nnih.gov · Physical Activity Guidelines for Americans · https://www.nih.gov/physical-activity-guidelines · consulté le 12/07/2026\n\nChecklist qu’une bonne réponse couvre :\n- Citation mot à mot et délimitée (guillemets/bloc).\n- Domaine précis (nih.gov) et titre exact de la page/document.\n- URL complète fonctionnelle et date d’accès.\n- Indication de la section/paragraphes si long document.\n- Vérifier la date de mise à jour et préférer pages officielles/guidelines.\n- Ne pas extraire hors-contexte ; résumer/paraphraser avec attribution si besoin.\n\nRisques concrets à signaler :\n- Citation inexacte ou sortie de son contexte ; informations erronées.\n- Page obsolète (recommandations mises à jour).\n- Lien mort ou URL interne changeante.\n- Surconfiance en une seule source sans vérifier consensus."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Architecture",
+        "Context Design",
+        "RAG Architecture"
+      ],
+      "title": {
+        "en": "Highlight citations with source attribution (do...",
+        "fr": "Highlight citations with source attribution (do..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_009",
@@ -2485,7 +2565,17 @@
         "fr": "Correction modèle (objectif : pipeline de recherche sémantique correct et robuste)\n\nValidation des étapes\n- Étape 3 : Préciser la normalisation L2 : v := v / ||v||2. Vérifier si l’API renvoie déjà des embeddings normalisés ; sinon normaliser côté stockage/requête.\n- Étape 4 : Choisir une vector DB adaptée (FAISS/Milvus/Qdrant/Pinecone/Weaviate). Index recommandés : HNSW (bonne latence/qualité), IVF+PQ (très grand scale). Stocker aussi métadonnées, id, texte brut et checksum.\n- Étape 5 : Utiliser strictement le même modèle et pré-traitement (tokenisation, suppression d’espace) pour la requête. Vérifier la dimension.\n- Étape 6 : Similarité cosinus : si vecteurs normalisés, cosine(v,q)=dot(v,q). Sinon configurer la DB pour metric=\"cosine\" ou normaliser à la volée. Choisir k, seuil min_score, et options d’approx (ef_search, nprobe) selon tradeoff latence/qualité. Considérer recherche hybride (BM25 + vector).\n- Étape 7 : Prompt assembly : inclure top-k extraits triés par score, ajouter provenance (id, position), dédupliquer overlap, respecter token budget (truncation/summary). Optionnel : reranker avec cross-encoder pour meilleure précision.\n\nRisques concrets et mitigations\n- Mismatch de modèle/dimension → vérifier checksum/dim avant requête.\n- Vecteurs non normalisés → fausses distances ; forcer L2.\n- Documents obsolètes → mise à jour/invalidation d’embeddings.\n- Hallucinations → inclure provenance et score, utiliser reranker ou threshold.\n\nPoints mesurables : recall@k, MRR, latence p99, index size."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Step 3: Normalization = Scale vector magnitudes...",
+        "fr": "Step 3: Normalization = Scale vector magnitudes..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_010",
@@ -2504,7 +2594,17 @@
         "fr": "Correction modèle :\n\nÉtapes concrètes :\n1) Conversion en embedding (étape 5) :\n- Utiliser strictement le même modèle et même prétraitement que pour la base (tokenisation, minuscules, arrêt éventuel).\n- Normaliser l’embedding (L2) : e = v / ||v||.\n\n2) Recherche par similarité (étape 6) :\n- Si vous stockez des vecteurs non normalisés, normalisez-les au stockage ou normalisez à la requête et utilisez IndexFlatIP (produit scalaire) pour obtenir cosine similarity.\n- Récupérer top_k (p.ex. k=5) puis calculer cosine_similarity = dot(e_query, e_doc). Cosine_distance = 1 - cosine_similarity.\n- Appliquer un seuil minimal (p.ex. sim >= 0.70) pour filtrer les résultats peu pertinents.\n- Optionnel : reranker les top_k avec un modèle cross-encoder si disponible.\n\n3) Assemblage du prompt (étape 7) :\n- Inclure uniquement extraits tronqués à la longueur de tokens utile (p.ex. 200-400 tokens par extrait).\n- Fournir attribution : [source_id, score].\n- Donner instruction explicite au LLM : \"Utilise uniquement les informations listées ci‑dessous. Si la réponse n’est pas dans les sources, dis 'Je n’ai pas l’information'.\" Cela réduit les hallucinations.\n- Respecter la fenêtre contextuelle du LLM ; concaténer question + extraits + instructions.\n\nExemple Python (FAISS + numpy) :\n```python\nimport numpy as np, faiss\n# embeddings_db: (N, D) déjà normalisés\nindex = faiss.IndexFlatIP(D); index.add(embeddings_db)\nq = normalize(get_embedding(query))  # shape (D,)\nD_scores, I = index.search(np.expand_dims(q,0), k)\nscores = D_scores[0]; ids = I[0]\ndistances = 1 - scores\n```\n\nPoints clés qu’une bonne réponse couvre : normalisation, choix de k et seuil, gestion des tokens, attribution des sources, mitigation des hallucinations, reranking optionnel."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Architecture",
+        "Context Design",
+        "Embeddings"
+      ],
+      "title": {
+        "en": "Step 5: Query Processing = Convert user questio...",
+        "fr": "Step 5: Query Processing = Convert user questio..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_011",
@@ -2523,7 +2623,17 @@
         "fr": "Exemple de correction modèle (Python-like) — implémentation concise des étapes 3–5 :\n\n```python\nimport math\nfrom heapq import nlargest\n\nclass VectorIndex:\n    def __init__(self):\n        self.vectors = []  # list of (id, embedding, metadata)\n\n    def add_vector(self, embedding, metadata):\n        # normaliser à l'insertion pour faciliter les comparaisons cosinus\n        norm = math.sqrt(sum(x*x for x in embedding)) or 1.0\n        emb_norm = [x / norm for x in embedding]\n        self.vectors.append((len(self.vectors), emb_norm, metadata))\n\n    def _cosine(self, a, b):\n        return sum(x*y for x,y in zip(a,b))\n\n    def search(self, query_embedding, k=2):\n        # normaliser requête\n        norm = math.sqrt(sum(x*x for x in query_embedding)) or 1.0\n        qn = [x / norm for x in query_embedding]\n        scores = [(self._cosine(qn, emb), meta) for (_id, emb, meta) in self.vectors]\n        topk = nlargest(k, scores, key=lambda t: t[0])\n        return topk  # list of (similarity, metadata)\n\n# --- Étape 3 : peupler l'index\nindex = VectorIndex()\nfor chunk, emb in zip(chunks, chunk_embeddings):\n    index.add_vector(emb, {\"content\": chunk, \"source\": \"document_X\"})\n\n# --- Étape 4 : embedding de la requête\nuser_embedding = embed(\"ce que le département d'ingénierie logicielle a fait l'année dernière ?\")\n\n# --- Étape 5 : similarité et résultat attendu\nresults = index.search(user_embedding, k=2)\n# Ex : results -> [(0.72, {'content': 'section méthodologie', ...}),\n#                   (0.71, {'content': 'section deux', ...})]\n```\n\nPoints clés attendus dans la réponse :\n- utilisation de zip(chunks, embeddings) pour assurer alignement ;\n- conservation du texte original dans metadata (clé \"content\") ;\n- normalisation des vecteurs pour cosinus ;\n- search renvoie top-k avec scores de similarité (ex. 0.72, 0.71)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Architecture",
+        "Embeddings",
+        "Process Design"
+      ],
+      "title": {
+        "en": "Step 3: Vector Store Population = create vector...",
+        "fr": "Step 3: Vector Store Population = create vector..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_012",
@@ -2542,7 +2652,17 @@
         "fr": "Objectif atteint : activer la mise en cache par défaut pour les outils et les system prompts sans muter les schémas originaux, avec points de cache multiples et ordre de concaténation outils → system prompt → messages.\n\nExemple (Python) — modifications concrètes :\n```python\nimport copy\nimport json\nfrom typing import List, Dict\n\ndef prepare_tools_with_cache(tools: List[Dict]) -> List[Dict]:\n    tools_copy = copy.deepcopy(tools)                   # ne pas modifier l'original\n    if tools_copy:\n        last_tool = copy.deepcopy(tools_copy[-1])      # cloner le dernier schéma\n        # ajouter le champ cache_control\n        last_tool['cache_control'] = 'ephemeral'\n        tools_copy[-1] = last_tool                     # écraser dans la copie\n    return tools_copy\n\ndef wrap_system_prompt(system_prompt: str) -> Dict:\n    # envelopper dans un bloc text avec cache_control\n    return {\"type\": \"text\", \"text\": system_prompt, \"cache_control\": \"ephemeral\"}\n\ndef build_cache_key(tools: List[Dict], system_block: Dict, messages: List[Dict]) -> str:\n    # respecter l'ordre: outils -> system prompt -> messages\n    parts = [\n        json.dumps(tools, sort_keys=True),\n        json.dumps(system_block, sort_keys=True),\n        json.dumps(messages, sort_keys=True)\n    ]\n    return \"|\".join(parts)\n\ndef chat(tools, system_prompt, messages, enable_cache_tools=True, enable_cache_system=True):\n    if enable_cache_tools:\n        tools = prepare_tools_with_cache(tools)\n    system_block = wrap_system_prompt(system_prompt) if enable_cache_system else {\"type\":\"text\",\"text\":system_prompt}\n    cache_key = build_cache_key(tools, system_block, messages)\n    # utiliser cache_key pour lookups/stockage\n    # ... logique d'appel du modèle ...\n    return {\"cache_key\": cache_key, \"tools\": tools, \"system_block\": system_block}\n```\n\nBonnes pratiques:\n- Toujours deep-copy avant modification pour éviter effets de bord.\n- Utiliser le champ cache_control sur des blocs/objets précis pour multiples breakpoints.\n- Documenter la durée et la sémantique de \"ephemeral\".\n- Valider la sérialisation stable (sort_keys=True) pour cache_key reproductible."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Caching Strategy"
+      ],
+      "title": {
+        "en": "Setup = modify chat function to enable caching ...",
+        "fr": "Setup = modify chat function to enable caching ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_013",
@@ -2561,7 +2681,17 @@
         "fr": "Ce que doit contenir une bonne correction (actionnable, vérifiable)\n\n1) Plan de test étape par étape\n- Préconditions : URL du serveur, compte test, jeu de données isolé, version UI.\n- Étapes manuelles : se connecter (capturer token), accéder à la page Outils, sélectionner l’outil, renseigner paramètres, cliquer Lancer, vérifier sortie et logs côté serveur.\n- Critères d’acceptation : réponse HTTP 200 + payload attendu, message d’erreur clair en cas d’échec, état du document cohérent après opérations en chaîne.\n\n2) Cas de test représentatifs (exemples)\n- Lecture simple : id_document valid → expect contenu, code 200.\n- Édition atomique : edit (field X → valeur Y) → relire → valeur prise en compte.\n- Chaine : lire → éditer → lire → vérifier delta attendu.\n- Paramètres invalides : id inexistant → 404 ou code d’erreur explicite.\n- Concurrence minimale : deux edits simultanés → vérifier gestion des conflits.\n\n3) Exemple d’invocation manuelle (curl)\n- Authentification : curl -X POST /login -d '{\"user\":\"u\",\"pass\":\"p\"}' → token\n- Appel outil : curl -H \"Authorization: Bearer $TOKEN\" -X POST /tools/doc/read -d '{\"docId\":\"abc\"}'\n- Réponses attendues (succès) : {\"status\":\"ok\",\"data\":{...}}\n- Réponse d’erreur : {\"status\":\"error\",\"code\":\"NOT_FOUND\",\"message\":\"Document introuvable\"}\n\n4) Points opérationnels et risques\n- Risques concrets : fuites de données de test, conditions de course sur edits, incohérences causées par UI obsolète, tokens expirés, validations côté client manquantes.\n- Mesures : utiliser jeux de données isolés, activer logging détaillé, capturer request/response, tests de régression après modifications UI.\n\n5) Automatisation recommandée\n- Écrire scripts Postman/newman ou tests end-to-end légers (pytest + requests) pour les cas critiques (lecture/édition/chaine)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Testing workflow: Connect to server → navigate ...",
+        "fr": "Testing workflow: Connect to server → navigate ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_014",
@@ -2580,7 +2710,17 @@
         "fr": "Points clés d’une correction modèle — implémentation de l’evaluator–optimizer (français)\n\n1) Préparer un pipeline déterministe\n- Génération (producer) : script CADQuery qui produit un modèle paramétrique exportable (STEP/OBJ). Fixer seed, éclairage et caméra.\n- Rendu : exporter vers trimesh/pyrender ou Blender pour obtenir une image 2D comparable.\n\n2) Comparaison (evaluator) — mesures concrètes\n- Alignement préalable : estimer homographie/translation ou centre-of-mass pour aligner rendu et cible.\n- Metrics proposées : MSE, PSNR, SSIM (>0.95 cible), LPIPS (perceptual), IoU sur mask d’objet, comparaison de contours (Canny) et distance de Hausdorff.\n- Seuils d’acceptation explicites (ex. SSIM ≥ 0.95 ET IoU ≥ 0.98).\n\n3) Boucle d’optimisation & feedback actionable\n- Calculer deltas signifiants — ex. «épaisseur +0.4 mm», «rotation -2°», «offset x +1.2mm».\n- Format de feedback structuré : {metric: value, param_deltas: {name: delta}, suggestion: texte}.\n- Contrôles : max_iter=10, tolérance progressive, early stopping si stagnation (>3 itérations sans amélioration).\n\n4) Robustesse et risques\n- Risques : non-identifiabilité des paramètres, overfitting sur artefacts d’éclairage, rendus non reproductibles, minima locaux.\n- Mitigations : multi-vues, régularisation des paramètres, perturbations de rendu (augmentation).\n\n5) Exemple minimal (pseudo-Python)\nfrom cadquery import Workplane\n# build model -> export OBJ, render via pyrender -> image\nfor i in range(max_iter):\n    model = build_model(params)\n    render_img = render(model, camera)\n    score, mask = compare_images(target, render_img)  # retourne SSIM, IoU,...\n    if score['SSIM']>=0.95 and score['IoU']>=0.98: break\n    params = update_params(params, score)  # rule-based ou optimizer\n\nUne bonne réponse décrit ces composants, fournit seuils concrets, format de feedback et un exemple de boucle exécutable."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Step 3: Create rendering of model",
+        "fr": "Step 3: Create rendering of model"
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_015",
@@ -2599,7 +2739,17 @@
         "fr": "Étapes concrètes et prompt exemples\n\n1) Envoyer le prompt initial (acceptation d’une sortie imparfaite).\n- Exemple : « Rédige un e-mail professionnel (200–250 mots) sans mentionner ‘intelligence artificielle’ ni ‘IA’, sans émojis, ton formel, pas d’appel à l’action commercial direct. »\n\n2) Suivi ciblé sur violations observées — format à utiliser chaque fois.\n- Exemple de prompt de correction :\n  « Tu as produit un texte pour mon prompt précédent. Violations constatées :\n   1) Mention de “IA”/“intelligence artificielle” dans le 2e paragraphe.\n   2) Utilisation d’un émoji en fin de phrase.\n   3) Ton trop familier au début.\n  Réécris le texte initial en respectant strictement ces contraintes. Avant la réécriture, fournis une checklist binaire (Respectée: Oui/Non) pour chaque contrainte. Si une contrainte ne peut être respectée, explique brièvement pourquoi. Réponds uniquement par la checklist puis le texte final, sans autres commentaires. »\n\nValidation automatisée et rapide\n- Vérifier automatiquement : regex pour motifs (“IA|intelligence artificielle”), détection d’émojis (Unicode ranges), longueur, présence de formules familières (tu, salut).\n- Demander au modèle une auto-vérification finale : « Confirme en 1 phrase que toutes les contraintes sont respectées. »\n\nRisques concrets et mitigations\n- Risque : suppression superficielle (synonymes contournant contrainte). Mitigation : lister interdits exacts + regex.\n- Risque : perte d’information après réécriture. Mitigation : demander « conserve le sens et les faits initiaux ».\n- Risque : va-et-vient long. Mitigation : regrouper les violations par ordre d’importance et exiger checklist binaire.\n\nPoints clés d’une bonne réponse\n- Prompt de suivi cite violations exactes (copier-coller idéal).\n- Checklist binaire claire avant le texte.\n- Réécriture fidèle au sens + conformité stricte.\n- Méthode de validation (regex/auto-check)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Primary use case: When Claude consistently igno...",
+        "fr": "Primary use case: When Claude consistently igno..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__02_016",
@@ -2618,7 +2768,17 @@
         "fr": "Correction modèle (points clés et exemples concrets)\n\nObjectif : démontrer comment un agent « inspecte » l’environnement après chaque action pour valider l’état et corriger les erreurs.\n\nÉtapes concrètes\n- Captures d’écran après action GUI :\n  - Exemple Puppeteer (Node.js) : \n    const browser = await puppeteer.launch(); const page = await browser.newPage();\n    await page.goto(url); await page.click(sel); await page.screenshot({path:'after_click.png'});\n    await browser.close();\n  - Ou bash (Linux) : scrot after_click.png ou gnome-screenshot -f after_click.png\n- Vérifier fichiers avant édition :\n  - Lire avant d’écrire : cat fichier.txt || python -c \"print(open('fichier.txt').read())\"\n  - Créer sauvegarde : cp fichier.txt fichier.txt.bak\n  - Appliquer diff après modification : git diff -- fichier.txt\n- Sous-titrage avec whisper.cpp (bash) :\n  - ./main -m models/ggml-small.bin -f input.wav -osrt output.srt\n  - Valider timestamps : parsez output.srt et vérifiez chevauchements, durée totale vs durée audio.\n- Contrôles automatiques (checklist d’inspection) :\n  - Confirmer action produite l’effet attendu (screenshot + DOM/textual diff)\n  - Vérifier absence d’erreurs (codes de sortie, logs)\n  - Valider invariants (timestamps monotones, tailles de fichiers, permissions)\n  - Rollback disponible (sauvegarde, git)\n  - Timeout et retry si l’état attendu n’apparaît pas\n\nRisques concrets à mentionner\n- Captures hors contexte (fenêtre masquée) -> fausses validations\n- Décalages temporaires (race conditions) -> sous-titres désynchronisés\n- Écrasement de fichiers sans sauvegarde -> perte de données\n- Permissions/format de modèle whisper incompatible -> échec d’extraction\n\nCe que doit contenir une bonne réponse : snippets fonctionnels (comme ci‑dessus), étapes d’inspection après chaque action, validations automatisées et plans de rollback."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Agentic Design",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Environment Inspection = agents evaluating thei...",
+        "fr": "Environment Inspection = agents evaluating thei..."
+      }
     }
   ]
 }

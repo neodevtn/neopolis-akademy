@@ -127,7 +127,17 @@
         "fr": "Objectif d’une bonne réponse : démontrer une méthode systématique de dépannage, des techniques concrètes d’optimisation et des étapes de validation/rétrogradation.\n\nÉtapes de dépannage (actionnables)\n- Reproduire l’erreur : documenter conditions exactes (entrée, version modèle, environnement, logs).\n- Isoler la cause : tester par dichotomie (désactiver composants, mock dépendances).\n- Collecter preuves : extraits de logs, traces de latence, métriques CPU/RAM, échantillons d’IO.\n- Hypothèses et tests : formuler 1–2 causes probables et écrire tests automatisés pour les valider.\n- Correctif et validation : appliquer patch dans un environnement staging, exécuter tests de non-régression.\n- Déploiement progressif : canary/rolling release + monitoring intensif.\n\nTechniques d’optimisation concrètes\n- Réduction de latence : mise en cache (réponses fréquentes), batching des requêtes, inférence asynchrone.\n- Coût et ressources : quantization, réduction du batch size si mémoire saturée, scaler automatique basé sur latence/p95.\n- Qualité des sorties : prompt engineering (simplifier instructions), régularisation des hyperparamètres, filtrage post-traitement.\n- Observabilité : exporter p50/p95/p99, taux d’erreur, throughput, coûts par requête.\n\nRisques à identifier et mitigations\n- Perte de données ou corruption → backups + tests d’intégrité.\n- Downtime utilisateur → déploiement canary + rollback automatisé.\n- Régression de qualité → suite de tests de performance et d’acceptance.\n- Coût excessif → alertes budgétaires et quotas.\n- Vulnérabilités/biais → revue sécurité + tests d’équité.\n\nChecklist finale qu’un bon élève fournirait\n- Reproduction + logs, hypothèses testables, correctif testé en staging, métriques post-déploiement, plan de rollback, et mitigations des risques listés."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Automation",
+        "Batch Processing",
+        "Caching Strategy"
+      ],
+      "title": {
+        "en": "Begin module →",
+        "fr": "Begin module →"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_002",
@@ -146,7 +156,17 @@
         "fr": "Vérifications concrètes (instructions, connaissances, compétences)\n- Instructions : relire le prompt en 30s — préciser format d’entrée/sortie (ex. FEN, SAN, coordonnées), contraintes (profondeur de recherche, temps), style de réponse. Exemple d’instruction ajoutée : « Réponds en SAN et vérifie la légalité de chaque coup ».\n- Connaissances : vérifier date/portée du cutoff et règles du domaine (ex. règles d’échecs internationales, promotion, roque, prise en passant). Si manquant, fournir un bref rappel intégré au prompt.\n- Compétences/outils : valider disponibilité des bibliothèques ou APIs nécessaires (Stockfish, python-chess), limites de tokens, accès internet/plugins. Si absence, proposer fallback (algorithme heuristique simple).\n\nSéquence de diagnostic (ordre à suivre)\n1) Relecture rapide : corriger ambiguïtés, ajouter exemples ou format attendu.\n2) Redémarrage à partir d’un résumé : demander au modèle un résumé de l’état puis continuer.\n3) Changer fonctionnalités/modèle : activer outils, augmenter modèle ou temps de calcul.\n4) Évaluer l’adéquation de la tâche : si elle requiert capteurs externes, données privées ou computation impossible, arrêter.\n\nExemple pratique — Galerie d’échecs : quatre échecs, quatre diagnostics\n1) Coup illégal produit → entrée mal formatée / règles incomplètes. Correction : fournir FEN + instruction « valider légalité ».\n2) Position mal rendue → notation ambigüe. Correction : exiger SAN ou coordonnées claires, fournir exemple.\n3) Échec non détecté → profondeur de recherche insuffisante ou absence d’évaluation tactique. Correction : connecter Stockfish ou augmenter profondeur/heuristiques.\n4) Promotion mal gérée → omission des règles de promotion. Correction : inclure règle explicite et tests unitaires (cas de promotion).\n\nActions immédiates : appliquer 1) + 2) ; si problème persiste, activer 3) ; ne conclure tâche impossible qu’après ces étapes."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Cost Optimization",
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "Check the configuration: are the instructions, ...",
+        "fr": "Check the configuration: are the instructions, ..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_003",
@@ -165,7 +185,17 @@
         "fr": "Points clés qu’une bonne réponse doit couvrir — actions concrètes et réutilisables :\n\n1. Diagnostiquer précisément\n   - Collecter exemples d’entrées + sorties décevantes, horodatage, paramètres (temp, modèle, instructions).\n   - Classer l’erreur (format, factuel/hallucination, ton, longueur, omissions).\n\n2. Trouver la cause racine\n   - Tester en isolant variables (même prompt avec temp 0.0 / 0.7; sans contexte; avec/without examples).\n   - Reproduire l’erreur de façon reproductible.\n\n3. Ajuster l’intervention\n   - Prompt engineering concret : ajouter contraintes explicites (ex. « Réponds uniquement en JSON valide conforme au schéma ci‑dessous »), exemples d’Entrée→Sortie, instructions de refus (« Si incertain, réponds ‘Je ne sais pas’ »).\n   - Paramètres du modèle : abaisser température pour précision; augmenter top_p pour diversité si nécessaire.\n   - Post‑traitement : validation JSON, filtres d’exactitude, vérification de citations.\n\n4. Capturer la correction pour pérenniser\n   - Enregistrer la version corrigée : contrôle de version (git), bibliothèque de templates, changelog.\n   - Créer tests automatisés (unit tests de prompt) qui rejouent cas problématiques et valident critères (format, présence de sources, score de similarité).\n   - Documenter le diagnostic et la justification de l’ajustement dans un playbook accessible.\n\n5. Boucle de rétroaction continue\n   - Monitorer métriques (taux d’erreur, temps humain de correction), alertes sur régressions, revue périodique.\n   - Si récurrent, généraliser la correction (template partagé, règle de routage) et former les utilisateurs.\n\nExemple bref : si la sortie manque toujours de format JSON -> modifier prompt : « Return only valid JSON matching schema: {…}. If you cannot, respond: {\"error\":\"cannot_generate_valid_json\"} »."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "We built this Associate course Module 7: Troubl...",
+        "fr": "We built this Associate course Module 7: Troubl..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_004",
@@ -184,7 +214,17 @@
         "fr": "Objectif attendu (ce que ferait une bonne réponse)\n- Traiter chaque sortie insatisfaisante comme une donnée de diagnostic, traduire la critique en un ajustement précis et capturer cette correction pour qu’elle soit réutilisée.\n\nActions concrètes (étapes à appliquer)\n1. Diagnostiquer après chaque itération : poser 3 questions — qu’est‑ce qui manque ou est incorrect ? Pourquoi le système l’a‑t‑il produit ? Quelle modification précise corrige ce cas ?\n2. Capturer la correction formellement : ajouter une entrée dans une bibliothèque de prompts/config (champ : symptôme, exemple d’entrée, correction appliquée, date, auteur).\n3. Implémenter la correction durablement : (a) modifier le prompt template; (b) ajouter une règle de post‑traitement automatique (regex/script); ou (c) ajouter un exemple ou contrainte explicite dans le contexte.\n4. Tester et déployer : créer un test unitaire (entrée → sortie attendue) et garder ces tests en version control. Automatiser exécution après chaque changement.\n5. Mesurer et déclencher mises à jour : suivre métriques (taux de corrections manuelles, temps de correction, score de qualité utilisateur). Définir seuils (ex. >5% d’erreurs → révision du prompt).\n6. Boucle continue : planifier rétrospectives courtes (hebdo/mensuel) pour incorporer patterns récurrents.\n\nRisques concrets et how to mitigate\n- Overfitting des prompts à des cas spécifiques → garder tests variés.\n- Perte de traçabilité → utiliser changelog et contrôle de version.\n- Corrections ad hoc non testées → exiger test avant déploiement.\n\nExemple rapide de capture :\nSymptôme: ton trop formel. Correction: ajouter “Réponds en style conversationnel, 3 phrases max.” → mise à jour du template + test d’exemple."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Computer Vision"
+      ],
+      "title": {
+        "en": "TeachingAdjusting from Feedback·7 min",
+        "fr": "TeachingAdjusting from Feedback·7 min"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_005",
@@ -203,7 +243,17 @@
         "fr": "Objectif attendu — correction modèle (procédure actionnable)\n\n1) Habitude post-itération (questions rapides)\n- Quel défaut précis est apparu ? (ex : phrases vagues, chiffres manquants, ton familier)\n- Où se situe la responsabilité ? (prompt, contexte, données d’entrée, température/model)\n- Quel critère permettra de vérifier la correction ? (ex : présence de « Recommandations : » + 3 éléments)\n\n2) Transformer la critique vague en ajustement précis (exemples)\n- « Trop générique » → préciser public et structure : « public = équipe produit; structure = résumé(3 lignes), métriques clés, recommandations(≥3) »\n- « Mauvais ton » → ajouter contrainte : « ton = formel, concis, phrases ≤ 20 mots »\n- « Format incorrect » → fournir schéma/regex/exemple attendu : « CSV à 3 colonnes : metric,value,trend »\n\nExemple concret de prompt\n- Avant : « Rédige un rapport. »\n- Après : « Rédige un rapport 300–400 mots pour l’équipe produit. Ton : concis et formel. Sections : Résumé (3 lignes), Métriques clés (tableau), Recommandations (3 actions avec priorité). »\n\n3) Capturer la correction pour persistance\n- Mettre à jour le template de prompt (versionner), ajouter un test automatisé (exemple d’entrée + assertion sur sections/ton/format), documenter dans le changelog, et instrumenter un monitoring (taux d’échecs > seuil → alerte).\n\nChecklist qu’une bonne réponse couvrirait : identification précise du défaut, ajustement exécutable, exemple prompt modifié, test de vérification, procédure de persistance/versioning et monitoring."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Every disappointing output is diagnostic data. ...",
+        "fr": "Every disappointing output is diagnostic data. ..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_006",
@@ -222,7 +272,17 @@
         "fr": "Procédure concrète (appliquer après chaque itération)\n1) Inspecter la sortie et noter précisément ce qui manque (ex. « audience non nommée », « ton trop familier », « erreurs factuelles »).\n2) Traduire chaque remarque en un levier modifiable : prompt, contexte chargé, template, paramètre (température, max tokens), ou vérification post‑process.\n3) Implémenter un changement précis et testable, puis réexécuter.\n\nExemples de traductions actionnables\n- « Trop générique » → levier : prompt. Nouvelle instruction : « Indique que l’audience est les managers produit et formule une unique action recommandée. »  \n- « Mauvais ton » → levier : system message. Nouvelle instruction : « Ton professionnel, empathique, niveau B2, pas d’argot. »  \n- « Erreurs factuelles » → levier : contexte + vérif. Ajoutez une source de vérité (base de données / citations) et demandez explicitement : « Citez la source pour chaque fait. »  \n- « Format incorrect » → levier : template. Fournir un exemple d’entrée/sortie et une structure contraignante (titres, bullet points, longueur).\n\nMesures et automatisation\n- Loguer % d’itérations corrigées manuellement, temps de correction, motifs récurrents.  \n- Déclencher mise à jour automatique du prompt si un motif dépasse un seuil (ex. >30% des rapports « ton »).\n\nRisques concrets\n- Sur‑affinage (overfitting) du prompt -> perte de diversité utile.  \n- Bruit de signal (corriger pour des exceptions).  \n- Modifications non réversibles sans versionning.\n\nChecklist rapide avant itération suivante\n- Ai‑je nommé l’audience et l’action ? Ai‑je fourni un template et des exemples ? Ai‑je choisi un levier (prompt/paramètre/contexte) vérifiable ? Ai‑je mesuré l’impact ?"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Build feedback loops into recurring work",
+        "fr": "Build feedback loops into recurring work"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_007",
@@ -241,7 +301,17 @@
         "fr": "Précision attendue : pour chaque critique vague, nommez (1) le levier à modifier (prompt, contexte chargé, instruction permanente/system message, réglage de génération), (2) l’ajustement exact à apporter, et (3) un critère vérifiable.\n\nExemples concrets :\n- « Trop générique » → Levier : prompt. Ajustement : « Ajoute au prompt : “Audience : responsables marketing B2B (30–50 ans). Objectif unique : demander une démonstration produit.” » Critère : la sortie contient explicitement l’audience et une CTA unique.\n- « Mauvaise tonalité » → Levier : instruction permanente/system message. Ajustement : « Dans l’instruction système, ajoute : “Tonalité : professionnelle, empathique, non technique; maximum 2 phrases d’intro.” » Critère : la tonalité correspond aux mots-clés et la longueur d’intro est ≤ 2 phrases.\n- « Le point a été manqué » → Levier : prompt + contexte chargé. Ajustement : « Commencez la réponse par répéter la question centrale en une phrase, puis répondez. Incluez un paragraphe “Réponse directe” en premier. » Critère : la première phrase énonce la question unique.\n\nCapture et normalisation :\n- Si l’ajustement sera réutilisé, enregistrez-le comme instruction permanente dans le Project config ou créez une Skill avec le prompt standardisé.\n- Test rapide : créez 3 cas de test (variantes d’entrée) et automatisez une vérification (présence d’audience, tonalité, reprise de la question).\n- Règle de promotion : si vous réappliquez la même correction >2 fois, la promouvoir en configuration partagée."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "A vague \"this isn't quite right\" does not impro...",
+        "fr": "A vague \"this isn't quite right\" does not impro..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_008",
@@ -260,7 +330,17 @@
         "fr": "Quand vous trouvez une correction fiable, transformez-la en configuration ou Skill selon ces étapes concrètes :\n\n1. Valider la récurrence : documentez 3 occurrences où la même correction était nécessaire (qui, quand, coût en minutes).\n2. Formaliser l’instruction : rédigez une version courte et déterministe — entrée attendue, règle à appliquer, format de sortie. Exemple :\n   - Instruction permanente : « Lorsqu’on demande un résumé d’article scientifique, produire 4 puces : contexte, méthode, résultats chiffrés, implication/précaution. Limiter à 80–120 mots. »\n3. Tester : exécutez la règle sur 5 cas réels différents ; corrigez la formulation si elle échoue.\n4. Capturer : ajouter dans Project Settings > Instructions (ou créer une Skill) avec métadonnées : auteur, date, tags, exemples d’entrée/sortie, tests automatisés.\n5. Gouvernance : assigner un propriétaire, créer un changelog, et programmer une revue trimestrielle.\n6. Communiquer : annoncer la nouvelle instruction/Skill à l’équipe et fournir un court guide d’utilisation.\n\nRisques si non capturée : redécouverte répétée (coût cumulatif), variations d’exécution, perte de connaissances quand une personne part, manque de traçabilité.\n\nChecklist qu’une bonne capture couvre :\n- règle claire et testable ; exemples positifs/négatifs ; intégration dans Project/Skill ; test automatisé ; propriétaire et plan de révision."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Automation",
+        "Claude Platform",
+        "Computer Vision"
+      ],
+      "title": {
+        "en": "When a fix works, do not leave it in a one-off ...",
+        "fr": "When a fix works, do not leave it in a one-off ..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_009",
@@ -279,7 +359,17 @@
         "fr": "Leçon clé : capturer les consignes récurrentes au niveau « Project / configuration » (templates, instructions permanentes) pour qu’elles soient appliquées automatiquement, visibles aux remplaçants et versionnées.\n\nChecklist actionnable pour une correction modèle\n- Centraliser : ajouter les consignes fréquentes au Project plutôt que dans chaque conversation.\n  Exemple d’instructions exactes à mettre en configuration :\n  - « Toujours indiquer le segment cible dans la première ligne. »\n  - « Placer l’appel à l’action dans sa propre section de clôture. »\n  - « Exclure systématiquement les comptes internes de test (préfixe/test IDs : TEST_). »\n- Normaliser : créer un template de brief + critères d’acceptation (ex. présence du segment, CTA, pas de comptes TEST).\n- Gouvernance : assigner un propriétaire du projet, habilitations d’édition limitées, historique des modifications et chlog.\n- Vérification automatique : ajouter règles de validation (vérifier absence de comptes TEST; signaler CTA manquant) et cas de test unitaires mensuels.\n- Onboarding & documentation : procédure courte pour les remplaçants + checklist de pré-envoi.\n- Revue périodique : audit trimestriel des instructions pour éviter qu’elles ne deviennent obsolètes.\n\nRisques concrets si non capturé ou mal géré\n- Instructions perdues ou oubliées -> rapports erronés (comptes de test inclus).\n- Consignes contradictoires entre templates et conversations.\n- Stabilité excessive (hard‑coding) empêchant ajustements nécessaires.\n- Manque de traçabilité / responsabilité lors de changements."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Automation",
+        "Claude Platform",
+        "Documentation"
+      ],
+      "title": {
+        "en": "Captured",
+        "fr": "Captured"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_010",
@@ -298,7 +388,17 @@
         "fr": "Actions concrètes à viser\n1) Cartographiez un cycle complet et consignez chaque action manuelle. Chronométrez et notez fréquence (p.ex. «coller brief → 8×/j, 30s/fois»).  \n2) Identifiez les blocs de texte répétés (briefs, instructions de formatage, signatures) et mesurez leur coût cumulé (temps + tokens).  \n3) Remplacez par des artefacts réutilisables :\n   - Template de prompt avec variables (system message pour contexte stable, user template pour tâches variables).\n   - Mémoire/contexte partagé (conversation memory) pour éléments persistants.\n   - Macro/shortcut UI pour coller en 1 clic.\n   - Script d’automatisation (API) pour injecter automatiquement contexte et constraints.\n4) Testez en basculant (toggle) la répétition : supprimez l’étape manuelle et vérifiez si le flux produit le même résultat; corrigez le template si besoin.\n5) Priorisez backlog d’optimisation par fréquence × temps gagné × risque.\n\nExemples\nPrompt-template (texte) :\nSystem: \"Tu es rédacteur technique. Contexte: {context}. Objectif: {task}. Contraintes: {constraints}.\"\nPython simple :\ntemplate = \"Contexte: {context}\\nTâche: {task}\\nContraintes: {constraints}\"\nfilled = template.format(context=context, task=task, constraints=constraints)\n\nRisques concrets à surveiller\n- Contexte périmé/stale menant à erreurs; fuite d’informations sensibles si mémoire non nettoyée; coûts tokens / latence inutile; duplication de travail de correction.\n\nChecklist qu’une bonne réponse doit couvrir\n- Inventaire manuel des étapes répétées; solution technique précise (template, memory, API); exemple fonctionnel; plan de test (toggle) et métriques de succès; plan de priorisation du backlog."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Find redundancy and friction",
+        "fr": "Find redundancy and friction"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_011",
@@ -317,7 +417,17 @@
         "fr": "Approche concise : identifier le défaut récurrent, choisir le paramètre de configuration le plus directement lié, appliquer la modification, tester sur un corpus représentatif et monitorer jusqu’à stabilisation.\n\nExemples concrets (défaut → changement de config) :\n- Hallucinations / erreurs factuelles → temperature: 0.0, top_p: 1.0 ; activer retrieval/fact-checking externe ; augmenter max_context.\n- Phrases répétées / boucles → frequency_penalty: 0.6–1.0 et/ou presence_penalty: 0.4–0.8 ; réduire max_tokens si la répétition vient en fin de sortie.\n- Sorties tronquées / incomplètes → augmenter max_tokens ; retirer stop prématurés ; chunker la tâche en plusieurs appels.\n- Format invalide (JSON/csv) → imposer response_format/format_instructions dans le system prompt ; ajouter validation JSON stricte côté client et rejeter/répéter si invalide.\n- Fuite d’informations sensibles → activer filtre/safeguards, règles système interdisant divulgation, et masque des tokens sensibles en post-traitement.\n\nExemple de configuration API (modèle) :\n{\n  \"model\":\"claude-2\",\n  \"temperature\":0.0,\n  \"top_p\":1.0,\n  \"frequency_penalty\":0.7,\n  \"presence_penalty\":0.0,\n  \"max_tokens\":1200,\n  \"stop\":[\"\\n\\n\"]\n}\n\nPlan de validation : créer 50–200 cas tests ciblés, comparer taux d’occurrence du défaut avant/après, relever régressions et ajuster itérativement."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Claude Platform",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Signal",
+        "fr": "Signal"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_012",
@@ -336,7 +446,17 @@
         "fr": "Réponse modèle (points-clés qu’une bonne réponse doit couvrir)\n\n1. Cadre de diagnostic systématique : reproduire le problème, obtenir métriques de base (latence, débit, taux d’erreur), collecter logs/traces, isoler la régression (déploiement, configuration, charge). Prioriser hypothèses par probabilité/impact.\n\n2. Mesures concrètes à vérifier : CPU, mémoire, GC, disk I/O, file descriptors, connexion DB, temps de requêtes lentes, files d’attente, taux d’erreur 5xx, saturation réseau. Outils : APM/tracing, top/htop, iostat, vmstat, pprof/Flamegraphs, slow query log.\n\n3. Technique d’isolation : tester sur environnement reproduisant la charge, ablation (désactiver feature), rollback partiel/feature flag, tests A/B, profilage ciblé. Chercher corrélations temporelles avec déploiements ou pics de trafic.\n\n4. Options de résolution et critères de choix : fixes provisoires non invasifs (retry, circuit breaker, augmenter timeout), optimisations (caching, batching, indexation, requêtes optimisées), scaling vertical/horizontal, refactor algorithmique. Choisir solution mesurable, réversible et testée.\n\n5. Validation et mitigation : déployer graduellement, vérifier métriques post-fix, disposer d’un plan de rollback, ajouter alertes pertinentes et tests de charge. Documenter cause racine et actions.\n\n6. Écueils à éviter : modifications sans mesures, patchs non réversibles, ignorer la surveillance post-déploiement, tirer de conclusions sur corrélation seule."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Batch Processing"
+      ],
+      "title": {
+        "en": "QuizModule 7·5 min",
+        "fr": "QuizModule 7·5 min"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_013",
@@ -355,7 +475,17 @@
         "fr": "Schéma de correction modèle (niveau 5/5)\n\n1) Schémas de causes profondes — méthode et livrables\n- Utiliser un diagramme en arêtes de poisson (Ishikawa) avec catégories: Personnel, Processus, Outils, Données, Environnement, Exigences. Remplir chaque branche avec preuves (logs, commits, tickets).\n- Compléter par 5 Whys pour la chaîne causale critique et, si besoin, un Fault Tree pour les combinaisons de défaillances.\n- Livrable attendu : diagramme annoté + liste priorisée de causes racines avec preuves et probabilité d’occurrence.\n\n2) Séquence de diagnostic (étapes précises)\n- Collecte: rassembler logs, traces, métriques, versions (git sha), config.\n- Reproduction: reproduire en environnement isolé (staging) ou via tests automatisés.\n- Hypothèses: formuler 2–3 hypothèses testables.\n- Isolation: utiliser binaire/feature toggles, rollback partiel, tests A/B pour isoler la cause.\n- Validation: corriger sur branche, exécuter suites de tests (unit, intégration, e2e), vérifier métriques.\n- Mesure: quantifier impact (MTTD, MTTR, taux d’erreur) avant/après.\n\n3) Faire persister les correctifs\n- Appliquer corrections à la source (code/config/infra as code).\n- Ajouter tests automatisés (régression, intégration) qui couvrent la cause.\n- Déployer via CI/CD avec revue et rollback automatique; versionner configs (Terraform/Ansible/GitOps).\n- Mettre en place alertes et dashboards pour surveiller la récurrence.\n- Documenter runbook et convertir en playbook opérationnel.\n\n4) Optimisation du flux de travail\n- Automatiser tâches répétitives (tests, déploiement, rollbacks).\n- Standardiser templates d’incident/postmortem et critères de clôture.\n- Réduire handoffs par ownership clair et SLOs/SLA, mesurer lead time et change failure rate.\n- Boucle d’amélioration: revue trimestrielle des RCA + KPI.\n\nRisques à considérer : fix incomplet/regressif, dérive de config, tests insuffisants, coût opérationnel élevé. Critères de réussite : réduction mesurable du MTTR, absence de régression, tests verts et monitoring actif."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Automation",
+        "Batch Processing",
+        "Deployment"
+      ],
+      "title": {
+        "en": "Full marks · 5/5: Full command of diagnosis and...",
+        "fr": "Full marks · 5/5: Full command of diagnosis and..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_014",
@@ -374,7 +504,17 @@
         "fr": "Leçon 1 — Q1 (définition / concept clé)\n- Vérifiez que vous avez donné une définition exacte et concise (1–2 phrases) et cité les éléments constitutifs. Exemple de réponse modèle : « X = [définition]. Ses trois attributs sont A, B et C, ce qui signifie… ».\n- Action : relire le passage du cours, recopier la définition puis reformuler à voix haute.\n\nLeçon 1 — Q2 (procédure / calcul)\n- Montrez toutes les étapes; n’affichez pas seulement la réponse finale. Indiquez les formules utilisées et les substitutions numériques. Exemple : « Étape 1 : appliquer la formule F. Étape 2 : remplacer A = … ; résultat = … ».\n- Action : refaire l’exercice sans regarder la solution, puis comparer étape par étape.\n\nLeçon 1 — Q3 (analyse / interprétation)\n- Répondez en deux parties : (a) réponse directe, (b) justification avec preuve ou exemple concret. Exemple : « Oui, parce que … (preuve). Par exemple, si … alors … ».\n- Action : préparer un contre-exemple pour tester la robustesse de votre argument.\n\nLeçon 2 — Q4 (application dans un scénario)\n- Identifiez l’hypothèse clé du scénario, appliquez le principe appris, et concluez clairement. Modèle : « Hypothèse : … ; Application : … ; Conclusion : … ».\n- Action : reformuler le scénario et tracer un schéma simple si utile.\n\nLeçon 3 — Q5 (synthèse / solution ouverte)\n- Proposez une solution structurée (objectif, contraintes, étapes, résultats attendus). Justifiez chaque étape brièvement.\n- Action : rédiger un plan en 3–4 points et vérifier la cohérence avec les critères d’évaluation.\n\nMéthode générale\n- Utilisez la technique “expliquer à quelqu’un” pour repérer les trous de compréhension.\n- Créez fiches pour définitions, formules et exemples types.\n- Retestez-vous 48–72h plus tard (spaced repetition)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Business Value",
+        "Error Handling",
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "Feedback: Review the questions you missed: Q1, ...",
+        "fr": "Feedback: Review the questions you missed: Q1, ..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_015",
@@ -393,7 +533,17 @@
         "fr": "Propositions corrigées (claires et actionnables)\n1) «Avant de poursuivre, relisez le module [nom/numéro]. Exécutez ensuite la séquence de diagnostic : identifiez les blocages, cartographiez leurs causes et retenez une solution de court terme pour chaque impasse.»\n2) Variante technique : «Consultez d’abord le module X. Lancez la séquence de diagnostic (relevé des symptômes → diagrammes de causes racines → priorisation des actions) pour convertir chaque impasse en une action corrective mesurable.»\n\nErreurs et corrections appliquées\n- Ambiguïté : préciser quel module (nom/numéro) pour éviter interprétations.  \n- Jargon et promesse vagues : «transforme les impasses en solutions rapides» est hyperbolique — remplacer par actions mesurables/solutions de court terme.  \n- Terminologie : «schémas des causes profondes» → «diagrammes d’analyse des causes racines» ou «diagrammes d’Ishikawa» suivant le contexte.  \n- Structure : séquence claire (étape → résultat attendu) et verbes d’action (identifiez, cartographiez, priorisez).\n\nChecklist qu’une bonne réponse couvre\n- Nommer la ressource exacte (module).  \n- Décrire la séquence étape par étape.  \n- Spécifier livrables attendus à chaque étape (diagramme, liste d’actions, responsable, délai).  \n- Remplacer affirmations vagues par résultats mesurables.  \n- Utiliser terminologie standardisée si technique (Ishikawa, 5 why, etc.)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Context Design",
+        "Digital Transformation"
+      ],
+      "title": {
+        "en": "incorrect: Revisit the module before continuing...",
+        "fr": "incorrect: Revisit the module before continuing..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__07_016",
@@ -412,7 +562,15 @@
         "fr": "Ce que doit contenir une bonne réponse/actions pour « Ignoré : Revenez terminer le quiz avant d'avancer » :\n\nActions concrètes (ordre recommandé)\n1. Rouvrir le quiz immédiatement et compléter toutes les questions non répondues ou marquées.  \n2. Vérifier et utiliser le bouton « Enregistrer » ou « Soumettre » — ne fermer qu’après confirmation de soumission.  \n3. Si limite de temps : noter le temps restant, travailler prioritairement sur les questions non traitées.  \n4. Si problème technique : prendre capture d’écran montrant l’erreur/état du quiz (URL, horodatage).  \n5. Contacter support pédagogique/instructeur si impossible de soumettre (joindre captures, nom du cours/quiz, navigateur/version, tentative d’heure).  \n6. Après soumission, vérifier le suivi (confirmation par e-mail, page de résultat, progression du cours).\n\nRisques concrets de ne pas suivre\n- Progression bloquée et contenu verrouillé.  \n- Perte de note (quiz non soumis compté comme zéro).  \n- Temps et efforts gaspillés sans preuve en cas de problème technique.  \n- Retard administratif si extension nécessaire.\n\nModèle de message à l’instructeur (copier-coller)\n« Bonjour, j’ai tenté de terminer le quiz [Nom du quiz] le [date/time]. Impossible de soumettre à cause de [erreur/navigateur/time out]. J’ai joint captures d’écran. Pouvez-vous confirmer réception ou accorder une réouverture/extension ? Merci, [Nom, ID étudiant]. »\n\nChecklist finale avant d’avancer\n- Quiz soumis et confirmé.  \n- Capture d’écran sauvegardée (si incident).  \n- Message envoyé au support si besoin."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "Skipped: Return to complete the quiz before adv...",
+        "fr": "Skipped: Return to complete the quiz before adv..."
+      }
     }
   ]
 }

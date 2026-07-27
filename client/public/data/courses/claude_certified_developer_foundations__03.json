@@ -216,7 +216,17 @@
         "fr": "Bonne réponse cible — actions concrètes et règles à appliquer :\n\nRègle unique : demandez-vous “quel est le pire résultat si cette action s’exécute sans vérification humaine ?”. Placez la barrière en fonction du coût de ce pire scénario.\n\nExemples concrets\n- Autoriser sans revue (acceptEdits) : corrections de formatage, edits confinés au working_directory, modifications de fichiers temporaires réversibles. Risque faible, facile à revert.\n- Bloquer ou exiger approbation humaine : écriture hors du working_directory, commandes shell destructrices (rm -rf, drop table), modifications de fichiers de sécurité/config prod, déploiements CI/CD, accès ou exfiltration de secrets, modifications de comptes/permissions. Risque élevé (données perdues, outages, fuite, compliance).\n\nDeny rules recommandées (phrases exploitables)\n- deny if write_target ∉ working_directory\n- deny if command matches destructive_shell_patterns\n- deny if touched_file ∈ {secrets, infra, deploy scripts, /etc, config/*.pem}\n\nMode opérationnel\n- use acceptEdits for low-risk automations\n- use default/plan mode to surface actions for human decision\n- enforce deny rules to deterministically block high-risk actions\n\nChecklist pour décider (utiliser avant chaque autorisation)\n1. Pire scénario concret ?\n2. Reversibilité (git revert, backups) ?\n3. Blast radius (utilisateurs/systèmes affectés) ?\n4. Données sensibles impliquées ?\n5. Nécessité de privilèges élevés ?\n6. Temps/coût pour corriger si erreur ?\n\nRépondez en appliquant ces règles et exemples aux actions de votre agent."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Automation"
+      ],
+      "title": {
+        "en": "Where a human still has to look: placing the re...",
+        "fr": "Where a human still has to look: placing the re..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_002",
@@ -235,7 +245,17 @@
         "fr": "Correction modèle — Comment décider où imposer une vérification humaine\n\nRègle unique : pour chaque action, demandez « quel est le pire résultat si cette action s'exécute sans vérification humaine ? ». Classez et agissez selon le coût et l'irréversibilité.\n\nRisques concrets à considérer\n- Fuite ou exfiltration de données sensibles\n- Corruption irréversible de base de données / perte de données\n- Blocage/arrêt de services en production (downtime)\n- Escalade de privilèges ou modification de permissions\n- Injection de code malveillant dans la base source\n- Non-conformité réglementaire ou exposition d’identifiants\n\nRègles pratiques (implémentation)\n1. Actions autorisées automatiquement (acceptEdits)\n   - Changements de formatage, corrections locales dans working directory, commentaires non persistants.\n   - Condition : réversible via git revert ou confined to temp files.\n\n2. Actions soumises à approbation humaine\n   - Écriture hors working directory, exécution de commandes shell destructives, modification de fichiers de sécurité/ci/infra, déploiements en prod.\n   - Implémenter : pause explicite, création d’une PR non mergée, tag “requires-review”, notification aux code-owners.\n\n3. Refus déterministe\n   - Règle : si cible ∈ {secrets, infra/config prod, ACLs, DB migrations}, refuser l’exécution automatique et exiger approbation humaine.\n   - Exemple pseudo-règle :\n     if action.target in protected_files or action.type == destructive_shell: require_human_approval()\n\nPratiques opérationnelles\n- Toujours journaliser l’intention, la diff, la preuve d’approbation.\n- Mode défaut/plan : laisse le plan visible mais ne l’exécute pas sans approbation.\n- Ne laissez jamais l’agent seul pour des fichiers marqués “sensitive” — son travail doit être une entrée dans la décision humaine.\n- Revoir périodiquement la catégorisation des fichiers/actions."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Agentic Design",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Permission modes and deny rules decide what the...",
+        "fr": "Permission modes and deny rules decide what the..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_003",
@@ -254,7 +274,17 @@
         "fr": "Exemple minimal et correct (fragments à assembler dans settings.json) :\n\n{\n  \"checkpointPermission\": \"AUTO_APPROVE_FILE_CHANGES\",\n  \"autoApproveFilePatterns\": [\"**/*.js\", \"**/*.ts\", \"**/*.py\"],\n  \"blockedFiles\": [\".env.production\"],\n  \"humanGates\": [\n    {\n      \"action\": \"execute_shell\",\n      \"permission\": \"HUMAN_APPROVAL\"\n    },\n    {\n      \"action\": \"read_file\",\n      \"path\": \".env.production\",\n      \"permission\": \"NEVER_ALLOW\"\n    }\n  ],\n  \"commandBlocklist\": [\"rm\", \"rmdir\", \"mv\", \"dd\", \"chmod\", \"chown\", \"sudo\", \"mkfs\", \">:\",\"|\"],\n  \"allowedActions\": [\"modify_file\"],\n  \"disallowedActions\": [\"execute_shell\", \"read_sensitive_files\"]\n}\n\nPourquoi c’est correct (points qu’une bonne réponse doit couvrir) :\n- checkpointPermission = AUTO_APPROVE_FILE_CHANGES : autorise automatiquement les modifications de fichiers (refactorisation automatique).\n- autoApproveFilePatterns : limite l’approbation automatique aux types de fichiers sûrs (code source).\n- blockedFiles + humanGate read_file .env.production = NEVER_ALLOW : garantit que .env.production n’est jamais lisible.\n- humanGate execute_shell = HUMAN_APPROVAL et commandBlocklist : empêche l’exécution de commandes shell destructrices sans intervention humaine et bloque explicitement commandes dangereuses.\n- allowedActions / disallowedActions : clarifie le périmètre (peut modifier des fichiers, ne peut pas exécuter de shell ni lire fichiers sensibles).\n\nRemarque pratique : préférez une défense en profondeur — both blocklist and explicit never-allow for sensitive files — et testez en sandbox avant déploiement."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Agentic Design",
+        "Automation",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "CheckpointPermission Modes & Human Gates·4 min",
+        "fr": "CheckpointPermission Modes & Human Gates·4 min"
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_004",
@@ -273,7 +303,17 @@
         "fr": "Exemple minimal et correct (deux éléments de settings.json) :\n\n{\n  \"auto_approve_file_changes\": true,\n  \"safety\": {\n    \"allow_shell\": false,\n    \"deny_file_read_patterns\": [\".env.production\"],\n    \"require_human_for_shell\": true\n  }\n}\n\nPourquoi c’est correct\n- auto_approve_file_changes: true — autorise automatiquement l’application des modifications de fichiers (réfaktorisation approuvée automatiquement).\n- safety.allow_shell: false — empêche toute exécution de commandes shell (bloque les commandes potentiellement destructrices).\n- safety.deny_file_read_patterns: [\".env.production\"] — garantit que .env.production n’est jamais lisible par l’agent.\n- safety.require_human_for_shell: true — “porte humaine” : demande explicite d’un humain si une exécution shell devait être levée (défense en profondeur).\n\nVérifications à effectuer après déploiement\n- Tenter une lecture de .env.production via l’agent => réponse d’erreur/accès refusé.\n- Tenter d’exécuter une commande shell (rm, git clean...) => refus immédiat; si une requête d’exécution survient elle doit générer une alerte demandant approbation humaine.\n- Vérifier qu’un changement de fichiers du module paiements est appliqué automatiquement sans prompt.\n\nRisques résiduels (à surveiller)\n- Mauvaise syntaxe des patterns empêchant le blocage (.env.production vs **/.env.production).\n- Règles trop permissives ailleurs (ex. accès réseau ou interfaces CI)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "Agentic Design",
+        "Automation"
+      ],
+      "title": {
+        "en": "Checkpoint 1: assemble the settings file and pl...",
+        "fr": "Checkpoint 1: assemble the settings file and pl..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_005",
@@ -292,7 +332,17 @@
         "fr": "Exemple de correction modèle — que doit contenir une bonne réponse\n\n1) Principe clef (concret)\n- CLAUDE.md contient les règles globales et la mémoire projet.  \n- .claude/rules/*.md contient des directives ciblées ; leur portée est définie uniquement par le frontmatter YAML `paths:` (et non par l’emplacement du fichier).  \n- Un fichier de règles sans champ `paths` se charge globalement, avec la même priorité que CLAUDE.md.\n\n2) Exemple fonctionnel (fichier .claude/rules/database.md)\n---\npaths:\n  - \"src/db/**\"\n  - \"migrations/**/*.sql\"\n---\nToutes les modifications de SQL dans ces chemins doivent :\n- inclure une frontière de transaction explicite (BEGIN/COMMIT/ROLLBACK) ou utiliser le gestionnaire de transaction central du projet,\n- utiliser des requêtes paramétrées (pas de concaténation de chaînes),\n- ne jamais modifier le schéma sans une demande de revue et l'approbation de l'équipe de DBA,\n- ajouter des tests d'intégration correspondants pour toute modification d'interaction DB.\nFin du fichier.\n\n3) Bonnes pratiques (checklist actionnable)\n- Choisir des globs précis (ex. \"src/db/**\" ou \"**/*.sql\") pour éviter de surcharger le contexte.\n- Garder les règles courtes et focalisées (1–8 points actionnables).\n- Éviter les contradictions avec CLAUDE.md ; en cas de conflit, documenter l’intention (préférence : la règle spécifique prévaut, sinon fusionner).\n- Tester : ouvrir un fichier correspondant et vérifier que Claude applique la règle ciblée.\n- Utiliser des sous-répertoires pour l’organisation uniquement (la portée reste frontmatter).\n\n4) Risques concrets à surveiller\n- Globs trop larges activent des règles inutiles (bruit contextuel).\n- Règles contradictoires dispersées — mener à des comportements incohérents.\n- Oublier d’ajouter `paths` si l’intention est de restreindre la règle."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Business Value",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Rules instruction files: scoping guidance to wh...",
+        "fr": "Rules instruction files: scoping guidance to wh..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_006",
@@ -311,7 +361,17 @@
         "fr": "Correction modèle :\n\nRésumé opérationnel\n- L'étendue (scope) est déterminée par le frontmatter YAML du fichier de règles, pas par son emplacement. Un fichier sans champ paths est chargé globalement au démarrage, avec la même priorité que CLAUDE.md.\n- Mettre contraintes globales et \"mémoire projet\" dans CLAUDE.md. Mettre directives ciblées (par chemin) dans .claude/rules/*.md avec un frontmatter paths.\n\nExemples concrets\n\nCLAUDE.md (global)\n---\n# pas de champ paths => chargé globalement\n# règles universelles\nrules:\n  - id: no-db-schema-change\n    description: \"Ne jamais modifier le schéma de la base de données sans approbation\"\n---\n\n.claude/rules/database.md (spécifique)\n---\npaths:\n- \"src/db/**/*.sql\"\n---\nrules:\n  - id: require-explicit-transaction\n    description: \"Tout SQL dans src/db/** doit inclure une frontière de transaction explicite (BEGIN/COMMIT/ROLLBACK).\"\n    check: \"présence de BEGIN/COMMIT dans le fichier ou wrapper transactionnel\"\n\nConseils pratiques et risques à éviter\n- Risque : oublier paths => règle devient globale. Vérifiez frontmatter.\n- Risque : mauvaise glob (ex. \"src/db/*\" au lieu de \"src/db/**/*.sql\") => fichiers non couverts.\n- Risque : duplication/conflict entre CLAUDE.md et règle spécifique. Favorisez CLAUDE.md pour contraintes invariantes, fichier spécifique pour règles locales.\n- Testez en ouvrant/éditant un fichier ciblé pour vérifier que la règle s'applique et ajustez le glob si nécessaire.\n\nPoints de validation d'une bonne réponse\n- Explique la différence portée vs emplacement.\n- Donne exemples YAML fonctionnels.\n- Liste risques concrets et méthodes de test."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Claude Platform",
+        "Context Design",
+        "Development"
+      ],
+      "title": {
+        "en": "Note that the scoping comes from the frontmatte...",
+        "fr": "Note that the scoping comes from the frontmatte..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_007",
@@ -330,7 +390,17 @@
         "fr": "Correction modèle — Hooks et bonnes pratiques\n\nRésumé opérationnel (par événement)\n- PreToolUse — Bloquer avant appel d’outil : renvoyer exit code 2 et écrire la raison sur stderr. Exemple CLI :\n  /hooks add --event PreToolUse --matcher 'tool.name==\"shell\"' --cmd 'sh -c \"echo \\\"Blocked: shell usage disabled\\\" >&2; exit 2\"'\n- PostToolUse — Effets secondaires après exécution : lancer formatteurs/tests/journaux. Exemple :\n  /hooks add --event PostToolUse --matcher 'tool.type==\"file.modify\"' --cmd 'bash -c \"black . || true; pytest -q || true; echo \\\"audit:$TOOL_CALL\\\" >> /var/log/agent_audit.log\"'\n- UserPromptSubmit — Validation/injection avant modèle : valider longueur, filtrer secrets ou préfixer contexte. Exemple (bloquer prompt contenant secret) :\n  /hooks add --event UserPromptSubmit --cmd 'python3 - <<PY\nimport sys\np=sys.stdin.read()\nif \"SECRET_KEY\" in p: print(\"Contains secret\", file=sys.stderr); sys.exit(2)\nprint(p)\nPY'\n- Stop — Suivi en fin de tour : notifications, nettoyage, audit. Exemple : envoyer événement vers système de monitoring.\n\nRisques concrets et mitigations\n- Blocage involontaire : tester matchers, fournir messages d’erreur précis.\n- Injection de commandes / exécution non sécurisée : exécuter hooks dans sandbox, éviter interpolation directe, utiliser scripts versionnés.\n- Latence / timeouts : imposer timeouts, garder hooks courts.\n- Fuite d’informations (logs) : rediger logs en évitant secrets, restreindre ACLs.\n\nChecklist pour une bonne réponse d’étudiant\n- Montre exemples concrets de commandes (incluant exit code 2 et stderr)\n- Utilise matchers pour limiter portée\n- Donne usages appropriés pour chaque événement\n- Énonce risques et mesures mitigantes\n- Propose testing/deploiement sûr (sandbox, timeouts, revue)"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Agentic Design",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Hooks are defined in settings files and configu...",
+        "fr": "Hooks are defined in settings files and configu..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_008",
@@ -349,7 +419,17 @@
         "fr": "Remplissage attendu :\n- Événement : \"pre_tool_call\" (s’exécute juste avant un appel d’outil)\n- Commande : \"chmod 000 .env.production\" (supprime toutes les permissions pour empêcher la lecture)\n\nExemple JSON minimal fonctionnel :\n{\n  \"hooks\": {\n    \"pre_tool_call\": {\n      \"path_restrictions\": [\n        {\n          \"path\": \".env.production\",\n          \"command\": \"chmod 000 .env.production\"\n        }\n      ]\n    },\n    \"post_tool_call\": {\n      \"restore_permissions\": [\n        {\n          \"path\": \".env.production\",\n          \"command\": \"chmod 600 .env.production\"\n        }\n      ]\n    }\n  }\n}\n\nPourquoi c’est correct et bonnes pratiques :\n- pre_tool_call s’exécute avant l’invocation de l’outil, donc empêche l’accès au fichier pendant l’appel.\n- chmod 000 retire lecture/écriture/exécution pour tous, empêchant les lectures non désirées.\n- Toujours utiliser le hook post_tool_call pour rétablir les permissions (ex. chmod 600) afin de ne pas bloquer durablement l’application ou l’utilisateur.\n- Utiliser chemins absolus dans les commandes en production (/workspace/.env.production) pour éviter d’altérer le mauvais fichier.\n- Risques à noter : si l’agent ou l’outil a besoin d’accéder légitimement au fichier, bloquer les permissions peut casser le flux — tester sur un environnement isolé."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Agentic Design",
+        "Context Design",
+        "Development"
+      ],
+      "title": {
+        "en": "CheckpointDurable Project Context·3 min",
+        "fr": "CheckpointDurable Project Context·3 min"
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_009",
@@ -368,7 +448,17 @@
         "fr": "Remplissez la clé d’événement par onBeforeToolCall et exécutez une commande shell qui retire les droits de lecture (par exemple chmod 000). Exemple minimal fonctionnel :\n\n{\n  \"hooks\": {\n    \"onBeforeToolCall\": [\n      {\n        \"run\": \"chmod 000 .env.production\"\n      }\n    ]\n  }\n}\n\nPourquoi c’est correct et quoi compléter ensuite :\n- onBeforeToolCall est l’événement qui s’exécute avant l’appel d’un outil.\n- chmod 000 retire toutes les permissions (lecture/écriture/exécution) sur .env.production, empêchant toute lecture par l’outil.\n- Ajoutez impérativement un hook de nettoyage pour restaurer les permissions après l’appel (par ex. onAfterToolCall avec chmod 640 .env.production) afin d’éviter un verrouillage permanent.\n\nRisques concrets et mitigations :\n- Risque : l’outil a besoin de lire .env.production → vérifier préalablement si la variable doit être accessible.\n- Risque : perte d’accès système si le hook s’exécute avec des droits trop élevés → exécuter sous l’utilisateur contrôlé et tester en staging.\n- Risque : échec du hook laissant le fichier verrouillé → implémenter onError/onFinally pour restauration et journalisation des actions."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Business Value",
+        "Development",
+        "Error Handling"
+      ],
+      "title": {
+        "en": "Checkpoint 2: drag the correct value",
+        "fr": "Checkpoint 2: drag the correct value"
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_010",
@@ -387,7 +477,17 @@
         "fr": "Claude Code\n- Chargement : auto‑découverte des fichiers SKILL.md placés dans .claude/skills. Le front matter (id, name, triggers, permissions) est lu par l’IDE/agent.\n- Exécution : la skill tourne dans le contexte du projet (CLAUDE.md, accès fichiers, hooks et subagents disponibles). Les étapes s’exécutent avec les droits locaux définis par le front matter (p. ex. file_read: true, network: false).\n- Action concrète : tester qu’un SKILL.md avec front matter {id, name, triggers, permissions} apparaît dans l’UI et peut être invoqué depuis le panneau de skills.\n\nMessages API\n- Chargement : pas d’auto‑chargement depuis le repo. Il faut envoyer le contenu du SKILL.md dans la requête (system prompt, metadata, ou via un “context” upload) ou héberger la skill côté serveur et fournir un token/URL.\n- Exécution : stateless côté modèle — le modèle n’a pas d’accès direct au FS ni aux hooks ; tout l’état/les fichiers doivent être fournis dans la requête. L’orchestration (exécution séquentielle des étapes, appels d’outils) est gérée côté client.\n- Action concrète : inclure le front matter + corps du SKILL.md dans la propriété system/message et fournir explicitement fichiers/credentials nécessaires.\n\nAgent SDK\n- Chargement : l’SDK peut charger les SKILL.md depuis .claude/skills (api d’enregistrement), mapper des étapes à des handlers/tools et appliquer les permissions.\n- Exécution : l’agent exécute localement, peut fournir accès contrôlé au FS, lancer subagents, et appliquer hooks déterministes. L’SDK gère l’isolation et les autorisations.\n- Action concrète : utiliser sdk.register_skill(path) puis sdk.invoke_skill(id, inputs).\n\nRisques concrets et recommandations\n- Risque : skill supposant accès FS/secret non disponible via API → déclarer permissions explicites dans front matter.\n- Risque : fuite de secrets lors du packaging → n’inclure jamais credentials dans .claude; documenter variables d’environnement.\n- Packaging recommandé : placer SKILL.md dans .claude/skills, versionner, et fournir un script d’installation unique (ex. install.sh qui copie/installe les fichiers ou ajoute un submodule). Testez la skill dans les trois contextes."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Automation"
+      ],
+      "title": {
+        "en": "Previously, we covered the mechanisms that give...",
+        "fr": "Previously, we covered the mechanisms that give..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_011",
@@ -406,7 +506,17 @@
         "fr": "Décision synthétique\n- Choisir un plugin quand le travail doit être reproductible et déployé chez plusieurs devs (coût d’installation unique + maintenance centralisée). Choisir des skills locaux quand l’activation ponctuelle et légère évite le surcoût d’un bundle.\n\nRisques concrets\n- Hypothèses d’environnement (chemins absolus) cassant l’installation sur d’autres machines.\n- Absence de guardrails/deny rules dans le bundle → protections non transférées.\n- Fuite de secrets dans les hooks ou scripts inclus.\n- Dépendances vulnérables ou non verrouillées provoquant régressions.\n- Mécanismes d’installation non idempotents rendant les mises à jour dangereuses.\n\nActions et bonnes pratiques (checklist)\n- Ne jamais coder de chemins absolus : utiliser variables d’environnement, chemins relatifs, détection OS.\n- Inclure explicitement dans le manifest : hooks, deny rules, guards, permissions requises.\n- Fournir un script d’installation idempotent (+ rollback), et instructions d’upgrade.\n- Bundler et pinner les dépendances; exécuter SCA (scanning vulnérabilités) avant release.\n- Ajouter tests d’intégration multi-plateformes dans CI (Linux/macOS/Windows).\n- Signer les packages, documenter permissions et risques dans README.\n- Automatiser publication/versioning (CI/CD), et définir procédure d’urgence (revert).\n- Vérifier que tout guardrail nécessaire est inclus dans le bundle ou documenté pour installation manuelle.\n\nExemple de contenu minimal du bundle : manifest, hooks, deny-rules, install.sh, tests CI, README, changelog, licence."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Automation",
+        "Context Design",
+        "Cost Optimization"
+      ],
+      "title": {
+        "en": "Cost · Complexity · Risk",
+        "fr": "Cost · Complexity · Risk"
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_012",
@@ -425,7 +535,17 @@
         "fr": "Bonne réponse : placer le skill dans le runtime terminal/Claude Code CLI et configurer son point d’entrée et son déclencheur sur commande terminale.\n\nActions concrètes :\n- Choisir le runtime “Claude Code terminal / CLI” (pas le runtime chat ou UI).  \n- Déclarer un entrypoint CLI (script exécutable) et un trigger “command” pour que le skill soit chargé à la demande.  \n- Demander les permissions d’accès aux fichiers/projet si la checklist lit le code.  \n- Installer le skill dans l’espace de travail du développeur (ou le déployer dans le magasin interne) pour qu’il soit disponible dans le terminal Claude Code.\n\nExemple de manifest minimal (YAML) à inclure dans le packaging :\nruntime: claude-code-terminal\nentrypoint: ./cli.py\nload: on_command\ncommands:\n  - name: request-review\n    pattern: \"^/review\"\n    description: \"Charge la skill review-checklist quand l'utilisateur tape /review dans le Claude Code terminal\"\npermissions:\n  - read_workspace_files\n\nExemple d’implémentation CLI (cli.py) :\n#!/usr/bin/env python3\nimport sys\nif \"/review\" in \" \".join(sys.argv):\n    # charger et exécuter la checklist\n    from review_checklist import run_checklist\n    run_checklist()\n\nPoints de validation pour l’exercice :\n- Le runtime choisi est bien le terminal/CLI (pas chat/editor).  \n- Le manifeste contient un entrypoint CLI et un trigger par commande.  \n- Le skill ne charge qu’à la commande (on-demand).  \n- Les permissions nécessaires pour lire le code sont déclarées."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Business Value",
+        "Claude Platform",
+        "Context Design"
+      ],
+      "title": {
+        "en": "CheckpointPackaging Workflows·3 min",
+        "fr": "CheckpointPackaging Workflows·3 min"
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_013",
@@ -444,7 +564,17 @@
         "fr": "Le libellé fourni est ambigu et peu utile pour l’utilisateur. Voici une correction modèle et des actions concrètes à appliquer.\n\nTexte recommandé (choix selon intention)\n- Si l’état signifie que l’élément a été ignoré : « État : Ignoré. Vous pouvez revenir à ce point de contrôle à tout moment. »\n- Si c’est un rappel/action disponible : « Ignorer (rétablir possible) — Vous pouvez revenir à ce point de contrôle à tout moment. »\n- Variante courte pour interface compacte : « Ignoré — peut être rétabli. »\n\nRaisons et améliorations concrètes\n- Préciser « État » ou « Action » pour supprimer l’ambiguïté.\n- Utiliser une ponctuation claire (tiret ou point) pour séparer l’étiquette de l’explication.\n- Adapter le ton (formel/informel) à l’audience ; ici « Vous » est cohérent pour un public professionnel.\n\nImplémentation technique (exemples)\n- i18n key : checkpoint.ignored = \"État : Ignoré. Vous pouvez revenir à ce point de contrôle à tout moment.\"\n- Accessibilité : aria-live=\"polite\" pour annoncer le changement d’état aux lecteurs d’écran.\n- Analytics : enregistrer un événement checkpoint_ignored avec timestamp et user_id.\n\nChecklist de validation\n- Le message est non-ambigu et concis.\n- Fonctionne sur mobile / ne se tronque pas.\n- Annoncé aux technologies d’assistance.\n- Clavier/commande pour « revenir » documentée ou accessible.\n- Tests utilisateurs valident la compréhension."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Development",
+        "Error Handling",
+        "Evaluation"
+      ],
+      "title": {
+        "en": "Skipped: You can return to this checkpoint at a...",
+        "fr": "Skipped: You can return to this checkpoint at a..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_014",
@@ -463,7 +593,17 @@
         "fr": "Correction modèle :\n\nVotre raisonnement est correct mais doit être rendu plus précis et opérationnel.\n\nPoints concrets à conserver et préciser\n- Confirmer : C + D ensemble satisfont le scénario s’ils implémentent (1) lecture/recherche/navigation sans confirmation, (2) modifications de fichiers autorisées quand non sensibles, (3) commandes shell destructrices bloquées, (4) refus explicite pour .env.production appliqué au chemin (paramètre).  \n- Remplacer l’idée vague de « classificateur » par une règle déterministe : la défense doit reposer sur des expressions régulières/path checks et un filtre de commandes explicite, pas sur un modèle de style.\n\nRègles et exemples actionnables\n- Refus explicite pour fichiers sensibles : regex ^(.*/)?\\.env\\.production$ ou path.endsWith(\"/.env.production\") — toute tentative d’écriture => blocage et alerte.  \n- Liste noire de commandes shell destructrices (bloquer motifs) : \\brm\\b, \\bdd\\b, \\btruncate\\b, >(?:\\s*/dev/zero), \": >\" sur fichiers sensibles, sudo rm, shred, dd if=/dev/zero, chmod 000 sur config critiques. Utiliser matching exact/anchored, pas classifier ML.  \n- Whitelist pour refactor local auto-approuvé : autoriser modifications automatiques pour chemins connus (ex. src/**, tests/**). Pour fichiers de déploiement (deploy/**, k8s/*.yaml, infra/**) exiger revue humaine/approval explicite (code-owner ou 2e relecteur).\n\nRisques concrets à expliciter\n- Écrasement irréversible de config de production, fuite de secrets, interruption de services en chaîne, erreurs non détectées dans rollouts automatisés.\n\nProcédure opérationnelle recommandée\n- Dry-run + diff obligatoire avant écriture, journalisation complète, backup/versioning automatique, et règle « approbation requise » pour tout fichier identifié sensible."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "Automation",
+        "Cost Optimization"
+      ],
+      "title": {
+        "en": "Correct: Pieces C and D together satisfy the sc...",
+        "fr": "Correct: Pieces C and D together satisfy the sc..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_015",
@@ -482,7 +622,17 @@
         "fr": "Éléments à choisir (clés, comportements et contrôles) :\n- autoApproveEdits: true — autorise automatiquement les modifications de fichiers non exécutables (edits de code/textes) sans confirmation.\n- protectedPaths (gardé) — conserve la protection des chemins sensibles (/etc, /var/www, ~/.ssh).\n- shellCommand.requireHumanApproval: true — toute exécution de shell qui correspond à risque doit demander approbation explicite.\n- shellCommand.allowedCommands (whitelist) — liste explicite de commandes non destructives autorisées (ls, cat, echo, grep).\n- shellCommand.forbiddenPatterns (blacklist) — regex bloquants pour rm, dd, >:, shred, mv, scp, curl|wget piped to sh, chmod 777, etc.\n- sandboxExecution + runAsNonRoot — exécuter dans environnement restreint et sans privilèges root.\n- auditLogging: true et dryRun: true pour tester règles avant déploiement.\n\nExemple de règle (JSON simplifié) :\n{\n  \"autoApproveEdits\": true,\n  \"protectedPaths\": [\"/etc\",\"/var/www\",\"~/.ssh\"],\n  \"shellCommand\": {\n    \"requireHumanApproval\": true,\n    \"allowedCommands\": [\"ls\",\"cat\",\"echo\",\"head\",\"tail\",\"grep\"],\n    \"forbiddenPatterns\": [\"\\\\brm\\\\b\",\"\\\\bdd\\\\b\",\"\\\\bsh\\\\s+-c\\\\b\",\">:\",\"\\\\bchmod\\\\s+777\\\\b\",\"curl\\\\s+.*\\\\|\\\\s*sh\"],\n    \"sandbox\": true,\n    \"runAsUser\": \"nobody\"\n  },\n  \"auditLogging\": true,\n  \"dryRun\": false\n}\n\nPoints de vérification avant validation : test dry-run, vérifier journaux d’audit, valider que edits auto-approuvés n’accordent pas exécution de scripts, formation des opérateurs pour approvals manuels."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Automation"
+      ],
+      "title": {
+        "en": "Revisit Part 1: With bypassPermissions set, the...",
+        "fr": "Revisit Part 1: With bypassPermissions set, the..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_016",
@@ -501,7 +651,17 @@
         "fr": "Risques identifiés\n- Exfiltration de secrets (clés/API) depuis .env.production.\n- Escalade de privilèges si le fichier contient credentials.\n- Non‑conformité réglementaire et audit failing.\n- Attaques de reconnaissance/lateral movement si d’autres services lisent ce fichier.\n\nCorrection attendue (actionnable)\n1) Implémenter une deny rule explicite et prioritaire pour le chemin exact et motifs (ex.: \".env.production\", \"/**/.env.production\"). 2) Faire appliquer le principe de “deny-by-default” et évaluer les règles allow ensuite. 3) Déployer la règle dans la configuration et vérifier par tests automatisés et logs d’audit. 4) Surveiller et alerter sur tentatives d’accès refusées.\n\nExemple de règle (Rego / OPA)\npackage agent.access\ndeny[msg] {\n  input.path == \".env.production\"\n  msg = \"Accès interdit : fichier .env.production\"\n}\n\nExemple YAML générique pour config d’agent\ndeny_rules:\n  - id: deny_env_production\n    match: [\"**/.env.production\", \".env.production\"]\n    reason: \"Contient des secrets\"\n    action: \"deny\"\n    priority: 100\n\nVérification\n- Tests unitaires simulant accès à .env.production (doivent échouer).\n- Tests d’intégration en CI avec règles chargées.\n- Revue de logs pour confirmer entrées \"deny\" et déclenchement d’alertes.\n- Documenter la règle dans la politique de sécurité et plan de mitigation."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Automation"
+      ],
+      "title": {
+        "en": "Revisit Part 1: Without the deny rule on .env.p...",
+        "fr": "Revisit Part 1: Without the deny rule on .env.p..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_017",
@@ -520,7 +680,17 @@
         "fr": "Partie 1 — Réponse : Pièces C et D ensemble.\nExplication concise : l’exercice demande les deux éléments conjoints ; indiquez explicitement C + D comme seule combinaison correcte.\n\nPartie 2 — Emplacement du contrôle humain : sur le “protected-path” AVANT l’exécution de l’écriture coûteuse (human‑in‑the‑loop, pre‑commit).\nActions concrètes à mettre en place :\n- Interface d’approbation explicite montrant le diff exact et les conséquences (fichier, base, ressources affectées).  \n- Re‑authentification forte (MFA) et séparation des privilèges : seuls des comptes autorisés peuvent approuver.  \n- Gardes server‑side non contournables (protected‑path) : le client/session par défaut ne doit pas pouvoir exécuter l’action.  \n- Log d’audit immuable et horodaté + délai configurable avant apply pour permettre annulation.  \n- Dry‑run / simulation et plan de rollback testés avant déploiement.  \n- Contrôles anti‑injection et validation des prompts entrants ; n’autoriser aucune suppression du prompt d’approbation.\n\nPourquoi (a), (c), (d) sont incorrectes :\n- (a) confond valeur par défaut de session avec exécution effective — ne garantit pas approbation humaine.  \n- (c) supprime les prompts et le protected‑path → rupture du contrôle.  \n- (d) n’intervient qu’après production — trop tard pour annuler sans coûts élevés.\n\nRisques concrets à adresser : suppression accidentelle, écriture irréversible, élévation de privilèges, contournement du guard, absence d’audit, et erreurs non détectées avant déploiement."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "Cost Optimization",
+        "Development"
+      ],
+      "title": {
+        "en": "Check both parts: Part 1 needs Pieces C and D t...",
+        "fr": "Check both parts: Part 1 needs Pieces C and D t..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_018",
@@ -539,7 +709,17 @@
         "fr": "Correction modèle — points clés et exemple opérationnel :\n\n1) Comportement : exact — PreToolUse s'exécute avant l'appel d'outil et peut empêcher l'exécution ; PostToolUse ne peut plus empêcher l'exécution (au mieux signaler un problème après coup).\n\n2) Convention de blocage : si le hook se termine avec le code de sortie 2, l'appel est bloqué et tout ce qui est écrit sur stderr devient le message remonté à Claude. Vérifier que votre plateforme utilise bien «2» pour ce comportement.\n\n3) Risques concrets et mitigations :\n- TOCTOU (race) : canonicaliser le chemin (realpath) et, si possible, ouvrir le fichier et vérifier le descripteur plutôt que le chemin textuel.\n- Symlinks/escapement : résoudre symlinks et interdire chemins hors répertoire autorisé.\n- Fuite d'informations : sanitizer/tronquer le message stderr (pas de traces internes ni chemins sensibles).\n- DOS : limiter taille du stderr et fréquence des validations.\n\n4) Exemple Python minimal (stdin contient JSON {\"path\": \"...\"}):\nimport sys, json, os\ndata = json.load(sys.stdin)\np = os.path.realpath(data.get(\"path\",\"\"))\nallowed = \"/safe/dir\"\nif not p.startswith(os.path.realpath(allowed)+os.sep):\n    sys.stderr.write(\"Accès refusé : chemin non autorisé\\n\")\n    sys.exit(2)\n# autorisé -> exit 0\nsys.exit(0)\n\nChecklist pour une bonne implémentation :\n- normalisation et résolution symlink (realpath)\n- comparaison sûre avec répertoire autorisé\n- ouverture/validation par descripteur si possible\n- nettoyage/tronquage du stderr\n- documenter le choix du code de sortie et son traitement par la plateforme."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Claude Platform",
+        "Development",
+        "Structured Output"
+      ],
+      "title": {
+        "en": "Correct: PreToolUse fires before the tool call ...",
+        "fr": "Correct: PreToolUse fires before the tool call ..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_019",
@@ -558,7 +738,17 @@
         "fr": "Correction modèle :\n\nPreToolUse est bien l’événement correct. PostToolUse se déclenche après l’exécution de l’outil, donc il est trop tard pour empêcher la lecture ou modifier l’appel. PreToolUse vous permet d’intercepter l’appel, modifier ses paramètres ou l’annuler.\n\nExemple (JS/TS pseudo‑API) :\nconst unregister = tool.on(\"PreToolUse\", (evt) => {\n  // vérifier et décider\n  if (!currentUser.hasPermission(\"readSensitive\")) {\n    evt.preventDefault();            // empêche l'exécution de l'outil\n    evt.result = { error: \"Accès refusé\" }; // réponse immédiate facultative\n    return;\n  }\n  // modifier les paramètres si nécessaire\n  evt.params.query = sanitize(evt.params.query);\n});\n\nAlternatives selon l’API : certaines implémentations exigent return false pour annuler, ou evt.cancel(). Vérifier la doc de l’API et utiliser la méthode d’annulation appropriée.\n\nPoints concrets à couvrir dans une bonne réponse :\n- Justification : PreToolUse = avant exécution, PostToolUse = après.\n- Exemple de code montrant prevention (evt.preventDefault()/evt.cancel()/return false).\n- Validation des droits/conditions dans le handler et modification des paramètres si besoin.\n- Tests : cas autorisé/interdit, ordre d’enregistrement (handler doit être enregistré avant les appels), logging et latence minimale pour éviter blocages.\n- Gestion des effets secondaires (nettoyage du handler si dynamique)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Incorrect: PostToolUse fires after the tool has...",
+        "fr": "Incorrect: PostToolUse fires after the tool has..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_020",
@@ -577,7 +767,17 @@
         "fr": "Correction modèle (bash) — objectif : lire l'entrée, extraire/normaliser le chemin et sortir 2 si c'est le fichier protégé, 0 sinon.\n\n#!/usr/bin/env bash\nset -euo pipefail\ninput=$(cat)                                 # lire toute l'entrée\n# tenter d'extraire un champ JSON \"path\" si présent\nif command -v jq >/dev/null 2>&1; then\n  path=$(jq -r 'if type==\"object\" and has(\"path\") then .path else . end' <<<\"$input\" 2>/dev/null) || path=\"$input\"\nelse\n  path=\"$input\"\nfi\n# trim\npath=$(printf '%s' \"$path\" | awk '{$1=$1;print}')\n# normaliser (utiliser realpath/readlink selon environnement)\nif command -v realpath >/dev/null 2>&1; then\n  norm=$(realpath -m -- \"$path\" 2>/dev/null || realpath -- \"$path\")\nelse\n  norm=$(readlink -f -- \"$path\" 2>/dev/null || printf '%s' \"$path\")\nfi\nprotected=\"/srv/protected/secret.txt\"\nprotected_norm=$(realpath -m -- \"$protected\" 2>/dev/null || readlink -f -- \"$protected\" 2>/dev/null || printf '%s' \"$protected\")\n[ \"$norm\" = \"$protected_norm\" ] && exit 2 || exit 0\n\nPoints clés qu'une bonne réponse couvre :\n- Lit l'entrée standard (pas d'arguments fixes).\n- Gère entrée brute et JSON (champ \"path\").\n- Normalise le chemin (résolution ../ et symlinks) avant comparaison.\n- Compare au chemin protégé canonique et exit 2 si égal, sinon exit 0.\n- Tests attendus : entrée exacte → exit 2 ; chemin équivalent avec ../ → exit 2 ; autre fichier → exit 0.\nRisques/pitfalls : ne pas laisser un \"exit 0\" inconditionnel, attention aux attaques de type TOCTOU si décider d'ouvrir le fichier après la vérification."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Development",
+        "Structured Output",
+        "Testing"
+      ],
+      "title": {
+        "en": "Partial: correct event, wrong command: The even...",
+        "fr": "Partial: correct event, wrong command: The even..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_021",
@@ -596,7 +796,17 @@
         "fr": "Zone vide 1 — Événement : l’événement “pré‑exécution” (souvent nommé before_script / pre_<task> / pre_run)\n- En pratique : selon le système, utilisez le hook qui s’exécute avant l’appel d’un outil :\n  - GitLab CI / GitHub Actions job : before_script (ou un step placé avant le call)\n  - npm : préfixe pre<command> (ex. pretest)\n  - orchestrateurs custom : pre_run / pre_exec / pre-tool-call\n\nZone vide 2 — Commande pour inspecter le PATH et sortir avec code 2 :\n- Exemple shell robuste (portable) à coller dans le hook pré‑exécution :\n  if ! command -v mytool >/dev/null 2>&1; then\n    echo \"ERROR: mytool introuvable dans \\$PATH\" >&2\n    exit 2\n  fi\n\nExemple complet (dans before_script / pre-run) :\n- before_script:\n  - |\n    if ! command -v mytool >/dev/null 2>&1; then\n      echo \"ERROR: mytool introuvable dans \\$PATH\" >&2\n      exit 2\n    fi\n\nPoints de validation attendus :\n- Le hook choisi s’exécute avant l’appel de l’outil.\n- La commande utilise command -v (portable) et redirige stderr.\n- Exit code = 2 si l’outil est absent, avec message d’erreur utile."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Development",
+        "Error Handling",
+        "Orchestration"
+      ],
+      "title": {
+        "en": "Revisit both blanks: Blank 1 needs the lifecycl...",
+        "fr": "Revisit both blanks: Blank 1 needs the lifecycl..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_022",
@@ -615,7 +825,17 @@
         "fr": "Correction proposée (phrase et style)\nChaque situation doit être associée à la configuration spécifique qui permet de charger le skill dans ce runtime. Principe : le même SKILL.md reste portable, mais chaque runtime le découvre et l’isole différemment — « runs everywhere » s’obtient par configuration et adaptation, pas automatiquement.\n\nPoints clés qu’une bonne réponse doit couvrir (actionnable)\n- Séparer le contenu portable (SKILL.md) des métadonnées runtime (manifests). SKILL.md décrit capability/usage; manifests runtime- spécifiques décrivent entrée, permissions, limits.\n- Fournir un adaptateur/convertisseur build-time qui génère la config exigée par chaque runtime (ex. skill->runtime.json ou runtime.yaml).\n- Déclarer explicitement permissions et capabilities dans chaque manifest pour le sandboxing (I/O, réseau, mémoire, fichiers).\n- Versionner API/format de SKILL.md et inclure feature-detection dans le bootstrap pour choisir la configuration correcte.\n- Intégrer tests d’intégration par runtime dans CI : discovery, sandboxing, start/stop, échecs de permission.\n- Packager dépendances avec le skill (lockfile) ou fournir container/runtime image.\n\nRisques concrets et mitigations\n- Mismatch permissions → tests d’intégration + manifest explicite.\n- Dépendances manquantes → lockfile et packaging/runtime image.\n- Échappement de sandbox → principe de moindre privilège et revue de sécurité.\n- Incompatibilités de format → versioning et adaptateurs."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Deployment"
+      ],
+      "title": {
+        "en": "Correct: Each situation is matched to the one c...",
+        "fr": "Correct: Each situation is matched to the one c..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_023",
@@ -634,7 +854,17 @@
         "fr": "Problème concret : un chemin absolu (/Users/alexmorgan/…) dans l’étape 1 casse le workflow lorsqu’un collaborateur clone le dépôt ailleurs. Solution : référencer le script à partir de la racine du projet (CLAUDE_PROJECT_DIR ou équivalent), vérifier l’existence/exécutabilité, et fournir un fallback portable.\n\nExemple de correction (bash) à placer dans l’étape 1 :\n- définir / utiliser CLAUDE_PROJECT_DIR fourni par l’environnement CI ou calculer la racine git si absent ;\n- construire le chemin relatif vers deploy-utils/validate.sh ;\n- vérifier et exécuter.\n\nExemple :\n```\n: \"${CLAUDE_PROJECT_DIR:=$(git rev-parse --show-toplevel 2>/dev/null || pwd)}\"\nVALIDATE_SH=\"${CLAUDE_PROJECT_DIR}/deploy-utils/validate.sh\"\n\nif [ ! -f \"$VALIDATE_SH\" ]; then\n  echo \"Erreur : $VALIDATE_SH introuvable. Vérifiez la structure du dépôt.\" >&2\n  exit 1\nfi\nif [ ! -x \"$VALIDATE_SH\" ]; then\n  chmod +x \"$VALIDATE_SH\" 2>/dev/null || {\n    echo \"Erreur : $VALIDATE_SH n'est pas exécutable et chmod a échoué.\" >&2\n    exit 1\n  }\nfi\n\n\"$VALIDATE_SH\" \"$@\"\n```\n\nBonnes pratiques et risques adressés :\n- Risque : chemins absolus spécifiques à l’auteur → échec chez d’autres contributeurs/CI.\n- Risque : variable non définie → fallback sûr (git rev-parse ou PWD).\n- Toujours vérifier l’existence et l’exécutabilité, citer les variables, et afficher des messages d’erreur explicites pour faciliter le debugging."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Business Value",
+        "Claude Platform",
+        "Deployment"
+      ],
+      "title": {
+        "en": "Correct: The defect is the absolute path /Users...",
+        "fr": "Correct: The defect is the absolute path /Users..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_024",
@@ -653,7 +883,17 @@
         "fr": "Correction modèle — points attendus et exemple pratique\n\n1) Principe : construire tous les chemins à partir de la racine du projet fournie par la variable d’environnement CLAUDE_PROJECT_DIR. Ne pas utiliser de chemins absolus codés en dur ni ~/.\n\n2) Vérifications à faire :\n- Valider que CLAUDE_PROJECT_DIR est défini et non vide.\n- Normaliser le chemin (os.path.abspath/os.path.normpath) et vérifier l’existence et les droits d’accès.\n- Ne pas utiliser expanduser() ni chemins relatifs dépendant du cwd.\n- Documenter la variable (README, scripts CI) et ajouter un test unitaire qui simule son absence.\n\n3) Exemple Python (fonctionnel) :\n```python\nimport os\nfrom pathlib import Path\n\nproj_root = os.environ.get(\"CLAUDE_PROJECT_DIR\")\nif not proj_root:\n    raise RuntimeError(\"CLAUDE_PROJECT_DIR non défini — voir README\")\n\nproj_root = Path(proj_root).resolve()\ntarget = proj_root / \"data\" / \"config.yaml\"\nif not target.exists():\n    raise FileNotFoundError(f\"Fichier attendu manquant: {target}\")\nwith target.open() as f:\n    cfg = f.read()\n```\n\n4) Exemple Bash :\n```bash\n: \"${CLAUDE_PROJECT_DIR:?Need CLAUDE_PROJECT_DIR set}\"\ntarget=\"${CLAUDE_PROJECT_DIR}/data/config.yaml\"\nif [ ! -f \"$target\" ]; then\n  echo \"Missing $target\" >&2\n  exit 1\nfi\n```\n\n5) Risques concrets et mitigation :\n- CLAUDE_PROJECT_DIR manquant → échouer tôt avec message clair.\n- Valeur malveillante/path traversal → resolve + vérifier qu’elle contient la structure attendue.\n- Permissions insuffisantes → vérifier accès en lecture/écriture et documenter prérequis.\n\n6) Livraison : tests automatisés, mise à jour README et variable exportée dans les scripts CI."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Partial: right defect, wrong fix: You found the...",
+        "fr": "Partial: right defect, wrong fix: You found the..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_025",
@@ -672,7 +912,17 @@
         "fr": "Problème identifié\nL’étape 1 utilise un chemin absolu lié au poste de l’auteur (ex. /home/alice/projects/myproject/...), donc elle fonctionnera uniquement sur sa machine. Ce n’est pas une erreur de nom/structure, c’est un défaut de portabilité.\n\nCorrection concrète (ce que changer)\n- Remplacer le chemin absolu par un chemin relatif ou une commande qui résout la racine du dépôt.\n- Ajouter une instruction claire « se placer dans la racine du projet » avant d’exécuter les étapes.\n\nExemple de texte corrigé pour l’étape 1\n1) Depuis la racine du dépôt cloné :\n   git clone https://.../mon-projet.git\n   cd mon-projet\n   cd backend\n   # ou, si le README peut être exécuté depuis n’importe quel sous-répertoire :\n   cd \"$(git rev-parse --show-toplevel)\"/backend\n\nAlternatives robustes\n- Utiliser cd backend (si le README est dans la racine).\n- Pour scripts bash : cd \"$(dirname \"$0\")/../backend\" (référence relative au script).\n- Pour chemins utilisateurs : éviter $HOME absolu; documenter la variable si nécessaire.\n\nTests à effectuer\n- Cloner le repo dans un répertoire différent et suivre l’installation sans modifier les commandes.\n- Exécuter les étapes dans CI (container) pour valider l’indépendance du chemin.\n\nRisques concrets évités\n- Installation qui échoue sur les machines des utilisateurs, échecs CI, mauvaise expérience et tickets d’assistance inutiles."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Development",
+        "Structured Output",
+        "Testing"
+      ],
+      "title": {
+        "en": "Incorrect: wrong defect: That is not where the ...",
+        "fr": "Incorrect: wrong defect: That is not where the ..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_026",
@@ -691,7 +941,17 @@
         "fr": "Tout à fait exact sur les quatre points. Voici une formulation corrigée et plus précise :\n\n« stdio est destiné aux serveurs qui s’exécutent uniquement sur la même machine que le client, tandis que HTTP est destiné aux services hébergés à distance ou accessibles depuis plusieurs machines. La portée \"local\" rend le serveur accessible uniquement sur votre poste ; la portée \"project\" (définie dans .mcp.json) le partage avec tous ceux qui clonent le dépôt ; et la portée \"enterprise\" permet un déploiement administratif pour l’ensemble des utilisateurs de l’organisation. »\n\nRemarques et corrections spécifiques :\n- Remplacer « sur votre machine » par « sur la même machine que le client » pour éviter l’ambiguïté client/serveur.\n- Mettre entre guillemets les noms de portée (local, project, enterprise) et préciser où est définie la portée project (.mcp.json).\n- Préciser que HTTP cible « services » ou « hôtes » distants plutôt que « tout ce qui est hébergé », plus clair techniquement.\n- Préciser « déploiement administratif » pour enterprise et éviter « le déploie » impersonnel.\n- Conserver HTTP en majuscules (acronyme) et stdio en minuscules (nom technique)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Agentic Design",
+        "Compliance",
+        "Deployment"
+      ],
+      "title": {
+        "en": "Correct: Right on all four. The decision logic:...",
+        "fr": "Correct: Right on all four. The decision logic:..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_027",
@@ -710,7 +970,17 @@
         "fr": "Objectif : vérifier que « la justification de chaque option » est complète, correcte et pédagogique. Voici une correction modèle et une méthode actionable pour évaluer/écrire ces justifications.\n\nCritères concrets (à appliquer à chaque option)\n- Énoncé clair de verdict : commencer par « Correct » / « Incorrect » / « Partiellement correct ».\n- Preuve ou raisonnement : fournir un raisonnement étape par étape ou une référence chiffrée ; si hypothèses utilisées, les expliciter.\n- Contre‑exemple ou limite : si incorrect ou partiel, donner un contre‑exemple concret ou expliquer la condition où l’option échoue.\n- Remède ou reformulation : proposer la correction ou la reformulation précise nécessaire pour rendre l’option correcte.\n- Concision et traçabilité : une à trois phrases pour le verdict + 2–4 phrases pour la preuve ; citer sources si pertinent.\n\nFormule type (à copier-coller)\n- Verdict : « Incorrect (ou Correct). »\n- Preuve : « Raisonnement : … » ou « Exemple/chiffre : … »\n- Limite : « Limite/contre‑exemple : … »\n- Correction : « Pour être vrai, écrire : … »\n\nExemple appliqué\n- Option A — Incorrect. Raisonnement : l’énoncé suppose X mais viole la condition Y (ex. n°). Contre‑exemple : … Correction : remplacer « X » par « X sous condition Y ».\n- Option B — Correct. Raisonnement : conforme à la définition D et aux résultats R (référence).\n\nChecklist finale (cocher avant validation)\n- [ ] Verdict explicite\n- [ ] Preuve suffisante et vérifiable\n- [ ] Hypothèses listées\n- [ ] Contre‑exemples ou limites donnés\n- [ ] Proposition corrective si nécessaire"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Business Value",
+        "Development",
+        "Error Handling"
+      ],
+      "title": {
+        "en": "correct: Rationale for each option is shown above.",
+        "fr": "correct: Rationale for each option is shown above."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_028",
@@ -729,7 +999,17 @@
         "fr": "Chaque bug identifié est correct. Remarques concrètes et actions à mener :\n\nBug 1 — bypassPermissions sur poste de prod\n- Pourquoi c’est dangereux : désactive les confirmations de sécurité nécessaires à une migration → exécution non autorisée, changements irréversibles.\n- Correction immédiate : retirer/désactiver bypassPermissions en production ; rejouer la migration en environnement de staging avec les prompts actifs.\n- Prévention : exiger approbation multifactorielle pour opérations de migration, journaux d’audit, procédures « runbook » et contrôle d’accès basé sur les rôles (RBAC).\n\nBug 2 — chemin absolu dans le skill\n- Pourquoi c’est dangereux : non portable ; cassera sur toute autre machine/CI.\n- Correction : remplacer par chemin relatif ou variable d’environnement. Exemple Node.js :\n  const path = require('path');\n  const skillPath = path.join(__dirname, 'skills', 'monSkill.json');\n- Tests : ajouter CI qui valide le chargement des assets depuis la racine du repo et documenter la structure des chemins.\n\nBug 3 — clé API en clair dans .mcp.json (committée)\n- Pourquoi c’est critique : fuite de secret, persistance dans l’historique Git.\n- Actions immédiates obligatoires :\n  1) Révoquer/rotater la clé via le fournisseur.\n  2) Supprimer la clé du dépôt et de l’historique. Exemple avec git-filter-repo :\n     git clone --mirror <repo-url>.git\n     cd <repo>.git\n     git filter-repo --invert-paths --path .mcp.json\n     git push --force --all && git push --force --tags\n  (ou utiliser BFG pour supprimer le fichier)\n  3) Ajouter .mcp.json à .gitignore et stocker les secrets dans un gestionnaire (Vault, AWS Secrets Manager, variables CI).\n- Prévention : scanner automatique (git-secrets, detect-secrets), hooks pre-commit, politique de rotation/least-privilege."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Automation"
+      ],
+      "title": {
+        "en": "All three correct: Bug 1 is bypassPermissions o...",
+        "fr": "All three correct: Bug 1 is bypassPermissions o..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__03_029",
@@ -748,7 +1028,17 @@
         "fr": "Extraits attendus (exemples fonctionnels) et points de vérification :\n\n1) parameters.yaml — defaultMode dans permissions\npermissions:\n  defaultMode: acceptEdits\n  rules:\n    - role: user\n      allow: [read, write]\nVérifier : clé permissions existe au même niveau que les règles associées ; defaultMode exact = \"acceptEdits\" (sensible à la casse).\n\n2) Compétence — chemin relatif basé sur une variable de projet\nproject:\n  root: \"./\"\nskill:\n  id: ma-competence\n  path: \"${project.root}skills/ma-competence\"\nVérifier : la variable project.root est définie avant usage, le chemin est relatif (./...) et résout localement lors du build (tester avec un script de build).\n\n3) Configuration MCP — credential via variable d’environnement\nmcp:\n  provider: example-mcp\n  credential: \"${env:MCP_CREDENTIAL}\"\nVérifier : la variable d’environnement MCP_CREDENTIAL est définie sur l’environnement d’exécution/de déploiement (CI/CD), et le format ${env:VAR} est supporté par l’outil.\n\nContrôles opérationnels/ sécurité (actionnables) :\n- Tester la résolution des variables (exécuter un build & run local).\n- S’assurer que MCP_CREDENTIAL n’est pas committé : utiliser secret manager ou variables CI.\n- Ajouter un fallback explicite ou échec clair si ${env:MCP_CREDENTIAL} absent.\n- Rédiger une courte README décrivant les variables requises (project.root, MCP_CREDENTIAL) et comment les définir."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Deployment",
+        "Development",
+        "Role Engineering"
+      ],
+      "title": {
+        "en": "Correct assembly: The settings file keeps defau...",
+        "fr": "Correct assembly: The settings file keeps defau..."
+      }
     }
   ]
 }

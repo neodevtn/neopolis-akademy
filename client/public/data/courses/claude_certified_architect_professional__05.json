@@ -83,7 +83,17 @@
         "fr": "Ce que doit contenir une excellente réponse (et un plan opérationnel prêt à l’usage) :\n\nSélection des champions\n- Critères : influence locale, maîtrise du workflow cible, disponibilité ~20% temps pour pilotage, appétence pour formation.\n- 1 champion par département ciblé; remplacer si indisponible.\n\nPhase pilote (2 semaines)\n- Objectif : convertir 1 flux réel (ex. revue de code, génération de tests).\n- Livrables du champion : 1 exemple pleinement fonctionnel, un CLAUDE.md adapté, enregistrement de la session, FAQ locale.\n- Supports fournis par l’Architect : templates de prompts, best practices, accès et limites.\n\nSession d’activation (45 min, 5 pairs)\n- Agenda précis : 5’ intro objectifs, 10’ démonstration sur cas concret, 15’ atelier hands-on (chaque pair exécute le flux), 10’ Q&A + next steps, 5’ collecte feedback + action items.\n- Template de prompt (ex. revue de code) : « Voici le diff [lien/patch]. Résume les changements, liste 5 risques potentiels et propose 3 suggestions d’amélioration de performance et sécurité. »\n\nCritères de succès & métriques\n- 3 indicateurs : % d’utilisateurs du lot qui utilisent le flux dans les 2 sem., n° workflows convertis, réduction moyenne du temps d’une tâche (%).\n- Seuil pilote : ≥60% des participants réutilisent le flux en production et fournissent un exemple partagé.\n\nPlan de diffusion par lots\n- Étapes : 1) piloter 1 champion par dept, 2) itérer CLAUDE.md, 3) former lots de 5-10 tous les 2 semaines, 4) agrégation des FAQ, 5) déploiement global.\n\nRisques concrets & mitigations\n- Confusion sur prompts → fournir templates et formation pratique.\n- Champion débordé → backup proposé + slot de transfert de connaissance.\n- Adoption superficielle → exigences de preuve d’usage (ex. PR tag).\n- Problèmes de sécurité/données → guidelines de non-exfiltration dans CLAUDE.md et revue par sécurité.\n\nPoints qu’une bonne réponse doit inclure : rôles/responsabilités, timeline précise, livrables actionnables, templates (prompt/CLAUDE.md), métriques et risques avec mitigations."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Architecture",
+        "Batch Processing",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Roll out through champions, then batches",
+        "fr": "Roll out through champions, then batches"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_002",
@@ -102,7 +112,17 @@
         "fr": "- Skill provisionné par le propriétaire (Organization settings > Skills)\n  - Idéal quand : capacité doit être disponible pour toute l’organisation.\n  - Création/versionnement/publication : valider en staging, utiliser un manifest versionné (semver), téléverser la release dans Organization Settings, documenter release notes.\n  - Octroi/révocation : visible automatiquement pour tous ; révoquer en retirant le Skill de Organization Settings ou désactivant la version.\n  - Revenir en arrière : re-téléverser la version précédente signée ou restaurer depuis backup ; appliquer hotfix si urgent.\n  - Risques : propagation rapide d’un bug ; limiter en testant sur org sandbox avant publication.\n\n- Plugin assigné à un groupe\n  - Idéal quand : accès restreint à sous-équipes, distribution gouvernée.\n  - Création/versionnement/publication : packager Skills dans plugin repo; CI produit artefacts versionnés; pousser releases et tags.\n  - Octroi/révocation : assigner le plugin à groupes, utiliser préférences (required/installed-by-default/available) ; retirer un groupe pour révoquer.\n  - Revenir en arrière : changer la version cible du plugin dans le repo connecté ou rétablir tag précédent via le panneau Plugins.\n  - Risques : mauvaise cible de groupe ; gérer via tests d’acceptation et approbation multi-owner.\n\n- Claude Code project Skills (.claude/skills/)\n  - Idéal quand : Skills spécifiques au projet, versionnés avec le code.\n  - Création/versionnement/publication : committer dans .claude/skills/, PR + review, CI lint/tests, use semver in manifest.\n  - Octroi/révocation : contrôle via repo ACLs ; révoquer en revertant/retirant le fichier.\n  - Revenir en arrière : git revert du commit qui a introduit la version problématique.\n  - Risques : dépendances locales, fuite d’accès si repo public — restreindre permissions.\n\n- API Skills (intégration programmée)\n  - Idéal quand : intégration machine-to-machine ou services externes.\n  - Création/versionnement/publication : versionner endpoints (v1/v2), déployer avec API gateway, CI/CD.\n  - Octroi/révocation : gérer via clés/service accounts, scopes et RBAC ; révoquer clefs ou désactiver comptes.\n  - Revenir en arrière : router trafic vers ancien endpoint/version ou déployer rollback via CD.\n  - Risques : sécurité des clés, latence, quotas — surveiller et auditer.\n\nBonnes pratiques transversales : semver, tests automatisés, revue de code, journaux/audit, approbation multi-owner pour publication org-wide, plan de rollback documenté."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Skills distribution: the team-scale version of ...",
+        "fr": "Skills distribution: the team-scale version of ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_003",
@@ -121,7 +141,17 @@
         "fr": "Objectif attendu — correction modèle (concise et actionnable)\n\n1) Résumé de conception attendu\n- Emballer le flux d’équipe comme une skill versionnée (manifest + API contract) ; les consommateurs pointent vers une version fixe (semver) plutôt que « latest ».\n- Gouvernance : propriétaire, procédure de release, tests automatiques, changelog, rollback.\n\n2) Guardrails coûts (concrets)\n- Model defaults : définir un modèle par défaut (ex. claude-2.1) dans le manifest.\n- Model allowlist : n’autoriser que des modèles approuvés pour la team.\n- Effort guidance : paramètres indicatifs (temperature, max_tokens, top_p) et un « effort_level » (low/medium/high) lié à coûts.\n- Caps : budget mensuel d’équipe, cap journalier par utilisateur, rate limits (rps), coût maximal par requête (ou token).\n- Monitoring & alerting : métriques d’usage, alertes à 50/75/90% du budget, rapports hebdo.\n\n3) Risques concrets\n- Dépassement budgétaire via modèles plus chers non restreints.\n- Quotas saturés bloquant l’équipe.\n- Régressions lors d’upgrades de modèle.\n- Manque d’observabilité (impossible d’attribuer coûts).\n\n4) Exemple minimal de manifest (extrait JSON)\n{\n  \"skill\": \"tri-requests\",\n  \"version\": \"1.2.0\",\n  \"model_default\": \"claude-2.1\",\n  \"model_allowlist\": [\"claude-2.1\",\"claude-instant\"],\n  \"effort\": {\"level\":\"low\",\"max_tokens\":512,\"temperature\":0.2},\n  \"limits\": {\"team_monthly_eur\":5000,\"per_user_daily_eur\":10,\"rps\":5,\"max_cost_per_request_eur\":0.05}\n}\n\n5) Checklist de validation avant mise en prod\n- Versionnée + CI tests end-to-end\n- Monitoring & alertes configurés\n- Budget et caps appliqués et testés\n- Processus de rollback documenté"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Architecture"
+      ],
+      "title": {
+        "en": "API Skill (Messages API container)A capability ...",
+        "fr": "API Skill (Messages API container)A capability ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_004",
@@ -140,7 +170,17 @@
         "fr": "Mécanisme recommandé\n- Publier la procédure comme un artefact versionné dans une source de vérité centralisée (p. ex. dépôt Git + release/tags or un CMS/Registry qui gère versions). Les départements consomment une version pinée (ex. tag v1.2) — pas un document « live » modifiable par tous.\n- Processus de changement : PR/merge request protégée + revue exigée par l’équipe de conformité + CI qui build/publie la nouvelle release. Rollback = publier une nouvelle release qui restaure la version antérieure (ou re-tag revert).\n- Enforcement : checks CI pour refuser l’utilisation de versions non autorisées; registre publiquement lisible mais écriture restreinte; journal d’audit des releases.\n\nFacteur déterminant\n- Besoin de reproductibilité stricte et de gouvernance centralisée : pinning/versioning empêche la propagation automatique d’un mauvais changement, permet des rollbacks rapides et fournit un historique/audit pour enquêter.\n\nCe qui serait une mauvaise raison\n- « Parce que Git est pratique » — explication insuffisante. La vraie raison est la capacité à contrôler, tracer et revenir à une version connue, pas l’outil en lui‑même."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Risk The biggest failure mode is a shared asset...",
+        "fr": "Risk The biggest failure mode is a shared asset..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_005",
@@ -159,7 +199,17 @@
         "fr": "Mécanisme choisi : déploiement centralisé (push) d’un artefact versionné géré par l’équipe centrale.\n\nRaisons précises :\n- Nécessité d’exécution identique : une seule source de vérité (procédure-as-code) garantit que toutes les unités exécutent strictement la même version.\n- Mises à jour centrales : l’équipe centrale publie des releases taguées (Git) et des artefacts immutables (registry privé, container images, packages) ; un pipeline distribue automatiquement la nouvelle version aux environnements départementaux.\n- Restauration/versioning : les releases sont historisées ; rollback opérationnel en ré-appliquant une version antérieure via le pipeline.\nActions concrètes à implémenter :\n1. Garder la procédure en repo central, tester via CI et créer releases signées/taggées.\n2. Publier artefacts dans un registre interne (ex. package registry / container registry).\n3. Automatiser la distribution (pipeline/agent qui pousse la version approuvée vers chaque département).\n4. Restreindre droits de modification (seulement l’équipe centrale peut publier), journaliser déploiements et vérifier conformité.\nPourquoi les autres mécanismes échouent : permettre des copies locales ou un modèle « pull » autonome favorise la dérive des procédures et complique les rollbacks."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Agentic Design",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Team Setup · Checkpoint",
+        "fr": "Team Setup · Checkpoint"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_006",
@@ -178,7 +228,17 @@
         "fr": "Sélection : Compétence fournie par l'organisation (Paramètres de l'organisation › Compétences).\n\nRaison déterminante : le besoin d’un point unique de contrôle pour garantir une exécution identique dans tous les départements, permettre des mises à jour centralisées et effectuer des rollbacks. Une compétence organisée au niveau organisationnel assure une « source de vérité » unique (versionnée), des droits d’administration centralisés, des journaux d’audit et un déploiement atomique/contrôlé vers toutes les équipes.\n\nActions concrètes à prendre : \n- Publier la procédure en tant que compétence organisationnelle versionnée; utiliser un schéma de versionnement sémantique. \n- Configurer permissions pour que les départements puissent exécuter mais pas modifier la compétence.\n- Mettre en place un processus de release (staging, validation, déploiement) et un mécanisme de rollback (retour à la version précédente in-situ).\n- Documenter changements et notifier automatiquement les équipes (release notes).\n- Tester la compétence en environnement pilote avant déploiement global.\n\nPourquoi la compétence de projet est incorrecte : elle crée des copies locales susceptibles de diverger, complique le contrôle de conformité, et ne facilite pas un rollback centralisé ni un audit unifié."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Checkpoint: design the team distribution strategy",
+        "fr": "Checkpoint: design the team distribution strategy"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_007",
@@ -197,7 +257,17 @@
         "fr": "Spécification & conception\n- Où Claude aide: générer schémas d’API, propositions d’architecture, diagrammes d’interaction à partir d’un spec sommaire; produire alternatives avec compromis (scalabilité, coût).\n- Revue requise: validation humaine des compromis, vérification des hypothèses métier, revue de sécurité/privacité (GDPR), approbation des choix infra.\n\nÉcriture du code\n- Où Claude aide: boilerplate, stubs, premières implémentations, squelettes de tests à partir d’un spec clair.\n- Revue requise: auteur doit comprendre/relire chaque ligne, vérifier exceptions, performance, risques d’injection/privé.\n\nRevue de code / PR\n- Où Claude aide: générer description de PR, checklists automatisées, suggestions de petits refactors.\n- Revue requise: revue humaine pour logique métier, sécurité, utilisabilité ; refus de PRs sans justification des changements.\n\nTests & QA\n- Où Claude aide: créer cas de tests unitaires, tests de bord, scénarios d’intégration, mocks.\n- Revue requise: exécuter et analyser flakiness, valider couverture critique, vérifier que les tests valident les invariants métier.\n\nCI/CD & déploiement\n- Où Claude aide: templates de pipeline, scripts de déploiement, rollback plans.\n- Revue requise: approbation ops pour secrets/permissions, tests de staging, revue des migrations DB.\n\nDocumentation & onboarding\n- Où Claude aide: guides développeur, README, runbooks, snippets conformes aux conventions.\n- Revue requise: relecture par SME pour exactitude et clarté.\n\nSurveillance & incidents\n- Où Claude aide: propositions d’alertes, runbooks de triage, résumé post-mortem.\n- Revue requise: validation des seuils, processus d’escalade et responsabilité humaine.\n\nIntégration pratique\n- Intégrer Claude via extensions éditeur, hooks PR, templates CI et skills projet pour appliquer conventions. Toujours exiger preuve de compréhension humaine et approbation explicite pour changements critiques."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Integrate assistance into the workflow that alr...",
+        "fr": "Integrate assistance into the workflow that alr..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_008",
@@ -216,7 +286,17 @@
         "fr": "Synthèse des problèmes + actions concrètes\n\nRisques concrets\n- Adoption inégale : perte d’échelle, connaissance cloisonnée, dette technique.\n- Surconfiance dans sorties IA : bugs non détectés, vulnérabilités injectées, dette de compréhension.\n- Blocage fonctionnel : l’équipe reste en Q&A et n’utilise pas intégrations/CI, limitant la valeur.\n- Conformité et traçabilité insuffisantes : problèmes légaux/reqs d’audit.\n\nMesures opérationnelles (Adoption)\n1. Champion-and-batch pratique : identifier 3 champions par domaine, former en 2 semaines, déployer à une cohorte de 5-8 devs, récolter feedback 2 semaines, itérer, puis élargir.\n2. Playbook “use-cases” prêt à l’emploi (templates de prompts, exemples de PR, checklist de revue).\n3. Rendre obligatoire une courte session pair-programming IA lors du onboarding pour 100% des devs sur 30 jours.\n\nMesures opérationnelles (Éviter le chat basique)\n1. Activer intégrations produit -> accès dépôt, CLI, skills packagées, et démonstrations ciblées.\n2. Créer workflows pré-intégrés : génération de tests unitaires + PR draft + pipeline CI qui bloque sans tests.\n3. Mesurer adoption par usage réel (PRs créées via IA, sessions d’outillage activées).\n\nDiligence — checklist exigée avant merge\n- Étiquette “AI-generated” dans la PR.\n- Tests unitaires et couverture minimale + revues humaines signées.\n- Scans SAST/DAST automatiques et analyse de dépendances.\n- Logs de prompt + sortie stockés pour audit.\n- Rejet ou rollback automatique si métriques erreurs/latence augmentent.\n\nKPIs à suivre : % devs actifs, % PRs IA avec revue & tests, taux de défauts post-merge."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Batch Processing"
+      ],
+      "title": {
+        "en": "Two failure modes show up again and again",
+        "fr": "Two failure modes show up again and again"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_009",
@@ -235,7 +315,17 @@
         "fr": "Actions concrètes pour éviter l’adoption morcelée et le blocage au « chat de base », puis une checklist de diligence opérationnelle (exactitude, sécurité, maintenabilité, compréhension humaine).\n\nStratégie d’adoption\n- Déploiement par vagues contrôlées : sélectionner 2–3 équipes pilotes représentatives, activer fonctionnalités (outils, accès dépôt, skills packagées) puis élargir par lots toutes les 4–6 semaines.\n- Champion formel + chef de produit : chaque vague a un champion responsable des templates, des sessions de pair-programming et du reporting des métriques d’usage/qualité.\n- Mesures d’activation : obliger l’usage des outils repo-aware et des templates pour 50% des PRs générées par AI dans la première vague ; mesurer taux de correction manuelle et temps d’intégration.\n- Gouvernance : checklist obligatoire avant fusion, revue par pair, et blocage CI si critères non remplis.\n\nChecklist de diligence (à appliquer avant mise en production)\nExactitude\n- Tests unitaires/CI : les sorties AI doivent passer les tests existants ; ajouter cas tests pour comportements générés.\n- Reproduction : fournir un prompt, seed et dataset pour reproduire la sortie.\nSécurité\n- Scan SAST/DAST : exécuter scans automatiques sur code généré.\n- Secrets & dépendances : vérifier absence de secrets, licences de librairies, vulnérabilités connues.\nMaintenabilité\n- Style/linters : formatage et linter OK ; ajouter commentaires explicatifs pour logique non triviale.\n- Complexité : éviter code > X cyclomatic; proposer refactorings si nécessaire.\nCompréhension humaine\n- Explication exigée : l’auteur doit documenter pourquoi la solution est correcte (2–3 phrases) et les hypothèses.\n- Pair review sign-off : relecteur atteste qu’il comprend et aurait pu écrire la même chose.\nProcessus opérationnel\n- Intégrer checklist en template PR et automatiser checks CI ; exiger sign-off humain final.\n- Conserver traçabilité (prompt + modèle + date + auteur) dans PR.\n- Mesurer KPIs : taux de rejets, temps de correction, incidents post-prod."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "1Lumpy adoption: This occurs when a few develop...",
+        "fr": "1Lumpy adoption: This occurs when a few develop..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_010",
@@ -254,7 +344,17 @@
         "fr": "Risques concrets\n- Exfiltration de données via entrées non validées (taint/flux de données).\n- Validation manquante pour cas limites ou inputs malformés.\n- Tests trop superficiels (happy path only) qui laissent passer régressions.\n- Perte de traçabilité/provenance du code (qui a compris quoi).\n- Culture de confiance aveugle envers l’AI (erosion du jugement).\n\nActions correctives immédiates (process + technique)\n- Bloquer les merges jusqu’à ajout d’un champ obligatoire dans la PR : “AI-generated: yes/no” + “Explained-by-author: 2 phrases”.\n- Exiger qu’un reviewer non-auteur confirme qu’il comprend et peut expliquer la logique (sign-off explicite).\n- Ajouter tests négatifs/edge cases et tests d’intégration couvrant validation/autorisation pour toute PR touchant I/O ou données sensibles.\n- Intégrer SAST/taint analysis + fuzzing dans CI ; refuser merge si règles critiques échouent.\n- Marquer clairement les fichiers modifiés par AI et conserver prompt + version d’outil pour audit.\n\nChecklist obligatoire pour PR (à intégrer dans le template)\n- Quel problème résout ce code ? (1–2 phrases)\n- Pourquoi cette implémentation est sûre pour les inputs externes ?\n- Tests ajoutés : noms et coverage ciblée (validation, autorisation, cas négatifs).\n- Reviewer non-auteur a exécuté et expliqué la logique (nom + date).\n- AI-generated: yes/no ; prompt et modèle (si oui).\n\nCulture et prévention long terme\n- Former reviewers à “explain-back” (demander à l’auteur de décrire la logique).\n- Limiter usage AI à ébauches, pas à modifications critiques sans revue humaine approfondie.\n- Metriques : temps moyen de revue, % de PRs marquées AI, incidents liés — utiliser pour rétroactions."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "The merge nobody could explain.",
+        "fr": "The merge nobody could explain."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_011",
@@ -273,7 +373,17 @@
         "fr": "Exactitude\n- Vérification : exécuter un jeu de tests unitaires et d'intégration couvrant cas nominaux, bords et erreurs connues ; comparer sorties à fichiers « golden » ou spécifications. Critère : 100 % des tests critiques passent ; divergences documentées avec preuve d'acceptation. Relecteur signe qu'il a reproduit localement.\n\nRobustesse et sécurité\n- Vérification : lancer scans statique (ESLint/flake8 + Bandit/semgrep) et scan vulnérabilités dépendances (Snyk/OSV). Exécuter tests de fuzzing et cas d'injection (timeout, payloads malformés). Critère : zéro vulnérabilité à haute sévérité ; mitigations documentées pour moyennes/ basses.\n\nMaintenabilité et compréhension humaine\n- Vérification : respecter le style (linters), couverture minimale (p.ex. ≥80 % pour nouveaux modules), docstrings + README expliquant entrées/sorties/contrats, et demande d'approbation par au moins un pair qui atteste des hypothèses non testées. Critère : PR approuvé après revue explicite des hypothèses.\n\nConformité, confidentialité et licences\n- Vérification : analyser présence de PII dans données/tests, valider gestion des logs/retention ; exécuter scan licences (FOSSA) sur dépendances ; vérifier non-reproduction de contenu propriétaire. Critère : conformité aux politiques internes et sanctions documentées si non-conforme.\n\nContrôle final humain : une personne signale par écrit les risques résiduels et conditions d'exploitation (entrées interdites, monitoring à activer) avant mise en production."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Error Handling"
+      ],
+      "title": {
+        "en": "Risk The biggest failure mode is judgment erosi...",
+        "fr": "Risk The biggest failure mode is judgment erosi..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_012",
@@ -292,7 +402,17 @@
         "fr": "Exactitude — Vérification concrète\n- Exécuter suite de tests unitaires + tests d’intégration couvrant cas normaux, limites et erreurs connues (ex. taux de réussite ≥ 95% pour fonctions critiques).  \n- Valider toutes les assertions factuelles par comparaisons automatisées à sources autorisées (API/DB de référence) ; tout écart doit être marqué comme “non vérifié” et revu manuellement.\n\nSécurité — Vérification concrète\n- Scanner le code et dépendances (SAST + SBOM + `npm audit`/`pip-audit`/Snyk) et résoudre vulnérabilités critiques/haut avant mise en prod.  \n- Rechercher secrets hardcodés (`grep -E \"AWS|SECRET|TOKEN\"`) et tester que l’entrée utilisateur est correctement échappée/validée pour prévenir injections. Exiger sandboxing / least privilege pour exécution.\n\nRobustesse — Vérification concrète\n- Tests de charge et stress (p.ex. montée en charge jusqu’à 2× le trafic prévu) et tests de tolérance aux pannes (redémarrage, coupure DB) ; temps de récupération et erreurs dégradées définis (SLA).  \n- Fuzzing/Property-based tests (Hypothesis) sur tous les parsers d’entrée ; vérifier gestion gracieuse des entrées malformées.\n\nConfidentialité / Conformité — Vérification concrète\n- S’assurer qu’aucune PII n’est loggée (scan des logs), chiffrage en transit et au repos activé, et que la rétention des données respecte la politique (ex. purge automatique après X jours).  \n- Si applicable, checklist GDPR/CCPA (bases légales, droit d’accès/suppression, DPIA effectué) et preuve documentaire.\n\nRéponse modèle attendue : une liste comme ci‑dessus — pour chaque dimension donner 1) méthode de test automatisable, 2) critères d’acceptation mesurables, 3) actions correctives si échec."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Dev Workflows · Exercise",
+        "fr": "Dev Workflows · Exercise"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_013",
@@ -311,7 +431,17 @@
         "fr": "Correction modèle :\n\nLa correspondance correcte entre mécanismes et facteur de gouvernance est la suivante :\n\n- Plugin — portée universelle / marketplace. Quand l’utiliser : pour intégrations tierces larges et réutilisables par tous les utilisateurs (ex. chercher dans un catalogue public). Exemple : plugin météo disponible pour tous. Raison : destiné à diffusion publique ou inter-orga.\n\n- Org-provisioned Skill — distribution gouvernée à l’échelle de l’organisation. Quand l’utiliser : pour fonctionnalités internes contrôlées par l’administration (ex. accès à annuaire RH, règles de conformité). Exemple : Skill provisionné par l’IT pour tous les employés. Raison : centralisé, administrable et audit-able.\n\n- Claude Code project Skill — portée d’une seule équipe / projet. Quand l’utiliser : pour outils spécifiques à un projet ou à une équipe (ex. pipeline de build interne, scripts d’analyse). Exemple : Skill accessible uniquement aux membres du projet X.\n\n- API Skill — réutilisation programmatique. Quand l’utiliser : pour intégration machine-to-machine, automatisation et consommation par d’autres services (ex. appeler un Skill depuis CI/CD).\n\nPoints de vérification : contrôle d’accès, responsabilité de maintenance, politique de déploiement, et stratégie de mise à jour."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Correct.: Each mechanism matches the factor tha...",
+        "fr": "Correct.: Each mechanism matches the factor tha..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_014",
@@ -330,7 +460,17 @@
         "fr": "La décision centrale à justifier est : quel acteur doit physiquement/logiciellement atteindre l’actif pour que l’objectif du scénario soit réalisé. Ne confondez pas méthode (comment) et facteur gouvernant (qui). Voici comment construire une réponse correcte et transmissible :\n\n1) Identifiez l’actif précis (ex. base de données PII, serveur de build, coffre-fort physique).  \n2) Lisez l’objectif du scénario : qui bénéficie de l’action (attaquant externe, employé malveillant, processus automatisé, admin légitime) ? Cet acteur est le facteur gouvernant.  \n3) Déduisez le niveau d’accès requis : accès réseau public, compte utilisateur valide, privilèges admin, accès physique, ou compromission d’un compte de service.  \n4) Reliez acteur → chemin d’accès : p.ex. «attaquant externe» ⇒ vecteur réseau exposé; «insider» ⇒ accès via poste de travail interne; «processus automatisé» ⇒ compromission de clé API/service account.  \n5) Vérifiez contraintes/contrôles qui pourraient bloquer l’acteur (authentification, segmentation, MFA, badge physique) et notez s’ils doivent être contournés.  \n6) Formulez la phrase de justification claire : «Le choix est forcé par [acteur] qui doit obtenir [type d’accès] sur [actif], car l’objectif est…»\n\nErreurs fréquentes : choisir une technique (phishing, exploit) au lieu de l’acteur; oublier le niveau de privilège requis; ignorer barrières physiques/logiques."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Partial.: `${correct}/4 correct. A correct choi...",
+        "fr": "Partial.: `${correct}/4 correct. A correct choi..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_015",
@@ -349,7 +489,17 @@
         "fr": "Réponse attendue (modèle) — comment corriger le tableau de distribution des compétences\n\n1) Répondez explicitement aux deux questions pour chaque actif\n- Qui doit avoir accès (rôles précis, pas de noms) : ex. \"Dev backend — lecture, écriture sur l’API de tests\".\n- Qui peut modifier ou révoquer (propriétaire de l’actif, responsables IAM, approbateur) : ex. \"Propriétaire du service = SRE; révocation = IAM Admin sur demande du manager + log d’audit\".\n\n2) Principes et règles concrètes à appliquer\n- Principe de moindre privilège et séparation des tâches.\n- RBAC/ABAC : mappez rôles métiers → permissions précises.\n- Processus d’approbation pour modifications/revocations (qui, ticketing, SLA).\n- Révocation automatique à l’offboarding ; urgence = procédure break-glass avec justification et expiration.\n- Journalisation des actions (who/what/when) et tests réguliers de révocation.\n\n3) Exemple de ligne de tableau (format attendu)\n- Actif: Base de données production | Accès lecture: DBA, App Service | Accès écriture: App Service | Modifier schéma: DBA | Révoquer: IAM Admin + Owner | Revue: trimestrielle\n\n4) Tests et preuves demandées\n- Table corrigée + justification role→permission pour chaque ligne.\n- Preuve du workflow d’approbation (ticket exemple).\n- Logs d’un test de révocation et résultat.\n\n5) Risques concrets à lister\n- Accès excessif (escalade de privilèges), comptes orphelins, retard de révocation, absence d’audit, conflits d’intérêts (pas de séparation), procédures d’exception non contrôlées.\n\nUne bonne réponse fournit le tableau mis à jour, justifications rôle/permission, le processus opérationnel pour modifier/révoquer, et preuves de tests/audit."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Incorrect.: Re-read the Skills-distribution tab...",
+        "fr": "Incorrect.: Re-read the Skills-distribution tab..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_016",
@@ -368,7 +518,17 @@
         "fr": "Checklist modélisée — vérification de compréhension humaine pour sorties assistées par IA\n\n1. Contexte et objectif\n- L’auteur fournit en une phrase l’objectif, le public visé et la décision attendue.\n\n2. Résumé de la justification\n- L’auteur résume en 3–5 phrases la logique principale menant à la sortie (pas de copier-coller de l’IA).\n\n3. Hypothèses et limites explicites\n- Liste claire des hypothèses (données manquantes, contraintes temporelles, biais connus) et des limites d’usage.\n\n4. Cartographie source → affirmation\n- Pour chaque affirmation clé, indiquer la source (externe, interne, sortie du modèle) et la preuve ou l’extrait supportant l’affirmation.\n\n5. Tests et reproduction\n- Fournir 2–3 tests simples (entrées, sortie attendue) permettant au relecteur de reproduire ou contredire la sortie; joindre logs/seed si pertinent.\n\n6. Contrôles anti-hallucination\n- Méthode utilisée (fact-checking, cross-model verification, validation humaine) et résultats.\n\n7. Risques et mitigations\n- Liste concrète des risques (erreurs factuelles, biais, fuite de données, impact réglementaire) et actions de mitigation.\n\n8. Critères d’acceptation et sign-off\n- Conditions mesurables pour accepter la sortie et signature datée de l’auteur confirmant qu’il peut défendre chaque point.\n\nPoints de validation pour le relecteur : cohérence du résumé avec les preuves, passage des tests fournis, absence de sources manquantes, et capacité de l’auteur à expliquer oralement toute affirmation clé."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Correct.: This checklist would let a reviewer t...",
+        "fr": "Correct.: This checklist would let a reviewer t..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__05_017",
@@ -387,7 +547,17 @@
         "fr": "1) Diagnostiquer chaque question marquée\n- Relisez l’énoncé et notez précisément ce qui vous a posé problème : incompréhension du libellé, oubli de concept, erreur de calcul, ou faute d’attention (négation, quantificateur).\n- Pour chaque question, écrivez la réponse que vous auriez dû donner et justifiez-la en une phrase (source + raisonnement).\n\n2) Révision ciblée (pour chacun des trois sujets)\n- Trouvez dans vos notes/ressources la section pertinente et relisez les définitions, règles et exemples clefs.\n- Faites 5–10 minutes d’exercices pratiques différents du test pour vérifier la maîtrise (questions à choix, mini-questions ouvertes).\n- Créez 3 flashcards par concept difficile (définition, formule, piège).\n\n3) Stratégie d’examen et corrections de méthode\n- Appliquez la lecture active : repérez négations/quantificateurs, éliminez d’abord les réponses manifestement fausses.\n- Si calculs : refaites les étapes sur papier et vérifiez les unités.\n- Si unsure, notez la question et revenez-y en fin de passation.\n\n4) Checklist qu’une bonne reprise doit couvrir\n- J’identifie type d’erreur pour chaque question manquée.\n- J’ai une justification documentée pour la bonne réponse.\n- J’ai refait au moins un exercice similaire par sujet.\n- J’ai corrigé une erreur de méthode (lecture, calcul, interprétation).\n- J’ai simulé une nouvelle tentative en respectant le timing.\n\nPlan rapide : 30–45 min par sujet (relecture + exercices), 15 min récapitulatif. Visez 100 % sur les sujets revus pour garantir 4/5."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Business Value"
+      ],
+      "title": {
+        "en": "`<strong>${correct}/5 correct.</strong> The que...",
+        "fr": "`<strong>${correct}/5 correct.</strong> The que..."
+      }
     }
   ]
 }

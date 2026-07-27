@@ -83,7 +83,17 @@
         "fr": "Ce que doit contenir une bonne correction (actionnable et vérifiable)\n\n1) Conversation de découverte structurée — checklist et questions\n- Objectif métier : \"Quel problème mesurable résolvons‑nous? KPI cible, échéance?\"\n- Contraintes : budget, date de livraison, conformité, dépendances externes\n- Utilisateurs & scénarios : qui fait quoi, fréquence, volumes, échecs tolérés\n- Critères d'acceptation : métriques de succès, seuils, signals d'échec\n- Questions concrètes : \"Si ceci échoue pendant 24h, qu'est‑ce qui se passe?\" \"Quel processus métier doit rester opérationnel?\"\n\n2) Traduction en exigences & hypothèses documentées\n- Table simple : Objectif métier → Exigence fonctionnelle/non‑fonctionnelle → Implication architecturale → Hypothèse testable (KPI, seuil)\n- Exemple : Réduire le temps de traitement à <2s → API asynchrone + mise en cache → Hypothèse: 80% des requêtes cachées; test via pilote → critère d'acceptation.\n\n3) Présentation des compromis pour décision métier\n- Slide/one‑pager par option : Description, Bénéfices concrets, Coût (dev + run), Risques (probabilité × impact), Effort de remise en cause/rollback, Temps d’implémentation, Dépendances.\n- Fournir recommandation claire + décision requise (Go/Pilot/Reject) et plan minimal de mitigation.\n\n4) Boucles de rétroaction & livraison\n- Artefacts de transfert : ADR, runbooks, SLAs, playbooks d’incident, formation.\n- Mesures post‑déploiement : telemetry, adoption metrics, review cadence (J+7, 1 mois, 3 mois).\n- Boucle : collecte KPI → revues régulières → itérations ou rollback.\n\n5) Risques concrets (à lister et mitiger)\n- Déconnexion objectifs métier / solution technique; mitigation : mapping exigences → décisions.\n- Sur‑coût / dépassements temps; mitigation : MVP + jalons.\n- Verrouillage fournisseur, sécurité/compliance non couverte, manque de support opérationnel, adoption utilisateur faible; mitigation : contrats reversibles, tests de conformité, runbooks, pilote utilisateur.\n\nAttendu d’une réponse modèle : notes de découverte, tableau exigence→implication→hypothèse, 1 page de compromis par option, plan de transfert + métriques et cadence de feedback."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Compliance"
+      ],
+      "title": {
+        "en": "Lead the stakeholder conversations that decide ...",
+        "fr": "Lead the stakeholder conversations that decide ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_002",
@@ -102,7 +112,17 @@
         "fr": "Choix architecturaux — résumé exécutable\n- Option A — Intégration directe API (rapide, faible coût initial)\n  - Coût: ~10–30 k€ d’intégration + coûts d’utilisation (ex. 0.01–0.10 €/requête selon volume)\n  - Risques: verrouillage partiel dépendant d’un fournisseur, gestion manuelle du scaling\n  - Rollback: réactiver couche proxy legacy + basculer DNS (≈ heures), restaurer schéma des logs\n- Option B — Plateforme managée (Bedrock/Vertex)\n  - Coût: +20–50% opérationnel; frais infra et egress\n  - Risques: coûts opaques, latence variable, mais conformité/SLAs pro\n  - Rollback: rollback infra via IaC (Terraform) + bascule VPC peering (≈ jours)\n- Option C — Broker tiers (intégrateur)\n  - Coût: marge + latence; intégration rapide pour multi-fournisseur\n  - Risques: dépendance tierce, complexité confidentialité\n  - Rollback: rupture contrat + replacer intégration directe (≈ semaines)\n\nBoucle de rétroaction & gouvernance\n- Déclencheurs: SLA > seuil d’erreur 3% pendant 1h, latence p95 > 2x cible, incident P1, NPS baisse >10 pts\n- Violation SLA: action immédiate (rate-limit, degrade feature), RCA 48h, pénalités contractuelles/credits\n- Itérer vs ré-architecturer: itérer si impact localisé (<15% des transactions, fixes <2 sprints). Ré-architecturer si end-to-end >30% d’échecs, coût croissant >25%/trimestre ou dette technique bloquante.\n- Gouvernance: comité hebdo (tech, produit, sécurité), revue formelle mensuelle, porte-feuille d’actions avec owner et deadlines.\n\nRôle de l’Architect en GTM partenaire\n- Discovery: checklist données/flux, contraintes compliance, KPIs commerciaux\n- Démo: 3 scénarios clients + jeux de données anonymisés; métriques avant/après\n- Objections techniques: préparés — sécurité (données chiffrées), latence (SLA p95), coût (TCO 3 ans)\n- Périmètre conjoint: template RACI, critères d’acceptation, plan pilote (4–8 semaines)\n\nLivrable pour sponsor & IP partenaire\n- One‑pager décisionnel (choix recommandé, coût TCO 3 ans, ROI, risques, rollback)\n- Kit réutilisable: diagrammes d’architecture, IaC snippets, SLA playbook, checklist compliance."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Present an architectural trade-off in terms a b...",
+        "fr": "Present an architectural trade-off in terms a b..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_003",
@@ -121,7 +141,17 @@
         "fr": "Boucle de rétroaction des parties prenantes\n- Triggers précis : latence p95 > seuil (ex. 200 ms) pendant 15 min, taux d’erreur >2% sur 1h, violation SLA mensuelle (uptime < 99.5%), incident de sécurité, nouveau besoin réglementaire.  \n- Révision = action immédiate (hotfix/rollback si impact client), suivi par revue technique en 24–72h, puis comité de gouvernance.  \n- Violation SLA : notification automatique au sponsor, remédiation sous SLA de correction (ex. RTO 4h, RPO 1h), crédit de service/plan d’action public, mise à jour du Risk Register.  \n- Itérer vs ré-architecturer : itérer si cause = configuration, modèles/paramètres, ou fréquence rare (<1/an) et coût de changement <20% du budget; ré-architecturer si défauts d’échelle, coûts croissants linéairement, dette technique >30% ou incidents répétés >3/quart.  \n- Checkpoints gouvernance : design review (pré-prod), audit sécurité & conformité (pré-prod), readiness checklist (go-live), post-mortem + 30/90 jours.\n\nRôle d’Architect en GTM partenaire\n- Discovery : 10 questions clés (objectifs métier, données sensibles, contraintes latence, KPI, utilisateurs).  \n- Démo scénarisée : 3 scénarios métier réels, métriques attendues, scripts d’entrée/sortie, critères d’acceptation.  \n- Objections techniques fréquentes + réponses prêtes (latence, sécurité, intégration CI/CD, coûts).  \n- Définition conjointe du périmètre : modèle RACI, périmètre fonctionnel, success criteria, dépendances, plan d’escalade (vous + Applied AI).\n\nChoix point d’entrée & stratégie multiplateforme\n- Comparaison synthétique : API directe = latence et contrôle max, coût variable; Bedrock/Vertex = intégration cloud, compliance entreprise, scalabilité; tiers = rapidité d’intégration mais moins de contrôle.  \n- Décision pragmatique : MVP via API directe si besoin de contrôle/latence; migrer vers Bedrock/Vertex pour scale/compliance.  \n- Document résultat (pour sponsor & IP) : Executive summary (valeur), comparatif coûts/latence/compliance, risques & mitigations, roadmap technologique, runbook et templates réutilisables."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Build and operate a stakeholder feedback loop a...",
+        "fr": "Build and operate a stakeholder feedback loop a..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_004",
@@ -140,7 +170,17 @@
         "fr": "Arbitrage architectural (actionnable)\n- Options présentées: 1) API directe (faible latence), 2) Bedrock/Vertex (gestion & conformité), 3) solution tierce (intégration rapide/tiers).  \n- Pour chaque choix fournir tableau synthétique: coût initial (POC dev + intégration, ex. 4–8 j/homme), coût récurrent (licences/TCO mensuel), latence indicative (API directe <50–150ms, cloud-managed 80–250ms, tiers 200–500ms), conformité (ISO/GDPR/CCPA risques), opérabilité (SLO/Ops effort).  \n- Risques concrets: dépassement budget d’intégration, non‑conformité réglementaire, verrous fournisseur, dégradation UX par latence, complexité de migration des données.  \n- Inversion: décrire étapes concrètes (feature flags, compat API, plan de migration de schéma DB, réplication asynchrone, contrat SLA de sortie). Estimer effort d’inversion (jours/homme + coûts infra).  \n\nBoucle de rétroaction des parties prenantes\n- Déclencheurs: déploiement production, dépassement seuil métrique (p.ex. latence > 20% SLO pendant 30m), incident P1, feedback client négatif >N.  \n- Processus: alerte → triage technique (24h) → revue commerciale (48–72h) → décision: hotfix / rollback / plan d’itération.  \n- Violation SLA: activer runbook (mitigation immédiate), notifier clients (SLA clause), lancer RCA en 72h, proposer remédiation chiffrée.  \n- Itérer vs ré-architecturer: si impact <15% sur SLO et coût de fix <20% TCO, itérer; si impact >30% ou cause architecturale (couplage, goulot fondamental), plan de ré‑architecture.  \n- Gouvernance: checkpoints obligatoires: security review, procurement sign‑off, ops readiness, comité exécutif pour basculement >$X ou risque conformité.  \n\nPartner‑track (role d’Architect)\n- Discovery: objectifs business, KPI, données sensibles, contraintes latence/coût, stack existant, parties prenantes.  \n- Démo: scénarios \"happy path\", montée en charge, échecs réseau, cas conformité (data residency).  \n- Objections: latence (benchmarks réalistes + plan edge caching), coût (POC pilote avec métrique TCO), conformité (attestations + data flows).  \n- Joint scoping: livrables, acceptance tests, runbook, propriété IP, SLA, roadmap.  \n\nChoix d’entrée & stratégie multiplateforme\n- Comparaison actionnable (latence / conformité / coût) + recommandation: lancer POC API directe pour latence critique; si conformité/gouvernance prioritaire, piloter via Bedrock/Vertex; si time-to-market prioritaire, envisager tiers pour prototype, avec clause de migration.  \n- Document résultats: 1‑page exec summary (recommandation, impact business), table comparatif, estimations TCO & timeline, acceptance criteria du pilote, plan de rollback/inversion, risques & mitigation — format réutilisable pour dossier achats et IP partenaire."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Benchmarking"
+      ],
+      "title": {
+        "en": "2Present an architectural tradeoff in terms a b...",
+        "fr": "2Present an architectural tradeoff in terms a b..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_005",
@@ -159,7 +199,17 @@
         "fr": "3. Boucle de rétroaction et jalons de gouvernance\n- Déclencheurs de revue (exemples concrets) : dépassement SLA (p95 latence > 2× cible pendant 1h), taux d’erreur > 3% sur 24h, changement réglementaire, ouverture d’un canal partenaire, mise en production d’une nouvelle fonctionnalité, incident de sécurité.  \n- Que nécessite une violation du SLA : notification immédiate aux parties prenantes + ouverture d’un incident (page on‑call), mitigation (rollback/scale), RCA documentée sous 72 h, plan corrective sous 7 jours avec propriétaire et KPI, revue de gouvernance plénière si impact business ≥ X%.  \n- Itérer vs réarchitecturer : itérer si problèmes isolés, correctifs < 30% du coût d’une refonte, capacité suffisante, délai de résolution < 2 sprints; réarchitecturer si incidents fréquents (>3/mois), coût d’exploitation croissant > 25%/an, contraintes non satisfaites par patches, changements d’API touchant >2 domaines.  \n- Jalons intégrés : discovery sign‑off, revue d’architecture (AARB), revue sécurité/compliance, readiness pré‑prod, post‑prod 30/90 jours, revue SLA trimestrielle.\n\n4. Partner Track — rôle de l’Architect\n- Conduire discovery conjointe (use cases, data, contraintes), produire user‑stories testables et critères d’acceptation.  \n- Démo scénarisée : scripts, dataset représentatif, métriques de succès.  \n- Gérer objections : checklist technique (sécurité, latence, intégration), playbooks de réponses et preuves (benchmarks, PoC).  \n- Définir périmètre conjoint : doc RACI, artéfacts livrables, roadmap, critères de handover pour Anthropic Applied AI.\n\n5. Choix point d’entrée et stratégie multiplateforme\n- Comparaison rapide : API directe = latence minimale, contrôle max, compliance gérée en interne; Bedrock/Vertex = orchestration managée, intégrations cloud, coûts/latence moyens; routes tierces = abstraction, possible conformité simplifiée, latence + complexité.  \n- KPI à mesurer : p50/p95/p99 latency, coût/1M tokens, disponibilité, région/data residency, certifications (SOC2/GDPR).  \n- Document résultats pour sponsor : Executive summary (recommandation claire), tradeoffs (latence/coût/compliance), chiffres clés et scénario coût sur 12‑24 mois, roadmap d’implémentation, risques + mitigation. Inclure templates réutilisables (one‑pager, matrice décisionnelle, tests d’acceptation).  \n\nLien discovery : traduire préférences en contraintes testables (ex : “préférence EU” → “toutes les PII stockées en EU, vérifiable par test automatisé”), et éviter le croquis plausible en exigeant critères d’acceptation signés avant design."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "3Build and operate a stakeholder feedback loop ...",
+        "fr": "3Build and operate a stakeholder feedback loop ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_006",
@@ -178,7 +228,17 @@
         "fr": "Ce qu’une bonne réponse doit contenir (actionnable, testable, vérifiable)\n\nDiscovery / traduction\n- Traduire préférences en exigences mesurables : critère d’acceptation, seuils, SLA, scénarios de test (ex. “les pages clients 95e perc ≤ 500ms sous 1k req/s”).\n- Liste de questions ouvertes à résoudre avant design (capacity, sécurité, compliance, données).  \n- Risque si non‑fait : archi prématurée => faux consentement du stakeholder.\n\nCadrage des compromis & go‑to‑market\n- Slide obligatoire pour chaque choix : 1) Apport concret (métriques, UX), 2) Ce qu’on renonce (fonctionnalités, latence, coût), 3) Coût d’inversion chiffré (estim. dev‑weeks, données à migrer, downtime).\n- Exemple chiffré : “Option A réduit coût infra 30% mais verrouille l’API ; inversion ≈ 6 dev‑weeks + migration de 1TB de données.”\n\nBoucle de rétroaction / governance\n- Table de gouvernance (colonnes) : Signal | Trigger (seuil ou calendrier) | Owner | Action | Fréquence | Audit trail.\n- Exemple : “error_rate>1% pour 5m | Trigger auto | Owner SRE | Action : rollback canary ; notifier Risk/Compliance.”\n\nDocumentation pour passation/audit\n- Inclure : diagrammes actuels, décisions + alternatives rejetées, trade‑offs, tests d’acceptation, runbooks, playbooks de rollback, checklist de conformité.\n- Test de complétude : un architecte externe doit pouvoir répondre à 5 questions clés (pourquoi ce choix, conditions d’échec, comment roll back, métriques de succès, limites connues).\n\nPoint d’entrée & document de résultats\n- Critères de choix du point d’entrée : blast radius minimal, KPI business impact, observabilité disponible.\n- Document de résultats : avant/après métrique métier, volumes/latence/taux d’erreurs, preuve auditable, recommandations d’extension et coûts prévisionnels."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Discovery is where you turn a stakeholder's pre...",
+        "fr": "Discovery is where you turn a stakeholder's pre..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_007",
@@ -197,7 +257,17 @@
         "fr": "Une bonne correction couvrirait, de manière actionnable, les cinq artefacts attendus et les risques clés, avec exemples concrets.\n\n1) Présentation des compromis\n- Contenu exigé : bénéfices mesurables (latence, coût, scalabilité), concessions (ex. cohérence vs disponibilité), coût de retour en arrière chiffré (temps, données à migrer, downtime, coût humain).\n- Démo : scénario acheteur (charge réaliste, pannes induites, cas d’échec métier), pas \"capacité équipe\".\n- Question demandée en réunion : \"autorisez‑vous X aujourd’hui, sachant que rollback = Y jours / $Z ?\"\n\n2) Boucle de rétroaction (table de gouvernance)\n- Colonnes : signal | trigger (seuil ou calendrier) | owner | action automatique/manuelle | preuve d’audit | fréquence revue.\n- Exemple ligne : \"Erreur API 5xx | >1% sur 5m OU mensuelle | SRE | auto-rollback canary + page | logs, runbook | revue hebdo\".\n\n3) Documentation handoff/audit\n- Inclure : décisions + alternatives rejetées + justification, runbooks (rollback, failover), diagrammes avec \"charge décisionnelle\", scripts IaC, accès, journaux d’audit.\n- Test de complétude : un architecte externe doit pouvoir déployer/rollback en suivant le doc.\n\n4) Point d’entrée et document d’issue\n- Contenu : état initial vs post-déploiement (volume, latence P50/P95, taux d’erreur), métrique métier avant/après, controles auditable (logs, snapshots), ROI estimé, checklist de conformité satisfaite.\n- Critères d’expansion clairs : seuils métriques + revue compliance + budget.\n\nRisques concrets et mitigations\n- Absence de trigger -> non‑conformité (mitiger : triggers calendaires + alerting)\n- Pas d’owner -> alertes orphelines (mitiger : SLA d’escalade)\n- Rollback coûteux -> refus sponsor (mitiger : rehearsed rollback, canary)\n- Démo non réaliste -> rejet client (mitiger : test with production‑like data)\n- Fuite de données/regulator breach (mitiger : DLP, audits pré-lancement)\n\nLivrables attendus : slide compromis + démo script, table de rétroaction CSV/MD, dossier handoff (runbooks, IaC, décisions), document d’issue avec tableaux métriques et checklist de go/no‑go."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Tradeoff framing and go to market is where you ...",
+        "fr": "Tradeoff framing and go to market is where you ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_008",
@@ -216,7 +286,17 @@
         "fr": "Correction modèle — éléments attendus et livrables concrets\n\n1) Discovery & trade-off framing\n- Livrable : tableau des contraintes (sécurité, latence, coût, compliance) + alternatives évaluées (pour chacune : coût, risque, compromis).\n- Critère de complétude : toute décision a au moins 2 alternatives documentées et une métrique permettant comparaison.\n\n2) Boucle de rétroaction (table de gouvernance)\n- Colonnes requises : signal, déclencheur (seuil ou calendrier), propriétaire, action immédiate, preuve d’audit, SLA d’escalade.\n- Exemple de ligne : Signal=exfiltration PII | Déclencheur=1 incident ou revue quotidienne | Propriétaire=DPO | Action=isoler modèle + ticket d’incident | Preuve=log + ticket | Escalade=CTO.\n- Implémentation : automatiser déclencheurs (cron + alerting) et lier tickets aux logs pour audit.\n\n3) Documentation handoff & audit\n- Doit contenir : objectifs, diagramme d’architecture, décisions clés, alternatives rejetées, risques résiduels, runbook de modification, checklist “architecte peut changer en sécurité”.\n- Test de complétude : un architecte tiers doit pouvoir suivre le runbook et effectuer une modification sans intervention de l’auteur.\n\n4) Point d’entrée & document de résultats\n- Mesures : volume, latence, taux d’erreur, métrique métier avant/après, seuils d’acceptation, preuves auditable (logs, dashboards).\n- Faire figurer business case et recommandations d’extension.\n\n5) Risques concrets\n- absence de déclencheur → non-détection ; perte du raisonnement décisionnel ; responsabilités non attribuées ; métriques insuffisantes pour sponsor ; trace d’audit incomplète.\n\n6) Mappage cycle\n- Associer chaque décision à une phase (discovery/design/handoff/monitoring/itération) et définir critères de passage explicites."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "The feedback loop is where you build the decisi...",
+        "fr": "The feedback loop is where you build the decisi..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_009",
@@ -235,7 +315,17 @@
         "fr": "Document de résultats attendu (correction modèle)\n\n1) Première phrase de la partie prenante\n- Fournir exactement la phrase d’origine qui a lancé le projet (ex. « Réduire le temps moyen de traitement des demandes de prêt en ligne pour augmenter le taux d’acceptation mensuel. »).\n\n2) Point d’entrée et justification\n- Indiquer la plateforme/pipeline choisie (ex. API interne + intégration web) et pourquoi (capacité, conformité, latence).\n- Contraintes de découverte qui ont motivé ce choix (données disponibles, SLA réglementaires, dépendances).\n\n3) Critères de succès mesurables (avec seuils)\n- Volume cible: ex. 50k req/jour.\n- Latence opérationnelle: p95 ≤ 300 ms.\n- Taux d’erreur: <0.1% (5xx) et <0.5% d’erreurs applicatives.\n- KPI métier avant/après: ex. taux de conversion +2.5 points (contrôle A/B, p<0.05).\n\n4) Preuve et auditabilité\n- Méthode: A/B parallèle, fenêtres pré/post, statistiques (p-value, IC).\n- Artefacts: séries temporelles, logs d’appel, snapshot des modèles, hash des weights, horodatage et référentiel.\n- Contrôle auditable: script d’analyse, exports bruts, playbook de rollback.\n\n5) Gouvernance et registre des décisions\n- Table: décision, propriétaire, date, justification, critère de révision, preuves liées.\n- Règles d’itération et SLA de réponses (qui déclenche un retrain/rollback).\n\n6) Calcul de valeur pour le CFO\n- Formule fournie: ΔKPI * revenu_par_conversion * utilisateurs_actifs_mensuels — fournir chiffres et scénario conservateur.\n\n7) Risques concrets et mitigations\n- Non‑conformité réglementaire: revue juridique + data minimization.\n- Dérive modèle: monitoring de dérive + seuils d’alerte.\n- Régression métier: tests canary + rollback automatisé.\n- Verrouillage fournisseur: exportabilité des artefacts.\n\n8) Handoff et checklist finale\n- Liste de fichiers livrables, playbooks, accès, runbook d’incident, plan d’expansion.\n\nExemple court à inclure: résultat attendu = « augmentation absolue du taux de conversion de 2.5 pts (IC 95%) mesurée sur 30 jours via test A/B contrôlé »."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Entry point selection and the outcome document ...",
+        "fr": "Entry point selection and the outcome document ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_010",
@@ -254,7 +344,17 @@
         "fr": "Correction modèle (résumé actionnable)\n\nExpliquer la chaîne causale et cartographier chaque décision sur le cycle de vie\n- Énoncer explicitement : « chaque sujet découle du précédent » et montrer la filiation Découverte → Conception → Transfert → Surveillance → Itération par des artefacts concrets.\n\nFournir un exemple concret (début à fin)\n- Phrase stakeholder : « Déployer Claude pour gérer les réclamations clients multi‑plateformes (web + mobile) en conformité RGPD. »\n- Découverte : interview stakeholders, exigences réglementaires, inventaire des données, user journeys. Livrable : brief de découverte + matrice parties prenantes.\n- Conception / trade‑offs : performance vs. privacy vs. latence; options d’architecture (client-side anonymization, enclave serveur). Livrable : tableau comparatif décisionnel avec critères pondérés.\n- Transfert / documentation : registre de décisions (qui, pourquoi, alternatives), runbook d’intégration, contrats SLAs. Signe de passation : owner suivant validé et documents signés.\n- Surveillance / boucle de rétroaction : métriques (accuracy, FPR/FNR, latence, drift, incidents), cadence de revue, gouvernance (qui peut dévier décisions). Livrable : tableau de gouvernance + playbooks d’escalade.\n- Itération / document d’aboutissement : synthèse valeur business, métriques avant/après, risques résiduels, plan d’expansion.\n\nCritères de passage de phase (checklist)\n- Critères SMART validés, tests d’acceptation passés, risques critiques atténués, propriétaire nommé, documentation stockée et accessible.\n\nRisques concrets\n- Non‑conformité RGPD, fuite de PII, dérive modèle, perte de connaissance lors de la passation, intégration multi‑plateforme non synchronisée, responsabilité juridique.\n\nFormat final attendu\n- Document d’aboutissement (1–2 pages + annexes) : contexte, décisions clés, métriques prouvant valeur, plan d’expansion, registre des décisions et contacts."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Business Value"
+      ],
+      "title": {
+        "en": "These five topics are not independent, in fact,...",
+        "fr": "These five topics are not independent, in fact,..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_011",
@@ -273,7 +373,17 @@
         "fr": "Ce que doit contenir une bonne réponse : transformer « sans couture » en contraintes testables, questions de découverte à poser, métriques d’acceptation, implications d’architecture et risques à couvrir.\n\nExemple de démarche concrète\n- Questions de suivi (à poser immédiatement) : Qu’est‑ce qui ferait que l’expérience semble « cassée » ? Quel délai d’attente est acceptable ? Quelles données peuvent être préremplies ? L’utilisateur doit‑il rester dans une seule application ? Que doit‑on masquer aux utilisateurs en cas d’erreur ?\n- Contraintes converties (testables) : P95 latence des transitions < 1 s ; taux de préremplissage ≥ 90 % pour champs connus ; erreurs visibles à l’utilisateur < 0,1 % ; temps de bascule vers réviseur humain ≤ 5 min.\n- Critères d’acceptation : scénarios d’E2E (nouvel utilisateur, données manquantes, échec d’API) avec résultats attendus et métriques mesurées en staging.\n\nImpacts d’architecture et pratiques\n- Exiger API idempotentes, SSO/session unifiée, retries exponentiels + circuit breaker, file d’attente et reconciliation asynchrone, logging corrélé, dashboards et alerting sur latence/erreurs.\n- Concevoir chemins de secours (graceful degradation) et audits pour erreurs humaines.\n\nRisques concrets à documenter\n- dépendances externes lentes, incohérences de données, conditions de concurrence, perte de traçabilité, régressions UX lors d’optimisations perf.\n\nLivrable attendu : liste de contraintes testables + 5 questions de découverte + 3 critères d’acceptation mesurables + implications techniques et risques mitigés."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Compliance"
+      ],
+      "title": {
+        "en": "The most important skill in discovery is transl...",
+        "fr": "The most important skill in discovery is transl..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_012",
@@ -292,7 +402,17 @@
         "fr": "Proposition de correction modèle (actionnable)\n\n1) Responsabilités — confirmer et nommer :\n- Propriétaire métier du routage (ex. Product Owner flux).\n- Propriétaire des règles (équipe métier / SME), versionnée dans Git.\n- Responsable conformité/DPO, Responsable sécurité, Responsable clinique (CMO) pour approbation finale.\n- Responsable opérationnel HIL pour SLA d’autorisation.\n\n2) Architecture et séparation des responsabilités :\n- Le modèle ne stocke / n’exécute pas la logique de routage. Utiliser un moteur de règles externe (ex. Drools, Camunda, ou service rules-as-code).\n- Claude = extracteur d’entités/risques; système de routage applique règles déterministes.\n\n3) Human-in-the-loop (contrôle obligatoire) :\n- Étape d’autorisation explicite avant écriture dans le dossier : UI d’examen, bouton “Autoriser pour enregistrement”, champ raison, SLA (p.ex. 2h).\n- Autorisation signée par utilisateur autorisé ; enregistrement de user_id, timestamp, décision, rule_version, model_version.\n\n4) Preuves & traçabilité (exigence centrale) :\n- Logs immuables (WORM), hachage de l’entrée/sortie, version règle, version modèle, ID de décision, signature utilisateur.\n- Chiffrement au repos et en transit, accès RBAC, journalisation d’accès.\n\n5) Protection des données de santé :\n- Minimiser PHI dans prompts : pseudonymisation/tokenisation côté client, endpoint privé (VPC), accord BAA/HIPAA si applicable.\n- Politique de rétention et suppression conforme (GDPR/lois locales).\n\n6) Tests, validation et gouvernance :\n- Test harness automatisé pour règles + cas cliniques, revue juridique initiale, revue périodique.\n- Décision : investir en discovery & compliance en amont pour éviter redesign coûteux.\n\nRisques concrets : fuite PHI via prompts, routage erroné par règle obsolète, approbation absente/forcée, logs insuffisants pour audit, non-conformité réglementaire. Actions mitigantes ci‑dessus."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "\"It just needs to read the form and route it.\"R...",
+        "fr": "\"It just needs to read the form and route it.\"R..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_013",
@@ -311,7 +431,17 @@
         "fr": "Objectif de la correction modèle — ce qu’un bon élève ferait :\n\n1) Structure claire et timeboxing\n- Ouvrir avec une agenda de 5–10 min : objectif, questions clés, limite du temps, résultat attendu.\n- Règle opérationnelle : pas de design en live ; tout élément de design est placé dans le « parking lot » et programmé séparément.\n\n2) Les quatre catégories de questions (avec exemples)\n- Objectifs métier : quel problème exact doit être résolu ? Quel résultat mesurerons-nous ? (KPI, deadline)\n- Contraintes : exigences légales/compliance ? Limites budgétaires ? Dépendances techniques existantes ? SLA attendus ?\n- Parties prenantes & décision : qui décide ? Qui valide la conformité ? Qui sera opérateur/mainteneur ?\n- Risques & scénarios : quels sont les pires cas ? Quelles données sensibles sont traitées ? Quelles migrations/rollbacks sont possibles ?\n\n3) Traduire préférences → contraintes en temps réel\n- Reformuler : « Si je comprends : ceci est une préférence car… Est-ce une contrainte must/should/could ? »\n- Créer immédiatement une ligne « Contrainte » dans le doc partagé (responsable, priorité, preuve).\n\n4) Risques concrets à lister\n- Contrainte cachée survit aux tests → coût élevé de refonte.\n- Non-implication de compliance/FTL → blocage en revue.\n- Prise de décision tardive → délai & dépassement budgétaire.\n- Feature creep par session de design improvisée.\n\n5) Actions opérationnelles à la fin de l’appel\n- Synthèse 5 min + décisions/next steps + répartition des actions + date atelier design.\n- Envoi d’un compte-rendu (constraints checklist, parking lot, participants à impliquer).\n\nScript court pour rediriger : « Très utile — pour garder cet appel centré sur la découverte, je note cette idée dans le parking lot et je propose un atelier de design dédié. Est‑ce que ça vous convient ? »"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Compliance"
+      ],
+      "title": {
+        "en": "Cost: A discovery call that runs long enough to...",
+        "fr": "Cost: A discovery call that runs long enough to..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_014",
@@ -330,7 +460,17 @@
         "fr": "Où poser la question: immédiatement après la déclaration de la partie prenante et avant toute proposition de solution. Exemples concrets de questions (phrases à poser) et pourquoi elles auraient exclu l’architecture proposée :\n\n1) Réglementation / données patients\n- Phrase: « Les données de santé peuvent-elles sortir du réseau hospitalier / cloud public ? »  \n- Si non → exclut SaaS public; impose on‑premise ou VPC privé, chiffrement au repos/ en transit, et accords DPA/HIPAA.\n\n2) Identifiabilité / journalisation\n- Phrase: « Quels logs, traces et versions des modèles doivent être conservés et pendant combien de temps ? »  \n- Si conservation complète requise → exige stockage auditables, immuables, et contrôle d’accès strict.\n\n3) Intégration EHR / format\n- Phrase: « Quelle interface EHR exigez‑vous (HL7, FHIR), et quels champs doivent être écrits automatiquement ? »  \n- Si intégration bidirectionnelle nécessaire → nécessite connecteurs certifiés et tests d’intégrité.\n\n4) Responsabilité clinique / validation\n- Phrase: « Qui signe la note clinique finale ? Quel niveau d’exactitude / auditabilité exigé ? »  \n- Si caution humaine obligatoire → design human‑in‑the‑loop avec workflow d’approbation.\n\n5) SLA, latence, disponibilité\n- Phrase: « Quelles contraintes de latence et heures de disponibilité (24/7) ? »  \n- Si latence/haute disponibilité strictes → choix d’architecture locale ou edge.\n\n6) Sécurité & accès\n- Phrase: « Quelles équipes peuvent accéder aux transcriptions / capacités de recherche ? »  \n- Si segmentation requise → contrôle d’accès RBAC, chiffrement par clé client.\n\nChecklist minimal attendu dans une bonne découverte: réglementation, données sensibles, intégration EHR, workflows d’approbation, exigences d’audit, SLA, coût/maintenance. Ces questions auraient empêché la proposition hâtive d’un prototype cloud non conforme."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "A reconstructed discovery call, where the quest...",
+        "fr": "A reconstructed discovery call, where the quest..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_015",
@@ -349,7 +489,17 @@
         "fr": "Correction modèle — découverte et point de contrôle (actionnable)\n\nRésumé du problème : une proposition d’ébauche plausible a empêché de poser les vraies questions de découverte ; des contraintes critiques (PHI, autorisation humaine, rétention multi‑état, contexte du modèle) n’ont pas été vérifiées.\n\nChecklist de découverte à terminer AVANT toute ébauche (4 catégories + questions concrètes)\n1) Must‑prove (doit être démontré)\n - Qui doit autoriser chaque sortie avant écriture dans le DME ? définir rôle, preuve, workflow et latence maximale.\n - Le texte dicté contient‑il PHI ? quels champs exactement (SSN, diagnostics, médication, identifiants) ?\n - Où doivent résider les données (par État/région) ? spécifier règles de rétention pour chaque juridiction.\n - Le modèle doit‑il conserver le contexte entre sessions ? quelle durée/portée ?\n\n2) Must‑not‑do (interdits)\n - Le modèle ne peut pas écrire dans le DME sans preuve d’autorisation signée.\n - Ne pas envoyer PHI non‑redactée à des services tiers ou sauvegardes.\n - Ne pas déployer en « single‑region » si la loi exige multi‑région.\n\n3) Gouvernance & conformité\n - Quels standards/regulations s’appliquent (HIPAA, lois d’État) ? exigences d’audit/notification.\n - Qui est responsable légalement en cas de fuite ?\n\n4) Opérationnel / sécurité\n - SLA et disponibilité pour l’autorisation humaine ; procédure de secours.\n - Comment détecter et supprimer PHI dans la context window (PII classifier / redaction) ?\n - Logging, cryptographie, gestion des clefs, tenue des preuves d’autorisation.\n\nRisques concrets\n - Fuite de PHI via context window ou logs\n - Non‑conformité aux règles de rétention → amendes\n - Retard/erreur clinique si gate humain absent ou mal conçu\n - Violation d’audit et perte de confiance\n\nActions correctives immédiates (si ébauche déjà faite)\n - Suspendre déploiement ; bloquer tout chemin d’écriture automatique.\n - Faire un gap analysis mapping ébauche ↔ checklist ci‑dessus.\n - Redesign : forcer gate HCI avec preuve cryptographique, redaction PII avant contexte, déploiement multi‑région conforme, journaux chiffrés et séparés.\n - Validation juridique/compliance + tests d’injection PHI + approbation signée des parties prenantes avant reprise."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Compliance"
+      ],
+      "title": {
+        "en": "Various constraints identified too late to be a...",
+        "fr": "Various constraints identified too late to be a..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_016",
@@ -368,7 +518,17 @@
         "fr": "Pour chacun de vos placements de revue des parties prenantes, une bonne réponse couvrirait explicitement les éléments suivants :\n\n1. Objectif de la revue — raison précise (ex. validation conformité réglementaire pour les deux points contrôlés).\n2. Participants et rôles — liste nominative ou rôles (propriétaire décisionnel, SME réglementaire, finance, QA, secrétaire) + remplaçant désigné.\n3. Critères d’entrée — conditions que le dossier doit satisfaire avant revue (tri effectué, éléments hors budget/self-resolves exclus, documentation, preuves).\n4. Critères de sortie/décisions possibles — approuvé, approuvé avec actions, rejeté, renvoi avec backlog; livrables attendus (PV, actions, responsables, échéances).\n5. Artefacts à fournir en pré-lecture — template de dossier, synthèse des risques, impact budgétaire, conformité checklist.\n6. Timebox et cadence — durée maximum, fréquence et SLA de décision.\n7. Traçabilité et audit — enregistrement de la décision, horodatage, lien vers ticket, champ décisionnel dans le système.\n8. Escalade et plan B — contacts d’escalade, délégation en cas d’absence, critères d’urgence.\n9. Mesures et KPIs — taux de décisions prises, délai moyen, % renvois, réwork.\n10. Risques concrets et mitigations — ex. absence de SME (nom de backup), interprétation réglementaire divergente (consensus meeting), décisions tardives (timebox stricte + pré-reads).\n\nExemple de template (par placement) : Nom de la revue | Objectif | Participants (avec remplaçants) | Entrée | Sortie attendue | Durée/timebox | Pré-reads (lien) | Escalade | KPI suivis."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Cost Optimization",
+        "Documentation"
+      ],
+      "title": {
+        "en": "`You triaged the cases well. The two regulated ...",
+        "fr": "`You triaged the cases well. The two regulated ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_017",
@@ -387,7 +547,17 @@
         "fr": "But: l’essentiel est de tester si le signal modifie une décision humaine. Si oui = escalade, sinon = surveillance/alerte passive.\n\nChecklist actionnable pour trier signal suivi vs signal escaladé\n- Impact sur décision : ce signal oblige-t‑il une personne à prendre une mesure (bloquer, corriger, contacter utilisateur, ouvrir une enquête) ? Si oui → escalade.\n- Sévérité et urgence : risque de dommage immédiat (sûreté, sécurité, légal, finances) → escalade avec SLA court.\n- Ambiguïté / besoin de jugement : le cas nécessite interprétation humaine (contexte, intention) → escalade.\n- Confiance du modèle : score de confiance < seuil défini → escalade pour vérification humaine.\n- Récurrence ou tendance : événement isolé = surveillance; pattern répété dépassant seuil → escalade.\n- Contraintes réglementaires / confidentialité : données sensibles nécessitent examen humain ou équipe dédiée → escalade.\n- Capacité d’automatisation sûre : si une action automatisée est sûre et réversible, garder en suivi automatique.\n\nExemples concrets\n- Harcèlement grave signalé → escalade immédiate à moderation/sécurité.\n- Pic d’erreurs 5xx → monitoring + alertes pour ingénierie (escalade si persiste 15 min).\n- Données utilisateur potentiellement exposées → escalade conformité + incident response.\n\nMétadonnées minimales pour escalade : type, timestamp, confiance, preuve (texte/logs), utilisateur affecté, recommandation. SLAs & routing clairs, journalisation et révision des faux positifs. Risques principaux : sur‑escalade, sous‑escalade, fuite de données — atténuer par seuils, audits et formation."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "`You separated the clear cases. The misses conc...",
+        "fr": "`You separated the clear cases. The misses conc..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_018",
@@ -406,7 +576,17 @@
         "fr": "Étapes opérationnelles (traitement d’un signal unique)\n1. Normaliser le signal (format, unité, filtrage) pour comparaison fiable.\n2. Récupérer l’état de consentement pertinent (user_id, type d’usage, version du consentement, date d’expiration).\n3. Définir le seuil applicable (valeur numérique, catégorie, intervalle) lié au consentement signé.\n4. Comparer : si signal > seuil autorisé (ou correspondant au cas d’usage consenti), appliquer l’action autorisée ; sinon rejeter/mettre en quarantaine.\n5. Actions en cas de franchissement autorisé : exécuter traitement minimal nécessaire, journaliser avec preuve (timestamp, consent_id, version), notifier l’utilisateur si prévu.\n6. Actions si franchissement sans consentement valide : bloquer traitement, alerter l’équipe de conformité, demander ou régénérer le consentement, conserver preuve du refus.\n7. Gérer cas limites : seuil flou → escalade humaine ; consentement expiré → refuser + informer.\n\nExemple Python (minimal, fonctionnel)\n```python\ndef process_signal(user_id, signal_value):\n    consent = get_consent_record(user_id)  # renvoie dict ou None\n    if not consent or not consent['valid']:\n        record_audit(user_id, signal_value, 'blocked_no_consent')\n        return False\n    threshold = consent['threshold']\n    if signal_value > threshold:\n        record_audit(user_id, signal_value, f'processed_consent={consent[\"id\"]}')\n        perform_processing(user_id, signal_value)\n        notify_user_if_required(user_id, signal_value)\n        return True\n    else:\n        record_audit(user_id, signal_value, 'below_threshold')\n        return False\n```\n\nRisques concrets à considérer\n- consentement périmé ou version non applicable, faux positifs/négatifs sur seuil,\n- fuite de données lors du traitement,\n- latence entre révocation et propagation,\n- journalisation inadéquate entravant audits.   \nMesures mitigantes : versioning du consentement, TTL, chiffrement, tests de détection d’erreurs."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Context Design"
+      ],
+      "title": {
+        "en": "`Work one signal at a time: does it cross a thr...",
+        "fr": "`Work one signal at a time: does it cross a thr..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_019",
@@ -425,7 +605,17 @@
         "fr": "Correction modèle — attendu\n\nDéfinitions et lecteur principal\n- Diagramme : représentation visuelle (architecture, flux, frontières). Lecteur principal : successeur technique / mainteneur.\n- Journal des décisions (ADR) : enregistrement de chaque décision d’architecture avec contexte et alternatives. Lecteur principal : successeur / architecte.\n- Registre de contrôle : preuve de conformité (tests, résultats, signatures). Lecteur principal : réviseur / auditeur.\n\nContenu minimum et format (actionnable)\n- Diagramme : titre, date, version, auteur, portée, composants, interfaces, flux de données, dépendances, liens vers tickets/ADR. Export PNG + source (e.g., draw.io).\n- Journal des décisions : ID, date, auteur, contexte, options évaluées, décision prise, justification, conséquences, plan de révision, lien vers ticket/diagramme.\n- Registre de contrôle : ID du contrôle, objectif, critères d’acceptation, procédure, preuves (captures d’écran, logs, rapports), date, exécuteur, statut, lieu de stockage sécurisé.\n\nPratiques de gouvernance\n- Indiquer explicitement “lecteur principal” en en-tête de chaque artefact.\n- Liens bidirectionnels entre diagramme ↔ ADR ↔ registre de contrôle.\n- Revue périodique (p. ex. sprint ou trimestrielle) et contrôle de version.\n\nRisques concrets et mitigations\n- Diagrammes obsolètes → automatiser génération ou checklist de mise à jour lors des PR.\n- Décisions non justifiées → exiger alternatives et critères d’évaluation dans l’ADR.\n- Preuves manquantes dans registre → refuser approbation jusqu’à complétude; définir template obligatoire.\n\nCritères d’évaluation\n- Complétude (tous les champs remplis), traçabilité (liens), fraîcheur (date/version), lisibilité pour le lecteur principal."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Compliance"
+      ],
+      "title": {
+        "en": "`Placed well. The diagram and the decision log ...",
+        "fr": "`Placed well. The diagram and the decision log ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__04_020",
@@ -444,7 +634,17 @@
         "fr": "Étapes concrètes à appliquer à chaque carte (une à la fois)\n\n1) Qui en dépend le plus ? Listez parties prenantes concrètes : équipes (frontend, QA, ops), services en aval, clients, tests automatisés. Notez la dépendance principale (ex. frontend dépend du endpoint).\n\n2) Déterminez statut « intention » vs « preuve » avec critères clairs :\n- Intention (ce que vous vouliez construire) : contient spécifications/AC, maquettes, story points, pas de code validé.\n- Preuve (ce que vous avez fait) : PR mergé, tests unitaires et d’intégration verts, build déployable, acceptance signée.\n- Si partiellement fait : mettez « En revue / QA » si code poussé mais non déployé ; « Bloqué » si dépend d’une autre tâche.\n\n3) Placez la carte sur le board :\n- Intention → Backlog / To Do / Sprint Planning.\n- En cours → In Progress.\n- Validation nécessaire → Review / QA.\n- Preuve complète → Done / Released / Archive.\n- Ambiguë → Needs Clarification (tag + owner).\n\nChecklist qu’une bonne réponse couvre :\n- Identification d’un dépendant principal et impact.\n- Critères objectifs pour intention vs preuve.\n- Action de placement correspondant au statut.\n- Liens obligatoires (PR, ticket dépendant, test run).\n- Prochaine action claire (qui fait quoi et délai).\n\nRisques concrets : mauvaise classification → blocage downstream, perte de traçabilité, livrable non conforme. Mitigation : définition de « Definition of Done », exigence de liens PR/tests, assigner propriétaire. \n\nExemple bref : Carte “API /payments:create” — dépendant principal = frontend + compta. AC listées, pas de PR → To Do. PR mergé mais tests CI échouent → Review/QA (ne pas placer en Done)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "`Work one card at a time: ask who relies on it ...",
+        "fr": "`Work one card at a time: ask who relies on it ..."
+      }
     }
   ]
 }

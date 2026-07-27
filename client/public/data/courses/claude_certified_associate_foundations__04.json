@@ -301,7 +301,17 @@
         "fr": "Objectif attendu — ce que doit atteindre la refonte\n- Clarifier en 3 secondes la valeur offerte (proposition claire, bénéfice utilisateur).\n- Rendre le flux de travail plus rapide et moins sujet aux erreurs.\n- Augmenter la conversion/complétion du workflow (KPI mesurables).\n\nÉtapes concrètes de conception\n1. Définir persona(s) et scénario d’usage ciblé (ex. manager pressé qui valide tâches).  \n2. Cartographier l’étape Workflow1 dans le parcours (entrée, sorties, dépendances).  \n3. Prioriser l’information : en-tête = objectif + bénéfice, zone principale = action/étape courante, panneau latéral = contexte/ressources.  \n4. Réduire la charge cognitive : regrouper actions, masquer options avancées (progressive disclosure), limiter champs obligatoires.  \n5. Concevoir CTAs clairs et hiérarchisés (ex. Primary: « Confirmer et passer à l’étape suivante », Secondary: « Enregistrer et quitter »).  \n6. Microcopy : fournir instructions concises et feedback inline (ex. « Champ requis », « Enregistré à 14:03 »).  \n7. États et erreurs : loader, validation inline, message d’erreur orienté solution.  \n8. Accessibilité & performance : WCAG AA, clavier/touch, temps de chargement <2s, tests sur 320–1440px.\n\nPrototype, tests et métriques\n- Livrables : wireframes basse/moyenne fidélité, prototype cliqueable, spec UI (tokens).  \n- Test utilisateur : 5–8 sessions modérées, mesurer taux de complétion, temps moyen, erreurs.  \n- Itération : A/B tester variations de CTA et de placement d’information.\n\nRisques concrets à éviter\n- surcharge d’informations, CTA ambigu, perte de contexte, erreurs non résolubles, non-accessibilité, incohérences terminologiques."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Communicating Value",
+        "fr": "Communicating Value"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_002",
@@ -320,7 +330,17 @@
         "fr": "But(s) objectifs et contraintes\n- Définir l’objectif principal de l’écran (p.ex. compléter l’étape 1 du workflow, configurer X) et les utilisateurs cibles.\n- Contrainte temporelle/technique : mobile first, réutilisation de design system.\n\nStructure et hiérarchie (concrète)\n- Barre de progression persistante en haut (ex. \"Étape 1 / 4\" + 25%) pour donner contexte.\n- Titre explicite : \"Workflow 1 — Configurer [élément]\" + sous-titre d’une ligne expliquant la tâche.\n- Regrouper le contenu en 2–3 zones visuelles : entrée principale (formulaire/paramètres), aide contextuelle (à droite ou accordéon), actions (footer sticky).\n- Action principale claire : bouton primaire \"Suivant\" à droite, action secondaire \"Sauvegarder le brouillon\" à gauche, annuler en lien discret.\n\nComportements et états\n- Validation inline et auto-save toutes les X secondes; si erreur, message contextuel + focus sur le champ fautif.\n- États chargement/succès/erreur : skeletons pour chargement, toast pour succès, modal pour erreurs critiques avec actions recommandées.\n- Mobile : empiler sections, actions en bas fixe, éviter plus de 5 champs visibles sans scroll.\n\nAccessibilité et micro-interactions\n- Contraste ≥ 4.5:1, labels explicites, tabindex logique, rôles ARIA pour erreurs, annonces ARIA-live pour messages.\n- Indicateurs de progression et retours haptique/visuel pour actions.\n\nLivrables et tests\n- Mockup annoté + prototype interactif (Figma/Framer) + spec composants (tokens, states).\n- Tests utilisateur : 5–8 participants, tâches de complétion, critère de succès ≥ 90% sur compréhension et < 3 minutes par écran.\n- KPI : taux de complétion par étape, temps moyen, taux d’erreur par champ, taux de sauvegarde.\n\nCritères d’acceptation\n- CTA visible sur mobile, autosave fonctionnel, messages d’erreur accessibles, prototype testé et métriques collectables."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Business Value",
+        "Context Design",
+        "Error Handling"
+      ],
+      "title": {
+        "en": "Exercise: Redesign a Workflow1 screen",
+        "fr": "Exercise: Redesign a Workflow1 screen"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_003",
@@ -339,7 +359,17 @@
         "fr": "Écran Quiz (Module 4 — Quiz 2)\n- Objectif : afficher score, corrections et chemin de remédiation immédiat.\n- Contenu obligatoire : score (n/total), temps pris, questions ratées + explication courte (1–2 phrases) et ressource liée (lien vers section pertinente).\n- Microcopies : « Vous avez obtenu 7/10. Voir les explications » ; pour échec : « Besoin d’aide ? Relisez les points à retenir ou refaites le mini-exercice. »\n- UX : bouton “Revoir les questions” + “Refaire le quiz”; désactiver boutons pendant chargement; focus géré pour lecteurs d’écran.\n\nÉcran Points à retenir\n- Objectif : synthèse actionnable (3–6 bullets) alignés sur objectifs d’apprentissage.\n- Structure : titre, 3–6 bullets prioritaires, un “Pour aller plus loin” (2 ressources), CTA vers quiz de remédiation.\n- Exemple de bullet : « Identifier les 3 étapes clés du processus X et savoir appliquer Y en contexte Z. »\n\nÉcran Module terminé (Complete1)\n- Contenu : résultat global du module, badge/certificat téléchargeable, boutons “Partager”, “Retour au parcours”, “Donner un feedback”.\n- Suivi : nom des événements analytics (module_complete, cert_download, share_click) et enregistrement de la date/score.\n- Accessibilité & sécurité : contrastes suffisants, labels ARIA sur boutons, conservation des données conforme RGPD.\n\nRisques à anticiper\n- Frustration si feedback trop vague; perte d’engagement si pas de prochaine étape claire; non-conformité accessibilité/analytics mal tagués.\n\nExemple HTML bouton accessible :\n<button aria-label=\"Télécharger le certificat\" id=\"cert-btn\">Télécharger le certificat</button>"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Context Design",
+        "Data Privacy",
+        "Fine-tuning"
+      ],
+      "title": {
+        "en": "Module 4 Quiz2 screens",
+        "fr": "Module 4 Quiz2 screens"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_004",
@@ -358,7 +388,17 @@
         "fr": "Objectif attendu — ce qu’une bonne réponse doit contenir :\n\n1) Cartographier l’existant (courte séquence)  \n- Exemple concret : « Demande client → formulaire → validation commerciale (2 j) → validation technique (3 j) → ticket dev → dev → QA → déploiement ». Indiquer points de blocage (attentes manuelles, files d’attente, reprises humaines).\n\n2) Objectifs du redesign (mesurables)  \n- Réduire lead time de 50 %, automatiser 60 % des tâches répétitives, erreurs <2 %, CSAT>90 %.\n\n3) Nouveau flux proposé (précis, rôles, outils, automatisations)  \n- Exemple : Formulaire structuré (Typeform) → webhook crée ticket Jira avec champs obligatoires → validations parallèles automatisées (règles business) → assignation automatique via règles d’escalade → branche Git + PR → pipeline CI exécute tests unitaires/intégration → déploiement en staging automatique → tests automatisés end-to-end → approbation manuelle (owner) → feature flag + release en prod. Outils suggérés : Jira, GitHub Actions/GitLab CI, Postman, Cypress, Sentry, Slack pour notifications.\n\n4) RACI, SOP et artefacts  \n- Fournir RACI, checklists pré-déploiement, playbook de rollback, tests de non-régression.\n\n5) KPIs et suivi  \n- Lead time, cycle time, taux d’erreur, MTTR, taux d’automatisation ; dashboard (Grafana/Datadog).\n\n6) Risques concrets & mitigations  \n- Intégration échoue → tests d’intégration automatisés + sandbox. Résistance au changement → pilote 1 équipe + formation. Régression en prod → feature flags + rollback script. Sécurité des données → chiffrement, contrôle d’accès.\n\n7) Plan de déploiement  \n- Pilote (2–4 semaines), itérations bimensuelles, revue post-mortem et extension progressive."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Change Management"
+      ],
+      "title": {
+        "en": "07Exercise: Redesign a Workflow",
+        "fr": "07Exercise: Redesign a Workflow"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_005",
@@ -377,7 +417,17 @@
         "fr": "Le libellé fourni est trop court ; voici une correction modèle et des bonnes pratiques liées à la fin d’un module et au quiz (Module 4).\n\nAvant le quiz\n- Relire les objectifs du module et la section « À retenir » (3–5 points clés).\n- Réviser exemples et cas pratiques du module, noter formules/étapes essentielles.\n- Faire un rapide quiz blanc ou flashcards pour repérer les lacunes.\n\nPendant le quiz\n- Lire chaque consigne et la barème (temps, points).\n- Prioriser les questions faciles puis revenir aux difficiles.\n- Pour questions ouvertes : répondre en 3 parties — définition concise, application concrète (exemple chiffré si pertinent), conclusion qui relie au concept du module.\n- Pour QCM : éliminer les options manifestement fausses, justifier mentalement le choix.\n\nAprès le quiz\n- Examiner immédiatement les feedbacks et erreurs : noter pourquoi erreur (méconnaissance, lecture, inattention).\n- Reprendre les sections ciblées et refaire exercices similaires.\n- Si la plateforme propose une progression réinitialisable : sauvegarder preuves (captures d’écran, certificats, notes), comprendre que réinitialiser efface scores/archives avant action.\n- Si besoin, contacter support pour récupération ou clarification.\n\nRisques concrets\n- Perte définitive de résultats/certificats en réinitialisant.\n- Mauvaise interprétation des feedbacks menant à révision inefficace.\n- Sous-estimation du temps disponible.\n\nCe qu’une bonne réponse au quiz montre\n- Maîtrise des définitions clés, application pratique claire, références précises aux sections du module."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Computer Vision",
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "08Module 4 Quiz",
+        "fr": "08Module 4 Quiz"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_006",
@@ -396,7 +446,17 @@
         "fr": "Colonnes obligatoires du tableau (format CSV/Excel) — chaque ligne = 1 exigence :\n- ID unique\n- Libellé court (1–6 mots)\n- Texte exact extrait du RFP (citation + numéro de page/section)\n- Source (RFP section exacte, ex. “§4.2, p.12”)\n- Réponse existante dans le fil (oui/non) + extrait ou lien vers l’e‑mail\n- Statut (Répondu / Ouvert)\n- Ambiguïtés / Question à poser (phrases prêtes à envoyer)\n- Critères d’acceptation mesurables (ex. SLA, formats livrables)\n- Priorité / Impact (Haute/Moyenne/Basse)\n- Dépendances & contraintes (techniques, licences, calendrier)\n- Responsable proposé & échéance\n\nTests de résistance à appliquer à la liste extraite :\n- Couverture : chaque section RFP citée au moins une fois.  \n- Unicité : dédupliquer exigences équivalentes ou conflictuelles.  \n- Faisabilité : évaluer brièvement si technique/budgétaire (OK / Risque / Impossible).  \n- Exigences non‑fonctionnelles séparées (sécurité, performances, conformité).  \n- Critères mesurables présents (sinon, demander précision).  \n- Priorisation et dépendances cohérentes avec planning.  \n\nExemple de ligne :\nID: RFP‑3.2 | Libellé: Authentification SSO | Texte RFP: “Support SAML 2.0” (§3.2,p.9) | Réponse e‑mail: non | Statut: Ouvert | Question: “Confirmez‑vous SAML 2.0 + IdP(s) attendus ?” | Critères: Test SAML avec IdP X, temps d’auth <2s | Priorité: Haute | Dép.: Intégration IdP | Responsable: Équipe Sécurité, échéance: T+6 sem.\n\nPhrase prête pour clarification client (ex.) : “Pour la section §3.2, confirmez‑vous SAML 2.0 comme seul standard et fournissez la liste d’IdP/certificats attendus ?”"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Claude Platform",
+        "Compliance",
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "\"From the attached RFP and the email thread, ex...",
+        "fr": "\"From the attached RFP and the email thread, ex..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_007",
@@ -415,7 +475,17 @@
         "fr": "Objectif attendu — correction modèle (100–220 mots)\n\nStructurez la boucle d’itération comme un flux de projet reproduisible et traçable :\n- Artefacts obligatoires : brief projet (objectifs, utilisateurs cibles, contraintes, KPIs), journal de décisions (qui, quoi, pourquoi, date), backlog d’itérations, prototypes versionnés, comptes-rendus de tests utilisateurs.\n- Processus itératif (timebox) : 1) Idéation (2–4 options) → 2) Prototype minimum viable → 3) Tests qualitatifs + quantitatifs (scénarios, métriques) → 4) Synthèse de retours → 5) Affinement et mise à jour du journal de décisions → répéter.\n- Maintien du contexte : stocker tous les prompts, réponses et artefacts dans le Projet centralisé (README ou dossier “Project Context”); nommer versions (v0.1_ideaA_date); lier chaque nouvelle itération à la décision antérieure.\n- Critères d’acceptation : satisfaction utilisateur cible ≥ seuil, indicateurs de performance atteints, dette technique tolérable documentée.\n- Exemple de prompt Claude pour ideation :\n  “Contexte : [résumé du brief]. Contraintes : [liste]. Objectif : proposer 3 concepts UX distincts avec avantages/inconvénients et risques. Donne aussi 2 métriques pour valider chaque concept.”\n- Risques concrets et mitigations : dérive de contexte (mitigation : journal de décisions obligatoire), sur-ajustement aux premiers retours (panel de test diversifié), perte de traçabilité (contrôle de version), problèmes de confidentialité (anonymiser données).\nRespectez cycles courts, mesures objectives et documentation systématique."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Solution Design, Development & Iteration",
+        "fr": "Solution Design, Development & Iteration"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_008",
@@ -434,7 +504,17 @@
         "fr": "Une bonne correction montre concrètement comment chaque itération stabilise le contexte, incorpore le retour et réduit le risque. Points clés qu’une excellente réponse doit couvrir :\n\n1) Brief initial (obligatoire) : utilisateurs cibles, métriques exactes, fréquence de mise à jour, contraintes (pas de dev backend, temps, sécurité), critère d’acceptation (ex. filtres + export CSV).\n\n2) Journal d’itérations (trois entrées) — pour chacune : prompt envoyé à Claude, artefact retourné (ex. maquette HTML/CSS/JS minimale ou wireframe), feedback utilisateur précis, changements appliqués, motivation et test d’acceptation. Exemple synthétique :\n- Itération 1 : prototype dashboard statique avec graphiques mock, pas de filtres. Feedback : ajouter filtre date, export CSV, meilleure lisibilité.\n- Itération 2 : prototype interactif (filtre date, export CSV via JS), palette accessible. Feedback : performance sur gros jeux, authentification.\n- Itération 3 : ajout de pagination/lazy-loading, simulation d’authentification et notes d’implémentation pour production. Accepté.\n\n3) Artefacts livrables : prototype HTML, spécification des données (schema), tests manuels, checklist de production (etapes pour déployer).\n\n4) Risques concrets : fuite de données sensibles, métriques mal calculées, dépendance aux données mock, sécurité/auth, maintenance non documentée, accessibilité non respectée.\n\n5) Pratiques recommandées : garder un changelog de prompts/versions, templates de prompt (ex. “Crée un prototype web minimal affichant X métriques, filtres A-B, export CSV, données mock…”), critères d’acceptation mesurables et plan de transfert au dev."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "The iteration loop",
+        "fr": "The iteration loop"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_009",
@@ -453,7 +533,17 @@
         "fr": "Étapes actionnables pour une cartographie de délégation (modèle à viser)\n\n1. Décomposer le flux en étapes atomiques (ex. ingestion, triage, enrichment, décision, exécution, suivi, audit).\n2. Pour chaque étape, définir : entrée/sortie, SLA attendu, données sensibles, points d’intégration, test d’acceptation.\n3. Critères décisionnels pour affecter propriétaire :\n   - Automatisable et routinier → AI\n   - Requiert jugement éthique/nuancé/légal → Humain\n   - Besoin d’efficacité + supervision humaine → AI + Humain (AI propose, humain valide)\n   - Données sensibles ou obligations d’audit → humain ou AI avec logging complet et approbation humaine\n   - Dépendances externes critiques (disponibilité/SLA) → Développeur/Architecte\n4. Signaux d’escalade : utilisation croissante, dépendance externe, SLA manqués, incidents sécurité, nécessité d’intégration continue.\n\nExemple concis (support client) :\n- Ingestion du ticket : AI (classification automatique)\n- Priorisation/triage : AI propose + humain valide (Both)\n- Rédaction réponse standard : AI\n- Réponses sensibles ou non-standard : humain\n- Envoi et suivi/metric : AI (monitoring), Devops définit alertes/SLO\n\nChecklist finale qu’une bonne réponse doit couvrir :\n- Cartographie étape par étape + outputs\n- Attribution claire avec justification basée sur critères concrets\n- SLA, tests d’acceptation et métriques par étape\n- Plan d’intégration (API/auth/logging) et responsabilités d’architecte\n- Conditions d’escalade et procédure d’audit/rollback"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Automation"
+      ],
+      "title": {
+        "en": "The artifact worked because it served a small t...",
+        "fr": "The artifact worked because it served a small t..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_010",
@@ -472,7 +562,17 @@
         "fr": "Responsable juridique — Ce que Claude peut faire de manière fiable\n- Rédiger un premier « redline » annoté (changements proposés, motifs courts) à partir d’un contrat source et d’un jeu d’instructions (objectifs commerciaux, clauses à protéger).  \n- Identifier incohérences, clauses manquantes courantes, et signaler risques contractuels typiques (indemnités, responsabilité, durée, modalités de paiement).  \n- Produire un sommaire exécutif listant les points à arbitrer par un avocat.\n\nLimitations concrètes\n- Ne pas remplacer l’avis juridique : Claude ne peut pas garantir conformité jurisprudentielle ni interpréter faits complexes.  \n- Ne pas appliquer automatiquement lois locales sans entrée explicite (précisez juridiction).  \n- Peut proposer formulations inappropriées pour des négociations sensibles — exiger révision par un avocat.\n\nResponsable de la pratique — Ce que Claude peut faire de manière fiable\n- Automatiser la préparation de packages de négociation (redline + liste d’arguments + playbook de concessions).  \n- Normaliser language et clauses types selon modèle interne (si modèles fournis).  \n- Extraire et agréger métriques (nombre de modifications, clauses fréquemment renégociées).\n\nLimitations concrètes\n- Ne pas décider de la stratégie de négociation ni prioriser issues business sans règles claires fournies.  \n- Ne pas tenir compte d’accords parallèles non fournis en entrée.\n\nPhrases recommandées à utiliser publiquement\n- « Claude prépare une première proposition de redline et un sommaire des risques ; un avocat revoit et valide avant signature. »  \nContrôles opérationnels à imposer : modèle standard, mention de juridiction, piste d’audit, revue humaine obligatoire, et seuils d’alerte pour clauses sensibles."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Automation",
+        "Business Value",
+        "Change Management"
+      ],
+      "title": {
+        "en": "Describe capability accurately",
+        "fr": "Describe capability accurately"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_011",
@@ -491,7 +591,17 @@
         "fr": "Workflow attendu (modèle opérationnel)\n1. Préparation : joindre le contrat intégral + playbook (sections clés et clauses standardisées) et préciser loi applicable, parties, version cible.\n2. Prompt Claude (exemple) : « Lis ce contrat et le playbook joint. 1) Extrait et énumère les clauses présentes (titres + résumés 1 ligne). 2) Signale toute déviation par rapport au playbook (déviation, article, pourquoi c’est différent). 3) Propose un redline (texte avec suppressions/insertions et justification brève pour chaque modification). 4) Liste obligations implicites potentiellement manquantes et degré de confiance pour chaque élément. Ne propose PAS d’acceptation finale. »\n3. Revue humaine : avocat lit les drapeaux, vérifie les obligations implicites listées, accepte/rejecte chaque modification et ajoute notes. Toute proposition avec score de confiance < 80% requiert double revue.\n4. Validation & audit : enregistre décision finale (qui, quand, motif). Aucun contrat envoyé sans signature humaine.\n\nRisques concrets & mitigations\n- Omission d’obligations implicites → checklist de contrôle humaine + double revue pour clauses critiques (indemnités, responsabilités, confidentialité).\n- Hallucinations / fausses références → exiger sources/renvois précis et confidence score.\n- Fuite de données sensibles → accès restreint, anonymisation préalable.\n- Erreurs de versioning → verrouillage de version et comparateur automatisé.\nKPIs & seuils\n- Réduction visée du temps ≈ 50%; taux d’acceptation initiale humain = 100%; échantillonnage post‑migration 10% pour contrôle qualité."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Automation",
+        "Claude Platform",
+        "Computer Vision"
+      ],
+      "title": {
+        "en": "Legal lead",
+        "fr": "Legal lead"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_012",
@@ -510,7 +620,17 @@
         "fr": "Ce que doit contenir une correction modèle — actionnable et vérifiable :\n\n1) Sortie attendue\n- Un diagramme simple (flowchart) + un tableau de tâches détaillé.\n- Chaque ligne du tableau : étape, acteur (AI/humain/hybride), entrée, sortie, métrique de succès, modes de défaillance, règle de délégation, point de contrôle humain, action d’escalade.\n\n2) Méthode pas-à-pas (à appliquer)\n- Choisir le workflow concret (ex. : tri de CV, modération de contenus, génération de factures).\n- Décomposer finement en tâches atomiques.\n- Pour chaque tâche : définir indicateurs mesurables (précision attendue, temps, coût).\n- Identifier données sensibles, conséquences d’erreur, fréquence.\n- Définir règles explicites de délégation (seuils, types d’inputs exclus, exceptions).\n- Spécifier contrôles humains (revue, approbation finale, audits) et journaux d’audit.\n\n3) Exemples de règles de délégation (concrètes)\n- Automatiser si score de confiance ≥ 0.95 ET pas de mots-clés sensibles.\n- Escalader si score 0.6–0.95 pour revue rapide (30s max).\n- Toujours humain si données PII/financières/légales, ou si impact financier > 1000€.\n\n4) Risques concrets à documenter\n- Surconfiance (automation bias), dérive du modèle, faux négatifs sur cas rares, fuite de données, absence de traçabilité, latence d’escalade.\n\n5) Validation et déploiement\n- Shadow mode 4 semaines, métriques de performance, seuils d’arrêt, plan de rollback.\n- Revue post-déploiement mensuelle + test sur jeux d’erreurs adverses.\n\nUne bonne réponse fournit le tableau + flowchart + au moins 3 règles de délégation chiffrées et un plan de validation/monitoring."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Phrases that quietly overstate",
+        "fr": "Phrases that quietly overstate"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_013",
@@ -529,7 +649,17 @@
         "fr": "Correction modèle — Plan solide (6 éléments) :\n\n1) Ingestion des données (exécution du code) : pipelines automatisés, validations de format et d’intégrité, logging immuable.  \n2) Prétraitement & enrichissement (exécution du code) : transformations reproductibles, tests unitaires des transformations, versionnage des jeux.  \n3) Entraînement & réglage (exécution du code + Skill) : protocoles expérimentaux définis par l’expert (hypothèses, hyperparamètres), journal d’expériences (MLflow ou équivalent).  \n4) Évaluation & validation (exécution du code + Skill humain) : suites de tests (performance, robustesse, biais), revue humaine des métriques et des exemples échec.  \n5) Déploiement en production — action irréversible/haute responsabilité (HUMAIN) : gate manuel obligatoire, checklist d’acceptation, approbation signée par rôle désigné.  \n6) Exploitation, surveillance et rollback — responsabilité humaine (HUMAIN) : monitoring continu, alertes, procédure de rollback et post-mortem, auditabilité.\n\nPlacement de la Skill et de l’exécution du code : la Skill humaine doit définir exigences, critères d’acceptation et approuver les étapes irréversibles (5,6) ; le code exécute automatisation, tests et déploiements conditionnels.\n\nContrôles concrets à inclure : contrôle d’accès RBAC, journaux immuables, CI/CD with quality gates, canary release, tests adversariaux, revue d’éthique.  \nRisques identifiés et mitigations : déploiement irréversible sans rollback (mitiger par canary + bouton kill), métriques mal spécifiées (mitiger par revue humaine), manque d’audit (mitiger par logging signé).  \n\nChecklist d’approbation (exemples) : tests unitaires OK, biais/documentation fournie, plan de rollback, monitoring activé, approbation formelle — signer avec identité."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Automation",
+        "Context Design",
+        "Design Patterns"
+      ],
+      "title": {
+        "en": "Strong map · all six correct: You kept the irre...",
+        "fr": "Strong map · all six correct: You kept the irre..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_014",
@@ -548,7 +678,17 @@
         "fr": "Checklist d’une bonne relecture des étapes déléguées et règles concrètes pour ne pas automatiser l’Étape 5 :\n\n1. Vérifier l’objet de la décision\n   - Est-ce une décision normative (préférence, éthique, jugement) ? -> garder humaine.\n   - Impact financier, légal ou sécurité > seuil défini -> garder humaine.\n\n2. Qualité et complétude de la rédaction\n   - Présence d’un critère mesurable par étape (oui/non). Si non, demander clarifications.\n   - Exigence minimale : 3 preuves factuelles, source ou métrique par option. Sinon, escalader.\n\n3. Critères d’automatisation (doit répondre à TOUTES)\n   - Décision purement factuelle et répétable.\n   - Données structurées et complètes.\n   - Confiance modèle/procédure ≥ 95% (ou seuil interne).\n   - Pas de implications éthiques/légales.\n\n4. Règles d’escalade concrètes (exemples)\n   - Si “ambiguïté” ou termes subjectifs (“pertinent”, “approprié”) → demander reformulation.\n   - Si confiance < seuil ou variance entre annotateurs > 10% → revue humaine.\n   - Si valeur monétaire/risque > X €/personne → approbation manuelle.\n\n5. Template de demande de correction (à renvoyer à l’auteur)\n   - Manque : [critère précis]\n   - Preuve requise : [type / nombre de sources]\n   - Exemple souhaité : [format attendu]\n   - Date de remise : [X]\n\nRisques concrets si on automatise l’Étape 5 prématurément :\n   - Décisions erronées/illégales, biais non détectés, perte de confiance utilisateur, coûts de correction élevés.\n\nAction immédiate recommandée : ajouter un gate “Revue humaine obligatoire” avec checklist ci‑dessus et règles d’escalade automatisées."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "Automation",
+        "Error Handling"
+      ],
+      "title": {
+        "en": "Feedback: Re-check the steps you delegated. The...",
+        "fr": "Feedback: Re-check the steps you delegated. The..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_015",
@@ -567,7 +707,17 @@
         "fr": "Réponse correcte : Vrai. La consigne de la leçon 5 est exacte — chaque étape doit être évaluée sur la réversibilité, l’enjeu et la responsabilité avant assignation, et toute étape irréversible doit être sous contrôle humain par défaut.\n\nCorrection modèle (points qu’un bon élève doit montrer) :\n- Verdict clair : expliquer pourquoi “Faux” est incorrect et donner la bonne réponse (“Vrai”) en une phrase.\n- Réversibilité — critères actionnables : peut-on annuler l’action sans perte de données ou effets permanents ? Indicateurs concrets : possibilité de rollback < X minutes, snapshots disponibles, logs d’audit, test de restauration validé. Si non, considérer irréversible.\n- Enjeu — critères actionnables : évaluer gravité × probabilité (sécurité physique, confidentialité, impact légal, coût financier, réputation). Définir seuils qui imposent revue humaine (p.ex. tout impact > €100k, risque de violation de données).\n- Responsabilité — critères actionnables : nommer rôle(s) responsables, chaîne d’escalade, autorité de décision, compétences requises et preuve de formation.\n- Règle d’affectation : automatiser seulement si (réversible ET faible enjeu ET responsabilité claire). Sinon, contrôle humain par défaut.\n- Mesures de mitigation : confirmations multi‑facteurs, environnements de staging, tests canary, journaux immutables, délais d’annulation, procédures d’escalade.\n- Exemples concrets : automatique OK pour déploiements canary réversibles ; humain requis pour suppression de base de données en production, décisions létales, actions réglementées.\n\nInclure documentation et justification pour chaque décision d’automatisation."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "Automation",
+        "Cost Optimization"
+      ],
+      "title": {
+        "en": "incorrect: Return to Lesson 5. Run each step ag...",
+        "fr": "incorrect: Return to Lesson 5. Run each step ag..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_016",
@@ -586,7 +736,17 @@
         "fr": "Une bonne correction montre des décisions de delegation-mapping claires, justifiées et testables. Points clés à couvrir :\n\n- Définition et catégories : préciser les modes de délégation (autonome, assistée / recommandation, requiert confirmation humaine, interdite) et critères appliqués.\n- Critères opérationnels et signaux : lister critères concrets (sensibilité des données, risque légal, impact sécurité/santé, besoin de jugement humain, information incomplète, demande explicite de l’utilisateur) et signaux détectables (mots-clés « paiement », « diagnostic », données personnelles, verbes d’action à haut impact).\n- Règles décisionnelles exemplaires :\n  - Autoriser autonome : tâches à faible risque et sans données sensibles (p. ex. recherche publique, résumé d’article).\n  - Assistée : recommandations pour décisions factuelles mais non critiques (p. ex. planification sans paiement).\n  - Confirmation humaine : actions irréversibles, paiements, modifications légales/contrats.\n  - Interdite : demande de fraude, instructions dangereuses, diagnostics cliniques complets.\n- Documentation et traçabilité : enregistrer la décision, critères déclenchants, justification, et option d’audit.\n- Tests et validation : cas d’usage positifs/négatifs, revues périodiques, métriques (taux d’escalade, erreurs).\n- Risques concrets à mentionner : sur-délégation (erreurs non détectées), sous-délégation (friction utilisateur), fuite de données, responsabilité légale, hallucinations.\n\nExemples concrets renforcent la réponse (p. ex. réservation payante → confirmation humaine)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "Automation",
+        "Compliance"
+      ],
+      "title": {
+        "en": "Skipped: Come back to this exercise before the ...",
+        "fr": "Skipped: Come back to this exercise before the ..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_017",
@@ -605,7 +765,17 @@
         "fr": "Analyse des exigences\n- Livrables clairement listés + critères d'acceptation mesurables (ex. performance ≤ X ms, conformité ISO Y).  \n- Technique : ateliers with stakeholders, user stories + critères d'acceptation, matrice de traçabilité exigences→tests.  \n- Preuve : document exigences signé + log des décisions.\n\nPlanification vérifiée\n- WBS détaillé, jalons clés, dépendances, chemins critiques identifiés.  \n- Estimations par tâche (effort, ressources) + réserve (p.ex. 10–20 % pour incertitude).  \n- Vérification : revue de planning avec parties prenantes et simulation de scénarios (retard/ressources).\n\nSeuil d'escalade\n- Déclencheurs quantifiés ex. : délai cumulé > 10 % du chemin critique, dépassement budgétaire > 8 %, blocage technique > 48 h.  \n- Niveau d'escalade : 1) Chef d’équipe, 2) PM, 3) Sponsor/executive.  \n- Format d’escalade : ticket formalisé + SLA de réponse (ex. 4 h pour incident critique).\n\nCartographie de délégation\n- RACI pour chaque livrable/tâche (Responsible, Accountable, Consulted, Informed).  \n- Autorités décisionnelles et substituts documentés (qui peut approuver changements ≤ X € ou Y % délai).  \n- Plan de relève et formation rapide pour postes critiques.\n\nCommunication avec parties prenantes\n- Matrice parties prenantes (intérêt/influence) + canal/cadence (hebdo digest, monthly steering).  \n- Templates : rapport d’avancement (statut, risques, actions), ordre du jour et compte‑rendu.  \n- KPI de suivi et preuve d’alignement : PV de réunion, approbations signées, registre des risques mis à jour."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Compliance"
+      ],
+      "title": {
+        "en": "Full marks · 5/5: Full command of workflow inte...",
+        "fr": "Full marks · 5/5: Full command of workflow inte..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_018",
@@ -624,7 +794,17 @@
         "fr": "Q1 → Leçon 2\n- Objectif d’apprentissage : maîtriser les concepts clés introduits en Leçon 2.\n- Erreurs fréquentes : confusion de définitions, sauter une hypothèse.\n- Actions correctives : relire les définitions et exemples de la Leçon 2 (15–20 min), réécrire la réponse correcte en 3 phrases, résoudre 2 exercices similaires sans notes, créer 2 flashcards (définition + contre-exemple).\n\nQ2 → Leçon 3\n- Objectif : appliquer la méthode présentée en Leçon 3.\n- Erreurs fréquentes : étapes de raisonnement manquantes, calculs incomplets.\n- Actions : reprendre pas à pas la méthode sur l’exemple du cours, refaire Q2 en détaillant chaque étape, comparer à la solution type et corriger les omissions. Faire 1 exercice d’application supplémentaire.\n\nQ3 → Leçon 4\n- Objectif : interpréter/adapter un concept à un nouveau contexte.\n- Erreurs fréquentes : application littérale sans adaptation, oubli des hypothèses.\n- Actions : lister les hypothèses de la Leçon 4, expliquer à voix haute comment elles s’appliquent à Q3, recréer la solution en 5–7 lignes.\n\nQ4 → Leçon 5\n- Objectif : implémentation pratique (logique, pseudo‑code ou calcul).\n- Erreurs fréquentes : erreurs de syntaxe, cas limites non traités.\n- Actions : relire l’exemple d’implémentation, corriger et tester une version minimale (ou pseudo‑code), ajouter tests pour 2 cas limites.\n\nQ5 → Leçon 6\n- Objectif : synthèse et évaluation critique.\n- Erreurs fréquentes : conclusions trop générales, pas de justification.\n- Actions : reformuler la conclusion en 2 phrases avec 2 justifications tirées du cours, proposer une alternative ou limite.\n\nProcessus général : chronométrez chaque révision (20–30 min), notez 3 points d’apprentissage corrigés, puis refaites chaque question sans aide pour vérifier la maîtrise."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Computer Vision",
+        "Context Design",
+        "Error Handling"
+      ],
+      "title": {
+        "en": "Feedback: Review the questions you missed: Q1 t...",
+        "fr": "Feedback: Review the questions you missed: Q1 t..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_019",
@@ -643,7 +823,17 @@
         "fr": "Problèmes identifiés\n- Trop vague : « Réexaminez le module » et « réalisez à nouveau l'exercice » ne disent pas quoi relire ni quelles preuves fournir.\n- Redondant et peu guidant : la phrase ne précise pas critères d’achèvement ni ressources.\n- Terme technique (« cartographie de délégation ») non contextualisé : l’apprenant peut ignorer les étapes attendues.\n\nCorrection modèle (message à afficher à l’apprenant)\nAction requise : relisez le module « Cartographie de délégation » (section 3.2) puis refaites l’exercice associé. Pour réussir, suivez ces étapes :\n1. Identifiez et listez les rôles (ex. : demandeur, approbateur, opérateur).\n2. Pour chaque rôle, précisez les actions autorisées et les limites (seuils, exceptions).\n3. Tracez les transferts d’autorité (qui délègue à qui) et notez les contrôles compensatoires.\n4. Documentez au moins un risque et la mesure de mitigation correspondante.\n5. Soumettez la carte (PDF ou capture d’écran) et un court commentaire (≤150 mots) expliquant vos choix.\n\nCritères d’acceptation\n- Carte complète (rôles + actions + délégations) + preuve visuelle.\n- Au moins un risque identifié avec mitigation.\n- Commentaire clair reliant la carte aux principes de sécurité du module.\n\nRaison : ces consignes rendent l’exercice mesurable, répétable et aligné sur la finalité pédagogique."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Context Design",
+        "Fundamentals",
+        "Output Formatting"
+      ],
+      "title": {
+        "en": "incorrect: Revisit the module before continuing...",
+        "fr": "incorrect: Revisit the module before continuing..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__04_020",
@@ -662,7 +852,17 @@
         "fr": "Cette consigne indique que vous devez d’abord compléter le quiz avant de poursuivre. Correction modèle — actions concrètes et contrôle qualité à viser :\n\nÉtapes à suivre (actionnables)\n- Revenir à la page du quiz et lire toutes les consignes avant de débuter.\n- Allouer un créneau calme (temps estimé indiqué sur la plateforme).\n- Répondre à toutes les questions ; ne laisser aucune réponse « vide » si le système l’autorise.\n- Utiliser la fonction « sauvegarder » régulière et finaliser en cliquant sur « soumettre ».\n- Confirmer la soumission : capture d’écran ou message de confirmation affiché par la plateforme.\n\nCritères de réussite (preuve que l’on peut continuer)\n- Statut du module passe à « complété » ou score requis atteint.\n- Reçu/confirmation visible dans l’historique des activités.\n- Accès débloqué au contenu suivant.\n\nPoints de contrôle et bonnes pratiques\n- Lire les ressources associées au quiz pour éviter erreurs par manque de préparation.\n- Gérer le temps par question ; revenir aux questions non résolues si nécessaire.\n- Réviser les réponses clés avant soumission.\n\nRisques concrets à éviter\n- Continuer sans quiz -> progression bloquée ou validation manquante.\n- Perte de données si la soumission n’est pas confirmée.\n- Risque d’échec par précipitation.\n\nQue faire en cas de problème technique\n- Rafraîchir/vider le cache, changer de navigateur, reconnecter.\n- Capturer l’erreur et contacter le support ou l’instructeur avec captures d’écran et identifiants du quiz."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Error Handling",
+        "Fundamentals",
+        "Prompt Engineering"
+      ],
+      "title": {
+        "en": "Skipped: Return to complete the quiz before adv...",
+        "fr": "Skipped: Return to complete the quiz before adv..."
+      }
     }
   ]
 }

@@ -341,7 +341,17 @@
         "fr": "1) Définition d’« done » et suite d’évaluation\n- Rédigez des critères mesurables par fonctionnalité : couverture des intents (≥95%), taux d’exactitude factuelle, taux d’échec géré (exceptions retournées au client <1%), latence p95 < X ms, absence de violation de sécurité.  \n- Choisissez une méthode de notation : binaire pour conformité, score continu (0–1) pour qualité, ou multi-dimensionnel (Sémantique / Sécurité / Latence).  \n- Exemple de prompt LLM-as-judge (few-shot) :\n  « Évalue la réponse A vs référence B selon ces 3 critères : pertinence(0–2), exactitude(0–2), sécurité(0–1). Donne score total et justification en 1 phrase. »\n- Calibrage : échantillon de n≥200 cas humains étiquetés, calculez Cohen’s kappa/inter-annotator agreement. Exécutez le juge LLM sur ces cas, tracez ROC/calibration curve, sélectionnez seuils qui atteignent précision désirée (p.ex. précision ≥ 0.9).\n\n2) Couche de tests et traçage\n- Tests unitaires : mocks des wrappers d’API, assertions sur exceptions et retours. Exemple (pseudo) : assert_tool_call(args).  \n- Tests d’intégration : environnements sandbox pour services externes, tests de quotas et d’erreurs réseau.  \n- Tests E2E : scénarios réels+cas adversariaux (injection d’instructions cachées, données corrompues). Exécuter en canary sur % de trafic.  \n- Résilience : tests de charge (ramp-up, burst), chaos testing (latence, 5xx), tests de limite de débit et queue saturation.  \n- Traçage/observabilité : corrélation_id, input_hash, model_version, tool_calls, tokens_used, latency_ms, judge_score, safety_flag. Expose métriques : success_rate, hallucination_rate, p95_latency, error_budget.  \n- CI/CD : exécution automatique des suites, block deploy si SLO non atteint, rollbacks automatiques, feature flags et circuit-breakers.\n\nRisques concrets à couvrir : dérive de modèle, biais non détecté par juge LLM, fuite d’information via tools, saturation de quotas, et erreurs silencieuses — surveillez safety_flag et alertes en temps réel."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Agentic Design"
+      ],
+      "title": {
+        "en": "You have built agents that work. This module is...",
+        "fr": "You have built agents that work. This module is..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_002",
@@ -360,7 +370,17 @@
         "fr": "Points clés qu'une bonne réponse doit couvrir — spécifique et actionnable :\n\n1. Cartographier la méthode à l’objectif\n- Sorties déterministes/fixées (ex. JSON trié) : correspondance exacte ou contrôle de forme (JSON Schema).\n- Collections non ordonnées (ex. trois capitales) : comparer ensembles — trier ou vérifier appartenance/longueur plutôt que string equality.\n- Textes ouverts (ex. justification) : juge humain ou modèle-évaluateur sémantique.\n\n2. Actions pratiques immédiates\n- Canonicaliser les sorties structurées (trier clés, normaliser espaces/encodage).\n- Valider schéma via JSON Schema/Avro pour structure obligatoire.\n- Pour listes, utiliser set equality ou comparaison multiensembles.\n- Pour texte libre, employer un pipeline hybride : contrôles automatiques (non vide, longueur, présence d’entités/clés) + juge échantillonné pour fidélité/complétude.\n\n3. Conception et réglage du juge\n- Rédiger un rubric clair et exemples positifs/négatifs.\n- Calibrer avec un jeu étiqueté ; mesurer Cohen’s kappa / agreement.\n- Tuner prompts (few-shot), température basse, et utiliser votes multiples ou agrégation.\n- Optimiser coût : filtrer via contrôles low-cost, échantillonnage stratifié (p.ex. 5–10% ou tous les échecs auto), cache des évaluations inchangées.\n\n4. Risques concrets et mitigations\n- Faux négatifs (exact match) → canonicalisation.\n- Faux positifs (checks faibles) → règles plus strictes + tests unitaires.\n- Coût/latence du juge → échantillonnage, modèle plus petit pour pré-filtrage, cache.\n- Biais/incohérence du juge → rubric, formation des annotateurs, agrégation.\n\n5. Checklist d’implémentation\n- Définir type de sortie → choisir évaluateur.\n- Implémenter validations automatiques en CI.\n- Créer jeu de calibration + rubric.\n- Planifier fréquence/échantillonnage du juge et monitorer coût/fiabilité."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Comparing how the same output scores under each...",
+        "fr": "Comparing how the same output scores under each..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_003",
@@ -379,7 +399,17 @@
         "fr": "Décomposer en étapes actionnables et critères mesurables.\n\n1) Définir le rubric: choisir dimensions claires (fidélité, complétude, ton, respect des instructions). Pour chaque dimension, donner une échelle numérique (ex. 1–5) avec des descripteurs exemplaires par note.\n\n2) Créer un corpus d’annotation: 1 000–5 000 exemples représentatifs, stratifiés par tâche/longueur/domaine. Répartir en train/val/test (70/15/15).\n\n3) Former et calibrer les annotateurs: guide, sessions d’exemples, adjudication. Mesurer accord inter-annotateur (Cohen’s kappa ou Krippendorff’s alpha) — viser alpha ≥ 0,7; si plus bas, affiner le rubric.\n\n4) Agréger labels: majorité ou score médian; pour cas divergents, adjudication par expert.\n\n5) Entraîner le juge (ou fine-tuner un modèle): prédire scores humains. Utiliser entraînement supervisé et retenir probabilités/score continu.\n\n6) Calibrer les probabilités/scores: Platt scaling (régression logistique), isotonic regression; évaluer ECE (Expected Calibration Error) et Brier score. Cibles: ECE < 0,05; Brier et MAE faibles (ex. MAE < 0,5 sur échelle 1–5).\n\n7) Évaluer performance: corrélation Spearman/Pearson avec juges humains, MAE, RMSE, calibration plots, intervalles de confiance par bootstrap. Evaluer sur slices (domaines, longueur, langage) et adversarial examples.\n\n8) Choix de seuils/usage: définir seuils décisionnels avec métriques coût-bénéfice (ROC/PR) et justification documentée.\n\n9) Déploiement et surveillance: tests en continu, recalibrations périodiques, logs d’erreurs, alertes si dérive; maintenir documentation, provenance des données et protocoles d’audit.\n\nCritères d’acceptation exemplaires: alpha ≥ 0,7; Spearman ≥ 0,7; MAE < 0,5; ECE < 0,05; tests adversariaux passés."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Cost Optimization",
+        "Development",
+        "Documentation"
+      ],
+      "title": {
+        "en": "Task typeGrading methodWhat it catchesWhere it ...",
+        "fr": "Task typeGrading methodWhat it catchesWhere it ..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_004",
@@ -398,7 +428,17 @@
         "fr": "Objectif attendu — ce que doit contenir une bonne réponse\n- Justification claire : privilégier la couverture (volume + diversité) plutôt que quelques cas parfaits.\n- Workflow itératif opérationnel : définir objectif → écrire prompt prototype → lancer éval large → analyser échecs par cas → modifier un seul levier → relancer → conserver seulement si amélioration nette.\n- Règle expérimentale : ne changer qu’un seul composant à la fois (prompt, modèle, exemples, récupération, post‑traitement).\n- Métriques et visibilité : suivre pass/fail par cas, taux global, régressions par cas critiques, distribution des erreurs — la vue par cas est prioritaire sur la moyenne.\n- Génération de cas : méthode et contrôle qualité (ex. seed + génération automatique + vérification manuelle échantillonnée ~10%).\n\nChecklist opérationnelle (exécutable)\n1. Créer 20–200 cas couvrant cas limites, entrées irrégulières, longueurs extrêmes.\n2. Automatiser scoring (regex/heuristique + labels) et garder l’ID de cas.\n3. Exécuter baseline et exporter résultats par cas.\n4. Identifier catégories d’échec (formatage, factualité/retrieval, contexte long, hallucination).\n5. Choisir un levier à modifier → appliquer → relancer uniquement sur suite complète.\n6. Comparer par‑cas : conserver changement si amélioration nette sans régression critique.\n7. Rééchantillonner 10% des cas générés pour validation humaine.\n\nExemple de prompt pour générer variantes (Claude)\n\"À partir de ces 10 exemples marqués [insérer], génère 100 variantes couvrant : fautes typographiques, formulations ambiguës, entrées très longues, et entrées courtes. Marque chaque cas par type et fournis la réponse attendue.\"\n\nRisques concrets à surveiller : biais d’échantillon (générer trop de variantes similaires), sur‑optimisation sur heuristiques de scoring, fausses positives d’autoscoring, régressions masquées par moyennes."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Coverage matters more than perfection",
+        "fr": "Coverage matters more than perfection"
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_005",
@@ -417,7 +457,17 @@
         "fr": "Points clés qu’une bonne correction doit couvrir (actionnable et spécifique) :\n\n- Règle d’or : ne changer qu’un seul composant à la fois. Composants typiques : prompt (texte), nombre d’exemples few-shot, modèle (ou température), mémoire/récupération, post‑traitement. Exemple de séquence : 1) capturer baseline (version, seed, métriques, sorties par cas), 2) changer uniquement le prompt en ajoutant 1 exemple, 3) réexécuter, 4) comparer par cas, 5) conserver ou rollback.\n\n- Mesure par cas, pas seulement moyenne : exporter un tableau avec colonne « cas », « sortie baseline », « sortie expérimentale », « verdict juge », « catégorie d’échec ». Cela montre si une amélioration masque des régressions.\n\n- Catégoriser les échecs (concrets) : format (mauvais JSON/CSV), factualité (hallucination / données manquantes -> retrieval), contexte (tronqué sur longues entrées), prompt-following (style/ton), performance (latence, coût). Pour chaque cas, spécifier action corrective ciblée (ex. : format → renforcer instructions de sortie; retrieval → augmenter fenêtre ou filtrer sources).\n\n- Calibration du juge : construire un rubrik clair, annoter manuellement ~100 cas pour mesurer précision du juge automatique, utiliser bootstrap ou test A/B (n≥30-50 par variante) pour signaler significativité avant adoption.\n\n- Reproductibilité & gouvernance : versionner prompts, seeds et dataset; enregistrer coût/latence; appliquer rollback si régression au-delà d’un seuil.\n\n- Exemple d’itération concrète : baseline → ajouter 1 exemple illustratif → exécuter 200 cas → comparer par-cas → si +F1 et pas >2 régressions critiques, conserver; sinon revert et essayer changement ciblé (p.ex. retrieval)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "The strategy that makes the loop work is changi...",
+        "fr": "The strategy that makes the loop work is changi..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_006",
@@ -436,7 +486,17 @@
         "fr": "Actions correctives à viser (concrètes et vérifiables)\n\n1) Créer un ensemble gradué et un holdout\n- Construire ~20 cas couvrant: une date unique, deux dates (ordre chronologique et texte), aucune date, date relative (“mardi prochain”), plages (“du 3 au 5 mai”), formats multiples (DD/MM/YYYY, MMM D), fuseaux, langues.\n- Marquer une portion (20–30%) comme holdout non utilisée pour développement.\n\n2) Spécifier le comportement attendu (exemples vérifiés)\n- Si une seule date → renvoyer sa date normalisée (ISO 8601).\n- Si deux dates → règle explicite (ex. \"renvoyer la plus proche/la première mentionnée/la plus ancienne\") et exemples.\n- Si aucune date → renvoyer null+raison.\nExemples:\n- Input: \"Réunion le 12/07/2026 ou le 09/08/2026.\" Output attendu: \"2026-07-12 (première mentionnée)\".\n- Input: \"Aucun rendez-vous.\" Output: null.\n\n3) Prompt modifié (exemple)\n\"Extrais la date cible du message. Si plusieurs dates, renvoie la PREMIÈRE MENTIONNÉE en ISO YYYY-MM-DD; si aucune, renvoie NULL. Réponse: <ISO ou NULL>.\"\n\n4) Procédé d’évaluation et prévention des régressions\n- Automatiser ces cas dans CI: seuil de précision minimal (p.ex. 95%) et alertes.\n- Inclure holdout dans évaluations périodiques.\n- Utiliser le modèle pour générer cas limites (prompt: \"Énumère 20 cas limites pour extraction de dates\") puis valider manuellement.\n\nRisques identifiés\n- Ambiguïtés de règles (quelle date choisir) → documenter clairement.\n- Formats/fuseaux non couverts → ajouter cas.\n- Surconfiance si pas de holdout → corriger via validation indépendante."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Automation",
+        "Development",
+        "Digital Transformation"
+      ],
+      "title": {
+        "en": "The review found no bug in the model or in the ...",
+        "fr": "The review found no bug in the model or in the ..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_007",
@@ -455,7 +515,17 @@
         "fr": "Correction modèle (ce qu’une bonne réponse doit couvrir)\n\n1) Tests fonctionnels — objectifs et assertions concrètes\n- Vérifier schéma et types: code HTTP 200, body JSON, champs attendus (ex: id:string, text:string, score:float), formats (ISO8601 pour dates).\n- Vérifier analyzabilité: text non vide, parsable en JSON si attendu, longueur minimale, pas de caractères non-UTF8.\n- Gérer erreurs: 4xx/5xx et message d’erreur structuré.\nExemple (pytest, pseudo):\n```\nresp = call_claude({\"prompt\":\"...\"}); assert resp.status==200\nbody=resp.json(); assert isinstance(body[\"id\"], str); assert isinstance(body[\"text\"], str)\nassert len(body[\"text\"])>0\n```\n\n2) Tests d’intégration — points clés\n- Tester le handoff: récupérer données (fixture), appliquer transformation, envoyer au modèle; vérifier que le modèle reçoit exactement le payload transformé.\n- Assertions intermédiaires: valider la sortie du fetcher, la transformation, puis la réponse du modèle.\n- Exemples d’échecs à couvrir: champ renommé, encodage modifié, nettoyage/escaping manquant, données tronquées.\n\n3) Tests E2E — points clés\n- Exécuter parcours utilisateur réel, valider résultat final et latence acceptable.\n- Inclure cas réels: données manquantes, réponses longues, retry.\n- Garder E2E rares et stables (smoke + nightly).\n\n4) Traçage et diagnostic (actionnable)\n- Injecter correlation_id unique dans chaque requête et propager entre composants.\n- Logs structurés JSON: timestamp, correlation_id, component, step, latency, status, snippet payload (ou pointer S3).\n- Sauvegarder request/response complets pour échecs (bucket chiffré), inclure headers, body, modèle-id, token usage.\n- Exposer endpoints de replay pour rejouer exactement la transaction.\n- Traces distribuées + metrics (latency, error rate) et alertes quand handoff rate dépasse seuil.\n\n5) Risques concrets à mentionner\n- Champ renommé/typé différemment (silent break).\n- Encodage/troncation sur handoff.\n- Timeouts et retries masquant la vraie cause.\n- Modèle hallucination non détectée par schéma.\n- Logs insuffisants empêchant corrélation.\n\nUne bonne réponse fournirait exemples de tests (fonctionnel + intégration) et une stratégie de traçage avec correlation_id, logs structurés et stockage des payloads pour replay."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Claude Platform",
+        "Cost Optimization"
+      ],
+      "title": {
+        "en": "A functional test checks that one Claude call r...",
+        "fr": "A functional test checks that one Claude call r..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_008",
@@ -474,7 +544,17 @@
         "fr": "Rupture probable : interface entre les deux composants (consommateur ↔ fournisseur). Mécanisme typique : mismatch de contrat/format (champ renommé/supprimé, type changé, nullable non géré) ou comportement asynchrone (timeout/retour partiel). Les tests unitaires ne le détectent pas parce qu’ils mockent l’interface.\n\nCorrection ciblée et actionnable :\n- Corriger le contrat ou ajouter un adaptateur côté consommateur qui normalise les réponses (ex. fallback sur ancien nom de champ, validation stricte). Exemple de patch minimal en Python :\n  value = payload.get(\"newName\") or payload.get(\"oldName\")\n- Ajouter des tests automatisés :\n  1) Contract test (consumer-driven contract, ex. Pact) pour verrouiller le format attendu entre les deux équipes — détecte régressions au niveau de l’API.\n  2) Test d’intégration end-to-end qui exécute réellement les deux composants avec des données réelles/fixture pour couvrir la transition. Intégrer ce test en CI.\n\nExemple d’intégration simple (pytest) :\nimport requests\ndef test_end_to_end_real_service():\n    resp = requests.get(\"https://service-fournisseur/api/resource\")\n    assert resp.status_code == 200\n    data = resp.json()\n    assert \"expectedField\" in data  # vérifie format réel\n\nNiveau de test qui aurait détecté l’erreur : test d’intégration entre composants (ou idéalement un test de contrat consommateur-fournisseur exécuté en CI). Ajoutez aussi traçage/metrics pour alerter sur champs manquants en production."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "How to prevent it",
+        "fr": "How to prevent it"
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_009",
@@ -493,7 +573,17 @@
         "fr": "Rupture identifiée\n- Où : la fonction build_prompt(chunks).\n- Mécanisme : mismatch de contrat/format — retrieve() renvoie des objets (dicts avec clé \"content\") mais build_prompt insère les objets tels quels (ou leur repr. Python) au lieu d'extraire .content, d'où un prompt non documenté et une réponse non liée.\n\nCorrection ciblée (actionnable)\n1. Corriger build_prompt pour extraire explicitement le texte :\n   - Exemple minimal :\n     def build_prompt(chunks):\n         texts = []\n         for c in chunks:\n             if isinstance(c, dict) and \"content\" in c:\n                 texts.append(c[\"content\"])\n             else:\n                 texts.append(getattr(c, \"content\", str(c)))\n         return assemble_prompt(texts)\n2. Ajouter validation d’entrée (raise/TypeError si aucun content) et logging clair quand le format est inattendu.\n3. Ajouter une suite de tests :\n   - Unit test pour build_prompt qui passe des chunks = [{\"content\":\"A\"},{\"content\":\"B\"}] et assert que \"A\" et \"B\" apparaissent dans le prompt.\n   - Test d’intégration retrieve→build_prompt qui vérifie que le prompt contient un extrait connu renvoyé par retrieve.\n\nNiveau de test qui l’aurait détecté\n- Le plus ciblé : un test unitaire pour build_prompt (détecte le bug isolé). Un test d’intégration retrieve→build_prompt fournirait une seconde couche de sécurité pour les contrats entre modules."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Business Value",
+        "Development",
+        "Error Handling"
+      ],
+      "title": {
+        "en": "Diagnose which test level a failure belongs to",
+        "fr": "Diagnose which test level a failure belongs to"
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_010",
@@ -512,7 +602,17 @@
         "fr": "Correction modèle (exécutable + bonnes pratiques)\n\nExemple minimal et robuste (Python) :\n```python\nchunks = retrieve(query)  # retourne liste de dicts avec au moins \"content\", optionnellement \"score\",\"source\"\n# filtrer, trier et extraire le texte\nvalid = [c for c in chunks if c.get(\"content\")]\nvalid = sorted(valid, key=lambda c: c.get(\"score\", 0), reverse=True)\ncontents = [c[\"content\"].strip() for c in valid]\n\n# limiter la taille du contexte (approx. par caractères ou tokenizer)\nMAX_CHARS = 10000\ncontext = \"\\n---\\n\".join(contents)\nif len(context) > MAX_CHARS:\n    context = context[:MAX_CHARS].rsplit(\"\\n\", 1)[0]  # ne pas couper brutalement\n\nif not context:\n    context = \"Aucun document pertinent trouvé.\"\n\nprompt = build_prompt(question, context)\n```\n\nPoints clés qu’une bonne réponse doit couvrir\n- Valider l’existence de la clé \"content\" et ignorer les chunks vides.\n- Trier par pertinence (score) et dédupliquer les contenus proches.\n- Gérer la longueur : tronquer avec un tokenizer ou par caractères pour respecter les limites du modèle.\n- Préserver métadonnées (source, page) et inclure citations si demandé.\n- Fallback clair quand retrieve() retourne rien.\n- Journaliser erreurs et latences; retenter en cas de timeout.\n\nRisques concrets et mitigations\n- Surchargement du prompt → tronquer ou résumer avant inclusion.\n- Information contradictoire → indiquer les sources et demander clarification.\n- Injection de contenu malveillant → nettoyer/sanitiser HTML, refus explicite si contenu sensible."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Context Design",
+        "Development",
+        "Error Handling"
+      ],
+      "title": {
+        "en": "context = \"\\n\".join(c[\"content\"] for c in chunk...",
+        "fr": "context = \"\\n\".join(c[\"content\"] for c in chunk..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_011",
@@ -531,7 +631,17 @@
         "fr": "Décision-clé : pour chaque échec, poser « attendre et réessayer la même requête fonctionnerait‑il ? » — si oui, réessayable ; sinon, terminal. Heuristiques concrètes :\n- Statuts HTTP : 429/503/504 → généralement réessayable ; 4xx (400/401/403/404) → généralement terminal.\n- Erreurs réseau/transitoires (timeouts, connexions fermées, DNS) → réessayables. Erreurs de validation ou de schéma → terminales.\n- Effets secondaires connus (création de ressources sans idempotence) → traiter comme potentiellement dangereux à réessayer.\n\nActions immédiates et patterns :\n- Retry with exponential backoff + jitter, limite d’essais et timeout global.\n- Idempotency keys pour opérations mutatives (ex. header Idempotency-Key).\n- Circuit breaker + bulkheads pour isoler la dépendance fautive.\n- Fallbacks/graceful degradation et file d’attente avec dead‑letter queue pour asynchrone.\n- Validation côté client/serveur pour éviter requêtes malformées.\n\nExemple minimal (pseudo‑Python) :\nattempts = 0\nwhile attempts < MAX:\n    try: call()\n       break\n    except TransientError:\n       sleep(backoff_with_jitter(attempts))\n       attempts += 1\n    except PermanentError:\n       raise\n\nObservabilité et sécurité :\n- Classer et métriquer (taux d’échecs réessayés vs terminaux), traces distribuées, alerts sur augmentation de retries ou latences.\nRisques concrets : tempête de retries, doublons/effets secondaires, consommation CPU/mémoire, indisponibilité aggravée, corruption d’état. Checklist attendu : classification claire, stratégie de retry/idempotence, limites/safeguards, instrumentation et plan de mitigation."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Development",
+        "Error Handling",
+        "RAG Architecture"
+      ],
+      "title": {
+        "en": "Surviving production failure: tool errors",
+        "fr": "Surviving production failure: tool errors"
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_012",
@@ -550,7 +660,17 @@
         "fr": "Règle simple et première décision\n- Tester : \"Attendre et réessayer exactement la même requête fonctionnerait‑il raisonnablement ?\"\n  - Oui → réessayable. Non → terminale.\n\nCatégories et actions immédiates\n- RETRIABLE = {429, 529, 500, 502, 503, 504}\n  - Action : réessayer avec backoff exponentiel + jitter, limiter nombre d’essais.\n  - Exemple pratique : max_attempts = 5, base_delay = 200–500 ms, factor = 2, jitter random(0.5–1.5).\n  - Exiger idempotence (ou utiliser token d’idempotence) avant de réessayer des opérations mutatives.\n- TERMINAL = {400, 401, 403, 404}\n  - Action : ne pas réessayer la même requête ; corriger la requête ou authentification.\n  - Exception contrôlée : si 401 peut être causé par token expiré, implémenter une logique de refresh unique puis retenter une fois (considérer cela comme une transformation de la requête, pas un simple retry).\n\nOpérations d’exploitation à implémenter\n- Logging structuré : status, request_id, payload hash, retry_count, latency, backend_id.\n- Metrics/alerting : taux d’erreurs réessayables > seuil (ex. >1% sur 5min) → alerte.\n- Circuit breaker + backpressure : ouvrir circuit si taux d’erreurs réessayables élevé pour éviter thundering‑herd.\n- Runbook : seuils précis (ex. 5xx > 5% pendant 10 min → escalation infra).\n- Tests en production : chaos/chaîne de pannes pour valider comportements de retry, idempotence et observabilité.\n\nRisques concrets à mentionner\n- Boucles de retry causant amplification de charge.\n- Coûts/latence élevés dus à réessais non contrôlés.\n- Corruption d’état si opérations non idempotentes sont réessayées.\n- Silence des erreurs terminales entraînant mauvaise UX.\n\nPoints qu’une bonne réponse doit couvrir\n- définition claire réessayable vs terminale, mapping codes → action, stratégie de retry (backoff + jitter + limites), idempotence, observabilité/alerting, circuit breaker et runbook."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Claude Platform",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Production introduces failures a prototype neve...",
+        "fr": "Production introduces failures a prototype neve..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_013",
@@ -569,7 +689,17 @@
         "fr": "Interprétation attendue\nCette instruction signifie que l’étape actuelle peut être mise en pause et reprise plus tard. Une bonne réponse montre que vous savez comment préserver l’état de travail, documenter ce qui manque et garantir une reprise reproductible.\n\nActions concrètes à réaliser avant de « partir » :\n- Sauvegarder l’état du code : git add/commit avec message clair (ex. git commit -m \"checkpoint: implémentation X — tests unitaires manquants\").\n- Créer une branche si le travail est expérimental (git checkout -b checkpoint/nom-feature).\n- Exporter l’environnement (pip freeze > requirements.txt ou conda env export > env.yml) et noter versions critiques.\n- Sauvegarder les données d’entrée/state (dump DB, snapshot Docker, fichiers tmp).\n- Écrire 3–5 lignes dans README/checkpoint.md : objectif, tâches restantes, hypothèses, commandes pour reprendre et tests à valider.\n- Lister ticket(s) ou checklist des prochaines étapes et temps estimé.\n\nRisques concrets et mitigations\n- Perte de travail non commité → mitigation : commits réguliers et push vers remote.\n- Incompatibilité d’environnement à la reprise → mitigation : exporter env + Docker image.\n- Contexte oublié (pourquoi pause) → mitigation : note explicative dans checkpoint.md.\n- Données sensibles exposées lors de sauvegarde → mitigation : chiffrer dumps ou exclure secrets via .gitignore/secrets manager.\n\nCritères d’évaluation d’une bonne reprise\n- Reprise automatisable en 3 commandes documentées.\n- Tests unitaires de base passent après ré-import.\n- Description des tâches restantes et critères de succès clairs."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Automation",
+        "Context Design",
+        "Development"
+      ],
+      "title": {
+        "en": "Skipped: You can return to this checkpoint at a...",
+        "fr": "Skipped: You can return to this checkpoint at a..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_014",
@@ -588,7 +718,17 @@
         "fr": "Correction modèle (objectif : rendre l’évaluation comparable et défendable)\n\n1) Sorties concrètes attendues (exemples précis)\n- Pour une action à entreprendre : titre succinct; 3 actions numérotées; pour chaque action — responsable (role ou nom), échéance (date ou délai), critère mesurable de réussite.\n- Pour un rapport de bug : 1 phrase de résumé; étapes de reproduction numérotées (environnement, versions, commandes/inputs); résultat observé vs attendu; logs/captures si pertinents; gravité et workaround conseillé.\n\n2) Échelle ancrée (exemple opérationnel 1–10)\n- 1–3 : manques critiques (au moins un élément requis absent : pas d’étapes de reproduction / pas de responsable / pas de critère de réussite).\n- 4–7 : partiel (éléments présents mais ambigus ou incomplets — p.ex. responsable = “équipe” sans rôle, étapes manquent de paramètres).\n- 8–10 : complet et fidèle (tous les éléments requis clairs, vérifiables et actionnables ; 10 = exemplaire, immédiatement exécutable).\n\n3) Instructions au juge (phrase courte et actionnable)\n- Vérifier la présence de chaque champ obligatoire. Si un champ absent → fail et score réduit selon gravité.\n- Si tous présents mais ambiguïtés empêchent exécution reproductible → score intermédiaire.\n- Noter exemples précis d’omission dans le feedback.\n\n4) Fiabilité & défendabilité\n- Fournir 5 exemples annotés (“gold”) couvrant cas 2–3–8–10 pour calibrer.\n- Documenter définitions de “ambigu”, “reproductible”, “mesurable” pour soutenir la notation en examen."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Business Value",
+        "Development",
+        "Hallucination Prevention"
+      ],
+      "title": {
+        "en": "All correct: You named a concrete output for ea...",
+        "fr": "All correct: You named a concrete output for ea..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_015",
@@ -607,7 +747,17 @@
         "fr": "Erreur identifiée : la grille doit contenir À LA FOIS un comportement attendu observable et une échelle ancrée (descripteurs concrets pour chaque niveau). Correction modèle — étapes actionnables puis exemple.\n\nÉtapes actionnables\n1. Énoncer le comportement attendu de façon observable et mesurable (verbes d’action : expliquer, démontrer, justifier).  \n2. Lister indicateurs vérifiables (quoi regarder : présence d’argument, sources citées, temps de parole, réponses aux questions).  \n3. Construire une échelle ancrée (3–5 niveaux) avec des libellés clairs et pour chaque niveau : phrase courte + exemples d’évidence observable.  \n4. Préciser règle de notation (choisir le niveau le plus élevé entièrement démontré) et instructions de calibration pour les évaluateurs.  \n5. Tester sur 3 cas réels et ajuster formulations ambiguës.\n\nExemple (compétence : Présenter une recommandation stratégique)\nComportement attendu : Présente une recommandation claire, étayée par données pertinentes, et répond aux questions clés des parties prenantes.\nÉchelle 4 niveaux\n- 4 — Exemplaire : Recommandation concise + 2 sources de données chiffrées, scénario d’impact, répond de manière prompte et complète à toutes les questions. (ex. slide avec tableau, simulation, réponses précises)\n- 3 — Conforme : Recommandation claire, appuyée par au moins 1 source et justification logique, répond aux questions courantes mais pas à toutes. (ex. slide avec graphique + argumentation)\n- 2 — Partiel : Recommandation vague ou mal liée aux données ; réponses partielles aux questions. (ex. absence de chiffres, réponses hésitantes)\n- 1 — Insuffisant : Pas de recommandation claire, pas de données, incapable de répondre aux questions.\nRègle d’attribution : choisir le niveau dont tous les éléments d’évidence sont présents. Calibration : deux évaluateurs sur 10 échantillons pour aligner judgements."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Development",
+        "Error Handling",
+        "Evaluation"
+      ],
+      "title": {
+        "en": "Partial: You completed the expected behaviors b...",
+        "fr": "Partial: You completed the expected behaviors b..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_016",
@@ -626,7 +776,17 @@
         "fr": "Expected behavior (exemple) — nommer la sortie attendue : « Produire un résumé en français de la transcription en 5–7 phrases (50–80 mots) listant les 4 points-clés, en indiquant les intervenants correspondants et sans ajouter d’informations non présentes dans la transcription. »\n\nBarème détaillé (échelle 1–10) — critères pondérés : exactitude (40%), couverture des points-clés (30%), concision/style (15%), attribution des intervenants (10%), absence d’invention (5%).\n\nScores et signification concrète :\n- 9–10 (Excellent) : ≥95% d’exactitude factuelle; tous les points-clés (4) présents; longueur 50–80 mots; intervenants correctement attribués; 0 erreurs factuelles.\n- 7–8 (Bon) : 85–94% d’exactitude; 3–4 points-clés présents; 1 omission mineure ou 1 formulation ambiguë; 0–1 petites erreurs.\n- 5–6 (Acceptable) : 65–84% d’exactitude; 2–3 points-clés présents; longueur acceptable mais style maladroit; jusqu’à 2 erreurs factuelles mineures.\n- 3–4 (Insuffisant) : 40–64% d’exactitude; 1–2 points-clés présents; résume trop long/ court; 3+ erreurs mineures ou 1 erreur importante.\n- 1–2 (Inacceptable) : <40% d’exactitude; points-clés manquants ou inventés; style inadapté; erreurs factuelles majeures.\n\nChecklist d’évaluation rapide :\n- Les 4 points-clés sont-ils identifiables ? (oui/non)\n- Y a-t-il des ajouts non présents dans la transcription ? (oui/non)\n- Longueur entre 50–80 mots ? (oui/non)\n- Attributions des intervenants correctes ? (oui/non)\n\nDocumenter une phrase justificative (1–2 lignes) pour tout score ≤6 en précisant omissions et erreurs."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Business Value",
+        "Development"
+      ],
+      "title": {
+        "en": "Revisit: Your expected_behavior restates the in...",
+        "fr": "Revisit: Your expected_behavior restates the in..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_017",
@@ -645,7 +805,17 @@
         "fr": "Problème identifié : retrieve() renvoie des chunk dicts (ex. {'id':..., 'content':...}) tandis que build_prompt() traitait chaque chunk comme une string et n’utilisait pas le champ content — d’où un contexte mal formé. Correction en 3 actions concrètes :\n\n1) Adapter build_prompt pour extraire content (et être défensif) :\n```\ndef build_prompt(chunks):\n    pieces = []\n    for c in chunks:\n        if isinstance(c, dict):\n            if 'content' not in c:\n                raise ValueError(\"chunk dict missing 'content'\")\n            pieces.append(c['content'])\n        elif isinstance(c, str):\n            pieces.append(c)\n        else:\n            raise TypeError(f\"Unsupported chunk type: {type(c)}\")\n    return PROMPT_TEMPLATE.format(context=\"\\n\".join(pieces))\n```\n\n2) Ajouter/mettre à jour le contrat (docstring) : retrieve() renvoie List[dict] avec clé 'content' OU build_prompt accepte les deux formats. Documenter clairement le format attendu.\n\n3) Écrire un test d’intégration qui vérifie exactement la jonction :\n```\ndef test_retrieve_build_prompt_integration():\n    chunks = [{'id': 1, 'content': 'TexteA'}, {'id': 2, 'content': 'TexteB'}]\n    prompt = build_prompt(chunks)\n    expected = PROMPT_TEMPLATE.format(context=\"TexteA\\nTexteB\")\n    assert prompt == expected\n```\nCe test capture la régression précédente (ignorance de 'content').\n\nBonnes pratiques complémentaires : ajouter un test unitaire qui passe des strings (compatibilité) et un message d’erreur clair si la clé 'content' manque. Commit message suggéré : \"fix: build_prompt extracts chunk['content'] and add integration test for retrieve→build_prompt junction\"."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Context Design",
+        "Development",
+        "Error Handling"
+      ],
+      "title": {
+        "en": "Correct: You chose Option C and named the integ...",
+        "fr": "Correct: You chose Option C and named the integ..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_018",
@@ -664,7 +834,17 @@
         "fr": "Problème identifié\n- La trace (ou les segments) est passée deux fois : au parser et à l'appel modèle. À l’étape 2, on concatène les segments dans le prompt sans lire explicitement le champ content (p. ex. on utilise l’objet entier ou la clé incorrecte), donc le prompt contient des objets mal formés ou undefined. Un composant isolé peut sembler correct ; la défaillance n’apparaît qu’en intégration.\n\nCorrection concrète et actions\n1. Contrat de données explicite\n   - Définir le schéma attendu : [{ id, content: string, role?, meta? }].\n   - Valider dès la sortie du parser (runtime checks/TypeScript interface).\n\n2. Construction du prompt (ex. JS)\n   - Utiliser explicitement content :\n     const segmentsText = segments.map(s => String(s.content ?? '')).filter(Boolean).join('\\n');\n     const prompt = `${systemPrompt}\\n\\n${segmentsText}\\n\\n${userInstruction}`;\n3. Ne pas dupliquer la trace\n   - Envoyer la trace soit via un paramètre structuré (metadata) soit inline dans le prompt, pas les deux.\n   - Exemple : callModel({ prompt, traceId }) ou callModel({ messages: [...], trace: undefined })\n\n4. Tests et monitoring\n   - Test unitaire : parser -> segments -> buildPrompt -> assert(prompt contient uniquement content).\n   - Test d’intégration : bout en bout vérifiant que la même donnée n’est pas serialisée deux fois.\n   - Logs/metrics : journaliser tailles de prompt, clés manquantes, et erreurs de sérialisation.\n\nRisques concrets\n- Prompt corrompu (objets sérialisés) -> réponses incohérentes.\n- Fuite de métadonnées/confidentialité si trace envoyée deux fois.\n- Dépassement de tokens si duplication.\n\nCritère de réussite\n- Prompt final contient uniquement le texte prévu (champ content), validation verte sur schema, et aucun doublon de trace dans la requête modèle."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Business Value",
+        "Context Design",
+        "Development"
+      ],
+      "title": {
+        "en": "Revisit: You picked Option A or B, but the pars...",
+        "fr": "Revisit: You picked Option A or B, but the pars..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_019",
@@ -683,7 +863,17 @@
         "fr": "Correction modèle :\n\nProblème identifié — correct : absence de backoff (time.sleep(0)), retry pour toutes les exceptions (y compris codes terminaux) et aggravation des limites de débit. Correction concrète et actionnable :\n\n1) Catégoriser les erreurs\n- Ne retenter que sur erreurs transitoires : 429 (rate limit), 5xx, erreurs réseau temporaires.\n- Ne pas retenter sur codes terminaux : 400, 401, 403, 404.\n\n2) Respecter Retry-After si fourni\n- Si l’en-tête Retry-After existe, attendre sa valeur avant de retenter.\n\n3) Exponential backoff + jitter\n- base_delay = 1s, multiplier = 2, max_delay = 60s, jitter = random.uniform(0, 1s).\n- limiter de tentatives (p. ex. max_retries = 5).\n\n4) Vérifier idempotence\n- Ne retenter que pour méthodes idempotentes (GET, PUT, DELETE); pour POST, nécessiter logique métier.\n\n5) Logging and metrics\n- Journaliser tentative, délai et raison finale d’échec.\n\nExemple Python (requests) :\n\nimport time, random, requests\ndef request_with_backoff(method, url, max_retries=5, **kwargs):\n    for attempt in range(1, max_retries+1):\n        try:\n            r = requests.request(method, url, **kwargs)\n            if r.status_code == 429:\n                ra = r.headers.get(\"Retry-After\")\n                wait = float(ra) if ra else None\n            elif 500 <= r.status_code < 600:\n                wait = None\n            else:\n                return r  # succès ou code terminal (400..499)\n            if wait is not None:\n                time.sleep(wait)\n            else:\n                backoff = min(60, (2 ** (attempt-1))) + random.uniform(0,1)\n                time.sleep(backoff)\n        except (requests.exceptions.ConnectionError,\n                requests.exceptions.Timeout) as e:\n            if attempt == max_retries:\n                raise\n            backoff = min(60, (2 ** (attempt-1))) + random.uniform(0,1)\n            time.sleep(backoff)\n    raise RuntimeError(\"Échec après retries\")"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Development",
+        "Error Handling"
+      ],
+      "title": {
+        "en": "Model answer: The defect: there is no backoff b...",
+        "fr": "Model answer: The defect: there is no backoff b..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_020",
@@ -702,7 +892,17 @@
         "fr": "Correction modèle :\n\nTous les scénarios sont pertinents. Voici une version opérationnelle et vérifiable à viser.\n\nScénario 1 — Haiku (volume élevé, faible risque)\n- Règle : utiliser Haiku si complexity_score < 0.3 ET expected_value_per_request < 50€.\n- Contrôles : audit aléatoire 1% des réponses ; KPI qualité (exactitude ou satisfaction) ≥ 95% sinon escalade.\n- Coût cible : prioriser latence et coût par requête ; plafonner budget mensuel Haiku.\n\nScénario 2 — Opus (raisonnement complexe, fort coût d’erreur)\n- Règle : Opus si complexity_score ≥ 0.8 OU potential_loss > 500€.\n- Protections : seuil de confiance (confidence_score) : si < 0.85 → human-in-loop ; exiger sources / preuves ; log complet pour traçabilité.\n- KPI sécurité : taux d’erreur toléré ≤ 1% ; test A/B avant bascule.\n\nScénario 3 — Trafic mixte (Sonnet/Haiku par défaut + surcharge Opus)\n- Règle : classifier intent/complexité ; routage par score :\n  if complexity_score >= 0.8 or high_value: route Opus (surcharge)\n  elif complexity_score <= 0.3: route Haiku\n  else: route Sonnet\n- Facturation : tag “model=Opus,surcharge=true” pour suivi coûts.\n\nExemple pseudocode de routage :\nif complexity >= 0.8 or potential_loss > 500: route = \"Opus\"\nelif complexity <= 0.3: route = \"Haiku\"\nelse: route = \"Sonnet\"\n\nRisques concrets et mitigations :\n- Mauvaise classification → tests réguliers du classifier, fallback humain.\n- Dépassement de budget → alertes budget à +5%, quotas.\n- Hallucinations / erreurs critiques → vérification humaine pour outputs à haut risque.\n- Latence pour Opus → QoS / timeouts et mise en cache.\n\nMesures opérationnelles à inclure : métriques (error rate, latency, cost/request), journaux, SLA, plan d’escalade et A/B tests avant déploiement."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Benchmarking",
+        "Business Value",
+        "Cost Optimization"
+      ],
+      "title": {
+        "en": "All three correct: Scenario 1: Haiku, cost-at-v...",
+        "fr": "All three correct: Scenario 1: Haiku, cost-at-v..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_021",
@@ -721,7 +921,17 @@
         "fr": "Points clés à couvrir en revoyant les scénarios manqués — ancrez chaque point sur « qu’est-ce qui change si on choisit un autre modèle » :\n\n1. Coût à volume\n- Mesures : coût par million de tokens, coût par requête, coût de cache/latence. Simulez charges (10k, 100k, 1M req/jour).\n- Décision opérationnelle : seuils budgétaires -> basculer vers modèle cheaper pour intents non critiques.\n- Risques concrets : dépassement TCO, dégradation latent/throughput en pic, facturation imprévue.\n\n2. Qualité sur étapes de raisonnement difficiles\n- Tests ciblés : jeux d’épreuves avec étapes multi-hop, questions adversariales, chaîne de raisonnement longue.\n- KPIs : taux de réussite sur étapes critiques, hallucination-rate, calibration des probabilités.\n- Stratégies : fallback sur modèle plus puissant si confiance < X, augmentation de prompt+chain-of-thought, verification post-hoc.\n- Risques : erreurs non détectées, décisions automatisées dangereuses.\n\n3. Trafic mixte nécessitant un router\n- Catégorisation d’intents (latence-sensible, coût-sensible, sécurité élevée).\n- Règles de routage (exemples) :\n  - if intent in {finance,medical} or confidence<0.6 -> route to high-capacity\n  - elif latency_SLA < 200ms and small_response -> route to low-latency model\n  - else -> route to cost-optimized model\n- Implémentation : baseline rule-based + ML classifier pour edge-cases, canary deploys.\n\nChecklist d’acceptation : jeux de charge, A/B, sampling d’échecs, métriques P95 latency, coût projeté, plan de rollback."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Automation",
+        "Benchmarking",
+        "Cost Optimization"
+      ],
+      "title": {
+        "en": "Partial: Review the scenario(s) you missed. The...",
+        "fr": "Partial: Review the scenario(s) you missed. The..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_022",
@@ -740,7 +950,17 @@
         "fr": "Objectif : automatiser la sélection par défaut des modèles avec critères mesurables, fenêtres d’évaluation et logique de redirection en cas de trafic mixte.\n\nÉtapes opérationnelles\n- Metrics à collecter : accuracy(F1/EM), latency P95 (ms), cost/token, taux d’échec métier (ex. réponse erronée), satisfaction utilisateur. Calculer score composite pondéré.\n- Seuils exemples (ajustables) : Sonnet score ≥ 0.95 et latency P95 ≤ 300ms → garder Sonnet. Si Sonnet score < 0.95 → basculer vers Opus. Autoriser Haiku seulement si qualité relative ≥ 0.90 versus Sonnet et gain coût/latence ≥ 25%.\n- Fenêtre d’évaluation : rolling window 1h (ou 1000 requêtes), éval automatique + canary 5–10% du trafic avant promotion complète.\n- Détection trafic mixte : classer requêtes (court vs long, interactive vs batch) ; si distribution >20% de plus d’un type → activer routing par profil plutôt que modèle global.\n\nExemple pseudocode\n- eval_latest = compute_eval(window)\n- if is_mixed_traffic(): route_by_profile(request)\n- else:\n    if eval_latest.sonnet < TH_SONNET: promote_model(\"Opus\")\n    elif eval_latest.opus_drop_vs_sonnet <= ALLOWED_DROP and cost_savings(opus->haiku) >= MIN_SAV: promote_model(\"Haiku\")\n    else: set_default(\"Sonnet\")\n\nSécurité & observabilité\n- Rollback automatique si degradation >5% en 30m. Alertes Slack + ticket. Logging complet des décisions et métriques. Tests de bout en bout et revue humaine pour changements de seuils critiques."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Automation",
+        "Batch Processing",
+        "Cost Optimization"
+      ],
+      "title": {
+        "en": "Revisit: Revisit the model-selection default: s...",
+        "fr": "Revisit: Revisit the model-selection default: s..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_023",
@@ -759,7 +979,17 @@
         "fr": "Votre réponse est correcte. Voici une correction modèle concise et actionnable :\n\n1 → C (fetch-once, plus petit modèle) — Bon choix quand une seule requête suffit. Action : exécuter un test de qualité avec le plus petit modèle acceptable, mesurer latence/coût, et n’augmenter le modèle qu’en cas d’échec de qualité.\n\n2 → A (tâche décomposée, fan‑out parallèle) — Approprié si les sous-tâches sont indépendantes. Action : estimer tokens par branche × nombre de branches pour prévoir le coût ; limiter la profondeur de recherche ou regrouper branches similaires pour contrôler la dépense.\n\n3 → D (streaming pour perception d’instantanéité) — Utile pour réduire le temps jusqu’au premier octet. Action : implémenter reconstitution côté client et test de robustesse sur connexions lentes. Attention à la complexité d’ordonnancement et à la gestion d’erreurs partielles.\n\n4 → B (batch + cache pour travail non urgent, sensible au coût) — Correct : batcher amortit le coût et le cache évite requêtes répétées. Action : utiliser API Message Batches, configurer TTL cache adapté, et réaliser jobs asynchrones/cron pour traitements non urgents.\n\nRisques concrets si choix erronés : paiement multiplicatif des tokens en fan‑out (coûts explosifs), perte d’environ 50 % d’économie si on n’utilise pas Message Batches, latence perçue accrue sans streaming, et complexité/consistance accrue avec cache mal dimensionné."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Batch Processing",
+        "Caching Strategy"
+      ],
+      "title": {
+        "en": "All correct: You matched 1 to C (fetch-once, sm...",
+        "fr": "All correct: You matched 1 to C (fetch-once, sm..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_024",
@@ -778,7 +1008,17 @@
         "fr": "Votre réponse mérite un crédit partiel. Voici ce qu’une correction complète devrait contenir, et comment corriger l’erreur « bon agent / mauvais levier » (ou inverse).\n\n1) Reformulation concise de la contrainte pertinente (ex. latence ≤ 200 ms, coût par requête ≤ 0,05 €).  \n2) Justification du type d’agent choisi : expliquer le rôle causal de l’agent par rapport à la contrainte (ex. agent d’orchestration pour réduire latence via placement/scale).  \n3) Analyse du levier proposé : décrire le mécanisme par lequel ce levier devrait agir sur la contrainte. Si cela ne fonctionne pas, préciser pourquoi (chemin causal manquant, effet négligeable, conflit d’objectifs).  \n4) Proposition alternative(s) de levier(s) qui déplaceraient effectivement la contrainte, avec ordre de priorité et estimation d’impact (qualitative ou quantitative). Exemples concrets : compression de modèle → -30% latence; mise en cache → -50% requêtes temps réel; migration vers GPU + batch → réduction coût/req.  \n5) Métriques et protocole d’évaluation : indicateurs (p95 latency, coût/req, taux d’erreur) + test A/B ou charge progressive + seuils d’acceptation.  \n6) Risques concrets et mitigations : régression de qualité (tester précision), coûts d’infra (budget cap), complexité opérationnelle (rollback plan), conformité/sécurité.\n\nExemple bref : si contrainte = latence et vous avez choisi un agent de formation (bon agent pour amélioration qualité) mais levier = augmenter dataset (n’aide pas la latence), corrigez en proposant modèle quantifié, distillation, ou infra d’exécution."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Agentic Design",
+        "Batch Processing",
+        "Development"
+      ],
+      "title": {
+        "en": "Partial: You picked the right agent type but id...",
+        "fr": "Partial: You picked the right agent type but id..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_025",
@@ -797,7 +1037,17 @@
         "fr": "Erreurs courantes\n- Lancer un pattern orchestrator-worker pour une tâche non divisible entraîne un « multiplicateur de tokens » sans gain (coût = workers × tokens).  \n- Activer un levier inapproprié (par ex. paralléliser un batch où la latence n’a pas d’importance) gaspillera ressources.\n\nRisques concrets\n- Coût cloud et tokens multipliés, latence cumulée par orchestration, résultats incohérents à l’agrégation, complexité et points de défaillance supplémentaires.\n\nChecklist pour décider et corriger\n1. Caractériser la tâche : est‑elle embarrassingly parallel (sous‑tâches indépendantes, idempotentes, non‑ordonnées) ? Exemples valides : exploration de grands espaces (recherche documentaire, candidates ranking), parameter sweep, génération par chunk indépendants.  \n2. Mesurer baseline : latence et tokens d’une exécution séquentielle.  \n3. Estimer overhead parallèle : tokens_workers = tokens_par_sous_tâche × N; tokens_orchestrateur = prompts d’agrégation. Calculez coût_total et vitesse attendue.  \n4. Seulement paralléliser si gain latence/throughput > overhead_coût + complexité.  \n5. Alternatives : batching, augmenter la fenêtre contextuelle, utiliser modèle plus rapide, pipeline asynchrone.\n\nImplémentation minimale (pattern Map‑Reduce)\n- Split -> Map (N workers exécutent tâches indépendantes) -> Reduce (orchestrateur consolide, filtre, vote).  \n- Garantir idempotence, déduplication, stratégie d’agrégation (score threshold, majority vote, rerank).\n\nValider en production : AB test coût vs latence, surveillance tokens/req, échecs d’agrégation et dérives de qualité."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Batch Processing"
+      ],
+      "title": {
+        "en": "Revisit: You chose orchestrator-worker (A) for ...",
+        "fr": "Revisit: You chose orchestrator-worker (A) for ..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_026",
@@ -816,7 +1066,17 @@
         "fr": "Implémentation attendue — claire, sûre et testable.\n\nExemple (Python) d’un hook PreToolUse qui s’exécute AVANT write_file, bloque toute écriture hors de /workspace/output et enregistre la tentative :\n\n```python\nfrom pathlib import Path\nimport logging\nimport time\n\nALLOWED_DIR = Path(\"/workspace/output\").resolve()\nlogger = logging.getLogger(\"pretooluse\")\nlogger.setLevel(logging.INFO)\n\nclass ToolBlockedError(Exception):\n    pass\n\ndef pre_tool_use(tool_name: str, kwargs: dict, user_id: str = \"unknown\"):\n    if tool_name != \"write_file\":\n        return  # only enforce for write_file\n\n    target = Path(kwargs.get(\"path\", \"\")).resolve()\n    if not str(target).startswith(str(ALLOWED_DIR) + Path.sep):\n        # log detailed attempt\n        logger.info({\n            \"ts\": time.time(),\n            \"user\": user_id,\n            \"tool\": tool_name,\n            \"path_attempt\": str(target),\n            \"reason\": \"outside_allowed_dir\"\n        })\n        raise ToolBlockedError(f\"Write blocked: {target} outside {ALLOWED_DIR}\")\n\n    # allowed -> nothing to do; guard completed\n    return\n\n# Exemple d'utilisation avant d'appeler l'outil réel\ntry:\n    pre_tool_use(\"write_file\", {\"path\": \"../etc/passwd\", \"content\": \"x\"}, user_id=\"alice\")\n    # call write_file(...) only if no exception\nexcept ToolBlockedError as e:\n    # retourner une erreur contrôlée au modèle/app\n    pass\n```\n\nPoints clés qu'une bonne réponse couvre :\n- Normalisation résolue des chemins (Path.resolve) pour empêcher ../ et symlinks malveillants.\n- Comparaison sécurisée startswith(ALLOWED_DIR + sep).\n- Enregistrement structuré (timestamp, user, path, raison).\n- Lancement d’une exception/erreur avant toute écriture (garde-fou).\n- Tests unitaires pour cas valides/invalides et pour symlinks/race conditions."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Development",
+        "Error Handling",
+        "Guardrails"
+      ],
+      "title": {
+        "en": "Model answer &middot; self-assess: Piece 1: Pre...",
+        "fr": "Model answer &middot; self-assess: Piece 1: Pre..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_027",
@@ -835,7 +1095,17 @@
         "fr": "Correction modèle — éléments qu’une bonne réponse doit contenir et comment vérifier\n\n1) Définitions courtes et rôles\n- Hook : code/configuration exécuté avant/après une opération (ex. validation d’entrée, enrichissement). Indiquer emplacement (pipeline, middleware).\n- Deny rule : règle de sécurité explicite qui refuse une action quand une condition est vraie (ex. règle RBAC ou politique de réseau).\n- Référence d’environnement : variable ou secret injecté dans le runtime (ex. VAR_DB_URL, secret manager). Préciser mécanisme de résolution et portabilité.\n- Journal d’audit : enregistrement immuable des événements (utilisateur, action, timestamp, résultat). Indiquer format et stockage.\n\n2) Vérifications concrètes (tests à effectuer)\n- Hook : simuler une requête qui devrait déclencher le hook ; vérifier effets attendus et erreurs gérées.\n- Deny rule : tenter une action qui doit être bloquée et confirmer code d’erreur/response ; vérifier priorité/ordre des règles.\n- Référence d’environnement : démarrer l’application avec valeur contrôlée, vérifier qu’elle est lue et qu’aucune valeur secrète n’est exposée dans logs ou stack traces.\n- Journal d’audit : exécuter actions réussies/échouées ; vérifier entrées contiennent user, action, timestamp, origine IP, outcome ; vérifier intégrité et rétention.\n\n3) Risques et points d’attention\n- Hooks non atomiques pouvant introduire latence ou incohérences.\n- Deny rules trop permissives ou ordre incorrect.\n- Fuite de secrets via variables d’environnement.\n- Journaux non signés/effaçables ou retention insuffisante.\n\nUne bonne réponse décrit ces éléments, donne étapes de test et adresse risques/mitigations."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Context Design",
+        "Development",
+        "Evaluation"
+      ],
+      "title": {
+        "en": "Pass: All four controls belong: the hook, the d...",
+        "fr": "Pass: All four controls belong: the hook, the d..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_028",
@@ -854,7 +1124,17 @@
         "fr": "Précisez d’abord quels sont précisément « les quatre éléments » (ex. objectifs, contraintes/ressources, solution/design, critères d’évaluation). Pour chacun, appliquez la boucle « analyser → ajuster → tester » :\n\n1) Objectifs — Vérifiez qu’ils sont mesurables et limités dans le temps. Action : reformulez chaque objectif en KPI (ex. taux d’erreur ≤ 2 %). Critère d’acceptation : KPI chiffré.\n\n2) Contraintes & ressources — Listez contraintes techniques, humaines, budget. Action : identifiez ce qui est non négociable et ce qui peut être changé. Critère : plan de ressources réaliste.\n\n3) Solution / méthode — Décomposez en composants testables. Action : modifiez une variable à la fois (A/B) et documentez l’hypothèse. Critère : protocole de test reproductible.\n\n4) Évaluation — Choisissez métriques, méthodes d’analyse et seuils. Action : définissez comment collecter et valider les données (échantillon, durée). Critère : tableau d’évaluation automatisé.\n\nPlan d’itération simple (à remplir pour chaque essai) : changement proposé → raison → méthode de test → seuil de réussite → responsable → délai.\n\nRisques courants et mitigations : confirmation bias (pré-enregistrer hypothèses), tests non représentatifs (augmenter taille/variété d’échantillon), modifications simultanées (changer 1 param à la fois), documentation insuffisante (tenir journal d’itérations).\n\nLivrables attendus après réessai : version modifiée, résultats de tests, comparaison KPI avant/après, décision (accepter/rejeter/itérer)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Computer Vision"
+      ],
+      "title": {
+        "en": "Retry: Revisit the four pieces above, then try ...",
+        "fr": "Retry: Revisit the four pieces above, then try ..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_029",
@@ -873,7 +1153,17 @@
         "fr": "Problème résumé : aucune évaluation automatisée ni jeu de test — seulement 3 démonstrations manuelles. Risques concrets : régressions silencieuses après changement de prompt/modèle, dérive de performance, biais non détectés, régressions de sécurité/sûreté, déploiement instable.\n\nCorrection modèle (actionnable)\n- Créer un jeu de test holdout représentatif (ex. ≥200 cas, stratifié par type de requête). Split recommandé : train/dev/test = 70/15/15 pour entraînement continu.\n- Annotation de qualité : 3 annotateurs par cas, labels majoritaires, calculer Cohen’s kappa (viser >0.7).\n- Définir métriques claires : accuracy/F1 pour classification, BLEU/ROUGE pour génération, taux d’erreurs critiques, et métriques de sécurité (ex. réponses refusées).\n- Construire une suite de régression automatisée : tests unitaires (invariants), canary prompts, cas adversariaux et borderline. Exemple de canary prompt : \"Quelle est la capitale de la France?\" → attendu \"Paris\".\n- Règles d’acceptation : pipeline CI qui échoue si baisse >2% d’une métrique ou si erreurs critiques augmentent.\n- Monitoring post-déploiement : logging des prompts, alertes sur drift (>X% changements), sampling humain continu (échantillon quotidien).\n- Versioning & reproductibilité : conserver seeds, prompt versions, modèle et dataset snapshot pour chaque run.\n- Tests de sécurité/biais : jeux dédiés pour contenus sensibles, seuils d’échec et procédures d’intervention humaine.\n\nImplémentez la suite dans CI (ex. GitHub Actions) et exécutez quotidiennement + avant chaque déploiement."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Model answer &middot; self-assess: Eval/test la...",
+        "fr": "Model answer &middot; self-assess: Eval/test la..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_030",
@@ -892,7 +1182,17 @@
         "fr": "1) Évaluation manquante\n- Problème : aucune étape de validation/examen des résultats avant acceptation — produits invalides ou incomplèts peuvent passer en production.\n- Risques : données corrompues, états incohérents, régressions nondétectées.\n- Correction actionnable : ajouter une étape explicite de validation avec règles et seuils (schéma, non-null, checksums, tests unitaires). Exemple pseudocode :\n  if result is None or not validate(result): raise ValidationError(\"résultat invalide\")\n  publish(result)\n\n2) Boucle de réessai immédiate sans back-off\n- Problème : sur échec, le code réessaie sans délai => CPU/ressources épuisées et thundering herd.\n- Risques : surcharge du service dépendant, temps d'indisponibilité accru, boucles infinies.\n- Correction actionnable : ajouter retry limité, exponential backoff + jitter et timeout global. Exemple Python :\n  for attempt in range(1, max_attempts+1):\n      try: return call()\n      except TransientError:\n          sleep(min(base * 2**(attempt-1) + random_jitter(), max_delay))\n  raise RetryFailed\n\n3) Chemin d'écriture non fiable sans hook\n- Problème : écriture effectuée sans confirmation/commit hook => pertes ou incohérences si crash.\n- Risques : données perdues, réexécution incorrecte, impossibilité de suivre état.\n- Correction actionnable : rendre l’écriture atomique (write-to-temp + fsync + rename) et ajouter hook/callback après commit pour actions downstream. Exemple sequence :\n  write temp file -> fsync -> os.replace(temp, final) -> call(on_commit, metadata)\n- Ajouter idempotence et journalisation pour reprise sûre."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Business Value",
+        "Development",
+        "Error Handling"
+      ],
+      "title": {
+        "en": "Pass: All three defects identified: the missing...",
+        "fr": "Pass: All three defects identified: the missing..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_031",
@@ -911,7 +1211,17 @@
         "fr": "Coupez l’exercice en trois couches claires, revisitez chacune, puis appliquez les modifications et retestez.\n\n1) Couche micro — clarté et précision\n- Actions concrètes : corriger orthographe/grammaire, supprimer mots inutiles, remplacer la voix passive par la voix active, clarifier une phrase ambiguë.\n- Exemple : «Des tests ont été effectués» → «L’équipe a effectué les tests le 12/07».\n- Vérifier : chaque phrase transmet une seule idée.\n\n2) Couche méso — structure et logique\n- Actions concrètes : réordonner les paragraphes pour suivre un fil logique (problème → solution → preuve), ajouter phrases de transition, verrouiller les preuves pour chaque affirmation.\n- Exemple : si une preuve est après la conclusion, déplacer la preuve avant la conclusion.\n- Vérifier : chaque paragraphe a une assertion centrale soutenue par preuve.\n\n3) Couche macro — objectifs et public\n- Actions concrètes : réévaluer l’objectif (informer, convaincre, instruire), adapter ton/registre, supprimer digressions hors-sujet, ajuster longueur selon le public.\n- Exemple : pour un public non technique, remplacer jargon par analogies simples.\n\nProcédé de re-essai\n- Implémenter modifications couche par couche, tester sur un lecteur témoin (ou checklist d’acceptation), mesurer contre critères (clarté, cohérence, atteinte d’objectif).\n- Risques à surveiller : perte du message original, complexification inutile, sur-édition.\n- Critères d’arrêt : lecteur comprend l’idée centrale en 30 s, structure logique vérifiable, aucune ambiguïté majeure restante."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Retry: Revisit the three layers above, then try...",
+        "fr": "Retry: Revisit the three layers above, then try..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_032",
@@ -930,7 +1240,17 @@
         "fr": "But: implémentez deux sorties — (1) la réponse finale destinée à l'utilisateur, concise et sourcée ; (2) une auto-évaluation programmatique expliquant pourquoi la réponse est bonne/limite. Voici ce qu’une correction modèle doit contenir et un exemple fonctionnel.\n\nPoints clés (à couvrir)\n- Récupérer et synthétiser le contenu de page_url (extrait pertinent, citation avec locateur).\n- Donner une réponse directe et concise (1–3 phrases), puis un bref développement si utile.\n- Signaler l’incertitude: phrases conditionnelles (« d’après la page…, il semble que… ») si preuves faibles.\n- Auto-évaluation structurée: scores/indicateurs pour — pertinence, exactitude (preuves présentes), concision, transparence (sources citées), sécurité (pas de contenu dangereux), confiance globale.\n- Actions en cas d’insuffisance: renvoyer « Je ne peux pas répondre avec certitude » et proposer étapes suivantes (demander précision, vérifier source).\n\nExemple Python (template)\n- Remplacez model_api.call par votre client LLM.\n\ndef answer(question, page_url):\n    import requests, re\n    # 1) récupérer texte\n    txt = requests.get(page_url, timeout=5).text\n    # 2) simple extraction (améliorer avec NLP)\n    excerpt = \" \".join(re.findall(r\".{0,200}%s.{0,200}\" % re.escape(question.split()[0]), txt, flags=re.I)[:2])\n    # 3) appeler LLM pour rédiger réponse en citant excerpt\n    model_resp = model_api.call(prompt=f\"Q:{question}\\nContexte:{excerpt}\\nRéponds brièvement et cite la source.\")\n    # 4) auto-évaluation heuristique\n    supported = bool(excerpt)\n    confidence = 0.9 if supported and len(model_resp)>20 else 0.4\n    eval = {\n      \"supported\": supported,\n      \"confidence\": confidence,\n      \"reasons\": [\n        \"extrait trouvé\" if supported else \"aucun extrait pertinent\",\n        \"réponse concise et sourcée\" if supported else \"réponse incertaine\"\n      ]\n    }\n    return {\"answer\": model_resp.strip(), \"self_evaluation\": eval}\n\nRisques concrets\n- Surestimer la confiance (fausses certitudes).\n- Omettre sources entraînant hallucinations.\n- Fuite de données sensibles durant la récupération/traitement."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Context Design",
+        "Development"
+      ],
+      "title": {
+        "en": "Model answer &middot; self-assess: def answer(q...",
+        "fr": "Model answer &middot; self-assess: def answer(q..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_033",
@@ -949,7 +1269,17 @@
         "fr": "Correction proposée (phrasing claire et idiomatique) :\nLa version renforcée mesure le succès via une évaluation automatisée, gère les échecs par une stratégie explicite de réessai avec backoff, et fait respecter la frontière de sécurité avant toute action via un hook placé à un chemin/point d’entrée fixe. Chaque correctif est appliqué au niveau de la couche qu’il protège ; les trois mesures se complètent et se renforcent mutuellement au lieu de se chevaucher.\n\nPoints que doit couvrir une bonne réponse (actionnables) :\n- Évaluation : définir métriques précises (succès/échec binaire, taux d’erreur, latence) et seuils ; automatiser l’éval (tests unitaires/ints) et exporter métriques pour alerting.\n- Réessai/backoff : politique chiffrée (p. ex. 3 tentatives max, backoff exponentiel base=2, max_delay=60s, ajouter jitter), conditions de retry (idempotence requise) et circuit breaker.\n- Hook de sécurité : emplacement fixe (p. ex. /hooks/safety-check au niveau de l’orchestrateur/API gateway), validations (authz/authn, sanitization, invariant checks) avant exécution.\n- Séparation des couches : mappez chaque correctif à la couche (UI, API, logique métier, infra) et évitez duplication ; préférez défense en profondeur.\n- Observabilité et limites : logs détaillés, traces, métriques d’échec, TTL des retries, politique de rollback/alerting en cas d’échec répété."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Automation"
+      ],
+      "title": {
+        "en": "Correct: The hardened version measures success ...",
+        "fr": "Correct: The hardened version measures success ..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_034",
@@ -968,7 +1298,17 @@
         "fr": "Problème central : des corrections sont appliquées à la mauvaise couche (p. ex. PreToolUse utilisé pour la reprise d’erreur ; retry wrapper déclaré comme frontière de sécurité). Une correction doit couvrir uniquement le mode d’échec pour lequel elle est conçue.\n\nCorrections recommandées (actionnables)\n- Cartographier les modes d’échec → couches. Pour chaque mode d’échec (validation input, autorisation, réseau transitoire, erreur applicative), documenter la mitigation et l’endroit exact d’implémentation.\n- PreToolUse : réserver à la validation pré-invocation (schéma, auth token présent, format, whitelists). Ne pas y mettre la logique de retry ni la gestion d’erreurs si l’outil échoue après invocation.\n- Retry wrapper : n’utilisez-le que pour appels transitoires réseau/IO. Exiger idempotence ou token de dé-duplication, backoff exponentiel, jitter, et un plafond de tentatives.\n- Frontière de sécurité : implémenter avant toute construction de requête externe (authN/authZ, filtrage des paramètres). Ne pas compter sur le retry ou hooks d’erreur pour empêcher l’accès non autorisé.\n- Gestion des erreurs centralisée : middleware/handler pour logging, mapping d’erreur vers réponse utilisateur, et escalade. Tests unitaires et e2e pour chaque couche.\n- Observabilité : métriques par couche (validation fails, auth fails, retries, erreurs externes), alerting sur taux d’échec anormal.\n\nRisques concrets si non corrigé : contournement de sécurité, fuites de données, duplications/effets secondaires due au retry, état incohérent, absence d’alerte opérationnelle.\n\nCritères d’acceptation : chaque mode d’échec a une mitigation documentée et testée; PreToolUse ne fait que valider; retries appliqués uniquement aux opérations idempotentes; auth exécutée avant tout appel externe; métriques/alertes actives."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Business Value",
+        "Computer Vision",
+        "Development"
+      ],
+      "title": {
+        "en": "Revisit: One or more fixes address the wrong la...",
+        "fr": "Revisit: One or more fixes address the wrong la..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__04_035",
@@ -987,7 +1327,17 @@
         "fr": "Livrable attendu — structure et critères précis :\n\n1) Résumé exécutif (150–250 mots) : énoncer le problème, l’approche, les résultats clés (chiffres précis : ex. précision 87 %, AUC 0,92) et la recommandation opérationnelle.\n\n2) Objectifs & métriques : lister objectifs mesurables et métriques utilisées (précision, rappel, F1, latence, coût). Indiquer les seuils d’acceptation.\n\n3) Méthodes & pipeline : décrire jeux de données (origine, taille), prétraitement (étapes et scripts), modèle/algorithme, hyperparamètres clés. Fournir commandes pour reproduire (ex. \"python train.py --seed 42 --epochs 50\").\n\n4) Résultats & comparaison : tableaux/chiffres comparant baseline vs solution, courbes d’apprentissage, tests sur jeu de test séparé. Signaler variance (CI) et tests statistiques si pertinent.\n\n5) Discussion & limites : biais possibles, cas d’échec, généralisation, contraintes de déploiement, impacts éthiques et confidentialité.\n\n6) Reproductibilité & artefacts : dépôt git, README, requirements.txt, seed, snapshot des checkpoints, jeu de test anonymisé ou instructions d’accès.\n\n7) Plan de déploiement & suivi : métriques à monitorer, stratégie rollback, fréquence de réentraînement.\n\nRisques concrets : fuite de données, surapprentissage, métriques inappropriées, manque de reproductibilité, problèmes de confidentialité. Pour chacun, listez une mitigation concrète.\n\nExemple de conclusion (à inclure) :\n\"Le modèle atteint 87 % de précision (+8 pts vs baseline) ; déploiement recommandé en phase pilote avec monitoring des biais et réentraînement mensuel.\""
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "Agentic Design",
+        "Automation"
+      ],
+      "title": {
+        "en": "Skipped: This is the final task. Complete it to...",
+        "fr": "Skipped: This is the final task. Complete it to..."
+      }
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -18,6 +18,8 @@ import {
   Lightbulb,
   ChevronDown,
   ChevronUp,
+  Save,
+  CloudOff,
 } from 'lucide-react';
 
 // Types
@@ -61,19 +63,19 @@ interface ExerciseRendererProps {
   onComplete?: (exerciseId: string, answer: string) => void;
 }
 
-const DIFFICULTY_COLORS = {
+const DIFFICULTY_COLORS: Record<string, string> = {
   foundation: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   intermediate: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
   advanced: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 };
 
-const DIFFICULTY_LABELS = {
+const DIFFICULTY_LABELS: Record<string, { en: string; fr: string }> = {
   foundation: { en: 'Foundation', fr: 'Fondation' },
   intermediate: { en: 'Intermediate', fr: 'Intermédiaire' },
   advanced: { en: 'Advanced', fr: 'Avancé' },
 };
 
-const TYPE_ICONS = {
+const TYPE_ICONS: Record<string, any> = {
   free_text: FileText,
   single_choice: CircleDot,
   multi_choice: CheckSquare,
@@ -82,7 +84,7 @@ const TYPE_ICONS = {
   scenario: Lightbulb,
 };
 
-const TYPE_LABELS = {
+const TYPE_LABELS: Record<string, { en: string; fr: string }> = {
   free_text: { en: 'Written Response', fr: 'Réponse écrite' },
   single_choice: { en: 'Single Choice', fr: 'Choix unique' },
   multi_choice: { en: 'Multiple Choice', fr: 'Choix multiple' },
@@ -91,9 +93,23 @@ const TYPE_LABELS = {
   scenario: { en: 'Scenario Analysis', fr: 'Analyse de scénario' },
 };
 
+// --- Storage helpers ---
 const STORAGE_KEY = 'neopolis_exercise_attempts';
+const DRAFT_STORAGE_KEY = 'neopolis_exercise_drafts';
 
-function loadAttempt(exerciseId: string): { answer: string; options: string[]; submittedAt: string } | null {
+interface SavedAttempt {
+  answer: string;
+  options: string[];
+  submittedAt: string;
+}
+
+interface SavedDraft {
+  answer: string;
+  options: string[];
+  savedAt: string;
+}
+
+function loadAttempt(exerciseId: string): SavedAttempt | null {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
     if (!data) return null;
@@ -108,6 +124,8 @@ function saveAttempt(exerciseId: string, answer: string, options: string[]) {
     const attempts = data ? JSON.parse(data) : {};
     attempts[exerciseId] = { answer, options, submittedAt: new Date().toISOString() };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(attempts));
+    // Clear draft on submit
+    clearDraft(exerciseId);
   } catch { /* ignore quota errors */ }
 }
 
@@ -121,14 +139,59 @@ function clearAttempt(exerciseId: string) {
   } catch { /* ignore */ }
 }
 
+// --- Draft auto-save helpers ---
+function loadDraft(exerciseId: string): SavedDraft | null {
+  try {
+    const data = localStorage.getItem(DRAFT_STORAGE_KEY);
+    if (!data) return null;
+    const drafts = JSON.parse(data);
+    return drafts[exerciseId] || null;
+  } catch { return null; }
+}
+
+function saveDraft(exerciseId: string, answer: string, options: string[]): string {
+  try {
+    const data = localStorage.getItem(DRAFT_STORAGE_KEY);
+    const drafts = data ? JSON.parse(data) : {};
+    const savedAt = new Date().toISOString();
+    drafts[exerciseId] = { answer, options, savedAt };
+    localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(drafts));
+    return savedAt;
+  } catch { return ''; }
+}
+
+function clearDraft(exerciseId: string) {
+  try {
+    const data = localStorage.getItem(DRAFT_STORAGE_KEY);
+    if (!data) return;
+    const drafts = JSON.parse(data);
+    delete drafts[exerciseId];
+    localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(drafts));
+  } catch { /* ignore */ }
+}
+
+// --- Auto-save status type ---
+type AutoSaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+
 export function ExerciseRenderer({ exercise, index, lang, onComplete }: ExerciseRendererProps) {
-  // Restore from localStorage on mount
+  // Restore from localStorage on mount: prioritize submitted attempt, then draft
   const savedAttempt = useMemo(() => loadAttempt(exercise.id), [exercise.id]);
-  const [userAnswer, setUserAnswer] = useState(savedAttempt?.answer || '');
-  const [selectedOptions, setSelectedOptions] = useState<Set<string>>(new Set(savedAttempt?.options || []));
+  const savedDraft = useMemo(() => loadDraft(exercise.id), [exercise.id]);
+
+  const [userAnswer, setUserAnswer] = useState(savedAttempt?.answer || savedDraft?.answer || '');
+  const [selectedOptions, setSelectedOptions] = useState<Set<string>>(
+    new Set(savedAttempt?.options || savedDraft?.options || [])
+  );
   const [submitted, setSubmitted] = useState(!!savedAttempt);
   const [showCorrection, setShowCorrection] = useState(false);
   const [showRubric, setShowRubric] = useState(false);
+
+  // Auto-save state
+  const [autoSaveStatus, setAutoSaveStatus] = useState<AutoSaveStatus>(savedDraft ? 'saved' : 'idle');
+  const [lastSavedAt, setLastSavedAt] = useState<string>(savedDraft?.savedAt || '');
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const prevAnswerRef = useRef(userAnswer);
+  const prevOptionsRef = useRef(selectedOptions);
 
   const interactionType = exercise.interactionType || 'free_text';
   const TypeIcon = TYPE_ICONS[interactionType] || FileText;
@@ -137,6 +200,69 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
     if (!field) return '';
     return field[lang] || field.en || '';
   };
+
+  // --- Auto-save logic (debounced 1.5s) ---
+  const performAutoSave = useCallback(() => {
+    if (submitted) return;
+    const answer = userAnswer;
+    const options = Array.from(selectedOptions);
+    // Only save if there's actual content
+    if (!answer.trim() && options.length === 0) return;
+    setAutoSaveStatus('saving');
+    try {
+      const savedAt = saveDraft(exercise.id, answer, options);
+      if (savedAt) {
+        setLastSavedAt(savedAt);
+        setAutoSaveStatus('saved');
+      } else {
+        setAutoSaveStatus('error');
+      }
+    } catch {
+      setAutoSaveStatus('error');
+    }
+  }, [exercise.id, userAnswer, selectedOptions, submitted]);
+
+  // Trigger auto-save on content change (debounced)
+  useEffect(() => {
+    if (submitted) return;
+    // Check if content actually changed
+    const answerChanged = userAnswer !== prevAnswerRef.current;
+    const optionsChanged = selectedOptions !== prevOptionsRef.current;
+    if (!answerChanged && !optionsChanged) return;
+
+    prevAnswerRef.current = userAnswer;
+    prevOptionsRef.current = selectedOptions;
+
+    // Don't auto-save empty content
+    if (!userAnswer.trim() && selectedOptions.size === 0) return;
+
+    // Debounce: wait 1.5s after last change
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    setAutoSaveStatus('idle');
+    debounceTimerRef.current = setTimeout(() => {
+      performAutoSave();
+    }, 1500);
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [userAnswer, selectedOptions, submitted, performAutoSave]);
+
+  // Save on page unload (beforeunload)
+  useEffect(() => {
+    if (submitted) return;
+    const handleBeforeUnload = () => {
+      if (userAnswer.trim() || selectedOptions.size > 0) {
+        saveDraft(exercise.id, userAnswer, Array.from(selectedOptions));
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [exercise.id, userAnswer, selectedOptions, submitted]);
 
   const wordCount = useMemo(() => {
     return userAnswer.trim().split(/\s+/).filter(Boolean).length;
@@ -158,7 +284,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
       default:
         return userAnswer.trim().length > 0;
     }
-  }, [submitted, exercise, wordCount, userAnswer, selectedOptions]);
+  }, [submitted, exercise, wordCount, userAnswer, selectedOptions, interactionType]);
 
   const handleSubmit = () => {
     setSubmitted(true);
@@ -166,6 +292,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
       ? Array.from(selectedOptions).join(',')
       : userAnswer;
     saveAttempt(exercise.id, userAnswer, Array.from(selectedOptions));
+    setAutoSaveStatus('idle');
     onComplete?.(exercise.id, answer);
   };
 
@@ -176,6 +303,9 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
     setShowCorrection(false);
     setShowRubric(false);
     clearAttempt(exercise.id);
+    clearDraft(exercise.id);
+    setAutoSaveStatus('idle');
+    setLastSavedAt('');
   };
 
   const toggleOption = (optionId: string) => {
@@ -201,6 +331,47 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
     if (isSelected && !option.correct) return 'incorrect';
     if (!isSelected && option.correct) return 'missed';
     return null;
+  };
+
+  // Format time for display
+  const formatSavedTime = (isoString: string) => {
+    if (!isoString) return '';
+    try {
+      const date = new Date(isoString);
+      return date.toLocaleTimeString(lang === 'fr' ? 'fr-FR' : 'en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } catch { return ''; }
+  };
+
+  // Auto-save indicator component
+  const AutoSaveIndicator = () => {
+    if (submitted) return null;
+    if (autoSaveStatus === 'idle' && !lastSavedAt) return null;
+
+    return (
+      <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+        {autoSaveStatus === 'saving' && (
+          <>
+            <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+            <span>{lang === 'fr' ? 'Sauvegarde...' : 'Saving...'}</span>
+          </>
+        )}
+        {autoSaveStatus === 'saved' && lastSavedAt && (
+          <>
+            <Save className="w-3 h-3 text-green-500" />
+            <span>{lang === 'fr' ? 'Brouillon sauvegardé' : 'Draft saved'} {formatSavedTime(lastSavedAt)}</span>
+          </>
+        )}
+        {autoSaveStatus === 'error' && (
+          <>
+            <CloudOff className="w-3 h-3 text-red-400" />
+            <span>{lang === 'fr' ? 'Erreur de sauvegarde' : 'Save error'}</span>
+          </>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -332,6 +503,9 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
                 ))}
               </div>
             )}
+
+            {/* Auto-save indicator */}
+            <AutoSaveIndicator />
           </div>
         ) : (
           /* Submitted state - show answer summary */

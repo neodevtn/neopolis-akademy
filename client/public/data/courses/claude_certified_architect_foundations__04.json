@@ -714,7 +714,17 @@
         "fr": "Ce que doit contenir une correction modèle (actionnable, vérifiable) :\n\n1. Utilisation du rewind\n- Indiquer explicitement la façon d’ouvrir : double-taper Échap sur une invite vide.\n- Démontrer les 3 options et leurs effets par exemple :\n  - Restaurer code + conversation -> montre fichiers/texte restaurés.\n  - Restaurer seulement conversation -> montre historique restauré.\n  - Restaurer seulement code -> montre arborescence/fichiers restaurés.\n- Cas d’usage concrets :\n  - \"Summarize from here\" : compresser une discussion latérale avant de revenir au fil principal.\n  - \"Summarize up to here\" : compresser longues phases de configuration.\n\n2. /goal autonome — formulation et démonstration\n- Exemples précis et vérifiables :\n  - /goal all tests in src/billing pass, and the type checker reports zero errors\n  - /goal Update README with example CLI usage and show example output\n- Montrer la boucle : définir /goal, laisser Claude itérer, inclure dans la transcription les sorties de tests, logs, diffs, ou le contenu final pour vérification.\n- Indiquer /goal clear pour annuler.\n\n3. Contraintes et bonnes pratiques\n- Condition : l’évaluateur lit seulement la transcription → toutes les preuves doivent être dans la sortie (résultats de tests, sorties de linter, diff de fichiers).\n- Rédiger des objectifs mesurables et non ambigus (pas \"améliorer\", mais \"tous les tests X passent\").\n- Après summarization, vérifier que l’information essentielle n’a pas été perdue.\n\n4. Risques concrets et mitigations\n- Perte d’informations importantes lors de la compression → mitigation : sauvegarder un checkpoint avant summarizing.\n- Objectifs vagues non vérifiables → mitigation : inclure commandes et sorties attendues.\n- Restaurations incorrectes confondant versions → mitigation : nommer checkpoints et préciser timestamp/contexte."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Rewind (recover from wrong paths):",
+        "fr": "Rewind (recover from wrong paths):"
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__04_002",
@@ -733,7 +743,17 @@
         "fr": "Points clés qu’une bonne réponse doit couvrir (comportement attendu, critères de validation et risques/mitigations) :\n\nComportement et critères de validation\n- Point de contrôle : chaque prompt utilisateur crée un checkpoint visible (ID, horodatage). Test : envoyer 3 prompts -> vérifier 3 checkpoints dans la barre/trace.\n- Rembobinage : double appui Échap sur un champ de prompt vide ouvre le menu. Test E2E : focus sur le prompt vide, double-Échap -> menu visible.\n- Options de restauration : trois actions distinctes — restaurer code+conversation, conversation seule, code seul. Test : modifier code/conversation, restaurer chaque option et vérifier l’état exact restauré.\n- Résumer : \n  - \"Résumer à partir d’ici\" compresse tout ce qui suit le checkpoint en un seul message résumé; les messages originaux deviennent masqués mais accessibles pour annulation.\n  - \"Résumer jusqu’ici\" compresse tout ce qui précède. Test : exécuter puis demander d’afficher le contenu résumé + annuler.\n- /goal : accepte une condition vérifiable (ex. \"/goal all tests in src/billing pass\"). Claude continue à itérer jusqu’à ce que la sortie contienne la preuve (ligne \"All tests passed\" ou rapport de test). /goal clear annule. Critère : la transcription doit contenir l’affirmation vérifiable.\n- Boucle autonome : exécute un prompt périodique (intervalle fixe ou adaptatif), chaque itération écrit un message avec ID et timestamp; Esc interrompt. Test : lancer boucle, vérifier plusieurs itérations, presser Échap -> aucune itération supplémentaire.\n\nRisques concrets et mitigations\n- Perte de données lors de restauration → garder snapshots immuables et bouton \"Annuler\".\n- Conditions /goal non vérifiables → valider format (doit contenir output attendu) et refuser sinon.\n- Boucle infinie/resource leak → limiter itérations, timers supervisés, bouton d’arrêt global.\n- Découverte UX/Accessibilité → indiquer raccourcis, prise en charge clavier-only et a11y labels.\n\nExemples vérifiables\n- Transcript doit inclure lignes comme \"Checkpoint #4 created\", \"Restored: conversation only\", \"Summary starting at #3: …\", \"All tests in src/billing passed\", \"Loop iteration 5 @ 2026-07-25T12:00Z\"."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Every user prompt creates a checkpoint; double-...",
+        "fr": "Every user prompt creates a checkpoint; double-..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__04_003",
@@ -752,7 +772,17 @@
         "fr": "Non — CLAUDE.md n’est pas la bonne « surface » pour règles strictes et contraintes bloquantes. CLAUDE.md sert d’instructions/guide lisible par Claude ; il devient peu fiable quand il est long ou contradictoire. Les règles impératives (ex. « ne jamais pousser vers main ») doivent être implémentées en code exécutable (hooks ou politiques gérées).\n\nActionnable — où placer quoi\n- Politique gérée (org-wide, priorité maximale) : règles de conformité, sécurité, contrôle d’accès. Ex. interdiction d’exposer des secrets, obligations de chiffrement.\n- Hooks (PreToolUse, Validation, etc.) : enforcement technique. Ex. PreToolUse bloque toute commande git push vers main.\n- Projet (mémoire projet) : conventions d’équipe (branch naming, reviewers obligatoires).\n- Utilisateur (préfs) : préférences personnelles non contraignantes.\n\nRisques concrets si tout reste dans CLAUDE.md\n- Règles critiques ignorées ou contradictoires\n- Comportement non déterministe selon l’ordre des lignes\n- Dérive des pratiques hors audit\n- Tests et monitoring impossibles\n\nExemple PreToolUse (pseudocode)\nif tool == \"git\" and command == \"push\" and target_branch == \"main\":\n    abort(\"Push vers main interdit. Créez une PR.\")\nelse:\n    allow()\n\nBonnes pratiques\n- Garder CLAUDE.md court : max 10 lignes, séparant \"suggestions\" vs \"obligations\".\n- Documenter priorité : politique gérée > hooks > projet > utilisateur > CLAUDE.md.\n- Tester les hooks, auditer les politiques et versionner les changements."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "CLAUDE.md = guidance, not enforced configuratio...",
+        "fr": "CLAUDE.md = guidance, not enforced configuratio..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__04_004",
@@ -771,7 +801,17 @@
         "fr": "Objectif clair : vérifier réellement l’exécution des tests à chaque exécution et empêcher la fin d’un tour si les tests échouent. Correction modèle (actionnable).\n\n1) Hook Stop (exécute tests avant de terminer)\n- Script d’exemple (stop_hook.sh) :\n  #!/bin/bash\n  set -e\n  pytest -q || { echo \"TESTS FAILED\"; exit 2; }\n  mypy . || { echo \"TYPE CHECK FAILED\"; exit 2; }\n  flake8 . || { echo \"LINT FAILED\"; exit 2; }\n  exit 0\n- Comportement : hook appelé avant fin de tour. Code de sortie 2 = échec signalé à Claude ; il doit relire/corriger.\n\n2) PostToolUse hook (après chaque modification)\n- Script d’exemple (post_tool_hook.sh) :\n  #!/bin/bash\n  set -e\n  files=$(git diff --name-only HEAD~1 -- '*.py')\n  [ -z \"$files\" ] && exit 0\n  mypy $files || { echo \"TYPE CHECK FAILED\"; exit 2; }\n  pytest --maxfail=1 $files || { echo \"TESTS FAILED\"; exit 2; }\n  exit 0\n- Exécuter lint/typecheck/tests ciblés sur fichiers modifiés pour rapidité.\n\n3) Garantie d’exécution à chaque fois\n- Hook mis en place côté infrastructure (obligatoire, ne peut être contourné).\n- Exporter logs/artéfacts (stdout/stderr, code de sortie) pour audit.\n\n4) Second avis \"à froid\"\n- Lancer un subagent/session sans mémoire ou un conteneur propre (ex. docker run --rm -v $PWD:/w -w /w python:3.11 bash -c \"./stop_hook.sh\").\n- Fournir uniquement le code et les résultats des tests au reviewer. Demander : tests non exécutés, exceptions masquées, dépendances manquantes, flakiness, tests non couverts.\n\nPoints d’attention pratiques : rendre les hooks idempotents, timeouts raisonnables, rejeter tout exit !=0/2 comme erreur interne, consigner les preuves (logs, sortie pytest --junitxml)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Make tests the real gate:",
+        "fr": "Make tests the real gate:"
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__04_005",
@@ -790,7 +830,17 @@
         "fr": "Étapes concrètes\n- Créez un checkpoint volontaire en envoyant un message utilisateur (même court : « checkpoint »). Chaque prompt utilisateur crée automatiquement un checkpoint.\n- Pour ouvrir Rewind : placez le focus dans la zone de prompt, videz-la, puis appuyez deux fois sur Échap (Esc). Le menu de rembobinage s’ouvre.\n- Dans le menu, sélectionnez le checkpoint souhaité (vérifiez l’aperçu ou l’horodatage si disponible).\n- Choisissez l’option :\n  - « Restaurer le code et la conversation » : restaure l’état complet (éditeur de code + historique du chat).\n  - « Restaurer la conversation » : restaure uniquement le chat, en conservant l’état actuel du code.\n- Confirmez la restauration. Si vous n’êtes pas sûr, copiez d’abord le code actuel dans un fichier/clipboard.\n\nQuand utiliser chaque option\n- Restaurer le code+conversation : quand le modèle a bifurqué et que vous voulez revenir à un état exécutable cohérent.\n- Restaurer la conversation seulement : quand vous voulez revenir au fil du dialogue mais conserver des modifications de code locales non souhaitées à perdre.\n\nRisques et bonnes pratiques\n- Risques : perte d’éditions non sauvegardées, restauration inattendue, incohérences avec actions externes (les appels API ou effets hors de l’interface ne sont pas annulés).\n- Sauvegardez le code avant restauration, créez checkpoints fréquents, et documentez les actions externes pour éviter effets secondaires."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Rewind",
+        "fr": "Rewind"
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__04_006",
@@ -809,7 +859,17 @@
         "fr": "Correction modèle (objectif : flux de travail avec checkpoints, résumés et restauration de fichiers)\n\n1) Marqueurs de checkpoint (pratique)\n- Insérer des marqueurs explicites dans la conversation ou le log de session : [CHECKPOINT: nom|hash|timestamp].\n- Exemple : [CHECKPOINT: design-api|2026-07-25T10:00Z]\n\n2) Commandes pour restaurer uniquement des fichiers\n- Restaurer fichiers à partir du dernier commit : git restore path/to/file\n- Restaurer fichiers à partir d’un commit spécifique : git restore --source=<commit_hash> path/to/file\n- Alternative (anciennes versions Git) : git checkout <commit_hash> -- path/to/file\n- Vérification : git status && git diff --staged path/to/file\n\n3) Prompts modèles pour résumés\n- \"Résumer à partir d'ici\": « Résume tout le texte après [CHECKPOINT: X] en 5–8 points, conserver décisions, tâches et dépendances; supprimer exemples et digressions. »\n- \"Résumer jusqu’ici\": « Résume tout le texte avant [CHECKPOINT: X] en 5–8 points, inclure changements de code, raisons et décisions ouvertes. »\n\n4) Loop autonome (goal + loop) — pseudocode\n- goal = \"livrer feature X\"\n- loop: pour i in 1..N:\n  - observe() — lire état du repo, tâches ouvertes, derniers checkpoints\n  - plan() — produire 1–3 actions atomiques (tests, commit, résumé)\n  - act() — exécuter actions en mode sandbox ou proposer PR\n  - reflect() — enregistrer résultat, créer checkpoint si significatif\n  - stop si goal atteint ou requiert validation humaine\n\n5) Risques et mitigations\n- Risques : perte de données (restauration erronée), résumés perdant détails critiques, dérive d’objectif, modifications non autorisées.\n- Mitigations : gardes-fous (mode read-only par défaut), confirmations humaines pour actions destructrices, tests automatisés avant commit, conserver backups/branches.\n\nUne bonne réponse fournira les marqueurs, commandes Git exactes, prompts de résumé réutilisables, pseudocode de loop et règles de sécurité."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Restore code - roll back just the files.",
+        "fr": "Restore code - roll back just the files."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__04_007",
@@ -828,7 +888,17 @@
         "fr": "But de l’exercice : expliquer clairement quand et comment utiliser les commandes de checkpointing (“Résume jusqu’ici”, “Résume à partir d’ici”) et comment rendre Claude plus autonome via “goal” et “loop”. Correction modèle :\n\n- Définitions concrètes\n  - “Résume jusqu’ici” : compresser tout le contenu antérieur en 4–8 points (décisions, paramètres, dépendances, éléments ouverts) pour libérer du contexte tout en conservant les parties d’implémentation intactes.\n  - “Résume à partir d’ici” : synthétiser tout ce qui suit un checkpoint pour réduire la verbosité d’une conversation parallèle ou d’une longue phase d’exécution.\n\n- Exemples de prompts (utilisables tels quels)\n  - Résume jusqu’ici : «Résume jusqu’ici en 6 bullets : décisions, paramètres, hypothèses, tâches restantes, points de risque, références.»\n  - Résume à partir d’ici : «À partir de ce point, résume en 4 bullets les actions réalisées, outputs produits, erreurs rencontrées et prochaines étapes.»\n\n- Rendre autonome (goal + loop)\n  - Patron : «Goal: [objectif mesurable]. Loop: 1) Plan la prochaine action ; 2) Exécute ; 3) Vérifie (tests/logs) ; 4) Si objectif non atteint, répète.»\n  - Exemple : «Goal: livrer un script X fonctionnel. Loop: plan → coder une fonction → lancer tests unitaires → enregistrer résultats → itérer.»\n\n- Risques concrets et mitigations\n  - Perte d’informations critiques : conservez archives brutes et identifiants de checkpoint.\n  - Erreurs de résumé / hallucinations : demander sources/segments originaux et validation humaine.\n  - Dérive d’état pendant la boucle : ajouter tests automatiques et seuils d’arrêt.\n\n- Bonnes pratiques opérationnelles\n  - Numéroter checkpoints, inclure métadonnées (horodatage, auteur).\n  - Exiger résumés concis + verbatim des décisions sensibles.\n  - Automatiser vérifications post-loop avant fusionner changements."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Summarize from here - summarizes everything aft...",
+        "fr": "Summarize from here - summarizes everything aft..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__04_008",
@@ -847,7 +917,17 @@
         "fr": "Points clés à couvrir (correction modèle)\n\n1) Planifier et itérer\n- Toujours fournir un plan structuré (objectifs, étapes, livrables, points de contrôle). Ex : étapes “1. config CI, 2. corriger failing tests X, 3. revue PR”.\n- Itérez sur le plan plutôt que d’espérer : demandez à Claude d’insérer/modifier une section précise (p.ex. “Ajoute une sous-étape après 2 pour mocker l’API Y”).\n\n2) Utiliser compact sans perdre l’essentiel\n- Commande : compact puis ajoutez immédiatement la consigne de résumé (ex. \"Compact — résume en conservant uniquement les changements d’API et les tickets référencés\").\n- Risque : suppression d’informations critiques → Mitigation : dans la même invite, lister explicitement ce qui doit être conservé (tests, endpoints, tickets).\n\n3) Rewind (retour à un point de contrôle)\n- Rappel pratique : touchez deux fois Échap sur une invite vide pour ouvrir le menu rewind.\n- Chaque invite crée un checkpoint ; options : restaurer code/conversation/both, “résumer à partir d’ici” ou “résumer jusqu’ici”.\n- Usage conseillé : créer checkpoints avant gros changements ou refactorings.\n\n4) Goal et Loop\n- Exemple Goal : /goal \"Tous les tests dans source billing passent et le vérificateur de types ne signale aucune erreur\"\n- Annuler : /goal clear\n- Contrainte : l’évaluateur ne voit que la transcription → s’assurer que les preuves (sorties de test, logs) sont dans la sortie.\n- Loop : utiliser pour polling CI/déploiement, appuyer Échap pour arrêter ; surveiller risques de side-effects ou boucles infinies.\n\n5) Work trees pour travail parallèle\n- Créez work trees séparés pour éviter conflits sur fichiers.\n- Fichier .worktree à la racine liste fichiers à copier/ignorer (ex. .env.local, config/private.json).\n- Risque : divergence de config entre arbres → synchroniser explicitement les changements validés.\n\nChecklist de vérification finale\n- Le plan contient critères de succès vérifiables.\n- Compact a des instructions précises de ce qui doit être gardé.\n- Checkpoint (rewind) créé avant opérations risquées.\n- Goal défini quand la condition est vérifiable par la sortie.\n- Loop configuré avec intervalle et stop condition.\n- Work trees configurés et fichiers sensibles exclus/partagés correctement."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Once the plan has been provided, actually read ...",
+        "fr": "Once the plan has been provided, actually read ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_foundations__04_009",
@@ -866,7 +946,17 @@
         "fr": "Hook: masquer une clé en entrée (updatedInput)\n- Détecter la clé dès la lecture (regex strict): /(sk_live_[A-Za-z0-9\\-_]{20,})/g\n- Remplacer par placeholder et renvoyer updatedInput pour permettre l’exécution.\n\nExemple (pseudo-JS):\nconst matches = input.match(/(sk_live_[A-Za-z0-9\\-_]{20,})/g);\nif (matches) {\n  // Ne pas logguer la clé en clair : stocker uniquement un haché pour audit\n  storeAudit({hash: sha256(matches[0]), type: 'secret-leaked', time: Date.now()});\n  const safeInput = input.replace(/(sk_live_[A-Za-z0-9\\-_]{20,})/g, '<REDACTED_KEY>');\n  return { action: 'updatedInput', updatedInput: safeInput };\n}\nreturn { action: 'allow' };\n\nBonnes pratiques opérationnelles:\n- Appliquer regex la plus stricte possible pour réduire faux positifs.\n- Ne jamais écrire la valeur complète du secret dans les logs ou le contexte.\n- Conserver un haché pour traçabilité et rotation des clés si nécessaire.\n- Tester sur exemples non sensibles avant déploiement.\n\nHook: SessionStart après compaction (préserver l’état)\n- Matcher: événement SessionStart déclenché après compact.\n- Extraire métadonnées (noms de fichiers, timestamps, short snippets).\n- Générer un \"short summary\" (3–6 lignes) et injecter dans le contexte via updatedContext/updatedInput.\n\nExemple de résumé retourné:\n{\n  action: 'updatedContext',\n  contextPatch: \"Résumé des fichiers: main.py (logic auth), secret.txt (contenu masqué), notes.md (10 entrées); dernier edit: 2026-07-20. Points clés: token rotated, endpoint /process.\"\n}\n\nBonnes pratiques:\n- Limiter la taille du résumé (p.ex. < 500 caractères).\n- Ne pas réintroduire de secrets dans le contexte résumé.\n- Valider que Claude utilise bien ce résumé (tests de reprise d’état)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Claude Platform",
+        "Context Design"
+      ],
+      "title": {
+        "en": "The obvious move is to return deny and stop a d...",
+        "fr": "The obvious move is to return deny and stop a d..."
+      }
     }
   ]
 }

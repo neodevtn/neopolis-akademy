@@ -252,7 +252,17 @@
         "fr": "Format : checklist + exemple (prompt initial / prompt corrigé)\n\nSignes d’un prompt faible (diagnostic actionnable)\n- Objectif vague : le but n’est pas formulé → préciser le résultat attendu.\n- Livrable absent ou mal défini : pas de format (tableau, mémo, email) → indiquer format et structure.\n- Contexte manquant : données, audience, historique non fournis → résumer les éléments pertinents ou connecter la source.\n- Contraintes non précisées : délai, longueur, style, sources autorisées manquent → indiquer explicitement.\n- Pas d’exemples ni de critère d’acceptation → fournir exemple concret et critères de réussite.\n\nChecklist corrective (à inclure systématiquement)\n1. Rôle attendu (ex. \"Tu es un consultant productif\").\n2. Tâche claire (ex. \"résumer X\", \"rédiger Y\").\n3. Livrable + format (ex. \"tableau à 3 colonnes\" ou \"mail de 150–200 mots\").\n4. Contexte concis (données, audience, décision visée).\n5. Contraintes (ton, style, sources, délai, longueur).\n6. Exemples/critères d’acceptation (ex. \"inclure KPI, source citation\").\n\nExemple pratique\nPrompt faible : « Résume ce rapport et dis-moi quoi faire. »\nPrompt corrigé : « Tu es consultant produit. Tâche : résumer le rapport sur l’usage mobile Q2 et proposer 3 actions prioritaires. Livrable : tableau (colonnes : insight, preuve du rapport, action recommandée). Contexte : v. rapport (pièce jointe), audience = équipe produit, contrainte = 200–300 mots totaux, style concis, hiérarchiser par impact estimé. Critère : chaque action doit inclure effort estimé (low/med/high). »\n\nRisques si non corrigé : résultats hors cible, perte de temps, décisions basées sur hypothèses erronées, exposition involontaire de données."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Business Value",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "The shape of the result: a table, a bulleted li...",
+        "fr": "The shape of the result: a table, a bulleted li..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_002",
@@ -271,7 +281,17 @@
         "fr": "Composants-clés (les « cinq ») : Contexte, Tâche (verbe clair), Contraintes (format, longueur, ton), Public, Livrable (critères d'acceptation / format final). Tous ne sont pas nécessaires à chaque prompt — l'enjeu est d'identifier lesquels manquent.\n\nQuand inclure quoi\n- Question factuelle courte → seulement Tâche (poser la question) ± Contraintes (langue).\n- Recherche / synthèse → Contexte (sources pertinentes), Tâche (synthétiser/compare), Contraintes (longueur, style), Public.\n- Livrable client (rapport, e-mail, slide) → tous les composants + critères d'acceptation/exemples.\n\nChecklist diagnostique pour un prompt faible\n1. Le modèle a-t-il assez de contexte (données, documents, rôle) ? Si non, joignez ou décrivez la source ou activez un Connector.  \n2. Le verbe est-il précis ? Remplacez « expliquer » par « résumer en 5 bullet points » ou « rédiger un plan détaillé ».  \n3. Les contraintes sont-elles explicites ? (longueur, style, format, échéance)  \n4. Le public est-il défini ? (dirigeant, technicien, grand public)  \n5. Le livrable est-il mesurable ? (nombre de pages, template PowerPoint, objet d’e-mail + CTA)\n\nTemplate pratique à utiliser\nContexte: [quel info le modèle connaît]  \nTâche: [verbe précis]  \nContraintes: [longueur, ton, format]  \nPublic: [qui lit]  \nLivrable: [ex. : e‑mail prêt à envoyer, 5 slides PPT, checklist de 10 items]\n\nExemple rapide\nAvant: « Prépare un résumé sur le projet X. »  \nAprès: Contexte: notes de réunion X (voir doc). Tâche: synthétiser les 3 décisions clés. Contraintes: ≤150 mots, bullets. Public: comité de direction. Livrable: paragraphe + 3 bullets, ton formel."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Claude Platform",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Not every prompt needs all five. A quick questi...",
+        "fr": "Not every prompt needs all five. A quick questi..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_003",
@@ -290,7 +310,17 @@
         "fr": "Checklist des 5 éléments (à vérifier en 30 s)\n- Rôle : qui est Claude ici ? (ex. « analyste marketing B2B »).\n- Contexte non inférable : données spécifiques (marché, audience, contraintes légales, date).\n- Tâche sans ambiguïté : action précise et portée (ex. « produire un plan 6 mois, pas un audit »).\n- Contraintes : limites de longueur, sources, style, budget, délais.\n- Format de sortie : structure attendue (bullet points, tableau CSV, résumé 100 mots).\n\nDécomposition pratique (procédé en 5 étapes)\n1. Définir objectif et critères d’acceptation (KPI, livrables).\n2. Fractionner en sous-tâches atomiques séquencées (ex. recherche → positionnement → plan média → calendrier → contenu).\n3. Pour chaque sous-tâche, rédiger un micro-prompt contenant les 5 éléments ci‑dessus. Inclure stop-criteria (quand passer à la suite).\n4. Exiger sorties vérifiables (tableaux, sources avec liens, métriques chiffrées).\n5. Itérer : révision + checklist QA avant validation finale.\n\nExemple concret (demande : « Plan marketing 6 mois pour SaaS gestion projet B2B »)\n- Sous‑tâche 1 (recherche marché) — Prompt : « Tu es analyste marché B2B. Contexte : SaaS PM, EU/US, ARR < $1M. Tâche : identifier 3 segments prioritaires + besoins + concurrents. Contraintes : sources depuis 2022, 400–600 mots. Format : 3 bullet points + tableau (segment | taille marché | priorité). » Checkpoint : valider segments avant la suite.\n- Sous‑tâche 2 (positionnement), 3 (canaux & budget), 4 (calendrier & KPIs), 5 (exécution créative).\n\nPoints QA à inclure dans chaque itération : sources, hypothèses explicites, métriques cibles, prochaines étapes claires."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Claude Platform",
+        "Computer Vision",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Before sending any prompt that matters",
+        "fr": "Before sending any prompt that matters"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_004",
@@ -309,7 +339,17 @@
         "fr": "1) Extraction (priorité) — demande à Claude d’extraire chaque changement substantiel en sortie structurée. Exemple de prompt Step 1 :\n« Lis le document joint et retourne un tableau JSON avec pour chaque changement : id, page/section, extrait original (≤200 caractères), résumé 1–2 lignes, implication pratique (qui fait quoi), public affecté, échéance/dates, risques juridiques/contrôles à vérifier, priorité (Haute/Moyenne/Basse). Cite la position texte. »\n\n2) Normalisation — consolide ces extraits en un “catalogue des changements” unique (même champ JSON), ajoute tags (RH, IT, conformité, clients) et assignations provisoires.\n\n3) Priorisation — filtre par impact + échéance ; marque les éléments nécessitant approbation légale/dirigeante.\n\n4) Fondation narrative — rédige un message-cadre (1 paragraphe) et 3 messages clés (pour tous publics, managers, cadres) reprenant le catalogue.\n\n5) Livraison ciblée — produire les trois livrables depuis la fondation :\n- Annonce interne : objet, 1 paragraphe d’annonce, actions immédiates, lien ressources.\n- FAQ : Q/R par changement (question anticipée, réponse courte, action requise, référence).\n- Brief cadre : 1 page, points d’impact, risques, décisions requises, calendrier.\n\n6) Validation & itération — walkthrough avec SME, juridique et 1 manager pilote ; collecter retours, versionner (changelog), incorporer.\n\n7) Diffusion & suivi — plan de canaux, responsables, indicateurs de compréhension et checklist de publication.\n\nRisques concrets : omission d’obligations légales, ambiguïté pour managers, actions opérationnelles non assignées. Demander toujours citations de sources et niveau de confiance pour chaque extraction."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Business Value",
+        "Claude Platform",
+        "Compliance"
+      ],
+      "title": {
+        "en": "Three deliverables, one foundation: sequence th...",
+        "fr": "Three deliverables, one foundation: sequence th..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_005",
@@ -328,7 +368,17 @@
         "fr": "Étape 1 — Extraire et traduire en pratique\n- Parcourez le document avec une grille : portée, responsabilités, processus opérationnels, obligations de conformité, sanctions, échéances, exceptions, données/Confidentialité, formation et reporting.\n- Pour chaque changement substantiel, notez (a) l’extrait exact (citation + emplacement), (b) en quoi cela modifie le processus actuel, (c) actions concrètes requises (qui fait quoi, quand, comment). Exemple : « Nouveau délai de conservation des données = réduit de 5 à 2 ans » → doit supprimer archives >2 ans; mettre à jour SOPs, informer IT pour purge automatique.\n\nÉtape 2 — Vérifier exhaustivité et exactitude\n- Comparer avec la version antérieure (outil diff ou tableau « ancien / nouveau / impact »).\n- Valider avec parties prenantes : juridique, sécurité, RH, opérations — collecte de sign-offs écrits.\n- Checklist de complétude : chaque section du document est mappée, contradictions résolues, définitions clarifiées, dates d’entrée en vigueur précisées.\n- Garder un changelog daté et responsable pour audit.\n\nÉtape 3 — Annonce au personnel (exemple)\nObjet : Mise à jour de la Politique [Nom] — Entrée en vigueur le [date]\nCorps : Résumé en 3 points des changements majeurs, actions requises par le personnel (p.ex. suivre la formation X, modifier procédures Y), lien vers la politique complète, date limite, contacts pour questions.\n\nÉtape 4 — FAQ (exemples)\n- Qui est concerné ? Tous les employés/équipes X.\n- Que dois‑je faire immédiatement ? [3 actions concrètes].\n- Y a‑t‑il formation obligatoire ? Oui — date et durée.\n- Que se passe‑t‑il en cas de non‑conformité ? Sanctions progressives + support pour remédiation.\n- Où trouver la politique complète et qui contacter ? Lien + contact (nom, e‑mail)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Automation",
+        "Evaluation",
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "Model decomposition",
+        "fr": "Model decomposition"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_006",
@@ -347,7 +397,17 @@
         "fr": "Analyse — ce que doit faire la consigne à Claude\n- Mesurer explicitement : couverture des critères (%, ex. 0–100), conformité à un standard nommé (ex. ISO, guideline interne), nombre d'hypothèses explicites, et taux d'ambiguïté détectée.\n- Standards mesurables : nommer la norme (ex. \"conformité à ISO 27001 control A.12 = oui/non\"), seuils (ex. ≥90% acceptable).\n- Gérer l'ambiguïté : demander jusqu'à 3 questions de clarification ; si pas de réponse, appliquer des hypothèses par défaut documentées et étiqueter les résultats avec un score de confiance (0–100%).\n\nRecherche — périmètre et discipline des sources\n- Définir la question en une phrase + 3 sous-questions. Délimiter : dates (p.ex. 2018–2026), langues, types de sources acceptés (peer‑review, rapports officiels, médias réputés).\n- Exiger preuves : citations in‑line + URL + date d’accès; synthèse triée par fiabilité.\n- Si fraîcheur requise : activer la recherche web dans le chat ou la fonctionnalité Recherche. Sinon, préciser « pas de web » et autoriser uniquement sources fournies.\n- Mesurer : % d’affirmations sourcées, diversité des sources.\n\nRédaction — public, ton, format\n- Spécifier public (rôle, niveau d’expertise), ton (formel, persuasif…), format (mail, rapport 1‑page, slides), longueur exacte ±10%, et métrique de lisibilité cible.\n- Demander exemples de style et tolérance aux reformulations (p.ex. \"gardez 70–90% du vocabulaire technique\").\n\nRemue‑méninges — contraintes lâches\n- Indiquer objectif, limites et demander volume + diversité (p.ex. 30 idées en 3 catégories).\n- Autoriser la divergence : interdiction d’auto‑censure, pas d’évaluation qualitative initiale.\n- Ensuite resserrer : filtrage par faisabilité, impact, coût.\n\nRéférence rapide (checklist)\n1) Énoncer question + limites. 2) Spécifier métriques et standards. 3) Demander citations et score de confiance. 4) Prévoir clarifications (≤3 Qs). 5) Indiquer format/longueur/ton. 6) Pour brainstorming : volume + catégories puis tri."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Claude Platform",
+        "Cost Optimization"
+      ],
+      "title": {
+        "en": "Analysis. Wants tight constraints and explicit ...",
+        "fr": "Analysis. Wants tight constraints and explicit ..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_007",
@@ -366,7 +426,17 @@
         "fr": "1) Faible : intention du prompt mal définie (objectif flou).  \nChangement unique le plus efficace : remplacer la demande vague par une instruction explicite et mesurable — par ex. «Résume en 5 bullet points les 3 arguments principaux et leur gain chiffré pour un décideur» plutôt que «fais un résumé».\n\n2) Faible : format de sortie absent (réponse non exploitable).  \nChangement unique le plus efficace : spécifier un format structuré (JSON ou tableau) avec champs nommés — par ex. «Réponds en JSON avec clés: summary, benefits, risks».\n\n3) Faible : contexte/audience manquants (ton et niveau inappropriés).  \nChangement unique le plus efficace : ajouter la cible et le registre — par ex. «Explique comme pour un chef de produit senior, en langage non technique, en 3 points».\n\n4) Faible : absence d’exemples ou d’exigences de raisonnement (résultats incohérents).  \nChangement unique le plus efficace : fournir un exemple d’entrée-sortie (one-shot) ou demander explicitement les étapes de raisonnement — par ex. «Montre les étapes et calcule les chiffres; exemple d’input→output ci‑dessous»."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Context Design",
+        "Evaluation",
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "CheckpointStrategy by Task Type·5 min",
+        "fr": "CheckpointStrategy by Task Type·5 min"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_008",
@@ -385,7 +455,17 @@
         "fr": "Erreurs fréquentes (écarts de spécification)\n- Objectif flou : pas de résultat mesurable attendu (ex. informer vs. produire un résumé de 200 mots).\n- Contexte insuffisant : données/contraintes manquantes (audience, ton, format).\n- Absence de format de sortie : pas de structure exigée (titres, sections, JSON).\n- Pas d’exemples ni de critères d’évaluation : impossible de calibrer la sortie.\n- Contraintes pratiques non précisées : sources à citer, longueur, style, interdictions.\n\nAssocier chaque correctif au composant\n- Objectif clair → composant « User task / Goal » : définir l’intention et le critère de réussite (KPIs).\n- Contexte & audience → composant « Context » : fournir brève background et besoins utilisateurs.\n- Format de sortie → composant « Output specification » : modèle, balises, JSON, longueur.\n- Ton & style → composant « System prompt / Persona » : voix, niveau de technicité.\n- Exemples et tests → composant « Examples » : entrée/sortie exemplaires et critères d’évaluation.\n- Contraintes (sources, citations) → composant « Constraints » : contraintes éthiques/légales.\n\nPrompt réparé (modèle)\nSystem: « Tu es un rédacteur technique clair et concis. Respecte le format demandé. »\nUser: « Objectif : produire un résumé actionnable du texte ci‑dessous destiné à des managers non techniques. Critère : 5 actions prioritaires, chacune en 1 phrase, + 2 risques. »\nContext: « Public = managers, connaissances techniques limitées. Longueur totale ≤ 200 mots. »\nInput: « [insérer texte source] »\nOutput specification: « Renvoie en JSON {\"actions\":[{\"id\":1,\"action\":\"…\",\"impact\":\"…\"}], \"risks\":[…], \"summary\":\"…\"} »\nExamples: fournir un court exemple d’entrée et sortie attendue.\nConstraints: « Cite uniquement les éléments présents dans le texte ; pas d’inventions. Langue : français. »"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Business Value",
+        "Context Design",
+        "Evaluation"
+      ],
+      "title": {
+        "en": "ExerciseRepair the Prompt·6 min",
+        "fr": "ExerciseRepair the Prompt·6 min"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_009",
@@ -404,7 +484,17 @@
         "fr": "Lacunes de spécification (concrètes)\n- Portée indéfinie : période, produit/feature, volume de retours non précisés.\n- Format de sortie absent : type (résumé, tableau), sections attendues, longueur.\n- Critères de priorisation manquants : comment trier actions (impact/effort).\n- Contexte utilisateur inexistant : public cible (équipe produit, direction).\n- Pas d’exemples ni de métrique pour juger qualité.\n- Aucune instruction sur preuves : citations clients, sentiment, fréquence.\n- Pas d’indication d’actions concrètes (propriétaire, échéance, métriques de succès).\n\nCorrespondance corrections → composants\n- Contexte & données : ajouter période, produit, échantillon ou lien aux données (Composant : Context/Data).\n- Rôle et ton : définir persona (PM analytique) et audience (Comité Produit) (Composant : System/Persona).\n- Format de sortie : fournir un schéma structuré et longueur limite (Composant : Output Format).\n- Priorisation : méthode impact/effort + score (Composant : Evaluation/Prioritization).\n- Preuves : inclure sentiment, fréquence, et 3–5 citations représentatives (Composant : Evidence).\n- Contraintes : délais, style concis, langue (Composant : Constraints).\n- Exemples : un mini-exemple de sortie (Composant : Few-shot).\n\nPrompt réparé (à copier)\nTu es un chef de produit analytique. Contexte : voici les retours clients pour [Produit/Feature] entre [date début] et [date fin] : [insérer données ou lien]. Public : équipe produit + direction. Objectif : fournir un résumé exploitable en max 500 mots.\n\nSortie attendue (sections obligatoires) :\n1) Résumé exécutif (2–3 phrases).\n2) Métriques clés : volume total, % positif/nuancé/négatif, top 5 thèmes par fréquence.\n3) Thèmes détaillés : pour chaque thème → description brève, % de mentions, sentiment moyen.\n4) Citations représentatives (3–5) : anonymisées.\n5) Recommandations priorisées (top 5) : action, propriétaire suggéré, échéance estimée, score Impact(1–5)/Effort(1–5) et justification.\n6) Risques et incertitudes.\n7) Prochaines étapes mesurables (OKR/KPI) pour valider impact.\n\nContraintes : français clair, ton professionnel, phrases courtes. Si données manquent, indiquer hypothèses. Fournis aussi une ligne d’évaluation : “Pourquoi cette recommandation est prioritaire” (1 phrase)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Business Value",
+        "Context Design",
+        "Evaluation"
+      ],
+      "title": {
+        "en": "Exercise: Repair the Underperforming Prompt",
+        "fr": "Exercise: Repair the Underperforming Prompt"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_010",
@@ -423,7 +513,17 @@
         "fr": "Objectif réel de l’auteur : transformer des verbatims clients en recommandations opérationnelles, hiérarchisées et datées, appuyées par des preuves (chiffres et exemples), avec propriétaires, estimations d’effort et métriques de succès.\n\nPrompt amélioré (à coller dans l’IA)\n« Je fournis un jeu de retours clients (CSV/JSON) + période + périmètre produit. Pour chaque problème identifié, renvoie un élément structuré contenant : \n1) Thème résumé (1 ligne) ; \n2) Preuves chiffrées (nombre, %, tendance vs période précédente) et 1–2 citations représentatives ; \n3) Priorité (H/M/B) avec score RICE rapide (Reach, Impact, Confidence, Effort) ; \n4) Recommandation concrète (actions précises, responsable proposé, échéance) ; \n5) Estimation d’effort (personne-jours) ; \n6) KPI cible et méthode de suivi ; \n7) Risques/dépendances. \nClasse les éléments par priorité. Si les données manquent, indique les hypothèses et demandes de données supplémentaires. Réponds en tableau/bullets. »\n\nExemple d’item\nThème : Temps de réponse support trop long. Preuves : 42 % des tickets >24h (N=1 200), +12 % vs Q1; citation : « J’ai attendu 3 jours… ». Priorité : H (RICE=96). Reco : embaucher 1 agent + automatiser accusé réception (owner : Support Manager; échéance 6 semaines). Effort : 25 j-h. KPI : tps médian ≤8h en 8 semaines. Risques : recrutement long, charge saisonnière.\n\nChecklist de validation : chaque recommandation est traçable aux données, priorisée, a owner, effort, KPI et risques."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Automation"
+      ],
+      "title": {
+        "en": "The weak prompt",
+        "fr": "The weak prompt"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_011",
@@ -442,7 +542,17 @@
         "fr": "But : l’énoncé est ambigu ; voici une correction modèle ciblée sur « vérifier l’ordre » et « afficher la réponse du modèle » pour un quiz sur les fondements du prompting.\n\nProcédure concrète\n- Définir l’objectif exact (format de sortie, niveau de détail).\n- Construire une structure canonique : 1) instruction système (contexte/ton), 2) tâche utilisateur (objectif), 3) contraintes/format (ex. « Répondre en JSON »), 4) exemples (input→output), 5) question finale.\n- Vérifier l’ordre en tests A/B : exécuter (A) contraintes avant exemples et (B) contraintes après exemples ; consigner différences d’output.\n- Paramètres : utiliser temperature=0 pour reproductibilité quand on teste l’effet d’ordre.\n- Affichage : pour chaque exécution, enregistrer et montrer (a) prompt utilisé, (b) réponse brute du modèle, (c) post-traitement attendu (parsing/validation), (d) erreurs ou divergences.\n\nChecklist qu’une bonne réponse couvre\n- Objet et format explicités\n- Structure de prompt respectée (système → user → contraintes → ex.)\n- Tests montrant impact de l’ordre (exemples concrets)\n- Logs et méthode d’évaluation (exact match, validations JSON)\n- Mesures de robustesse (temperature, prompts adverses)\n\nRisques concrets\n- Instructions contradictoires (ordre mal choisi)\n- Exemple qui domine la contrainte (model copies format non désiré)\n- Injection de prompt via entrées utilisateur\n- Sortie mal formée non parsable\n\nExemple bref\nPrompt : « SYSTEM: Tu es un assistant concis. USER: Résume en 1 phrase. CONTRAINTE: Répondre en français. EXEMPLE: Input: ‘Article long’ → Output: ‘Phrase résumé.’ »\nAttendu : une phrase en français conforme à la contrainte."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Computer Vision",
+        "Context Design",
+        "Evaluation"
+      ],
+      "title": {
+        "en": "Check order",
+        "fr": "Check order"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_012",
@@ -461,7 +571,17 @@
         "fr": "Réponse modèle — ce que doit couvrir une bonne réponse au quiz « Fondations du prompting » :\n\n1) But clair et rôle : identifier l’objectif (résumer, traduire, planifier) et définir le rôle de l’IA (ex. «Tu es un rédacteur scientifique»). Exemple d’amélioration : remplacer «Résume ceci» par «Résume en 3 phrases en français, niveau lycée, en listant 2 points clés».\n\n2) Instructions précises et contraintes : inclure format de sortie, longueur, ton, langue, et toute contrainte (ex. «pas plus de 120 mots», «utilise des puces»). Eviter ambiguïtés et pronoms non résolus.\n\n3) Exemples et few‑shot : quand utile, fournir 1–3 exemples d’entrée/sortie pour fixer le style attendu. Ex. montrer un avant/après.\n\n4) Stratégies de raisonnement : demander explicitement l’ordre de réflexion (ex. «Énumère d’abord les étapes, puis fournis la réponse finale») ou utiliser des prompts en chaîne (decomposition) pour tâches complexes.\n\n5) Évaluation et test : vérifier exactitude, exhaustivité, adhérence aux contraintes et style. Tester variantes de prompt et ajuster.\n\n6) Risques et mitigations : hallucinations (demander sources/citations), biais (diversifier exemples), fuite de données (ne pas inclure d’informations sensibles), prompt injection (définir garde‑fous explicites).\n\nPoints clés pour choisir la meilleure option dans chaque scénario : objectif + spécificité + contraintes + exemples + gestion des risques."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Evaluation"
+      ],
+      "title": {
+        "en": "QuizModule 2·5 min",
+        "fr": "QuizModule 2·5 min"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_013",
@@ -480,7 +600,17 @@
         "fr": "Correction modèle (ce que l'étudiant doit produire)\n\n1) Méthode (brève, actionnable)\n- Charger les 200 réponses depuis un CSV/JSON en une liste Python.\n- Normaliser (lower(), remove punctuation, unicode normalize).\n- Définir pour chaque problème un petit ensemble de mots-clés/expressions représentatives.\n- Pour chaque réponse, détecter les mentions (une réponse peut compter pour plusieurs problèmes si elles sont explicitement évoquées).\n- Compter précisément les occurrences par problème, calculer part = count / 200.\n- Choisir pour chaque problème une citation mot à mot provenant d'une réponse classée dans ce problème (p. ex. la réponse contenant le plus de mots-clés pour ce problème).\n- Produire une liste classée (plus fréquent → moins fréquent) avec : rang, nom du problème, count, part, citation.\n\n2) Exemple de code fonctionnel (Python)\nresponses = [...]  # liste de 200 chaînes\nimport re, collections\ndef norm(s): return re.sub(r'[^\\w\\s]', '', s.lower())\nkeywords = {\n  \"prix élevé\": [\"cher\", \"trop cher\", \"prix élevé\", \"coûte trop\"],\n  \"interface confuse\": [\"interface\", \"confus\", \"difficile à utiliser\", \"trop de clics\"],\n  \"support lent\": [\"support\", \"aucune réponse\", \"temps de réponse\", \"lent\"]\n}\ntags_count = collections.Counter()\ntag_examples = {k: [] for k in keywords}\nfor r in responses:\n  nr = norm(r)\n  for tag, kws in keywords.items():\n    if any(k in nr for k in kws):\n      tags_count[tag] += 1\n      tag_examples[tag].append(r)\n# choisir citation représentative : réponse la plus courte ou la plus fréquente parmi tag_examples\nresult = []\ntotal = len(responses)\nfor tag, cnt in tags_count.most_common(3):\n  quote = max(tag_examples[tag], key=len)  # ou autre critère\n  result.append((tag, cnt, f\"{cnt/total:.1%}\", quote))\nprint(result)\n\n3) Format de sortie attendu (exemple)\n1. Prix élevé — 78 réponses — 39.0% — \"Le produit est trop cher pour la qualité.\"\n2. Interface confuse — 55 réponses — 27.5% — \"L'application est difficile à naviguer, beaucoup d'erreurs.\"\n3. Support lent — 20 réponses — 10.0% — \"Je n'ai reçu aucune réponse du support en 7 jours.\"\n\n4) Points de vigilance\n- Gérer mentions multiples (compter par mention, pas par réponse unique, si demandé).\n- Documenter règles de mappage (keywords) et limiter biais.\n- Vérifier qualitativement 10–20 cas pour valider l'assignation automatique."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Automation",
+        "Business Value",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Model answer (S09_MODEL):",
+        "fr": "Model answer (S09_MODEL):"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_014",
@@ -499,7 +629,17 @@
         "fr": "Corrections modèle — correspondance des faiblesses aux composants et actions correctives\n\n1) Faiblesse : objectif ambivalent (sous‑spécifié)  \n   - Composant : Instruction / tâche.  \n   - Justification : l'agent ne sait pas critères de réussite ni priorité.  \n   - Correctif : reformuler l'instruction en une phrase claire + critères mesurables (ex. \"résumer en ≤150 mots, conserver les 3 idées principales, citer sources\").\n\n2) Faiblesse : contexte insuffisant (sous‑spécifié)  \n   - Composant : Contexte / données d'entrée.  \n   - Justification : manque d'informations métier ou contraintes produit conduit à réponses inappropriées.  \n   - Correctif : fournir contexte clé (public cible, format attendu, exemples de données), ou une source de vérité unique.\n\n3) Faiblesse : format trop contraint (sur‑spécifié)  \n   - Composant : Contraintes de sortie / schéma.  \n   - Justification : contrainte excessive empêche solutions valides et fragilise la génération.  \n   - Correctif : assouplir (autoriser options), décrire intention plutôt que micro‑règles, ajouter validation post‑process.\n\n4) Faiblesse : exemples manquants ou non représentatifs  \n   - Composant : Exemples / few‑shot.  \n   - Justification : exemples biaisés entraînent comportements inattendus.  \n   - Correctif : fournir jeux d'exemples divers et contre‑exemples, inclure cas limites et erreurs types.\n\nCalibration bidirectionnelle (actionnable)  \n- Itérer : tester variations (plus strict / plus lâche) et mesurer qualité.  \n- Métriques : exactitude, couverture, robustesse aux cas limites.  \n- Processus : corriger composant ciblé → réévaluer → ajuster contraintes/exemples jusqu'à convergence."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Agentic Design",
+        "Architecture",
+        "Context Design"
+      ],
+      "title": {
+        "en": "All correct: You can map each weakness to a com...",
+        "fr": "All correct: You can map each weakness to a com..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_015",
@@ -518,7 +658,17 @@
         "fr": "Points précis à vérifier (les cinq composants) :\n1. Rôle : définissez brièvement le rôle (ex. « Agis comme un facilitateur de brainstorming »), pas comme juge final.\n2. Contexte : fournissez l’objectif et les contraintes business essentielles, pas des exigences de forme prématurées.\n3. Tâche : indiquez clairement « générer des idées » plutôt que « générer des idées finales prêtes à l’emploi ».\n4. Contraintes : limitez-les aux indispensables (budget, échéance), évitez les contraintes créatives excessives.\n5. Format de sortie / évaluation : précisez quantité et structure (ex. nombre d’idées, catégories, 1-2 phrases de justification).\n\nRisques concrets d’un brainstorming trop contraint :\n- Appauvrissement de la créativité (mode collapse).\n- Omission d’idées disruptives.\n- Sur-ajustement aux contraintes mineures.\n- Difficulté d’adoption opérationnelle (idées non testables).\n\nAjustements pratiques à faire :\n- Remplacez « seulement »/« impérativement » par « de préférence », ou déplacez ces contraintes dans une seconde étape d’affinage.\n- Autorisez une proportion d’idées « wild » (15–25 %) et demandez diverses perspectives (utilisateur, technique, commercial).\n- Utilisez une approche en deux étapes : 1) large génération, 2) filtrage/affinage.\n\nExemple de prompt révisé (fonctionnel) :\n« Agis comme facilitateur de brainstorming. Pour le produit X, propose 12 idées de fonctionnalités : 6 pratiques, 4 différenciantes, 2 « audacieuses ». Pour chaque idée, donne une phrase de description et une phrase sur l’impact utilisateur. Respecte contraintes : budget ≤Y, délai Z. »\n\nChecklist avant soumission :\n- Rôle clair mais non prescriptif\n- Contexte essentiel seulement\n- Quantité et diversité demandées\n- Contraintes minimales et placées secondairement\n- Format de sortie précis et vérifiable"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Context Design",
+        "Evaluation",
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "Feedback: Re-read the prompts against the five ...",
+        "fr": "Feedback: Re-read the prompts against the five ..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_016",
@@ -537,7 +687,17 @@
         "fr": "Méthode modèle (à appliquer pour chaque prompt)\n\n1) Identifiez le type de tâche (résumé, génération créative, extraction factuelle, calcul, prise de décision, interaction multi‑tour).\n2) Décrivez la pile de composants attendue, par ordre d’exécution :\n   - Parseur d’entrée (validation, normalisation)\n   - Récupérateur/accès aux connaissances (docs, mémoire)\n   - Planificateur/stratege (structure du résultat)\n   - Moteur de raisonnement / chaîne de pensée (étapes intermédiaires)\n   - Outil externe si nécessaire (API, calculatrice)\n   - Vérificateur de cohérence/fact checking\n   - Formateur de sortie (ton, longueur, format)\n3) Exécutez la simulation: pour chaque composant, montrez l’état attendu (ex. le récupérateur renvoie 3 extraits pertinents ; le planificateur produit un plan en 4 sections).\n4) Évaluez l’adéquation de la stratégie selon critères concrets :\n   - Pertinence : les composants fournis couvrent-ils les besoins informationnels ?\n   - Précision/sûreté : vérificateur et sources contrôlent-ils les hallucinations ?\n   - Efficacité/latence : coût et temps acceptables pour la tâche ?\n   - Complexité : chaines longues apportent-elles de la valeur ou du risque ?\n   - Confidentialité/accès aux données sensibles\n5) Décision finale et ajustements recommandés (ex. ajouter une étape de fact-check si extraction factuelle ; éviter chain-of-thought explicite pour conformité).\n\nExemple bref : prompt = « Résume 5 pages techniques en 300 mots. »\n- Pile : parseur → récupérateur doc → planificateur 3‑parties → raisonnement → vérif. factuelle → formatter.\n- Simulation : récupérateur extrait 5 paragraphes clés ; plan -> intro/méthode/résultats ; vérif. compare faits clés à sources.\n- Conclusion : stratégie convenable ; ajouter vérif. pour éviter omissions/hallucinations."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Data Privacy"
+      ],
+      "title": {
+        "en": "incorrect: Return to Lessons 2 and 5. Run each ...",
+        "fr": "incorrect: Return to Lessons 2 and 5. Run each ..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_017",
@@ -556,7 +716,17 @@
         "fr": "Quand vous revenez à ce point de contrôle, appliquez systématiquement le diagnostic à cinq composants suivant. Une bonne correction contient, pour chaque composant, des réponses courtes et actionnables (1–2 phrases) plus au moins une mesure/critère et au moins une mitigation si pertinent.\n\n1) Objectif / tâche\n- Question : Quel est l’objectif précis (entrée→sortie) ?\n- À fournir : énoncé clair + exemple d’entrée/sortie.\n- Critère : métrique principale (ex. précision ≥ 90 %, F1, utilité humaine).\n\n2) Données / contextes d’entrée\n- Question : Quelles données seront fournies et quelles variations (langue, format, qualité) ?\n- À fournir : sources, taille, exemples d’anomalies.\n- Risques : données manquantes, biais, fuite d’informations sensibles.\n- Mitigation : validation d’entrée, anonymisation, jeux de test représentatifs.\n\n3) Méthode / modèle\n- Question : Quelle approche (règles, modèle pré‑entraîné, fine‑tuning) et quelles ressources ?\n- À fournir : architecture, paramètres importants, dépendances.\n- Risques : surapprentissage, dépendances non reproductibles.\n- Mitigation : cross‑validation, versioning, tests unitaires.\n\n4) Sorties / critères d’acceptation\n- Question : Quelles sorties sont attendues et comment les évaluer ?\n- À fournir : format de sortie, seuils, exemples acceptables/inacceptables.\n- Tests : cas normaux, cas limites, tests adverses.\n\n5) Contraintes & risques opérationnels\n- Question : contraintes temps, coûts, sécurité, conformité ?\n- À fournir : SLA, limites de coût, exigences légales.\n- Risques concrets : hallucinations, fuite de PII, latence excessive, dérive des données.\n- Mitigation : filtres de post‑traitement, monitoring, revue humaine, rollback plan.\n\nLivrable attendu : une page synthétique avec ces 5 sections complétées + 3 tests représentatifs et un plan de mitigation priorisé."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Architecture",
+        "Compliance",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Skipped: Return to this checkpoint before the e...",
+        "fr": "Skipped: Return to this checkpoint before the e..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_018",
@@ -575,7 +745,17 @@
         "fr": "Correction modèle — points attendus et actions concrètes\n\nGaps attendus (les cinq) — une bonne réponse doit identifier et expliquer :\n1. Contexte explicite : préciser la source et la taille des données (ex. “200 réponses clients recueillies via formulaire X, période janvier–mars”).\n2. Rôle demandé : définir le rôle que doit jouer le modèle (ex. “en tant qu’analyste de données produit”).\n3. Objectif clair : dire ce qu’on attend précisément (ex. “résumer thèmes récurrents, proposer 3 actions prioritaires”).\n4. Format et contraintes : format de sortie, longueur, structure (ex. “bullet points, 3-5 phrases par thème, total ≤ 300 mots”).\n5. Critères d’évaluation / hypothèses : indiquer comment juger la réponse et quelles hypothèses sont valides (ex. “ignorer les réponses incomplètes < 5 mots; considérer synonymes”).\n\nRisques concrets si non spécifié :\n- Résumé trop générique ou hors sujet.\n- Ton ou niveau d’analyse inadéquat (trop technique ou trop superficiel).\n- Omission d’éléments importants ou redondances.\n- Hallucinations/ajout d’informations non fournies.\n- Non-respect des contraintes de format ou de longueur.\n\nExemple de prompt corrigé (fonctionnel) :\n« Contexte : jeu de 200 réponses clients recueillies par formulaire en ligne (jan–mars). Rôle : vous êtes un analyste produit. Objectif : identifier 5 thèmes récurrents, estimer leur fréquence (%) et proposer 3 actions prioritaires. Contraintes : bullet points, 1–2 phrases par thème, total ≤ 250 mots. Hypothèses : ignorez réponses <5 mots. Critères : pertinence, concision, faisabilité des actions. »\n\nChecklist pour une bonne réponse :\n- Contexte présent et chiffré\n- Rôle explicite\n- Objectif mesurable\n- Format/longueur définis\n- Critères et hypothèses listés"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Context Design",
+        "Evaluation",
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "All five gaps identified: Good. The context (20...",
+        "fr": "All five gaps identified: Good. The context (20..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_019",
@@ -594,7 +774,17 @@
         "fr": "Le fragment \"+s09S1Sel.length+'/5'\" fonctionne mais est ambigu et fragile (l'unary + est inutile). Correction modèle :\n\n1) Version JS simple et lisible :\nconst count = (s09S1Sel && s09S1Sel.length) ? s09S1Sel.length : 0;\nconst text = `Partial · : ${count}/5`;\nconsole.log(text);\n\n2) Version robuste (protection contre undefined/type et bornage 0–5) :\nconst count = Number(s09S1Sel?.length ?? 0);\nconst safe = Math.min(Math.max(Math.floor(count), 0), 5);\nconst text = `Partial · : ${safe}/5`;\n\n3) Exemple React/JSX :\n<span>Partial · : {s09S1Sel?.length ? `${s09S1Sel.length}/5` : '0/5'}</span>\n\nPoints clés qu’une bonne réponse couvre :\n- Éviter le + unaire inutile (lisibilité) ; utiliser template literals ou concaténation explicite.\n- Vérifier existence de s09S1Sel et que length est un nombre.\n- Normaliser/arrondir et borner la valeur si nécessaire (ex. 0–5).\n- Prévenir erreurs runtime (undefined) et formats inattendus (strings)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Fundamentals",
+        "RAG Architecture",
+        "Template Design"
+      ],
+      "title": {
+        "en": "Partial · : +s09S1Sel.length+'/5'",
+        "fr": "Partial · : +s09S1Sel.length+'/5'"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_020",
@@ -613,7 +803,17 @@
         "fr": "Bonne réponse — voici la correction modèle attendue et ce que vous devriez montrer.\n\nRaisonnement précis\n- Pourquoi c'est un distracteur : «professional and polished» est une contrainte stylistique, pas une spécification fonctionnelle. Elle n'introduit pas d'exigences sur le format, les données d'entrée/sortie, les limites, la sécurité ou les critères de réussite. Donc elle ne comble aucune lacune technique de la tâche.\n- Différence clé : les fragments utiles modifient le comportement du modèle (format de sortie, structure, règles d'évitement, validation), tandis que le ton ne change que la surface linguistique.\n\nVérifications actionnables que l'étudiant doit citer\n1. Retirer le fragment et relire la spécification : si la tâche reste exécutable et non ambiguë, c'est un distracteur.\n2. Demander si le fragment impose une contrainte testable (ex. JSON valide, longueur max, interdiction de halluciner). Si non, c'est distracteur.\n\nExemple de formulation correcte pour l'étape 3 (modèle d'instruction)\n- «Génère un résumé de 150–200 mots en français, en respectant le format JSON {\"title\":..., \"summary\":...}. Cite jusqu'à 3 sources vérifiables; n'invente pas de faits; évite tout conseil légal/ médical. Utilise un ton professionnel.»\n(Remarque : le ton reste applicable mais il ne doit pas être utilisé pour combler des manques de spécification.)\n\nCette réponse devrait suffire pour déverrouiller l'étape 3."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Error Handling",
+        "Fundamentals",
+        "Hallucination Prevention"
+      ],
+      "title": {
+        "en": "All fragments placed correctly: You identified ...",
+        "fr": "All fragments placed correctly: You identified ..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_021",
@@ -632,7 +832,17 @@
         "fr": "Le prompt révisé est bon mais peut être rendu encore plus précis et accompagnée d’un exemple exécutable. Fournir aussi des consignes sur le prétraitement et la reproductibilité.\n\nPrompt final (à utiliser tel quel) :\nVous êtes un·e analyste produit. Ci-joint, 200 réponses à des enquêtes clients. Identifiez les trois problématiques les plus fréquemment évoquées, classées par nombre de réponses. Pour chaque problématique, fournissez : 1) le nombre exact de réponses, 2) la part (%) des réponses, 3) une citation mot à mot représentative. Utilisez du code pour compter précisément, appliquez un prétraitement (minuscule, suppression stopwords français), et fixez random_state pour reproductibilité. Formatez la sortie en liste classée, la plus fréquente en premier.\n\nExemple de code Python (fonctionnel) :\nresponses = [...]  # liste de 200 chaînes\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.cluster import KMeans\nfrom sklearn.metrics.pairwise import cosine_similarity\nimport numpy as np\n\nvec = TfidfVectorizer(stop_words='french', ngram_range=(1,2))\nX = vec.fit_transform(responses)\nk = 10\nkm = KMeans(n_clusters=k, random_state=42).fit(X)\nlabels = km.labels_\ncounts = np.bincount(labels, minlength=k)\ntop = np.argsort(counts)[::-1][:3]\n\nfor rank, idx in enumerate(top, 1):\n    inds = np.where(labels==idx)[0]\n    sims = cosine_similarity(X[inds], km.cluster_centers_[idx].reshape(1,-1)).flatten()\n    rep = responses[inds[np.argmax(sims)]]\n    cnt = len(inds)\n    print(f\"{rank}. {cnt} réponses ({cnt/len(responses):.1%}) — citation : \\\"{rep}\\\"\")\n\nPoints qu’une bonne correction doit couvrir :\n- Prétraitement textuel et langue (stopwords français, normalisation).\n- Choix méthode de regroupement (TF-IDF+KMeans vs embeddings sémantiques).\n- Reproductibilité (random_state).\n- Validation (inspection manuelle, seuils pour fusion/filtrage).\n- Format de sortie prêt à l’analyse décisionnelle."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Business Value",
+        "Context Design",
+        "Digital Transformation"
+      ],
+      "title": {
+        "en": "Model answer: revised prompt: \"You are a produc...",
+        "fr": "Model answer: revised prompt: \"You are a produc..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_022",
@@ -651,7 +861,17 @@
         "fr": "Correction modèle — ce que l'étudiant doit produire\n\n1) Vérification des cinq lacunes et attribution\n- Composants corrigés : rôle (analyste produit), contexte (200 réponses jointes), tâche (identifier 3 problèmes les plus fréquents, triés par nombre), contraintes (citation littérale + part approximative), format de sortie (liste classée).  \n- Distracteur : l'instruction « ton poli » doit être rejetée car elle n'adresse aucune lacune fonctionnelle — mentionnez explicitement pourquoi.\n\n2) Résultat attendu (précis et exécutable)\n- Prompt final clair intégrant rôle, contexte, tâche, contraintes, et format.\n- Méthode reproductible d'exécution de code pour compter les mentions (compter chaque problème indépendamment, autoriser plusieurs mentions par réponse).\n\n3) Exemple de snippet Python fonctionnel (bref)\nimport pandas as pd\ndf = pd.read_csv('responses.csv')  # colonne 'response'\nkeywords = {'Livraison': ['retard','livraison lente'],\n            'Qualité produit': ['cassé','défectueux','mauvaise qualité'],\n            'Service client': ['réponse lente','impossible joindre']}\ndef mentions(r, terms): return any(t in str(r).lower() for t in terms)\ncounts = {k: df['response'].apply(lambda r: mentions(r, v)).sum() for k,v in keywords.items()}\nrep_quote = {k: df[df['response'].apply(lambda r: mentions(r,v))]['response'].iloc[0] for k,v in keywords.items()}\n\n4) Checklist de qualité (à inclure dans la réponse)\n- Méthode de prétraitement (minuscule, suppression ponctuation) ; définition claire des termes-clés ou usage de NLP pour le matching.\n- Calculs exacts : count, pourcentage = count/200*100.\n- Trier par fréquence décroissante ; formater en liste numérotée avec problème, décompte, % et citation littérale.\n- Noter limites et ambiguïtés (phrases mentionnant plusieurs problèmes, synonymes non couverts)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Agentic Design",
+        "Business Value",
+        "Context Design"
+      ],
+      "title": {
+        "en": "All stages correct: You diagnosed all five gaps...",
+        "fr": "All stages correct: You diagnosed all five gaps..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_023",
@@ -670,7 +890,17 @@
         "fr": "Ordre recommandé (chaque bloc fournit ce dont le suivant a besoin) :\n1. Rôle / contrainte globale (ex. «Tu es Claude, assistant expert...»).  \n2. Objectif principal (résumé clair et mesurable de la tâche).  \n3. Données et contexte nécessaires (variables, sources, exemples d’entrée).  \n4. Hypothèses et prérequis (ce que l’on peut supposer ou pas).  \n5. Contraintes de sortie (format, longueur, langue, structure JSON/CSV).  \n6. Étapes attendues / méthode (procédure à suivre, vérifications intermédiaires).  \n7. Exemples d’entrée→sortie (entrées minimales et cas limites).  \n8. Critères de validation et comportement en cas d’erreur (quoi faire si données manquent).  \n9. Question finale ou demande de confirmation (demander au modèle s’il est prêt).\n\nVérification rapide (checklist) :\n- Chaque bloc fournit explicitement les éléments requis par le bloc suivant (p.ex. format annoncé avant les exemples).  \n- Pas d’informations référencées après qu’elles sont nécessaires (éviter dépendances circulaires).  \n- Les noms des variables et formats sont cohérents entre blocs.  \n- Exemples couvrent cas normal et cas limites.  \n- Critères de validation utilisables automatiquement (règles, regex, schéma).  \n- Testez en exécutant une requête simple : si Claude demande une donnée non fournie, réordonnez ou explicitez.\n\nExemple court :\n1. Rôle: «Assistant technique»  \n2. Objectif: «Convertir CSV en JSON»  \n3. Données: «CSV avec colonnes A,B»  \n4. Format sortie: «JSON array d’objets {A,B}»  \n5. Exemple: «A,B → [{\"A\":\"x\",\"B\":\"y\"}]»  \n6. Validation: «valider n⁰ de colonnes = 2»."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Not yet: That order is not right yet. Reorder t...",
+        "fr": "Not yet: That order is not right yet. Reorder t..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_024",
@@ -689,7 +919,17 @@
         "fr": "Étapes concrètes pour reconstruire un prompt faible\n1) Identifier l’objectif précis (livrable, public, usage).  \n2) Définir le rôle du modèle (ex. « Rédige comme un journaliste tech senior »).  \n3) Fournir contexte et données d’entrée (faits, sources, contraintes temporelles).  \n4) Spécifier format de sortie (longueur, sections/titres, balisage, JSON).  \n5) Ajouter critères d’évaluation (exactitude, ton, citations, lisibilité).  \n6) Inclure exemples + cas limites (ex. si données manquantes).  \n7) Préciser contraintes éthiques/sécurité (pas de conseils médicaux, sources fiables).  \n\nTemplate compact (à remplir)\nTu es [rôle]. Tâche : [action précise]. Contexte : [contexte + données]. Contraintes : [longueur, ton, points à éviter]. Format : [structure/markdown/JSON]. Exemples : [1–2 exemples courts]. Critères : [3 critères auditables]. Questions si ambiguïté : [demander info].  \n\nExemple — partir de « Rédige un article sur le télétravail » → prompt reconstruit\nTu es un journaliste tech senior. Tâche : rédiger un article de 800±100 mots sur les bonnes pratiques du télétravail pour managers. Contexte : public = managers PME, 2026, inclure études récentes (au moins 2 sources). Contraintes : ton professionnel, pas de jargon, proposer 5 actions concrètes avec étapes. Format : titre, résumé (30–40 mots), 5 sections (problème, preuves, actions, outils recommandés, conclusion). Exemples : voir style de The Economist. Critères : citations vérifiables, langage clair, checklist finale. Si information manquante, demander précision sur l’audience.  \n\nChecklist que votre réponse devrait couvrir dans le quiz\n- Objectif explicite, rôle, contexte\n- Entrées et contraintes claires\n- Format de sortie défini et testable\n- Critères d’évaluation et exemples\n- Gestion des ambiguïtés et risques (sources, sécurité)"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "Context Design",
+        "Evaluation"
+      ],
+      "title": {
+        "en": "Skipped: Move on if you need to, but the end-of...",
+        "fr": "Skipped: Move on if you need to, but the end-of..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_025",
@@ -708,7 +948,17 @@
         "fr": "Composants clés (à inclure dans chaque prompt)\n- System / rôle : contexte et contraintes (ex. «Tu es un expert…»).  \n- Instruction principale : objectif clair et mesurable.  \n- Contexte / données : textes, schémas, variables.  \n- Exemples (few‑shot) : format attendu + erreurs à éviter.  \n- Contraintes de sortie : longueur, format JSON/CSV, balises.  \n- Mécanisme de vérification : tests unitaires, calculs indépendants, critères d’acceptation.\n\nDécomposition (méthode)\n- Diviser en sous‑tâches atomiques (ex. extraire → normaliser → analyser → synthétiser).  \n- Pour chaque sous‑tâche, définir entrée/sortie et conditions de succès.  \n- Construire prompts modulaires réutilisables pour chaque étape.\n\nItération diagnostique (processus)\n- Écrire cas de test (positifs, négatifs, frontières).  \n- Exécuter, collecter erreurs par catégorie (hallucinations, format, logique).  \n- A/B testing sur variantes (ex. with/without chain‑of‑thought, temperature).  \n- Corriger prompt : clarifier ambiguïtés, ajouter exemples, renforcer vérificateur.  \n- Automatiser régressions et métriques (exactitude, précision, rappel, F1, taux de format).\n\nStratégies par type de tâche\n- Classification : prompt court + few‑shot + seuils de confiance.  \n- Synthèse/summarization : instructions de niveau de détail + long/short summary examples.  \n- Code génération : tests unitaires + demande d’explication ligne à ligne.  \n- Calcul/math : demander étapes, puis vérification par méthode alternative (régression, inversion).  \n- Extraction de données : schema JSON strict + validation JSON Schema.  \n- Créatif : contraintes (ton, longueur), exemples de style.\n\nCalculs vérifiés — exemple prompt (français)\n«Résous le calcul, fournis chaque étape numérotée, donne la réponse finale puis vérifie par une méthode indépendante (ex. calcul inverse). Indique OK/ERROR si la vérification échoue.»  \n\nPoints qu’une bonne copie doit couvrir : templates réutilisables, exemples concrets, protocoles de test et vérification, métriques, et un flux itératif clair (tester → diagnostiquer → corriger → re‑tester)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Full marks: Full coverage of the prompting fram...",
+        "fr": "Full marks: Full coverage of the prompting fram..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_026",
@@ -727,7 +977,17 @@
         "fr": "Q1 — Leçon 2\n- Relisez les définitions-clés et formules présentées (liste exacte dans la leçon).  \n- Erreurs fréquentes : confondre termes proches, oublier une hypothèse d’application.  \n- Action : réécrivez la définition en vos mots et résolvez 2 exercices d’application simple en expliquant chaque étape.\n\nQ2 — Leçon 3\n- Concentrez-vous sur la procédure/algorithme exposé et ses conditions d’entrée/sortie.  \n- Erreurs fréquentes : mauvaise initialisation, négliger les cas limites.  \n- Action : tracez le flux de l’algorithme sur un exemple concret et testez deux cas limites.\n\nQ3 — Leçon 4\n- Revoyez l’analyse d’exemples et la méthodologie d’interprétation des résultats.  \n- Erreurs fréquentes : sauter une étape d’analyse, interpréter un résultat hors-contexte.  \n- Action : reprenez la question manquée et verbalisez pourquoi chaque étape est nécessaire.\n\nQ4 — Leçon 5\n- Portez attention aux critères d’évaluation et aux méthodes de validation.  \n- Erreurs fréquentes : accepter une solution sans vérification, oublier de justifier un choix.  \n- Action : fournissez une courte validation (checks) et une justification pour la réponse.\n\nQ5 — Leçons 2 et 4\n- Intégration : appliquez les définitions (Leçon 2) dans l’analyse méthodique (Leçon 4).  \n- Action : refaites Q5 en deux colonnes : (1) rappels théoriques nécessaires, (2) application pas à pas avec justification."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Context Design",
+        "Error Handling",
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "Feedback: Review the questions you missed: Q1 m...",
+        "fr": "Feedback: Review the questions you missed: Q1 m..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_027",
@@ -746,7 +1006,17 @@
         "fr": "Composants (exemples) : Rôle, Contexte, Tâche, Contraintes, Format de sortie.\n\nExemple — prompt initial (trop vague) :\n«Écris un article sur l'IA.»\n\nApplication des cinq composants\n- Rôle : Indiquez la persona/compétence — ex. «en tant que chercheur en IA senior».\n- Contexte : Pourquoi et pour qui — ex. «pour un bulletin interne d’ingénieurs produit, connaissance technique de base».\n- Tâche : Action précise — ex. «résumer les tendances 2026 et recommander 3 priorités techniques».\n- Contraintes : Limites mesurables — ex. «600–800 mots, langage non promotionnel, citer 3 sources récentes, éviter spéculations».\n- Format de sortie : Structure attendue — ex. «titre, résumé, 3 sections (tendances, risques, recommandations), conclusion en 2 phrases, liste de sources en format APA».\n\nPrompt amélioré (à copier) :\n«En tant que chercheur en IA senior, rédige pour un bulletin interne destiné à des ingénieurs produit un article de 600–800 mots qui résume les principales tendances en IA pour 2026 et propose 3 priorités techniques. Utilise un ton factuel, non promotionnel. Structure : titre, résumé (2 phrases), sections “Tendances”, “Risques”, “Recommandations” (une recommandation par section, argumentée), conclusion (2 phrases). Cite 3 sources récentes en format APA. Évite les spéculations non sourcées.»\n\nChecklist rapide pour l’étudiant :\n- Persona et audience précisés\n- Objectif et action clairs\n- Contraintes mesurables (longueur, style, citations)\n- Format de sortie défini\n- Tester et itérer (1–2 cycles) avant de poursuivre."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Context Design"
+      ],
+      "title": {
+        "en": "incorrect: Revisit the module before continuing...",
+        "fr": "incorrect: Revisit the module before continuing..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__02_028",
@@ -765,7 +1035,17 @@
         "fr": "Interprétation et objectif\nLe message actuel \"Ignoré : Revenez pour terminer le quiz avant de continuer.\" est ambigu et peu actionnable. Une bonne réponse doit proposer un libellé clair, une mise en œuvre technique et anticiper risques/ergonomie.\n\nLibellé recommandé (exemples)\n- Bannière/inline : « Quiz non complété — terminez le quiz pour débloquer la suite. »\n- Modal bloquant : Titre « Quiz requis » ; Corps : « Vous devez terminer le quiz n°3 pour continuer. Voulez‑vous reprendre maintenant ? » Boutons : « Reprendre le quiz » / « Annuler ».\n- Petit rappel non bloquant : « Quiz en cours — 40 % complété. Continuer sans finir peut verrouiller l’accès. »\n\nImplémentation (extrait)\n- Désactiver bouton \"Continuer\" tant que quiz.completed !== true :\n```js\nconst continueBtn = document.getElementById('continue');\nfunction updateState(quizCompleted){\n  continueBtn.disabled = !quizCompleted;\n  continueBtn.setAttribute('aria-disabled', String(!quizCompleted));\n}\n```\n- Bloquer navigation via onbeforeunload si quiz inachevé :\n```js\nwindow.addEventListener('beforeunload', (e) => {\n  if(!quiz.completed){ e.preventDefault(); e.returnValue = ''; }\n});\n```\n\nRisques concrets à mentionner\n- Frustration/utilisateurs quittant la page\n- Contournement via désactivation JS\n- Perte de progression si autosave absent\n- Inaccessibilité (lecteurs d’écran) ou mauvaise localisation\n\nChecklist pour une bonne réponse\n- Message clair, actionnable et localisé\n- Comportement UX (bloquant vs informatif) justifié\n- Exemples de texte précis\n- Extraits techniques (désactivation bouton, beforeunload, autosave)\n- Considérations accessibilité et tests (keyboard, aria, i18n)\n- Mesures pour éviter contournement et perte de données (autosave, serveur-side check)"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Error Handling",
+        "Fundamentals",
+        "Testing"
+      ],
+      "title": {
+        "en": "Skipped: Return to complete the quiz before adv...",
+        "fr": "Skipped: Return to complete the quiz before adv..."
+      }
     }
   ]
 }

@@ -665,7 +665,17 @@
         "fr": "Décomposition — ce qu’une bonne réponse doit montrer\n- Définir explicitement 4 propriétés pertinentes pour l’évaluation (ex. exactitude/factualité, déterminisme/répétabilité, confidentialité/contrainte règlementaire, traçabilité/auditabilité).  \n- Pour chaque sous‑tâche, justifier l’affectation (Claude / système existant / humain) par rapport à ces propriétés. Exemples concrets :\n  - Extraction de faits structurés à partir de documents → Claude + vérification automatique par règles + humain pour cas ambigus (car risque d’hallucination).  \n  - Décisions légales ou validations réglementaires → humain (must be auditable, responsabilité légale).  \n  - Mises en forme massives, génération de drafts internes → Claude (haute cadence, tolérance d’erreurs minimes).  \n  - Données sensibles/PII → système contrôlé en interne ou anonymisation préalable (pour confidentialité).  \n- Liste de risques concrets à éviter : hallucinations produisant erreurs métier, fuite de données, absence de journalisation, décisions non‑répétables, goulots humains, coûts d’API inattendus.\n\nSélection du pattern — critères et défense\n- Décrire succinctement chaque pattern et ses coûts :\n  - Appel augmenté (one LLM call + prompts) : simple, faible latence, mais peu d’audit/contrôle. Choisir si tâche atomique et faible risque.\n  - Flux de travail (orchestration + étapes + validations) : meilleur contrôle, traçabilité, plus complexe et latence supérieure. Choisir pour processus réglementés.\n  - Agent (autonomie + outils) : puissant pour actions multi‑outils, mais risque d’exécution imprévue, difficile à certifier. Réserver aux tâches où automatisation dynamique apporte valeur claire.\n- Checklist pour défendre l’architecture face à une alternative :\n  - Montrer exigences réglementaires + mapping des tâches aux propriétés.  \n  - Indicateurs acceptables (faux positifs, latence, coût, couverture d’audit).  \n  - Plan d’atténuation (human‑in‑loop, tests adversariaux, journaux immuables, canary rollouts, SLA).  \n\nExemple d’argument court : “Nous choisissons un flux de travail car la tâche exige auditabilité et contrôles humains sur décisions sensibles ; Claude fournit drafts et extraction, le système gère PII et journaux immuables, l’humain valide les exceptions.”"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Architecture"
+      ],
+      "title": {
+        "en": "\"The work\" in this module",
+        "fr": "\"The work\" in this module"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__01_002",
@@ -684,7 +694,17 @@
         "fr": "1) Prédiction statistique (complétion de motif)\n- Capacité : génère du texte cohérent et fluide à partir de schémas appris.\n- Limitation : peut inventer des faits plausibles (hallucinations) ou donner des réponses convaincantes mais fausses.\n- Atténuation concrète : exiger sources vérifiables (RAG), faire valider sorties critiques par une base de données externe ou un réviseur humain, et demander au modèle de marquer l'incertitude (probabilité/confidence).\n\n2) Suivi d’instructions fort mais sensible au prompt\n- Capacité : peut exécuter des tâches complexes si on le guide précisément.\n- Limitation : résultats varient fortement selon la formulation ; prompts ambigus mènent à erreurs ou comportements indésirables.\n- Atténuation concrète : spécifier format de sortie, contraintes et critères de réussite; inclure exemples (few-shot); tester prompts avec cas limites et adversariaux.\n\n3) Raisonnement fluide mais fragile\n- Capacité : réalise des enchaînements logiques et calculs simples en texte.\n- Limitation : erreurs de chaîne de pensée (sauts illégitimes, oubli d’étapes) et problèmes sur raisonnement long.\n- Atténuation concrète : décomposer tâches en étapes vérifiables, demander justification étape par étape, et faire des contrôles automatiques (recalculs, assertions).\n\n4) Contexte limité et sans mémoire persistante\n- Capacité : utilise le contexte fourni pour produire réponses ciblées.\n- Limitation : oublie l’historique hors fenêtre contextuelle et ne mémorise pas d’état persistant entre sessions.\n- Atténuation concrète : fournir résumé contextuel actualisé, stocker/patcher l’état externe via base de connaissances ou outils, et chunker l’information pour rester dans la fenêtre contextuelle."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Before you decide what Claude should do in a so...",
+        "fr": "Before you decide what Claude should do in a so..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__01_003",
@@ -703,7 +723,17 @@
         "fr": "Points qu’ils doivent couvrir (correction modèle) — Limitation / risques identifiés\n- Deux erreurs distinctes à la frontière : 400 invalid_request_error (prompt trop long en tokens) ou 413 request_too_large (payload bytes), et stop reason model_context_window_exceeded (génération tronquée).\n- Risques concrets : perte d’informations critiques, réponses incomplètes, hallucinations dues à perte de contexte, erreurs numériques, coûts inutiles et mauvaise UX.\n\nMesures concrètes et actionnables (mitigations)\n- Compter les tokens avant envoi (utiliser le même tokenizer que le modèle). Si > limite, chunker.\n- Gérer explicitement les codes HTTP 400 et 413 : alerter/logguer, réduire le prompt et réessayer.\n- Vérifier usage dans chaque réponse ; si usage proches du plafond, résumer le contexte (summarize-on-the-fly).\n- Charger progressivement : garder seulement le contexte critique, précharger données essentielles (short facts) et stocker le reste en mémoire externe/embeddings.\n- Chunking + overlap (p.ex. 80% overlap) et indexation pour retrouver le contexte pertinent.\n- Pour calculs précis, déléguer à code exécuté ou service déterministe et inclure résultats dans le prompt.\n- Utiliser prompts système, sortie structurée (JSON) et limites explicites de longueur / rôle.\n\nExemple minimal (pseudocode Python)\n- count = count_tokens(prompt)\n- if count > TOKEN_LIMIT: chunks = chunk_and_summarize(prompt); prompt = assemble(chunks_summary + current_turn)\n- resp = call_api(prompt, max_tokens=remaining_limit)\n- if resp.http_code in (400,413): trim_and_retry()\n- if resp.stop_reason == \"model_context_window_exceeded\": request_followup_summary_and_resume()\n\nCritères d’une bonne réponse attendue\n- Détection/prévention avant envoi (tokenizer), gestion d’erreurs HTTP et stop_reason, stratégie de chunking+résumé incrémental, exemple d’implémentation ou pseudocode, et solution pour précision numérique."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Limitation: The context window is a hard edge: ...",
+        "fr": "Limitation: The context window is a hard edge: ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__01_004",
@@ -722,7 +752,17 @@
         "fr": "Diagnostic bref : l’équipe a confondu une démo reproductible à court terme avec une garantie de déterminisme. Les LLM sont intrinsèquement non‑déterministes (paramètres de décodage, version du modèle, infrastructure) — il faut concevoir l’architecture en tenant compte de cette incertitude.\n\nRisques concrets\n- Erreurs financières (reconciliations contradictoires, écritures fausses).\n- Non‑conformité et audit impossible (données non réconciliables).\n- Pertes business et perte de confiance client.\n- Incapacité à diagnostiquer incidents (logs insuffisants).\n\nMesures actionnables (priorité et mise en œuvre)\n- Ne pas traiter les sorties du modèle comme « source de vérité ». Ajoutez une étape de validation/reconciliation indépendante.\n- Journaliser systématiquement : entrée brute, version du modèle, paramètres de décodage (temperature, top_p), seed, timestamp et sortie. Conserver pour audits et re‑reproduction.\n- Verrouiller version et paramètres en production (p.ex. model=claude‑v1.2, temperature=0) mais documenter que cela réduit, n’élimine pas, la variance.\n- Implémenter règles déterministes de post‑traitement et contraintes de schéma (validation JSON, règles métier).\n- Utiliser RAG / sources externes comme source de vérité pour données critiques ; exiger preuve/justification générée par le modèle.\n- Mettre en place monitoring et alerting sur dérives (incohérence inter‑exécutions, taux de non‑conformité).\n- Processus opérationnel : human‑in‑the‑loop pour cas à risque élevé ; tests CI qui simulent non‑déterminisme et vérifient idempotence des pipelines.\n\nActions immédiates recommandées : activer le logging complet, ajouter checks de validation, et retarder décisions financières automatiques jusqu’à implémentation d’une réconciliation deterministe."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Knowledge and capability boundaries. The model ...",
+        "fr": "Knowledge and capability boundaries. The model ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__01_005",
@@ -741,7 +781,17 @@
         "fr": "Couche 1 — Point d’entrée / Edge\n- API Gateway / Endpoints publics\n- Reverse proxy / CDN\nPourquoi : doit juste valider la requête et rediriger ; ne contient pas de logique per‑utilisateur.\n\nCouche 2 — Identité & Contexte utilisateur\n- Authentification / OAuth / Sessions\n- Routage multi‑tenant / Attribution d’utilisateur (tenant id, user id)\n- Workspace/session par utilisateur\nPourquoi : ici on résout “qui est l’utilisateur” et on enrichit la requête avec son contexte avant toute logique applicative.\n\nCouche 3 — Primitives de plateforme & Logique applicative\n- Moteur d’inférence (LLM, sandbox)\n- Stockage de données utilisateur (bases, context store)\n- Templates de prompts, orchestration, monitoring/metrics\nPourquoi : services indépendants et réutilisables, agissant en fonction du contexte utilisateur injecté par la couche 2.\n\nRisques concrets si on choisit le point d’entrée avant d’identifier l’utilisateur\n- Routage incorrect (mauvais tenant / fuite de données)\n- Escalade de privilèges via endpoints publics\n- Impossibilité d’appliquer quotas/rate limits par utilisateur\n- Logs non corrélés, pertes d’auditabilité\n\nCorrections actionnables\n- Toujours authentifier/attribuer user_id/tenant_id avant de charger workspace spécifique.\n- Implémenter middleware edge → auth → context → application.\n- Tagger toutes les requêtes et logs avec user/tenant id.\n- Appliquer politiques (chiffrement, quotas, isolation) à la couche d’identité avant d’appeler les primitives."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Risk: An entry point chosen before the user is ...",
+        "fr": "Risk: An entry point chosen before the user is ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__01_006",
@@ -760,7 +810,17 @@
         "fr": "Risques concrets\n- Coût et latence excessifs : déployer une équipe d’agents quand un appel d’outil suffit (tokens, appels réseau).\n- Surface d’attaque et complexité opératoire accrues : plus de composants = plus de points de défaillance et de sécurité.\n- Mauvaise adéquation fonctionnelle : comportement inattendu (p. ex. agent exploratoire vs workflow déterministe).\n- Retard de projet et décisions bloquées : réunions sans consensus sémantique.\n- Problèmes de conformité/privilege : mauvais contrôle d’accès si responsabilités non précisées.\n\nActions concrètes (checklist à exiger en revue d’architecture)\n1) Glossaire obligatoire : définir comment l’équipe utilise les 7 primitives (ex. agent = modèle qui choisit lui‑même la séquence d’appels d’outils; workflow = suite d’étapes codées; orchestrateur multi‑agent = superviseur qui délègue).\n2) Dans toute proposition, préciser : primitives choisies, liste d’outils, contrôle d’état (centralisé vs ephemeral), synchronicité (sync/async), stratégie d’erreur/retry, coûts estimés (latence/tokens), surface opérationnelle et exigences sécurité.\n3) Critères de décision rapides : si besoin en déterminisme → workflow ; si exploration/adaptation → agent ; si isolation des responsabilités → multi‑agent.\n4) Exigence de prototype minimal ou simulation coût/latence avant adoption coûteuse.\n5) Templates de revue : questions de clarification à poser (Que signifie « agent » ici ? Quels outils ? Qui orchestre les erreurs ?).\n\nExemple de question clarifiante à poser en réunion : « Quand vous dites “agent”, voulez‑vous un loop décisionnel autonome avec choix d’outils, ou un workflow codé d’étapes fixes ? »"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Architecture"
+      ],
+      "title": {
+        "en": "The patterns taught later in this module, the a...",
+        "fr": "The patterns taught later in this module, the a..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__01_007",
@@ -779,7 +839,17 @@
         "fr": "Réponse attendue (format et contenu qu’une bonne réponse doit fournir) :\n- Pour chaque des trois ensembles, donner les paires \"primitive → travail\" et une justification brève (1 phrase) montrant pourquoi elles correspondent.\n- Respecter une correspondance sémantique (même niveau d’abstraction) : ne pas associer une primitive technique (\"API endpoint\") à un objectif métier (\"KPIs\") sans justification.\n\nExemples de correspondances typiques (utiles comme référence) :\n- Persona → Représenter un utilisateur cible (guide les décisions de design et priorisation).\n- Job‑to‑be‑done / User need → Objectif utilisateur à satisfaire (définit la valeur attendue).\n- Core flow / Primary journey → Séquence d’écrans critique (définit l’expérience principale).\n- UI primitive (bouton, champ) → Composant réutilisable (implémentation front-end standardisée).\n- Data model / Schema → Structure des données persistées (contrat partagé backend/frontend).\n- API endpoint → Point d’accès aux opérations métiers (interface entre UI et backend).\n- Constraint / Guard → Règle de validation ou sécurité (condition non négociable).\n\nChecklist de validation (à inclure avec la réponse) :\n- Chaque primitive a une paire unique et une justification.\n- Les niveaux d’abstraction correspondent (conceptuel ↔ conceptuel, technique ↔ technique).\n- Les ambiguïtés sont annotées pour discussion d’équipe.\n- Le vocabulaire retenu est ajouté au glossaire partagé."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Risk: Without a shared vocabulary, teams cannot...",
+        "fr": "Risk: Without a shared vocabulary, teams cannot..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__01_008",
@@ -798,7 +868,17 @@
         "fr": "Méthode synthétique + exemples concrets (chaque ligne = tâche décomposée → attribution recommandée + justification par Réversibilité / Enjeux / Responsabilité).\n\n1) Recherche factuelle & récupération de docs → Claude autonome (avec log).\n   - Réversibilité : haute (corrections faciles).\n   - Enjeux : faibles (erreurs corrigibles).\n   - Responsabilité : équipe produit / rédacteur qui valide l'utilisation.\n\n2) Rédaction de brouillons (emails, rapports, propositions) → Collaboratif (Claude rédige, humain révise).\n   - Réversibilité : haute (édition simple).\n   - Enjeux : modérés (ton, conformité).\n   - Responsabilité : auteur humain final / manager de contenu.\n\n3) Code applicatif non critique (exemples, snippets) → Collaboratif (Claude produit + tests automatisés + revue humaine avant merge).\n   - Réversibilité : moyenne (revert possible, risque bugs).\n   - Enjeux : modérés à élevés selon portée.\n   - Responsabilité : ingénieur auteur & responsable QA.\n\n4) Déploiement, modifications infra, suppression de données → Humain seul (opérations verrouillées).\n   - Réversibilité : faible/partielle (suppressions irréversibles).\n   - Enjeux : élevés (perte, conformité).\n   - Responsabilité : ingénieur infra & DPO/manager.\n\n5) Conseils juridiques/médicaux/financiers personnalisés → Humain seul (expert qualifié).\n   - Réversibilité : variable.\n   - Enjeux : très élevés (légal, santé, financier).\n   - Responsabilité : juriste/médecin/financier licencié.\n\n6) Idéation produit, scénarios, A/B ideas → Claude autonome/collaboratif (génère lots d’options; humain choisit).\n   - Réversibilité : élevée.\n   - Enjeux : faibles à modérés.\n   - Responsabilité : PM + équipe produit.\n\n7) Traitement de PII & décisions automatisées affectant personnes → Humain supervisé (humain décide; Claude peut anonymiser/filtrer).\n   - Réversibilité : faible pour décisions déjà appliquées.\n   - Enjeux : élevés (vie privée, discrimination).\n   - Responsabilité : DPO + équipe conformité.\n\nRègles pratiques : 1) Toujours journaliser actions AI ; 2) Définir seuils de révision humaine (risque/impact) ; 3) Tests et rollback obligatoires pour tout changement effectif."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Delegation: deciding what Claude is trusted to own",
+        "fr": "Delegation: deciding what Claude is trusted to own"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__01_009",
@@ -817,7 +897,17 @@
         "fr": "Réponse modèle — décomposition et attribution\n\nÉtapes et responsabilités\n1. Lire et extraire la réclamation → Claude\n- Tâche : extraire texte libre en champs structurés (date, assurée, numéro de police, faits, montants, pièces jointes).\n- Output attendu : JSON validé contre un schéma strict (ex. claim_id, incident_date, description, claim_items[]).\n\nExemple de schéma minimal :\n{\"claim_id\":\"\", \"policy_number\":\"\", \"insured\":\"\", \"incident_date\":\"\", \"description\":\"\", \"attachments\":[{\"type\":\"\",\"url\":\"\"}], \"confidence\":0.0}\n\n2. Décider de la priorité → Moteur de règles / système existant\n- Tâche : appliquer règles déterministes (p.ex. montants>X, risque sécurité, délai SLA).\n- Intégration : Claude envoie les champs structurés au moteur de règles via API; moteur renvoie priority={low,medium,high}.\n\n3. Vérifier la couverture de police → Système de police (API) + logique métier\n- Tâche : lookup de la police, exclusions, limites, franchises.\n- Règle : ne pas laisser Claude « décider » de la couverture ; il appelle l’API et consomme la réponse. Toute ambiguïté remonte à un expert humain.\n\n4. Rédiger et préparer l’e‑mail à l’expert en sinistres → Claude (rédaction) + orchestrateur pour l’envoi\n- Tâche Claude : générer un brouillon d’e‑mail structuré (sujet, corps, pièces jointes, résumé d’action) en utilisant le JSON final et le résultat du moteur de règles.\n- Envoi effectif : orchestrateur système déclenche l’envoi automatique si priority=low et confidence>=seuil, sinon file en revue humaine.\n\nPoints d’ingénierie et contrôles\n- Seuils de confiance (confidence) pour décisions automatiques ; escalade manuelle au‑dessus/en dessous.\n- Logs d’audit pour chaque étape (input, extraction, règles appliquées, couverture, e‑mail).\n- Validation anti‑hallucination : Claude ne doit jamais inventer des numéros de police ou décisions de couverture.\n- Sécurité : chiffrement des PII/PHI en transit et stockage, accès restreint.\n\nExemple d’appel séquentiel (simplifié)\n1) Claude -> extrait JSON\n2) Orchestrateur -> POST /rules/priority avec JSON -> reçoit priority\n3) Orchestrateur -> GET /policies/{policy_number} -> reçoit coverage\n4) Claude -> prompt avec JSON+priority+coverage -> génère e‑mail\n5) Orchestrateur -> appliquer règles d’envoi/escalade."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "This screen will teach you the discipline of de...",
+        "fr": "This screen will teach you the discipline of de..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__01_010",
@@ -836,7 +926,17 @@
         "fr": "Décomposition modèle (spécifique et actionnable)\n\n1) Préparation déterministe (système) : rassembler données du dossier (numéro sinistre, montant estimé, pièces jointes), vérifier destinataire autorisé, classifier sensibilité (PII, juridique) et calculer valeur financière. Loguer et produire un « context bundle » immuable envoyé à Claude.\n\n2) Rédaction (Claude) : produire un brouillon d’e‑mail respectant template, liste de points factuels cités (sources/données du dossier), un résumé en 3 lignes et une justification de chaque proposition. Inclure un champ \"incertitudes\" itemisé.\n\nExemple de prompt pour Claude (copier-coller) :\n« Contexte : [context bundle]. Objectif : rédiger un e‑mail formel à [destinataire] pour [objectif]. Contraintes : ton professionnel, mentionner uniquement faits vérifiables, inclure 3 actions proposées et sources. Produis : (1) résumé 1‑ligne, (2) brouillon d’e‑mail, (3) incertitudes. »\n\n3) Vérifications automatisées (système) : contrôle de conformité template, détection de données sensibles non autorisées, correspondance destinataire, checksum du brouillon.\n\n4) Approbation humaine (workflow) : définir seuils explicites — par défaut : valeur ≤ €1 000 = approbation automatique si sensibilité basse ; €1 000–10 000 = approbation d’un agent ; > €10 000 ou sensibilité élevée = approbation d’un superviseur juridique. Ajuster seuils selon risque métier.\n\n5) Envoi & audit (système) : envoi effectif, journalisation immuable, exportable pour audit, mécanismes de rollback.\n\nRisques concrets : coûts récurrents (trop de requêtes), hallucinations factuelles, fuite PII, perte de traçabilité, décisions financières sans revue humaine. Mesures : templates stricts, prompts limités, logs, seuils chiffrés et vérifications détérministes."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Architecture"
+      ],
+      "title": {
+        "en": "\"Email the adjuster.\" This step needs to be spl...",
+        "fr": "\"Email the adjuster.\" This step needs to be spl..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__01_011",
@@ -855,7 +955,17 @@
         "fr": "Réponse modèle (exemple de tri et justification — 8 capacités vers 4 propriétaires)\n\n1) Fonctionnement hors-ligne / robustesse réseau → Partenaire terrain  \nRaison : Déploiement et maintenance de l’infrastructure locale (edge devices, caches, sync) relèvent de l’ingénierie sur site.\n\n2) Accès aux manuels et aux schémas locaux (sources propriétaires) → Partenaire terrain  \nRaison : Le partenaire contrôle/curate les documents locaux et doit garantir leur disponibilité et mise à jour.\n\n3) Règles “exactes à chaque fois” (logique déterministe / vérifications) → Produit / PO  \nRaison : Définir exigences métier, critères d’exactitude, et accepter la solution ; spécifier fallback déterministe requis.\n\n4) Implémentation des garde-fous ML (filtrage, prompt-engineering, reranking) → Équipe plateforme ML  \nRaison : La plateforme construit et maintient les pipelines de fine-tuning, reranking et règles appliquées au modèle.\n\n5) Journalisation et télémétrie (auditabilité des décisions) → Équipe plateforme ML  \nRaison : Collecte standardisée, stockage sécurisé et outils d’analyse sont fonctions plateforme.\n\n6) Sécurité des données et conformité locale (chiffrement, rétention) → Sécurité & Conformité  \nRaison : Politiques de confidentialité, flux de données et audits réglementaires sont de leur responsabilité.\n\n7) Mécanisme d’override / procédure d’escalade (humain en boucle) → Partenaire terrain  \nRaison : Les opérateurs sur site doivent pouvoir interrompre/contourner l’assistant et lancer procédures d’urgence.\n\n8) Déploiement des mises à jour logicielles et gouvernance des versions → Produit / Équipe plateforme (co-ownership)  \nRaison : Produit planifie releases; plateforme exécute pipelines CI/CD et rollback — définir SLA et processus conjoint.\n\nUne bonne réponse justifie chaque affectation par qui contrôle la donnée, qui peut changer l’infrastructure, et qui porte la responsabilité réglementaire/produit."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Caching Strategy"
+      ],
+      "title": {
+        "en": "A rule that needs to be right every time was ha...",
+        "fr": "A rule that needs to be right every time was ha..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__01_012",
@@ -874,7 +984,17 @@
         "fr": "But attendu : pour chaque étape du brief, indiquez précisément qui exécute (Claude / systèmes existants / humains) et justifiez brièvement. Une correction modèle doit couvrir :\n\n1) Critères d’attribution (une phrase chacun)\n- Claude (LLM) : tâches génératives, reformulation, synthèse, suggestions non déterministes.\n- Systèmes existants : tâches automatisées, règles déterministes, envoi d’e-mails, pipelines ETL, authentification technique.\n- Humains : décisions à risque élevé, validation légale/éthique, interactions sensibles, actions physiques, approbation finale.\n\n2) Exemples concrets (pour montrer compréhension)\n- Rédaction d’un brief client → Claude rédige le brouillon; humain révise et approuve.\n- Envoi d’une facture automatisée → système existant exécute l’envoi; Claude crée le contenu si besoin.\n- Vérification KYC / conformité → système KYC exécute les contrôles automatiques; humain tranche les cas ambigus.\n- Débogage d’une intégration → Claude propose diagnostics; systèmes exécutent tests; humain déploie correctif.\n\n3) Checklist de validation (points à inclure pour chaque étape)\n- Justification d’attribution (1 phrase)\n- Dépendances techniques (API, bases de données)\n- Points de contrôle ou approbation humaine\n- Modes de défaillance et plan de secours\n- Contraintes de confidentialité/permissions\n\n4) Pièges courants\n- Confier des décisions sensibles entièrement à Claude\n- Omettre de prévoir approbations humaines ou logs système\n\nUne bonne réponse associera chaque étape à un responsable avec justification, dépendances et contrôle qualité."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Skip for now",
+        "fr": "Skip for now"
+      }
     }
   ]
 }

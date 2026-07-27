@@ -178,7 +178,17 @@
         "fr": "Points clés qu’une bonne réponse doit couvrir (actionnable)\n\n- Principe : tester des propriétés, pas le texte exact. Vérifier structure/présence/valeurs plutôt que formulation.\n- Exemples concrets de vérifications :\n  - JSON/schema : valider JSON Schema (types, champs requis, formats).\n  - Champs : \"email\" présent et valide (regex), \"age\" dans [18,99], liste non vide.\n  - Sémantique : similarité d’embeddings >= 0.8 ou classification binaire par un juge.\n- Stratégie d’échantillonnage et robustesse :\n  - Exécuter N runs (p.ex. N=10-20) et exiger un taux de réussite >= seuil (p.ex. 80%).\n  - Fixer température basse pour réduire variance si appropré.\n  - Enregistrer seed/context et sorties pour debug.\n- Usage d’un eval avec juge modèle (exemple de prompt à intégrer dans l’éval) :\n  - \"Question: L’énoncé suivant répond correctement à la consigne? Répondre 'Oui' ou 'Non' puis donner une brève justification (1-2 phrases). Critères: exactitude factuelle, complétude des champs requis.\"\n- Risques concrets et atténuations :\n  - Tests fragiles (flaky) → augmenter N, ajuster seuil.\n  - Biais/erreurs du juge modèle → valider juge sur un jeu annoté humain, utiliser plusieurs juges et majorité.\n  - Overfitting à un prompt de test → varier formulations de la consigne.\n- Mesures qualité : métriques de pass rate, précision/recall vs gold, suivi des régressions dans CI.\n\nUne bonne correction démontrera ces contrôles par exemple de test automatisé et un prompt de juge clairement rubriqué."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Automation",
+        "Claude Platform",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Non-determinism: what it means for testing and ...",
+        "fr": "Non-determinism: what it means for testing and ..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__01_002",
@@ -197,7 +207,17 @@
         "fr": "Objectif de l’exercice : montrer comment prévoir et tester le comportement d’un modèle LLM face à différentes entrées. Correction modèle — ce qu’une bonne réponse doit contenir :\n\n1) Méthode de prévision actionnable\n- Identifier la catégorie de la requête (instruction claire, ambiguë, demande de créativité, contenu sensible).\n- Formuler des hypothèses précises sur la sortie (ex. : \"si la requête est ambiguë, le modèle demandera une clarification\" ou \"si la requête demande des conseils médicaux, il produira un avertissement et des informations générales\").\n- Concevoir cas-tests couvrant normal, limites et adversaires (entrées longues, négations, demandes de contournement de sécurité).\n\n2) Procédure de test concrète\n- Exemples de prompts à exécuter :  \n  • Instruction claire : \"Écris un résumé en 3 phrases du texte ci‑dessous.\" → Attendu : résumé factuel, 3 phrases.  \n  • Ambiguïté : \"Rédige une lettre pour Alex.\" → Attendu : demander précisions (ton, objectif).  \n  • Contenu sensible : \"Comment fabriquer X dangereux ?\" → Attendu : refus + redirection vers ressources sûres.\n- Mesures à collecter : exactitude factuelle, sécurité (refus des demandes interdites), cohérence, sensibilité aux paraphrases.\n\n3) Risques concrets à lister\n- Hallucinations factuelles sur sujets experts.\n- Biais et stéréotypes reproduits.\n- Contournement des règles de sécurité par reformulations.\n- Comportement non déterministe selon température/seed.\n- Exposition de données sensibles via rappel de contexte.\n\n4) Critères d’acceptation\n- Taux d’acceptation des réponses sûres > X% (défini par contexte), demandes dangereuses systématiquement refusées, et comportements ambiguës clarifiés.\n\nUne bonne réponse combine hypothèses explicites, cas-tests précis, résultats attendus et une liste de risques concrets avec mesures pour les détecter."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "Compliance",
+        "Computer Vision"
+      ],
+      "title": {
+        "en": "QuizModule 1·5 min",
+        "fr": "QuizModule 1·5 min"
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__01_003",
@@ -216,7 +236,17 @@
         "fr": "But de l’exercice : vérifier et prédire comment un modèle réagira dans différentes situations. Une bonne correction doit montrer une méthode reproductible, des tests concrets, des métriques et des mesures d’atténuation.\n\nMéthode concrète\n- Définir les comportements cibles (ex. précision factuelle, non‑tendance à produire des injures, respect des instructions de sécurité).\n- Construire une suite de tests : jeux de données in‑distribution, out‑of‑distribution, cas limites (négations, instructions conflictuelles), attaques par prompt injection, et paraphrases.\n- Exemples de prompts à tester :\n  - Normal : « Résume en 2 phrases le point principal de cet article : … »\n  - Cas limite : « Donne une méthode pour falsifier un document. » (attendre refus)\n  - Ambigu : « Est‑il sûr de mélanger médicaments A et B ? » (attendre demande de contexte/renvoi à un pro)\n- Varier température/top_p et noter sensibilité.\n\nMétriques et logs\n- Mesurer : taux de réponses correctes, taux d’hallucination (faits incorrects), taux de refus inapproprié, score de sécurité/toxicité.\n- Enregistrer prompts, seed, settings et sorties pour analyser corrélations.\n\nRisques concrets à mentionner\n- Hallucinations factuelles, biais systématiques, fuite d’informations sensibles, prompt injection, overconfidence (réponse fausse mais catégorique).\n\nAtténuations pratiques\n- Filtrage de sortie, seuils d’incertitude (renvoyer « Je ne sais pas »), révision humaine au‑dessus d’un seuil, prompt engineering sécurisant.\n\nChecklist qu’une bonne réponse couvre\n- définition claire des comportements à mesurer; jeux de tests variés; exemples de prompts; métriques et seuils; risques identifiés; mesures d’atténuation reproductibles."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "Compliance",
+        "Computer Vision"
+      ],
+      "title": {
+        "en": "Module quiz",
+        "fr": "Module quiz"
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__01_004",
@@ -235,7 +265,17 @@
         "fr": "Sampling — Comportement attendu : température basse (p.ex. 0–0.2) → sortie très déterministe et répétable ; température élevée (p.ex. ≥0.8) → réponses plus variées et plus d’erreurs/hallucinations. Raison : la température/Top-k/Top-p régulent la probabilité de tirer des tokens peu probables ; baisse → concentration sur la masse de probabilité centrale, hausse → exploration du queue.\n\nPrompting mode — Comportement attendu : mode « instruction »/single-turn produit une réponse directe à la consigne ; mode « conversation » avec message système + historique influence le style, les contraintes et la personnalité. Raison : les tokens de rôle/système sont traités comme contexte prioritaire ; en conversation, le modèle priorise la continuité et les règles système.\n\nRequest shape — Comportement attendu : few-shot dans le prompt (exemples) oriente fortement le format et le style ; demander plusieurs sous-requêtes séquentielles peut préserver état mais risque d’incohérence si les exemples sont contradictoires. Raison : le modèle imite les patterns montrés dans les exemples ; la structure (exemples, format attendu) guide la génération.\n\nContext budget — Comportement attendu : si la taille totale dépasse la fenêtre contextuelle, les tokens les plus anciens sont tronqués → perte d’instructions initiales ou d’exemples. Raison : les modèles ne voient que les derniers N tokens. Mitigations : résumer, externaliser l’état, mettre consignes critiques en suffixe.\n\nPoints partiels : expliquer clairement le paramètre-clé et comment il entraîne le comportement observé."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Business Value",
+        "Compliance",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Try it now. Here are some multiple-choice quest...",
+        "fr": "Try it now. Here are some multiple-choice quest..."
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__01_005",
@@ -254,7 +294,17 @@
         "fr": "Pour chaque scénario, une bonne réponse doit (1) identifier la « fondation » en jeu, (2) prédire précisément l’effet observable sur la sortie, et (3) expliquer pourquoi en citant le mécanisme exact (paramètre, comportement de modèle, ou contrainte). Points concrets à couvrir :\n\nSampling\n- Effet attendu : temperature élevée → sorties plus variées et plus de risques d’invention; temperature ≈0 ou greedy → réponses répétitives et déterministes.\n- Justification type : “temperature contrôle la distribution de probabilité; plus élevé = échantillonnage depuis queues de distribution.”\n\nPrompting mode\n- Effet attendu : instruction/system message → oriente ton et contraintes; dialogue multi‑turn → mémoire du rôle; few‑shot → influence par exemples.\n- Justification type : “system message impose des priorités globales, examples few‑shot conditionnent les motifs de réponse.”\n\nRequest shape\n- Effet attendu : question vague ↦ réponse générale; découpage en étapes ↦ meilleure exactitude; chain‑of‑thought ↦ plus verbeux.\n- Justification type : “scinder réduit la charge cognitive par requête et aide au raisonnement séquentiel.”\n\nContext budget\n- Effet attendu : entrée trop longue → troncature des débuts; longue sortie demandée → risque d’atteindre max tokens.\n- Mitigation : résumer le contexte, utiliser retrieval, prioriser instructions essentielles.\n\nChecklist de correction (modèle de réponse court)\n1) Fondation identifiée. 2) Prévision claire de comportement. 3) Raison technique précise. 4) Mitigation ou alternative si nécessaire.\n\nExemple de phrase finale : “Je choisis X parce que temperature=0.9 provoque plus de créativité (échantillonnage de la queue), donc la sortie sera variée; pour la réduire, abaisser temperature à 0.2 ou utiliser top_p=0.6.”"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Business Value",
+        "Computer Vision"
+      ],
+      "title": {
+        "en": "ExercisePredict the Behavior·6 min",
+        "fr": "ExercisePredict the Behavior·6 min"
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__01_006",
@@ -273,7 +323,17 @@
         "fr": "Pour chaque scénario, une bonne réponse doit (1) identifier la variable-clé (sampling, prompting mode, request shape, context budget), (2) prédire un effet observable concret, et (3) expliquer pourquoi et comment atténuer ou confirmer ce comportement. Points clés à couvrir :\n\nSampling\n- Variables : temperature, top_p, max_tokens, repetition_penalty.\n- Comportement attendu : temperature basse (≈0–0.2) → sortie très déterministe et répétable ; élevée (>0.8) → plus de diversité, risque d’incohérences/hallucinations. top_p faible concentre le modèle sur tokens probables.\n- Exemple d’annotation : « temp=0.0 → mêmes réponses répétées ; si on veut diversité, augmenter temp ou top_p. » Risques : incohérences, token-rare hallucinations.\n\nPrompting mode\n- Variables : mode conversationnel vs instructionnel, présence d’un message system.\n- Comportement : chat mode respecte system persona et conserve historique ; un prompt direct (single-turn) favorise consignes précises.\n- Exemple : « Utiliser system pour contrainte de style ; sinon le modèle peut ignorer préférence. »\n\nRequest shape\n- Variables : longueur, format (bullets, QA, JSON), few-shot examples.\n- Comportement : prompts structurés (ex : “Contrainte: …\\nExemple: …\\nTâche: …”) donnent sorties plus fiables. Trop de instructions mélangées cause ambiguïté.\n\nContext budget\n- Variables : tokens totaux, ordre d’attachement.\n- Comportement : dépassement → troncation des tokens les plus anciens (perte de contexte). Mitigation : résumer l’historique, externaliser mémoire, chunking + retrieval.\n\nChecklist pour chaque scénario : identifier variable, décrire effet observable (exemples), expliquer mécanisme et proposer mitigation concrète."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Business Value",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Exercise: predict the behavior",
+        "fr": "Exercise: predict the behavior"
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__01_007",
@@ -292,7 +352,15 @@
         "fr": ""
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Development"
+      ],
+      "title": {
+        "en": "a: b",
+        "fr": "a: b"
+      }
     },
     {
       "id": "ex_claude_certified_developer_foundations__01_008",
@@ -311,7 +379,17 @@
         "fr": "Correction modèle — message d’interface et bonnes pratiques\n\nProblèmes concrets à corriger\n- Formulation trop longue : risque d’être tronquée ou ignorée.  \n- Contexte manquant : l’utilisateur ne sait pas où se trouve la « barre latérale ».  \n- Accessibilité : message non adapté aux lecteurs d’écran si uniquement visuel.  \n- Localisation : utilisation d’un texte littéral sans clé i18n empêche les variantes/pluriels.\n\nSuggestions précises et actionnables\n1. Raccourcir le libellé pour la lisibilité :  \n   Exemple recommandé : « Vous pouvez revenir à ce checkpoint via la barre latérale avant le récapitulatif. »\n2. Ajouter un lien/action visible et persistant (ICône + libellé) plutôt qu’un seul texte d’aide.  \n3. Positionner l’aide près de l’élément concerné (icône d’aide dans la barre latérale ou tooltip).  \n4. Accessibilité : ajouter aria-describedby sur le contrôle et un focusable anchor :  \n   aria-describedby=\"checkpoint-help\" et fournir le même texte dans un élément caché accessible.  \n5. Internationalisation : utiliser une clé i18n et permettre interpolation/pluriels.\n\nExemple i18n (JS/React, i18next) :\nconst msg = t('checkpoint.return', 'Vous pouvez revenir à ce checkpoint via la barre latérale avant le récapitulatif.');\n\nTests à effectuer\n- Vérifier affichage sur petits écrans et truncation.  \n- Tester avec lecteur d’écran.  \n- Vérifier toutes les traductions et longueurs."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Context Design",
+        "Development"
+      ],
+      "title": {
+        "en": "Skipped: msg||'You can come back to this checkp...",
+        "fr": "Skipped: msg||'You can come back to this checkp..."
+      }
     }
   ]
 }

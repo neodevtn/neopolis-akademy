@@ -341,7 +341,17 @@
         "fr": "Architecture cible (chemin de la requête) — contrôle + action en cas d’échec :\n\n1) Ingress & Authentification\n- Contrôles : JWT/OAuth, MFA, scope par rôle, quota par utilisateur.\n- Échec : refuser la requête (401/403), journaliser et alerter si anomalie de quota.\n\n2) Validation syntaxique/déclarative (déterministe)\n- Contrôles : schémas JSON, taille max, types, caractères interdits, regex pour secrets (clefs, PII).\n- Échec : rejeter (= fail-closed) avec message générique; mettre en quarantaine de l’input pour analyse.\n\n3) Filtrage d’entrée sémantique (modèle + heuristiques)\n- Contrôles : classification de contenu (toxique, illégal, injonction d’exfiltration), détection de prompt-injection.\n- Échec : bloquer ou rediriger vers procédure HRI (human review); si risque élevé, refuser exécution et alerter SRE/SecOps.\n\n4) Assemblage du prompt et restrictions d’instruction\n- Contrôles : template avec injection-safe escaping, limites de tokens, hints d’alignement (system messages) sans dépendre uniquement du modèle.\n- Échec : ne pas appeler le modèle; équivalent à refuse-safe.\n\n5) Appel modèle (claude)\n- Contrôles : température conservatrice pour actions sensibles, provenance des paramètres, model sandboxing.\n- Échec (exécution échouée) : retry contrôlé → si persiste, basculer vers HRI ou réponse par défaut sûre.\n\n6) Vérification sortie (déterministe + modèle vérificateur)\n- Contrôles : regex pour secrets, classifiers de toxicité/biais, fact-checker retrieval-based, signature de conformité.\n- Échec : supprimer contenu dangereux, retourner message neutre et démarrer human review; refuser action sur outils.\n\n7) Autorisation d’appel d’outils / exécution d’effets\n- Contrôles : politique centrale (OPA), tokens scellés par scope, pré-approbation pour actions sensibles, « dry-run »/simulation sandbox.\n- Échec : ne pas exécuter; journaliser, alerter, demander approbation humaine.\n\n8) Post-exécution, logging & contrôle continu\n- Contrôles : audit immuable, provenance des réponses, métriques d’alignement, alerting automatique sur anomalies.\n- Échec (détection a posteriori de violation) : rollback si possible, notifier affected parties, corriger règles et retrain signals.\n\nRègles opérationnelles clés\n- Séparation training vs runtime : l’entraînement réduit comportements probables, mais ne remplace aucun contrôle runtime. Toute règle de sécurité doit être appliquée par la couche applicative.\n- Déterministe = première ligne (faible coût, auditable); modèle = second niveau (capacité sémantique) avec thresholds et conservatisme.\n- Principe fail-closed : défaut = refuser/exiger HRI. Toujours logguer contexte et raison de refus."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Design the full safety stack for a Claude syste...",
+        "fr": "Design the full safety stack for a Claude syste..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_002",
@@ -360,7 +370,17 @@
         "fr": "Réponse modèle — points qu’une bonne solution doit couvrir (actionnable et précis)\n\n1) Distinction entraînement vs couche applicative\n- Entraînement réduit: biais grossiers, toxicité fréquente, hallucinations connues ; améliore sécurité générale mais pas parfaite.\n- Application doit: validation d’entrée, traduction de politiques d’entreprise en règles exécutables, autorisation d’appels d’outils, journalisation, audits et procédures d’escalade.\n\n2) Placement des contrôles sur le chemin de la requête (ordre et exemples concrets)\n- Avant modèle (filtrage d’entrée déterministe): canonicalisation, longueur/max tokens, schéma JSON, whitelist/blacklist regex, vérif. d’authentification et d’autorisation (OAuth scopes). Objectif: bloquer injections, inputs non conformes, requêtes non autorisées.\n- Pendant appel (contrôles pré-outil): décider si le modèle peut appeler un outil ; vérifier token/scope et allowlist par utilisateur/role ; enregistrer intent.\n- Après modèle (filtrage de sortie): classificateur de sécurité (modèle) pour contenu sémantique (bias, instruction-following risks), puis filtres déterministes finaux (regex PII, patterns d’exfiltration). Toujours appliquer vérif. d’autorisation avant exécution d’action.\n- Escalade: seuils d’incertitude → revue humaine.\n\n3) Quand modèle-based vs déterministe\n- Déterministe: format, PII exact, tokens interdits, entêtes, signature numérique, auth. Utiliser pour performance et auditable.\n- Modèle-based: nuance, détection d’instruction malveillante, biais subtil, contextual fairness. Coupler avec un seuil probabiliste et log.\n\n4) Politique fail-closed (exemples concrets)\n- Si validation d’entrée échoue → refuser avec code d’erreur et message standardisé.\n- Si classificateur de sortie > seuil danger (ex. prob>0.2) → bloquer + alerter + journaliser.\n- Si probabilité incertaine (0.05–0.2) → mettre en quarantaine pour revue humaine.\n- Ne jamais exécuter action sensible (transactions, emails, changements infra) sans token d’autorisation + double consentement humain pour actions à impact élevé.\n\n5) Risques concrets à lister et mitigations\n- Fausse réjection d’une requête valide → journaux détaillés + procédure d’appel/réexamen.\n- Exécution non autorisée → scopes, allowlist, RBAC.\n- Exfiltration de données → redaction, DLP déterministe post-output.\n- Biais/injustice → evals fairness continues + correction de prompt/app logic.\n- Attaques adversariales → input canonicalization et tests de red-team.\n\nPistes opérationnelles finales: automatiser journaux d’audit, métriques de refus/faux-positif, boucles MLOps pour ré-entrainement, playbook d’incident et revues humaines périodiques."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "The earlier modules ended with an operational p...",
+        "fr": "The earlier modules ended with an operational p..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_003",
@@ -379,7 +399,17 @@
         "fr": "Répartition et justifications\n\nComportement entraîné de Claude\n- Refuser d'aider à la synthèse d'une arme dangereuse  \n  Pourquoi : c’est une règle de sécurité de contenu que le modèle doit appliquer de façon systématique via ses instructions d’entraînement et ses refus. Actions concrètes : intégrer des templates de refus, entraîner/évaluer avec des scénarios adversariaux, loguer et escalader les tentatives répétées.\n- Refuser de produire un contenu manifestement haineux  \n  Pourquoi : pareillement, c’est une politique de modération linguistique que le modèle doit internaliser (prompting safe-completions, RLHF). Actions concrètes : définir catégories claires (hateful/abusive), tests unitaires de génération, messages de refus informatifs, mécanismes d’appel humain pour cas limites.\n\nCouche applicative\n- Ne jamais restituer les données d'un autre locataire  \n  Pourquoi : isolation multi‑locataire relève de l’architecture et du contrôle d’accès (authentification, autorisation, stockage, journalisation). Le modèle ne peut garantir l’isolation technique. Actions concrètes : mandatory tenant IDs, strong ACLs, token-scoped sessions, séparation des index/search caches, chiffrage at-rest/in-transit, revues d’accès et tests d’intrusion. Ne pas se fier uniquement au modèle pour filtrer ou «s’éviter» la fuite de données.\n\nRisques concrets si mal assigné : fuites de données entre clients (si appli fait confiance au modèle), génération de guides dangereux ou discours haineux non bloqués (si le modèle n’est pas entraîné/filtré)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Sort the responsibility",
+        "fr": "Sort the responsibility"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_004",
@@ -398,7 +428,17 @@
         "fr": "1) Risque : Fuite de données sensibles (confidentialité)\n- Catégorie : Confidentialité\n- Composant affecté : Base de connaissances partenaire + canal agent ↔ KB\n- Vraisemblance : Moyenne (exposition via requêtes mal filtrées)\n- Impact : Élevé (données clients/partenaire compromises)\n- Mesure d'atténuation : Chiffrement TLS + encryption at rest, filtrage des PII avant requête, accès API restreint par ACL et tokens à durée limitée, DLP sur sorties.\n- Responsable : Sécurité Produit / Responsable API partenaire\n- Élément de preuve : Extraits de politique IAM, captures de configuration TLS, règles DLP et journaux de blocage\n\n2) Risque : Remboursements non autorisés (fraude financière)\n- Catégorie : Fraude / Contrôle financier\n- Composant affecté : Outil de remboursement connecté + agent\n- Vraisemblance : Moyenne (automatisation exposée)\n- Impact : Élevé (pertes financières, réputation)\n- Mesure d'atténuation : Workflow d'autorisation (2 approbations or OTP), limites transactionnelles, journalisation immuable, reconciliation quotidienne automatique.\n- Responsable : Finance Ops / Responsable Support\n- Élément de preuve : Logs d’approbation, règles de workflow, rapports de reconciliation\n\n3) Risque : Réponses erronées ou hallucinations (sécurité/sûreté)\n- Catégorie : Intégrité / Qualité\n- Composant affecté : Agent IA / moteur de génération\n- Vraisemblance : Élevée (LLM peut halluciner)\n- Impact : Moyen-Élevé (mauvaise prise de décision client)\n- Mesure d'atténuation : Prompting strict + grounding dans KB, seuils de confiance, validation humaine pour actions critiques, tests E2E automatisés.\n- Responsable : ML Ops / Support Quality Lead\n- Élément de preuve : Stratégies de prompt, logs de confiance, tickets validés manuellement\n\n4) Risque : Journaux altérables ou insuffisants (auditabilité)\n- Catégorie : Traçabilité / Conformité\n- Composant affecté : Journal de requêtes / stockage logs\n- Vraisemblance : Faible-Moyenne (mauvaise configuration)\n- Impact : Élevé (impossibilité de prouver actions)\n- Mesure d'atténuation : Stockage WORM ou signé cryptographiquement, export vers SIEM, retention policy et accès restreint.\n- Responsable : SRE / Sécurité Opérations\n- Élément de preuve : Politique de retention, entrées signées, alertes SIEM\n\nUne bonne évaluation inclurait ces champs pour chaque risque, priorisation par impact/vraisemblance, et plan de validation (tests, preuves) associés."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Agentic Design",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Documenting the risk assessment as a deliverable",
+        "fr": "Documenting the risk assessment as a deliverable"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_005",
@@ -417,7 +457,17 @@
         "fr": "Risque : Transactions non autorisées / fraude (remboursements abusifs)\nMesure d'atténuation : Exiger authentification forte (MFA) et RBAC pour les appels de remboursement ; imposer des seuils (ex. > 100€) qui déclenchent approbation humaine ou approbation en 2 étapes ; signer et chiffrer les requêtes avec mTLS + JWT courte durée et journaliser les IDs de transaction pour réconciliation.\n\nRisque : Hallucinations ou réponses incorrectes tirées du modèle (mauvais remboursement, mauvaise info client)\nMesure d'atténuation : Utiliser retrieval-augmented generation avec citation de source (lien/ID de la base partenaire) ; appliquer un seuil de confiance/score et basculer vers opérateur humain pour réponses à faible confiance ou cas à fort impact ; tests de régression automatiques et métriques de précision sur cas réels.\n\nRisque : Fuite ou exposition de données sensibles (PII dans KB, logs, ou API)\nMesure d'atténuation : Masquer/redacter les PII en entrée/sortie, chiffrer les données en transit et au repos (TLS + AES-256), tokeniser les identifiants sensibles, appliquer politiques de minimisation et retention (ex. purger logs sensibles après 90 jours).\n\nRisque : Intégrité et confiance de la base de connaissances partenaire\nMesure d'atténuation : Valider et signer les livrables du partenaire (hash + vérification périodique), monitoring des changements, pipeline CI pour tests de qualité des données avant ingestion.\n\nRisque : Disponibilité et abus (DoS, appels massifs)\nMesure d'atténuation : Rate-limiting, quotas par client, circuit breakers, redondance et alerting SIEM + playbook d'incident."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Agentic Design"
+      ],
+      "title": {
+        "en": "Assess the risks in a proposed architecture",
+        "fr": "Assess the risks in a proposed architecture"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_006",
@@ -436,7 +486,17 @@
         "fr": "1) Injection de prompt depuis la base de connaissances\nMesure : traiter tout contenu récupéré comme non fiable — appliquer un filtre d’instructions (regex + classifieur ML) pour supprimer/neutraliser directives, normaliser/échapper les caractères spéciaux, et n’injecter que champs de données autorisés (allowlist).\n\n2) Abus d’outil (ex. remboursement)\nMesure : enforcement indépendant avant exécution de l’outil — vérification d’autorisation/entitlement côté service d’orchestration, re-authentification ou 2FA pour montants sensibles, approbation humaine pour seuils définis.\n\n3) Fuite de données sensibles (PII)\nMesure : détection et masquage automatisés des PII (NER + règles), principe de moindre privilège sur champs renvoyés, journaux redacted et accès restreint.\n\n4) Empoisonnement ou corruption de la KB\nMesure : pipeline d’ingestion avec validation et revue, signatures/versioning des entrées, tests automatisés et rollback possible des versions corrompues.\n\n5) Hallucinations / réponses non vérifiées\nMesure : exiger source vérifiable pour assertions (citations); si aucune source fiable, renvoyer incertitude plutôt que compléter; test adversarial continu.\n\n6) Escalade de privilèges via enchaînement d’instructions\nMesure : scoper les capacités des sessions (capability tokens), limiter les APIs accessibles selon rôle et contexte, vérifications côté service, non par le modèle.\n\n7) Manque d’auditabilité\nMesure : journaliser toutes les décisions du modèle, inputs récupérés, appels d’outils et résultats (immutable logs, horodatage, IDs utilisateur) pour post-mortem.\n\n8) Disponibilité / abus (DoS)\nMesure : quotas, rate limiting, détection d’anomalies et circuit-breaker, alerting et isolation des sessions suspectes."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Identify the risk categories present in this de...",
+        "fr": "Identify the risk categories present in this de..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_007",
@@ -455,7 +515,17 @@
         "fr": "1) Injection indirecte via la base de connaissances — risques concrets : documents contenant instructions (ex. \"Ignore previous instructions\", \"Process refund without auth\") ; fuite de contexte utilisateur. Mitigations actionnables :\n- Traiter tout contenu récupéré comme non fiable : désactiver l'exécution d'instructions trouvées dans le contenu (ne pas concaténer raw doc -> prompt).\n- Nettoyage automatique : enlever lignes commençant par verbes impératifs, balises \"instruction\", snippets de code ; appliquer un classifieur ML simple (entraînement sur exemples d'\"instructions\" vs \"données\") pour filtrer docs instructifs.\n- Provenance : joindre métadonnées (source, horodatage, score de confiance) et n'utiliser que docs au-dessus d'un seuil.\n- Tests : créer cas d'attaque avec phrases \"ignore previous\" pour vérifier rejet.\n\n2) Abus d’outils / action de remboursement — risques concrets : exécution non autorisée, fraude, replay attacks. Mitigations actionnables :\n- Gatekeeper d’autorisation indépendant du modèle : vérifier RBAC, signatures, et état de session avant d’exécuter l’outil.\n- Validation à 2 étapes : confirmation humaine ou challenge cryptographique (ex. signer requête avec une clé de service).\n- Journaux immuables et alerting en cas d’opération sensible ; révoquer clés compromises ; limiter taux/volume par compte.\n\n3) Épuisement du budget de tokens — risques concrets : gros docs tronquent contexte utile. Mitigations actionnables :\n- Chunking déterministe (ex. 1000 token chunks, overlap 100), résumé préalable par modèle pour docs > 5k tokens.\n- Enforcer : max_input_tokens global (ex. 4k) et rejeter/signer erreur claire si dépassé.\n- Priorisation de récupération (top-k par pertinence) et monitoring d’usage de tokens + alertes (SLOs pour latence/erreur)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Skip for now",
+        "fr": "Skip for now"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_008",
@@ -474,7 +544,17 @@
         "fr": "Une bonne réponse doit décrire clairement le rôle, l’ordre et des contrôles concrets pour chaque point de décision, plus un flux d’exécution et des mesures de sécurité en cas d’échec.\n\nPoints clés attendus\n- Input screening (avant le modèle) : filtre d’intention (ex. demandes illégales, fraude), détection de contenu interdit (violence, sexualité infantile), suppression/masquage de PII, prompt-injection et validation du format. Actions : rejeter, demander reformulation, rediriger vers intervention humaine. Journaliser l’événement.\n- Appel au modèle : le modèle reçoit seulement les requêtes qui passent le screening. Ajouter tokens de contexte et instructions de sécurité.\n- Tool-call authorization (avant tout effet de bord) : valider identité/permission (RBAC), vérifier limites (montants, fréquence), vérifier cohérence des paramètres, confirmer intent explicite pour actions sensibles (ex. \"Confirmez-vous rembourser 500€ ?\"). Pour actions critiques, exiger deuxième approbation humaine.\n- Output screening (avant l’utilisateur) : contrôle final pour hallucinations/faits non vérifiés, fuite de PII, contenu interdit, format attendu. Redaction automatique ou remplacement par message sûr si non conforme.\n\nExemple succinct de pipeline (pseudocode)\ninput = receive()\nif not input_screen(input): return safe_fallback()\nmodel_output = model.generate(input)\nif model_proposes_tool_call(model_output):\n  if not authorize_tool_call(user, action, params): return safe_fallback()\n  tool_result = execute_tool(action, params)\nfinal_output = merge(model_output, tool_result)\nif not output_screen(final_output): return safe_fallback()\nreturn final_output\n\nMesures opérationnelles : logging/audit immuable, métriques d’erreur, alerting pour patterns anormaux, politiques de révision humaine pour incidents."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Where guardrails sit in a request path",
+        "fr": "Where guardrails sit in a request path"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_009",
@@ -493,7 +573,17 @@
         "fr": "Placement attendu (axe horizontal : Entrée — Autorisation avant outils — Sortie ; axe vertical : Déterministe vs Modèle) :\n\n- A. Écran de Jailbreak et d'injection de prompt → Entrée / Basé sur modèle.\n  Raisonnement : la détection des tentatives de jailbreak/injection est souvent subtile (phrases reformulées, contournements) ; un classifieur ML dédié détecte mieux les patterns contextuels. Implémentation : classifier entraîné + seuil conservateur, affichage d'alerte bloquante ou reformulation requise.\n\n- B. Liste noire des termes interdits dans le message utilisateur → Entrée / Déterministe.\n  Raisonnement : simple correspondance lexicale, performant et auditable. Implémentation : normalisation Unicode, suppression d'espaces/leet, regex, liste versionnée, rejection/masquage avant parsing.\n\n- (Contrôle manquant — conseillé) Vérification d'autorisation avant exécution d'outil → Autorisation avant outil / Déterministe.\n  Raisonnement : permissions, rôles et quotas sont des règles explicites ; appliquer RBAC/ABAC, ledger d'audit et confirmation explicite si élévation requise.\n\n- C. Évaluateur de toxicité sur la réponse générée → Sortie / Basé sur modèle.\n  Raisonnement : l’évaluation du texte produit nécessite souvent un modèle spécialisé (nuances, contexte). Implémentation : modèle de sécurité externe, seuils, escalade humaine ou reformulation si au-dessus du seuil.\n\nCases vides attendues : (Autorisation / Modèle) et (Sortie / Déterministe). Expliquez brièvement ces choix (auditabilité, couverture de faux positifs/négatifs) dans la justification."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Architecture",
+        "Context Design",
+        "Output Formatting"
+      ],
+      "title": {
+        "en": "Place the controls on the path",
+        "fr": "Place the controls on the path"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_010",
@@ -512,7 +602,17 @@
         "fr": "Points d’entrée (et comment ils peuvent biaiser + comment les instrumenter concrètement)\n\n1) Données fournies par le demandeur (formulaire)\n- Risques : erreurs systématiques (exclusion d’anciens formats), saisie sélective, auto‑censure par groupes vulnérables.\n- Instrumentation requise : horodatage, IP/pays, version du formulaire, champs bruts et indicateurs de saisie manquante, taux d’erreur de champ, identifiant de session.\n- Vérifier : corrélations saisie manquante vs groupe protégé, tests A/B du formulaire.\n\n2) Contexte récupéré (bases externes / enrichissement)\n- Risques : biais de couverture (certains groupes sous‑représentés), latence différentielle, erreurs de matching.\n- Instrumentation requise : source + version des données, score de confiance du matching, timestamp, provenance complète, nombre d’enrichissements appliqués.\n- Vérifier : taux d’accès par source par groupe démographique, audits d’échantillons.\n\n3) Sortie du modèle (score/prédiction)\n- Risques : calibration inégale, features proxies pour caractéristiques protégées, dérive du modèle.\n- Instrumentation requise : identifiant modèle/version, seed, score brut + probabilités, importance des features (SHAP/contrf.), seuils appliqués, intervalle de confiance, métriques par groupe (AUC, FPR/FNR).\n- Vérifier : tests de disparate impact, calibration par sous‑populations, monitoring de dérive.\n\n4) Routage / logique décisionnelle (règles, seuils, humain)\n- Risques : règles applicables différemment par segment, biais d’override humain, routage entraînant feedback loop.\n- Instrumentation requise : trace de routage (alors/conditions), logs d’overrides avec motif et opérateur, délai de décision, version des règles.\n- Vérifier : proportion d’overrides par groupe, revue périodique des règles.\n\nImplémentation opérationnelle : attachez un identifiant de requête unique à tous les logs, conservez versions et provenance, chiffrez PII, rétention conforme, et automatisez rapports d’équité hebdomadaires."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Batch Processing"
+      ],
+      "title": {
+        "en": "Decision logging is what makes those explanatio...",
+        "fr": "Decision logging is what makes those explanatio..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_011",
@@ -531,7 +631,17 @@
         "fr": "Critère attendu — démarche et éléments concrets\n\n1) Règles de discernement (accept / réviser / remplacer)\n- Acceptable : sortie factuelle, pas de mention/différenciation des groupes protégés, pas d’impact différentiel.\n- Réviser : formulation potentiellement stigmatisante, usage de proxies sensibles, incertitude > seuil.\n- Remplacer : résultat manifestement discriminatoire, instructions demandant traitement inégal sans justification légale/éthique.\n\n2) Procédure d’évaluation (étapes actionnables)\n- Détection automatique : règles regex + classifieur pour repérer références à attributs sensibles, et calculer score d’équité par sous-groupe.\n- Échantillonnage : loguer 100% des sorties marquées “à risque”, échantillonner 1–5% des autres pour validation.\n- Triage humain : reviewer reçoit enregistrement complet + dashboard avec métriques par sous-groupe; décision et justification écrites obligatoires.\n- Remédiation : si biais confirmé → corriger prompt/modèle et re-générer, documenter changement.\n\n3) Schéma d’un enregistrement de transparence (champs minimum)\n- id, horodatage, modèle/version, prompt/inputs, sortie, score de risque (ex. 0–1), attributs sensibles détectés (masqués), décision (accept/revise/replace), justification du reviewer, actions prises, TTL/retention label.\n\n4) Risques concrets et mitigations\n- Vie privée / ré-identification : redaction des PII, pseudonymisation, chiffrement at-rest/in-transit.\n- Fuite de données sensibles via logs : restreindre accès RBAC, journaliser accès aux logs.\n- Coût de stockage élevé : compresser, retention différenciée (ex. 90 jours pour brute, 2 ans pour incidents), échantillonnage adaptatif.\n- Charge opérationnelle : automatiser triage et règles, définir SLA reviewers.\n- Conformité : conserver preuves d’audit, politique de suppression périodique.\n\n5) Gouvernance pratique\n- Politique de retention publishée, revue trimestrielle des règles, métriques KPIs (taux d’acceptation, faux négatifs de détection, coûts de stockage)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Discernment: judging outputs for unequal treatment",
+        "fr": "Discernment: judging outputs for unequal treatment"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_012",
@@ -550,7 +660,17 @@
         "fr": "Ce que l’équipe a raté et comment corriger — correction modèle concise et actionnable :\n\nRisques concrets\n- Biais injecté par le corpus de récupération (surreprésentation, lacunes de couverture).\n- Impossibilité de prouver l’origine du préjudice faute de journalisation.\n- Dépendance excessive au fournisseur sans garanties de traçabilité.\n- Incapacité réglementaire (audits, recours) et perte de confiance.\n\nMesures techniques à mettre en place (prioritaires)\n1. Instrumenter la chaîne de récupération :\n   - Enregistrer pour chaque requête : request_id, horodatage, user_context (selon privacy), version_index/corpus_id, doc_ids retournés, scores_retrieval, scores_rerank, décision finale, modèle/version, pipeline_config.\n2. Versionner et stocker les snapshots du corpus et des index (checksum + métadonnées de provenance).\n3. Exiger du fournisseur l’accès aux métadonnées de récupération et à un contrat SLA sur l’auditabilité.\n4. Déployer tests d’équité automatiques sur sorties (disparités par groupes protégés, coverage tests) et alertes.\n5. Conserver journaux suffisants pour reconstruire un cas individuel (rétention et exportabilité pour audits).\n6. Documenter chaîne de responsabilité et playbook de réponse (comment reproduire/contester un cas).\n\nExemple de schéma de log (JSON) à enregistrer par requête\n{\"request_id\":\"...\",\"timestamp\":\"...\",\"user_group\":\"...\",\"corpus_id\":\"v2026-07-01\",\"returned_docs\":[{\"id\":\"d1\",\"score\":0.92}], \"final_decision\":\"A\",\"model_version\":\"m1.3\",\"pipeline_config\":\"retrieval=v1;rerank=v2\"}\n\nChecklist quune bonne réponse couvre\n- Instrumentation de chaque point d’injection (récupération, filtres, reranking)\n- Versioning du corpus/index\n- Métadonnées et provenance accessibles\n- Tests d’équité automatisés et seuils d’alerte\n- Journaux au niveau décisionnel + playbook d’audit/réponse."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Context Design"
+      ],
+      "title": {
+        "en": "\"We assumed fairness was the model's job. The s...",
+        "fr": "\"We assumed fairness was the model's job. The s..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_013",
@@ -569,7 +689,17 @@
         "fr": "Pourquoi c’est un problème\n- Impossibilité de reconstituer le parcours : on ne peut pas expliquer pourquoi un cas a pris un chemin plutôt qu’un autre.\n- Entrave à la contestation : l’utilisateur ne peut pas contester une décision sans preuve du routage.\n- Risque de non‑conformité réglementaire : audits (ex. RGPD, régulateurs financiers/santé) exigent traçabilité des décisions automatisées.\n- Difficulté de détection des biais et de correction : aucun signal pour corréler erreurs/segments routés.\n- Débogage et surveillance compromis : incidents difficiles à diagnostiquer et à corriger.\n\nActions concrètes recommandées\n1. Journaliser systématiquement chaque étape de routage avec ces champs minimaux :\n   - timestamp, request_id, user_id (pseudonymisé si nécessaire)\n   - routing_rule_id et version, rule_match = true/false\n   - features_clés utilisées pour la décision (ou hash/empreinte)\n   - model/service_version, confidence_score, downstream_path\n   - actor (automatique/humain), decision_reason (texte standardisé)\n2. Enregistrer avant/après l’état si le routage modifie la prise en charge.\n3. Garantir intégrité et accessibilité : logs immuables (WORM), horodatage signé, rétention et contrôles d’accès.\n4. Tests et monitoring : checks de couverture (pourcentage de routages journalisés), alertes si routage non journalisé, tests de relecture qui reproduisent le parcours d’un cas.\n5. Respect vie privée : minimiser données sensibles, chiffrement, droits d’accès pour les audits.\n\nExemple JSON de log\n{\"ts\":\"2026-07-25T12:00:00Z\",\"request_id\":\"abc123\",\"routing_rule_id\":\"RR-42\",\"rule_version\":\"v1.3\",\"features\":[\"age_bucket:senior\",\"score:0.78\"],\"decision\":\"escalate\",\"model_version\":\"m-2.1\",\"actor\":\"automated\",\"reason\":\"threshold exceeded\"}"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Critique the decision-logging design",
+        "fr": "Critique the decision-logging design"
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_014",
@@ -588,7 +718,17 @@
         "fr": "Proposition réécrite (claire et professionnelle) :\n\"You identified the boundary shown on the layered‑defense map. Broad categories of potential harm are reflected in the model’s learned behavior. Are there any partner‑specific risks, constraints, or use cases we should account for?\"\n\nPourquoi ces changements (concrets) :\n- Remplace « you drew the boundary the map draws » par « you identified the boundary shown » pour éliminer la redondance et la formulation maladroite.\n- Remplace « trained behavior » par « model’s learned behavior » pour préciser qu’il s’agit du comportement appris par le modèle.\n- Remplace « Broad harm classes » par « Broad categories of potential harm » pour rendre le sens plus explicite.\n- Ajoute « risks, constraints, or use cases » pour orienter la question vers des éléments actionnables et concrets.\n\nQuestion de suivi prête à l’emploi (à envoyer au partenaire) :\n\"Please specify any partner‑specific threats, high‑risk user groups, prohibited uses, or legal/regulatory constraints relevant to this integration.\"\n\nChecklist qu’une bonne réponse au partenaire devrait couvrir :\n- Liste des risques spécifiques au partenaire (3–5 exemples concrets).\n- Exemples d’usages légitimes et non autorisés.\n- Contraintes réglementaires ou contractuelles.\n- Mesures de mitigation proposées (contrôles techniques, human review, monitoring)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "All correct.: `You drew the boundary the layere...",
+        "fr": "All correct.: `You drew the boundary the layere..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_015",
@@ -607,7 +747,17 @@
         "fr": "Corrigé proposé (élément en rouge) :\n- Texte original (rouge) : « Émettre un remboursement / Retourner un enregistrement »\n- Nouvelle classification : « Décision/Action sur les données — Opération métier (requiert autorisation, journalisation et règles backend) »\n\nJustification concise :\n- Il s’agit d’une commande opérationnelle qui modifie l’état des données et/ou des comptes financiers — ce n’est pas une règle de sécurité générale sur le contenu. Le comportement entraîné ne doit pas être le seul filtre : la décision doit être contrôlée par la logique métier et des contrôles d’accès.\nActions recommandées pour la soumission :\n1. Remplacer la catégorie « sécurité générale » par « décision/action sur les données ».  \n2. Ajouter méta-informations : niveaux d’autorisation requis, conditions préalables (vérification d’identité, politique de remboursement), et exigence de journalisation/audit.  \n3. Documenter les contrôles backend nécessaires (autorisation RBAC, validation des transactions, double confirmation pour montants élevés).  \n4. Indiquer explicitement que le modèle ne doit pas exécuter ces actions automatiquement et qu’une API sécurisée et auditable doit les gérer.\n\nCes éléments feront apparaître correctement l’élément comme une action métier nécessitant protections et contrôles."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Agentic Design"
+      ],
+      "title": {
+        "en": "Partially correct.: The harm classes are right,...",
+        "fr": "Partially correct.: The harm classes are right,..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_016",
@@ -626,7 +776,17 @@
         "fr": "Étapes concrètes à suivre\n1. Auditer et retirer toute règle de domaine/autorisation du prompt/system message et des comportements entraînés du modèle. Remplacez-les par instructions neutres (p.ex. \"Réponds fidèlement sans appliquer de politiques partenaires\").\n2. Externaliser les politiques partenaires dans une couche applicative (config/BD/engine). Ne pas hardcoder dans le modèle.\n3. Implémenter un middleware qui valide les requêtes et filtre/autorise les sorties du modèle avant restitution à l’utilisateur.\n4. Journaliser, tester (unit, intégration, tests d’évasion prompt-injection) et monitorer (alertes sur refus/contournements).\n\nExemple (Node.js / Express — middleware simple)\nconst enforcePolicy = (output, user, policy) => {\n  if (!policy.allows(user.role, output.category)) throw new Error('Forbidden by partner policy');\n  if (policy.redactSensitive) return redact(output, policy.sensitiveFields);\n  return output;\n};\napp.post('/ask', async (req,res) => {\n  const modelOutput = await callModel(req.body.promptNeutral);\n  try {\n    const final = enforcePolicy(modelOutput, req.user, req.partnerPolicy);\n    res.json(final);\n  } catch(e) { res.status(403).json({error: e.message}); }\n});\n\nRisques concrets à considérer\n- Règles laissées dans les prompts (contournement, responsabilité juridique)\n- Prompt injection si la couche applicative n’assure pas la validation\n- Incohérences entre versions de politique (sync/gestion de configuration)\n\nChecklist qu’une bonne soumission doit couvrir\n- Retrait des règles du modèle, prompts neutres\n- Politique stockée/exécutée côté applicatif\n- Middleware/engine d’autorisation fonctionnel + exemple\n- Tests & monitoring + journalisation des décisions."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Some items need adjustment.: A deployment-speci...",
+        "fr": "Some items need adjustment.: A deployment-speci..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_017",
@@ -645,7 +805,17 @@
         "fr": "Butée courte et contrôlée : l’idée est de s’interrompre consciemment puis de revenir avant une « tâche cumulée » (deadline ou point d’intégration). Correction modèle — ce que ferait un bon élève :\n\nDéfinition et objectif\n- Interruption volontaire et limitée pour recharger ou résoudre une micro-tâche sans compromettre l’intégration ultérieure.\n\nÉtapes actionnables\n1. Décidez pourquoi vous sautez (pause, info, micro-tâche) et combien de temps maximum (ex. 10–25 min).\n2. Capturez l’état : 1 phrase résumant l’avancement + 1 action concrète suivante (« Terminer section 2 ; reprendre à la ligne 42 »).\n3. Programmez un déclencheur clair : heure précise, minuterie, ou événement (ex. « revenir 30 min avant la réunion de synthèse »).\n4. Bloquez un tampon (10–15 min) avant la tâche cumulée pour ré-aligner et vérifier dépendances.\n5. Limitez l’activité pendant le saut (repos court, lecture ciblée, tâche non liée courte).\n6. Rituel de reprise : relire la phrase de capture + relancer l’outil/doc en <5 min.\n\nRisques concrets et mitigations\n- Perdre le contexte → note synthétique + capture d’écran.  \n- Procrastination prolongée → alarme et engagement public (messagerie, collègue).  \n- Sous-estimation du temps → ajouter buffer de 10–15 min.  \n- Conflits de priorité → vérifier calendrier avant de sauter.\n\nCritères de succès\n- Vous revenez au moins 10–15 min avant la tâche cumulée, relancez le travail en ≤5 min et respectez la deadline."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Skipped: Move on if you need to but come back b...",
+        "fr": "Skipped: Move on if you need to but come back b..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_018",
@@ -664,7 +834,17 @@
         "fr": "Objectif : fournir une évaluation des risques complète et reproductible, utilisable dès zéro.\n\nÉtapes concrètes\n1. Définir le périmètre et les actifs (systèmes, données, personnes, fournisseurs). Documenter hypothèses.\n2. Identifier menaces et vulnérabilités par actif (brainstorm + sources : incidents passés, audits, threat intelligence).\n3. Choisir méthode d’analyse : évaluation qualitative (5x5 probabilité × impact) ou quantitative (valeur monétaire).\n4. Construire registre des risques (colonnes minimales : ID, actif, risque, cause, probabilité, impact, score, gravité, mesures existantes, actions recommandées, propriétaire, échéance, statut).\n   - Exemple de ligne : R1 | Base clients | Perte de données personnelles | défaut de chiffrement | Prob 4/5 | Impact 5/5 | Score 20 | Élevé | Chiffrement AES-256, IAM | Implémenter rotation clés + MFA | Propriétaire: SecOps | 3 mois | En cours\n5. Prioriser (seuils : score 1–8 faible, 9–15 moyen, 16–25 élevé). Allouer ressources selon criticité.\n6. Définir mesures de traitement : réduction (contrôles techniques/process), transfert (assurance), acceptation, évitement. Pour chaque mesure préciser coûts, bénéfices, indicateurs de succès.\n7. Plan de surveillance : KPIs (nombre d’incidents, temps MTTR, conformité patch), fréquence des revues (mensuelle/trim.), tests (pentest, exercises DR), reporting au management.\n8. Documenter risques résiduels et décisions d’acceptation. Tenir journal des changements.\n\nRisques concrets à vérifier : fuite de données, non-conformité réglementaire, panne d’infrastructure, compromission par tiers, biais de modèle, attaques adversariales, fraude interne, interruption chaîne d’approvisionnement, catastrophe naturelle.\n\nLivrables recommandés : registre des risques, heatmap, plan d’action avec propriétaires et calendrier, résumé exécutif pour la direction."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Compliance",
+        "Computer Vision"
+      ],
+      "title": {
+        "en": "Skipped: Move on if you need to, but the cumula...",
+        "fr": "Skipped: Move on if you need to, but the cumula..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_019",
@@ -683,7 +863,17 @@
         "fr": "Correction modèle\n\nVotre séparation est correcte mais doit être précisée et dotée de garde‑fous opérationnels.\n\n1) Validation de la séparation\n- Modèle pour “open‑ended intent”: classification d’intention, génération de texte, interprétation vague. Exemple concret: détecter si l’utilisateur veut une recommandation (→ modèle).\n- Contrôles déterministes pour règles exactes et autorisations: vérification RBAC/ABAC, règles juridiques binaires, calculs arithmétiques exacts. Exemple: \"si user.role == 'admin' et action == 'delete' alors autoriser\" implémenté dans un moteur déterministe (OPA, PDP).\n\n2) Points concrets à ajouter\n- Seuils de confiance: ex. si score d’intention < 0.9 → route vers revue humaine ou étape déterministe supplémentaire.\n- Fallbacks déterministes: après réponse model, appliquer checks fixes (ex. vérifier qu’aucune donnée sensible n’est exposée).\n- Journalisation immuable: stocker décision modèle + score + règles appliquées pour audit.\n\n3) Risques identifiés et mitigations\n- Hallucinations modèles → mitigation: post‑validation déterministe, lists bloquantes de contenu.\n- Contournement d’autorisation → mitigation: effectuer l’autorisation finale uniquement dans le composant déterministe.\n- Latence/Disponibilité → mitigation: cacher réponses fréquentes, circuit breaker et mode dégradé déterministe.\n- Biais/mauvaise classification → mitigation: jeux de tests, métriques FPR/FNR, monitoring drift.\n\n4) Tests requis\n- Jeux d’évaluation pour intent (divers, adversariaux).\n- Tests unitaires pour chaque règle déterministe.\n- Scénarios d’intégration: modèle + checks postérieurs.\n\nUne bonne réponse montrerait cette séparation, règles de seuils, logs/audit, tests et mitigations concrets."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "All placed correctly.: `You placed each control...",
+        "fr": "All placed correctly.: `You placed each control..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_020",
@@ -702,7 +892,17 @@
         "fr": "Correction modèle (concis et actionnable) :\n\n1) Clarifier l’intention de la vérification\n- Si la décision doit être prouvée (audit légal / non-répudiation) : usez d’un mécanisme déterministe et réjouable (policy engine + signatures).\n  - Implémentation concrète : moteur de politiques (ex. OPA/XACML) retourne Decision Record contenant {user_id, action, resource, policy_id, policy_version, input_attributes, timestamp}. Signez ce record (HMAC ou signature asymétrique) et stockez-le immuable.\n  - Ne jamais remplacer ce proof par « le modèle a dit oui ». Le modèle peut informer la décision mais la preuve doit être la décision du moteur signée.\n\n- Si l’objectif est d’interpréter une intention (détection probabiliste, explication) : traitez comme interprétatif.\n  - Implémentation concrète : modèle ML retourne {label, confidence, top_features, model_id, model_version, input_snapshot}. Loggez explications (LIME/SHAP/attention) et incluez seuils de confiance et workflow H2I (human-in-the-loop).\n\n2) Placement et flux\n- Séparez la couche d’inférence (modèle d’intention) de la couche d’autorisation (policy engine). Le modèle propose; la policy engine décide et produit la preuve.\n- En cas de règles fixes utilisées pour interpréter l’intention, versionnez les règles et consignez la rule_set_id; prévoyez fallback humain.\n\n3) Checklist que doit couvrir une bonne réponse\n- Distinction prouvable vs interprétatif\n- Exemple concret d’audit record signé\n- Données à logger (id, input, model/version, explanation, policy_version, signature)\n- Processus H2I et gestion des règles/versioning."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Compliance",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Partially correct.: The placement is right, but...",
+        "fr": "Partially correct.: The placement is right, but..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_021",
@@ -721,7 +921,17 @@
         "fr": "Cartographie recommandée des contrôles et actions concrètes\n\n- Ordre et emplacement (axe de traitement) :\n  1. Authentification / Autorisation — avant sélection/exécution d’un outil. Action : bloquer l’appel aux API/outils si l’utilisateur n’a pas le droit pour l’action demandée.\n  2. Validation d’entrée & classification (intention, toxicité, données sensibles) — avant génération ou appel d’outil. Action : rejeter ou rediriger les requêtes malveillantes/illégales.\n  3. Politique de sélection d’outil & sandboxing — décider quel outil exécuter (ou refuser) selon contexte et droits.\n  4. Exécution d’outil (effet réel) — uniquement après contrôles ci‑dessus.\n  5. Vérification post‑exécution (toxicity judge sur la réponse, vérif. d’intégrité, filtres d’exfiltration) — avant exposition au client.\n  6. Logging, alerting, mitigation (rollback si nécessaire) — après vérifications.\n\n- Risques concrets si mal placés :\n  - Autorisation après exécution → actions non autorisées déjà effectuées.\n  - Juge de toxicité avant réponse → impossible d’évaluer la sortie réelle (faux négatifs).\n  - Filtre de fuite de données après rendu → données sensibles déjà exposées.\n  - Validation d’entrée absente → outils exécutés sur input malveillant.\n\n- Checklist qu’une bonne réponse couvrirait :\n  - Pour chaque contrôle : emplacement exact + pourquoi (ex.: « authorisation → avant appel outil, empêche exécution »).\n  - Exemples d’actions de mitigation (block, sanitize, sandbox, rollback).\n  - Points de surveillance (logs, alertes, métriques d’échec)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Architecture"
+      ],
+      "title": {
+        "en": "Some controls are in the wrong zone.: A control...",
+        "fr": "Some controls are in the wrong zone.: A control..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_022",
@@ -740,7 +950,17 @@
         "fr": "Points de lacune typiques (points d’injection non journalisés)\n- Entrées utilisateur non normalisées : champs libres, fichiers, métadonnées HTTP (User-Agent, headers).\n- Messages système/assistant injectés en amont : prompts construits dynamiquement ou templates modifiés.\n- Appels asynchrones / files d’attente : tâches en background, callbacks, retries.\n- Caching et réutilisation de réponses : hits de cache sans traçage de la provenance.\n- Services tiers / API upstream : réponses transformées sans conservation de l’original.\n- Hooks de post-traitement humain : corrections manuelles, modération ou réécritures.\n- Paramètres par défaut changeants : température, top_k, modèle sélectionné implicitement.\n- Transformations pré/post (tokenization, anonymisation) : étapes où l’entrée est altérée.\n- Erreurs silencieuses / fallback logique : branches non loggées lors d’exceptions.\n\nRisques concrets\n- Impossibilité d’expliquer une décision -> non-conformité réglementaire.\n- Perte d’auditabilité et responsabilité.\n- Incapacité à retracer source d’un biais ou d’une erreur.\n- Exposition à manipulation (injection non détectée).\n\nActions concrètes et champs de log requis\n- Pour chaque requête/loguer : timestamp, user_id, request_id, raw_input, normalized_input, constructed_prompt (avec templates), model_version, model_params, intermediate_outputs (top-N), model_response, postprocessed_response, upstream_responses, human_edits, execution_path/branch, error_codes.\n- Mesures : hash des inputs pour intégrité, rotation/retention policy, contrôle d’accès aux logs, chiffrement.\n\nTests d’audit\n- Scénarios d’injection (headers, fichiers, prompts dynamiques) automatisés pour vérifier que chaque point écrit les champs ci‑dessus.\n- Revue périodique des chemins d’exécution non couverts et tests de couverture des logs."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Agentic Design"
+      ],
+      "title": {
+        "en": "All gaps identified.: `You found the points whe...",
+        "fr": "All gaps identified.: `You found the points whe..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_023",
@@ -759,7 +979,17 @@
         "fr": "Corrections à apporter (concret et actionnable) :\n1. Instrumentation : journalisez l’étape de routage manquante et incluez l’attribut de sous-groupe (ex. genre, âge, région) dans chaque enregistrement de décision. Exemple de champs : request_id, user_id, routing_step, model_version, subgroup_label, timestamp, outcome, score.\n2. Désagrégation des métriques : calculez les métriques clé (TPR, FPR, précision, erreur moyenne, calibration) par sous-groupe en plus de l’agrégé. Ne présumez pas que l’agrégé suffit.\n3. Seuils et alerting : définissez des seuils d’écart acceptable (ex. différence TPR > 5%) et déclenchez des alertes si dépassés.\n4. Tests et visualisation : fournissez un tableau/graphique montrant les métriques par sous-groupe et l’échantillon (n) par cellule. Ajoutez tests statistiques (p-valeur, IC) et minimum n pour interprétation.\n5. Traçabilité : assurez la reconstitution d’une décision (routing + modèle) via ID corrélés; stockez versions de modèle et règles de routage.\n\nRisques concrets à mentionner :\n- Masquage d’un préjudice concentré par une métrique agrégée.\n- Incapacité à auditer décisions sans logs de routage.\n- Estimations instables pour petits sous-groupes.\n- Risque de fuite de données sensibles si logs ne sont pas protégés.\n\nExemple Python (pandas) pour métriques par sous-groupe :\n```python\nimport pandas as pd\nfrom sklearn.metrics import recall_score, precision_score\n\ndf = pd.read_csv(\"decisions.csv\")\nmetrics = df.groupby('subgroup').apply(lambda g: pd.Series({\n  'n': len(g),\n  'TPR': recall_score(g.y_true, g.y_pred),\n  'Precision': precision_score(g.y_true, g.y_pred)\n}))\nprint(metrics)\n```\n\nSoumettez la version modifiée avec : logs mis à jour, tableau de métriques désagrégées, seuils d’alerte et preuve visuelle."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Data Privacy"
+      ],
+      "title": {
+        "en": "Partially correct.: You caught the unlogged rou...",
+        "fr": "Partially correct.: You caught the unlogged rou..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_024",
@@ -778,7 +1008,17 @@
         "fr": "Étapes précises pour corriger et resoumettre (ce qu'une bonne réponse doit contenir)\n\n1) Reproduire et recadrer la question\n- Relisez la question et notez les critères obligatoires (quel composant, quel niveau de log, quelles données exigées).\n- Écrivez en une phrase la décision attendue (ex. « signaler erreur X depuis composant Y avec request_id et stack trace »).\n\n2) Inspecter les preuves de logging\n- Vérifiez un échantillon de logs pour ces champs : timestamp, component, level, request_id/correlation_id, user_id/session, message, stack_trace.\n- Exemple minimal de ligne de log attendu :\n  2026-07-25T12:34:56Z component=auth level=ERROR request_id=abc123 user_id=42 msg=\"token validation failed\" stack=Auth.validate:line42\n\n3) Diagnostiquer la lacune\n- Si manquant, identifiez la cause : mauvais niveau (INFO vs ERROR), filtre de log, environnement (prod vs dev), code non déployé, mauvaise question d’interprétation.\n- Documentez la motivation de votre décision initiale (ex. « j’ai ignoré les erreurs R car jugées non-pertinentes pour la métrique X »).\n\n4) Actions correctives à appliquer\n- Ajuster la sélection : inclure explicitement le composant/cas manquant.\n- Modifier code/log config : ajouter log au niveau approprié, inclure request_id et stack.\n- Ajouter test automatique : script qui simule l’erreur et greppe les champs requis.\n\n5) Documentation pour soumission\n- Fournir reconstruction pas-à-pas (consignes → actions → preuve de logs) + commit/hash + commande de test utilisée.\n- Mentionner risques si non corrigé : perte de traçabilité, incapacité à enquêter, non-conformité réglementaire, fausses alertes.\n\nSoumettez la sélection corrigée avec la justification et la preuve (extrait de logs + test)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Not yet.: A component that is adequately logged...",
+        "fr": "Not yet.: A component that is adequately logged..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_025",
@@ -797,7 +1037,17 @@
         "fr": "Interprétation attendue\nTraitez \"Ignoré\" comme un skip contrôlé, pas comme une suppression. L’étudiant doit montrer comment marquer l’état, préserver le contexte, et garantir un retour avant la tâche cumulée.\n\nPoints concrets à couvrir (ordre d’implémentation)\n- Marquer l’état : ajouter un flag “skipped=true” + raison, timestamp, user/actor. Conserver la snapshot des inputs pour reprise.\n- Corrélation : générer flow_id + decision_id/parent_id pour tracer plusieurs décisions liées.\n- Événements observables : émettre decision_requested, decision_skipped, decision_resumed, decision_completed, decision_failed.\n- Métadonnées à logguer : flow_id, decision_id, timestamp, input_hash, outcome, confidence, duration, actor, retry_count.\n- Idempotence & reprise : stocker seed/inputs, version du modèle, et un point de reprise (cursor) pour ré-exécuter ou compenser.\n- Tests & validation : cas de reprise, replay deterministe, métriques (skip_rate, mean_time_to_resume).\n- Sécurité/PII : redaction configurable, ACLs, politique de conservation.\n\nExemple d’événement JSON\n{\"event\":\"decision_skipped\",\"flow_id\":\"F123\",\"decision_id\":\"D4\",\"ts\":\"2026-07-25T12:00:00Z\",\"reason\":\"await_external\",\"input_hash\":\"ab12\",\"actor\":\"agent-A\"}\n\nPseudocode minimal (JS-like)\nemitEvent(\"decision_skipped\", meta);\npersistState({flow_id, decision_id, inputs, skipped:true});\nonResume(()=> { loadState(); requeueDecision(); emitEvent(\"decision_resumed\", meta); });\n\nUne bonne réponse inclura ces éléments et montrera comment la reprise s’intègre avant la tâche cumulée."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Agentic Design",
+        "Architecture",
+        "Compliance"
+      ],
+      "title": {
+        "en": "Skipped: Move on if you need to, but come back ...",
+        "fr": "Skipped: Move on if you need to, but come back ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_026",
@@ -816,7 +1066,17 @@
         "fr": "Les deux objectifs sont atteints. La règle dirige le routage en fonction des enjeux, en identifiant les décisions nécessitant une intervention humaine, tout en maintenant la file d'attente suffisamment courte pour que la revue humaine conserve sa valeur. Les enjeux (coût et réversibilité) orientent le routage ; la confiance détermine quelles portions de ce volume, pondérées par les enjeux, peuvent être traitées automatiquement en toute sécurité.\n\nPoints d'amélioration et actions concrètes :\n- Clarification lexicale : remplacer « capturant » par « identifiant » pour insister sur la détection explicite des cas à escalader.\n- Cohérence : utiliser « revue humaine » ou « revue » au lieu de « révision » pour uniformiser le vocabulaire.\n- Mesurabilité : remplacer « suffisamment courte » par un seuil (ex. délai maximal de 30 minutes ou file < 50 items) et définir SLA de revue.\n- Règle de routage actionable : calculer score_enjeux = 0.6·coût + 0.4·réversibilité ; score_global = score_enjeux · confiance.\n- Seuils opérationnels (exemples) :\n  - score_global ≥ 0.9 → validation automatique,\n  - 0.7 ≤ score_global < 0.9 → file de revue humaine,\n  - score_global < 0.7 → escalade prioritaire.\n- Journalisation : enregistrer la justification du routage (score, seuil utilisé, décision finale) pour audit et ajustements."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Computer Vision"
+      ],
+      "title": {
+        "en": "Correct.: Both targets met. The rule routes by ...",
+        "fr": "Correct.: Both targets met. The rule routes by ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_027",
@@ -835,7 +1095,17 @@
         "fr": "Correction modèle — message et implémentation\n\nTexte recommandé (français clair et naturel) :\n\"Pas tout à fait. <contenu choisi>. Laissez les enjeux guider le routage et la confiance régler le volume. Réessayez.\"\n\nRemarques concrètes :\n- Éviter les doubles ponctuations et le mélange de code/texte dans l’interface.\n- Préférer \"la confiance régler\" → \"la confiance régler le volume\" ou \"la confiance détermine le volume\" selon le registre.\n- Toujours valider/échaper msgs[choice] pour éviter injection ou contenu vide.\n\nExemples fonctionnels\n\nJavaScript (robuste) :\nconst choiceText = (msgs[choice] || \"\").trim();\nconst safeText = choiceText ? `${choiceText}` : \"Votre sélection n'a pas été trouvée.\";\nconst message = `Pas tout à fait. ${safeText} Laissez les enjeux guider le routage et la confiance régler le volume. Réessayez.`;\n\nPython (robuste) :\nchoice_text = msgs.get(choice, \"\").strip() if isinstance(msgs, dict) else \"\"\nsafe_text = choice_text or \"Votre sélection n'a pas été trouvée.\"\nmessage = f\"Pas tout à fait. {safe_text} Laissez les enjeux guider le routage et la confiance régler le volume. Réessayez.\"\n\nRisques concrets à mentionner\n- msg vide ou non défini → message incompréhensible\n- contenu user-generated non filtré → injection, propos inappropriés\n- traduction/localisation manquante\n- ton/politesse inadaptés au public\n\nChecklist qu’une bonne réponse couvre\n- phrase finale claire et grammaticalement correcte\n- gestion des valeurs nulles/indéfinies\n- échappement/validation des entrées\n- i18n et cohérence de ton\n- message actionable (que doit faire l’utilisateur ensuite)"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Not quite.: msgs[choice]+' Let stakes drive rou...",
+        "fr": "Not quite.: msgs[choice]+' Let stakes drive rou..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_028",
@@ -854,7 +1124,17 @@
         "fr": "Correction modèle (que l'étudiant devrait viser) :\n\nInterprétation et action immédiate\n- Reconnaître l'instruction d'interruption et ne pas poursuivre la tâche cumulée.\n- Documenter précisément l'endroit où l'on s'arrête (étape, fichier, ligne, tests passing/failing).\n\nÉtat reproductible et sauvegarde\n- Committer le travail en cours sur une branche dédiée : \n  git checkout -b wip/stop-before-cumul\n  git add .\n  git commit -m \"WIP: interrompu avant tâche cumulée — état X, tests Y\"\n  git push origin wip/stop-before-cumul\n- Exporter l'environnement (requirements.txt, environment.yml) et snapshot des données si pertinentes.\n\nInstructions pour reprise\n- Rédiger un court README/TO-DO contenant :\n  - Point d'arrêt exact (fichiers, fonctions)\n  - Commandes pour reproduire l'état (build/test/run)\n  - Tests qui doivent passer et ceux qui échouent\n  - Dépendances externes et versions\n- Créer une issue/ ticket avec blocages connus et priorité.\n\nCommunication et rappel\n- Informer l'encadrant/équipe par message clair : exemple : \"Interrompu avant tâche cumulée — branch wip/stop-before-cumul. Voir README, tests unitaires échouent sur X. Besoin de Y pour continuer.\"\n- Programmer un rappel/calendrier pour revenir avant la date limite de la tâche cumulée.\n\nVérifications pré-reprise\n- À la reprise, exécuter : git pull, installer deps, lancer tests unitaires et un smoke test avant de poursuivre."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Business Value",
+        "Prompt Engineering"
+      ],
+      "title": {
+        "en": "Skipped: Move on if you need to, but come back ...",
+        "fr": "Skipped: Move on if you need to, but come back ..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_029",
@@ -873,7 +1153,17 @@
         "fr": "Correction modèle — Ce que doit contenir une bonne réponse\n\n- Objectif : démontrer la traçabilité entre l’obligation (règlementaire/politique), le contrôle mis en place, et l’artefact inspectable que le réviseur peut examiner pour valider le contrôle.\n\n- Méthode concrète (à suivre pour chaque obligation) :\n  1. Énoncer l’obligation précisément (référence de la norme/article).\n  2. Décrire le contrôle opérationnel et son propriétaire.\n  3. Lister l’artefact inspectable attendu (format, emplacement, période couverte).\n  4. Critères d’acceptation du réviseur (preuve de fonctionnement, intégrité, horodatage, portée).\n  5. Exemples d’évidence alternative si l’artefact principal manque.\n\n- Exemples concrets :\n  - Obligation : séparation des privilèges (ISO/PCI). Contrôle : révisions trimestrielles des droits admin. Artefact : export CSV des rôles/utilisateurs, rapport de la revue signée, tickets de remédiation. Critères : horodatage, signature du réviseur, lien aux comptes affectés.\n  - Obligation : journalisation des accès. Contrôle : collecte centralisée des logs. Artefact : extrait de logs avec filtres, configuration SIEM, preuve d’intégrité (hash). Critères : logs couvrant période, retention conforme, preuves d’alerte.\n\n- Liste de vérification du réviseur :\n  - Artefact authentique et non modifié (hash, signature).\n  - Couverture temporelle et portée conformes.\n  - Corrélation entre artefact et contrôle documenté.\n  - Preuves de remédiation pour exceptions.\n  - Conservation selon politique.\n\n- Pièges courants : artefacts générés automatiquement manquants d’horodatage, preuves non signées, absence de lien entre ticket de remédiation et changement."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "Correct.: You matched the control to the obliga...",
+        "fr": "Correct.: You matched the control to the obliga..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_030",
@@ -892,7 +1182,17 @@
         "fr": "Preuve observable exigée : fournissez le BAA signé (page de signature avec date et parties) ET des artefacts techniques prouvant que la protection est effectivement activée — pas l’intention. Exemples d’artefacts concrets à joindre :\n- BAA_scanned_signed.pdf (page de signature, date, nom du représentant) ;\n- capture d’écran de la console montrant “HIPAA / BAA mode: Enabled” ou “Audit logging: ON” avec horodatage et nom du service ;\n- export de configuration (JSON/YAML) montrant la clé “audit_logging: true” ou “encryption_at_rest: enabled” ;\n- entrée de journal montrant l’activation (timestamp, utilisateur) ou ticket de changement (ID, approbation) ; \n- logs d’accès prouvant que seuls comptes autorisés ont accédé après activation.\n\nRaison révisée et résistante à l’audit (exemple à fournir dans le contrôle) :\n« Les données PHI sont protégées par un accord contractuel (BAA signé le 2025-01-10) et par des contrôles techniques activés (audit logging et chiffrement au repos activés). Preuve : BAA_scanned_signed.pdf, config_export_2025-01-11.json, screenshot_console_2025-01-11.png, ticket_CHG-12345. »"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Automation",
+        "Compliance"
+      ],
+      "title": {
+        "en": "Right control, weak rationale.: The control fit...",
+        "fr": "Right control, weak rationale.: The control fit..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_031",
@@ -911,7 +1211,17 @@
         "fr": "Ce qui manque : transformer l’affirmation en un contrôle vérifiable. Procédure actionnable à suivre pour réécrire un contrôle accepté par un évaluateur.\n\n1) Définir l’obligation claire\n- Ex. « Les comptes administrateurs doivent utiliser une authentification multi‑facteur (MFA). »\n\n2) Décrire l’artefact vérifiable (preuves concrètes)\n- Exemples acceptables : export de la configuration IdP signée/horodatée, logs d’authentification (last 30 jours) montrant le flag MFA=true, rapport d’inventaire des comptes avec colonne MFA activée, ticket de changement prouvant la mise en production.\n- Exemples non acceptables : simple déclaration écrite, capture d’écran sans métadonnées, attestations non datées.\n\n3) Détailler la méthode de test (qui, quand, comment)\n- Qui : auditeur indépendant ou équipe secops.\n- Quand : périodicité (mensuelle/trimestrielle) et à l’événement (nouveau déploiement).\n- Comment : obtenir export IdP, sélectionner échantillon de 10% des comptes administrateurs (min 10), vérifier configuration et logs, corréler avec ticket CMDB.\n\n4) Critères d’acceptation\n- Pass if ≥ 95% des comptes admin ont MFA activée et logs des 30 derniers jours montrent authentifications avec MFA.\n- Fail si artefact manquant, logs incomplets, ou exceptions non documentées.\n\n5) Exemple de contrôle réécrit\n- « Contrôle: Tous les comptes administrateurs ont MFA activée. Preuves: export IdP horodaté + logs d’authentification 30j + inventaire comptes. Test: échantillonnage 10 comptes, vérifier MFA flag=true et authentification MFA dans logs. »\n\nApplique ce modèle à chaque contrôle: obligation → artefact précis → procédure de test → critères."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "Architecture",
+        "Digital Transformation",
+        "Role Engineering"
+      ],
+      "title": {
+        "en": "Not quite.: Either the control doesn't evidence...",
+        "fr": "Not quite.: Either the control doesn't evidence..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_032",
@@ -930,7 +1240,17 @@
         "fr": "Bonne réponse attendue — structure et éléments concrets pour justifier les choix de contrôle sur l’ensemble du déploiement :\n\nStructure de justification à fournir pour chaque contrôle\n- Nom du contrôle.\n- Risque ciblé (concret).\n- Pourquoi ce contrôle (effet attendu).\n- Implémentation précise (technique, Outils/configs, paramètres).\n- Propriétaire opérationnel.\n- Indicateurs/mesures (métriques, SLO/alertes).\n- Preuve/validation (tests, audits, pentests).\n- Risque résiduel et mesures complémentaires.\n- Impact métier / compromis.\n\nContrôles exemplaires (avec détails actionnables)\n- Authentification forte (MFA + SSO OIDC, FIDO2 pour admins) — métrique : % comptes protégés, tentatives bloquées; vérif : revue logs, pentest phishing.\n- Contrôle d’accès (RBAC + principe de moindre privilège, JIT pour accès sensibles) — implémentation : rôles IAM, politique de révision trimestrielle.\n- Chiffrement (TLS1.3 en transit; KMS avec rotation automatique pour les données au repos) — preuve : scan TLS, rapport KMS.\n- Validation d’entrée/sortie + SCA (scanners SAST/DAST, dépendances signées) — métrique : vulnérabilités ouvertes vs résolues.\n- Protection périmétrique (WAF, rate limiting, IPS) — règles baselines + tuning par trafic réel.\n- CI/CD sécurisé (signing d’artefacts, scans SBOM, secrets detection), déploiements canaris.\n- Observabilité + IR (logs centralisés, alerting, runbooks, exercices IR et tests RTO/RPO).\n- Gouvernance et conformité (DPIA, mapping exigences régulatoires, revue de contrôle).\n\nPoints à expliciter pour l’assemblage cumulatif\n- Cartographier quels risques sont couverts par plusieurs contrôles (défense en profondeur) et où subsistent des dépendances uniques.\n- Priorisation basée sur impact/likelihood et coûts opérationnels.\n- Plan de vérification continue (tests automatisés, audits périodiques)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "Skipped: You can skip, but the cumulative assem...",
+        "fr": "Skipped: You can skip, but the cumulative assem..."
+      }
     },
     {
       "id": "ex_claude_certified_architect_professional__03_033",
@@ -949,7 +1269,17 @@
         "fr": "Points qu’une bonne réponse finale doit contenir — checklist actionnable :\n\n1. Relire précisément l’énoncé : souligner les verbes d’action (implémenter, expliquer, comparer) et lister les livrables attendus (fichiers, format, durée, critères de rendu).\n2. Vérifier l’exhaustivité : chaque exigence doit être explicitement satisfaite (ex. “fonction X implémentée”, “tests unitaires fournis”, “résumé de 150‑200 mots”).\n3. Qualité technique / preuves : inclure code commenté + instructions d’exécution (commande exacte), captures d’écran ou sortie de test, et fichiers nommés selon la consigne (ex. projet_final_v1.zip).\n4. Justification et réflexions : expliquer brièvement les choix (2–4 phrases) et mentionner limites connues ou pistes d’amélioration.\n5. Tests et validation : fournir résultats de tests (pass/fail), cas de bord considérés, et étapes pour reproduire.\n6. Format et présentation : respecter format demandé (PDF, .py, .ipynb), orthographe, formatage, et références si utilisées.\n7. Soumission et confirmation : vérifier l’upload, conserver preuve (capture écran ou mail de confirmation), indiquer date/heure de soumission.\n\nErreurs fréquentes : livrable incomplet, absence de reproduction des résultats, noms de fichiers erronés, pas d’explication des choix. Actions finales : relire 5 min, zip/nommer correctement, soumettre, conserver preuve."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "advanced",
+      "skillTags": [
+        "AI Safety",
+        "Architecture",
+        "Data Privacy"
+      ],
+      "title": {
+        "en": "Skipped: This is the final exercise, so finish ...",
+        "fr": "Skipped: This is the final exercise, so finish ..."
+      }
     }
   ]
 }

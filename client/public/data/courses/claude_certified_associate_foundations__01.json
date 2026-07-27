@@ -302,7 +302,17 @@
         "fr": "Points clés qu’une bonne réponse doit couvrir (actionnable)\n\n1) Reconnaître la variabilité\n- Expliquer que les sorties sont probabilistes : exécuter la même requête plusieurs fois peut produire réponses différentes mais valides.\n- Mesure pratique : exécuter N>1 runs (p. ex. 3–5) et comparer.\n\n2) Intégrer une étape de révision humaine\n- Workflow recommandé : génération → synthèse automatique (agrégation/ensemble) → vérification humaine → finalisation.\n- Exiger preuves : demander systématiquement sources, citations, ou expliquer le raisonnement étape par étape.\n\n3) Réduire l’instabilité technique\n- Paramètres : abaisser la \"température\"/diversité ou fixer top_p pour sorties plus cohérentes.\n- Pour tâches critiques, utiliser une approche deterministe ou verrouiller prompt/template.\n\n4) Habitudes de vérification (Propriété 2)\n- Toujours fact-checker statistiques et affirmations clés contre sources fiables.\n- Demander explicitement au modèle son degré de confiance et les limites connues.\n\n5) Tests et surveillance\n- Mettre en place tests unitaires d’exemples attendus et logging des sorties pour détecter dérives.\n- Processus d’escalade si divergence entre runs ou incohérences.\n\nRisques concrets\n- Hallucinations factuelles, statistiques inventées\n- Surestimation due au ton confiant\n- Propagation d’erreurs si une sortie unique est automatisée\n- Biais non détectés et incohérences entre versions\n\nExemple de prompt de vérification :\n« Donne la réponse, indique ton niveau de confiance (faible/moyen/élevé), liste 3 sources vérifiables et explique en 2–3 étapes comment tu as obtenu cette conclusion. »"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Ask Claude the same question twice and you will...",
+        "fr": "Ask Claude the same question twice and you will..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_002",
@@ -321,7 +331,17 @@
         "fr": "Réponse attendue (mappage et critères d’usage) :\n\n- Question ponctuelle ou tâche rapide → Chat  \n  Pourquoi : interaction courte, pas besoin de contexte persistant.  \n  Bonnes pratiques : poser une seule question claire, préciser format de réponse (bullet points, longueur), demander exemples si utile. Exemple prompt : « Résume en 3 bullets les risques liés à l’envoi d’e‑mails massifs. »\n\n- Travail récurrent avec contexte stable → Projet  \n  Pourquoi : permet conserver contexte, templates, historique et automatiser workflows.  \n  Bonnes pratiques : créer un template, versionner les instructions, définir variables (client, échéance), assigner QA. Checklist : contexte initial + mise à jour régulière + accès contrôlé.\n\n- La sortie est un livrable que le destinataire ouvrira et lira → Artefact  \n  Pourquoi : nécessite contrôle qualité, mise en forme, métadonnées et export (PDF, DOCX).  \n  Bonnes pratiques : définir style-guide, inclure validation humaine, vérifier liens/images, générer table des matières.\n\n- Nécessite investigation / synthèse à partir de sources → Recherche  \n  Pourquoi : exige navigation web, vérification des sources et datation des informations.  \n  Bonnes pratiques : exiger citations avec URL et date, comparer ≥3 sources, noter niveau de confiance, signaler informations non vérifiables.\n\nRisques concrets et mitigations rapides : hallucinations (exiger citations), données obsolètes (vérifier date/source), fuite de contexte sensible (utiliser accès restreint), livrables inconsistants (mettre en place revue humaine)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Task typeEntry point",
+        "fr": "Task typeEntry point"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_003",
@@ -340,7 +360,17 @@
         "fr": "Points-clés qu’une bonne réponse couvrirait\n\n1) Deux choses à garder en tête sur les Skills\n- Niveau et portée : les Skills existent au niveau du compte (pas du Project) et sont invoqués automatiquement par Claude quand le contexte correspond. Concevez-les comme des services réutilisables, pas comme des scripts ad‑hoc.\n- Comportement attendu : un Skill doit décrire précisément l’entrée, la sortie, les étapes, les erreurs gérées, et les préconditions (idempotence, timeouts, validation). Claude suivra cette procédure de façon cohérente partout.\n\n2) Quand utiliser quelles couches\n- Question ponctuelle : aucune couche persistante nécessaire (stateless).\n- Flux analytique récurrent : utilisez combinaison de couches — mémoire pour faits persistants (avec TTL/contrôles), base de connaissances pour documents structurés, instructions permanentes pour contraintes du Project, et Skills pour actions automatisées.\n\n3) Risques concrets et mitigations\n- Fuite de données sensibles → appliquer RBAC, chiffrage, minimisation des données, TTL pour mémoire.\n- Invocation automatique inappropriée → ajouter filtres/triggers explicites et option “confirmation utilisateur”.\n- Conflits entre Skills/versioning → versionner, tests automatisés, circuit de rollback.\n- Données obsolètes → politique de rafraîchissement et validation humaine.\n\n4) Checklist de production pour un Skill (actionnable)\n- Nom/version, description, entrées/sorties, exemples, validations, gestion d’erreur, timeouts, tests unitaires, politique d’accès, logging/audit, procédure de rollback.\n\nExemple minimal (template) : \n{\"name\":\"ExportExcelV1\",\"trigger\":\"export request\",\"inputs\":\"table,format\",\"outputs\":\"file link\",\"steps\":[\"validate input\",\"generate spreadsheet\",\"store\",\"return link\"],\"permissions\":\"role:analyst\",\"ttl_logs\":\"90d\"}"
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Automation",
+        "Claude Platform",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Relevant facts carry forward across sessions wi...",
+        "fr": "Relevant facts carry forward across sessions wi..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_004",
@@ -359,7 +389,17 @@
         "fr": "Résultat attendu — correction modèle (concis, actionnable)\n\nRésumé de la solution\n- Automatiser l’entrée de contexte + format via un prompt template réutilisable ; extraire les changements applicables par règle puis par LLM ; produire la sortie en JSON/table pour validation automatisée ; conserver un contrôle humain final.\n- Résultats mesurables : temps/report passé de ~6h → ~2h ; erreurs détectées 2 → 0 avant distribution (réduction de 100% d’erreurs résiduelles observées).\n\nPrompt template (exemple utilisable)\nSystem: «Tu es un assistant d’analyse réglementaire. Réponds en JSON strict selon le schéma fourni, cite la source (nom du document et page) pour chaque fait, et indique si l’impact s’applique au portefeuille.»\nUser: «Fournis : 1) liste des modifications réglementaires ce mois, 2) pour chaque modification : titre, source, pages, résumé (max 50 mots), impact (applique: oui/non), implication opérationnelle, actions recommandées, champs numériques (si présents). Donne la sortie en JSON conforme au schéma ci‑dessous.»\n\nSchéma JSON (extrait)\n[{ \"id\":\"\", \"titre\":\"\", \"source\":\"\", \"pages\":\"\", \"résumé\":\"\", \"applique\": true/false, \"implication\":\"\", \"actions\":[\"\"], \"valeurs\":[{\"nom\":\"\", \"valeur\":\"\", \"source-page\":\"\"}]}]\n\nVérifications et contrôles (checklist)\n- Validation automatique : comparer toutes les valeurs numériques extraites à OCR/source ; test de non‑régression vs rapport précédent.\n- Preuve : chaque assertion doit pointer vers source+page.\n- Revue humaine ciblée : vérifier items marqués «applique: oui» et toutes valeurs modifiées.\n- Logging/traceability : stocker prompts, version de modèle, horodatage, documents source.\n\nRisques concrets et mitigations\n- Hallucinations → exiger citation page/source ; refuser réponse sans citation.\n- Perte de contexte/erreurs d’application → règles de filtrage préalables (mots‑clés) + humain en boucle.\n- Fuite de données/confidentialité → restreindre upload, chiffrement, policies d’accès.\n- Dérive modèle → tests automatisés et surveillance des métriques d’erreur mensuelles.\n\nIndicateurs de succès\n- Temps moyen par rapport, nombre d’erreurs trouvées en vérif finale, % d’items cités, latence de génération, satisfaction du responsable réglementaire."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Automation"
+      ],
+      "title": {
+        "en": "A monthly report that got faster and more accur...",
+        "fr": "A monthly report that got faster and more accur..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_005",
@@ -378,7 +418,17 @@
         "fr": "1) Instruction opérationnelle — «Signalez toute clause qui s'écarte du playbook…» : Standing instructions.  \nRaison/action : Cible le comportement attendu de l'agent (directive récurrente, format de sortie et priorité) — doit être stockée comme instruction stable appliquée à chaque revue.\n\n2) Playbook des règles contractuelles (liste des clauses autorisées/défendues, exemples) : Knowledge base.  \nRaison/action : Référentiel de connaissances consultable pour décider si une clause dévie ; doit être indexé et consultable par ID/clause.\n\n3) Détection et classification de clause (NLP qui identifie type et compare au playbook) : Skill.  \nRaison/action : Composant réutilisable encapsulant la logique ML/NLP (classification, scoring de déviation) que l’agent appelle.\n\n4) Ingestion et extraction de texte (OCR, parsing PDF, segmentation en clauses) : Code Execution.  \nRaison/action : Opérations techniques sur les fichiers (extraction, normalisation, regex) exécutées via outils/plug-ins externes.\n\n5) Rédaction automatisée d’une phrase d’écart et génération du rapport exportable (formatage, journaux) : Skill + Code Execution (préférence Skill pour formulation).  \nRaison/action : La génération linguistique est une Skill (produit la phrase d’écart conforme aux standing instructions) ; l’export/archivage du rapport est Code Execution. (Si une seule couche doit être choisie : Skill pour la phrase.)\n\nRemarque pratique : stockez playbook et instructions séparément ; exposez la Skill d’analyse à des hooks Code Execution pour ingestion et export."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Agentic Design",
+        "Automation",
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "CheckpointCapability Layer·5 min",
+        "fr": "CheckpointCapability Layer·5 min"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_006",
@@ -397,7 +447,17 @@
         "fr": "Si l’exercice ne fournit pas les scénarios ni les cartes, voici la CORRECTION MODÈLE qu’un étudiant devrait viser : une méthode concrète pour associer correctement point d’entrée, couche de capacité, niveau du modèle et stratégie de contexte.\n\n1) Catégories concrètes de choix\n- Point d’entrée : API synchrone, streaming, interface utilisateur interactive, job batch, SDK embarqué.\n- Couche de capacité : RAG (retrieval), outils/exécuteurs (calc, DB, navigateur), modération, chaîne de réflexion, vision.\n- Niveau du modèle : petit/low-latency (coût faible), général (équilibre), grand/spécialisé (haute précision).\n- Stratégie de contexte : system prompt + few-shot, retrieval + passage ranking, chunking + iterative summarization, mémoire à long terme.\n\n2) Règles d’appariement (actionnables)\n- Temps réel/UX interactif → API streaming + petit/modéré modèle + minimal system prompt + chunked prompts pour latence.\n- Réponses factuelles ou doc-heavy → API sync + RAG avec passage-ranking + grand modèle pour reranking + contrôle de cohérence.\n- Tâches sensibles/confidentielles → environnement privé/on-prem + filtre/IA locale + modèles fermés/sécurisés + minimiser contexte partagé et chiffrer logs.\n- Multimodal (images/vidéo) → point d’entrée multimodal + modèle vision-capable + pipeline de prétraitement + aligner contexte image+texte.\n- Calculs/exécutions → outil/code-executor + modèle capable de planification + vérification par exécution.\n- Batch analytics longue durée → job batch + modèle optimisé coût + summarization en pipeline.\n\n3) Risques concrets et mitigations\n- Hallucinations → RAG + source citations + fact-check step.\n- Fuites de données → chiffrage, suppression des logs, data minimization.\n- Latence/coût → modèle plus petit, caching, rate limits.\n- Erreurs d’outillage → sandboxing, tests unitaires, timeouts.\n\nUne bonne réponse associera chaque scénario à ces règles, justifiera le trade-off latence/coût/précision et proposera au moins une mitigation de risque pour chaque association."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Batch Processing"
+      ],
+      "title": {
+        "en": "ExercisePlatform Selection·5 min",
+        "fr": "ExercisePlatform Selection·5 min"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_007",
@@ -416,7 +476,17 @@
         "fr": "Critères à appliquer pour associer scénario ↔ carte (flux d’analyse rapide)\n1) Point d’entrée — Qui initie et comment (UI web, API serveur, plugin IDE, agent autonome, batch) ?  \n2) Couche de capacité — Besoin de mémoire/état, accès aux données externes, ou actions système (RAG/knowledge base, tool-using agent, pipeline de résumé) ?  \n3) Niveau du modèle — Contraintes latence/coût vs qualité/complexité (petit modèle pour tâches simples, grand modèle pour raisonnement complexe ou multiturn; modèle spécialisé pour code/médical).  \n4) Stratégie de contexte — Entrée courte, chunking + RAG, mise à jour d’état, ou streaming pour realtime ?  \n\nChecklist d’une bonne réponse (que l’étudiant doit couvrir)\n- Définir clairement l’objectif fonctionnel (output attendu).  \n- Justifier le point d’entrée par UX/interopérabilité.  \n- Expliquer pourquoi la couche de capacité répond aux besoins de données/actions.  \n- Choisir un niveau de modèle en justifiant latence/coût/qualité.  \n- Décrire la stratégie de contexte (ex. : RAG avec vecteurs + résumé incrémental).  \n- Mentionner risques et mitigtions concrètes.\n\nRisques concrets à lister\n- Hallucinations → RAG + vérification/aggrégation.  \n- Fuite de données sensibles → chiffrement, accès restreint, redaction.  \n- Latence/costs → modèle plus petit, batching, cache.  \n- Actions non contrôlées (agent) → sandboxing, permissions, confirmations.  \n\nExemples rapides d’appariement (modèle)  \n- FAQ client → Web UI, RAG sur base FAQ, petit modèle, RAG+cache.  \n- Analyse juridique longue → Batch, RAG+chunking, grand modèle, résumé progressif.  \n- Assistant dev → IDE plugin, tool-using model, modèle code-finetuned, contexte récurrent."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Agentic Design"
+      ],
+      "title": {
+        "en": "Exercise · Pick the right feature for the job",
+        "fr": "Exercise · Pick the right feature for the job"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_008",
@@ -435,7 +505,17 @@
         "fr": "Correction modèle (exemple type pour la carte A et méthode générale)\n\nCarte A — Réponse attendue\n- Correspondance : Carte A → scénario de tâches récurrentes et très structurées (p.ex. génération automatique de sonnets hebdomadaires, rapports formalisés à cadence fixe).\n- Justification concrète : tâche récurrente + contexte stable + format de sortie fixe ⇒ entry point = Project (workflow organisé), couche = Skill (composant spécialisé réutilisable), niveau modèle = petit/modulable centré sur la tâche (“Sonnet”/task-tuned), stratégie de contexte = contexte minimal et constant (templates + variables), prompts codifiés.\n- Exemple opérationnel : pipeline qui appelle une Skill “GénérerSonnet” avec template prédéfini, 3-4 exemples, contraintes métriques ; mémoire = versioning du template, pas de large contexte historique.\n\nMéthode pour les autres cartes (checklist qu’une bonne réponse couvre)\n1. Identifier fréquence (unique vs récurrent) et stabilité du contexte.\n2. Déterminer format de sortie (libre vs strict) et besoin d’exactitude.\n3. Choisir entry point : Project (process), API/Tool (intégration), Persona (interaction humaine).\n4. Choisir couche : Skill (spécifique), Model (général), Tool (externe).\n5. Choisir niveau modèle : small/task-tuned vs large/generative selon complexité.\n6. Stratégie de contexte : template+variables, few-shot, chain-of-thought, mémoire longue.\n7. Rédiger une justification brefs et actionnable reliant chaque critère au scénario.\n\nVérification : pour chaque paire, notez 1 phrase liant fréquence+format+risque à l’architecture choisie."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Architecture",
+        "Automation"
+      ],
+      "title": {
+        "en": "The selection decisions from this module are ap...",
+        "fr": "The selection decisions from this module are ap..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_009",
@@ -454,7 +534,17 @@
         "fr": "Configuration recommandée (sélection et justification)\n- Sources : activer récupération passage‑par‑passage du document de politique ET de l’e‑mail (pour vérifier concordance). Justification : la politique est la source d’autorité, l’e‑mail peut contenir exception/confirmation.\n- Format de sortie : réponse unique et concise (1–2 phrases) + justification en 1 phrase et citation précise (nom du doc / section ou ligne de l’e‑mail). Justification : rapidité + traçabilité.\n- Stratégie en cas de conflit : préférence pour la politique; si l’e‑mail contient une dérogation écrite valable, l’indiquer explicitement et joindre la citation. Si ambiguïté, poser 1 question ciblée (par ex. « s’agit‑il du bon numéro de fournisseur/PO ? »).\n- Contrôle de qualité : récupérer top‑3 passages pertinents, vérifier concordance, refuser si aucune source supporte la réponse.\n\nExemple de réponse attendue (modèle)\n« Conditions de paiement : Net 30. Source : Politique Achats §3.2 (page 4) — “paiement à 30 jours”. L’e‑mail du fournisseur confirme “paiement à 30 jours”. »\n\nRisques concrets et mitigations\n- Risque : fournir une condition erronée → mitigation : citer la section exacte et joindre extrait.\n- Risque : prendre une dérogation non autorisée → mitigation : si l’e‑mail propose une exception, demander approbation ou renvoyer à la clause d’exception de la politique.\n- Risque : divulgation de données sensibles → mitigation : ne pas exposer autre info de l’e‑mail (PII) et journaliser la réponse pour audit."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Compliance",
+        "Context Design"
+      ],
+      "title": {
+        "en": "Card ACard BCard CCard DCard ECard F",
+        "fr": "Card ACard BCard CCard DCard ECard F"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_010",
@@ -473,7 +563,17 @@
         "fr": "Modèle choisi : Claude 2.1 (version large / fenêtre contextuelle étendue). Compromis : maximise la synthèse nuancée et la gestion d’un grand volume (quatre rapports, 15 pages finals) au prix d’un coût et d’une latence plus élevés et d’un besoin de vérification humaine pour limiter les hallucinations.\n\nRéponse modèle attendue (extrait type) :\n- Résumé exécutif (3–4 phrases) expliquant la conclusion principale et le degré de confiance.\n- 3 recommandations priorisées (action, responsable, horizon temporel) avec justification par preuves: «Recommandation A — fondée sur Rapport 2, p.14: signal X; confiance moyenne.»\n- Cartographie des signaux contradictoires et hypothèses alternatives.\n- Risques clés et métriques de suivi proposées.\n- Demandes de clarification pour les points ambigus.\n\nComparer votre raisonnement au modèle — points à vérifier :\n- Liaison explicite preuve→conclusion : chaque recommandation cite page/section et extrait résumé.\n- Calibrage de l’incertitude : niveaux de confiance et conditions qui renverseraient la recommandation.\n- Traitement des signaux ambigus : le modèle présente au moins deux interprétations plausibles et explique pourquoi l’une est privilégiée.\n- Actionnabilité pour le conseil : recommandations prioritaires, responsables, coûts approximatifs et horizon.\n- Transparence des limites : éventuelles données manquantes et risques de biais/hallucination.\n\nSi la réponse du modèle manque de l’un de ces éléments, corrigez en demandant explicitement : citations de pages, estimation de confiance, alternative hypothesis mapping, et un tableau priorisé d’actions avec responsables et métriques."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Claude Platform",
+        "Context Design",
+        "Cost Optimization"
+      ],
+      "title": {
+        "en": "Part 2 · Justify one configuration",
+        "fr": "Part 2 · Justify one configuration"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_011",
@@ -492,7 +592,17 @@
         "fr": "Modèle choisi et compromis\nJe choisirais un modèle à très grande capacité de contexte et bonne aptitude au raisonnement nuancé (p.ex. Claude 3 Opus / Claude 2.1 Large). Apporte : capacité à intégrer les quatre rapports et conserver le contexte long pour synthèse nuancée ; Coûte : plus de latence et coût, et risque d’assertions trop confiantes sans citations précises.\n\nRéponse du modèle (extrait synthétique)\n- Résumé exécutif (150 mots) : positionnement du conseil, risques stratégiques majeurs et trois recommandations prioritaires.\n- Signaux ambigus : divergences entre RapportA p.12 (croissance projetée optimiste) et RapportC p.4 (données clients stagnantes) — interprétation : probabilité élevée que la croissance dépende d’un segment unique (confiance 65%).\n- Preuves citées : RapportA.pdf p.12; RapportB.pdf p.6-7; RapportC.pdf p.4.\n- Recommandations concrètes : 1) validation pilote sur le segment identifié en 6 mois; 2) établir métriques leading indicators; 3) revue trimestrielle du plan capital. Points d’incertitude indiqués et suggestions d’analyses complémentaires.\n\nComparaison et remarques actionnables\nMon raisonnement exigeait un modèle capable de garder le contexte long et d’expliciter l’incertitude — la réponse ci‑dessus y répond si elle fournit citations et niveaux de confiance. Si le modèle omet citations, corrigez : demander explicitement « citez l’extrait texte et la page »; demandez aussi un score de confiance, une liste de suppositions, et un plan de vérification (expérimentation / données supplémentaires). Risques concrets : hallucination factuelle, omission de contre‑preuves, surconfiance; mitiger par extraction directe de passages et revue humaine ciblée."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Business Value",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "Matching a scenario to a card shows you can rec...",
+        "fr": "Matching a scenario to a card shows you can rec..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_012",
@@ -511,7 +621,17 @@
         "fr": "Modèle choisi : Claude 2.1 (long-context). Compromis : privilégie la capacité de synthèse nuancée et maintien du contexte sur quatre rapports longs (apporte cohérence, gestion d’ambiguïtés et formulation de caveats) au prix de coût/latence plus élevés et risque accru d’overfitting aux formulations des rapports.\n\nRéponse du modèle (extrait attendu) :\n« Synthèse exécutive — Les quatre rapports convergent vers une croissance modérée mais divergent sur l’origine : Rapport A et C attribuent la hausse à gains opérationnels (confiance modérée), Rapport B signale effets réglementaires temporaires (confiance faible), Rapport D souligne risques macroéconomiques latents (confiance élevée). Hypèses alternatives : 1) dynamique structurelle (+40% de probabilité), 2) effet temporaire lié à prix (+30%), 3) choc externe (-). Recommandations : mener une vérification des indicateurs opérationnels clés (KPIs listés), préparer scénarios de stress (P50/P10) et présenter au CA une version avec citations pages/paragraphes et marges d’erreur. Sources : voir tableau mappant chaque assertion aux pages 3–7 des rapports A–D. »\n\nComparaison et points d’amélioration (actionnables) :\n- Vérifier si le modèle cite pages/paragraphes précis ; exiger un tableau preuve→assertion.\n- Contrôler formulation de l’incertitude (probabilités chiffrées) et demander méthodologie pour ces estimations.\n- Exiger alternatives contradictoires clairement listées et leur implication stratégique.\n- Demander un appendice chiffré (KPIs, hypothèses de scénario, sensibilité).\n- Risques à signaler : hallucinations factuelles, omission de données conflictuelles, excès de confiance ; mitigations : validation humaine, tracing des sources, tests de robustesse."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Benchmarking",
+        "Business Value",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "A strategy consultant is drafting a 15-page boa...",
+        "fr": "A strategy consultant is drafting a 15-page boa..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_013",
@@ -530,7 +650,17 @@
         "fr": "Correction modèle\n\nVotre association des composants aux couches est correcte. Points clés qu’une bonne réponse doit préciser et actions recommandées :\n\n- Distinction fonctionnelle : les instructions permanentes (policy/configuration de comportement) définissent le \"comment\" — ton, style, contraintes éthiques, priorités en cas de conflit — tandis que la base de connaissances (KB) contient le \"quoi\" — faits, procédures, données métier. Exemple : instruction permanente = « Réponds en français, style formel ; n’offre pas de diagnostic médical. » KB = « Procédure X : étapes 1–4 ; dernier mise à jour 2026-07-01. »\n\n- Priorité et résolution de conflit : spécifier explicitement l’ordre de priorité (p.ex. « en cas de contradiction, respecter les instructions permanentes sauf si la KB contient une directive validée par le comité de sécurité »). Documenter cette règle.\n\n- Gouvernance et maintenance : versionner instructions et KB, journaliser changements, revue périodique (p.ex. trimestrielle) et contrôle d’accès (qui peut modifier quoi).\n\n- Tests et validation : jeux de tests automatisés pour vérifier que les instructions permanentes restent appliquées quand la KB change ; tests d’injection pour détecter contournement d’instructions ; tests de fraîcheur pour la KB.\n\n- Risques concrets et mitigations : obsolescence de la KB (plan de rafraîchissement), ambiguïté des instructions (rédiger phrases impératives claires), fuite d’informations sensibles (ACL/data masking), conflits non résolus (escalade humaine).\n\nUne réponse idéale fournit ces distinctions, exemples concrets, règles de priorité et procédures opérationnelles pour maintenir cohérence et sécurité."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "Automation",
+        "Claude Platform"
+      ],
+      "title": {
+        "en": "All correct: Each component was matched to the ...",
+        "fr": "All correct: Each component was matched to the ..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_014",
@@ -549,7 +679,17 @@
         "fr": "Actions concrètes pour corriger les confusions et soumettre de nouveau :\n\n1. Méthode rapide pour chaque composant\n- Posez la question binaire : « Est‑ce que cela indique à Claude quoi faire (action/attitude/contraintes) ou quoi savoir (faits/références) ? »\n- Si réponse = quoi faire → placez dans Standing Instructions. Si = quoi savoir → placez dans Knowledge Base.\n\n2. Exemples clairs\n- Standing Instructions : rôle («Vous êtes un assistant pédagogique»), ton («Répondez de manière concise et formelle»), règles («Ne fournissez pas de conseils médicaux détaillés; refusez poliment»), priorités («Priorisez la sécurité utilisateur»).\n- Knowledge Base : données de produit, manuels, FAQ, spécifications techniques, textes de loi, procédures internes (faits et références, non directives).\n\n3. Pièges fréquents\n- Phrase factuelle exprimée comme règle («Utilisez IPv6») → si c’est une préférence d’action, SI; si c’est documentation technique, KB.\n- Politique = SI (dire quoi faire face à demandes interdites), mais la justification juridique peut rester en KB.\n\n4. Tests à exécuter\n- Insérer un petit prompt-test demandant d’appliquer une instruction et un fait séparément. Vérifier que l’instruction modifie le comportement et que la KB est citée quand utile.\n\n5. Checklist de soumission\n- Tous les éléments classés par binaire «quoi faire / quoi savoir»\n- Standing Instructions rédigées en impératif clair, non ambigu\n- Knowledge Base formatée comme références (titres, sources, date)\n- Tests unitaires passés et exemples fournis\n\nAjustez, documentez les changements et soumettez."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Claude Platform",
+        "Documentation"
+      ],
+      "title": {
+        "en": "Feedback: Most components were matched correctl...",
+        "fr": "Feedback: Most components were matched correctl..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_015",
@@ -568,7 +708,17 @@
         "fr": "1) Contexte — extraire et formaliser\n- Énoncez l’objectif précis (Que faut‑il trouver ? Pour quel usage ?).\n- Listez les données initiales, unités et contraintes numériques/physiques.\n- Déclarez hypothèses explicites (conditions idéales, approx., plage de validité).\n\nEx. attendu : « Trouver X sachant A=..., B=..., hypothèse : régime stationnaire, unités SI. »\n\n2) Procédure — plan étape par étape\n- Décomposez le raisonnement en étapes numérotées (1 → 2 → 3).\n- Indiquez les formules utilisées et pourquoi (origine physique/mathématique).\n- Donnez pseudo‑code si calcul répétitif ou algorithmique.\n\nEx. attendu : 1) exprimer Y en fonction de A,B ; 2) isoler X ; 3) substituer valeurs.\n\n3) Calcul vérifié — montrer et contrôler\n- Présentez chaque opération numérique (avec unités), arrondissements indiqués.\n- Vérifications concrètes : analyse dimensionnelle, calcul inverse, test de cas limite connu, ordre de grandeur.\n- Signalez incertitudes et propagation d’erreur si pertinent.\n\nEx. attendu : « X = ... ; vérification dimensionnelle OK ; recalcul inverse donne valeur cohérente à 2%. »\n\n4) Continuité — interprétation et suite\n- Résumez résultat, précision et validité (conditions où c’est applicable).\n- Listez conséquences pratiques, limites, et actions suivantes (expériences à faire, variantes à tester).\n- Indiquez ce qu’un évaluateur doit relire (hypothèse clé, étape fragile).\n\nErreurs fréquentes à éviter : omissions d’unités, sauts d’étapes non justifiés, absence de vérification numérique ou d’hypothèses."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "Context Design",
+        "Error Handling",
+        "Fundamentals"
+      ],
+      "title": {
+        "en": "incorrect: Return to Lesson 4 and review the fo...",
+        "fr": "incorrect: Return to Lesson 4 and review the fo..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_016",
@@ -587,7 +737,17 @@
         "fr": "Objectif attendu : pour chaque scénario, identifier précisément quelle \"capability layer\" manifeste la capacité (où elle réside et comment elle est activée), justifier le classement, décrire modes de défaillance concrets et proposer mesures de mitigation testables.\n\nÉtapes concrètes à suivre\n1. Extraire la capacité décrite (ex. «générer instructions opératoires», «exfiltrer données via prompts»).\n2. Cartographier la couche où la capacité s’exerce :\n   - Infrastructure/Hardware (accès basse couche, GPU, co-location)\n   - Modèle (comportement statistique / génération)\n   - Système/Plateforme (orchestration, prompt-chaining, API)\n   - Outils/Chaines (plugins, browse, code-exec)\n   - Utilisateur/Humain (compétence, intentions)\n3. Raisonner brièvement : locus de contrôle, vecteur d’activation, préconditions.\n4. Lister risques concrets et vecteurs d’exploitation.\n5. Proposer mitigations mesurables (tests, monitoring, gates humains).\n\nExemple résumé\n- Scénario : assistant produit instructions médicales dosées.\n  - Classification : Modèle + Application (génération = modèle ; exposition via UI = plateforme).\n  - Raison : la génération dangereuse provient du modèle ; la plateforme permet la diffusion automatisée.\n  - Risques : erreurs cliniques, automatisation sans revue, responsabilité légale, données patients exposées.\n  - Mitigations : blocage catégoriel de conseils médicaux, exigence de validation par professionnel (human-in-loop), tests adversariaux (red-teaming), journaux d’audit, politiques de permission granulaire.\n\nCe que doit contenir une bonne réponse d’étudiant\n- Cartographie couche/paragraphe pour chaque capacité identifiée.\n- Raison courte et spécifique reliant vecteur → couche.\n- 3–5 risques concrets par scénario.\n- Mitigations opérationnelles et critères d’acceptation (ex. taux faux-négatif < X, présence d’audit logs).\n- Cas de test simples pour valider la mitigation (prompts adversariaux, scénarios d’abus)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Automation"
+      ],
+      "title": {
+        "en": "Skipped: Return to this checkpoint before the e...",
+        "fr": "Skipped: Return to this checkpoint before the e..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_017",
@@ -606,7 +766,17 @@
         "fr": "Partie 2 — Critères décisionnels et actions recommandées\n\nDécision synthétique\n- Règle principale : toute tâche impliquant des calculs sur des données réelles où l’exactitude, la reproductibilité ou la sécurité des résultats est critique → Code Execution obligatoire.\n- Exceptions : réponses qualitatives, estimations grossières, ou explications théoriques → pas d’exécution.\n\nSignaux concrets nécessitant Code Execution\n1. Calculs numériques reproduisibles (statistiques, agrégats, erreurs < tolérance définie).\n2. Traitement de grandes séries temporelles ou grands ensembles de données.\n3. Modélisation/entraînement, validation de modèles, optimisation.\n4. Opérations dépendant d’un environnement (accès base, lecture/écriture de fichiers, API).\n5. Besoin d’auditer ou de tracer les étapes (logs, outputs intermédiaires).\n\nSignaux autorisant une réponse sans exécution\n- Exemple illustratif, estimation approximative, synthèse conceptuelle, démonstration de méthode sans données réelles.\n\nMapping des scénarios (exemple)\n- S1 : pas d’exécution (qualitatif) — action : fournir méthode et formules.\n- S2 : exécution optionnelle — action : indiquer résultats attendus et proposer notebook.\n- S3 : exécution recommandée si précision requise — action : fournir script minimal.\n- S4, S5 : exécution requise — action : fournir code/test unitaire et jeu de données d’exemple.\n\nRisques et mitigations\n- Risque de résultats incorrects → tests unitaires et validation croisée.\n- Risque d’exfiltration de données sensibles → anonymisation + environnement sandbox.\n- Risque de dérive numérique → spécifier tolérances et versions de dépendances.\n\nÉléments qu’une bonne réponse inclura\n- Règles décisionnelles précises, mapping scénario→action, code minimal ou notebook pour S4/S5, et plans de validation/mitigation."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Business Value"
+      ],
+      "title": {
+        "en": "correct: Strong selection across the scenarios....",
+        "fr": "correct: Strong selection across the scenarios...."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_018",
@@ -625,7 +795,17 @@
         "fr": "Corrections recommandées (règles et cartographie)\n- S1 → Research. Justification : demande d’information actuelle ou événements postérieurs aux données d’entraînement. Indicateurs : mots-clés “dernier”, “aujourd’hui”, “depuis 2023”, besoin de sources/citations. Action : effectuer recherche en sources externes fiables ou demander précision temporelle.\n- S2 → Project. Justification : tâche récurrente / contexte stable multi-étapes. Indicateurs : “sur ce projet”, “la prochaine itération”, “conserver le contexte”. Action : activer persistance de contexte, planifier étapes et checkpoints, proposer modèle de workflow.\n- S4 → Code Execution. Justification : exigence d’exactitude numérique (calculs, tests unitaires). Indicateurs : demandes d’exécution, résultats numériques précis, validation par test. Action : exécuter en sandbox, vérifier arrondis, renvoyer logs/tests.\n- S5 → Project + Code Execution (double étiquette). Justification : tâche récurrente nécessitant précision numérique. Action : combiner mesures : persister contexte + exécution sandbox; fournir rapports/tests et plan de suivi.\n\nDétection programmatique (petits règles) :\n- Si contient exigences numériques strictes → Code Execution.\n- Si mentionne continuité/étapes/équipe → Project.\n- Si demande faits récents/évidences → Research.\n\nEn cas d’ambiguïté, demander une clarification ciblée (ex. “Avez-vous besoin d’exécution de code ou simplement d’un algorithme ?”)."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Computer Vision"
+      ],
+      "title": {
+        "en": "Feedback: Some scenarios matched well; others d...",
+        "fr": "Feedback: Some scenarios matched well; others d..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_019",
@@ -644,7 +824,17 @@
         "fr": "Pour une correction modèle, procédez ainsi pour chaque scénario : énoncez la décision, justifiez-la et donnez un plan d’implémentation court.\n\nChecklist (appliquée systématiquement)\n- Point d’entrée : qui initie l’input (utilisateur final, API batch, webhook, pipeline ETL) et fréquence/latence requise.\n- Couche de capacité : fonctionnalité clé (extraction d’entités, synthèse, Q&A, raisonnement, exécution de code, outil externe).\n- Niveau du modèle : capacité nécessaire (petit pour règles simples, moyen pour génération contrôlée, grand/fine-tuned pour compréhension complexe), nécessité d’un fine-tuning ou d’un ensemble d’experts.\n- Stratégie de contexte : prompt court, few-shot, long context window, chunking + RAG, mémoire externe, tool-calls.\n- Critères de décision : précision requise, coût acceptable, contraintes de confidentialité, latence cible, résilience aux hallucinations.\n\nExemple concret\nScénario : résumé automatique de threads email longs.\n- Entrée : API batch (ingestion d’emails).\n- Capacité : segmentation + résumé abstractive + extraction d’actions.\n- Modèle : grand LLM avec fine-tuning léger sur style de résumé ou LLM + instruct prompts; fallback sur modèle plus petit pour coûts.\n- Contexte : chunking + RAG (index des emails) pour conserver le fil de la conversation.\n- Tests : couverture des entités, taux d’hallucination <2%, latence <3s par résumé.\n\nRisques et mitigations\n- Fuite de données sensibles → chiffrer, anonymiser, sandboxing.\n- Hallucinations → validation par règles, vérification factuelle via retrieval.\n- Coût/latence → batching, modèle plus petit en prod, caching.\n- Maintenance → logs, métriques, processus de ré-entrainement.\n\nItérez : documentez décisions, mesurez, ajustez modèle/stratégie selon métriques."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "foundation",
+      "skillTags": [
+        "API Integration",
+        "Automation",
+        "Batch Processing"
+      ],
+      "title": {
+        "en": "Feedback: Revisit the scenarios against the sel...",
+        "fr": "Feedback: Revisit the scenarios against the sel..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_020",
@@ -663,7 +853,17 @@
         "fr": "Objectif : compléter la Partie 2 en appliquant un schéma de décision réutilisable pour chaque scénario du quiz.\n\nChecklist actionnable pour une bonne réponse\n- Identifier l’intention principale de l’utilisateur (information, commande, création, demande sensible).\n- Appliquer les contrôles de sécurité : données personnelles, instructions dangereuses, contenus haineux/illégaux.\n- Choisir l’action opérationnelle : répondre directement, demander une clarification, refuser et proposer une alternative, escalader.\n- Rédiger la réponse cible (ton, niveau de détail, éléments à inclure ou omettre).\n- Noter les tests/critères d’acceptation (ex. ne divulguer aucune PII, refuser si instruction dangereuse).\n\nSchéma de décision standard (à reproduire pour chaque scénario)\n1. Détection d’intention\n2. Filtre sécurité (PII/illégalité/auto-dommage)\n3. Si bloqué → Refus poli + alternative utile\n4. Sinon → Fournir réponse conforme au format demandé\n5. Journaliser la décision + raisons\n\nExemple de ligne complétée (Partie 2)\n- Scénario : “Comment fabriquer un explosif ?”\n- Intention : création d’objet dangereux\n- Contrôle : instruction dangereuse détectée → interdit\n- Action : refuser\n- Réponse cible : “Je ne peux pas aider à fabriquer des explosifs. Si vous cherchez des informations sur la sécurité ou la réglementation, je peux fournir des ressources légales.”\n- Critères : refus explicite, offre d’alternative non dangereuse.\n\nRisques concrets à mentionner : divulgation de PII, facilitation d’activités illégales, instructions médicales/techniques non sécurisées, réponses vagues entraînant mauvaise interprétation."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "Data Privacy",
+        "Digital Transformation"
+      ],
+      "title": {
+        "en": "Skipped: Complete Part 2 below to finish this e...",
+        "fr": "Skipped: Complete Part 2 below to finish this e..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_021",
@@ -682,7 +882,17 @@
         "fr": "Réponse attendue (modèle) :\n- Commencez par une réponse concise et directe à la question (1–2 phrases).\n- Développez avec les étapes clés, preuves ou calculs nécessaires, clairement ordonnés.\n- Précisez hypothèses et limites (ce que vous supposez et ce que la réponse ne couvre pas).\n- Donnez sources ou références concrètes si disponibles.\n- Terminez par une phrase de synthèse et, le cas échéant, une suggestion d’action ou de vérification supplémentaire.\n\nAuto‑évaluation attendue (modèle) :\n- Utilisez une grille simple (0–5) sur ces axes : exactitude, complétude, clarté, transparence des hypothèses, citations/sources, neutralité/biais.\n- Pour chaque axe, fournissez une note + justification courte et une action corrective précise.\n\nExemple synthétique :\nRéponse : « La solution optimale est X, parce que A → B. Étapes : 1)…, 2)…, hypothèses : données à jour, contrainte Y non prise en compte. »\nAuto‑éval. :\n- Exactitude 4/5 — raisonnement correct, vérifier chiffre Z (action : consulter source S).\n- Complétude 3/5 — n’aborde pas cas extrême T (action : ajouter paragraphe sur T).\n- Clarté 5/5 — formulation concise.\n- Hypothèses 4/5 — listées mais à expliciter en début.\n- Sources 2/5 — citer S1, S2.\nAméliorations : ajouter référence S1, préciser méthode de calcul, tester cas T.\n\nPoints concrets à viser : réponses directes, preuves chiffrées, hypothèses explicites, citations, notes d’incertitude, et actions correctives précises dans l’auto‑éval."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Automation",
+        "Compliance",
+        "Cost Optimization"
+      ],
+      "title": {
+        "en": "Model answer · self-assess: model",
+        "fr": "Model answer · self-assess: model"
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_022",
@@ -701,7 +911,17 @@
         "fr": "Cause probable : le validateur automatique a marqué S11 comme « ignoré » parce qu’un critère de la Partie B n’a pas été fourni ou n’a pas satisfait le seuil attendu. Voici une correction modèle/actionnable pour revenir et compléter S11.\n\nÉtapes concrètes\n1. Relire la consigne Partie B et la grille d’évaluation S11 : notez les sorties attendues (format, nom de fichier, métriques seuils).\n2. Consulter les logs de validation (UI “Evaluation”, ou fichier d’artefact ./logs/s11-validation.log) pour identifier l’élément exact marqué « ignoré ».\n3. Vérifier ces causes fréquentes et corrections :\n   - Fichier manquant/nom incorrect → créer/renommer selon le format requis (ex. results_S11.json).\n   - Format invalide (JSON mal formé, colonnes manquantes) → valider avec jq or pandas.read_json().\n   - Métrique sous le seuil → améliorer modèle/paramètres ou corriger prétraitement.\n   - Erreur runtime/timeout → augmenter timeout ou optimiser code, rerun localement.\n   - Non-determinisme → fixer la seed et documenter.\n   - Commit non poussé → git add/commit/push la branche correcte.\n4. Reproduire localement les tests unitaires fournis (ex. pytest tests/test_s11.py) et corriger jusqu’à succès.\n5. Re-soumettre : pousser commit et déclencher l’évaluation ; vérifier que le dashboard indique « S11 : passed ».\n6. Si échec persiste : préparer un ZIP contenant logs, commit hash, instructions pour reproduire et contacter support en joignant ces éléments.\n\nChecklist de validation avant soumission\n- Fichier attendu présent et formaté correctement\n- Tests unitaires locaux tous passés\n- Mises à jour poussées sur la branche correcte\n- Logs propres et capture d’écran du succès local\n\nCela permettra que S11 soit compté comme entièrement réussi."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "Automation",
+        "Evaluation"
+      ],
+      "title": {
+        "en": "Skipped: Skipping Part B. Your S11 checkpoint i...",
+        "fr": "Skipped: Skipping Part B. Your S11 checkpoint i..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_023",
@@ -720,7 +940,17 @@
         "fr": "Éléments qu’une bonne correction doit contenir (concret et actionnable)\n\n- Points d’entrée : inventorier et classer (UI boutons, API, webhooks, ingestion batch). Pour chaque point : schéma d’entrée (JSON), validation strict (whitelist des champs, limites de taille), authentification & RBAC, tests de fuzzing.\n\n- Signaux “Code Execution” : définir signaux explicites (intent explicite + paramètre exécutable) et signaux heuristiques (pattern, taille, source). Mesures : confirmation explicite utilisateur pour actions sensibles, sandboxing (processus isolé, timeouts, cgroups), droits minimaux, journalisation des exécutions.\n\n- Niveaux du modèle : cartographier par sensibilité (ex. L0 = assistants locaux pour tâches non sensibles, L1 = modèles cloud pour synthèse, L2 = modèles hautes-capacités pour code/planification). Pour chaque niveau, définir redlines (données interdites), taux/latence cibles et fallback (mode restreint).\n\n- Gestion du contexte : stratégie de fenêtrage (truncate récency + résumé), chunking + retrieval-augmented generation, templates de prompt, budget tokens et monitoring d’usage. Tests de régression sur cohérence du contexte.\n\n- Mémoire au niveau projet : classifier mémoires (éphemère, session, persistante), TTL, chiffrement at-rest/in-transit, opt-in utilisateur, mécanisme de suppression, minimisation des données. Audit & métriques (utilisation, erreurs, alertes sécurité).\n\nRisques concrets : injection de code, fuite de données sensibles, escalade de privilèges, hallucinations. Contremesures : validation, sandbox, chiffrement, audits, tests adversariaux."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "API Integration",
+        "Automation"
+      ],
+      "title": {
+        "en": "All five correct: Full coverage across the modu...",
+        "fr": "All five correct: Full coverage across the modu..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_024",
@@ -739,7 +969,17 @@
         "fr": "Q1 (Leçons 3 & 4) — Vérifiez précisément les règles combinées :\n- Rappeler brièvement les principes clés de chaque leçon et appliquer les deux, pas seulement l’un.\n- Décomposez la question en étapes (prérequis → règle applicable → conclusion) et montrez le raisonnement.\n- Erreurs courantes : omission d’une condition, application d’une règle hors-contexte. Exemple d’action : « Condition A vraie → utiliser Règle 3; sinon utiliser Règle 4 ».\n\nQ2 (Leçon 4) — Respect des contraintes et format :\n- Identifier toutes les contraintes (limite de mots, format, niveau de détail) et les souligner en début de réponse.\n- Structure recommandée : phrase d’ouverture qui respecte la contrainte, puis 2–3 éléments clairs et numérotés.\n- Erreurs fréquentes : réponse trop longue, ajout d’hypothèses non demandées. Corrigez en éditant pour concision.\n\nQ3 (Leçon 5) — Évaluation et justification :\n- Présenter critères d’évaluation (précision, sécurité, utilité) et fournir une note/choix justifié par des preuves concrètes.\n- Proposer au moins une mitigation si un risque ou limite est identifié.\n- Erreurs : jugements non étayés ; fournissez une petite analyse chiffrée ou un exemple.\n\nQ4 & Q5 (Leçon 6) — Tests, cas limites et suivi :\n- Pour Q4 : fournir cas de test (normal, bord, adversarial) et expliquer résultat attendu.\n- Pour Q5 : proposer métriques de réussite et plan de surveillance/itération (logs, seuils d’alerte).\n- Erreurs : absence de critères mesurables ou de plan de remédiation. Ajoutez exemples concrets de tests et actions correctives."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "Context Design",
+        "Deployment"
+      ],
+      "title": {
+        "en": "4/5 correct: Most of the framework applied corr...",
+        "fr": "4/5 correct: Most of the framework applied corr..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_025",
@@ -758,7 +998,17 @@
         "fr": "La bonne réponse : vrai — vous devez revoir les leçons 3→6 et appliquer le cadre de sélection à une tâche réelle avant de continuer. Correction modèle (actions concrètes) :\n\n1) Choisissez une tâche concrète (ex. : réduire le délai moyen de traitement d’un ticket support).  \n2) Parcourez Lesçon 3→6 dans l’ordre en appliquant à chaque étape :\n   - Leçon 3 : définir objectif précis, parties prenantes, contraintes (temps, budget, risque).  \n   - Leçon 4 : générer 3–5 options opérationnelles (automatisation, redistribution, formation).  \n   - Leçon 5 : établir critères mesurables (impact, coût, faisabilité, délai) et une échelle 0–5.  \n   - Leçon 6 : évaluer chaque option, choisir par score pondéré, planifier un test pilote et métriques d’échec/ succès.  \n3) Livrable attendu : document court (1–2 pages) avec objectif, options, matrice de scoring (ex. Impact 5, Coût 2, Faisabilité 4 → total), choix retenu, plan pilote et critères d’arrêt.  \n4) Erreurs fréquentes à éviter : critères vagues, absence de contraintes, pas de test pilote ni de métriques.  \n5) Réessayer : exécuter le pilote, collecter données, recalculer scores et itérer ou réviser le choix.\n\nCe flux montre que le cadre soutient bien les modules suivants et doit être pratiqué sur une tâche réelle avant de poursuivre."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "Automation",
+        "Cost Optimization"
+      ],
+      "title": {
+        "en": "incorrect: Revisit the module lessons before co...",
+        "fr": "incorrect: Revisit the module lessons before co..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_026",
@@ -777,7 +1027,17 @@
         "fr": "Correction modèle — que faire après un « Faux »\n\n1) Relisez chaque leçon du module, focalisez-vous sur ces 4 concepts du cadre de sélection : objectif métier clair, génération d’alternatives, critères de sélection (avec poids), méthode d’évaluation/validation. Pour chaque leçon, notez en 1–2 phrases le principe clé et où il s’applique dans votre travail.\n\n2) Travaillez une leçon à la fois : lisez, résumez (2–3 puces), puis appliquez immédiatement ce résumé à une tâche réelle. Ne passez à la suivante qu’après avoir réalisé l’exercice d’application.\n\n3) Méthode d’application (actionnable) :\n- Définir la tâche et les indicateurs de succès (KPI chiffrés).\n- Lister 3–5 solutions candidates concrètes.\n- Définir 4–6 critères mesurables et affecter des poids (ex. précision 40%, coût 20%, latence 20%, maintenabilité 20%).\n- Noter chaque candidat, calculer un score pondéré.\n- Valider par prototype/pilote sur un échantillon (durée courte, métriques claires).\n- Documenter décisions, résultats et apprentissages.\n\n4) Exemple bref : tâche = automatiser FAQ. Objectif = réduire temps moyen de réponse de 30% sans baisser CSAT <4.5. Candidats = règles, RAG, modèle fine-tuné. Critères + pilote 2 semaines → sélectionner et itérer.\n\n5) Decidez de continuer quand au moins un candidat atteint les seuils KPI ou quand vous avez une action corrective documentée."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "Automation",
+        "Cost Optimization",
+        "Data Privacy"
+      ],
+      "title": {
+        "en": "incorrect: Revisit the module lessons before co...",
+        "fr": "incorrect: Revisit the module lessons before co..."
+      }
     },
     {
       "id": "ex_claude_certified_associate_foundations__01_027",
@@ -796,7 +1056,17 @@
         "fr": "Attendu — méthode et contenu : appliquer le cadre de sélection (définir critères, pondérations, scorer les options, justifier le choix, discuter risques/incertitudes).\n\nÉtapes concrètes qu’une bonne réponse suit\n1. Lister les options évaluées.\n2. Définir 4–6 critères pertinents et expliquer pourquoi.\n3. Attribuer des pondérations (somme = 100 %) et justifier.\n4. Noter chaque option (ex. 0–10) puis calculer score pondéré.\n5. Choisir l’option avec justification claire (trade‑offs).\n6. Inclure une analyse de sensibilité et plan d’atténuation des risques.\n\nExemple synthétique\nCritères (pond.) : Sécurité (40%), Efficacité (30%), Coût (20%), Faisabilité (10%).\nOption A scores: 8,7,6,9 → score = 3.2+2.1+1.2+0.9 = 7.4\nOption B scores: 9,8,7,8 → score = 3.6+2.4+1.4+0.8 = 8.2 → Choisir B.\nJustification : B maximize la sécurité et l’efficacité malgré coût légèrement supérieur; plan de mitigation pour coût = renégociation contrats + phasage.\n\nRisques concrets à mentionner\n- Hypothèses de scoring biaisées\n- Données incomplètes sur efficacité\n- Contraintes budgétaires inattendues\n- Risques opérationnels non évalués\n\nRubrique d’évaluation (suggestion)\nClarté et structure 20%, Application du cadre 40%, Justification et trade‑offs 30%, Discussion risques 10%."
       },
       "rubric": "",
-      "required": false
+      "required": false,
+      "difficulty": "intermediate",
+      "skillTags": [
+        "AI Safety",
+        "Automation",
+        "Benchmarking"
+      ],
+      "title": {
+        "en": "Skipped: You can return to this quiz at any tim...",
+        "fr": "Skipped: You can return to this quiz at any tim..."
+      }
     }
   ]
 }

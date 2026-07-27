@@ -562,3 +562,7 @@
 - [x] Cliquer "Suivant" après avoir revu un chapitre terminé provoque un crash (ExerciseRenderer crash sur champs manquants)
 - [x] Rendu défensif du t() dans LanguageContext (null/undefined)
 - [x] ExerciseRenderer: tous les champs rendus optionnels, interactionType/difficulty/rubric avec fallbacks
+
+## Sauvegarde automatique brouillons exercices + enrichissement JSON (2026-07-27)
+- [x] Implémenter auto-save des brouillons dans ExerciseRenderer (debounce 1.5s, localStorage, indicateur visuel Save/Saving/Error)
+- [x] Enrichir les données JSON des exercices avec difficulty et skillTags pour tous les cours (513 exercices enrichis)
