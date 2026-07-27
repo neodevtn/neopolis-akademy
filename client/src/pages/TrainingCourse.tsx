@@ -1417,6 +1417,18 @@ export default function TrainingCourse() {
     );
   }
 
+  // Wait for lessons to load before rendering the course content
+  if (lessonsLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-sm text-muted-foreground">{t({ en: "Loading course...", fr: "Chargement du cours..." })}</p>
+        </div>
+      </div>
+    );
+  }
+
   // For single-lesson courses with multiple chapters, treat chapters as progression units
   const isSingleLessonCourse = courseLessons.length === 1 && (courseLessons[0]?.chapters?.length || 0) > 1;
   const totalProgressUnits = isSingleLessonCourse

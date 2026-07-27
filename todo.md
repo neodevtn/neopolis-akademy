@@ -603,3 +603,6 @@
 
 ## Amélioration style navigation (2026-07-27)
 - [x] Améliorer le style/taille des liens de navigation (La Formule, Pourquoi maintenant, Partenaires, Process Commercial, FAQ) - plus élégant, meilleure lisibilité
+
+## Bug: Pages de cours crash au premier chargement (2026-07-27)
+- [x] Toutes les pages de cours donnent une erreur au premier chargement (ajouté guard lessonsLoading avant le rendu principal)
