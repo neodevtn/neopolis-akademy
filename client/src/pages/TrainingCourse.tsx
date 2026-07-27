@@ -9,7 +9,7 @@ import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
   BookOpen, Lock, LogIn, ArrowRight, Moon, Sun, Menu, X, Clock, Check, Filter, Video, Eye,
-  Dumbbell, FileText, ChevronDown
+  Dumbbell, FileText, ChevronDown, Brain, Target, Trophy, GraduationCap, Puzzle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -1238,6 +1238,26 @@ function LessonSidebarContent({
         // Check if this lesson has a matching video
         const lessonTitle = resolveI18n(lesson.title, "en").toLowerCase().trim();
         const hasVideo = videos.some((v: any) => (v.title || "").toLowerCase().trim() === lessonTitle);
+        
+        // Determine chapter/lesson type icon
+        const chType = lesson.chapterType || '';
+        const hasBucketSort = lesson.hasBucketSort || false;
+        const lessonTitleEn = resolveI18n(lesson.title, "en").toLowerCase();
+        const isModuleComplete = lessonTitleEn.includes('module complete') || lessonTitleEn.includes('module terminé');
+        const isKeyTakeaways = lessonTitleEn.includes('key takeaway') || lessonTitleEn.includes('points clés');
+        
+        let typeIcon: React.ReactNode = null;
+        if (chType === 'quiz' || lessonTitleEn.includes('quiz')) {
+          typeIcon = <Brain className="w-3 h-3 text-purple-500 shrink-0" />;
+        } else if (chType === 'exercise' || chType === 'checkpoint' || hasBucketSort) {
+          typeIcon = <Target className="w-3 h-3 text-orange-500 shrink-0" />;
+        } else if (hasVideo || lesson.hasVideo) {
+          typeIcon = <Video className="w-3 h-3 text-red-400 shrink-0" />;
+        } else if (isModuleComplete) {
+          typeIcon = <Trophy className="w-3 h-3 text-amber-500 shrink-0" />;
+        } else if (isKeyTakeaways) {
+          typeIcon = <GraduationCap className="w-3 h-3 text-emerald-500 shrink-0" />;
+        }
 
         // Clickable if completed or current
         const isClickable = completed || isCurrent;
@@ -1253,10 +1273,15 @@ function LessonSidebarContent({
               <span className={`truncate font-medium ${textClass}`}>
                 {resolveI18n(lesson.title, lang)}
               </span>
-              {hasVideo && (
+              {typeIcon && (
+                <span className="shrink-0 ml-auto flex items-center">
+                  {typeIcon}
+                </span>
+              )}
+              {!typeIcon && hasVideo && (
                 <Video className="w-3.5 h-3.5 text-red-400 shrink-0 ml-auto" />
               )}
-              {isActive && completed && (
+              {isActive && completed && !typeIcon && (
                 <Eye className="w-3.5 h-3.5 text-amber-500 shrink-0 ml-auto" />
               )}
             </button>
@@ -1285,6 +1310,32 @@ function LessonSidebarContent({
           </div>
         );
       })}
+      {/* Legend for type icons */}
+      <div className="mt-4 pt-3 border-t border-border px-3">
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Légende</p>
+        <div className="grid grid-cols-2 gap-1.5">
+          <div className="flex items-center gap-1.5">
+            <Target className="w-3 h-3 text-orange-500" />
+            <span className="text-[10px] text-muted-foreground">Exercice</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Brain className="w-3 h-3 text-purple-500" />
+            <span className="text-[10px] text-muted-foreground">Quiz</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Video className="w-3 h-3 text-red-400" />
+            <span className="text-[10px] text-muted-foreground">Vidéo</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <GraduationCap className="w-3 h-3 text-emerald-500" />
+            <span className="text-[10px] text-muted-foreground">Résumé</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Trophy className="w-3 h-3 text-amber-500" />
+            <span className="text-[10px] text-muted-foreground">Terminé</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1610,6 +1661,9 @@ export default function TrainingCourse() {
               ? (courseLessons[0]?.chapters || []).map((ch: any, i: number) => ({
                   id: ch.id || `chapter_${i}`,
                   title: ch.title || { en: `Chapter ${i + 1}`, fr: `Chapitre ${i + 1}` },
+                  chapterType: ch.type || 'teaching',
+                  hasVideo: ch.blocks?.some((b: any) => b.type === 'video') || false,
+                  hasBucketSort: ch.blocks?.some((b: any) => b.type === 'bucket_sort') || false,
                 }))
               : courseLessons
             }

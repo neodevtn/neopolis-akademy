@@ -634,3 +634,12 @@
 - [x] Nettoyage des blocs vides et checkpoint redondants
 - [x] Fusion des chapitres avec le même titre (Core Entry Points, Capability Layer)
 - [x] Ajout contenu aux chapitres structurels (intro, takeaways, complete)
+
+## Indicateurs visuels sidebar (2026-07-27)
+- [x] Ajouter icônes dans la sidebar pour différencier les types de chapitres
+- [x] Icône quiz (Brain violet) pour les chapitres type quiz
+- [x] Icône exercice interactif (Target orange) pour les chapitres type exercise/checkpoint
+- [x] Icône vidéo (Video rouge) pour les chapitres avec vidéo
+- [x] Icône résumé (GraduationCap vert) pour les chapitres Key Takeaways
+- [x] Icône module terminé (Trophy ambre) pour les chapitres Module Complete
+- [x] Légende ajoutée en bas de la sidebar
