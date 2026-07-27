@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { Link, useParams } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
@@ -818,32 +818,47 @@ function LessonViewer({
   onChapterChange?: (current: number, total: number) => void;
   initialChapter?: number;
 }) {
-  const [currentChapter, setCurrentChapter] = useState(0);
-  // Sync with initialChapter prop (for single-lesson courses navigating via sidebar)
-  useEffect(() => {
-    if (initialChapter !== undefined && initialChapter !== currentChapter) {
-      setCurrentChapter(initialChapter);
-    }
-  }, [initialChapter]);
+  const [currentChapter, setCurrentChapter] = useState(initialChapter ?? 0);
   const [showQuiz, setShowQuiz] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
+  // Track whether we're syncing from parent to avoid calling onChapterChange back
+  const isSyncingFromParent = useRef(false);
+  const prevLessonId = useRef(lesson.id);
 
   const chapters = lesson.chapters || [];
   const totalChapters = chapters.length;
 
+  // Sync with initialChapter prop (for single-lesson courses navigating via sidebar)
   useEffect(() => {
-    // When lesson changes, reset chapter position
-    // But for single-lesson courses, use initialChapter if available (persisted progress)
-    const startChapter = initialChapter !== undefined ? initialChapter : 0;
-    setCurrentChapter(startChapter);
-    setShowQuiz(false);
-    setShowTranscript(false);
-    onChapterChange?.(startChapter, chapters.length);
+    if (initialChapter !== undefined && initialChapter !== currentChapter) {
+      isSyncingFromParent.current = true;
+      setCurrentChapter(initialChapter);
+    }
+  }, [initialChapter]);
+
+  // When lesson changes, reset chapter position
+  useEffect(() => {
+    if (lesson.id !== prevLessonId.current) {
+      prevLessonId.current = lesson.id;
+      const startChapter = initialChapter !== undefined ? initialChapter : 0;
+      setCurrentChapter(startChapter);
+      setShowQuiz(false);
+      setShowTranscript(false);
+      // Notify parent of initial position
+      onChapterChange?.(startChapter, chapters.length);
+    }
   }, [lesson.id]);
 
+  // When chapter changes from internal navigation (Next button, etc.)
   useEffect(() => {
+    if (isSyncingFromParent.current) {
+      // This change came from parent sync, don't call back to avoid loop
+      isSyncingFromParent.current = false;
+      // Still scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     onChapterChange?.(currentChapter, totalChapters);
-    // Scroll content area to top when chapter changes
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentChapter, totalChapters]);
 
@@ -1519,6 +1534,16 @@ export default function TrainingCourse() {
     }
   };
 
+  // Stable callback for chapter changes (prevents infinite re-render in LessonViewer)
+  const handleChapterChange = useCallback((current: number, total: number) => {
+    setChapterProgress({ current, total });
+    // Persist chapter progress to database
+    if (course?.id) {
+      const lessonIdx = isSingleLessonCourse ? 0 : (activeLessonIndex ?? 0);
+      persistChapterProgress(course.id, lessonIdx, current, total);
+    }
+  }, [course?.id, isSingleLessonCourse, activeLessonIndex, persistChapterProgress]);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -1777,7 +1802,21 @@ export default function TrainingCourse() {
                     t={t}
                     certId={certId || ""}
                     courseId={courseId || ""}
-                    onComplete={() => handleMarkLessonComplete(displayedIndex)}
+                    onComplete={() => {
+                      if (isSingleLessonCourse) {
+                        // For single-lesson courses, advance chapter progress to the end
+                        const totalChaps = courseLessons[0]?.chapters?.length || 1;
+                        setChapterProgress({ current: totalChaps, total: totalChaps });
+                        // Persist chapter progress to DB (marks all chapters as done)
+                        if (course?.id) {
+                          persistChapterProgress(course.id, 0, totalChaps, totalChaps);
+                        }
+                        // Also mark lesson 0 as complete in training_progress table
+                        handleMarkLessonComplete(0);
+                      } else {
+                        handleMarkLessonComplete(displayedIndex);
+                      }
+                    }}
                     matchedVideos={lessonVideos}
                     completedVideos={completedVideos}
                     expandedVideos={expandedVideos}
@@ -1788,14 +1827,7 @@ export default function TrainingCourse() {
                     getYouTubeThumbnail={getYouTubeThumbnail}
                     isReviewMode={isReviewMode}
                     courseExercises={courseExercises}
-                    onChapterChange={(current, total) => {
-                      setChapterProgress({ current, total });
-                      // Persist chapter progress to database
-                      if (course?.id) {
-                        const lessonIdx = isSingleLessonCourse ? 0 : (activeLessonIndex ?? 0);
-                        persistChapterProgress(course.id, lessonIdx, current, total);
-                      }
-                    }}
+                    onChapterChange={handleChapterChange}
                     initialChapter={isSingleLessonCourse ? (chapterProgress?.current ?? 0) : undefined}
                   />
                 </div>

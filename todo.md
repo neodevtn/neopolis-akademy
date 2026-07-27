@@ -613,3 +613,16 @@
 - [x] Créer composant TabbedContent avec onglets interactifs
 - [x] Créer composant ComparisonBox (wrong/right pattern)
 - [x] Mettre à jour renderBlock dans TrainingCourse.tsx pour les 3 nouveaux types de blocs
+
+## Bug fix: Flip cards + Complete Lesson + Review crash (2026-07-27)
+- [x] Flip cards trop petites - le texte du dos déborde (hauteur dynamique nécessaire)
+- [x] Bouton "Complete Lesson" ne fonctionne pas après quiz réussi (fix: pour single-lesson courses, avance chapter progress à la fin + mark lesson 0)
+- [x] Mode review crash avec React error #185 (fix: stabilisé onChapterChange avec useCallback + ref isSyncingFromParent pour briser la boucle infinie)
+
+## Restructuration des cours avec blocs interactifs (2026-07-27)
+- [ ] Restructurer tous les cours restants (29 fichiers) avec flip_cards, tabbed_content, comparison, tables
+- [ ] Identifier les patterns textuels dans chaque cours qui correspondent à des éléments interactifs
+- [ ] Convertir les listes de comparaison en blocs comparison (wrong/right)
+- [ ] Convertir les contenus à onglets en blocs tabbed_content
+- [ ] Convertir les cartes retournables en blocs flip_cards
+- [ ] Ajouter des tables structurées là où le texte contient des données tabulaires
