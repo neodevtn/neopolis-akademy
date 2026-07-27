@@ -566,3 +566,18 @@
 ## Sauvegarde automatique brouillons exercices + enrichissement JSON (2026-07-27)
 - [x] Implémenter auto-save des brouillons dans ExerciseRenderer (debounce 1.5s, localStorage, indicateur visuel Save/Saving/Error)
 - [x] Enrichir les données JSON des exercices avec difficulty et skillTags pour tous les cours (513 exercices enrichis)
+
+## Refonte outil Diagnostic IA selon DATAS-STD-BPM-AI-001 (2026-07-27)
+- [x] Refonte complète de DiagnosticIA.tsx avec 9 étapes (7 saisie + 1 synthèse + 1 résultats)
+- [x] Sections A-B: Identification (code, nom, catégorie APQC, domaine, objectif, déclencheur, résultat)
+- [x] Sections D-E-F: Ressources (fréquence, volume, temps, agents, coûts, erreurs, SLA, délais)
+- [x] Sections G-J: Automatisation (niveau actuel, outils utilisés)
+- [x] Section H: Interventions humaines (7 types avec scores de répétitivité)
+- [x] Section I: Données manipulées (12 types avec niveaux de structure)
+- [x] Section K: Irritants/points de douleur (12 types)
+- [x] Critère 4: Complexité (disponibilité données, systèmes, conduite changement, réglementaire, maturité)
+- [x] Moteur de scoring: 4 critères (potentiel, technologies, gains, complexité/ROI)
+- [x] Matrice Valeur × Complexité (Quick Win, Stratégique, Optionnel, À éviter)
+- [x] 13 technologies IA avec matching automatique par signaux (données, interventions, irritants)
+- [x] Recommandations contextuelles (8 types)
+- [x] Zéro texte libre — tous les champs sont des sélecteurs structurés
