@@ -600,3 +600,6 @@
 - [x] Login admin redirige vers /admin au lieu de /training
 - [x] Bouton "Admin" visible dans le header Training pour les admins
 - [x] Navigation Candidatures / Suivi Apprenants dans le header admin
+
+## Amélioration style navigation (2026-07-27)
+- [x] Améliorer le style/taille des liens de navigation (La Formule, Pourquoi maintenant, Partenaires, Process Commercial, FAQ) - plus élégant, meilleure lisibilité

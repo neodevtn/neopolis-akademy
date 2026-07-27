@@ -168,7 +168,7 @@ export default function Home() {
               Registered Partner
             </a>
           </div>
-          <div className="hidden md:flex items-center gap-1 ml-auto">
+          <div className="hidden lg:flex items-center gap-0 ml-auto">
             <NavLink href="#formule">La Formule</NavLink>
             <NavLink href="#pourquoi">Pourquoi maintenant</NavLink>
             <NavLink href="#partenaires">Partenaires</NavLink>
@@ -715,11 +715,11 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   return (
     <a
       href={href}
-      className="text-sm font-semibold relative group"
-      style={{ color: "var(--wise-ink)" }}
+      className="whitespace-nowrap text-[13px] font-medium px-2 py-1.5 rounded-md relative group transition-all duration-200 hover:bg-gray-50"
+      style={{ color: "var(--wise-ink-muted, #64748b)" }}
     >
       {children}
-      <span className="absolute -bottom-1 left-0 w-0 h-0.5 rounded-full group-hover:w-full transition-all duration-300" style={{ backgroundColor: "var(--wise-primary)" }} />
+      <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-0 h-[1.5px] rounded-full group-hover:w-2/3 transition-all duration-300 ease-out" style={{ backgroundColor: "var(--wise-primary)" }} />
     </a>
   );
 }
