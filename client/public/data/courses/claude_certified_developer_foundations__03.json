@@ -77,11 +77,154 @@
               ]
             },
             {
-              "type": "content",
-              "body": {
-                "en": "Checkpoint 1: assemble the settings file and place the human gate\n\nTry it now. You are configuring Claude Code for a trusted local refactor of the payments module.\n\nThe refactor should auto-approve file edits but must never run destructive shell commands, and the file .env.production must never be readable by the agent. Below are settings.json pieces.\n\nPart 1: Select the setting.json pieces that assemble the correct configuration\n\nSelect two pieces.\n\n✓\nPiece A. { \"permissions\": { \"defaultMode\": \"default\"} }\n\n✓\nPiece B. { \"permissions\": { \"defaultMode\": \"bypassPermissions\" } }\n\n✓\nPiece C. { \"permissions\": { \"allow\": [\"Bash(npm run:*)\"], \"deny\": [\"Bash(rm:*)\", \"Bash(git push:*)\"] } }\n\n✓\nPiece D. { \"permissions\": { \"deny\": [\"Read(.env.production)\"] } }\n\n✓\nPiece E. { \"permissions\": { \"allow\": [\"Bash(*)\", \"Edit(*)\"] } }\n\nPart 2\n\nYour settings allow the agent to edit files automatically. During the refactor the agent proposes a change to a deployment configuration file that several production services read. Where should a human gate sit for that one action? Choose the single best answer.\n\naNowhere: the settings already auto-approve edits, so let it run.\n\nbA human reviews and approves the change to the deployment configuration file before the write executes, because a wrong value there is hard to undo and reaches systems outside the file.\n\ncAdd bypassPermissions so the agent never pauses.\n\ndReview the change only after the write, during the next pull request.\n\nSubmit\nSkip for now",
-                "fr": "Point de contrôle 1 : assembler le fichier de paramètres et placer le contrôle humain\n\nEssayez-le dès maintenant. Vous configurez Claude Code pour une refactorisation locale de confiance du module des paiements.\n\nLa refactorisation doit autoriser automatiquement les modifications de fichiers mais ne doit jamais exécuter des commandes shell destructives, et le fichier .env.production ne doit jamais être lisible par l'agent. Ci-dessous, des éléments de settings.json.\n\nPartie 1 : Sélectionnez les éléments de settings.json qui constituent la configuration correcte\n\nSélectionnez deux éléments.\n\n✓\nÉlément A. { \"permissions\": { \"defaultMode\": \"default\"} }\n\n✓\nÉlément B. { \"permissions\": { \"defaultMode\": \"bypassPermissions\" } }\n\n✓\nÉlément C. { \"permissions\": { \"allow\": [\"Bash(npm run:*)\"], \"deny\": [\"Bash(rm:*)\", \"Bash(git push:*)\"] } }\n\n✓\nÉlément D. { \"permissions\": { \"deny\": [\"Read(.env.production)\"] } }\n\n✓\nÉlément E. { \"permissions\": { \"allow\": [\"Bash(*)\", \"Edit(*)\"] } }\n\nPartie 2\n\nVos paramètres permettent à l'agent de modifier les fichiers automatiquement. Lors de la refactorisation, l'agent propose une modification d'un fichier de configuration de déploiement que lisent plusieurs services de production. Où devrait se situer un contrôle humain pour cette action unique ? Choisissez la meilleure réponse unique.\n\na Nulle part : les paramètres approuvent déjà automatiquement les modifications, laissez-les donc s'exécuter.\n\nb Un humain révise et approuve la modification du fichier de configuration de déploiement avant que l'écriture ne soit exécutée, car une valeur incorrecte là-bas est difficile à annuler et atteint des systèmes en dehors du fichier.\n\nc Ajouter bypassPermissions afin que l'agent ne fasse jamais de pause.\n\nd Revoir le changement uniquement après l'écriture, lors de la prochaine pull request.\n\nSoumettre\nIgnorer pour l'instant"
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "cAdd bypassPermissions so the agent never pauses.",
+                    "fr": "cAdd bypassPermissions so the agent never pauses."
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "dReview the change only after the write, during the next pull request.",
+                    "fr": "dReview the change only after the write, during the next pull request."
+                  }
+                }
+              ],
+              "id": "bucket_26",
+              "title": {
+                "en": "Checkpoint 1: assemble the settings file and place the hu...",
+                "fr": "Checkpoint 1: assemble the settings file and place the hu..."
+              },
+              "instructions": {
+                "en": "Checkpoint 1: assemble the settings file and place the human gate Try it now. You are configuring Claude Code for a trusted local refactor of the payments module. The refactor should auto-approve file edits but must never run destructive shell commands, and the file .env.production must never be readable by the agent. Below are settings.json pieces. Part 1: Select the setting.json pieces that assemble the correct configuration",
+                "fr": "Checkpoint 1: assemble the settings file and place the human gate Try it now. You are configuring Claude Code for a trusted local refactor of the payments module. The refactor should auto-approve file edits but must never run destructive shell commands, and the file .env.production must never be readable by the agent. Below are settings.json pieces. Part 1: Select the setting.json pieces that assemble the correct configuration"
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "Select two pieces.",
+                    "fr": "Select two pieces."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "✓",
+                    "fr": "✓"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "Piece A. { \"permissions\": { \"defaultMode\": \"default\"} }",
+                    "fr": "Piece A. { \"permissions\": { \"defaultMode\": \"default\"} }"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_3",
+                  "text": {
+                    "en": "✓",
+                    "fr": "✓"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_4",
+                  "text": {
+                    "en": "Piece B. { \"permissions\": { \"defaultMode\": \"bypassPermissions\" } }",
+                    "fr": "Piece B. { \"permissions\": { \"defaultMode\": \"bypassPermissions\" } }"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_5",
+                  "text": {
+                    "en": "✓",
+                    "fr": "✓"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_6",
+                  "text": {
+                    "en": "Piece C. { \"permissions\": { \"allow\": [\"Bash(npm run:*)\"], \"deny\": [\"Bash(rm:*)\", \"Bash(git push:*)\"] } }",
+                    "fr": "Piece C. { \"permissions\": { \"allow\": [\"Bash(npm run:*)\"], \"deny\": [\"Bash(rm:*)\", \"Bash(git push:*)\"] } }"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_7",
+                  "text": {
+                    "en": "✓",
+                    "fr": "✓"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_8",
+                  "text": {
+                    "en": "Piece D. { \"permissions\": { \"deny\": [\"Read(.env.production)\"] } }",
+                    "fr": "Piece D. { \"permissions\": { \"deny\": [\"Read(.env.production)\"] } }"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_9",
+                  "text": {
+                    "en": "✓",
+                    "fr": "✓"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_10",
+                  "text": {
+                    "en": "Piece E. { \"permissions\": { \"allow\": [\"Bash(*)\", \"Edit(*)\"] } }",
+                    "fr": "Piece E. { \"permissions\": { \"allow\": [\"Bash(*)\", \"Edit(*)\"] } }"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_11",
+                  "text": {
+                    "en": "Part 2",
+                    "fr": "Part 2"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_12",
+                  "text": {
+                    "en": "Your settings allow the agent to edit files automatically. During the refactor the agent proposes a change to a deployment configuration file that several production services read. Where should a human gate sit for that one action? Choose the single best answer.",
+                    "fr": "Your settings allow the agent to edit files automatically. During the refactor the agent proposes a change to a deployment configuration file that several production services read. Where should a human gate sit for that one action? Choose the single best answer."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_13",
+                  "text": {
+                    "en": "aNowhere: the settings already auto-approve edits, so let it run.",
+                    "fr": "aNowhere: the settings already auto-approve edits, so let it run."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_14",
+                  "text": {
+                    "en": "bA human reviews and approves the change to the deployment configuration file before the write executes, because a wrong value there is hard to undo and reaches systems outside the file.",
+                    "fr": "bA human reviews and approves the change to the deployment configuration file before the write executes, because a wrong value there is hard to undo and reaches systems outside the file."
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "checkpoint",
@@ -196,11 +339,169 @@
               ]
             },
             {
-              "type": "content",
-              "body": {
-                "en": "Checkpoint 2: drag the correct value\n\nTry it now. You are setting up a hook that enforces a path restriction, and the configuration below has two blanks.\n\nSelect the correct one: the lifecycle event that runs before a tool call executes, and the command the hook runs to block reads of .env.production.\n\n{\n\"hooks\": {\n\"________\": [\n{\n\"matcher\": \"Read\",\n\"hooks\": [{ \"type\": \"command\", \"command\": \"________\" }]\n}\n]\n}\n}\n\nBlank 1: the lifecycle event\n\nPreToolUse\n\nPostToolUse\n\nUserPromptSubmit\n\nSessionStart\n\nBlank 2: the command\n\nA script that reads the tool call from stdin, checks the file path, and exits with code 2 when the path is .env.production (writing the reason to stderr).\n\nA script that logs the tool call to an audit file and exits 0.\n\nA script that prints a warning and exits 0 unconditionally.\n\nSubmit\nSkip for now",
-                "fr": "Checkpoint 2 : faites glisser la bonne valeur\n\nEssayez-le maintenant. Vous configurez un hook qui applique une restriction de chemin, et la configuration ci-dessous comporte deux cases vides.\n\nSélectionnez la bonne : l'événement du cycle de vie qui s'exécute avant l'exécution d'un appel d'outil, et la commande que le hook exécute pour bloquer les lectures de .env.production.\n\n{\n\"hooks\": {\n\"________\": [\n{\n\"matcher\": \"Read\",\n\"hooks\": [{ \"type\": \"command\", \"command\": \"________\" }]\n}\n]\n}\n}\n\nCase 1 : l'événement du cycle de vie\n\nPreToolUse\n\nPostToolUse\n\nUserPromptSubmit\n\nSessionStart\n\nCase 2 : la commande\n\nUn script qui lit l'appel d'outil depuis stdin, vérifie le chemin du fichier et se termine avec le code 2 lorsque le chemin est .env.production (en écrivant la raison sur stderr).\n\nUn script qui enregistre l'appel d'outil dans un fichier d'audit et se termine avec le code 0.\n\nUn script qui affiche un avertissement et se termine avec le code 0 sans condition.\n\nSoumettre\n\nIgnorer pour le moment"
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "A script that reads the tool call from stdin, checks the file path, and exits with code 2 when the path is .env.production (writing the reason to stderr).",
+                    "fr": "A script that reads the tool call from stdin, checks the file path, and exits with code 2 when the path is .env.production (writing the reason to stderr)."
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "A script that logs the tool call to an audit file and exits 0.",
+                    "fr": "A script that logs the tool call to an audit file and exits 0."
+                  }
+                },
+                {
+                  "id": "bucket_2",
+                  "label": {
+                    "en": "A script that prints a warning and exits 0 unconditionally.",
+                    "fr": "A script that prints a warning and exits 0 unconditionally."
+                  }
+                }
+              ],
+              "id": "bucket_27",
+              "title": {
+                "en": "Checkpoint 2: drag the correct value Try it now",
+                "fr": "Checkpoint 2: drag the correct value Try it now"
+              },
+              "instructions": {
+                "en": "Checkpoint 2: drag the correct value Try it now. You are setting up a hook that enforces a path restriction, and the configuration below has two blanks. Select the correct one: the lifecycle event that runs before a tool call executes, and the command the hook runs to block reads of .env.production.",
+                "fr": "Checkpoint 2: drag the correct value Try it now. You are setting up a hook that enforces a path restriction, and the configuration below has two blanks. Select the correct one: the lifecycle event that runs before a tool call executes, and the command the hook runs to block reads of .env.production."
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "{",
+                    "fr": "{"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "\"hooks\": {",
+                    "fr": "\"hooks\": {"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "\"________\": [",
+                    "fr": "\"________\": ["
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_3",
+                  "text": {
+                    "en": "{",
+                    "fr": "{"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_4",
+                  "text": {
+                    "en": "\"matcher\": \"Read\",",
+                    "fr": "\"matcher\": \"Read\","
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_5",
+                  "text": {
+                    "en": "\"hooks\": [{ \"type\": \"command\", \"command\": \"________\" }]",
+                    "fr": "\"hooks\": [{ \"type\": \"command\", \"command\": \"________\" }]"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_6",
+                  "text": {
+                    "en": "}",
+                    "fr": "}"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_7",
+                  "text": {
+                    "en": "]",
+                    "fr": "]"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_8",
+                  "text": {
+                    "en": "}",
+                    "fr": "}"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_9",
+                  "text": {
+                    "en": "}",
+                    "fr": "}"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_10",
+                  "text": {
+                    "en": "Blank 1: the lifecycle event",
+                    "fr": "Blank 1: the lifecycle event"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_11",
+                  "text": {
+                    "en": "PreToolUse",
+                    "fr": "PreToolUse"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_12",
+                  "text": {
+                    "en": "PostToolUse",
+                    "fr": "PostToolUse"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_13",
+                  "text": {
+                    "en": "UserPromptSubmit",
+                    "fr": "UserPromptSubmit"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_14",
+                  "text": {
+                    "en": "SessionStart",
+                    "fr": "SessionStart"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_15",
+                  "text": {
+                    "en": "Blank 2: the command",
+                    "fr": "Blank 2: the command"
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "checkpoint",
@@ -230,11 +531,113 @@
               }
             },
             {
-              "type": "content",
-              "body": {
-                "en": "Checkpoint 3: place the skill in the right runtime\n\nTry it now. Three teams want to reuse the same review-checklist skill in different places.\n\nFor each, match what must be configured for the skill to load and run. Note: the source presents four runtime situations. All four are included here so the match stays complete.\n\nA developer wants the skill to load when they ask for a review in the Claude Code terminal.\n\nPlace SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nA service calls the Messages API and wants the skill to run as part of the request.\n\nPlace SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nA scheduled headless job uses Agent SDK and expects the skill from the repo to load.\n\nPlace SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nA product team wants the same review-checklist skill to run inside a long-running agent that Anthropic hosts, reachable by an agent ID across sessions.\n\nPlace SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.\n\nSubmit\nSkip for now\n\nWatch OutPackaging Workflows·3 min\n\nThe plugin that installed on your machine and failed on everyone else’s\n\nSetup\n\nA plugin installed cleanly tells you the package was assembled correctly; however, it does not tell you the plugin will run effectively, because installation and execution are different things. The install copies files into place. Execution resolves the paths and variables those files point at, against the machine where they are running. When a plugin author bakes their own machine’s layout into a skill, the install still succeeds everywhere, but the execution fails everywhere except the author’s own setup. This gap occurs because it’s something the author can’t see.\n\nWhat happened\n\nA developer built a deployment workflow skill, packaged it as a plugin, and tested it locally. Local testing passed, the plugin went out to the team through the internal marketplace, and every teammate’s install succeeded, but the moment any teammate ran the skill, it failed.\n\nThe root cause sat in the skill’s SKILL.md, in a command that pointed at /Users/alexmorgan/projects/deploy-utils/validate.sh.\n\nThat directory existed on the author’s machine and nowhere else. The skill carried an absolute path to the author’s home directory, so every teammate’s run looked for a file that was on their system or included in the skill.\n\nA second skill in the same plugin leaned on an environment variable, DEPLOY_TOKEN, that the author had set in their own shell profile, and the plugin’s README never mentioned it. Three teammates spent two hours debugging before they traced the second failure to the missing variable.\n\nThe plugin incorrectly treated the author’s machine as the team’s machine, which caused the break. Both failures in the example above have the same root cause and the same absolute path. It sits in the SKILL.md as plain text, and a reviewer reading the file can catch it. The environment variable can be dangerous because nothing in the package announces the associated dependency, meaning the skill runs fine right up until the step that needs the variable, and only then does it fail. This is why it can cost three people two hours to fix.\n\nWhat to Watch Out for\n\nAny path reference in a skill, hook command, or plugin component must be relative to the project root or use an environment variable for the base path. Use $CLAUDE_PROJECT_DIR to reference scripts stored in the project, and ${CLAUDE_PLUGIN_ROOT} for scripts bundled inside the plugin itself, so the path resolves correctly no matter whose machine runs it or what directory the session started in. Make sure any scripts, config files, or other assets the plugin depends on are either bundled inside the plugin or included in a shared project location, so every teammate can access the same files after install. Document every environment variable the plugin requires and validate it at install time so a missing one surfaces immediately instead of mid-run. Then test the install on a clean machine before distribution; this will catch any issues that the build machine may be hiding.",
-                "fr": "Checkpoint 3 : placez la skill dans le bon runtime\n\nEssayez-le maintenant. Trois équipes veulent réutiliser la même review-checklist skill dans différents endroits.\n\nPour chacun, faites correspondre ce qui doit être configuré pour que la skill se charge et s’exécute. Remarque : la source présente quatre situations d’exécution. Les quatre sont incluses ici afin que l’appariement reste complet.\n\nUn développeur veut que la skill se charge lorsqu’il demande une révision dans le terminal Claude Code.\n\nPlacez SKILL.md dans .claude/skills avec une description qui correspond aux demandes de révision. Envoyez les en-têtes code-execution et skills beta et écrivez la skill de sorte que ses étapes ne dépendent pas de fichiers locaux ou d’outils locaux. Activez les sources de système de fichiers en définissant settingSources explicitement afin que l’agent charge les skills depuis le projet. Ne vous fiez pas à un comportement par défaut, et confirmez le comportement par défaut actuel par rapport à la référence de l’Agent SDK au moment de la construction. Définissez l’agent comme une ressource API qui liste la skill et définissez l’en-tête beta managed-agents-2026-04-01 sur les appels. Écrivez la skill de sorte que ses étapes ne dépendent pas de fichiers locaux, car elle s’exécutera dans le sandbox d’Anthropic.\n\nUn service appelle le Messages API et souhaite que la skill s’exécute dans le cadre de la requête.\n\nPlacez SKILL.md dans .claude/skills avec une description qui correspond aux demandes de révision. Envoyez les en-têtes code-execution et skills beta et écrivez la skill de sorte que ses étapes ne dépendent pas de fichiers locaux ou d’outils locaux. Activez les sources de système de fichiers en définissant settingSources explicitement afin que l’agent charge les skills depuis le projet. Ne vous fiez pas à un comportement par défaut, et confirmez le comportement par défaut actuel par rapport à la référence de l’Agent SDK au moment de la construction. Définissez l’agent comme une ressource API qui liste la skill et définissez l’en-tête beta managed-agents-2026-04-01 sur les appels. Écrivez la skill de sorte que ses étapes ne dépendent pas de fichiers locaux, car elle s’exécutera dans le sandbox d’Anthropic.\n\nUn travail planifié sans interface utilisateur utilise l’Agent SDK et s’attend à ce que la skill du dépôt se charge.\n\nPlacez SKILL.md dans .claude/skills avec une description qui correspond aux demandes de révision. Envoyez les en-têtes code-execution et skills beta et écrivez la skill de sorte que ses étapes ne dépendent pas de fichiers locaux ou d’outils locaux. Activez les sources de système de fichiers en définissant settingSources explicitement afin que l’agent charge les skills depuis le projet. Ne vous fiez pas à un comportement par défaut, et confirmez le comportement par défaut actuel par rapport à la référence de l’Agent SDK au moment de la construction. Définissez l’agent comme une ressource API qui liste la skill et définissez l’en-tête beta managed-agents-2026-04-01 sur les appels. Écrivez la skill de sorte que ses étapes ne dépendent pas de fichiers locaux, car elle s’exécutera dans le sandbox d’Anthropic.\n\nUne équipe produit veut que la même review-checklist skill fonctionne à l’intérieur d’un agent à long terme que Anthropic héberge, accessible via un identifiant d’agent au cours des sessions.\n\nPlacez SKILL.md dans .claude/skills avec une description qui correspond aux demandes de révision. Envoyez les en-têtes code-execution et skills beta et écrivez la skill de sorte que ses étapes ne dépendent pas de fichiers locaux ou d’outils locaux. Activez les sources de système de fichiers en définissant settingSources explicitement afin que l’agent charge les skills depuis le projet. Ne vous fiez pas à un comportement par défaut, et confirmez le comportement par défaut actuel par rapport à la référence de l’Agent SDK au moment de la construction. Définissez l’agent comme une ressource API qui liste la skill et définissez l’en-tête beta managed-agents-2026-04-01 sur les appels. Écrivez la skill de sorte que ses étapes ne dépendent pas de fichiers locaux, car elle s’exécutera dans le sandbox d’Anthropic.\n\nSoumettre\nIgnorer pour l’instant\n\nAttention : Workflows d’emballage · 3 min\n\nLe plugin qui s’est installé sur votre machine et a échoué sur celle de tout le monde\n\nMise en place\n\nUn plugin installé proprement vous indique que le package a été assemblé correctement ; néanmoins, cela ne vous dit pas que le plugin fonctionnera efficacement, car l’installation et l’exécution sont deux choses différentes. L’installation copie des fichiers sur place. L’exécution résout les chemins et les variables vers lesquels ces fichiers pointent, sur la machine où ils s’exécutent. Lorsqu’un auteur de plugin intègre la disposition de sa propre machine dans une skill, l’installation réussit partout, mais l’exécution échoue partout sauf dans la configuration de l’auteur. Cette lacune se produit parce que c’est quelque chose que l’auteur ne peut pas voir.\n\nCe qui s’est passé\n\nUn développeur a construit une skill de workflow de déploiement, l’a empaquetée comme plugin et l’a testée localement. Le test local a réussi, le plugin est passé au reste de l’équipe via le marketplace interne, et chaque installation d’un coéquipier a réussi, mais dès que n’importe quel coéquipier a exécuté la skill, elle a échoué.\n\nLa cause première résidait dans le SKILL.md de la skill, dans une commande qui pointait vers /Users/alexmorgan/projects/deploy-utils/validate.sh.\n\nCe répertoire existait sur la machine de l’auteur et nulle part ailleurs. La skill contenait un chemin absolu vers le répertoire personnel de l’auteur, de sorte que chaque exécution d’un coéquipier cherchait un fichier qui se trouvait sur leur système ou inclus dans la skill.\n\nUne seconde skill dans le même plugin s’appuyait sur une variable d’environnement, DEPLOY_TOKEN, que l’auteur avait définie dans son propre profil shell, et le README du plugin ne le mentionnait jamais. Trois coéquipiers ont passé deux heures à déboguer avant d’identifier la seconde erreur due à la variable manquante.\n\nLe plugin a incorrectement traité la machine de l’auteur comme celle de l’équipe, ce qui a causé la panne. Les deux échecs ci-dessus ont la même cause et le même chemin absolu. Cela se trouve dans le SKILL.md en texte brut, et un lecteur du fichier peut le repérer. La variable d’environnement peut être dangereuse car rien dans le package n’annonce la dépendance associée, ce qui signifie que la skill s’exécute correctement jusqu’à l’étape qui nécessite la variable, et échoue seulement à ce moment-là. C’est pourquoi cela peut coûter à trois personnes deux heures pour corriger le problème.\n\nÀ surveiller\n\nToute référence de chemin dans une skill, une commande hook ou un composant plugin doit être relative à la racine du projet ou utiliser une variable d’environnement comme chemin de base. Utilisez $CLAUDE_PROJECT_DIR pour référencer les scripts stockés dans le projet, et ${CLAUDE_PLUGIN_ROOT} pour les scripts fournis avec le plugin lui-même, afin que le chemin se résolve correctement quelle que soit la machine qui l’exécute ou quel que soit le répertoire dans lequel la session a démarré. Assurez-vous que les scripts, fichiers de configuration ou autres actifs dont le plugin dépend sont soit embarqués dans le plugin, soit inclus dans un emplacement de projet partagé, afin que chaque coéquipier puisse accéder aux mêmes fichiers après l’installation. Documentez chaque variable d’environnement que le plugin nécessite et validez-la lors de l’installation afin qu’une valeur manquante apparaisse immédiatement au lieu d’apparaître au milieu de l’exécution. Puis testez l’installation sur une machine propre avant distribution ; cela permettra de détecter tout problème que la machine de build pourrait masquer."
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "The plugin incorrectly treated the author’s machine as the team’s machine, which caused the break. Both failures in the example above have the same root cause and the same absolute path. It sits in the SKILL.md as plain text, and a reviewer reading the file can catch it. The environment variable can be dangerous because nothing in the package announces the associated dependency, meaning the skill runs fine right up until the step that needs the variable, and only then does it fail. This is why it can cost three people two hours to fix.",
+                    "fr": "The plugin incorrectly treated the author’s machine as the team’s machine, which caused the break. Both failures in the example above have the same root cause and the same absolute path. It sits in the SKILL.md as plain text, and a reviewer reading the file can catch it. The environment variable can be dangerous because nothing in the package announces the associated dependency, meaning the skill runs fine right up until the step that needs the variable, and only then does it fail. This is why it can cost three people two hours to fix."
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "What to Watch Out for",
+                    "fr": "What to Watch Out for"
+                  }
+                },
+                {
+                  "id": "bucket_2",
+                  "label": {
+                    "en": "Any path reference in a skill, hook command, or plugin component must be relative to the project root or use an environment variable for the base path. Use $CLAUDE_PROJECT_DIR to reference scripts stored in the project, and ${CLAUDE_PLUGIN_ROOT} for scripts bundled inside the plugin itself, so the path resolves correctly no matter whose machine runs it or what directory the session started in. Make sure any scripts, config files, or other assets the plugin depends on are either bundled inside the plugin or included in a shared project location, so every teammate can access the same files after install. Document every environment variable the plugin requires and validate it at install time so a missing one surfaces immediately instead of mid-run. Then test the install on a clean machine before distribution; this will catch any issues that the build machine may be hiding.",
+                    "fr": "Any path reference in a skill, hook command, or plugin component must be relative to the project root or use an environment variable for the base path. Use $CLAUDE_PROJECT_DIR to reference scripts stored in the project, and ${CLAUDE_PLUGIN_ROOT} for scripts bundled inside the plugin itself, so the path resolves correctly no matter whose machine runs it or what directory the session started in. Make sure any scripts, config files, or other assets the plugin depends on are either bundled inside the plugin or included in a shared project location, so every teammate can access the same files after install. Document every environment variable the plugin requires and validate it at install time so a missing one surfaces immediately instead of mid-run. Then test the install on a clean machine before distribution; this will catch any issues that the build machine may be hiding."
+                  }
+                }
+              ],
+              "id": "bucket_28",
+              "title": {
+                "en": "Checkpoint 3: place the skill in the right runtime Try it...",
+                "fr": "Checkpoint 3: place the skill in the right runtime Try it..."
+              },
+              "instructions": {
+                "en": "Checkpoint 3: place the skill in the right runtime Try it now. Three teams want to reuse the same review-checklist skill in different places. For each, match what must be configured for the skill to load and run. Note: the source presents four runtime situations. All four are included here so the match stays complete. A developer wants the skill to load when they ask for a review in the Claude Code terminal. Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox. A service calls the Messages API and wants the skill to run as part of the request. Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox. A scheduled headless job uses Agent SDK and expects the skill from the repo to load. Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox. A product team wants the same review-checklist skill to run inside a long-running agent that Anthropic hosts, reachable by an agent ID across sessions. Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox.",
+                "fr": "Checkpoint 3: place the skill in the right runtime Try it now. Three teams want to reuse the same review-checklist skill in different places. For each, match what must be configured for the skill to load and run. Note: the source presents four runtime situations. All four are included here so the match stays complete. A developer wants the skill to load when they ask for a review in the Claude Code terminal. Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox. A service calls the Messages API and wants the skill to run as part of the request. Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox. A scheduled headless job uses Agent SDK and expects the skill from the repo to load. Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox. A product team wants the same review-checklist skill to run inside a long-running agent that Anthropic hosts, reachable by an agent ID across sessions. Place SKILL.md in .claude/skills with a description that matches review requests.Send the code-execution and skills beta headers and write the skill so its steps do not depend on local files or local tools.Enable filesystem sources by setting settingSources explicitly so the agent loads skills from the project. Do not rely on a default, and confirm current default behavior against the Agent SDK reference at build time.Define the agent as an API resource that lists the skill and set the managed-agents-2026-04-01 beta header on the calls. Write the skill so its steps do not depend on local files, because it will run in Anthropic’s sandbox."
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "Watch OutPackaging Workflows·3 min",
+                    "fr": "Watch OutPackaging Workflows·3 min"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "The plugin that installed on your machine and failed on everyone else’s",
+                    "fr": "The plugin that installed on your machine and failed on everyone else’s"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "Setup",
+                    "fr": "Setup"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_3",
+                  "text": {
+                    "en": "A plugin installed cleanly tells you the package was assembled correctly; however, it does not tell you the plugin will run effectively, because installation and execution are different things. The install copies files into place. Execution resolves the paths and variables those files point at, against the machine where they are running. When a plugin author bakes their own machine’s layout into a skill, the install still succeeds everywhere, but the execution fails everywhere except the author’s own setup. This gap occurs because it’s something the author can’t see.",
+                    "fr": "A plugin installed cleanly tells you the package was assembled correctly; however, it does not tell you the plugin will run effectively, because installation and execution are different things. The install copies files into place. Execution resolves the paths and variables those files point at, against the machine where they are running. When a plugin author bakes their own machine’s layout into a skill, the install still succeeds everywhere, but the execution fails everywhere except the author’s own setup. This gap occurs because it’s something the author can’t see."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_4",
+                  "text": {
+                    "en": "What happened",
+                    "fr": "What happened"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_5",
+                  "text": {
+                    "en": "A developer built a deployment workflow skill, packaged it as a plugin, and tested it locally. Local testing passed, the plugin went out to the team through the internal marketplace, and every teammate’s install succeeded, but the moment any teammate ran the skill, it failed.",
+                    "fr": "A developer built a deployment workflow skill, packaged it as a plugin, and tested it locally. Local testing passed, the plugin went out to the team through the internal marketplace, and every teammate’s install succeeded, but the moment any teammate ran the skill, it failed."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_6",
+                  "text": {
+                    "en": "The root cause sat in the skill’s SKILL.md, in a command that pointed at /Users/alexmorgan/projects/deploy-utils/validate.sh.",
+                    "fr": "The root cause sat in the skill’s SKILL.md, in a command that pointed at /Users/alexmorgan/projects/deploy-utils/validate.sh."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_7",
+                  "text": {
+                    "en": "That directory existed on the author’s machine and nowhere else. The skill carried an absolute path to the author’s home directory, so every teammate’s run looked for a file that was on their system or included in the skill.",
+                    "fr": "That directory existed on the author’s machine and nowhere else. The skill carried an absolute path to the author’s home directory, so every teammate’s run looked for a file that was on their system or included in the skill."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_8",
+                  "text": {
+                    "en": "A second skill in the same plugin leaned on an environment variable, DEPLOY_TOKEN, that the author had set in their own shell profile, and the plugin’s README never mentioned it. Three teammates spent two hours debugging before they traced the second failure to the missing variable.",
+                    "fr": "A second skill in the same plugin leaned on an environment variable, DEPLOY_TOKEN, that the author had set in their own shell profile, and the plugin’s README never mentioned it. Three teammates spent two hours debugging before they traced the second failure to the missing variable."
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "flip_cards",

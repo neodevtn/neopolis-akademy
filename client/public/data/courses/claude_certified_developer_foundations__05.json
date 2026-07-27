@@ -135,7 +135,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Checkpoint 1: Fix the broken accelerator template\n\nTry it now. Below is an agent template another team is supposed to reuse. It has one defect: a customer-specific value is hardcoded where a parameter belongs.\n\nThe template as shipped\n\n# agent_template.py : \"reusable\" code-review agent\ndef build_review_agent():\nreturn Agent(\nmodel=\"claude-opus-4-8\",\nsystem_prompt=SYSTEM_PROMPT,\ntools=[read_file, run_linter],\nrepo_path=\"/home/acme/checkout-service\", # customer repo\n)\n\n(Confirm current model ID at platform.claude.com/docs/en/about-claude/models at build time.)\n\nIdentify the hardcoded value, then write the corrected function signature and the parameterized line that replaces it.\n\nCompare with model answer\nSkip for now\n\nSkipped\n\nMove on if you need to but come back before the cumulative task. A later checkpoint plants a version of this same hardcoding defect among two others and is harder to spot under multi-layer load.",
+                "en": "Checkpoint 1: Fix the broken accelerator template\n\nTry it now. Below is an agent template another team is supposed to reuse. It has one defect: a customer-specific value is hardcoded where a parameter belongs.\n\nThe template as shipped\n\n# agent_template.py : \"reusable\" code-review agent\ndef build_review_agent():\nreturn Agent(\nmodel=\"claude-opus-4-8\",\nsystem_prompt=SYSTEM_PROMPT,\ntools=[read_file, run_linter],\nrepo_path=\"/home/acme/checkout-service\", # customer repo\n)\n\n(Confirm current model ID at platform.claude.com/docs/en/about-claude/models at build time.)\n\nIdentify the hardcoded value, then write the corrected function signature and the parameterized line that replaces it.\n\nCompare with model answer\n\nSkipped\n\nMove on if you need to but come back before the cumulative task. A later checkpoint plants a version of this same hardcoding defect among two others and is harder to spot under multi-layer load.",
                 "fr": "Point de contrôle 1 : Corriger le modèle d'accélérateur cassé\n\nEssayez-le maintenant. Ci-dessous se trouve un modèle d'agent qu'une autre équipe est censée réutiliser. Il présente un défaut : une valeur spécifique au client est codée en dur là où appartient un paramètre.\n\nLe modèle tel qu'il est livré\n\n# agent_template.py : \"reusable\" code-review agent\ndef build_review_agent():\nreturn Agent(\nmodel=\"claude-opus-4-8\",\nsystem_prompt=SYSTEM_PROMPT,\ntools=[read_file, run_linter],\nrepo_path=\"/home/acme/checkout-service\", # customer repo\n)\n\n(Vérifiez l'ID du modèle actuel sur platform.claude.com/docs/en/about-claude/models lors du build.)\n\nIdentifiez la valeur codée en dur, puis écrivez la signature de fonction corrigée et la ligne paramétrée qui remplace celle-ci.\n\nComparez avec la réponse du modèle\nIgnorer pour l'instant\n\nIgnoré\n\nPassez à autre chose si nécessaire, mais revenez avant la tâche cumulative. Un point de contrôle ultérieur introduit une version de ce même défaut de codage en dur parmi deux autres et il est plus difficile à repérer sous une charge multi-niveaux."
               }
             },
@@ -233,11 +233,129 @@
               ]
             },
             {
-              "type": "content",
-              "body": {
-                "en": "Checkpoint 2: Choose the contribution channel and the readiness fix\n\nTry it now. Read the three cases below. Match each case to the channel built for it and match each case to the one readiness item the snippet is missing.\n\nCase A: A focused tool that wraps a single API into a clean function. The snippet is the function and nothing else.\n\nCase B: A full customer-service application a developer wants to share whole, including its UI and deployment scripts.\n\nCase C: A one-line fix to an existing Cookbook example. The snippet is the corrected line, carried in from a customer engagement.\n\nMatch 1: case to channel\n\nCase A: A focused tool that wraps a single API into a clean function. The snippet is the function and nothing else.\n\nThe tool's own repositoryThe Cookbook, but only after the reusable pattern is stripped out as a focused exampleThe Cookbook example's own repository\n\nCase B: A full customer-service application shared whole, including its UI and deployment scripts.\n\nThe tool's own repositoryThe Cookbook, but only after the reusable pattern is stripped out as a focused exampleThe Cookbook example's own repository\n\nCase C: A one-line fix to an existing Cookbook example. The snippet is the corrected line, carried in from a customer engagement.\n\nThe tool's own repositoryThe Cookbook, but only after the reusable pattern is stripped out as a focused exampleThe Cookbook example's own repository\n\nMatch 2: case to the missing readiness item\n\nCase A: A focused tool that wraps a single API into a clean function. The snippet is the function and nothing else.\n\nA test that proves the wrapper behavesReduction to a single focused pattern, because a whole application does not fit a review built for one patternThe rights check, because engagement code can carry a licensing constraint that blocks the merge before any technical review\n\nCase B: A full customer-service application shared whole, including its UI and deployment scripts.\n\nA test that proves the wrapper behavesReduction to a single focused pattern, because a whole application does not fit a review built for one patternThe rights check, because engagement code can carry a licensing constraint that blocks the merge before any technical review\n\nCase C: A one-line fix to an existing Cookbook example. The snippet is the corrected line, carried in from a customer engagement.\n\nA test that proves the wrapper behavesReduction to a single focused pattern, because a whole application does not fit a review built for one patternThe rights check, because engagement code can carry a licensing constraint that blocks the merge before any technical review\n\nSubmit\nSkip for now",
-                "fr": "Checkpoint 2 : Choisir le canal de contribution et le correctif de readiness\n\nEssayez-le maintenant. Lisez les trois cas ci-dessous. Associez chaque cas au canal conçu pour lui et associez chaque cas à l'unique élément de readiness que le snippet manque.\n\nCas A : Un outil ciblé qui encapsule une seule API dans une fonction propre. L'extrait est la fonction et rien d'autre.\n\nCas B : Une application complète de service client qu'un développeur veut partager dans son ensemble, y compris son UI et ses scripts de déploiement.\n\nCas C : Une correction d'une seule ligne à un exemple Cookbook existant. L'extrait est la ligne corrigée, portée d'un engagement client.\n\nCorrespondance 1 : cas vers le canal\n\nCas A : Un outil ciblé qui encapsule une seule API dans une fonction propre. L'extrait est la fonction et rien d'autre.\n\nLe dépôt propre à l'outilThe Cookbook, mais seulement après que le motif réutilisable a été retiré pour en faire un exemple cibléLe dépôt propre à l'exemple Cookbook\n\nCas B : Une application complète de service client partagée dans son ensemble, y compris son UI et ses scripts de déploiement.\n\nLe dépôt propre à l'outilThe Cookbook, mais seulement après que le motif réutilisable a été retiré pour en faire un exemple cibléLe dépôt propre à l'exemple Cookbook\n\nCas C : Une correction d'une seule ligne à un exemple Cookbook existant. L'extrait est la ligne corrigée, portée d'un engagement client.\n\nLe dépôt propre à l'outilThe Cookbook, mais seulement après que le motif réutilisable a été retiré pour en faire un exemple cibléLe dépôt propre à l'exemple Cookbook\n\nCorrespondance 2 : cas vers l'élément de readiness manquant\n\nCas A : Un outil ciblé qui encapsule une seule API dans une fonction propre. L'extrait est la fonction et rien d'autre.\n\nUn test qui prouve que le wrapper se comporteRéduction à un seul pattern ciblé, car une application entière ne convient pas à une revue conçue pour un seul patternLa vérification des droits, car le code d'engagement peut comporter une contrainte de licence qui bloque la fusion avant toute revue technique\n\nCas B : Une application complète de service client partagée dans son ensemble, y compris son UI et ses scripts de déploiement.\n\nUn test qui prouve que le wrapper se comporteRéduction à un seul pattern ciblé, car une application entière ne convient pas à une revue conçue pour un seul patternLa vérification des droits, car le code d'engagement peut comporter une contrainte de licence qui bloque la fusion avant toute revue technique\n\nCas C : Une correction d'une seule ligne à un exemple Cookbook existant. L'extrait est la ligne corrigée, portée d'un engagement client.\n\nUn test qui prouve que le wrapper se comporteRéduction à un seul pattern ciblé, car une application entière ne convient pas à une revue conçue pour un seul patternLa vérification des droits, car le code d'engagement peut comporter une contrainte de licence qui bloque la fusion avant toute revue technique\n\nSoumettre\nIgnorer pour le moment"
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "A test that proves the wrapper behavesReduction to a single focused pattern, because a whole application does not fit a review built for one patternThe rights check, because engagement code can carry a licensing constraint that blocks the merge before any technical review",
+                    "fr": "A test that proves the wrapper behavesReduction to a single focused pattern, because a whole application does not fit a review built for one patternThe rights check, because engagement code can carry a licensing constraint that blocks the merge before any technical review"
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "Case C: A one-line fix to an existing Cookbook example. The snippet is the corrected line, carried in from a customer engagement.",
+                    "fr": "Case C: A one-line fix to an existing Cookbook example. The snippet is the corrected line, carried in from a customer engagement."
+                  }
+                },
+                {
+                  "id": "bucket_2",
+                  "label": {
+                    "en": "A test that proves the wrapper behavesReduction to a single focused pattern, because a whole application does not fit a review built for one patternThe rights check, because engagement code can carry a licensing constraint that blocks the merge before any technical review",
+                    "fr": "A test that proves the wrapper behavesReduction to a single focused pattern, because a whole application does not fit a review built for one patternThe rights check, because engagement code can carry a licensing constraint that blocks the merge before any technical review"
+                  }
+                }
+              ],
+              "id": "bucket_32",
+              "title": {
+                "en": "Checkpoint 2: Choose the contribution channel and the rea...",
+                "fr": "Checkpoint 2: Choose the contribution channel and the rea..."
+              },
+              "instructions": {
+                "en": "Checkpoint 2: Choose the contribution channel and the readiness fix Try it now. Read the three cases below. Match each case to the channel built for it and match each case to the one readiness item the snippet is missing. Case A: A focused tool that wraps a single API into a clean function. The snippet is the function and nothing else. Case B: A full customer-service application a developer wants to share whole, including its UI and deployment scripts. Case C: A one-line fix to an existing Cookbook example. The snippet is the corrected line, carried in from a customer engagement.",
+                "fr": "Checkpoint 2: Choose the contribution channel and the readiness fix Try it now. Read the three cases below. Match each case to the channel built for it and match each case to the one readiness item the snippet is missing. Case A: A focused tool that wraps a single API into a clean function. The snippet is the function and nothing else. Case B: A full customer-service application a developer wants to share whole, including its UI and deployment scripts. Case C: A one-line fix to an existing Cookbook example. The snippet is the corrected line, carried in from a customer engagement."
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "Match 1: case to channel",
+                    "fr": "Match 1: case to channel"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "Case A: A focused tool that wraps a single API into a clean function. The snippet is the function and nothing else.",
+                    "fr": "Case A: A focused tool that wraps a single API into a clean function. The snippet is the function and nothing else."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "The tool's own repositoryThe Cookbook, but only after the reusable pattern is stripped out as a focused exampleThe Cookbook example's own repository",
+                    "fr": "The tool's own repositoryThe Cookbook, but only after the reusable pattern is stripped out as a focused exampleThe Cookbook example's own repository"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_3",
+                  "text": {
+                    "en": "Case B: A full customer-service application shared whole, including its UI and deployment scripts.",
+                    "fr": "Case B: A full customer-service application shared whole, including its UI and deployment scripts."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_4",
+                  "text": {
+                    "en": "The tool's own repositoryThe Cookbook, but only after the reusable pattern is stripped out as a focused exampleThe Cookbook example's own repository",
+                    "fr": "The tool's own repositoryThe Cookbook, but only after the reusable pattern is stripped out as a focused exampleThe Cookbook example's own repository"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_5",
+                  "text": {
+                    "en": "Case C: A one-line fix to an existing Cookbook example. The snippet is the corrected line, carried in from a customer engagement.",
+                    "fr": "Case C: A one-line fix to an existing Cookbook example. The snippet is the corrected line, carried in from a customer engagement."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_6",
+                  "text": {
+                    "en": "The tool's own repositoryThe Cookbook, but only after the reusable pattern is stripped out as a focused exampleThe Cookbook example's own repository",
+                    "fr": "The tool's own repositoryThe Cookbook, but only after the reusable pattern is stripped out as a focused exampleThe Cookbook example's own repository"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_7",
+                  "text": {
+                    "en": "Match 2: case to the missing readiness item",
+                    "fr": "Match 2: case to the missing readiness item"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_8",
+                  "text": {
+                    "en": "Case A: A focused tool that wraps a single API into a clean function. The snippet is the function and nothing else.",
+                    "fr": "Case A: A focused tool that wraps a single API into a clean function. The snippet is the function and nothing else."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_9",
+                  "text": {
+                    "en": "A test that proves the wrapper behavesReduction to a single focused pattern, because a whole application does not fit a review built for one patternThe rights check, because engagement code can carry a licensing constraint that blocks the merge before any technical review",
+                    "fr": "A test that proves the wrapper behavesReduction to a single focused pattern, because a whole application does not fit a review built for one patternThe rights check, because engagement code can carry a licensing constraint that blocks the merge before any technical review"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_10",
+                  "text": {
+                    "en": "Case B: A full customer-service application shared whole, including its UI and deployment scripts.",
+                    "fr": "Case B: A full customer-service application shared whole, including its UI and deployment scripts."
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "checkpoint",
@@ -312,11 +430,110 @@
               ]
             },
             {
-              "type": "content",
-              "body": {
-                "en": "Checkpoint 3: extract the requirements\n\nTry it now. A regulated EU bank wants an agent that summarizes customer call transcripts for its support team, with summaries reviewed before they are stored in the EU.\n\nQuestion 1\n\nA regulated EU bank wants an agent that summarizes customer call transcripts for its support team. Which of the following is a valid functional requirement?\n\nAThe agent should be fast and accurate.\n\nBThe agent produces a summary that a human approves before it is stored.\n\nCThe system must be built using an approved cloud provider.\n\nDTranscript data must not leave the EU.\n\nQuestion 2\n\nFrom the same scenario, which of the following is a valid infrastructure requirement?\n\nAThe agent must produce summaries quickly enough for support staff to act on them.\n\nBThe agent summarizes transcripts using a pre-approved prompt template.\n\nCTranscript data is processed in the EU.\n\nDA human reviews each summary before it is stored.\n\nSubmit\nSkip for now",
-                "fr": "Point de contrôle 3 : extraire les exigences\n\nEssayez-le maintenant. Une banque de l'UE réglementée veut un agent qui résume les transcriptions d'appels des clients pour son équipe d'assistance, les résumés étant examinés avant d'être stockés dans l'UE.\n\nQuestion 1\n\nUne banque de l'UE réglementée veut un agent qui résume les transcriptions d'appels des clients pour son équipe d'assistance. Laquelle des exigences fonctionnelles suivantes est valable ?\n\nA L'agent doit être rapide et précis.\n\nB L'agent produit un résumé qu'un humain approuve avant qu'il ne soit stocké.\n\nC Le système doit être construit en utilisant un fournisseur de cloud agréé.\n\nD Les données de transcription ne doivent pas quitter l'UE.\n\nQuestion 2\n\nDans le même scénario, laquelle des exigences d'infrastructure suivantes est valable ?\n\nA L'agent doit produire des résumés suffisamment rapidement pour que le personnel de support puisse en agir.\n\nB L'agent résume les transcriptions en utilisant un modèle de prompt pré-approuvé.\n\nC Les données des transcriptions sont traitées dans l'UE.\n\nD Un être humain examine chaque résumé avant qu'il ne soit stocké.\n\nSoumettre\nIgnorer pour le moment"
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "Question 2",
+                    "fr": "Question 2"
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "From the same scenario, which of the following is a valid infrastructure requirement?",
+                    "fr": "From the same scenario, which of the following is a valid infrastructure requirement?"
+                  }
+                },
+                {
+                  "id": "bucket_2",
+                  "label": {
+                    "en": "AThe agent must produce summaries quickly enough for support staff to act on them.",
+                    "fr": "AThe agent must produce summaries quickly enough for support staff to act on them."
+                  }
+                },
+                {
+                  "id": "bucket_3",
+                  "label": {
+                    "en": "BThe agent summarizes transcripts using a pre-approved prompt template.",
+                    "fr": "BThe agent summarizes transcripts using a pre-approved prompt template."
+                  }
+                },
+                {
+                  "id": "bucket_4",
+                  "label": {
+                    "en": "CTranscript data is processed in the EU.",
+                    "fr": "CTranscript data is processed in the EU."
+                  }
+                },
+                {
+                  "id": "bucket_5",
+                  "label": {
+                    "en": "DA human reviews each summary before it is stored.",
+                    "fr": "DA human reviews each summary before it is stored."
+                  }
+                }
+              ],
+              "id": "bucket_33",
+              "title": {
+                "en": "Checkpoint 3: extract the requirements Try it now",
+                "fr": "Checkpoint 3: extract the requirements Try it now"
+              },
+              "instructions": {
+                "en": "Checkpoint 3: extract the requirements Try it now. A regulated EU bank wants an agent that summarizes customer call transcripts for its support team, with summaries reviewed before they are stored in the EU.",
+                "fr": "Checkpoint 3: extract the requirements Try it now. A regulated EU bank wants an agent that summarizes customer call transcripts for its support team, with summaries reviewed before they are stored in the EU."
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "Question 1",
+                    "fr": "Question 1"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "A regulated EU bank wants an agent that summarizes customer call transcripts for its support team. Which of the following is a valid functional requirement?",
+                    "fr": "A regulated EU bank wants an agent that summarizes customer call transcripts for its support team. Which of the following is a valid functional requirement?"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "AThe agent should be fast and accurate.",
+                    "fr": "AThe agent should be fast and accurate."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_3",
+                  "text": {
+                    "en": "BThe agent produces a summary that a human approves before it is stored.",
+                    "fr": "BThe agent produces a summary that a human approves before it is stored."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_4",
+                  "text": {
+                    "en": "CThe system must be built using an approved cloud provider.",
+                    "fr": "CThe system must be built using an approved cloud provider."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_5",
+                  "text": {
+                    "en": "DTranscript data must not leave the EU.",
+                    "fr": "DTranscript data must not leave the EU."
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "flip_cards",
@@ -420,11 +637,95 @@
               ]
             },
             {
-              "type": "content",
-              "body": {
-                "en": "Checkpoint 4: place the work in the right phase\n\nTry it now. Place each activity in the lifecycle phase it belongs to: requirements, design, test, deploy, operate.\n\n(a) pinning the full model ID and keeping the prior version\n\nrequirementsdesigntestdeployoperate\n\n(b) gating promotion on the eval result before a version goes to production\n\nrequirementsdesigntestdeployoperate\n\n(c) deciding data must be processed in a specific region\n\nrequirementsdesigntestdeployoperate\n\n(d) instrumenting token cost and latency per call in production\n\nrequirementsdesigntestdeployoperate\n\n(e) choosing Amazon Bedrock because the customer holds its compliance posture there\n\nrequirementsdesigntestdeployoperate\n\nSubmit\nSkip for now",
-                "fr": "Point de contrôle 4 : placer le travail dans la bonne phase\n\nEssayez-le maintenant. Placez chaque activité dans la phase du cycle de vie à laquelle elle appartient : requirements, design, test, deploy, operate.\n\n(a) épingler l'ID du modèle complet et conserver la version précédente\n\nrequirementsdesigntestdeployoperate\n\n(b) conditionner la promotion en fonction du résultat d'évaluation avant qu'une version n'aille en production\n\nrequirementsdesigntestdeployoperate\n\n(c) décider que les données doivent être traitées dans une région spécifique\n\nrequirementsdesigntestdeployoperate\n\n(d) instrumenter le coût par token et la latence par appel en production\n\nrequirementsdesigntestdeployoperate\n\n(e) choisir Amazon Bedrock car le client y maintient son niveau de conformité\n\nrequirementsdesigntestdeployoperate\n\nSoumettre\nIgnorer pour le moment"
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "requirementsdesigntestdeployoperate",
+                    "fr": "requirementsdesigntestdeployoperate"
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "(d) instrumenting token cost and latency per call in production",
+                    "fr": "(d) instrumenting token cost and latency per call in production"
+                  }
+                },
+                {
+                  "id": "bucket_2",
+                  "label": {
+                    "en": "requirementsdesigntestdeployoperate",
+                    "fr": "requirementsdesigntestdeployoperate"
+                  }
+                },
+                {
+                  "id": "bucket_3",
+                  "label": {
+                    "en": "(e) choosing Amazon Bedrock because the customer holds its compliance posture there",
+                    "fr": "(e) choosing Amazon Bedrock because the customer holds its compliance posture there"
+                  }
+                },
+                {
+                  "id": "bucket_4",
+                  "label": {
+                    "en": "requirementsdesigntestdeployoperate",
+                    "fr": "requirementsdesigntestdeployoperate"
+                  }
+                }
+              ],
+              "id": "bucket_34",
+              "title": {
+                "en": "Checkpoint 4: place the work in the right phase Try it now",
+                "fr": "Checkpoint 4: place the work in the right phase Try it now"
+              },
+              "instructions": {
+                "en": "Checkpoint 4: place the work in the right phase Try it now. Place each activity in the lifecycle phase it belongs to: requirements, design, test, deploy, operate.",
+                "fr": "Checkpoint 4: place the work in the right phase Try it now. Place each activity in the lifecycle phase it belongs to: requirements, design, test, deploy, operate."
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "(a) pinning the full model ID and keeping the prior version",
+                    "fr": "(a) pinning the full model ID and keeping the prior version"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "requirementsdesigntestdeployoperate",
+                    "fr": "requirementsdesigntestdeployoperate"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "(b) gating promotion on the eval result before a version goes to production",
+                    "fr": "(b) gating promotion on the eval result before a version goes to production"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_3",
+                  "text": {
+                    "en": "requirementsdesigntestdeployoperate",
+                    "fr": "requirementsdesigntestdeployoperate"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_4",
+                  "text": {
+                    "en": "(c) deciding data must be processed in a specific region",
+                    "fr": "(c) deciding data must be processed in a specific region"
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "flip_cards",
@@ -570,11 +871,121 @@
           "durationMinutes": 4,
           "blocks": [
             {
-              "type": "content",
-              "body": {
-                "en": "Checkpoint 5: Match the deployment platform and version pin to each scenario\n\nTry it now. A customer runs AWS with a data-residency requirement and needs to be able to roll back a model update. Select the one correct piece in each group below to assemble the minimal deployment configuration that satisfies both. Leave out what does not belong.\n\nPlatform Group\n\nFirst-party API\n\nAmazon Bedrock\n\nGoogle Vertex AI\n\nIdentity Group\n\nAWS identity reference\n\nAnthropic API key\n\nModel reference group\n\nA pinned full model ID\n\nA moving alias\n\nRollback Group\n\nRetain the prior pinned version\n\nNo retention\n\nSubmit\nSkip for now",
-                "fr": "Point de contrôle 5 : Associer la plateforme de déploiement et l’ancrage de version à chaque scénario\n\nEssayez-le maintenant. Un client utilise AWS avec une exigence de résidence des données et doit pouvoir revenir sur une mise à jour de modèle. Sélectionnez l’élément correct dans chaque groupe ci-dessous afin d’assembler la configuration minimale de déploiement qui satisfait les deux critères. Ignorez ce qui ne convient pas.\n\nGroupe Plateforme\n\nAPI de première partie\n\nAmazon Bedrock\n\nGoogle Vertex AI\n\nGroupe d'identité\n\nRéférence d’identité AWS\n\nClé API Anthropic\n\nGroupe de référence du modèle\n\nUn identifiant de modèle complet épinglé\n\nUn alias mouvant\n\nGroupe de restauration\n\nConserver la version épinglée précédente\n\nAucune rétention\n\nSoumettre\nIgnorer pour l'instant"
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "Rollback Group",
+                    "fr": "Rollback Group"
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "Retain the prior pinned version",
+                    "fr": "Retain the prior pinned version"
+                  }
+                },
+                {
+                  "id": "bucket_2",
+                  "label": {
+                    "en": "No retention",
+                    "fr": "No retention"
+                  }
+                }
+              ],
+              "id": "bucket_35",
+              "title": {
+                "en": "Checkpoint 5: Match the deployment platform and version p...",
+                "fr": "Checkpoint 5: Match the deployment platform and version p..."
+              },
+              "instructions": {
+                "en": "Checkpoint 5: Match the deployment platform and version pin to each scenario Try it now. A customer runs AWS with a data-residency requirement and needs to be able to roll back a model update. Select the one correct piece in each group below to assemble the minimal deployment configuration that satisfies both. Leave out what does not belong.",
+                "fr": "Checkpoint 5: Match the deployment platform and version pin to each scenario Try it now. A customer runs AWS with a data-residency requirement and needs to be able to roll back a model update. Select the one correct piece in each group below to assemble the minimal deployment configuration that satisfies both. Leave out what does not belong."
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "Platform Group",
+                    "fr": "Platform Group"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "First-party API",
+                    "fr": "First-party API"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "Amazon Bedrock",
+                    "fr": "Amazon Bedrock"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_3",
+                  "text": {
+                    "en": "Google Vertex AI",
+                    "fr": "Google Vertex AI"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_4",
+                  "text": {
+                    "en": "Identity Group",
+                    "fr": "Identity Group"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_5",
+                  "text": {
+                    "en": "AWS identity reference",
+                    "fr": "AWS identity reference"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_6",
+                  "text": {
+                    "en": "Anthropic API key",
+                    "fr": "Anthropic API key"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_7",
+                  "text": {
+                    "en": "Model reference group",
+                    "fr": "Model reference group"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_8",
+                  "text": {
+                    "en": "A pinned full model ID",
+                    "fr": "A pinned full model ID"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_9",
+                  "text": {
+                    "en": "A moving alias",
+                    "fr": "A moving alias"
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "checkpoint",
@@ -690,11 +1101,89 @@
               ]
             },
             {
-              "type": "content",
-              "body": {
-                "en": "Checkpoint 6: Diagnose the platform mismatch from a comparison trace\n\nTry it now. The comparison trace below shows a deployment platform selected on familiarity failing a customer requirement. Identify the mechanism, then pick the targeted fix from the three options.\n\nThe trace\n\nplatform_selected = \"team_default\" # chosen on familiarity\nlatency_test: measured from dev laptop -> 180ms (looked fine)\ncustomer_region: eu-west, payload 12 KB\ncompliance_check: data residency = EU-only required\nresult: REJECTED reason=\"data processed outside EU on selected platform\"\n\nAOption 1: Optimize the parser to cut the 180ms latency measured on the laptop.\n\nBOption 2: Remeasure latency from EU-west and select the platform whose region satisfies EU-only residency.\n\nCOption 3: Add a caching layer to reduce per call cost on the selected platform.\n\nSubmit\nSkip for now",
-                "fr": "Point de contrôle 6 : Diagnostiquer l'incompatibilité de la plateforme à partir d'une trace de comparaison\n\nEssayez-le maintenant. La trace de comparaison ci-dessous montre qu'une plateforme de déploiement sélectionnée en fonction de la familiarité échoue à satisfaire une exigence du client. Identifiez le mécanisme, puis choisissez la solution ciblée parmi les trois options.\n\nLa trace\n\nplatform_selected = \"team_default\" # chosen on familiarity\nlatency_test: measured from dev laptop -> 180ms (looked fine)\ncustomer_region: eu-west, payload 12 KB\ncompliance_check: data residency = EU-only required\nresult: REJECTED reason=\"data processed outside EU on selected platform\"\n\nAOption 1: Optimize the parser to cut the 180ms latency measured on the laptop.\n\nBOption 2: Remeasure latency from EU-west and select the platform whose region satisfies EU-only residency.\n\nCOption 3: Add a caching layer to reduce per call cost on the selected platform.\n\nSoumettre\nIgnorer pour l'instant"
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "AOption 1: Optimize the parser to cut the 180ms latency measured on the laptop.",
+                    "fr": "AOption 1: Optimize the parser to cut the 180ms latency measured on the laptop."
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "BOption 2: Remeasure latency from EU-west and select the platform whose region satisfies EU-only residency.",
+                    "fr": "BOption 2: Remeasure latency from EU-west and select the platform whose region satisfies EU-only residency."
+                  }
+                },
+                {
+                  "id": "bucket_2",
+                  "label": {
+                    "en": "COption 3: Add a caching layer to reduce per call cost on the selected platform.",
+                    "fr": "COption 3: Add a caching layer to reduce per call cost on the selected platform."
+                  }
+                }
+              ],
+              "id": "bucket_36",
+              "title": {
+                "en": "Checkpoint 6: Diagnose the platform mismatch from a compa...",
+                "fr": "Checkpoint 6: Diagnose the platform mismatch from a compa..."
+              },
+              "instructions": {
+                "en": "Checkpoint 6: Diagnose the platform mismatch from a comparison trace Try it now. The comparison trace below shows a deployment platform selected on familiarity failing a customer requirement. Identify the mechanism, then pick the targeted fix from the three options.",
+                "fr": "Checkpoint 6: Diagnose the platform mismatch from a comparison trace Try it now. The comparison trace below shows a deployment platform selected on familiarity failing a customer requirement. Identify the mechanism, then pick the targeted fix from the three options."
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "The trace",
+                    "fr": "The trace"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "platform_selected = \"team_default\" # chosen on familiarity",
+                    "fr": "platform_selected = \"team_default\" # chosen on familiarity"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "latency_test: measured from dev laptop -> 180ms (looked fine)",
+                    "fr": "latency_test: measured from dev laptop -> 180ms (looked fine)"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_3",
+                  "text": {
+                    "en": "customer_region: eu-west, payload 12 KB",
+                    "fr": "customer_region: eu-west, payload 12 KB"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_4",
+                  "text": {
+                    "en": "compliance_check: data residency = EU-only required",
+                    "fr": "compliance_check: data residency = EU-only required"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_5",
+                  "text": {
+                    "en": "result: REJECTED reason=\"data processed outside EU on selected platform\"",
+                    "fr": "result: REJECTED reason=\"data processed outside EU on selected platform\""
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "checkpoint",
@@ -787,13 +1276,6 @@
                   }
                 }
               ]
-            },
-            {
-              "type": "content",
-              "body": {
-                "en": "Checkpoint 7: Complete the multi-component boundary configuration\n\nTry it now. The multi-component app below is wired, with two blanks left. Drag the correct control onto the seam that receives untrusted fetched content and drag the correct identity scope onto the most privileged component.\n\nThe partial app\n\n# components wired: API -> Claude Code task -> MCP server\nfetched = code_task.run(fetch_url=customer_page)\n\n# BLANK 1: control on the seam receiving untrusted fetched content\nnext_call(input=drop here(fetched))\n\n# MCP server reaches the customer system (most privileged component)\nmcp_server = MCPServer(\nsystem=customer_db,\nscope=drop here, # BLANK 2: identity scope\n)\n\nDrag tokens (shared bank, two are distractors)\n\ntreat_as_dataleast_privilege_read_onlyrun_as_instructionsfull_access\n\nSubmit\nSkip for now\n\nCumulativeAll topics·6 min\n\nCumulative task: Find all three, explain each, write the correction\n\nBelow is a runnable packaged accelerator deployed across platforms. There are three planted defects: one in the packaging layer, one in the deployment-and-versioning layer, and one in the multi-component boundary layer. Your task is to find all three.\n\nThe deployment as shipped\n\n# Packaged code-review accelerator, deployed for a regulated AWS customer\ndef build_agent():\nreturn Agent(\nmodel=\"opus\",\nsystem_prompt=SYSTEM_PROMPT,\nrepo_path=\"/home/acme/checkout\",\ntools=[read_file, run_linter],\n)\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn)\n\n# multi-component step: Claude Code task fetches a customer page\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=fetched)\n\nCarry your three corrected lines into the next screen, where you assemble and verify the fixed deployment.\n\nIn your own words, identify all three defects.\n\nReveal model answer\nSkip for now\n\nCumulativeAll topics·6 min\n\nCumulative task: assemble and verify the corrected deployment\n\nYou have identified three defects across this module. Now assemble the fix: in your own words, describe what each defect was, what you changed, and why the corrected version is deployable. Then review the corrected code below and confirm your reasoning holds.\n\nWhen you are ready, reveal the model answer.\n\nReveal model answer\nSkip for now\n\nThe corrected deployment\n\ndef build_agent(repo_path): # parameterized for reuse\nreturn Agent(\nmodel=\"us.anthropic.claude-opus-4-8\", # pinned full Bedrock model ID\nsystem_prompt=SYSTEM_PROMPT,\nrepo_path=repo_path, # set per engagement\ntools=[read_file, run_linter],\n)\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn,\nretain_previous_pinned_version=True) # rollback target kept\n\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=treat_as_data(fetched)) # untrusted -> data, not instructions\n\n# verify before promoting: gate the version through the bundled eval\nassert eval_suite.run(model=\"us.anthropic.claude-opus-4-8\") >= baseline_score\n\nModel answer: The first defect was a hardcoded repository path. Parameterizing it restores reuse: a new engagement sets the value rather than editing the loop. The second defect was a moving model alias. Pinning the full Bedrock model ID (with the anthropic. prefix) with a retained previous version restores controlled rollout and gives a rollback target if the new version regresses. The third defect was fetched content passed directly as instructions. Wrapping it in treat_as_data() closes the trust boundary: content from an untrusted source is treated as data, not as something the agent should act on. The eval assertion gates promotion on a proven baseline score before the version ships.\n\nAll three defects landed · pass\nI missed one or more · retry\n\nRecapAll topics·3 min\n\nKey takeaways\n\n01\n\nPackage while the build is fresh.\n\nAn accelerator keeps the reusable logic, exposes the customer-specific parts as documented parameters, and bundles the eval and the audit log alongside the asset. Correct packaging produces an asset teams configure. The knowledge of what is customer-specific is most expensive to reconstruct after the people who held it have moved on.\n\n02\n\nA maintainer accepts what they can verify.\n\nMoving an asset into shared infrastructure means matching it to the channel built for its shape, then clearing the review bar: focused code, a runnable example, a test, and a statement of assumptions, with licensing rights confirmed before the technical review. A contribution a reviewer cannot verify sits at the back of the queue. Readiness moves a private asset into shared infrastructure others build on.\n\n03\n\nPin what ships.\n\nChoose the deployment platform based on the customer's cloud and compliance posture, then pin the specific model version rather than the moving alias and keep the prior version available. An alias is like asking for the current edition of a book: convenient, but the text can change. Pinning cites a fixed edition, so an upstream model change is something you adopt deliberately rather than something that arrives overnight with no rollback path.\n\n04\n\nMeasure the dimension that decides the placement.\n\nA platform choice is defensible only when latency, compliance, and cost are measured: latency from the customer's region, compliance against their existing certification, and cost as the total per call rather than the token price alone. For regulated customers, compliance is usually pass-or-fail. Raising compliance as a constraint during scoping prevents it from rejecting the build later at contract review.\n\n05\n\nMark every seam as a boundary.\n\nA multi-component application is only as contained as its most privileged seam. Scope each component to the minimum access its role requires and treat every point where data crosses as a trust boundary. Fetched content is treated as data, not instructions. Trust at a component boundary must be explicitly established. It does not carry over from the component that sent the data. When a seam cannot be secured, it goes to a human owner rather than being shipped.\n\nWhat comes next\n\nYou can now package a build into a reusable asset, contribute it back, place and version it on the right platform, defend that placement, and connect components together so the boundaries hold. That completes the build-to-deploy arc for this persona: from writing production code in the earlier modules to shipping assets a regulated customer can audit and a team can reuse.\n\nAnthropic public references (time-sensitive)\n\nIDSourceTypeUsed for\n\nS1platform.claude.com (Claude in Amazon Bedrock, Claude on Vertex AI)Product documentationDeployment platforms, identity and data models, residency routing, regional and global endpoints.\n\nS2platform.claude.com (Model IDs and versioning, Model deprecations)Product documentationPinned model IDs, alias resolution, lifecycle and retirement, partner-set schedules.\n\nS3anthropic.com and the Anthropic GitHub organization (Cookbook)Product and repositoryContribution channels, the Cookbook as a home for focused examples, contribution conventions.\n\nS4Building with the Claude API (Skilljar)Course sourceEval datasets, graders, and the evaluation pipeline used as the deployment gate.\n\nS5Claude Code 101 In Action (Skilljar)Course sourceClaude Code agentic tasks and MCP server roles in a multi-component workflow.\n\nYou can now take a working build all the way to a deployable, auditable asset.\n\nPackage it, contribute it, place and version it, defend that placement, and hold the boundaries together under review.\n\nGlossaryKey Terms·3 min\n\nKey terms from this module\n\nAlphabetical. Click a term to expand its definition.\n\nAccelerator\n\nA working solution packaged so the next engagement configures it rather than rebuilding it. Customer-specific parts are exposed as documented parameters, the assumptions are written down, and an eval is bundled to prove the asset still works in a new context.\n\nContribution readiness\n\nWhat a maintainer needs to verify a contribution: focused code, a runnable example, a test that proves the behavior, a statement of environment assumptions, and confirmed rights to contribute the code.\n\nDeployment platform\n\nWhere a Claude workload runs. The six are: the first-party Claude API, Claude Platform on AWS, Claude in Amazon Bedrock, Claude on Amazon Bedrock (legacy), Google Vertex AI, and third-party platforms. The same model can differ by platform on identity, data residency, latency, and cost.\n\nModel alias versus pinned ID\n\nAn alias such as opus or sonnet resolves to a recommended version that updates over time and can differ by platform. A pinned full model ID is a fixed snapshot. Pinning is what keeps an upstream model change from being a silent production change.\n\nTrust boundary\n\nThe seam where data or instructions move from one deployment environment to another in a multi-component app. Content fetched by one component is untrusted when it reaches the next, so the receiving component treats it as data, not instructions.\n\nModule CompleteDeveloper Path·2 min\n\nCongrats! You’ve successfully completed this module.\n\nYou can now take a working build all the way to a deployable, auditable asset: a reusable accelerator, a contribution a maintainer can verify, a deployment platform chosen and versioned on purpose, and every seam in a multi-component app marked as a trust boundary. The throughline: the point where code starts working is where this module's work begins.\n\n4\nof 9 checkpoints passed\n\nM1\n\nMSO Foundations\n\nTokens, context windows, sampling, model tiers, prompting modes, and the API transport mechanics.\n\nM2\n\nProduction-Grade Prompting, Agents & Tool-use\n\nProduction-ready prompts, tool-use loops, streaming, context and memory management, and checkpointed agent loops.\n\nM3\n\nClaude Code, MCP & Integration\n\nPermission modes, durable project context, plugin packaging, and MCP integration without leaking credentials.\n\nM4\n\nProduction Engineering, Evals, and Security\n\nProve the system holds under production traffic and survives a security review.\n\nM5\n\nAccelerators and IP Contribution\n\nPackage accelerators, prepare verifiable contributions, choose deployment platforms, and mark trust boundaries.\n\nYou Are Here\n\nReview module\nStart over\n\nModule completion recorded.",
-                "fr": "Checkpoint 7 : Complétez la configuration de la frontière multi-composants\n\nEssayez-le maintenant. L’application multi‑composants ci-dessous est câblée, avec deux emplacements vides. Faites glisser le bon contrôle sur la couture qui reçoit le contenu récupéré non fiable et faites glisser le bon identity scope sur le composant le plus privilégié.\n\nL’application partielle\n\n# components wired: API -> Claude Code task -> MCP server\nfetched = code_task.run(fetch_url=customer_page)\n\n# BLANK 1: control on the seam receiving untrusted fetched content\nnext_call(input=drop here(fetched))\n\n# MCP server reaches the customer system (most privileged component)\nmcp_server = MCPServer(\nsystem=customer_db,\nscope=drop here, # BLANK 2: identity scope\n)\n\nDrag tokens (shared bank, two are distractors)\n\ntreat_as_dataleast_privilege_read_onlyrun_as_instructionsfull_access\n\nSubmit\nIgnorer pour l'instant\n\nCumulatif — Tous les sujets·6 min\n\nTâche cumulative : Trouver les trois, expliquer chacun, écrire la correction\n\nCi-dessous se trouve un accélérateur empaqueté et déployé sur plusieurs plateformes. Il y a trois défauts plantés : l'un dans la couche d'emballage, l'autre dans la couche de déploiement et de versionnage, et le troisième dans la couche frontière multi-composants. Votre tâche est de trouver les trois.\n\nLe déploiement tel qu’expédié\n\n# Packaged code-review accelerator, deployed for a regulated AWS customer\ndef build_agent():\nreturn Agent(\nmodel=\"opus\",\nsystem_prompt=SYSTEM_PROMPT,\nrepo_path=\"/home/acme/checkout\",\ntools=[read_file, run_linter],\n)\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn)\n\n# multi-component step: Claude Code task fetches a customer page\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=fetched)\n\nCarry your three corrected lines into the next screen, where you assemble and verify the fixed deployment.\n\nEn vos propres mots, identifiez les trois défauts.\n\nRévéler la réponse du modèle\nIgnorer pour l'instant\n\nLa déploiement corrigé\n\ndef build_agent(repo_path): # parameterized for reuse\nreturn Agent(\nmodel=\"us.anthropic.claude-opus-4-8\", # pinned full Bedrock model ID\nsystem_prompt=SYSTEM_PROMPT,\nrepo_path=repo_path, # set per engagement\ntools=[read_file, run_linter],\n)\n\ndeploy(platform=\"amazon_bedrock\", identity=aws_role_arn,\nretain_previous_pinned_version=True) # rollback target kept\n\nfetched = code_task.run(fetch_url=customer_page)\nnext_call(input=treat_as_data(fetched)) # untrusted -> data, not instructions\n\n# verify before promoting: gate the version through the bundled eval\nassert eval_suite.run(model=\"us.anthropic.claude-opus-4-8\") >= baseline_score\n\nModel answer: Le premier défaut était un chemin de dépôt codé en dur. Le le mettre en paramètre rétablit la réutilisabilité : un nouvel engagement définit la valeur plutôt que de modifier la boucle. Le deuxième défaut était un alias de modèle qui évolue. Épingler le full Bedrock model ID (avec le préfixe anthropic.) et conserver une version précédente permet un déploiement contrôlé et fournit un point de retour si la nouvelle version régressa. Le troisième défaut était le contenu récupéré passé directement comme instructions. L’empaquetant dans treat_as_data() ferme la frontière de confiance : le contenu d’une source non fiable est traité comme des données, et non comme quelque chose sur lequel l’agent doit agir. L’assertion d’évaluation conditionne la promotion sur un score de référence vérifié avant que la version ne soit déployée.\n\nTous les trois défauts corrigés · OK\nJ’en ai manqué un ou plusieurs · réessayer\n\nRécapitulatif — Tous les sujets · 3 min\n\nPoints clés\n\n01\n\nEmpaqueter pendant que le build est frais.\n\nUn accélérateur conserve la logique réutilisable, expose les parties spécifiques au client en tant que paramètres documentés, et regroupe l’eval et le journal d’audit avec l’actif. Un empaquetage correct produit un actif que les équipes peuvent configurer. La connaissance de ce qui est spécifique au client est la partie la plus coûteuse à reconstruire après le départ des personnes qui la détenaient.\n\n02\n\nUn mainteneur vérifie ce qu’il peut vérifier.\n\nDéplacer un actif vers une infrastructure partagée signifie l’aligner sur le canal conçu pour sa forme, puis lever la barre de revue : code ciblé, un exemple exécutable, un test et une déclaration des hypothèses, avec les droits de licence confirmés avant la revue technique. Une contribution qu’un relecteur ne peut pas vérifier reste en queue. La disponibilité permet de déplacer un actif privé vers une infrastructure partagée sur laquelle d’autres bâtissent.\n\n03\n\nÉpinglez ce qui est livré.\n\nChoisissez la plateforme de déploiement en fonction du cloud et de la posture de conformité du client, puis épinglez la version modèle spécifique plutôt que l’alias en évolution et gardez la version précédente disponible. Un alias équivaut à demander l’édition actuelle d’un livre : pratique, mais le texte peut changer. L’épinglage fixe une édition, de sorte qu’un changement de modèle en amont est quelque chose que vous adoptez délibérément plutôt que quelque chose qui arrive du jour au lendemain sans chemin de retour.\n\n04\n\nMesurez la dimension qui décide du placement.\n\nLe choix de plateforme est défendable uniquement lorsque la latence, la conformité et le coût sont mesurés : latence depuis la région du client, conformité par rapport à leur certification existante, et coût total par appel plutôt que le coût par jeton seul. Pour les clients réglementés, la conformité est généralement binaire. Élever la conformité comme contrainte lors de la définition du périmètre empêche qu’elle rejette le build plus tard lors de la revue du contrat.\n\n05\n\nMarquez chaque couture comme une frontière.\n\nUne application multi-composants est contenue uniquement à hauteur de sa couture la plus privilégiée. Établissez le périmètre d’accès pour chaque composant au minimum nécessaire et traitez chaque point où les données traversent comme une frontière de confiance. Le contenu récupéré est traité comme des données, et non comme des instructions. La confiance à la frontière d’un composant doit être établie explicitement. Elle ne se transmet pas du composant qui a envoyé les données. Lorsqu’une couture ne peut pas être sécurisée, elle revient à un humain responsable plutôt que d’être expédiée.\n\nCe qui vient ensuite\n\nVous pouvez désormais empaqueter un build en un actif réutilisable, le contribuer, le placer et le versionner sur la bonne plateforme, défendre ce placement et connecter les composants ensemble afin que les frontières tiennent. Cela complète l’arc build-to-deploy pour cette persona : de l’écriture du code de production dans les modules plus tôt jusqu’à la livraison d’actifs qu’un client réglementé peut auditer et qu’une équipe peut réutiliser.\n\nRéférences publiques Anthropic (dynamiques dans le temps)\n\nS1platform.claude.com (Claude dans Amazon Bedrock, Claude sur Vertex AI) Documentation produit Plates-formes de déploiement, modèles d’identité et de données, routage de résidence, endpoints régionaux et globaux.\n\nS2platform.claude.com (Model IDs et versioning, Model deprecations) Documentation produit IDs de modèle épinglés, résolution d’alias, cycle de vie et mise au rebut, calendriers des ensembles partenaires.\n\nS3anthropic.com et l’organisation GitHub d’Anthropic (Cookbook) Documentation produit et dépôt Canaux de contribution, le Cookbook comme lieu pour des exemples ciblés, conventions de contribution.\n\nS4Construire avec l’API Claude (Skilljar) Source de cours Jeux de données d’évaluation, correcteurs et pipeline d’évaluation utilisé comme porte du déploiement.\n\nS5Claude Code 101 In Action (Skilljar) Source de cours Tâches agentiques Claude Code et rôles du MCP server dans un flux multi-composants.\n\nVous pouvez désormais emmener une build opérationnelle jusqu’à un actif déployable et auditable.\n\nEmballez-le, contributez-le, placez-le et versionnez-le, défendez ce placement et maintenez les frontières ensemble sous revue.\n\nGlossaire Termes Clés · 3 min\n\nTermes clés de ce module\n\nPar ordre alphabétique. Cliquez sur un terme pour afficher sa définition.\n\nAccelerator\n\nUne solution opérationnelle empaquetée afin que la prochaine étape de l’engagement la configure plutôt que de la recompiler. Les parties spécifiques au client sont exposées en tant que paramètres documentés, les hypothèses sont écrites, et une eval est intégrée pour prouver que l’actif continue de fonctionner dans un nouveau contexte.\n\nPréparation à la contribution\n\nCe que doit vérifier un mainteneur pour une contribution : code ciblé, un exemple exécutable, un test qui prouve le comportement, une déclaration des hypothèses d’environnement et les droits confirmés pour contribuer le code.\n\nDeployment platform\n\nOù une charge Claude s’exécute. Les six sont : l’API Claude de première partie, Claude Platform sur AWS, Claude dans Amazon Bedrock, Claude sur Amazon Bedrock (hérité), Google Vertex AI et des plateformes tierces. Le même modèle peut différer selon la plateforme sur l’identité, la résidence des données, la latence et le coût.\n\nModel alias versus pinned ID\n\nUn alias comme opus ou sonnet pointe vers une version recommandée qui se met à jour au fil du temps et peut différer selon la plateforme. Un ID de modèle épinglé est une capture fixe. L’épinglage empêche qu’un changement de modèle en amont passe inaperçu en production.\n\nTrust boundary\n\nLa couture où les données ou les instructions passent d’un environnement de déploiement à un autre dans une application multi-composants. Le contenu récupéré par un composant est non fiable lorsqu’il atteint le suivant, il est donc traité comme des données, et non comme des instructions.\n\nModule CompleteDeveloper Path · 2 min\n\nFélicitations ! Vous avez terminé avec succès ce module.\n\nVous pouvez désormais faire passer un build opérationnel jusqu’à un actif déployable et auditable : un accélérateur réutilisable, une contribution qu’un mainteneur peut vérifier, une plateforme de déploiement choisie et versionnée intentionnellement, et chaque couture d’une application multi-composants marquée comme une frontière de confiance. Le fil conducteur : le point où le code commence à fonctionner est le début du travail de ce module.\n\n4\nsur 9 points de contrôle passés\n\nM1\n\nFondations MSO\n\nJetons, fenêtres de contexte, échantillonnage, niveaux de modèle, modes de prompting et mécanismes de transport de l’API.\n\nM2\n\n prompting de production, Agents & Utilisation des outils\n\nPrompts prêts pour la production, boucles d’utilisation d’outils, streaming, gestion du contexte et de la mémoire, et boucles d’agents avec points de contrôle.\n\nM3\n\nClaude Code, MCP & Intégration\n\nMode d’autorisation, contexte de projet durable, packaging de plugins, et intégration MCP sans fuite d’identifiants.\n\nM4\n\nIngénierie de production, Evals et Sécurité\n\nProuver que le système résiste au trafic de production et qu’il passe une revue de sécurité.\n\nM5\n\nAccélérateurs et Contribution IP\n\nEmballer les accélérateurs, préparer des contributions vérifiables, choisir des plateformes de déploiement et marquer les frontières de confiance.\n\nVous êtes ici\n\nRévision du module\nRecommencer\n\nModule terminé enregistré."
-              }
             },
             {
               "type": "flip_cards",

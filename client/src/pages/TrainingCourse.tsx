@@ -18,6 +18,7 @@ import { FlipCardsGrid } from "@/components/FlipCard";
 import { TabbedContent } from "@/components/TabbedContent";
 import { ComparisonBox } from "@/components/ComparisonBox";
 import { MatchingExercise } from "@/components/MatchingExercise";
+import { SingleChoiceExercise } from "@/components/SingleChoiceExercise";
 import { motion } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 
@@ -54,10 +55,19 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
   // Heuristic helpers
   const isShortLine = (line: string) => line.trim().length > 0 && line.trim().length <= 60;
   const isMetaLine = (line: string) => /^(Estimated time|Instructions|Duration|Time|Note|Tip|Warning|Important|Example|Exercise|Step \d):/i.test(line.trim());
+  
+  // Technical terms that should be rendered as badges
+  const techTerms = new Set(['Code Execution', 'Memory', 'Skills', 'Knowledge Base', 'Standing Instructions',
+    'System Prompt', 'Context Window', 'API Key', 'Token', 'Temperature', 'Prompt Caching',
+    'Tool Use', 'Function Calling', 'Streaming', 'Batch Processing', 'Vision', 'Embeddings',
+    'Fine-tuning', 'RAG', 'MCP', 'Artifacts', 'Projects', 'Computer Use']);
+  const isTechBadge = (line: string) => techTerms.has(line.trim());
+  
   const isSectionHeading = (line: string, nextLine: string | undefined) => {
     const trimmed = line.trim();
     if (trimmed.length === 0) return false;
     if (trimmed.length > 80) return false;
+    if (isTechBadge(trimmed)) return false; // Don't treat badges as headings
     // Short line (< 50 chars) that doesn't end with punctuation and is followed by empty line or longer text
     if (trimmed.length <= 50 && !/[.,:;!?)]$/.test(trimmed)) {
       if (!nextLine || nextLine.trim() === "" || nextLine.trim().length > trimmed.length) {
@@ -135,6 +145,13 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
           <span className="text-xs font-bold uppercase tracking-wider text-primary">{label.trim()}:</span>
           {value && <span className="text-sm text-foreground">{value}</span>}
         </div>
+      );
+    } else if (isTechBadge(line)) {
+      // Technical term badge
+      elements.push(
+        <span key={i} className="inline-block px-3 py-1.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 mr-2 mb-2">
+          {line.trim()}
+        </span>
       );
     } else if (isFirstTextLine) {
       // First text line = main title
@@ -1064,6 +1081,25 @@ function LessonViewer({
               lang={lang as "en" | "fr"}
             />
           </div>
+        );
+      }
+      case "single_choice_exercise": {
+        const question = typeof block.question === 'string' ? block.question : (block.question?.[lang] || block.question?.en || '');
+        const options = (block.options || []).map((opt: any) => ({
+          id: opt.id,
+          text: typeof opt.text === 'string' ? opt.text : (opt.text?.[lang] || opt.text?.en || '')
+        }));
+        const explanation = typeof block.explanation === 'string' ? block.explanation : (block.explanation?.[lang] || block.explanation?.en || '');
+        const correctAnswer = block.correctAnswer || 'a';
+        return (
+          <SingleChoiceExercise
+            key={blockIdx}
+            id={block.id || `quiz_${blockIdx}`}
+            question={question}
+            options={options}
+            correctAnswer={correctAnswer}
+            explanation={explanation}
+          />
         );
       }
       default:

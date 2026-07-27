@@ -87,11 +87,193 @@
               ]
             },
             {
-              "type": "content",
-              "body": {
-                "en": "Complete a partial eval for a summarization feature\n\nThis eval has two gaps. For the dataset, identify the specific output each input case should produce. For the judge prompt, match each score band to what it means. Drag each answer card from the bank onto its row below.\n\ndataset.json\n\n[\n{\n\"input\": \"Long support thread about a delayed refund, 14 messages.\",\n\"expected_behavior\": \"A 2-sentence summary naming the issue (delayed\nrefund) and the current status (escalated).\"\n},\n{\n\"input\": \"Meeting transcript where three action items are assigned.\",\n\"expected_behavior\": \"\"\n},\n{\n\"input\": \"Bug report with repro steps and one unrelated aside.\",\n\"expected_behavior\": \"\"\n}\n]\n\njudge_prompt.txt\n\nYou are grading a summary against its expected behavior.\nSummary: {output}\nExpected behavior: {expected_behavior}\n\nReturn JSON with \"strengths\", \"weaknesses\", \"reasoning\", and \"score\".\n\nScore scale: 1 to 3, 4 to 7, 8 to 10 (see below to complete the definitions).\n\nSubmit\nSkip for now",
-                "fr": "Réaliser une évaluation partielle d'une fonctionnalité de résumé\n\nCette évaluation comporte deux lacunes. Pour l'ensemble de données, identifiez la sortie spécifique que chaque cas d'entrée devrait produire. Pour le prompt du juge, associez chaque bande de score à ce qu'elle signifie. Glissez chaque carte-réponse depuis la banque sur sa ligne ci-dessous.\n\ndataset.json\n\n[\n{\n\"input\": \"Un long fil de discussion du support concernant un remboursement en retard, 14 messages.\",\n\"expected_behavior\": \"Une synthèse en 2 phrases nommant le problème (remboursement en retard) et l'état actuel (élevé à un niveau supérieur).\"\n},\n{\n\"input\": \"Transcription de réunion où trois actions sont assignées.\",\n\"expected_behavior\": \"\"\n},\n{\n\"input\": \"Rapport de bogue avec des étapes de reproduction et une aparté hors sujet.\",\n\"expected_behavior\": \"\"\n}\n]\n\njudge_prompt.txt\n\nVous évaluez un résumé par rapport à son comportement attendu.\nRésumé : {output}\nComportement attendu : {expected_behavior}\n\nRetourner un JSON avec \"strengths\", \"weaknesses\", \"reasoning\", et \"score\".\n\nÉchelle de score : 1 à 3, 4 à 7, 8 à 10 (voir ci-dessous pour compléter les définitions).\n\nSoumettre\nPasser pour l'instant"
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "Expected behavior: {expected_behavior}",
+                    "fr": "Expected behavior: {expected_behavior}"
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "Return JSON with \"strengths\", \"weaknesses\", \"reasoning\", and \"score\".",
+                    "fr": "Return JSON with \"strengths\", \"weaknesses\", \"reasoning\", and \"score\"."
+                  }
+                },
+                {
+                  "id": "bucket_2",
+                  "label": {
+                    "en": "Score scale: 1 to 3, 4 to 7, 8 to 10 (see below to complete the definitions).",
+                    "fr": "Score scale: 1 to 3, 4 to 7, 8 to 10 (see below to complete the definitions)."
+                  }
+                }
+              ],
+              "id": "bucket_29",
+              "title": {
+                "en": "Complete a partial eval for a summarization feature This ...",
+                "fr": "Complete a partial eval for a summarization feature This ..."
+              },
+              "instructions": {
+                "en": "Complete a partial eval for a summarization feature This eval has two gaps. For the dataset, identify the specific output each input case should produce. For the judge prompt, match each score band to what it means. Drag each answer card from the bank onto its row below.",
+                "fr": "Complete a partial eval for a summarization feature This eval has two gaps. For the dataset, identify the specific output each input case should produce. For the judge prompt, match each score band to what it means. Drag each answer card from the bank onto its row below."
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "dataset.json",
+                    "fr": "dataset.json"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "[",
+                    "fr": "["
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "{",
+                    "fr": "{"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_3",
+                  "text": {
+                    "en": "\"input\": \"Long support thread about a delayed refund, 14 messages.\",",
+                    "fr": "\"input\": \"Long support thread about a delayed refund, 14 messages.\","
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_4",
+                  "text": {
+                    "en": "\"expected_behavior\": \"A 2-sentence summary naming the issue (delayed",
+                    "fr": "\"expected_behavior\": \"A 2-sentence summary naming the issue (delayed"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_5",
+                  "text": {
+                    "en": "refund) and the current status (escalated).\"",
+                    "fr": "refund) and the current status (escalated).\""
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_6",
+                  "text": {
+                    "en": "},",
+                    "fr": "},"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_7",
+                  "text": {
+                    "en": "{",
+                    "fr": "{"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_8",
+                  "text": {
+                    "en": "\"input\": \"Meeting transcript where three action items are assigned.\",",
+                    "fr": "\"input\": \"Meeting transcript where three action items are assigned.\","
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_9",
+                  "text": {
+                    "en": "\"expected_behavior\": \"\"",
+                    "fr": "\"expected_behavior\": \"\""
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_10",
+                  "text": {
+                    "en": "},",
+                    "fr": "},"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_11",
+                  "text": {
+                    "en": "{",
+                    "fr": "{"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_12",
+                  "text": {
+                    "en": "\"input\": \"Bug report with repro steps and one unrelated aside.\",",
+                    "fr": "\"input\": \"Bug report with repro steps and one unrelated aside.\","
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_13",
+                  "text": {
+                    "en": "\"expected_behavior\": \"\"",
+                    "fr": "\"expected_behavior\": \"\""
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_14",
+                  "text": {
+                    "en": "}",
+                    "fr": "}"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_15",
+                  "text": {
+                    "en": "]",
+                    "fr": "]"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_16",
+                  "text": {
+                    "en": "judge_prompt.txt",
+                    "fr": "judge_prompt.txt"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_17",
+                  "text": {
+                    "en": "You are grading a summary against its expected behavior.",
+                    "fr": "You are grading a summary against its expected behavior."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_18",
+                  "text": {
+                    "en": "Summary: {output}",
+                    "fr": "Summary: {output}"
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "checkpoint",
@@ -166,11 +348,137 @@
               ]
             },
             {
-              "type": "content",
-              "body": {
-                "en": "Diagnose which test level a failure belongs to\n\nTry it now. Read the trace below, where the end-to-end test fails while every unit test passes. Identify where the break is, name the mechanism, and choose both the targeted fix and the test level that would have caught it from the three options shown.\n\nPASS test_retrieve_unit returns 3 chunks for a known query\nPASS test_model_call_functional returns a well-formed answer string\nFAIL test_full_flow_e2e\nstep 1 retrieve(q) ok -> [{\"content\": \"...\"}, ...]\nstep 2 build_prompt(chunks) ok -> chunks placed without .content\nstep 3 model.call(prompt) ok -> answer unrelated to the documents\nstep 4 assert \"30 days\" FAIL -> phrase not in answer\n\nOption A · fix the parser\n\ndef parse_date(s): return dateutil.parse(s) # already passes its unit test\n\nOption B · fix the prompt wording\n\nprompt = \"Answer carefully and cite the policy.\" # rewords, ignores the seam\n\nOption C · align the handoff + add an integration test\n\ncontext = \"\\n\".join(c[\"content\"] for c in chunks) # extract .content\nprompt = build_prompt(question, context)\n# new test drives retrieve() -> build_prompt() together on real chunks\n\nSubmit\nSkip for now",
-                "fr": "Diagnostiquer à quel niveau de test appartient une défaillance\n\nEssayez-le maintenant. Lisez la trace ci-dessous, où le test end-to-end échoue alors que tous les tests unitaires passent. Identifiez où se produit la rupture, nommez le mécanisme, et choisissez à la fois la correction ciblée et le niveau de test qui aurait permis de le détecter parmi les trois options ci-dessous.\n\nPASS test_retrieve_unit renvoie 3 chunks pour une requête connue\nPASS test_model_call_functional renvoie une chaîne de réponse bien formée\nÉCHEC test_full_flow_e2e\nétape 1 retrieve(q) ok -> [{\"content\": \"...\"}, ...]\nétape 2 build_prompt(chunks) ok -> chunks placés sans .content\nétape 3 model.call(prompt) ok -> réponse non liée aux documents\nétape 4 assert \"30 days\" FAIL -> la phrase n'est pas dans la réponse\n\nOption A · corriger le parseur\n\ndef parse_date(s): return dateutil.parse(s) # already passes its unit test\n\nOption B · corriger le libellé du prompt\n\nprompt = \"Answer carefully and cite the policy.\" # rewords, ignores the seam\n\nOption C · aligner la passation + ajouter un test d'intégration\n\ncontext = \"\\n\".join(c[\"content\"] for c in chunks) # extract .content\nprompt = build_prompt(question, context)\n# new test drives retrieve() -> build_prompt() together on real chunks\n\nSoumettre\nIgnorer pour le moment"
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "context = \"\\n\".join(c[\"content\"] for c in chunks) # extract .content",
+                    "fr": "context = \"\\n\".join(c[\"content\"] for c in chunks) # extract .content"
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "prompt = build_prompt(question, context)",
+                    "fr": "prompt = build_prompt(question, context)"
+                  }
+                },
+                {
+                  "id": "bucket_2",
+                  "label": {
+                    "en": "# new test drives retrieve() -> build_prompt() together on real chunks",
+                    "fr": "# new test drives retrieve() -> build_prompt() together on real chunks"
+                  }
+                }
+              ],
+              "id": "bucket_30",
+              "title": {
+                "en": "Diagnose which test level a failure belongs to Try it now",
+                "fr": "Diagnose which test level a failure belongs to Try it now"
+              },
+              "instructions": {
+                "en": "Diagnose which test level a failure belongs to Try it now. Read the trace below, where the end-to-end test fails while every unit test passes. Identify where the break is, name the mechanism, and choose both the targeted fix and the test level that would have caught it from the three options shown.",
+                "fr": "Diagnose which test level a failure belongs to Try it now. Read the trace below, where the end-to-end test fails while every unit test passes. Identify where the break is, name the mechanism, and choose both the targeted fix and the test level that would have caught it from the three options shown."
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "PASS test_retrieve_unit returns 3 chunks for a known query",
+                    "fr": "PASS test_retrieve_unit returns 3 chunks for a known query"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "PASS test_model_call_functional returns a well-formed answer string",
+                    "fr": "PASS test_model_call_functional returns a well-formed answer string"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "FAIL test_full_flow_e2e",
+                    "fr": "FAIL test_full_flow_e2e"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_3",
+                  "text": {
+                    "en": "step 1 retrieve(q) ok -> [{\"content\": \"...\"}, ...]",
+                    "fr": "step 1 retrieve(q) ok -> [{\"content\": \"...\"}, ...]"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_4",
+                  "text": {
+                    "en": "step 2 build_prompt(chunks) ok -> chunks placed without .content",
+                    "fr": "step 2 build_prompt(chunks) ok -> chunks placed without .content"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_5",
+                  "text": {
+                    "en": "step 3 model.call(prompt) ok -> answer unrelated to the documents",
+                    "fr": "step 3 model.call(prompt) ok -> answer unrelated to the documents"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_6",
+                  "text": {
+                    "en": "step 4 assert \"30 days\" FAIL -> phrase not in answer",
+                    "fr": "step 4 assert \"30 days\" FAIL -> phrase not in answer"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_7",
+                  "text": {
+                    "en": "Option A · fix the parser",
+                    "fr": "Option A · fix the parser"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_8",
+                  "text": {
+                    "en": "def parse_date(s): return dateutil.parse(s) # already passes its unit test",
+                    "fr": "def parse_date(s): return dateutil.parse(s) # already passes its unit test"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_9",
+                  "text": {
+                    "en": "Option B · fix the prompt wording",
+                    "fr": "Option B · fix the prompt wording"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_10",
+                  "text": {
+                    "en": "prompt = \"Answer carefully and cite the policy.\" # rewords, ignores the seam",
+                    "fr": "prompt = \"Answer carefully and cite the policy.\" # rewords, ignores the seam"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_11",
+                  "text": {
+                    "en": "Option C · align the handoff + add an integration test",
+                    "fr": "Option C · align the handoff + add an integration test"
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "checkpoint",
@@ -237,7 +545,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Repair the broken error and retry path\n\nThe block below has one defect. Identify it and write the corrected version.\n\nBroken code shown to the learner\n\ndef call_with_retry(make_call, max_attempts=5):\nfor attempt in range(max_attempts):\ntry:\nreturn make_call()\nexcept Exception:\ntime.sleep(0)\nraise RetryBudgetExhausted()\n\nCompare with model answer\nSkip for now",
+                "en": "Repair the broken error and retry path\n\nThe block below has one defect. Identify it and write the corrected version.\n\nBroken code shown to the learner\n\ndef call_with_retry(make_call, max_attempts=5):\nfor attempt in range(max_attempts):\ntry:\nreturn make_call()\nexcept Exception:\ntime.sleep(0)\nraise RetryBudgetExhausted()\n\nCompare with model answer",
                 "fr": "Réparez le chemin d'erreur et de réessai cassé\n\nLe bloc ci-dessous présente un défaut. Identifiez-le et écrivez la version corrigée.\n\nCode cassé montré à l'apprenant\n\ndef call_with_retry(make_call, max_attempts=5):\nfor attempt in range(max_attempts):\ntry:\nreturn make_call()\nexcept Exception:\ntime.sleep(0)\nraise RetryBudgetExhausted()\n\nComparez avec la réponse du modèle\nIgnorez pour l'instant"
               }
             },
@@ -271,8 +579,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Choose the model and name the deciding constraint\n\nFor each scenario, pick the model tier (Opus, Sonnet, or Haiku) and identify the one constraint that drives the decision.\n\nSubmit\nSkip for now",
-                "fr": "Choisissez le modèle et nommez la contrainte déterminante\n\nPour chaque scénario, choisissez le niveau du modèle (Opus, Sonnet ou Haiku) et identifiez la contrainte unique qui guide la décision.\n\nSoumettre\nPasser pour le moment"
+                "en": "Choose the model and name the deciding constraint\n\nFor each scenario, pick the model tier (Opus, Sonnet, or Haiku) and identify the one constraint that drives the decision."
               }
             },
             {
@@ -368,11 +675,58 @@
               ]
             },
             {
-              "type": "content",
-              "body": {
-                "en": "Match each task to its agent type and cost lever\n\nTry it now. For each of the four scenarios below, select the configuration snippet that best matches it. Each snippet is labeled with its agent type and the primary cost lever it uses.\n\nLabeled configuration snippets\n\nA orchestrator_worker(lead=LARGE, workers=SMALL, n=5) # lever: parallel split\nB single_agent(model=SMALL, batch=True, cache=True) # lever: Message Batches API (~50% cost reduction) + prompt caching\nC single_agent(model=SMALL, retrieval=\"fetch_once\") # lever: model choice\nD single_agent(model=SMALL, stream=True) # lever: streaming\n\nSubmit\nSkip for now",
-                "fr": "Associer chaque tâche à son type d'agent et à son levier de coût\n\nEssayez-le maintenant. Pour chacun des quatre scénarios ci-dessous, sélectionnez l'extrait de configuration qui correspond le mieux.\n\nExtraits de configuration étiquetés\n\nA orchestrator_worker(lead=LARGE, workers=SMALL, n=5) # lever: parallel split\nB single_agent(model=SMALL, batch=True, cache=True) # lever: Message Batches API (~50% cost reduction) + prompt caching\nC single_agent(model=SMALL, retrieval=\"fetch_once\") # lever: model choice\nD single_agent(model=SMALL, stream=True) # lever: streaming\n\nSoumettre\nPasser pour le moment"
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "C single_agent(model=SMALL, retrieval=\"fetch_once\") # lever: model choice",
+                    "fr": "C single_agent(model=SMALL, retrieval=\"fetch_once\") # lever: model choice"
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "D single_agent(model=SMALL, stream=True) # lever: streaming",
+                    "fr": "D single_agent(model=SMALL, stream=True) # lever: streaming"
+                  }
+                }
+              ],
+              "id": "bucket_31",
+              "title": {
+                "en": "Match each task to its agent type and cost lever Try it now",
+                "fr": "Match each task to its agent type and cost lever Try it now"
+              },
+              "instructions": {
+                "en": "Match each task to its agent type and cost lever Try it now. For each of the four scenarios below, select the configuration snippet that best matches it. Each snippet is labeled with its agent type and the primary cost lever it uses.",
+                "fr": "Match each task to its agent type and cost lever Try it now. For each of the four scenarios below, select the configuration snippet that best matches it. Each snippet is labeled with its agent type and the primary cost lever it uses."
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "Labeled configuration snippets",
+                    "fr": "Labeled configuration snippets"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "A orchestrator_worker(lead=LARGE, workers=SMALL, n=5) # lever: parallel split",
+                    "fr": "A orchestrator_worker(lead=LARGE, workers=SMALL, n=5) # lever: parallel split"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "B single_agent(model=SMALL, batch=True, cache=True) # lever: Message Batches API (~50% cost reduction) + prompt caching",
+                    "fr": "B single_agent(model=SMALL, batch=True, cache=True) # lever: Message Batches API (~50% cost reduction) + prompt caching"
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "checkpoint",
@@ -489,8 +843,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Assemble the minimal secure configuration for a fetch-and-write agent\n\nThe scenario is an agent that fetches untrusted web content and writes to a single protected path while acting under a scoped identity. Assemble the minimal configuration for this agent. Write the four controls it must include and explain in one sentence what each one enforces. Leave out anything that does not belong.\n\nPiece 1 · hook on a lifecycle event\n\non: PreToolUse # runs before the tool executes\nif tool == \"write_file\" and not path.startswith(\"/workspace/output\"):\ndeny(\"write outside permitted path\") # returns permissionDecision: \"deny\"\n\nPiece 2 · deny rule\n\ndeny_paths: [\"/etc\", \"/secrets\", \"~/.aws\"] # explicit filesystem denies\n\nPiece 3 · secret reference\n\napi_key: os.environ[\"SERVICE_API_KEY\"] # not committed config\n\nPiece 4 · audit-log line\n\nlog_audit(action, path, result) # on every privileged action\n\nCompare with model answer\nSkip for now\n\nCumulativeModule-Wide·7 min\n\nCumulative production-hardening task: find the three defects and explain each\n\nEverything so far has hardened one layer at a time: the eval, the test and tracing layer, the failure paths, the cost and orchestration budget, and the security boundary. Real production failures rarely arrive one layer at a time.\n\nThis task puts three defects in one runnable application, each drawn from a different group of layers, and asks you to find and fix all three.\n\nTry it now. The application below runs, but it contains three planted defects, one per layer. First, localize each defect to its layer. Then write the fix for each. Your goal is to find, fix, and integrate all three.\n\ndef answer(question, page_url):\npage = fetch(page_url) # untrusted content\n\nnotes = read_file(\"/workspace/input/notes\")\nwrite_file(page.suggested_path, summarize(page))\n\nresp = None\nfor i in range(5):\ntry:\nresp = client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question))\nbreak\nexcept Exception:\ntime.sleep(0)\n\nreturn resp.content[0].text\n\nIdentify each defect\n\nThe application above has three defects, one per layer. For each defect: name the layer it belongs to and write one sentence describing what it causes at runtime.\n\nCompare with model answer\nSkip for now\n\nCumulativeModule-Wide·8 min\n\nCumulative production-hardening task: write the corrected version\n\nWrite the corrected version of the application. For each defect you identified, show the fixed code and name what it changes.\n\nApplication from the previous screen (for reference)\n\ndef answer(question, page_url):\npage = fetch(page_url) # untrusted content\n\nnotes = read_file(\"/workspace/input/notes\")\nwrite_file(page.suggested_path, summarize(page))\n\nresp = None\nfor i in range(5):\ntry:\nresp = client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question))\nbreak\nexcept Exception:\ntime.sleep(0)\n\nreturn resp.content[0].text\n\nCompare with model answer\nSkip for now (final task)\n\nRecapModule 4·3 min\n\nKey takeaways\n\n1\n\nSet the standard before you build it.\n\nAn eval turns \"done\" from a feeling into a score on a fixed set of cases. The grading method must match the output: exact match when there is one correct form, a code check for structured output, and a judge for open-ended quality, which you calibrate against human-labelled cases before you trust it. You write the eval first because identifying the expected behavior forces you to define success while the design can still change.\n\n2\n\nMatch the test to the failure, and trace so you know where it happened.\n\nUnit, functional, integration, and end-to-end tests each catch a different break, and most silent failures hide at the integration seam where two passing components hand off. A trace shows which step produced the bad result, which turns a day of investigation into a short fix. The same instinct drives the retrieval choice: fetch once for single-fact lookups, search across iterations when the question is genuinely multi-step.\n\n3\n\nSort every failure, then handle them individually.\n\nThe first question for any failure is whether waiting and retrying could resolve the issue. Retriable failures get exponential backoff, with a cap and a retry budget, never an immediate loop that only deepens the problem. Tool failures come back to the model with the error flag set, not hidden behind an empty result that the model mistakes for data. Every failure a retry cannot fix requires a named fallback. Otherwise, an unhandled exception becomes the default behavior, which is how one bad response takes down the whole flow.\n\n4\n\nMeasure cost and latency per call, and fan out only when a task truly splits.\n\nYou cannot budget what you do not measure, so instrument token cost, latency, and error rate on every call. Then tune a chosen lever instead of guessing from the invoice. An orchestrator-worker pattern multiplies token cost by the number of subagents, roughly fifteen times in Anthropic's reported case. It earns that cost only on tasks that split into independent parallel parts, not on tightly coupled work that a single agent can handle for a fraction of the cost.\n\n5\n\nTreat fetched content as data and enforce the boundary with a hook.\n\nA model reads everything in its context together, as one stream of tokens with no built-in line between trusted instructions and untrusted data. An instruction hidden in fetched content can influence the agent's behavior. Trusting your own users does not help, because the injection arrives through the content the agent reads. Examine untrusted input as data, scope the agent's identity to least privilege, keep secrets out of committed config, and enforce the action boundary with a hook that blocks and logs before the tool runs. That boundary is what a regulated review can control and inspect.\n\nWhat comes next\n\nThe next module turns the production-ready systems you can now build into reusable accelerators and contributed intellectual property. It covers how to package a working build as a parameterized template, MCP server, or portable eval suite, contribute it back through a channel a maintainer accepts, and then choose, version-pin, and defend where it runs across the first-party API, Amazon Bedrock, and Google Vertex AI so a model change or a residency review does not break production. The next module covers the deployment platform specifics this module set aside.\n\nAnthropic public references (time-sensitive)\n\nIDSourceTypeUsed for\n\nS1https://platform.claude.com/docsProduct documentationEval tooling and grading methods, test levels, API error and status codes, retry and backoff guidance, tool-result error flag, observability and prompt caching, IAM and prompt-injection defenses.\n\nS2code.claude.comProduct documentationClaude Code hook lifecycle events (PreToolUse) and guardrail patterns.\n\nS3anthropic.com and Anthropic multi-agent research writingEngineering and research writingOrchestrator-worker pattern and its roughly 15x token cost, agentic search versus RAG and the Claude Code retrieval finding, prompt-injection defenses.\n\nS4Building with the Claude API (Skilljar)Anthropic courseEval pipeline, code and model graders, RAG and retrieval mechanics, workflow patterns, prompt caching. Stable conceptual material only.\n\nS5Claude Code 101 In Action (Skilljar)Anthropic courseClaude Code hooks and configuration carried from the prior module.\n\nYou can now prove a Claude feature holds under production traffic.\n\nEvals, tests and traces, failure handling, cost and orchestration discipline, and a security boundary; each layer closes one way development hides what production reveals.\n\nGlossaryKey Terms·3 min\n\nKey terms from this module\n\nAlphabetical. Click a term to expand its definition.\n\nAgentic search\n\nLetting the model issue its own queries, read the results, and refine across several rounds instead of fetching a fixed set of context once. It handles multi-step questions and changing corpora at higher token and latency cost and avoids the staleness and infrastructure of a maintained index.\n\nEval\n\nA set of input cases, expected behaviors, and grades that defines what a feature must do before it ships. Running an eval produces a score on a holdout set, which turns \"done\" from a judgment call into a number you can track as you change the prompt, tools, or model.\n\nExponential backoff\n\nA retry strategy that waits a growing interval between attempts, up to a cap and a fixed number of tries, often with random jitter. It prevents immediate retries from deepening a rate limit, and it honors a retry-after value when the response provides one.\n\nHook-based guardrail\n\nA check that runs at a fixed point in the Claude Code agent lifecycle, such as PreToolUse before a tool call, and can block an action and log it. Unlike a prompt instruction, a hook is an enforced control that runs before the protected action, which is the distinction a regulated review cares about.\n\nIntegration test\n\nA test that exercises the seam where two components hand off, such as retrieval output passed into a model call. It catches the silent failures that unit and functional tests miss, because each component can pass alone while the handoff between them is wrong.\n\nLLM-as-judge\n\nA grading method that uses a second model call with a rubric to score open-ended outputs that no code rule can check. It returns a score with reasoning, and it is only trustworthy after you calibrate it against human-labeled cases and measure agreement.\n\nOrchestrator-worker pattern\n\nA multi-agent shape where a lead agent plans a task, spawns subagents that work in parallel each with its own context and compiles their results. It helps on broad tasks that split into independent parts, at roughly fifteen times the token cost of a single chat in Anthropic's reported case.\n\nPrompt injection\n\nAn attack where instructions hidden inside content the agent fetches are treated as commands, because the model reads its whole context as one stream with no built-in boundary between trusted instructions and untrusted data. The defense is to treat fetched content as data and enforce the action boundary outside the prompt.\n\nRetriable versus terminal error\n\nThe first distinction for any production failure. A retriable error, such as a rate limit or overload, is likely to succeed on a later attempt and gets backoff. A terminal error, such as a bad request, will fail again identically and should fail fast instead of wasting the retry budget.\n\nModule CompleteDeveloper Path·2 min\n\nCongrats! You’ve successfully completed this module.\n\nYou can now prove that a Claude feature holds under production traffic: an eval that defines \"done,\" a test and tracing layer that localizes a break, failure handling that survives a rate limit, a cost and orchestration budget that holds at scale, and a security boundary that survives a regulated review. Each layer closes one way development hides what production reveals.\n\n0\nof ? checkpoints passed\n\nM1\n\nMSO Foundations\n\nTokens, context windows, sampling, model tiers, prompting modes, and the API transport mechanics.\n\nM2\n\nProduction-Grade Prompting, Agents & Tool-use\n\nProduction-ready prompts, tool-use loops, streaming, context and memory management, and checkpointed agent loops.\n\nM3\n\nClaude Code, MCP & Integration\n\nPermission modes, durable project context, plugin packaging, and MCP integration without leaking credentials.\n\nM4\n\nProduction Engineering, Evals, and Security\n\nProve the system holds under production traffic and survives a security review.\n\nYou Are Here\n\nM5\n\nAccelerators and IP Contribution\n\nPackage accelerators, prepare verifiable contributions, choose deployment platforms, and mark trust boundaries.\n\nUp Next\n\nReview module\nStart over\n\nModule completion recorded.",
-                "fr": "Assembler la configuration minimale et sécurisée pour un agent de récupération et d'écriture\n\nLe scénario décrit un agent qui récupère du contenu web non fiable et l'écrit dans un seul chemin protégé, tout en agissant sous une identité restreinte. Constituez la configuration minimale pour cet agent. Écrivez les quatre contrôles qu'il doit inclure et expliquez en une phrase ce que chacun impose. N'incluez que ce qui appartient à la tâche.\n\nPièce 1 · hook sur un événement du cycle de vie\n\non: PreToolUse # runs before the tool executes\nif tool == \"write_file\" and not path.startswith(\"/workspace/output\"):\ndeny(\"write outside permitted path\") # returns permissionDecision: \"deny\"\n\nPièce 2 · règle de refus\n\ndeny_paths: [\"/etc\", \"/secrets\", \"~/.aws\"] # explicit filesystem denies\n\nPièce 3 · référence secrète\n\napi_key: os.environ[\"SERVICE_API_KEY\"] # not committed config\n\nPièce 4 · ligne d'audit\n\nlog_audit(action, path, result) # on every privileged action\n\nComparer avec la réponse du modèle\nÀ noter : ignorer pour le moment\n\nModule cumulatif à l'échelle·7 min\n\nTâche de durcissement cumulatif en production : trouvez les trois défauts et expliquez-les chacun\n\nTout ce qui précède a durci une couche à la fois : l'eval, la couche de tests et de traçage, les chemins d'échec, le coût et le budget d'orchestration, et la frontière de sécurité. Les défaillances réelles en production surviennent rarement une couche après l'autre.\n\nCette tâche introduit trois défauts dans une même application exécutable, chacun provenant d'un groupe de couches différent, et vous demande de trouver et corriger les trois.\n\nEssayez-le maintenant. L'application ci-dessous s'exécute, mais elle contient trois défauts plantés, un par couche. Tout d'abord, localisez chaque défaut dans sa couche. Puis écrivez la correction pour chacun. Votre objectif est de trouver, corriger et intégrer les trois.\n\ndef answer(question, page_url):\npage = fetch(page_url) # untrusted content\n\nnotes = read_file(\"/workspace/input/notes\")\nwrite_file(page.suggested_path, summarize(page))\n\nresp = None\nfor i in range(5):\ntry:\nresp = client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question))\nbreak\nexcept Exception:\ntime.sleep(0)\n\nreturn resp.content[0].text\n\nIdentifier chaque défaut\n\nL'application ci-dessus présente trois défauts, chacun appartenant à une couche différente. Pour chaque défaut : nommez la couche à laquelle il appartient et écrivez une phrase décrivant ce qu'il provoque à l'exécution.\n\nComparer avec la réponse du modèle\nÀ noter : ignorer pour le moment\n\nModule cumulatif à l'échelle·8 min\n\nTâche de durcissement en production : écrire la version corrigée\n\nÉcrivez la version corrigée de l'application. Pour chaque défaut que vous avez identifié, montrez le code corrigé et nommez ce que cela change.\n\nApplication de l'écran précédent (pour référence)\n\ndef answer(question, page_url):\npage = fetch(page_url) # untrusted content\n\nnotes = read_file(\"/workspace/input/notes\")\nwrite_file(page.suggested_path, summarize(page))\n\nresp = None\nfor i in range(5):\ntry:\nresp = client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question))\nbreak\nexcept Exception:\ntime.sleep(0)\n\nreturn resp.content[0].text\n\nComparer avec la réponse du modèle\nÀ noter : ignorer pour le moment (tâche finale)\n\nModule Récapitulatif·3 min\n\nPoints clés\n\n1\n\nFixez la norme avant de la construire.\n\nUne eval transforme le « done » d’un ressenti en une note sur un ensemble fixe de cas. La méthode d’évaluation doit correspondre à la sortie : correspondance exacte lorsqu’il existe une forme correcte unique, vérification de code pour une sortie structurée, et un juge pour la qualité ouverte, que vous calibrez par rapport à des cas étiquetés par des humains avant de lui faire confiance. Vous écrivez l’eval en premier car identifier le comportement attendu vous oblige à définir le succès alors que le design peut encore changer.\n\n2\n\nFaites correspondre le test à l’échec, et tracez pour savoir où cela s’est produit.\n\nLes tests unitaires, fonctionnels, d’intégration et de bout en bout capturent chacun une rupture différente, et la plupart des échecs silencieux se cachent à la jonction d’intégration où deux composants qui passent se transmettent. Une trace montre quelle étape a produit le mauvais résultat, ce qui transforme une journée d’investigation en une correction rapide. La même intuition guide le choix de récupération : récupérer une fois pour des recherches à fait unique, chercher au fil des itérations lorsque la question est réellement multi-étapes.\n\n3\n\nTriez chaque échec, puis traitez-les individuellement.\n\nLa première question pour toute défaillance est de savoir si attendre et réessayer pourrait résoudre le problème. Les échecs réessayables bénéficient d’un backoff exponentiel, avec un plafond et un budget de retry, jamais une boucle immédiate qui aggrave le problème. Les échecs d’outils revenant au modèle avec le drapeau d’erreur activé ne doivent pas être cachés derrière un résultat vide que le modèle prendrait pour des données. Chaque échec qu’un retry ne peut pas corriger nécessite une solution de repli nommée. Sinon, une exception non gérée devient le comportement par défaut, ce qui est la raison pour laquelle une mauvaise réponse peut faire tomber l’ensemble du flux.\n\n4\n\nMesurez le coût et la latence par appel, et déployez en parallèle uniquement lorsqu’une tâche se scinde réellement.\n\nVous ne pouvez pas budgéter ce que vous ne mesurez pas, alors instrumentez le coût des tokens, la latence et le taux d’erreur à chaque appel. Ensuite, ajustez un levier choisi plutôt que de vous fier à la facture. Un schéma orchestrateur-travailleur multiplie le coût des tokens par le nombre de sous‑agents, environ quinze fois dans le cas rapporté par Anthropic. Cela coûte ce coût uniquement sur les tâches qui se divisent en parties indépendantes, et non sur un travail étroitement couplé qu’un seul agent peut gérer pour une fraction du coût.\n\n5\n\nTraitez le contenu récupéré comme des données et appliquez la frontière avec un hook.\n\nUn modèle lit tout dans son contexte comme un seul flux de tokens sans frontière intégrée entre les instructions fiables et les données non fiables. Une instruction cachée dans le contenu récupéré peut influencer le comportement de l’agent. Faire confiance à vos propres utilisateurs n’aide pas, car l’injection arrive via le contenu que lit l’agent. Examinez les entrées non fiables comme des données, limitez l’identité de l’agent au principe du moindre privilège, gardez les secrets hors de la configuration commitée, et appliquez la frontière d’action avec un hook qui bloque et enregistre avant que l’outil ne s’exécute. Cette frontière est celle qu’une revue réglementée peut contrôler et inspecter.\n\nCe qui vient ensuite\n\nLe prochain module transforme les systèmes prêts pour la production que vous pouvez maintenant construire en accélérateurs réutilisables et en propriété intellectuelle contributive. Il couvre comment empaqueter une build fonctionnelle sous forme de modèle paramétré, serveur MCP, ou ensemble d'évaluations portables, le ramener via un canal accepté par un mainteneur, puis choisir, épingler les versions et défendre où il s'exécute entre l'API propriétaire, Amazon Bedrock et Google Vertex AI afin qu'un changement de modèle ou une revue de résidence ne casse pas la production. Le prochain module couvre les spécificités de la plateforme de déploiement que ce module a mises de côté.\n\nRéférences publiques d'Anthropic (sensibles au temps)\n\nIDSourceTypeUsed for\n\nS1https://platform.claude.com/docs Documentation produit — Outils d'évaluation et méthodes de notation, niveaux de test, codes d'erreur et statut API, conseils de retry et backoff, indicateur d'erreur de résultat d'outil, observabilité et mise en cache des prompts, IAM et défenses contre l'injection de prompt.\n\nS2code.claude.com Documentation produit — Claude Code hook lifecycle events (PreToolUse) et modèles de garde.\n\nS3anthropic.com et Anthropic multi-agent research writingEngineering and research writing — Schéma orchestrateur-travailleur et son coût en tokens d'environ 15x, recherche agentique versus RAG et la récupération Claude Code, défenses contre l’injection de prompt.\n\nS4Building with the Claude API (Skilljar)Documentation Anthropic course — Pipeline d'évaluation, évaluateurs de code et de modèle, mécanismes RAG et récupération, modèles de flux de travail, mise en cache des prompts. Matériel conceptuel stable uniquement.\n\nS5Claude Code 101 In Action (Skilljar)Documentation Anthropic course — Hooks Claude Code et configuration portée depuis le module précédent.\n\nVous pouvez désormais démontrer qu’une fonctionnalité Claude tient sous trafic de production.\n\nÉvals, tests et traces, gestion des défaillances, coût et discipline d’orchestration, et une frontière de sécurité ; chaque couche ferme une voie que le développement cache ce que la production révèle.\n\nGlossaireTermes clés·3 min\n\nTermes clés de ce module\n\nPar ordre alphabétique. Cliquez sur un terme pour afficher sa définition.\n\nRecherche agentique\n\nLaisser le modèle émettre ses propres requêtes, lire les résultats et affiner sur plusieurs tours au lieu de récupérer un ensemble fixe de contexte une fois. Il gère les questions multi-étapes et des corpus en évolution, à un coût en tokens et en latence plus élevé, et évite l’obsolescence et l’infrastructure d’un index maintenu.\n\nÉval\n\nUn ensemble de cas d’entrée, de comportements attendus et de notes qui définit ce que doit faire une fonctionnalité avant sa publication. L’exécution d’une éval produit une note avec raisonnement, et elle n’est fiable qu’après être calibrée contre des cas étiquetés par des humains et mesurer l’accord.\n\nBackoff exponentiel\n\nUne stratégie de réessai qui attend des intervalles croissants entre les tentatives, jusqu’à un plafond et un nombre fixe de tentatives, souvent avec du jitter aléatoire. Cela empêche les réessais immédiats de Depth limite et respecte une valeur de retry-after lorsque la réponse en fournit une.\n\nGarde-fou basé sur hook\n\nUne vérification qui s’exécute à un point fixe dans le cycle de vie de l’agent Claude Code, tel que PreToolUse avant l’appel d’un outil, et peut bloquer une action et l’enregistrer. Contrairement à une instruction de prompt, un hook est un contrôle imposé qui s’exécute avant l’action protégée, ce qui est la distinction qui intéresse une revue réglementée.\n\nTest d’intégration\n\nUn test qui explore la jonction où deux composants se passent des résultats, comme la sortie de récupération passée dans un appel modèle. Il capture les échecs silencieux que les tests unitaires et fonctionnels manquent, car chaque composant peut passer seul alors que le passage entre eux est erroné.\n\nLLM-as-judge\n\nUne méthode d’évaluation qui utilise un deuxième appel modèle avec une grille pour évaluer des sorties ouvertes que aucune règle de code ne peut vérifier. Il retourne une note avec raisonnement et n’est digne de confiance qu’après calibration contre des cas étiquetés par des humains et mesure de l’accord.\n\nOrchestrator-worker pattern\n\nUne forme multi-agent où un agent principal planifie une tâche, déclenche des sous-agents qui travaillent en parallèle chacun avec son propre contexte et compile leurs résultats. Cela aide sur des tâches larges qui se divisent en parties indépendantes, avec environ quinze fois le coût en tokens d’un seul chat selon le cas rapporté par Anthropic.\n\nInjection de prompt\n\nUne attaque où des instructions cachées dans le contenu que l’agent récupère sont traitées comme des commandes, car le modèle lit tout son contexte comme un seul flux sans frontière intégrée entre instructions fiables et données non fiables. La défense consiste à traiter le contenu récupéré comme des données et à appliquer la frontière d’action en dehors du prompt.\n\nErreur réessayable versus terminale\n\nLa première distinction pour toute défaillance en production. Une erreur réessayable, telle qu’une limitation de débit ou une surcharge, est susceptible de réussir lors d’une tentative ultérieure et bénéficie d’un backoff. Une erreur terminale, telle qu’une mauvaise requête, échouera à nouveau de manière identique et devrait échouer rapidement plutôt que de gaspiller le budget de retry.\n\nModule Complet Chemin Développeur·2 min\n\nFélicitations ! Vous avez terminé ce module avec succès.\n\nVous pouvez désormais démontrer qu’une fonctionnalité Claude tient sous trafic de production : une eval qui définit \"done,\" une couche de test et de traçage qui localise une rupture, une gestion des défaillances qui survit à une limite de débit, un coût et un budget d’orchestration qui tiennent à l’échelle, et une frontière de sécurité qui survit à une revue réglementaire. Chaque couche ferme une voie que le développement cache ce que la production révèle.\n\n0\nsur ? points de contrôle passés\n\nM1\n\nFondements MSO\n\nJetons, fenêtres de contexte, échantillonnage, niveaux de modèle, modes d’invite, et les mécanismes de transport API.\n\nM2\n\nPrompting de niveau production, Agents & Tool-use\n\n invites prêts pour la production, boucles d’utilisation d’outils, streaming, gestion du contexte et de la mémoire, et boucles d’agents sauvegardées.\n\nM3\n\nClaude Code, MCP & Intégration\n\nModes d’autorisation, contexte de projet durable, packaging de plugins, et intégration MCP sans fuite de credentials.\n\nM4\n\nIngénierie de production, Évals, et Sécurité\n\nProuver que le système tient sous trafic de production et résiste à une revue de sécurité.\n\nVous êtes ici\n\nM5\n\nAccélérateurs et Contribution IP\n\nEmballer des accélérateurs, préparer des contributions vérifiables, choisir des plateformes de déploiement, et marquer les limites de confiance.\n\nÀ suivre\n\nRéviser le module\nRecommencer\n\nAchèvement du module enregistré."
+                "en": "Assemble the minimal secure configuration for a fetch-and-write agent\nThe scenario is an agent that fetches untrusted web content and writes to a single protected path while acting under a scoped identity. Assemble the minimal configuration for this agent. Write the four controls it must include and explain in one sentence what each one enforces. Leave out anything that does not belong.\nPiece 1 · hook on a lifecycle event\non: PreToolUse # runs before the tool executes\nif tool == \"write_file\" and not path.startswith(\"/workspace/output\"):\ndeny(\"write outside permitted path\") # returns permissionDecision: \"deny\"\nPiece 2 · deny rule\ndeny_paths: [\"/etc\", \"/secrets\", \"~/.aws\"] # explicit filesystem denies\nPiece 3 · secret reference\napi_key: os.environ[\"SERVICE_API_KEY\"] # not committed config\nPiece 4 · audit-log line\nlog_audit(action, path, result) # on every privileged action\nCompare with model answer\nCumulativeModule-Wide·7 min\nCumulative production-hardening task: find the three defects and explain each\nEverything so far has hardened one layer at a time: the eval, the test and tracing layer, the failure paths, the cost and orchestration budget, and the security boundary. Real production failures rarely arrive one layer at a time.\nThis task puts three defects in one runnable application, each drawn from a different group of layers, and asks you to find and fix all three.\nTry it now. The application below runs, but it contains three planted defects, one per layer. First, localize each defect to its layer. Then write the fix for each. Your goal is to find, fix, and integrate all three.\ndef answer(question, page_url):\npage = fetch(page_url) # untrusted content\nnotes = read_file(\"/workspace/input/notes\")\nwrite_file(page.suggested_path, summarize(page))\nresp = None\nfor i in range(5):\ntry:\nresp = client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question))\nbreak\nexcept Exception:\ntime.sleep(0)\nreturn resp.content[0].text\nIdentify each defect\nThe application above has three defects, one per layer. For each defect: name the layer it belongs to and write one sentence describing what it causes at runtime.\nCompare with model answer\nCumulativeModule-Wide·8 min\nCumulative production-hardening task: write the corrected version\nWrite the corrected version of the application. For each defect you identified, show the fixed code and name what it changes.\nApplication from the previous screen (for reference)\ndef answer(question, page_url):\npage = fetch(page_url) # untrusted content\nnotes = read_file(\"/workspace/input/notes\")\nwrite_file(page.suggested_path, summarize(page))\nresp = None\nfor i in range(5):\ntry:\nresp = client.messages.create(model=MODEL, max_tokens=MAX_TOKENS, messages=msg(question))\nbreak\nexcept Exception:\ntime.sleep(0)\nreturn resp.content[0].text\nCompare with model answer\nSkip for now (final task)\nRecapModule 4·3 min\nKey takeaways\n1\nSet the standard before you build it.\nAn eval turns \"done\" from a feeling into a score on a fixed set of cases. The grading method must match the output: exact match when there is one correct form, a code check for structured output, and a judge for open-ended quality, which you calibrate against human-labelled cases before you trust it. You write the eval first because identifying the expected behavior forces you to define success while the design can still change.\n2\nMatch the test to the failure, and trace so you know where it happened.\nUnit, functional, integration, and end-to-end tests each catch a different break, and most silent failures hide at the integration seam where two passing components hand off. A trace shows which step produced the bad result, which turns a day of investigation into a short fix. The same instinct drives the retrieval choice: fetch once for single-fact lookups, search across iterations when the question is genuinely multi-step.\n3\nSort every failure, then handle them individually.\nThe first question for any failure is whether waiting and retrying could resolve the issue. Retriable failures get exponential backoff, with a cap and a retry budget, never an immediate loop that only deepens the problem. Tool failures come back to the model with the error flag set, not hidden behind an empty result that the model mistakes for data. Every failure a retry cannot fix requires a named fallback. Otherwise, an unhandled exception becomes the default behavior, which is how one bad response takes down the whole flow.\n4\nMeasure cost and latency per call, and fan out only when a task truly splits.\nYou cannot budget what you do not measure, so instrument token cost, latency, and error rate on every call. Then tune a chosen lever instead of guessing from the invoice. An orchestrator-worker pattern multiplies token cost by the number of subagents, roughly fifteen times in Anthropic's reported case. It earns that cost only on tasks that split into independent parallel parts, not on tightly coupled work that a single agent can handle for a fraction of the cost.\n5\nTreat fetched content as data and enforce the boundary with a hook.\nA model reads everything in its context together, as one stream of tokens with no built-in line between trusted instructions and untrusted data. An instruction hidden in fetched content can influence the agent's behavior. Trusting your own users does not help, because the injection arrives through the content the agent reads. Examine untrusted input as data, scope the agent's identity to least privilege, keep secrets out of committed config, and enforce the action boundary with a hook that blocks and logs before the tool runs. That boundary is what a regulated review can control and inspect.\nWhat comes next\nThe next module turns the production-ready systems you can now build into reusable accelerators and contributed intellectual property. It covers how to package a working build as a parameterized template, MCP server, or portable eval suite, contribute it back through a channel a maintainer accepts, and then choose, version-pin, and defend where it runs across the first-party API, Amazon Bedrock, and Google Vertex AI so a model change or a residency review does not break production. The next module covers the deployment platform specifics this module set aside.\nAnthropic public references (time-sensitive)\nIDSourceTypeUsed for\nS1https://platform.claude.com/docsProduct documentationEval tooling and grading methods, test levels, API error and status codes, retry and backoff guidance, tool-result error flag, observability and prompt caching, IAM and prompt-injection defenses.\nS2code.claude.comProduct documentationClaude Code hook lifecycle events (PreToolUse) and guardrail patterns.\nS3anthropic.com and Anthropic multi-agent research writingEngineering and research writingOrchestrator-worker pattern and its roughly 15x token cost, agentic search versus RAG and the Claude Code retrieval finding, prompt-injection defenses.\nS4Building with the Claude API (Skilljar)Anthropic courseEval pipeline, code and model graders, RAG and retrieval mechanics, workflow patterns, prompt caching. Stable conceptual material only.\nS5Claude Code 101 In Action (Skilljar)Anthropic courseClaude Code hooks and configuration carried from the prior module.\nYou can now prove a Claude feature holds under production traffic.\nEvals, tests and traces, failure handling, cost and orchestration discipline, and a security boundary; each layer closes one way development hides what production reveals.\nGlossaryKey Terms·3 min\nKey terms from this module\nAlphabetical. Click a term to expand its definition.\nAgentic search\nLetting the model issue its own queries, read the results, and refine across several rounds instead of fetching a fixed set of context once. It handles multi-step questions and changing corpora at higher token and latency cost and avoids the staleness and infrastructure of a maintained index.\nEval\nA set of input cases, expected behaviors, and grades that defines what a feature must do before it ships. Running an eval produces a score on a holdout set, which turns \"done\" from a judgment call into a number you can track as you change the prompt, tools, or model.\nExponential backoff\nA retry strategy that waits a growing interval between attempts, up to a cap and a fixed number of tries, often with random jitter. It prevents immediate retries from deepening a rate limit, and it honors a retry-after value when the response provides one.\nHook-based guardrail\nA check that runs at a fixed point in the Claude Code agent lifecycle, such as PreToolUse before a tool call, and can block an action and log it. Unlike a prompt instruction, a hook is an enforced control that runs before the protected action, which is the distinction a regulated review cares about.\nIntegration test\nA test that exercises the seam where two components hand off, such as retrieval output passed into a model call. It catches the silent failures that unit and functional tests miss, because each component can pass alone while the handoff between them is wrong.\nLLM-as-judge\nA grading method that uses a second model call with a rubric to score open-ended outputs that no code rule can check. It returns a score with reasoning, and it is only trustworthy after you calibrate it against human-labeled cases and measure agreement.\nOrchestrator-worker pattern\nA multi-agent shape where a lead agent plans a task, spawns subagents that work in parallel each with its own context and compiles their results. It helps on broad tasks that split into independent parts, at roughly fifteen times the token cost of a single chat in Anthropic's reported case.\nPrompt injection\nAn attack where instructions hidden inside content the agent fetches are treated as commands, because the model reads its whole context as one stream with no built-in boundary between trusted instructions and untrusted data. The defense is to treat fetched content as data and enforce the action boundary outside the prompt.\nRetriable versus terminal error\nThe first distinction for any production failure. A retriable error, such as a rate limit or overload, is likely to succeed on a later attempt and gets backoff. A terminal error, such as a bad request, will fail again identically and should fail fast instead of wasting the retry budget.\nModule CompleteDeveloper Path·2 min\nCongrats! You’ve successfully completed this module.\nYou can now prove that a Claude feature holds under production traffic: an eval that defines \"done,\" a test and tracing layer that localizes a break, failure handling that survives a rate limit, a cost and orchestration budget that holds at scale, and a security boundary that survives a regulated review. Each layer closes one way development hides what production reveals.\nM1\nMSO Foundations\nTokens, context windows, sampling, model tiers, prompting modes, and the API transport mechanics.\nM2\nProduction-Grade Prompting, Agents & Tool-use\nProduction-ready prompts, tool-use loops, streaming, context and memory management, and checkpointed agent loops.\nM3\nClaude Code, MCP & Integration\nPermission modes, durable project context, plugin packaging, and MCP integration without leaking credentials.\nM4\nProduction Engineering, Evals, and Security\nProve the system holds under production traffic and survives a security review.\nAccelerators and IP Contribution\nPackage accelerators, prepare verifiable contributions, choose deployment platforms, and mark trust boundaries.\nModule completion recorded."
               }
             },
             {

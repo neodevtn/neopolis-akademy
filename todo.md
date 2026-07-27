@@ -643,3 +643,14 @@
 - [x] Icône résumé (GraduationCap vert) pour les chapitres Key Takeaways
 - [x] Icône module terminé (Trophy ambre) pour les chapitres Module Complete
 - [x] Légende ajoutée en bas de la sidebar
+
+## Fix texte brut → éléments interactifs (2026-07-27)
+- [x] Identifier et convertir les patterns de boutons en texte brut (Review module, Start over, Start Module, Return to course home, Submit, Skip for now) → supprimés du contenu
+- [x] Convertir les cards/composants en texte brut (Code Execution, Component, etc.) en badges/chips colorés
+- [x] Convertir les quiz en texte brut (questions + options A/B/C/D) en vrais quiz interactifs → 8 modules avec SingleChoiceExercise
+- [x] Nettoyer les textes "Module X complete" → supprimés du contenu, remplacés par chapitre dédié
+- [x] Améliorer le rendu du contenu textuel (PageContent) avec détection automatique des termes techniques
+- [x] Créé composant SingleChoiceExercise.tsx avec feedback visuel et explication
+- [x] Supprimé 5 bucket_sort corrompus avec labels UI chrome
+- [x] Régénéré quiz corrompus (Associate 01, 04) via LLM
+- [x] Stripé tout le UI chrome résiduel (Submit, Skip, Check answer, Previous, Contents, Next)

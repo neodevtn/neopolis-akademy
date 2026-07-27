@@ -129,8 +129,223 @@
             {
               "type": "content",
               "body": {
-                "en": "Module quiz\n\nTry it now. Here are some multiple-choice questions to test your understanding of the course so far.\n\nSubmit quiz\nSkip for now",
-                "fr": "Quiz du module\n\nEssayez-le maintenant. Voici quelques questions à choix multiples pour tester votre compréhension du cours jusqu'à présent.\n\nSoumettre le quiz\nPasser pour l'instant"
+                "en": "Module quiz\n\nTry it now. Here are some multiple-choice questions to test your understanding of the course so far.",
+                "fr": "Module quiz\n\nTry it now. Here are some multiple-choice questions to test your understanding of the course so far."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "q1",
+              "question": {
+                "en": "A developer is building a feature that summarizes customer support tickets. During testing, they notice that a ticket containing 800 words is being rejected due to exceeding the input limit. What is the most accurate way they should diagnose and fix this issue?",
+                "fr": "A developer is building a feature that summarizes customer support tickets. During testing, they notice that a ticket containing 800 words is being rejected due to exceeding the input limit. What is the most accurate way they should diagnose and fix this issue?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Assume the limit is 800 words and trim the ticket to 799 words before sending",
+                    "fr": "Assume the limit is 800 words and trim the ticket to 799 words before sending"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Count the tokens in the input rather than the words, since tokens are the actual unit of measurement, and confirm the tokenizer behavior for the speci",
+                    "fr": "Count the tokens in the input rather than the words, since tokens are the actual unit of measurement, and confirm the tokenizer behavior for the speci"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Switch to a more capable model tier since higher-tier models always accept more words",
+                    "fr": "Switch to a more capable model tier since higher-tier models always accept more words"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Convert the ticket to plain ASCII characters to reduce the character count before sending",
+                    "fr": "Convert the ticket to plain ASCII characters to reduce the character count before sending"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Claude processes tokens, not words or characters. The correct approach is to count tokens, which are the actual unit of input, output, and cost. Characters-per-token ratios are model-dependent, so the developer must confirm tokenizer behavior for the specific model at build time.",
+                "fr": "Claude processes tokens, not words or characters. The correct approach is to count tokens, which are the actual unit of input, output, and cost. Characters-per-token ratios are model-dependent, so the developer must confirm tokenizer behavior for the specific model at build time."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "q2",
+              "question": {
+                "en": "A startup is launching a high-traffic chatbot that needs to handle thousands of simple FAQ responses per minute at the lowest possible cost. Their engineering team suggests using Claude Opus for maximum reliability. What is the most appropriate recommendation?",
+                "fr": "A startup is launching a high-traffic chatbot that needs to handle thousands of simple FAQ responses per minute at the lowest possible cost. Their engineering team suggests using Claude Opus for maximum reliability. What is the most appropriate recommendation?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Use Claude Opus because it is the most capable and will ensure the highest quality answers",
+                    "fr": "Use Claude Opus because it is the most capable and will ensure the highest quality answers"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Use Claude Sonnet as the balanced default since it handles most production workloads well",
+                    "fr": "Use Claude Sonnet as the balanced default since it handles most production workloads well"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Use Claude Haiku, which is built for speed and cost efficiency on tasks that fit its capability envelope",
+                    "fr": "Use Claude Haiku, which is built for speed and cost efficiency on tasks that fit its capability envelope"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Use Claude Fable because agentic chatbot work always requires maximum intelligence",
+                    "fr": "Use Claude Fable because agentic chatbot work always requires maximum intelligence"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "Claude Haiku is specifically built for speed and cost efficiency on tasks that fit its capability envelope. Simple FAQ responses are well within Haiku's capability, making it the right choice for high-volume, cost-sensitive, low-complexity tasks.",
+                "fr": "Claude Haiku is specifically built for speed and cost efficiency on tasks that fit its capability envelope. Simple FAQ responses are well within Haiku's capability, making it the right choice for high-volume, cost-sensitive, low-complexity tasks."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "q3",
+              "question": {
+                "en": "A data analyst needs Claude to extract structured financial data from reports and output it in a very specific JSON format. Initial zero-shot attempts produce inconsistently structured outputs. What is the most effective next step?",
+                "fr": "A data analyst needs Claude to extract structured financial data from reports and output it in a very specific JSON format. Initial zero-shot attempts produce inconsistently structured outputs. What is the most effective next step?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Switch to a higher-tier model, since zero-shot failures always indicate insufficient model capability",
+                    "fr": "Switch to a higher-tier model, since zero-shot failures always indicate insufficient model capability"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Add one or more worked examples of the exact input paired with the desired JSON output to the prompt",
+                    "fr": "Add one or more worked examples of the exact input paired with the desired JSON output to the prompt"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Remove all instructions from the prompt and rely solely on the model's default behavior",
+                    "fr": "Remove all instructions from the prompt and rely solely on the model's default behavior"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Increase the sampling temperature to make the model more creative in formatting its output",
+                    "fr": "Increase the sampling temperature to make the model more creative in formatting its output"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "When zero-shot prompting fails to produce a consistently shaped output, adding one or more examples (one-shot or multi-shot prompting) shows the model the exact format desired. Examples sit in the prompt and pin down the answer shape that a description alone often fails to achieve.",
+                "fr": "When zero-shot prompting fails to produce a consistently shaped output, adding one or more examples (one-shot or multi-shot prompting) shows the model the exact format desired. Examples sit in the prompt and pin down the answer shape that a description alone often fails to achieve."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "q4",
+              "question": {
+                "en": "An engineering team is debating whether to integrate Claude using the raw REST API directly or through an official SDK. Their use case is a standard Python backend application. What is the most practical guidance?",
+                "fr": "An engineering team is debating whether to integrate Claude using the raw REST API directly or through an official SDK. Their use case is a standard Python backend application. What is the most practical guidance?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Always use raw REST to avoid SDK version dependency issues and maintain full control",
+                    "fr": "Always use raw REST to avoid SDK version dependency issues and maintain full control"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Use the official Python SDK, which is a thin convenience layer over the REST API that simplifies integration without sacrificing control",
+                    "fr": "Use the official Python SDK, which is a thin convenience layer over the REST API that simplifies integration without sacrificing control"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Use the SDK only for TypeScript projects; Python projects should always call the REST API directly",
+                    "fr": "Use the SDK only for TypeScript projects; Python projects should always call the REST API directly"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Avoid both and use a third-party community library for better performance",
+                    "fr": "Avoid both and use a third-party community library for better performance"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "The official SDK for Python is a thin convenience layer over the REST API, making it the practical choice for standard Python backends. It simplifies integration while still calling the same underlying HTTP REST endpoint, so there is no meaningful loss of control.",
+                "fr": "The official SDK for Python is a thin convenience layer over the REST API, making it the practical choice for standard Python backends. It simplifies integration while still calling the same underlying HTTP REST endpoint, so there is no meaningful loss of control."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "q5",
+              "question": {
+                "en": "A product team notices that when they run the same prompt multiple times, Claude occasionally produces slightly different outputs. A junior developer suggests this is a bug and proposes always setting the temperature to zero to eliminate all variation. What is the most accurate assessment of this situation?",
+                "fr": "A product team notices that when they run the same prompt multiple times, Claude occasionally produces slightly different outputs. A junior developer suggests this is a bug and proposes always setting the temperature to zero to eliminate all variation. What is the most accurate assessment of this situation?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "The developer is correct; non-determinism is a defect and temperature zero guarantees identical outputs every time",
+                    "fr": "The developer is correct; non-determinism is a defect and temperature zero guarantees identical outputs every time"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Variation in outputs is a normal characteristic of LLM behavior related to sampling, and the team should evaluate whether the variation is acceptable ",
+                    "fr": "Variation in outputs is a normal characteristic of LLM behavior related to sampling, and the team should evaluate whether the variation is acceptable "
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "The variation is caused by the context window being too small and can be fixed by reducing prompt length",
+                    "fr": "The variation is caused by the context window being too small and can be fixed by reducing prompt length"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Non-determinism only occurs with lower-tier models and switching to Opus will eliminate the variation",
+                    "fr": "Non-determinism only occurs with lower-tier models and switching to Opus will eliminate the variation"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Non-determinism is a fundamental characteristic of how LLMs behave, arising from the sampling process. It is not a bug. The team should assess whether the variation impacts their use case negatively rather than reflexively eliminating it, as some variation can be desirable depending on the application.",
+                "fr": "Non-determinism is a fundamental characteristic of how LLMs behave, arising from the sampling process. It is not a bug. The team should assess whether the variation impacts their use case negatively rather than reflexively eliminating it, as some variation can be desirable depending on the application."
               }
             }
           ],
@@ -149,13 +364,6 @@
           "type": "exercise",
           "durationMinutes": 6,
           "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "en": "Exercise: predict the behavior\n\nTry it now. Each scenario below presents a configuration drawn from one of this module’s four foundations, sampling, prompting mode, request shape, and the context budget. For each one, select the answer that predicts the correct behavior and identifies the reason why. Partial credit is available when you answer three of four correctly.\n\nSubmit\nSkip for now\n\nRecapFive Takeaways·2 min\n\nRecap: five takeaways\n\n1\n\nTokens are the unit of input, output, and cost.\n\nThink and budget in tokens rather than words, since that is what the API meters and the context window measures.\n\n2\n\nThe context window is a fixed token budget that holds the whole request at once.\n\nAn oversized input errors before generation, while hitting the ceiling mid-generation returns truncated output with a model_context_window_exceeded stop reason, so managing history is the application's job.\n\n3\n\nSampling makes generation non-deterministic.\n\nThe same prompt can return different wording on each run, so testing on exact text is unreliable. This is what evals are built for.\n\n4\n\nModel choice and reasoning mode are separate, composable levers.\n\nPick the smallest model and the simplest reasoning and prompting that meet your eval and add capability only where the eval says you need it.\n\n5\n\nA developer reaches Claude over a REST API, usually through an SDK.\n\nChoose between synchronous, streaming, async/await, or batch based on whether a user is waiting and whether the workload is real-time or bulk offline.\n\nWhat comes next: Module 2 puts these foundations to work across prompting craft, tool schemas, streaming, context engineering, and agent construction.\n\nSources\n\nClaude 101 (Skilljar), Building with the Claude API (Skilljar), AI Fluency: Framework & Foundations (Skilljar), platform.claude.com/docs. Verify product specifics at publish time.\n\nYou can now speak the shared vocabulary of the Developer course.\n\nTokens, context, sampling, model tiers, prompting modes, and the transport mechanics of the API now have names, so the rest of the course can build on them directly.\n\nModule CompleteDeveloper Path·2 min\n\nCongrats! You’ve successfully completed this module.\n\nYou can now explain tokens, the context window, sampling, and non-determinism, distinguish model choice from reasoning mode, choose the right prompting mode for the job, and describe how a developer reaches Claude over SDKs, REST, streaming, and async patterns. These foundations are the shared vocabulary the rest of the Developer course builds on.\n\n0\nof ? checkpoints passed\n\nM1\n\nMSO Foundations\n\nTokens, context, sampling, model tiers, prompting modes, and the technical substrate.\n\nYou Are Here\n\nM2\n\nProduction-Grade Prompting, Agents & Tool-use\n\nPrompting craft, extended thinking, tool schemas, streaming, context engineering, and agent construction.\n\nUp Next\n\nM3\n\nClaude Code, MCP & Integration\n\nPermission modes, durable project context, plugin packaging, and MCP integration without leaking credentials.\n\nM4\n\nProduction Engineering, Evals, and Security\n\nEvals, tracing, failure handling, cost and orchestration budgets, and security boundaries that hold in production.\n\nM5\n\nAccelerators and IP Contribution\n\nPackage accelerators, prepare verifiable contributions, choose deployment platforms, and mark trust boundaries.\n\nReview module\nStart over\nStart Module 2 →\nReturn to course home\n\nModule 1 complete.",
-                "fr": "Exercice : prédire le comportement\n\nEssayez-le maintenant. Chaque scénario ci-dessous présente une configuration tirée de l’une des quatre fondations de ce module, sampling, prompting mode, request shape et le contexte budget. Pour chacun, sélectionnez la réponse qui prédit le comportement correct et identifie la raison. Des points partiels sont disponibles si vous répondez correctement à trois sur quatre.\n\nSoumettre\nPasser pour l'instant\n\nRécapitulatif : cinq points à retenir · 2 min\n\nRécapitulatif : cinq points à retenir\n\n1\n\nLes tokens sont l’unité d’entrée, de sortie et de coût.\n\nPensez et budgétez en tokens plutôt qu’en mots, car c’est ce que les API mesurent et ce que la fenêtre de contexte mesure.\n\n2\n\nLa fenêtre de contexte est un budget fixe de tokens qui contient la requête entière d’un seul coup.\n\nUne entrée trop volumineuse génère une erreur avant la génération, tandis que dépasser le plafond en milieu de génération renvoie une sortie tronquée avec la raison d’arrêt model_context_window_exceeded, ainsi la gestion de l’historique est la tâche de l’application.\n\n3\n\nSampling rend la génération non déterministe.\n\nLe même prompt peut produire des formulations différentes à chaque exécution, il n’est donc pas fiable de tester sur du texte exact. C’est à cela que servent les évals.\n\n4\n\nLe choix du modèle et le mode de raisonnement sont des leviers séparés et modulables.\n\nChoisissez le plus petit modèle et le raisonnement et le prompting les plus simples qui satisfont votre eval et ajoutez des capacités uniquement là où l’eval indique que vous en avez besoin.\n\n5\n\nUn développeur accède à Claude via une REST API, généralement via un SDK.\n\nChoisissez entre synchronous, streaming, async/await ou batch en fonction du fait qu’un utilisateur attend et si la charge est en temps réel ou en bulk hors ligne.\n\nCe qui vient ensuite : Module 2 met ces fondations au travail dans l’art du prompting, les schémas d’outils, le streaming, l’ingénierie du contexte et la construction d’agents.\n\nSources\n\nClaude 101 (Skilljar), Building with the Claude API (Skilljar), AI Fluency: Framework & Foundations (Skilljar), platform.claude.com/docs. Vérifiez les spécificités du produit au moment de la publication.\n\nVous pouvez désormais parler le vocabulaire partagé du cours Developer.\n\nLes tokens, le contexte, l’échantillonnage, les niveaux de modèles, les modes de prompting et les mécanismes de transport de l’API portent désormais des noms, de sorte que le reste du cours puisse s’appuyer directement dessus.\n\nModule 1 terminé. Parcours Développeur · 2 min\n\nFélicitations ! Vous avez terminé avec succès ce module.\n\nVous pouvez désormais expliquer les tokens, la fenêtre de contexte, l’échantillonnage et la non-détermination, distinguer le choix du modèle du mode de raisonnement, choisir le bon mode de prompting pour le travail, et décrire comment un développeur accède à Claude via SDKs, REST, streaming et patterns asynchrones. Ces fondations constituent le vocabulaire commun sur lequel repose le reste du cours Developer.\n\n0 sur ? jalons franchis\n\nM1\n\nFondations MSO\n\nTokens, contexte, échantillonnage, niveaux de modèles, modes de prompting et le substrat technique.\n\nVous êtes ici\n\nM2\n\nPrompting de production, Agents & Utilisation d’outils\n\nArt du prompting, pensée étendue, schémas d’outils, streaming, ingénierie du contexte et construction d’agents.\n\nÀ venir\n\nM3\n\nClaude Code, MCP & Intégration\n\nModes de permission, contexte de projet durable, emballage de plugins et intégration MCP sans fuite d’identifiants.\n\nM4\n\nIngénierie de Production, Évals et Sécurité\n\nÉvals, traçage, gestion des échecs, budgets de coût et d’orchestration, et frontières de sécurité qui tiennent en production.\n\nM5\n\nAccélérateurs et Contribution IP\n\nAccélérateurs de paquets, préparez des contributions vérifiables, choisissez les plateformes de déploiement et délimitez les frontières de confiance.\n\nRéviser le module\nRecommencer\nDémarrer le Module 2 → \nRetour à l’accueil du cours\n\nModule 1 terminé."
-              }
-            },
             {
               "type": "flip_cards",
               "cards": [

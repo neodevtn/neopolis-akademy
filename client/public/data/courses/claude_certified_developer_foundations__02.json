@@ -79,7 +79,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Checkpoint 1 · Fix the broken prompt\n\nThe prompt shown here extracts a JSON object from a support ticket with three fields: category, urgency, and a one-sentence summary. It contains one defect. Write the corrected system prompt that fixes it.\n\nBroken prompt\n\nSystem: \"You are a support ticket processor. Extract the key information from the ticket below.\"\n\nUser: <ticket>My API key stopped working after I rotated it last night. I have a production deployment that is failing. This needs to be fixed immediately.</ticket>\n\nReveal model answer\nSkip for now",
+                "en": "Checkpoint 1 · Fix the broken prompt\n\nThe prompt shown here extracts a JSON object from a support ticket with three fields: category, urgency, and a one-sentence summary. It contains one defect. Write the corrected system prompt that fixes it.\n\nBroken prompt\n\nSystem: \"You are a support ticket processor. Extract the key information from the ticket below.\"\n\nUser: <ticket>My API key stopped working after I rotated it last night. I have a production deployment that is failing. This needs to be fixed immediately.</ticket>\n\nReveal model answer",
                 "fr": "Point de contrôle 1 · Corriger le prompt cassé\n\nLe prompt affiché ici extrait un objet JSON d'un ticket de support avec trois champs : category, urgency et un résumé en une phrase. Il contient un défaut. Écrivez le system prompt corrigé qui le corrige.\n\nPrompt cassé\n\nSystème : \"You are a support ticket processor. Extract the key information from the ticket below.\"\n\nUtilisateur : <ticket>Ma clé API a cessé de fonctionner après avoir été renouvelée hier soir. J'ai un déploiement en production qui échoue. Cela doit être corrigé immédiatement.</ticket>\n\nRévéler la réponse du modèle\nIgnorer pour le moment"
               }
             },
@@ -146,11 +146,65 @@
               ]
             },
             {
-              "type": "content",
-              "body": {
-                "en": "Checkpoint 2 · Decide when extended thinking earns its cost\n\nThree tasks are described below. Match each task on the left to the correct extended-thinking decision on the right. There is one correct call per task.\n\nClassify 50,000 support tickets into three labels overnight.\n\nNever do this.Leave it off.Enable it, budget for the planning step.\n\nPlan a multi-step refactor where each step depends on the previous one.\n\nNever do this.Leave it off.Enable it, budget for the planning step.\n\nStrip the thinking block out of conversation history to save context before the next tool call.\n\nNever do this.Leave it off.Enable it, budget for the planning step.\n\nSubmit\nSkip for now",
-                "fr": "Point de contrôle 2 · Déterminez quand la réflexion étendue en vaut le coût\n\nTrois tâches sont décrites ci-dessous. Associez chaque tâche de gauche à la décision de réflexion étendue correspondante, située à droite. Il n’y a qu’un seul choix correct par tâche.\n\nCatégorisez 50 000 tickets de support en trois étiquettes en une seule nuit.\n\nNe faites jamais ceci. Laissez-le de côté. Activez-le, prévoyez le budget pour l’étape de planification.\n\nPlanifiez une refactorisation en plusieurs étapes où chaque étape dépend de la précédente.\n\nNe faites jamais ceci. Laissez-le de côté. Activez-le, prévoyez le budget pour l’étape de planification.\n\nSupprimez le bloc de réflexion de l’historique de la conversation pour économiser le contexte avant le prochain appel d’outil.\n\nNe faites jamais ceci. Laissez-le de côté. Activez-le, prévoyez le budget pour l’étape de planification.\n\nSoumettre\nPasser pour le moment"
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "Never do this.Leave it off.Enable it, budget for the planning step.",
+                    "fr": "Never do this.Leave it off.Enable it, budget for the planning step."
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "Strip the thinking block out of conversation history to save context before the next tool call.",
+                    "fr": "Strip the thinking block out of conversation history to save context before the next tool call."
+                  }
+                },
+                {
+                  "id": "bucket_2",
+                  "label": {
+                    "en": "Never do this.Leave it off.Enable it, budget for the planning step.",
+                    "fr": "Never do this.Leave it off.Enable it, budget for the planning step."
+                  }
+                }
+              ],
+              "id": "bucket_21",
+              "title": {
+                "en": "Checkpoint 2 · Decide when extended thinking earns its co...",
+                "fr": "Checkpoint 2 · Decide when extended thinking earns its co..."
+              },
+              "instructions": {
+                "en": "Checkpoint 2 · Decide when extended thinking earns its cost Three tasks are described below. Match each task on the left to the correct extended-thinking decision on the right. There is one correct call per task.",
+                "fr": "Checkpoint 2 · Decide when extended thinking earns its cost Three tasks are described below. Match each task on the left to the correct extended-thinking decision on the right. There is one correct call per task."
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "Classify 50,000 support tickets into three labels overnight.",
+                    "fr": "Classify 50,000 support tickets into three labels overnight."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "Never do this.Leave it off.Enable it, budget for the planning step.",
+                    "fr": "Never do this.Leave it off.Enable it, budget for the planning step."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "Plan a multi-step refactor where each step depends on the previous one.",
+                    "fr": "Plan a multi-step refactor where each step depends on the previous one."
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "checkpoint",
@@ -265,11 +319,137 @@
               ]
             },
             {
-              "type": "content",
-              "body": {
-                "en": "Checkpoint 3 · Spot and fix the schema bug\n\nThe session trace below shows an agent calling a tool, receiving a result, and then failing with an API validation error on the next request. The schema is valid, the tool description is specific, and the tool result content is correct.\n\nOne convention you need to know before reading the trace: tool_result blocks are always sent in the user role, even though the content is generated by your application rather than typed by a person. The role field marks who is sending the message to Claude, not who authored the underlying content. Turn 3 in the trace is labeled \"User (tool result)\" to make that assignment explicit.\n\nRead the trace, identify which message block is missing or mis-ordered, name the rule that was broken, and select the targeted fix from the three options below.\n\nSession trace\n\nTurn 1: User:\n[text]: \"What is the current balance for account A-4471?\"\n\nTurn 2: Assistant:\n[text]: \"I'll look that up.\"\n[tool_use]: id=\"toolu_01\", name=\"get_account_balance\",\ninput={\"account_id\": \"A-4471\"}\n\nTurn 3: User (tool result):\n[tool_result]: tool_use_id=\"toolu_02\", content=\"Balance: $1,240.18\"\n\nTurn 4: API response:\nError: invalid_request_error\n\"tool_result block references unknown tool_use_id\"\n\nAUpdate the description on get_account_balance to add an exclusion condition.\n\nBCorrect the tool_use_id on the tool_result block so it matches the id issued in the assistant turn.\n\nCAdd a required array to the tool's input_schema so account_id cannot be omitted.\n\nSubmit\nSkip for now",
-                "fr": "Checkpoint 3 · Repérer et corriger le bug du schéma\n\nLa trace de session ci-dessous montre un agent appelant un outil, recevant un résultat, puis échouant avec une erreur de validation API lors de la prochaine requête. Le schéma est valide, la description de l'outil est précise, et le contenu du résultat de l'outil est correct.\n\nUne convention à connaître avant de lire la trace : les blocs tool_result sont toujours envoyés dans le rôle utilisateur, même si le contenu est généré par votre application plutôt que tapé par une personne. Le champ role indique qui envoie le message à Claude, et non qui est l'auteur du contenu sous-jacent. Le Tour 3 dans la trace est étiqueté \"Utilisateur (résultat de l'outil)\" pour rendre cette attribution explicite.\n\nLisez la trace, identifiez quel bloc de message est manquant ou mal ordonné, nommez la règle qui a été enfreinte, et sélectionnez la correction ciblée parmi les trois options ci-dessous.\n\nTrace de session\n\nTour 1 : Utilisateur :\n[text]: \"Quel est le solde actuel du compte A-4471 ?\"\n\nTour 2 : Assistant :\n[text]: \"Je vais vérifier cela.\"\n[tool_use]: id=\"toolu_01\", name=\"get_account_balance\",\ninput={\"account_id\": \"A-4471\"}\n\nTour 3 : Utilisateur (résultat de l'outil) :\n[tool_result]: tool_use_id=\"toolu_02\", content=\"Balance: $1,240.18\"\n\nTour 4 : Réponse API :\nErreur : invalid_request_error\n\"tool_result block references unknown tool_use_id\"\n\nA) Mettre à jour la description sur get_account_balance pour ajouter une condition d'exclusion.\n\nB) Corriger le tool_use_id sur le bloc tool_result afin qu'il corresponde à l'identifiant émis dans le tour de l'assistant.\n\nC) Ajouter un tableau requis au input_schema de l'outil afin que account_id ne puisse pas être omis.\n\nSoumettre\nPasser pour le moment"
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "AUpdate the description on get_account_balance to add an exclusion condition.",
+                    "fr": "AUpdate the description on get_account_balance to add an exclusion condition."
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "BCorrect the tool_use_id on the tool_result block so it matches the id issued in the assistant turn.",
+                    "fr": "BCorrect the tool_use_id on the tool_result block so it matches the id issued in the assistant turn."
+                  }
+                },
+                {
+                  "id": "bucket_2",
+                  "label": {
+                    "en": "CAdd a required array to the tool's input_schema so account_id cannot be omitted.",
+                    "fr": "CAdd a required array to the tool's input_schema so account_id cannot be omitted."
+                  }
+                }
+              ],
+              "id": "bucket_22",
+              "title": {
+                "en": "Checkpoint 3 · Spot and fix the schema bug The session tr...",
+                "fr": "Checkpoint 3 · Spot and fix the schema bug The session tr..."
+              },
+              "instructions": {
+                "en": "Checkpoint 3 · Spot and fix the schema bug The session trace below shows an agent calling a tool, receiving a result, and then failing with an API validation error on the next request. The schema is valid, the tool description is specific, and the tool result content is correct. One convention you need to know before reading the trace: tool_result blocks are always sent in the user role, even though the content is generated by your application rather than typed by a person. The role field marks who is sending the message to Claude, not who authored the underlying content. Turn 3 in the trace is labeled \"User (tool result)\" to make that assignment explicit. Read the trace, identify which message block is missing or mis-ordered, name the rule that was broken, and select the targeted fix from the three options below.",
+                "fr": "Checkpoint 3 · Spot and fix the schema bug The session trace below shows an agent calling a tool, receiving a result, and then failing with an API validation error on the next request. The schema is valid, the tool description is specific, and the tool result content is correct. One convention you need to know before reading the trace: tool_result blocks are always sent in the user role, even though the content is generated by your application rather than typed by a person. The role field marks who is sending the message to Claude, not who authored the underlying content. Turn 3 in the trace is labeled \"User (tool result)\" to make that assignment explicit. Read the trace, identify which message block is missing or mis-ordered, name the rule that was broken, and select the targeted fix from the three options below."
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "Session trace",
+                    "fr": "Session trace"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "Turn 1: User:",
+                    "fr": "Turn 1: User:"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "[text]: \"What is the current balance for account A-4471?\"",
+                    "fr": "[text]: \"What is the current balance for account A-4471?\""
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_3",
+                  "text": {
+                    "en": "Turn 2: Assistant:",
+                    "fr": "Turn 2: Assistant:"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_4",
+                  "text": {
+                    "en": "[text]: \"I'll look that up.\"",
+                    "fr": "[text]: \"I'll look that up.\""
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_5",
+                  "text": {
+                    "en": "[tool_use]: id=\"toolu_01\", name=\"get_account_balance\",",
+                    "fr": "[tool_use]: id=\"toolu_01\", name=\"get_account_balance\","
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_6",
+                  "text": {
+                    "en": "input={\"account_id\": \"A-4471\"}",
+                    "fr": "input={\"account_id\": \"A-4471\"}"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_7",
+                  "text": {
+                    "en": "Turn 3: User (tool result):",
+                    "fr": "Turn 3: User (tool result):"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_8",
+                  "text": {
+                    "en": "[tool_result]: tool_use_id=\"toolu_02\", content=\"Balance: $1,240.18\"",
+                    "fr": "[tool_result]: tool_use_id=\"toolu_02\", content=\"Balance: $1,240.18\""
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_9",
+                  "text": {
+                    "en": "Turn 4: API response:",
+                    "fr": "Turn 4: API response:"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_10",
+                  "text": {
+                    "en": "Error: invalid_request_error",
+                    "fr": "Error: invalid_request_error"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_11",
+                  "text": {
+                    "en": "\"tool_result block references unknown tool_use_id\"",
+                    "fr": "\"tool_result block references unknown tool_use_id\""
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "checkpoint",
@@ -301,7 +481,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Checkpoint 4 · Repair the broken stream handler\n\nThe handler below streams a response and appends the assistant turn to conversation history. It contains one defect that only surfaces when a stream is interrupted. Identify the defect and write the corrected version.\n\nBroken handler\n\nblocks = {}\nstop_seen = False\nwith client.messages.stream(model=model, max_tokens=4096, messages=messages, tools=tools) as stream:\nfor event in stream:\nif event.type == \"content_block_start\":\nblocks[event.index] = init_block(event)\nelif event.type == \"content_block_delta\":\napply_delta(blocks[event.index], event.delta)\nelif event.type == \"message_stop\":\nstop_seen = True\nmessages.append({\"role\": \"assistant\", \"content\": assemble(blocks)})\n\nReveal model answer\nSkip for now",
+                "en": "Checkpoint 4 · Repair the broken stream handler\n\nThe handler below streams a response and appends the assistant turn to conversation history. It contains one defect that only surfaces when a stream is interrupted. Identify the defect and write the corrected version.\n\nBroken handler\n\nblocks = {}\nstop_seen = False\nwith client.messages.stream(model=model, max_tokens=4096, messages=messages, tools=tools) as stream:\nfor event in stream:\nif event.type == \"content_block_start\":\nblocks[event.index] = init_block(event)\nelif event.type == \"content_block_delta\":\napply_delta(blocks[event.index], event.delta)\nelif event.type == \"message_stop\":\nstop_seen = True\nmessages.append({\"role\": \"assistant\", \"content\": assemble(blocks)})\n\nReveal model answer",
                 "fr": "Point de contrôle 4 · Réparer le gestionnaire de flux cassé\n\nLe gestionnaire ci-dessous diffuse une réponse en streaming et ajoute le tour de l'assistant à l'historique de la conversation. Il contient un défaut unique qui ne se manifeste que lorsqu'un flux est interrompu. Identifiez le défaut et rédigez la version corrigée.\n\nGestionnaire cassé\n\nblocks = {}\nstop_seen = False\nwith client.messages.stream(model=model, max_tokens=4096, messages=messages, tools=tools) as stream:\nfor event in stream:\nif event.type == \"content_block_start\":\nblocks[event.index] = init_block(event)\nelif event.type == \"content_block_delta\":\napply_delta(blocks[event.index], event.delta)\nelif event.type == \"message_stop\":\nstop_seen = True\nmessages.append({\"role\": \"assistant\", \"content\": assemble(blocks)})\n\nRévélation de la réponse du modèle\nIgnorer pour le moment"
               }
             },
@@ -398,11 +578,137 @@
               ]
             },
             {
-              "type": "content",
-              "body": {
-                "en": "Checkpoint 5 · Diagnose the context failure\n\nThe session trace below shows a multi-turn agent run with degrading tool selections. Read the trace, identify which turn triggered the failure, name the mechanism, and select the one-line fix from the three options below.\n\nSession trace\n\nClick each turn to inspect it.\n\nTurnTool calledResult size\n\n1fetch_policy_document, correct selection2,400 tokens\n\n2fetch_policy_document, correct selection2,400 tokens\n\n3fetch_policy_document, correct selection2,400 tokens\n\n4fetch_policy_document, correct selection2,400 tokens\n\n5search_knowledge_base instead of apply_coverage_rule, wrong selection1,800 tokens\n\n6search_knowledge_base again, wrong selection (same as turn 5)1,800 tokens\n\n7Session ends without resultN/A\n\nTurn 4\n\nfetch_policy_document, correct selection, 2,400 tokens. Last correct turn. Four large tool results (9,600 tokens) are now sitting in the context window, crowding the instructions that tell Claude which tool to use next.\n\nAAdd a clearer description to the apply_coverage_rule tool schema.\n\nBPrune fetch_policy_document results after each turn so that accumulated outputs do not crowd out current instructions, and apply compaction before turn 5.\n\nCIncrease max_tokens in the API call to give Claude more room to respond.\n\nSubmit\nSkip for now",
-                "fr": "Point de contrôle 5 · Diagnostiquer l'échec du contexte\n\nLa trace de session ci-dessous montre une exécution multi-tours d'un agent avec des sélections d'outils qui se dégradent. Lisez la trace, identifiez quel tour a déclenché l'échec, nommez le mécanisme et sélectionnez la correction en une ligne parmi les trois options ci-dessous.\n\nTrace de la session\n\nCliquez sur chaque tour pour l’inspecter.\n\nTurnTool calledResult size\n\n1fetch_policy_document, sélection correcte, 2 400 tokens\n\n2fetch_policy_document, sélection correcte, 2 400 tokens\n\n3fetch_policy_document, sélection correcte, 2 400 tokens\n\n4fetch_policy_document, sélection correcte, 2 400 tokens\n\n5search_knowledge_base au lieu de apply_coverage_rule, sélection incorrecte, 1 800 tokens\n\n6search_knowledge_base encore, sélection incorrecte (identique au tour 5) 1 800 tokens\n\n7Session se termine sans résultat N/A\n\nTour 4\n\nfetch_policy_document, sélection correcte, 2 400 tokens. Dernier tour correct. Quatre grands résultats d'outils (9 600 tokens) sont maintenant dans la fenêtre de contexte, encombrant les instructions qui indiquent à Claude quel outil utiliser ensuite.\n\nA : Ajouter une description plus claire du schéma de l'outil apply_coverage_rule.\n\nB : Élaguer les résultats fetch_policy_document après chaque tour afin que les sorties accumulées n'encombrent pas les instructions actuelles, et appliquer une compaction avant le tour 5.\n\nC : Augmenter max_tokens dans l'appel API pour donner à Claude plus d'espace pour répondre.\n\nSoumettre\nPasser pour l'instant"
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "AAdd a clearer description to the apply_coverage_rule tool schema.",
+                    "fr": "AAdd a clearer description to the apply_coverage_rule tool schema."
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "BPrune fetch_policy_document results after each turn so that accumulated outputs do not crowd out current instructions, and apply compaction before turn 5.",
+                    "fr": "BPrune fetch_policy_document results after each turn so that accumulated outputs do not crowd out current instructions, and apply compaction before turn 5."
+                  }
+                },
+                {
+                  "id": "bucket_2",
+                  "label": {
+                    "en": "CIncrease max_tokens in the API call to give Claude more room to respond.",
+                    "fr": "CIncrease max_tokens in the API call to give Claude more room to respond."
+                  }
+                }
+              ],
+              "id": "bucket_23",
+              "title": {
+                "en": "Checkpoint 5 · Diagnose the context failure The session t...",
+                "fr": "Checkpoint 5 · Diagnose the context failure The session t..."
+              },
+              "instructions": {
+                "en": "Checkpoint 5 · Diagnose the context failure The session trace below shows a multi-turn agent run with degrading tool selections. Read the trace, identify which turn triggered the failure, name the mechanism, and select the one-line fix from the three options below.",
+                "fr": "Checkpoint 5 · Diagnose the context failure The session trace below shows a multi-turn agent run with degrading tool selections. Read the trace, identify which turn triggered the failure, name the mechanism, and select the one-line fix from the three options below."
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "Session trace",
+                    "fr": "Session trace"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "Click each turn to inspect it.",
+                    "fr": "Click each turn to inspect it."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "TurnTool calledResult size",
+                    "fr": "TurnTool calledResult size"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_3",
+                  "text": {
+                    "en": "1fetch_policy_document, correct selection2,400 tokens",
+                    "fr": "1fetch_policy_document, correct selection2,400 tokens"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_4",
+                  "text": {
+                    "en": "2fetch_policy_document, correct selection2,400 tokens",
+                    "fr": "2fetch_policy_document, correct selection2,400 tokens"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_5",
+                  "text": {
+                    "en": "3fetch_policy_document, correct selection2,400 tokens",
+                    "fr": "3fetch_policy_document, correct selection2,400 tokens"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_6",
+                  "text": {
+                    "en": "4fetch_policy_document, correct selection2,400 tokens",
+                    "fr": "4fetch_policy_document, correct selection2,400 tokens"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_7",
+                  "text": {
+                    "en": "5search_knowledge_base instead of apply_coverage_rule, wrong selection1,800 tokens",
+                    "fr": "5search_knowledge_base instead of apply_coverage_rule, wrong selection1,800 tokens"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_8",
+                  "text": {
+                    "en": "6search_knowledge_base again, wrong selection (same as turn 5)1,800 tokens",
+                    "fr": "6search_knowledge_base again, wrong selection (same as turn 5)1,800 tokens"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_9",
+                  "text": {
+                    "en": "7Session ends without resultN/A",
+                    "fr": "7Session ends without resultN/A"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_10",
+                  "text": {
+                    "en": "Turn 4",
+                    "fr": "Turn 4"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_11",
+                  "text": {
+                    "en": "fetch_policy_document, correct selection, 2,400 tokens. Last correct turn. Four large tool results (9,600 tokens) are now sitting in the context window, crowding the instructions that tell Claude which tool to use next.",
+                    "fr": "fetch_policy_document, correct selection, 2,400 tokens. Last correct turn. Four large tool results (9,600 tokens) are now sitting in the context window, crowding the instructions that tell Claude which tool to use next."
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "checkpoint",
@@ -499,8 +805,8 @@
             {
               "type": "content",
               "body": {
-                "en": "Checkpoint 6 · Complete the agent wiring\n\nThe partial agent implementation below has two gaps. Write the missing content for each gap: (1) the description for update_record, and (2) the HITL checkpoint code.\n\nPartial implementation\n\ntools = [\n{\n\"name\": \"read_record\",\n\"description\": \"Use this to read a customer record by customer_id.\",\n\"input_schema\": {\n\"type\": \"object\",\n\"properties\": {\n\"customer_id\": {\"type\": \"string\"}\n},\n\"required\": [\"customer_id\"]\n}\n},\n{\n\"name\": \"update_record\",\n\"description\": [BLANK, write the description for this tool],\n\"input_schema\": {\n\"type\": \"object\",\n\"properties\": {\n\"customer_id\": {\"type\": \"string\"},\n\"field\": {\"type\": \"string\"},\n\"new_value\": {\"type\": \"string\"}\n},\n\"required\": [\"customer_id\", \"field\", \"new_value\"]\n}\n}\n]\n\ndef run_agent_loop(user_request):\nmessages = [{\"role\": \"user\", \"content\": user_request}]\n\nwhile True:\nresponse = client.messages.create(\nmodel=model, max_tokens=4096,\ntools=tools,\nmessages=messages\n)\n\nif response.stop_reason == \"end_turn\":\nreturn response\n\nif response.stop_reason == \"tool_use\":\nmessages.append({\"role\": \"assistant\", \"content\": response.content})\n\ntool_results = []\nfor block in response.content:\nif block.type == \"tool_use\":\n\n[BLANK, insert HITL checkpoint before executing update_record]\n\nresult = execute_tool(block.name, block.input)\ntool_results.append({\n\"type\": \"tool_result\",\n\"tool_use_id\": block.id,\n\"content\": result\n})\n\nmessages.append({\"role\": \"user\", \"content\": tool_results})\n\nGap 1: Write the description for update_record\n\nGap 2: Write the HITL checkpoint code\n\nReveal model answers\nSkip for now",
-                "fr": "Checkpoint 6 · Compléter le câblage de l’agent\n\nL’implémentation partielle de l’agent ci-dessous présente deux lacunes. Écrivez le contenu manquant pour chaque lacune : (1) la description de update_record, et (2) le code du checkpoint HITL.\n\nImplémentation partielle\n\ntools = [\n{\n\"name\": \"read_record\",\n\"description\": \"Use this to read a customer record by customer_id.\",\n\"input_schema\": {\n\"type\": \"object\",\n\"properties\": {\n\"customer_id\": {\"type\": \"string\"}\n},\n\"required\": [\"customer_id\"]\n}\n},\n{\n\"name\": \"update_record\",\n\"description\": [BLANK, write the description for this tool],\n\"input_schema\": {\n\"type\": \"object\",\n\"properties\": {\n\"customer_id\": {\"type\": \"string\"},\n\"field\": {\"type\": \"string\"},\n\"new_value\": {\"type\": \"string\"}\n},\n\"required\": [\"customer_id\", \"field\", \"new_value\"]\n}\n}\n]\n\ndef run_agent_loop(user_request):\nmessages = [{\"role\": \"user\", \"content\": user_request}]\n\nwhile True:\nresponse = client.messages.create(\nmodel=model, max_tokens=4096,\ntools=tools,\nmessages=messages\n)\n\nif response.stop_reason == \"end_turn\":\nreturn response\n\nif response.stop_reason == \"tool_use\":\nmessages.append({\"role\": \"assistant\", \"content\": response.content})\n\ntool_results = []\nfor block in response.content:\nif block.type == \"tool_use\":\n\n[BLANK, insert HITL checkpoint before executing update_record]\n\nresult = execute_tool(block.name, block.input)\ntool_results.append({\n\"type\": \"tool_result\",\n\"tool_use_id\": block.id,\n\"content\": result\n})\n\nmessages.append({\"role\": \"user\", \"content\": tool_results})\n\nGap 1: Write the description for update_record\n\nGap 2: Write the HITL checkpoint code\n\nReveal model answers\nSkip for now"
+                "en": "Checkpoint 6 · Complete the agent wiring\n\nThe partial agent implementation below has two gaps. Write the missing content for each gap: (1) the description for update_record, and (2) the HITL checkpoint code.\n\nPartial implementation\n\ntools = [\n{\n\"name\": \"read_record\",\n\"description\": \"Use this to read a customer record by customer_id.\",\n\"input_schema\": {\n\"type\": \"object\",\n\"properties\": {\n\"customer_id\": {\"type\": \"string\"}\n},\n\"required\": [\"customer_id\"]\n}\n},\n{\n\"name\": \"update_record\",\n\"description\": [BLANK, write the description for this tool],\n\"input_schema\": {\n\"type\": \"object\",\n\"properties\": {\n\"customer_id\": {\"type\": \"string\"},\n\"field\": {\"type\": \"string\"},\n\"new_value\": {\"type\": \"string\"}\n},\n\"required\": [\"customer_id\", \"field\", \"new_value\"]\n}\n}\n]\n\ndef run_agent_loop(user_request):\nmessages = [{\"role\": \"user\", \"content\": user_request}]\n\nwhile True:\nresponse = client.messages.create(\nmodel=model, max_tokens=4096,\ntools=tools,\nmessages=messages\n)\n\nif response.stop_reason == \"end_turn\":\nreturn response\n\nif response.stop_reason == \"tool_use\":\nmessages.append({\"role\": \"assistant\", \"content\": response.content})\n\ntool_results = []\nfor block in response.content:\nif block.type == \"tool_use\":\n\n[BLANK, insert HITL checkpoint before executing update_record]\n\nresult = execute_tool(block.name, block.input)\ntool_results.append({\n\"type\": \"tool_result\",\n\"tool_use_id\": block.id,\n\"content\": result\n})\n\nmessages.append({\"role\": \"user\", \"content\": tool_results})\n\nGap 1: Write the description for update_record\n\nGap 2: Write the HITL checkpoint code\n\nReveal model answers",
+                "fr": "Checkpoint 6 · Compléter le câblage de l’agent\n\nL’implémentation partielle de l’agent ci-dessous présente deux lacunes. Écrivez le contenu manquant pour chaque lacune : (1) la description de update_record, et (2) le code du checkpoint HITL.\n\nImplémentation partielle\n\ntools = [\n{\n\"name\": \"read_record\",\n\"description\": \"Use this to read a customer record by customer_id.\",\n\"input_schema\": {\n\"type\": \"object\",\n\"properties\": {\n\"customer_id\": {\"type\": \"string\"}\n},\n\"required\": [\"customer_id\"]\n}\n},\n{\n\"name\": \"update_record\",\n\"description\": [BLANK, write the description for this tool],\n\"input_schema\": {\n\"type\": \"object\",\n\"properties\": {\n\"customer_id\": {\"type\": \"string\"},\n\"field\": {\"type\": \"string\"},\n\"new_value\": {\"type\": \"string\"}\n},\n\"required\": [\"customer_id\", \"field\", \"new_value\"]\n}\n}\n]\n\ndef run_agent_loop(user_request):\nmessages = [{\"role\": \"user\", \"content\": user_request}]\n\nwhile True:\nresponse = client.messages.create(\nmodel=model, max_tokens=4096,\ntools=tools,\nmessages=messages\n)\n\nif response.stop_reason == \"end_turn\":\nreturn response\n\nif response.stop_reason == \"tool_use\":\nmessages.append({\"role\": \"assistant\", \"content\": response.content})\n\ntool_results = []\nfor block in response.content:\nif block.type == \"tool_use\":\n\n[BLANK, insert HITL checkpoint before executing update_record]\n\nresult = execute_tool(block.name, block.input)\ntool_results.append({\n\"type\": \"tool_result\",\n\"tool_use_id\": block.id,\n\"content\": result\n})\n\nmessages.append({\"role\": \"user\", \"content\": tool_results})\n\nGap 1: Write the description for update_record\n\nGap 2: Write the HITL checkpoint code\n\nReveal model answers"
               }
             },
             {
@@ -566,11 +872,790 @@
               ]
             },
             {
-              "type": "content",
-              "body": {
-                "en": "Checkpoint 7 · Choose the right memory pattern\n\nRead the three agent use cases below. Match each agent use case on the left to the correct memory scope on the right. There is one correct scope per use case.\n\nA customer support agent assists the same user across daily check-ins over two weeks. Each session starts where the previous one left off.\n\nIn-context memory: all state lives in the active conversation.External storage: write state to a database at session end, then read it back at session start.No persistent memory (stateless): each session starts fresh.\n\nA document formatter receives a file, applies a transformation, returns the output, and terminates. Each job is fully independent.\n\nIn-context memory: all state lives in the active conversation.External storage: write state to a database at session end, then read it back at session start.No persistent memory (stateless): each session starts fresh.\n\nA coding assistant works with a developer across a multi-hour session. The session will not continue after it ends.\n\nIn-context memory: all state lives in the active conversation.External storage: write state to a database at session end, then read it back at session start.No persistent memory (stateless): each session starts fresh.\n\nSubmit\nSkip for now\n\nCumulativeDebug Task·8 min\n\nCumulative debug task · Identify each bug\n\nThe agent implementation below has four planted bugs, one in each of four layers: the schema layer, the streaming layer where the response is assembled and committed, the context layer where the message structure is built, and the memory layer.\n\nWork through the two stages below. This screen covers Stage 1: identify each bug. Stage 2, writing the corrected version, is on the next screen.\n\nBuggy implementation\n\n# --- TOOL DEFINITIONS ---\ntools = [\n{\n\"name\": \"get_customer_data\",\n\"description\": \"Gets data.\",\n\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }\n}\n]\n\n# --- AGENT LOOP ---\ndef run_agent(user_request, session_history):\nmessages = session_history + [{\"role\":\"user\",\"content\":user_request}]\nwhile True:\nblocks = {}\nstop_seen = False\nwith client.messages.stream(\nmodel=model, max_tokens=4096, tools=tools, messages=messages,\nthinking={\"type\": \"adaptive\"}\n) as stream:\nfor event in stream:\nif event.type == \"content_block_start\":\nblocks[event.index] = init_block(event)\nelif event.type == \"content_block_delta\":\napply_delta(blocks[event.index], event.delta)\nelif event.type == \"message_stop\":\nstop_seen = True\nassistant_content = [b for b in assemble(blocks) if b[\"type\"] != \"thinking\"]\nmessages.append({\"role\": \"assistant\", \"content\": assistant_content})\nresponse = finalize(blocks)\nif response.stop_reason == \"end_turn\":\nreturn response\nfor block in response.content:\nif block.type == \"tool_use\":\nresult = execute_tool(block.name, block.input)\nmessages.append({\"role\":\"user\",\"content\":[{\"type\":\"tool_result\",\n\"tool_use_id\":block.id,\"content\":result}]})\n\n# --- MEMORY ---\ndef build_session_history(prior_sessions):\n# Concatenating all prior session transcripts in-context\nfull_history = []\nfor session in prior_sessions:\nfull_history.extend(session[\"messages\"])\nreturn full_history\n\nStage 1: Identify each bug\n\nThe implementation above has four bugs, one in each of four layers. For each bug: name the layer it belongs to and write one sentence describing what it causes at runtime.\n\nReveal model answer\nSkip for now\n\nCumulativeDebug Task·10 min\n\nCumulative debug task · Write the corrected version\n\nStage 2: write the corrected version of each bug identified on the previous screen. For each one, show the fixed code and name what it changes.\n\nBuggy implementation (for reference)\n\n# --- TOOL DEFINITIONS ---\ntools = [\n{\n\"name\": \"get_customer_data\",\n\"description\": \"Gets data.\",\n\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }\n}\n]\n\n# --- AGENT LOOP ---\ndef run_agent(user_request, session_history):\nmessages = session_history + [{\"role\":\"user\",\"content\":user_request}]\nwhile True:\nblocks = {}\nstop_seen = False\nwith client.messages.stream(\nmodel=model, max_tokens=4096, tools=tools, messages=messages,\nthinking={\"type\": \"adaptive\"}\n) as stream:\nfor event in stream:\nif event.type == \"content_block_start\":\nblocks[event.index] = init_block(event)\nelif event.type == \"content_block_delta\":\napply_delta(blocks[event.index], event.delta)\nelif event.type == \"message_stop\":\nstop_seen = True\nassistant_content = [b for b in assemble(blocks) if b[\"type\"] != \"thinking\"]\nmessages.append({\"role\": \"assistant\", \"content\": assistant_content})\nresponse = finalize(blocks)\nif response.stop_reason == \"end_turn\":\nreturn response\nfor block in response.content:\nif block.type == \"tool_use\":\nresult = execute_tool(block.name, block.input)\nmessages.append({\"role\":\"user\",\"content\":[{\"type\":\"tool_result\",\n\"tool_use_id\":block.id,\"content\":result}]})\n\n# --- MEMORY ---\ndef build_session_history(prior_sessions):\n# Concatenating all prior session transcripts in-context\nfull_history = []\nfor session in prior_sessions:\nfull_history.extend(session[\"messages\"])\nreturn full_history\n\nReveal model answer\nSkip for now",
-                "fr": "Checkpoint 7 · Choisir le bon schéma de mémoire\n\nLisez les trois cas d’utilisation d’agent ci-dessous. Associez chaque cas d’utilisation d’agent sur la gauche à la bonne portée mémoire sur la droite. Il y a une seule portée correcte par cas d’utilisation.\n\nUn agent du support client assiste le même utilisateur lors de contrôles quotidiens sur deux semaines. Chaque session reprend là où la précédente s’était arrêtée.\n\nIn-context memory: tout l'état réside dans la conversation active.External storage: écrire l'état dans une base de données à la fin de la session, puis le lire au début de la session.No persistent memory (stateless): chaque session commence à zéro.\n\nUn formatteur de documents reçoit un fichier, applique une transformation, renvoie le résultat et se termine. Chaque travail est entièrement indépendant.\n\nIn-context memory: tout l'état réside dans la conversation active.External storage: écrire l'état dans une base de données à la fin de la session, puis le lire au début de la session.No persistent memory (stateless): chaque session commence à zéro.\n\nUn assistant de codage travaille avec un développeur pendant une session de plusieurs heures. La session ne se poursuivra pas après sa fin.\n\nIn-context memory: tout l'état réside dans la conversation active.External storage: écrire l'état dans une base de données à la fin de la session, puis le lire au début de la session.No persistent memory (stateless): chaque session commence à zéro.\n\nSoumettre\nIgnorer pour le moment\n\nTâche cumulée de débogage · 8 min\n\nTâche cumulée de débogage · Identifier chaque bogue\n\nL’implémentation de l’agent ci-dessous contient quatre bogues plantés, l’un dans chacune des quatre couches: la couche schéma, la couche streaming où la réponse est assemblée et enregistrée, la couche contexte où la structure du message est construite, et la couche mémoire.\n\nTravaillez par étapes ci-dessous. Cet écran couvre l’étape 1: identifier chaque bogue. L’étape 2, écrire la version corrigée, se trouve sur l’écran suivant.\n\nImplémentation buggy\n\n# --- TOOL DEFINITIONS ---\ntools = [\n{\n\"name\": \"get_customer_data\",\n\"description\": \"Gets data.\",\n\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }\n}\n]\n\n# --- AGENT LOOP ---\ndef run_agent(user_request, session_history):\nmessages = session_history + [{\"role\":\"user\",\"content\":user_request}]\nwhile True:\nblocks = {}\nstop_seen = False\nwith client.messages.stream(\nmodel=model, max_tokens=4096, tools=tools, messages=messages,\nthinking={\"type\": \"adaptive\"}\n) as stream:\nfor event in stream:\nif event.type == \"content_block_start\":\nblocks[event.index] = init_block(event)\nelif event.type == \"content_block_delta\":\napply_delta(blocks[event.index], event.delta)\nelif event.type == \"message_stop\":\nstop_seen = True\nassistant_content = [b for b in assemble(blocks) if b[\"type\"] != \"thinking\"]\nmessages.append({\"role\": \"assistant\", \"content\": assistant_content})\nresponse = finalize(blocks)\nif response.stop_reason == \"end_turn\":\nreturn response\nfor block in response.content:\nif block.type == \"tool_use\":\nresult = execute_tool(block.name, block.input)\nmessages.append({\"role\":\"user\",\"content\":[{\"type\":\"tool_result\",\n\"tool_use_id\":block.id,\"content\":result}]})\n\n# --- MEMORY ---\ndef build_session_history(prior_sessions):\n# Concatenating all prior session transcripts in-context\nfull_history = []\nfor session in prior_sessions:\nfull_history.extend(session[\"messages\"])\nreturn full_history\n\nStage 1: Identify each bug\n\nL’implémentation ci-dessus contient quatre bogues, l’un dans chacune des quatre couches. Pour chaque bogue : nommez la couche à laquelle il appartient et rédigez une phrase décrivant ce qu’il provoque à l’exécution.\n\nRévéler la réponse du modèle\nPasser pour le moment\n\nTâche cumulée de débogage · 10 min\n\nTâche cumulée de débogage · Écrire la version corrigée\n\nÉtape 2 : écrire la version corrigée de chaque bogue identifiée à l’écran précédent. Pour chacun, montrez le code corrigé et indiquez ce que cela change.\n\nImplémentation buggy (pour référence)\n\n# --- TOOL DEFINITIONS ---\ntools = [\n{\n\"name\": \"get_customer_data\",\n\"description\": \"Gets data.\",\n\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }\n}\n]\n\n# --- AGENT LOOP ---\ndef run_agent(user_request, session_history):\nmessages = session_history + [{\"role\":\"user\",\"content\":user_request}]\nwhile True:\nblocks = {}\nstop_seen = False\nwith client.messages.stream(\nmodel=model, max_tokens=4096, tools=tools, messages=messages,\nthinking={\"type\": \"adaptive\"}\n) as stream:\nfor event in stream:\nif event.type == \"content_block_start\":\nblocks[event.index] = init_block(event)\nelif event.type == \"content_block_delta\":\napply_delta(blocks[event.index], event.delta)\nelif event.type == \"message_stop\":\nstop_seen = True\nassistant_content = [b for b in assemble(blocks) if b[\"type\"] != \"thinking\"]\nmessages.append({\"role\": \"assistant\", \"content\": assistant_content})\nresponse = finalize(blocks)\nif response.stop_reason == \"end_turn\":\nreturn response\nfor block in response.content:\nif block.type == \"tool_use\":\nresult = execute_tool(block.name, block.input)\nmessages.append({\"role\":\"user\",\"content\":[{\"type\":\"tool_result\",\n\"tool_use_id\":block.id,\"content\":result}]})\n\n# --- MEMORY ---\ndef build_session_history(prior_sessions):\n# Concatenating all prior session transcripts in-context\nfull_history = []\nfor session in prior_sessions:\nfull_history.extend(session[\"messages\"])\nreturn full_history\n\nRévéler la réponse du modèle\nPasser pour le moment"
-              }
+              "type": "bucket_sort",
+              "buckets": [
+                {
+                  "id": "bucket_0",
+                  "label": {
+                    "en": "# Concatenating all prior session transcripts in-context",
+                    "fr": "# Concatenating all prior session transcripts in-context"
+                  }
+                },
+                {
+                  "id": "bucket_1",
+                  "label": {
+                    "en": "full_history = []",
+                    "fr": "full_history = []"
+                  }
+                },
+                {
+                  "id": "bucket_2",
+                  "label": {
+                    "en": "for session in prior_sessions:",
+                    "fr": "for session in prior_sessions:"
+                  }
+                },
+                {
+                  "id": "bucket_3",
+                  "label": {
+                    "en": "full_history.extend(session[\"messages\"])",
+                    "fr": "full_history.extend(session[\"messages\"])"
+                  }
+                },
+                {
+                  "id": "bucket_4",
+                  "label": {
+                    "en": "return full_history",
+                    "fr": "return full_history"
+                  }
+                },
+                {
+                  "id": "bucket_5",
+                  "label": {
+                    "en": "Reveal model answer",
+                    "fr": "Reveal model answer"
+                  }
+                }
+              ],
+              "id": "bucket_24",
+              "title": {
+                "en": "Checkpoint 7 · Choose the right memory pattern Read the t...",
+                "fr": "Checkpoint 7 · Choose the right memory pattern Read the t..."
+              },
+              "instructions": {
+                "en": "Checkpoint 7 · Choose the right memory pattern Read the three agent use cases below. Match each agent use case on the left to the correct memory scope on the right. There is one correct scope per use case. A customer support agent assists the same user across daily check-ins over two weeks. Each session starts where the previous one left off. In-context memory: all state lives in the active conversation.External storage: write state to a database at session end, then read it back at session start.No persistent memory (stateless): each session starts fresh. A document formatter receives a file, applies a transformation, returns the output, and terminates. Each job is fully independent. In-context memory: all state lives in the active conversation.External storage: write state to a database at session end, then read it back at session start.No persistent memory (stateless): each session starts fresh. A coding assistant works with a developer across a multi-hour session. The session will not continue after it ends. In-context memory: all state lives in the active conversation.External storage: write state to a database at session end, then read it back at session start.No persistent memory (stateless): each session starts fresh.",
+                "fr": "Checkpoint 7 · Choose the right memory pattern Read the three agent use cases below. Match each agent use case on the left to the correct memory scope on the right. There is one correct scope per use case. A customer support agent assists the same user across daily check-ins over two weeks. Each session starts where the previous one left off. In-context memory: all state lives in the active conversation.External storage: write state to a database at session end, then read it back at session start.No persistent memory (stateless): each session starts fresh. A document formatter receives a file, applies a transformation, returns the output, and terminates. Each job is fully independent. In-context memory: all state lives in the active conversation.External storage: write state to a database at session end, then read it back at session start.No persistent memory (stateless): each session starts fresh. A coding assistant works with a developer across a multi-hour session. The session will not continue after it ends. In-context memory: all state lives in the active conversation.External storage: write state to a database at session end, then read it back at session start.No persistent memory (stateless): each session starts fresh."
+              },
+              "cards": [
+                {
+                  "id": "item_0",
+                  "text": {
+                    "en": "CumulativeDebug Task·8 min",
+                    "fr": "CumulativeDebug Task·8 min"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_1",
+                  "text": {
+                    "en": "Cumulative debug task · Identify each bug",
+                    "fr": "Cumulative debug task · Identify each bug"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_2",
+                  "text": {
+                    "en": "The agent implementation below has four planted bugs, one in each of four layers: the schema layer, the streaming layer where the response is assembled and committed, the context layer where the message structure is built, and the memory layer.",
+                    "fr": "The agent implementation below has four planted bugs, one in each of four layers: the schema layer, the streaming layer where the response is assembled and committed, the context layer where the message structure is built, and the memory layer."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_3",
+                  "text": {
+                    "en": "Work through the two stages below. This screen covers Stage 1: identify each bug. Stage 2, writing the corrected version, is on the next screen.",
+                    "fr": "Work through the two stages below. This screen covers Stage 1: identify each bug. Stage 2, writing the corrected version, is on the next screen."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_4",
+                  "text": {
+                    "en": "Buggy implementation",
+                    "fr": "Buggy implementation"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_5",
+                  "text": {
+                    "en": "# --- TOOL DEFINITIONS ---",
+                    "fr": "# --- TOOL DEFINITIONS ---"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_6",
+                  "text": {
+                    "en": "tools = [",
+                    "fr": "tools = ["
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_7",
+                  "text": {
+                    "en": "{",
+                    "fr": "{"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_8",
+                  "text": {
+                    "en": "\"name\": \"get_customer_data\",",
+                    "fr": "\"name\": \"get_customer_data\","
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_9",
+                  "text": {
+                    "en": "\"description\": \"Gets data.\",",
+                    "fr": "\"description\": \"Gets data.\","
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_10",
+                  "text": {
+                    "en": "\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }",
+                    "fr": "\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_11",
+                  "text": {
+                    "en": "}",
+                    "fr": "}"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_12",
+                  "text": {
+                    "en": "]",
+                    "fr": "]"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_13",
+                  "text": {
+                    "en": "# --- AGENT LOOP ---",
+                    "fr": "# --- AGENT LOOP ---"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_14",
+                  "text": {
+                    "en": "def run_agent(user_request, session_history):",
+                    "fr": "def run_agent(user_request, session_history):"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_15",
+                  "text": {
+                    "en": "messages = session_history + [{\"role\":\"user\",\"content\":user_request}]",
+                    "fr": "messages = session_history + [{\"role\":\"user\",\"content\":user_request}]"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_16",
+                  "text": {
+                    "en": "while True:",
+                    "fr": "while True:"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_17",
+                  "text": {
+                    "en": "blocks = {}",
+                    "fr": "blocks = {}"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_18",
+                  "text": {
+                    "en": "stop_seen = False",
+                    "fr": "stop_seen = False"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_19",
+                  "text": {
+                    "en": "with client.messages.stream(",
+                    "fr": "with client.messages.stream("
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_20",
+                  "text": {
+                    "en": "model=model, max_tokens=4096, tools=tools, messages=messages,",
+                    "fr": "model=model, max_tokens=4096, tools=tools, messages=messages,"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_21",
+                  "text": {
+                    "en": "thinking={\"type\": \"adaptive\"}",
+                    "fr": "thinking={\"type\": \"adaptive\"}"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_22",
+                  "text": {
+                    "en": ") as stream:",
+                    "fr": ") as stream:"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_23",
+                  "text": {
+                    "en": "for event in stream:",
+                    "fr": "for event in stream:"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_24",
+                  "text": {
+                    "en": "if event.type == \"content_block_start\":",
+                    "fr": "if event.type == \"content_block_start\":"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_25",
+                  "text": {
+                    "en": "blocks[event.index] = init_block(event)",
+                    "fr": "blocks[event.index] = init_block(event)"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_26",
+                  "text": {
+                    "en": "elif event.type == \"content_block_delta\":",
+                    "fr": "elif event.type == \"content_block_delta\":"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_27",
+                  "text": {
+                    "en": "apply_delta(blocks[event.index], event.delta)",
+                    "fr": "apply_delta(blocks[event.index], event.delta)"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_28",
+                  "text": {
+                    "en": "elif event.type == \"message_stop\":",
+                    "fr": "elif event.type == \"message_stop\":"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_29",
+                  "text": {
+                    "en": "stop_seen = True",
+                    "fr": "stop_seen = True"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_30",
+                  "text": {
+                    "en": "assistant_content = [b for b in assemble(blocks) if b[\"type\"] != \"thinking\"]",
+                    "fr": "assistant_content = [b for b in assemble(blocks) if b[\"type\"] != \"thinking\"]"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_31",
+                  "text": {
+                    "en": "messages.append({\"role\": \"assistant\", \"content\": assistant_content})",
+                    "fr": "messages.append({\"role\": \"assistant\", \"content\": assistant_content})"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_32",
+                  "text": {
+                    "en": "response = finalize(blocks)",
+                    "fr": "response = finalize(blocks)"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_33",
+                  "text": {
+                    "en": "if response.stop_reason == \"end_turn\":",
+                    "fr": "if response.stop_reason == \"end_turn\":"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_34",
+                  "text": {
+                    "en": "return response",
+                    "fr": "return response"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_35",
+                  "text": {
+                    "en": "for block in response.content:",
+                    "fr": "for block in response.content:"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_36",
+                  "text": {
+                    "en": "if block.type == \"tool_use\":",
+                    "fr": "if block.type == \"tool_use\":"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_37",
+                  "text": {
+                    "en": "result = execute_tool(block.name, block.input)",
+                    "fr": "result = execute_tool(block.name, block.input)"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_38",
+                  "text": {
+                    "en": "messages.append({\"role\":\"user\",\"content\":[{\"type\":\"tool_result\",",
+                    "fr": "messages.append({\"role\":\"user\",\"content\":[{\"type\":\"tool_result\","
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_39",
+                  "text": {
+                    "en": "\"tool_use_id\":block.id,\"content\":result}]})",
+                    "fr": "\"tool_use_id\":block.id,\"content\":result}]})"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_40",
+                  "text": {
+                    "en": "# --- MEMORY ---",
+                    "fr": "# --- MEMORY ---"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_41",
+                  "text": {
+                    "en": "def build_session_history(prior_sessions):",
+                    "fr": "def build_session_history(prior_sessions):"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_42",
+                  "text": {
+                    "en": "# Concatenating all prior session transcripts in-context",
+                    "fr": "# Concatenating all prior session transcripts in-context"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_43",
+                  "text": {
+                    "en": "full_history = []",
+                    "fr": "full_history = []"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_44",
+                  "text": {
+                    "en": "for session in prior_sessions:",
+                    "fr": "for session in prior_sessions:"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_45",
+                  "text": {
+                    "en": "full_history.extend(session[\"messages\"])",
+                    "fr": "full_history.extend(session[\"messages\"])"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_46",
+                  "text": {
+                    "en": "return full_history",
+                    "fr": "return full_history"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_47",
+                  "text": {
+                    "en": "Stage 1: Identify each bug",
+                    "fr": "Stage 1: Identify each bug"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_48",
+                  "text": {
+                    "en": "The implementation above has four bugs, one in each of four layers. For each bug: name the layer it belongs to and write one sentence describing what it causes at runtime.",
+                    "fr": "The implementation above has four bugs, one in each of four layers. For each bug: name the layer it belongs to and write one sentence describing what it causes at runtime."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_49",
+                  "text": {
+                    "en": "Reveal model answer",
+                    "fr": "Reveal model answer"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_50",
+                  "text": {
+                    "en": "CumulativeDebug Task·10 min",
+                    "fr": "CumulativeDebug Task·10 min"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_51",
+                  "text": {
+                    "en": "Cumulative debug task · Write the corrected version",
+                    "fr": "Cumulative debug task · Write the corrected version"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_52",
+                  "text": {
+                    "en": "Stage 2: write the corrected version of each bug identified on the previous screen. For each one, show the fixed code and name what it changes.",
+                    "fr": "Stage 2: write the corrected version of each bug identified on the previous screen. For each one, show the fixed code and name what it changes."
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_53",
+                  "text": {
+                    "en": "Buggy implementation (for reference)",
+                    "fr": "Buggy implementation (for reference)"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_54",
+                  "text": {
+                    "en": "# --- TOOL DEFINITIONS ---",
+                    "fr": "# --- TOOL DEFINITIONS ---"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_55",
+                  "text": {
+                    "en": "tools = [",
+                    "fr": "tools = ["
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_56",
+                  "text": {
+                    "en": "{",
+                    "fr": "{"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_57",
+                  "text": {
+                    "en": "\"name\": \"get_customer_data\",",
+                    "fr": "\"name\": \"get_customer_data\","
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_58",
+                  "text": {
+                    "en": "\"description\": \"Gets data.\",",
+                    "fr": "\"description\": \"Gets data.\","
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_59",
+                  "text": {
+                    "en": "\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }",
+                    "fr": "\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_60",
+                  "text": {
+                    "en": "}",
+                    "fr": "}"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_61",
+                  "text": {
+                    "en": "]",
+                    "fr": "]"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_62",
+                  "text": {
+                    "en": "# --- AGENT LOOP ---",
+                    "fr": "# --- AGENT LOOP ---"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_63",
+                  "text": {
+                    "en": "def run_agent(user_request, session_history):",
+                    "fr": "def run_agent(user_request, session_history):"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_64",
+                  "text": {
+                    "en": "messages = session_history + [{\"role\":\"user\",\"content\":user_request}]",
+                    "fr": "messages = session_history + [{\"role\":\"user\",\"content\":user_request}]"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_65",
+                  "text": {
+                    "en": "while True:",
+                    "fr": "while True:"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_66",
+                  "text": {
+                    "en": "blocks = {}",
+                    "fr": "blocks = {}"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_67",
+                  "text": {
+                    "en": "stop_seen = False",
+                    "fr": "stop_seen = False"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_68",
+                  "text": {
+                    "en": "with client.messages.stream(",
+                    "fr": "with client.messages.stream("
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_69",
+                  "text": {
+                    "en": "model=model, max_tokens=4096, tools=tools, messages=messages,",
+                    "fr": "model=model, max_tokens=4096, tools=tools, messages=messages,"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_70",
+                  "text": {
+                    "en": "thinking={\"type\": \"adaptive\"}",
+                    "fr": "thinking={\"type\": \"adaptive\"}"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_71",
+                  "text": {
+                    "en": ") as stream:",
+                    "fr": ") as stream:"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_72",
+                  "text": {
+                    "en": "for event in stream:",
+                    "fr": "for event in stream:"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_73",
+                  "text": {
+                    "en": "if event.type == \"content_block_start\":",
+                    "fr": "if event.type == \"content_block_start\":"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_74",
+                  "text": {
+                    "en": "blocks[event.index] = init_block(event)",
+                    "fr": "blocks[event.index] = init_block(event)"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_75",
+                  "text": {
+                    "en": "elif event.type == \"content_block_delta\":",
+                    "fr": "elif event.type == \"content_block_delta\":"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_76",
+                  "text": {
+                    "en": "apply_delta(blocks[event.index], event.delta)",
+                    "fr": "apply_delta(blocks[event.index], event.delta)"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_77",
+                  "text": {
+                    "en": "elif event.type == \"message_stop\":",
+                    "fr": "elif event.type == \"message_stop\":"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_78",
+                  "text": {
+                    "en": "stop_seen = True",
+                    "fr": "stop_seen = True"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_79",
+                  "text": {
+                    "en": "assistant_content = [b for b in assemble(blocks) if b[\"type\"] != \"thinking\"]",
+                    "fr": "assistant_content = [b for b in assemble(blocks) if b[\"type\"] != \"thinking\"]"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_80",
+                  "text": {
+                    "en": "messages.append({\"role\": \"assistant\", \"content\": assistant_content})",
+                    "fr": "messages.append({\"role\": \"assistant\", \"content\": assistant_content})"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_81",
+                  "text": {
+                    "en": "response = finalize(blocks)",
+                    "fr": "response = finalize(blocks)"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_82",
+                  "text": {
+                    "en": "if response.stop_reason == \"end_turn\":",
+                    "fr": "if response.stop_reason == \"end_turn\":"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_83",
+                  "text": {
+                    "en": "return response",
+                    "fr": "return response"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_84",
+                  "text": {
+                    "en": "for block in response.content:",
+                    "fr": "for block in response.content:"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_85",
+                  "text": {
+                    "en": "if block.type == \"tool_use\":",
+                    "fr": "if block.type == \"tool_use\":"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_86",
+                  "text": {
+                    "en": "result = execute_tool(block.name, block.input)",
+                    "fr": "result = execute_tool(block.name, block.input)"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_87",
+                  "text": {
+                    "en": "messages.append({\"role\":\"user\",\"content\":[{\"type\":\"tool_result\",",
+                    "fr": "messages.append({\"role\":\"user\",\"content\":[{\"type\":\"tool_result\","
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_88",
+                  "text": {
+                    "en": "\"tool_use_id\":block.id,\"content\":result}]})",
+                    "fr": "\"tool_use_id\":block.id,\"content\":result}]})"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_89",
+                  "text": {
+                    "en": "# --- MEMORY ---",
+                    "fr": "# --- MEMORY ---"
+                  },
+                  "correctBucket": ""
+                },
+                {
+                  "id": "item_90",
+                  "text": {
+                    "en": "def build_session_history(prior_sessions):",
+                    "fr": "def build_session_history(prior_sessions):"
+                  },
+                  "correctBucket": ""
+                }
+              ]
             },
             {
               "type": "flip_cards",
@@ -698,13 +1783,6 @@
                   }
                 }
               ]
-            },
-            {
-              "type": "content",
-              "body": {
-                "en": "Checkpoint 8 · Select the right input encoding for each scenario\n\nRead the three input scenarios below. For each input scenario, select the correct encoding method. Each item's feedback names the cost of the wrong choice.\n\nA reference product diagram used in every request your pipeline makes\n\nMessage Batches API: submit all requests in one batch call, poll for completionFiles API: upload once, reference file_id in each requestInline base64: encode and include directly in the message block\n\nA one-off screenshot of a UI bug, submitted by a support engineer in a single request\n\nMessage Batches API: submit all requests in one batch call, poll for completionFiles API: upload once, reference file_id in each requestInline base64: encode and include directly in the message block\n\nA job classifying 5,000 customer feedback responses\n\nMessage Batches API: submit all requests in one batch call, poll for completionFiles API: upload once, reference file_id in each requestInline base64: encode and include directly in the message block\n\nSubmit\nSkip for now\n\nRecapEight takeaways·3 min\n\nEight takeaways, one per enabling objective\n\n1\n\nWhen a prompt fails, the failure type tells you which technique is missing.\n\nOutput in the wrong shape points to a missing output constraint, drift across turns points to an underspecified system prompt, and a hallucinated structure points to the absence of few-shot examples. The instinct to reword the instruction and try again rarely works, because none of those failures are phrasing problems. Diagnose the failure type first, then add the technique that addresses it. When prompt-level instructions are not enough because untested inputs still break the parser, move output control into the API with structured outputs: JSON outputs constrain the final response against a schema, and strict tool use validates the arguments Claude passes to your tools, at the cost of first-call compilation latency and added input tokens.\n\n2\n\nMatch the reasoning depth to the task before you tune the prompt.\n\nEnable reasoning only where a reasoning pass changes the answer and calibrate the effort setting to the problem rather than raising it on every call. Remember that thinking blocks return to the API unchanged or the next request fails. Choosing which model to run, as distinct from whether to enable reasoning, is taught in the MSO Foundations module that precedes this one.\n\n3\n\nA stream ending is not a message completing.\n\nStreaming buys perceived latency at the cost of assembling the response yourself from partial events. Act on a block only after it closes, commit a turn to history only after message_stop, and on an interrupted stream discard the partial turn and retry. The failure mode to recognize is a tool-use error on a retry that traces back to a half-built block from a dropped stream, not to the schema.\n\n4\n\nEvery wrong-tool selection traces back to the schema, and most of the time to the description.\n\nClaude picks a tool by reading the description field and matching it against the user's request, which means two tools that both say \"use this to find information\" are indistinguishable from Claude's side even when the input schemas look nothing alike. The one sentence that resolves most wrong-tool bugs is the exclusion condition: a line in every description naming when not to call the tool, written into the schema at design time rather than after the first wrong call shows up in a log. When someone else has already written the tools, MCP lets you connect a maintained server instead of authoring every schema by hand, but each connected server adds its tool definitions to the context window whether the tools are used, so connect deliberately and control loading cost.\n\n5\n\nContext is a fixed budget, and tool outputs spend it faster than anything else in the loop.\n\nProduction tool outputs run three to five times longer than the fixtures used in development, so a session that holds together cleanly across fifty turns in testing can hit the ceiling at turn eight once it ships. Pruning, compaction, and subagent handoffs each buy back headroom in different ways, and the one to apply depends on whether you still need the earlier state. When tool selection starts degrading after a fixed number of turns, the window is the first place to look, not the schema.\n\n6\n\nThe workflow-or-agent decision sets the cost of everything that follows, and human checkpoints belong in the design.\n\nA workflow is the right call when you can write the exact steps in code, and an agent is the right call when you can specify the goal and the tools but not the path between them. Choosing wrong in either direction only surfaces in production: agents where workflows would do add context cost and behavior that lives in transcripts, and workflows where agents are needed break the first time an input falls outside the path. If a tool can take an irreversible action, the human-in-the-loop checkpoint goes in before the loop is wired, not after the first write reaches a customer environment.\n\n7\n\nMemory scope is decided by the shape of the session, not by what is easiest to implement.\n\nIn-context memory is the simplest pattern to write, which is why it is also the one that fails earliest when production sessions turn out to be shorter and more numerous than the long continuous sessions used in development. External storage adds latency but the state survives across sessions, summarized memory cuts cost but loses anything the summarizer prompt did not preserve, and stateless is correct for jobs that complete and close. The refactor from in-context to external under production pressure takes about an hour, and making the same choice deliberately at design time takes about twenty minutes. Carrying repeatable instructions across tasks is a separate problem from carrying state, and the pattern for it is a Skill: a markdown file Claude loads on demand by matching its description, rather than instructions injected into every session.\n\n8\n\nCalculate the cost of a multimodal input before you write the ingestion code and match the API to the workload.\n\nAn image costs ⌈width / 28⌉ × ⌈height / 28⌉ visual tokens, and the per-image ceiling differs by model tier. A high-resolution original on the newest models can cost many times what a thumbnail costs in your test set, so the formula needs to run against the largest input you expect in production rather than the inputs you have on hand. Inline base64 fits one-off images, the Files API fits assets reused across requests, and the Message Batches API handles offline work at lower per-token cost in exchange for non-deterministic latency. The mistake worth avoiding is calling the synchronous API in a loop and treating that as batching.\n\nWhat comes next\n\nThis module established the Developer primitive library, including five interaction types that all subsequent Developer modules draw from. The patterns introduced here, which include prompting craft, tool schemas, context engineering, agent construction, memory scoping, and multimodal ingestion, form the foundation for every module that follows.\n\nSources\n\nClaude 101 (Skilljar): Prompting foundations, tool-use basics, agents and workflows overview, context window concepts.\n\nClaude Code 101 In Action (Skilljar): Context management (/compact, /clear), Claude Code agent loop, production agent patterns.\n\nAI Fluency Framework Foundations (Skilljar): Prompting techniques, few-shot examples, constraint specification.\n\nBuilding with the Claude API (Skilljar): Tool schemas, message block structure, streaming, structured outputs, Files API, batch API, agent construction.\n\nplatform.claude.com: Canonical reference for tool-use, agents, context, MCP, API mechanics. Pull at publish and re-verify.\n\nAnthropic Blog: \"Building Effective Agents\": Workflow sub-patterns (chaining, routing, parallelization, evaluator-optimizer), agent design guidance.\n\nYou can now take a Claude prototype into production.\n\nProduction-ready prompts, tool-use loops, streaming, context and memory management, and checkpointed agent loops now hold up under real usage.\n\nGlossaryKey Terms·3 min\n\nKey terms from this module\n\nAlphabetical. Click a term to expand its definition.\n\nClaude Agent SDK\n\nA managed agent runtime distributed as @anthropic-ai/claude-agent-sdk (Typescript) / claude-agent-sdk (Python). It gives a partner programmatic access to the same agent loop that powers Claude Code: iteration, tool execution, observation, termination, so the partner can embed an agent inside their own product instead of running Claude Code in a terminal. Distinct from the Anthropic SDK, which is a thin convenience wrapper over the API and does not run an agent loop.\n\nContext Window\n\nThe total number of tokens a model can process in a single request, including the system prompt, conversation history, tool definitions, tool results, and the model's own output. When the running total reaches the limit, earlier content must be removed or summarized before new content can be added.\n\nFunction signature\n\nFunction signature is a programming term that means the declaration of a function: its name plus the list of parameters it accepts, including their names, types, and any default values.\n\nHITL\n\nHuman-in-the-loop refers to inserting a human review or approval step into an automated process before consequential action is taken.\n\nRefactor\n\nRefactor refers to changing the internal structure of code without changing what it does from the outside. You reorganize, rename, or rewrite the implementation to make it cleaner, faster, easier to test, or easier to extend, but the behavior the rest of the system sees stays the same.\n\nSOC 2\n\nService Organization Control 2 is an audit framework developed by the American Institute of Certified Public Accountants (AICPA) for evaluating how a service organization handles customer data. It is the standard most commonly cited when a SaaS vendor or cloud service provider is asked to demonstrate that their security practices meet a recognized bar.\n\nState\n\nState is the information an agent carries between turns: the conversation so far, what the user asked for, results from earlier tool calls.\n\nStop_reason\n\nA field in the API response that tells your code why the model stopped generating. The two values most relevant to agentic loops are end_turn, which means Claude has finished and is not requesting any further action, and tool_use, which means Claude has issued one or more tool_use blocks and is waiting for results before continuing.\n\nSubagent\n\nA separate agent instance spun up by an orchestrating agent to handle a discrete subtask. Subagents do not inherit conversation history, skills, or context from the parent session, each starts clean and must be configured explicitly with the instructions and tools it needs. Results are returned to the orchestrator, which incorporates them into the broader task.\n\nToken\n\nThe unit Claude uses to measure and process text. The characters-per-token average depends on the tokenizer of the model at hand and differs between model generations. Treat any chars-per-token rule of thumb as model-dependent and confirm current tokenizer behavior at build time. Tokens are consumed by everything in the context window: prompts, responses, tool schemas, and tool results. They are the basis for both pricing and context budget calculations.\n\nTool_use_block\n\nA content block returned by the assistant when Claude wants to call a function. Contains the tool name, a unique ID, and the input arguments Claude wants passed to your code. Every tool_use block must be answered by a matching tool_result block in the immediately following user turn, with the same ID preserved exactly.\n\nModule CompleteDeveloper Path·2 min\n\nCongrats! You’ve successfully completed this module.\n\nYou can now write production-ready prompts, wire a tool-use loop that survives real conditions, handle streaming safely, manage context and memory at scale, and build an agent loop with the right checkpoints in the right places. The engineering decisions in this module are the ones that separate a prototype from a system that holds up in production.\n\n0\nof ? checkpoints passed\n\nM1\n\nMSO Foundations\n\nTokens, context windows, sampling, model tiers, prompting modes, and the API transport mechanics.\n\nM2\n\nProduction-Grade Prompting, Agents & Tool-use\n\nProduction-ready prompts, tool-use loops, streaming, context and memory management, and checkpointed agent loops.\n\nYou Are Here\n\nM3\n\nClaude Code, MCP & Integration\n\nPermission modes, durable project context, plugin packaging, and MCP integration without leaking credentials.\n\nUp Next\n\nM4\n\nProduction Engineering, Evals, and Security\n\nEvals, tracing, failure handling, cost and orchestration budgets, and security boundaries that hold in production.\n\nM5\n\nAccelerators and IP Contribution\n\nPackage accelerators, prepare verifiable contributions, choose deployment platforms, and mark trust boundaries.\n\nReview module\nStart over\nStart Module 3 →\nReturn to course home\n\nModule 2 complete.",
-                "fr": "Checkpoint 8 · Sélectionnez le bon encodage d'entrée pour chaque scénario\n\nLisez les trois scénarios d'entrée ci-dessous. Pour chaque scénario d'entrée, sélectionnez la méthode d'encodage correcte. Le feedback de chaque élément indique le coût de la mauvaise option.\n\nUn diagramme de produit de référence utilisé dans chaque requête que votre pipeline effectue\n\nMessage Batches API : soumettre toutes les requêtes en un seul appel batch, interroger l'état d’achèvement\nFiles API : téléverser une fois, référencer file_id dans chaque requête\nInline base64 : encoder et inclure directement dans le bloc de message\n\nUne capture d’écran unique d’un bug d’interface utilisateur, soumise par un ingénieur support dans une seule requête\n\nMessage Batches API : soumettre toutes les requêtes en un seul appel batch, interroger l’état d’achèvement\nFiles API : téléverser une fois, référencer file_id dans chaque requête\nInline base64 : encoder et inclure directement dans le bloc de message\n\nUn travail de classification de 5 000 retours clients\n\nMessage Batches API : soumettre toutes les requêtes en un seul appel batch, interroger l’état d’achèvement\nFiles API : téléverser une fois, référencer file_id dans chaque requête\nInline base64 : encoder et inclure directement dans le bloc de message\n\nSoumettre\nPasser pour le moment\n\nRécapitulatif · Huit points à retenir · 3 min\n\nHuit points à retenir, un par objectif habilitant\n\n1\n\nQuand un prompt échoue, le type d’échec indique quelle technique manque.\n\nUne sortie dans une forme incorrecte pointe vers une contrainte de sortie manquante, un décalage entre les tours pointe vers un prompt système sous-défini, et une structure hallucination pointe vers l’absence d’exemples few-shot. L’instinct de reformuler l’instruction et d’essayer à nouveau fonctionne rarement, car aucune de ces défaillances n’est un problème de phrasage. Diagnostiquez le type d’échec en premier, puis ajoutez la technique qui y répond. Lorsque les instructions au niveau du prompt ne suffisent pas parce que des entrées non testées cassent encore le parseur, déplacez le contrôle de sortie dans l’API avec des sorties structurées : les sorties JSON contraignent la réponse finale à un schéma, et l’utilisation stricte des outils valide les arguments que Claude passe à vos outils, au prix d’une latence de compilation à la première invocation et de tokens d’entrée supplémentaires.\n\n2\n\nAjustez la profondeur du raisonnement à la tâche avant d’affiner le prompt.\n\nActivez le raisonnement uniquement lorsque une passe de raisonnement modifie la réponse, et calibrez le niveau d’effort en fonction du problème plutôt que de l’augmenter à chaque appel.\n\nSouvenez-vous que les blocs de raisonnement reviennent à l’API tels quels et que la prochaine requête échoue. Choisir quel modèle exécuter, distinct d’activer le raisonnement, est enseigné dans le module MSO Foundations qui précède celui-ci.\n\n3\n\nLa fin d’un flux n’est pas l’achèvement d’un message.\n\nLe streaming apporte une latence perçue au prix de constituer vous-même la réponse à partir d’événements partiels. Agissez sur un bloc uniquement après sa fermeture, engagez un tour dans l’historique uniquement après message_stop, et en cas de flux interrompu, rejetez le tour partiel et réessayez. Le mode d’échec à reconnaître est une erreur d’utilisation d’outil lors d’un réessai qui remonte à un bloc partiellement construit d’un flux abandonné, et non au schéma.\n\n4\n\nChaque sélection d’outil incorrecte renvoie au schéma, et la plupart du temps à la description.\n\nClaude sélectionne un outil en lisant le champ description et en le faisant correspondre à la demande de l’utilisateur, ce qui signifie que deux outils qui disent tous les deux « utilisez ceci pour trouver des informations » sont indistinguables du côté de Claude même lorsque les schémas d’entrée ne se ressemblent pas. La phrase unique qui résout la plupart des bugs de mauvaise sélection d’outil est la condition d’exclusion : une ligne dans chaque description indiquant quand ne pas appeler l’outil, écrite dans le schéma au moment de la conception plutôt qu’après le premier appel incorrect qui apparaît dans le journal. Lorsqu’un autre a déjà écrit les outils, MCP vous permet de connecter un serveur maintenu à la place d’écrire chaque schéma à la main, mais chaque serveur connecté ajoute ses définitions d’outil dans la fenêtre de contexte, que les outils soient utilisés ou non, alors connectez-vous délibérément et maîtrisez le coût de chargement.\n\n5\n\nLa portée du contexte est un budget fixe, et les sorties d’outil le dépensent plus vite que tout le reste dans la boucle.\n\nLes sorties d’outils en production durent trois à cinq fois plus longtemps que les fixtures utilisées en développement, donc une session qui tient sur cinquante tours en test peut atteindre le plafond au tour huit une fois déployée. L’élagage, la compaction et les transferts à des subagents rachètent de l’espace de manœuvre de manières différentes, et celle à appliquer dépend de si vous avez encore besoin de l’état antérieur. Lorsque la sélection d’outil commence à se dégrader après un nombre fixe de tours, la fenêtre est le premier endroit à vérifier, pas le schéma.\n\n6\n\nLa décision workflow-or-agent détermine le coût de tout ce qui suit, et les checkpoints humains doivent figurer dans la conception.\n\nUn workflow est le bon choix lorsque vous pouvez écrire les étapes exactes en code, et un agent est le bon choix lorsque vous pouvez préciser l’objectif et les outils mais pas le chemin entre eux. Choisir mal dans l’une ou l’autre direction ne se manifeste qu’en production : des agents là où des workflows feraient ajouteront du coût de contexte et un comportement qui se retrouve dans des transcripts, et des workflows où des agents sont nécessaires échouent à la première fois qu’une entrée sort du chemin. Si un outil peut effectuer une action irréversible, le point de contrôle humain-in-the-loop doit être placé avant le câblage de la boucle, et non après la première écriture qui atteint un environnement client.\n\n7\n\nLa portée mémoire est déterminée par la forme de la session, et non par ce qui est le plus facile à mettre en œuvre.\n\nLa mémoire in-context est le motif le plus simple à écrire, ce qui explique pourquoi c’est aussi celui qui échoue le plus tôt lorsque les sessions de production se révèlent plus courtes et plus nombreuses que les longues sessions continues utilisées en développement. Le stockage externe ajoute de la latence mais l’état survit à travers les sessions, la mémoire résumée réduit le coût mais perd tout ce que le prompt résumé n’a pas conservé, et sans état est correct pour les tâches qui se terminent et se ferment. Le refactoring de in-context vers externe sous pression de production prend environ une heure, et faire le même choix délibérément lors de la conception prend environ vingt minutes. Transmettre des instructions reproductibles à travers les tâches est un problème distinct du transport d’état, et le motif pour cela est une Skill : un fichier markdown que Claude charge à la demande en faisant correspondre sa description, plutôt que des instructions injectées dans chaque session.\n\n8\n\nCalculez le coût d’une entrée multimodale avant d’écrire le code d’ingestion et adaptez l’API à la charge de travail.\n\nUne image coûte ⌈width / 28⌉ × ⌈height / 28⌉ jetons visuels, et le plafond par image diffère selon le niveau de modèle. Un original haute résolution sur les modèles les plus récents peut coûter bien plus cher qu’une miniature dans votre ensemble de tests, donc la formule doit être calculée pour la plus grande entrée que vous attendez en production plutôt que pour les entrées dont vous disposez. Inline base64 convient pour des images uniques, l’Files API convient pour des actifs réutilisés dans plusieurs requêtes, et le Message Batches API gère le travail hors ligne à coût par token plus bas en échange d’une latence non déterministe. L’erreur à éviter est d’appeler l’API synchrone dans une boucle et de considérer cela comme du batching.\n\nCe qui vient ensuite\n\nCe module a établi la Developer primitive library, comprenant cinq types d’interaction dont tous les modules Developer suivants se servent. Les modèles introduits ici, qui incluent le prompting, les schémas d’outils, l’ingénierie du contexte, la construction d’agents, la définition de la portée mémoire et l’ingestion multimodale, forment la fondation de chaque module qui suit.\n\nSources\n\nClaude 101 (Skilljar) : Fondements du prompting, bases d’utilisation des outils, aperçu des agents et des workflows, concepts de la fenêtre de contexte.\n\nClaude Code 101 In Action (Skilljar) : Gestion du contexte (/compact, /clear), boucle d’agent Claude Code, modèles d’agent de production.\n\nFondations du AI Fluency Framework (Skilljar) : Techniques de prompting, exemples few-shot, spécification des contraintes.\n\nBuilding with the Claude API (Skilljar) : Schémas d’outils, structure du bloc de messages, streaming, sorties structurées, Files API, batch API, construction d’agent.\n\nplatform.claude.com : Référence canonique pour tool-use, agents, contexte, MCP, mécanismes de l’API. Tirer à la publication et re-vérifier.\n\nAnthropic Blog : « Building Effective Agents » : Sous-patterns de workflow (chaînage, routage, parallélisation, evaluator-optimizer), conseils de conception d’agents.\n\nVous pouvez désormais déployer un prototype Claude en production.\n\nPrompts prêts pour la production, boucles d’usage d’outils, streaming, gestion du contexte et de la mémoire, et boucles d’agents avec checkpoints dans les bons endroits tiennent désormais sous usage réel.\n\nGlossaire — Termes clés · 3 min\n\nTermes clés de ce module\n\nPar ordre alphabétique. Cliquez sur un terme pour développer sa définition.\n\nClaude Agent SDK\n\nUn runtime d’agent géré distribué sous @anthropic-ai/claude-agent-sdk (TypeScript) / claude-agent-sdk (Python). Il donne à un partenaire un accès programmatique à la même boucle d’agent qui alimente Claude Code : itération, exécution d’outil, observation, terminaison, afin que le partenaire puisse intégrer un agent dans son propre produit plutôt que d’exécuter Claude Code dans un terminal. Différent du Anthropic SDK, qui est une simple enveloppe pratique autour de l’API et ne lance pas une boucle d’agent.\n\nContext Window\n\nLe nombre total de tokens qu’un modèle peut traiter dans une seule requête, incluant le système prompt, l’historique de la conversation, les définitions d’outils, les résultats d’outils et la sortie du modèle lui-même. Lorsque le total courant atteint la limite, le contenu antérieur doit être retiré ou résumé avant que le nouveau contenu puisse être ajouté.\n\nFunction signature\n\nLa signature de fonction est un terme de programmation qui signifie la déclaration d’une fonction : son nom plus la liste des paramètres qu’elle accepte, y compris leurs noms, types et éventuelles valeurs par défaut.\n\nHITL\n\nHuman-in-the-loop fait référence à l’insertion d’une étape de révision ou d’approbation humaine dans un processus automatisé avant qu’une action conséquente soit entreprise.\n\nRefactor\n\nLa refactorisation désigne le fait de modifier la structure interne du code sans changer ce qu’il fait de l’extérieur. Vous réorganisez, renommez ou réécrivez l’implémentation pour la rendre plus propre, plus rapide, plus facile à tester ou à étendre, mais le comportement vu par le reste du système reste le même.\n\nSOC 2\n\nService Organization Control 2 est un cadre d’audit développé par l’American Institute of Certified Public Accountants (AICPA) pour évaluer comment une organisation de services gère les données clients. C’est la norme la plus citée lorsque un fournisseur SaaS ou un prestataire de services cloud est invité à démontrer que ses pratiques de sécurité répondent à un niveau reconnu.\n\nState\n\nL’État est l’information qu’un agent porte entre les tours : la conversation jusqu’à présent, ce que l’utilisateur a demandé, les résultats des appels d’outils antérieurs.\n\nStop_reason\n\nUn champ dans la réponse de l’API qui indique à votre code pourquoi le modèle a cessé de générer. Les deux valeurs les plus pertinentes pour les boucles agentiques sont end_turn, ce qui signifie que Claude a terminé et ne demande aucune action supplémentaire, et tool_use, ce qui signifie que Claude a émis un ou plusieurs blocs tool_use et attend les résultats pour continuer.\n\nSubagent\n\nUne instance d’agent distincte lancée par un agent orchestrateur pour gérer une sous-tâche discrète. Les subagents n’héritent pas de l’historique de la conversation, des compétences ou du contexte de la session parente ; chacun démarre propre et doit être configuré explicitement avec les instructions et les outils dont il a besoin. Les résultats sont renvoyés à l’orchestrateur, qui les intègre dans la tâche plus large.\n\nToken\n\nL’unité que Claude utilise pour mesurer et traiter le texte. La moyenne de caractères par token dépend du tokenizer du modèle et diffère entre les générations de modèles. Considérez toute règle empirique de caractères par token comme dépendante du modèle et vérifiez le comportement actuel du tokenizer au moment de la construction. Les tokens sont consommés par tout ce qui se trouve dans la context window : prompts, réponses, schémas d’outils et résultats d’outils. Ils forment la base à la fois du pricing et du calcul du budget contextuel.\n\nTool_use_block\n\nBloc de contenu renvoyé par l’assistant lorsque Claude souhaite appeler une fonction. Contient le nom de l’outil, un identifiant unique et les arguments d’entrée que Claude souhaite transmettre à votre code. Chaque bloc tool_use doit être répondu par un bloc tool_result correspondant dans le tour utilisateur qui suit immédiatement, avec le même ID conservé exactement.\n\nModule CompleteDeveloper Path · 2 min\n\nFélicitations ! Vous avez réussi à terminer ce module.\n\nVous pouvez désormais écrire des prompts prêts pour la production, mettre en place une boucle d’usage d’outils qui supporte des conditions réelles, gérer le streaming en toute sécurité, gérer le contexte et la mémoire à grande échelle et construire une boucle d’agents avec les checkpoints adéquats aux bons endroits. Les décisions d’ingénierie de ce module séparent désormais un prototype d’un système qui tient en production.\n\n0 sur ? checkpoints passés\n\nM1\n\nMSO Foundations\n\nJetons, context windows, échantillonnage, niveaux de modèles, modes de prompting et mécanismes de transport de l’API.\n\nM2\n\nProduction-Grade Prompting, Agents & Tool-use\n\nPrompts prêts pour la production, boucles d’usage d’outils, streaming, gestion du contexte et de la mémoire, et boucles d’agents avec checkpoints.\n\nVous êtes ici\n\nM3\n\nClaude Code, MCP & Intégration\n\nModes d’autorisation, cadre persistant du projet, emballage de plugins et intégration MCP sans fuite d’identifiants.\n\nÀ venir\n\nM4\n\nProduction Engineering, Evals, and Security\n\nÉvals, traçage, gestion des échecs, budgets de coût et d’orchestration, et frontières de sécurité qui tiennent en production.\n\nM5\n\nAccelerators and IP Contribution\n\nAccélérateurs et contributions IP, emballer des accélérateurs, préparer des contributions vérifiables, choisir des plateformes de déploiement et délimiter les frontières de confiance.\n\nRevoir le module\nRecommencer\nDémarrer le Module 3 →\nRetour à l’accueil du cours\n\nModule 2 terminé."
-              }
             },
             {
               "type": "flip_cards",
