@@ -19,6 +19,7 @@ import { TabbedContent } from "@/components/TabbedContent";
 import { ComparisonBox } from "@/components/ComparisonBox";
 import { MatchingExercise } from "@/components/MatchingExercise";
 import { SingleChoiceExercise } from "@/components/SingleChoiceExercise";
+import { ChapterQuiz } from "@/components/ChapterQuiz";
 import { motion } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 
@@ -256,10 +257,31 @@ function LessonQuiz({
       .then((r) => r.json())
       .then((allQuizzes: any) => {
         const courseQuizzes = allQuizzes[courseId];
-        if (courseQuizzes && courseQuizzes[String(lessonIndex)]) {
-          const lessonQs = courseQuizzes[String(lessonIndex)];
+        // Gather all questions for this lesson (keys may be compound "lessonIdx_chapterIdx" or simple "chapterIdx")
+        let lessonQs: any[] = [];
+        if (courseQuizzes) {
+          const prefix = `${lessonIndex}_`;
+          for (const [key, qs] of Object.entries(courseQuizzes)) {
+            if (key.startsWith(prefix) || (key === String(lessonIndex) && !key.includes('_'))) {
+              lessonQs = lessonQs.concat(qs as any[]);
+            }
+          }
+          // For single-lesson courses, all keys are just chapterIndex (no underscore)
+          if (lessonQs.length === 0) {
+            for (const [key, qs] of Object.entries(courseQuizzes)) {
+              if (!key.includes('_')) {
+                lessonQs = lessonQs.concat(qs as any[]);
+              }
+            }
+          }
+        }
+        if (lessonQs.length > 0) {
+          // Shuffle and pick 5 questions from the pool
+          const shuffled = [...lessonQs].sort(() => Math.random() - 0.5);
+          const selected = shuffled.slice(0, 5);
+          const lessonQsSelected = selected;
           // Map to expected format
-          const mapped = lessonQs.map((q: any, idx: number) => ({
+          const mapped = lessonQsSelected.map((q: any, idx: number) => ({
             id: `lq_${courseId}_${lessonIndex}_${idx}`,
             question: { en: q.question, fr: q.question },
             choices: q.choices.map((c: any) => ({ id: c.id, text: { en: c.text, fr: c.text } })),
@@ -407,16 +429,33 @@ function LessonQuiz({
                       .then((r) => r.json())
                       .then((allQuizzes: any) => {
                         const cq = allQuizzes[courseId];
-                        if (cq && cq[String(lessonIndex)]) {
-                          const lessonQs = cq[String(lessonIndex)];
-                          const mapped = lessonQs.map((q: any, idx: number) => ({
-                            id: `lq_${courseId}_${lessonIndex}_${idx}_${Date.now()}`,
-                            question: { en: q.question, fr: q.question },
-                            choices: q.choices.map((c: any) => ({ id: c.id, text: { en: c.text, fr: c.text } })),
-                            correctChoiceIds: [q.correctId],
-                            explanation: { en: q.explanation, fr: q.explanation },
-                          }));
-                          setQuestions(mapped);
+                        if (cq) {
+                          let retryQs: any[] = [];
+                          const prefix = `${lessonIndex}_`;
+                          for (const [key, qs] of Object.entries(cq)) {
+                            if (key.startsWith(prefix) || (key === String(lessonIndex) && !key.includes('_'))) {
+                              retryQs = retryQs.concat(qs as any[]);
+                            }
+                          }
+                          if (retryQs.length === 0) {
+                            for (const [key, qs] of Object.entries(cq)) {
+                              if (!key.includes('_')) {
+                                retryQs = retryQs.concat(qs as any[]);
+                              }
+                            }
+                          }
+                          if (retryQs.length > 0) {
+                            const shuffled = [...retryQs].sort(() => Math.random() - 0.5);
+                            const selected = shuffled.slice(0, 5);
+                            const mapped = selected.map((q: any, idx: number) => ({
+                              id: `lq_${courseId}_${lessonIndex}_${idx}_${Date.now()}`,
+                              question: { en: q.question, fr: q.question },
+                              choices: q.choices.map((c: any) => ({ id: c.id, text: { en: c.text, fr: c.text } })),
+                              correctChoiceIds: [q.correctId],
+                              explanation: { en: q.explanation, fr: q.explanation },
+                            }));
+                            setQuestions(mapped);
+                          }
                         }
                       })
                       .catch(() => {});
@@ -839,6 +878,8 @@ function LessonViewer({
   const [currentChapter, setCurrentChapter] = useState(initialChapter ?? 0);
   const [showQuiz, setShowQuiz] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
+  const [showChapterQuiz, setShowChapterQuiz] = useState(false);
+  const [chapterQuizPassed, setChapterQuizPassed] = useState<Set<number>>(new Set());
   // Track whether we're syncing from parent to avoid calling onChapterChange back
   const isSyncingFromParent = useRef(false);
   const prevLessonId = useRef(lesson.id);
@@ -862,6 +903,8 @@ function LessonViewer({
       setCurrentChapter(startChapter);
       setShowQuiz(false);
       setShowTranscript(false);
+      setShowChapterQuiz(false);
+      setChapterQuizPassed(new Set());
       // Notify parent of initial position
       onChapterChange?.(startChapter, chapters.length);
     }
@@ -1134,12 +1177,29 @@ function LessonViewer({
             </div>
           )}
 
+          {/* Chapter Quiz (shown between teaching chapters) */}
+          {showChapterQuiz && (
+            <ChapterQuiz
+              courseId={courseId}
+              chapterIndex={currentChapter}
+              lessonIndex={lessonIndex}
+              lang={lang}
+              t={t}
+              onPass={() => {
+                setChapterQuizPassed((prev) => { const next = new Set(Array.from(prev)); next.add(currentChapter); return next; });
+                setShowChapterQuiz(false);
+                setCurrentChapter((p) => p + 1);
+                setShowTranscript(false);
+              }}
+            />
+          )}
+
           {/* Chapter navigation */}
           <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
             <Button
               variant="outline"
               size="sm"
-              onClick={() => { setCurrentChapter((p) => p - 1); setShowTranscript(false); }}
+              onClick={() => { setCurrentChapter((p) => p - 1); setShowTranscript(false); setShowChapterQuiz(false); }}
               disabled={currentChapter === 0}
               className="gap-1.5"
             >
@@ -1171,7 +1231,21 @@ function LessonViewer({
             {!isLastChapter ? (
               <Button
                 size="sm"
-                onClick={() => { setCurrentChapter((p) => p + 1); setShowTranscript(false); }}
+                onClick={() => {
+                  // Determine if this chapter needs a quiz gate
+                  const chapterTitle = resolveI18n(chapter?.title, 'en');
+                  const isStructuralChapter = /^(Module Introduction|Key Takeaways|Module Complete)$/i.test(chapterTitle);
+                  const isTeachingChapter = chapter?.type === 'teaching' && !isStructuralChapter;
+                  const needsQuiz = isTeachingChapter && !isReviewMode && !chapterQuizPassed.has(currentChapter);
+                  
+                  if (needsQuiz) {
+                    setShowChapterQuiz(true);
+                  } else {
+                    setCurrentChapter((p) => p + 1);
+                    setShowTranscript(false);
+                    setShowChapterQuiz(false);
+                  }
+                }}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground gap-1.5"
               >
                 {t({ en: "Next", fr: "Suivant" })}

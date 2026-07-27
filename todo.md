@@ -654,3 +654,9 @@
 - [x] Supprimé 5 bucket_sort corrompus avec labels UI chrome
 - [x] Régénéré quiz corrompus (Associate 01, 04) via LLM
 - [x] Stripé tout le UI chrome résiduel (Submit, Skip, Check answer, Previous, Contents, Next)
+
+## Restauration quiz de passage entre chapitres (2026-07-27)
+- [x] Modifier LessonViewer pour afficher un mini-quiz après CHAQUE chapitre teaching (pas seulement le dernier)
+- [x] Le bouton "Suivant" ne doit être accessible qu'après avoir réussi le quiz du chapitre
+- [x] Enrichir les questions par chapitre (de 3 à 12 pour variabilité, en afficher 3 aléatoirement)
+- [x] Vérifier que les examens blancs fonctionnent toujours (MockExam.tsx inchangé, route /mock-exam/:certId existante)
