@@ -25,6 +25,51 @@
               }
             },
             {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "@.claude/conventions/code-style.md\n@.claude/conventions/testing.md\n@.claude/conventions/workflow.md",
+                    "fr": "@.claude/conventions/code-style.md\n@.claude/conventions/testing.md\n@.claude/conventions/workflow.md"
+                  },
+                  "back": {
+                    "en": "This is great for organizing. But know exactly what it buys you, because it's easy to get the wrong idea. When Claude launches, it expands those imported files inline, right where you referenced them. So imports help you keep things tidy, but everything still loads up front. They do not reduce the a",
+                    "fr": "This is great for organizing. But know exactly what it buys you, because it's easy to get the wrong idea. When Claude launches, it expands those imported files inline, right where you referenced them. So imports help you keep things tidy, but everything still loads up front. They do not reduce the a"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Be specific and checkable",
+                    "fr": "Be specific and checkable"
+                  },
+                  "back": {
+                    "en": "Don't write \"follow best practices.\" Do you even know exactly what that means? If you can't check whether it was followed, neither can Claude. Compare these two:",
+                    "fr": "Don't write \"follow best practices.\" Do you even know exactly what that means? If you can't check whether it was followed, neither can Claude. Compare these two:"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Emphasis is a budget",
+                    "fr": "Emphasis is a budget"
+                  },
+                  "back": {
+                    "en": "Words like \"IMPORTANT\" and \"YOU MUST\" do raise a rule's priority. But only relative to everything quieter around it. If every rule shouts, then nothing stands out and the emphasis means nothing. So treat emphasis like a budget. Spend it on the two or three rules that really hurt when they get broken",
+                    "fr": "Words like \"IMPORTANT\" and \"YOU MUST\" do raise a rule's priority. But only relative to everything quieter around it. If every rule shouts, then nothing stands out and the emphasis means nothing. So treat emphasis like a budget. Spend it on the two or three rules that really hurt when they get broken"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Keep the file under revision",
+                    "fr": "Keep the file under revision"
+                  },
+                  "back": {
+                    "en": "Your CLAUDE.md file is never finished. Treat it like living code that keeps getting edited.",
+                    "fr": "Your CLAUDE.md file is never finished. Treat it like living code that keeps getting edited."
+                  }
+                }
+              ]
+            },
+            {
               "type": "video",
               "videoId": "sfE5UQEumdM",
               "title": "A CLAUDE.md That Follows",
@@ -256,6 +301,61 @@
               }
             },
             {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "Cycling with shift-tab",
+                    "fr": "Cycling with shift-tab"
+                  },
+                  "back": {
+                    "en": "You don't need to memorize a command for each mode. Press shift-tab to cycle through the everyday ones: manual, accept edits, plan, and auto. The status bar at the bottom always shows which mode you're currently in, so you can glance down and know exactly what Claude is allowed to do.",
+                    "fr": "You don't need to memorize a command for each mode. Press shift-tab to cycle through the everyday ones: manual, accept edits, plan, and auto. The status bar at the bottom always shows which mode you're currently in, so you can glance down and know exactly what Claude is allowed to do."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "How auto mode works",
+                    "fr": "How auto mode works"
+                  },
+                  "back": {
+                    "en": "Auto is the hands-off mode. Claude runs on its own, but before each action executes, a separate classifier model reviews it. The classifier guards intent. It's watching for moves that escalate beyond what you actually asked for.",
+                    "fr": "Auto is the hands-off mode. Claude runs on its own, but before each action executes, a separate classifier model reviews it. The classifier guards intent. It's watching for moves that escalate beyond what you actually asked for."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Production deploys and migrations",
+                    "fr": "Production deploys and migrations"
+                  },
+                  "back": {
+                    "en": "Force pushing, or piping downloaded code straight into a shell",
+                    "fr": "Force pushing, or piping downloaded code straight into a shell"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "What the classifier can't do",
+                    "fr": "What the classifier can't do"
+                  },
+                  "back": {
+                    "en": "The classifier checks intent, not correctness. It won't catch whether the code actually works. So if you ask Claude to refactor authentication and it writes broken authentication, the classifier waves it through, because broken isn't dangerous.",
+                    "fr": "The classifier checks intent, not correctness. It won't catch whether the code actually works. So if you ask Claude to refactor authentication and it writes broken authentication, the classifier waves it through, because broken isn't dangerous."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Don't ask, for unattended runs",
+                    "fr": "Don't ask, for unattended runs"
+                  },
+                  "back": {
+                    "en": "Don't ask is the right move whenever no human is around to approve prompts: CI pipelines, scheduled jobs, overnight batches. Only pre-approved tools are allowed, and anything off that list gets auto-denied with no prompt. That's the whole point. Your pipeline keeps moving instead of hanging on an ap",
+                    "fr": "Don't ask is the right move whenever no human is around to approve prompts: CI pipelines, scheduled jobs, overnight batches. Only pre-approved tools are allowed, and anything off that list gets auto-denied with no prompt. That's the whole point. Your pipeline keeps moving instead of hanging on an ap"
+                  }
+                }
+              ]
+            },
+            {
               "type": "video",
               "videoId": "Fjg4O-ZcRSU",
               "title": "Permission Modes",
@@ -331,6 +431,71 @@
                 "en": "A setup you trust is worth a lot more once your whole team is running it. The problem is moving it around. You build a great .claude directory with skills, subagents, and hooks, and then what? Everyone copies and pastes files between machines and hopes they stay in sync. Plugins fix that. A plugin is how Claude Code packages a setup and moves it from one person to the next.\n\nThere are two sides to this, and we'll cover both. First, using plugins that other people publish. Second, packaging your own once you've built something worth sharing.\n\nWhat a plugin is\n\nA plugin is one installable unit. It bundles everything you'd otherwise share by hand: skills, subagents, hooks, and MCP server configs, plus the longer tail of stuff like language server protocol servers, background monitors, themes, and a slice of settings.json. One version, one install.\n\nWhere the plugin lives decides how you install it. Inside a session, you can install one directly by name:\n\n/plugin install org-name@plugin-name\n\nHere's what that looks like. Claude Code installs it and tells you to run /reload-plugins to apply the change.\n\nAdding a marketplace for your team\n\nFor a team, the better move is to add a private marketplace once. A marketplace is a shared source that plugins resolve through:\n\n/plugin marketplace add your-org/claude-plugins\n\nCall it whatever you want. Once it's added, every install after that resolves through it. You get centralized discovery, version tracking, and updates in one place instead of scattered across everyone's laptop.\n\nYou can browse what's available from the Discover tab. It lists the plugins on your marketplaces so you can search and pick.\n\nRead before you install\n\nHere's the part that matters most. A plugin runs code on your machine, with your privileges. Its hooks fire on every matching tool call. So if you install a plugin for its skills, you also get its PreToolUse and Stop hooks whether you read them or not.\n\nThink about what that means. A community plugin could ship a Stop hook that calls out to a network endpoint every time, and nothing in your configuration would warn you about it. That's not a reason to avoid plugins. It's a reason to look first.\n\nBefore you install, check the plugin's details. Claude Code shows you what it will install and estimates the context cost, along with a plain warning that Anthropic doesn't control what's inside third-party plugins.\n\nTwo things worth knowing about where plugins come from:\n\nThe in-app submission form posts to the community marketplace after Anthropic's automated review.\n\nThe official marketplace is curated on its own separate track.\n\nBut reviewed isn't the same as trusted. Automated review catches some things, not everything. So the rule stands: install plugins and add marketplaces only from sources you truly trust, and check what a plugin actually does before turning it on.\n\nComponents run alongside yours\n\nA plugin doesn't overwrite your configuration. Its components run alongside your own. That's mostly good, but it has consequences you should understand.\n\nHooks stack. A plugin's PreToolUse hook and your own PreToolUse hook both fire on every tool call. Neither replaces the other. This is exactly why you read the details first.\n\nSkills, agents, and commands are namespaced under the plugin name, so they never clash with yours. A plugin can also ship a settings.json file, but only a narrow one. Claude Code honors just two keys from it: the agent and subagent status line keys.\n\nThat agent key is worth a pause. Setting it promotes one of the plugin's subagents to the main thread, along with its system prompt, tool restrictions, and model. In other words, enabling the plugin can change how Claude Code behaves by default. That's one of the main reasons to look before you even turn it on.\n\nOnce a plugin is installed you can see everything it added, manage it, and uninstall it from the plugin panel.\n\nPackaging your own plugin\n\nNow the other side. Once you've built a .claude directory that works, don't make your team copy and paste it between machines. Package it instead.\n\nThe good news is you don't have to restructure anything. A plugin uses the same .claude shape you already use:\n\nOne folder per skill.\n\nOne markdown file per subagent under agents.\n\nhooks/hooks.json and .mcp.json, at the plugin root.\n\nThe directory structure does most of the work. Claude Code discovers components by convention.\n\nThe manifest\n\nOn top of that, there's an optional manifest. It lives at .claude-plugin/plugin.json and holds the name, version, description, and author:\n\n{\n\"name\": \"svg-splitter-review\",\n\"version\": \"0.1.0\",\n\"description\": \"Reviews the SVG Splitter repo\",\n\"author\": {\n\"name\": \"Lewis Menelaws\"\n}\n}\n\nThe manifest is optional. Leave it out and Claude Code still discovers your components by directory convention. But a couple of details are worth knowing:\n\nName is the only required field. It namespaces your skills as company-name:skill-name, which keeps them from colliding with anyone else's.\n\nVersion it like any other dependency. That's what makes updates and version tracking work across your team.\n\nThe takeaway\n\nTwo simple rules cover most of this:\n\nWhen you use plugins, read before you install. A plugin runs code with your privileges, so look at its hooks, agents, and MCP servers first.\n\nWhen you build one, package your .claude the moment it works. One manifest, one install.\n\nThat's the whole point. One installable unit, and the setup you trust reaches your entire team.",
                 "fr": "Une configuration en laquelle vous avez confiance vaut bien plus lorsque toute votre équipe l’utilise. Le problème, c’est de la déplacer. Vous créez un excellent répertoire .claude avec des skills, des subagents et des hooks, et ensuite ? Tout le monde copie et colle des fichiers entre les machines et espère qu’ils restent synchronisés. Les plugins résolvent cela. Un plugin est la façon dont Claude Code empaquète une configuration et la transmet d’une personne à l’autre.\n\nIl y a deux volets à cela, et nous les couvrirons tous les deux. Premièrement, utiliser des plugins publiés par d’autres personnes. Deuxièmement, empaqueter le vôtre une fois que vous avez construit quelque chose qui mérite d’être partagé.\n\nCe qu’est un plugin\n\nUn plugin est une unité installable. Il regroupe tout ce que vous partageriez autrement à la main : skills, subagents, hooks, et les configs serveur MCP, plus le reste comme les serveurs du Language Server Protocol (LSP), les moniteurs en arrière-plan, les thèmes, et un morceau de settings.json. Une version, une installation.\n\nL’endroit où vit le plugin détermine comment vous l’installez. À l’intérieur d’une session, vous pouvez en installer un directement par son nom :\n\n/plugin install org-name@plugin-name\n\nVoici à quoi cela ressemble. Claude Code l’installe et vous dit d’exécuter /reload-plugins pour appliquer le changement.\n\nAjouter une marketplace pour votre équipe\n\nPour une équipe, le meilleur mouvement est d’ajouter une marketplace privée une fois. Une marketplace est une source partagée à partir de laquelle les plugins se résolvent via :\n\n/plugin marketplace add your-org/claude-plugins\n\nNommez-la comme vous le souhaitez. Une fois qu’elle est ajoutée, chaque installation ultérieure passe par elle. Vous bénéficiez d’une découverte centralisée, d’un suivi des versions et de mises à jour en un seul endroit, plutôt que dispersés sur l’ordinateur portable de chacun.\n\nVous pouvez parcourir ce qui est disponible depuis l’onglet Discover. Il répertorie les plugins sur vos marketplaces afin que vous puissiez rechercher et choisir.\n\nÀ lire avant l’installation\n\nVoici la partie qui compte le plus. Un plugin exécute du code sur votre machine, avec vos privilèges. Ses hooks se déclenchent à chaque appel d’outil correspondant. Donc, si vous installez un plugin pour ses skills, vous obtenez aussi ses hooks PreToolUse et Stop, que vous les lisiez ou non.\n\nPensez à ce que cela signifie. Un plugin communautaire pourrait livrer un hook Stop qui appelle à chaque fois un endpoint réseau, et rien dans votre configuration ne vous avertirait. Ce n’est pas une raison d’éviter les plugins. C’est une raison de regarder d’abord.\n\nAvant d’installer, vérifiez les détails du plugin. Claude Code vous indique ce qu’il va installer et estime le coût du contexte, avec un avertissement simple indiquant qu’Anthropic ne contrôle pas ce qui se cache dans les plugins tiers.\n\nDeux choses à savoir sur l’origine des plugins :\n\nLe formulaire de soumission in-app est posté sur la marketplace communautaire après l’examen automatisé d’Anthropic.\n\nLa marketplace officielle est gérée sur sa propre trajectoire distincte.\n\nMais ce qui est “reviewed” n’est pas équivalent à “trusted”. La revue automatisée repère certaines choses, pas tout. Donc la règle demeure : installez des plugins et ajoutez des marketplaces uniquement à partir de sources en lesquelles vous avez vraiment confiance, et vérifiez ce que fait réellement un plugin avant de l’activer.\n\nLes composants fonctionnent aux côtés des vôtres\n\nUn plugin n’écrase pas votre configuration. Ses composants fonctionnent aux côtés des vôtres. C’est globalement une bonne chose, mais cela a des conséquences que vous devriez comprendre.\n\nPile de hooks. Le hook PreToolUse d’un plugin et votre propre hook PreToolUse se déclenchent tous les deux à chaque appel d’outil. Aucun ne remplace l’autre. C’est exactement pourquoi vous lisez les détails en premier.\n\nLes skills, agents et commandes portent le nom du plugin, de sorte qu’ils ne rentrent jamais en conflit avec les vôtres. Un plugin peut aussi livrer un fichier settings.json, mais seulement une petite partie. Claude Code ne prend en charge que deux clés en son sein : celles de la ligne d’état de l’agent et du subagent.\n\nCette clé agent mérite qu’on s’y arrête. En l’activant, cela promeut l’un des subagents du plugin vers le thread principal, avec son system prompt, ses restrictions d’outils et son modèle. Autrement dit, activer le plugin peut changer le comportement de Claude Code par défaut. C’est l’une des raisons principales de regarder avant même de l’allumer.\n\nUne fois qu’un plugin est installé, vous pouvez voir tout ce qu’il a ajouté, le gérer et le désinstaller depuis le panneau plugin.\n\nL’empaquetage de votre propre plugin\n\nPassons à l’autre côté. Une fois que vous avez construit un répertoire .claude qui fonctionne, ne demandez pas à votre équipe de le copier-coller entre les machines. Embarquez-le plutôt.\n\nLa bonne nouvelle, c’est que vous n’avez pas besoin de tout restructurer. Un plugin utilise la même forme .claude que vous utilisez déjà :\n\nUn dossier par skill.\n\nUn fichier markdown par subagent sous agents.\n\nhooks/hooks.json et .mcp.json, à la racine du plugin.\n\nLa structure de répertoires fait la majeure partie du travail. Claude Code découvre les composants par convention.\n\nLe manifeste\n\nEn plus, il existe un manifeste optionnel. Il se trouve à .claude-plugin/plugin.json et contient le nom, la version, la description et l’auteur :\n\n{\n\"name\": \"svg-splitter-review\",\n\"version\": \"0.1.0\",\n\"description\": \"Reviews the SVG Splitter repo\",\n\"author\": {\n\"name\": \"Lewis Menelaws\"\n}\n}\n\nLe manifeste est optionnel. Laissez-le de côté et Claude Code découvrira tout de même vos composants par convention de répertoire. Mais quelques détails valent la peine d’être connus :\n\nLe nom est le seul champ obligatoire. Il namespace vos skills sous company-name:skill-name, ce qui les empêche d’entrer en collision avec les autres.\n\nVersionnez-la comme n’importe quelle autre dépendance. C’est ce qui rend les mises à jour et le suivi des versions possibles à travers toute votre équipe.\n\nLa conclusion\n\nDeux règles simples couvrent la plupart de ceci :\n\nQuand vous utilisez des plugins, lisez avant d’installer. Un plugin exécute du code avec vos privilèges, alors regardez d’abord ses hooks, ses agents et ses serveurs MCP.\n\nQuand vous en construisez un, empaquetez votre .claude au moment où il fonctionne. Un seul manifeste, une seule installation.\n\nC’est là tout l’enjeu. Une unité installable, et la configuration sur laquelle vous avez confiance atteint l’ensemble de votre équipe."
               }
+            },
+            {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "What a plugin is",
+                    "fr": "What a plugin is"
+                  },
+                  "back": {
+                    "en": "A plugin is one installable unit. It bundles everything you'd otherwise share by hand: skills, subagents, hooks, and MCP server configs, plus the longer tail of stuff like language server protocol servers, background monitors, themes, and a slice of settings.json. One version, one install.",
+                    "fr": "A plugin is one installable unit. It bundles everything you'd otherwise share by hand: skills, subagents, hooks, and MCP server configs, plus the longer tail of stuff like language server protocol servers, background monitors, themes, and a slice of settings.json. One version, one install."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "/plugin install org-name@plugin-name",
+                    "fr": "/plugin install org-name@plugin-name"
+                  },
+                  "back": {
+                    "en": "Here's what that looks like. Claude Code installs it and tells you to run /reload-plugins to apply the change.",
+                    "fr": "Here's what that looks like. Claude Code installs it and tells you to run /reload-plugins to apply the change."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "/plugin marketplace add your-org/claude-plugins",
+                    "fr": "/plugin marketplace add your-org/claude-plugins"
+                  },
+                  "back": {
+                    "en": "Call it whatever you want. Once it's added, every install after that resolves through it. You get centralized discovery, version tracking, and updates in one place instead of scattered across everyone's laptop.",
+                    "fr": "Call it whatever you want. Once it's added, every install after that resolves through it. You get centralized discovery, version tracking, and updates in one place instead of scattered across everyone's laptop."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Read before you install",
+                    "fr": "Read before you install"
+                  },
+                  "back": {
+                    "en": "Here's the part that matters most. A plugin runs code on your machine, with your privileges. Its hooks fire on every matching tool call. So if you install a plugin for its skills, you also get its PreToolUse and Stop hooks whether you read them or not.",
+                    "fr": "Here's the part that matters most. A plugin runs code on your machine, with your privileges. Its hooks fire on every matching tool call. So if you install a plugin for its skills, you also get its PreToolUse and Stop hooks whether you read them or not."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Components run alongside yours",
+                    "fr": "Components run alongside yours"
+                  },
+                  "back": {
+                    "en": "A plugin doesn't overwrite your configuration. Its components run alongside your own. That's mostly good, but it has consequences you should understand.",
+                    "fr": "A plugin doesn't overwrite your configuration. Its components run alongside your own. That's mostly good, but it has consequences you should understand."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Packaging your own plugin",
+                    "fr": "Packaging your own plugin"
+                  },
+                  "back": {
+                    "en": "Now the other side. Once you've built a .claude directory that works, don't make your team copy and paste it between machines. Package it instead.",
+                    "fr": "Now the other side. Once you've built a .claude directory that works, don't make your team copy and paste it between machines. Package it instead."
+                  }
+                }
+              ]
             },
             {
               "type": "video",
@@ -410,6 +575,61 @@
               }
             },
             {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "Two ways to create one",
+                    "fr": "Two ways to create one"
+                  },
+                  "back": {
+                    "en": "You can create a routine from the web at claude.ai/code/routines. You give it a name, write the instructions describing what Claude should do in each session, pick a repository, and choose a trigger.",
+                    "fr": "You can create a routine from the web at claude.ai/code/routines. You give it a name, write the instructions describing what Claude should do in each session, pick a repository, and choose a trigger."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Getting structured output back",
+                    "fr": "Getting structured output back"
+                  },
+                  "back": {
+                    "en": "Because headless mode pipes like any shell tool, you'll often want structured data back instead of prose. You can pair a JSON schema with the JSON output format, and Claude will constrain its output to match your schema.",
+                    "fr": "Because headless mode pipes like any shell tool, you'll often want structured data back instead of prose. You can pair a JSON schema with the JSON output format, and Claude will constrain its output to match your schema."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Multi-step automation with sessions",
+                    "fr": "Multi-step automation with sessions"
+                  },
+                  "back": {
+                    "en": "For work that happens across multiple steps, you don't have to cram everything into one command. Capture the session's ID from the JSON output and resume it later:",
+                    "fr": "For work that happens across multiple steps, you don't have to cram everything into one command. Capture the session's ID from the JSON output and resume it later:"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Deterministic runs for CI",
+                    "fr": "Deterministic runs for CI"
+                  },
+                  "back": {
+                    "en": "When CI needs the same results every single run, there's a mode built for that.",
+                    "fr": "When CI needs the same results every single run, there's a mode built for that."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Here's the quick decision guide:",
+                    "fr": "Here's the quick decision guide:"
+                  },
+                  "back": {
+                    "en": "Routines are the default for repeat work. They run on Anthropic's infrastructure with nothing for you to host.",
+                    "fr": "Routines are the default for repeat work. They run on Anthropic's infrastructure with nothing for you to host."
+                  }
+                }
+              ]
+            },
+            {
               "type": "video",
               "videoId": "b9TCW-pdzDA",
               "title": "Routines and Headless",
@@ -485,6 +705,91 @@
                 "en": "Prompting Claude to knock out a quick task is easy. You ask, it works, you check the result. But long tasks are a different game. Refactoring across a dozen files or building out a new feature can take hours. And the more you have to steer Claude along the way, the longer it drags on.\n\nThe good news is that you have a lot of tools to help Claude during these long sessions. It really comes down to two habits: scope the work before Claude starts, and steer it while it runs. Let's walk through both.\n\nScope the work first with plan mode\n\nBefore Claude writes a single line, get it to lay out a plan. In plan mode, Claude does its research in read-only mode. It reads the code, figures out what needs to change, and hands you a plan to review.\n\nWhen you get that plan, actually read it. Don't skim it. The more thorough the plan, the fewer surprises you'll hit once Claude starts executing. If something's off or missing, just ask Claude to add it where you want. Iterating on a plan is much faster than letting Claude run and hoping for the best, then cleaning up the mess.\n\nSteer while Claude works\n\nOnce Claude is running, you have a few ways to keep it pointed in the right direction. The first is compaction.\n\nCompact\n\nCompact summarizes your conversation, uses that summary as the new context, and deletes the old messages. This frees up your context window so Claude can keep going. The risk is that something important gets dropped in the summary, and Claude drifts off course.\n\nSo don't just run /compact on its own. Add instructions after the command to tell Claude how to summarize. For example, if you finished debugging a while back and now you only care about some API changes, say so:\n\n/compact Focus on the --version flag implementation\n\nAnything you write after the command shapes what the summary keeps. That's your steering wheel for context.\n\nRewind\n\nWhen Claude heads down the wrong path, you don't have to prompt your way back out. Rewind takes you to your last checkpoint. Every user prompt creates a checkpoint you can revert to. To open the menu, double tap escape on an empty prompt.\n\nFrom the rewind menu you get a few options:\n\nRestore code and conversation - roll back both together.\n\nRestore conversation - roll back just the chat.\n\nRestore code - roll back just the files.\n\nSummarize from here - summarizes everything after the checkpoint. Great if you had a side conversation and just want to free up some space.\n\nSummarize up to here - summarizes everything before the checkpoint. Great when you had a long setup phase you want to compress, but you want to keep the implementation parts intact.\n\nLet Claude run more autonomously\n\nEverything so far assumes you're hands-on, watching and correcting. If you want something more autonomous, there's goal and loop.\n\nGoal\n\nGoal sets a completion condition. You describe what \"done\" looks like, and Claude keeps working across turns until a fast evaluator confirms those conditions are met. It won't just stop the first time it thinks it's finished.\n\nFor example:\n\n/goal all tests in src/billing pass, and the type checker reports zero errors\n\nTo cancel it, run /goal clear. One important constraint: the evaluator only reads the transcript. So your condition has to be checkable from the output Claude actually produces, like the results of a test run.\n\nLoop\n\nLoop runs a prompt on an interval between turns, either fixed or self-paced. Use it to pull something external, like a CI run or a deploy, and act when the state changes.\n\nTo stop a loop, just press escape.\n\nRun parallel work with worktrees\n\nThe steering metaphor so far assumes one steering wheel in one car. But when you're running multiple agents on the same codebase, you don't want two steering wheels in one car. That's unsafe. Two Claude sessions fighting over the same files leads to conflicts.\n\nThat's where worktrees come in. Instead of sessions stepping on each other, each one gets its own independent file tree.\n\nBecause each agent has its own tree, they can't clobber each other's changes. When a session exits, a clean worktree is automatically removed.\n\nThere's one helpful file to know about. A .worktreeinclude file at the repo root lists git-ignored files to copy into each worktree. This is useful for things like an environment variable file or a local config that you need in every worktree but don't want to commit to version control.\n\nPutting it together\n\nHandling long Claude Code sessions comes down to a handful of habits:\n\nScope your work first, then steer.\n\nDirect your compaction so the summary keeps what matters.\n\nUse the rewind menu to course correct when Claude drifts.\n\nSet a goal when you can describe \"done\" better than you can describe the steps.\n\nRun parallel work in worktrees.\n\nDo that, and you can trust a long run without babysitting every step of it.",
                 "fr": "Demander à Claude d’accomplir rapidement une tâche est facile. Vous demandez, cela fonctionne, vous vérifiez le résultat. Mais les tâches longues représentent un autre défi. Le Refactoring sur une douzaine de fichiers ou le développement d'une nouvelle fonctionnalité peut prendre des heures. Et plus vous devez guider Claude en cours de route, plus cela traîne.\n\nLa bonne nouvelle, c'est que vous disposez de nombreux outils pour aider Claude pendant ces longues sessions. Tout se résume à deux habitudes : définir le périmètre du travail avant que Claude ne commence, et le guider pendant son exécution. Voyons cela étape par étape.\n\nDéfinir le périmètre du travail d’abord avec plan mode\n\nAvant que Claude n’écrive une seule ligne, demandez-lui d’établir un plan. Dans le plan mode, Claude effectue ses recherches en mode lecture seule. Il lit le code, détermine ce qui doit changer et vous remet un plan à examiner.\n\nUne fois ce plan en main, lisez-le réellement. Ne le survollez pas. Plus le plan est approfondi, moins vous serez surpris lorsque Claude commencera à exécuter. Si quelque chose ne va pas ou manque, demandez simplement à Claude de l’ajouter à l’endroit souhaité. Itérer sur un plan est bien plus rapide que de laisser Claude s’exécuter en espérant le meilleur, puis nettoyer le désordre.\n\nGuider pendant que Claude travaille\n\nUne fois Claude en fonctionnement, vous avez plusieurs façons de le garder sur la bonne voie. Le premier est la compaction.\n\nCompact\n\nCompact résume votre conversation, utilise ce résumé comme nouveau contexte et supprime les anciens messages. Cela libère votre fenêtre de contexte pour que Claude puisse continuer. Le risque est que quelque chose d’important soit omis dans le résumé, et que Claude dévie de sa trajectoire.\n\nDonc ne lancez pas simplement /compact tout seul. Ajoutez des instructions après la commande pour dire à Claude comment résumer. Par exemple, si vous avez terminé le débogage il y a quelque temps et que vous ne vous intéressez désormais qu’à certains changements API, dites-le :\n\n/compact Focus on the --version flag implementation\n\nTout ce que vous écrivez après la commande façonne ce que le résumé conserve. C’est votre volant de direction pour le contexte.\n\nRewind\n\nLorsque Claude s’engage sur une mauvaise voie, vous n’avez pas à vous débrouiller avec des prompts pour en sortir. Rewind vous ramène à votre dernier checkpoint. Chaque prompt utilisateur crée un checkpoint vers lequel vous pouvez revenir. Pour ouvrir le menu, double-cliquez sur Échap dans une invite vide.\n\nDepuis le menu Rewind, vous obtenez plusieurs options :\n\nRétablir le code et la conversation - revenir sur les deux en même temps.\n\nRétablir la conversation - revenir uniquement au chat.\n\nRétablir le code - revenir uniquement sur les fichiers.\n\nRésumé à partir d’ici - résume tout après le checkpoint. Parfait si vous avez eu une conversation secondaire et que vous souhaitez simplement libérer de l’espace.\n\nRésumé jusqu’ici - résume tout ce qui précède le checkpoint. Parfait lorsque vous avez eu une longue phase de configuration que vous voulez compresser, mais que vous souhaitez garder les parties d’implémentation intactes.\n\nLaisser Claude fonctionner de manière plus autonome\n\nTout ce qui précède suppose que vous êtes actif, que vous regardez et corrigez. Si vous voulez quelque chose de plus autonome, il y a goal et loop.\n\nGoal\n\nGoal définit une condition de complétion. Vous décrivez à quoi ressemble « done », et Claude continue de travailler sur plusieurs tours jusqu’à ce qu’un évaluateur rapide confirme que ces conditions sont satisfaites. Il ne s’arrêtera pas dès qu’il pense avoir terminé.\n\nPar exemple :\n\n/goal all tests in src/billing pass, and the type checker reports zero errors\n\nPour l’annuler, exécutez /goal clear. Une contrainte importante : l’évaluateur ne lit que la transcription. Votre condition doit donc être vérifiable à partir de la sortie que Claude produit effectivement, comme les résultats d’un test.\n\nLoop\n\nLoop exécute un prompt à intervalles entre les tours, soit fixes, soit à votre propre rythme. Utilisez-le pour récupérer quelque chose d’extérieur, comme un CI run ou un déploiement, et agir lorsque l’état change.\n\nPour arrêter une boucle, appuyez simplement sur Échap.\n\nRun parallel work with worktrees\n\nLa métaphore du pilotage jusqu’ici suppose un seul volant dans une seule voiture. Mais lorsque vous exécutez plusieurs agents sur le même codebase, vous ne voulez pas deux volants dans une seule voiture. C’est dangereux. Deux sessions Claude qui se disputent les mêmes fichiers entraînent des conflits.\n\nC’est là que les worktrees entrent en jeu. Plutôt que des sessions qui se marchent sur les pieds, chacune obtient son propre arbre de fichiers indépendant.\n\nComme chaque agent a son propre arbre, ils ne peuvent pas écraser les changements des autres. Quand une session se termine, un worktree propre est automatiquement supprimé.\n\nIl y a un fichier utile à connaître. Un fichier .worktreeinclude à la racine du dépôt répertorie les fichiers git-ignorés à copier dans chaque worktree. Cela est utile pour des éléments comme un fichier de variables d’environnement ou une config locale que vous avez besoin dans chaque worktree mais que vous ne voulez pas commiter dans le contrôle de version.\n\nPour résumer\n\nLa gestion des longues sessions Claude Code se résume à quelques habitudes :\n\nDéfinissez d’abord le périmètre du travail, puis guidez-le.\n\nDirigez votre compaction de sorte que le résumé conserve l’essentiel.\n\nUtilisez le menu Rewind pour corriger la trajectoire lorsque Claude dévie.\n\nFixez un objectif lorsque vous pouvez décrire “done” mieux que les étapes.\n\nExécutez un travail parallèle dans les worktrees.\n\nFaites cela, et vous pourrez faire confiance à une longue exécution sans surveiller chaque étape."
               }
+            },
+            {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "Steer while Claude works",
+                    "fr": "Steer while Claude works"
+                  },
+                  "back": {
+                    "en": "Once Claude is running, you have a few ways to keep it pointed in the right direction. The first is compaction.",
+                    "fr": "Once Claude is running, you have a few ways to keep it pointed in the right direction. The first is compaction."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Compact",
+                    "fr": "Compact"
+                  },
+                  "back": {
+                    "en": "Compact summarizes your conversation, uses that summary as the new context, and deletes the old messages. This frees up your context window so Claude can keep going. The risk is that something important gets dropped in the summary, and Claude drifts off course.",
+                    "fr": "Compact summarizes your conversation, uses that summary as the new context, and deletes the old messages. This frees up your context window so Claude can keep going. The risk is that something important gets dropped in the summary, and Claude drifts off course."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Rewind",
+                    "fr": "Rewind"
+                  },
+                  "back": {
+                    "en": "When Claude heads down the wrong path, you don't have to prompt your way back out. Rewind takes you to your last checkpoint. Every user prompt creates a checkpoint you can revert to. To open the menu, double tap escape on an empty prompt.",
+                    "fr": "When Claude heads down the wrong path, you don't have to prompt your way back out. Rewind takes you to your last checkpoint. Every user prompt creates a checkpoint you can revert to. To open the menu, double tap escape on an empty prompt."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Let Claude run more autonomously",
+                    "fr": "Let Claude run more autonomously"
+                  },
+                  "back": {
+                    "en": "Everything so far assumes you're hands-on, watching and correcting. If you want something more autonomous, there's goal and loop.",
+                    "fr": "Everything so far assumes you're hands-on, watching and correcting. If you want something more autonomous, there's goal and loop."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Goal",
+                    "fr": "Goal"
+                  },
+                  "back": {
+                    "en": "Goal sets a completion condition. You describe what \"done\" looks like, and Claude keeps working across turns until a fast evaluator confirms those conditions are met. It won't just stop the first time it thinks it's finished.",
+                    "fr": "Goal sets a completion condition. You describe what \"done\" looks like, and Claude keeps working across turns until a fast evaluator confirms those conditions are met. It won't just stop the first time it thinks it's finished."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "For example:",
+                    "fr": "For example:"
+                  },
+                  "back": {
+                    "en": "/goal all tests in src/billing pass, and the type checker reports zero errors",
+                    "fr": "/goal all tests in src/billing pass, and the type checker reports zero errors"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Loop",
+                    "fr": "Loop"
+                  },
+                  "back": {
+                    "en": "Loop runs a prompt on an interval between turns, either fixed or self-paced. Use it to pull something external, like a CI run or a deploy, and act when the state changes.",
+                    "fr": "Loop runs a prompt on an interval between turns, either fixed or self-paced. Use it to pull something external, like a CI run or a deploy, and act when the state changes."
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Run parallel work with worktrees",
+                    "fr": "Run parallel work with worktrees"
+                  },
+                  "back": {
+                    "en": "The steering metaphor so far assumes one steering wheel in one car. But when you're running multiple agents on the same codebase, you don't want two steering wheels in one car. That's unsafe. Two Claude sessions fighting over the same files leads to conflicts.",
+                    "fr": "The steering metaphor so far assumes one steering wheel in one car. But when you're running multiple agents on the same codebase, you don't want two steering wheels in one car. That's unsafe. Two Claude sessions fighting over the same files leads to conflicts."
+                  }
+                }
+              ]
             },
             {
               "type": "video",

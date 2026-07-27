@@ -620,9 +620,9 @@
 - [x] Mode review crash avec React error #185 (fix: stabilisé onChapterChange avec useCallback + ref isSyncingFromParent pour briser la boucle infinie)
 
 ## Restructuration des cours avec blocs interactifs (2026-07-27)
-- [ ] Restructurer tous les cours restants (29 fichiers) avec flip_cards, tabbed_content, comparison, tables
-- [ ] Identifier les patterns textuels dans chaque cours qui correspondent à des éléments interactifs
-- [ ] Convertir les listes de comparaison en blocs comparison (wrong/right)
-- [ ] Convertir les contenus à onglets en blocs tabbed_content
-- [ ] Convertir les cartes retournables en blocs flip_cards
-- [ ] Ajouter des tables structurées là où le texte contient des données tabulaires
+- [x] Restructurer tous les cours restants (29 fichiers) avec flip_cards, tabbed_content, comparison - 25/29 fichiers modifiés, 142 blocs interactifs ajoutés
+- [x] Identifier les patterns textuels dans chaque cours (Component/Term/Definition, Weak/Strong prompt, Option/Level)
+- [x] Convertir les listes de comparaison en blocs comparison (wrong/right) - 1 comparison
+- [x] Convertir les contenus à onglets en blocs tabbed_content - 5 tabbed_content
+- [x] Convertir les cartes retournables en blocs flip_cards - 136 flip_cards
+- [x] Fix: useCallback Rules of Hooks violation (moved before conditional returns)

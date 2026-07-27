@@ -785,6 +785,31 @@
                 "en": "Claude Code = AI coding assistant that functions as a collaborative engineer on projects, not just a code generator.\n\nKey capabilities: project setup, feature design, code writing, testing, deployment, error fixing in production.\n\nSetup workflow:\n- Download project, open in editor\n- Run \\`claude\\` command to launch\n- Ask Claude to read README and execute setup directions\n- Run \\`init\\` command = Claude scans codebase for architecture/coding style, creates claude.md file\n- claude.md = automatically included context for future requests\n\nMemory types: Project (shared), Local, User memory files.\n\nContext management:\n- Use # symbol to add specific notes to memory\n- Can manually edit claude.md or rerun init to update\n- Claude can handle Git operations (staging, committing)\n\nEffective prompting strategies:\n\nMethod 1 - Three-step workflow:\n1. Identify relevant files, ask Claude to analyze them\n2. Describe feature, ask Claude to plan solution (no code yet)\n3. Ask Claude to implement the plan\n\nMethod 2 - Test-driven development:\n1. Provide relevant context\n2. Ask Claude to suggest tests for the feature\n3. Select and implement chosen tests\n4. Ask Claude to write code until tests pass\n\nCore principle: Claude Code = effort multiplier. More detailed instructions = significantly better results. Treat as collaborative engineer, not just code generator.",
                 "fr": "Claude Code = assistant de codage IA qui fonctionne comme un ingénieur collaboratif sur les projets, pas seulement un générateur de code.\n\nCapacités clés : mise en place du projet, conception des fonctionnalités, écriture de code, tests, déploiement, correction d'erreurs en production.\n\nFlux de configuration:\n- Télécharger le projet, l'ouvrir dans l'éditeur\n- Lancer la commande \\`claude\\` pour démarrer\n- Demander à Claude de lire le README et d'exécuter les directives de configuration\n- Lancer la commande \\`init\\` = Claude scanne la base de code pour l'architecture et le style de codage, crée le fichier claude.md\n- claude.md = contexte automatiquement inclus pour les demandes futures\n\nTypes de mémoire : Projet (partagée), Local, Fichiers mémoire utilisateur.\n\nGestion du contexte:\n- Utiliser le symbole # pour ajouter des notes spécifiques à la mémoire\n- Peut modifier manuellement claude.md ou relancer init pour mettre à jour\n- Claude peut gérer des opérations Git (staging, committing)\n\nStratégies de prompting efficaces:\n\nMéthode 1 - Flux de travail en trois étapes:\n1. Identifier les fichiers pertinents, demander à Claude de les analyser\n2. Décrire la fonctionnalité, demander à Claude de planifier la solution (aucun code pour le moment)\n3. Demander à Claude de mettre en œuvre le plan\n\nMéthode 2 - Développement piloté par les tests:\n1. Fournir le contexte pertinent\n2. Demander à Claude de suggérer des tests pour la fonctionnalité\n3. Sélectionner et mettre en œuvre les tests choisis\n4. Demander à Claude d'écrire le code jusqu'à ce que les tests passent\n\nPrincipe fondamental : Claude Code = multiplicateur d'efforts. Des instructions plus détaillées = des résultats nettement meilleurs. Considérez-le comme un ingénieur collaboratif, pas seulement un générateur de code."
               }
+            },
+            {
+              "type": "tabbed_content",
+              "tabs": [
+                {
+                  "label": {
+                    "en": "Method 1: - Three-step workflow:",
+                    "fr": "Method 1: - Three-step workflow:"
+                  },
+                  "content": {
+                    "en": "- Three-step workflow:\n1. Identify relevant files, ask Claude to analyze them\n2. Describe feature, ask Claude to plan solution (no code yet)\n3. Ask Claude to implement the plan",
+                    "fr": "- Three-step workflow:\n1. Identify relevant files, ask Claude to analyze them\n2. Describe feature, ask Claude to plan solution (no code yet)\n3. Ask Claude to implement the plan"
+                  }
+                },
+                {
+                  "label": {
+                    "en": "Method 2: - Test-driven development:",
+                    "fr": "Method 2: - Test-driven development:"
+                  },
+                  "content": {
+                    "en": "- Test-driven development:\n1. Provide relevant context\n2. Ask Claude to suggest tests for the feature\n3. Select and implement chosen tests\n4. Ask Claude to write code until tests pass",
+                    "fr": "- Test-driven development:\n1. Provide relevant context\n2. Ask Claude to suggest tests for the feature\n3. Select and implement chosen tests\n4. Ask Claude to write code until tests pass"
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {
@@ -899,6 +924,51 @@
                 "en": "Contextual Retrieval = technique to improve RAG pipeline accuracy by adding context to document chunks before embedding.\n\nProblem: When documents are split into chunks, individual chunks lose context from the original document, reducing retrieval accuracy.\n\nSolution: Pre-processing step that adds contextual information to each chunk before inserting into retriever database.\n\nProcess:\n1. Take individual chunk + original source document\n2. Send to LLM (Claude) with prompt asking to generate situating context\n3. LLM generates brief context explaining chunk's relationship to larger document\n4. Join generated context with original chunk = \"contextualized chunk\"\n5. Use contextualized chunk as input to vector/BM25 indexes\n\nLarge Document Handling: If source document too large for single prompt, use selective context strategy:\n- Include starter chunks (1-3) from document beginning for summary/abstract\n- Include chunks immediately before target chunk for local context\n- Skip middle chunks that provide less relevant context\n\nImplementation: add_context function takes text chunk + source text, generates context via LLM, concatenates context with original chunk, returns contextualized version.\n\nBenefit: Chunks retain ties to larger document structure and cross-references, improving retrieval accuracy for complex documents with interconnected sections.",
                 "fr": "Récupération contextuelle = technique visant à améliorer la précision du pipeline RAG en ajoutant du contexte aux morceaux de documents avant l'embedding.\n\nProblème : Lorsque les documents sont séparés en morceaux, les morceaux individuels perdent le contexte du document d'origine, ce qui réduit la précision de la récupération.\n\nSolution : Étape de pré-traitement qui ajoute des informations contextuelles à chaque morceau avant de les insérer dans la base de données du retriever.\n\nProcessus :\n1. Prendre le morceau individuel et le document source d'origine\n2. Envoyer au LLM (Claude) avec prompt demandant de générer un contexte de positionnement\n3. Le LLM génère un bref contexte expliquant la relation du morceau avec le document plus large\n4. Joindre le contexte généré au morceau original = 'morceau contextualisé'\n5. Utiliser le morceau contextualisé comme entrée pour les index vectoriels et BM25\n\nGestion des documents volumineux : Si le document source est trop volumineux pour un seul prompt, utilisez une stratégie de contexte sélectif :\n- Inclure des morceaux initiaux (1–3) pris au début du document pour le résumé\n- Inclure les morceaux immédiatement avant le morceau cible pour le contexte local\n- Ignorer les morceaux du milieu qui apportent un contexte moins pertinent\n\nImplémentation : la fonction add_context prend un morceau de texte + le texte source, génère le contexte via le LLM, concatène le contexte avec le morceau original, et retourne la version contextualisée.\n\nAvantage : Les morceaux conservent leurs liens avec la structure du document plus large et les références croisées, améliorant la précision de la récupération pour les documents complexes avec des sections interconnectées."
               }
+            },
+            {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "Take individual chunk + original source document",
+                    "fr": "Take individual chunk + original source document"
+                  },
+                  "back": {
+                    "en": "2. Send to LLM (Claude) with prompt asking to generate situating context",
+                    "fr": "2. Send to LLM (Claude) with prompt asking to generate situating context"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "LLM generates brief context explaining chunk's",
+                    "fr": "LLM generates brief context explaining chunk's"
+                  },
+                  "back": {
+                    "en": "relationship to larger document",
+                    "fr": "relationship to larger document"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Join generated context with original chunk =",
+                    "fr": "Join generated context with original chunk ="
+                  },
+                  "back": {
+                    "en": "\"contextualized chunk\"",
+                    "fr": "\"contextualized chunk\""
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Use contextualized chunk as input to vector/BM25",
+                    "fr": "Use contextualized chunk as input to vector/BM25"
+                  },
+                  "back": {
+                    "en": "indexes\n\nLarge Document Handling: If source document too large for single prompt, use selective context strategy:\n- Include starter chunks (1-3) from document beginning for summary/abstract\n- Include chunks immediately before target chunk for local context\n- Skip middle chunks that provide less rele",
+                    "fr": "indexes\n\nLarge Document Handling: If source document too large for single prompt, use selective context strategy:\n- Include starter chunks (1-3) from document beginning for summary/abstract\n- Include chunks immediately before target chunk for local context\n- Skip middle chunks that provide less rele"
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {
@@ -1122,7 +1192,7 @@
             {
               "type": "content",
               "body": {
-                "en": "**Tool-Enabled Claude Requests**\n\nStep 3: Making requests to Claude with tools = include tool schema in request alongside user message using \\`tools\\` keyword argument containing JSON schema specs.\n\n**Multi-Block Messages**\n\nContent structure change = messages now contain multiple blocks instead of just text blocks.\n\nTool response format = assistant message with:\n- Text block = user-facing explanation \n- Tool use block = contains function name + arguments for tool execution\n\n**Message History Management**\n\nCritical requirement = manually maintain conversation history since Claude stores nothing.\n\nMulti-block handling = append entire response.content (all blocks) to messages list, not just text.\n\nHelper function updates needed = add_user_message and add_assistant_message functions must support multiple blocks instead of single text blocks only.\n\nConversation flow = user message → assistant response with tool use block → execute tool → respond back to Claude with full history.",
+                "en": "Multi-block handling = append entire response.content (all blocks) to messages list, not just text.\n\nHelper function updates needed = add_user_message and add_assistant_message functions must support multiple blocks instead of single text blocks only.\n\nConversation flow = user message → assistant response with tool use block → execute tool → respond back to Claude with full history.",
                 "fr": "**Demandes Claude avec outils activés**\n\nÉtape 3 : Faire des requêtes à Claude avec outils = inclure le schéma d'outil dans la requête parallèlement au message utilisateur en utilisant l'argument mot-clé \\`tools\\` contenant les spécifications du schéma JSON.\n\n**Messages à blocs multiples**\n\nChangement de structure du contenu = les messages contiennent désormais plusieurs blocs au lieu de blocs de texte uniquement.\n\nFormat de réponse de l'outil = message de l'assistant avec :\n- Bloc de texte = explication destinée à l'utilisateur\n- Bloc d'utilisation d'outil = contient le nom de la fonction + les arguments pour l'exécution de l'outil\n\n**Gestion de l'historique des messages**\n\nExigence critique = maintenir manuellement l'historique de la conversation, car Claude ne stocke rien.\n\nGestion multi-blocs = ajouter l'intégralité de response.content (tous les blocs) à la liste des messages, pas seulement le texte.\n\nMises à jour des fonctions d'aide nécessaires = les fonctions add_user_message et add_assistant_message doivent prendre en charge plusieurs blocs au lieu d'un seul bloc texte.\n\nFlux de conversation = message utilisateur → réponse de l'assistant avec le bloc d'utilisation d'outil → exécuter l'outil → répondre à Claude avec l'historique complet."
               }
             }
@@ -1198,15 +1268,7 @@
             "fr": "Implémentation de plusieurs tours de dialogue"
           },
           "type": "teaching",
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "en": "**Multiple Turns Implementation = continuously calling Claude until it stops requesting tools**\n\n**Stop Reason Field = indicates why Claude stopped generating text**\n- stop_reason = \"tool_use\" means Claude wants to call a tool\n- Other values exist but tool_use is most commonly checked\n\n**run_conversation Function = main loop that:**\n1. Calls Claude with messages + available tools\n2. Adds assistant response to conversation history\n3. Checks stop_reason - if not \"tool_use\", breaks loop\n4. If tool_use, calls run_tools function\n5. Adds tool results as user message\n6. Repeats until no more tool requests\n\n**run_tools Function = processes multiple tool use blocks:**\n1. Filters message.content for blocks with type=\"tool_use\"\n2. Iterates through each tool request\n3. Runs appropriate tool function via run_tool helper\n4. Creates tool_result blocks with: type=\"tool_result\", tool_use_id=original_id, content=JSON_encoded_output, is_error=boolean\n5. Returns list of all tool result blocks\n\n**run_tool Function = dispatcher that:**\n- Takes tool_name and tool_input\n- Uses if statements to match tool names to functions\n- Executes appropriate tool function\n- Scalable for adding multiple tools\n\n**Error Handling = try/except blocks around tool execution:**\n- Success: is_error=false, content=tool_output\n- Failure: is_error=true, content=error_message\n\n**Key Architecture Points:**\n- Assistant messages can contain multiple blocks (text + multiple tool_use)\n- Each tool_use block gets separate tool_result response\n- Tool results sent back as user message containing all results\n- Process repeats until Claude provides final text-only response",
-                "fr": "**Implémentation à plusieurs tours = appel continu à Claude jusqu'à ce qu'il cesse de demander des outils**\n\n**Champ stop_reason = indique pourquoi Claude a cessé de générer du texte**\n- stop_reason = \"tool_use\" signifie que Claude veut appeler un outil\n- D'autres valeurs existent mais tool_use est celle qui est le plus couramment vérifiée\n\n**run_conversation Function = boucle principale qui:**\n1. Appelle Claude avec messages + available tools\n2. Ajoute la réponse de l'assistant à l'historique de la conversation\n3. Vérifie stop_reason - si ce n'est pas \"tool_use\", sort de la boucle\n4. Si tool_use, appelle la fonction run_tools\n5. Ajoute les résultats des outils comme message utilisateur\n6. Répète jusqu'à ce qu'il n'y ait plus de demandes d'outils\n\n**run_tools Function = traite plusieurs blocs d'utilisation d'outil:**\n1. Filtre message.content pour les blocs avec type=\"tool_use\"\n2. Parcourt chaque demande d'outil\n3. Exécute la fonction outil appropriée via le helper run_tool\n4. Crée des blocs tool_result avec: type=\"tool_result\", tool_use_id=original_id, content=JSON_encoded_output, is_error=boolean\n5. Retourne la liste de tous les blocs tool_result\n\n**run_tool Function = répartiteur qui:**\n- Prend tool_name et tool_input\n- Utilise des instructions if pour faire correspondre les noms d'outil aux fonctions\n- Exécute la fonction outil appropriée\n- Évolutif pour l'ajout de plusieurs outils\n\n**Gestion des erreurs = blocs try/except autour de l'exécution des outils:**\n- Succès: is_error=false, content=tool_output\n- Échec: is_error=true, content=error_message\n\n**Points clés de l'architecture :**\n- Les messages de l'assistant peuvent contenir plusieurs blocs (texte + plusieurs tool_use)\n- Chaque bloc tool_use reçoit une réponse tool_result distincte\n- Les résultats des outils sont renvoyés dans un message utilisateur contenant tous les résultats\n- Le processus se répète jusqu'à ce que Claude fournisse une réponse finale en texte uniquement"
-              }
-            }
-          ],
+          "blocks": [],
           "completionRule": {
             "requires": [
               "contentViewed"
@@ -1307,6 +1369,31 @@
                 "en": "RAG = Retrieval Augmented Generation technique for querying large documents using language models.\n\nProblem: How to extract specific information from large documents (100-1000+ pages) using Claude without hitting context limits.\n\nOption 1 (Direct approach): Place entire document text directly into prompt.\n- Limitations: Hard token limits, decreased effectiveness with longer prompts, higher costs, slower processing\n\nOption 2 (RAG approach): Two-step process\n- Step 1: Break document into small chunks\n- Step 2: For user questions, find most relevant chunks and include only those in prompt\n\nRAG benefits: Model focuses on relevant content, scales to large/multiple documents, smaller prompts, lower costs, faster processing\n\nRAG downsides: More complexity, requires preprocessing, needs search mechanism to find relevant chunks, no guarantee chunks contain complete context, multiple chunking strategies possible (equal portions vs header-based)\n\nKey challenge: Defining relevance and optimal chunking strategy for specific use cases.\n\nRAG trades simplicity for scalability and efficiency but requires careful implementation and evaluation.",
                 "fr": "RAG = Retrieval Augmented Generation, une technique de récupération augmentée par génération pour interroger de grands documents à l'aide de modèles de langage.\n\nProblème : Comment extraire des informations spécifiques de grands documents (100 à 1000+ pages) en utilisant Claude sans dépasser les limites de contexte.\n\nOption 1 (Approche directe) : Placer le texte de l'ensemble du document directement dans le prompt.\n- Limitations : Limites strictes de tokens, efficacité diminuant avec des prompts plus longs, coûts plus élevés, traitement plus lent\n\nOption 2 (approche RAG) : Processus en deux étapes\n- Étape 1 : Diviser le document en petits morceaux\n- Étape 2 : Pour les questions des utilisateurs, repérer les morceaux les plus pertinents et n’inclure que ceux-ci dans le prompt\n\nAvantages de RAG : Le modèle se concentre sur le contenu pertinent, peut gérer de grands documents et documents multiples, prompts plus courts, coûts réduits, traitement plus rapide\n\nInconvénients de RAG : Plus de complexité, nécessite un prétraitement, nécessite un mécanisme de recherche pour trouver les morceaux pertinents, aucune garantie que les morceaux contiennent le contexte complet, plusieurs stratégies de découpage possibles (portions égales vs basées sur les en-têtes)\n\nDéfi clé : Définir la pertinence et la stratégie de découpage optimale pour des cas d'utilisation spécifiques.\n\nRAG sacrifie la simplicité au profit de l'évolutivité et de l'efficacité, mais nécessite une mise en œuvre et une évaluation minutieuses."
               }
+            },
+            {
+              "type": "tabbed_content",
+              "tabs": [
+                {
+                  "label": {
+                    "en": "Option 1: (Direct approach): Place entire document text d...",
+                    "fr": "Option 1: (Direct approach): Place entire document text d..."
+                  },
+                  "content": {
+                    "en": "(Direct approach): Place entire document text directly into prompt.\n- Limitations: Hard token limits, decreased effectiveness with longer prompts, higher costs, slower processing",
+                    "fr": "(Direct approach): Place entire document text directly into prompt.\n- Limitations: Hard token limits, decreased effectiveness with longer prompts, higher costs, slower processing"
+                  }
+                },
+                {
+                  "label": {
+                    "en": "Option 2: (RAG approach): Two-step process",
+                    "fr": "Option 2: (RAG approach): Two-step process"
+                  },
+                  "content": {
+                    "en": "(RAG approach): Two-step process\n- Step 1: Break document into small chunks\n- Step 2: For user questions, find most relevant chunks and include only those in prompt\n\nRAG benefits: Model focuses on relevant content, scales to large/multiple documents, smaller prompts, lower costs, faster processing\n\nRAG downsides: More complexity, requires preprocessing, needs search mechanism to find relevant chunks, no guarantee chunks contain complete context, multiple chunking strategies possible (equal portions vs header-based)",
+                    "fr": "(RAG approach): Two-step process\n- Step 1: Break document into small chunks\n- Step 2: For user questions, find most relevant chunks and include only those in prompt\n\nRAG benefits: Model focuses on relevant content, scales to large/multiple documents, smaller prompts, lower costs, faster processing\n\nRAG downsides: More complexity, requires preprocessing, needs search mechanism to find relevant chunks, no guarantee chunks contain complete context, multiple chunking strategies possible (equal portions vs header-based)"
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {
@@ -1351,6 +1438,61 @@
                 "en": "MCP Client = communication interface between your server and MCP server, provides access to server's tools\n\nTransport agnostic = client/server can communicate via multiple protocols (stdio, HTTP, WebSockets)\n\nCommon setup = client and server on same machine using standard input/output\n\nCommunication = message exchange defined by MCP spec\n\nKey message types:\n- list tools request = client asks server for available tools\n- list tools result = server responds with tool list \n- call tool request = client asks server to run tool with arguments\n- call tool result = server responds with tool execution result\n\nTypical flow:\n1. User queries server\n2. Server requests tool list from MCP client\n3. MCP client sends list tools request to MCP server\n4. MCP server responds with list tools result\n5. Server sends query + tools to Claude\n6. Claude requests tool execution\n7. Server asks MCP client to run tool\n8. MCP client sends call tool request to MCP server\n9. MCP server executes tool (e.g. GitHub API call)\n10. Results flow back through chain: MCP server → MCP client → server → Claude → user\n\nPurpose = enables servers to delegate tool execution to specialized MCP servers while maintaining Claude integration",
                 "fr": "MCP Client = interface de communication entre votre serveur et le serveur MCP, donne accès aux outils du serveur\n\nTransport agnostique = le client et le serveur peuvent communiquer via plusieurs protocoles (stdio, HTTP, WebSockets)\n\nConfiguration commune = le client et le serveur sur la même machine en utilisant l'entrée/sortie standard\n\nCommunication = échange de messages défini par la spécification MCP\n\nTypes de messages clés :\n- requête de liste d'outils = le client demande au serveur la liste des outils disponibles\n- résultat de la liste d'outils = le serveur répond avec la liste des outils\n- requête d'exécution d'outil = le client demande au serveur d'exécuter un outil avec des arguments\n- résultat d'exécution d'outil = le serveur répond avec le résultat de l'exécution de l'outil\n\nFlux typique:\n1. L'utilisateur interroge le serveur\n2. Le serveur demande au MCP client la liste des outils\n3. Le MCP client envoie une requête de liste d'outils au serveur MCP\n4. Le serveur MCP répond avec le résultat de la liste d'outils\n5. Le serveur envoie la requête et les outils à Claude\n6. Claude demande l'exécution de l'outil\n7. Le serveur demande au MCP client d'exécuter l'outil\n8. Le MCP client envoie une requête d'exécution d'outil au serveur MCP\n9. Le serveur MCP exécute l'outil (par exemple un appel à l'API GitHub)\n10. Les résultats remontent le long de la chaîne : serveur MCP → MCP client → serveur → Claude → utilisateur\n\nObjectif = permet aux serveurs de déléguer l'exécution d'outils à des serveurs MCP spécialisés tout en assurant l'intégration de Claude"
               }
+            },
+            {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "User queries server",
+                    "fr": "User queries server"
+                  },
+                  "back": {
+                    "en": "2. Server requests tool list from MCP client",
+                    "fr": "2. Server requests tool list from MCP client"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "MCP client sends list tools request to MCP server",
+                    "fr": "MCP client sends list tools request to MCP server"
+                  },
+                  "back": {
+                    "en": "4. MCP server responds with list tools result",
+                    "fr": "4. MCP server responds with list tools result"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Server sends query + tools to Claude",
+                    "fr": "Server sends query + tools to Claude"
+                  },
+                  "back": {
+                    "en": "6. Claude requests tool execution",
+                    "fr": "6. Claude requests tool execution"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Server asks MCP client to run tool",
+                    "fr": "Server asks MCP client to run tool"
+                  },
+                  "back": {
+                    "en": "8. MCP client sends call tool request to MCP server",
+                    "fr": "8. MCP client sends call tool request to MCP server"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "MCP server executes tool (e.g. GitHub API call)",
+                    "fr": "MCP server executes tool (e.g. GitHub API call)"
+                  },
+                  "back": {
+                    "en": "10. Results flow back through chain: MCP server → MCP client → server → Claude → user\n\nPurpose = enables servers to delegate tool execution to specialized MCP servers while maintaining Claude integration",
+                    "fr": "10. Results flow back through chain: MCP server → MCP client → server → Claude → user\n\nPurpose = enables servers to delegate tool execution to specialized MCP servers while maintaining Claude integration"
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {
@@ -1373,6 +1515,51 @@
                 "en": "Making API Request to Anthropic = Process involving 4 setup steps and understanding message structure\n\nSetup Steps:\n1. Install packages = pip install anthropic python-dotenv in Jupyter notebook\n2. Store API key = Create .env file with ANTHROPIC_API_KEY=\"your_key\" (ignore in version control)\n3. Load environment variable = Use python-dotenv to securely load API key\n4. Create client = Initialize anthropic client and define model variable (claude-3-sonnet)\n\nAPI Request Structure:\n- Function = client.messages.create()\n- Required arguments = model, max_tokens, messages\n- Model = Name of Claude model to use\n- Max_tokens = Safety limit for generation length (not target length)\n- Messages = List containing conversation exchanges\n\nMessage Types:\n- User message = {\"role\": \"user\", \"content\": \"your text\"} (human-authored content)\n- Assistant message = Contains model-generated responses\n\nResponse Access:\n- Full response = Contains metadata and nested structure\n- Text only = message.content[0].text extracts just generated text\n\nExample request structure: client.messages.create(model=model, max_tokens=1000, messages=[{\"role\": \"user\", \"content\": \"What is quantum computing?\"}])",
                 "fr": "Faire une requête API vers Anthropic = Processus comprenant 4 étapes de configuration et la compréhension de la structure des messages\n\nÉtapes de configuration :\n1. Installer les packages = pip install anthropic python-dotenv in Jupyter notebook\n2. Stocker la clé API = Créer un fichier .env avec ANTHROPIC_API_KEY=\"your_key\" (à ignorer dans le contrôle de version)\n3. Charger la variable d'environnement = Utiliser python-dotenv pour charger en toute sécurité la clé API\n4. Créer le client = Initialiser le client anthropic et définir la variable modèle (claude-3-sonnet)\n\nStructure de la requête API :\n- Fonction = client.messages.create()\n- Arguments obligatoires = model, max_tokens, messages\n- Modèle = Nom du modèle Claude à utiliser\n- Max_tokens = Limite de sécurité pour la longueur de génération (et non la longueur cible)\n- Messages = Liste contenant les échanges de conversation\n\nTypes de messages :\n- Message utilisateur = {\"role\": \"user\", \"content\": \"your text\"} (contenu rédigé par l'humain)\n- Message de l'assistant = Contient les réponses générées par le modèle\n\nAccès à la réponse :\n- Réponse complète = Contient les métadonnées et la structure imbriquée\n- Texte uniquement = message.content[0].text extrait uniquement le texte généré\n\nStructure de requête d'exemple : client.messages.create(model=model, max_tokens=1000, messages=[{\"role\": \"user\", \"content\": \"What is quantum computing?\"}])"
               }
+            },
+            {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "Install packages = pip install anthropic",
+                    "fr": "Install packages = pip install anthropic"
+                  },
+                  "back": {
+                    "en": "python-dotenv in Jupyter notebook",
+                    "fr": "python-dotenv in Jupyter notebook"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Store API key = Create .env file with",
+                    "fr": "Store API key = Create .env file with"
+                  },
+                  "back": {
+                    "en": "ANTHROPIC_API_KEY=\"your_key\" (ignore in version control)",
+                    "fr": "ANTHROPIC_API_KEY=\"your_key\" (ignore in version control)"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Load environment variable = Use python-dotenv to",
+                    "fr": "Load environment variable = Use python-dotenv to"
+                  },
+                  "back": {
+                    "en": "securely load API key",
+                    "fr": "securely load API key"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Create client = Initialize anthropic client and",
+                    "fr": "Create client = Initialize anthropic client and"
+                  },
+                  "back": {
+                    "en": "define model variable (claude-3-sonnet)\n\nAPI Request Structure:\n- Function = client.messages.create()\n- Required arguments = model, max_tokens, messages\n- Model = Name of Claude model to use\n- Max_tokens = Safety limit for generation length (not target length)\n- Messages = List containing conversati",
+                    "fr": "define model variable (claude-3-sonnet)\n\nAPI Request Structure:\n- Function = client.messages.create()\n- Required arguments = model, max_tokens, messages\n- Model = Name of Claude model to use\n- Max_tokens = Safety limit for generation length (not target length)\n- Messages = List containing conversati"
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {
@@ -1574,7 +1761,7 @@
             {
               "type": "content",
               "body": {
-                "en": "**Project Overview**\n\nGoal = Teach Claude to set time-based reminders through tool implementation in Jupyter notebook\n\nTarget interaction = User: \"Set reminder for doctor's appointment, week from Thursday\" → Claude: \"I will remind you at that point in time\"\n\n**Three core problems requiring tools:**\n\n1. Time knowledge gap = Claude knows current date but not exact time\n2. Time calculation errors = Claude sometimes miscalculates time-based addition (e.g., 379 days from January 13th, 1973)\n3. No reminder mechanism = Claude understands reminder concept but lacks implementation capability\n\n**Three corresponding tools to build:**\n\n1. Current datetime tool = Gets current date + time\n2. Duration addition tool = Adds time duration to datetime (e.g., current date + 20 days)\n3. Reminder setting tool = Actually sets the reminder\n\nImplementation approach = One tool at a time, building toward multi-tool coordination",
+                "en": "Implementation approach = One tool at a time, building toward multi-tool coordination",
                 "fr": "**Aperçu du projet**\n\nObjectif = Enseigner à Claude à définir des rappels basés sur le temps grâce à la mise en œuvre d’outils dans Jupyter notebook\n\n**Interaction cible** = Utilisateur : « Définir un rappel pour le rendez-vous chez le médecin, dans une semaine à partir de jeudi » → Claude : « Je vous rappellerai à ce moment-là »\n\n**Trois problèmes principaux nécessitant des outils :**\n\n1. Lacune de connaissance temporelle = Claude connaît la date actuelle mais pas l'heure exacte\n2. Erreurs de calcul temporel = Claude calcule parfois mal des additions basées sur le temps (par exemple 379 jours à partir du 13 janvier 1973)\n3. Pas de mécanisme de rappel = Claude comprend le concept de rappel mais n'a pas la capacité de mise en œuvre\n\n**Trois outils correspondants à construire :**\n\n1. Current datetime tool = Récupère la date et l'heure actuelles\n2. Duration addition tool = Ajoute une durée à datetime (par ex. date actuelle + 20 jours)\n3. Reminder setting tool = Définit réellement le rappel\n\nApproche de mise en œuvre = Un outil à la fois, en allant vers une coordination multi-outils"
               }
             }
@@ -1599,6 +1786,51 @@
                 "en": "CLI-based chatbot project = teaches MCP client-server interaction through hands-on implementation\n\nProject components:\n- MCP client = connects to custom MCP server\n- MCP server = provides 2 tools (read document, update document)\n- Document collection = fake documents stored in memory only\n\nKey distinction: Normal projects implement either client OR server, not both. This project implements both for educational purposes.\n\nSetup process:\n1. Download CLI_project.zip starter code\n2. Extract and open in code editor\n3. Follow readme.md setup directions\n4. Add API key to .env file\n5. Install dependencies (with/without UV)\n6. Run project: \"uv run main.py\" or \"python main.py\"\n7. Test with chat prompt\n\nExpected outcome = working chat interface that responds to basic queries, ready for MCP feature additions.",
                 "fr": "Projet de chatbot basé sur CLI qui enseigne l'interaction client-serveur MCP par une mise en œuvre pratique.\n\nComposants du projet:\n- MCP client = se connecte à un serveur MCP personnalisé\n- MCP server = fournit deux outils (lire le document, mettre à jour le document)\n- Collection de documents = documents fictifs stockés uniquement en mémoire\n\nDifférence clé : les projets normaux implémentent soit le client OU le serveur, pas les deux. Ce projet implémente les deux à des fins pédagogiques.\n\nProcessus d'installation:\n1. Télécharger le fichier de démarrage CLI_project.zip\n2. Extraire et ouvrir dans l'éditeur de code\n3. Suivre les instructions de configuration dans readme.md\n4. Ajouter la clé API dans le fichier .env\n5. Installer les dépendances (avec/sans UV)\n6. Exécuter le projet : \"uv run main.py\" ou \"python main.py\"\n7. Tester avec une invite de chat\n\nRésultat attendu : interface de chat opérationnelle qui répond à des requêtes simples, prête pour l'ajout de fonctionnalités MCP."
               }
+            },
+            {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "Download CLI_project.zip starter code",
+                    "fr": "Download CLI_project.zip starter code"
+                  },
+                  "back": {
+                    "en": "2. Extract and open in code editor",
+                    "fr": "2. Extract and open in code editor"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Follow readme.md setup directions",
+                    "fr": "Follow readme.md setup directions"
+                  },
+                  "back": {
+                    "en": "4. Add API key to .env file",
+                    "fr": "4. Add API key to .env file"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Install dependencies (with/without UV)",
+                    "fr": "Install dependencies (with/without UV)"
+                  },
+                  "back": {
+                    "en": "6. Run project: \"uv run main.py\" or \"python main.py\"",
+                    "fr": "6. Run project: \"uv run main.py\" or \"python main.py\""
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Test with chat prompt",
+                    "fr": "Test with chat prompt"
+                  },
+                  "back": {
+                    "en": "Expected outcome = working chat interface that responds to basic queries, ready for MCP feature additions.",
+                    "fr": "Expected outcome = working chat interface that responds to basic queries, ready for MCP feature additions."
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {
@@ -2012,7 +2244,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Text Chunking Strategies = process of dividing documents into smaller pieces for RAG pipelines\n\nCore Problem: Chunking quality directly impacts RAG performance. Poor chunking leads to irrelevant context retrieval (e.g., medical \"bug\" text retrieved for software engineering query about bugs).\n\nThree Main Strategies:\n\n1. Size-Based Chunking = dividing text into equal-length strings\n- Pros: Easy to implement, most common in production\n- Cons: Cut-off words, lacks context\n- Solution: Overlap strategy = include characters from neighboring chunks to preserve context\n- Trade-off: Creates text duplication but improves chunk meaning\n\n2. Structure-Based Chunking = dividing based on document structure (headers, paragraphs, sections)\n- Best for structured documents (markdown, HTML)\n- Limitation: Requires guaranteed document formatting\n- Example: Split on markdown headers (##) to create section-based chunks\n\n3. Semantic-Based Chunking = using NLP to group related sentences/sections\n- Most advanced technique\n- Groups consecutive sentences based on semantic similarity\n- Complex implementation\n\nKey Implementation Notes:\n- Chunk by character = most reliable fallback, works with any document type\n- Chunk by sentence = good middle ground if sentence detection works reliably\n- Chunk by section = optimal results but requires structured input\n- Strategy choice depends on document type guarantees and use case requirements\n\nRule: No universal best chunking method - depends on document structure guarantees and specific use case.",
+                "en": "Text Chunking Strategies = process of dividing documents into smaller pieces for RAG pipelines\n\nCore Problem: Chunking quality directly impacts RAG performance. Poor chunking leads to irrelevant context retrieval (e.g., medical \"bug\" text retrieved for software engineering query about bugs).\n\nThree Main Strategies:\n\nKey Implementation Notes:\n- Chunk by character = most reliable fallback, works with any document type\n- Chunk by sentence = good middle ground if sentence detection works reliably\n- Chunk by section = optimal results but requires structured input\n- Strategy choice depends on document type guarantees and use case requirements\n\nRule: No universal best chunking method - depends on document structure guarantees and specific use case.",
                 "fr": "Stratégies de chunking du texte = processus de division des documents en morceaux plus petits pour les pipelines RAG\n\nProblème central : La qualité du chunking affecte directement les performances du RAG. Un chunking de mauvaise qualité entraîne une récupération de contexte non pertinente (par exemple, du texte médical « bug » récupéré pour une requête en génie logiciel sur des bugs).\n\nTrois stratégies principales :\n\n1. Size-Based Chunking = diviser le texte en chaînes de longueur égale\n- Avantages : Facile à mettre en œuvre, le plus courant en production\n- Inconvénients : Mots coupés, manque de contexte\n- Solution : stratégie de chevauchement = inclure des caractères des chunks voisins pour préserver le contexte\n- Compromis : entraîne une duplication du texte mais améliore la signification des chunks\n\n2. Structure-Based Chunking = diviser en fonction de la structure du document (en-têtes, paragraphes, sections)\n- Idéal pour les documents structurés (markdown, HTML)\n- Limitation : Nécessite que le formatage du document soit garanti\n- Exemple : découper sur les en-têtes markdown (##) pour créer des chunks basés sur les sections\n\n3. Semantic-Based Chunking = utilisation de NLP pour regrouper des phrases/sections liées\n- Technique la plus avancée\n- Regroupe les phrases consécutives en fonction de la similarité sémantique\n- Mise en œuvre complexe\n\nNotes clés de mise en œuvre :\n- Chunking par caractère = le recours le plus fiable, fonctionne avec tout type de document\n- Chunking par phrase = bon compromis si la détection de phrases fonctionne de manière fiable\n- Chunking par section = résultats optimaux mais nécessite une entrée structurée\n- Le choix de la stratégie dépend des garanties de type de document et des exigences du cas d'utilisation\n\nRègle : Il n'existe pas de méthode de chunking universellement optimale - elle dépend des garanties de la structure du document et du cas d'utilisation spécifique."
               }
             }
@@ -2241,6 +2473,51 @@
                 "en": "Tools for Structured Data = alternative method to extract structured JSON from data sources using Claude's tool system instead of message pre-fill and stop sequences.\n\nKey differences from prompt-based extraction:\n- More reliable output\n- More complex setup\n- Requires JSON schema specification\n\nCore Process:\n1. Define JSON schema for tool where inputs = desired data structure\n2. Send prompt + schema to Claude\n3. Claude calls tool with structured arguments matching schema\n4. Extract JSON from tool use block (no tool result needed)\n\nCritical requirement = Force tool calling using tool_choice parameter:\n- tool_choice = {\"type\": \"tool\", \"name\": \"your_tool_name\"}\n- Ensures Claude always calls specified tool\n\nImplementation steps:\n1. Create schema definition for extraction tool\n2. Update chat function to accept tool_choice parameter\n3. Pass tool_choice to client.messages.create()\n4. Access structured data from response.content[0].input\n\nUse cases = When reliability more important than simplicity. Prompt-based methods better for quick/simple extractions, tools better for complex/reliable extractions.",
                 "fr": "Outils pour les données structurées = une méthode alternative pour extraire des JSON structurés à partir de sources de données en utilisant le système d'outils de Claude plutôt que le pré-remplissage des messages et les séquences d'arrêt.\n\nPrincipales différences par rapport à l'extraction basée sur le prompt :\n- Des résultats plus fiables\n- Mise en place plus complexe\n- Nécessite une spécification de schéma JSON\n\nProcessus central :\n1. Définir le schéma JSON pour l'outil où les entrées correspondent à la structure de données souhaitée\n2. Envoyer le prompt + le schéma à Claude\n3. Claude appelle l'outil avec des arguments structurés correspondant au schéma\n4. Extraire le JSON à partir du bloc d'utilisation de l'outil (aucun résultat d'outil nécessaire)\n\nExigence critique = Forcer l'appel d'outil en utilisant le paramètre tool_choice :\n- tool_choice = {\"type\": \"tool\", \"name\": \"your_tool_name\"}\n- Assure que Claude appelle systématiquement l'outil spécifié\n\nÉtapes de mise en œuvre :\n1. Créer une définition de schéma pour l'outil d'extraction\n2. Mettre à jour la fonction de chat pour accepter le paramètre tool_choice\n3. Passer tool_choice à client.messages.create()\n4. Accéder aux données structurées à partir de response.content[0].input\n\nCas d'utilisation = Lorsque la fiabilité est plus importante que la simplicité. Les méthodes basées sur le prompt conviennent mieux pour des extractions rapides et simples, les outils conviennent mieux pour des extractions complexes et fiables."
               }
+            },
+            {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "Send prompt + schema to Claude",
+                    "fr": "Send prompt + schema to Claude"
+                  },
+                  "back": {
+                    "en": "3. Claude calls tool with structured arguments matching schema",
+                    "fr": "3. Claude calls tool with structured arguments matching schema"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Extract JSON from tool use block (no tool result",
+                    "fr": "Extract JSON from tool use block (no tool result"
+                  },
+                  "back": {
+                    "en": "needed)\n\nCritical requirement = Force tool calling using tool_choice parameter:\n- tool_choice = {\"type\": \"tool\", \"name\": \"your_tool_name\"}\n- Ensures Claude always calls specified tool\n\nImplementation steps:",
+                    "fr": "needed)\n\nCritical requirement = Force tool calling using tool_choice parameter:\n- tool_choice = {\"type\": \"tool\", \"name\": \"your_tool_name\"}\n- Ensures Claude always calls specified tool\n\nImplementation steps:"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Create schema definition for extraction tool",
+                    "fr": "Create schema definition for extraction tool"
+                  },
+                  "back": {
+                    "en": "2. Update chat function to accept tool_choice parameter",
+                    "fr": "2. Update chat function to accept tool_choice parameter"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Pass tool_choice to client.messages.create()",
+                    "fr": "Pass tool_choice to client.messages.create()"
+                  },
+                  "back": {
+                    "en": "4. Access structured data from response.content[0].input\n\nUse cases = When reliability more important than simplicity. Prompt-based methods better for quick/simple extractions, tools better for complex/reliable extractions.",
+                    "fr": "4. Access structured data from response.content[0].input\n\nUse cases = When reliability more important than simplicity. Prompt-based methods better for quick/simple extractions, tools better for complex/reliable extractions."
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {

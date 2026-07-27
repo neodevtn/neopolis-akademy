@@ -373,6 +373,51 @@
                 "en": "BM25 = Best Match 25, a lexical search algorithm used in RAG pipelines for text-based search complementing semantic search.\n\nProblem with semantic search alone: Can return irrelevant results despite good performance. Example: searching \"incident 2023 Q4 011\" returned correct section 10 but also irrelevant section 3 (financial analysis) that never mentions the incident.\n\nSolution approach: Hybrid search combining semantic search (embeddings + vector database) with lexical search (BM25) running in parallel, then merging results for better balance.\n\nBM25 algorithm steps:\n1. Tokenize user query = break into individual terms by removing punctuation and splitting on spaces\n2. Count term frequency = calculate how often each term appears across all text chunks\n3. Assign importance weights = rare terms get higher importance, common terms (like \"a\") get lower importance\n4. Rank chunks = prioritize chunks containing higher-weighted terms more frequently\n\nKey advantage: BM25 prioritizes chunks with rare, specific terms (like \"incident 2023\") over generic common words, leading to more relevant results for exact term matches.\n\nImplementation: Both semantic and lexical search systems use similar APIs (add_document, search functions) enabling easy integration for hybrid search approach.\n\nNext step: Merge both search systems to get combined benefits of semantic understanding and exact term matching.",
                 "fr": "BM25 = Best Match 25, un algorithme de recherche lexicale utilisé dans les pipelines RAG pour la recherche textuelle qui complète la recherche sémantique.\n\nProblème avec la recherche sémantique seule : elle peut renvoyer des résultats hors sujet malgré de bonnes performances. Exemple : la recherche de \"incident 2023 Q4 011\" a renvoyé la section 10 correcte mais aussi la section 3 hors sujet (analyse financière) qui n’évoque jamais l’incident.\n\nApproche de solution : recherche hybride combinant recherche sémantique (embeddings + vector database) avec recherche lexicale (BM25), s’exécutant en parallèle, puis fusion des résultats pour un meilleur équilibre.\n\nÉtapes de l'algorithme BM25 :\n\n1. Tokeniser la requête utilisateur = découper en termes individuels en supprimant la ponctuation et en séparant par des espaces\n2. Compter la fréquence des termes = calculer combien de fois chaque terme apparaît dans tous les morceaux de texte\n3. Attribuer des poids d'importance = les termes rares obtiennent une importance plus élevée, les termes courants (comme « a ») obtiennent une importance plus faible\n4. Classer les morceaux = privilégier les morceaux contenant des termes de poids plus élevé plus fréquemment\n\nAvantage clé : BM25 privilégie les morceaux contenant des termes rares et spécifiques (comme « incident 2023 ») par rapport aux mots génériques courants, ce qui conduit à des résultats plus pertinents pour les correspondances exactes des termes.\n\nImplémentation : les systèmes de recherche sémantique et lexicale utilisent des APIs similaires (add_document, search functions) permettant une intégration facile pour l'approche de recherche hybride.\n\nProchaine étape : fusionner les deux systèmes de recherche pour obtenir les avantages combinés de la compréhension sémantique et de la correspondance exacte des termes."
               }
+            },
+            {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "Tokenize user query = break into individual terms",
+                    "fr": "Tokenize user query = break into individual terms"
+                  },
+                  "back": {
+                    "en": "by removing punctuation and splitting on spaces",
+                    "fr": "by removing punctuation and splitting on spaces"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Count term frequency = calculate how often each",
+                    "fr": "Count term frequency = calculate how often each"
+                  },
+                  "back": {
+                    "en": "term appears across all text chunks",
+                    "fr": "term appears across all text chunks"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Assign importance weights = rare terms get higher",
+                    "fr": "Assign importance weights = rare terms get higher"
+                  },
+                  "back": {
+                    "en": "importance, common terms (like \"a\") get lower importance",
+                    "fr": "importance, common terms (like \"a\") get lower importance"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Rank chunks = prioritize chunks containing",
+                    "fr": "Rank chunks = prioritize chunks containing"
+                  },
+                  "back": {
+                    "en": "higher-weighted terms more frequently\n\nKey advantage: BM25 prioritizes chunks with rare, specific terms (like \"incident 2023\") over generic common words, leading to more relevant results for exact term matches.\n\nImplementation: Both semantic and lexical search systems use similar APIs (add_document,",
+                    "fr": "higher-weighted terms more frequently\n\nKey advantage: BM25 prioritizes chunks with rare, specific terms (like \"incident 2023\") over generic common words, leading to more relevant results for exact term matches.\n\nImplementation: Both semantic and lexical search systems use similar APIs (add_document,"
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {
@@ -1084,7 +1129,7 @@
             {
               "type": "content",
               "body": {
-                "en": "**Step 3: Calling Claude with Tool Schema**\n\nAPI Request Structure = Include tools parameter with JSON schema list to inform Claude of available tools\n\n**Multi-Block Message Response**\n\nMessage Content Types = Text blocks (user display) + Tool use blocks (function calls)\n\nTool Use Block Contents = Function name + input arguments for execution\n\n**Critical Message History Management**\n\nConversation Persistence = Manual tracking required - Claude stores no history\n\nMulti-Block Handling = Must preserve entire content list including all blocks (text + tool use) when appending to message history\n\nImplementation = messages.append({\"role\": \"assistant\", \"content\": response.content})\n\n**Helper Function Updates Needed**\n\nCurrent Limitation = add_user_message and add_assistant_message only support single text blocks\n\nRequired Fix = Update helpers to handle multiple content blocks per message",
+                "en": "Multi-Block Handling = Must preserve entire content list including all blocks (text + tool use) when appending to message history\n\nImplementation = messages.append({\"role\": \"assistant\", \"content\": response.content})\n\n**Helper Function Updates Needed**\n\nCurrent Limitation = add_user_message and add_assistant_message only support single text blocks\n\nRequired Fix = Update helpers to handle multiple content blocks per message",
                 "fr": "**Étape 3 : Appeler Claude with Tool Schema**\n\nStructure de la requête API = Inclure le paramètre tools avec une liste de schémas JSON pour informer Claude des outils disponibles\n\n**Réponse multi-blocs**\n\nTypes de contenu des messages = Blocs de texte (affichage utilisateur) + Blocs d'utilisation d'outils (appels de fonction)\n\nContenus des blocs d'utilisation d'outils = Nom de la fonction + arguments d'entrée pour l'exécution\n\n**Gestion critique de l'historique des messages**\n\nPersistance de la conversation = Suivi manuel nécessaire - Claude ne stocke aucun historique\n\nGestion multi-blocs = Doit préserver l'intégralité de la liste de contenu y compris tous les blocs (texte + utilisation d'outils) lors de l'ajout à l'historique des messages\n\nImplémentation = messages.append({\"role\": \"assistant\", \"content\": response.content})\n\n**Mises à jour nécessaires des helpers**\n\nLimitation actuelle = add_user_message et add_assistant_message ne prennent en charge qu'un seul bloc de texte\n\nCorrection requise = Mettre à jour les helpers pour gérer plusieurs blocs de contenu par message"
               }
             }
@@ -1183,6 +1228,71 @@
                 "en": "Multiple Turns = Loop that keeps calling Claude until it stops requesting tools, indicated by stop_reason field\n\nStop Reason = Field in Claude's response indicating why text generation stopped. \"tool_use\" value means Claude wants to call a tool.\n\nRun Conversation Function = Main loop that:\n1. Calls Claude with messages + available tools\n2. Adds assistant response to message history\n3. Checks stop_reason - if not \"tool_use\", breaks loop\n4. If tool_use, calls run_tools function\n5. Adds tool results as user message\n6. Repeats until Claude gives final response\n\nRun Tools Function = Processes multiple tool calls from single message:\n1. Filters message.content for tool_use blocks only\n2. Iterates through each tool request\n3. Runs appropriate tool function using tool request name/input\n4. Creates tool_result blocks with: type=\"tool_result\", tool_use_id=original_id, content=JSON_encoded_output, is_error=false/true\n5. Returns list of all tool result blocks\n\nRun Tool Function = Helper that maps tool names to actual tool functions using if statements. Enables easy scaling to multiple tools.\n\nError Handling = Try/catch around tool execution, setting is_error=true and including error message in content when tools fail.\n\nMessage Flow = User message → Assistant response with tool_use → Tool results as user message → Assistant response (repeat until no tool_use) → Final response.\n\nMulti-block Messages = Single Claude message can contain multiple blocks (text + multiple tool_use blocks). Code must handle extracting and processing all tool_use blocks separately.",
                 "fr": "Multiple Turns = Boucle qui appelle Claude tant qu'il n'arrête pas de demander des outils, ce qui est indiqué par le champ stop_reason\n\nStop Reason = Champ dans la réponse de Claude indiquant pourquoi la génération de texte s'est arrêtée. La valeur \"tool_use\" signifie que Claude veut appeler un outil.\n\nRun Conversation Function = Boucle principale qui:\n1. Appelle Claude avec les messages + les outils disponibles\n2. Ajoute la réponse de l'assistant à l'historique des messages\n3. Vérifie stop_reason - si ce n'est pas \"tool_use\", quitte la boucle\n4. Si tool_use, appelle la fonction run_tools\n5. Ajoute les résultats des outils comme message utilisateur\n6. Répète jusqu'à ce que Claude donne une réponse finale\n\nRun Tools Function = Traite plusieurs appels d'outil à partir d'un seul message:\n1. Filtre message.content pour ne conserver que les blocs tool_use\n2. Parcourt chaque demande d'outil\n3. Exécute la fonction d'outil appropriée en utilisant le nom/d'entrée de la demande d'outil\n4. Crée des blocs tool_result avec: type=\"tool_result\", tool_use_id=original_id, content=JSON_encoded_output, is_error=false/true\n5. Retourne la liste de tous les blocs tool_result\n\nRun Tool Function = Aide qui associe les noms d'outil aux véritables fonctions d'outil en utilisant des instructions if. Permet une mise à l'échelle facile vers plusieurs outils.\n\nError Handling = Try/catch autour de l'exécution des outils, en définissant is_error=true et en incluant le message d'erreur dans le contenu lorsque les outils échouent.\n\nMessage Flow = Message utilisateur → Réponse de l'assistant avec tool_use → Résultats des outils en tant que message utilisateur → Réponse de l'assistant (répéter jusqu'à ce qu'il n'y ait plus de tool_use) → Réponse finale.\n\nMulti-block Messages = Un seul message Claude peut contenir plusieurs blocs (texte + plusieurs blocs tool_use). Le code doit gérer l'extraction et le traitement de tous les blocs tool_use séparément."
               }
+            },
+            {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "Calls Claude with messages + available tools",
+                    "fr": "Calls Claude with messages + available tools"
+                  },
+                  "back": {
+                    "en": "2. Adds assistant response to message history",
+                    "fr": "2. Adds assistant response to message history"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "If tool_use, calls run_tools function",
+                    "fr": "If tool_use, calls run_tools function"
+                  },
+                  "back": {
+                    "en": "5. Adds tool results as user message",
+                    "fr": "5. Adds tool results as user message"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Repeats until Claude gives final response",
+                    "fr": "Repeats until Claude gives final response"
+                  },
+                  "back": {
+                    "en": "Run Tools Function = Processes multiple tool calls from single message:",
+                    "fr": "Run Tools Function = Processes multiple tool calls from single message:"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Filters message.content for tool_use blocks only",
+                    "fr": "Filters message.content for tool_use blocks only"
+                  },
+                  "back": {
+                    "en": "2. Iterates through each tool request",
+                    "fr": "2. Iterates through each tool request"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Creates tool_result blocks with",
+                    "fr": "Creates tool_result blocks with"
+                  },
+                  "back": {
+                    "en": "type=\"tool_result\", tool_use_id=original_id, content=JSON_encoded_output, is_error=false/true",
+                    "fr": "type=\"tool_result\", tool_use_id=original_id, content=JSON_encoded_output, is_error=false/true"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Returns list of all tool result blocks",
+                    "fr": "Returns list of all tool result blocks"
+                  },
+                  "back": {
+                    "en": "Run Tool Function = Helper that maps tool names to actual tool functions using if statements. Enables easy scaling to multiple tools.\n\nError Handling = Try/catch around tool execution, setting is_error=true and including error message in content when tools fail.\n\nMessage Flow = User message → Assist",
+                    "fr": "Run Tool Function = Helper that maps tool names to actual tool functions using if statements. Enables easy scaling to multiple tools.\n\nError Handling = Try/catch around tool execution, setting is_error=true and including error message in content when tools fail.\n\nMessage Flow = User message → Assist"
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {
@@ -1293,6 +1403,61 @@
                 "en": "RAG Flow Implementation = Complete workflow using vector database for document retrieval\n\n5 Core Steps:\n1. Text Chunking = Split document into sections using chunk_by_section function\n2. Generate Embeddings = Create embeddings for each text chunk using generate_embedding\n3. Vector Store Population = Create vector index instance, loop through chunk-embedding pairs, insert via store.add_vector with embedding + metadata dictionary containing original text\n4. Query Processing = Generate embedding for user question using same generate_embedding function\n5. Similarity Search = Use store.search(user_embedding, num_results) to find most relevant chunks, returns documents with cosine distances\n\nKey Technical Points:\n- Vector DB stores embeddings + original text metadata (embeddings alone not useful for developers)\n- Cosine distance measures similarity (lower = more similar)\n- Multiple chunks returned for comprehensive context\n- Implementation uses class VectorIndex as sample vector database\n\nExample Query: \"What did software engineering department do last year?\" returned section 2 (distance 0.71) and methodology section (distance 0.72) as top matches.\n\nLimitation: Current implementation has scenarios where workflow doesn't work optimally, requiring additional improvements.",
                 "fr": "RAG Flow Implementation: Flux complet utilisant une base de données vectorielle pour la récupération de documents\n\n5 étapes clés:\n1. Text Chunking: Diviser le document en sections en utilisant la fonction chunk_by_section\n2. Generate Embeddings: Créer des embeddings pour chaque chunk de texte en utilisant generate_embedding\n3. Vector Store Population: Créer une instance d'index vectoriel, parcourir les paires chunk-embedding, insérer via store.add_vector avec embedding + dictionnaire de métadonnées contenant le texte original\n4. Query Processing: Générer embedding pour la question de l'utilisateur en utilisant la même fonction generate_embedding\n5. Similarity Search: Utiliser store.search(user_embedding, num_results) pour trouver les chunks les plus pertinents, renvoie les documents avec les distances cosinus\n\nPoints techniques clés:\n- Vector DB stocke embeddings + métadonnées du texte original (les embeddings seuls ne sont pas utiles pour les développeurs)\n- La distance cosinus mesure la similarité (plus faible = plus similaire)\n- Plusieurs chunks retournés pour un contexte complet\n- L'implémentation utilise la classe VectorIndex comme base de données vectorielle d'exemple\n\nExemple de requête: \"What did software engineering department do last year?\" a renvoyé la section 2 (distance 0,71) et la section méthodologie (distance 0,72) comme meilleures correspondances.\n\nLimitation: L'implémentation actuelle présente des scénarios où le flux de travail ne fonctionne pas de manière optimale, nécessitant des améliorations supplémentaires."
               }
+            },
+            {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "Text Chunking = Split document into sections using",
+                    "fr": "Text Chunking = Split document into sections using"
+                  },
+                  "back": {
+                    "en": "chunk_by_section function",
+                    "fr": "chunk_by_section function"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Generate Embeddings = Create embeddings for each",
+                    "fr": "Generate Embeddings = Create embeddings for each"
+                  },
+                  "back": {
+                    "en": "text chunk using generate_embedding",
+                    "fr": "text chunk using generate_embedding"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Vector Store Population = Create vector index",
+                    "fr": "Vector Store Population = Create vector index"
+                  },
+                  "back": {
+                    "en": "instance, loop through chunk-embedding pairs, insert via store.add_vector with embedding + metadata dictionary containing original text",
+                    "fr": "instance, loop through chunk-embedding pairs, insert via store.add_vector with embedding + metadata dictionary containing original text"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Query Processing = Generate embedding for user",
+                    "fr": "Query Processing = Generate embedding for user"
+                  },
+                  "back": {
+                    "en": "question using same generate_embedding function",
+                    "fr": "question using same generate_embedding function"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Similarity Search = Use",
+                    "fr": "Similarity Search = Use"
+                  },
+                  "back": {
+                    "en": "store.search(user_embedding, num_results) to find most relevant chunks, returns documents with cosine distances\n\nKey Technical Points:\n- Vector DB stores embeddings + original text metadata (embeddings alone not useful for developers)\n- Cosine distance measures similarity (lower = more similar)\n- Mu",
+                    "fr": "store.search(user_embedding, num_results) to find most relevant chunks, returns documents with cosine distances\n\nKey Technical Points:\n- Vector DB stores embeddings + original text metadata (embeddings alone not useful for developers)\n- Cosine distance measures similarity (lower = more similar)\n- Mu"
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {
@@ -1363,6 +1528,31 @@
                 "en": "RAG = Retrieval Augmented Generation, technique for querying large documents with LLMs.\n\nProblem: How to extract specific information from large documents (100-1000 pages) for LLM processing.\n\nOption 1 (Direct approach): Feed entire document text into prompt.\n- Limitations: Token limits, decreased effectiveness with long prompts, higher cost, slower processing.\n\nOption 2 (RAG approach): \n- Step 1: Break document into small chunks\n- Step 2: Find most relevant chunks for user question, include only those in prompt\n\nRAG advantages: LLM focuses on relevant content, scales to large/multiple documents, smaller prompts = faster/cheaper processing.\n\nRAG disadvantages: Complex preprocessing required, need search mechanism for chunk retrieval, must define \"relevance\", no guarantee chunks contain complete context, multiple chunking strategies possible (equal portions vs header-based).\n\nKey challenge: Determining optimal chunking strategy and search mechanism for specific use case.\n\nRAG trades simplicity for scalability and efficiency but requires careful implementation evaluation.",
                 "fr": "RAG = Retrieval Augmented Generation, technique for querying large documents with LLMs.\n\nProblème : Comment extraire des informations spécifiques à partir de documents volumineux (100-1000 pages) pour le traitement par les LLMs.\n\nOption 1 (Approche directe) : Envoyer tout le texte du document dans le prompt.\n- Limites : limites de tokens, efficacité diminuée avec les prompts longs, coût plus élevé, traitement plus lent.\n\nOption 2 (approche RAG) :\n- Étape 1 : Diviser le document en petits morceaux\n- Étape 2 : Identifier les blocs les plus pertinents pour la question de l'utilisateur, n'inclure que ceux-ci dans le prompt\n\nAvantages de RAG : Le LLM se concentre sur le contenu pertinent, s'adapte à de grands documents ou à plusieurs documents, des prompts plus petits = traitement plus rapide et moins cher.\n\nInconvénients de RAG : Prétraitement complexe requis, besoin d'un mécanisme de recherche pour la récupération des morceaux, il faut définir la « pertinence », aucune garantie que les morceaux contiennent le contexte complet, plusieurs stratégies de découpage possibles (portions égales vs basées sur les en-têtes).\n\nDéfi clé : Déterminer la stratégie de découpage optimale et le mécanisme de recherche pour un cas d'utilisation spécifique.\n\nRAG sacrifie la simplicité au profit de l'évolutivité et de l'efficacité mais nécessite une évaluation minutieuse de l'implémentation."
               }
+            },
+            {
+              "type": "tabbed_content",
+              "tabs": [
+                {
+                  "label": {
+                    "en": "Option 1: (Direct approach): Feed entire document text in...",
+                    "fr": "Option 1: (Direct approach): Feed entire document text in..."
+                  },
+                  "content": {
+                    "en": "(Direct approach): Feed entire document text into prompt.\n- Limitations: Token limits, decreased effectiveness with long prompts, higher cost, slower processing.",
+                    "fr": "(Direct approach): Feed entire document text into prompt.\n- Limitations: Token limits, decreased effectiveness with long prompts, higher cost, slower processing."
+                  }
+                },
+                {
+                  "label": {
+                    "en": "Option 2: (RAG approach):",
+                    "fr": "Option 2: (RAG approach):"
+                  },
+                  "content": {
+                    "en": "(RAG approach): \n- Step 1: Break document into small chunks\n- Step 2: Find most relevant chunks for user question, include only those in prompt\n\nRAG advantages: LLM focuses on relevant content, scales to large/multiple documents, smaller prompts = faster/cheaper processing.\n\nRAG disadvantages: Complex preprocessing required, need search mechanism for chunk retrieval, must define \"relevance\", no guarantee chunks contain complete context, multiple chunking strategies possible (equal portions vs header-based).",
+                    "fr": "(RAG approach): \n- Step 1: Break document into small chunks\n- Step 2: Find most relevant chunks for user question, include only those in prompt\n\nRAG advantages: LLM focuses on relevant content, scales to large/multiple documents, smaller prompts = faster/cheaper processing.\n\nRAG disadvantages: Complex preprocessing required, need search mechanism for chunk retrieval, must define \"relevance\", no guarantee chunks contain complete context, multiple chunking strategies possible (equal portions vs header-based)."
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {
@@ -1407,6 +1597,61 @@
                 "en": "MCP Client = communication interface between your server and MCP server, provides access to server's tools\n\nTransport agnostic = client/server can communicate via multiple protocols (stdin/stdout, HTTP, WebSockets, etc.)\n\nCommunication method = message exchange following MCP spec\n\nKey message types:\n- list tools request = client asks server for available tools\n- list tools result = server responds with tool list \n- call tool request = client asks server to run specific tool with arguments\n- call tool result = server returns tool execution results\n\nTypical flow:\n1. User queries your server\n2. Server requests tool list from MCP client\n3. MCP client sends list tools request to MCP server\n4. MCP server responds with available tools\n5. Server sends user query + tools to Claude\n6. Claude requests tool execution\n7. Server asks MCP client to run tool\n8. MCP client sends call tool request to MCP server\n9. MCP server executes tool (e.g., GitHub API call)\n10. Results flow back through chain: MCP server → MCP client → your server → Claude → user\n\nMCP client role = intermediary that translates between your server and MCP server, doesn't execute tools directly",
                 "fr": "MCP Client = interface de communication entre votre serveur et le serveur MCP, fournit l'accès aux outils du serveur\nTransport agnostic = le client/serveur peut communiquer via plusieurs protocoles (stdin/stdout, HTTP, WebSockets, etc.)\nCommunication method = échange de messages selon la spécification MCP\nTypes de messages clés :\n- list tools request = le client demande au serveur la liste des outils disponibles\n- list tools result = le serveur répond avec la liste des outils\n- call tool request = le client demande au serveur d'exécuter un outil spécifique avec des arguments\n- call tool result = le serveur renvoie les résultats de l'exécution de l'outil\nDéroulement typique :\n1. L'utilisateur interroge votre serveur\n2. Le serveur demande la liste des outils au MCP client\n3. Le MCP client envoie la requête de liste d'outils au MCP server\n4. Le MCP server répond avec les outils disponibles\n5. Le serveur transmet la requête de l'utilisateur et les outils à Claude\n6. Claude demande l'exécution d'un outil\n7. Le serveur demande au MCP client d'exécuter l'outil\n8. Le MCP client envoie la requête d'appel d'outil au MCP server\n9. Le MCP server exécute l'outil (par exemple, appel API GitHub)\n10. Les résultats transitent de retour par la chaîne : MCP server → MCP client → votre serveur → Claude → l'utilisateur\nRôle du MCP client = intermédiaire qui assure la traduction entre votre serveur et le MCP server, n'exécute pas directement les outils"
               }
+            },
+            {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "User queries your server",
+                    "fr": "User queries your server"
+                  },
+                  "back": {
+                    "en": "2. Server requests tool list from MCP client",
+                    "fr": "2. Server requests tool list from MCP client"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "MCP client sends list tools request to MCP server",
+                    "fr": "MCP client sends list tools request to MCP server"
+                  },
+                  "back": {
+                    "en": "4. MCP server responds with available tools",
+                    "fr": "4. MCP server responds with available tools"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Server sends user query + tools to Claude",
+                    "fr": "Server sends user query + tools to Claude"
+                  },
+                  "back": {
+                    "en": "6. Claude requests tool execution",
+                    "fr": "6. Claude requests tool execution"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Server asks MCP client to run tool",
+                    "fr": "Server asks MCP client to run tool"
+                  },
+                  "back": {
+                    "en": "8. MCP client sends call tool request to MCP server",
+                    "fr": "8. MCP client sends call tool request to MCP server"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "MCP server executes tool (e.g., GitHub API call)",
+                    "fr": "MCP server executes tool (e.g., GitHub API call)"
+                  },
+                  "back": {
+                    "en": "10. Results flow back through chain: MCP server → MCP client → your server → Claude → user\n\nMCP client role = intermediary that translates between your server and MCP server, doesn't execute tools directly",
+                    "fr": "10. Results flow back through chain: MCP server → MCP client → your server → Claude → user\n\nMCP client role = intermediary that translates between your server and MCP server, doesn't execute tools directly"
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {
@@ -1458,15 +1703,7 @@
             "fr": "Faire une requête"
           },
           "type": "teaching",
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "en": "**Making a Request to Vertex AI Claude**\n\n**Setup Steps:**\n1. Install anthropic SDK: \\`%pip install \"anthropic[vertex]\"\\`\n2. Import and create client: \\`from anthropic import vertex\\` then instantiate with region=\"global\" and project_id\n3. Define model version variable for reuse\n\n**Required Arguments for client.messages.create():**\n- model = specific Claude model version string\n- max_tokens = safety limit on response length (not a target, just maximum)\n- messages = list of message dictionaries\n\n**Message Types:**\n- User message = {role: \"user\", content: \"text written by humans\"}\n- Assistant message = {role: \"assistant\", content: \"text generated by Claude\"}\n\n**Response Access:**\nRaw response contains metadata. Extract generated text with: \\`message.content[0].text\\`\n\n**Key Concepts:**\nMessages = conversation exchanges between user and Claude\nMax tokens = safety mechanism preventing excessive generation\nProject ID = unique identifier from Google Cloud console",
-                "fr": "**Effectuer une requête vers Vertex AI Claude**\n\n**Étapes de configuration :**\n1. Installer le SDK anthropic: \\`%pip install \"anthropic[vertex]\"\\`\n2. Importer et créer le client: \\`from anthropic import vertex\\` puis l'instancier avec region=\"global\" et project_id\n3. Définir une variable de version du modèle pour la réutilisation\n\n**Arguments obligatoires pour client.messages.create():**\n- model = chaîne de version du modèle Claude spécifique\n- max_tokens = limite de sécurité sur la longueur de la réponse (pas un objectif, juste un maximum)\n- messages = liste de dictionnaires de messages\n\n**Types de messages :**\n- message utilisateur = {role: \"user\", content: \"texte écrit par des humains\"}\n- message assistant = {role: \"assistant\", content: \"texte généré par Claude\"}\n\n**Accès à la réponse :**\nLa réponse brute contient des métadonnées. Extraire le texte généré avec: \\`message.content[0].text\\`\n\n**Concepts clés :**\nMessages = échanges de conversation entre l'utilisateur et Claude\nMax tokens = mécanisme de sécurité empêchant une génération excessive\nProject ID = identifiant unique provenant de la console Google Cloud"
-              }
-            }
-          ],
+          "blocks": [],
           "completionRule": {
             "requires": [
               "contentViewed"
@@ -1531,6 +1768,71 @@
                 "en": "Multi-Turn Tool Conversations = system allowing AI to make multiple sequential tool calls within single conversation\n\nProblem: Users submit queries requiring multiple tools. Example: \"What day is 103 days from today?\" needs get_current_datetime tool, then add_duration_to_datetime tool.\n\nProcess Flow:\n1. Claude requests first tool (get_current_datetime)\n2. System executes tool, returns result\n3. Claude requests second tool (add_duration_to_datetime) \n4. System executes tool, returns result\n5. Claude provides final answer\n\nImplementation Pattern:\n- run_conversation function takes initial message list\n- While loop: call Claude, check response\n- If response contains tool_use blocks: execute tools, add results to conversation, continue loop\n- If response contains no tool_use: return final answer to user\n\nRequired Refactoring:\n1. Update add_user_message/add_assistant_message helpers to handle multiple message blocks (text + tool_use blocks)\n2. Modify chat function to accept tool schemas list, return entire message instead of just text\n3. Add text_from_message helper to extract text from multi-block messages\n4. Implement conversation loop supporting sequential tool calls\n\nKey Concept: Unpredictable tool chains require flexible conversation management assuming multiple tool calls per query.",
                 "fr": "Multi-Turn Tool Conversations = système permettant à AI d'effectuer plusieurs appels d'outils séquentiels au cours d'une même conversation\n\nProblème : Les utilisateurs soumettent des requêtes nécessitant plusieurs outils. Exemple : « Quelle date tombe dans 103 jours à partir d'aujourd'hui ? » nécessite l'outil get_current_datetime, puis l'outil add_duration_to_datetime.\n\nFlux du processus :\n1. Claude demande le premier outil (get_current_datetime)\n2. Le système exécute l'outil et renvoie le résultat\n3. Claude demande le deuxième outil (add_duration_to_datetime)\n4. Le système exécute l'outil et renvoie le résultat\n5. Claude fournit la réponse finale\n\nModèle de mise en œuvre :\n- La fonction run_conversation prend une liste de messages initiale\n- Boucle while : appeler Claude, vérifier la réponse\n- Si la réponse contient des blocs tool_use : exécuter les outils, ajouter les résultats à la conversation, continuer la boucle\n- Si la réponse ne contient pas de tool_use : retourner la réponse finale à l'utilisateur\n\nRefactorings requises :\n1. Mettre à jour les helpers add_user_message/add_assistant_message pour gérer plusieurs blocs de messages (texte + blocs tool_use)\n2. Modifier la fonction chat pour accepter une liste de tool schemas, et renvoyer le message entier au lieu d'un simple texte\n3. Ajouter une helper text_from_message pour extraire le texte des messages multi-blocs\n4. Implémenter une boucle de conversation prenant en charge les appels d'outils séquentiels\n\nConcept clé : les chaînes d'outils imprévisibles nécessitent une gestion flexible de la conversation en supposant plusieurs appels d'outils par requête."
               }
+            },
+            {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "Claude requests first tool (get_current_datetime)",
+                    "fr": "Claude requests first tool (get_current_datetime)"
+                  },
+                  "back": {
+                    "en": "2. System executes tool, returns result",
+                    "fr": "2. System executes tool, returns result"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Claude requests second tool",
+                    "fr": "Claude requests second tool"
+                  },
+                  "back": {
+                    "en": "(add_duration_to_datetime)",
+                    "fr": "(add_duration_to_datetime)"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "System executes tool, returns result",
+                    "fr": "System executes tool, returns result"
+                  },
+                  "back": {
+                    "en": "5. Claude provides final answer\n\nImplementation Pattern:\n- run_conversation function takes initial message list\n- While loop: call Claude, check response\n- If response contains tool_use blocks: execute tools, add results to conversation, continue loop\n- If response contains no tool_use: return final",
+                    "fr": "5. Claude provides final answer\n\nImplementation Pattern:\n- run_conversation function takes initial message list\n- While loop: call Claude, check response\n- If response contains tool_use blocks: execute tools, add results to conversation, continue loop\n- If response contains no tool_use: return final"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Update add_user_message/add_assistant_message",
+                    "fr": "Update add_user_message/add_assistant_message"
+                  },
+                  "back": {
+                    "en": "helpers to handle multiple message blocks (text + tool_use blocks)",
+                    "fr": "helpers to handle multiple message blocks (text + tool_use blocks)"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Modify chat function to accept tool schemas list,",
+                    "fr": "Modify chat function to accept tool schemas list,"
+                  },
+                  "back": {
+                    "en": "return entire message instead of just text",
+                    "fr": "return entire message instead of just text"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Implement conversation loop supporting sequential",
+                    "fr": "Implement conversation loop supporting sequential"
+                  },
+                  "back": {
+                    "en": "tool calls\n\nKey Concept: Unpredictable tool chains require flexible conversation management assuming multiple tool calls per query.",
+                    "fr": "tool calls\n\nKey Concept: Unpredictable tool chains require flexible conversation management assuming multiple tool calls per query."
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {
@@ -1564,7 +1866,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Claude models = 3 families optimized for different priorities\n\n**Opus** = highest intelligence model. For complex multi-step tasks requiring deep reasoning and planning. Can work independently for hours. Supports reasoning capability. Trade-off = higher cost + moderate latency.\n\n**Sonnet** = balanced model. Good intelligence + speed + cost efficiency. Strong coding abilities, precise code edits without breaking functionality. Fast text generation. Sweet spot for most use cases.\n\n**Haiku** = fastest model. Optimized for speed + cost efficiency. No reasoning capabilities. Best for real-time user interactions + high-volume processing.\n\n**Selection framework**: Intelligence priority → Opus. Speed priority → Haiku. Balanced needs → Sonnet.\n\n**Key insight**: Teams often use multiple models in same application. Haiku for user interactions, Sonnet for business logic, Opus for complex reasoning tasks.\n\nAll models share core capabilities = text generation, coding, image analysis.",
+                "en": "Claude models = 3 families optimized for different priorities\n\n\n\nAll models share core capabilities = text generation, coding, image analysis.",
                 "fr": "Modèles Claude = 3 familles optimisées pour des priorités différentes\n\n**Opus** = le modèle d'intelligence le plus élevé. Pour des tâches complexes en plusieurs étapes nécessitant un raisonnement approfondi et une planification. Peut fonctionner de manière autonome pendant des heures. Dispose de capacités de raisonnement. Compromis = coût plus élevé + latence modérée.\n\n**Sonnet** = modèle équilibré. Bonne intelligence + vitesse + efficacité des coûts. Excellentes capacités de codage, modifications de code précises sans compromettre la fonctionnalité. Génération rapide de texte. Le point idéal pour la plupart des cas d'utilisation.\n\n**Haiku** = le modèle le plus rapide. Optimisé pour la vitesse + l'efficacité des coûts. Aucune capacité de raisonnement. Idéal pour les interactions utilisateur en temps réel + traitement à haut volume.\n\n**Cadre de sélection** : Priorité d'intelligence → Opus. Priorité de vitesse → Haiku. Besoins équilibrés → Sonnet.\n\n**Idée clé**: Les équipes utilisent souvent plusieurs modèles dans la même application. Haiku pour les interactions utilisateur, Sonnet pour la logique métier, Opus pour des tâches de raisonnement complexes.\n\nTous les modèles partagent des capacités de base = génération de texte, codage, analyse d'images."
               }
             }
@@ -1633,6 +1935,61 @@
                 "en": "Project goal = teach Claude to set time-based reminders via tools in Jupyter notebook\n\nTarget interaction = user says \"Set reminder for doctor's appointment, week from Thursday\" → Claude responds \"I will remind you at that point in time\"\n\nThree core problems identified:\n1. Claude lacks precise current time knowledge (knows date, not exact time)\n2. Claude sometimes fails at time-based calculations (e.g., \"379 days from January 13th, 1973\")\n3. Claude has no mechanism to actually set reminders (understands concept but cannot execute)\n\nSolution approach = three dedicated tools:\n1. Get current datetime tool (date + time)\n2. Add duration to datetime tool (handles time calculations)\n3. Reminder setting tool (executes actual reminder creation)\n\nImplementation = one tool at a time, eventually combining multiple tools for complete functionality.",
                 "fr": "Objectif du projet = apprendre à Claude à définir des rappels basés sur le temps via des outils dans un notebook Jupyter\n\nInteraction cible = l'utilisateur dit « Set reminder for doctor's appointment, week from Thursday » → Claude répond « I will remind you at that point in time »\n\nTrois problèmes principaux identifiés :\n1. Claude manque de connaissance précise de l'heure actuelle (connaît la date, pas l'heure exacte)\n2. Claude échoue parfois dans les calculs basés sur le temps (par exemple, « 379 jours à partir du 13 janvier 1973 »)\n3. Claude n'a pas de mécanisme pour réellement créer des rappels (comprend le concept mais ne peut pas exécuter)\n\nApproche de solution = trois outils dédiés :\n1. Get current datetime tool (date + time)\n2. Add duration to datetime tool (handles time calculations)\n3. Reminder setting tool (executes actual reminder creation)\n\nImplémentation = un outil à la fois, en fin de compte en combinant plusieurs outils pour une fonctionnalité complète."
               }
+            },
+            {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "Claude lacks precise current time knowledge (knows",
+                    "fr": "Claude lacks precise current time knowledge (knows"
+                  },
+                  "back": {
+                    "en": "date, not exact time)",
+                    "fr": "date, not exact time)"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Claude sometimes fails at time-based calculations",
+                    "fr": "Claude sometimes fails at time-based calculations"
+                  },
+                  "back": {
+                    "en": "(e.g., \"379 days from January 13th, 1973\")",
+                    "fr": "(e.g., \"379 days from January 13th, 1973\")"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Claude has no mechanism to actually set reminders",
+                    "fr": "Claude has no mechanism to actually set reminders"
+                  },
+                  "back": {
+                    "en": "(understands concept but cannot execute)\n\nSolution approach = three dedicated tools:",
+                    "fr": "(understands concept but cannot execute)\n\nSolution approach = three dedicated tools:"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Get current datetime tool (date + time)",
+                    "fr": "Get current datetime tool (date + time)"
+                  },
+                  "back": {
+                    "en": "2. Add duration to datetime tool (handles time calculations)",
+                    "fr": "2. Add duration to datetime tool (handles time calculations)"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Reminder setting tool (executes actual reminder",
+                    "fr": "Reminder setting tool (executes actual reminder"
+                  },
+                  "back": {
+                    "en": "creation)\n\nImplementation = one tool at a time, eventually combining multiple tools for complete functionality.",
+                    "fr": "creation)\n\nImplementation = one tool at a time, eventually combining multiple tools for complete functionality."
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {
@@ -1772,15 +2129,7 @@
             "fr": "Prompts dans le client"
           },
           "type": "teaching",
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "en": "**Prompts in MCP Client Implementation**\n\nClient-side prompt functions:\n- \\`list_prompts()\\` = await self.session.list_prompts(), return result.props\n- \\`get_prompt()\\` = await self.session.get_prompt(prompt_name, arguments), return result.messages\n\n**Prompt workflow:**\n1. Define prompt in MCP server with variables (e.g., document_id)\n2. Client calls get_prompt with prompt name + arguments dictionary\n3. Arguments interpolated into prompt function as keyword arguments\n4. Returns messages fed directly to Claude\n\n**Example usage:**\nFormat command → select document → prompt with document ID passed to Claude → Claude uses tools to fetch document → reformats with requested styling\n\n**Key concept:**\nPrompts = server-defined templates that clients can invoke with runtime arguments, enabling dynamic prompt generation with variable substitution.",
-                "fr": "**Prompts dans l'implémentation du client MCP**\n\nFonctions de prompt côté client:\n- \\`list_prompts()\\` = await self.session.list_prompts(), return result.props\n- \\`get_prompt()\\` = await self.session.get_prompt(prompt_name, arguments), return result.messages\n\n**Flux de prompts :**\n1. Définir le prompt dans le serveur MCP avec des variables (p. ex., document_id)\n2. Le client appelle get_prompt avec le nom du prompt et le dictionnaire d'arguments\n3. Les arguments sont interpolés dans la fonction prompt en tant qu'arguments nommés\n4. Renvoie des messages fournis directement à Claude\n\n**Exemple d'utilisation :**\nFormatage de la commande → sélection du document → prompt avec l'ID du document transmis à Claude → Claude utilise des outils pour récupérer le document → le reformate avec le style demandé\n\n**Concept clé :**\nPrompts = des templates définis par le serveur que les clients peuvent invoquer avec des arguments au moment de l'exécution, permettant une génération dynamique de prompts avec substitution de variables."
-              }
-            }
-          ],
+          "blocks": [],
           "completionRule": {
             "requires": [
               "contentViewed"
@@ -2330,7 +2679,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Adding multiple tools to Claude involves updating two key functions after implementing tool schemas and functions.\n\n**Process:**\n1. Add tool schemas to tools list in RunConversation function\n2. Add corresponding function calls to RunTool function using if/elif statements\n3. Tool functions execute and return results when Claude requests them\n\n**Example Implementation:**\n- RunTool checks tool_name, calls appropriate function with **tool_input\n- Pattern: if tool_name == \"ToolName\": return ToolFunction(**tool_input)\n\n**Multi-tool Usage:**\nClaude can chain multiple tools in sequence (e.g., AddDurationToDateTime → SetReminder). Each tool call creates separate message blocks with tool_use and tool_result pairs in conversation history.\n\n**Key Pattern:**\nOnce initial framework established, adding new tools = add schema + add function + update RunTool switch statement. Process becomes standardized and scalable.",
+                "en": "Adding multiple tools to Claude involves updating two key functions after implementing tool schemas and functions.",
                 "fr": "Ajouter plusieurs outils à Claude implique de mettre à jour deux fonctions clés après avoir implémenté les schémas et les fonctions des outils.\n\n**Processus :**\n1. Ajouter les schémas d’outils à la liste des outils dans la fonction RunConversation\n2. Ajouter les appels de fonction correspondants à la fonction RunTool en utilisant des instructions if/elif\n3. Les fonctions d’outil s’exécutent et renvoient les résultats lorsque Claude les demande\n\n**Implémentation d’exemple :**\n- RunTool vérifie tool_name, appelle la fonction appropriée avec **tool_input\n- Pattern: if tool_name == \"ToolName\": return ToolFunction(**tool_input)\n\n**Utilisation multi-outils :**\nClaude peut enchaîner plusieurs outils en séquence (par exemple, AddDurationToDateTime → SetReminder). Chaque appel d’outil crée des blocs de messages séparés avec des paires tool_use et tool_result dans l’historique de la conversation.\n\n**Motif clé :**\nUne fois le cadre initial établi, ajouter des schémas + ajouter des fonctions + mettre à jour la déclaration switch de RunTool. Le processus devient standardisé et évolutif."
               }
             }

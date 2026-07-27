@@ -1362,6 +1362,16 @@ export default function TrainingCourse() {
     }
   }, [persistedChapterInit]);
 
+  // Stable callback for chapter changes (prevents infinite re-render in LessonViewer)
+  // MUST be declared before any conditional returns (Rules of Hooks)
+  const handleChapterChange = useCallback((current: number, total: number) => {
+    setChapterProgress({ current, total });
+    // Persist chapter progress to database - uses refs/closures to avoid stale values
+    if (courseId) {
+      persistChapterProgress(courseId, 0, current, total);
+    }
+  }, [courseId, persistChapterProgress]);
+
   // Server-synced video progress
   const videoProgressQuery = trpc.videoProgress.get.useQuery(
     { courseId: courseId || "" },
@@ -1533,16 +1543,6 @@ export default function TrainingCourse() {
       markLessonComplete(certId, courseId, lessonIndex);
     }
   };
-
-  // Stable callback for chapter changes (prevents infinite re-render in LessonViewer)
-  const handleChapterChange = useCallback((current: number, total: number) => {
-    setChapterProgress({ current, total });
-    // Persist chapter progress to database
-    if (course?.id) {
-      const lessonIdx = isSingleLessonCourse ? 0 : (activeLessonIndex ?? 0);
-      persistChapterProgress(course.id, lessonIdx, current, total);
-    }
-  }, [course?.id, isSingleLessonCourse, activeLessonIndex, persistChapterProgress]);
 
   return (
     <div className="min-h-screen bg-background">

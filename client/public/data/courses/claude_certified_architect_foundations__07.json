@@ -667,6 +667,51 @@
                 "en": "StreamableHTTP Transport = HTTP-based MCP transport using server-sent events (SSE) to enable server-to-client communication\n\nCore Problem: MCP requires server-to-client requests (sampling, notifications, logging) but HTTP naturally supports only client-to-server requests\n\nWorkaround Solution: Uses SSE connections to allow server streaming messages to client\n\nSession ID = Random identifier assigned during initialization, included in all subsequent requests as HTTP header\n\nInitialization Flow:\n1. Client sends initialize request\n2. Server responds with result + MCP session ID header\n3. Client sends initialized notification with session ID\n4. Client optionally makes GET request with session ID to establish SSE connection\n\nTwo SSE Connections:\n1. Long-lived SSE connection = For server-initiated requests (sampling, notifications)\n2. Short-lived SSE connection = For specific tool call responses, automatically closed after result\n\nMessage Routing:\n- Progress notifications → Long-lived SSE connection\n- Logging messages + tool results → Short-lived SSE connection tied to specific request\n\nKey Limitation: Setting certain flags to true breaks the workaround, making StreamableHTTP complex to understand and use properly\n\nCritical Point: SSE responses enable bidirectional communication over HTTP by keeping connections open and streaming individual messages from server to client",
                 "fr": "StreamableHTTP Transport = transport MCP basé sur HTTP utilisant server-sent events (SSE) pour permettre la communication serveur-vers-client\n\nProblème principal : MCP nécessite des requêtes serveur-vers-client (sampling, notifications, logging), mais HTTP prend naturellement en charge uniquement les requêtes client-vers-serveur\n\nSolution de contournement : Utilise des connexions SSE pour permettre au serveur de diffuser des messages vers le client\n\nIdentifiant de session = identifiant aléatoire attribué lors de l'initialisation, inclus dans toutes les requêtes ultérieures en tant qu'en-tête HTTP\n\nFlux d'initialisation :\n1. Le client envoie une requête d'initialisation\n2. Le serveur répond avec le résultat et l'en-tête MCP session ID\n3. Le client envoie une notification d'initialisation avec l'identifiant de session\n4. Le client effectue éventuellement une requête GET avec l'identifiant de session pour établir la connexion SSE\n\nDeux connexions SSE :\n1. Connexion SSE longue durée = Pour les requêtes initiées par le serveur (sampling, notifications)\n2. Connexion SSE à courte durée = Pour les réponses d'appels d'outil spécifiques, automatiquement fermée après le résultat\n\nRoutage des messages :\n- Notifications de progression → connexion SSE longue durée\n- Messages de journalisation + résultats d'outils → connexion SSE à courte durée liée à une requête spécifique\n\nLimitation clé : régler certains drapeaux sur true casse la solution de contournement, rendant StreamableHTTP difficile à comprendre et à utiliser correctement\n\nPoint critique : les réponses SSE permettent une communication bidirectionnelle sur HTTP en maintenant les connexions ouvertes et en diffusant des messages individuels du serveur vers le client"
               }
+            },
+            {
+              "type": "flip_cards",
+              "cards": [
+                {
+                  "front": {
+                    "en": "Client sends initialize request",
+                    "fr": "Client sends initialize request"
+                  },
+                  "back": {
+                    "en": "2. Server responds with result + MCP session ID header",
+                    "fr": "2. Server responds with result + MCP session ID header"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Client optionally makes GET request with session",
+                    "fr": "Client optionally makes GET request with session"
+                  },
+                  "back": {
+                    "en": "ID to establish SSE connection\n\nTwo SSE Connections:",
+                    "fr": "ID to establish SSE connection\n\nTwo SSE Connections:"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Long-lived SSE connection = For server-initiated",
+                    "fr": "Long-lived SSE connection = For server-initiated"
+                  },
+                  "back": {
+                    "en": "requests (sampling, notifications)",
+                    "fr": "requests (sampling, notifications)"
+                  }
+                },
+                {
+                  "front": {
+                    "en": "Short-lived SSE connection = For specific tool",
+                    "fr": "Short-lived SSE connection = For specific tool"
+                  },
+                  "back": {
+                    "en": "call responses, automatically closed after result\n\nMessage Routing:\n- Progress notifications → Long-lived SSE connection\n- Logging messages + tool results → Short-lived SSE connection tied to specific request\n\nKey Limitation: Setting certain flags to true breaks the workaround, making StreamableHTTP",
+                    "fr": "call responses, automatically closed after result\n\nMessage Routing:\n- Progress notifications → Long-lived SSE connection\n- Logging messages + tool results → Short-lived SSE connection tied to specific request\n\nKey Limitation: Setting certain flags to true breaks the workaround, making StreamableHTTP"
+                  }
+                }
+              ]
             }
           ],
           "completionRule": {
