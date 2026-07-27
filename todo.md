@@ -583,8 +583,8 @@
 - [x] Zéro texte libre — tous les champs sont des sélecteurs structurés
 
 ## Champs texte libre + Export PDF diagnostic (2026-07-27)
-- [ ] Ajouter champs texte libre optionnels (contexte organisationnel, description du processus, notes)
-- [ ] Implémenter export PDF du rapport diagnostic avec charte graphique Neopolis Development
+- [x] Ajouter champs texte libre optionnels (contexte organisationnel, description du processus, notes)
+- [x] Implémenter export PDF du rapport diagnostic avec charte graphique Neopolis Development (jsPDF, header vert, sections structurées, auteur Achraf Khelil)
 
 ## Unification authentification (2026-07-27)
 - [x] Remplacer OAuth Manus par authentification email/mot de passe intégrée

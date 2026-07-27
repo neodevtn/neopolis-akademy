@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
+import { jsPDF } from "jspdf";
 import { Progress } from "@/components/ui/progress";
 import {
   ArrowLeft,
@@ -1230,6 +1231,287 @@ export default function DiagnosticIA() {
     setProcess(INITIAL_STATE);
   };
 
+  const generatePDF = () => {
+    if (!result) return;
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const pageW = doc.internal.pageSize.getWidth();
+    const margin = 15;
+    const contentW = pageW - margin * 2;
+    let y = 15;
+
+    // Brand colors
+    const primaryR = 34, primaryG = 197, primaryB = 94; // #22c55e
+    const darkR = 26, darkG = 26, darkB = 46; // #1a1a2e
+    const grayR = 100, grayG = 116, grayB = 139; // #64748b
+
+    const addPage = () => { doc.addPage(); y = 15; };
+    const checkPage = (needed: number) => { if (y + needed > 275) addPage(); };
+
+    const findLabel = (arr: { id: string; label: { fr: string } }[], id: string) => arr.find(x => x.id === id)?.label?.fr || id;
+
+    // ─── Header ───
+    doc.setFillColor(primaryR, primaryG, primaryB);
+    doc.rect(0, 0, pageW, 28, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.text("Neopolis Development", margin, 12);
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text("Rapport de Diagnostic d'Automatisabilit\u00e9 IA", margin, 19);
+    doc.text("DATAS-STD-BPM-AI-001 v2.0", margin, 25);
+    doc.setFontSize(8);
+    doc.text(new Date().toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" }), pageW - margin - 40, 25);
+    y = 35;
+
+    // ─── Section title helper ───
+    const sectionTitle = (title: string) => {
+      checkPage(14);
+      doc.setFillColor(240, 253, 244);
+      doc.roundedRect(margin, y, contentW, 8, 1, 1, "F");
+      doc.setTextColor(primaryR, primaryG, primaryB);
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text(title, margin + 3, y + 5.5);
+      y += 12;
+      doc.setTextColor(darkR, darkG, darkB);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+    };
+
+    const labelValue = (label: string, value: string) => {
+      checkPage(6);
+      doc.setTextColor(grayR, grayG, grayB);
+      doc.setFont("helvetica", "normal");
+      doc.text(label, margin + 2, y);
+      doc.setTextColor(darkR, darkG, darkB);
+      doc.setFont("helvetica", "bold");
+      doc.text(value, margin + 55, y);
+      doc.setFont("helvetica", "normal");
+      y += 5.5;
+    };
+
+    // ─── 1. Identification ───
+    sectionTitle("1. Identification du processus");
+    labelValue("Nom :", process.name || "-");
+    labelValue("Code :", process.code || "-");
+    labelValue("Domaine :", findLabel(DOMAINS as any, process.domain));
+    labelValue("Cat\u00e9gorie :", findLabel(VALUE_STREAM_CATEGORIES as any, process.valueStreamCategory));
+    labelValue("Responsable :", process.owner || "-");
+    labelValue("D\u00e9partement :", process.department || "-");
+    labelValue("Objectif :", findLabel(OBJECTIVES as any, process.objective));
+    labelValue("D\u00e9clencheur :", findLabel(TRIGGERS as any, process.trigger));
+    labelValue("Sortie attendue :", findLabel(EXPECTED_OUTPUTS as any, process.expectedOutput));
+    y += 3;
+
+    // ─── Context (optional) ───
+    if (process.organizationalContext || process.processDescription || process.additionalNotes) {
+      sectionTitle("2. Contexte (optionnel)");
+      if (process.organizationalContext) {
+        doc.setTextColor(grayR, grayG, grayB);
+        doc.text("Contexte organisationnel :", margin + 2, y);
+        y += 4.5;
+        doc.setTextColor(darkR, darkG, darkB);
+        const lines = doc.splitTextToSize(process.organizationalContext, contentW - 4);
+        checkPage(lines.length * 4);
+        doc.text(lines, margin + 2, y);
+        y += lines.length * 4 + 3;
+      }
+      if (process.processDescription) {
+        doc.setTextColor(grayR, grayG, grayB);
+        doc.text("Description du processus :", margin + 2, y);
+        y += 4.5;
+        doc.setTextColor(darkR, darkG, darkB);
+        const lines = doc.splitTextToSize(process.processDescription, contentW - 4);
+        checkPage(lines.length * 4);
+        doc.text(lines, margin + 2, y);
+        y += lines.length * 4 + 3;
+      }
+      if (process.additionalNotes) {
+        doc.setTextColor(grayR, grayG, grayB);
+        doc.text("Notes compl\u00e9mentaires :", margin + 2, y);
+        y += 4.5;
+        doc.setTextColor(darkR, darkG, darkB);
+        const lines = doc.splitTextToSize(process.additionalNotes, contentW - 4);
+        checkPage(lines.length * 4);
+        doc.text(lines, margin + 2, y);
+        y += lines.length * 4 + 3;
+      }
+      y += 2;
+    }
+
+    // ─── 3. Ressources & M\u00e9triques ───
+    sectionTitle("3. Ressources & M\u00e9triques");
+    labelValue("Fr\u00e9quence :", findLabel(FREQUENCIES as any, process.frequency));
+    labelValue("Volume :", findLabel(VOLUME_RANGES as any, process.volumePerYear));
+    labelValue("Agents (ETP) :", findLabel(AGENTS_RANGES as any, process.agentsFTE));
+    labelValue("Temps moyen :", findLabel(AVG_TIME_RANGES as any, process.avgTimeMinutes));
+    labelValue("Co\u00fbt humain :", findLabel(COST_LEVELS as any, process.humanCostLevel));
+    labelValue("Co\u00fbt IT :", findLabel(COST_LEVELS as any, process.itCostLevel));
+    labelValue("Taux d'erreur :", findLabel(ERROR_RATES as any, process.errorRateLevel));
+    labelValue("Respect SLA :", findLabel(SLA_COMPLIANCE as any, process.slaCompliance));
+    labelValue("D\u00e9lai moyen :", findLabel(WAIT_DAYS as any, process.avgWaitDays));
+    y += 3;
+
+    // ─── 4. Automatisation & Outils ───
+    sectionTitle("4. Automatisation & Outils");
+    labelValue("Niveau :", findLabel(AUTOMATION_LEVELS as any, process.automationLevel));
+    doc.setTextColor(grayR, grayG, grayB);
+    doc.text("Outils utilis\u00e9s :", margin + 2, y);
+    y += 4.5;
+    doc.setTextColor(darkR, darkG, darkB);
+    const toolsText = process.tools.map(t => findLabel(TOOLS_USED as any, t)).join(", ");
+    const toolLines = doc.splitTextToSize(toolsText, contentW - 4);
+    checkPage(toolLines.length * 4);
+    doc.text(toolLines, margin + 2, y);
+    y += toolLines.length * 4 + 4;
+
+    // ─── 5. Interventions humaines ───
+    sectionTitle("5. Interventions humaines");
+    process.humanInterventions.forEach(hi => {
+      checkPage(5);
+      const label = findLabel(HUMAN_INTERVENTIONS as any, hi);
+      doc.text(`\u2022 ${label}`, margin + 2, y);
+      y += 4.5;
+    });
+    y += 3;
+
+    // ─── 6. Donn\u00e9es manipul\u00e9es ───
+    sectionTitle("6. Donn\u00e9es manipul\u00e9es");
+    process.dataTypes.forEach(dt => {
+      checkPage(5);
+      const item = DATA_TYPES.find(d => d.id === dt);
+      const structLabel = item?.structureLevel === "structured" ? "[Structur\u00e9]" : item?.structureLevel === "semi_structured" ? "[Semi-structur\u00e9]" : item?.structureLevel === "fully_digital" ? "[Num\u00e9rique]" : "[Non structur\u00e9]";
+      doc.text(`\u2022 ${item?.label?.fr || dt} ${structLabel}`, margin + 2, y);
+      y += 4.5;
+    });
+    y += 3;
+
+    // ─── 7. Irritants ───
+    sectionTitle("7. Irritants / Points de douleur");
+    process.irritants.forEach(ir => {
+      checkPage(5);
+      doc.text(`\u2022 ${findLabel(IRRITANTS as any, ir)}`, margin + 2, y);
+      y += 4.5;
+    });
+    y += 3;
+
+    // ─── 8. Facteurs de complexit\u00e9 ───
+    sectionTitle("8. Facteurs de complexit\u00e9");
+    labelValue("Disponibilit\u00e9 donn\u00e9es :", findLabel(DATA_READINESS as any, process.dataReadiness));
+    labelValue("Syst\u00e8mes \u00e0 int\u00e9grer :", findLabel(SYSTEMS_TO_INTEGRATE as any, process.systemsToIntegrate));
+    labelValue("Conduite changement :", findLabel(CHANGE_MANAGEMENT as any, process.changeManagement));
+    labelValue("Contraintes r\u00e9glement. :", findLabel(REGULATORY_CONSTRAINTS as any, process.regulatoryConstraints));
+    labelValue("Maturit\u00e9 technique :", findLabel(TECHNICAL_MATURITY as any, process.technicalMaturity));
+    y += 3;
+
+    // ═══ RESULTS PAGE ═══
+    addPage();
+    doc.setFillColor(primaryR, primaryG, primaryB);
+    doc.rect(0, 0, pageW, 12, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("R\u00c9SULTATS DE L'\u00c9VALUATION", pageW / 2, 8, { align: "center" });
+    y = 20;
+
+    // ─── Matrix Position (Hero) ───
+    const matrixLabelsLocal: Record<string, string> = {
+      quick_win: "QUICK WIN \u2014 Prioriser imm\u00e9diatement",
+      strategic: "Projet strat\u00e9gique \u2014 Planifier avec soin",
+      optional: "Optionnel \u2014 Si ressources disponibles",
+      avoid: "\u00c0 \u00c9VITER \u2014 Ne pas engager",
+    };
+    doc.setFillColor(240, 253, 244);
+    doc.roundedRect(margin, y, contentW, 18, 2, 2, "F");
+    doc.setTextColor(primaryR, primaryG, primaryB);
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text(matrixLabelsLocal[result.matrixPosition] || result.matrixPosition, pageW / 2, y + 8, { align: "center" });
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(grayR, grayG, grayB);
+    doc.text(`Score de priorit\u00e9 : ${result.priorityScore} | Valeur : ${result.valueScore.toFixed(2)} | Complexit\u00e9 : ${result.complexityScore.toFixed(2)}`, pageW / 2, y + 14, { align: "center" });
+    y += 25;
+
+    // ─── Criterion 1: AI Potential ───
+    sectionTitle("Crit\u00e8re 1 \u2014 Potentiel d'automatisation IA");
+    const potentialLabelsLocal: Record<string, string> = { very_high: "Tr\u00e8s \u00e9lev\u00e9", high: "\u00c9lev\u00e9", medium: "Moyen", low: "Faible" };
+    labelValue("Score global :", `${result.overallPotentialScore.toFixed(2)} / 4 (${potentialLabelsLocal[result.potentialLevel]})`);
+    labelValue("Volume :", `${result.volumeScore} / 4`);
+    labelValue("Structure donn\u00e9es :", `${result.dataStructureScore} / 4`);
+    labelValue("R\u00e9p\u00e9titivit\u00e9 :", `${result.repetitivenessScore} / 4`);
+    labelValue("Points douleur :", `${result.painPointsScore} / 4`);
+    y += 3;
+
+    // ─── Criterion 2: Technologies ───
+    sectionTitle("Crit\u00e8re 2 \u2014 Technologies IA applicables");
+    result.applicableTechnologies.slice(0, 8).forEach(tech => {
+      checkPage(5);
+      const techName = typeof tech.name === "string" ? tech.name : (tech.name as any)?.fr || tech.id;
+      doc.text(`\u2022 ${techName} (pertinence: ${tech.relevance}%)`, margin + 2, y);
+      y += 4.5;
+    });
+    y += 3;
+
+    // ─── Criterion 3: Expected Gains ───
+    sectionTitle("Crit\u00e8re 3 \u2014 Gains attendus");
+    const gainLabelsLocal: Record<string, string> = { time: "Gain de temps", quality: "Am\u00e9lioration qualit\u00e9", cost: "R\u00e9duction co\u00fbts", delays: "R\u00e9duction d\u00e9lais", satisfaction: "Satisfaction client", compliance: "Am\u00e9lioration conformit\u00e9" };
+    result.expectedGains.forEach(gain => {
+      checkPage(5);
+      doc.text(`\u2022 ${gainLabelsLocal[gain.type] || gain.type} : ${gain.quantification}`, margin + 2, y);
+      y += 4.5;
+    });
+    y += 3;
+
+    // ─── Criterion 4: Complexity & ROI ───
+    sectionTitle("Crit\u00e8re 4 \u2014 Complexit\u00e9 & ROI");
+    const complexityLabelsLocal: Record<string, string> = { low: "Faible", medium: "Moyenne", high: "\u00c9lev\u00e9e", very_high: "Tr\u00e8s \u00e9lev\u00e9e" };
+    labelValue("Complexit\u00e9 :", `${result.complexityScore.toFixed(2)} / 3 (${complexityLabelsLocal[result.complexityLevel]})`);
+    labelValue("ROI estim\u00e9 :", potentialLabelsLocal[result.roiLevel]);
+    y += 3;
+
+    // ─── Recommendations ───
+    if (result.recommendations.length > 0) {
+      sectionTitle("Recommandations");
+      const recLabelsLocal: Record<string, string> = {
+        quick_win: "Ce processus est un Quick Win : valeur \u00e9lev\u00e9e, complexit\u00e9 faible. Prioriser pour impl\u00e9mentation imm\u00e9diate.",
+        strategic: "Projet strat\u00e9gique : valeur \u00e9lev\u00e9e mais complexit\u00e9 significative. S\u00e9curiser des ressources d\u00e9di\u00e9es.",
+        avoid: "Non recommand\u00e9 : valeur faible par rapport \u00e0 la complexit\u00e9. R\u00e9\u00e9valuer quand les conditions changent.",
+        agent_candidate: "Candidat fort pour l'automatisation par Agent IA (orchestration multi-\u00e9tapes inter-syst\u00e8mes).",
+        pilot_first: "Actuellement 100% manuel : commencer par un pilote sur un sous-ensemble.",
+        rag_quick_win: "Impl\u00e9menter la recherche s\u00e9mantique (RAG) comme premi\u00e8re \u00e9tape rapide.",
+        phased_approach: "Complexit\u00e9 tr\u00e8s \u00e9lev\u00e9e : adopter une approche par phases avec jalons incr\u00e9mentaux.",
+        support_control_roi: "Les processus Support/Contr\u00f4le offrent souvent le ROI le plus rapide.",
+      };
+      result.recommendations.forEach(rec => {
+        checkPage(8);
+        const recText = recLabelsLocal[rec] || rec;
+        const recLines = doc.splitTextToSize(`\u2192 ${recText}`, contentW - 4);
+        doc.text(recLines, margin + 2, y);
+        y += recLines.length * 4 + 2;
+      });
+    }
+
+    // ─── Footer ───
+    checkPage(20);
+    y += 8;
+    doc.setDrawColor(200, 200, 200);
+    doc.line(margin, y, pageW - margin, y);
+    y += 6;
+    doc.setFontSize(7);
+    doc.setTextColor(grayR, grayG, grayB);
+    doc.text("M\u00e9thodologie : DATAS-STD-BPM-AI-001 v2.0 \u2014 \u00ab R\u00e9f\u00e9rentiel de Processus d'Entreprise & Transformation par l'IA \u00bb de Data Services (Datas)", margin, y);
+    y += 3.5;
+    doc.text(`G\u00e9n\u00e9r\u00e9 par Neopolis Akademy | Auteur : Achraf Khelil | ${new Date().toLocaleDateString("fr-FR")}`, margin, y);
+    y += 3.5;
+    doc.text("www.neopolis-dev.com", margin, y);
+
+    // Save
+    const filename = `diagnostic_ia_${process.name.replace(/[^a-zA-Z0-9]/g, "_").toLowerCase() || "rapport"}_${new Date().toISOString().slice(0, 10)}.pdf`;
+    doc.save(filename);
+  };
+
   // Summary step (step 7) - shows what was entered before final evaluation
   const renderSummary = () => {
     const domain = DOMAINS.find(d => d.id === process.domain);
@@ -1391,12 +1673,18 @@ export default function DiagnosticIA() {
           </div>
           <div className="flex items-center gap-3">
             {step === 8 && (
-              <Link href="/training/transformation_processus_ia/transformation_processus_ia__01">
-                <Button variant="outline" className="gap-2">
+              <>
+                <Button onClick={generatePDF} className="gap-2 bg-primary hover:bg-primary/90">
                   <Download className="w-4 h-4" />
-                  {t({ en: "Follow the Training", fr: "Suivre la formation" })}
+                  {t({ en: "Export PDF", fr: "Exporter PDF" })}
                 </Button>
-              </Link>
+                <Link href="/training/transformation_processus_ia/transformation_processus_ia__01">
+                  <Button variant="outline" className="gap-2">
+                    <FileText className="w-4 h-4" />
+                    {t({ en: "Follow the Training", fr: "Suivre la formation" })}
+                  </Button>
+                </Link>
+              </>
             )}
             {step < 8 && (
               <Button
