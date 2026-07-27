@@ -14,6 +14,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { ExerciseRenderer } from "@/components/ExerciseRenderer";
+import { FlipCardsGrid } from "@/components/FlipCard";
+import { TabbedContent } from "@/components/TabbedContent";
+import { ComparisonBox } from "@/components/ComparisonBox";
 import { motion } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 
@@ -993,6 +996,37 @@ function LessonViewer({
             <ExerciseRenderer
               exercise={exercise}
               index={0}
+              lang={lang as "en" | "fr"}
+            />
+          </div>
+        );
+      }
+      case "flip_cards": {
+        const cards = block.cards || [];
+        if (!cards.length) return null;
+        return (
+          <div key={blockIdx}>
+            <FlipCardsGrid cards={cards} lang={lang as "en" | "fr"} />
+          </div>
+        );
+      }
+      case "tabbed_content": {
+        const tabs = block.tabs || [];
+        if (!tabs.length) return null;
+        return (
+          <div key={blockIdx}>
+            <TabbedContent tabs={tabs} lang={lang as "en" | "fr"} />
+          </div>
+        );
+      }
+      case "comparison": {
+        const items = block.items || [];
+        if (!items.length) return null;
+        return (
+          <div key={blockIdx}>
+            <ComparisonBox
+              items={items}
+              conclusion={block.conclusion}
               lang={lang as "en" | "fr"}
             />
           </div>

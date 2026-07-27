@@ -606,3 +606,10 @@
 
 ## Bug: Pages de cours crash au premier chargement (2026-07-27)
 - [x] Toutes les pages de cours donnent une erreur au premier chargement (ajouté guard lessonsLoading avant le rendu principal)
+
+## Fidélité cours Anthropic : composants interactifs (2026-07-27)
+- [x] Restructurer le JSON du cours Platform & Model Foundations avec blocs flip_cards, tabbed_content, comparison
+- [x] Créer composant FlipCard avec animation 3D (flip au clic)
+- [x] Créer composant TabbedContent avec onglets interactifs
+- [x] Créer composant ComparisonBox (wrong/right pattern)
+- [x] Mettre à jour renderBlock dans TrainingCourse.tsx pour les 3 nouveaux types de blocs
