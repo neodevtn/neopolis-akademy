@@ -592,3 +592,11 @@
 - [x] Garder le compte démo comme un compte normal (pas un espace séparé)
 - [x] Configurer un compte admin avec identifiants
 - [x] Supprimer la redirection vers manus.im/app-auth
+
+## Bug: Admin ne voit pas l'interface d'administration (2026-07-27)
+- [x] Le compte admin@neopolis.dev ne voit aucune interface d'administration après connexion
+- [x] Vérifier le rôle 'admin' en base de données (confirmé admin)
+- [x] S'assurer que la navigation conditionnelle affiche le lien admin pour les comptes admin
+- [x] Login admin redirige vers /admin au lieu de /training
+- [x] Bouton "Admin" visible dans le header Training pour les admins
+- [x] Navigation Candidatures / Suivi Apprenants dans le header admin

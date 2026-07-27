@@ -135,11 +135,15 @@ export default function AdminDashboard() {
             <img src={LOGO_URL} alt="Neopolis Akademy" className="h-8 object-contain" />
             <span className="text-xs font-semibold ml-2 px-2 py-0.5 rounded-full" style={{ backgroundColor: "var(--wise-primary-pale)", color: "var(--wise-positive-deep)" }}>Admin</span>
           </div>
-          <Link href="/">
-            <button className="wise-btn-tertiary text-sm flex items-center gap-2">
-              <ArrowLeft className="w-4 h-4" /> Retour au site
-            </button>
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link href="/admin" className="text-sm font-semibold px-3 py-1.5 rounded-lg transition-colors" style={{ backgroundColor: "var(--wise-primary-pale)", color: "var(--wise-positive-deep)" }}>Candidatures</Link>
+            <Link href="/admin/training" className="text-sm font-medium px-3 py-1.5 rounded-lg transition-colors hover:bg-gray-100" style={{ color: "var(--wise-mute)" }}>Suivi Apprenants</Link>
+            <Link href="/">
+              <button className="wise-btn-tertiary text-sm flex items-center gap-2 ml-3">
+                <ArrowLeft className="w-4 h-4" /> Retour
+              </button>
+            </Link>
+          </div>
         </div>
       </nav>
 

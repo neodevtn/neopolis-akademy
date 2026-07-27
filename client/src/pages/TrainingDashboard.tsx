@@ -66,7 +66,7 @@ const levelConfig = {
 export default function TrainingDashboard() {
   const { lang, toggleLang, t } = useLanguage();
   const { getCertProgress, getLastVisitedCourse } = useTrainingProgress();
-  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { isAuthenticated, loading: authLoading, user } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
   const certCompletionData = useMemo(() => {
@@ -179,6 +179,11 @@ export default function TrainingDashboard() {
               <span>{lang === "en" ? "🇬🇧" : "🇫🇷"}</span>
               {lang === "en" ? "EN" : "FR"}
             </button>
+            {user?.role === "admin" && (
+              <Link href="/admin" className="text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-400 hover:bg-amber-500/25 transition-colors hidden sm:block">
+                Admin
+              </Link>
+            )}
             <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
               {t({ en: "Back to site", fr: "Retour au site" })}
             </Link>

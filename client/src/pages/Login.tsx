@@ -46,7 +46,11 @@ export default function Login() {
       }
 
       // Redirect based on role
-      window.location.href = "/training";
+      if (data.role === "admin") {
+        window.location.href = "/admin";
+      } else {
+        window.location.href = "/training";
+      }
     } catch (err) {
       setLoginError("Erreur réseau. Veuillez réessayer.");
       setLoginLoading(false);
