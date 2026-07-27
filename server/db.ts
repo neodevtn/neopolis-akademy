@@ -507,3 +507,23 @@ export async function exportLearnersCSV() {
     lastSignedIn: u.lastSignedIn?.toISOString() || '',
   }));
 }
+
+// ============ Auth: Email/Password ============
+
+export async function getUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get user by email: database not available");
+    return undefined;
+  }
+
+  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function setUserPasswordHash(openId: string, passwordHash: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(users).set({ passwordHash }).where(eq(users.openId, openId));
+}

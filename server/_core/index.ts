@@ -5,6 +5,7 @@ import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { registerDemoAuthRoutes } from "../demoAuth";
+import { registerAuthRoutes } from "../auth";
 import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
@@ -45,7 +46,8 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
   registerOAuthRoutes(app);
-  registerDemoAuthRoutes(app);
+  registerAuthRoutes(app);
+  registerDemoAuthRoutes(app); // Keep legacy demo route for backwards compatibility
   app.use(certificateRouter);
   // tRPC API with batch limit (F-011)
   app.use("/api/trpc", tRPCBatchLimit);

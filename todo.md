@@ -581,3 +581,14 @@
 - [x] 13 technologies IA avec matching automatique par signaux (données, interventions, irritants)
 - [x] Recommandations contextuelles (8 types)
 - [x] Zéro texte libre — tous les champs sont des sélecteurs structurés
+
+## Champs texte libre + Export PDF diagnostic (2026-07-27)
+- [ ] Ajouter champs texte libre optionnels (contexte organisationnel, description du processus, notes)
+- [ ] Implémenter export PDF du rapport diagnostic avec charte graphique Neopolis Development
+
+## Unification authentification (2026-07-27)
+- [x] Remplacer OAuth Manus par authentification email/mot de passe intégrée
+- [x] Créer page login/register unifiée
+- [x] Garder le compte démo comme un compte normal (pas un espace séparé)
+- [x] Configurer un compte admin avec identifiants
+- [x] Supprimer la redirection vers manus.im/app-auth

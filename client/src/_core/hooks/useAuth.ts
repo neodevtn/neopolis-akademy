@@ -77,8 +77,8 @@ export function useAuth(options?: UseAuthOptions) {
     if (typeof window === "undefined") return;
     if (redirectPath && window.location.pathname === redirectPath) return;
 
-    // Mint the login URL (and its one-time nonce cookie) at navigation time only.
-    window.location.href = redirectPath ?? getLoginUrl();
+    // Redirect to local login page
+    window.location.href = redirectPath ?? "/login";
   }, [
     redirectOnUnauthenticated,
     redirectPath,

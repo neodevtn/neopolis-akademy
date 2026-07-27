@@ -86,6 +86,11 @@ interface ProcessSheet {
   changeManagement: "" | "minimal" | "moderate" | "significant";
   regulatoryConstraints: "" | "none" | "some" | "heavy";
   technicalMaturity: "" | "proven" | "emerging" | "experimental";
+
+  // Optional free-text fields (context & description)
+  organizationalContext: string;
+  processDescription: string;
+  additionalNotes: string;
 }
 
 interface EvaluationResult {
@@ -667,6 +672,47 @@ function Step1Identification({ data, onChange }: { data: ProcessSheet; onChange:
         onChange={v => onChange({ expectedOutput: v[v.length - 1] || "" })}
         required
       />
+
+      {/* Optional free-text fields */}
+      <div className="border-t border-border pt-5 mt-2">
+        <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+          <FileText className="w-4 h-4 text-muted-foreground" />
+          {t({ en: "Optional — Context & Description", fr: "Optionnel — Contexte & Description" })}
+        </h4>
+        <p className="text-xs text-muted-foreground mb-4">{t({ en: "These fields are optional and allow you to provide additional context for the report.", fr: "Ces champs sont optionnels et permettent d'enrichir le rapport avec du contexte supplémentaire." })}</p>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1.5">{t({ en: "Organizational Context", fr: "Contexte organisationnel" })}</label>
+            <textarea
+              value={data.organizationalContext}
+              onChange={e => onChange({ organizationalContext: e.target.value })}
+              placeholder={t({ en: "Describe the organization, sector, size, strategic context...", fr: "Décrivez l'organisation, le secteur, la taille, le contexte stratégique..." })}
+              rows={3}
+              className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground resize-y min-h-[72px]"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1.5">{t({ en: "Process Description", fr: "Description du processus" })}</label>
+            <textarea
+              value={data.processDescription}
+              onChange={e => onChange({ processDescription: e.target.value })}
+              placeholder={t({ en: "Describe the process steps, actors involved, key interactions...", fr: "Décrivez les étapes du processus, les acteurs impliqués, les interactions clés..." })}
+              rows={4}
+              className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground resize-y min-h-[96px]"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1.5">{t({ en: "Additional Notes", fr: "Notes complémentaires" })}</label>
+            <textarea
+              value={data.additionalNotes}
+              onChange={e => onChange({ additionalNotes: e.target.value })}
+              placeholder={t({ en: "Any other relevant information, constraints, expectations...", fr: "Toute autre information pertinente, contraintes, attentes..." })}
+              rows={2}
+              className="w-full px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm placeholder:text-muted-foreground resize-y min-h-[56px]"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1135,6 +1181,7 @@ const INITIAL_STATE: ProcessSheet = {
   automationLevel: "",
   humanInterventions: [], dataTypes: [], tools: [], irritants: [],
   dataReadiness: "", systemsToIntegrate: "", changeManagement: "", regulatoryConstraints: "", technicalMaturity: "",
+  organizationalContext: "", processDescription: "", additionalNotes: "",
 };
 
 export default function DiagnosticIA() {

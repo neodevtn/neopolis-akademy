@@ -18,6 +18,9 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
 
   if (!isUnauthorized) return;
 
+  // Don't redirect if already on login page
+  if (window.location.pathname === "/login" || window.location.pathname === "/demo-login") return;
+
   window.location.href = getLoginUrl();
 };
 
