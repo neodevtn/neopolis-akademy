@@ -715,7 +715,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   return (
     <a
       href={href}
-      className="whitespace-nowrap text-[13px] font-medium px-2 py-1.5 rounded-md relative group transition-all duration-200 hover:bg-gray-50"
+      className="whitespace-nowrap text-[11px] font-medium px-2 py-1.5 rounded-md relative group transition-all duration-200 hover:bg-gray-50"
       style={{ color: "var(--wise-ink-muted, #64748b)" }}
     >
       {children}
