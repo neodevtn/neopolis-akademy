@@ -1380,7 +1380,7 @@ function LessonSidebarContent({
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-left ${bgClass} ${isLocked ? "opacity-50 cursor-not-allowed" : ""} ${isClickable && !isActive ? "hover:bg-secondary/50 cursor-pointer" : ""}`}
             >
               {statusIcon}
-              <span className={`truncate font-medium ${textClass}`}>
+              <span className={`truncate font-medium ${textClass}`} title={resolveI18n(lesson.title, lang)}>
                 {resolveI18n(lesson.title, lang)}
               </span>
               {typeIcon && (

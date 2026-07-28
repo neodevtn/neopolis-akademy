@@ -660,3 +660,10 @@
 - [x] Le bouton "Suivant" ne doit être accessible qu'après avoir réussi le quiz du chapitre
 - [x] Enrichir les questions par chapitre (de 3 à 12 pour variabilité, en afficher 3 aléatoirement)
 - [x] Vérifier que les examens blancs fonctionnent toujours (MockExam.tsx inchangé, route /mock-exam/:certId existante)
+
+## Corrections UI, traduction FR des exercices et quiz (2026-07-28)
+- [x] Corriger les titres de cours en français (30 titres corrigés dans trainingIndex.json)
+- [x] Traduire les quiz de chapitre en français (3873/4019 questions = 96%)
+- [x] Traduire les exercices (bucket_sort, single_choice) en français (69 blocs dans 14 fichiers)
+- [x] Vérifier la structure des données quiz (4019 questions, 0 erreurs, 335 chapitres)
+- [x] Vérifier le rendu UI des cours (pas d'erreurs console, TypeScript OK)
