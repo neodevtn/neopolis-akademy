@@ -675,3 +675,8 @@
 - [x] Phase 4 : Quiz intégré - label Q1, options A/B/C orange, fond gris clair
 - [x] Phase 5 : Tabbed Content - onglets orange avec underline épaisse
 - [x] Phase 6 : Navigation - compteur "Écran X sur Y", bouton Next coral
+- [x] Phase 7 : Layer Cards - détection automatique du pattern "Label\nTitre\nDescription" répété, rendu en grille de cartes colorées
+- [x] Phase 8 : Sidebar hiérarchique - sous-items (écrans) par chapitre avec navigation directe
+- [x] Phase 9 : Titre d'écran - extraction du titre depuis le premier bloc de contenu, badge type + nom du chapitre
+- [x] Phase 10 : LessonQuiz Skilljar - style Q1/A/B/C avec lettres coral, fond beige, bouton coral
+- [x] Phase 11 : Suppression du doublon titre dans le contenu (skip first line du premier bloc content)

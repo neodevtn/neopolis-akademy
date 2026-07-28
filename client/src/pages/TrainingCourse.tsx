@@ -44,6 +44,99 @@ function resolveI18n(val: any, lang: string): string {
   return String(val);
 }
 
+// Detect repeated label-card patterns: Label\n\nTitle\n\nDescription (like Skilljar "Layer cards")
+function detectLabelCards(lines: string[]): { cards: { label: string; title: string; description: string }[]; startIdx: number; endIdx: number }[] {
+  const results: { cards: { label: string; title: string; description: string }[]; startIdx: number; endIdx: number }[] = [];
+  const visited = new Set<number>();
+  
+  for (let i = 0; i < lines.length; i++) {
+    if (visited.has(i)) continue;
+    const label = lines[i].trim();
+    // Label: single word, capitalized, no punctuation, 2-20 chars
+    if (!label || label.split(/\s+/).length > 1 || label.length > 20 || label.length < 2) continue;
+    if (!/^[A-ZÀ-Ü]/.test(label)) continue;
+    if (/[.,:;!?()0-9]/.test(label)) continue;
+    
+    // Try to find 2+ consecutive occurrences of this label
+    const cards: { label: string; title: string; description: string }[] = [];
+    let scanIdx = i;
+    let lastEnd = i;
+    
+    while (scanIdx < lines.length) {
+      const currentLabel = lines[scanIdx]?.trim();
+      if (currentLabel !== label) break;
+      
+      // Skip empty lines after label
+      let j = scanIdx + 1;
+      while (j < lines.length && lines[j].trim() === '') j++;
+      
+      // Title line
+      const title = lines[j]?.trim() || '';
+      if (!title || title.length > 80) break;
+      j++;
+      
+      // Skip empty lines after title
+      while (j < lines.length && lines[j].trim() === '') j++;
+      
+      // Description line(s) - collect until next empty line or next label occurrence
+      let desc = '';
+      while (j < lines.length && lines[j].trim() !== '' && lines[j].trim() !== label) {
+        desc += (desc ? ' ' : '') + lines[j].trim();
+        j++;
+      }
+      
+      cards.push({ label, title, description: desc });
+      lastEnd = j;
+      
+      // Skip empty lines to find next potential label
+      while (j < lines.length && lines[j].trim() === '') j++;
+      scanIdx = j;
+    }
+    
+    if (cards.length >= 2) {
+      results.push({ cards, startIdx: i, endIdx: lastEnd });
+      for (let k = i; k < lastEnd; k++) visited.add(k);
+    }
+  }
+  
+  return results;
+}
+
+// Render Layer Cards as a visual grid
+function LayerCardsGrid({ cards }: { cards: { label: string; title: string; description: string }[] }) {
+  const colors = ['#c75b3a', '#c75b3a', '#2a7d8a', '#c75b3a', '#2a7d8a'];
+  const bgColors = ['white', 'white', '#e8f4f8', 'white', '#e8f4f8'];
+  
+  return (
+    <div className="my-6">
+      <div className={`grid gap-4 ${cards.length <= 2 ? 'grid-cols-1 sm:grid-cols-2' : cards.length === 3 ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}>
+        {cards.map((card, idx) => {
+          const borderColor = colors[idx % colors.length];
+          const bgColor = bgColors[idx % bgColors.length];
+          return (
+            <div
+              key={idx}
+              className="rounded-lg p-4 border border-gray-200"
+              style={{ borderTop: `4px solid ${borderColor}`, backgroundColor: bgColor }}
+            >
+              <span
+                className="text-[10px] font-bold uppercase tracking-wider block mb-2"
+                style={{ color: borderColor }}
+              >
+                {card.label}
+              </span>
+              <p className="text-sm font-bold text-gray-900 mb-1">{card.title}</p>
+              {card.description && (
+                <p className="text-xs text-gray-500 leading-relaxed">{card.description}</p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // Smart content renderer with heuristic structure detection
 function PageContent({ content, lang }: { content: string; lang: string }) {
   const lines = content.split("\n");
@@ -53,24 +146,33 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
   let codeKey = 0;
   let isFirstTextLine = true;
 
+  // Detect layer card patterns first
+  const cardGroups = detectLabelCards(lines);
+  const cardLineSet = new Set<number>();
+  cardGroups.forEach(g => {
+    for (let k = g.startIdx; k < g.endIdx; k++) cardLineSet.add(k);
+  });
+
   // Heuristic helpers
   const isShortLine = (line: string) => line.trim().length > 0 && line.trim().length <= 60;
   const isMetaLine = (line: string) => /^(Estimated time|Instructions|Duration|Time|Note|Tip|Warning|Important|Example|Exercise|Step \d):/i.test(line.trim());
   
-  // Technical terms that should be rendered as badges
+  // Technical terms - render as bold inline text (not badges)
   const techTerms = new Set(['Code Execution', 'Memory', 'Skills', 'Knowledge Base', 'Standing Instructions',
     'System Prompt', 'Context Window', 'API Key', 'Token', 'Temperature', 'Prompt Caching',
     'Tool Use', 'Function Calling', 'Streaming', 'Batch Processing', 'Vision', 'Embeddings',
     'Fine-tuning', 'RAG', 'MCP', 'Artifacts', 'Projects', 'Computer Use']);
-  const isTechBadge = (line: string) => techTerms.has(line.trim());
+  const isTechTerm = (line: string) => techTerms.has(line.trim());
   
   const isSectionHeading = (line: string, nextLine: string | undefined) => {
     const trimmed = line.trim();
     if (trimmed.length === 0) return false;
-    if (trimmed.length > 80) return false;
-    if (isTechBadge(trimmed)) return false; // Don't treat badges as headings
-    // Short line (< 50 chars) that doesn't end with punctuation and is followed by empty line or longer text
-    if (trimmed.length <= 50 && !/[.,:;!?)]$/.test(trimmed)) {
+    if (trimmed.length > 45) return false; // Only very short lines can be headings
+    if (isTechTerm(trimmed)) return false;
+    // Must not contain colons (those are meta lines or descriptions)
+    if (trimmed.includes(':')) return false;
+    // Short line that doesn't end with punctuation and is followed by empty line or longer text
+    if (!/[.,:;!?)]$/.test(trimmed)) {
       if (!nextLine || nextLine.trim() === "" || nextLine.trim().length > trimmed.length) {
         return true;
       }
@@ -88,6 +190,16 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
   };
 
   for (let i = 0; i < lines.length; i++) {
+    // Check if this line starts a card group - render the card grid and skip
+    const cardGroup = cardGroups.find(g => g.startIdx === i);
+    if (cardGroup) {
+      elements.push(<LayerCardsGrid key={`cards-${i}`} cards={cardGroup.cards} />);
+      i = cardGroup.endIdx - 1; // -1 because for loop will increment
+      continue;
+    }
+    // Skip lines that are part of a card group (shouldn't happen but safety)
+    if (cardLineSet.has(i)) continue;
+
     const line = lines[i];
     const nextLine = i < lines.length - 1 ? lines[i + 1] : undefined;
     const prevLine = i > 0 ? lines[i - 1] : undefined;
@@ -119,7 +231,7 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     } else if (line.match(/^\*\*.*\*\*$/)) {
       // Bold-only line as sub-section title
       elements.push(
-        <h4 key={i} className="text-base font-bold mt-8 mb-2 text-foreground border-l-3 border-primary pl-3">
+        <h4 key={i} className="text-base font-bold mt-5 mb-2 text-foreground">
           {line.replace(/\*\*/g, "")}
         </h4>
       );
@@ -142,25 +254,25 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
       const [label, ...rest] = line.split(":");
       const value = rest.join(":").trim();
       elements.push(
-        <div key={i} className="flex items-baseline gap-2 mt-3 mb-2 py-1.5 px-3 rounded-lg bg-primary/5 border border-primary/10">
-          <span className="text-xs font-bold uppercase tracking-wider text-primary">{label.trim()}:</span>
+        <div key={i} className="flex items-baseline gap-2 mt-2 mb-1">
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label.trim()}:</span>
           {value && <span className="text-sm text-foreground">{value}</span>}
         </div>
       );
-    } else if (isTechBadge(line)) {
-      // Technical term badge
+    } else if (isTechTerm(line)) {
+      // Technical term - render as bold text
       elements.push(
-        <span key={i} className="inline-block px-3 py-1.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 mr-2 mb-2">
+        <p key={i} className="text-sm font-semibold text-foreground mb-1">
           {line.trim()}
-        </span>
+        </p>
       );
     } else if (isFirstTextLine) {
-      // First text line = main title
+      // First text line - render as regular paragraph (no special title treatment)
       isFirstTextLine = false;
       elements.push(
-        <h3 key={i} className="text-lg font-bold mb-4 pb-3 border-b-2 border-primary/30 text-foreground">
+        <p key={i} className="text-sm leading-relaxed mb-2 text-muted-foreground">
           {renderInlineFormatting(line)}
-        </h3>
+        </p>
       );
     } else if (isSectionHeading(line, nextLine) && (prevLine?.trim() === "" || i === 1)) {
       // Heuristic: short line after empty line, not ending with punctuation = sub-heading
@@ -672,125 +784,87 @@ function LessonQuiz({
 
   const isCorrect = selected && q.correctChoiceIds.includes(selected);
 
+  // Option letters for Skilljar style
+  const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+
   return (
     <motion.div
       key={`q-${currentQ}-${attemptCount}`}
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
-      className={`rounded-2xl p-6 border bg-card border-border ${shakeError ? "animate-[shake_0.4s_ease-in-out]" : ""}`}
+      className={`rounded-lg p-5 mt-6 bg-[#f8f8f6] dark:bg-card ${shakeError ? "animate-[shake_0.4s_ease-in-out]" : ""}`}
     >
-      {/* Header with progress dots */}
+      {/* Question label - Skilljar style "Q1" grey */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-bold uppercase tracking-wide text-primary">
-            {t({ en: "Validation Quiz", fr: "Quiz de validation" })}
-          </h3>
+          <span className="text-sm font-bold text-gray-400 uppercase">
+            Q{currentQ + 1}
+          </span>
           {attemptCount > 1 && (
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 font-medium">
               #{attemptCount}
             </span>
           )}
         </div>
-        <div className="flex items-center gap-1.5">
-          {/* Progress dots */}
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                i < currentQ
-                  ? (answers[i]?.correct ? "bg-emerald-500" : "bg-red-400")
-                  : i === currentQ
-                  ? "bg-primary w-5"
-                  : "bg-secondary"
-              }`}
-            />
-          ))}
-          <span className="text-xs font-medium ml-1.5 text-muted-foreground">
-            {currentQ + 1}/3
-          </span>
-        </div>
+        <span className="text-xs text-gray-400">
+          {currentQ + 1}/3
+        </span>
       </div>
 
-      <p className="text-sm font-medium mb-4 text-foreground">
+      {/* Question text - serif */}
+      <p className="text-base font-medium mb-5 text-gray-900 dark:text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
         {resolveI18n(q.question, lang)}
       </p>
 
-      <div className="space-y-2 mb-4">
-        {q.choices.map((choice: any) => {
+      {/* Choices - Skilljar style: A/B/C letter in coral */}
+      <div className="space-y-3 mb-5">
+        {q.choices.map((choice: any, idx: number) => {
           const isSelected = selected === choice.id;
           const isCorrectChoice = q.correctChoiceIds.includes(choice.id);
-          let choiceClass = "border-border hover:border-primary/30 bg-card";
-          let feedbackIcon: React.ReactNode = null;
+          const letter = OPTION_LETTERS[idx] || choice.id.toUpperCase();
+
+          let containerClass = "bg-white dark:bg-card border-gray-200 dark:border-border hover:border-[#c75b3a]/50";
+          let letterColor = "text-[#c75b3a]";
 
           if (showResult) {
             if (isCorrectChoice) {
-              choiceClass = "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20";
-              feedbackIcon = <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />;
+              containerClass = "bg-green-50 dark:bg-emerald-900/20 border-green-400 dark:border-emerald-600";
+              letterColor = "text-green-600";
             } else if (isSelected && !isCorrectChoice) {
-              choiceClass = "border-red-400 bg-red-50 dark:bg-red-900/20";
-              feedbackIcon = <X className="w-4 h-4 text-red-500 shrink-0" />;
+              containerClass = "bg-red-50 dark:bg-red-900/20 border-red-400 dark:border-red-600";
+              letterColor = "text-red-500";
+            } else {
+              containerClass = "bg-white dark:bg-card border-gray-200 dark:border-border opacity-60";
             }
           } else if (isSelected) {
-            choiceClass = "border-primary bg-primary/5";
+            containerClass = "bg-[#fef3f0] dark:bg-[#c75b3a]/10 border-[#c75b3a]";
           }
 
           return (
-            <motion.button
+            <button
               key={choice.id}
               onClick={() => !showResult && setSelected(choice.id)}
               disabled={showResult}
-              layout
-              className={`w-full text-left p-3 rounded-xl border text-sm transition-all flex items-center gap-2 ${choiceClass} ${showResult ? "cursor-default" : "cursor-pointer"}`}
+              className={`w-full text-left px-4 py-3 rounded-lg border transition-all flex items-center gap-3 ${containerClass} ${showResult ? "cursor-default" : "cursor-pointer"}`}
             >
-              <span className="font-medium mr-1 text-muted-foreground">{choice.id.toUpperCase()}.</span>
-              <span className="text-foreground flex-1">{resolveI18n(choice.text, lang)}</span>
-              {feedbackIcon}
-            </motion.button>
+              <span className={`text-sm font-bold ${letterColor}`}>{letter}</span>
+              <span className="text-sm text-gray-800 dark:text-foreground flex-1">{resolveI18n(choice.text, lang)}</span>
+              {showResult && isCorrectChoice && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />}
+              {showResult && isSelected && !isCorrectChoice && <X className="w-4 h-4 text-red-500 shrink-0" />}
+            </button>
           );
         })}
       </div>
 
-      {/* Immediate visual feedback banner */}
-      {showResult && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          transition={{ duration: 0.2 }}
-          className={`rounded-lg p-3 mb-3 flex items-center gap-2 ${
-            isCorrect
-              ? "bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800"
-              : "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
-          }`}
-        >
-          {isCorrect ? (
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-          ) : (
-            <X className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0" />
-          )}
-          <span className={`text-sm font-medium ${
-            isCorrect ? "text-emerald-700 dark:text-emerald-300" : "text-red-700 dark:text-red-300"
-          }`}>
-            {isCorrect
-              ? t({ en: "Correct!", fr: "Correct !" })
-              : t({ en: "Incorrect", fr: "Incorrect" })
-            }
-          </span>
-        </motion.div>
-      )}
-
-      {/* Explanation */}
-      {showResult && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.15 }}
-          className="text-xs p-3 rounded-lg mb-3 bg-secondary text-muted-foreground"
-        >
+      {/* Explanation after answer */}
+      {showResult && q.explanation && (
+        <div className="text-sm p-3 rounded-lg mb-4 bg-white dark:bg-secondary border border-gray-200 dark:border-border text-gray-700 dark:text-muted-foreground italic">
           {resolveI18n(q.explanation, lang)}
-        </motion.div>
+        </div>
       )}
 
+      {/* Action button - coral */}
       {!showResult ? (
         <Button
           onClick={() => {
@@ -802,9 +876,10 @@ function LessonQuiz({
             }
           }}
           disabled={!selected}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground w-full"
+          className="bg-[#c75b3a] hover:bg-[#a84a2e] text-white w-full"
+          size="sm"
         >
-          {t({ en: "Check Answer", fr: "V\u00e9rifier la r\u00e9ponse" })}
+          {t({ en: "Check Answer", fr: "Vérifier" })}
         </Button>
       ) : (
         <Button
@@ -822,11 +897,12 @@ function LessonQuiz({
               setShowResult(false);
             }
           }}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground w-full"
+          className="bg-[#c75b3a] hover:bg-[#a84a2e] text-white w-full"
+          size="sm"
         >
           {currentQ >= 2
-            ? t({ en: "See Results", fr: "Voir les r\u00e9sultats" })
-            : t({ en: "Next Question", fr: "Question suivante" })}
+            ? t({ en: "See Results", fr: "Voir les résultats" })
+            : t({ en: "Next Question", fr: "Question suivante" })} →
         </Button>
       )}
     </motion.div>
@@ -941,10 +1017,30 @@ function LessonViewer({
     switch (block.type) {
       case "content": {
         const body = block.body || {};
-        const text = typeof body === "string" ? body : (body[lang] || body.en || "");
+        let text = typeof body === "string" ? body : (body[lang] || body.en || "");
         if (!text) return null;
+        // Skip the first line of the first content block since it's used as the screen title
+        if (blockIdx === 0) {
+          const lines = text.split('\n');
+          const firstNonEmpty = lines.findIndex((l: string) => l.trim().length > 0);
+          if (firstNonEmpty >= 0) {
+            // Remove the first non-empty line (used as screen title)
+            lines.splice(firstNonEmpty, 1);
+            // Also check if the next non-empty line was used as screen description
+            const secondNonEmpty = lines.findIndex((l: string) => l.trim().length > 0);
+            if (secondNonEmpty >= 0) {
+              const secondLine = lines[secondNonEmpty].trim().replace(/^#{1,6}\s+/, '');
+              if (secondLine.length < 120 && secondLine.length > 20) {
+                // This was likely used as screen description - skip it too
+                lines.splice(secondNonEmpty, 1);
+              }
+            }
+            text = lines.join('\n');
+          }
+        }
+        if (!text.trim()) return null;
         return (
-          <div key={blockIdx} className="rounded-xl p-6 min-h-[100px] bg-secondary/30">
+          <div key={blockIdx} className="py-2">
             <PageContent content={text} lang={lang} />
           </div>
         );
@@ -1068,7 +1164,7 @@ function LessonViewer({
         const exercise = courseExercises.find((ex: any) => ex.id === exerciseId);
         if (!exercise) return null;
         return (
-          <div key={blockIdx} className="border-l-4 border-amber-500 pl-4">
+          <div key={blockIdx} className="my-4">
             <ExerciseRenderer
               exercise={exercise}
               index={0}
@@ -1154,45 +1250,81 @@ function LessonViewer({
     <div className="mt-2">
       {!showQuiz ? (
         <>
-          {/* Chapter header - Skilljar style */}
-          {chapter && (
-            <div className="mb-6">
-              {/* Badge row */}
-              <div className="flex items-center gap-3 mb-3">
-                <span className={`inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full ${
-                  chapter.type === 'exercise'
-                    ? 'bg-lime-100 text-lime-800 dark:bg-lime-900/30 dark:text-lime-300'
-                    : chapter.type === 'checkpoint' || chapter.type === 'quiz'
-                    ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
-                    : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300'
-                }`}>
-                  {chapter.type === 'exercise' ? t({ en: 'EXERCISE', fr: 'EXERCICE' })
-                    : chapter.type === 'checkpoint' ? 'CHECKPOINT'
-                    : chapter.type === 'quiz' ? 'QUIZ'
-                    : t({ en: 'TEACHING', fr: 'ENSEIGNEMENT' })}
-                </span>
-                {chapter.duration && (
-                  <span className="text-xs text-muted-foreground uppercase tracking-wide">
-                    {chapter.duration}
+          {/* Chapter header - Skilljar style: badge shows type + chapter name, title shows screen title */}
+          {chapter && (() => {
+            // Extract screen title from first content block's first line
+            const firstContentBlock = chapter.blocks?.find((b: any) => b.type === 'content');
+            let screenTitle = '';
+            let screenDescription = '';
+            if (firstContentBlock) {
+              const body = firstContentBlock.body || {};
+              const text = typeof body === 'string' ? body : (body[lang] || body.en || '');
+              const textLines = text.split('\n').filter((l: string) => l.trim().length > 0);
+              if (textLines.length > 0) {
+                // Strip markdown heading prefixes (##, ###, etc.)
+                screenTitle = textLines[0].trim().replace(/^#{1,6}\s+/, '');
+                // If second line is a short description (< 120 chars), use it
+                if (textLines.length > 1 && textLines[1].trim().length < 120 && textLines[1].trim().length > 20) {
+                  screenDescription = textLines[1].trim().replace(/^#{1,6}\s+/, '');
+                }
+              }
+            }
+            // Fall back to chapter title if no screen title found
+            const displayTitle = screenTitle || resolveI18n(chapter.title, lang);
+            const chapterName = resolveI18n(chapter.title, lang);
+            // Only show chapter name in badge if screen title is different from chapter title
+            const showChapterInBadge = screenTitle && screenTitle !== chapterName;
+
+            return (
+              <div className="mb-6">
+                {/* Badge row: TYPE | CHAPTER_NAME · DURATION */}
+                <div className="flex items-center gap-2 mb-3 flex-wrap">
+                  <span className={`inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full ${
+                    chapter.type === 'exercise'
+                      ? 'bg-lime-100 text-lime-800 dark:bg-lime-900/30 dark:text-lime-300'
+                      : chapter.type === 'checkpoint' || chapter.type === 'quiz'
+                      ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                      : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300'
+                  }`}>
+                    {chapter.type === 'exercise' ? t({ en: 'EXERCISE', fr: 'EXERCICE' })
+                      : chapter.type === 'checkpoint' ? 'CHECKPOINT'
+                      : chapter.type === 'quiz' ? 'QUIZ'
+                      : t({ en: 'TEACHING', fr: 'ENSEIGNEMENT' })}
                   </span>
+                  {showChapterInBadge && (
+                    <span className="text-xs text-muted-foreground uppercase tracking-wide font-medium">
+                      {chapterName}
+                    </span>
+                  )}
+                  {chapter.duration && (
+                    <span className="text-xs text-muted-foreground">
+                      · {chapter.duration}
+                    </span>
+                  )}
+                </div>
+                {/* Screen title - large serif */}
+                <h2 className="text-2xl md:text-3xl font-semibold text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+                  {displayTitle}
+                </h2>
+                {/* Screen description - italic serif */}
+                {screenDescription && (
+                  <p className="mt-3 text-base text-muted-foreground italic" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+                    {screenDescription}
+                  </p>
+                )}
+                {/* Chapter description fallback */}
+                {!screenDescription && chapter.description && (
+                  <p className="mt-3 text-base text-muted-foreground italic" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+                    {resolveI18n(chapter.description, lang)}
+                  </p>
                 )}
               </div>
-              {/* Title - serif */}
-              <h2 className="text-2xl md:text-3xl font-semibold text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
-                {resolveI18n(chapter.title, lang)}
-              </h2>
-              {/* Description - italic serif */}
-              {chapter.description && (
-                <p className="mt-3 text-base text-muted-foreground italic" style={{ fontFamily: 'Lora, Georgia, serif' }}>
-                  {resolveI18n(chapter.description, lang)}
-                </p>
-              )}
-            </div>
-          )}
+            );
+          })()}
 
           {/* Render all blocks in the current chapter */}
           {chapter && (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {chapter.blocks.map((block: any, idx: number) => renderBlock(block, idx))}
             </div>
           )}
@@ -1297,6 +1429,9 @@ function LessonSidebarContent({
   onLessonClick,
   chapterProgress,
   displayedLessonIndex,
+  onScreenClick,
+  activeScreenIndex,
+  chaptersData,
 }: {
   lessons: any[];
   lang: string;
@@ -1309,7 +1444,14 @@ function LessonSidebarContent({
   onLessonClick: (idx: number) => void;
   chapterProgress: { current: number; total: number } | null;
   displayedLessonIndex: number;
+  onScreenClick?: (chapterIdx: number, screenIdx: number) => void;
+  activeScreenIndex?: number;
+  chaptersData?: any[];
 }) {
+  // Calculate overall progress percentage
+  const completedCount = lessons.filter((_, idx) => isLessonComplete(courseId, idx)).length;
+  const progressPct = lessons.length > 0 ? Math.round((completedCount / lessons.length) * 100) : 0;
+
   return (
     <div className="p-3 space-y-1">
       <p className="text-xs font-bold uppercase tracking-wider px-3 py-2 text-muted-foreground">
@@ -1375,6 +1517,10 @@ function LessonSidebarContent({
         // Clickable if completed or current
         const isClickable = completed || isCurrent;
 
+        // Get sub-screens (blocks) for this chapter when it's the active one
+        const showSubScreens = isActive && chaptersData && chaptersData[idx];
+        const chapterBlocks = showSubScreens ? (chaptersData[idx]?.blocks || []) : [];
+
         return (
           <div key={lesson.id || idx}>
             <button
@@ -1398,8 +1544,48 @@ function LessonSidebarContent({
                 <Eye className="w-3.5 h-3.5 text-amber-500 shrink-0 ml-auto" />
               )}
             </button>
-            {/* Chapter progress indicator for the currently displayed lesson */}
-            {idx === displayedLessonIndex && chapterProgress && chapterProgress.total > 1 && !completed && (
+            {/* Sub-screens (blocks) for active chapter - Skilljar style */}
+            {showSubScreens && chapterBlocks.length > 1 && (
+              <div className="ml-5 mt-0.5 mb-1 border-l-2 border-border pl-3 space-y-0.5">
+                {chapterBlocks.map((block: any, screenIdx: number) => {
+                  const isActiveScreen = activeScreenIndex === screenIdx;
+                  // Determine screen title from block
+                  let screenTitle = '';
+                  if (block.type === 'content') {
+                    const body = block.body || {};
+                    const text = typeof body === 'string' ? body : (body[lang] || body.en || '');
+                    const firstLine = text.split('\n').find((l: string) => l.trim().length > 0) || '';
+                    screenTitle = firstLine.trim().substring(0, 40);
+                  } else if (block.type === 'checkpoint' || block.type === 'bucket_sort') {
+                    screenTitle = 'Checkpoint';
+                  } else if (block.type === 'flip_cards') {
+                    screenTitle = 'Flip Cards';
+                  } else if (block.type === 'single_choice_exercise') {
+                    screenTitle = 'Exercice';
+                  } else if (block.type === 'tabbed_content') {
+                    screenTitle = 'Contenu';
+                  } else {
+                    screenTitle = block.type || 'Écran';
+                  }
+                  return (
+                    <button
+                      key={screenIdx}
+                      onClick={() => onScreenClick?.(idx, screenIdx)}
+                      className={`w-full text-left flex items-center gap-2 px-2 py-1.5 rounded text-xs transition-colors ${
+                        isActiveScreen
+                          ? 'text-[#c75b3a] font-medium bg-[#c75b3a]/5'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-secondary/30'
+                      }`}
+                    >
+                      <span className="text-[10px]">{isActiveScreen ? '●' : '○'}</span>
+                      <span className="truncate">{screenTitle}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            {/* Chapter progress indicator for the currently displayed lesson (non-sub-screen mode) */}
+            {idx === displayedLessonIndex && chapterProgress && chapterProgress.total > 1 && !completed && !showSubScreens && (
               <div className="ml-7 mr-3 mt-0.5 mb-1">
                 <div className="flex items-center gap-1.5">
                   <div className="flex-1 flex gap-0.5">
@@ -1423,30 +1609,18 @@ function LessonSidebarContent({
           </div>
         );
       })}
-      {/* Legend for type icons */}
+      {/* Progress footer */}
       <div className="mt-4 pt-3 border-t border-border px-3">
-        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">Légende</p>
-        <div className="grid grid-cols-2 gap-1.5">
-          <div className="flex items-center gap-1.5">
-            <Target className="w-3 h-3 text-orange-500" />
-            <span className="text-[10px] text-muted-foreground">Exercice</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Brain className="w-3 h-3 text-purple-500" />
-            <span className="text-[10px] text-muted-foreground">Quiz</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Video className="w-3 h-3 text-red-400" />
-            <span className="text-[10px] text-muted-foreground">Vidéo</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <GraduationCap className="w-3 h-3 text-emerald-500" />
-            <span className="text-[10px] text-muted-foreground">Résumé</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Trophy className="w-3 h-3 text-amber-500" />
-            <span className="text-[10px] text-muted-foreground">Terminé</span>
-          </div>
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+            {t({ en: "PROGRESS", fr: "PROGRESSION" })} {progressPct}%
+          </span>
+        </div>
+        <div className="h-1.5 rounded-full bg-secondary overflow-hidden mb-3">
+          <div
+            className="h-full rounded-full bg-[#c75b3a] transition-all duration-500"
+            style={{ width: `${progressPct}%` }}
+          />
         </div>
       </div>
     </div>
@@ -1468,6 +1642,9 @@ function LessonSidebar({
   onLessonClick,
   chapterProgress,
   displayedLessonIndex,
+  onScreenClick,
+  activeScreenIndex,
+  chaptersData,
 }: {
   lessons: any[];
   lang: string;
@@ -1482,6 +1659,9 @@ function LessonSidebar({
   onLessonClick: (idx: number) => void;
   chapterProgress: { current: number; total: number } | null;
   displayedLessonIndex: number;
+  onScreenClick?: (chapterIdx: number, screenIdx: number) => void;
+  activeScreenIndex?: number;
+  chaptersData?: any[];
 }) {
   const sidebarContent = (
     <LessonSidebarContent
@@ -1496,6 +1676,9 @@ function LessonSidebar({
       onLessonClick={(idx) => { onLessonClick(idx); onClose(); }}
       chapterProgress={chapterProgress}
       displayedLessonIndex={displayedLessonIndex}
+      onScreenClick={onScreenClick}
+      activeScreenIndex={activeScreenIndex}
+      chaptersData={chaptersData}
     />
   );
 
@@ -1816,6 +1999,9 @@ export default function TrainingCourse() {
               ? (chapterProgress?.current ?? 0)
               : (activeLessonIndex ?? nextUnlocked)
             }
+            chaptersData={isSingleLessonCourse ? (courseLessons[0]?.chapters || []) : undefined}
+            activeScreenIndex={undefined}
+            onScreenClick={isSingleLessonCourse ? undefined : undefined}
           />
         )}
 

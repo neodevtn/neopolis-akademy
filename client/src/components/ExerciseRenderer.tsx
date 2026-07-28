@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -375,30 +374,27 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
   };
 
   return (
-    <Card className="border border-border/50 overflow-hidden">
-      {/* Header */}
-      <div className="px-4 py-3 bg-muted/30 border-b border-border/50 flex items-center justify-between gap-3">
+    <div className="my-6 rounded-lg border border-gray-200 overflow-hidden">
+      {/* Header - Skilljar style: Exercise · Title */}
+      <div className="px-5 py-3 bg-[#f8f8f6] border-b border-gray-200 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 min-w-0">
-          <TypeIcon className="h-4 w-4 text-muted-foreground shrink-0" />
-          <span className="text-sm font-medium truncate">
-            {index + 1}. {getText(exercise.title)}
+          <span className="text-xs font-bold uppercase tracking-wider text-[#c75b3a]">
+            Exercise
           </span>
+          {getText(exercise.title) && (
+            <>
+              <span className="text-gray-300">·</span>
+              <span className="text-sm font-medium text-gray-700 truncate" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+                {getText(exercise.title)}
+              </span>
+            </>
+          )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          {exercise.difficulty && DIFFICULTY_LABELS[exercise.difficulty] && (
-            <Badge variant="outline" className={`text-xs ${DIFFICULTY_COLORS[exercise.difficulty] || ''}`}>
-              {DIFFICULTY_LABELS[exercise.difficulty][lang]}
-            </Badge>
-          )}
-          {interactionType && TYPE_LABELS[interactionType] && (
-            <Badge variant="outline" className="text-xs">
-              {TYPE_LABELS[interactionType][lang]}
-            </Badge>
-          )}
           {submitted && (
-            <Badge className="bg-green-600 text-white text-xs">
-              {lang === 'fr' ? 'Soumis' : 'Submitted'}
-            </Badge>
+            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">
+              {lang === 'fr' ? '✓ Soumis' : '✓ Submitted'}
+            </span>
           )}
         </div>
       </div>
@@ -685,7 +681,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
           </div>
         )}
       </div>
-    </Card>
+    </div>
   );
 }
 
