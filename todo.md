@@ -680,3 +680,10 @@
 - [x] Phase 9 : Titre d'écran - extraction du titre depuis le premier bloc de contenu, badge type + nom du chapitre
 - [x] Phase 10 : LessonQuiz Skilljar - style Q1/A/B/C avec lettres coral, fond beige, bouton coral
 - [x] Phase 11 : Suppression du doublon titre dans le contenu (skip first line du premier bloc content)
+
+## Conversion texte brut → composants UI Skilljar (2026-07-28)
+- [x] Callout boxes : détecter les patterns "Label\n\"texte quoté\"" → boîte grise avec label small-caps
+- [x] Stepper horizontal : détecter les séquences "1\nLabel\n2\nLabel\n..." → composant stepper avec cercles numérotés
+- [x] Step detail boxes : détecter "Step N · Titre\nDescription" → boîte colorée bleu/teal
+- [x] STEP N: items : détecter "Step N:" ou "STEP N:" → items stylisés avec numéro en badge
+- [x] Fix flip cards CSS : vérifié correct (rotateY 3D fonctionne, artefact PDF seulement)

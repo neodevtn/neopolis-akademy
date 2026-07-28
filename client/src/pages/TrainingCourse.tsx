@@ -137,6 +137,93 @@ function LayerCardsGrid({ cards }: { cards: { label: string; title: string; desc
   );
 }
 
+// Detect callout box patterns: "Label\n\"quoted text\"" or "Label\ntext" where label is short caps
+function detectCalloutBoxes(lines: string[]): { label: string; text: string; startIdx: number; endIdx: number }[] {
+  const results: { label: string; text: string; startIdx: number; endIdx: number }[] = [];
+  const calloutLabels = /^(single prompt|decomposed prompt|multi-step prompt|system prompt|user prompt|assistant response|prompt|example prompt|example response|response|output|input|bad prompt|good prompt|weak prompt|strong prompt|improved prompt|original prompt|revised prompt)/i;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = lines[i].trim();
+    if (!calloutLabels.test(trimmed)) continue;
+    if (trimmed.length > 40) continue;
+    
+    // Next non-empty line should be the content (possibly quoted)
+    let j = i + 1;
+    while (j < lines.length && lines[j].trim() === '') j++;
+    if (j >= lines.length) continue;
+    
+    // Collect content lines until next empty line or end
+    let content = '';
+    const startContent = j;
+    while (j < lines.length && lines[j].trim() !== '') {
+      content += (content ? '\n' : '') + lines[j].trim();
+      j++;
+    }
+    if (content) {
+      results.push({ label: trimmed, text: content, startIdx: i, endIdx: j });
+    }
+  }
+  return results;
+}
+
+// Detect numbered step sequences: "1\nLabel\n2\nLabel\n3\nLabel..."
+function detectStepperSequence(lines: string[], startIdx: number): { steps: string[]; endIdx: number } | null {
+  const steps: string[] = [];
+  let i = startIdx;
+  let expectedNum = 1;
+  
+  while (i < lines.length) {
+    const trimmed = lines[i].trim();
+    // Must be a bare number matching expected sequence
+    if (trimmed === String(expectedNum)) {
+      // Next non-empty line is the label
+      let j = i + 1;
+      while (j < lines.length && lines[j].trim() === '') j++;
+      if (j >= lines.length) break;
+      const label = lines[j].trim();
+      if (!label || label.length > 60) break;
+      steps.push(label);
+      expectedNum++;
+      // Move past the label and any trailing empty lines
+      j++;
+      while (j < lines.length && lines[j].trim() === '') j++;
+      i = j;
+    } else {
+      break;
+    }
+  }
+  
+  if (steps.length >= 3) {
+    return { steps, endIdx: i };
+  }
+  return null;
+}
+
+// Detect "Step N: description" or "STEP N: description" patterns
+function detectStepItems(lines: string[], startIdx: number): { items: { num: number; text: string }[]; endIdx: number } | null {
+  const items: { items: { num: number; text: string }[]; endIdx: number } = { items: [], endIdx: startIdx };
+  let i = startIdx;
+  
+  while (i < lines.length) {
+    const match = lines[i].trim().match(/^(?:Step|STEP)\s+(\d+)[:.·]\s*(.+)$/i);
+    if (match) {
+      items.items.push({ num: parseInt(match[1]), text: match[2] });
+      items.endIdx = i + 1;
+      i++;
+    } else if (lines[i].trim() === '' && items.items.length > 0) {
+      // Allow one empty line between step items
+      i++;
+      const nextMatch = lines[i]?.trim().match(/^(?:Step|STEP)\s+(\d+)[:.·]\s*(.+)$/i);
+      if (!nextMatch) break;
+    } else {
+      break;
+    }
+  }
+  
+  if (items.items.length >= 2) return items;
+  return null;
+}
+
 // Smart content renderer with heuristic structure detection
 function PageContent({ content, lang }: { content: string; lang: string }) {
   const lines = content.split("\n");
@@ -151,6 +238,13 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
   const cardLineSet = new Set<number>();
   cardGroups.forEach(g => {
     for (let k = g.startIdx; k < g.endIdx; k++) cardLineSet.add(k);
+  });
+
+  // Detect callout boxes
+  const calloutBoxes = detectCalloutBoxes(lines);
+  const calloutLineSet = new Set<number>();
+  calloutBoxes.forEach(cb => {
+    for (let k = cb.startIdx; k < cb.endIdx; k++) calloutLineSet.add(k);
   });
 
   // Heuristic helpers
@@ -194,11 +288,78 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     const cardGroup = cardGroups.find(g => g.startIdx === i);
     if (cardGroup) {
       elements.push(<LayerCardsGrid key={`cards-${i}`} cards={cardGroup.cards} />);
-      i = cardGroup.endIdx - 1; // -1 because for loop will increment
+      i = cardGroup.endIdx - 1;
       continue;
     }
-    // Skip lines that are part of a card group (shouldn't happen but safety)
     if (cardLineSet.has(i)) continue;
+
+    // Check if this line starts a callout box
+    const calloutBox = calloutBoxes.find(cb => cb.startIdx === i);
+    if (calloutBox) {
+      elements.push(
+        <div key={`callout-${i}`} className="my-4 rounded-lg border border-gray-200 dark:border-border bg-[#f8f7f4] dark:bg-secondary p-4">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-muted-foreground block mb-2">
+            {calloutBox.label}
+          </span>
+          <p className="text-sm text-gray-800 dark:text-foreground leading-relaxed italic">
+            {calloutBox.text}
+          </p>
+        </div>
+      );
+      i = calloutBox.endIdx - 1;
+      continue;
+    }
+    if (calloutLineSet.has(i)) continue;
+
+    // Check if this line starts a numbered stepper sequence (bare "1" followed by label)
+    const trimmedForStepper = lines[i].trim();
+    if (/^\d+$/.test(trimmedForStepper) && parseInt(trimmedForStepper) === 1) {
+      const stepper = detectStepperSequence(lines, i);
+      if (stepper) {
+        elements.push(
+          <div key={`stepper-${i}`} className="my-6 flex items-center justify-center gap-0 overflow-x-auto py-2">
+            {stepper.steps.map((step, idx) => (
+              <div key={idx} className="flex items-center">
+                <div className="flex flex-col items-center">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white ${
+                    idx === 0 ? 'bg-[#c75b3a]' : 'bg-gray-300 dark:bg-gray-600'
+                  }`}>
+                    {idx + 1}
+                  </div>
+                  <span className="text-xs text-gray-600 dark:text-muted-foreground mt-1.5 text-center max-w-[100px]">{step}</span>
+                </div>
+                {idx < stepper.steps.length - 1 && (
+                  <div className="w-8 h-0.5 bg-gray-300 dark:bg-gray-600 mx-1 mt-[-16px]" />
+                )}
+              </div>
+            ))}
+          </div>
+        );
+        i = stepper.endIdx - 1;
+        continue;
+      }
+    }
+
+    // Check if this line starts a "Step N:" sequence
+    if (/^(?:Step|STEP)\s+\d+[:.·]/i.test(lines[i].trim())) {
+      const stepItems = detectStepItems(lines, i);
+      if (stepItems) {
+        elements.push(
+          <div key={`steps-${i}`} className="my-4 space-y-2">
+            {stepItems.items.map((item, idx) => (
+              <div key={idx} className="flex items-start gap-3 p-3 rounded-lg bg-[#e8f4f8] dark:bg-blue-900/20 border border-[#b8dce5] dark:border-blue-800">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-[#2a7d8a] text-white text-xs font-bold shrink-0">
+                  {item.num}
+                </span>
+                <span className="text-sm text-gray-800 dark:text-foreground">{item.text}</span>
+              </div>
+            ))}
+          </div>
+        );
+        i = stepItems.endIdx - 1;
+        continue;
+      }
+    }
 
     const line = lines[i];
     const nextLine = i < lines.length - 1 ? lines[i + 1] : undefined;
