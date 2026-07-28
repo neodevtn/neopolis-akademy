@@ -166,7 +166,7 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
 
       {/* Question text */}
       <p className="text-base font-medium mb-5 text-gray-900" style={{ fontFamily: 'Lora, Georgia, serif' }}>
-        {q.question}
+        {resolveI18n(q.question, lang)}
       </p>
 
       {/* Choices - Skilljar style: A/B/C letter in orange */}
@@ -201,7 +201,7 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
               className={`w-full text-left px-4 py-3 rounded-lg border transition-all flex items-center gap-3 ${containerClass} ${showResult ? "cursor-default" : "cursor-pointer"}`}
             >
               <span className={`text-sm font-bold ${letterColor}`}>{letter}</span>
-              <span className="text-sm text-gray-800 flex-1">{choice.text}</span>
+              <span className="text-sm text-gray-800 flex-1">{resolveI18n(choice.text, lang)}</span>
               {showResult && isCorrectChoice && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />}
               {showResult && isSelected && !isCorrectChoice && <X className="w-4 h-4 text-red-500 shrink-0" />}
             </button>
@@ -212,7 +212,7 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
       {/* Explanation after answer */}
       {showResult && q.explanation && (
         <div className="text-sm p-3 rounded-lg mb-4 bg-white border border-gray-200 text-gray-700 italic">
-          {q.explanation}
+          {resolveI18n(q.explanation, lang)}
         </div>
       )}
 

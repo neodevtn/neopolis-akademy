@@ -553,13 +553,13 @@ function LessonQuiz({
           const shuffled = [...lessonQs].sort(() => Math.random() - 0.5);
           const selected = shuffled.slice(0, 5);
           const lessonQsSelected = selected;
-          // Map to expected format
+          // Map to expected format - handle both plain string and bilingual {en, fr} objects
           const mapped = lessonQsSelected.map((q: any, idx: number) => ({
             id: `lq_${courseId}_${lessonIndex}_${idx}`,
-            question: { en: q.question, fr: q.question },
-            choices: q.choices.map((c: any) => ({ id: c.id, text: { en: c.text, fr: c.text } })),
+            question: typeof q.question === 'object' ? q.question : { en: q.question, fr: q.question },
+            choices: q.choices.map((c: any) => ({ id: c.id, text: typeof c.text === 'object' ? c.text : { en: c.text, fr: c.text } })),
             correctChoiceIds: [q.correctId],
-            explanation: { en: q.explanation, fr: q.explanation },
+            explanation: typeof q.explanation === 'object' ? q.explanation : { en: q.explanation, fr: q.explanation },
           }));
           setQuestions(mapped);
         } else {
@@ -722,10 +722,10 @@ function LessonQuiz({
                             const selected = shuffled.slice(0, 5);
                             const mapped = selected.map((q: any, idx: number) => ({
                               id: `lq_${courseId}_${lessonIndex}_${idx}_${Date.now()}`,
-                              question: { en: q.question, fr: q.question },
-                              choices: q.choices.map((c: any) => ({ id: c.id, text: { en: c.text, fr: c.text } })),
+                              question: typeof q.question === 'object' ? q.question : { en: q.question, fr: q.question },
+                              choices: q.choices.map((c: any) => ({ id: c.id, text: typeof c.text === 'object' ? c.text : { en: c.text, fr: c.text } })),
                               correctChoiceIds: [q.correctId],
-                              explanation: { en: q.explanation, fr: q.explanation },
+                              explanation: typeof q.explanation === 'object' ? q.explanation : { en: q.explanation, fr: q.explanation },
                             }));
                             setQuestions(mapped);
                           }
@@ -918,10 +918,10 @@ function LessonQuiz({
                         const lessonQs = cq[String(lessonIndex)];
                         const mapped = lessonQs.map((q: any, idx: number) => ({
                           id: `lq_${courseId}_${lessonIndex}_${idx}_${Date.now()}`,
-                          question: { en: q.question, fr: q.question },
-                          choices: q.choices.map((c: any) => ({ id: c.id, text: { en: c.text, fr: c.text } })),
+                          question: typeof q.question === 'object' ? q.question : { en: q.question, fr: q.question },
+                          choices: q.choices.map((c: any) => ({ id: c.id, text: typeof c.text === 'object' ? c.text : { en: c.text, fr: c.text } })),
                           correctChoiceIds: [q.correctId],
-                          explanation: { en: q.explanation, fr: q.explanation },
+                          explanation: typeof q.explanation === 'object' ? q.explanation : { en: q.explanation, fr: q.explanation },
                         }));
                         setQuestions(mapped);
                       }
@@ -1399,6 +1399,7 @@ function LessonViewer({
             options={options}
             correctAnswer={correctAnswer}
             explanation={explanation}
+            lang={lang as 'en' | 'fr'}
           />
         );
       }
@@ -1720,13 +1721,13 @@ function LessonSidebarContent({
                   } else if (block.type === 'checkpoint' || block.type === 'bucket_sort') {
                     screenTitle = 'Checkpoint';
                   } else if (block.type === 'flip_cards') {
-                    screenTitle = 'Flip Cards';
+                    screenTitle = lang === 'fr' ? 'Cartes mémoire' : 'Flip Cards';
                   } else if (block.type === 'single_choice_exercise') {
-                    screenTitle = 'Exercice';
+                    screenTitle = lang === 'fr' ? 'Exercice' : 'Exercise';
                   } else if (block.type === 'tabbed_content') {
-                    screenTitle = 'Contenu';
+                    screenTitle = lang === 'fr' ? 'Contenu' : 'Content';
                   } else {
-                    screenTitle = block.type || 'Écran';
+                    screenTitle = block.type || (lang === 'fr' ? 'Écran' : 'Screen');
                   }
                   return (
                     <button

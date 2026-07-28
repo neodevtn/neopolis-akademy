@@ -706,3 +706,11 @@
 - [x] Template email bilingue de relance pour candidats en attente (FR/EN)
 - [x] Endpoint serveur pour envoyer un email de relance (applications.sendReminder)
 - [x] Bouton "Relancer par email" dans le backoffice admin pour les candidats en attente
+
+## Fix langue boutons/quiz/exercices/corrections (2026-07-29)
+- [x] Vérifier que les boutons UI (Suivant, Vérifier, etc.) utilisent la langue sélectionnée
+- [x] Vérifier que les quiz affichent questions/réponses dans la bonne langue (24114 champs traduits en bilingue)
+- [x] Vérifier que les exercices et corrections utilisent la bonne langue
+- [x] Corriger SingleChoiceExercise : ajout prop lang, boutons bilingues
+- [x] Corriger ChapterQuiz : resolveI18n sur question/choices/explanation
+- [x] Corriger sidebar : titres d'écran bilingues (Cartes mémoire/Flip Cards, etc.)

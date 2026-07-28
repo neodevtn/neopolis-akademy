@@ -12,6 +12,7 @@ interface SingleChoiceExerciseProps {
   options: Option[];
   correctAnswer: string;
   explanation: string;
+  lang?: 'en' | 'fr';
 }
 
 export function SingleChoiceExercise({
@@ -20,11 +21,14 @@ export function SingleChoiceExercise({
   options,
   correctAnswer,
   explanation,
+  lang = 'fr',
 }: SingleChoiceExerciseProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const isCorrect = selectedAnswer === correctAnswer;
+
+  const t = (en: string, fr: string) => lang === 'fr' ? fr : en;
 
   const handleSelect = (optionId: string) => {
     if (isSubmitted) return;
@@ -115,7 +119,7 @@ export function SingleChoiceExercise({
             disabled={!selectedAnswer}
             className="px-6 py-2.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
-            Vérifier
+            {t("Check", "Vérifier")}
           </button>
         ) : (
           <div className="space-y-3">
@@ -123,12 +127,12 @@ export function SingleChoiceExercise({
               {isCorrect ? (
                 <>
                   <CheckCircle2 className="w-4.5 h-4.5" />
-                  Correct !
+                  {t("Correct!", "Correct !")}
                 </>
               ) : (
                 <>
                   <XCircle className="w-4.5 h-4.5" />
-                  Incorrect
+                  {t("Incorrect", "Incorrect")}
                 </>
               )}
             </div>
@@ -141,7 +145,7 @@ export function SingleChoiceExercise({
               onClick={handleReset}
               className="px-4 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-foreground hover:border-foreground/30 transition-colors"
             >
-              Réessayer
+              {t("Try again", "Réessayer")}
             </button>
           </div>
         )}
