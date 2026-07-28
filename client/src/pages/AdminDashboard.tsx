@@ -36,6 +36,36 @@ export default function AdminDashboard() {
     },
   });
 
+  const exportPDFMutation = trpc.applications.exportPDF.useMutation({
+    onSuccess: (data) => {
+      // Convert base64 to blob and download
+      const byteCharacters = atob(data.pdf);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = data.filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success("PDF exporté avec succès");
+    },
+    onError: () => toast.error("Erreur lors de l'export PDF"),
+  });
+
+  const sendReminderMutation = trpc.applications.sendReminder.useMutation({
+    onSuccess: (data) => {
+      toast.success(`Email de relance envoyé (candidature en attente depuis ${data.daysPending} jours)`);
+    },
+    onError: (err) => toast.error(err.message || "Erreur lors de l'envoi de la relance"),
+  });
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
@@ -393,6 +423,31 @@ export default function AdminDashboard() {
                                  )}
                               </div>
                             </DetailSection>
+                          </div>
+                          {/* Action buttons row */}
+                          <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="text-xs gap-1.5"
+                              disabled={exportPDFMutation.isPending}
+                              onClick={() => exportPDFMutation.mutate({ applicationId: app.id })}
+                            >
+                              {exportPDFMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <FileText className="w-3 h-3" />}
+                              Exporter PDF
+                            </Button>
+                            {app.status === "en_attente" && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="text-xs gap-1.5 text-amber-700 border-amber-200 hover:bg-amber-50"
+                                disabled={sendReminderMutation.isPending}
+                                onClick={() => sendReminderMutation.mutate({ applicationId: app.id, language: "fr" })}
+                              >
+                                {sendReminderMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Mail className="w-3 h-3" />}
+                                Relancer par email
+                              </Button>
+                            )}
                           </div>
                         </td>
                       </tr>

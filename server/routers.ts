@@ -9,7 +9,8 @@ import { TRPCError } from "@trpc/server";
 import { notifyOwner } from "./_core/notification";
 import { applicationSchema } from "@shared/validation";
 import { storagePut } from "./storage";
-import { sendConfirmationEmail, sendDecisionEmail, sendInvitationEmail } from "./email";
+import { sendConfirmationEmail, sendDecisionEmail, sendInvitationEmail, sendReminderEmail } from "./email";
+import { generateCandidatePDF } from "./pdf";
 import { uploadRateLimit, submitRateLimit, getClientIp } from "./security";
 
 export const appRouter = router({
@@ -282,6 +283,47 @@ export const appRouter = router({
       }
       return await getApplicationStats();
     }),
+
+    exportPDF: protectedProcedure
+      .input(z.object({ applicationId: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        const app = await getApplicationById(input.applicationId);
+        if (!app) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Application not found" });
+        }
+        const pdfBuffer = await generateCandidatePDF(app as any);
+        return { pdf: pdfBuffer.toString("base64"), filename: `candidat_${app.firstName}_${app.lastName}.pdf` };
+      }),
+
+    sendReminder: protectedProcedure
+      .input(z.object({
+        applicationId: z.number(),
+        language: z.enum(["fr", "en"]).default("fr"),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        const app = await getApplicationById(input.applicationId);
+        if (!app) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Application not found" });
+        }
+        if (app.status !== "en_attente") {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "Only pending applications can receive reminders" });
+        }
+        const daysPending = Math.floor((Date.now() - new Date(app.createdAt).getTime()) / (1000 * 60 * 60 * 24));
+        await sendReminderEmail({
+          to: app.email,
+          firstName: app.firstName,
+          lastName: app.lastName,
+          language: input.language,
+          daysPending,
+        });
+        return { success: true, daysPending };
+      }),
   }),
 
   // ============ Training Progress ============

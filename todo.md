@@ -699,3 +699,10 @@
 - [x] Compléter le backoffice admin Ambassadeur : dialog décision avec notes + envoi email auto
 - [x] Corriger le menu header où certains éléments sont collés (gap-1, px-2.5, ml-1)
 - [x] Corriger le bug récurrent des images qui disparaissent du site (motion.img → img standard avec loading="eager")
+
+## Export PDF profil candidat + Email de relance (2026-07-28)
+- [x] Endpoint serveur pour générer un PDF du profil complet d'un candidat (server/pdf.ts avec PDFKit)
+- [x] Bouton "Exporter PDF" dans le détail candidat du backoffice admin
+- [x] Template email bilingue de relance pour candidats en attente (FR/EN)
+- [x] Endpoint serveur pour envoyer un email de relance (applications.sendReminder)
+- [x] Bouton "Relancer par email" dans le backoffice admin pour les candidats en attente

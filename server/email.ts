@@ -657,3 +657,139 @@ export async function sendInvitationEmail(data: InvitationEmailData): Promise<vo
   }
   console.log(`[Email] Invitation sent to ${data.to}`);
 }
+
+
+// ============================================================
+// REMINDER EMAIL
+// ============================================================
+
+interface ReminderEmailData {
+  to: string;
+  firstName: string;
+  lastName: string;
+  language?: Language;
+  daysPending: number;
+  platformUrl?: string;
+}
+
+function buildReminderHtml(data: ReminderEmailData): string {
+  const lang = data.language || "fr";
+  const content = lang === "fr" ? `
+    <div style="padding: 32px;">
+      <h2 style="color: #0f1b2d; font-size: 20px; margin-bottom: 16px;">Bonjour ${data.firstName},</h2>
+      <p style="color: #374151; font-size: 14px; line-height: 1.6; margin-bottom: 16px;">
+        Nous avons bien reçu votre candidature au programme <strong>Neopolis Akademy — AI Solutions Partner</strong> il y a <strong>${data.daysPending} jours</strong>.
+      </p>
+      <p style="color: #374151; font-size: 14px; line-height: 1.6; margin-bottom: 16px;">
+        Votre dossier est actuellement en cours d'examen par notre comité de sélection. Nous tenions à vous informer que le processus suit son cours et que vous recevrez une réponse définitive prochainement.
+      </p>
+      <p style="color: #374151; font-size: 14px; line-height: 1.6; margin-bottom: 24px;">
+        En attendant, nous vous encourageons à :
+      </p>
+      <ul style="color: #374151; font-size: 14px; line-height: 1.8; margin-bottom: 24px; padding-left: 20px;">
+        <li>Compléter votre profil LinkedIn si ce n'est pas déjà fait</li>
+        <li>Vous familiariser avec les solutions d'IA agentique (Claude, agents autonomes)</li>
+        <li>Identifier des cas d'usage concrets dans votre secteur d'activité</li>
+      </ul>
+      <p style="color: #374151; font-size: 14px; line-height: 1.6;">
+        Merci pour votre patience et votre intérêt pour le programme.
+      </p>
+      <p style="color: #374151; font-size: 14px; line-height: 1.6; margin-top: 24px;">
+        Cordialement,<br/>
+        <strong>L'équipe Neopolis Akademy</strong>
+      </p>
+    </div>
+  ` : `
+    <div style="padding: 32px;">
+      <h2 style="color: #0f1b2d; font-size: 20px; margin-bottom: 16px;">Hello ${data.firstName},</h2>
+      <p style="color: #374151; font-size: 14px; line-height: 1.6; margin-bottom: 16px;">
+        We received your application for the <strong>Neopolis Akademy — AI Solutions Partner</strong> program <strong>${data.daysPending} days ago</strong>.
+      </p>
+      <p style="color: #374151; font-size: 14px; line-height: 1.6; margin-bottom: 16px;">
+        Your application is currently being reviewed by our selection committee. We wanted to let you know that the process is ongoing and you will receive a final response soon.
+      </p>
+      <p style="color: #374151; font-size: 14px; line-height: 1.6; margin-bottom: 24px;">
+        In the meantime, we encourage you to:
+      </p>
+      <ul style="color: #374151; font-size: 14px; line-height: 1.8; margin-bottom: 24px; padding-left: 20px;">
+        <li>Complete your LinkedIn profile if not already done</li>
+        <li>Familiarize yourself with agentic AI solutions (Claude, autonomous agents)</li>
+        <li>Identify concrete use cases in your industry</li>
+      </ul>
+      <p style="color: #374151; font-size: 14px; line-height: 1.6;">
+        Thank you for your patience and interest in the program.
+      </p>
+      <p style="color: #374151; font-size: 14px; line-height: 1.6; margin-top: 24px;">
+        Best regards,<br/>
+        <strong>The Neopolis Akademy Team</strong>
+      </p>
+    </div>
+  `;
+
+  return emailWrapper(emailHeader(lang === "fr" ? "Suivi de votre candidature" : "Application Status Update") + content + emailFooter(lang));
+}
+
+function buildReminderText(data: ReminderEmailData): string {
+  const lang = data.language || "fr";
+  if (lang === "fr") {
+    return `Bonjour ${data.firstName},
+
+Nous avons bien reçu votre candidature au programme Neopolis Akademy — AI Solutions Partner il y a ${data.daysPending} jours.
+
+Votre dossier est actuellement en cours d'examen par notre comité de sélection. Nous tenions à vous informer que le processus suit son cours et que vous recevrez une réponse définitive prochainement.
+
+En attendant, nous vous encourageons à :
+- Compléter votre profil LinkedIn si ce n'est pas déjà fait
+- Vous familiariser avec les solutions d'IA agentique (Claude, agents autonomes)
+- Identifier des cas d'usage concrets dans votre secteur d'activité
+
+Merci pour votre patience et votre intérêt pour le programme.
+
+Cordialement,
+L'équipe Neopolis Akademy`;
+  }
+  return `Hello ${data.firstName},
+
+We received your application for the Neopolis Akademy — AI Solutions Partner program ${data.daysPending} days ago.
+
+Your application is currently being reviewed by our selection committee. We wanted to let you know that the process is ongoing and you will receive a final response soon.
+
+In the meantime, we encourage you to:
+- Complete your LinkedIn profile if not already done
+- Familiarize yourself with agentic AI solutions (Claude, autonomous agents)
+- Identify concrete use cases in your industry
+
+Thank you for your patience and interest in the program.
+
+Best regards,
+The Neopolis Akademy Team`;
+}
+
+export async function sendReminderEmail(data: ReminderEmailData): Promise<void> {
+  const { Resend } = await import("resend");
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (!resendApiKey) {
+    console.log(`[Email] RESEND_API_KEY not configured. Reminder email NOT sent to ${data.to}`);
+    return;
+  }
+
+  const resend = new Resend(resendApiKey);
+  const lang = data.language || "fr";
+  const subject = lang === "fr"
+    ? "Neopolis Akademy — Suivi de votre candidature"
+    : "Neopolis Akademy — Application Status Update";
+
+  const { error } = await resend.emails.send({
+    from: FROM_ADDRESS,
+    to: [data.to],
+    subject,
+    html: buildReminderHtml(data),
+    text: buildReminderText(data),
+  });
+
+  if (error) {
+    console.error(`[Email] Resend error for ${data.to}:`, error);
+    throw new Error(`Reminder email sending failed: ${error.message}`);
+  }
+  console.log(`[Email] Reminder sent to ${data.to}`);
+}
