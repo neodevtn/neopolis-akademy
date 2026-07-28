@@ -667,3 +667,11 @@
 - [x] Traduire les exercices (bucket_sort, single_choice) en français (69 blocs dans 14 fichiers)
 - [x] Vérifier la structure des données quiz (4019 questions, 0 erreurs, 335 chapitres)
 - [x] Vérifier le rendu UI des cours (pas d'erreurs console, TypeScript OK)
+
+## Corrections UI Skilljar-style (2026-07-28)
+- [x] Phase 1 : Typographie - police serif Lora pour titres, badge type chapitre
+- [x] Phase 2 : Flip Cards - bordure pointillée bleue, label PROPERTY, bouton FLIP, verso bleu
+- [x] Phase 3 : Bucket Sort - grille 2 colonnes, buckets pointillés colorés, feedback bannière
+- [x] Phase 4 : Quiz intégré - label Q1, options A/B/C orange, fond gris clair
+- [x] Phase 5 : Tabbed Content - onglets orange avec underline épaisse
+- [x] Phase 6 : Navigation - compteur "Écran X sur Y", bouton Next coral

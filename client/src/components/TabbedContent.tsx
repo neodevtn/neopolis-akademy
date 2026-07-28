@@ -14,39 +14,44 @@ export function TabbedContent({ tabs, lang }: TabbedContentProps) {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <div className="my-6 rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
-      {/* Tab headers */}
-      <div className="flex border-b border-gray-200 bg-gray-50">
+    <div className="my-6">
+      {/* Tab headers - Skilljar style: orange active with thick underline */}
+      <div className="flex border-b border-gray-200">
         {tabs.map((tab, idx) => (
           <button
             key={idx}
             onClick={() => setActiveTab(idx)}
             className={`
-              flex-1 px-4 py-3 text-sm font-medium transition-all duration-200
+              px-5 py-3 text-sm font-medium transition-all duration-200 relative
               ${activeTab === idx
-                ? 'text-emerald-700 bg-white border-b-2 border-emerald-500 shadow-sm'
-                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                ? 'text-[#c75b3a]'
+                : 'text-gray-500 hover:text-gray-700'
               }
             `}
           >
             {tab.label[lang] || tab.label.en}
+            {activeTab === idx && (
+              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#c75b3a] rounded-t-sm" />
+            )}
           </button>
         ))}
       </div>
 
       {/* Tab content */}
-      <div className="p-6">
+      <div className="py-5 px-1">
         <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed">
           {(tabs[activeTab]?.content[lang] || tabs[activeTab]?.content.en || '').split('\n\n').map((paragraph, idx) => {
             // Handle bold text
             const parts = paragraph.split(/\*\*(.*?)\*\*/g);
             // Handle bullet points
-            if (paragraph.startsWith('•')) {
+            if (paragraph.startsWith('•') || paragraph.startsWith('- ')) {
+              const cleanParagraph = paragraph.replace(/^[•\-]\s*/, '');
+              const bulletParts = cleanParagraph.split(/\*\*(.*?)\*\*/g);
               return (
                 <div key={idx} className="flex items-start gap-2 my-1.5">
-                  <span className="text-emerald-500 mt-0.5">•</span>
+                  <span className="text-[#c75b3a] mt-0.5 font-bold">•</span>
                   <span>
-                    {parts.map((part, i) =>
+                    {bulletParts.map((part, i) =>
                       i % 2 === 1 ? <strong key={i} className="text-gray-900">{part}</strong> : <span key={i}>{part}</span>
                     )}
                   </span>
@@ -62,18 +67,6 @@ export function TabbedContent({ tabs, lang }: TabbedContentProps) {
             );
           })}
         </div>
-      </div>
-
-      {/* Tab indicator */}
-      <div className="flex justify-center gap-1.5 pb-4">
-        {tabs.map((_, idx) => (
-          <div
-            key={idx}
-            className={`w-2 h-2 rounded-full transition-colors duration-200 ${
-              activeTab === idx ? 'bg-emerald-500' : 'bg-gray-200'
-            }`}
-          />
-        ))}
       </div>
     </div>
   );

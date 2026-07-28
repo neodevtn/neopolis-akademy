@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { motion } from "framer-motion";
-import { CheckCircle2, X, ArrowRight, Brain } from "lucide-react";
+import { CheckCircle2, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Helper to resolve {en, fr} objects or plain strings
@@ -26,6 +25,9 @@ interface ChapterQuizProps {
 const QUESTIONS_TO_SHOW = 3;
 const PASS_THRESHOLD = 2;
 
+// Option letters
+const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+
 export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPass, onSkip }: ChapterQuizProps) {
   const [allQuestions, setAllQuestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,10 +38,8 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
   const [quizComplete, setQuizComplete] = useState(false);
   const [quizPassed, setQuizPassed] = useState(false);
   const [attemptCount, setAttemptCount] = useState(1);
-  const [shakeError, setShakeError] = useState(false);
 
   // Load questions from lessonQuizzes.json
-  // Try compound key "lessonIndex_chapterIndex" first, then fall back to just chapterIndex
   useEffect(() => {
     setLoading(true);
     fetch("/data/lessonQuizzes.json")
@@ -51,12 +51,10 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
           setLoading(false);
           return;
         }
-        // Try compound key first (for multi-lesson courses)
         const compoundKey = `${lessonIndex}_${chapterIndex}`;
         if (courseQuizzes[compoundKey]) {
           setAllQuestions(courseQuizzes[compoundKey]);
         } else if (courseQuizzes[String(chapterIndex)]) {
-          // Fall back to simple chapter index (for single-lesson courses)
           setAllQuestions(courseQuizzes[String(chapterIndex)]);
         } else {
           setAllQuestions([]);
@@ -74,7 +72,7 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
     if (allQuestions.length <= QUESTIONS_TO_SHOW) return allQuestions;
     const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
     return shuffled.slice(0, QUESTIONS_TO_SHOW);
-  }, [allQuestions, attemptCount]); // Re-shuffle on retry
+  }, [allQuestions, attemptCount]);
 
   // If no questions available, auto-pass
   useEffect(() => {
@@ -86,7 +84,7 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        <div className="w-5 h-5 border-2 border-[#c75b3a] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -96,52 +94,34 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
   // Quiz complete screen
   if (quizComplete) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-        className="rounded-2xl p-6 border bg-card border-border mt-6"
-      >
+      <div className="rounded-lg p-6 mt-6 bg-[#f8f8f6]">
         <div className="text-center">
           {quizPassed ? (
             <>
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.1 }}
-              >
-                <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-3" />
-              </motion.div>
-              <h3 className="text-base font-bold mb-1 text-foreground">
+              <CheckCircle2 className="w-10 h-10 text-green-600 mx-auto mb-3" />
+              <h3 className="text-lg font-semibold mb-1 text-gray-900" style={{ fontFamily: 'Lora, Georgia, serif' }}>
                 {t({ en: "Chapter validated!", fr: "Chapitre validé !" })}
               </h3>
-              <p className="text-sm mb-4 text-muted-foreground">
+              <p className="text-sm mb-4 text-gray-600">
                 {t({
-                  en: `You got ${correctCount}/${QUESTIONS_TO_SHOW} correct. You can proceed to the next chapter.`,
-                  fr: `Vous avez obtenu ${correctCount}/${QUESTIONS_TO_SHOW} correct. Vous pouvez passer au chapitre suivant.`
+                  en: `You got ${correctCount}/${QUESTIONS_TO_SHOW} correct.`,
+                  fr: `Vous avez obtenu ${correctCount}/${QUESTIONS_TO_SHOW} correct.`
                 })}
               </p>
-              <Button onClick={onPass} className="bg-primary hover:bg-primary/90 text-primary-foreground gap-1.5">
-                <ArrowRight className="w-4 h-4" />
-                {t({ en: "Continue", fr: "Continuer" })}
+              <Button onClick={onPass} className="gap-1.5 bg-[#c75b3a] hover:bg-[#a84a2e] text-white">
+                {t({ en: "Continue", fr: "Continuer" })} →
               </Button>
             </>
           ) : (
             <>
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1, rotate: [0, -10, 10, -5, 5, 0] }}
-                transition={{ duration: 0.5 }}
-              >
-                <X className="w-12 h-12 text-red-500 mx-auto mb-3" />
-              </motion.div>
-              <h3 className="text-base font-bold mb-1 text-foreground">
+              <X className="w-10 h-10 text-red-500 mx-auto mb-3" />
+              <h3 className="text-lg font-semibold mb-1 text-gray-900" style={{ fontFamily: 'Lora, Georgia, serif' }}>
                 {t({ en: "Not quite!", fr: "Pas tout à fait !" })}
               </h3>
-              <p className="text-sm mb-4 text-muted-foreground">
+              <p className="text-sm mb-4 text-gray-600">
                 {t({
-                  en: `You got ${correctCount}/${QUESTIONS_TO_SHOW}. You need at least ${PASS_THRESHOLD}/${QUESTIONS_TO_SHOW} to continue.`,
-                  fr: `Vous avez obtenu ${correctCount}/${QUESTIONS_TO_SHOW}. Il faut au moins ${PASS_THRESHOLD}/${QUESTIONS_TO_SHOW} pour continuer.`
+                  en: `You got ${correctCount}/${QUESTIONS_TO_SHOW}. You need at least ${PASS_THRESHOLD}/${QUESTIONS_TO_SHOW}.`,
+                  fr: `Vous avez obtenu ${correctCount}/${QUESTIONS_TO_SHOW}. Il faut au moins ${PASS_THRESHOLD}/${QUESTIONS_TO_SHOW}.`
                 })}
               </p>
               <Button
@@ -153,20 +133,18 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
                   setCorrectCount(0);
                   setQuizComplete(false);
                   setQuizPassed(false);
-                  setShakeError(false);
                 }}
-                className="bg-amber-600 hover:bg-amber-700 text-white gap-1.5"
+                className="gap-1.5 bg-[#c75b3a] hover:bg-[#a84a2e] text-white"
               >
-                <ArrowRight className="w-4 h-4" />
                 {t({
-                  en: `Retry (Attempt #${attemptCount + 1})`,
+                  en: `Try Again (Attempt #${attemptCount + 1})`,
                   fr: `Réessayer (Tentative n°${attemptCount + 1})`
                 })}
               </Button>
             </>
           )}
         </div>
-      </motion.div>
+      </div>
     );
   }
 
@@ -174,116 +152,79 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
   const q = questions[currentQ];
   if (!q) return null;
 
-  const isCorrect = selected === q.correctId;
-
   return (
-    <motion.div
-      key={`chq-${currentQ}-${attemptCount}`}
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
-      className={`rounded-2xl p-5 border bg-card border-border mt-6 ${shakeError ? "animate-[shake_0.4s_ease-in-out]" : ""}`}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <Brain className="w-4 h-4 text-violet-500" />
-          <h3 className="text-xs font-bold uppercase tracking-wide text-violet-600 dark:text-violet-400">
-            {t({ en: "Chapter Quiz", fr: "Quiz de chapitre" })}
-          </h3>
-          {attemptCount > 1 && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 font-medium">
-              #{attemptCount}
-            </span>
-          )}
-        </div>
-        <div className="flex items-center gap-1.5">
-          {Array.from({ length: QUESTIONS_TO_SHOW }).map((_, i) => (
-            <div
-              key={i}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                i < currentQ
-                  ? "bg-emerald-500"
-                  : i === currentQ
-                  ? "bg-violet-500 w-4"
-                  : "bg-secondary"
-              }`}
-            />
-          ))}
-          <span className="text-xs font-medium ml-1 text-muted-foreground">
-            {currentQ + 1}/{QUESTIONS_TO_SHOW}
-          </span>
-        </div>
+    <div className="rounded-lg p-5 mt-6 bg-[#f8f8f6]">
+      {/* Question label - Skilljar style "Q1" grey */}
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-sm font-bold text-gray-400 uppercase">
+          Q{currentQ + 1}
+        </span>
+        <span className="text-xs text-gray-400">
+          {currentQ + 1}/{QUESTIONS_TO_SHOW}
+        </span>
       </div>
 
-      {/* Question */}
-      <p className="text-sm font-medium mb-3 text-foreground">
+      {/* Question text */}
+      <p className="text-base font-medium mb-5 text-gray-900" style={{ fontFamily: 'Lora, Georgia, serif' }}>
         {q.question}
       </p>
 
-      {/* Choices */}
-      <div className="space-y-2 mb-3">
-        {q.choices.map((choice: any) => {
+      {/* Choices - Skilljar style: A/B/C letter in orange */}
+      <div className="space-y-3 mb-5">
+        {q.choices.map((choice: any, idx: number) => {
           const isSelected = selected === choice.id;
           const isCorrectChoice = choice.id === q.correctId;
-          let choiceClass = "border-border hover:border-violet-300 dark:hover:border-violet-700 bg-card";
-          let feedbackIcon: React.ReactNode = null;
+          const letter = OPTION_LETTERS[idx] || choice.id.toUpperCase();
+
+          let containerClass = "bg-white border-gray-200 hover:border-[#c75b3a]/50";
+          let letterColor = "text-[#c75b3a]";
 
           if (showResult) {
             if (isCorrectChoice) {
-              choiceClass = "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20";
-              feedbackIcon = <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />;
+              containerClass = "bg-green-50 border-green-400";
+              letterColor = "text-green-600";
             } else if (isSelected && !isCorrectChoice) {
-              choiceClass = "border-red-400 bg-red-50 dark:bg-red-900/20";
-              feedbackIcon = <X className="w-4 h-4 text-red-500 shrink-0" />;
+              containerClass = "bg-red-50 border-red-400";
+              letterColor = "text-red-500";
+            } else {
+              containerClass = "bg-white border-gray-200 opacity-60";
             }
           } else if (isSelected) {
-            choiceClass = "border-violet-500 bg-violet-50 dark:bg-violet-900/20";
+            containerClass = "bg-[#fef3f0] border-[#c75b3a]";
           }
 
           return (
-            <motion.button
+            <button
               key={choice.id}
               onClick={() => !showResult && setSelected(choice.id)}
               disabled={showResult}
-              layout
-              className={`w-full text-left p-3 rounded-xl border text-sm transition-all flex items-center gap-2 ${choiceClass} ${showResult ? "cursor-default" : "cursor-pointer"}`}
+              className={`w-full text-left px-4 py-3 rounded-lg border transition-all flex items-center gap-3 ${containerClass} ${showResult ? "cursor-default" : "cursor-pointer"}`}
             >
-              <span className="font-medium mr-1 text-muted-foreground">{choice.id.toUpperCase()}.</span>
-              <span className="text-foreground flex-1">{choice.text}</span>
-              {feedbackIcon}
-            </motion.button>
+              <span className={`text-sm font-bold ${letterColor}`}>{letter}</span>
+              <span className="text-sm text-gray-800 flex-1">{choice.text}</span>
+              {showResult && isCorrectChoice && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />}
+              {showResult && isSelected && !isCorrectChoice && <X className="w-4 h-4 text-red-500 shrink-0" />}
+            </button>
           );
         })}
       </div>
 
       {/* Explanation after answer */}
       {showResult && q.explanation && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.15 }}
-          className="text-xs p-3 rounded-lg mb-3 bg-secondary text-muted-foreground"
-        >
+        <div className="text-sm p-3 rounded-lg mb-4 bg-white border border-gray-200 text-gray-700 italic">
           {q.explanation}
-        </motion.div>
+        </div>
       )}
 
       {/* Action button */}
       {!showResult ? (
         <Button
-          onClick={() => {
-            setShowResult(true);
-            if (selected !== q.correctId) {
-              setShakeError(true);
-              setTimeout(() => setShakeError(false), 400);
-            }
-          }}
+          onClick={() => setShowResult(true)}
           disabled={!selected}
-          className="bg-violet-600 hover:bg-violet-700 text-white w-full"
+          className="bg-[#c75b3a] hover:bg-[#a84a2e] text-white w-full"
           size="sm"
         >
-          {t({ en: "Check Answer", fr: "Vérifier la réponse" })}
+          {t({ en: "Check Answer", fr: "Vérifier" })}
         </Button>
       ) : (
         <Button
@@ -298,17 +239,16 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
               setCurrentQ((p) => p + 1);
               setSelected(null);
               setShowResult(false);
-              setShakeError(false);
             }
           }}
-          className="bg-violet-600 hover:bg-violet-700 text-white w-full"
+          className="bg-[#c75b3a] hover:bg-[#a84a2e] text-white w-full"
           size="sm"
         >
           {currentQ >= QUESTIONS_TO_SHOW - 1
             ? t({ en: "See Results", fr: "Voir les résultats" })
-            : t({ en: "Next Question", fr: "Question suivante" })}
+            : t({ en: "Next Question", fr: "Question suivante" })} →
         </Button>
       )}
-    </motion.div>
+    </div>
   );
 }

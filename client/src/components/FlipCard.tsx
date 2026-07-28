@@ -1,30 +1,31 @@
 import { useState, useRef, useEffect } from 'react';
-import { RotateCcw } from 'lucide-react';
 
 interface FlipCardProps {
   front: string;
   back: string;
   index: number;
+  isFlipped: boolean;
+  onFlip: () => void;
+  isLastFlipped: boolean;
 }
 
-export function FlipCard({ front, back, index }: FlipCardProps) {
-  const [isFlipped, setIsFlipped] = useState(false);
+export function FlipCard({ front, back, index, isFlipped, onFlip, isLastFlipped }: FlipCardProps) {
   const frontRef = useRef<HTMLDivElement>(null);
   const backRef = useRef<HTMLDivElement>(null);
-  const [cardHeight, setCardHeight] = useState(200);
+  const [cardHeight, setCardHeight] = useState(180);
 
   useEffect(() => {
     const frontH = frontRef.current?.scrollHeight || 0;
     const backH = backRef.current?.scrollHeight || 0;
-    const maxH = Math.max(frontH, backH, 160);
-    setCardHeight(maxH + 32); // 32px extra padding
+    const maxH = Math.max(frontH, backH, 140);
+    setCardHeight(maxH + 40);
   }, [front, back]);
 
   return (
     <div
       className="group cursor-pointer"
       style={{ perspective: '1000px' }}
-      onClick={() => setIsFlipped(!isFlipped)}
+      onClick={onFlip}
     >
       <div
         className="relative w-full transition-transform duration-500 ease-out"
@@ -34,36 +35,42 @@ export function FlipCard({ front, back, index }: FlipCardProps) {
           height: `${cardHeight}px`,
         }}
       >
-        {/* Front */}
+        {/* Front - dashed blue border */}
         <div
           ref={frontRef}
-          className="absolute inset-0 flex flex-col items-center justify-center p-5 rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white shadow-sm overflow-hidden"
-          style={{ backfaceVisibility: 'hidden' }}
+          className={`absolute inset-0 flex flex-col justify-between p-5 rounded-lg overflow-hidden ${
+            isLastFlipped && !isFlipped
+              ? 'border-2 border-dashed border-[#c75b3a]'
+              : 'border-2 border-dashed border-[#4a90d9]'
+          }`}
+          style={{ backfaceVisibility: 'hidden', backgroundColor: '#fff' }}
         >
-          <div className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wider mb-2">
-            Carte {index + 1}
+          <div>
+            <div className="text-[11px] font-bold uppercase tracking-wider text-[#c75b3a] mb-3">
+              Property {index + 1}
+            </div>
+            <p className="text-sm text-gray-900 leading-relaxed" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+              {front}
+            </p>
           </div>
-          <p className="text-center text-sm font-medium text-gray-800 leading-snug">
-            {front}
-          </p>
-          <div className="mt-3 flex items-center gap-1.5 text-[10px] text-emerald-500">
-            <RotateCcw className="w-3 h-3" />
-            <span>Cliquez pour retourner</span>
+          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[#4a90d9] mt-3">
+            <span>FLIP</span>
+            <span className="text-base">↻</span>
           </div>
         </div>
 
-        {/* Back */}
+        {/* Back - solid blue border, light blue background */}
         <div
           ref={backRef}
-          className="absolute inset-0 flex flex-col items-start justify-start p-5 rounded-xl border border-gray-200 bg-white shadow-sm overflow-y-auto"
-          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+          className="absolute inset-0 flex flex-col justify-between p-5 rounded-lg border-2 border-solid border-[#4a90d9] overflow-y-auto"
+          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)', backgroundColor: '#e8f4fd' }}
         >
-          <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-wrap">
+          <p className="text-sm text-gray-800 leading-relaxed italic" style={{ fontFamily: 'Lora, Georgia, serif' }}>
             {back}
           </p>
-          <div className="mt-3 flex items-center gap-1.5 text-[10px] text-gray-400 self-center shrink-0">
-            <RotateCcw className="w-3 h-3" />
-            <span>Cliquez pour revenir</span>
+          <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[#4a90d9] mt-3">
+            <span>FLIP</span>
+            <span className="text-base">↻</span>
           </div>
         </div>
       </div>
@@ -73,21 +80,51 @@ export function FlipCard({ front, back, index }: FlipCardProps) {
 
 interface FlipCardsGridProps {
   cards: Array<{
-    front: { en: string; fr: string };
-    back: { en: string; fr: string };
+    front: { en: string; fr: string } | string;
+    back: { en: string; fr: string } | string;
   }>;
-  lang: 'en' | 'fr';
+  lang: string;
 }
 
 export function FlipCardsGrid({ cards, lang }: FlipCardsGridProps) {
+  const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
+  const [lastFlipped, setLastFlipped] = useState<number | null>(null);
+
+  const handleFlip = (idx: number) => {
+    setFlippedCards((prev) => {
+      const next = new Set(Array.from(prev));
+      if (next.has(idx)) {
+        next.delete(idx);
+      } else {
+        next.add(idx);
+      }
+      return next;
+    });
+    setLastFlipped(idx);
+  };
+
+  const resolveLang = (val: any): string => {
+    if (!val) return '';
+    if (typeof val === 'string') return val;
+    return lang === 'fr' ? (val.fr || val.en || '') : (val.en || val.fr || '');
+  };
+
+  // Use 3 columns for 5 cards (3+2), 2 columns for 4 cards (2+2), etc.
+  const gridCols = cards.length >= 5 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' :
+                   cards.length >= 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' :
+                   'grid-cols-1 sm:grid-cols-2';
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
+    <div className={`grid ${gridCols} gap-4 my-6`}>
       {cards.map((card, idx) => (
         <FlipCard
           key={idx}
           index={idx}
-          front={card.front[lang] || card.front.en}
-          back={card.back[lang] || card.back.en}
+          front={resolveLang(card.front)}
+          back={resolveLang(card.back)}
+          isFlipped={flippedCards.has(idx)}
+          onFlip={() => handleFlip(idx)}
+          isLastFlipped={lastFlipped === idx && !flippedCards.has(idx)}
         />
       ))}
     </div>

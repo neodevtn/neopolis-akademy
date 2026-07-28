@@ -1082,7 +1082,7 @@ function LessonViewer({
         if (!cards.length) return null;
         return (
           <div key={blockIdx}>
-            <FlipCardsGrid cards={cards} lang={lang as "en" | "fr"} />
+            <FlipCardsGrid cards={cards} lang={lang} />
           </div>
         );
       }
@@ -1154,19 +1154,39 @@ function LessonViewer({
     <div className="mt-2">
       {!showQuiz ? (
         <>
-          {/* Chapter title */}
+          {/* Chapter header - Skilljar style */}
           {chapter && (
-            <div className="mb-4">
-              <div className="flex items-center gap-2 mb-1">
-                {chapter.type === "exercise" ? (
-                  <Dumbbell className="w-4 h-4 text-amber-500" />
-                ) : (
-                  <BookOpen className="w-4 h-4 text-primary" />
+            <div className="mb-6">
+              {/* Badge row */}
+              <div className="flex items-center gap-3 mb-3">
+                <span className={`inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full ${
+                  chapter.type === 'exercise'
+                    ? 'bg-lime-100 text-lime-800 dark:bg-lime-900/30 dark:text-lime-300'
+                    : chapter.type === 'checkpoint' || chapter.type === 'quiz'
+                    ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                    : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300'
+                }`}>
+                  {chapter.type === 'exercise' ? t({ en: 'EXERCISE', fr: 'EXERCICE' })
+                    : chapter.type === 'checkpoint' ? 'CHECKPOINT'
+                    : chapter.type === 'quiz' ? 'QUIZ'
+                    : t({ en: 'TEACHING', fr: 'ENSEIGNEMENT' })}
+                </span>
+                {chapter.duration && (
+                  <span className="text-xs text-muted-foreground uppercase tracking-wide">
+                    {chapter.duration}
+                  </span>
                 )}
-                <h3 className="text-base font-semibold text-foreground">
-                  {resolveI18n(chapter.title, lang)}
-                </h3>
               </div>
+              {/* Title - serif */}
+              <h2 className="text-2xl md:text-3xl font-semibold text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+                {resolveI18n(chapter.title, lang)}
+              </h2>
+              {/* Description - italic serif */}
+              {chapter.description && (
+                <p className="mt-3 text-base text-muted-foreground italic" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+                  {resolveI18n(chapter.description, lang)}
+                </p>
+              )}
             </div>
           )}
 
@@ -1197,39 +1217,23 @@ function LessonViewer({
           {/* Chapter navigation */}
           <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
               onClick={() => { setCurrentChapter((p) => p - 1); setShowTranscript(false); setShowChapterQuiz(false); }}
               disabled={currentChapter === 0}
-              className="gap-1.5"
+              className="gap-1 text-muted-foreground hover:text-foreground"
             >
-              <ChevronLeft className="w-4 h-4" />
-              {t({ en: "Previous", fr: "Précédent" })}
+              ← {t({ en: "Previous", fr: "Précédent" })}
             </Button>
 
-            {/* Chapter indicator */}
-            <div className="flex items-center gap-2">
-              <div className="flex gap-1">
-                {Array.from({ length: totalChapters }).map((_, i) => (
-                  <div
-                    key={i}
-                    className={`w-2 h-2 rounded-full transition-all ${
-                      i === currentChapter
-                        ? (chapters[i]?.type === "exercise" ? "bg-amber-500 w-4" : "bg-primary w-4")
-                        : i < currentChapter
-                        ? "bg-primary/50"
-                        : "bg-secondary"
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-xs ml-2 text-muted-foreground">
-                {currentChapter + 1}/{totalChapters}
-              </span>
-            </div>
+            {/* Screen indicator - Skilljar style */}
+            <span className="text-sm text-muted-foreground">
+              {t({ en: `Screen ${currentChapter + 1} of ${totalChapters}`, fr: `Écran ${currentChapter + 1} sur ${totalChapters}` })}
+            </span>
 
             {!isLastChapter ? (
               <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => {
                   // Determine if this chapter needs a quiz gate
@@ -1246,10 +1250,9 @@ function LessonViewer({
                     setShowChapterQuiz(false);
                   }
                 }}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground gap-1.5"
+                className="gap-1 text-[#c75b3a] hover:text-[#a84a2e] font-medium"
               >
-                {t({ en: "Next", fr: "Suivant" })}
-                <ChevronRight className="w-4 h-4" />
+                {t({ en: "Next", fr: "Suivant" })} →
               </Button>
             ) : isReviewMode ? (
               <span className="text-xs text-muted-foreground italic">
