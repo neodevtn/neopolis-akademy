@@ -687,3 +687,15 @@
 - [x] Step detail boxes : détecter "Step N · Titre\nDescription" → boîte colorée bleu/teal
 - [x] STEP N: items : détecter "Step N:" ou "STEP N:" → items stylisés avec numéro en badge
 - [x] Fix flip cards CSS : vérifié correct (rotateY 3D fonctionne, artefact PDF seulement)
+
+## Audit et correction des traductions (2026-07-28)
+- [x] Traduire 1472 champs flip_cards (en==fr, tout en anglais) vers le français (2341 champs traduits via LLM)
+- [x] Traduire 9 blocs content manquant la version FR
+- [x] Traduire ~700 autres champs bilingues non traduits (bucket_sort, titres, etc.)
+- [x] Intégrer Resend avec l'adresse info@neopolis-dev.com pour les emails transactionnels de la plateforme
+- [x] Créer les templates email bilingues de réception de candidature
+- [x] Créer les templates email bilingues d'acceptation et de refus de candidature avec accès et recommandations de suivi
+- [x] Créer les templates email bilingues d'invitation envoyée depuis le backoffice admin
+- [x] Compléter le backoffice admin Ambassadeur : dialog décision avec notes + envoi email auto
+- [x] Corriger le menu header où certains éléments sont collés (gap-1, px-2.5, ml-1)
+- [x] Corriger le bug récurrent des images qui disparaissent du site (motion.img → img standard avec loading="eager")

@@ -44,6 +44,8 @@ export default function AdminTraining() {
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteName, setInviteName] = useState("");
+  const [inviteLang, setInviteLang] = useState<"fr" | "en">("fr");
+  const [inviteMessage, setInviteMessage] = useState("");
   const pageSize = 15;
 
   // Queries
@@ -375,13 +377,35 @@ export default function AdminTraining() {
                         onChange={(e) => setInviteName(e.target.value)}
                       />
                     </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-1.5 block">Langue de l'email</label>
+                        <select
+                          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                          value={inviteLang}
+                          onChange={(e) => setInviteLang(e.target.value as "fr" | "en")}
+                        >
+                          <option value="fr">Français</option>
+                          <option value="en">English</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-foreground mb-1.5 block">Message personnalisé (optionnel)</label>
+                      <textarea
+                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm min-h-[80px] resize-y"
+                        placeholder="Un message personnel pour accompagner l'invitation..."
+                        value={inviteMessage}
+                        onChange={(e) => setInviteMessage(e.target.value)}
+                      />
+                    </div>
                   </div>
                   <DialogFooter>
                     <Button variant="outline" onClick={() => setInviteOpen(false)}>Annuler</Button>
                     <Button
                       className="bg-primary hover:bg-primary/90 text-primary-foreground"
                       disabled={!inviteEmail || inviteMutation.isPending}
-                      onClick={() => inviteMutation.mutate({ email: inviteEmail, name: inviteName || undefined })}
+                      onClick={() => inviteMutation.mutate({ email: inviteEmail, name: inviteName || undefined, language: inviteLang, message: inviteMessage || undefined })}
                     >
                       {inviteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
                       <span className="ml-1.5">Envoyer l'invitation</span>

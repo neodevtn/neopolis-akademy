@@ -9,7 +9,7 @@ import { TRPCError } from "@trpc/server";
 import { notifyOwner } from "./_core/notification";
 import { applicationSchema } from "@shared/validation";
 import { storagePut } from "./storage";
-import { sendConfirmationEmail } from "./email";
+import { sendConfirmationEmail, sendDecisionEmail, sendInvitationEmail } from "./email";
 import { uploadRateLimit, submitRateLimit, getClientIp } from "./security";
 
 export const appRouter = router({
@@ -235,12 +235,45 @@ export const appRouter = router({
       .input(z.object({
         id: z.number(),
         status: z.enum(["en_attente", "selectionne", "refuse"]),
+        adminNotes: z.string().optional(),
+        sendEmail: z.boolean().optional().default(true),
+        language: z.enum(["fr", "en"]).optional().default("fr"),
+        recommendedCourses: z.array(z.string()).optional(),
       }))
       .mutation(async ({ ctx, input }) => {
         if (ctx.user.role !== "admin") {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
-        return await updateApplicationStatus(input.id, input.status);
+        const result = await updateApplicationStatus(input.id, input.status);
+
+        // Send decision email if status changed to selectionne or refuse
+        if (input.sendEmail && (input.status === "selectionne" || input.status === "refuse")) {
+          const app = await getApplicationById(input.id);
+          if (app) {
+            try {
+              await sendDecisionEmail({
+                to: app.email,
+                firstName: app.firstName,
+                lastName: app.lastName,
+                language: input.language,
+                decision: input.status,
+                scores: {
+                  scoreTotal: Number(app.scoreTotal) || 0,
+                  scoreTechnique: Number(app.scoreTechnique) || 0,
+                  scoreMetier: Number(app.scoreMetier) || 0,
+                  scoreCommunication: Number(app.scoreCommunication) || 0,
+                },
+                adminNotes: input.adminNotes,
+                recommendedCourses: input.recommendedCourses,
+                platformUrl: "https://akademy.neodev.click",
+              });
+            } catch (emailErr) {
+              console.error("[Admin] Decision email failed:", emailErr);
+              // Don't throw - status was already updated
+            }
+          }
+        }
+        return result;
       }),
 
     stats: protectedProcedure.query(async ({ ctx }) => {
@@ -399,12 +432,35 @@ export const appRouter = router({
       }),
 
     createInvitation: protectedProcedure
-      .input(z.object({ email: z.string().email(), name: z.string().optional() }))
+      .input(z.object({
+        email: z.string().email(),
+        name: z.string().optional(),
+        language: z.enum(["fr", "en"]).optional().default("fr"),
+        message: z.string().optional(),
+      }))
       .mutation(async ({ ctx, input }) => {
         if (ctx.user.role !== "admin") {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
-        return await createInvitation(input.email, input.name || null, ctx.user.id);
+        const invitation = await createInvitation(input.email, input.name || null, ctx.user.id);
+
+        // Send invitation email
+        try {
+          const baseUrl = process.env.VITE_APP_URL || "https://akademy.neodev.click";
+          const invitationLink = `${baseUrl}/register?token=${(invitation as any).token || ""}`;
+          await sendInvitationEmail({
+            to: input.email,
+            name: input.name || null,
+            language: input.language,
+            invitedBy: ctx.user.name || "Neopolis Akademy Admin",
+            invitationLink,
+            message: input.message,
+          });
+        } catch (emailErr) {
+          console.error("[Admin] Invitation email failed:", emailErr);
+          // Don't throw - invitation was already created
+        }
+        return invitation;
       }),
 
     getInvitations: protectedProcedure

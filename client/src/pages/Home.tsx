@@ -168,15 +168,15 @@ export default function Home() {
               Registered Partner
             </a>
           </div>
-          <div className="hidden lg:flex items-center gap-0 ml-auto">
+          <div className="hidden lg:flex items-center gap-1 ml-auto">
             <NavLink href="#formule">La Formule</NavLink>
             <NavLink href="#pourquoi">Pourquoi maintenant</NavLink>
             <NavLink href="#partenaires">Partenaires</NavLink>
             <NavLink href="#process">Process Commercial</NavLink>
             <NavLink href="#faq">FAQ</NavLink>
-            <Link href="/training" className="text-xs font-semibold px-3 py-1.5 rounded-full transition-colors bg-emerald-600 text-white hover:bg-emerald-700">Training</Link>
-            <Link href="/diagnostic" className="text-xs font-semibold px-3 py-1.5 rounded-full transition-colors bg-blue-600 text-white hover:bg-blue-700">Diagnostic IA</Link>
-            <a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="text-xs font-semibold px-3 py-1.5 rounded-full transition-colors" style={{ color: "var(--wise-positive-deep)", border: "1px solid var(--wise-positive-deep)" }}>À propos</a>
+            <Link href="/training" className="text-xs font-semibold px-3 py-1.5 ml-1 rounded-full transition-colors bg-emerald-600 text-white hover:bg-emerald-700">Training</Link>
+            <Link href="/diagnostic" className="text-xs font-semibold px-3 py-1.5 ml-1 rounded-full transition-colors bg-blue-600 text-white hover:bg-blue-700">Diagnostic IA</Link>
+            <a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="text-xs font-semibold px-3 py-1.5 ml-1 rounded-full transition-colors" style={{ color: "var(--wise-positive-deep)", border: "1px solid var(--wise-positive-deep)" }}>À propos</a>
           </div>
           <div className="flex items-center gap-2 ml-auto md:ml-2">
             <Link href="/apply">
@@ -715,7 +715,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   return (
     <a
       href={href}
-      className="whitespace-nowrap text-[11px] font-medium px-2 py-1.5 rounded-md relative group transition-all duration-200 hover:bg-gray-50"
+      className="whitespace-nowrap text-[11px] font-medium px-2.5 py-1.5 rounded-md relative group transition-all duration-200 hover:bg-gray-50"
       style={{ color: "var(--wise-ink-muted, #64748b)" }}
     >
       {children}
@@ -746,12 +746,11 @@ function FormulaCard({ icon, step, title, description, badge, image }: { icon: R
     >
       {/* Image en haut avec overlay au hover */}
       <div className="relative w-full h-44 -mx-6 -mt-6 mb-5 overflow-hidden" style={{ width: "calc(100% + 48px)" }}>
-        <motion.img
+        <img
           src={image}
           alt={title}
-          className="w-full h-full object-cover"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+          className="w-full h-full object-cover transition-transform duration-400 ease-out group-hover:scale-105"
+          loading="eager"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <span className="absolute top-3 right-3 text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm" style={{ backgroundColor: "rgba(255,255,255,0.9)", color: "var(--wise-ink)" }}>

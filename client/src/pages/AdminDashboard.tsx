@@ -4,10 +4,14 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video } from "lucide-react";
+import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send } from "lucide-react";
 import { getLoginUrl } from "@/const";
+import { toast } from "sonner";
 
 const LOGO_URL = "/manus-storage/logo_neopolis_akademy_9c9a0823.png";
 
@@ -15,6 +19,10 @@ export default function AdminDashboard() {
   const { user, loading, isAuthenticated } = useAuth();
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [decisionDialog, setDecisionDialog] = useState<{ open: boolean; appId: number | null; status: "selectionne" | "refuse" | null; app: any }>({ open: false, appId: null, status: null, app: null });
+  const [decisionNotes, setDecisionNotes] = useState("");
+  const [decisionLang, setDecisionLang] = useState<"fr" | "en">("fr");
+  const [sendEmail, setSendEmail] = useState(true);
 
   const statsQuery = trpc.applications.stats.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
   const applicationsQuery = trpc.applications.list.useQuery(
@@ -233,8 +241,7 @@ export default function AdminDashboard() {
                               size="sm"
                               variant="ghost"
                               className="text-green-700 hover:text-green-600 hover:bg-green-50 text-xs"
-                              onClick={(e) => { e.stopPropagation(); updateStatusMutation.mutate({ id: app.id, status: "selectionne" }); }}
-                              disabled={updateStatusMutation.isPending}
+                              onClick={(e) => { e.stopPropagation(); setDecisionDialog({ open: true, appId: app.id, status: "selectionne", app }); setDecisionNotes(""); }}
                             >
                               Sélectionner
                             </Button>
@@ -244,8 +251,7 @@ export default function AdminDashboard() {
                               size="sm"
                               variant="ghost"
                               className="text-red-700 hover:text-red-600 hover:bg-red-50 text-xs"
-                              onClick={(e) => { e.stopPropagation(); updateStatusMutation.mutate({ id: app.id, status: "refuse" }); }}
-                              disabled={updateStatusMutation.isPending}
+                              onClick={(e) => { e.stopPropagation(); setDecisionDialog({ open: true, appId: app.id, status: "refuse", app }); setDecisionNotes(""); }}
                             >
                               Refuser
                             </Button>
@@ -405,6 +411,93 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Decision Dialog */}
+      <Dialog open={decisionDialog.open} onOpenChange={(open) => { if (!open) setDecisionDialog({ open: false, appId: null, status: null, app: null }); }}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {decisionDialog.status === "selectionne" ? (
+                <><CheckCircle className="w-5 h-5 text-green-600" /> Accepter la candidature</>
+              ) : (
+                <><XCircle className="w-5 h-5 text-red-600" /> Refuser la candidature</>
+              )}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            {decisionDialog.app && (
+              <div className="flex items-center gap-3 p-3 bg-secondary/50 rounded-lg">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary text-sm font-medium">
+                  {decisionDialog.app.firstName?.[0]}{decisionDialog.app.lastName?.[0]}
+                </div>
+                <div>
+                  <div className="font-medium text-sm">{decisionDialog.app.firstName} {decisionDialog.app.lastName}</div>
+                  <div className="text-xs text-muted-foreground">{decisionDialog.app.email}</div>
+                </div>
+                <div className="ml-auto text-right">
+                  <div className="text-sm font-semibold">{Number(decisionDialog.app.scoreTotal).toFixed(1)}%</div>
+                  <div className="text-[10px] text-muted-foreground">Score total</div>
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-xs">Langue de l'email</Label>
+                <Select value={decisionLang} onValueChange={(v) => setDecisionLang(v as "fr" | "en")}>
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="fr">Français</SelectItem>
+                    <SelectItem value="en">English</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-end">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" checked={sendEmail} onChange={(e) => setSendEmail(e.target.checked)} className="rounded border-border" />
+                  <span className="text-xs text-muted-foreground flex items-center gap-1"><Mail className="w-3 h-3" /> Envoyer l'email</span>
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-xs">Notes / Commentaires (optionnel)</Label>
+              <Textarea
+                className="mt-1 text-sm"
+                placeholder={decisionDialog.status === "selectionne" ? "Bienvenue dans le programme ! Voici quelques recommandations..." : "Merci pour votre candidature. Nous vous encourageons à..."}
+                value={decisionNotes}
+                onChange={(e) => setDecisionNotes(e.target.value)}
+                rows={3}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDecisionDialog({ open: false, appId: null, status: null, app: null })}>
+              Annuler
+            </Button>
+            <Button
+              className={decisionDialog.status === "selectionne" ? "bg-green-600 hover:bg-green-700 text-white" : "bg-red-600 hover:bg-red-700 text-white"}
+              onClick={() => {
+                if (decisionDialog.appId && decisionDialog.status) {
+                  updateStatusMutation.mutate({
+                    id: decisionDialog.appId,
+                    status: decisionDialog.status,
+                    adminNotes: decisionNotes || undefined,
+                    sendEmail,
+                    language: decisionLang,
+                  });
+                  setDecisionDialog({ open: false, appId: null, status: null, app: null });
+                  toast.success(decisionDialog.status === "selectionne" ? "Candidature acceptée" : "Candidature refusée");
+                }
+              }}
+              disabled={updateStatusMutation.isPending}
+            >
+              <Send className="w-4 h-4 mr-1" />
+              {decisionDialog.status === "selectionne" ? "Confirmer l'acceptation" : "Confirmer le refus"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
