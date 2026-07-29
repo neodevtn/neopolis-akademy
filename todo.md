@@ -808,3 +808,18 @@
 - [x] Implémenter détecteur de listes numérotées interactives (stepper/timeline)
 - [x] Implémenter détecteur d'accordéons pour sections longues (collapsible)
 - [x] Vérifier le rendu visuel et les interactions
+
+## Standards e-learning moderne - Audit UX/UI (2026-07-29)
+- [x] Barre de progression de lecture (sticky top, montre le % de scroll dans le chapitre)
+- [x] Temps de lecture estimé par chapitre (ex: "5 min de lecture")
+- [x] Optimiser la largeur de lecture (max-width 680px pour le texte, line-height 1.8)
+- [x] Augmenter la taille du texte body (16px au lieu de 14.5px)
+- [x] Séparateurs visuels entre les sections majeures (hr gradient + espacement h2/h3/h4)
+- [x] Pull quotes / encadrés "À retenir" (classe .key-concept avec border-left orange)
+- [ ] Icônes sur les headings de section (théorie, pratique, attention) - reporté
+- [ ] Navigation sticky avec titre du chapitre visible au scroll - reporté
+- [x] Bouton scroll-to-top apparaissant après défilement
+- [ ] Améliorer le rendu bilingue (afficher uniquement la langue sélectionnée) - reporté
+- [x] Animation de complétion de chapitre (classe .chapter-complete-celebration)
+- [x] Raccourcis clavier pour navigation (flèches gauche/droite + kbd-hints visuels)
+- [x] Accessibilité : focus-visible, skip-to-content, prefers-reduced-motion

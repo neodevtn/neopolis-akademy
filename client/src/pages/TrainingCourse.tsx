@@ -9,7 +9,7 @@ import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
   BookOpen, Lock, LogIn, LogOut, ArrowRight, Moon, Sun, Menu, X, Clock, Check, Filter, Video, Eye,
-  Dumbbell, FileText, ChevronDown, Brain, Target, Trophy, GraduationCap, Puzzle, Download
+  Dumbbell, FileText, ChevronDown, Brain, Target, Trophy, GraduationCap, Puzzle, Download, ArrowUp, Timer
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
@@ -2101,6 +2101,26 @@ function LessonViewer({
   const chapters = lesson.chapters || [];
   const totalChapters = chapters.length;
 
+  // Reading progress state
+  const [readingProgress, setReadingProgress] = useState(0);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const isLastChapter = currentChapter >= totalChapters - 1;
+
+  // Estimated reading time (based on word count of current chapter)
+  const estimatedReadingTime = useMemo(() => {
+    const chapter = chapters[currentChapter];
+    if (!chapter) return 0;
+    let wordCount = 0;
+    for (const block of chapter.blocks || []) {
+      if (block.type === 'content') {
+        const body = block.body || {};
+        const text = typeof body === 'string' ? body : (body[lang] || body.en || '');
+        wordCount += text.split(/\s+/).length;
+      }
+    }
+    return Math.max(1, Math.ceil(wordCount / 200)); // 200 words per minute
+  }, [chapters, currentChapter, lang]);
+
   // Sync with initialChapter prop (for single-lesson courses navigating via sidebar)
   useEffect(() => {
     if (initialChapter !== undefined && initialChapter !== currentChapter) {
@@ -2125,12 +2145,43 @@ function LessonViewer({
     }
   }, [lesson.id]);
 
+  // Reading progress tracking + scroll-to-top visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+      setReadingProgress(progress);
+      setShowScrollTop(scrollTop > 400);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Keyboard shortcuts for navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in an input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.key === 'ArrowRight' && !isLastChapter) {
+        setSlideDirection('right');
+        setCurrentChapter(p => p + 1);
+      } else if (e.key === 'ArrowLeft' && currentChapter > 0) {
+        setSlideDirection('left');
+        setCurrentChapter(p => p - 1);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentChapter, isLastChapter]);
+
   // When chapter changes from internal navigation (Next button, etc.) - only scroll
   useEffect(() => {
     if (isSyncingFromParent.current) {
       isSyncingFromParent.current = false;
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    setReadingProgress(0);
   }, [currentChapter, totalChapters]);
 
   // Only persist progress when validatedChapter advances (quiz passed or exercises completed)
@@ -2140,7 +2191,6 @@ function LessonViewer({
     }
   }, [validatedChapter, totalChapters]);
 
-  const isLastChapter = currentChapter >= totalChapters - 1;
   const chapter = chapters[currentChapter];
 
   if (!chapter && !showQuiz) {
@@ -2197,7 +2247,7 @@ function LessonViewer({
         }
         if (!text.trim()) return null;
         return (
-          <div key={blockIdx} className="py-2">
+          <div key={blockIdx} className="py-1">
             <PageContent content={text} lang={lang} />
           </div>
         );
@@ -2489,6 +2539,18 @@ function LessonViewer({
 
   return (
     <div className="mt-2">
+      {/* Reading progress bar */}
+      <div className="reading-progress-bar" style={{ width: `${readingProgress}%` }} />
+
+      {/* Scroll to top button */}
+      <button
+        className={`scroll-to-top ${showScrollTop ? 'visible' : ''}`}
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label="Scroll to top"
+      >
+        <ArrowUp className="w-4 h-4 text-foreground" />
+      </button>
+
       {!showQuiz ? (
         <>
           <AnimatePresence mode="wait" custom={slideDirection}>
@@ -2551,6 +2613,12 @@ function LessonViewer({
                       · {chapter.duration}
                     </span>
                   )}
+                  {estimatedReadingTime > 0 && (
+                    <span className="reading-time-badge">
+                      <Timer className="w-3 h-3" />
+                      {estimatedReadingTime} min {t({ en: 'read', fr: 'de lecture' })}
+                    </span>
+                  )}
                 </div>
                 {/* Screen title - large serif */}
                 <h2 className="text-2xl md:text-[28px] font-semibold text-foreground leading-tight" style={{ fontFamily: 'Lora, Georgia, serif' }}>
@@ -2576,7 +2644,7 @@ function LessonViewer({
 
           {/* Render all blocks in the current chapter */}
           {chapter && (
-            <div className="space-y-6">
+            <div className="space-y-8">
               {chapter.blocks.map((block: any, idx: number) => renderBlock(block, idx))}
             </div>
           )}
@@ -2617,17 +2685,20 @@ function LessonViewer({
                 />
               </div>
             </div>
-            {/* Navigation buttons */}
+            {/* Navigation buttons with keyboard hints */}
             <div className="flex items-center justify-between">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => { setSlideDirection('left'); setCurrentChapter((p) => p - 1); setShowTranscript(false); setShowChapterQuiz(false); }}
-              disabled={currentChapter === 0}
-              className="gap-1.5 text-muted-foreground hover:text-foreground"
-            >
-              ← {t({ en: "Previous", fr: "Précédent" })}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => { setSlideDirection('left'); setCurrentChapter((p) => p - 1); setShowTranscript(false); setShowChapterQuiz(false); }}
+                disabled={currentChapter === 0}
+                className="gap-1.5 text-muted-foreground hover:text-foreground"
+              >
+                ← {t({ en: "Previous", fr: "Précédent" })}
+              </Button>
+              <span className="kbd-hint hidden md:inline-flex">←</span>
+            </div>
 
             {(() => {
               if (isLastChapter && isReviewMode) {
@@ -2662,37 +2733,37 @@ function LessonViewer({
               const needsQuiz = isTeachingChapter && !isReviewMode && !chapterQuizPassed.has(currentChapter);
 
               return (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  disabled={isGatedByExercises}
-                  onClick={() => {
-                    if (needsQuiz) {
-                      setShowChapterQuiz(true);
-                    } else {
-                      // For non-quiz chapters (structural, exercise-completed, etc.), validate progress
-                      if (isQuizOrCheckpointChapter && allExercisesCompleted) {
-                        // Exercises completed = chapter validated
-                        setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
-                      } else if (isStructuralChapter || (!isTeachingChapter && !isQuizOrCheckpointChapter)) {
-                        // Structural chapters auto-validate (they have no quiz)
-                        setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
+                <div className="flex items-center gap-2">
+                  <span className="kbd-hint hidden md:inline-flex">→</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={isGatedByExercises}
+                    onClick={() => {
+                      if (needsQuiz) {
+                        setShowChapterQuiz(true);
+                      } else {
+                        if (isQuizOrCheckpointChapter && allExercisesCompleted) {
+                          setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
+                        } else if (isStructuralChapter || (!isTeachingChapter && !isQuizOrCheckpointChapter)) {
+                          setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
+                        }
+                        setSlideDirection('right');
+                        setCurrentChapter((p) => p + 1);
+                        setShowTranscript(false);
+                        setShowChapterQuiz(false);
                       }
-                      setSlideDirection('right');
-                      setCurrentChapter((p) => p + 1);
-                      setShowTranscript(false);
-                      setShowChapterQuiz(false);
-                    }
-                  }}
-                  className={`gap-1 font-medium ${isGatedByExercises ? 'text-muted-foreground cursor-not-allowed' : 'text-[#c75b3a] hover:text-[#a84a2e]'}`}
-                  title={isGatedByExercises ? (lang === 'fr' ? 'Répondez correctement à toutes les questions pour continuer' : 'Answer all questions correctly to continue') : undefined}
-                >
-                  {isGatedByExercises ? (
-                    <>{t({ en: "Complete all exercises", fr: "Complétez les exercices" })}</>
-                  ) : (
-                    <>{t({ en: "Next", fr: "Suivant" })} →</>
-                  )}
-                </Button>
+                    }}
+                    className={`gap-1 font-medium ${isGatedByExercises ? 'text-muted-foreground cursor-not-allowed' : 'text-[#c75b3a] hover:text-[#a84a2e]'}`}
+                    title={isGatedByExercises ? (lang === 'fr' ? 'Répondez correctement à toutes les questions pour continuer' : 'Answer all questions correctly to continue') : undefined}
+                  >
+                    {isGatedByExercises ? (
+                      <>{t({ en: "Complete all exercises", fr: "Complétez les exercices" })}</>
+                    ) : (
+                      <>{t({ en: "Next", fr: "Suivant" })} →</>
+                    )}
+                  </Button>
+                </div>
               );
             })()}
             </div>
