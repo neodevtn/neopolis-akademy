@@ -360,9 +360,61 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     for (let k = t.startIdx; k < t.endIdx; k++) mdTableLineSet.add(k);
   });
 
+  // Pre-pass: detect TOC blocks (sequence of short topic lines near the start of content)
+  const tocBlocks: { startIdx: number; endIdx: number; items: string[] }[] = [];
+  const tocLineSet = new Set<number>();
+  // Look for TOC pattern: after first non-empty line (title), find 3+ consecutive short topic lines
+  let firstNonEmptyIdx = lines.findIndex(l => l.trim() !== '');
+  if (firstNonEmptyIdx >= 0) {
+    // Find next non-empty line after the first one (skip empty lines)
+    let searchStart = firstNonEmptyIdx + 1;
+    while (searchStart < lines.length && lines[searchStart].trim() === '') searchStart++;
+    if (searchStart < lines.length) {
+      const tocItems: string[] = [];
+      let tocEnd = searchStart;
+      while (tocEnd < lines.length) {
+        const t = lines[tocEnd].trim();
+        if (t === '') { tocEnd++; continue; }
+        if (t.length <= 40 && t.split(/\s+/).length <= 5 && /^[A-Z]/.test(t) && !/[.,:;!?)]$/.test(t) && !t.includes(':')) {
+          tocItems.push(t);
+          tocEnd++;
+        } else {
+          break;
+        }
+      }
+      if (tocItems.length >= 3) {
+        tocBlocks.push({ startIdx: searchStart, endIdx: tocEnd, items: tocItems });
+        for (let k = searchStart; k < tocEnd; k++) tocLineSet.add(k);
+      }
+    }
+  }
+
   // Heuristic helpers
   const isShortLine = (line: string) => line.trim().length > 0 && line.trim().length <= 60;
   const isMetaLine = (line: string) => /^(Estimated time|Instructions|Duration|Time|Note|Tip|Warning|Important|Example|Exercise|Step \d):/i.test(line.trim());
+
+  // Detect sub-section headings with pattern "Title: description" (e.g. "Tokens: the unit of input, output, and cost")
+  const isSubSectionTitle = (line: string, idx: number) => {
+    const trimmed = line.trim();
+    // Must have a colon, be under 80 chars, not be a meta line
+    if (!trimmed.includes(':') || trimmed.length > 80 || trimmed.length < 10) return false;
+    if (isMetaLine(line)) return false;
+    // Pattern: "Word(s): rest of title" where the part before colon is 1-4 words
+    const colonIdx = trimmed.indexOf(':');
+    const beforeColon = trimmed.slice(0, colonIdx).trim();
+    const afterColon = trimmed.slice(colonIdx + 1).trim();
+    if (beforeColon.split(/\s+/).length > 5) return false;
+    if (afterColon.length < 5) return false;
+    // Must start with a capital letter
+    if (!/^[A-Z]/.test(beforeColon)) return false;
+    // Must be preceded by an empty line (or be near the start)
+    if (idx > 0 && lines[idx - 1].trim() !== '') return false;
+    // Must be followed by an empty line then a paragraph
+    if (idx < lines.length - 1 && lines[idx + 1].trim() !== '') return false;
+    return true;
+  };
+
+  // Detect TOC block: sequence of short lines (1-3 words each) at the beginning of content
   
   // Technical terms - render as bold inline text (not badges)
   const techTerms = new Set(['Code Execution', 'Memory', 'Skills', 'Knowledge Base', 'Standing Instructions',
@@ -393,11 +445,19 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     // Check against known section heading keywords
     if (knownSectionHeadings.has(trimmed.toLowerCase())) return true;
     
-    // Must not contain colons (those are meta lines or descriptions)
+    // Must not contain colons (those are handled by isSubSectionTitle)
     if (trimmed.includes(':')) return false;
-    // Short line that doesn't end with punctuation and is followed by empty line or longer text
-    if (!/[.,:;!?)]$/.test(trimmed) && trimmed.length <= 45) {
-      if (!nextLine || nextLine.trim() === "" || nextLine.trim().length > trimmed.length) {
+    
+    // Question-style headings (e.g. "Why do we need AI Fluency?")
+    if (/^[A-Z][^.]*\?$/.test(trimmed) && trimmed.length <= 55) {
+      if (!nextLine || nextLine.trim() === '' || nextLine.trim().length > trimmed.length) {
+        return true;
+      }
+    }
+    
+    // Short line that doesn't end with period/comma (allow ? and !)
+    if (!/[.,;)]$/.test(trimmed) && trimmed.length <= 50) {
+      if (!nextLine || nextLine.trim() === '' || nextLine.trim().length > trimmed.length) {
         return true;
       }
     }
@@ -466,6 +526,23 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
       continue;
     }
     if (cardLineSet.has(i)) continue;
+
+    // Check if this line starts a TOC block
+    const tocBlock = tocBlocks.find(tb => tb.startIdx === i);
+    if (tocBlock) {
+      elements.push(
+        <div key={`toc-${i}`} className="mb-6 mt-2 flex flex-wrap gap-2">
+          {tocBlock.items.map((item, idx) => (
+            <span key={idx} className="inline-flex items-center px-3 py-1.5 rounded-full text-[13px] font-medium bg-[#f0ede8] dark:bg-slate-800 text-foreground/70 border border-[#e8e5e0] dark:border-slate-700">
+              {item}
+            </span>
+          ))}
+        </div>
+      );
+      i = tocBlock.endIdx - 1;
+      continue;
+    }
+    if (tocLineSet.has(i)) continue;
 
     // Check if this line starts a callout box
     const calloutBox = calloutBoxes.find(cb => cb.startIdx === i);
@@ -669,6 +746,17 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
       );
     } else if (line.trim() === "") {
       elements.push(<div key={i} className="h-2" />);
+    } else if (isSubSectionTitle(line, i)) {
+      // Sub-section title with pattern "Title: description"
+      const colonIdx = line.trim().indexOf(':');
+      const titlePart = line.trim().slice(0, colonIdx).trim();
+      const descPart = line.trim().slice(colonIdx + 1).trim();
+      elements.push(
+        <h3 key={i} className="text-[17px] font-bold mt-8 mb-2 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+          <span>{titlePart}</span>
+          <span className="text-foreground/60 font-normal">: {descPart}</span>
+        </h3>
+      );
     } else if (isMetaLine(line)) {
       // Metadata line (e.g. "Estimated time: 10 minutes", "Instructions:")
       const [label, ...rest] = line.split(":");
@@ -697,8 +785,10 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
         );
       }
     } else if (isFirstTextLine) {
-      // First text line - check if it's actually an implicit list item before treating as paragraph
+      // First text line - TOC is now handled by pre-pass
       isFirstTextLine = false;
+      
+      // Check if it's an implicit list item
       if (isImplicitListItem(line, lines.slice(Math.max(0, i - 8), i), lines.slice(i + 1, i + 6))) {
         elements.push(
           <li key={i} className="text-[14.5px] ml-6 mb-2 leading-relaxed list-disc text-foreground/80">

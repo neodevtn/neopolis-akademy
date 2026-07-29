@@ -775,3 +775,10 @@
 - [x] Supprimer les blocs content doublons qui précèdent un bucket_sort (artefact scraping - détection runtime)
 - [x] Scanner tous les cours pour détecter les types de blocs non rendus (transcript et comparison déjà gérés)
 - [x] Vérifier que MatchingExercise (bucket_sort) fonctionne correctement avec les données JSON
+
+## Amélioration rendu sous-titres et mise en page (2026-07-29)
+- [x] Détecter les sous-titres (lignes courtes isolées avant paragraphes) et les rendre en h3/h4
+- [x] Détecter les patterns "Titre: sous-titre" et les rendre avec style distinct
+- [x] Améliorer l'espacement et la hiérarchie visuelle globale du contenu
+- [x] Détecter les blocs TOC (séquence de mots courts) et les rendre en pills
+- [x] Améliorer isSectionHeading pour attraper les headings avec ? et !
