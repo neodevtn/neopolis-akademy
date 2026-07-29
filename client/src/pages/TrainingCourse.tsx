@@ -12,6 +12,7 @@ import {
   Dumbbell, FileText, ChevronDown, Brain, Target, Trophy, GraduationCap, Puzzle, Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { ExerciseRenderer } from "@/components/ExerciseRenderer";
 import { FlipCardsGrid } from "@/components/FlipCard";
@@ -467,6 +468,191 @@ function InlineTabsRenderer({ block }: { block: InlineTabBlock }) {
   );
 }
 
+// Detect numbered list blocks: "1. text\n\n2. text\n\n3. text" pattern
+interface NumberedListBlock {
+  startIdx: number;
+  endIdx: number;
+  introLine: number | null; // line index of the intro sentence (e.g. "À l'issue de ce module, vous serez capable de :")
+  items: { num: number; text: string }[];
+}
+
+function detectNumberedLists(lines: string[]): NumberedListBlock[] {
+  const results: NumberedListBlock[] = [];
+  const visited = new Set<number>();
+
+  for (let i = 0; i < lines.length; i++) {
+    if (visited.has(i)) continue;
+    const match = lines[i].trim().match(/^(\d+)[\.)]\.?\s+(.+)/);
+    if (!match || parseInt(match[1]) !== 1) continue;
+
+    // Found a "1. ..." line - collect consecutive numbered items
+    const items: { num: number; text: string }[] = [];
+    let expectedNum = 1;
+    let j = i;
+    let endIdx = i;
+
+    while (j < lines.length) {
+      const trimmed = lines[j].trim();
+      const numMatch = trimmed.match(/^(\d+)[\.)]\.?\s+(.+)/);
+      if (numMatch && parseInt(numMatch[1]) === expectedNum) {
+        // Collect multi-line item (continuation lines until next numbered item or empty+numbered)
+        let itemText = numMatch[2];
+        let k = j + 1;
+        // Check for continuation lines (non-empty, non-numbered)
+        while (k < lines.length && lines[k].trim() !== '' && !lines[k].trim().match(/^\d+[\.)]\.?\s/)) {
+          itemText += ' ' + lines[k].trim();
+          k++;
+        }
+        items.push({ num: expectedNum, text: itemText });
+        expectedNum++;
+        endIdx = k;
+        // Skip empty lines between items
+        while (k < lines.length && lines[k].trim() === '') k++;
+        j = k;
+      } else {
+        break;
+      }
+    }
+
+    if (items.length >= 3) {
+      // Check if there's an intro line before (ending with ":")
+      let introLine: number | null = null;
+      let searchBack = i - 1;
+      while (searchBack >= 0 && lines[searchBack].trim() === '') searchBack--;
+      if (searchBack >= 0 && lines[searchBack].trim().endsWith(':')) {
+        introLine = searchBack;
+      }
+
+      const startIdx = introLine !== null ? introLine : i;
+      results.push({ startIdx, endIdx, introLine, items });
+      for (let k = startIdx; k < endIdx; k++) visited.add(k);
+    }
+  }
+  return results;
+}
+
+// Detect long content sections suitable for accordion (sections with headings followed by paragraphs)
+interface AccordionSection {
+  title: string;
+  contentLines: string[];
+}
+interface AccordionBlock {
+  startIdx: number;
+  endIdx: number;
+  sections: AccordionSection[];
+}
+
+function detectAccordionBlocks(lines: string[], excludedLines: Set<number>): AccordionBlock[] {
+  const results: AccordionBlock[] = [];
+  
+  // Find sequences of 4+ short heading lines each followed by paragraph content
+  // Pattern: short title line (< 60 chars, no period, starts with capital) followed by 2+ content lines
+  const sections: { titleIdx: number; title: string; contentStart: number; contentEnd: number }[] = [];
+  
+  for (let i = 0; i < lines.length; i++) {
+    if (excludedLines.has(i)) continue;
+    const trimmed = lines[i].trim();
+    if (!trimmed) continue;
+    
+    // Check if this is a section heading
+    if (
+      trimmed.length > 3 &&
+      trimmed.length < 70 &&
+      /^[A-ZÀ-Ÿ]/.test(trimmed) &&
+      !/[.;,)]$/.test(trimmed) &&
+      !trimmed.startsWith('-') &&
+      !trimmed.startsWith('•') &&
+      !trimmed.match(/^\d+[\.)]\.?\s/) &&
+      trimmed.split(/\s+/).length <= 12
+    ) {
+      // Check that previous line is empty (or start of content)
+      if (i > 0 && lines[i - 1].trim() !== '' && !excludedLines.has(i - 1)) continue;
+      
+      // Collect content lines after this heading
+      let contentStart = i + 1;
+      // Skip empty line after heading
+      while (contentStart < lines.length && lines[contentStart].trim() === '') contentStart++;
+      
+      let contentEnd = contentStart;
+      let contentLineCount = 0;
+      while (contentEnd < lines.length) {
+        if (excludedLines.has(contentEnd)) break;
+        const cl = lines[contentEnd].trim();
+        if (cl === '') {
+          // Check if next non-empty line is a new section heading
+          let peek = contentEnd + 1;
+          while (peek < lines.length && lines[peek].trim() === '') peek++;
+          if (peek < lines.length) {
+            const peekTrimmed = lines[peek].trim();
+            if (
+              peekTrimmed.length > 3 &&
+              peekTrimmed.length < 70 &&
+              /^[A-ZÀ-Ÿ]/.test(peekTrimmed) &&
+              !/[.;,)]$/.test(peekTrimmed) &&
+              !peekTrimmed.startsWith('-') &&
+              !peekTrimmed.startsWith('•') &&
+              !peekTrimmed.match(/^\d+[\.)]\.?\s/) &&
+              peekTrimmed.split(/\s+/).length <= 12
+            ) {
+              break; // Next section heading found
+            }
+          } else {
+            break; // End of content
+          }
+          contentEnd++;
+        } else {
+          contentLineCount++;
+          contentEnd++;
+        }
+      }
+      
+      if (contentLineCount >= 2) {
+        sections.push({ titleIdx: i, title: trimmed, contentStart, contentEnd });
+      }
+    }
+  }
+  
+  // Group consecutive sections into accordion blocks (need 4+ sections)
+  if (sections.length >= 4) {
+    let blockStart = 0;
+    while (blockStart < sections.length) {
+      // Find a run of consecutive sections (each section starts right after the previous ends)
+      let blockEnd = blockStart + 1;
+      while (blockEnd < sections.length) {
+        const prevSection = sections[blockEnd - 1];
+        const currSection = sections[blockEnd];
+        // Check if current section title is within a few lines of previous section's content end
+        const gap = currSection.titleIdx - prevSection.contentEnd;
+        if (gap <= 3) {
+          blockEnd++;
+        } else {
+          break;
+        }
+      }
+      
+      const runLength = blockEnd - blockStart;
+      if (runLength >= 4) {
+        const accordionSections: AccordionSection[] = [];
+        for (let s = blockStart; s < blockEnd; s++) {
+          const sec = sections[s];
+          accordionSections.push({
+            title: sec.title,
+            contentLines: lines.slice(sec.contentStart, sec.contentEnd).filter(l => l.trim() !== '')
+          });
+        }
+        results.push({
+          startIdx: sections[blockStart].titleIdx,
+          endIdx: sections[blockEnd - 1].contentEnd,
+          sections: accordionSections
+        });
+      }
+      blockStart = blockEnd;
+    }
+  }
+  
+  return results;
+}
+
 // Detect "Step N: description" or "STEP N: description" patterns
 function detectStepItems(lines: string[], startIdx: number): { items: { num: number; text: string }[]; endIdx: number } | null {
   const items: { items: { num: number; text: string }[]; endIdx: number } = { items: [], endIdx: startIdx };
@@ -671,6 +857,26 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     for (let k = sb.startIdx; k < sb.endIdx; k++) styledInfoLineSet.add(k);
   });
 
+  // Detect numbered list blocks ("1. text\n\n2. text\n\n3. text")
+  const numberedListBlocks = detectNumberedLists(lines);
+  const numberedListLineSet = new Set<number>();
+  numberedListBlocks.forEach(nl => {
+    for (let k = nl.startIdx; k < nl.endIdx; k++) numberedListLineSet.add(k);
+  });
+
+  // Build combined exclusion set for accordion detection (don't detect inside other structures)
+  const allExcluded = new Set<number>();
+  [cardLineSet, calloutLineSet, concatTableLineSet, mdTableLineSet,
+   tocLineSet, inlineTabLineSet, styledInfoLineSet, numberedListLineSet
+  ].forEach(s => s.forEach(v => allExcluded.add(v)));
+
+  // Detect accordion blocks (4+ consecutive titled sections)
+  const accordionBlocks = detectAccordionBlocks(lines, allExcluded);
+  const accordionLineSet = new Set<number>();
+  accordionBlocks.forEach(ab => {
+    for (let k = ab.startIdx; k < ab.endIdx; k++) accordionLineSet.add(k);
+  });
+
   // Heuristic helpers
   const isShortLine = (line: string) => line.trim().length > 0 && line.trim().length <= 60;
   const isMetaLine = (line: string) => /^(Estimated time|Instructions|Duration|Time|Note|Tip|Warning|Important|Example|Exercise|Step \d):/i.test(line.trim());
@@ -826,6 +1032,65 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
       continue;
     }
     if (styledInfoLineSet.has(i)) continue;
+
+    // Check if this line starts a numbered list block
+    const numberedList = numberedListBlocks.find(nl => nl.startIdx === i);
+    if (numberedList) {
+      elements.push(
+        <div key={`numlist-${i}`} className="my-6">
+          {numberedList.introLine !== null && (
+            <p className="text-[14.5px] leading-[1.75] mb-4 text-foreground/80 font-medium">
+              {renderInlineFormatting(lines[numberedList.introLine].trim())}
+            </p>
+          )}
+          <div className="space-y-3 pl-1">
+            {numberedList.items.map((item, idx) => (
+              <div key={idx} className="flex items-start gap-4 group">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-[#c75b3a] to-[#a84832] flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                  {item.num}
+                </div>
+                <p className="text-[14.5px] leading-[1.75] text-foreground/80 pt-1 flex-1">
+                  {renderInlineFormatting(item.text)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+      i = numberedList.endIdx - 1;
+      continue;
+    }
+    if (numberedListLineSet.has(i)) continue;
+
+    // Check if this line starts an accordion block
+    const accordionBlock = accordionBlocks.find(ab => ab.startIdx === i);
+    if (accordionBlock) {
+      elements.push(
+        <div key={`accordion-${i}`} className="my-6 rounded-xl border border-[#e8e5e0] dark:border-slate-700 overflow-hidden">
+          <Accordion type="multiple" defaultValue={[accordionBlock.sections[0]?.title || '']}>
+            {accordionBlock.sections.map((section, idx) => (
+              <AccordionItem key={idx} value={section.title} className="border-b border-[#e8e5e0] dark:border-slate-700 last:border-b-0">
+                <AccordionTrigger className="px-5 py-4 text-[15px] font-semibold text-foreground hover:no-underline hover:bg-[#faf9f7] dark:hover:bg-slate-800/40">
+                  {section.title}
+                </AccordionTrigger>
+                <AccordionContent className="px-5 pb-4">
+                  <div className="space-y-2">
+                    {section.contentLines.map((cl, ci) => (
+                      <p key={ci} className="text-[14px] leading-[1.75] text-foreground/75">
+                        {renderInlineFormatting(cl)}
+                      </p>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      );
+      i = accordionBlock.endIdx - 1;
+      continue;
+    }
+    if (accordionLineSet.has(i)) continue;
 
     // Check if this line starts a TOC block
     const tocBlock = tocBlocks.find(tb => tb.startIdx === i);

@@ -802,3 +802,9 @@
 ## Fix rendu des tabs et blocs dans les leçons (2026-07-29)
 - [x] Corriger la détection des tabs (affichés comme liste à puces au lieu de tabs interactifs)
 - [x] Corriger le rendu des blocs de contenu (texte brut au lieu de cartes stylisées)
+
+## Détection patterns structurés : listes numérotées + accordéons (2026-07-29)
+- [x] Analyser les données de cours pour identifier les patterns de listes numérotées et sections longues
+- [x] Implémenter détecteur de listes numérotées interactives (stepper/timeline)
+- [x] Implémenter détecteur d'accordéons pour sections longues (collapsible)
+- [x] Vérifier le rendu visuel et les interactions
