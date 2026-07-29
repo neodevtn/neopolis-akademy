@@ -16,6 +16,7 @@ import {
   Sun,
   ArrowLeft,
   PlayCircle,
+  LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
@@ -66,7 +67,7 @@ const levelConfig = {
 export default function TrainingDashboard() {
   const { lang, toggleLang, t } = useLanguage();
   const { getCertProgress, getLastVisitedCourse } = useTrainingProgress();
-  const { isAuthenticated, loading: authLoading, user } = useAuth();
+  const { isAuthenticated, loading: authLoading, user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
   const certCompletionData = useMemo(() => {
@@ -187,6 +188,16 @@ export default function TrainingDashboard() {
             <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
               {t({ en: "Back to site", fr: "Retour au site" })}
             </Link>
+            {isAuthenticated && (
+              <button
+                onClick={() => logout()}
+                className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full transition-all hover:bg-red-50 dark:hover:bg-red-950/30 text-red-600 dark:text-red-400 hover:text-red-700 border border-red-200 dark:border-red-800 hover:border-red-300"
+                title="Déconnexion"
+              >
+                <LogOut size={13} />
+                <span className="hidden md:inline">Déconnexion</span>
+              </button>
+            )}
           </div>
         </div>
       </header>

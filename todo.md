@@ -794,3 +794,7 @@
 - [x] Ajouter coche verte dans la sidebar pour les chapitres validés (progression par chapitre)
 - [x] Créer widget "Reprendre la lecture" sur la page d'accueil (retour au dernier exercice/quiz consulté)
 - [x] Ajouter animations slide-in horizontal entre les écrans de cours
+
+## Bouton déconnexion + Fix 404 images (2026-07-29)
+- [x] Ajouter un bouton de déconnexion visible dans la navigation
+- [x] Corriger les 404 sur les images /manus-storage/ (proxy sert maintenant les fichiers directement au lieu de 307 redirect)

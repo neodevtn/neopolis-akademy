@@ -75,7 +75,7 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
     "Content-Security-Policy",
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // needed for Vite HMR in dev + Chart.js
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://manus-analytics.com", // needed for Vite HMR in dev + Chart.js + analytics
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: https: blob:",

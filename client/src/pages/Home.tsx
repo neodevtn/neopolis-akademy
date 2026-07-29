@@ -21,6 +21,7 @@ import {
   Menu,
   X,
   PlayCircle,
+  LogOut,
 } from "lucide-react";
 import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -125,6 +126,24 @@ function AnimatedSection({ children, className, style, id }: { children: React.R
     >
       {children}
     </motion.section>
+  );
+}
+
+/* ─── Logout Button ─── */
+function LogoutButton() {
+  const { isAuthenticated, logout, user } = useAuth();
+
+  if (!isAuthenticated) return null;
+
+  return (
+    <button
+      onClick={() => logout()}
+      className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full transition-all hover:bg-red-50 text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300"
+      title={`Déconnexion (${user?.name || ''})`}
+    >
+      <LogOut size={13} />
+      <span className="hidden md:inline">Déconnexion</span>
+    </button>
   );
 }
 
@@ -248,6 +267,7 @@ export default function Home() {
             <a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="text-xs font-semibold px-3 py-1.5 ml-1 rounded-full transition-colors" style={{ color: "var(--wise-positive-deep)", border: "1px solid var(--wise-positive-deep)" }}>À propos</a>
           </div>
           <div className="flex items-center gap-2 ml-auto md:ml-2">
+            <LogoutButton />
             <Link href="/apply">
               <button className="wise-btn-primary flex items-center gap-1.5 text-xs md:text-sm px-3 md:px-5 py-2 md:py-2.5">
                 Postuler <ChevronRight size={14} />

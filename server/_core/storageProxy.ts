@@ -53,8 +53,20 @@ export function registerStorageProxy(app: Express) {
         return;
       }
 
-      res.set("Cache-Control", "no-store");
-      res.redirect(307, url);
+      // Pipe the file directly to avoid 307 redirect issues in browsers
+      const fileResp = await fetch(url);
+      if (!fileResp.ok) {
+        res.status(502).send("Storage file fetch error");
+        return;
+      }
+      const contentType = fileResp.headers.get("content-type");
+      if (contentType) res.set("Content-Type", contentType);
+      const contentLength = fileResp.headers.get("content-length");
+      if (contentLength) res.set("Content-Length", contentLength);
+      res.set("Cache-Control", "public, max-age=86400, immutable");
+      res.set("Access-Control-Allow-Origin", "*");
+      const arrayBuf = await fileResp.arrayBuffer();
+      res.send(Buffer.from(arrayBuf));
     } catch (err) {
       console.error("[StorageProxy] failed:", err);
       res.status(502).send("Storage proxy error");

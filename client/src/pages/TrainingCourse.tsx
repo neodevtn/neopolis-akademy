@@ -8,7 +8,7 @@ import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
-  BookOpen, Lock, LogIn, ArrowRight, Moon, Sun, Menu, X, Clock, Check, Filter, Video, Eye,
+  BookOpen, Lock, LogIn, LogOut, ArrowRight, Moon, Sun, Menu, X, Clock, Check, Filter, Video, Eye,
   Dumbbell, FileText, ChevronDown, Brain, Target, Trophy, GraduationCap, Puzzle, Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -2521,7 +2521,7 @@ function LessonSidebar({
 export default function TrainingCourse() {
   const { certId, courseId } = useParams<{ certId: string; courseId: string }>();
   const { lang, toggleLang, t } = useLanguage();
-  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { isAuthenticated, loading: authLoading, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { isLessonComplete, markLessonComplete, getNextUnlockedLesson, isCourseComplete, getChapterProgress: getPersistedChapterProgress, saveChapterProgress: persistChapterProgress } = useTrainingProgress();
   const [expandedVideos, setExpandedVideos] = useState<Set<string>>(new Set());
@@ -2788,6 +2788,14 @@ export default function TrainingCourse() {
             >
               <span>{lang === "en" ? "🇬🇧" : "🇫🇷"}</span>
               {lang === "en" ? "EN" : "FR"}
+            </button>
+            <button
+              onClick={() => logout()}
+              className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full transition-all hover:bg-red-50 dark:hover:bg-red-950/30 text-red-600 dark:text-red-400 hover:text-red-700 border border-red-200 dark:border-red-800 hover:border-red-300"
+              title="Déconnexion"
+            >
+              <LogOut size={13} />
+              <span className="hidden md:inline">Déconnexion</span>
             </button>
           </div>
         </div>
