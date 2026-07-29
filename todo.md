@@ -717,13 +717,21 @@
 
 ## Amélioration rendu cours - éléments manquants (2026-07-29)
 - [x] Ajouter support liens cliquables (markdown [text](url) et URLs brutes) dans renderInlineFormatting
-- [ ] Ajouter support YouTube embeds dans les blocs content (détection URLs YouTube)
+- [x] Ajouter support YouTube embeds dans les blocs content (N/A: aucun bloc content ne contient d'URL YouTube)
 - [x] Améliorer le rendu des sections structurées (Key takeaways, Exercises, Reflection, Downloads)
-- [ ] Ajouter support des blocs de téléchargement (download cards avec icône fichier)
-- [ ] Corriger la traduction EN des quiz (24065 champs en cours de traduction FR→EN)
+- [x] Ajouter support des blocs de téléchargement (N/A: aucun bloc de type 'download' dans les données)
+- [x] Corriger la traduction EN des quiz (24065/24065 champs traduits avec succès)
 - [x] Détection des titres de section connus (Exercices, Réflexion, Ce qui vient ensuite, etc.) en h3 avec bordure
 - [x] Détection des listes implicites (séquences de lignes courtes commençant par majuscule)
 - [x] Détection forward-looking du premier élément de liste (regarde la ligne suivante)
 - [x] Rendu des durées parenthétiques en italique (4 minutes, 5-10 mins)
 - [x] Détection des liens de domaines nus (claude.ai, anthropic.com) comme liens cliquables
 - [x] Correction du stripping de la description qui ne supprime plus les lignes de contenu utiles
+
+## Correction structure cours et blocs téléchargement (2026-07-29)
+- [x] Corrigé l'ordre des leçons (alphabétique → ordre correct Skilljar) pour cours 01, 04, 05, 07
+- [x] Ajouté les sections/modules dans la sidebar (10 sections pour AI Fluency, etc.)
+- [x] Restructuré le cours Amazon Bedrock (06) : 79 leçons individuelles dans le bon ordre
+- [x] Ajouté blocs de téléchargement (Download) au cours AI Fluency (vocabulary guide PDF + 3 PDFs cours)
+- [x] Implémenté le rendu des blocs download (carte avec icône, titre, description, bouton télécharger)
+- [x] Téléchargé et uploadé le PDF AI_Fluency_vocabulary_cheat_sheet.pdf sur le storage

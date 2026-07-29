@@ -9,7 +9,7 @@ import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
   BookOpen, Lock, LogIn, ArrowRight, Moon, Sun, Menu, X, Clock, Check, Filter, Video, Eye,
-  Dumbbell, FileText, ChevronDown, Brain, Target, Trophy, GraduationCap, Puzzle
+  Dumbbell, FileText, ChevronDown, Brain, Target, Trophy, GraduationCap, Puzzle, Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -1535,6 +1535,49 @@ function LessonViewer({
           />
         );
       }
+      case "download": {
+        const dlTitle = block.title ? (typeof block.title === 'object' ? (block.title[lang] || block.title.en || '') : block.title) : '';
+        const dlDesc = block.description ? (typeof block.description === 'object' ? (block.description[lang] || block.description.en || '') : block.description) : '';
+        const dlUrl = block.url || '';
+        const dlFilename = block.filename || 'file';
+        return (
+          <div key={blockIdx} className="my-4">
+            {blockIdx === 0 || (blockIdx > 0 && (() => {
+              // Show "Downloads" header only for the first download block in a sequence
+              const prevBlock = chapter?.blocks?.[blockIdx - 1];
+              return !prevBlock || prevBlock.type !== 'download';
+            })()) ? (
+              <h3 className="text-xl font-bold text-foreground mb-3 flex items-center gap-2">
+                <Download className="w-5 h-5" />
+                {t({ en: "Downloads", fr: "Téléchargements" })}
+              </h3>
+            ) : null}
+            <a
+              href={dlUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              download={dlFilename}
+              className="block rounded-2xl bg-secondary/60 border border-border/50 p-5 hover:bg-secondary/80 transition-colors group"
+            >
+              <div className="flex items-center gap-5">
+                <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <FileText className="w-8 h-8 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-foreground text-base mb-1">{dlTitle}</p>
+                  {dlDesc && <p className="text-sm text-muted-foreground leading-relaxed">{dlDesc}</p>}
+                </div>
+                <div className="shrink-0">
+                  <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary/10 text-primary text-sm font-medium group-hover:bg-primary/20 transition-colors">
+                    <Download className="w-4 h-4" />
+                    {t({ en: "Download", fr: "Télécharger" })}
+                  </span>
+                </div>
+              </div>
+            </a>
+          </div>
+        );
+      }
       default:
         return null;
     }
@@ -1726,6 +1769,7 @@ function LessonSidebarContent({
   onScreenClick,
   activeScreenIndex,
   chaptersData,
+  sections,
 }: {
   lessons: any[];
   lang: string;
@@ -1741,10 +1785,36 @@ function LessonSidebarContent({
   onScreenClick?: (chapterIdx: number, screenIdx: number) => void;
   activeScreenIndex?: number;
   chaptersData?: any[];
+  sections?: any[];
 }) {
   // Calculate overall progress percentage
   const completedCount = lessons.filter((_, idx) => isLessonComplete(courseId, idx)).length;
   const progressPct = lessons.length > 0 ? Math.round((completedCount / lessons.length) * 100) : 0;
+
+  // Build section boundaries: map lesson index -> section title to show BEFORE it
+  const sectionBoundaries: Record<number, string> = {};
+  if (sections && sections.length > 0) {
+    let lessonIdx = 0;
+    for (const section of sections) {
+      const sectionTitle = section.title ? (typeof section.title === 'object' ? resolveI18n(section.title, lang) : section.title) : '';
+      const sectionLessons = section.lessons || [];
+      if (sectionLessons.length > 0) {
+        // Find the index of the first lesson in this section
+        const firstLessonTitle = sectionLessons[0];
+        const foundIdx = lessons.findIndex((l: any) => {
+          const lt = l.title ? (typeof l.title === 'object' ? resolveI18n(l.title, 'en') : l.title) : '';
+          return lt.toLowerCase() === firstLessonTitle.toLowerCase();
+        });
+        if (foundIdx >= 0) {
+          sectionBoundaries[foundIdx] = sectionTitle;
+        }
+      } else {
+        // No lessons array - use sequential assignment
+        sectionBoundaries[lessonIdx] = sectionTitle;
+      }
+      lessonIdx += sectionLessons.length || 0;
+    }
+  }
 
   return (
     <div className="p-3 space-y-1">
@@ -1817,6 +1887,11 @@ function LessonSidebarContent({
 
         return (
           <div key={lesson.id || idx}>
+            {sectionBoundaries[idx] && (
+              <p className="text-xs font-bold uppercase tracking-wider px-3 pt-4 pb-1 text-primary/80 border-t border-border/50 mt-2">
+                {sectionBoundaries[idx]}
+              </p>
+            )}
             <button
               onClick={() => isClickable && onLessonClick(idx)}
               disabled={isLocked}
@@ -1858,6 +1933,8 @@ function LessonSidebarContent({
                     screenTitle = lang === 'fr' ? 'Exercice' : 'Exercise';
                   } else if (block.type === 'tabbed_content') {
                     screenTitle = lang === 'fr' ? 'Contenu' : 'Content';
+                  } else if (block.type === 'download') {
+                    screenTitle = lang === 'fr' ? 'Téléchargement' : 'Download';
                   } else {
                     screenTitle = block.type || (lang === 'fr' ? 'Écran' : 'Screen');
                   }
@@ -1939,6 +2016,7 @@ function LessonSidebar({
   onScreenClick,
   activeScreenIndex,
   chaptersData,
+  sections,
 }: {
   lessons: any[];
   lang: string;
@@ -1956,6 +2034,7 @@ function LessonSidebar({
   onScreenClick?: (chapterIdx: number, screenIdx: number) => void;
   activeScreenIndex?: number;
   chaptersData?: any[];
+  sections?: any[];
 }) {
   const sidebarContent = (
     <LessonSidebarContent
@@ -1973,6 +2052,7 @@ function LessonSidebar({
       onScreenClick={onScreenClick}
       activeScreenIndex={activeScreenIndex}
       chaptersData={chaptersData}
+      sections={sections}
     />
   );
 
@@ -2060,6 +2140,7 @@ export default function TrainingCourse() {
   const [lessonsLoading, setLessonsLoading] = useState(true);
 
   const [courseExercises, setCourseExercises] = useState<any[]>([]);
+  const [courseSections, setCourseSections] = useState<any[]>([]);
 
 
   useEffect(() => {
@@ -2070,12 +2151,14 @@ export default function TrainingCourse() {
       .then((data) => {
         setCourseLessons(data.lessons || []);
         setCourseExercises(data.exercises || []);
+        setCourseSections(data.sections || []);
 
         setLessonsLoading(false);
       })
       .catch(() => {
         setCourseLessons([]);
         setCourseExercises([]);
+        setCourseSections([]);
 
         setLessonsLoading(false);
       });
@@ -2296,6 +2379,7 @@ export default function TrainingCourse() {
             chaptersData={isSingleLessonCourse ? (courseLessons[0]?.chapters || []) : undefined}
             activeScreenIndex={undefined}
             onScreenClick={isSingleLessonCourse ? undefined : undefined}
+            sections={isSingleLessonCourse ? undefined : courseSections}
           />
         )}
 

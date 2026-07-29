@@ -3,6 +3,310 @@
   "sourceCourseTitle": "Introduction to Model Context Protocol",
   "lessons": [
     {
+      "id": "lesson_06",
+      "title": {
+        "en": "Introducing MCP",
+        "fr": "Introduction à MCP"
+      },
+      "chapters": [
+        {
+          "id": "chapter_01",
+          "title": {
+            "en": "Introducing MCP",
+            "fr": "Introduction à MCP"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "MCP = Model Context Protocol, communication layer providing Claude with context and tools without requiring developers to write tedious code.\n\nCore Architecture: MCP client connects to MCP server. MCP server contains tools, resources, and prompts as internal components.\n\nProblem Solved: Traditional approach requires developers to manually author tool schemas and functions for each service integration (like GitHub API tools). This creates maintenance burden for complex services with many features.\n\nMCP Solution: Shifts tool definition and execution from developer's server to dedicated MCP server. MCP server = interface to outside service, wrapping functionality into pre-built tools.\n\nKey Benefits: Eliminates need for developers to write/maintain tool schemas and function implementations. Someone else authors the tools, packages them in MCP server.\n\nCommon Questions:\n- Who authors MCP servers? Anyone, but often service providers create official implementations\n- Difference from direct API calls? Saves developer time by providing pre-built tool schemas/functions instead of manual authoring\n- Relationship to tool use? MCP and tool use are complementary, not identical. MCP focuses on who does the work of creating tools\n\nCore Value: Reduces developer burden by outsourcing tool creation to MCP server implementations rather than requiring custom tool development for each service integration.",
+                "fr": "MCP = Model Context Protocol, couche de communication fournissant à Claude le contexte et les outils sans que les développeurs aient à écrire du code fastidieux.\n\nArchitecture centrale : le client MCP se connecte au serveur MCP. Le serveur MCP contient des outils, des ressources et des prompts en tant que composants internes.\n\nProblème résolu : L'approche traditionnelle exige que les développeurs créent manuellement les schémas d'outils et les fonctions pour chaque intégration de service (comme les outils de l'API GitHub). Cela crée une charge de maintenance pour les services complexes comportant de nombreuses fonctionnalités.\n\nSolution MCP : Déplace la définition et l'exécution des outils du serveur du développeur vers un serveur MCP dédié. Le serveur MCP = interface vers le service externe, encapsulant les fonctionnalités dans des outils préfabriqués.\n\nAvantages clés : Élimine le besoin pour les développeurs d'écrire/maintenir les schémas d'outils et les implémentations de fonctions. Quelqu'un d'autre écrit les outils et les regroupe dans le serveur MCP.\n\nQuestions fréquentes :\n- Qui écrit les serveurs MCP ? N'importe qui, mais souvent les fournisseurs de services créent des implémentations officielles\n- Quelle est la différence avec les appels API directs ? Cela fait gagner du temps aux développeurs en fournissant des schémas d'outils et de fonctions préconstruits au lieu d'une création manuelle\n- Relation avec l'utilisation des outils ? MCP et l'utilisation des outils sont complémentaires, et non identiques. MCP se concentre sur qui fait le travail de création des outils\n\nValeur centrale : Réduit la charge des développeurs en externalisant la création d'outils vers les implémentations du serveur MCP plutôt que d'exiger le développement d'outils personnalisés pour chaque intégration de service."
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        }
+      ],
+      "completionRule": {
+        "requires": [
+          "allChaptersComplete"
+        ]
+      }
+    },
+    {
+      "id": "lesson_09",
+      "title": {
+        "en": "MCP Clients",
+        "fr": "Clients MCP"
+      },
+      "chapters": [
+        {
+          "id": "chapter_01",
+          "title": {
+            "en": "MCP Clients",
+            "fr": "Clients MCP"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "MCP Client = communication interface between your server and MCP server, provides access to server's tools.\n\nTransport agnostic = client/server can communicate via multiple protocols (stdin/stdout, HTTP, WebSockets, etc). Common setup: both on same machine using stdin/stdout.\n\nCommunication = message exchange defined by MCP spec. Key message types:\n- list tools request/result = client asks server for available tools, server responds with tool list\n- call tool request/result = client asks server to run tool with arguments, server returns execution result\n\nTypical flow: User query → Server asks MCP client for tools → MCP client sends list tools request to MCP server → Server gets tool list → Server sends query + tools to Claude → Claude requests tool execution → Server asks MCP client to run tool → MCP client sends call tool request to MCP server → MCP server executes tool (e.g., GitHub API call) → Results flow back through chain → Claude formulates final response → User gets answer.\n\nMCP client acts as intermediary - doesn't execute tools itself, just facilitates communication between your server and MCP server that actually runs the tools.",
+                "fr": "MCP Client = interface de communication entre votre serveur et le serveur MCP, fournit l'accès aux outils du serveur.\n\nTransport agnostique = le client/serveur peut communiquer via plusieurs protocoles (stdin/stdout, HTTP, WebSockets, etc.). Configuration courante : les deux sur la même machine en utilisant stdin/stdout.\n\nCommunication = échange de messages défini par la spécification MCP. Types de messages clés :\n- requête/résultat de la liste des outils = le client demande au serveur les outils disponibles, le serveur répond par la liste des outils\n- requête/résultat d'appel d'outil = le client demande au serveur d'exécuter l'outil avec des arguments, le serveur renvoie le résultat de l'exécution\n\nFlux typique : requête utilisateur → Le serveur demande au client MCP les outils → Le client MCP envoie une requête de liste d'outils au serveur MCP → Le serveur obtient la liste des outils → Le serveur envoie la requête + les outils à Claude → Claude demande l'exécution de l'outil → Le serveur demande au client MCP d'exécuter l'outil → Le client MCP envoie la requête d'appel d'outil au serveur MCP → Le serveur MCP exécute l'outil (par exemple, appel API GitHub) → Le flux des résultats remonte le long de la chaîne → Claude formule la réponse finale → L'utilisateur obtient la réponse.\n\nLe client MCP agit comme intermédiaire - n'exécute pas les outils lui-même, se contente de faciliter la communication entre votre serveur et le serveur MCP qui exécute réellement les outils."
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        }
+      ],
+      "completionRule": {
+        "requires": [
+          "allChaptersComplete"
+        ]
+      }
+    },
+    {
+      "id": "lesson_11",
+      "title": {
+        "en": "Project Setup",
+        "fr": "Mise en place du projet"
+      },
+      "chapters": [
+        {
+          "id": "chapter_01",
+          "title": {
+            "en": "Project Setup",
+            "fr": "Configuration du projet"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "MCP Learning Project = CLI-based chatbot implementing both client and server components for educational purposes.\n\nProject Structure = Custom MCP client connects to custom MCP server, both built in same project.\n\nDocument System = Fake documents stored in memory only, no persistence.\n\nServer Tools = Two tools implemented: read document contents, update document contents.\n\nReal-world Context = Normally projects implement either client OR server, not both. This project does both for learning.\n\nSetup Requirements = Download CLI_project.zip, extract, configure .env with API key, install dependencies.\n\nRunning Project = \"uv run main.py\" (with UV) or \"python main.py\" (without UV).\n\nVerification = Chat prompt appears, responds to basic queries like \"what's one plus one\".",
+                "fr": "Projet d'apprentissage MCP = chatbot basé sur CLI implémentant à la fois les composants client et serveur à des fins pédagogiques.\n\nStructure du projet = Client MCP personnalisé se connecte au serveur MCP personnalisé, les deux développés dans le même projet.\n\nSystème de documents = Documents fictifs stockés uniquement en mémoire, aucune persistance.\n\nOutils du serveur = Deux outils implémentés : lire le contenu des documents, mettre à jour le contenu des documents.\n\nContexte du monde réel = En général, les projets implémentent soit le client, soit le serveur, pas les deux. Ce projet fait les deux pour l'apprentissage.\n\nPré-requis d'installation = Télécharger CLI_project.zip, extraire, configurer .env avec la clé API, installer les dépendances.\n\nExécution du projet = \"uv run main.py\" (avec UV) ou \"python main.py\" (sans UV).\n\nVérification = L'invite de chat apparaît, répond à des questions simples comme « combien font un plus un ? »"
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        }
+      ],
+      "completionRule": {
+        "requires": [
+          "allChaptersComplete"
+        ]
+      }
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "Defining Tools with MCP",
+        "fr": "Définir les outils avec MCP"
+      },
+      "chapters": [
+        {
+          "id": "chapter_01",
+          "title": {
+            "en": "Defining Tools with MCP",
+            "fr": "Définir des outils avec MCP"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "MCP server implementation = Python SDK simplifies tool creation vs manual JSON schemas\n\nTool definition syntax = @mcp.tool decorator + function with typed parameters + Field descriptions\n\nDocument storage = in-memory dictionary with doc_id keys and content values\n\nTool 1 - read_doc_contents = takes doc_id string parameter, returns document content from docs dictionary, raises ValueError if doc not found\n\nTool 2 - edit_document = takes doc_id, old_string, new_string parameters, performs find/replace operation on document content, includes existence validation\n\nMCP Python SDK benefits = auto-generates JSON schemas from decorated functions, single line server creation, eliminates manual schema writing\n\nParameter definition = use Field() with description for tool arguments, import from pydantic\n\nError handling = validate document existence before operations, raise ValueError for missing documents\n\nImplementation pattern = decorator → function definition → parameter typing → validation → core logic",
+                "fr": "Implémentation du serveur MCP = Python SDK simplifie la création d'outils par rapport à des schémas JSON manuels\n\nSyntaxe de définition d'outil = @mcp.tool décorateur + fonction avec paramètres typés + descriptions Field\n\nStockage des documents = dictionnaire en mémoire avec les clés doc_id et les valeurs de contenu\n\nTool 1 - read_doc_contents = prend le paramètre doc_id de type chaîne, renvoie le contenu du document à partir du dictionnaire docs, déclenche ValueError si le document est introuvable\n\nTool 2 - edit_document = prend les paramètres doc_id, old_string, new_string, effectue une opération de recherche/remplacement sur le contenu du document, inclut une validation d'existence\n\nAvantages du MCP Python SDK = génère automatiquement les schémas JSON à partir des fonctions décorées, création de serveur en une seule ligne, élimine l'écriture manuelle de schémas\n\nDéfinition des paramètres = utiliser Field() avec une description pour les arguments de l'outil, importer depuis pydantic\n\nGestion des erreurs = valider l'existence du document avant les opérations, lever ValueError en cas de documents manquants\n\nModèle d'implémentation = décorateur → définition de fonction → typage des paramètres → validation → logique principale"
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_02",
+          "title": {
+            "en": "Exercise: Defining Tools with MCP",
+            "fr": "Exercice : Définir des outils avec MCP"
+          },
+          "type": "exercise",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Integration = once implemented, can run CLI to have Claude use tools (e.g., \"what is contents of report.pdf document\")\nCommon Practice = wrap client session in larger class rather than using directly for better resource management",
+                "fr": "Intégration = une fois implémentée, peut lancer le CLI pour que Claude utilise des outils (par ex., « quel est le contenu du document report.pdf »)\nBonne pratique = envelopper la session client dans une classe plus grande plutôt que de l'utiliser directement pour une meilleure gestion des ressources"
+              }
+            },
+            {
+              "type": "checkpoint",
+              "exerciseId": "ex_claude_certified_architect_foundations__07_004"
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "requiredExercisesPassed"
+            ]
+          }
+        }
+      ],
+      "completionRule": {
+        "requires": [
+          "allChaptersComplete"
+        ]
+      }
+    },
+    {
+      "id": "lesson_17",
+      "title": {
+        "en": "The Server Inspector",
+        "fr": "L'inspecteur du serveur"
+      },
+      "chapters": [
+        {
+          "id": "chapter_01",
+          "title": {
+            "en": "The Server Inspector",
+            "fr": "L'Inspecteur du serveur"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "MCP Inspector = in-browser debugger for testing MCP servers without connecting to actual applications\n\nAccess: Run \\`mcp dev [server_file.py]\\` in terminal with activated Python environment → opens server on port → visit provided localhost address\n\nInterface: Left sidebar with Connect button → top navigation bar shows Resources/Prompts/Tools sections → Tools section lists available tools → click tool to open right panel for manual testing\n\nTesting process: Select tool → input required parameters (like document ID) → click Run Tool → verify output/success message\n\nKey features: Live development testing, tool invocation simulation, parameter input fields, success/failure feedback\n\nStatus: Inspector in active development - UI may change but core functionality remains similar\n\nUsage pattern: Essential for MCP server development and debugging before production deployment",
+                "fr": "MCP Inspector = débogueur in-browser pour tester les serveurs MCP sans se connecter à des applications réelles\n\nAccès : exécutez `mcp dev [server_file.py]` dans le terminal avec un environnement Python activé → le serveur écoute sur un port → rendez-vous à l’adresse localhost fournie\n\nInterface : barre latérale gauche avec le bouton Connect → la barre de navigation supérieure affiche les sections Resources/Prompts/Tools → la section Tools répertorie les outils disponibles → cliquer sur un outil pour ouvrir le panneau droit pour des tests manuels\n\nProcessus de test : sélectionner l’outil → saisir les paramètres requis (comme l’ID de document) → cliquer sur Run Tool → vérifier la sortie/le message de succès\n\nPrincipales fonctionnalités : tests de développement en direct, simulation d’invocation d’outil, champs de saisie de paramètres, retours sur succès/échec\n\nÉtat : Inspector en développement actif - l’UI peut changer mais les fonctionnalités de base restent similaires\n\nMode d’utilisation : Essentiel pour le développement et le débogage des serveurs MCP avant le déploiement en production"
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        }
+      ],
+      "completionRule": {
+        "requires": [
+          "allChaptersComplete"
+        ]
+      }
+    },
+    {
+      "id": "lesson_05",
+      "title": {
+        "en": "Implementing a Client",
+        "fr": "Implémentation d'un client"
+      },
+      "chapters": [
+        {
+          "id": "chapter_01",
+          "title": {
+            "en": "Implementing a Client",
+            "fr": "Implémentation d'un client"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "MCP Client Implementation:\n\nMCP Client = wrapper class around client session for connecting to MCP server with resource cleanup management\n\nClient Session = actual connection to MCP server from MCP Python SDK, requires cleanup when closing\n\nResource Cleanup = necessary process when shutting down, handled by connect/cleanup/async enter/async exit functions\n\nClient Purpose = exposes MCP server functionality to rest of codebase, provides interface between application code and server\n\nKey Functions:\n- list_tools() = await self.session.list_tools(), return result.tools\n- call_tool() = await self.session.call_tool(tool_name, tool_input)\n\nImplementation Flow:\n1. Application requests tool list for Claude\n2. Client calls list_tools() to get server's available tools\n3. Claude selects tool and provides parameters\n4. Client calls call_tool() to execute on server\n5. Results returned to Claude\n\nTesting = run MCP client.py directly with testing harness to verify connection and tool listing\n\nIntegration = once implemented, can run CLI to have Claude use tools (e.g., \"what is contents of report.pdf document\")\n\nCommon Practice = wrap client session in larger class rather than using directly for better resource management",
+                "fr": "MCP Client Implementation:\n\nMCP Client = classe wrapper autour de la session client pour se connecter au serveur MCP avec gestion du nettoyage des ressources\n\nClient Session = connexion réelle au serveur MCP à partir du MCP Python SDK, nécessite un nettoyage lors de la fermeture\n\nResource Cleanup = processus nécessaire lors de l'arrêt, géré par connect/cleanup/async enter/async exit functions\n\nClient Purpose = expose les fonctionnalités du serveur MCP au reste du code, fournit une interface entre le code de l'application et le serveur\n\nKey Functions:\n- list_tools() = await self.session.list_tools(), return result.tools\n- call_tool() = await self.session.call_tool(tool_name, tool_input)\n\nImplementation Flow:\n1. L'application demande la liste des outils pour Claude\n2. Le Client appelle list_tools() pour obtenir les outils disponibles sur le serveur\n3. Claude sélectionne l'outil et fournit les paramètres\n4. Le Client appelle call_tool() pour exécuter sur le serveur\n5. Résultats retournés à Claude\n\nTesting = exécuter MCP client.py directement avec un harness de test pour vérifier la connexion et la liste des outils\n\nIntegration = une fois implémenté, peut lancer le CLI pour que Claude utilise les outils (par exemple, « quelle est le contenu du document report.pdf »)\n\nCommon Practice = envelopper la session client dans une classe plus grande plutôt que de l'utiliser directement pour une meilleure gestion des ressources"
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        }
+      ],
+      "completionRule": {
+        "requires": [
+          "allChaptersComplete"
+        ]
+      }
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Defining Resources",
+        "fr": "Définir les ressources"
+      },
+      "chapters": [
+        {
+          "id": "chapter_01",
+          "title": {
+            "en": "Defining Resources",
+            "fr": "Définition des ressources"
+          },
+          "type": "teaching",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Resources = MCP server feature that exposes data to clients for read operations\n\nResource types:\n- Direct/Static = static URI (e.g., docs://documents)\n- Templated = parameterized URI with wildcards (e.g., documents/{doc_id})\n\nResource flow:\n1. Client sends read resource request with URI\n2. MCP server matches URI to resource function\n3. Server executes function, returns result\n4. Client receives data via read resource result message\n\nImplementation:\n- Use @mcp.resource decorator\n- Define URI (route-like address)\n- Set MIME type (application/json, text/plain, etc.)\n- Templated resources: URI parameters become function keyword arguments\n- Python MCP SDK auto-serializes return values to strings\n\nCommon pattern = One resource per distinct read operation (list items vs fetch single item)\n\nMIME types = hints to client about returned data format for proper deserialization",
+                "fr": "Ressources = fonctionnalité du serveur MCP qui expose des données aux clients pour des opérations de lecture\n\nTypes de ressource :\n- Direct/Static = URI statique (par ex., docs://documents)\n- Templatisées = URI paramétrée avec des caractères génériques (par ex., documents/{doc_id})\n\n Flux des ressources :\n1. Le client envoie une demande de ressource de lecture avec l'URI\n2. Le serveur MCP fait correspondre l'URI à la fonction de ressource\n3. Le serveur exécute la fonction et renvoie le résultat\n4. Le client reçoit les données via le message de résultat de la ressource de lecture\n\nImplémentation :\n- Utiliser le décorateur @mcp.resource\n- Définir l'URI (adresse de type route)\n- Définir le type MIME (application/json, text/plain, etc.)\n- Ressources templatisées : les paramètres d'URI deviennent des arguments nommés de la fonction\n- Le Python MCP SDK sérialise automatiquement les valeurs de retour en chaînes de caractères\n\nModèle commun = Une ressource par opération de lecture distincte (lister les éléments vs récupérer un élément unique)\n\nTypes MIME = indications pour le client sur le format des données renvoyées pour une désérialisation correcte"
+              }
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "contentViewed"
+            ]
+          }
+        },
+        {
+          "id": "chapter_02",
+          "title": {
+            "en": "Exercise: Defining Resources",
+            "fr": "Exercice : Définir les ressources"
+          },
+          "type": "exercise",
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Testing process: Select tool → input required parameters (like document ID) → click Run Tool → verify output/success message\nKey features: Live development testing, tool invocation simulation, parameter input fields, success/failure feedback\nStatus: Inspector in active development - UI may change bu",
+                "fr": "Processus de test : Sélectionner l'outil → saisir les paramètres requis (comme l'identifiant du document) → lancer l'outil → vérifier le message de sortie ou de réussite\nCaractéristiques clés : Tests en développement en temps réel, simulation d'invocation d'outil, champs de saisie des paramètres, retours sur réussite/échec\nStatut : Inspecteur en développement actif - l'interface utilisateur peut changer"
+              }
+            },
+            {
+              "type": "checkpoint",
+              "exerciseId": "ex_claude_certified_architect_foundations__07_003"
+            }
+          ],
+          "completionRule": {
+            "requires": [
+              "requiredExercisesPassed"
+            ]
+          }
+        }
+      ],
+      "completionRule": {
+        "requires": [
+          "allChaptersComplete"
+        ]
+      }
+    },
+    {
       "id": "lesson_01",
       "title": {
         "en": "Accessing Resources",
@@ -159,293 +463,25 @@
       }
     },
     {
-      "id": "lesson_03",
+      "id": "lesson_12",
       "title": {
-        "en": "Defining Resources",
-        "fr": "Définir les ressources"
+        "en": "Prompts in the Client",
+        "fr": "Prompts dans le client"
       },
       "chapters": [
         {
           "id": "chapter_01",
           "title": {
-            "en": "Defining Resources",
-            "fr": "Définition des ressources"
+            "en": "Prompts in the Client",
+            "fr": "Prompts dans le client"
           },
           "type": "teaching",
           "blocks": [
             {
               "type": "content",
               "body": {
-                "en": "Resources = MCP server feature that exposes data to clients for read operations\n\nResource types:\n- Direct/Static = static URI (e.g., docs://documents)\n- Templated = parameterized URI with wildcards (e.g., documents/{doc_id})\n\nResource flow:\n1. Client sends read resource request with URI\n2. MCP server matches URI to resource function\n3. Server executes function, returns result\n4. Client receives data via read resource result message\n\nImplementation:\n- Use @mcp.resource decorator\n- Define URI (route-like address)\n- Set MIME type (application/json, text/plain, etc.)\n- Templated resources: URI parameters become function keyword arguments\n- Python MCP SDK auto-serializes return values to strings\n\nCommon pattern = One resource per distinct read operation (list items vs fetch single item)\n\nMIME types = hints to client about returned data format for proper deserialization",
-                "fr": "Ressources = fonctionnalité du serveur MCP qui expose des données aux clients pour des opérations de lecture\n\nTypes de ressource :\n- Direct/Static = URI statique (par ex., docs://documents)\n- Templatisées = URI paramétrée avec des caractères génériques (par ex., documents/{doc_id})\n\n Flux des ressources :\n1. Le client envoie une demande de ressource de lecture avec l'URI\n2. Le serveur MCP fait correspondre l'URI à la fonction de ressource\n3. Le serveur exécute la fonction et renvoie le résultat\n4. Le client reçoit les données via le message de résultat de la ressource de lecture\n\nImplémentation :\n- Utiliser le décorateur @mcp.resource\n- Définir l'URI (adresse de type route)\n- Définir le type MIME (application/json, text/plain, etc.)\n- Ressources templatisées : les paramètres d'URI deviennent des arguments nommés de la fonction\n- Le Python MCP SDK sérialise automatiquement les valeurs de retour en chaînes de caractères\n\nModèle commun = Une ressource par opération de lecture distincte (lister les éléments vs récupérer un élément unique)\n\nTypes MIME = indications pour le client sur le format des données renvoyées pour une désérialisation correcte"
-              }
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_02",
-          "title": {
-            "en": "Exercise: Defining Resources",
-            "fr": "Exercice : Définir les ressources"
-          },
-          "type": "exercise",
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "en": "Testing process: Select tool → input required parameters (like document ID) → click Run Tool → verify output/success message\nKey features: Live development testing, tool invocation simulation, parameter input fields, success/failure feedback\nStatus: Inspector in active development - UI may change bu",
-                "fr": "Processus de test : Sélectionner l'outil → saisir les paramètres requis (comme l'identifiant du document) → lancer l'outil → vérifier le message de sortie ou de réussite\nCaractéristiques clés : Tests en développement en temps réel, simulation d'invocation d'outil, champs de saisie des paramètres, retours sur réussite/échec\nStatut : Inspecteur en développement actif - l'interface utilisateur peut changer"
-              }
-            },
-            {
-              "type": "checkpoint",
-              "exerciseId": "ex_claude_certified_architect_foundations__07_003"
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "requiredExercisesPassed"
-            ]
-          }
-        }
-      ],
-      "completionRule": {
-        "requires": [
-          "allChaptersComplete"
-        ]
-      }
-    },
-    {
-      "id": "lesson_04",
-      "title": {
-        "en": "Defining Tools with MCP",
-        "fr": "Définir les outils avec MCP"
-      },
-      "chapters": [
-        {
-          "id": "chapter_01",
-          "title": {
-            "en": "Defining Tools with MCP",
-            "fr": "Définir des outils avec MCP"
-          },
-          "type": "teaching",
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "en": "MCP server implementation = Python SDK simplifies tool creation vs manual JSON schemas\n\nTool definition syntax = @mcp.tool decorator + function with typed parameters + Field descriptions\n\nDocument storage = in-memory dictionary with doc_id keys and content values\n\nTool 1 - read_doc_contents = takes doc_id string parameter, returns document content from docs dictionary, raises ValueError if doc not found\n\nTool 2 - edit_document = takes doc_id, old_string, new_string parameters, performs find/replace operation on document content, includes existence validation\n\nMCP Python SDK benefits = auto-generates JSON schemas from decorated functions, single line server creation, eliminates manual schema writing\n\nParameter definition = use Field() with description for tool arguments, import from pydantic\n\nError handling = validate document existence before operations, raise ValueError for missing documents\n\nImplementation pattern = decorator → function definition → parameter typing → validation → core logic",
-                "fr": "Implémentation du serveur MCP = Python SDK simplifie la création d'outils par rapport à des schémas JSON manuels\n\nSyntaxe de définition d'outil = @mcp.tool décorateur + fonction avec paramètres typés + descriptions Field\n\nStockage des documents = dictionnaire en mémoire avec les clés doc_id et les valeurs de contenu\n\nTool 1 - read_doc_contents = prend le paramètre doc_id de type chaîne, renvoie le contenu du document à partir du dictionnaire docs, déclenche ValueError si le document est introuvable\n\nTool 2 - edit_document = prend les paramètres doc_id, old_string, new_string, effectue une opération de recherche/remplacement sur le contenu du document, inclut une validation d'existence\n\nAvantages du MCP Python SDK = génère automatiquement les schémas JSON à partir des fonctions décorées, création de serveur en une seule ligne, élimine l'écriture manuelle de schémas\n\nDéfinition des paramètres = utiliser Field() avec une description pour les arguments de l'outil, importer depuis pydantic\n\nGestion des erreurs = valider l'existence du document avant les opérations, lever ValueError en cas de documents manquants\n\nModèle d'implémentation = décorateur → définition de fonction → typage des paramètres → validation → logique principale"
-              }
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        },
-        {
-          "id": "chapter_02",
-          "title": {
-            "en": "Exercise: Defining Tools with MCP",
-            "fr": "Exercice : Définir des outils avec MCP"
-          },
-          "type": "exercise",
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "en": "Integration = once implemented, can run CLI to have Claude use tools (e.g., \"what is contents of report.pdf document\")\nCommon Practice = wrap client session in larger class rather than using directly for better resource management",
-                "fr": "Intégration = une fois implémentée, peut lancer le CLI pour que Claude utilise des outils (par ex., « quel est le contenu du document report.pdf »)\nBonne pratique = envelopper la session client dans une classe plus grande plutôt que de l'utiliser directement pour une meilleure gestion des ressources"
-              }
-            },
-            {
-              "type": "checkpoint",
-              "exerciseId": "ex_claude_certified_architect_foundations__07_004"
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "requiredExercisesPassed"
-            ]
-          }
-        }
-      ],
-      "completionRule": {
-        "requires": [
-          "allChaptersComplete"
-        ]
-      }
-    },
-    {
-      "id": "lesson_05",
-      "title": {
-        "en": "Implementing a Client",
-        "fr": "Implémentation d'un client"
-      },
-      "chapters": [
-        {
-          "id": "chapter_01",
-          "title": {
-            "en": "Implementing a Client",
-            "fr": "Implémentation d'un client"
-          },
-          "type": "teaching",
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "en": "MCP Client Implementation:\n\nMCP Client = wrapper class around client session for connecting to MCP server with resource cleanup management\n\nClient Session = actual connection to MCP server from MCP Python SDK, requires cleanup when closing\n\nResource Cleanup = necessary process when shutting down, handled by connect/cleanup/async enter/async exit functions\n\nClient Purpose = exposes MCP server functionality to rest of codebase, provides interface between application code and server\n\nKey Functions:\n- list_tools() = await self.session.list_tools(), return result.tools\n- call_tool() = await self.session.call_tool(tool_name, tool_input)\n\nImplementation Flow:\n1. Application requests tool list for Claude\n2. Client calls list_tools() to get server's available tools\n3. Claude selects tool and provides parameters\n4. Client calls call_tool() to execute on server\n5. Results returned to Claude\n\nTesting = run MCP client.py directly with testing harness to verify connection and tool listing\n\nIntegration = once implemented, can run CLI to have Claude use tools (e.g., \"what is contents of report.pdf document\")\n\nCommon Practice = wrap client session in larger class rather than using directly for better resource management",
-                "fr": "MCP Client Implementation:\n\nMCP Client = classe wrapper autour de la session client pour se connecter au serveur MCP avec gestion du nettoyage des ressources\n\nClient Session = connexion réelle au serveur MCP à partir du MCP Python SDK, nécessite un nettoyage lors de la fermeture\n\nResource Cleanup = processus nécessaire lors de l'arrêt, géré par connect/cleanup/async enter/async exit functions\n\nClient Purpose = expose les fonctionnalités du serveur MCP au reste du code, fournit une interface entre le code de l'application et le serveur\n\nKey Functions:\n- list_tools() = await self.session.list_tools(), return result.tools\n- call_tool() = await self.session.call_tool(tool_name, tool_input)\n\nImplementation Flow:\n1. L'application demande la liste des outils pour Claude\n2. Le Client appelle list_tools() pour obtenir les outils disponibles sur le serveur\n3. Claude sélectionne l'outil et fournit les paramètres\n4. Le Client appelle call_tool() pour exécuter sur le serveur\n5. Résultats retournés à Claude\n\nTesting = exécuter MCP client.py directement avec un harness de test pour vérifier la connexion et la liste des outils\n\nIntegration = une fois implémenté, peut lancer le CLI pour que Claude utilise les outils (par exemple, « quelle est le contenu du document report.pdf »)\n\nCommon Practice = envelopper la session client dans une classe plus grande plutôt que de l'utiliser directement pour une meilleure gestion des ressources"
-              }
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        }
-      ],
-      "completionRule": {
-        "requires": [
-          "allChaptersComplete"
-        ]
-      }
-    },
-    {
-      "id": "lesson_06",
-      "title": {
-        "en": "Introducing MCP",
-        "fr": "Introduction à MCP"
-      },
-      "chapters": [
-        {
-          "id": "chapter_01",
-          "title": {
-            "en": "Introducing MCP",
-            "fr": "Introduction à MCP"
-          },
-          "type": "teaching",
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "en": "MCP = Model Context Protocol, communication layer providing Claude with context and tools without requiring developers to write tedious code.\n\nCore Architecture: MCP client connects to MCP server. MCP server contains tools, resources, and prompts as internal components.\n\nProblem Solved: Traditional approach requires developers to manually author tool schemas and functions for each service integration (like GitHub API tools). This creates maintenance burden for complex services with many features.\n\nMCP Solution: Shifts tool definition and execution from developer's server to dedicated MCP server. MCP server = interface to outside service, wrapping functionality into pre-built tools.\n\nKey Benefits: Eliminates need for developers to write/maintain tool schemas and function implementations. Someone else authors the tools, packages them in MCP server.\n\nCommon Questions:\n- Who authors MCP servers? Anyone, but often service providers create official implementations\n- Difference from direct API calls? Saves developer time by providing pre-built tool schemas/functions instead of manual authoring\n- Relationship to tool use? MCP and tool use are complementary, not identical. MCP focuses on who does the work of creating tools\n\nCore Value: Reduces developer burden by outsourcing tool creation to MCP server implementations rather than requiring custom tool development for each service integration.",
-                "fr": "MCP = Model Context Protocol, couche de communication fournissant à Claude le contexte et les outils sans que les développeurs aient à écrire du code fastidieux.\n\nArchitecture centrale : le client MCP se connecte au serveur MCP. Le serveur MCP contient des outils, des ressources et des prompts en tant que composants internes.\n\nProblème résolu : L'approche traditionnelle exige que les développeurs créent manuellement les schémas d'outils et les fonctions pour chaque intégration de service (comme les outils de l'API GitHub). Cela crée une charge de maintenance pour les services complexes comportant de nombreuses fonctionnalités.\n\nSolution MCP : Déplace la définition et l'exécution des outils du serveur du développeur vers un serveur MCP dédié. Le serveur MCP = interface vers le service externe, encapsulant les fonctionnalités dans des outils préfabriqués.\n\nAvantages clés : Élimine le besoin pour les développeurs d'écrire/maintenir les schémas d'outils et les implémentations de fonctions. Quelqu'un d'autre écrit les outils et les regroupe dans le serveur MCP.\n\nQuestions fréquentes :\n- Qui écrit les serveurs MCP ? N'importe qui, mais souvent les fournisseurs de services créent des implémentations officielles\n- Quelle est la différence avec les appels API directs ? Cela fait gagner du temps aux développeurs en fournissant des schémas d'outils et de fonctions préconstruits au lieu d'une création manuelle\n- Relation avec l'utilisation des outils ? MCP et l'utilisation des outils sont complémentaires, et non identiques. MCP se concentre sur qui fait le travail de création des outils\n\nValeur centrale : Réduit la charge des développeurs en externalisant la création d'outils vers les implémentations du serveur MCP plutôt que d'exiger le développement d'outils personnalisés pour chaque intégration de service."
-              }
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        }
-      ],
-      "completionRule": {
-        "requires": [
-          "allChaptersComplete"
-        ]
-      }
-    },
-    {
-      "id": "lesson_07",
-      "title": {
-        "en": "JSON Message Types",
-        "fr": "Types de messages JSON"
-      },
-      "chapters": [
-        {
-          "id": "chapter_01",
-          "title": {
-            "en": "JSON Message Types",
-            "fr": "Types de messages JSON"
-          },
-          "type": "teaching",
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "en": "JSON Message Types in MCP:\n\nMCP communication = JSON messages between clients and servers. Each message type has distinct purpose.\n\nMessage categories:\n- Request/Result pairs = Always come together (call_tool_request + call_tool_result, initialize_request + initialize_result)\n- Notifications = Events that don't need responses (progress_notification, logging_message_notification, tool_change_notification)\n\nMessage direction classification:\n- Client messages = Sent by MCP client to server\n- Server messages = Sent by MCP server to client\n\nKey insight: Servers can send messages TO clients (server requests, server notifications). This directional capability becomes critical limitation in streamable HTTP transport.\n\nSchema definition = TypeScript file in MCP spec repository (schema.ts). Not executable code, just type descriptions for convenience.\n\nMessage structure = JSON-RPC format with method, params, ID fields.",
-                "fr": "Types de messages JSON dans MCP:\n\nLa communication MCP = des messages JSON échangés entre les clients et les serveurs. Chaque type de message a un objectif distinct.\n\nCatégories de messages :\n- Paires Request/Result = Toujours associées ensemble (call_tool_request + call_tool_result, initialize_request + initialize_result)\n- Notifications = Événements qui n'ont pas besoin de réponses (progress_notification, logging_message_notification, tool_change_notification)\n\nClassification de la direction des messages :\n- Messages client = Envoyés par le client MCP au serveur\n- Messages serveur = Envoyés par le serveur MCP au client\n\nIdée clé : les serveurs peuvent envoyer des messages aux clients (requêtes côté serveur, notifications côté serveur). Cette capacité directionnelle devient une limitation critique dans un transport HTTP en streaming.\n\nDéfinition du schéma = fichier TypeScript dans le dépôt des spécifications MCP (schema.ts). Pas de code exécutable, juste des descriptions de types pour plus de commodité.\n\nStructure des messages = format JSON-RPC avec les champs method, params et ID."
-              }
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        }
-      ],
-      "completionRule": {
-        "requires": [
-          "allChaptersComplete"
-        ]
-      }
-    },
-    {
-      "id": "lesson_08",
-      "title": {
-        "en": "Log and Progress Notitications",
-        "fr": "Journaux et notifications de progression"
-      },
-      "chapters": [
-        {
-          "id": "chapter_01",
-          "title": {
-            "en": "Log and Progress Notitications",
-            "fr": "Notifications de journal et de progression"
-          },
-          "type": "teaching",
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "en": "Log and Progress Notifications = MCP server feature that provides real-time feedback during tool execution to improve user experience.\n\nImplementation on server side:\n- Tool functions automatically receive context argument as last parameter\n- Context object provides methods: info() for logging, report_progress() for progress updates\n- Calling these methods automatically sends messages back to client\n\nImplementation on client side:\n- Create callback function for logging statements\n- Create separate callback for progress updates\n- Pass logging callback to client session\n- Pass progress callback to call_tool function\n- Callbacks handle how to display information to user (terminal output, web UI, etc.)\n\nKey benefits:\n- Prevents user confusion about stalled/failed tool calls\n- Provides visibility into long-running operations\n- Real-time feedback during tool execution\n\nOptional feature = can be omitted if not needed, purely for UX enhancement.",
-                "fr": "Notifications de journalisation et de progression = fonctionnalité du serveur MCP qui fournit des retours en temps réel pendant l'exécution d'un outil afin d'améliorer l'expérience utilisateur.\n\nImplémentation côté serveur:\n- Les fonctions d'outil reçoivent automatiquement l'argument contextuel en tant que dernier paramètre\n- L'objet contextuel fournit des méthodes : info() pour la journalisation, report_progress() pour les mises à jour de progression\n- L'appel de ces méthodes envoie automatiquement des messages au client\n\nImplémentation côté client:\n- Créer une fonction de rappel pour les messages de journalisation\n- Créer une fonction de rappel distincte pour les mises à jour de progression\n- Passer la fonction de rappel de journalisation à la session client\n- Passer la fonction de rappel de progression à la fonction call_tool\n- Les fonctions de rappel gèrent la manière d'afficher l'information à l'utilisateur (sortie du terminal, interface utilisateur web, etc.)\n\nAvantages clés:\n- Évite la confusion de l'utilisateur face à des appels d'outil bloqués ou échoués\n- Fournit une visibilité sur les opérations de longue durée\n- Rétroaction en temps réel pendant l'exécution de l'outil\n\nCaractéristique optionnelle = peut être omise si ce n'est pas nécessaire, purement pour l'amélioration de l'expérience utilisateur."
-              }
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        }
-      ],
-      "completionRule": {
-        "requires": [
-          "allChaptersComplete"
-        ]
-      }
-    },
-    {
-      "id": "lesson_09",
-      "title": {
-        "en": "MCP Clients",
-        "fr": "Clients MCP"
-      },
-      "chapters": [
-        {
-          "id": "chapter_01",
-          "title": {
-            "en": "MCP Clients",
-            "fr": "Clients MCP"
-          },
-          "type": "teaching",
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "en": "MCP Client = communication interface between your server and MCP server, provides access to server's tools.\n\nTransport agnostic = client/server can communicate via multiple protocols (stdin/stdout, HTTP, WebSockets, etc). Common setup: both on same machine using stdin/stdout.\n\nCommunication = message exchange defined by MCP spec. Key message types:\n- list tools request/result = client asks server for available tools, server responds with tool list\n- call tool request/result = client asks server to run tool with arguments, server returns execution result\n\nTypical flow: User query → Server asks MCP client for tools → MCP client sends list tools request to MCP server → Server gets tool list → Server sends query + tools to Claude → Claude requests tool execution → Server asks MCP client to run tool → MCP client sends call tool request to MCP server → MCP server executes tool (e.g., GitHub API call) → Results flow back through chain → Claude formulates final response → User gets answer.\n\nMCP client acts as intermediary - doesn't execute tools itself, just facilitates communication between your server and MCP server that actually runs the tools.",
-                "fr": "MCP Client = interface de communication entre votre serveur et le serveur MCP, fournit l'accès aux outils du serveur.\n\nTransport agnostique = le client/serveur peut communiquer via plusieurs protocoles (stdin/stdout, HTTP, WebSockets, etc.). Configuration courante : les deux sur la même machine en utilisant stdin/stdout.\n\nCommunication = échange de messages défini par la spécification MCP. Types de messages clés :\n- requête/résultat de la liste des outils = le client demande au serveur les outils disponibles, le serveur répond par la liste des outils\n- requête/résultat d'appel d'outil = le client demande au serveur d'exécuter l'outil avec des arguments, le serveur renvoie le résultat de l'exécution\n\nFlux typique : requête utilisateur → Le serveur demande au client MCP les outils → Le client MCP envoie une requête de liste d'outils au serveur MCP → Le serveur obtient la liste des outils → Le serveur envoie la requête + les outils à Claude → Claude demande l'exécution de l'outil → Le serveur demande au client MCP d'exécuter l'outil → Le client MCP envoie la requête d'appel d'outil au serveur MCP → Le serveur MCP exécute l'outil (par exemple, appel API GitHub) → Le flux des résultats remonte le long de la chaîne → Claude formule la réponse finale → L'utilisateur obtient la réponse.\n\nLe client MCP agit comme intermédiaire - n'exécute pas les outils lui-même, se contente de faciliter la communication entre votre serveur et le serveur MCP qui exécute réellement les outils."
+                "en": "MCP Client Prompt Implementation:\n\nList prompts function = await self.session.list_prompts(), return result.props\n\nGet prompt function = await self.session.get_prompt(prompt_name, arguments), return result.messages\n\nPrompt workflow = Client requests prompt by name → passes arguments as keyword parameters → MCP server interpolates arguments into prompt template → returns formatted messages for AI model\n\nArguments flow = Client arguments → prompt function keyword arguments → interpolated into prompt text (e.g., document_id parameter gets inserted into prompt template)\n\nReturn format = Messages array that forms conversation input for AI model\n\nCLI usage = /format command → select document → prompt with document ID sent to Claude → Claude uses tools to fetch document → returns formatted result\n\nKey concept = Prompts are server-defined templates that clients can invoke with parameters, enabling reusable AI instructions with dynamic content insertion.",
+                "fr": "Implémentation du prompt client MCP :\n\nFonction de liste des prompts = await self.session.list_prompts(), return result.props\n\nFonction d'obtention du prompt = await self.session.get_prompt(prompt_name, arguments), return result.messages\n\nFlux du prompt = Le client demande le prompt par nom → transmet les arguments en tant que paramètres nommés → le serveur MCP interpole les arguments dans le modèle de prompt → retourne des messages formatés pour le modèle AI\n\nFlux des arguments = Arguments du client → arguments mot-clé de la fonction prompt → interpolés dans le texte du prompt (par ex., le paramètre document_id est inséré dans le modèle de prompt)\n\nFormat de retour = Tableau de messages qui constitue l'entrée de conversation pour le modèle AI\n\nUtilisation CLI = commande /format → sélection du document → prompt avec l'ID du document envoyé à Claude → Claude utilise des outils pour récupérer le document → retourne le résultat formaté\n\nConcept clé = Prompts are des modèles définis par le serveur que les clients peuvent invoquer avec des paramètres, permettant des instructions AI réutilisables avec insertion dynamique de contenu."
               }
             }
           ],
@@ -499,25 +535,25 @@
       }
     },
     {
-      "id": "lesson_11",
+      "id": "lesson_07",
       "title": {
-        "en": "Project Setup",
-        "fr": "Mise en place du projet"
+        "en": "JSON Message Types",
+        "fr": "Types de messages JSON"
       },
       "chapters": [
         {
           "id": "chapter_01",
           "title": {
-            "en": "Project Setup",
-            "fr": "Configuration du projet"
+            "en": "JSON Message Types",
+            "fr": "Types de messages JSON"
           },
           "type": "teaching",
           "blocks": [
             {
               "type": "content",
               "body": {
-                "en": "MCP Learning Project = CLI-based chatbot implementing both client and server components for educational purposes.\n\nProject Structure = Custom MCP client connects to custom MCP server, both built in same project.\n\nDocument System = Fake documents stored in memory only, no persistence.\n\nServer Tools = Two tools implemented: read document contents, update document contents.\n\nReal-world Context = Normally projects implement either client OR server, not both. This project does both for learning.\n\nSetup Requirements = Download CLI_project.zip, extract, configure .env with API key, install dependencies.\n\nRunning Project = \"uv run main.py\" (with UV) or \"python main.py\" (without UV).\n\nVerification = Chat prompt appears, responds to basic queries like \"what's one plus one\".",
-                "fr": "Projet d'apprentissage MCP = chatbot basé sur CLI implémentant à la fois les composants client et serveur à des fins pédagogiques.\n\nStructure du projet = Client MCP personnalisé se connecte au serveur MCP personnalisé, les deux développés dans le même projet.\n\nSystème de documents = Documents fictifs stockés uniquement en mémoire, aucune persistance.\n\nOutils du serveur = Deux outils implémentés : lire le contenu des documents, mettre à jour le contenu des documents.\n\nContexte du monde réel = En général, les projets implémentent soit le client, soit le serveur, pas les deux. Ce projet fait les deux pour l'apprentissage.\n\nPré-requis d'installation = Télécharger CLI_project.zip, extraire, configurer .env avec la clé API, installer les dépendances.\n\nExécution du projet = \"uv run main.py\" (avec UV) ou \"python main.py\" (sans UV).\n\nVérification = L'invite de chat apparaît, répond à des questions simples comme « combien font un plus un ? »"
+                "en": "JSON Message Types in MCP:\n\nMCP communication = JSON messages between clients and servers. Each message type has distinct purpose.\n\nMessage categories:\n- Request/Result pairs = Always come together (call_tool_request + call_tool_result, initialize_request + initialize_result)\n- Notifications = Events that don't need responses (progress_notification, logging_message_notification, tool_change_notification)\n\nMessage direction classification:\n- Client messages = Sent by MCP client to server\n- Server messages = Sent by MCP server to client\n\nKey insight: Servers can send messages TO clients (server requests, server notifications). This directional capability becomes critical limitation in streamable HTTP transport.\n\nSchema definition = TypeScript file in MCP spec repository (schema.ts). Not executable code, just type descriptions for convenience.\n\nMessage structure = JSON-RPC format with method, params, ID fields.",
+                "fr": "Types de messages JSON dans MCP:\n\nLa communication MCP = des messages JSON échangés entre les clients et les serveurs. Chaque type de message a un objectif distinct.\n\nCatégories de messages :\n- Paires Request/Result = Toujours associées ensemble (call_tool_request + call_tool_result, initialize_request + initialize_result)\n- Notifications = Événements qui n'ont pas besoin de réponses (progress_notification, logging_message_notification, tool_change_notification)\n\nClassification de la direction des messages :\n- Messages client = Envoyés par le client MCP au serveur\n- Messages serveur = Envoyés par le serveur MCP au client\n\nIdée clé : les serveurs peuvent envoyer des messages aux clients (requêtes côté serveur, notifications côté serveur). Cette capacité directionnelle devient une limitation critique dans un transport HTTP en streaming.\n\nDéfinition du schéma = fichier TypeScript dans le dépôt des spécifications MCP (schema.ts). Pas de code exécutable, juste des descriptions de types pour plus de commodité.\n\nStructure des messages = format JSON-RPC avec les champs method, params et ID."
               }
             }
           ],
@@ -535,25 +571,25 @@
       }
     },
     {
-      "id": "lesson_12",
+      "id": "lesson_18",
       "title": {
-        "en": "Prompts in the Client",
-        "fr": "Prompts dans le client"
+        "en": "The Stdio Transport",
+        "fr": "Le transport Stdio"
       },
       "chapters": [
         {
           "id": "chapter_01",
           "title": {
-            "en": "Prompts in the Client",
-            "fr": "Prompts dans le client"
+            "en": "The Stdio Transport",
+            "fr": "Le transport Stdio"
           },
           "type": "teaching",
           "blocks": [
             {
               "type": "content",
               "body": {
-                "en": "MCP Client Prompt Implementation:\n\nList prompts function = await self.session.list_prompts(), return result.props\n\nGet prompt function = await self.session.get_prompt(prompt_name, arguments), return result.messages\n\nPrompt workflow = Client requests prompt by name → passes arguments as keyword parameters → MCP server interpolates arguments into prompt template → returns formatted messages for AI model\n\nArguments flow = Client arguments → prompt function keyword arguments → interpolated into prompt text (e.g., document_id parameter gets inserted into prompt template)\n\nReturn format = Messages array that forms conversation input for AI model\n\nCLI usage = /format command → select document → prompt with document ID sent to Claude → Claude uses tools to fetch document → returns formatted result\n\nKey concept = Prompts are server-defined templates that clients can invoke with parameters, enabling reusable AI instructions with dynamic content insertion.",
-                "fr": "Implémentation du prompt client MCP :\n\nFonction de liste des prompts = await self.session.list_prompts(), return result.props\n\nFonction d'obtention du prompt = await self.session.get_prompt(prompt_name, arguments), return result.messages\n\nFlux du prompt = Le client demande le prompt par nom → transmet les arguments en tant que paramètres nommés → le serveur MCP interpole les arguments dans le modèle de prompt → retourne des messages formatés pour le modèle AI\n\nFlux des arguments = Arguments du client → arguments mot-clé de la fonction prompt → interpolés dans le texte du prompt (par ex., le paramètre document_id est inséré dans le modèle de prompt)\n\nFormat de retour = Tableau de messages qui constitue l'entrée de conversation pour le modèle AI\n\nUtilisation CLI = commande /format → sélection du document → prompt avec l'ID du document envoyé à Claude → Claude utilise des outils pour récupérer le document → retourne le résultat formaté\n\nConcept clé = Prompts are des modèles définis par le serveur que les clients peuvent invoquer avec des paramètres, permettant des instructions AI réutilisables avec insertion dynamique de contenu."
+                "en": "MCP Transport = mechanism for moving JSON messages between client and server\n\nStdio Transport = transport where client launches server as separate process, communicates via standard input/output streams\n\nCommunication mechanism: Client writes to server's stdin, reads from server's stdout. Server writes to stdout, reads from stdin.\n\nAdvantages: Bidirectional communication - either client or server can initiate requests at any time\n\nLimitations: Only works when client and server run on same physical machine\n\nMessage exchange patterns:\n- Client-to-server request: Write to stdin, read response from stdout\n- Server-to-client request: Server writes to stdout, client responds via stdin\n\nRequired initialization sequence:\n1. Initialize request (client to server)\n2. Initialize result (server to client) \n3. Initialize notification (client to server, no response required)\n\nMessage types:\n- Requests = expect responses\n- Notifications = no response required\n- Results = responses to requests\n\nKey characteristic: Full bidirectional communication support - both parties can initiate requests\n\nContrast with HTTP transport: HTTP transport has limitations on server-initiated requests that stdio transport doesn't have",
+                "fr": "MCP Transport = mécanisme de transfert des messages JSON entre le client et le serveur\n\nStdio Transport = transport où le client lance le serveur en tant que processus séparé, communique via les streams standard d'entrée/sortie\n\nMécanisme de communication : le client écrit dans le stdin du serveur, lit le stdout du serveur. Le serveur écrit dans le stdout, lit le stdin.\n\nAvantages : Communication bidirectionnelle - soit le client soit le serveur peut initier des requêtes à tout moment\n\nLimitations : Ne fonctionne que lorsque le client et le serveur s'exécutent sur la même machine physique\n\nSchémas d'échange de messages :\n- Requête client-vers-serveur : Écrire dans le stdin, lire la réponse du stdout\n- Requête serveur-vers-client : Le serveur écrit dans le stdout, le client répond via le stdin\n\nSéquence d'initialisation requise :\n1. Initialiser la requête (client vers serveur)\n2. Initialiser le résultat (serveur vers client)\n3. Initialiser la notification (client vers serveur, aucune réponse requise)\n\nTypes de messages :\n- Requêtes = attendent des réponses\n- Notifications = aucune réponse requise\n- Résultats = réponses aux requêtes\n\nCaractéristique clé : Support complet de la communication bidirectionnelle - les deux parties peuvent initier des requêtes\n\nPar rapport au transport HTTP : le transport HTTP présente des limitations sur les requêtes initiées par le serveur que le transport stdio n'a pas"
               }
             }
           ],
@@ -571,61 +607,25 @@
       }
     },
     {
-      "id": "lesson_13",
+      "id": "lesson_19",
       "title": {
-        "en": "Roots",
-        "fr": "Racines"
+        "en": "The StreamableHTTP Transport",
+        "fr": "Le StreamableHTTP Transport"
       },
       "chapters": [
         {
           "id": "chapter_01",
           "title": {
-            "en": "Roots",
-            "fr": "Racines"
+            "en": "The StreamableHTTP Transport",
+            "fr": "Le transport StreamableHTTP"
           },
           "type": "teaching",
           "blocks": [
             {
               "type": "content",
               "body": {
-                "en": "MCP Roots = codified way for users to grant server access to specific files/folders\n\nProblem without roots: User says \"convert bikin.mp4\" but Claude can't locate file in complex filesystem without full path. Requiring full paths inconvenient for users.\n\nSolution with roots: Add 3 tools to MCP server:\n- ConvertVideo (original tool)\n- ReadDirectory (lists files/folders in directory) \n- ListRoots (returns available roots)\n\nRoot = file/folder user grants permission to access beforehand (via command line args when starting server)\n\nImplementation requirement: Tools must check that accessed files/folders are contained within granted roots using function like is_path_allowed()\n\nTwo main benefits:\n1. Permission control - limits server access to authorized areas only\n2. Autonomous discovery - Claude can search through available roots to find files without user providing full paths\n\nKey limitation: MCP SDK doesn't automatically enforce root restrictions. Server developer must implement access checks manually.\n\nListRoots tool optional - can alternatively include root list in prompt directly. Tool pattern allows Claude to dynamically check available roots when needed.",
-                "fr": "MCP Roots = une façon codifiée pour que les utilisateurs accordent l'accès du serveur à des fichiers/dossiers spécifiques\n\nProblème sans roots : L'utilisateur dit \"convert bikin.mp4\" mais Claude ne peut pas localiser le fichier dans un système de fichiers complexe sans chemin complet. Exiger des chemins complets est gênant pour les utilisateurs.\n\nSolution avec roots : Ajouter 3 outils au serveur MCP :\n- ConvertVideo (outil d'origine)\n- ReadDirectory (qui liste les fichiers/dossiers dans un répertoire)\n- ListRoots (renvoie les roots disponibles)\n\nRoot = fichier/dossier que l'utilisateur autorise d'accéder préalablement (via les arguments de ligne de commande lors du démarrage du serveur)\n\nExigence de mise en œuvre : Les outils doivent vérifier que les fichiers/dossiers consultés se trouvent dans les roots accordés en utilisant une fonction telle que is_path_allowed()\n\nDeux avantages principaux :\n1. Contrôle des permissions - limite l'accès du serveur aux zones autorisées uniquement\n2. Découverte autonome - Claude peut parcourir les roots disponibles pour trouver des fichiers sans que l'utilisateur n'ait à fournir des chemins complets\n\nLimitation clé : le MCP SDK n'applique pas automatiquement les restrictions de root. Le développeur du serveur doit implémenter manuellement les contrôles d'accès.\n\nOutil ListRoots optionnel - peut aussi inclure la liste des roots directement dans le prompt. Le modèle d'outil permet à Claude de vérifier dynamiquement les roots disponibles lorsque cela est nécessaire."
-              }
-            }
-          ],
-          "completionRule": {
-            "requires": [
-              "contentViewed"
-            ]
-          }
-        }
-      ],
-      "completionRule": {
-        "requires": [
-          "allChaptersComplete"
-        ]
-      }
-    },
-    {
-      "id": "lesson_14",
-      "title": {
-        "en": "Sampling",
-        "fr": "Échantillonnage"
-      },
-      "chapters": [
-        {
-          "id": "chapter_01",
-          "title": {
-            "en": "Sampling",
-            "fr": "Échantillonnage"
-          },
-          "type": "teaching",
-          "blocks": [
-            {
-              "type": "content",
-              "body": {
-                "en": "Sampling = technique allowing MCP servers to request language model text generation from clients instead of directly accessing LLMs themselves.\n\nPurpose = shifts LLM access responsibility from server to client, avoiding need for servers to handle API keys, authentication, or token costs.\n\nArchitecture = Server creates message request → Client receives via sampling callback → Client calls LLM → Client returns generated text to server.\n\nBenefits = eliminates server complexity for LLM integration, removes API key requirements from servers, prevents unauthorized token usage on public servers.\n\nImplementation = Server uses create_message() function with message list, Client implements sampling callback to handle LLM requests and return create_message_result.\n\nPrimary use case = publicly accessible MCP servers that need LLM capabilities without direct LLM access or associated costs/security concerns.",
-                "fr": "Sampling = technique permettant aux serveurs MCP de demander la génération de texte par le modèle de langage à partir des clients plutôt que d'accéder directement aux LLM eux-mêmes.\n\nPurpose = déplace la responsabilité d'accès au LLM du serveur vers le client, évitant que les serveurs aient à gérer les clés API, l'authentification ou les coûts liés aux tokens.\n\nArchitecture = Le serveur crée une requête de message → Le client reçoit via sampling callback → Le client appelle le LLM → Le client renvoie le texte généré au serveur.\n\nBenefits = élimine la complexité côté serveur pour l'intégration du LLM, supprime les exigences de clés API des serveurs, empêche l'utilisation non autorisée de tokens sur les serveurs publics.\n\nImplementation = Le serveur utilise la fonction create_message() avec une liste de messages, le client met en œuvre le sampling callback pour gérer les requêtes LLM et retourner create_message_result.\n\nPrimary use case = serveurs MCP accessibles au public qui ont besoin de capacités LLM sans accès direct au LLM ni coûts et préoccupations de sécurité associés."
+                "en": "StreamableHTTP Transport = MCP transport enabling client-server communication over HTTP connections, allows remote server hosting unlike standard I/O transport which requires same-machine operation.\n\nKey advantage = Remote hosting capability - servers can be publicly accessible at URLs like mcpserver.com, expanding MCP server possibilities.\n\nCritical limitation = Restricted server-to-client messaging functionality due to HTTP's unidirectional nature - clients easily request from servers, but servers cannot easily initiate requests to clients.\n\nTwo key settings impact functionality:\n- stateless HTTP (default: false)\n- JSON response (default: false)\n\nSetting these to true = Reduced functionality, breaks progress bars, logging notifications, progress notifications, and sampling requests.\n\nHTTP communication constraint = Server doesn't know client address and client may not be publicly accessible, making server-initiated requests challenging.\n\nAffected message types when using HTTP = Sampling requests, listing routes, progress notifications, logging notifications - all require server-to-client communication.\n\nCommon deployment issue = Application works fine locally with standard I/O transport but fails when deployed with HTTP transport due to these messaging restrictions.\n\nSolution exists = StreamableHTTP transport has workarounds for server-to-client communication challenges, but with caveats.",
+                "fr": "StreamableHTTP Transport = transport MCP permettant la communication client-serveur via les connexions HTTP, autorise l'hébergement distant du serveur, contrairement au transport I/O standard qui nécessite un fonctionnement sur la même machine.\n\nAvantage clé = Capacité d'hébergement à distance - les serveurs peuvent être accessibles publiquement à des URL comme mcpserver.com, élargissant les possibilités des serveurs MCP.\n\nLimitation critique = Fonctionnalité de messagerie serveur-vers-client restreinte en raison de la nature unidirectionnelle de HTTP - les clients peuvent facilement faire des requêtes vers les serveurs, mais les serveurs ne peuvent pas facilement initier des requêtes vers les clients.\n\nDeux paramètres clés impactent la fonctionnalité :\n- stateless HTTP (default: false)\n- JSON response (default: false)\n\nLes régler sur true = Fonctionnalité réduite, casse les progress bars, les notifications de logging, les progress notifications et les sampling requests.\n\nContrainte de communication HTTP = Le serveur ne connaît pas l'adresse du client et le client peut ne pas être publiquement accessible, ce qui rend les requêtes initiées par le serveur difficiles.\n\nTypes de messages affectés lors de l'utilisation de HTTP = Sampling requests, listing routes, progress notifications, logging notifications - tous nécessitent une communication serveur-vers-client.\n\nProblème courant de déploiement = L'application fonctionne correctement localement avec le transport standard I/O mais échoue lors du déploiement avec le transport HTTP en raison de ces restrictions de messagerie.\n\nUne solution existe = le transport StreamableHTTP dispose de contournements pour les défis de communication serveur-vers-client, mais avec des avertissements."
               }
             }
           ],
@@ -760,25 +760,25 @@
       }
     },
     {
-      "id": "lesson_17",
+      "id": "lesson_08",
       "title": {
-        "en": "The Server Inspector",
-        "fr": "L'inspecteur du serveur"
+        "en": "Log and Progress Notitications",
+        "fr": "Journaux et notifications de progression"
       },
       "chapters": [
         {
           "id": "chapter_01",
           "title": {
-            "en": "The Server Inspector",
-            "fr": "L'Inspecteur du serveur"
+            "en": "Log and Progress Notitications",
+            "fr": "Notifications de journal et de progression"
           },
           "type": "teaching",
           "blocks": [
             {
               "type": "content",
               "body": {
-                "en": "MCP Inspector = in-browser debugger for testing MCP servers without connecting to actual applications\n\nAccess: Run \\`mcp dev [server_file.py]\\` in terminal with activated Python environment → opens server on port → visit provided localhost address\n\nInterface: Left sidebar with Connect button → top navigation bar shows Resources/Prompts/Tools sections → Tools section lists available tools → click tool to open right panel for manual testing\n\nTesting process: Select tool → input required parameters (like document ID) → click Run Tool → verify output/success message\n\nKey features: Live development testing, tool invocation simulation, parameter input fields, success/failure feedback\n\nStatus: Inspector in active development - UI may change but core functionality remains similar\n\nUsage pattern: Essential for MCP server development and debugging before production deployment",
-                "fr": "MCP Inspector = débogueur in-browser pour tester les serveurs MCP sans se connecter à des applications réelles\n\nAccès : exécutez `mcp dev [server_file.py]` dans le terminal avec un environnement Python activé → le serveur écoute sur un port → rendez-vous à l’adresse localhost fournie\n\nInterface : barre latérale gauche avec le bouton Connect → la barre de navigation supérieure affiche les sections Resources/Prompts/Tools → la section Tools répertorie les outils disponibles → cliquer sur un outil pour ouvrir le panneau droit pour des tests manuels\n\nProcessus de test : sélectionner l’outil → saisir les paramètres requis (comme l’ID de document) → cliquer sur Run Tool → vérifier la sortie/le message de succès\n\nPrincipales fonctionnalités : tests de développement en direct, simulation d’invocation d’outil, champs de saisie de paramètres, retours sur succès/échec\n\nÉtat : Inspector en développement actif - l’UI peut changer mais les fonctionnalités de base restent similaires\n\nMode d’utilisation : Essentiel pour le développement et le débogage des serveurs MCP avant le déploiement en production"
+                "en": "Log and Progress Notifications = MCP server feature that provides real-time feedback during tool execution to improve user experience.\n\nImplementation on server side:\n- Tool functions automatically receive context argument as last parameter\n- Context object provides methods: info() for logging, report_progress() for progress updates\n- Calling these methods automatically sends messages back to client\n\nImplementation on client side:\n- Create callback function for logging statements\n- Create separate callback for progress updates\n- Pass logging callback to client session\n- Pass progress callback to call_tool function\n- Callbacks handle how to display information to user (terminal output, web UI, etc.)\n\nKey benefits:\n- Prevents user confusion about stalled/failed tool calls\n- Provides visibility into long-running operations\n- Real-time feedback during tool execution\n\nOptional feature = can be omitted if not needed, purely for UX enhancement.",
+                "fr": "Notifications de journalisation et de progression = fonctionnalité du serveur MCP qui fournit des retours en temps réel pendant l'exécution d'un outil afin d'améliorer l'expérience utilisateur.\n\nImplémentation côté serveur:\n- Les fonctions d'outil reçoivent automatiquement l'argument contextuel en tant que dernier paramètre\n- L'objet contextuel fournit des méthodes : info() pour la journalisation, report_progress() pour les mises à jour de progression\n- L'appel de ces méthodes envoie automatiquement des messages au client\n\nImplémentation côté client:\n- Créer une fonction de rappel pour les messages de journalisation\n- Créer une fonction de rappel distincte pour les mises à jour de progression\n- Passer la fonction de rappel de journalisation à la session client\n- Passer la fonction de rappel de progression à la fonction call_tool\n- Les fonctions de rappel gèrent la manière d'afficher l'information à l'utilisateur (sortie du terminal, interface utilisateur web, etc.)\n\nAvantages clés:\n- Évite la confusion de l'utilisateur face à des appels d'outil bloqués ou échoués\n- Fournit une visibilité sur les opérations de longue durée\n- Rétroaction en temps réel pendant l'exécution de l'outil\n\nCaractéristique optionnelle = peut être omise si ce n'est pas nécessaire, purement pour l'amélioration de l'expérience utilisateur."
               }
             }
           ],
@@ -796,25 +796,25 @@
       }
     },
     {
-      "id": "lesson_18",
+      "id": "lesson_13",
       "title": {
-        "en": "The Stdio Transport",
-        "fr": "Le transport Stdio"
+        "en": "Roots",
+        "fr": "Racines"
       },
       "chapters": [
         {
           "id": "chapter_01",
           "title": {
-            "en": "The Stdio Transport",
-            "fr": "Le transport Stdio"
+            "en": "Roots",
+            "fr": "Racines"
           },
           "type": "teaching",
           "blocks": [
             {
               "type": "content",
               "body": {
-                "en": "MCP Transport = mechanism for moving JSON messages between client and server\n\nStdio Transport = transport where client launches server as separate process, communicates via standard input/output streams\n\nCommunication mechanism: Client writes to server's stdin, reads from server's stdout. Server writes to stdout, reads from stdin.\n\nAdvantages: Bidirectional communication - either client or server can initiate requests at any time\n\nLimitations: Only works when client and server run on same physical machine\n\nMessage exchange patterns:\n- Client-to-server request: Write to stdin, read response from stdout\n- Server-to-client request: Server writes to stdout, client responds via stdin\n\nRequired initialization sequence:\n1. Initialize request (client to server)\n2. Initialize result (server to client) \n3. Initialize notification (client to server, no response required)\n\nMessage types:\n- Requests = expect responses\n- Notifications = no response required\n- Results = responses to requests\n\nKey characteristic: Full bidirectional communication support - both parties can initiate requests\n\nContrast with HTTP transport: HTTP transport has limitations on server-initiated requests that stdio transport doesn't have",
-                "fr": "MCP Transport = mécanisme de transfert des messages JSON entre le client et le serveur\n\nStdio Transport = transport où le client lance le serveur en tant que processus séparé, communique via les streams standard d'entrée/sortie\n\nMécanisme de communication : le client écrit dans le stdin du serveur, lit le stdout du serveur. Le serveur écrit dans le stdout, lit le stdin.\n\nAvantages : Communication bidirectionnelle - soit le client soit le serveur peut initier des requêtes à tout moment\n\nLimitations : Ne fonctionne que lorsque le client et le serveur s'exécutent sur la même machine physique\n\nSchémas d'échange de messages :\n- Requête client-vers-serveur : Écrire dans le stdin, lire la réponse du stdout\n- Requête serveur-vers-client : Le serveur écrit dans le stdout, le client répond via le stdin\n\nSéquence d'initialisation requise :\n1. Initialiser la requête (client vers serveur)\n2. Initialiser le résultat (serveur vers client)\n3. Initialiser la notification (client vers serveur, aucune réponse requise)\n\nTypes de messages :\n- Requêtes = attendent des réponses\n- Notifications = aucune réponse requise\n- Résultats = réponses aux requêtes\n\nCaractéristique clé : Support complet de la communication bidirectionnelle - les deux parties peuvent initier des requêtes\n\nPar rapport au transport HTTP : le transport HTTP présente des limitations sur les requêtes initiées par le serveur que le transport stdio n'a pas"
+                "en": "MCP Roots = codified way for users to grant server access to specific files/folders\n\nProblem without roots: User says \"convert bikin.mp4\" but Claude can't locate file in complex filesystem without full path. Requiring full paths inconvenient for users.\n\nSolution with roots: Add 3 tools to MCP server:\n- ConvertVideo (original tool)\n- ReadDirectory (lists files/folders in directory) \n- ListRoots (returns available roots)\n\nRoot = file/folder user grants permission to access beforehand (via command line args when starting server)\n\nImplementation requirement: Tools must check that accessed files/folders are contained within granted roots using function like is_path_allowed()\n\nTwo main benefits:\n1. Permission control - limits server access to authorized areas only\n2. Autonomous discovery - Claude can search through available roots to find files without user providing full paths\n\nKey limitation: MCP SDK doesn't automatically enforce root restrictions. Server developer must implement access checks manually.\n\nListRoots tool optional - can alternatively include root list in prompt directly. Tool pattern allows Claude to dynamically check available roots when needed.",
+                "fr": "MCP Roots = une façon codifiée pour que les utilisateurs accordent l'accès du serveur à des fichiers/dossiers spécifiques\n\nProblème sans roots : L'utilisateur dit \"convert bikin.mp4\" mais Claude ne peut pas localiser le fichier dans un système de fichiers complexe sans chemin complet. Exiger des chemins complets est gênant pour les utilisateurs.\n\nSolution avec roots : Ajouter 3 outils au serveur MCP :\n- ConvertVideo (outil d'origine)\n- ReadDirectory (qui liste les fichiers/dossiers dans un répertoire)\n- ListRoots (renvoie les roots disponibles)\n\nRoot = fichier/dossier que l'utilisateur autorise d'accéder préalablement (via les arguments de ligne de commande lors du démarrage du serveur)\n\nExigence de mise en œuvre : Les outils doivent vérifier que les fichiers/dossiers consultés se trouvent dans les roots accordés en utilisant une fonction telle que is_path_allowed()\n\nDeux avantages principaux :\n1. Contrôle des permissions - limite l'accès du serveur aux zones autorisées uniquement\n2. Découverte autonome - Claude peut parcourir les roots disponibles pour trouver des fichiers sans que l'utilisateur n'ait à fournir des chemins complets\n\nLimitation clé : le MCP SDK n'applique pas automatiquement les restrictions de root. Le développeur du serveur doit implémenter manuellement les contrôles d'accès.\n\nOutil ListRoots optionnel - peut aussi inclure la liste des roots directement dans le prompt. Le modèle d'outil permet à Claude de vérifier dynamiquement les roots disponibles lorsque cela est nécessaire."
               }
             }
           ],
@@ -832,25 +832,25 @@
       }
     },
     {
-      "id": "lesson_19",
+      "id": "lesson_14",
       "title": {
-        "en": "The StreamableHTTP Transport",
-        "fr": "Le StreamableHTTP Transport"
+        "en": "Sampling",
+        "fr": "Échantillonnage"
       },
       "chapters": [
         {
           "id": "chapter_01",
           "title": {
-            "en": "The StreamableHTTP Transport",
-            "fr": "Le transport StreamableHTTP"
+            "en": "Sampling",
+            "fr": "Échantillonnage"
           },
           "type": "teaching",
           "blocks": [
             {
               "type": "content",
               "body": {
-                "en": "StreamableHTTP Transport = MCP transport enabling client-server communication over HTTP connections, allows remote server hosting unlike standard I/O transport which requires same-machine operation.\n\nKey advantage = Remote hosting capability - servers can be publicly accessible at URLs like mcpserver.com, expanding MCP server possibilities.\n\nCritical limitation = Restricted server-to-client messaging functionality due to HTTP's unidirectional nature - clients easily request from servers, but servers cannot easily initiate requests to clients.\n\nTwo key settings impact functionality:\n- stateless HTTP (default: false)\n- JSON response (default: false)\n\nSetting these to true = Reduced functionality, breaks progress bars, logging notifications, progress notifications, and sampling requests.\n\nHTTP communication constraint = Server doesn't know client address and client may not be publicly accessible, making server-initiated requests challenging.\n\nAffected message types when using HTTP = Sampling requests, listing routes, progress notifications, logging notifications - all require server-to-client communication.\n\nCommon deployment issue = Application works fine locally with standard I/O transport but fails when deployed with HTTP transport due to these messaging restrictions.\n\nSolution exists = StreamableHTTP transport has workarounds for server-to-client communication challenges, but with caveats.",
-                "fr": "StreamableHTTP Transport = transport MCP permettant la communication client-serveur via les connexions HTTP, autorise l'hébergement distant du serveur, contrairement au transport I/O standard qui nécessite un fonctionnement sur la même machine.\n\nAvantage clé = Capacité d'hébergement à distance - les serveurs peuvent être accessibles publiquement à des URL comme mcpserver.com, élargissant les possibilités des serveurs MCP.\n\nLimitation critique = Fonctionnalité de messagerie serveur-vers-client restreinte en raison de la nature unidirectionnelle de HTTP - les clients peuvent facilement faire des requêtes vers les serveurs, mais les serveurs ne peuvent pas facilement initier des requêtes vers les clients.\n\nDeux paramètres clés impactent la fonctionnalité :\n- stateless HTTP (default: false)\n- JSON response (default: false)\n\nLes régler sur true = Fonctionnalité réduite, casse les progress bars, les notifications de logging, les progress notifications et les sampling requests.\n\nContrainte de communication HTTP = Le serveur ne connaît pas l'adresse du client et le client peut ne pas être publiquement accessible, ce qui rend les requêtes initiées par le serveur difficiles.\n\nTypes de messages affectés lors de l'utilisation de HTTP = Sampling requests, listing routes, progress notifications, logging notifications - tous nécessitent une communication serveur-vers-client.\n\nProblème courant de déploiement = L'application fonctionne correctement localement avec le transport standard I/O mais échoue lors du déploiement avec le transport HTTP en raison de ces restrictions de messagerie.\n\nUne solution existe = le transport StreamableHTTP dispose de contournements pour les défis de communication serveur-vers-client, mais avec des avertissements."
+                "en": "Sampling = technique allowing MCP servers to request language model text generation from clients instead of directly accessing LLMs themselves.\n\nPurpose = shifts LLM access responsibility from server to client, avoiding need for servers to handle API keys, authentication, or token costs.\n\nArchitecture = Server creates message request → Client receives via sampling callback → Client calls LLM → Client returns generated text to server.\n\nBenefits = eliminates server complexity for LLM integration, removes API key requirements from servers, prevents unauthorized token usage on public servers.\n\nImplementation = Server uses create_message() function with message list, Client implements sampling callback to handle LLM requests and return create_message_result.\n\nPrimary use case = publicly accessible MCP servers that need LLM capabilities without direct LLM access or associated costs/security concerns.",
+                "fr": "Sampling = technique permettant aux serveurs MCP de demander la génération de texte par le modèle de langage à partir des clients plutôt que d'accéder directement aux LLM eux-mêmes.\n\nPurpose = déplace la responsabilité d'accès au LLM du serveur vers le client, évitant que les serveurs aient à gérer les clés API, l'authentification ou les coûts liés aux tokens.\n\nArchitecture = Le serveur crée une requête de message → Le client reçoit via sampling callback → Le client appelle le LLM → Le client renvoie le texte généré au serveur.\n\nBenefits = élimine la complexité côté serveur pour l'intégration du LLM, supprime les exigences de clés API des serveurs, empêche l'utilisation non autorisée de tokens sur les serveurs publics.\n\nImplementation = Le serveur utilise la fonction create_message() avec une liste de messages, le client met en œuvre le sampling callback pour gérer les requêtes LLM et retourner create_message_result.\n\nPrimary use case = serveurs MCP accessibles au public qui ont besoin de capacités LLM sans accès direct au LLM ni coûts et préoccupations de sécurité associés."
               }
             }
           ],
@@ -984,6 +984,72 @@
         "en": "Integration = once implemented, can run CLI to ...",
         "fr": "Intégration = une fois implémentée, il est possible d'exécuter le CLI pour ..."
       }
+    }
+  ],
+  "sections": [
+    {
+      "id": "intro",
+      "title": {
+        "en": "Introduction",
+        "fr": "Introduction"
+      },
+      "lessons": [
+        "Introducing MCP",
+        "MCP Clients"
+      ]
+    },
+    {
+      "id": "servers",
+      "title": {
+        "en": "Hands-on with MCP servers",
+        "fr": "Pratique avec les serveurs MCP"
+      },
+      "lessons": [
+        "Project Setup",
+        "Defining Tools with MCP",
+        "The Server Inspector"
+      ]
+    },
+    {
+      "id": "clients",
+      "title": {
+        "en": "Connecting with MCP clients",
+        "fr": "Connexion avec les clients MCP"
+      },
+      "lessons": [
+        "Implementing a Client",
+        "Defining Resources",
+        "Accessing Resources",
+        "Defining Prompts",
+        "Prompts in the Client"
+      ]
+    },
+    {
+      "id": "assessment",
+      "title": {
+        "en": "Assessment and wrap Up",
+        "fr": "Évaluation et conclusion"
+      },
+      "lessons": [
+        "MCP Review"
+      ]
+    },
+    {
+      "id": "advanced",
+      "title": {
+        "en": "Advanced MCP features",
+        "fr": "Fonctionnalités MCP avancées"
+      },
+      "lessons": [
+        "JSON Message Types",
+        "The Stdio Transport",
+        "The StreamableHTTP Transport",
+        "Stateless HTTP",
+        "StreamableHTTP in Depth",
+        "Log and Progress Notitications",
+        "Roots",
+        "Sampling"
+      ]
     }
   ]
 }
