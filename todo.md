@@ -846,4 +846,4 @@
 - [x] Backend: Table admin_notifications + procédures (list, markRead, markAllRead)
 - [x] Backend: Génération automatique de notifications (nouvelle candidature, apprenant inactif >7j)
 - [x] Frontend: Panneau de notifications admin (icône cloche + dropdown avec badge compteur)
-- [ ] Heartbeat job: Détection automatique des apprenants inactifs >7 jours + génération notification admin
+- [x] Heartbeat job: Détection automatique des apprenants inactifs >7 jours + génération notification admin (cron: dwftZFKazMhLDwjwmpq3fJ, daily 08:00 UTC)
