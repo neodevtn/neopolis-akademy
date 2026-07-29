@@ -1497,6 +1497,22 @@ function LessonViewer({
         const body = block.body || {};
         let text = typeof body === "string" ? body : (body[lang] || body.en || "");
         if (!text) return null;
+        // Skip content blocks that are text duplicates of the following bucket_sort exercise
+        const allBlocks = chapter?.blocks || [];
+        if (blockIdx + 1 < allBlocks.length && allBlocks[blockIdx + 1]?.type === 'bucket_sort') {
+          const nextBucket = allBlocks[blockIdx + 1];
+          const bucketLabels = (nextBucket.buckets || []).map((b: any) => {
+            const lbl = b.label || {};
+            return typeof lbl === 'string' ? lbl : (lbl[lang] || lbl.en || '');
+          });
+          const textLines = text.trim().split('\n').map((l: string) => l.trim()).filter(Boolean);
+          const lastLines = textLines.slice(-Math.max(bucketLabels.length + 2, 6));
+          const matchCount = bucketLabels.filter((label: string) => lastLines.includes(label)).length;
+          if (matchCount >= 2) {
+            // This content block is a scraping artifact - skip it
+            return null;
+          }
+        }
         // Skip the first line of the first content block since it's used as the screen title
         if (blockIdx === 0) {
           const lines = text.split('\n');

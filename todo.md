@@ -770,3 +770,8 @@
 - [x] Indicateur de progression détaillé sur page certification (exercices restants par cours)
 - [x] Rendu Q/R en cartes interactives (SingleChoiceExercise redesign Skilljar-style)
 - [x] Ajustement styles visuels pour correspondre aux patterns Skilljar (couleurs, typographie, espacement)
+
+## Corrections rendu exercices interactifs (2026-07-29)
+- [x] Supprimer les blocs content doublons qui précèdent un bucket_sort (artefact scraping - détection runtime)
+- [x] Scanner tous les cours pour détecter les types de blocs non rendus (transcript et comparison déjà gérés)
+- [x] Vérifier que MatchingExercise (bucket_sort) fonctionne correctement avec les données JSON
