@@ -8,15 +8,23 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Columns3 } from "lucide-react";
+import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Columns3, Bell, BellRing, UserX, FileCheck } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 
 const LOGO_URL = "/manus-storage/logo_neopolis_akademy_9c9a0823.png";
 
 type TabType = "candidatures" | "kanban" | "communications" | "analytics" | "activity";
+
+// Notification type icons
+const NOTIF_ICONS: Record<string, { icon: any; color: string }> = {
+  new_application: { icon: FileCheck, color: "#22c55e" },
+  inactive_learner: { icon: UserX, color: "#f59e0b" },
+  quiz_failure: { icon: AlertTriangle, color: "#ef4444" },
+  system: { icon: BellRing, color: "#3b82f6" },
+};
 
 export default function AdminDashboard() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -37,6 +45,19 @@ export default function AdminDashboard() {
   const [commSubject, setCommSubject] = useState("");
   const [commBody, setCommBody] = useState("");
   const [commType, setCommType] = useState<string>("announcement");
+  const [notifOpen, setNotifOpen] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  // Close notification panel on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotifOpen(false);
+      }
+    }
+    if (notifOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [notifOpen]);
 
   const statsQuery = trpc.applications.stats.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
   const applicationsQuery = trpc.applications.list.useQuery(
@@ -116,6 +137,16 @@ export default function AdminDashboard() {
 
   const analyticsQuery = trpc.adminTools.analytics.getLearnerAnalytics.useQuery(undefined, { enabled: activeTab === "analytics" });
   const activityLogQuery = trpc.adminTools.activityLog.list.useQuery(undefined, { enabled: activeTab === "activity" });
+
+  // Notifications
+  const notifCountQuery = trpc.adminTools.notifications.unreadCount.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin", refetchInterval: 30000 });
+  const notifListQuery = trpc.adminTools.notifications.list.useQuery(undefined, { enabled: notifOpen });
+  const markReadMutation = trpc.adminTools.notifications.markRead.useMutation({
+    onSuccess: () => { notifCountQuery.refetch(); notifListQuery.refetch(); },
+  });
+  const markAllReadMutation = trpc.adminTools.notifications.markAllRead.useMutation({
+    onSuccess: () => { notifCountQuery.refetch(); notifListQuery.refetch(); toast.success("Toutes les notifications marquées comme lues"); },
+  });
 
   if (loading) {
     return (
@@ -233,6 +264,78 @@ export default function AdminDashboard() {
             <button onClick={() => setActiveTab("analytics")} className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${activeTab === "analytics" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "analytics" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "analytics" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Évaluation</button>
             <button onClick={() => setActiveTab("activity")} className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${activeTab === "activity" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "activity" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "activity" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Activité</button>
             <Link href="/admin/training" className="text-sm font-medium px-3 py-1.5 rounded-lg transition-colors hover:bg-gray-100" style={{ color: "var(--wise-mute)" }}>Suivi Apprenants</Link>
+
+            {/* Notification Bell */}
+            <div className="relative ml-2" ref={notifRef}>
+              <button
+                onClick={() => setNotifOpen(!notifOpen)}
+                className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                title="Notifications"
+              >
+                <Bell className="w-5 h-5" style={{ color: "var(--wise-mute)" }} />
+                {(notifCountQuery.data?.count || 0) > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center animate-pulse">
+                    {notifCountQuery.data!.count > 9 ? "9+" : notifCountQuery.data!.count}
+                  </span>
+                )}
+              </button>
+
+              {/* Notification Dropdown */}
+              {notifOpen && (
+                <div className="absolute right-0 top-full mt-2 w-96 max-h-[480px] bg-card border border-border rounded-xl shadow-xl overflow-hidden z-[100]">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+                    <h3 className="text-sm font-semibold">Notifications</h3>
+                    <div className="flex items-center gap-2">
+                      {(notifCountQuery.data?.count || 0) > 0 && (
+                        <button
+                          onClick={() => markAllReadMutation.mutate()}
+                          className="text-xs text-primary hover:underline"
+                        >
+                          Tout marquer comme lu
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="overflow-y-auto max-h-[400px]">
+                    {notifListQuery.isLoading ? (
+                      <div className="flex justify-center py-8"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
+                    ) : !notifListQuery.data?.items?.length ? (
+                      <div className="text-center py-10">
+                        <Bell className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
+                        <p className="text-sm text-muted-foreground">Aucune notification</p>
+                      </div>
+                    ) : (
+                      notifListQuery.data.items.map((notif: any) => {
+                        const meta = NOTIF_ICONS[notif.type] || NOTIF_ICONS.system;
+                        const IconComp = meta.icon;
+                        return (
+                          <div
+                            key={notif.id}
+                            className={`flex items-start gap-3 px-4 py-3 border-b border-border/50 hover:bg-accent/30 transition-colors cursor-pointer ${notif.isRead === 0 ? "bg-primary/5" : ""}`}
+                            onClick={() => { if (notif.isRead === 0) markReadMutation.mutate({ id: notif.id }); }}
+                          >
+                            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: `${meta.color}15` }}>
+                              <IconComp className="w-4 h-4" style={{ color: meta.color }} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className={`text-sm ${notif.isRead === 0 ? "font-semibold" : "font-normal text-muted-foreground"}`}>{notif.title}</p>
+                              {notif.message && <p className="text-xs text-muted-foreground mt-0.5 truncate">{notif.message}</p>}
+                              <p className="text-[10px] text-muted-foreground/70 mt-1">
+                                {new Date(notif.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                              </p>
+                            </div>
+                            {notif.isRead === 0 && (
+                              <div className="w-2 h-2 rounded-full bg-primary shrink-0 mt-2" />
+                            )}
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
             <Link href="/">
               <button className="wise-btn-tertiary text-sm flex items-center gap-2 ml-2">
                 <ArrowLeft className="w-4 h-4" /> Retour

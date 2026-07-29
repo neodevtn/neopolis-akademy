@@ -843,3 +843,6 @@
 - [x] Frontend: Timeline d'activité par apprenant (journal d'activité)
 - [x] Frontend: Alertes automatiques (inactif >7j, échecs quiz, progression bloquée)
 - [x] Vérifier et corriger l'upload CV et photo dans le formulaire de candidature (visible et fonctionnel)
+- [x] Backend: Table admin_notifications + procédures (list, markRead, markAllRead)
+- [x] Backend: Génération automatique de notifications (nouvelle candidature, apprenant inactif >7j)
+- [x] Frontend: Panneau de notifications admin (icône cloche + dropdown avec badge compteur)

@@ -10,6 +10,11 @@ import {
   bulkUpdateApplicationStatus, getApplicationsByIds,
   getLearnerAnalytics, getRecipientsByFilter,
 } from "./adminDb";
+import {
+  getAdminNotifications, getUnreadNotificationCount,
+  markNotificationRead, markAllNotificationsRead,
+  createAdminNotification,
+} from "./notificationsDb";
 import { upsertUser, setUserPasswordHash, getUserByEmail } from "./db";
 import { sendDecisionEmail } from "./email";
 import bcrypt from "bcryptjs";
@@ -374,6 +379,45 @@ export const adminEnhancedRouter = router({
       .query(async ({ ctx, input }) => {
         assertAdmin(ctx);
         return await getAdminActivityLog(input?.page || 1, input?.pageSize || 50);
+      }),
+  }),
+
+  // ============ Notifications ============
+  notifications: router({
+    list: protectedProcedure
+      .input(z.object({
+        page: z.number().min(1).default(1),
+        pageSize: z.number().min(1).max(50).default(20),
+        unreadOnly: z.boolean().default(false),
+      }).optional())
+      .query(async ({ ctx, input }) => {
+        assertAdmin(ctx);
+        return await getAdminNotifications(
+          input?.page || 1,
+          input?.pageSize || 20,
+          input?.unreadOnly || false
+        );
+      }),
+
+    unreadCount: protectedProcedure
+      .query(async ({ ctx }) => {
+        assertAdmin(ctx);
+        return await getUnreadNotificationCount();
+      }),
+
+    markRead: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        assertAdmin(ctx);
+        await markNotificationRead(input.id);
+        return { success: true };
+      }),
+
+    markAllRead: protectedProcedure
+      .mutation(async ({ ctx }) => {
+        assertAdmin(ctx);
+        await markAllNotificationsRead();
+        return { success: true };
       }),
   }),
 });

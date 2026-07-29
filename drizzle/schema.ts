@@ -273,3 +273,19 @@ export const adminActivityLog = mysqlTable("admin_activity_log", {
 
 export type AdminActivityLog = typeof adminActivityLog.$inferSelect;
 export type InsertAdminActivityLog = typeof adminActivityLog.$inferInsert;
+
+/**
+ * Admin notifications - alerts for new applications, inactive learners, etc.
+ */
+export const adminNotifications = mysqlTable("admin_notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  type: varchar("type", { length: 50 }).notNull(), // "new_application", "inactive_learner", "quiz_failure", "system"
+  title: varchar("title", { length: 255 }).notNull(),
+  message: text("message"),
+  targetType: varchar("targetType", { length: 50 }), // "application", "user"
+  targetId: int("targetId"),
+  isRead: int("isRead").default(0).notNull(), // 0=unread, 1=read
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type AdminNotification = typeof adminNotifications.$inferSelect;
+export type InsertAdminNotification = typeof adminNotifications.$inferInsert;

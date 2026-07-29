@@ -13,6 +13,7 @@ import { sendConfirmationEmail, sendDecisionEmail, sendInvitationEmail, sendRemi
 import { generateCandidatePDF } from "./pdf";
 import { uploadRateLimit, submitRateLimit, getClientIp } from "./security";
 import { adminEnhancedRouter } from "./adminRouter";
+import { createAdminNotification } from "./notificationsDb";
 
 export const appRouter = router({
   system: systemRouter,
@@ -177,6 +178,19 @@ export const appRouter = router({
           });
         } catch (e) {
           console.error("Failed to send notification:", e);
+        }
+
+        // Create admin notification for new application
+        try {
+          await createAdminNotification({
+            type: "new_application",
+            title: `Nouvelle candidature de ${input.firstName} ${input.lastName}`,
+            message: `Score: ${scores.scoreTotal.toFixed(1)}% | Pays: ${input.country} | Secteur: ${input.sector}`,
+            targetType: "application",
+            targetId: application.id,
+          });
+        } catch (e) {
+          console.error("Failed to create admin notification:", e);
         }
 
         // Send confirmation email to candidate
