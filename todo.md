@@ -737,10 +737,19 @@
 - [x] Téléchargé et uploadé le PDF AI_Fluency_vocabulary_cheat_sheet.pdf sur le storage
 
 ## Ressources téléchargeables complètes (Downloads) - 2026-07-29
-- [ ] Extraire les fichiers du ZIP fourni par l'utilisateur (76 fichiers uniques)
-- [ ] Uploader tous les fichiers sur le serveur (manus-upload-file --webdev)
-- [ ] Intégrer les données de téléchargement dans les JSON de cours (référence fichiers locaux, pas URLs signées)
-- [ ] Refaire le rendu des cartes Download dans TrainingCourse.tsx (fidèle à Skilljar : fond coloré, illustration quill, titre, description, bouton)
-- [ ] Vérifier le rendu : leçon ai-fluency-framework-foundations/291863 affiche la carte AI Fluency vocabulary guide
-- [ ] Vérifier que le bouton pointe vers AI_Fluency_vocabulary_cheat_sheet.pdf hébergé localement
-- [ ] Vérifier que l'image quill est visible avec alt text
+- [x] Extraire les fichiers du ZIP fourni par l'utilisateur (139 fichiers extraits)
+- [x] Uploader tous les fichiers sur le serveur (manus-upload-file --webdev) - 139 fichiers uploadés
+- [x] Intégrer les données de téléchargement dans les JSON de cours (143 blocs dans 5 cours)
+- [x] Refaire le rendu des cartes Download dans TrainingCourse.tsx (fidèle à Skilljar : fond coloré, illustration quill, titre, description, bouton)
+- [x] Vérifier le rendu : leçon Introduction to AI Fluency affiche la carte AI Fluency vocabulary guide
+- [x] Vérifier que le bouton pointe vers AI_Fluency_vocabulary_cheat_sheet.pdf hébergé localement
+- [x] Vérifier que l'image quill est visible avec alt text
+
+## Vérification structure et icônes - 2026-07-29
+- [x] Restructuré cours 02 (Building with Claude API) : 94 leçons, 11 sections
+- [x] Restructuré cours 03 (Claude on Google Cloud) : 98 leçons, 12 sections
+- [x] Ajouté sections aux cours 04 (Claude Code), 05 (Claude 101), 07 (MCP)
+- [x] Corrigé logique section boundaries (titres répétés Module Introduction)
+- [x] Ajouté icônes de type (Video, BookOpen, Download, Brain, Target) à tous les cours
+- [x] Corrigé sections cours 06 (Bedrock) : Computer Use et Course introduction
+- [x] Vérifié TypeScript compile sans erreur

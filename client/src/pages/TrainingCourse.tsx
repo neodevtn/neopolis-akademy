@@ -1808,25 +1808,38 @@ function LessonSidebarContent({
   // Build section boundaries: map lesson index -> section title to show BEFORE it
   const sectionBoundaries: Record<number, string> = {};
   if (sections && sections.length > 0) {
-    let lessonIdx = 0;
+    const genericTitles = new Set(['module introduction', 'module complete', 'key takeaways']);
+    let searchFrom = 0;
     for (const section of sections) {
       const sectionTitle = section.title ? (typeof section.title === 'object' ? resolveI18n(section.title, lang) : section.title) : '';
       const sectionLessons = section.lessons || [];
       if (sectionLessons.length > 0) {
-        // Find the index of the first lesson in this section
-        const firstLessonTitle = sectionLessons[0];
-        const foundIdx = lessons.findIndex((l: any) => {
-          const lt = l.title ? (typeof l.title === 'object' ? resolveI18n(l.title, 'en') : l.title) : '';
-          return lt.toLowerCase() === firstLessonTitle.toLowerCase();
-        });
+        // Find the first non-generic lesson title in this section for boundary matching
+        const uniqueTitle = sectionLessons.find((t: string) => !genericTitles.has(t.toLowerCase()));
+        let foundIdx = -1;
+        if (uniqueTitle) {
+          // Search from expected position to handle repeated titles
+          for (let i = searchFrom; i < lessons.length; i++) {
+            const lt = lessons[i].title ? (typeof lessons[i].title === 'object' ? resolveI18n(lessons[i].title, 'en') : lessons[i].title) : '';
+            if (lt.toLowerCase() === uniqueTitle.toLowerCase()) {
+              // The section starts at the first lesson before this unique one (could be Module Introduction)
+              foundIdx = Math.max(searchFrom, i - sectionLessons.indexOf(uniqueTitle));
+              break;
+            }
+          }
+        }
         if (foundIdx >= 0) {
           sectionBoundaries[foundIdx] = sectionTitle;
+          searchFrom = foundIdx + sectionLessons.length;
+        } else {
+          // Fallback: use sequential position
+          sectionBoundaries[searchFrom] = sectionTitle;
+          searchFrom += sectionLessons.length;
         }
       } else {
         // No lessons array - use sequential assignment
-        sectionBoundaries[lessonIdx] = sectionTitle;
+        sectionBoundaries[searchFrom] = sectionTitle;
       }
-      lessonIdx += sectionLessons.length || 0;
     }
   }
 
@@ -1879,10 +1892,18 @@ function LessonSidebarContent({
         const isModuleComplete = lessonTitleEn.includes('module complete') || lessonTitleEn.includes('module terminé');
         const isKeyTakeaways = lessonTitleEn.includes('key takeaway') || lessonTitleEn.includes('points clés');
         
+        // Detect lesson content types from blocks
+        const lessonBlocks = (lesson.chapters || []).flatMap((ch: any) => (ch.blocks || []).map((b: any) => b.type || ''));
+        const hasFlipCards = lessonBlocks.includes('flip_cards');
+        const hasDownload = lessonBlocks.includes('download');
+        const hasCheckpoint = lessonBlocks.includes('checkpoint');
+        const hasTabbedContent = lessonBlocks.includes('tabbed_content');
+        const hasExerciseBlock = lessonBlocks.includes('single_choice_exercise');
+        
         let typeIcon: React.ReactNode = null;
         if (chType === 'quiz' || lessonTitleEn.includes('quiz')) {
           typeIcon = <Brain className="w-3 h-3 text-purple-500 shrink-0" />;
-        } else if (chType === 'exercise' || chType === 'checkpoint' || hasBucketSort) {
+        } else if (chType === 'exercise' || hasExerciseBlock || hasBucketSort) {
           typeIcon = <Target className="w-3 h-3 text-orange-500 shrink-0" />;
         } else if (hasVideo || lesson.hasVideo) {
           typeIcon = <Video className="w-3 h-3 text-red-400 shrink-0" />;
@@ -1890,6 +1911,12 @@ function LessonSidebarContent({
           typeIcon = <Trophy className="w-3 h-3 text-amber-500 shrink-0" />;
         } else if (isKeyTakeaways) {
           typeIcon = <GraduationCap className="w-3 h-3 text-emerald-500 shrink-0" />;
+        } else if (hasCheckpoint && !hasFlipCards && !hasTabbedContent) {
+          typeIcon = <Check className="w-3 h-3 text-blue-500 shrink-0" />;
+        } else if (hasDownload) {
+          typeIcon = <Download className="w-3 h-3 text-indigo-500 shrink-0" />;
+        } else {
+          typeIcon = <BookOpen className="w-3 h-3 text-slate-400 shrink-0" />;
         }
 
         // Clickable if completed or current
