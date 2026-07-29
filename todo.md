@@ -714,3 +714,10 @@
 - [x] Corriger SingleChoiceExercise : ajout prop lang, boutons bilingues
 - [x] Corriger ChapterQuiz : resolveI18n sur question/choices/explanation
 - [x] Corriger sidebar : titres d'écran bilingues (Cartes mémoire/Flip Cards, etc.)
+
+## Amélioration rendu cours - éléments manquants (2026-07-29)
+- [ ] Ajouter support liens cliquables (markdown [text](url) et URLs brutes) dans renderInlineFormatting
+- [ ] Ajouter support YouTube embeds dans les blocs content (détection URLs YouTube)
+- [ ] Améliorer le rendu des sections structurées (Key takeaways, Exercises, Reflection, Downloads)
+- [ ] Ajouter support des blocs de téléchargement (download cards avec icône fichier)
+- [ ] Corriger la traduction EN des quiz (24065 champs en cours de traduction FR→EN)

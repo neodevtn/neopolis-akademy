@@ -382,6 +382,31 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     }
     if (inCodeBlock) { codeLines.push(line); continue; }
 
+    // Horizontal rule
+    if (line.trim() === "---" || line.trim() === "***" || line.trim() === "___") {
+      elements.push(<hr key={i} className="my-4 border-border/50" />);
+      continue;
+    }
+    // Blockquote
+    if (line.startsWith("> ")) {
+      elements.push(
+        <blockquote key={i} className="border-l-4 border-blue-400/60 pl-4 py-1 my-2 text-sm italic text-muted-foreground bg-blue-50/30 dark:bg-blue-950/20 rounded-r">
+          {renderInlineFormatting(line.replace(/^>\s*/, ""))}
+        </blockquote>
+      );
+      continue;
+    }
+    // Key Takeaways / À retenir section heading
+    if (line.match(/^(key takeaway|à retenir|points? clé|takeaway)/i) || line.match(/^#{1,3}\s*(key takeaway|à retenir|points? clé|takeaway)/i)) {
+      const cleanTitle = line.replace(/^#{1,3}\s*/, "");
+      elements.push(
+        <div key={i} className="flex items-center gap-2 mt-6 mb-3 p-3 bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/50 dark:border-amber-800/30 rounded-lg">
+          <span className="text-amber-600 text-lg">💡</span>
+          <h4 className="text-base font-bold text-amber-800 dark:text-amber-300">{cleanTitle}</h4>
+        </div>
+      );
+      continue;
+    }
     // Markdown headings
     if (line.startsWith("### ")) {
       elements.push(<h4 key={i} className="text-base font-semibold mt-5 mb-2 text-foreground">{line.replace("### ", "")}</h4>);
@@ -472,7 +497,8 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
 
 function renderInlineFormatting(text: string): React.ReactNode {
   const parts: React.ReactNode[] = [];
-  const regex = /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g;
+  // Match: markdown links, raw URLs, code, bold, italic
+  const regex = /(\[[^\]]+\]\([^)]+\)|https?:\/\/[^\s)]+|`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g;
   let lastIndex = 0;
   let match;
 
@@ -481,7 +507,24 @@ function renderInlineFormatting(text: string): React.ReactNode {
       parts.push(text.slice(lastIndex, match.index));
     }
     const m = match[0];
-    if (m.startsWith("`")) {
+    if (m.startsWith("[")) {
+      // Markdown link: [text](url)
+      const linkMatch = m.match(/^\[([^\]]+)\]\(([^)]+)\)/);
+      if (linkMatch) {
+        parts.push(
+          <a key={match.index} href={linkMatch[2]} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline underline-offset-2">
+            {linkMatch[1]}
+          </a>
+        );
+      }
+    } else if (m.startsWith("http")) {
+      // Raw URL
+      parts.push(
+        <a key={match.index} href={m} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline underline-offset-2 break-all">
+          {m}
+        </a>
+      );
+    } else if (m.startsWith("`")) {
       parts.push(<code key={match.index} className="px-1.5 py-0.5 rounded text-xs font-mono bg-secondary text-primary">{m.slice(1, -1)}</code>);
     } else if (m.startsWith("**")) {
       parts.push(<strong key={match.index} className="font-semibold text-foreground">{m.slice(2, -2)}</strong>);
