@@ -12,6 +12,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { securityHeaders, globalRateLimit, tRPCBatchLimit } from "../security";
 import certificateRouter from "../certificate";
+import { inactiveLearnerCheckHandler } from "../scheduledInactiveCheck";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -49,6 +50,10 @@ async function startServer() {
   registerAuthRoutes(app);
   registerDemoAuthRoutes(app); // Keep legacy demo route for backwards compatibility
   app.use(certificateRouter);
+
+  // Heartbeat scheduled handlers
+  app.post("/api/scheduled/inactive-learner-check", inactiveLearnerCheckHandler);
+
   // tRPC API with batch limit (F-011)
   app.use("/api/trpc", tRPCBatchLimit);
   app.use(
