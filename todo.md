@@ -753,3 +753,9 @@
 - [x] Ajouté icônes de type (Video, BookOpen, Download, Brain, Target) à tous les cours
 - [x] Corrigé sections cours 06 (Bedrock) : Computer Use et Course introduction
 - [x] Vérifié TypeScript compile sans erreur
+## Corrections rendu UI (2026-07-29) - Problèmes identifiés par screenshots
+- [x] Convertir le chapitre Capability Layer en tabbed_content (Skills/Code Execution/Memory)
+- [x] Ajouter détection et rendu des tables concaténées (pattern camelCase) dans PageContent
+- [x] Ajouter support des tables markdown (pipe-delimited) dans PageContent
+- [x] Vérifier que la navigation écran (Écran X sur N) fonctionne correctement
+- [x] Corriger le rendu des titres de chapitre (Memory comme heading propre)

@@ -224,6 +224,105 @@ function detectStepItems(lines: string[], startIdx: number): { items: { num: num
   return null;
 }
 
+// Detect concatenated table patterns (scraping artifact: "HeaderCol1HeaderCol2\nCell1Cell2")
+function detectConcatenatedTables(lines: string[]): { headers: string[]; rows: string[][]; startIdx: number; endIdx: number }[] {
+  const results: { headers: string[]; rows: string[][]; startIdx: number; endIdx: number }[] = [];
+  const visited = new Set<number>();
+
+  for (let i = 0; i < lines.length; i++) {
+    if (visited.has(i)) continue;
+    const stripped = lines[i].trim();
+    if (!stripped || stripped.length < 10) continue;
+
+    // Check for camelCase transitions (lowercase immediately followed by uppercase)
+    const transitions = (stripped.match(/[a-z][A-Z]/g) || []).length;
+    if (transitions < 1) continue;
+
+    // Split header at camelCase boundaries (including after punctuation)
+    const headerCells = stripped.split(/(?<=[a-z.?!,;:)])(?=[A-Z])/);
+    if (headerCells.length < 2) continue;
+
+    // Check subsequent non-empty lines for similar pattern
+    const colCount = headerCells.length;
+    const rows: string[][] = [];
+    let endIdx = i + 1;
+
+    for (let j = i + 1; j < lines.length; j++) {
+      const rowLine = lines[j].trim();
+      if (!rowLine) { endIdx = j + 1; continue; }
+
+      // Check if this row also has camelCase transitions
+      const rowTransitions = (rowLine.match(/[a-z][A-Z]/g) || []).length;
+      if (rowTransitions < 1 && rowLine.length > 30) break;
+      if (rowTransitions < 1) break;
+
+      // Split row with limited splits to match column count
+      const rowCells = rowLine.split(/(?<=[a-z.?!,;:)])(?=[A-Z])/);
+      // Accept rows that split into colCount cells (or close)
+      if (rowCells.length >= colCount - 1 && rowCells.length <= colCount + 1) {
+        // Normalize to exact colCount
+        if (rowCells.length > colCount) {
+          // Merge extra cells into the last column
+          const normalized = rowCells.slice(0, colCount - 1);
+          normalized.push(rowCells.slice(colCount - 1).join(''));
+          rows.push(normalized);
+        } else if (rowCells.length < colCount) {
+          // Pad with empty cells
+          rows.push([...rowCells, ...Array(colCount - rowCells.length).fill('')]);
+        } else {
+          rows.push(rowCells);
+        }
+        endIdx = j + 1;
+      } else {
+        break;
+      }
+    }
+
+    // Need at least 2 data rows to consider it a table
+    if (rows.length >= 2) {
+      results.push({ headers: headerCells, rows, startIdx: i, endIdx });
+      for (let k = i; k < endIdx; k++) visited.add(k);
+    }
+  }
+  return results;
+}
+
+// Detect markdown pipe tables (| col1 | col2 |)
+function detectMarkdownTables(lines: string[]): { headers: string[]; rows: string[][]; startIdx: number; endIdx: number }[] {
+  const results: { headers: string[]; rows: string[][]; startIdx: number; endIdx: number }[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line.startsWith('|') || !line.endsWith('|')) continue;
+
+    // Check if next line is a separator (| --- | --- |)
+    const nextLine = lines[i + 1]?.trim() || '';
+    if (!nextLine.match(/^\|[\s-:|]+\|$/)) continue;
+
+    // Parse header
+    const headers = line.split('|').filter(c => c.trim()).map(c => c.trim());
+    if (headers.length < 2) continue;
+
+    // Parse rows
+    const rows: string[][] = [];
+    let endIdx = i + 2;
+    for (let j = i + 2; j < lines.length; j++) {
+      const rowLine = lines[j].trim();
+      if (!rowLine.startsWith('|') || !rowLine.endsWith('|')) break;
+      const cells = rowLine.split('|').filter(c => c.trim() !== '' || c.includes(' ')).map(c => c.trim());
+      if (cells.length >= 1) {
+        rows.push(cells);
+        endIdx = j + 1;
+      }
+    }
+
+    if (rows.length >= 1) {
+      results.push({ headers, rows, startIdx: i, endIdx });
+    }
+  }
+  return results;
+}
+
 // Smart content renderer with heuristic structure detection
 function PageContent({ content, lang }: { content: string; lang: string }) {
   const lines = content.split("\n");
@@ -245,6 +344,20 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
   const calloutLineSet = new Set<number>();
   calloutBoxes.forEach(cb => {
     for (let k = cb.startIdx; k < cb.endIdx; k++) calloutLineSet.add(k);
+  });
+
+  // Detect concatenated tables (scraping artifact)
+  const concatTables = detectConcatenatedTables(lines);
+  const concatTableLineSet = new Set<number>();
+  concatTables.forEach(t => {
+    for (let k = t.startIdx; k < t.endIdx; k++) concatTableLineSet.add(k);
+  });
+
+  // Detect markdown pipe tables
+  const mdTables = detectMarkdownTables(lines);
+  const mdTableLineSet = new Set<number>();
+  mdTables.forEach(t => {
+    for (let k = t.startIdx; k < t.endIdx; k++) mdTableLineSet.add(k);
   });
 
   // Heuristic helpers
@@ -371,6 +484,66 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
       continue;
     }
     if (calloutLineSet.has(i)) continue;
+
+    // Check if this line starts a concatenated table
+    const concatTable = concatTables.find(t => t.startIdx === i);
+    if (concatTable) {
+      elements.push(
+        <div key={`ctable-${i}`} className="my-4 overflow-x-auto">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="bg-muted/50">
+                {concatTable.headers.map((h, hi) => (
+                  <th key={hi} className="text-left p-3 font-semibold text-foreground border-b border-border">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {concatTable.rows.map((row, ri) => (
+                <tr key={ri} className={ri % 2 === 0 ? '' : 'bg-muted/20'}>
+                  {row.map((cell, ci) => (
+                    <td key={ci} className="p-3 text-muted-foreground border-b border-border/50">{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+      i = concatTable.endIdx - 1;
+      continue;
+    }
+    if (concatTableLineSet.has(i)) continue;
+
+    // Check if this line starts a markdown pipe table
+    const mdTable = mdTables.find(t => t.startIdx === i);
+    if (mdTable) {
+      elements.push(
+        <div key={`mdtable-${i}`} className="my-4 overflow-x-auto">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="bg-muted/50">
+                {mdTable.headers.map((h, hi) => (
+                  <th key={hi} className="text-left p-3 font-semibold text-foreground border-b border-border">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {mdTable.rows.map((row, ri) => (
+                <tr key={ri} className={ri % 2 === 0 ? '' : 'bg-muted/20'}>
+                  {row.map((cell, ci) => (
+                    <td key={ci} className="p-3 text-muted-foreground border-b border-border/50">{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+      i = mdTable.endIdx - 1;
+      continue;
+    }
+    if (mdTableLineSet.has(i)) continue;
 
     // Check if this line starts a numbered stepper sequence (bare "1" followed by label)
     const trimmedForStepper = lines[i].trim();
@@ -507,12 +680,22 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
         </div>
       );
     } else if (isTechTerm(line)) {
-      // Technical term - render as bold text
-      elements.push(
-        <p key={i} className="text-sm font-semibold text-foreground mb-1">
-          {line.trim()}
-        </p>
-      );
+      // Technical term - render as heading if preceded by empty line (section title)
+      // or as bold inline text if within a paragraph
+      const prevTrimmed = prevLine?.trim() || '';
+      if (prevTrimmed === '' || i === 0) {
+        elements.push(
+          <h4 key={i} className="text-base font-bold mt-5 mb-2 text-foreground">
+            {line.trim()}
+          </h4>
+        );
+      } else {
+        elements.push(
+          <p key={i} className="text-sm font-semibold text-foreground mb-1">
+            {line.trim()}
+          </p>
+        );
+      }
     } else if (isFirstTextLine) {
       // First text line - check if it's actually an implicit list item before treating as paragraph
       isFirstTextLine = false;
