@@ -716,8 +716,14 @@
 - [x] Corriger sidebar : titres d'écran bilingues (Cartes mémoire/Flip Cards, etc.)
 
 ## Amélioration rendu cours - éléments manquants (2026-07-29)
-- [ ] Ajouter support liens cliquables (markdown [text](url) et URLs brutes) dans renderInlineFormatting
+- [x] Ajouter support liens cliquables (markdown [text](url) et URLs brutes) dans renderInlineFormatting
 - [ ] Ajouter support YouTube embeds dans les blocs content (détection URLs YouTube)
-- [ ] Améliorer le rendu des sections structurées (Key takeaways, Exercises, Reflection, Downloads)
+- [x] Améliorer le rendu des sections structurées (Key takeaways, Exercises, Reflection, Downloads)
 - [ ] Ajouter support des blocs de téléchargement (download cards avec icône fichier)
 - [ ] Corriger la traduction EN des quiz (24065 champs en cours de traduction FR→EN)
+- [x] Détection des titres de section connus (Exercices, Réflexion, Ce qui vient ensuite, etc.) en h3 avec bordure
+- [x] Détection des listes implicites (séquences de lignes courtes commençant par majuscule)
+- [x] Détection forward-looking du premier élément de liste (regarde la ligne suivante)
+- [x] Rendu des durées parenthétiques en italique (4 minutes, 5-10 mins)
+- [x] Détection des liens de domaines nus (claude.ai, anthropic.com) comme liens cliquables
+- [x] Correction du stripping de la description qui ne supprime plus les lignes de contenu utiles

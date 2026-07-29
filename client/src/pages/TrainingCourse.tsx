@@ -258,28 +258,89 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     'Fine-tuning', 'RAG', 'MCP', 'Artifacts', 'Projects', 'Computer Use']);
   const isTechTerm = (line: string) => techTerms.has(line.trim());
   
+  // Known section heading keywords (case-insensitive match)
+  const knownSectionHeadings = new Set([
+    'exercises', 'reflection', "what's next",
+    'acknowledgments and license', 'putting things into practice',
+    'getting started', 'what you will learn', 'learning objectives',
+    'summary', 'conclusion', 'introduction', 'overview', 'prerequisites',
+    'next steps', 'resources', 'references', 'discussion', 'activity',
+    // French equivalents
+    'exercices', 'réflexion', 'et ensuite', 'points clés', 'à retenir',
+    'remerciements et licence', 'mise en pratique', 'objectifs',
+    'résumé', 'prochaines étapes', 'ressources'
+  ]);
+
   const isSectionHeading = (line: string, nextLine: string | undefined) => {
     const trimmed = line.trim();
     if (trimmed.length === 0) return false;
-    if (trimmed.length > 45) return false; // Only very short lines can be headings
+    if (trimmed.length > 60) return false;
     if (isTechTerm(trimmed)) return false;
+    
+    // Check against known section heading keywords
+    if (knownSectionHeadings.has(trimmed.toLowerCase())) return true;
+    
     // Must not contain colons (those are meta lines or descriptions)
     if (trimmed.includes(':')) return false;
     // Short line that doesn't end with punctuation and is followed by empty line or longer text
-    if (!/[.,:;!?)]$/.test(trimmed)) {
+    if (!/[.,:;!?)]$/.test(trimmed) && trimmed.length <= 45) {
       if (!nextLine || nextLine.trim() === "" || nextLine.trim().length > trimmed.length) {
         return true;
       }
     }
     return false;
   };
-  const isImplicitListItem = (line: string, prevLines: string[]) => {
+  const isImplicitListItem = (line: string, prevLines: string[], nextLines: string[]) => {
     const trimmed = line.trim();
-    // Detect lines that are part of a list pattern: short, similar structure, in sequence
-    if (trimmed.length > 0 && trimmed.length <= 80) {
-      // Check if it starts with a parenthetical pattern like "Clear product description (what...)"
-      if (/^[A-Z][^.]*\([^)]+\)$/.test(trimmed)) return true;
+    if (trimmed.length === 0 || trimmed.length > 120) return false;
+    
+    // Check if it starts with a parenthetical pattern like "Clear product description (what...)"
+    if (/^[A-Z][^.]*\([^)]+\)$/.test(trimmed)) return true;
+    
+    // Check if previous non-empty line ends with ":" (introduces a list)
+    const prevNonEmpty = prevLines.filter(l => l.trim().length > 0);
+    const lastPrev = prevNonEmpty[prevNonEmpty.length - 1]?.trim() || '';
+    const secondLastPrev = prevNonEmpty[prevNonEmpty.length - 2]?.trim() || '';
+    
+    // If any recent non-empty line ends with ":" - this is a list context
+    const hasColonIntro = prevLines.slice(-12).some(l => l.trim().endsWith(':'));
+    
+    // If the previous non-empty line ends with ":" or the one before that does
+    // AND this line is relatively short and starts with a capital letter
+    if ((lastPrev.endsWith(':') || secondLastPrev.endsWith(':') || hasColonIntro) && trimmed.length <= 100) {
+      // This is likely a list item following a colon-ending intro
+      if (/^[A-Z\u00C0-\u024F]/.test(trimmed) && !trimmed.endsWith(':')) return true;
+      // Also catch lines starting with a product/tool name followed by colon ("Claude: Visit...")
+      if (/^[A-Z][a-zA-Z]+:/.test(trimmed)) return true;
     }
+    
+    // Detect sequences of short lines that start with capitals and have similar structure
+    if (/^[A-Z\u00C0-\u024F]/.test(trimmed) && trimmed.length <= 100 && !trimmed.endsWith('.')) {
+      // Check if previous non-empty line is also a similar short line (continuation)
+      if (prevNonEmpty.length >= 1) {
+        const prevTrimmed = lastPrev;
+        if (prevTrimmed.length > 20 && prevTrimmed.length <= 100 &&
+            /^[A-Z\u00C0-\u024F]/.test(prevTrimmed) &&
+            !prevTrimmed.endsWith('.') && !prevTrimmed.endsWith(':')) {
+          return true;
+        }
+      }
+      
+      // Forward-looking: if the NEXT non-empty line is also a similar short line,
+      // then this is likely the FIRST item of an implicit list
+      if (trimmed.length > 20) {
+        const nextNonEmpty = nextLines.find(l => l.trim().length > 0);
+        if (nextNonEmpty) {
+          const nextTrimmed = nextNonEmpty.trim();
+          if (nextTrimmed.length > 20 && nextTrimmed.length <= 100 &&
+              /^[A-Z\u00C0-\u024F]/.test(nextTrimmed) &&
+              !nextTrimmed.endsWith('.') && !nextTrimmed.endsWith(':')) {
+            return true;
+          }
+        }
+      }
+    }
+    
     return false;
   };
 
@@ -453,22 +514,39 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
         </p>
       );
     } else if (isFirstTextLine) {
-      // First text line - render as regular paragraph (no special title treatment)
+      // First text line - check if it's actually an implicit list item before treating as paragraph
       isFirstTextLine = false;
-      elements.push(
-        <p key={i} className="text-sm leading-relaxed mb-2 text-muted-foreground">
-          {renderInlineFormatting(line)}
-        </p>
-      );
+      if (isImplicitListItem(line, lines.slice(Math.max(0, i - 8), i), lines.slice(i + 1, i + 6))) {
+        elements.push(
+          <li key={i} className="text-sm ml-5 mb-1.5 leading-relaxed list-disc text-muted-foreground">
+            {renderInlineFormatting(line)}
+          </li>
+        );
+      } else {
+        elements.push(
+          <p key={i} className="text-sm leading-relaxed mb-2 text-muted-foreground">
+            {renderInlineFormatting(line)}
+          </p>
+        );
+      }
     } else if (isSectionHeading(line, nextLine) && (prevLine?.trim() === "" || i === 1)) {
-      // Heuristic: short line after empty line, not ending with punctuation = sub-heading
-      elements.push(
-        <h4 key={i} className="text-base font-bold mt-6 mb-2 text-foreground">
-          {renderInlineFormatting(line)}
-        </h4>
-      );
-    } else if (isImplicitListItem(line, lines.slice(Math.max(0, i - 3), i))) {
-      // Implicit list item (short line with parenthetical explanation)
+      // Check if it's a known major section heading (render as h3) vs heuristic (h4)
+      const isKnownHeading = knownSectionHeadings.has(line.trim().toLowerCase());
+      if (isKnownHeading) {
+        elements.push(
+          <h3 key={i} className="text-lg font-bold mt-8 mb-3 text-foreground border-b border-border/30 pb-1">
+            {renderInlineFormatting(line)}
+          </h3>
+        );
+      } else {
+        elements.push(
+          <h4 key={i} className="text-base font-bold mt-6 mb-2 text-foreground">
+            {renderInlineFormatting(line)}
+          </h4>
+        );
+      }
+    } else if (isImplicitListItem(line, lines.slice(Math.max(0, i - 8), i), lines.slice(i + 1, i + 6))) {
+      // Implicit list item (short line following a colon-ending intro)
       elements.push(
         <li key={i} className="text-sm ml-5 mb-1.5 leading-relaxed list-disc text-muted-foreground">
           {renderInlineFormatting(line)}
@@ -497,8 +575,8 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
 
 function renderInlineFormatting(text: string): React.ReactNode {
   const parts: React.ReactNode[] = [];
-  // Match: markdown links, raw URLs, code, bold, italic
-  const regex = /(\[[^\]]+\]\([^)]+\)|https?:\/\/[^\s)]+|`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g;
+  // Match: markdown links, raw URLs, bare domain links, parenthetical time/duration, code, bold, italic
+  const regex = /(\[[^\]]+\]\([^)]+\)|https?:\/\/[^\s)]+|\b(?:claude\.ai|anthropic\.com|openai\.com|github\.com|google\.com|docs\.anthropic\.com|console\.anthropic\.com)(?:\/[^\s)]*)?|\(\d+(?:-\d+)?\s*(?:minutes?|mins?|hours?|hrs?)\)|`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/gi;
   let lastIndex = 0;
   let match;
 
@@ -521,6 +599,17 @@ function renderInlineFormatting(text: string): React.ReactNode {
       // Raw URL
       parts.push(
         <a key={match.index} href={m} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline underline-offset-2 break-all">
+          {m}
+        </a>
+      );
+    } else if (m.startsWith("(") && /^\(\d+/.test(m)) {
+      // Parenthetical duration: (4 minutes), (5-10 mins)
+      parts.push(<em key={match.index} className="italic text-muted-foreground/80 text-xs">{m}</em>);
+    } else if (/^[a-z]/i.test(m) && m.includes('.')) {
+      // Bare domain link (claude.ai, anthropic.com, etc.)
+      const href = m.startsWith('http') ? m : `https://${m}`;
+      parts.push(
+        <a key={match.index} href={href} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline underline-offset-2">
           {m}
         </a>
       );
