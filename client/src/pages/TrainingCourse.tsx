@@ -1538,40 +1538,54 @@ function LessonViewer({
       case "download": {
         const dlTitle = block.title ? (typeof block.title === 'object' ? (block.title[lang] || block.title.en || '') : block.title) : '';
         const dlDesc = block.description ? (typeof block.description === 'object' ? (block.description[lang] || block.description.en || '') : block.description) : '';
-        const dlUrl = block.url || '';
+        const dlUrl = block.download_url || block.url || '';
         const dlFilename = block.filename || 'file';
+        const dlColor = block.color || '#cbcadb';
+        const dlImage = block.image || {};
+        const dlImageSrc = typeof dlImage === 'object' ? (dlImage.src || '') : '';
+        const dlImageAlt = typeof dlImage === 'object' ? (dlImage.alt || 'Download illustration') : 'Download illustration';
+        const isFirstDownload = blockIdx === 0 || (blockIdx > 0 && (() => {
+          const prevBlock = chapter?.blocks?.[blockIdx - 1];
+          return !prevBlock || prevBlock.type !== 'download';
+        })());
         return (
           <div key={blockIdx} className="my-4">
-            {blockIdx === 0 || (blockIdx > 0 && (() => {
-              // Show "Downloads" header only for the first download block in a sequence
-              const prevBlock = chapter?.blocks?.[blockIdx - 1];
-              return !prevBlock || prevBlock.type !== 'download';
-            })()) ? (
-              <h3 className="text-xl font-bold text-foreground mb-3 flex items-center gap-2">
-                <Download className="w-5 h-5" />
+            {isFirstDownload ? (
+              <h3 className="text-2xl font-bold text-foreground mb-4">
                 {t({ en: "Downloads", fr: "Téléchargements" })}
               </h3>
             ) : null}
+            {/* Desktop: horizontal card. Mobile: stacked */}
             <a
               href={dlUrl}
               target="_blank"
               rel="noopener noreferrer"
-              download={dlFilename}
-              className="block rounded-2xl bg-secondary/60 border border-border/50 p-5 hover:bg-secondary/80 transition-colors group"
+              className="block rounded-2xl overflow-hidden hover:opacity-90 transition-opacity group mb-4"
+              style={{ backgroundColor: dlColor }}
             >
-              <div className="flex items-center gap-5">
-                <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                  <FileText className="w-8 h-8 text-primary" />
+              <div className="flex flex-col md:flex-row items-stretch">
+                {/* Image section */}
+                <div className="md:w-48 w-full h-40 md:h-auto flex items-center justify-center p-6 shrink-0">
+                  {dlImageSrc ? (
+                    <img
+                      src={dlImageSrc}
+                      alt={dlImageAlt}
+                      className="w-24 h-24 md:w-32 md:h-32 object-contain"
+                    />
+                  ) : (
+                    <FileText className="w-16 h-16 text-foreground/60" />
+                  )}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-foreground text-base mb-1">{dlTitle}</p>
-                  {dlDesc && <p className="text-sm text-muted-foreground leading-relaxed">{dlDesc}</p>}
-                </div>
-                <div className="shrink-0">
-                  <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary/10 text-primary text-sm font-medium group-hover:bg-primary/20 transition-colors">
-                    <Download className="w-4 h-4" />
-                    {t({ en: "Download", fr: "Télécharger" })}
-                  </span>
+                {/* Content section */}
+                <div className="flex-1 p-6 flex flex-col justify-center">
+                  <p className="font-semibold text-foreground text-lg mb-2">{dlTitle}</p>
+                  {dlDesc && <p className="text-foreground/80 text-base leading-relaxed mb-4">{dlDesc}</p>}
+                  <div>
+                    <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-foreground/10 text-foreground text-sm font-medium group-hover:bg-foreground/20 transition-colors w-full md:w-auto justify-center">
+                      <Download className="w-4 h-4" />
+                      {t({ en: "Download", fr: "Télécharger" })}
+                    </span>
+                  </div>
                 </div>
               </div>
             </a>

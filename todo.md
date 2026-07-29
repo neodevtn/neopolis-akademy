@@ -735,3 +735,12 @@
 - [x] Ajouté blocs de téléchargement (Download) au cours AI Fluency (vocabulary guide PDF + 3 PDFs cours)
 - [x] Implémenté le rendu des blocs download (carte avec icône, titre, description, bouton télécharger)
 - [x] Téléchargé et uploadé le PDF AI_Fluency_vocabulary_cheat_sheet.pdf sur le storage
+
+## Ressources téléchargeables complètes (Downloads) - 2026-07-29
+- [ ] Extraire les fichiers du ZIP fourni par l'utilisateur (76 fichiers uniques)
+- [ ] Uploader tous les fichiers sur le serveur (manus-upload-file --webdev)
+- [ ] Intégrer les données de téléchargement dans les JSON de cours (référence fichiers locaux, pas URLs signées)
+- [ ] Refaire le rendu des cartes Download dans TrainingCourse.tsx (fidèle à Skilljar : fond coloré, illustration quill, titre, description, bouton)
+- [ ] Vérifier le rendu : leçon ai-fluency-framework-foundations/291863 affiche la carte AI Fluency vocabulary guide
+- [ ] Vérifier que le bouton pointe vers AI_Fluency_vocabulary_cheat_sheet.pdf hébergé localement
+- [ ] Vérifier que l'image quill est visible avec alt text

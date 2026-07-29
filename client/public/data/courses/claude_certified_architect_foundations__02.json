@@ -87,6 +87,21 @@
                 "en": "Multi-Index RAG Pipeline = system combining semantic search (vector index) and lexical search (BM25 index) for improved retrieval accuracy.\n\nKey Components:\n- Vector Index = semantic similarity search using embeddings\n- BM25 Index = lexical/keyword-based search \n- Retriever Class = wrapper that forwards queries to both indexes and merges results\n\nReciprocal Rank Fusion = technique for merging search results from different indexes. Formula: RRF_score = sum of (1/(rank + 1)) across all search methods for each document. Documents ranked by highest combined score.\n\nExample: Vector search returns [doc2, doc7, doc6], BM25 returns [doc6, doc2, doc7]. After RRF calculation, final ranking becomes [doc2, doc6, doc7] because doc2 ranked high in both methods.\n\nBenefits:\n- Improved search accuracy by combining different search paradigms\n- Modular design with standardized API (search() and add_document() methods)\n- Easy to extend with additional search indexes\n- Better handling of edge cases where single method fails\n\nImplementation pattern allows multiple search methodologies to work together while maintaining separate, isolated index classes.",
                 "fr": "Multi-Index RAG Pipeline = système combinant la recherche sémantique (vector index) et la recherche lexicale (BM25 index) pour une meilleure précision de récupération.\n\nComposants clés:\n- Vector Index = recherche de similarité sémantique utilisant des embeddings\n- BM25 Index = recherche lexicale basée sur des mots-clés\n- Retriever Class = wrapper qui transmet les requêtes vers les deux indexes et fusionne les résultats\n\nReciprocal Rank Fusion = technique de fusion des résultats de recherche issus de différents indexes. Formule: RRF_score = somme de (1/(rank + 1)) pour toutes les méthodes de recherche pour chaque document. Documents classés par le score combiné le plus élevé.\n\nExemple: la Vector search renvoie [doc2, doc7, doc6], BM25 renvoie [doc6, doc2, doc7]. Après le calcul de RRF, le classement final devient [doc2, doc6, doc7] car doc2 est bien classé dans les deux méthodes.\n\nAvantages:\n- Amélioration de la précision de recherche en combinant différents paradigmes de recherche\n- Design modulaire avec une API standardisée (search() et add_document()) \n- Facile à étendre avec des indexes de recherche supplémentaires\n- Meilleure gestion des cas limites où une seule méthode échoue\n\nLe modèle d'implémentation permet à plusieurs méthodologies de recherche de fonctionner ensemble tout en maintenant des classes d'index séparées et isolées."
               }
+            },
+            {
+              "type": "download",
+              "title": "005_hybrid.ipynb",
+              "description": "",
+              "filename": "005_hybrid.ipynb",
+              "download_url": "/manus-storage/01_005_hybrid_87defeca.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287766",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic-poc/assets/1748558852/005_hybrid.ipynb"
             }
           ],
           "completionRule": {
@@ -501,6 +516,21 @@
                 "en": "BM25 = Best Match 25, a lexical search algorithm commonly used in RAG pipelines to complement semantic search.\n\nProblem with semantic search alone = Can miss exact term matches, returning irrelevant results even when specific terms appear frequently in certain documents.\n\nHybrid search approach = Combines semantic search (embeddings/vector database) with lexical search (BM25) in parallel, then merges results for better balance.\n\nBM25 algorithm steps:\n1. Tokenize user query into separate terms (remove punctuation, split on spaces)\n2. Count frequency of each term across all text chunks/documents\n3. Assign relative importance to terms based on usage frequency (rare terms = higher importance, common terms like \"a\" = lower importance)\n4. Rank text chunks by how often they contain higher-weighted terms\n\nKey insight = Frequently used terms across corpus are less important for search relevance than rare, specific terms.\n\nBM25 advantages = Better at finding exact term matches, prioritizes documents containing rare/specific search terms, complements semantic search weaknesses.\n\nImplementation = Both semantic and lexical search systems use similar APIs (add_document, search functions) making them easy to combine.\n\nNext step = Merge results from both search systems to get benefits of semantic understanding plus exact term matching.",
                 "fr": "BM25 = Best Match 25, un algorithme de recherche lexical couramment utilisé dans les pipelines RAG pour compléter la recherche sémantique.\n\nProblème de la recherche sémantique seule = Elle peut manquer des correspondances exactes de termes, renvoyant des résultats non pertinents même lorsque des termes spécifiques apparaissent fréquemment dans certains documents.\n\nApproche de recherche hybride = Combine la recherche sémantique (embeddings/base de données vectorielle) avec la recherche lexicale (BM25) en parallèle, puis fusionne les résultats pour un meilleur équilibre.\n\nÉtapes de l'algorithme BM25 :\n1. Tokeniser la requête utilisateur en termes distincts (suppression de la ponctuation, séparation par des espaces)\n2. Compter la fréquence de chaque terme dans l'ensemble des extraits de texte ou des documents\n3. Attribuer une importance relative aux termes en fonction de leur fréquence d'utilisation (termes rares = importance plus élevée, termes courants comme \"a\" = moindre importance)\n4. Classer les extraits de texte en fonction de la fréquence à laquelle ils contiennent des termes à poids plus élevé\n\nIdée clé = Les termes fréquemment utilisés à travers le corpus sont moins importants pour la pertinence de la recherche que les termes rares et spécifiques.\n\nAvantages de BM25 = Meilleur pour trouver les correspondances exactes de termes, privilégie les documents contenant des termes de recherche rares/spécifiques, complète les faiblesses de la recherche sémantique.\n\nImplémentation = Les deux systèmes de recherche sémantique et lexicale utilisent des API similaires (add_document, fonctions de recherche) ce qui les rend faciles à combiner.\n\nProchaine étape = Fusionner les résultats des deux systèmes de recherche pour obtenir les avantages de la compréhension sémantique ainsi que la correspondance exacte des termes."
               }
+            },
+            {
+              "type": "download",
+              "title": "004_bm25.ipynb",
+              "description": "",
+              "filename": "004_bm25.ipynb",
+              "download_url": "/manus-storage/01_004_bm25_07d92341.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287767",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic-poc/assets/1748558831/004_bm25.ipynb"
             }
           ],
           "completionRule": {
@@ -527,6 +557,21 @@
             {
               "type": "checkpoint",
               "exerciseId": "ex_claude_certified_architect_foundations__02_010"
+            },
+            {
+              "type": "download",
+              "title": "004_bm25.ipynb",
+              "description": "",
+              "filename": "004_bm25.ipynb",
+              "download_url": "/manus-storage/01_004_bm25_07d92341.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287767",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic-poc/assets/1748558831/004_bm25.ipynb"
             }
           ],
           "completionRule": {
@@ -707,6 +752,36 @@
                 "en": "Citations = feature allowing Claude to reference source documents and show where information comes from\n\nCitation types:\n- citation_page_location = for PDF documents, shows document index/title/start page/end page/cited text\n- citation_char_location = for plain text, shows character position in text block\n\nImplementation:\n- Add \"citations\": {\"enabled\": true} to request\n- Add \"title\" field to identify source document\n- Works with both PDF files and plain text sources\n\nResponse structure = content becomes list of text blocks, some containing citations arrays with location data\n\nPurpose = transparency for users to verify Claude's information sources and check accuracy of interpretations\n\nUI benefit = enables citation popups/overlays showing source document, page numbers, and exact cited text when users hover over referenced content\n\nKey use case = ensuring users can investigate how Claude builds responses from source materials rather than appearing to speak from memory alone",
                 "fr": "Citations = fonctionnalité permettant à Claude de référencer des documents source et de montrer d'où proviennent les informations\n\nCitation types:\n- citation_page_location = pour les documents PDF, affiche l'indice/titre du document/page de début/page de fin/texte cité\n- citation_char_location = pour le texte brut, affiche la position du caractère dans le bloc de texte\n\nImplémentation:\n- Ajouter \"citations\": {\"enabled\": true} à la requête\n- Ajouter le champ \"title\" pour identifier le document source\n- Fonctionne avec les fichiers PDF et les sources en texte brut\n\nStructure de la réponse = le contenu devient une liste de blocs de texte, certains contenant des tableaux de citations avec des données de localisation\n\nObjectif = transparence pour les utilisateurs afin de vérifier les sources d'information de Claude et de vérifier l'exactitude des interprétations\n\nAvantage UI = permet des fenêtres contextuelles de citations et des superpositions montrant le document source, les numéros de page et le texte exact cité lorsque les utilisateurs survolent le contenu référencé\n\nCas d'utilisation clé = s'assurer que les utilisateurs puissent enquêter sur la manière dont Claude construit ses réponses à partir des documents sources plutôt que de sembler parler de mémoire seule"
               }
+            },
+            {
+              "type": "download",
+              "title": "002_citations_complete.ipynb",
+              "description": "",
+              "filename": "002_citations_complete.ipynb",
+              "download_url": "/manus-storage/01_002_citations_complete_2f7448a3.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287771",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762980791/002_citations_complete.ipynb"
+            },
+            {
+              "type": "download",
+              "title": "earth.pdf",
+              "description": "",
+              "filename": "earth.pdf",
+              "download_url": "/manus-storage/02_earth_93b76db3.pdf",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 2,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287771",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762980798/earth.pdf"
             }
           ],
           "completionRule": {
@@ -842,6 +917,21 @@
                   }
                 }
               ]
+            },
+            {
+              "type": "download",
+              "title": "app_starter.zip",
+              "description": "",
+              "filename": "app_starter.zip",
+              "download_url": "/manus-storage/01_app_starter_34c80b09.zip",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287805",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic-poc/assets/1748559261/app_starter.zip"
             }
           ],
           "completionRule": {
@@ -890,6 +980,21 @@
                 "en": "Code Based Grading = automated validation system for LLM outputs containing code, JSON, or regex\n\nCore Implementation:\n- validate_json() = attempts JSON parsing, returns 10 if valid, 0 if error\n- validate_python() = attempts AST parsing, returns 10 if valid, 0 if error \n- validate_regex() = attempts regex compilation, returns 10 if valid, 0 if error\n\nDataset Requirements:\n- Must include \"format\" key specifying expected output type (JSON/Python/RegEx)\n- Updated via prompt template modification for automated dataset generation\n\nPrompt Engineering:\n- Instruct model to respond only with raw code/JSON/regex\n- No comments, explanations, or commentary\n- Use pre-filled Assistant message with \\`\\`\\`code\\`\\`\\` blocks\n- Add stop sequences to extract clean output\n\nScoring System:\n- Final score = (model_score + syntax_score) / 2\n- Combines semantic evaluation with syntax validation\n- Enables measurement of both correctness and technical validity\n\nKey Limitation = requires known expected format for proper validator selection",
                 "fr": "Code Based Grading = système de validation automatisé pour les sorties des LLM contenant du code, JSON ou regex\n\nImplémentation centrale :\n- validate_json() = tente l'analyse JSON, renvoie 10 si valide, 0 en cas d'erreur\n- validate_python() = tente l'analyse AST, renvoie 10 si valide, 0 en cas d'erreur\n- validate_regex() = tente la compilation regex, renvoie 10 si valide, 0 en cas d'erreur\n\nExigences du jeu de données :\n- Doit inclure une clé \"format\" spécifiant le type de sortie attendu (JSON/Python/RegEx)\n- Mis à jour via la modification du template de prompt pour la génération automatisée du jeu de données\n\nIngénierie du prompt :\n- Donner instruction au modèle de répondre uniquement avec du code brut/JSON/regex\n- Pas de commentaires, d'explications ni de remarques\n- Utiliser un message Assistant pré-rempli avec des blocs \\`\\`\\`code\\`\\`\\`\n- Ajouter des séquences d'arrêt pour extraire une sortie propre\n\nSystème de notation :\n- Score final = (model_score + syntax_score) / 2\n- Combine l'évaluation sémantique et la validation syntaxique\n- Permet de mesurer à la fois la précision et la validité technique\n\nLimitation clé : nécessite le format attendu connu pour une sélection correcte du validateur"
               }
+            },
+            {
+              "type": "download",
+              "title": "001_prompt_evals_fns.ipynb",
+              "description": "",
+              "filename": "001_prompt_evals_fns.ipynb",
+              "download_url": "/manus-storage/01_001_prompt_evals_fns_8ef2c747.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287737",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762977673/001_prompt_evals_fns.ipynb"
             }
           ],
           "completionRule": {
@@ -912,6 +1017,36 @@
                 "en": "Files API = allows uploading files ahead of time and referencing them later via file ID instead of including raw file data in each request. Upload file → get file metadata object with ID → use ID in future requests.\n\nCode Execution = server-based tool where Claude executes Python code in isolated Docker containers. No implementation needed, just include predefined tool schema. Claude can run code multiple times, interpret results, generate final response.\n\nKey constraints: Docker containers have no network access. Data input/output relies on Files API integration.\n\nCombined workflow: Upload file via Files API → get file ID → include ID in container upload block → ask Claude to analyze → Claude writes/executes code with access to uploaded file → returns analysis and results.\n\nClaude can generate files (plots, reports) inside container that can be downloaded using file IDs returned in response.\n\nUse cases: Data analysis, file processing, automated code generation for complex tasks. Response contains code blocks, execution results, and final analysis.\n\nImplementation: Use container upload block with file ID, include analysis prompt, Claude handles code execution automatically.",
                 "fr": "Files API = permet d'uploader des fichiers à l'avance et de les référencer plus tard via l'ID de fichier au lieu d'inclure les données brutes du fichier dans chaque requête. Téléverser le fichier → obtenir l'objet de métadonnées du fichier avec l'ID → utiliser l'ID dans les requêtes futures.\n\nCode Execution = outil basé sur serveur où Claude exécute du code Python dans des conteneurs Docker isolés. Aucune implémentation nécessaire, il suffit d'inclure le schéma d'outil prédéfini. Claude peut exécuter du code plusieurs fois, interpréter les résultats et générer la réponse finale.\n\nContraintes clés : les conteneurs Docker n'ont pas accès au réseau. L'entrée/sortie de données repose sur l'intégration de Files API.\n\nWorkflow combiné : téléverser le fichier via Files API → obtenir l'ID du fichier → inclure l'ID dans le bloc d'upload du conteneur → demander à Claude d'analyser → Claude écrit/exécute le code avec accès au fichier téléversé → renvoie l'analyse et les résultats.\n\nClaude peut générer des fichiers (graphiques, rapports) à l'intérieur du conteneur qui peuvent être téléchargés via les IDs de fichier retournés dans la réponse.\n\nCas d'utilisation : analyse de données, traitement de fichiers, génération automatique de code pour des tâches complexes. La réponse contient des blocs de code, les résultats d'exécution et l'analyse finale.\n\nImplémentation : utiliser le bloc d'upload du conteneur avec l'ID de fichier, inclure le prompt d'analyse, Claude gère l'exécution du code automatiquement."
               }
+            },
+            {
+              "type": "download",
+              "title": "streaming.csv",
+              "description": "",
+              "filename": "streaming.csv",
+              "download_url": "/manus-storage/01_streaming_55a0b1ec.csv",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287777",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic-poc/assets/1748559110/streaming.csv"
+            },
+            {
+              "type": "download",
+              "title": "005_code_execution.ipynb",
+              "description": "",
+              "filename": "005_code_execution.ipynb",
+              "download_url": "/manus-storage/02_005_code_execution_5ac6e348.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 2,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287777",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762981347/005_code_execution.ipynb"
             }
           ],
           "completionRule": {
@@ -1001,6 +1136,21 @@
                   }
                 }
               ]
+            },
+            {
+              "type": "download",
+              "title": "app_starter.zip",
+              "description": "",
+              "filename": "app_starter.zip",
+              "download_url": "/manus-storage/01_app_starter_34c80b09.zip",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287805",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic-poc/assets/1748559261/app_starter.zip"
             }
           ],
           "completionRule": {
@@ -1183,6 +1333,36 @@
                 "en": "Extended Thinking = Claude feature that allows reasoning time before generating final response\n\nKey mechanics:\n- Displays separate thinking process visible to users\n- Increases accuracy for complex tasks but adds cost (charged for thinking tokens) and latency\n- Thinking budget = minimum 1024 tokens allocated for thinking phase\n- Max tokens must exceed thinking budget (e.g., budget 1024 requires max_tokens ≥ 1025)\n\nWhen to use:\n- Enable after prompt optimization fails to achieve desired accuracy\n- Use prompt evals to determine necessity\n\nResponse structure:\n- Thinking block = contains reasoning text + cryptographic signature\n- Text block = final response\n- Signature = prevents tampering with thinking text (safety measure)\n\nSpecial cases:\n- Redacted thinking blocks = encrypted thinking text flagged by safety systems\n- Provided for conversation continuity without losing context\n- Can force redacted blocks using test string: \"entropic magic string triggered redacted thinking [special characters]\"\n\nImplementation:\n- Set thinking=true and thinking_budget parameter\n- Ensure max_tokens > thinking_budget for adequate response generation capacity",
                 "fr": "Réflexion étendue = fonctionnalité de Claude qui permet un temps de raisonnement avant de générer la réponse finale\n\nMécanismes clés :\n- Affiche un processus de réflexion distinct visible pour les utilisateurs\n- Améliore la précision pour les tâches complexes mais augmente le coût (facturé en tokens de réflexion) et la latence\n- thinking_budget = minimum 1024 tokens alloués à la phase de réflexion\n- max_tokens doit dépasser thinking_budget (par exemple, le budget 1024 nécessite max_tokens ≥ 1025)\n\nQuand l'utiliser :\n- Activer après qu'optimisation du prompt échoue à atteindre la précision souhaitée\n- Utiliser les prompt evals pour déterminer la nécessité\n\nStructure de la réponse :\n- Bloc de réflexion = contient le texte de raisonnement + signature cryptographique\n- Bloc de texte = réponse finale\n- Signature = empêche la modification du texte de réflexion (mesure de sécurité)\n\nCas spéciaux :\n- Blocs de réflexion masqués = texte de réflexion chiffré signalé par les systèmes de sécurité\n- Fourni pour assurer la continuité de la conversation sans perte de contexte\n- Peut forcer les blocs masqués en utilisant la chaîne de test : \"entropic magic string triggered redacted thinking [special characters]\"\n\nImplémentation :\n- Définir thinking=true et le paramètre thinking_budget\n- S'assurer que max_tokens > thinking_budget pour une capacité de génération de réponse adéquate"
               }
+            },
+            {
+              "type": "download",
+              "title": "001_thinking_complete.ipynb",
+              "description": "",
+              "filename": "001_thinking_complete.ipynb",
+              "download_url": "/manus-storage/01_001_thinking_complete_877f1f3a.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287773",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762980359/001_thinking_complete.ipynb"
+            },
+            {
+              "type": "download",
+              "title": "001_thinking.ipynb",
+              "description": "",
+              "filename": "001_thinking.ipynb",
+              "download_url": "/manus-storage/02_001_thinking_83c6bf9b.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 2,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287773",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762980359/001_thinking.ipynb"
             }
           ],
           "completionRule": {
@@ -1205,6 +1385,21 @@
                 "en": "Custom prompt evaluation workflow = build prompt + generate test dataset + evaluate performance\n\nGoal = AWS code assistance prompt that outputs only Python, JSON config, or regex without explanations\n\nDataset generation approaches = manual assembly or automated with Claude (use faster models like Haiku for generation)\n\nDataset structure = array of JSON objects with task property describing user requests\n\nGeneration process = prompt Claude to create test cases → use pre-filling with assistant message \"\\`\\`\\`json\" → set stop sequence \"\\`\\`\\`\" → parse response as JSON → save to file\n\nKey implementation = generate_dataset() function that sends prompt to Claude, gets structured JSON response of test tasks, saves to dataset.json file for later evaluation use\n\nTest dataset enables systematic evaluation by running prompt against multiple input scenarios to measure performance consistency.",
                 "fr": "Flux de travail d'évaluation de prompt personnalisé = construire le prompt + générer le dataset de test + évaluer les performances\n\nObjectif = prompt d'assistance au code AWS qui ne produit que Python, JSON config, ou regex sans explications\n\nApproches de génération du dataset = assemblage manuel ou automatisé avec Claude (utiliser des modèles plus rapides comme Haiku pour la génération)\n\nStructure du dataset = tableau d'objets JSON avec la propriété task décrivant les requêtes des utilisateurs\n\nProcessus de génération = interroger Claude pour créer des cas de test → utiliser un pré-remplissage avec le message d'assistant \"\\`\\`\\`json\" → définir la séquence d'arrêt \"\\`\\`\\`\" → analyser la réponse en JSON → enregistrer dans un fichier\n\nImplémentation clé = generate_dataset() function qui envoie le prompt à Claude, obtient une réponse JSON structurée des test tasks, enregistre dans dataset.json pour une utilisation ultérieure lors de l'évaluation\n\nLe dataset de test permet une évaluation systématique en exécutant le prompt sur plusieurs scénarios d'entrée pour mesurer la constance des performances."
               }
+            },
+            {
+              "type": "download",
+              "title": "001_prompt_evals.ipynb",
+              "description": "",
+              "filename": "001_prompt_evals.ipynb",
+              "download_url": "/manus-storage/01_001_prompt_evals_f06a385b.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287739",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762977284/001_prompt_evals.ipynb"
             }
           ],
           "completionRule": {
@@ -1285,6 +1480,36 @@
                 "en": "Claude Vision Capabilities = ability to process images within user messages for analysis, comparison, counting, and description tasks.\n\nImage Limitations:\n- Max 100 images per request\n- Size/dimension restrictions apply\n- Images consume tokens (charged based on pixel height/width calculation)\n\nImage Block Structure = special block type within user messages that holds either raw image data (base64) or URL reference to online image. Multiple image blocks allowed per message.\n\nCritical Success Factor = strong prompting techniques required for accurate results. Simple prompts often fail.\n\nPrompting Techniques for Images:\n- Step-by-step analysis instructions\n- One-shot/multi-shot examples (alternating image and text pairs)\n- Clear guidelines and verification steps\n- Structured analysis frameworks\n\nExample Use Case = automated fire risk assessment from satellite imagery analyzing tree density, property access, roof overhang, and assigning numerical risk scores.\n\nImplementation = base64 encode image data, create message with image block (type: image, source: base64, media_type, data) followed by text block containing detailed prompt instructions.\n\nKey Takeaway = image accuracy depends entirely on prompt sophistication, not just image quality.",
                 "fr": "Capacités de Claude Vision = capacité à traiter les images contenues dans les messages utilisateur pour des tâches d'analyse, de comparaison, de comptage et de description.\n\nLimitations des images :\n- Max 100 images par requête\n- Des restrictions de taille et de dimensions s'appliquent\n- Les images consomment des tokens (facturés selon le calcul de la hauteur et de la largeur en pixels)\n\nStructure du bloc image = type de bloc spécial dans les messages utilisateur qui contient soit des données d'image brutes (base64) soit une référence URL à une image en ligne. Plusieurs blocs image autorisés par message.\n\nFacteur clé de réussite = des techniques de prompting robustes requises pour des résultats précis. Des prompts simples échouent souvent.\n\nTechniques de prompting pour les images :\n- Instructions d'analyse pas à pas\n- Exemples One-shot/multi-shot (paires image et texte alternées)\n- Directives claires et étapes de vérification\n- Cadres d'analyse structurés\n\nExemple de cas d'utilisation = évaluation automatisée du risque d'incendie à partir d'images satellites analysant la densité des arbres, l'accès à la propriété, le débord du toit et l'attribution de scores de risque numériques.\n\nImplémentation = encoder les données d'image en base64, créer un message avec un bloc image (type: image, source: base64, media_type, data) suivi d'un bloc texte contenant des instructions de prompt détaillées.\n\nPoint clé = la précision des images dépend entièrement de la sophistication du prompt, et pas seulement de la qualité de l'image."
               }
+            },
+            {
+              "type": "download",
+              "title": "images.zip",
+              "description": "",
+              "filename": "images.zip",
+              "download_url": "/manus-storage/01_images_4ee105ed.zip",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287778",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic-poc/assets/1748558985/images.zip"
+            },
+            {
+              "type": "download",
+              "title": "002_images.ipynb",
+              "description": "",
+              "filename": "002_images.ipynb",
+              "download_url": "/manus-storage/02_002_images_d8691c0b.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 2,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287778",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762980473/002_images.ipynb"
             }
           ],
           "completionRule": {
@@ -1300,7 +1525,23 @@
             "fr": "Implémentation de plusieurs tours de dialogue"
           },
           "type": "teaching",
-          "blocks": [],
+          "blocks": [
+            {
+              "type": "download",
+              "title": "001_tools_008.ipynb",
+              "description": "",
+              "filename": "001_tools_008.ipynb",
+              "download_url": "/manus-storage/01_001_tools_008_2f3d18b5.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287758",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762978310/001_tools_008.ipynb"
+            }
+          ],
           "completionRule": {
             "requires": [
               "contentViewed"
@@ -1343,6 +1584,21 @@
                 "en": "RAG Flow Implementation = practical walkthrough of 5-step retrieval-augmented generation process\n\nStep 1: Text Chunking = split document into sections using chunk_by_section function on report.MD file\n\nStep 2: Embedding Generation = create vector representations for each chunk using generate_embedding function (supports single string or list of strings input)\n\nStep 3: Vector Store Population = create vector index instance, loop through chunk-embedding pairs using zip(), store each pair with store.add_vector(embedding, {content: chunk}). Store original text with embeddings for meaningful retrieval results.\n\nStep 4: Query Processing = user asks question \"what did software engineering department do last year\", generate embedding for user query\n\nStep 5: Similarity Search = use store.search(user_embedding, 2) to find 2 most relevant chunks, returns results with cosine distances (0.71 for section two, 0.72 for methodology section)\n\nKey Components:\n- Vector Index Class = custom vector database implementation\n- Cosine Distance = similarity metric between query and stored embeddings\n- Metadata Storage = storing original text content alongside embeddings enables meaningful retrieval\n\nWorkflow complete but has limitations requiring further improvements.",
                 "fr": "RAG Flow Implementation = guide pratique du processus de retrieval-augmented generation en 5 étapes\n\nStep 1: Text Chunking = découper le document en sections en utilisant la fonction chunk_by_section sur report.MD\n\nStep 2: Embedding Generation = créer des représentations vectorielles pour chaque chunk en utilisant la fonction generate_embedding (prise en charge d'une seule chaîne ou d'une liste de chaînes en entrée)\n\nStep 3: Vector Store Population = créer une instance d'index vectoriel, parcourir les paires chunk-embedding en utilisant zip(), stocker chaque paire avec store.add_vector(embedding, {content: chunk}). Stocker le texte original avec les embeddings pour des résultats de récupération significatifs.\n\nStep 4: Query Processing = l'utilisateur pose la question « qu'a fait le département d'ingénierie logicielle l'année dernière ? », générer l'embedding pour la requête de l'utilisateur\n\nStep 5: Similarity Search = utiliser store.search(user_embedding, 2) pour trouver les 2 chunks les plus pertinents, renvoie les résultats avec les distances cosinus (0,71 pour la section deux, 0,72 pour la section méthodologie)\n\nKey Components:\n- Vector Index Class = implémentation personnalisée de la base de données vectorielle\n- Cosine Distance = métrique de similarité entre la requête et les embeddings stockés\n- Metadata Storage = le stockage du contenu texte original aux côtés des embeddings permet une récupération significative\n\nWorkflow complete but has limitations requiring further improvements."
               }
+            },
+            {
+              "type": "download",
+              "title": "003_vectordb.ipynb",
+              "description": "",
+              "filename": "003_vectordb.ipynb",
+              "download_url": "/manus-storage/01_003_vectordb_3ccc806a.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287761",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic-poc/assets/1748558819/003_vectordb.ipynb"
             }
           ],
           "completionRule": {
@@ -1365,6 +1621,36 @@
                 "en": "MCP = Model Context Protocol, communication layer providing Claude with context and tools without requiring developers to write tedious code.\n\nArchitecture: MCP client connects to MCP server. Server contains tools, resources, and prompts as internal components.\n\nProblem solved: Eliminates burden of authoring/maintaining numerous tool schemas and functions for service integrations. Example: GitHub chatbot would require implementing tools for repositories, pull requests, issues, projects - significant developer effort.\n\nSolution: MCP server handles tool definition and execution instead of your application server. MCP servers = interfaces to outside services, wrapping functionality into ready-to-use tools.\n\nKey benefits: Developers avoid writing tool schemas and function implementations themselves.\n\nCommon questions:\n- Who creates MCP servers? Anyone, often service providers make official implementations (AWS, etc.)\n- vs direct API calls? MCP eliminates need to author tool schemas/functions yourself\n- vs tool use? MCP and tool use are complementary - MCP handles WHO does the work (server vs developer), both still involve tools\n\nCore value: Shifts integration burden from application developers to MCP server maintainers.",
                 "fr": "MCP = Model Context Protocol, couche de communication fournissant à Claude le contexte et les outils sans obliger les développeurs à écrire du code fastidieux.\n\nArchitecture : le client MCP se connecte au serveur MCP. Le serveur contient des outils, des ressources et des prompts en tant que composants internes.\n\nProblème résolu : élimine le fardeau lié à l’écriture et à la maintenance de nombreux schémas d'outils et de fonctions pour les intégrations de services. Exemple : un chatbot GitHub nécessiterait de mettre en œuvre des outils pour les dépôts, les pull requests, les issues et les projets – un effort important des développeurs.\n\nSolution : le serveur MCP gère la définition et l'exécution des outils au lieu de votre serveur d’application. Les serveurs MCP = interfaces vers des services externes, encapsulant les fonctionnalités dans des outils prêts à l'emploi.\n\nAvantages clés : Les développeurs évitent d'écrire eux-mêmes les schémas d'outils et les implémentations de fonctions.\n\nQuestions fréquentes :\n- Qui crée les serveurs MCP ? N'importe qui ; souvent les fournisseurs de services proposent des implémentations officielles (AWS, etc.)\n- par rapport à des appels API directs ? MCP élimine le besoin d'écrire soi-même les schémas d'outils et les fonctions.\n- par rapport à l'utilisation d'outils ? MCP et l'utilisation d'outils sont complémentaires — MCP gère QUI fait le travail (serveur vs développeur), les deux impliquent encore des outils.\n\nValeur centrale : déplace le fardeau d'intégration des développeurs d'applications vers les mainteneurs des serveurs MCP."
               }
+            },
+            {
+              "type": "download",
+              "title": "images.zip",
+              "description": "",
+              "filename": "images.zip",
+              "download_url": "/manus-storage/01_images_4ee105ed.zip",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287778",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic-poc/assets/1748558985/images.zip"
+            },
+            {
+              "type": "download",
+              "title": "002_images.ipynb",
+              "description": "",
+              "filename": "002_images.ipynb",
+              "download_url": "/manus-storage/02_002_images_d8691c0b.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 2,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287778",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762980473/002_images.ipynb"
             }
           ],
           "completionRule": {
@@ -1614,6 +1900,21 @@
                 "en": "Model Based Grading = evaluation system that takes model outputs and assigns objective scores (typically 1-10 scale, 10 = highest quality)\n\nThree grader types:\n- Code graders = programmatic checks (length, word presence, syntax validation, readability scores)\n- Model graders = additional API call to evaluate original model output, highly flexible for quality/instruction-following assessment\n- Human graders = person evaluates responses, most flexible but time-consuming and tedious\n\nKey requirements: Must return objective signal (usually numerical score). Define evaluation criteria upfront.\n\nImplementation pattern for model graders:\n- Create detailed prompt requesting strengths/weaknesses/reasoning/score (not just score alone to avoid default middling scores)\n- Use JSON response format with pre-filled assistant message and stop sequences\n- Parse returned JSON for score and reasoning\n- Calculate average scores across test cases for final metric\n\nModel graders offer high flexibility but may be inconsistent. Still provides objective baseline for prompt optimization.",
                 "fr": "Model Based Grading = système d'évaluation qui prend les sorties du modèle et attribue des scores objectifs (typiquement une échelle de 1 à 10, 10 = meilleure qualité)\n\nTrois types de correcteurs:\n- Correcteurs de code = vérifications programmatiques (longueur, présence de mots, validation de la syntaxe, scores de lisibilité)\n- Correcteurs de modèle = appel API additionnel pour évaluer la sortie du modèle original, très flexible pour l'évaluation de la qualité et du respect des instructions\n- Correcteurs humains = une personne évalue les réponses, plus flexible mais chronophage et fastidieuse\n\nExigences clés: Doit renvoyer un signal objectif (généralement un score numérique). Définir les critères d'évaluation à l'avance.\n\nPattern de mise en œuvre pour les correcteurs de modèle:\n- Créer un prompt détaillé demandant les forces/faiblesses, le raisonnement et le score (et pas seulement le score seul pour éviter les scores médians par défaut)\n- Utiliser un format de réponse JSON avec un message d'assistant pré-rempli et des séquences d'arrêt\n- Analyser le JSON retourné pour le score et le raisonnement\n- Calculer les scores moyens sur les cas de test pour la métrique finale\n\nLes correcteurs de modèle offrent une grande flexibilité mais peuvent être incohérents. Fournissent néanmoins une base objective pour l'optimisation des prompts."
               }
+            },
+            {
+              "type": "download",
+              "title": "001_prompt_evals_grader.ipynb",
+              "description": "",
+              "filename": "001_prompt_evals_grader.ipynb",
+              "download_url": "/manus-storage/01_001_prompt_evals_grader_777359cb.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287742",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762977624/001_prompt_evals_grader.ipynb"
             }
           ],
           "completionRule": {
@@ -1672,6 +1973,21 @@
                 "en": "Multi-Turn Tool Conversations = conversations where Claude uses multiple tools sequentially to answer a single user query.\n\nTool Chaining Process = user asks question → Claude requests first tool → tool executed → result returned → Claude requests second tool → tool executed → result returned → Claude provides final answer.\n\nExample Flow = user asks \"what day is 103 days from today\" → Claude calls get_current_datetime → Claude calls add_duration_to_datetime → Claude provides answer.\n\nImplementation Pattern = while loop that continues calling Claude until no more tool requests, checking each response for tool_use blocks.\n\nrun_conversation Function = takes initial messages, loops through Claude calls, executes requested tools, adds results to conversation, continues until final response.\n\nRequired Refactors:\n- add_user_message/add_assistant_message = updated to handle multiple message blocks instead of just plain text\n- chat function = accepts tools parameter, returns entire message instead of just first text block\n- text_from_message helper = extracts all text blocks from a message with multiple content blocks\n\nKey Insight = can't predict how many tools user queries will require, so system must handle arbitrary chains of tool calls automatically.",
                 "fr": "Multi-Turn Tool Conversations = des conversations où Claude utilise plusieurs outils de manière séquentielle pour répondre à une seule requête utilisateur.\n\nTool Chaining Process = l'utilisateur pose une question → Claude demande le premier outil → outil exécuté → résultat renvoyé → Claude demande le deuxième outil → outil exécuté → résultat renvoyé → Claude fournit la réponse finale.\n\nExample Flow = l'utilisateur demande « quel jour est dans 103 jours à partir d'aujourd'hui ? » → Claude appelle get_current_datetime → Claude appelle add_duration_to_datetime → Claude fournit la réponse.\n\nImplementation Pattern = une boucle while qui continue d'appeler Claude jusqu'à ce qu'il n'y ait plus de demandes d'outils, en vérifiant chaque réponse pour les blocs tool_use.\n\nrun_conversation Function = prend des messages initiaux, boucle à travers les appels à Claude, exécute les outils demandés, ajoute les résultats à la conversation, continue jusqu'à la réponse finale.\n\nRequired Refactors:\n- add_user_message/add_assistant_message = mises à jour pour gérer plusieurs blocs de messages au lieu d'un seul texte\n- chat function = accepte le paramètre outils, renvoie le message entier au lieu de seulement le premier bloc de texte\n- text_from_message helper = extrait tous les blocs de texte d'un message comportant plusieurs blocs de contenu\n\nKey Insight = on ne peut pas prédire combien d'outils les requêtes des utilisateurs nécessiteront, donc le système doit gérer automatiquement des chaînes arbitraires d'appels d'outils."
               }
+            },
+            {
+              "type": "download",
+              "title": "001_tools_007.ipynb",
+              "description": "",
+              "filename": "001_tools_007.ipynb",
+              "download_url": "/manus-storage/01_001_tools_007_120f95a2.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287750",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762978180/001_tools_007.ipynb"
             }
           ],
           "completionRule": {
@@ -1716,6 +2032,21 @@
                 "en": "PDF Support in Claude:\n\nClaude can read PDF files directly using similar code to image processing. \n\nKey implementation changes:\n- File type = \"document\" instead of \"image\"\n- Media type = \"application/pdf\" instead of \"image/png\"\n- Variable naming = file_bytes instead of image_bytes\n\nClaude PDF capabilities = read text + images + charts + tables + mixed content extraction\n\nPDF processing = one-stop solution for comprehensive document analysis\n\nUsage pattern = same as image input but with document-specific parameters",
                 "fr": "Support PDF dans Claude :\n\nClaude peut lire les fichiers PDF directement en utilisant un code similaire à celui du traitement d'images.\n\nPrincipaux changements d’implémentation :\n- Type de fichier = \"document\" au lieu de \"image\"\n- Type de média = \"application/pdf\" au lieu de \"image/png\"\n- Nommage des variables = file_bytes au lieu de image_bytes\n\nLes capacités PDF de Claude = lecture du texte + images + graphiques + tableaux + extraction de contenu mixte\n\nLe traitement des fichiers PDF = une solution tout-en-un pour une analyse complète des documents\n\nMode d'utilisation = le même que l’entrée image mais avec des paramètres spécifiques au document"
               }
+            },
+            {
+              "type": "download",
+              "title": "earth.pdf",
+              "description": "",
+              "filename": "earth.pdf",
+              "download_url": "/manus-storage/01_earth_db3f0ced.pdf",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287768",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic-poc/assets/1748559008/earth.pdf"
             }
           ],
           "completionRule": {
@@ -1863,6 +2194,36 @@
                   }
                 }
               ]
+            },
+            {
+              "type": "download",
+              "title": "cli_project.zip",
+              "description": "",
+              "filename": "cli_project.zip",
+              "download_url": "/manus-storage/01_cli_project_9e146f70.zip",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287785",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762981524/cli_project.zip"
+            },
+            {
+              "type": "download",
+              "title": "cli_project_COMPLETE.zip",
+              "description": "",
+              "filename": "cli_project_COMPLETE.zip",
+              "download_url": "/manus-storage/02_cli_project_COMPLETE_687d4483.zip",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 2,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287785",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762981524/cli_project_COMPLETE.zip"
             }
           ],
           "completionRule": {
@@ -1907,6 +2268,21 @@
                 "en": "Prompt Caching Implementation = automatically caches tool schemas and system prompts to reduce token usage\n\nSetup = modify chat function to enable caching by default for tools and system prompts\n\nTool Schema Caching = add cache_control field with type \"ephemeral\" to last tool in list. Best practice: create copy of tools list, clone last tool schema, add cache control, then overwrite to avoid modifying original schemas\n\nSystem Prompt Caching = wrap system prompt in text block dictionary with cache_control type \"ephemeral\"\n\nMultiple Cache Breakpoints = can set cache points for both tools and system prompt in single request\n\nCache Order = tools → system prompt → messages\n\nToken Usage Patterns:\n- cache_creation_input_tokens = tokens written to cache on first use\n- cache_read_input_tokens = tokens retrieved from cache on subsequent identical requests\n- Partial cache reads possible when some content matches cached data\n\nCache Invalidation = any change to cached content (tools or system prompt) invalidates cache, forces new cache creation\n\nUse Cases = identical content across requests - same tool schemas, system prompts, or message sequences",
                 "fr": "Mise en cache des prompts = automatiquement met en cache les schémas d'outils et les prompts système pour réduire l'utilisation des tokens\n\nMise en place = modifier la fonction de chat pour activer la mise en cache par défaut pour les outils et les prompts système\n\nMise en cache du schéma des outils = ajouter le champ cache_control avec le type \"ephemeral\" au dernier outil de la liste. Meilleure pratique : créer une copie de la liste des outils, cloner le schéma du dernier outil, ajouter cache_control, puis écraser pour éviter de modifier les schémas d'origine\n\nMise en cache du prompt système = envelopper le prompt système dans un dictionnaire de bloc de texte avec le type cache_control \"ephemeral\"\n\nPlusieurs points d'arrêt du cache = on peut définir des points de cache pour les outils et le prompt système dans une seule requête\n\nOrdre du cache = outils → prompt système → messages\n\nModèles d'utilisation des tokens :\n- cache_creation_input_tokens = tokens écrits dans le cache lors de la première utilisation\n- cache_read_input_tokens = tokens récupérés du cache lors des requêtes identiques ultérieures\n- Des lectures partielles du cache sont possibles lorsque certains contenus correspondent aux données mises en cache\n\nInvalidation du cache = toute modification du contenu mis en cache (outils ou prompt système) invalide le cache et force la création d'un nouveau cache\n\nCas d'utilisation = contenu identique d'une requête à l'autre - mêmes schémas d'outils, prompts système ou séquences de messages"
               }
+            },
+            {
+              "type": "download",
+              "title": "003_caching.ipynb",
+              "description": "",
+              "filename": "003_caching.ipynb",
+              "download_url": "/manus-storage/01_003_caching_dee2adff.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287774",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762980904/003_caching.ipynb"
             }
           ],
           "completionRule": {
@@ -1943,6 +2319,36 @@
                 "en": "Prompt Engineering = improving prompts to get more reliable, higher-quality outputs from language models.\n\nModule Structure: Start with initial poor prompt → Apply prompt engineering techniques step-by-step → Evaluate improvements after each technique → Observe performance gains over time.\n\nExample Goal: Generate one-day meal plan for athletes based on height, weight, physical goal, dietary restrictions.\n\nTechnical Setup:\n- Updated eval pipeline with flexible prompt evaluator class\n- Supports concurrency (adjust max_concurrent_tasks based on rate limits)\n- generate_dataset() method creates test cases with specified inputs\n- run_prompt() function processes each test case individually\n\nKey Components:\n- prompt_input_spec = dictionary defining required prompt inputs\n- extra_criteria = additional validation requirements for model grading\n- output.html = formatted evaluation report showing test case results and scores\n\nProcess: Write initial prompt → Interpolate test case inputs → Run evaluation → Apply engineering techniques → Re-evaluate → Repeat until satisfactory performance.\n\nInitial Results: Expect poor scores (example: 2.32) with basic prompts, especially when using less capable models. Scores improve as techniques are applied.",
                 "fr": "Prompt Engineering = amélioration des prompts pour obtenir des sorties plus fiables et de meilleure qualité des LLM.\n\nModule Structure: Structure du module : Commencez par un prompt initial de mauvaise qualité → Appliquez les techniques de prompt engineering étape par étape → Évaluez les améliorations après chaque technique → Observez les gains de performance au fil du temps.\n\nExample Goal: Objectif d'exemple : Générer un plan de repas sur une journée pour les athlètes en fonction de la taille, du poids, de l'objectif physique et des restrictions alimentaires.\n\nTechnical Setup:\n- Updated eval pipeline with flexible prompt evaluator class\n- Supports concurrency (adjust max_concurrent_tasks based on rate limits)\n- generate_dataset() method creates test cases with specified inputs\n- run_prompt() function processes each test case individually\n\nConfiguration technique:\n- pipeline d'évaluation mis à jour avec une classe évaluatrice de prompt flexible\n- Prend en charge la concurrence (ajustez max_concurrent_tasks en fonction des limites de taux)\n- La méthode generate_dataset() crée des cas de test avec les entrées spécifiées\n- La fonction run_prompt() traite chaque cas de test individuellement\n\nKey Components:\n- prompt_input_spec = dictionary defining required prompt inputs\n- extra_criteria = additional validation requirements for model grading\n- output.html = formatted evaluation report showing test case results and scores\n\nComposants clés:\n- prompt_input_spec = dictionnaire définissant les entrées de prompt requises\n- extra_criteria = exigences de validation supplémentaires pour l'évaluation du modèle\n- output.html = rapport d'évaluation formaté montrant les résultats des cas de test et les scores\n\nProcess: Write initial prompt → Interpolate test case inputs → Run evaluation → Apply engineering techniques → Re-evaluate → Repeat until satisfactory performance.\n\nProcessus : écrire un prompt initial → interpoler les entrées des cas de test → lancer l'évaluation → appliquer les techniques d'ingénierie → réévaluer → répéter jusqu'à obtenir une performance satisfaisante.\n\nInitial Results: Expect poor scores (example: 2.32) with basic prompts, especially when using less capable models. Scores improve as techniques are applied.\n\nRésultats initiaux : Attendez-vous à des scores faibles (exemple : 2.32) avec des prompts basiques, surtout lors de l'utilisation de modèles moins performants. Les scores s'améliorent à mesure que les techniques sont appliquées."
               }
+            },
+            {
+              "type": "download",
+              "title": "001_prompting.ipynb",
+              "description": "",
+              "filename": "001_prompting.ipynb",
+              "download_url": "/manus-storage/01_001_prompting_6ce869f7.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287745",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762977962/001_prompting.ipynb"
+            },
+            {
+              "type": "download",
+              "title": "002_prompting_completed.ipynb",
+              "description": "",
+              "filename": "002_prompting_completed.ipynb",
+              "download_url": "/manus-storage/02_002_prompting_completed_94021f51.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 2,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287745",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762977962/002_prompting_completed.ipynb"
             }
           ],
           "completionRule": {
@@ -2031,6 +2437,36 @@
                 "en": "Reranking = post-processing step that uses LLM to reorder search results by relevance after initial retrieval.\n\nProcess: Run vector + BM25 search → merge results → pass to LLM with prompt asking to rank documents by relevance → get reordered results.\n\nImplementation details: Use document IDs instead of full text for efficiency. LLM receives user query + candidate documents + instruction to return most relevant docs in decreasing order. Assistant message pre-fill + stop sequence ensures structured JSON output.\n\nTradeoffs: Increases search accuracy by leveraging LLM's understanding of semantic relevance. Increases latency due to additional LLM call. Particularly effective when initial retrieval methods miss nuanced query intent (e.g., \"ENG team\" vs \"engineering team\").\n\nExample improvement: Query \"What did engineering team do with incident 2023?\" correctly prioritized software engineering section over cybersecurity section after reranking, despite hybrid search initially ranking it lower.",
                 "fr": "Reranking = étape de post-traitement qui utilise un LLM pour réorganiser les résultats de recherche par pertinence après la récupération initiale.\n\nProcessus : exécuter une recherche vector + BM25 → fusionner les résultats → passer au LLM avec un prompt demandant de classer les documents par pertinence → obtenir des résultats réordonnés.\n\nDétails de l'implémentation : Utiliser des document IDs plutôt que le texte intégral pour plus d'efficacité. Le LLM reçoit la requête utilisateur + documents candidats + instruction pour retourner les docs les plus pertinents dans l'ordre décroissant. Le pré-remplissage du message de l'assistant + la séquence d'arrêt assure une sortie JSON structurée.\n\nAvantages et compromis : Améliore la précision de la recherche en tirant parti de la compréhension du LLM de la pertinence sémantique. Augmente la latence en raison d'un appel LLM supplémentaire. Particulièrement efficace lorsque les méthodes de récupération initiales passent à côté des nuances de l'intention de la requête (par ex., \"ENG team\" vs \"engineering team\").\n\nExemple d'amélioration : La requête \"What did engineering team do with incident 2023?\" a correctement priorisé la section software engineering par rapport à la section cybersecurity après reranking, bien que la recherche hybride l'ait initialement classée plus bas."
               }
+            },
+            {
+              "type": "download",
+              "title": "001_prompting.ipynb",
+              "description": "",
+              "filename": "001_prompting.ipynb",
+              "download_url": "/manus-storage/01_001_prompting_6ce869f7.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287745",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762977962/001_prompting.ipynb"
+            },
+            {
+              "type": "download",
+              "title": "002_prompting_completed.ipynb",
+              "description": "",
+              "filename": "002_prompting_completed.ipynb",
+              "download_url": "/manus-storage/02_002_prompting_completed_94021f51.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 2,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287745",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762977962/002_prompting_completed.ipynb"
             }
           ],
           "completionRule": {
@@ -2279,6 +2715,36 @@
                 "en": "Text Chunking Strategies = process of dividing documents into smaller pieces for RAG pipelines\n\nCore Problem: Chunking quality directly impacts RAG performance. Poor chunking leads to irrelevant context retrieval (e.g., medical \"bug\" text retrieved for software engineering query about bugs).\n\nThree Main Strategies:\n\nKey Implementation Notes:\n- Chunk by character = most reliable fallback, works with any document type\n- Chunk by sentence = good middle ground if sentence detection works reliably\n- Chunk by section = optimal results but requires structured input\n- Strategy choice depends on document type guarantees and use case requirements\n\nRule: No universal best chunking method - depends on document structure guarantees and specific use case.",
                 "fr": "Stratégies de chunking du texte = processus de division des documents en morceaux plus petits pour les pipelines RAG\n\nProblème central : La qualité du chunking affecte directement les performances du RAG. Un chunking de mauvaise qualité entraîne une récupération de contexte non pertinente (par exemple, du texte médical « bug » récupéré pour une requête en génie logiciel sur des bugs).\n\nTrois stratégies principales :\n\n1. Size-Based Chunking = diviser le texte en chaînes de longueur égale\n- Avantages : Facile à mettre en œuvre, le plus courant en production\n- Inconvénients : Mots coupés, manque de contexte\n- Solution : stratégie de chevauchement = inclure des caractères des chunks voisins pour préserver le contexte\n- Compromis : entraîne une duplication du texte mais améliore la signification des chunks\n\n2. Structure-Based Chunking = diviser en fonction de la structure du document (en-têtes, paragraphes, sections)\n- Idéal pour les documents structurés (markdown, HTML)\n- Limitation : Nécessite que le formatage du document soit garanti\n- Exemple : découper sur les en-têtes markdown (##) pour créer des chunks basés sur les sections\n\n3. Semantic-Based Chunking = utilisation de NLP pour regrouper des phrases/sections liées\n- Technique la plus avancée\n- Regroupe les phrases consécutives en fonction de la similarité sémantique\n- Mise en œuvre complexe\n\nNotes clés de mise en œuvre :\n- Chunking par caractère = le recours le plus fiable, fonctionne avec tout type de document\n- Chunking par phrase = bon compromis si la détection de phrases fonctionne de manière fiable\n- Chunking par section = résultats optimaux mais nécessite une entrée structurée\n- Le choix de la stratégie dépend des garanties de type de document et des exigences du cas d'utilisation\n\nRègle : Il n'existe pas de méthode de chunking universellement optimale - elle dépend des garanties de la structure du document et du cas d'utilisation spécifique."
               }
+            },
+            {
+              "type": "download",
+              "title": "001_chunking.ipynb",
+              "description": "",
+              "filename": "001_chunking.ipynb",
+              "download_url": "/manus-storage/01_001_chunking_e916a942.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287776",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic-poc/assets/1748558508/001_chunking.ipynb"
+            },
+            {
+              "type": "download",
+              "title": "report.md",
+              "description": "",
+              "filename": "report.md",
+              "download_url": "/manus-storage/02_report_f273fd0c.md",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 2,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287776",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic-poc/assets/1748558508/report.md"
             }
           ],
           "completionRule": {
@@ -2315,6 +2781,36 @@
                 "en": "Text Embeddings = numerical representation of text meaning generated by embedding models\n\nEmbedding Model = takes text input, outputs long list of numbers (range -1 to +1)\n\nEmbedding Numbers = scores representing unknown qualities/features of input text. Each number theoretically scores different aspects (happiness, topic relevance, etc.) but actual meaning is unknown to users.\n\nSemantic Search = uses text embeddings to find text chunks related to user questions in RAG pipelines. Solves the search problem of matching user queries to relevant document chunks.\n\nRAG Pipeline Process = extract text chunks → user submits query → find related chunks using semantic search → add relevant chunks as context to prompt\n\nImplementation = Anthropic recommends Voyage AI for embedding generation. Requires separate account/API key. Free to start, easy integration via SDK.\n\nKey Insight = Embeddings enable semantic similarity matching rather than keyword matching, allowing better understanding of text relationships for retrieval tasks.",
                 "fr": "Text Embeddings = représentation numérique du sens du texte générée par les embedding models\n\nEmbedding Model = prend une entrée de texte, produit une longue liste de nombres (plage de -1 à +1)\n\nEmbedding Numbers = scores représentant des qualités/caractéristiques inconnues du texte d'entrée. Chaque nombre évalue théoriquement différents aspects (bonheur, pertinence du sujet, etc.) mais la signification réelle est inconnue des utilisateurs.\n\nSemantic Search = utilise des text embeddings pour trouver des morceaux de texte liés aux questions des utilisateurs dans les pipelines RAG. Résout le problème de recherche consistant à faire correspondre les requêtes des utilisateurs à des morceaux de documents pertinents.\n\nRAG Pipeline Process = extraire des morceaux de texte → l'utilisateur soumet une requête → trouver des morceaux connexes en utilisant semantic search → ajouter les morceaux pertinents comme contexte au prompt\n\nImplementation = Anthropic recommande Voyage AI pour la génération d'embeddings. Nécessite un compte/API séparé. Gratuit pour démarrer, intégration facile via le SDK.\n\nKey Insight = Les embeddings permettent une correspondance par similarité sémantique plutôt que par correspondance par mots-clés, ce qui permet une meilleure compréhension des relations entre les textes pour les tâches de récupération."
               }
+            },
+            {
+              "type": "download",
+              "title": "002_embeddings.ipynb",
+              "description": "",
+              "filename": "002_embeddings.ipynb",
+              "download_url": "/manus-storage/01_002_embeddings_19380db0.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287759",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic-poc/assets/1748558530/002_embeddings.ipynb"
+            },
+            {
+              "type": "download",
+              "title": "VoyageAI API Key Directions.pdf",
+              "description": "",
+              "filename": "VoyageAI_API_Key_Directions.pdf",
+              "download_url": "/manus-storage/02_VoyageAI_API_Key_Directions_a2da5e55.pdf",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 2,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287759",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic-poc/assets/1748558581/VoyageAI_API_Key_Directions.pdf"
             }
           ],
           "completionRule": {
@@ -2403,6 +2899,21 @@
                 "en": "Text Editor Tool = built-in Claude tool for file/text operations (read, write, create, replace, undo files/directories)\n\nKey characteristics:\n- Only JSON schema built into Claude, implementation must be custom-coded\n- Schema stub sent to Claude gets auto-expanded to full schema\n- Schema type string varies by Claude model version (3.5 vs 3.7 have different dates)\n- Enables Claude to act as software engineer out-of-the-box\n\nRequired implementation:\n- Custom class/functions to handle Claude's tool use requests\n- Functions for: view files, string replace, create files, etc.\n- Actual file system operations not provided by Claude\n\nWorkflow:\n1. Send minimal schema stub to Claude (name + type with version-specific date)\n2. Claude expands to full schema internally\n3. Claude sends tool use requests\n4. Custom implementation executes actual file operations\n5. Results sent back to Claude\n\nUse cases:\n- Replicate AI code editor functionality\n- File system operations where native editors unavailable\n- Automated code generation/refactoring\n- Multi-file project manipulation\n\nBenefits = approximates fancy code editor capabilities through API calls rather than GUI interaction.",
                 "fr": "Outil Éditeur de Texte = outil intégré Claude pour les opérations sur les fichiers/texte (lecture, écriture, création, remplacement, annulation d'opérations sur les fichiers et répertoires)\n\nCaractéristiques clés:\n- Seul le JSON schema intégré dans Claude, l'implémentation doit être codée sur mesure\n- Le stub du schema envoyé à Claude est automatiquement étendu pour devenir le schéma complet\n- Le type de schema string varie selon la version du modèle Claude (3.5 vs 3.7 ayant des dates différentes)\n- Permet à Claude d'agir comme ingénieur logiciel prêt à l'emploi\n\nImplémentation requise:\n- Classes/fonctions personnalisées pour gérer les demandes d'utilisation des outils de Claude\n- Fonctions pour : voir les fichiers, remplacer des chaînes, créer des fichiers, etc.\n- Les opérations réelles sur le système de fichiers ne sont pas fournies par Claude\n\nFlux de travail:\n1. Envoyer un stub de schéma minimal à Claude (nom + type avec date spécifique à la version)\n2. Claude étend le schéma complet en interne\n3. Claude envoie des requêtes d'utilisation d'outils\n4. L'implémentation personnalisée exécute les opérations réelles sur le système de fichiers\n5. Les résultats sont renvoyés à Claude\n\nCas d'utilisation:\n- Réaliser les fonctionnalités d'un éditeur de code IA\n- Opérations du système de fichiers lorsque les éditeurs natifs ne sont pas disponibles\n- Génération/refactorisation de code automatisées\n- Manipulation de projets multi-fichiers\n\nAvantages = approximation des capacités d'un éditeur de code avancé grâce à des appels API plutôt qu'à une interaction GUI."
               }
+            },
+            {
+              "type": "download",
+              "title": "005_text_editor_tool.ipynb",
+              "description": "",
+              "filename": "005_text_editor_tool.ipynb",
+              "download_url": "/manus-storage/01_005_text_editor_tool_c837a024.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287760",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762979892/005_text_editor_tool.ipynb"
             }
           ],
           "completionRule": {
@@ -2439,6 +2950,36 @@
                 "en": "Web Search Tool = built-in Claude tool for searching web to find up-to-date/specialized information for user questions\n\nImplementation = no custom code needed, Claude handles search execution automatically\n\nSchema Requirements:\n- type: \"web_search_20250305\" \n- name: \"web_search\"\n- max_uses: number (limits total searches, default 5)\n- allowed_domains: optional list to restrict search to specific domains\n\nResponse Structure:\n- Text blocks = Claude's explanatory text\n- Tool use blocks = search queries Claude executed \n- Web search result blocks = found pages (title, URL)\n- Citation blocks = specific text supporting Claude's statements\n\nKey Features:\n- Multiple searches possible per request (up to max_uses limit)\n- Domain restriction available for quality control\n- Citation system links statements to source material\n\nUI Rendering Pattern:\n- Display text blocks as normal text\n- Show search results as reference list\n- Highlight citations with source attribution (domain, title, URL, quoted text)\n\nUse Case Example: Restricting to NIH.gov for medical/exercise advice ensures scientifically-backed information vs generic web content.",
                 "fr": "Outil de recherche Web = outil intégré de Claude pour rechercher sur le Web afin de trouver des informations à jour et spécialisées pour les questions des utilisateurs\n\nImplémentation = aucun code personnalisé n'est nécessaire, Claude gère l’exécution de la recherche automatiquement\n\nExigences du schéma:\n- type: \"web_search_20250305\" \n- name: \"web_search\"\n- max_uses: number (limite le nombre total de recherches, par défaut 5)\n- allowed_domains: liste optionnelle pour restreindre la recherche à des domaines spécifiques\n\nStructure de la réponse:\n- Blocs de texte = texte explicatif de Claude\n- Blocs d’utilisation de l’outil = requêtes de recherche effectuées par Claude\n- Blocs de résultats de recherche Web = pages trouvées (titre, URL)\n- Blocs de citation = texte spécifique appuyant les affirmations de Claude\n\nPrincipales fonctionnalités:\n- Plusieurs recherches possibles par requête (jusqu’à la limite max_uses)\n- Restriction de domaine disponible pour le contrôle de qualité\n- Le système de citation relie les déclarations au matériel source\n\nModèle d'affichage UI:\n- Afficher les blocs de texte tels quels\n- Afficher les résultats de recherche sous forme de liste de références\n- Mettre en évidence les citations avec attribution de source (domaine, titre, URL, texte cité)\n\nExemple d’utilisation : Limiter à NIH.gov pour les conseils médicaux et d'exercice garantit une information scientifiquement étayée par rapport au contenu Web générique."
               }
+            },
+            {
+              "type": "download",
+              "title": "006_web_search.ipynb",
+              "description": "",
+              "filename": "006_web_search.ipynb",
+              "download_url": "/manus-storage/01_006_web_search_8975acd5.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287755",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762980062/006_web_search.ipynb"
+            },
+            {
+              "type": "download",
+              "title": "006_web_search_complete.ipynb",
+              "description": "",
+              "filename": "006_web_search_complete.ipynb",
+              "download_url": "/manus-storage/02_006_web_search_complete_1e3d99a8.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 2,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287755",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762980063/006_web_search_complete.ipynb"
             }
           ],
           "completionRule": {
@@ -2461,6 +3002,21 @@
                 "en": "Tool Functions = Python functions executed automatically when Claude needs extra information to help users.\n\nKey characteristics:\n- Plain Python functions called by Claude when it determines additional data is needed\n- Must use descriptive function names and argument names\n- Should validate inputs and raise errors with meaningful messages\n- Error messages are visible to Claude, allowing it to retry with corrected parameters\n\nBest practices:\n1. Well-named functions and arguments\n2. Input validation with immediate error raising for invalid inputs\n3. Meaningful error messages that guide correction\n\nExample implementation pattern:\n\\`\\`\\`\ndef get_current_datetime(date_format=\"%Y%m%d %H:%M:%S\"):\n if not date_format:\n raise ValueError(\"date format cannot be empty\")\n return datetime.now().strftime(date_format)\n\\`\\`\\`\n\nTool function workflow: Claude identifies need for information → calls tool function → receives result or error → may retry with corrections if error occurred.\n\nPurpose: Extend Claude's capabilities beyond its training data by providing access to real-time information like current datetime, weather, etc.",
                 "fr": "Tool Functions = des fonctions Python exécutées automatiquement lorsque Claude a besoin d'informations supplémentaires pour aider les utilisateurs.\n\nCaractéristiques clés :\n- Fonctions Python simples appelées par Claude lorsqu'il détermine qu'il faut des données supplémentaires\n- Doit utiliser des noms de fonctions et d'arguments descriptifs\n- Doit valider les entrées et lever des erreurs avec des messages explicites\n- Les messages d'erreur sont visibles par Claude, ce qui lui permet de réessayer avec les paramètres corrigés\n\nBonnes pratiques :\n1. Des fonctions et arguments bien nommés\n2. Validation des entrées avec levée immédiate d'erreurs en cas d'entrées invalides\n3. Messages d'erreur significatifs qui guident la correction\n\nExemple de modèle d'implémentation :\n\\`\\`\\`\ndef get_current_datetime(date_format=\"%Y%m%d %H:%M:%S\"):\n if not date_format:\n raise ValueError(\"date format cannot be empty\")\n return datetime.now().strftime(date_format)\n\\`\\`\\`\n\nFlux de travail des fonctions outil : Claude identifie le besoin d'informations → appelle la fonction outil → reçoit le résultat ou une erreur → peut réessayer avec des corrections si une erreur s'est produite.\n\nObjectif : Étendre les capacités de Claude au-delà de ses données d'entraînement en fournissant un accès à des informations en temps réel telles que l'heure actuelle, la météo, etc."
               }
+            },
+            {
+              "type": "download",
+              "title": "001_tools.ipynb",
+              "description": "",
+              "filename": "001_tools.ipynb",
+              "download_url": "/manus-storage/01_001_tools_9beb6f18.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287756",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762978090/001_tools.ipynb"
             }
           ],
           "completionRule": {
@@ -2572,6 +3128,21 @@
                 "en": "Multiple Tools Implementation = Adding additional tools to an existing tool system after initial framework setup.\n\nProcess = 3 steps: (1) Add tool schemas to RunConversation function's tools list, (2) Add conditional cases in RunTool function to handle new tool names, (3) Implement actual tool functions.\n\nKey Components:\n- RunConversation function = Contains tools list that makes Claude aware of available tools\n- RunTool function = Routes tool calls to appropriate functions based on tool name\n- Tool schemas = Define tool structure for the AI model\n- Tool functions = Actual implementation code\n\nExample Tools Added:\n- AddDurationToDateTime = Calculates date/time with duration offset\n- SetReminder = Creates reminder (mock implementation that prints confirmation)\n\nTool Chaining = AI can use multiple tools sequentially in single conversation (e.g., calculate date first, then set reminder with result).\n\nMessage Structure = Assistant responses can contain multiple blocks: text blocks + tool use blocks in same message.\n\nScalability = After initial framework setup, adding new tools becomes simple pattern of schema + routing + implementation.",
                 "fr": "Implémentation de plusieurs outils = Ajouter des outils supplémentaires à un système d'outils existant après la configuration initiale du framework.\n\nProcessus = 3 étapes : (1) Ajouter les schémas d'outil à la liste des outils de la fonction RunConversation, (2) Ajouter des cas conditionnels dans la fonction RunTool pour gérer les nouveaux noms d'outil, (3) Implémenter les fonctions d'outil réelles.\n\nÉléments clés:\n- RunConversation function = Contient la liste des outils qui permettent à Claude de prendre connaissance des outils disponibles\n- RunTool function = Dirige les appels d'outil vers les fonctions appropriées selon le nom de l'outil\n- Tool schemas = Définissent la structure de l'outil pour le modèle d'IA\n- Tool functions = Code de mise en œuvre réel\n\nOutils d'exemple ajoutés:\n- AddDurationToDateTime = Calcule la date/heure avec un décalage de durée\n- SetReminder = Crée un rappel (implémentation simulée qui affiche une confirmation)\n\nChaînage d'outils = L'IA peut utiliser plusieurs outils successivement dans une même conversation (par exemple, calculer la date d'abord, puis définir le rappel avec le résultat).\n\nStructure des messages = Les réponses de l'Assistant peuvent contenir plusieurs blocs : blocs de texte + blocs d'utilisation des outils dans le même message.\n\nÉvolutivité = Après la configuration initiale du framework, l'ajout de nouveaux outils devient un schéma simple de schéma + routage + mise en œuvre."
               }
+            },
+            {
+              "type": "download",
+              "title": "001_tools_009.ipynb",
+              "description": "",
+              "filename": "001_tools_009.ipynb",
+              "download_url": "/manus-storage/01_001_tools_009_8dffe145.ipynb",
+              "image": {
+                "src": "/manus-storage/33dbe8f783d4835a838b4c4ae85d3c04e352fee1-1000x1000_f2c3440b.svg",
+                "alt": "Download illustration"
+              },
+              "color": "",
+              "order": 1,
+              "source_page": "https://anthropic-partners.skilljar.com/claude-with-the-anthropic-api/287749",
+              "asset_path": "/instructor/4hdejjwplbrm-anthropic/assets/1762978354/001_tools_009.ipynb"
             }
           ],
           "completionRule": {
