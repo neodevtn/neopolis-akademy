@@ -326,11 +326,8 @@ export default function Apply() {
   const handleSubmit = async () => {
     if (!validateStep()) return;
 
-    // Vidéo obligatoire
-    if (!recordedBlob) {
-      setServerError("L'enregistrement vidéo est obligatoire. Veuillez enregistrer votre vidéo pitch avant de soumettre.");
-      return;
-    }
+    // Vidéo optionnelle mais fortement recommandée
+    // (pas de blocage si pas de vidéo)
 
     setUploading(true);
     let cvFileUrl = "";
@@ -796,34 +793,59 @@ export default function Apply() {
             {/* File uploads */}
             <div className="border-t pt-6 mt-6" style={{ borderColor: "var(--wise-canvas-soft)" }}>
               <h3 className="heading-md text-foreground mb-4">Documents</h3>
+              <p className="text-sm text-muted-foreground mb-4">Ajoutez votre CV et une photo de profil pour compléter votre dossier de candidature.</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label>CV (PDF, DOC, DOCX)</Label>
+                  <Label className="font-semibold">CV (PDF, DOC, DOCX) <span className="text-xs text-muted-foreground font-normal">— max 10 Mo</span></Label>
                   <input ref={cvInputRef} type="file" accept=".pdf,.doc,.docx" className="hidden" onChange={e => { if (e.target.files?.[0]) setCvFile(e.target.files[0]); }} />
                   <div
-                    className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors" style={{ borderColor: "var(--wise-canvas-soft)" }}
+                    className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200 hover:border-primary/50 hover:bg-primary/5 ${cvFile ? 'border-primary/40 bg-primary/5' : ''}`}
+                    style={{ borderColor: cvFile ? undefined : "var(--wise-canvas-soft)" }}
                     onClick={() => cvInputRef.current?.click()}
                   >
-                    <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
                     {cvFile ? (
-                      <p className="text-sm text-primary font-medium">{cvFile.name}</p>
+                      <div className="space-y-2">
+                        <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
+                          <CheckCircle className="w-6 h-6 text-primary" />
+                        </div>
+                        <p className="text-sm text-primary font-semibold">{cvFile.name}</p>
+                        <p className="text-xs text-muted-foreground">{(cvFile.size / 1024 / 1024).toFixed(2)} Mo</p>
+                        <p className="text-xs text-primary/70 underline">Changer le fichier</p>
+                      </div>
                     ) : (
-                      <p className="text-sm text-muted-foreground">Cliquez pour uploader votre CV</p>
+                      <div className="space-y-2">
+                        <Upload className="w-10 h-10 mx-auto text-muted-foreground/60" />
+                        <p className="text-sm font-medium text-foreground">Cliquez pour uploader votre CV</p>
+                        <p className="text-xs text-muted-foreground">PDF, DOC ou DOCX</p>
+                      </div>
                     )}
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label>Photo de profil (JPG, PNG)</Label>
+                  <Label className="font-semibold">Photo de profil (JPG, PNG) <span className="text-xs text-muted-foreground font-normal">— max 5 Mo</span></Label>
                   <input ref={photoInputRef} type="file" accept=".jpg,.jpeg,.png,.webp" className="hidden" onChange={e => { if (e.target.files?.[0]) setPhotoFile(e.target.files[0]); }} />
                   <div
-                    className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors" style={{ borderColor: "var(--wise-canvas-soft)" }}
+                    className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200 hover:border-primary/50 hover:bg-primary/5 ${photoFile ? 'border-primary/40 bg-primary/5' : ''}`}
+                    style={{ borderColor: photoFile ? undefined : "var(--wise-canvas-soft)" }}
                     onClick={() => photoInputRef.current?.click()}
                   >
-                    <User className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
                     {photoFile ? (
-                      <p className="text-sm text-primary font-medium">{photoFile.name}</p>
+                      <div className="space-y-2">
+                        <div className="w-16 h-16 mx-auto rounded-full overflow-hidden border-2 border-primary/30">
+                          <img src={URL.createObjectURL(photoFile)} alt="Aperçu" className="w-full h-full object-cover" />
+                        </div>
+                        <p className="text-sm text-primary font-semibold">{photoFile.name}</p>
+                        <p className="text-xs text-muted-foreground">{(photoFile.size / 1024 / 1024).toFixed(2)} Mo</p>
+                        <p className="text-xs text-primary/70 underline">Changer la photo</p>
+                      </div>
                     ) : (
-                      <p className="text-sm text-muted-foreground">Cliquez pour uploader votre photo</p>
+                      <div className="space-y-2">
+                        <div className="w-16 h-16 mx-auto rounded-full bg-muted/30 flex items-center justify-center">
+                          <User className="w-8 h-8 text-muted-foreground/60" />
+                        </div>
+                        <p className="text-sm font-medium text-foreground">Cliquez pour uploader votre photo</p>
+                        <p className="text-xs text-muted-foreground">JPG, PNG ou WebP</p>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -1008,8 +1030,8 @@ export default function Apply() {
               Suivant <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
             </button>
           ) : (
-            <button onClick={handleSubmit} disabled={submitMutation.isPending || uploading || !recordedBlob} className="wise-btn-primary flex items-center gap-1 md:gap-2 text-xs md:text-base px-3 md:px-6 py-2 md:py-3" style={{ opacity: (submitMutation.isPending || uploading || !recordedBlob) ? 0.6 : 1 }}>
-              {(submitMutation.isPending || uploading) ? <><Loader2 className="w-4 h-4 animate-spin" /> Envoi...</> : !recordedBlob ? <>Vidéo requise <Video className="w-4 h-4" /></> : <>Soumettre <CheckCircle className="w-4 h-4" /></>}
+            <button onClick={handleSubmit} disabled={submitMutation.isPending || uploading} className="wise-btn-primary flex items-center gap-1 md:gap-2 text-xs md:text-base px-3 md:px-6 py-2 md:py-3" style={{ opacity: (submitMutation.isPending || uploading) ? 0.6 : 1 }}>
+              {(submitMutation.isPending || uploading) ? <><Loader2 className="w-4 h-4 animate-spin" /> Envoi...</> : <>Soumettre ma candidature <CheckCircle className="w-4 h-4" /></>}
             </button>
           )}
         </div>

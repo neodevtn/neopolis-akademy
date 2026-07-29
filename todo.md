@@ -823,3 +823,23 @@
 - [x] Animation de complétion de chapitre (classe .chapter-complete-celebration)
 - [x] Raccourcis clavier pour navigation (flèches gauche/droite + kbd-hints visuels)
 - [x] Accessibilité : focus-visible, skip-to-content, prefers-reduced-motion
+
+## Amélioration Back-Office Admin (2026-07-29)
+- [x] Schema: table admin_notes (notes sur utilisateurs/candidatures)
+- [x] Schema: table admin_tags (étiquettes personnalisées pour segmenter les apprenants)
+- [x] Schema: table communications (historique des emails envoyés en masse)
+- [x] Backend: CRUD notes admin (ajouter, modifier, supprimer, lister par cible)
+- [x] Backend: Activation automatique des candidatures acceptées (créer compte + envoyer email)
+- [x] Backend: Actions en masse (accepter/refuser multiples candidatures, envoyer emails groupés)
+- [x] Backend: Tags/segments apprenants (créer, assigner, filtrer)
+- [x] Backend: Communiqués en masse (composer email, sélectionner destinataires, envoyer)
+- [x] Frontend: Système de notes admin (timeline, ajout rapide, filtrage)
+- [x] Frontend: Outils d'évaluation avancés (dashboard performance, indicateurs de risque)
+- [x] Frontend: Visionneuse CV intégrée (preview PDF inline)
+- [x] Frontend: Activation automatique candidatures (bouton batch + workflow)
+- [x] Frontend: Invitations en masse (import CSV, envoi groupé)
+- [x] Frontend: Communiqués en masse (compositeur email avec templates)
+- [ ] Frontend: Vue Kanban candidatures (drag & drop entre statuts) — différé
+- [ ] Frontend: Timeline d'activité par apprenant — différé
+- [x] Frontend: Alertes automatiques (inactif >7j, échecs quiz, progression bloquée)
+- [x] Vérifier et corriger l'upload CV et photo dans le formulaire de candidature (visible et fonctionnel)

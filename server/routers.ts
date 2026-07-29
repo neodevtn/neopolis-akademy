@@ -12,6 +12,7 @@ import { storagePut } from "./storage";
 import { sendConfirmationEmail, sendDecisionEmail, sendInvitationEmail, sendReminderEmail } from "./email";
 import { generateCandidatePDF } from "./pdf";
 import { uploadRateLimit, submitRateLimit, getClientIp } from "./security";
+import { adminEnhancedRouter } from "./adminRouter";
 
 export const appRouter = router({
   system: systemRouter,
@@ -108,13 +109,7 @@ export const appRouter = router({
           });
         }
 
-        // Vid\u00e9o obligatoire
-        if (!input.videoFileUrl || input.videoFileUrl.trim() === "") {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "L'enregistrement vidéo est obligatoire. Veuillez enregistrer votre vidéo pitch avant de soumettre.",
-          });
-        }
+        // Vidéo optionnelle mais fortement recommandée
 
         // Calculate score with all new fields
         const scores = calculateScore({
@@ -530,6 +525,9 @@ export const appRouter = router({
         return await exportLearnersCSV();
       }),
   }),
+
+  // Enhanced admin tools (notes, tags, communications, bulk actions, analytics)
+  adminTools: adminEnhancedRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -192,3 +192,84 @@ export const userInvitations = mysqlTable("user_invitations", {
 
 export type UserInvitation = typeof userInvitations.$inferSelect;
 export type InsertUserInvitation = typeof userInvitations.$inferInsert;
+
+/**
+ * Admin notes - private notes attached to users or applications
+ */
+export const adminNotes = mysqlTable("admin_notes", {
+  id: int("id").autoincrement().primaryKey(),
+  targetType: mysqlEnum("targetType", ["user", "application"]).notNull(),
+  targetId: int("targetId").notNull(), // userId or applicationId
+  authorId: int("authorId").notNull(), // admin who wrote the note
+  content: text("content").notNull(),
+  category: mysqlEnum("category", ["general", "evaluation", "follow_up", "alert", "decision"]).default("general").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AdminNote = typeof adminNotes.$inferSelect;
+export type InsertAdminNote = typeof adminNotes.$inferInsert;
+
+/**
+ * Admin tags - custom labels for segmenting learners
+ */
+export const adminTags = mysqlTable("admin_tags", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull().unique(),
+  color: varchar("color", { length: 20 }).default("#6b7280").notNull(), // hex color
+  description: text("description"),
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AdminTag = typeof adminTags.$inferSelect;
+export type InsertAdminTag = typeof adminTags.$inferInsert;
+
+/**
+ * User-tag assignments - many-to-many relationship
+ */
+export const userTags = mysqlTable("user_tags", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  tagId: int("tagId").notNull(),
+  assignedBy: int("assignedBy").notNull(),
+  assignedAt: timestamp("assignedAt").defaultNow().notNull(),
+});
+
+export type UserTag = typeof userTags.$inferSelect;
+export type InsertUserTag = typeof userTags.$inferInsert;
+
+/**
+ * Communications - tracks mass emails and announcements sent by admins
+ */
+export const communications = mysqlTable("communications", {
+  id: int("id").autoincrement().primaryKey(),
+  subject: varchar("subject", { length: 500 }).notNull(),
+  body: text("body").notNull(), // HTML email body
+  type: mysqlEnum("type", ["invitation", "announcement", "reminder", "welcome", "custom"]).notNull(),
+  recipientFilter: json("recipientFilter"), // JSON: { tags: [], status: [], role: [] }
+  recipientCount: int("recipientCount").notNull().default(0),
+  sentBy: int("sentBy").notNull(), // admin userId
+  status: mysqlEnum("status", ["draft", "sending", "sent", "failed"]).default("draft").notNull(),
+  sentAt: timestamp("sentAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Communication = typeof communications.$inferSelect;
+export type InsertCommunication = typeof communications.$inferInsert;
+
+/**
+ * Admin activity log - audit trail of admin actions
+ */
+export const adminActivityLog = mysqlTable("admin_activity_log", {
+  id: int("id").autoincrement().primaryKey(),
+  adminId: int("adminId").notNull(),
+  action: varchar("action", { length: 100 }).notNull(), // e.g. "accept_application", "block_user", "send_communication"
+  targetType: varchar("targetType", { length: 50 }).notNull(), // "user", "application", "communication"
+  targetId: int("targetId"),
+  details: json("details"), // additional context
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AdminActivityLog = typeof adminActivityLog.$inferSelect;
+export type InsertAdminActivityLog = typeof adminActivityLog.$inferInsert;
