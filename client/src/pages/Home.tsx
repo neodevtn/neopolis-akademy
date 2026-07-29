@@ -20,7 +20,11 @@ import {
   Rocket,
   Menu,
   X,
+  PlayCircle,
 } from "lucide-react";
+import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
+import { useAuth } from "@/_core/hooks/useAuth";
+import trainingIndex from "@/data/trainingIndex.json";
 
 // Chart.js
 import { Chart as ChartJS, registerables } from "chart.js";
@@ -121,6 +125,71 @@ function AnimatedSection({ children, className, style, id }: { children: React.R
     >
       {children}
     </motion.section>
+  );
+}
+
+/* ─── Resume Reading Widget ─── */
+function ResumeReadingWidget() {
+  const { isAuthenticated } = useAuth();
+  const { getLastVisitedCourse, isLoading } = useTrainingProgress();
+
+  if (!isAuthenticated || isLoading) return null;
+
+  const lastVisited = getLastVisitedCourse();
+  if (!lastVisited) return null;
+
+  const course = trainingIndex.courses.find((c: any) => c.id === lastVisited.courseId);
+  if (!course) return null;
+  const cert = trainingIndex.certifications.find((c: any) => c.id === (course as any).certId);
+  const progressPct = Math.round(((lastVisited.chapterIndex + 1) / lastVisited.totalChapters) * 100);
+
+  return (
+    <div className="container" style={{ padding: "0 clamp(1.25rem, 4vw, 3rem)" }}>
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
+        className="-mt-4 mb-8"
+      >
+        <Link
+          href={`/training/${(course as any).certId}/${course.id}`}
+          className="group block rounded-2xl border p-4 md:p-5 hover:shadow-lg transition-all duration-200"
+          style={{
+            background: "linear-gradient(135deg, oklch(96% 0.02 145 / 0.5), oklch(97% 0.015 95 / 0.5))",
+            borderColor: "oklch(82% 0.06 145 / 0.4)",
+          }}
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "oklch(90% 0.06 145 / 0.4)" }}>
+              <PlayCircle className="w-5 h-5 md:w-6 md:h-6" style={{ color: "oklch(45% 0.15 145)" }} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full" style={{ background: "oklch(90% 0.06 145 / 0.5)", color: "oklch(40% 0.12 145)" }}>
+                  Reprendre la lecture
+                </span>
+                {cert && <span className="text-xs text-muted-foreground">{(cert as any).icon}</span>}
+              </div>
+              <h3 className="text-sm md:text-base font-semibold group-hover:opacity-80 transition-opacity truncate" style={{ color: "oklch(25% 0.02 250)" }}>
+                {typeof (course as any).title === 'object' ? ((course as any).title.fr || (course as any).title.en) : (course as any).title}
+              </h3>
+              <div className="flex items-center gap-3 mt-1.5">
+                <div className="flex-1 max-w-[200px] h-1.5 rounded-full overflow-hidden" style={{ background: "oklch(88% 0.02 145 / 0.6)" }}>
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{ width: `${progressPct}%`, background: "oklch(55% 0.15 145)" }}
+                  />
+                </div>
+                <span className="text-xs font-medium" style={{ color: "oklch(45% 0.08 145)" }}>
+                  Chapitre {lastVisited.chapterIndex + 1}/{lastVisited.totalChapters}
+                </span>
+              </div>
+            </div>
+            <ChevronRight className="w-5 h-5 flex-shrink-0 group-hover:translate-x-0.5 transition-transform" style={{ color: "oklch(55% 0.1 145)" }} />
+          </div>
+        </Link>
+      </motion.div>
+    </div>
   );
 }
 
@@ -251,6 +320,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ─── Resume Reading Widget ─── */}
+      <ResumeReadingWidget />
 
       {/* ─── Pourquoi maintenant (Gris Band) ─── */}
       <AnimatedSection id="pourquoi" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>

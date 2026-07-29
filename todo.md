@@ -789,3 +789,8 @@
 - [x] Augmenter contraste et taille des sous-titres dans les leçons
 - [x] Ajouter feedback visuel immédiat avec explication après chaque réponse de quiz
 - [x] Ajouter animations de transition fluides au drag & drop (MatchingExercise)
+
+## Indicateurs sidebar + Reprendre lecture + Animations écrans (2026-07-29)
+- [x] Ajouter coche verte dans la sidebar pour les chapitres validés (progression par chapitre)
+- [x] Créer widget "Reprendre la lecture" sur la page d'accueil (retour au dernier exercice/quiz consulté)
+- [x] Ajouter animations slide-in horizontal entre les écrans de cours

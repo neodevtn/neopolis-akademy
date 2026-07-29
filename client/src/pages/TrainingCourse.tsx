@@ -20,7 +20,7 @@ import { ComparisonBox } from "@/components/ComparisonBox";
 import { MatchingExercise } from "@/components/MatchingExercise";
 import { SingleChoiceExercise } from "@/components/SingleChoiceExercise";
 import { ChapterQuiz } from "@/components/ChapterQuiz";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 
 /* ─── Animation Variants ─── */
@@ -1530,6 +1530,8 @@ function LessonViewer({
   // Track whether we're syncing from parent to avoid calling onChapterChange back
   const isSyncingFromParent = useRef(false);
   const prevLessonId = useRef(lesson.id);
+  // Track navigation direction for slide-in animation
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
 
   const chapters = lesson.chapters || [];
   const totalChapters = chapters.length;
@@ -1538,6 +1540,7 @@ function LessonViewer({
   useEffect(() => {
     if (initialChapter !== undefined && initialChapter !== currentChapter) {
       isSyncingFromParent.current = true;
+      setSlideDirection(initialChapter > currentChapter ? 'right' : 'left');
       setCurrentChapter(initialChapter);
     }
   }, [initialChapter]);
@@ -1900,10 +1903,38 @@ function LessonViewer({
     }
   };
 
+  // Slide-in animation variants
+  const slideEase = [0.23, 1, 0.32, 1] as [number, number, number, number];
+  const slideVariants = {
+    enter: (dir: 'left' | 'right') => ({
+      x: dir === 'right' ? 60 : -60,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.3, ease: slideEase },
+    },
+    exit: (dir: 'left' | 'right') => ({
+      x: dir === 'right' ? -60 : 60,
+      opacity: 0,
+      transition: { duration: 0.2, ease: slideEase },
+    }),
+  };
+
   return (
     <div className="mt-2">
       {!showQuiz ? (
         <>
+          <AnimatePresence mode="wait" custom={slideDirection}>
+          <motion.div
+            key={`chapter-${currentChapter}`}
+            custom={slideDirection}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+          >
           {/* Chapter header - Skilljar style: badge shows type + chapter name, title shows screen title */}
           {chapter && (() => {
             // Extract screen title from first content block's first line
@@ -1998,11 +2029,14 @@ function LessonViewer({
                 setShowChapterQuiz(false);
                 // Advance validated progress (quiz passed = chapter validated)
                 setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
+                setSlideDirection('right');
                 setCurrentChapter((p) => p + 1);
                 setShowTranscript(false);
               }}
             />
           )}
+          </motion.div>
+          </AnimatePresence>
 
                     {/* Chapter navigation */}
           <div className="mt-8 pt-5 border-t border-[#e8e5e0] dark:border-slate-700">
@@ -2023,7 +2057,7 @@ function LessonViewer({
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => { setCurrentChapter((p) => p - 1); setShowTranscript(false); setShowChapterQuiz(false); }}
+              onClick={() => { setSlideDirection('left'); setCurrentChapter((p) => p - 1); setShowTranscript(false); setShowChapterQuiz(false); }}
               disabled={currentChapter === 0}
               className="gap-1.5 text-muted-foreground hover:text-foreground"
             >
@@ -2079,6 +2113,7 @@ function LessonViewer({
                         // Structural chapters auto-validate (they have no quiz)
                         setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
                       }
+                      setSlideDirection('right');
                       setCurrentChapter((p) => p + 1);
                       setShowTranscript(false);
                       setShowChapterQuiz(false);
@@ -2324,6 +2359,10 @@ function LessonSidebarContent({
                   } else {
                     screenTitle = block.type || (lang === 'fr' ? 'Écran' : 'Screen');
                   }
+                  // Determine if this screen is validated (before current active position)
+                  const isScreenValidated = activeLessonIndex !== null && screenIdx < activeLessonIndex;
+                  // For single-lesson courses, screens before the active chapter are validated
+                  const isChapterValidated = completed || (screenIdx < (activeLessonIndex ?? 0));
                   return (
                     <button
                       key={screenIdx}
@@ -2331,10 +2370,16 @@ function LessonSidebarContent({
                       className={`w-full text-left flex items-center gap-2 px-2 py-1.5 rounded text-xs transition-colors ${
                         isActiveScreen
                           ? 'text-[#c75b3a] font-medium bg-[#c75b3a]/5'
+                          : isChapterValidated
+                          ? 'text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'
                           : 'text-muted-foreground hover:text-foreground hover:bg-secondary/30'
                       }`}
                     >
-                      <span className="text-[10px]">{isActiveScreen ? '●' : '○'}</span>
+                      {isChapterValidated && !isActiveScreen ? (
+                        <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
+                      ) : (
+                        <span className="text-[10px]">{isActiveScreen ? '●' : '○'}</span>
+                      )}
                       <span className="truncate">{screenTitle}</span>
                     </button>
                   );
@@ -2350,16 +2395,23 @@ function LessonSidebarContent({
                       <div
                         key={ci}
                         className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                          ci <= chapterProgress.current
+                          ci < chapterProgress.current
+                            ? "bg-emerald-500"
+                            : ci === chapterProgress.current
                             ? "bg-primary"
                             : "bg-border"
                         }`}
                       />
                     ))}
                   </div>
-                  <span className="text-[10px] text-muted-foreground font-medium whitespace-nowrap">
-                    {chapterProgress.current + 1}/{chapterProgress.total}
-                  </span>
+                  <div className="flex items-center gap-1">
+                    {chapterProgress.current > 0 && (
+                      <CheckCircle2 className="w-2.5 h-2.5 text-emerald-500" />
+                    )}
+                    <span className="text-[10px] text-muted-foreground font-medium whitespace-nowrap">
+                      {chapterProgress.current + 1}/{chapterProgress.total}
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
