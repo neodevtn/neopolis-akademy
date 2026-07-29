@@ -782,3 +782,10 @@
 - [x] Améliorer l'espacement et la hiérarchie visuelle globale du contenu
 - [x] Détecter les blocs TOC (séquence de mots courts) et les rendre en pills
 - [x] Améliorer isSectionHeading pour attraper les headings avec ? et !
+
+## Fiabilisation progression + UX améliorations (2026-07-29)
+- [x] Fiabiliser indicateurs de progression (basés sur quiz/checkpoint passés avec succès + unlock)
+- [x] Corriger les tags "Not started" / "In progress" / "Completed" pour refléter la vraie progression
+- [x] Augmenter contraste et taille des sous-titres dans les leçons
+- [x] Ajouter feedback visuel immédiat avec explication après chaque réponse de quiz
+- [x] Ajouter animations de transition fluides au drag & drop (MatchingExercise)

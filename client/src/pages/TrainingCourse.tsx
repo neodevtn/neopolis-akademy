@@ -752,9 +752,9 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
       const titlePart = line.trim().slice(0, colonIdx).trim();
       const descPart = line.trim().slice(colonIdx + 1).trim();
       elements.push(
-        <h3 key={i} className="text-[17px] font-bold mt-8 mb-2 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+        <h3 key={i} className="text-xl font-bold mt-10 mb-3 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
           <span>{titlePart}</span>
-          <span className="text-foreground/60 font-normal">: {descPart}</span>
+          <span className="text-foreground/70 font-normal text-lg">: {descPart}</span>
         </h3>
       );
     } else if (isMetaLine(line)) {
@@ -773,7 +773,7 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
       const prevTrimmed = prevLine?.trim() || '';
       if (prevTrimmed === '' || i === 0) {
         elements.push(
-          <h4 key={i} className="text-base font-bold mt-6 mb-2.5 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+          <h4 key={i} className="text-lg font-bold mt-8 mb-3 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
             {line.trim()}
           </h4>
         );
@@ -807,13 +807,13 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
       const isKnownHeading = knownSectionHeadings.has(line.trim().toLowerCase());
       if (isKnownHeading) {
         elements.push(
-          <h3 key={i} className="text-lg font-bold mt-8 mb-3 text-foreground border-b border-border/30 pb-2" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+          <h3 key={i} className="text-xl font-bold mt-10 mb-3 text-foreground border-b border-border/40 pb-2.5" style={{ fontFamily: 'Lora, Georgia, serif' }}>
             {renderInlineFormatting(line)}
           </h3>
         );
       } else {
         elements.push(
-          <h4 key={i} className="text-base font-bold mt-6 mb-2.5 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+          <h4 key={i} className="text-lg font-bold mt-8 mb-3 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
             {renderInlineFormatting(line)}
           </h4>
         );
@@ -1518,6 +1518,9 @@ function LessonViewer({
   initialChapter?: number;
 }) {
   const [currentChapter, setCurrentChapter] = useState(initialChapter ?? 0);
+  // validatedChapter tracks the highest chapter index that was VALIDATED (quiz passed or exercises completed)
+  // This is what gets persisted as progress - NOT the navigation position
+  const [validatedChapter, setValidatedChapter] = useState(initialChapter ?? 0);
   const [showQuiz, setShowQuiz] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
   const [showChapterQuiz, setShowChapterQuiz] = useState(false);
@@ -1545,27 +1548,29 @@ function LessonViewer({
       prevLessonId.current = lesson.id;
       const startChapter = initialChapter !== undefined ? initialChapter : 0;
       setCurrentChapter(startChapter);
+      setValidatedChapter(startChapter);
       setShowQuiz(false);
       setShowTranscript(false);
       setShowChapterQuiz(false);
       setChapterQuizPassed(new Set());
-      // Notify parent of initial position
-      onChapterChange?.(startChapter, chapters.length);
+      setCompletedExercises(new Set());
     }
   }, [lesson.id]);
 
-  // When chapter changes from internal navigation (Next button, etc.)
+  // When chapter changes from internal navigation (Next button, etc.) - only scroll
   useEffect(() => {
     if (isSyncingFromParent.current) {
-      // This change came from parent sync, don't call back to avoid loop
       isSyncingFromParent.current = false;
-      // Still scroll to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
     }
-    onChapterChange?.(currentChapter, totalChapters);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentChapter, totalChapters]);
+
+  // Only persist progress when validatedChapter advances (quiz passed or exercises completed)
+  useEffect(() => {
+    if (validatedChapter > 0) {
+      onChapterChange?.(validatedChapter, totalChapters);
+    }
+  }, [validatedChapter, totalChapters]);
 
   const isLastChapter = currentChapter >= totalChapters - 1;
   const chapter = chapters[currentChapter];
@@ -1991,6 +1996,8 @@ function LessonViewer({
               onPass={() => {
                 setChapterQuizPassed((prev) => { const next = new Set(Array.from(prev)); next.add(currentChapter); return next; });
                 setShowChapterQuiz(false);
+                // Advance validated progress (quiz passed = chapter validated)
+                setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
                 setCurrentChapter((p) => p + 1);
                 setShowTranscript(false);
               }}
@@ -2064,6 +2071,14 @@ function LessonViewer({
                     if (needsQuiz) {
                       setShowChapterQuiz(true);
                     } else {
+                      // For non-quiz chapters (structural, exercise-completed, etc.), validate progress
+                      if (isQuizOrCheckpointChapter && allExercisesCompleted) {
+                        // Exercises completed = chapter validated
+                        setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
+                      } else if (isStructuralChapter || (!isTeachingChapter && !isQuizOrCheckpointChapter)) {
+                        // Structural chapters auto-validate (they have no quiz)
+                        setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
+                      }
                       setCurrentChapter((p) => p + 1);
                       setShowTranscript(false);
                       setShowChapterQuiz(false);

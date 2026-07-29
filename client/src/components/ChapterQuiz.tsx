@@ -209,10 +209,38 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
         })}
       </div>
 
+      {/* Immediate feedback banner */}
+      {showResult && (
+        <div className={`flex items-center gap-3 p-3.5 rounded-lg mb-3 border ${
+          selected === q.correctId
+            ? 'bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-800'
+            : 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800'
+        }`}>
+          {selected === q.correctId ? (
+            <>
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <span className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">
+                {t({ en: "Correct!", fr: "Correct !" })}
+              </span>
+            </>
+          ) : (
+            <>
+              <X className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0" />
+              <span className="text-sm font-semibold text-red-800 dark:text-red-300">
+                {t({ en: "Incorrect", fr: "Incorrect" })}
+              </span>
+            </>
+          )}
+        </div>
+      )}
+
       {/* Explanation after answer */}
       {showResult && q.explanation && (
-        <div className="text-sm p-3 rounded-lg mb-4 bg-white border border-gray-200 text-gray-700 italic">
-          {resolveI18n(q.explanation, lang)}
+        <div className="text-sm p-4 rounded-lg mb-4 bg-blue-50/80 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-gray-800 dark:text-gray-200">
+          <div className="flex items-start gap-2">
+            <span className="text-blue-500 mt-0.5 shrink-0">💡</span>
+            <p className="leading-relaxed">{resolveI18n(q.explanation, lang)}</p>
+          </div>
         </div>
       )}
 
