@@ -264,6 +264,7 @@ export default function AdminDashboard() {
             <button onClick={() => setActiveTab("analytics")} className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${activeTab === "analytics" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "analytics" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "analytics" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Évaluation</button>
             <button onClick={() => setActiveTab("activity")} className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${activeTab === "activity" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "activity" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "activity" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Activité</button>
             <Link href="/admin/training" className="text-sm font-medium px-3 py-1.5 rounded-lg transition-colors hover:bg-gray-100" style={{ color: "var(--wise-mute)" }}>Suivi Apprenants</Link>
+            <Link href="/admin/content" className="text-sm font-medium px-3 py-1.5 rounded-lg transition-colors hover:bg-gray-100" style={{ color: "var(--wise-mute)" }}>Contenu</Link>
 
             {/* Notification Bell */}
             <div className="relative ml-2" ref={notifRef}>

@@ -847,3 +847,7 @@
 - [x] Backend: Génération automatique de notifications (nouvelle candidature, apprenant inactif >7j)
 - [x] Frontend: Panneau de notifications admin (icône cloche + dropdown avec badge compteur)
 - [x] Heartbeat job: Détection automatique des apprenants inactifs >7 jours + génération notification admin (cron: dwftZFKazMhLDwjwmpq3fJ, daily 08:00 UTC)
+- [x] Admin: Navigateur de cours/quiz/exercices (lister tous les contenus disponibles)
+- [x] Admin: Mode consultation (voir le contenu comme un apprenant sans affecter la progression)
+- [x] Admin: Mode simulation (simuler un quiz/exercice sans enregistrer les résultats)
+- [x] Admin: Mode édition (modifier le contenu des cours, questions de quiz, exercices)

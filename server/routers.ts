@@ -13,6 +13,7 @@ import { sendConfirmationEmail, sendDecisionEmail, sendInvitationEmail, sendRemi
 import { generateCandidatePDF } from "./pdf";
 import { uploadRateLimit, submitRateLimit, getClientIp } from "./security";
 import { adminEnhancedRouter } from "./adminRouter";
+import { adminContentRouter } from "./adminContentRouter";
 import { createAdminNotification } from "./notificationsDb";
 
 export const appRouter = router({
@@ -542,6 +543,7 @@ export const appRouter = router({
 
   // Enhanced admin tools (notes, tags, communications, bulk actions, analytics)
   adminTools: adminEnhancedRouter,
+  adminContent: adminContentRouter,
 });
 
 export type AppRouter = typeof appRouter;
