@@ -471,11 +471,11 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     const calloutBox = calloutBoxes.find(cb => cb.startIdx === i);
     if (calloutBox) {
       elements.push(
-        <div key={`callout-${i}`} className="my-4 rounded-lg border border-gray-200 dark:border-border bg-[#f8f7f4] dark:bg-secondary p-4">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-muted-foreground block mb-2">
+        <div key={`callout-${i}`} className="my-5 rounded-xl border-l-4 border-l-[#c75b3a] border border-[#e8e5e0] dark:border-slate-700 bg-[#faf9f7] dark:bg-slate-800/40 p-5">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-[#c75b3a] block mb-2">
             {calloutBox.label}
           </span>
-          <p className="text-sm text-gray-800 dark:text-foreground leading-relaxed italic">
+          <p className="text-[14px] text-foreground/85 leading-relaxed italic">
             {calloutBox.text}
           </p>
         </div>
@@ -489,20 +489,20 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     const concatTable = concatTables.find(t => t.startIdx === i);
     if (concatTable) {
       elements.push(
-        <div key={`ctable-${i}`} className="my-4 overflow-x-auto">
+        <div key={`ctable-${i}`} className="my-5 overflow-x-auto rounded-xl border border-[#e8e5e0] dark:border-slate-700">
           <table className="w-full text-sm border-collapse">
             <thead>
-              <tr className="bg-muted/50">
+              <tr className="bg-[#f5f3ef] dark:bg-slate-800">
                 {concatTable.headers.map((h, hi) => (
-                  <th key={hi} className="text-left p-3 font-semibold text-foreground border-b border-border">{h}</th>
+                  <th key={hi} className="text-left px-4 py-3 font-semibold text-foreground text-[13px] uppercase tracking-wide border-b border-[#e8e5e0] dark:border-slate-700">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {concatTable.rows.map((row, ri) => (
-                <tr key={ri} className={ri % 2 === 0 ? '' : 'bg-muted/20'}>
+                <tr key={ri} className={ri % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-[#faf9f7] dark:bg-slate-800/40'}>
                   {row.map((cell, ci) => (
-                    <td key={ci} className="p-3 text-muted-foreground border-b border-border/50">{cell}</td>
+                    <td key={ci} className="px-4 py-3 text-foreground/80 text-[13.5px] border-b border-[#e8e5e0]/60 dark:border-slate-700/60">{cell}</td>
                   ))}
                 </tr>
               ))}
@@ -519,20 +519,20 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     const mdTable = mdTables.find(t => t.startIdx === i);
     if (mdTable) {
       elements.push(
-        <div key={`mdtable-${i}`} className="my-4 overflow-x-auto">
+        <div key={`mdtable-${i}`} className="my-5 overflow-x-auto rounded-xl border border-[#e8e5e0] dark:border-slate-700">
           <table className="w-full text-sm border-collapse">
             <thead>
-              <tr className="bg-muted/50">
+              <tr className="bg-[#f5f3ef] dark:bg-slate-800">
                 {mdTable.headers.map((h, hi) => (
-                  <th key={hi} className="text-left p-3 font-semibold text-foreground border-b border-border">{h}</th>
+                  <th key={hi} className="text-left px-4 py-3 font-semibold text-foreground text-[13px] uppercase tracking-wide border-b border-[#e8e5e0] dark:border-slate-700">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {mdTable.rows.map((row, ri) => (
-                <tr key={ri} className={ri % 2 === 0 ? '' : 'bg-muted/20'}>
+                <tr key={ri} className={ri % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-[#faf9f7] dark:bg-slate-800/40'}>
                   {row.map((cell, ci) => (
-                    <td key={ci} className="p-3 text-muted-foreground border-b border-border/50">{cell}</td>
+                    <td key={ci} className="px-4 py-3 text-foreground/80 text-[13.5px] border-b border-[#e8e5e0]/60 dark:border-slate-700/60">{cell}</td>
                   ))}
                 </tr>
               ))}
@@ -603,7 +603,7 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     if (line.startsWith("```")) {
       if (inCodeBlock) {
         elements.push(
-          <pre key={`code-${codeKey++}`} className="bg-slate-900 text-emerald-300 p-4 rounded-lg text-xs font-mono overflow-x-auto my-3 leading-relaxed">
+          <pre key={`code-${codeKey++}`} className="bg-[#1e1e2e] text-emerald-300 p-5 rounded-xl text-[13px] font-mono overflow-x-auto my-5 leading-relaxed border border-slate-800">
             {codeLines.join("\n")}
           </pre>
         );
@@ -643,27 +643,27 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     }
     // Markdown headings
     if (line.startsWith("### ")) {
-      elements.push(<h4 key={i} className="text-base font-semibold mt-5 mb-2 text-foreground">{line.replace("### ", "")}</h4>);
+      elements.push(<h4 key={i} className="text-base font-semibold mt-6 mb-2.5 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>{line.replace("### ", "")}</h4>);
     } else if (line.startsWith("## ")) {
-      elements.push(<h3 key={i} className="text-lg font-semibold mt-6 mb-3 text-foreground">{line.replace("## ", "")}</h3>);
+      elements.push(<h3 key={i} className="text-lg font-semibold mt-8 mb-3 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>{line.replace("## ", "")}</h3>);
     } else if (line.startsWith("# ")) {
-      elements.push(<h2 key={i} className="text-xl font-bold mt-6 mb-3 text-foreground">{line.replace("# ", "")}</h2>);
+      elements.push(<h2 key={i} className="text-xl font-bold mt-8 mb-3 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>{line.replace("# ", "")}</h2>);
     } else if (line.match(/^\*\*.*\*\*$/)) {
       // Bold-only line as sub-section title
       elements.push(
-        <h4 key={i} className="text-base font-bold mt-5 mb-2 text-foreground">
+        <h4 key={i} className="text-base font-bold mt-6 mb-2.5 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
           {line.replace(/\*\*/g, "")}
         </h4>
       );
     } else if (line.startsWith("- ") || line.startsWith("• ")) {
       elements.push(
-        <li key={i} className="text-sm ml-5 mb-1.5 leading-relaxed list-disc text-muted-foreground">
+        <li key={i} className="text-[14.5px] ml-6 mb-2 leading-relaxed list-disc text-foreground/80">
           {renderInlineFormatting(line.replace(/^[-•]\s*/, ""))}
         </li>
       );
     } else if (line.match(/^\d+\.\s/)) {
       elements.push(
-        <li key={i} className="text-sm ml-5 mb-1.5 leading-relaxed list-decimal text-muted-foreground">
+        <li key={i} className="text-[14.5px] ml-6 mb-2 leading-relaxed list-decimal text-foreground/80">
           {renderInlineFormatting(line.replace(/^\d+\.\s*/, ""))}
         </li>
       );
@@ -685,13 +685,13 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
       const prevTrimmed = prevLine?.trim() || '';
       if (prevTrimmed === '' || i === 0) {
         elements.push(
-          <h4 key={i} className="text-base font-bold mt-5 mb-2 text-foreground">
+          <h4 key={i} className="text-base font-bold mt-6 mb-2.5 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
             {line.trim()}
           </h4>
         );
       } else {
         elements.push(
-          <p key={i} className="text-sm font-semibold text-foreground mb-1">
+          <p key={i} className="text-[14.5px] font-semibold text-foreground mb-1.5">
             {line.trim()}
           </p>
         );
@@ -701,13 +701,13 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
       isFirstTextLine = false;
       if (isImplicitListItem(line, lines.slice(Math.max(0, i - 8), i), lines.slice(i + 1, i + 6))) {
         elements.push(
-          <li key={i} className="text-sm ml-5 mb-1.5 leading-relaxed list-disc text-muted-foreground">
+          <li key={i} className="text-[14.5px] ml-6 mb-2 leading-relaxed list-disc text-foreground/80">
             {renderInlineFormatting(line)}
           </li>
         );
       } else {
         elements.push(
-          <p key={i} className="text-sm leading-relaxed mb-2 text-muted-foreground">
+          <p key={i} className="text-[14.5px] leading-[1.75] mb-3 text-foreground/80">
             {renderInlineFormatting(line)}
           </p>
         );
@@ -717,13 +717,13 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
       const isKnownHeading = knownSectionHeadings.has(line.trim().toLowerCase());
       if (isKnownHeading) {
         elements.push(
-          <h3 key={i} className="text-lg font-bold mt-8 mb-3 text-foreground border-b border-border/30 pb-1">
+          <h3 key={i} className="text-lg font-bold mt-8 mb-3 text-foreground border-b border-border/30 pb-2" style={{ fontFamily: 'Lora, Georgia, serif' }}>
             {renderInlineFormatting(line)}
           </h3>
         );
       } else {
         elements.push(
-          <h4 key={i} className="text-base font-bold mt-6 mb-2 text-foreground">
+          <h4 key={i} className="text-base font-bold mt-6 mb-2.5 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
             {renderInlineFormatting(line)}
           </h4>
         );
@@ -731,14 +731,14 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     } else if (isImplicitListItem(line, lines.slice(Math.max(0, i - 8), i), lines.slice(i + 1, i + 6))) {
       // Implicit list item (short line following a colon-ending intro)
       elements.push(
-        <li key={i} className="text-sm ml-5 mb-1.5 leading-relaxed list-disc text-muted-foreground">
+        <li key={i} className="text-[14.5px] ml-6 mb-2 leading-relaxed list-disc text-foreground/80">
           {renderInlineFormatting(line)}
         </li>
       );
     } else {
       // Regular paragraph
       elements.push(
-        <p key={i} className="text-sm leading-relaxed mb-2 text-muted-foreground">
+        <p key={i} className="text-[14.5px] leading-[1.75] mb-3 text-foreground/80">
           {renderInlineFormatting(line)}
         </p>
       );
@@ -747,7 +747,7 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
 
   if (inCodeBlock && codeLines.length > 0) {
     elements.push(
-      <pre key={`code-${codeKey}`} className="bg-slate-900 text-emerald-300 p-4 rounded-lg text-xs font-mono overflow-x-auto my-3 leading-relaxed">
+      <pre key={`code-${codeKey}`} className="bg-[#1e1e2e] text-emerald-300 p-5 rounded-xl text-[13px] font-mono overflow-x-auto my-5 leading-relaxed border border-slate-800">
         {codeLines.join("\n")}
       </pre>
     );
@@ -1710,6 +1710,9 @@ function LessonViewer({
         const explanation = typeof block.explanation === 'string' ? block.explanation : (block.explanation?.[lang] || block.explanation?.en || '');
         const correctAnswer = block.correctAnswer || 'a';
         const exerciseId = block.id || `quiz_${blockIdx}`;
+        // Calculate question number within this chapter
+        const chapterBlocks = chapter?.blocks || [];
+        const quizBlocksBefore = chapterBlocks.slice(0, blockIdx).filter((b: any) => b.type === 'single_choice_exercise').length;
         return (
           <SingleChoiceExercise
             key={blockIdx}
@@ -1719,6 +1722,7 @@ function LessonViewer({
             correctAnswer={correctAnswer}
             explanation={explanation}
             lang={lang as 'en' | 'fr'}
+            questionNumber={quizBlocksBefore + 1}
             onCorrect={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })}
           />
         );
@@ -1815,9 +1819,9 @@ function LessonViewer({
             const showChapterInBadge = screenTitle && screenTitle !== chapterName;
 
             return (
-              <div className="mb-6">
+              <div className="mb-8">
                 {/* Badge row: TYPE | CHAPTER_NAME · DURATION */}
-                <div className="flex items-center gap-2 mb-3 flex-wrap">
+                <div className="flex items-center gap-2.5 mb-4 flex-wrap">
                   <span className={`inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full ${
                     chapter.type === 'exercise'
                       ? 'bg-lime-100 text-lime-800 dark:bg-lime-900/30 dark:text-lime-300'
@@ -1842,9 +1846,11 @@ function LessonViewer({
                   )}
                 </div>
                 {/* Screen title - large serif */}
-                <h2 className="text-2xl md:text-3xl font-semibold text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+                <h2 className="text-2xl md:text-[28px] font-semibold text-foreground leading-tight" style={{ fontFamily: 'Lora, Georgia, serif' }}>
                   {displayTitle}
                 </h2>
+                {/* Decorative separator */}
+                <div className="mt-4 mb-2 w-12 h-0.5 bg-[#c75b3a]/60 rounded-full" />
                 {/* Screen description - italic serif */}
                 {screenDescription && (
                   <p className="mt-3 text-base text-muted-foreground italic" style={{ fontFamily: 'Lora, Georgia, serif' }}>
@@ -1885,22 +1891,31 @@ function LessonViewer({
             />
           )}
 
-          {/* Chapter navigation */}
-          <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
+                    {/* Chapter navigation */}
+          <div className="mt-8 pt-5 border-t border-[#e8e5e0] dark:border-slate-700">
+            {/* Progress bar */}
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+                {t({ en: `Screen ${currentChapter + 1} of ${totalChapters}`, fr: `Écran ${currentChapter + 1} sur ${totalChapters}` })}
+              </span>
+              <div className="flex-1 h-1.5 rounded-full bg-[#e8e5e0] dark:bg-slate-700 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-[#c75b3a] transition-all duration-300"
+                  style={{ width: `${((currentChapter + 1) / totalChapters) * 100}%` }}
+                />
+              </div>
+            </div>
+            {/* Navigation buttons */}
+            <div className="flex items-center justify-between">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => { setCurrentChapter((p) => p - 1); setShowTranscript(false); setShowChapterQuiz(false); }}
               disabled={currentChapter === 0}
-              className="gap-1 text-muted-foreground hover:text-foreground"
+              className="gap-1.5 text-muted-foreground hover:text-foreground"
             >
               ← {t({ en: "Previous", fr: "Précédent" })}
             </Button>
-
-                        {/* Screen indicator - Skilljar style */}
-            <span className="text-sm text-muted-foreground">
-              {t({ en: `Screen ${currentChapter + 1} of ${totalChapters}`, fr: `Écran ${currentChapter + 1} sur ${totalChapters}` })}
-            </span>
 
             {(() => {
               if (isLastChapter && isReviewMode) {
@@ -1959,6 +1974,7 @@ function LessonViewer({
                 </Button>
               );
             })()}
+            </div>
           </div>
         </>
       ) : (
@@ -2822,7 +2838,7 @@ export default function TrainingCourse() {
                     </div>
                   )}
                 </div>
-                <div className="p-4">
+                <div className="p-6 sm:p-8">
                   <LessonViewer
                     lesson={displayedLesson}
                     lessonIndex={displayedIndex}

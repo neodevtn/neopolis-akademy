@@ -5,7 +5,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { useTheme } from "@/contexts/ThemeContext";
 import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
-import { CheckCircle2, PlayCircle, BookOpen, ArrowLeft, Clock, LogIn, Download, Trophy, History, Moon, Sun, ChevronRight, Layers, Lock } from "lucide-react";
+import { CheckCircle2, PlayCircle, BookOpen, ArrowLeft, Clock, LogIn, Download, Trophy, History, Moon, Sun, ChevronRight, Layers, Lock, Target, Brain } from "lucide-react";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -342,6 +342,48 @@ export default function TrainingCertification() {
           </motion.div>
         )}
 
+        {/* Progress Summary Cards */}
+        <motion.div variants={fadeInUp} className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+          {(() => {
+            const totalChapters = courses.reduce((sum, c) => sum + (c.lessonCount || 0), 0);
+            const completedChapters = Object.values(courseProgressMap).reduce((sum, p) => sum + p.completed, 0);
+            const totalExercises = courses.reduce((sum, c) => sum + (c.exerciseCount || 0), 0);
+            const completedCourses = courses.filter(c => (courseProgressMap[c.id]?.pct ?? 0) >= 100).length;
+            return (
+              <>
+                <div className="bg-card rounded-xl border border-border p-4 text-center">
+                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-2">
+                    <BookOpen className="w-4 h-4 text-primary" />
+                  </div>
+                  <div className="text-lg font-bold text-foreground">{completedChapters}/{totalChapters}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">{t({ en: "Chapters", fr: "Chapitres" })}</div>
+                </div>
+                <div className="bg-card rounded-xl border border-border p-4 text-center">
+                  <div className="w-9 h-9 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mx-auto mb-2">
+                    <Target className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                  </div>
+                  <div className="text-lg font-bold text-foreground">{totalExercises}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">{t({ en: "Exercises", fr: "Exercices" })}</div>
+                </div>
+                <div className="bg-card rounded-xl border border-border p-4 text-center">
+                  <div className="w-9 h-9 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <div className="text-lg font-bold text-foreground">{completedCourses}/{courses.length}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">{t({ en: "Courses", fr: "Cours" })}</div>
+                </div>
+                <div className="bg-card rounded-xl border border-border p-4 text-center">
+                  <div className="w-9 h-9 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center mx-auto mb-2">
+                    <Brain className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+                  </div>
+                  <div className="text-lg font-bold text-foreground">{progressPct}%</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">{t({ en: "Overall", fr: "Global" })}</div>
+                </div>
+              </>
+            );
+          })()}
+        </motion.div>
+
         {/* Course List - Sequential locking: course N+1 locked until course N is completed */}
         <motion.div variants={fadeInUp}>
           <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
@@ -446,24 +488,36 @@ export default function TrainingCertification() {
                       <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                     </div>
                   </div>
-                  {/* Per-course progress bar */}
+                  {/* Per-course segmented progress bar */}
                   {started && !completed && (
-                    <div className="mt-3 flex items-center gap-2">
-                      <div className="flex-1 h-1.5 rounded-full bg-secondary overflow-hidden">
-                        <div
-                          className="h-full rounded-full bg-primary transition-all duration-500"
-                          style={{ width: `${progress.pct}%` }}
-                        />
+                    <div className="mt-3">
+                      <div className="flex items-center gap-1 mb-1.5">
+                        {Array.from({ length: progress.total }, (_, i) => (
+                          <div
+                            key={i}
+                            className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${
+                              i < progress.completed ? 'bg-primary' : 'bg-secondary'
+                            }`}
+                          />
+                        ))}
                       </div>
-                      <span className="text-[11px] text-muted-foreground font-medium">{progress.pct}%</span>
+                      <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                        <span>{progress.completed}/{progress.total} {t({ en: "chapters done", fr: "chapitres terminés" })}</span>
+                        <span className="font-medium text-primary">{progress.pct}%</span>
+                      </div>
                     </div>
                   )}
                   {completed && (
-                    <div className="mt-3 flex items-center gap-2">
-                      <div className="flex-1 h-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 overflow-hidden">
-                        <div className="h-full rounded-full bg-emerald-500" style={{ width: "100%" }} />
+                    <div className="mt-3">
+                      <div className="flex items-center gap-1 mb-1.5">
+                        {Array.from({ length: progress.total }, (_, i) => (
+                          <div key={i} className="flex-1 h-1.5 rounded-full bg-emerald-500" />
+                        ))}
                       </div>
-                      <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">100%</span>
+                      <div className="flex items-center justify-between text-[11px]">
+                        <span className="text-emerald-600 dark:text-emerald-400">{progress.total}/{progress.total} {t({ en: "chapters done", fr: "chapitres terminés" })}</span>
+                        <span className="font-medium text-emerald-600 dark:text-emerald-400">100%</span>
+                      </div>
                     </div>
                   )}
                 </Link>

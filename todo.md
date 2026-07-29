@@ -765,3 +765,8 @@
 - [x] Rendre les quiz/checkpoint obligatoires (Next button désactivé tant que exercices pas complétés)
 - [x] Vérifier que le quiz de fin de leçon (LessonQuiz) est bien obligatoire pour marquer le cours comme terminé
 - [x] Comparer les patterns visuels Skilljar (tabs, tables, titres) avec notre rendu
+
+## Améliorations UX Training (2026-07-29)
+- [x] Indicateur de progression détaillé sur page certification (exercices restants par cours)
+- [x] Rendu Q/R en cartes interactives (SingleChoiceExercise redesign Skilljar-style)
+- [x] Ajustement styles visuels pour correspondre aux patterns Skilljar (couleurs, typographie, espacement)
