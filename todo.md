@@ -798,3 +798,7 @@
 ## Bouton déconnexion + Fix 404 images (2026-07-29)
 - [x] Ajouter un bouton de déconnexion visible dans la navigation
 - [x] Corriger les 404 sur les images /manus-storage/ (proxy sert maintenant les fichiers directement au lieu de 307 redirect)
+
+## Fix rendu des tabs et blocs dans les leçons (2026-07-29)
+- [x] Corriger la détection des tabs (affichés comme liste à puces au lieu de tabs interactifs)
+- [x] Corriger le rendu des blocs de contenu (texte brut au lieu de cartes stylisées)

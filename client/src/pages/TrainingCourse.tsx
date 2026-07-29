@@ -199,6 +199,274 @@ function detectStepperSequence(lines: string[], startIdx: number): { steps: stri
   return null;
 }
 
+// Detect inline tabbed content pattern:
+// Pattern: instruction line ("Select each...") → 3+ short labels → repeated sections (Capability:/Limitation:/Mitigation: or similar paired entries)
+interface InlineTabBlock {
+  instructionIdx: number;
+  labels: string[];
+  tabContents: { label: string; sections: { heading: string; text: string }[] }[];
+  startIdx: number;
+  endIdx: number;
+}
+
+function detectInlineTabs(lines: string[]): InlineTabBlock[] {
+  const results: InlineTabBlock[] = [];
+  
+  // Look for instruction lines that precede tab labels
+  const instructionPatterns = /^(Select each|Sélectionnez chaque|Choose each|Click each|Cliquez sur|Choisissez)/i;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = lines[i].trim();
+    if (!instructionPatterns.test(trimmed)) continue;
+    
+    // After instruction, find 3+ consecutive short label lines
+    let j = i + 1;
+    while (j < lines.length && lines[j].trim() === '') j++;
+    
+    const labels: string[] = [];
+    const labelsStart = j;
+    while (j < lines.length) {
+      const t = lines[j].trim();
+      if (t === '') { j++; continue; }
+      // Labels are short (<=40 chars), few words, start with capital, no ending punctuation
+      if (t.length <= 40 && t.split(/\s+/).length <= 5 && /^[A-Z]/.test(t) && !/[.,:;!?)]$/.test(t) && !t.includes(':')) {
+        labels.push(t);
+        j++;
+      } else {
+        break;
+      }
+    }
+    
+    if (labels.length < 3) continue;
+    
+    // After labels, look for repeated section patterns (Capability:/Limitation:/Mitigation: or similar)
+    // Each tab should have the same number of sections
+    const sectionPattern = /^(Capability|Limitation|Mitigation|Capacité|Limite|Atténuation|Mesures d'atténuation|Cost|Complexity|Risk|Coût|Complexité|Risque|The feasibility question to ask|Where design compensates|La question de faisabilité|Où la conception compense)\s*[:：]/i;
+    
+    // Skip empty lines
+    while (j < lines.length && lines[j].trim() === '') j++;
+    
+    // Detect section headings and their content
+    const allSections: { heading: string; text: string; lineIdx: number }[] = [];
+    let k = j;
+    while (k < lines.length) {
+      const line = lines[k].trim();
+      if (line === '') { k++; continue; }
+      
+      const sectionMatch = line.match(sectionPattern);
+      if (sectionMatch) {
+        // This is a section heading line - extract heading and content
+        const colonIdx = line.indexOf(':');
+        if (colonIdx === -1) { k++; continue; }
+        const heading = line.slice(0, colonIdx).trim();
+        const restOfLine = line.slice(colonIdx + 1).trim();
+        
+        // Collect content: rest of this line + following non-empty lines until next section or double blank
+        let content = restOfLine;
+        k++;
+        while (k < lines.length) {
+          const nextLine = lines[k].trim();
+          if (nextLine === '') {
+            // Check if next non-empty line is a new section heading
+            let peek = k + 1;
+            while (peek < lines.length && lines[peek].trim() === '') peek++;
+            if (peek >= lines.length || sectionPattern.test(lines[peek].trim()) || 
+                (!sectionPattern.test(lines[peek].trim()) && allSections.length >= labels.length * 2)) {
+              break;
+            }
+            // Otherwise it's just a paragraph break within the section
+            content += '\n\n';
+            k++;
+            continue;
+          }
+          if (sectionPattern.test(nextLine)) break;
+          content += (content ? ' ' : '') + nextLine;
+          k++;
+        }
+        allSections.push({ heading, text: content, lineIdx: k });
+      } else {
+        // Not a section heading - we've reached the end of the tab content
+        break;
+      }
+    }
+    
+    // We need at least (labels.length) sections to form tabs
+    // Typically it's labels.length * 3 (Capability/Limitation/Mitigation for each)
+    if (allSections.length < labels.length) continue;
+    
+    // Determine how many sections per tab
+    const sectionsPerTab = Math.floor(allSections.length / labels.length);
+    if (sectionsPerTab < 1) continue;
+    
+    // Distribute sections to tabs
+    const tabContents: { label: string; sections: { heading: string; text: string }[] }[] = [];
+    for (let ti = 0; ti < labels.length; ti++) {
+      const startSec = ti * sectionsPerTab;
+      const endSec = startSec + sectionsPerTab;
+      tabContents.push({
+        label: labels[ti],
+        sections: allSections.slice(startSec, endSec).map(s => ({ heading: s.heading, text: s.text }))
+      });
+    }
+    
+    results.push({
+      instructionIdx: i,
+      labels,
+      tabContents,
+      startIdx: i,
+      endIdx: k
+    });
+  }
+  
+  return results;
+}
+
+// Detect "Label · Label · Label" header followed by "Label: text" sections (styled info block)
+interface StyledInfoBlock {
+  header: string;
+  sections: { heading: string; text: string }[];
+  startIdx: number;
+  endIdx: number;
+}
+
+function detectStyledInfoBlocks(lines: string[]): StyledInfoBlock[] {
+  const results: StyledInfoBlock[] = [];
+  // Pattern: "Word · Word · Word" (dot-separated labels) followed by matching "Word: text" sections
+  const dotSeparatorPattern = /^([A-Z\u00C0-\u024F][a-z\u00C0-\u024F]*(?:\s+[a-z\u00C0-\u024F]+)*)\s*[·•]\s*([A-Z\u00C0-\u024F][a-z\u00C0-\u024F]*(?:\s+[a-z\u00C0-\u024F]+)*)\s*[·•]\s*([A-Z\u00C0-\u024F][a-z\u00C0-\u024F]*(?:\s+[a-z\u00C0-\u024F]+)*)$/;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed = lines[i].trim();
+    const match = trimmed.match(dotSeparatorPattern);
+    if (!match) continue;
+    
+    const headerLabels = [match[1], match[2], match[3]];
+    
+    // After the header, look for matching sections
+    let j = i + 1;
+    while (j < lines.length && lines[j].trim() === '') j++;
+    
+    const sections: { heading: string; text: string }[] = [];
+    while (j < lines.length) {
+      const line = lines[j].trim();
+      if (line === '') { j++; continue; }
+      
+      // Check if this line starts with one of the header labels followed by colon
+      const sectionMatch = headerLabels.find(label => 
+        line.startsWith(label + ':') || line.startsWith(label + ' :')
+      );
+      if (sectionMatch) {
+        const colonIdx = line.indexOf(':');
+        const heading = line.slice(0, colonIdx).trim();
+        const restOfLine = line.slice(colonIdx + 1).trim();
+        
+        // Collect content until next section or end
+        let content = restOfLine;
+        j++;
+        while (j < lines.length) {
+          const nextLine = lines[j].trim();
+          if (nextLine === '') {
+            let peek = j + 1;
+            while (peek < lines.length && lines[peek].trim() === '') peek++;
+            if (peek >= lines.length) break;
+            const peekLine = lines[peek].trim();
+            const isNextSection = headerLabels.some(label => 
+              peekLine.startsWith(label + ':') || peekLine.startsWith(label + ' :')
+            );
+            if (isNextSection || !peekLine) break;
+            content += '\n\n';
+            j++;
+            continue;
+          }
+          const isNextSection = headerLabels.some(label => 
+            nextLine.startsWith(label + ':') || nextLine.startsWith(label + ' :')
+          );
+          if (isNextSection) break;
+          content += ' ' + nextLine;
+          j++;
+        }
+        sections.push({ heading, text: content });
+      } else {
+        break;
+      }
+    }
+    
+    if (sections.length >= 2) {
+      results.push({
+        header: trimmed,
+        sections,
+        startIdx: i,
+        endIdx: j
+      });
+    }
+  }
+  
+  return results;
+}
+
+// Styled info block renderer (beige card with sections)
+function StyledInfoBlockRenderer({ block }: { block: StyledInfoBlock }) {
+  return (
+    <div className="my-6 p-5 rounded-xl border border-[#e8e5e0] dark:border-slate-700 bg-[#f5f3ef] dark:bg-slate-800/50">
+      <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-4">
+        {block.header}
+      </div>
+      <div className="space-y-4">
+        {block.sections.map((section, idx) => (
+          <div key={idx}>
+            <span className="text-[15px] font-bold text-foreground">{section.heading}:</span>
+            <span className="text-[14.5px] text-foreground/80 ml-1 leading-[1.75]">
+              {section.text}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Interactive inline tabs renderer component
+function InlineTabsRenderer({ block }: { block: InlineTabBlock }) {
+  const [activeTab, setActiveTab] = useState(0);
+  
+  return (
+    <div className="my-6">
+      {/* Tab headers - Skilljar style with orange active indicator */}
+      <div className="flex border-b border-gray-200 dark:border-slate-700 overflow-x-auto">
+        {block.tabContents.map((tab, idx) => (
+          <button
+            key={idx}
+            onClick={() => setActiveTab(idx)}
+            className={`
+              px-5 py-3 text-sm font-medium transition-all duration-200 relative whitespace-nowrap
+              ${activeTab === idx
+                ? 'text-[#c75b3a]'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+              }
+            `}
+          >
+            {tab.label}
+            {activeTab === idx && (
+              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#c75b3a] rounded-t-sm" />
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab content - styled card */}
+      <div className="mt-4 p-5 rounded-xl border border-[#e8e5e0] dark:border-slate-700 bg-[#faf9f7] dark:bg-slate-800/40">
+        {block.tabContents[activeTab]?.sections.map((section, idx) => (
+          <div key={idx} className={idx > 0 ? 'mt-5 pt-5 border-t border-[#e8e5e0] dark:border-slate-700' : ''}>
+            <span className="text-sm font-bold text-foreground">{section.heading}:</span>
+            <span className="text-sm text-foreground/80 ml-1 leading-relaxed">
+              {section.text}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // Detect "Step N: description" or "STEP N: description" patterns
 function detectStepItems(lines: string[], startIdx: number): { items: { num: number; text: string }[]; endIdx: number } | null {
   const items: { items: { num: number; text: string }[]; endIdx: number } = { items: [], endIdx: startIdx };
@@ -389,6 +657,20 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     }
   }
 
+  // Detect inline tabbed content (tabs embedded in text)
+  const inlineTabBlocks = detectInlineTabs(lines);
+  const inlineTabLineSet = new Set<number>();
+  inlineTabBlocks.forEach(tb => {
+    for (let k = tb.startIdx; k < tb.endIdx; k++) inlineTabLineSet.add(k);
+  });
+
+  // Detect styled info blocks ("Cost · Complexity · Risk" pattern)
+  const styledInfoBlocks = detectStyledInfoBlocks(lines);
+  const styledInfoLineSet = new Set<number>();
+  styledInfoBlocks.forEach(sb => {
+    for (let k = sb.startIdx; k < sb.endIdx; k++) styledInfoLineSet.add(k);
+  });
+
   // Heuristic helpers
   const isShortLine = (line: string) => line.trim().length > 0 && line.trim().length <= 60;
   const isMetaLine = (line: string) => /^(Estimated time|Instructions|Duration|Time|Note|Tip|Warning|Important|Example|Exercise|Step \d):/i.test(line.trim());
@@ -526,6 +808,24 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
       continue;
     }
     if (cardLineSet.has(i)) continue;
+
+    // Check if this line starts an inline tabbed content block
+    const inlineTab = inlineTabBlocks.find(tb => tb.startIdx === i);
+    if (inlineTab) {
+      elements.push(<InlineTabsRenderer key={`itabs-${i}`} block={inlineTab} />);
+      i = inlineTab.endIdx - 1;
+      continue;
+    }
+    if (inlineTabLineSet.has(i)) continue;
+
+    // Check if this line starts a styled info block (Cost · Complexity · Risk)
+    const styledInfo = styledInfoBlocks.find(sb => sb.startIdx === i);
+    if (styledInfo) {
+      elements.push(<StyledInfoBlockRenderer key={`sinfo-${i}`} block={styledInfo} />);
+      i = styledInfo.endIdx - 1;
+      continue;
+    }
+    if (styledInfoLineSet.has(i)) continue;
 
     // Check if this line starts a TOC block
     const tocBlock = tocBlocks.find(tb => tb.startIdx === i);
