@@ -5,7 +5,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { useTheme } from "@/contexts/ThemeContext";
 import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
-import { CheckCircle2, PlayCircle, BookOpen, ArrowLeft, Clock, LogIn, Download, Trophy, History, Moon, Sun, ChevronRight, Layers } from "lucide-react";
+import { CheckCircle2, PlayCircle, BookOpen, ArrowLeft, Clock, LogIn, Download, Trophy, History, Moon, Sun, ChevronRight, Layers, Lock } from "lucide-react";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -342,14 +342,14 @@ export default function TrainingCertification() {
           </motion.div>
         )}
 
-        {/* Course List - NO sequential locking, all courses accessible */}
+        {/* Course List - Sequential locking: course N+1 locked until course N is completed */}
         <motion.div variants={fadeInUp}>
           <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
             <Layers className="w-5 h-5 text-primary" />
             {t({ en: "Prep Courses", fr: "Cours de préparation" })}
           </h2>
           <p className="text-sm text-muted-foreground mb-5">
-            {t({ en: "Start any course in any order. Complete all courses to unlock the mock exam.", fr: "Commencez n'importe quel cours dans l'ordre de votre choix. Terminez tous les cours pour débloquer l'examen blanc." })}
+            {t({ en: "Complete each course in order to unlock the next one. Finish all courses to access the mock exam.", fr: "Terminez chaque cours dans l'ordre pour débloquer le suivant. Terminez tous les cours pour accéder à l'examen blanc." })}
           </p>
         </motion.div>
         <motion.div variants={staggerContainer} className="space-y-3">
@@ -357,9 +357,42 @@ export default function TrainingCertification() {
             const progress = courseProgressMap[course.id] || { completed: 0, total: 0, pct: 0 };
             const completed = progress.pct >= 100;
             const started = progress.completed > 0;
+            // Sequential locking: course is locked if previous course is not completed (except first course)
+            const previousCourseCompleted = idx === 0 || (courseProgressMap[courses[idx - 1].id]?.pct ?? 0) >= 100;
+            const isLocked = !previousCourseCompleted && !completed && !started;
 
             return (
               <motion.div key={course.id} variants={fadeInUp}>
+                {isLocked ? (
+                  <div
+                    className="block bg-card/60 rounded-2xl border border-border p-5 opacity-60 cursor-not-allowed"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center justify-center w-11 h-11 rounded-xl shrink-0 bg-secondary text-muted-foreground font-semibold text-sm">
+                        <Lock className="w-4 h-4" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-muted-foreground">{t(course.title)}</h3>
+                        <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <BookOpen className="w-3 h-3" />
+                            {progress.total} {t({ en: "chapters", fr: "chapitres" })}
+                          </span>
+                          {course.exerciseCount > 0 && (
+                            <span className="flex items-center gap-1">
+                              {course.exerciseCount} {t({ en: "exercises", fr: "exercices" })}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="shrink-0 flex items-center gap-2">
+                        <span className="text-xs bg-secondary text-muted-foreground px-2.5 py-1 rounded-full font-medium">
+                          {t({ en: "Locked", fr: "Verrouillé" })}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
                 <Link
                   href={`/training/${certId}/${course.id}`}
                   className={`block bg-card rounded-2xl border p-5 transition-all hover:shadow-md group ${
@@ -434,6 +467,7 @@ export default function TrainingCertification() {
                     </div>
                   )}
                 </Link>
+                )}
               </motion.div>
             );
           })}

@@ -13,6 +13,7 @@ interface SingleChoiceExerciseProps {
   correctAnswer: string;
   explanation: string;
   lang?: 'en' | 'fr';
+  onCorrect?: (id: string) => void;
 }
 
 export function SingleChoiceExercise({
@@ -22,6 +23,7 @@ export function SingleChoiceExercise({
   correctAnswer,
   explanation,
   lang = 'fr',
+  onCorrect,
 }: SingleChoiceExerciseProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -38,6 +40,9 @@ export function SingleChoiceExercise({
   const handleSubmit = () => {
     if (!selectedAnswer) return;
     setIsSubmitted(true);
+    if (selectedAnswer === correctAnswer && onCorrect) {
+      onCorrect(id);
+    }
   };
 
   const handleReset = () => {

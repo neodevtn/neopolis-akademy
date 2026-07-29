@@ -759,3 +759,9 @@
 - [x] Ajouter support des tables markdown (pipe-delimited) dans PageContent
 - [x] Vérifier que la navigation écran (Écran X sur N) fonctionne correctement
 - [x] Corriger le rendu des titres de chapitre (Memory comme heading propre)
+
+## Corrections structure et quiz (2026-07-29) - Problèmes signalés par l'utilisateur
+- [x] Rétablir le verrouillage séquentiel des cours (cours N+1 verrouillé tant que cours N pas terminé)
+- [x] Rendre les quiz/checkpoint obligatoires (Next button désactivé tant que exercices pas complétés)
+- [x] Vérifier que le quiz de fin de leçon (LessonQuiz) est bien obligatoire pour marquer le cours comme terminé
+- [x] Comparer les patterns visuels Skilljar (tabs, tables, titres) avec notre rendu

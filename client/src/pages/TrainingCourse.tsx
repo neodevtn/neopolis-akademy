@@ -1432,6 +1432,8 @@ function LessonViewer({
   const [showTranscript, setShowTranscript] = useState(false);
   const [showChapterQuiz, setShowChapterQuiz] = useState(false);
   const [chapterQuizPassed, setChapterQuizPassed] = useState<Set<number>>(new Set());
+  // Track completed exercises in quiz/checkpoint chapters (exerciseId -> true)
+  const [completedExercises, setCompletedExercises] = useState<Set<string>>(new Set());
   // Track whether we're syncing from parent to avoid calling onChapterChange back
   const isSyncingFromParent = useRef(false);
   const prevLessonId = useRef(lesson.id);
@@ -1645,6 +1647,7 @@ function LessonViewer({
               exercise={exercise}
               index={0}
               lang={lang as "en" | "fr"}
+              onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })}
             />
           </div>
         );
@@ -1706,15 +1709,17 @@ function LessonViewer({
         }));
         const explanation = typeof block.explanation === 'string' ? block.explanation : (block.explanation?.[lang] || block.explanation?.en || '');
         const correctAnswer = block.correctAnswer || 'a';
+        const exerciseId = block.id || `quiz_${blockIdx}`;
         return (
           <SingleChoiceExercise
             key={blockIdx}
-            id={block.id || `quiz_${blockIdx}`}
+            id={exerciseId}
             question={question}
             options={options}
             correctAnswer={correctAnswer}
             explanation={explanation}
             lang={lang as 'en' | 'fr'}
+            onCorrect={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })}
           />
         );
       }
@@ -1892,48 +1897,68 @@ function LessonViewer({
               ← {t({ en: "Previous", fr: "Précédent" })}
             </Button>
 
-            {/* Screen indicator - Skilljar style */}
+                        {/* Screen indicator - Skilljar style */}
             <span className="text-sm text-muted-foreground">
               {t({ en: `Screen ${currentChapter + 1} of ${totalChapters}`, fr: `Écran ${currentChapter + 1} sur ${totalChapters}` })}
             </span>
 
-            {!isLastChapter ? (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  // Determine if this chapter needs a quiz gate
-                  const chapterTitle = resolveI18n(chapter?.title, 'en');
-                  const isStructuralChapter = /^(Module Introduction|Key Takeaways|Module Complete)$/i.test(chapterTitle);
-                  const isTeachingChapter = chapter?.type === 'teaching' && !isStructuralChapter;
-                  const needsQuiz = isTeachingChapter && !isReviewMode && !chapterQuizPassed.has(currentChapter);
-                  
-                  if (needsQuiz) {
-                    setShowChapterQuiz(true);
-                  } else {
-                    setCurrentChapter((p) => p + 1);
-                    setShowTranscript(false);
-                    setShowChapterQuiz(false);
-                  }
-                }}
-                className="gap-1 text-[#c75b3a] hover:text-[#a84a2e] font-medium"
-              >
-                {t({ en: "Next", fr: "Suivant" })} →
-              </Button>
-            ) : isReviewMode ? (
-              <span className="text-xs text-muted-foreground italic">
-                {t({ en: "End of review", fr: "Fin de la révision" })}
-              </span>
-            ) : (
-              <Button
-                size="sm"
-                onClick={() => setShowQuiz(true)}
-                className="bg-amber-600 hover:bg-amber-700 text-white gap-1.5"
-              >
-                {t({ en: "Take Quiz", fr: "Passer le quiz" })}
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            )}
+            {(() => {
+              if (isLastChapter && isReviewMode) {
+                return (
+                  <span className="text-xs text-muted-foreground italic">
+                    {t({ en: "End of review", fr: "Fin de la révision" })}
+                  </span>
+                );
+              }
+              if (isLastChapter && !isReviewMode) {
+                return (
+                  <Button
+                    size="sm"
+                    onClick={() => setShowQuiz(true)}
+                    className="bg-amber-600 hover:bg-amber-700 text-white gap-1.5"
+                  >
+                    {t({ en: "Take Quiz", fr: "Passer le quiz" })}
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                );
+              }
+              // Not last chapter - show Next button with possible gate
+              const isQuizOrCheckpointChapter = chapter?.type === 'quiz' || chapter?.type === 'checkpoint';
+              const chapterExerciseIds = isQuizOrCheckpointChapter
+                ? (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'checkpoint').map((b: any, i: number) => b.type === 'checkpoint' ? (b.exerciseId || `checkpoint_${i}`) : (b.id || `quiz_${i}`))
+                : [];
+              const allExercisesCompleted = chapterExerciseIds.length === 0 || chapterExerciseIds.every((id: string) => completedExercises.has(id));
+              const isGatedByExercises = isQuizOrCheckpointChapter && chapterExerciseIds.length > 0 && !allExercisesCompleted && !isReviewMode;
+              const chapterTitle = resolveI18n(chapter?.title, 'en');
+              const isStructuralChapter = /^(Module Introduction|Key Takeaways|Module Complete)$/i.test(chapterTitle);
+              const isTeachingChapter = chapter?.type === 'teaching' && !isStructuralChapter;
+              const needsQuiz = isTeachingChapter && !isReviewMode && !chapterQuizPassed.has(currentChapter);
+
+              return (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={isGatedByExercises}
+                  onClick={() => {
+                    if (needsQuiz) {
+                      setShowChapterQuiz(true);
+                    } else {
+                      setCurrentChapter((p) => p + 1);
+                      setShowTranscript(false);
+                      setShowChapterQuiz(false);
+                    }
+                  }}
+                  className={`gap-1 font-medium ${isGatedByExercises ? 'text-muted-foreground cursor-not-allowed' : 'text-[#c75b3a] hover:text-[#a84a2e]'}`}
+                  title={isGatedByExercises ? (lang === 'fr' ? 'Répondez correctement à toutes les questions pour continuer' : 'Answer all questions correctly to continue') : undefined}
+                >
+                  {isGatedByExercises ? (
+                    <>{t({ en: "Complete all exercises", fr: "Complétez les exercices" })}</>
+                  ) : (
+                    <>{t({ en: "Next", fr: "Suivant" })} →</>
+                  )}
+                </Button>
+              );
+            })()}
           </div>
         </>
       ) : (
@@ -2435,14 +2460,43 @@ export default function TrainingCourse() {
     );
   }
 
-  if (!course || !cert) {
+    if (!course || !cert) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <p className="text-muted-foreground">{t({ en: "Course not found", fr: "Cours introuvable" })}</p>
       </div>
     );
   }
-
+  // Sequential lock guard: prevent direct URL access to locked courses
+  const certCourses = trainingIndex.courses.filter((c: any) => c.certId === certId);
+  const courseIdx = certCourses.findIndex((c: any) => c.id === courseId);
+  if (courseIdx > 0) {
+    const prevCourse = certCourses[courseIdx - 1];
+    const prevTotal = prevCourse.lessonCount || 1;
+    const prevComplete = isCourseComplete(prevCourse.id, prevTotal);
+    if (!prevComplete) {
+      return (
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="max-w-md text-center p-8">
+            <div className="w-16 h-16 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-6">
+              <Lock className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h2 className="text-xl font-bold text-foreground mb-3">
+              {t({ en: "Course Locked", fr: "Cours verrouill\u00e9" })}
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              {t({ en: `You must complete "${typeof prevCourse.title === 'object' ? (prevCourse.title as any)[lang] || (prevCourse.title as any).en : prevCourse.title}" first.`, fr: `Vous devez d'abord terminer "${typeof prevCourse.title === 'object' ? (prevCourse.title as any)[lang] || (prevCourse.title as any).fr : prevCourse.title}".` })}
+            </p>
+            <Link href={`/training/${certId}`}>
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                {t({ en: "Back to certification", fr: "Retour \u00e0 la certification" })}
+              </Button>
+            </Link>
+          </div>
+        </div>
+      );
+    }
+  }
   // Wait for lessons to load before rendering the course content
   if (lessonsLoading) {
     return (
