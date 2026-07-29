@@ -839,7 +839,7 @@
 - [x] Frontend: Activation automatique candidatures (bouton batch + workflow)
 - [x] Frontend: Invitations en masse (import CSV, envoi groupé)
 - [x] Frontend: Communiqués en masse (compositeur email avec templates)
-- [ ] Frontend: Vue Kanban candidatures (drag & drop entre statuts) — différé
-- [ ] Frontend: Timeline d'activité par apprenant — différé
+- [x] Frontend: Vue Kanban candidatures (drag & drop entre statuts)
+- [x] Frontend: Timeline d'activité par apprenant (journal d'activité)
 - [x] Frontend: Alertes automatiques (inactif >7j, échecs quiz, progression bloquée)
 - [x] Vérifier et corriger l'upload CV et photo dans le formulaire de candidature (visible et fonctionnel)

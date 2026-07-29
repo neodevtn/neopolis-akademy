@@ -10,13 +10,13 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2 } from "lucide-react";
+import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Columns3 } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 
 const LOGO_URL = "/manus-storage/logo_neopolis_akademy_9c9a0823.png";
 
-type TabType = "candidatures" | "notes" | "communications" | "analytics";
+type TabType = "candidatures" | "kanban" | "communications" | "analytics" | "activity";
 
 export default function AdminDashboard() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -115,6 +115,7 @@ export default function AdminDashboard() {
   });
 
   const analyticsQuery = trpc.adminTools.analytics.getLearnerAnalytics.useQuery(undefined, { enabled: activeTab === "analytics" });
+  const activityLogQuery = trpc.adminTools.activityLog.list.useQuery(undefined, { enabled: activeTab === "activity" });
 
   if (loading) {
     return (
@@ -228,7 +229,9 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-2">
             <button onClick={() => setActiveTab("candidatures")} className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${activeTab === "candidatures" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "candidatures" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "candidatures" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Candidatures</button>
             <button onClick={() => setActiveTab("communications")} className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${activeTab === "communications" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "communications" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "communications" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Communications</button>
+            <button onClick={() => setActiveTab("kanban")} className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${activeTab === "kanban" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "kanban" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "kanban" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Kanban</button>
             <button onClick={() => setActiveTab("analytics")} className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${activeTab === "analytics" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "analytics" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "analytics" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Évaluation</button>
+            <button onClick={() => setActiveTab("activity")} className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${activeTab === "activity" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "activity" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "activity" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Activité</button>
             <Link href="/admin/training" className="text-sm font-medium px-3 py-1.5 rounded-lg transition-colors hover:bg-gray-100" style={{ color: "var(--wise-mute)" }}>Suivi Apprenants</Link>
             <Link href="/">
               <button className="wise-btn-tertiary text-sm flex items-center gap-2 ml-2">
@@ -638,6 +641,118 @@ export default function AdminDashboard() {
               </div>
             ) : (
               <p className="text-muted-foreground text-center py-20">Aucune donnée disponible.</p>
+            )}
+          </>
+        )}
+
+        {/* ==================== KANBAN TAB ==================== */}
+        {activeTab === "kanban" && (
+          <>
+            <h1 className="wise-display-md mb-8">Vue Kanban — Candidatures</h1>
+            {applicationsQuery.isLoading ? (
+              <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {(["en_attente", "selectionne", "refuse"] as const).map((status) => {
+                  const statusLabels: Record<string, { label: string; color: string; bg: string }> = {
+                    en_attente: { label: "En attente", color: "var(--wise-warning)", bg: "rgba(234,179,8,0.08)" },
+                    selectionne: { label: "Sélectionnés", color: "var(--wise-positive)", bg: "rgba(34,197,94,0.08)" },
+                    refuse: { label: "Refusés", color: "var(--wise-negative)", bg: "rgba(239,68,68,0.08)" },
+                  };
+                  const { label, color, bg } = statusLabels[status];
+                  const items = (applicationsQuery.data || []).filter((a: any) => a.status === status);
+                  return (
+                    <div key={status} className="rounded-xl border border-border p-4" style={{ backgroundColor: bg }}>
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-semibold text-sm" style={{ color }}>{label}</h3>
+                        <Badge variant="outline" className="text-xs">{items.length}</Badge>
+                      </div>
+                      <div className="space-y-3 max-h-[60vh] overflow-y-auto">
+                        {items.length === 0 ? (
+                          <p className="text-xs text-muted-foreground text-center py-8">Aucune candidature</p>
+                        ) : items.map((app: any) => (
+                          <div key={app.id} className="bg-card rounded-lg border border-border p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onClick={() => setExpandedId(app.id === expandedId ? null : app.id)}>
+                            <div className="flex items-center gap-2 mb-1">
+                              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: color }}>
+                                {(app.firstName?.[0] || "").toUpperCase()}{(app.lastName?.[0] || "").toUpperCase()}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium truncate">{app.firstName} {app.lastName}</p>
+                                <p className="text-xs text-muted-foreground truncate">{app.email}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 mt-2">
+                              <span className="text-xs text-muted-foreground">{app.country}</span>
+                              {app.totalScore != null && (
+                                <Badge variant="outline" className="text-xs">{(app.totalScore * 100).toFixed(0)}%</Badge>
+                              )}
+                            </div>
+                            {status === "en_attente" && (
+                              <div className="flex gap-2 mt-2">
+                                <Button size="sm" variant="outline" className="text-xs h-7 flex-1" style={{ color: "var(--wise-positive)" }} onClick={(e) => { e.stopPropagation(); setDecisionDialog({ open: true, appId: app.id, status: "selectionne", app }); }}>
+                                  <CheckCircle className="w-3 h-3 mr-1" /> Accepter
+                                </Button>
+                                <Button size="sm" variant="outline" className="text-xs h-7 flex-1" style={{ color: "var(--wise-negative)" }} onClick={(e) => { e.stopPropagation(); setDecisionDialog({ open: true, appId: app.id, status: "refuse", app }); }}>
+                                  <XCircle className="w-3 h-3 mr-1" /> Refuser
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ==================== ACTIVITY TAB ==================== */}
+        {activeTab === "activity" && (
+          <>
+            <h1 className="wise-display-md mb-8">Journal d'activité</h1>
+            {activityLogQuery.isLoading ? (
+              <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+            ) : activityLogQuery.data?.items?.length ? (
+              <div className="space-y-3">
+                {activityLogQuery.data.items.map((item: any) => {
+                  const actionLabels: Record<string, { label: string; icon: any; color: string }> = {
+                    accept_application: { label: "Candidature acceptée", icon: CheckCircle, color: "var(--wise-positive)" },
+                    reject_application: { label: "Candidature refusée", icon: XCircle, color: "var(--wise-negative)" },
+                    bulk_accept: { label: "Acceptation en masse", icon: Users, color: "var(--wise-positive)" },
+                    bulk_reject: { label: "Refus en masse", icon: Users, color: "var(--wise-negative)" },
+                    send_communication: { label: "Communication envoyée", icon: Mail, color: "var(--wise-info, #3b82f6)" },
+                    activate_account: { label: "Compte activé", icon: Zap, color: "var(--wise-positive)" },
+                    add_note: { label: "Note ajoutée", icon: StickyNote, color: "var(--wise-warning)" },
+                  };
+                  const meta = actionLabels[item.action] || { label: item.action, icon: Activity, color: "var(--wise-mute)" };
+                  const IconComp = meta.icon;
+                  const details = item.details as any;
+                  return (
+                    <div key={item.id} className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card hover:bg-accent/30 transition-colors">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: `${meta.color}15` }}>
+                        <IconComp className="w-4 h-4" style={{ color: meta.color }} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium">{meta.label}</p>
+                        {details?.candidateName && <p className="text-xs text-muted-foreground">Candidat : {details.candidateName}</p>}
+                        {details?.subject && <p className="text-xs text-muted-foreground">Objet : {details.subject}</p>}
+                        {details?.count && <p className="text-xs text-muted-foreground">{details.count} élément(s) concerné(s)</p>}
+                      </div>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        {new Date(item.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-20">
+                <Activity className="w-12 h-12 mx-auto mb-4 text-muted-foreground/30" />
+                <p className="text-muted-foreground">Aucune activité enregistrée pour le moment.</p>
+                <p className="text-xs text-muted-foreground mt-1">Les actions admin (acceptations, refus, communications) apparaîtront ici.</p>
+              </div>
             )}
           </>
         )}
