@@ -1370,15 +1370,35 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
     } else if (isSectionHeading(line, nextLine) && (prevLine?.trim() === "" || i === 1)) {
       // Check if it's a known major section heading (render as h3) vs heuristic (h4)
       const isKnownHeading = knownSectionHeadings.has(line.trim().toLowerCase());
+      // Determine contextual icon based on heading content
+      const headingLower = line.trim().toLowerCase();
+      let headingIcon = '';
+      if (/exercice|exercise|activity|activité|mise en pratique|putting.*practice/i.test(headingLower)) {
+        headingIcon = '✏️';
+      } else if (/réflexion|reflection|discussion|think|réfléchir/i.test(headingLower)) {
+        headingIcon = '💡';
+      } else if (/résumé|summary|conclusion|points? clé|à retenir|key takeaway/i.test(headingLower)) {
+        headingIcon = '🎯';
+      } else if (/prochaines? étapes?|next steps?|et ensuite|what.*next/i.test(headingLower)) {
+        headingIcon = '➡️';
+      } else if (/objectif|learning objective|what you will learn/i.test(headingLower)) {
+        headingIcon = '🏠';
+      } else if (/ressources?|resources?|références?|references?/i.test(headingLower)) {
+        headingIcon = '📚';
+      } else if (/prérequis|prerequisites?|getting started/i.test(headingLower)) {
+        headingIcon = '⚙️';
+      }
       if (isKnownHeading) {
         elements.push(
           <h3 key={i} className="text-xl font-bold mt-10 mb-3 text-foreground border-b border-border/40 pb-2.5" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+            {headingIcon && <span className="mr-2">{headingIcon}</span>}
             {renderInlineFormatting(line)}
           </h3>
         );
       } else {
         elements.push(
           <h4 key={i} className="text-lg font-bold mt-8 mb-3 text-foreground" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+            {headingIcon && <span className="mr-2">{headingIcon}</span>}
             {renderInlineFormatting(line)}
           </h4>
         );
@@ -2550,6 +2570,18 @@ function LessonViewer({
       >
         <ArrowUp className="w-4 h-4 text-foreground" />
       </button>
+
+      {/* Sticky chapter title bar - appears on scroll */}
+      <div className={`sticky-chapter-bar ${showScrollTop ? 'visible' : ''}`}>
+        <div className="flex items-center gap-3 max-w-3xl mx-auto px-4">
+          <span className="text-xs font-semibold text-[#c75b3a] uppercase tracking-wider">
+            {currentChapter + 1}/{totalChapters}
+          </span>
+          <span className="text-sm font-medium text-foreground truncate">
+            {chapter ? resolveI18n(chapter.title, lang) : ''}
+          </span>
+        </div>
+      </div>
 
       {!showQuiz ? (
         <>

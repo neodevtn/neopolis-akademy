@@ -816,10 +816,10 @@
 - [x] Augmenter la taille du texte body (16px au lieu de 14.5px)
 - [x] Séparateurs visuels entre les sections majeures (hr gradient + espacement h2/h3/h4)
 - [x] Pull quotes / encadrés "À retenir" (classe .key-concept avec border-left orange)
-- [ ] Icônes sur les headings de section (théorie, pratique, attention) - reporté
-- [ ] Navigation sticky avec titre du chapitre visible au scroll - reporté
+- [x] Icônes sur les headings de section (✏️ exercice, 💡 réflexion, 🎯 résumé, ➡️ next steps, 📚 ressources, ⚙️ prérequis)
+- [x] Navigation sticky avec titre du chapitre visible au scroll
 - [x] Bouton scroll-to-top apparaissant après défilement
-- [ ] Améliorer le rendu bilingue (afficher uniquement la langue sélectionnée) - reporté
+- [x] Améliorer le rendu bilingue (déjà implémenté : body[lang] affiche uniquement la langue sélectionnée)
 - [x] Animation de complétion de chapitre (classe .chapter-complete-celebration)
 - [x] Raccourcis clavier pour navigation (flèches gauche/droite + kbd-hints visuels)
 - [x] Accessibilité : focus-visible, skip-to-content, prefers-reduced-motion
