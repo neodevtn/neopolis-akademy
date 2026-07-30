@@ -28,6 +28,7 @@ import {
 import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import { useAuth } from "@/_core/hooks/useAuth";
 import trainingIndex from "@/data/trainingIndex.json";
+import { faqItems as faqItemsData } from "@/data/faqData";
 
 // Chart.js
 import { Chart as ChartJS, registerables } from "chart.js";
@@ -102,15 +103,8 @@ const scaleIn = {
 };
 
 /* ─── FAQ Data ─── */
-const faqItems = [
-  { q: "Quels sont les prérequis pour postuler ?", a: "Aucun prérequis technique n'est exigé. Le programme est ouvert à tous les professionnels dont le métier est menacé par l'IA : développeurs, comptables, juristes, traducteurs, agents de service client, etc. Une motivation forte et une capacité d'apprentissage sont les seuls critères essentiels." },
-  { q: "La formation et la certification sont-elles vraiment gratuites ?", a: "Oui, 100% gratuites. La formation e-learning de 7 jours, l'accès à la plateforme Anthropic Academy, et le voucher pour la certification Claude Certified Architect (CCA) sont entièrement pris en charge par Neopolis Development en tant que Registered Partner du Claude Partner Network." },
-  { q: "Combien de temps dure le programme complet ?", a: "La formation e-learning dure 7 jours intensifs. Ensuite, vous disposez d'un accès à la plateforme Anthropic pour préparer la certification CCA à votre rythme, avec une date limite de passage fixée au 31 août 2026." },
-  { q: "Quels sont les débouchés après la certification ?", a: "Les candidats certifiés obtiennent le statut d'AI Solutions Partner - Ambassadeur Certifié. Vous devenez un entrepreneur indépendant distribuant des solutions IA auprès des entreprises de votre secteur d'activité, avec le soutien technique et commercial complet de Neopolis Development." },
-  { q: "Quels pays sont concernés ?", a: "Le programme est ouvert aux professionnels tunisiens. Il vise à créer un réseau d'ambassadeurs certifiés couvrant tous les secteurs d'activité en Tunisie et dans la région MENA." },
-  { q: "Comment fonctionne le processus de sélection ?", a: "Après soumission de votre candidature, un score est calculé automatiquement basé sur vos compétences techniques (40%), votre expertise métier (35%) et vos capacités de communication (25%). Les 200 à 300 meilleurs profils seront sélectionnés pour intégrer le programme." },
-  { q: "Quelles ressources Neopolis Development fournit-elle aux ambassadeurs ?", a: "Neopolis fournit : ressources humaines et techniques, matériel et appliances, agents IA prêts à l'emploi, accès à des LLM multiples (pas seulement Anthropic), infrastructure de serveurs puissants hébergés on-premise, et toute l'assistance nécessaire pour attaquer votre marché cible." },
-];
+// FAQ items with full translations (fr, en, ar)
+const faqItems = faqItemsData;
 
 /* ─── Animated Section Wrapper ─── */
 function AnimatedSection({ children, className, style, id }: { children: React.ReactNode; className?: string; style?: React.CSSProperties; id?: string }) {
@@ -400,10 +394,10 @@ export default function Home() {
       <AnimatedSection id="formule" style={{ background: "var(--wise-canvas)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-12">
           <motion.div variants={fadeInUp} className="text-center mb-14">
-            <span className="wise-badge-positive mb-4">100% Gratuit</span>
-            <h2 className="wise-display-md mb-4">La Formule Complète</h2>
+            <span className="wise-badge-positive mb-4">{t({ fr: "100% Gratuit", en: "100% Free", ar: "مجاني 100%" })}</span>
+            <h2 className="wise-display-md mb-4">{t({ fr: "La Formule Complète", en: "The Complete Formula", ar: "الصيغة الكاملة" })}</h2>
             <p className="wise-body-lg max-w-[52ch] mx-auto">
-              Un parcours en 3 étapes pour devenir AI Solutions Partner – Ambassadeur Certifié
+              {t({ fr: "Un parcours en 3 étapes pour devenir AI Solutions Partner – Ambassadeur Certifié", en: "A 3-step journey to become an AI Solutions Partner – Certified Ambassador", ar: "رحلة من 3 خطوات لتصبح شريك حلول ذكاء اصطناعي – سفير معتمد" })}
             </p>
           </motion.div>
 
@@ -411,30 +405,30 @@ export default function Home() {
             <motion.div variants={fadeInUp}>
               <FormulaCard
                 icon={<BookOpen size={28} />}
-                step="01"
-                title="E-Learning 7 jours"
-                description="Formation intensive sur l'IA générale, les LLM, les agents IA et leurs applications métier concrètes."
-                badge="Gratuit"
+                step={t({ fr: "01", en: "01", ar: "01" })}
+                title={t({ fr: "E-Learning 7 jours", en: "7-Day E-Learning", ar: "التعلم الإلكتروني 7 أيام" })}
+                description={t({ fr: "Formation intensive sur l'IA générale, les LLM, les agents IA et leurs applications métier concrètes.", en: "Intensive training on general AI, LLMs, AI agents, and their concrete business applications.", ar: "تدريب مكثف على الذكاء الاصطناعي العام، نماذج اللغة الكبيرة، وكلاء الذكاء الاصطناعي، وتطبيقاتهم التجارية الملموسة." })}
+                badge={t({ fr: "Gratuit", en: "Free", ar: "مجاني" })}
                 image={ELEARNING_IMG}
               />
             </motion.div>
             <motion.div variants={fadeInUp}>
               <FormulaCard
                 icon={<Award size={28} />}
-                step="02"
-                title="Certification CCA"
-                description="Accès à la plateforme Anthropic + voucher pour passer la certification Claude Certified Architect avant le 31 août 2026."
-                badge="Gratuit"
+                step={t({ fr: "02", en: "02", ar: "02" })}
+                title={t({ fr: "Certification CCA", en: "CCA Certification", ar: "شهادة CCA" })}
+                description={t({ fr: "Accès à la plateforme Anthropic + voucher pour passer la certification Claude Certified Architect avant le 31 août 2026.", en: "Access to Anthropic platform + voucher to take the Claude Certified Architect certification before August 31, 2026.", ar: "الوصول إلى منصة Anthropic + قسيمة لاجتياز شهادة Claude Certified Architect قبل 31 أغسطس 2026." })}
+                badge={t({ fr: "Gratuit", en: "Free", ar: "مجاني" })}
                 image={CERT_IMG}
               />
             </motion.div>
             <motion.div variants={fadeInUp}>
               <FormulaCard
                 icon={<Globe size={28} />}
-                step="03"
-                title="Statut Ambassadeur"
-                description="Devenez AI Solutions Partner indépendant et distribuez des solutions IA auprès des entreprises de votre secteur."
-                badge="Accompagnement complet"
+                step={t({ fr: "03", en: "03", ar: "03" })}
+                title={t({ fr: "Statut Ambassadeur", en: "Ambassador Status", ar: "حالة السفير" })}
+                description={t({ fr: "Devenez AI Solutions Partner indépendant et distribuez des solutions IA auprès des entreprises de votre secteur.", en: "Become an independent AI Solutions Partner and distribute AI solutions to companies in your sector.", ar: "كن شريك حلول ذكاء اصطناعي مستقلاً وزع حلول الذكاء الاصطناعي للشركات في قطاعك." })}
+                badge={t({ fr: "Accompagnement complet", en: "Full support", ar: "دعم كامل" })}
                 image={AFRICA_IMG}
               />
             </motion.div>
@@ -446,13 +440,13 @@ export default function Home() {
       <AnimatedSection id="partenaires" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-12">
           <motion.div variants={fadeInUp} className="text-center mb-14">
-            <span className="wise-eyebrow mb-4 inline-flex">Écosystème</span>
-            <h2 className="wise-display-md mb-4">Nos Partenaires Technologiques</h2>
+            <span className="wise-eyebrow mb-4 inline-flex">{t({ fr: "Écosystème", en: "Ecosystem", ar: "النظام البيئي" })}</span>
+            <h2 className="wise-display-md mb-4">{t({ fr: "Nos Partenaires Technologiques", en: "Our Technology Partners", ar: "شركاؤنا التكنولوجيون" })}</h2>
             <p className="wise-body-lg max-w-[52ch] mx-auto">
-              Neopolis Development, Registered Partner du <a href="https://www.anthropic.com/news/claude-partner-network" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "var(--wise-positive-deep)" }}>Claude Partner Network</a>, construit un écosystème pour déployer l'IA agentique en Afrique et MENA.
+              {t({ fr: "Neopolis Development, Registered Partner du Claude Partner Network, construit un écosystème pour déployer l'IA agentique en Afrique et MENA.", en: "Neopolis Development, Registered Partner of the Claude Partner Network, is building an ecosystem to deploy agentic AI in Africa and MENA.", ar: "Neopolis Development، شريك مسجل في شبكة Claude Partner Network، يبني نظاماً بيئياً لنشر الذكاء الاصطناعي الوكيلي في أفريقيا والشرق الأوسط وشمال أفريقيا." })} <a href="https://www.anthropic.com/news/claude-partner-network" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "var(--wise-positive-deep)" }}>Claude Partner Network</a>
             </p>
             <p className="wise-body-sm mt-2" style={{ color: "var(--wise-mute)" }}>
-              Statut Select en cours d'obtention
+              {t({ fr: "Statut Select en cours d'obtention", en: "Select status in progress", ar: "حالة Select قيد الحصول" })}
             </p>
           </motion.div>
 
@@ -461,7 +455,7 @@ export default function Home() {
               <PartnerCard
                 name="Anthropic"
                 logo="/manus-storage/logo_anthropic_e6ab4160.png"
-                description="Créateur de Claude, l'un des LLM les plus avancés au monde. En tant que Registered Partner du CPN, nous offrons un accès facilité à la certification Claude Certified Architect (CCA) via un voucher gratuit pour nos candidats."
+                description={t({ fr: "Créateur de Claude, l'un des LLM les plus avancés au monde. En tant que Registered Partner du CPN, nous offrons un accès facilité à la certification Claude Certified Architect (CCA) via un voucher gratuit pour nos candidats.", en: "Creator of Claude, one of the most advanced LLMs in the world. As a Registered Partner of the CPN, we offer easy access to the Claude Certified Architect (CCA) certification via a free voucher for our candidates.", ar: "منشئ Claude، أحد أكثر نماذج اللغة الكبيرة تقدماً في العالم. بصفتنا شريكاً مسجلاً في شبكة CPN، نقدم وصولاً سهلاً إلى شهادة Claude Certified Architect (CCA) عبر قسيمة مجانية لمرشحينا." })}
               />
             </motion.div>
 
@@ -473,15 +467,15 @@ export default function Home() {
               <NetworkGraph />
             </motion.div>
             <motion.div variants={fadeInRight}>
-              <h3 className="wise-display-xs mb-4">Ce que nous fournissons</h3>
+              <h3 className="wise-display-xs mb-4">{t({ fr: "Ce que nous fournissons", en: "What we provide", ar: "ما نوفره" })}</h3>
               <div className="space-y-2">
                 {[
-                  "Ressources humaines et techniques dédiées",
-                  "Agents IA prêts à l'emploi (ready-to-use)",
-                  "Accès multi-LLM (Claude, Gemini, OpenAI...)",
-                  "Infrastructure serveurs on-premise puissante",
-                  "Accompagnement commercial et marketing",
-                  "Support technique continu",
+                  t({ fr: "Ressources humaines et techniques dédiées", en: "Dedicated human and technical resources", ar: "موارد بشرية وتقنية مخصصة" }),
+                  t({ fr: "Agents IA prêts à l'emploi (ready-to-use)", en: "Ready-to-use AI agents", ar: "وكلاء ذكاء اصطناعي جاهزون للاستخدام" }),
+                  t({ fr: "Accès multi-LLM (Claude, Gemini, OpenAI...)", en: "Multi-LLM access (Claude, Gemini, OpenAI...)", ar: "الوصول إلى نماذج لغة متعددة (Claude, Gemini, OpenAI...)" }),
+                  t({ fr: "Infrastructure serveurs on-premise puissante", en: "Powerful on-premise server infrastructure", ar: "بنية تحتية قوية للخوادم المحلية" }),
+                  t({ fr: "Accompagnement commercial et marketing", en: "Commercial and marketing support", ar: "الدعم التجاري والتسويقي" }),
+                  t({ fr: "Support technique continu", en: "Continuous technical support", ar: "الدعم الفني المستمر" }),
                 ].map((item, i) => (
                   <motion.div
                     key={i}
@@ -511,16 +505,16 @@ export default function Home() {
             <motion.div variants={fadeInLeft}>
               <span className="wise-eyebrow mb-6 inline-flex">
                 <Target size={12} />
-                Votre futur statut
+                {t({ fr: "Votre futur statut", en: "Your future status", ar: "حالتك المستقبلية" })}
               </span>
-              <h2 className="wise-display-md mb-6">Devenez AI Solutions Partner</h2>
+              <h2 className="wise-display-md mb-6">{t({ fr: "Devenez AI Solutions Partner", en: "Become an AI Solutions Partner", ar: "كن شريك حلول ذكاء اصطناعي" })}</h2>
               <p className="wise-body-lg mb-6">
-                Après votre certification, vous obtenez le statut d'<strong>AI Solutions Partner - Ambassadeur Certifié</strong>. Vous devenez un entrepreneur indépendant qui distribue des solutions IA auprès des PME/TPE de votre secteur d'activité.
+                {t({ fr: "Après votre certification, vous obtenez le statut d'AI Solutions Partner - Ambassadeur Certifié. Vous devenez un entrepreneur indépendant qui distribue des solutions IA auprès des PME/TPE de votre secteur d'activité.", en: "After your certification, you obtain the status of AI Solutions Partner - Certified Ambassador. You become an independent entrepreneur who distributes AI solutions to SMEs in your industry.", ar: "بعد الحصول على الشهادة، تحصل على مركز شريك حلول ذكاء اصطناعي - سفير معتمد. أنت تصبح رائد أعمال مستقلاً يوزع حلول الذكاء الاصطناعي للشركات الصغيرة والمتوسطة في قطاعك." })}
               </p>
               <div className="wise-card-sage p-6">
-                <h4 className="font-semibold text-lg mb-3" style={{ color: "var(--wise-ink)" }}>Votre mission :</h4>
+                <h4 className="font-semibold text-lg mb-3" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Votre mission :", en: "Your mission:", ar: "مهمتك:" })}</h4>
                 <p className="wise-body-md">
-                  Identifier les entreprises de votre secteur dont les processus peuvent être automatisés par des agents IA, leur proposer des solutions concrètes, et les accompagner dans leur transformation digitale - avec tout le soutien de Neopolis Development.
+                  {t({ fr: "Identifier les entreprises de votre secteur dont les processus peuvent être automatisés par des agents IA, leur proposer des solutions concrètes, et les accompagner dans leur transformation digitale - avec tout le soutien de Neopolis Development.", en: "Identify companies in your sector whose processes can be automated by AI agents, propose concrete solutions to them, and support them in their digital transformation - with full support from Neopolis Development.", ar: "تحديد الشركات في قطاعك التي يمكن أتمتة عملياتها بواسطة وكلاء الذكاء الاصطناعي، والعرض عليهم حلولاً عملية، ودعمهم في التحول الرقمي - مع الدعم الكامل من Neopolis Development." })}
                 </p>
               </div>
             </motion.div>
@@ -537,11 +531,11 @@ export default function Home() {
           <motion.div variants={fadeInUp} className="text-center mb-12 md:mb-16">
             <span className="wise-eyebrow mb-4 inline-flex">
               <Zap size={12} />
-              Modèle économique
+              {t({ fr: "Modèle économique", en: "Economic model", ar: "النموذج الاقتصادي" })}
             </span>
-            <h2 className="wise-display-md mb-4">Le Process Commercial de l'Ambassadeur</h2>
+            <h2 className="wise-display-md mb-4">{t({ fr: "Le Process Commercial de l'Ambassadeur", en: "The Ambassador's Commercial Process", ar: "عملية السفير التجارية" })}</h2>
             <p className="wise-body-lg max-w-[56ch] mx-auto">
-              Un parcours structuré en 5 phases, de la prospection au monitoring, avec une rémunération attractive à chaque étape.
+              {t({ fr: "Un parcours structuré en 5 phases, de la prospection au monitoring, avec une rémunération attractive à chaque étape.", en: "A structured journey in 5 phases, from prospecting to monitoring, with attractive compensation at each stage.", ar: "رحلة منظمة في 5 مراحل، من البحث عن العملاء إلى مراقبة المشروع، مع تعويض جذاب في كل مرحلة." })}
             </p>
           </motion.div>
 
@@ -717,7 +711,7 @@ export default function Home() {
           <motion.div variants={staggerContainer} className="max-w-3xl mx-auto space-y-3">
             {faqItems.map((item, i) => (
               <motion.div key={i} variants={fadeInUp}>
-                <FAQItem question={item.q} answer={item.a} />
+                <FAQItem question={t(item.q)} answer={t(item.a)} />
               </motion.div>
             ))}
           </motion.div>
@@ -1460,6 +1454,7 @@ function HeroGraphic() {
 }
 
 function MobileMenuButton() {
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -1482,9 +1477,9 @@ function MobileMenuButton() {
           >
             <div className="rounded-2xl p-4 shadow-xl" style={{ backgroundColor: "#ffffff", border: "1px solid rgba(0,0,0,0.06)" }}>
               <nav className="flex flex-col gap-2">
-                <a href="#formule" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>La Formule</a>
-                <a href="#pourquoi" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>Pourquoi maintenant</a>
-                <a href="#partenaires" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>Partenaires</a>
+                <a href="#formule" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "La Formule", en: "The Formula", ar: "الصيغة" })}</a>
+                <a href="#pourquoi" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" })}</a>
+                <a href="#partenaires" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</a>
                 <a href="#faq" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>FAQ</a>
                 <div className="h-px my-1" style={{ background: "var(--wise-rule)" }} />
                 <a href="/training" onClick={() => setOpen(false)} className="text-sm font-semibold py-2.5 px-3 rounded-lg bg-emerald-50 text-emerald-700 transition-colors">Training 🎓</a>

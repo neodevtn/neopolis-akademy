@@ -1,0 +1,30 @@
+export const faqItems = [
+  {
+    q: { fr: "Quels sont les prérequis pour postuler ?", en: "What are the prerequisites to apply?", ar: "ما هي متطلبات التقدم بطلب؟" },
+    a: { fr: "Aucun prérequis technique n'est exigé. Le programme est ouvert à tous les professionnels dont le métier est menacé par l'IA : développeurs, comptables, juristes, traducteurs, agents de service client, etc. Une motivation forte et une capacité d'apprentissage sont les seuls critères essentiels.", en: "No technical prerequisites are required. The program is open to all professionals whose careers are threatened by AI: developers, accountants, lawyers, translators, customer service agents, etc. Strong motivation and learning ability are the only essential criteria.", ar: "لا يوجد متطلبات تقنية. البرنامج مفتوح لجميع المتخصصين الذين المهن مهددة بالذكاء الاصطناعي: مطورون، محاسبون، محامون، مترجمون، وكلاء خدمة العملاء وغيرهم. الحافز القوي وقدرة التعلم هي المعايير الوحيدة الأساسية." }
+  },
+  {
+    q: { fr: "La formation et la certification sont-elles vraiment gratuites ?", en: "Is the training and certification really free?", ar: "هل التدريب والشهادة مجانية بالفعل؟" },
+    a: { fr: "Oui, 100% gratuites. La formation e-learning de 7 jours, l'accès à la plateforme Anthropic Academy, et le voucher pour la certification Claude Certified Architect (CCA) sont entièrement pris en charge par Neopolis Development en tant que Registered Partner du Claude Partner Network.", en: "Yes, 100% free. The 7-day e-learning training, access to the Anthropic Academy platform, and the voucher for the Claude Certified Architect (CCA) certification are fully covered by Neopolis Development as a Registered Partner of the Claude Partner Network.", ar: "نعم، 100% مجانية. التدريب الإلكتروني لمدة 7 أيام، والوصول إلى منصة Anthropic Academy، والقسيمة للحصول على شهادة Claude Certified Architect (CCA) ممولة بالكامل من Neopolis Development بصفتها شريكاً مسجلاً في شبكة Claude Partner Network." }
+  },
+  {
+    q: { fr: "Combien de temps dure le programme complet ?", en: "How long is the complete program?", ar: "ما مدة البرنامج الكامل؟" },
+    a: { fr: "La formation e-learning dure 7 jours intensifs. Ensuite, vous disposez d'un accès à la plateforme Anthropic pour préparer la certification CCA à votre rythme, avec une date limite de passage fixée au 31 août 2026.", en: "The e-learning training lasts 7 intensive days. Afterwards, you have access to the Anthropic platform to prepare for the CCA certification at your own pace, with a deadline set for August 31, 2026.", ar: "يستغرق التدريب الإلكتروني 7 أيام مكثفة. بعد ذلك، لديك الوصول إلى منصة Anthropic للتحضير لشهادة CCA بالسرعة التي تناسبك، مع موعد نهاية محدد في 31 أغسطس 2026." }
+  },
+  {
+    q: { fr: "Quels sont les débouchés après la certification ?", en: "What are the career prospects after certification?", ar: "ما هي فرص العمل بعد الشهادة؟" },
+    a: { fr: "Les candidats certifiés obtiennent le statut d'AI Solutions Partner - Ambassadeur Certifié. Vous devenez un entrepreneur indépendant distribuant des solutions IA auprès des entreprises de votre secteur d'activité, avec le soutien technique et commercial complet de Neopolis Development.", en: "Certified candidates obtain the status of AI Solutions Partner - Certified Ambassador. You become an independent entrepreneur distributing AI solutions to companies in your industry, with full technical and commercial support from Neopolis Development.", ar: "يحصل المرشحون المعتمدون على مركز شريك حلول ذكاء اصطناعي - سفير معتمد. أنت تصبح رائد أعمال مستقلاً توزع حلول الذكاء الاصطناعي على الشركات في قطاعك، مع الدعم الفني والتجاري الكامل من Neopolis Development." }
+  },
+  {
+    q: { fr: "Quels pays sont concernés ?", en: "Which countries are included?", ar: "أي الدول مشمولة؟" },
+    a: { fr: "Le programme est ouvert aux professionnels tunisiens. Il vise à créer un réseau d'ambassadeurs certifiés couvrant tous les secteurs d'activité en Tunisie et dans la région MENA.", en: "The program is open to Tunisian professionals. It aims to create a network of certified ambassadors covering all sectors of activity in Tunisia and the MENA region.", ar: "البرنامج مفتوح للمتخصصين التونسيين. يهدف إلى بناء شبكة من السفراء المعتمدين تغطي جميع قطاعات النشاط في تونس ومنطقة الشرق الأوسط وشمال أفريقيا." }
+  },
+  {
+    q: { fr: "Comment fonctionne le processus de sélection ?", en: "How does the selection process work?", ar: "كيف يعمل عملية الاختيار؟" },
+    a: { fr: "Après soumission de votre candidature, un score est calculé automatiquement basé sur vos compétences techniques (40%), votre expertise métier (35%) et vos capacités de communication (25%). Les 200 à 300 meilleurs profils seront sélectionnés pour intégrer le programme.", en: "After submitting your application, a score is calculated automatically based on your technical skills (40%), your industry expertise (35%), and your communication abilities (25%). The 200 to 300 best profiles will be selected to join the program.", ar: "بعد تقديم طلبك، يتم حساب النقاط تلقائياً بناءً على مهارات التقنية (40%)، وخبرة الصناعة (35%)، وقدرات الاتصال (25%). سيتم اختيار 200 إلى 300 أفضل ملف للانضمام إلى البرنامج." }
+  },
+  {
+    q: { fr: "Quelles ressources Neopolis Development fournit-elle aux ambassadeurs ?", en: "What resources does Neopolis Development provide to ambassadors?", ar: "ما هي الموارد التي توفرها Neopolis Development للسفراء؟" },
+    a: { fr: "Neopolis fournit : ressources humaines et techniques, matériel et appliances, agents IA prêts à l'emploi, accès à des LLM multiples (pas seulement Anthropic), infrastructure de serveurs puissants hébergés on-premise, et toute l'assistance nécessaire pour attaquer votre marché cible.", en: "Neopolis provides: human and technical resources, equipment and appliances, ready-to-use AI agents, access to multiple LLMs (not just Anthropic), powerful on-premise server infrastructure, and all necessary support to target your market.", ar: "Neopolis توفر: موارد بشرية وتقنية، معدات وأجهزة، وكلاء ذكاء اصطناعي جاهزة للاستخدام، والوصول إلى نماذج لغة متعددة (ليس فقط Anthropic)، وبنية تحتية قوية للخوادم المحلية، وكل الدعم الضروري لاستهداف سوقك." }
+  }
+];
