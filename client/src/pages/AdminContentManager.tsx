@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +30,7 @@ type ViewMode = "browse" | "course" | "quiz-simulate" | "exam-simulate" | "edit-
 
 export default function AdminContentManager() {
   const { user, isAuthenticated } = useAuth();
+  const { t } = useLanguage();
   const [viewMode, setViewMode] = useState<ViewMode>("browse");
   const [selectedCourseId, setSelectedCourseId] = useState<string>("");
   const [selectedCertId, setSelectedCertId] = useState<string>("");
@@ -398,7 +400,7 @@ export default function AdminContentManager() {
                 <Badge variant="outline">Question {quizSimState.currentQ + 1}/{questions.length}</Badge>
                 <span className="text-xs text-gray-500">{Object.keys(quizSimState.answers).length} répondue(s)</span>
               </div>
-              <p className="font-medium mb-4">{questions[quizSimState.currentQ]?.question}</p>
+              <p className="font-medium mb-4">{typeof questions[quizSimState.currentQ]?.question === "object" ? t(questions[quizSimState.currentQ]?.question) : questions[quizSimState.currentQ]?.question}</p>
               <div className="space-y-2">
                 {questions[quizSimState.currentQ]?.choices?.map((choice: any) => (
                   <button
@@ -406,7 +408,7 @@ export default function AdminContentManager() {
                     className={`w-full text-left p-3 rounded border transition-colors ${quizSimState.answers[quizSimState.currentQ] === choice.id ? "border-emerald-500 bg-emerald-50" : "border-gray-200 hover:border-gray-300"}`}
                     onClick={() => setQuizSimState(prev => ({ ...prev, answers: { ...prev.answers, [prev.currentQ]: choice.id } }))}
                   >
-                    {choice.text}
+                    {typeof choice.text === "object" ? t(choice.text) : choice.text}
                   </button>
                 ))}
               </div>
@@ -440,9 +442,9 @@ export default function AdminContentManager() {
                     <div className="flex items-start gap-2">
                       {isCorrect ? <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5" /> : <XCircle className="w-4 h-4 text-red-600 mt-0.5" />}
                       <div className="flex-1">
-                        <p className="text-sm font-medium">{q.question}</p>
-                        <p className="text-xs text-gray-500 mt-1">Réponse correcte : {q.choices?.find((c: any) => c.id === q.correctId)?.text}</p>
-                        {q.explanation && <p className="text-xs text-blue-600 mt-1">💡 {q.explanation}</p>}
+                        <p className="text-sm font-medium">{typeof q.question === "object" ? t(q.question) : q.question}</p>
+                        <p className="text-xs text-gray-500 mt-1">Réponse correcte : {typeof q.choices?.find((c: any) => c.id === q.correctId)?.text === "object" ? t(q.choices?.find((c: any) => c.id === q.correctId)?.text) : q.choices?.find((c: any) => c.id === q.correctId)?.text}</p>
+                        {q.explanation && <p className="text-xs text-blue-600 mt-1">💡 {typeof q.explanation === "object" ? t(q.explanation) : q.explanation}</p>}
                       </div>
                     </div>
                   </div>
@@ -491,9 +493,9 @@ export default function AdminContentManager() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-4">
                 <Badge variant="outline">Question {quizSimState.currentQ + 1}/{activeExamQuestions.length}</Badge>
-                <Badge variant="secondary">{activeExamQuestions[quizSimState.currentQ]?.domain}</Badge>
+                <Badge variant="secondary">{typeof activeExamQuestions[quizSimState.currentQ]?.domain === "object" ? t(activeExamQuestions[quizSimState.currentQ]?.domain) : activeExamQuestions[quizSimState.currentQ]?.domain}</Badge>
               </div>
-              <p className="font-medium mb-4">{activeExamQuestions[quizSimState.currentQ]?.question}</p>
+              <p className="font-medium mb-4">{typeof activeExamQuestions[quizSimState.currentQ]?.question === "object" ? t(activeExamQuestions[quizSimState.currentQ]?.question) : activeExamQuestions[quizSimState.currentQ]?.question}</p>
               <div className="space-y-2">
                 {activeExamQuestions[quizSimState.currentQ]?.choices?.map((choice: any) => (
                   <button
@@ -501,7 +503,7 @@ export default function AdminContentManager() {
                     className={`w-full text-left p-3 rounded border transition-colors ${quizSimState.answers[quizSimState.currentQ] === choice.id ? "border-emerald-500 bg-emerald-50" : "border-gray-200 hover:border-gray-300"}`}
                     onClick={() => setQuizSimState(prev => ({ ...prev, answers: { ...prev.answers, [prev.currentQ]: choice.id } }))}
                   >
-                    {choice.text}
+                    {typeof choice.text === "object" ? t(choice.text) : choice.text}
                   </button>
                 ))}
               </div>
@@ -544,7 +546,7 @@ export default function AdminContentManager() {
                   const isCorrect = correct.includes(quizSimState.answers[idx]);
                   return (
                     <div key={idx} className={`p-2 rounded text-sm ${isCorrect ? "bg-green-50" : "bg-red-50"}`}>
-                      <span className="font-medium">{idx + 1}.</span> {q.question.substring(0, 80)}...
+                      <span className="font-medium">{idx + 1}.</span> {(typeof q.question === "object" ? t(q.question) : q.question).substring(0, 80)}...
                       {!isCorrect && <span className="text-red-600 ml-2">✗</span>}
                     </div>
                   );
@@ -563,7 +565,7 @@ export default function AdminContentManager() {
     if (!allQuestions) return <div className="text-center py-8 text-gray-500">Chargement...</div>;
 
     const certQuestions = allQuestions.filter((q: any) => q.certificationId === selectedCertId);
-    const domains = Array.from(new Set(certQuestions.map((q: any) => q.domain)));
+    const domains = Array.from(new Set(certQuestions.map((q: any) => typeof q.domain === "object" ? (q.domain.fr || q.domain.en || "") : q.domain)));
 
     return (
       <div className="space-y-4">
@@ -602,8 +604,8 @@ export default function AdminContentManager() {
               {certQuestions.slice(0, 100).map((q: any, idx: number) => (
                 <tr key={q.id} className="border-b hover:bg-gray-50">
                   <td className="px-3 py-2 text-gray-400">{idx + 1}</td>
-                  <td className="px-3 py-2 truncate max-w-md">{q.question}</td>
-                  <td className="px-3 py-2"><Badge variant="secondary" className="text-xs">{q.domain}</Badge></td>
+                  <td className="px-3 py-2 truncate max-w-md">{typeof q.question === "object" ? t(q.question) : q.question}</td>
+                  <td className="px-3 py-2"><Badge variant="secondary" className="text-xs">{typeof q.domain === "object" ? t(q.domain) : q.domain}</Badge></td>
                   <td className="px-3 py-2 text-right">
                     <Button size="sm" variant="ghost" className="h-6 px-1" onClick={() => {
                       setEditingExamQ(q);
@@ -654,8 +656,8 @@ export default function AdminContentManager() {
                 {questions.map((q: any, qi: number) => (
                   <div key={qi} className="border-b last:border-0 py-2 flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm truncate">{q.question}</p>
-                      <p className="text-xs text-gray-400">Réponse : {q.choices?.find((c: any) => c.id === q.correctId)?.text}</p>
+                      <p className="text-sm truncate">{typeof q.question === "object" ? t(q.question) : q.question}</p>
+                      <p className="text-xs text-gray-400">Réponse : {typeof q.choices?.find((c: any) => c.id === q.correctId)?.text === "object" ? t(q.choices?.find((c: any) => c.id === q.correctId)?.text) : q.choices?.find((c: any) => c.id === q.correctId)?.text}</p>
                     </div>
                     <Button size="sm" variant="ghost" className="h-6 px-1 shrink-0" onClick={() => {
                       setEditingQuiz({ courseId: selectedCourseId, lessonKey: key, questionIdx: qi, ...q });
@@ -779,11 +781,11 @@ export default function AdminContentManager() {
             <div className="space-y-3">
               <div>
                 <label className="text-xs font-medium text-gray-600">Domaine</label>
-                <Input value={editingExamQ.domain || ""} onChange={(e) => setEditingExamQ({ ...editingExamQ, domain: e.target.value })} />
+                <Input value={typeof editingExamQ.domain === "object" ? (editingExamQ.domain.fr || editingExamQ.domain.en || "") : (editingExamQ.domain || "")} onChange={(e) => setEditingExamQ({ ...editingExamQ, domain: e.target.value })} />
               </div>
               <div>
                 <label className="text-xs font-medium text-gray-600">Question</label>
-                <Textarea value={editingExamQ.question || ""} onChange={(e) => setEditingExamQ({ ...editingExamQ, question: e.target.value })} rows={3} />
+                <Textarea value={typeof editingExamQ.question === "object" ? (editingExamQ.question.fr || editingExamQ.question.en || "") : (editingExamQ.question || "")} onChange={(e) => setEditingExamQ({ ...editingExamQ, question: e.target.value })} rows={3} />
               </div>
               <div>
                 <label className="text-xs font-medium text-gray-600">Choix</label>
@@ -801,7 +803,7 @@ export default function AdminContentManager() {
                       className="w-4 h-4"
                     />
                     <Input
-                      value={c.text}
+                      value={typeof c.text === "object" ? (c.text.fr || c.text.en || "") : c.text}
                       onChange={(e) => {
                         const choices = [...editingExamQ.choices];
                         choices[ci] = { ...choices[ci], text: e.target.value };
@@ -815,7 +817,7 @@ export default function AdminContentManager() {
               </div>
               <div>
                 <label className="text-xs font-medium text-gray-600">Explication</label>
-                <Textarea value={editingExamQ.explanation || ""} onChange={(e) => setEditingExamQ({ ...editingExamQ, explanation: e.target.value })} rows={2} />
+                <Textarea value={typeof editingExamQ.explanation === "object" ? (editingExamQ.explanation.fr || editingExamQ.explanation.en || "") : (editingExamQ.explanation || "")} onChange={(e) => setEditingExamQ({ ...editingExamQ, explanation: e.target.value })} rows={2} />
               </div>
             </div>
             <DialogFooter>
@@ -863,7 +865,7 @@ export default function AdminContentManager() {
             <div className="space-y-3">
               <div>
                 <label className="text-xs font-medium text-gray-600">Question</label>
-                <Textarea value={editingQuiz.question || ""} onChange={(e) => setEditingQuiz({ ...editingQuiz, question: e.target.value })} rows={3} />
+                <Textarea value={typeof editingQuiz.question === "object" ? (editingQuiz.question.fr || editingQuiz.question.en || "") : (editingQuiz.question || "")} onChange={(e) => setEditingQuiz({ ...editingQuiz, question: e.target.value })} rows={3} />
               </div>
               <div>
                 <label className="text-xs font-medium text-gray-600">Choix (cocher la bonne réponse)</label>
@@ -877,7 +879,7 @@ export default function AdminContentManager() {
                       className="w-4 h-4"
                     />
                     <Input
-                      value={c.text}
+                      value={typeof c.text === "object" ? (c.text.fr || c.text.en || "") : c.text}
                       onChange={(e) => {
                         const choices = [...editingQuiz.choices];
                         choices[ci] = { ...choices[ci], text: e.target.value };
@@ -890,7 +892,7 @@ export default function AdminContentManager() {
               </div>
               <div>
                 <label className="text-xs font-medium text-gray-600">Explication</label>
-                <Textarea value={editingQuiz.explanation || ""} onChange={(e) => setEditingQuiz({ ...editingQuiz, explanation: e.target.value })} rows={2} />
+                <Textarea value={typeof editingQuiz.explanation === "object" ? (editingQuiz.explanation.fr || editingQuiz.explanation.en || "") : (editingQuiz.explanation || "")} onChange={(e) => setEditingQuiz({ ...editingQuiz, explanation: e.target.value })} rows={2} />
               </div>
             </div>
             <DialogFooter>

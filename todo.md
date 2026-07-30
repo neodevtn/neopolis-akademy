@@ -880,3 +880,30 @@
 - [x] Invitation en masse non visible dans l'admin (corrigé: onglet Invitations visible avec bouton Envoi en masse)
 - [x] Traductions landing page incomplètes (corrigé: toutes les sections traduites en EN/AR - stats, CTA, Process, Formule, FAQ, Footer, FlowDiagram, Simulateur, Exemples)
 - [x] Intégrer les traductions formLabels.ts dans Apply.tsx (formulaire entièrement traduit FR/EN/AR : 10 étapes, navigation, vidéo pitch, documents)
+
+## Audit complet front/back/learning/admin (30 juillet 2026)
+- [x] Audit Landing page (EN + FR) : contenu, stats, chart, formule, partenaires, FAQ, footer
+- [x] Audit Formulaire candidature (10 étapes) : validation, dropdowns, navigation
+- [x] Audit Login : validation, erreurs, loading state
+- [x] Audit Accept Invitation : gestion token invalide/absent
+- [x] Audit Training Dashboard : progress, stats, certifications
+- [x] Audit Training Certification Detail : cours verrouillés/déverrouillés
+- [x] Audit Training Course Content : navigation chapitres, contenu, flip cards
+- [x] Audit Mock Exam (apprenant) : config, timer, questions, choix
+- [x] Audit Admin Candidatures : stats, table, filtres, export CSV
+- [x] Audit Admin Communications : table, bouton nouveau communiqué
+- [x] Audit Admin Invitations : stats, table, envoi en masse
+- [x] Audit Admin Kanban : 3 colonnes, cartes candidats
+- [x] Audit Admin Évaluation : stats, classement apprenants
+- [x] Audit Admin Activité : journal avec message explicatif
+- [x] Audit Admin Suivi Apprenants : 3 tabs, recherche, table, export
+- [x] Audit Admin Analytics : graphiques inscriptions, activité, répartition
+- [x] Audit Admin Contenu : 6 certifications, 31 cours, stats
+- [x] Audit Admin Simuler Examen : CORRIGÉ (crash React #31 objets traduction)
+- [x] Audit Admin Éditer Examen : CORRIGÉ (objets traduction dans inputs)
+- [x] Audit Diagnostic IA : formulaire multi-étapes fonctionnel
+- [x] Audit Mentions Légales : contenu juridique complet
+- [x] Audit Page 404 : affichage correct avec bouton retour
+- [x] Correction bug critique : AdminContentManager crash simulation examen (useLanguage + t())
+- [x] Correction bug mineur : Markdown ** dans titres sidebar et headings (strip asterisks)
+- [x] Tests unitaires : 16/16 passent (scoring, courseQuality, auth, email)

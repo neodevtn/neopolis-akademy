@@ -2607,7 +2607,7 @@ function LessonViewer({
               const textLines = text.split('\n').filter((l: string) => l.trim().length > 0);
               if (textLines.length > 0) {
                 // Strip markdown heading prefixes (##, ###, etc.)
-                screenTitle = textLines[0].trim().replace(/^#{1,6}\s+/, '');
+                screenTitle = textLines[0].trim().replace(/^#{1,6}\s+/, '').replace(/\*\*/g, '');
                 // If second line is a short description (< 120 chars), use it
                 if (textLines.length > 1 && textLines[1].trim().length < 120 && textLines[1].trim().length > 20) {
                   screenDescription = textLines[1].trim().replace(/^#{1,6}\s+/, '');
@@ -3014,7 +3014,7 @@ function LessonSidebarContent({
                     const body = block.body || {};
                     const text = typeof body === 'string' ? body : (body[lang] || body.en || '');
                     const firstLine = text.split('\n').find((l: string) => l.trim().length > 0) || '';
-                    screenTitle = firstLine.trim().substring(0, 40);
+                    screenTitle = firstLine.trim().replace(/\*\*/g, '').substring(0, 40);
                   } else if (block.type === 'checkpoint' || block.type === 'bucket_sort') {
                     screenTitle = 'Checkpoint';
                   } else if (block.type === 'flip_cards') {
