@@ -14,27 +14,58 @@ import {
   step6Schema, step7Schema, step8Schema, step9Schema, step10Schema, applicationSchema, getFieldErrors
 } from "@shared/validation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { translateValidationError } from "@/data/validationMessages";
 
 const LOGO_URL = "/manus-storage/logo_neopolis_akademy_wise_ede57803.png";
 
-const africanCountries = [
-  "Algérie", "Angola", "Bénin", "Botswana", "Burkina Faso", "Burundi", "Cameroun",
-  "Cap-Vert", "Centrafrique", "Comores", "Congo", "Côte d'Ivoire", "Djibouti",
-  "Égypte", "Érythrée", "Eswatini", "Éthiopie", "Gabon", "Gambie", "Ghana",
-  "Guinée", "Guinée-Bissau", "Guinée équatoriale", "Kenya", "Lesotho", "Libéria",
-  "Libye", "Madagascar", "Malawi", "Mali", "Maroc", "Maurice", "Mauritanie",
-  "Mozambique", "Namibie", "Niger", "Nigéria", "Ouganda", "RD Congo", "Rwanda",
-  "São Tomé-et-Príncipe", "Sénégal", "Seychelles", "Sierra Leone", "Somalie",
-  "Soudan", "Soudan du Sud", "Tanzanie", "Tchad", "Togo", "Tunisie", "Zambie", "Zimbabwe"
+const africanCountriesData: {fr: string; en: string; ar: string}[] = [
+  {fr: "Algérie", en: "Algeria", ar: "الجزائر"}, {fr: "Angola", en: "Angola", ar: "أنغولا"}, {fr: "Bénin", en: "Benin", ar: "بنين"},
+  {fr: "Botswana", en: "Botswana", ar: "بوتسوانا"}, {fr: "Burkina Faso", en: "Burkina Faso", ar: "بوركينا فاسو"},
+  {fr: "Burundi", en: "Burundi", ar: "بوروندي"}, {fr: "Cameroun", en: "Cameroon", ar: "الكاميرون"},
+  {fr: "Cap-Vert", en: "Cape Verde", ar: "الرأس الأخضر"}, {fr: "Centrafrique", en: "Central African Republic", ar: "أفريقيا الوسطى"},
+  {fr: "Comores", en: "Comoros", ar: "جزر القمر"}, {fr: "Congo", en: "Congo", ar: "الكونغو"},
+  {fr: "Côte d'Ivoire", en: "Ivory Coast", ar: "ساحل العاج"}, {fr: "Djibouti", en: "Djibouti", ar: "جيبوتي"},
+  {fr: "Égypte", en: "Egypt", ar: "مصر"}, {fr: "Érythrée", en: "Eritrea", ar: "إريتريا"},
+  {fr: "Eswatini", en: "Eswatini", ar: "إسواتيني"}, {fr: "Éthiopie", en: "Ethiopia", ar: "إثيوبيا"},
+  {fr: "Gabon", en: "Gabon", ar: "الغابون"}, {fr: "Gambie", en: "Gambia", ar: "غامبيا"},
+  {fr: "Ghana", en: "Ghana", ar: "غانا"}, {fr: "Guinée", en: "Guinea", ar: "غينيا"},
+  {fr: "Guinée-Bissau", en: "Guinea-Bissau", ar: "غينيا بيساو"}, {fr: "Guinée équatoriale", en: "Equatorial Guinea", ar: "غينيا الاستوائية"},
+  {fr: "Kenya", en: "Kenya", ar: "كينيا"}, {fr: "Lesotho", en: "Lesotho", ar: "ليسوتو"},
+  {fr: "Libéria", en: "Liberia", ar: "ليبيريا"}, {fr: "Libye", en: "Libya", ar: "ليبيا"},
+  {fr: "Madagascar", en: "Madagascar", ar: "مدغشقر"}, {fr: "Malawi", en: "Malawi", ar: "ملاوي"},
+  {fr: "Mali", en: "Mali", ar: "مالي"}, {fr: "Maroc", en: "Morocco", ar: "المغرب"},
+  {fr: "Maurice", en: "Mauritius", ar: "موريشيوس"}, {fr: "Mauritanie", en: "Mauritania", ar: "موريتانيا"},
+  {fr: "Mozambique", en: "Mozambique", ar: "موزمبيق"}, {fr: "Namibie", en: "Namibia", ar: "ناميبيا"},
+  {fr: "Niger", en: "Niger", ar: "النيجر"}, {fr: "Nigéria", en: "Nigeria", ar: "نيجيريا"},
+  {fr: "Ouganda", en: "Uganda", ar: "أوغندا"}, {fr: "RD Congo", en: "DR Congo", ar: "الكونغو الديمقراطية"},
+  {fr: "Rwanda", en: "Rwanda", ar: "رواندا"}, {fr: "São Tomé-et-Príncipe", en: "São Tomé and Príncipe", ar: "ساو تومي وبرينسيبي"},
+  {fr: "Sénégal", en: "Senegal", ar: "السنغال"}, {fr: "Seychelles", en: "Seychelles", ar: "سيشل"},
+  {fr: "Sierra Leone", en: "Sierra Leone", ar: "سيراليون"}, {fr: "Somalie", en: "Somalia", ar: "الصومال"},
+  {fr: "Soudan", en: "Sudan", ar: "السودان"}, {fr: "Soudan du Sud", en: "South Sudan", ar: "جنوب السودان"},
+  {fr: "Tanzanie", en: "Tanzania", ar: "تنزانيا"}, {fr: "Tchad", en: "Chad", ar: "تشاد"},
+  {fr: "Togo", en: "Togo", ar: "توغو"}, {fr: "Tunisie", en: "Tunisia", ar: "تونس"},
+  {fr: "Zambie", en: "Zambia", ar: "زامبيا"}, {fr: "Zimbabwe", en: "Zimbabwe", ar: "زيمبابوي"}
 ];
 
-const sectors = [
-  "Développement logiciel", "Service client / Support", "Comptabilité & Finance",
-  "Juridique & Paralégal", "Administration & Secrétariat", "Marketing & Communication",
-  "Traduction & Interprétation", "Banque & Assurance", "Ressources Humaines",
-  "Logistique & Transport", "Santé & Médical", "Éducation & Formation",
-  "Immobilier", "Commerce & Vente", "Télécommunications", "Énergie",
-  "Agriculture & Agroalimentaire", "Autre"
+const sectorsData: {fr: string; en: string; ar: string}[] = [
+  {fr: "Développement logiciel", en: "Software Development", ar: "تطوير البرمجيات"},
+  {fr: "Service client / Support", en: "Customer Service / Support", ar: "خدمة العملاء / الدعم"},
+  {fr: "Comptabilité & Finance", en: "Accounting & Finance", ar: "المحاسبة والمالية"},
+  {fr: "Juridique & Paralégal", en: "Legal & Paralegal", ar: "القانون والشؤون القانونية"},
+  {fr: "Administration & Secrétariat", en: "Administration & Secretarial", ar: "الإدارة والسكرتارية"},
+  {fr: "Marketing & Communication", en: "Marketing & Communication", ar: "التسويق والاتصالات"},
+  {fr: "Traduction & Interprétation", en: "Translation & Interpretation", ar: "الترجمة والترجمة الفورية"},
+  {fr: "Banque & Assurance", en: "Banking & Insurance", ar: "البنوك والتأمين"},
+  {fr: "Ressources Humaines", en: "Human Resources", ar: "الموارد البشرية"},
+  {fr: "Logistique & Transport", en: "Logistics & Transport", ar: "اللوجستيات والنقل"},
+  {fr: "Santé & Médical", en: "Healthcare & Medical", ar: "الصحة والطب"},
+  {fr: "Éducation & Formation", en: "Education & Training", ar: "التعليم والتدريب"},
+  {fr: "Immobilier", en: "Real Estate", ar: "العقارات"},
+  {fr: "Commerce & Vente", en: "Sales & Commerce", ar: "التجارة والمبيعات"},
+  {fr: "Télécommunications", en: "Telecommunications", ar: "الاتصالات"},
+  {fr: "Énergie", en: "Energy", ar: "الطاقة"},
+  {fr: "Agriculture & Agroalimentaire", en: "Agriculture & Agri-food", ar: "الزراعة والصناعات الغذائية"},
+  {fr: "Autre", en: "Other", ar: "أخرى"}
 ];
 
 type FormData = {
@@ -51,7 +82,7 @@ type FormData = {
 
 const initialFormData: FormData = {
   firstName: "", lastName: "", email: "", phone: "",
-  country: "Tunisie", city: "", sector: "", currentRole: "", yearsExperience: "",
+  country: "", city: "", sector: "", currentRole: "", yearsExperience: "",
   programmingLevel: "", aiKnowledge: "", cloudExperience: "", technicalTools: "", certifications: "",
   sectorExpertise: "", clientNetwork: "", businessDevelopment: "",
   distributionNetwork: "", industryContacts: "", existingPartnerships: "", targetMarketKnowledge: "",
@@ -62,11 +93,12 @@ const initialFormData: FormData = {
 };
 
 function FieldError({ error }: { error?: string }) {
+  const { lang } = useLanguage();
   if (!error) return null;
   return (
     <p className="text-xs text-destructive flex items-center gap-1 mt-1">
       <AlertCircle className="w-3 h-3 shrink-0" />
-      {error}
+      {translateValidationError(error, lang)}
     </p>
   );
 }
@@ -536,7 +568,7 @@ export default function Apply() {
             </div>
             <div className="space-y-2">
               <Label>{t({fr: "Email", en: "Email", ar: "البريد الإلكتروني"})} *</Label>
-              <Input type="email" value={formData.email} onChange={e => updateField("email", e.target.value)} placeholder="votre@email.com" className={errors.email ? "border-destructive" : ""} />
+              <Input type="email" value={formData.email} onChange={e => updateField("email", e.target.value)} placeholder={t({fr: "votre@email.com", en: "your@email.com", ar: "بريدك@email.com"})} className={errors.email ? "border-destructive" : ""} />
               <FieldError error={errors.email} />
             </div>
             <div className="space-y-2">
@@ -560,7 +592,7 @@ export default function Apply() {
               <Label>{t({fr: "Pays de résidence", en: "Country of Residence", ar: "دولة الإقامة"})} *</Label>
               <Select value={formData.country} onValueChange={v => updateField("country", v)}>
                 <SelectTrigger className={errors.country ? "border-destructive" : ""}><SelectValue placeholder={t({fr: "Sélectionnez votre pays", en: "Select your country", ar: "اختر بلدك"})} /></SelectTrigger>
-                <SelectContent>{africanCountries.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+                <SelectContent>{africanCountriesData.map(c => <SelectItem key={c.fr} value={c.fr}>{t(c)}</SelectItem>)}</SelectContent>
               </Select>
               <FieldError error={errors.country} />
             </div>
@@ -573,7 +605,7 @@ export default function Apply() {
               <Label>{t({fr: "Secteur d'activité", en: "Industry Sector", ar: "قطاع النشاط"})} *</Label>
               <Select value={formData.sector} onValueChange={v => updateField("sector", v)}>
                 <SelectTrigger className={errors.sector ? "border-destructive" : ""}><SelectValue placeholder={t({fr: "Sélectionnez votre secteur", en: "Select your sector", ar: "اختر قطاعك"})} /></SelectTrigger>
-                <SelectContent>{sectors.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                <SelectContent>{sectorsData.map(s => <SelectItem key={s.fr} value={s.fr}>{t(s)}</SelectItem>)}</SelectContent>
               </Select>
               <FieldError error={errors.sector} />
             </div>
