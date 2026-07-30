@@ -7,6 +7,7 @@ import { registerOAuthRoutes } from "./oauth";
 import { registerDemoAuthRoutes } from "../demoAuth";
 import { registerAuthRoutes } from "../auth";
 import { registerStorageProxy } from "./storageProxy";
+import { registerAssetProxy } from "../assetProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -46,6 +47,7 @@ async function startServer() {
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
+  registerAssetProxy(app);
   registerOAuthRoutes(app);
   registerAuthRoutes(app);
   registerDemoAuthRoutes(app); // Keep legacy demo route for backwards compatibility

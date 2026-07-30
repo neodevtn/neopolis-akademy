@@ -15,7 +15,7 @@ import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 import { AdminNavbar } from "@/components/AdminNavbar";
 
-const LOGO_URL = "/manus-storage/logo_neopolis_akademy_9c9a0823.png";
+const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
 type TabType = "candidatures" | "kanban" | "communications" | "invitations" | "analytics" | "activity";
 

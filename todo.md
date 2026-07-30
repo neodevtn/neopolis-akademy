@@ -933,3 +933,10 @@
 - [x] Ajouter onglets EN/FR dans le dialogue d'édition des blocs de contenu (body)
 - [x] Anglais comme langue par défaut (fallback si pas de traduction FR)
 - [x] Helpers getI18n/setI18n pour normalisation string <-> {en,fr}
+
+## Bug images disparaissent en navigation normale (31 juillet 2026)
+- [x] Fix: créer /api/assets/ proxy custom qui pipe les fichiers directement (bypass platform 307 redirect)
+- [x] Fix: migrer toutes les refs frontend de /manus-storage/ vers /api/assets/
+- [x] Fix: storage.ts retourne /api/assets/ pour les nouveaux uploads
+- [x] Fix: /manus-storage/ redirige 301 vers /api/assets/ pour compatibilité DB existante
+- [x] Cache-Control: max-age=3600, must-revalidate (au lieu de 1 an immutable via CloudFront)

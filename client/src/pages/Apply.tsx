@@ -16,7 +16,7 @@ import {
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translateValidationError } from "@/data/validationMessages";
 
-const LOGO_URL = "/manus-storage/logo_neopolis_akademy_wise_ede57803.png";
+const LOGO_URL = "/api/assets/logo_neopolis_akademy_wise_ede57803.png";
 
 const africanCountriesData: {fr: string; en: string; ar: string}[] = [
   {fr: "Algérie", en: "Algeria", ar: "الجزائر"}, {fr: "Angola", en: "Angola", ar: "أنغولا"}, {fr: "Bénin", en: "Benin", ar: "بنين"},

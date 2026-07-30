@@ -1,75 +1,18 @@
 import type { Express } from "express";
-import { ENV } from "./env";
-import { sdk } from "./sdk";
 
 export function registerStorageProxy(app: Express) {
-  app.get("/manus-storage/*", async (req, res) => {
+  // Redirect old /manus-storage/ URLs to /api/assets/ for backward compatibility
+  // (DB records may still contain /manus-storage/ paths from before the migration)
+  // Note: In production, the platform intercepts /manus-storage/ at the edge and
+  // returns a 307 redirect to a signed CloudFront URL. This local handler only
+  // runs in dev mode. The real fix is using /api/assets/ which bypasses the platform.
+  app.get("/manus-storage/*", (req, res) => {
     const key = (req.params as Record<string, string>)[0];
     if (!key) {
       res.status(400).send("Missing storage key");
       return;
     }
-
-    // F-014: Protect application files (CV, photos, videos) - require admin auth
-    if (key.startsWith("applications/")) {
-      try {
-        const user = await sdk.authenticateRequest(req);
-        if (!user || user.role !== "admin") {
-          res.status(403).json({ error: "Acc\u00e8s r\u00e9serv\u00e9 aux administrateurs" });
-          return;
-        }
-      } catch {
-        res.status(401).json({ error: "Authentification requise pour acc\u00e9der aux fichiers de candidature" });
-        return;
-      }
-    }
-
-    if (!ENV.forgeApiUrl || !ENV.forgeApiKey) {
-      res.status(500).send("Storage proxy not configured");
-      return;
-    }
-
-    try {
-      const forgeUrl = new URL(
-        "v1/storage/presign/get",
-        ENV.forgeApiUrl.replace(/\/+$/, "") + "/",
-      );
-      forgeUrl.searchParams.set("path", key);
-
-      const forgeResp = await fetch(forgeUrl, {
-        headers: { Authorization: `Bearer ${ENV.forgeApiKey}` },
-      });
-
-      if (!forgeResp.ok) {
-        const body = await forgeResp.text().catch(() => "");
-        console.error(`[StorageProxy] forge error: ${forgeResp.status} ${body}`);
-        res.status(502).send("Storage backend error");
-        return;
-      }
-
-      const { url } = (await forgeResp.json()) as { url: string };
-      if (!url) {
-        res.status(502).send("Empty signed URL from backend");
-        return;
-      }
-
-      // Pipe the file directly to avoid 307 redirect issues in browsers
-      const fileResp = await fetch(url);
-      if (!fileResp.ok) {
-        res.status(502).send("Storage file fetch error");
-        return;
-      }
-      const contentType = fileResp.headers.get("content-type");
-      if (contentType) res.set("Content-Type", contentType);
-      const contentLength = fileResp.headers.get("content-length");
-      if (contentLength) res.set("Content-Length", contentLength);
-      res.set("Cache-Control", "public, max-age=86400, immutable");
-      res.set("Access-Control-Allow-Origin", "*");
-      const arrayBuf = await fileResp.arrayBuffer();
-      res.send(Buffer.from(arrayBuf));
-    } catch (err) {
-      console.error("[StorageProxy] failed:", err);
-      res.status(502).send("Storage proxy error");
-    }
+    // Redirect to our custom asset proxy
+    res.redirect(301, `/api/assets/${key}`);
   });
 }

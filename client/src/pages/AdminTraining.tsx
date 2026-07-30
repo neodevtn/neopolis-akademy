@@ -27,7 +27,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import trainingIndex from "@/data/trainingIndex.json";
 
-const LOGO_URL = "/manus-storage/logo_neopolis_akademy_9c9a0823.png";
+const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
 /* ─── Animation ─── */
 const fadeIn = {

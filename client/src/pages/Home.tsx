@@ -77,13 +77,13 @@ function AnimatedStat({ value, suffix = "", prefix = "" }: { value: number; suff
 }
 
 /* ─── Asset URLs ─── */
-const LOGO_URL = "/manus-storage/neopolis_dev_logo_4x_4011a55b.png";
-const LOGO_ICON = "/manus-storage/neopolis_dev_logo_original_60dc435f.png";
-const HERO_IMG = "/manus-storage/hero_tunisian_ai_08a6f956.png";
-const CERT_IMG = "/manus-storage/step2_certification_b2f65035.png";
-const ELEARNING_IMG = "/manus-storage/step1_elearning_d87a7198.png";
-const AFRICA_IMG = "/manus-storage/step3_ambassador_91fc256d.png";
-const PARTNER_IMG = "/manus-storage/wise_partnership_illustration_b3c56284.png";
+const LOGO_URL = "/api/assets/neopolis_dev_logo_4x_4011a55b.png";
+const LOGO_ICON = "/api/assets/neopolis_dev_logo_original_60dc435f.png";
+const HERO_IMG = "/api/assets/hero_tunisian_ai_08a6f956.png";
+const CERT_IMG = "/api/assets/step2_certification_b2f65035.png";
+const ELEARNING_IMG = "/api/assets/step1_elearning_d87a7198.png";
+const AFRICA_IMG = "/api/assets/step3_ambassador_91fc256d.png";
+const PARTNER_IMG = "/api/assets/wise_partnership_illustration_b3c56284.png";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -466,7 +466,7 @@ export default function Home() {
             <motion.div variants={scaleIn}>
               <PartnerCard
                 name="Anthropic"
-                logo="/manus-storage/logo_anthropic_e6ab4160.png"
+                logo="/api/assets/logo_anthropic_e6ab4160.png"
                 description={t({ fr: "Créateur de Claude, l'un des LLM les plus avancés au monde. En tant que Registered Partner du CPN, nous offrons un accès facilité à la certification Claude Certified Architect (CCA) via un voucher gratuit pour nos candidats.", en: "Creator of Claude, one of the most advanced LLMs in the world. As a Registered Partner of the CPN, we offer easy access to the Claude Certified Architect (CCA) certification via a free voucher for our candidates.", ar: "منشئ Claude، أحد أكثر نماذج اللغة الكبيرة تقدماً في العالم. بصفتنا شريكاً مسجلاً في شبكة CPN، نقدم وصولاً سهلاً إلى شهادة Claude Certified Architect (CCA) عبر قسيمة مجانية لمرشحينا." })}
               />
             </motion.div>
@@ -737,16 +737,16 @@ export default function Home() {
           <div className="marquee-track">
             {[...Array(2)].map((_, i) => (
               <div key={i} className="marquee-content">
-                <img src="/manus-storage/logo_anthropic_e6ab4160.png" alt="Anthropic" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/logo_anthropic_e6ab4160.png" alt="Anthropic" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
 
-                <img src="/manus-storage/claude_ba4537f3.png" alt="Claude" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/claude_ba4537f3.png" alt="Claude" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
 
 
-                <img src="/manus-storage/openai_73a9a1b1.png" alt="OpenAI" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/manus-storage/gemini_c13269e9.png" alt="Gemini" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/manus-storage/langchain_9c5e065b.png" alt="LangChain" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/manus-storage/crewai_7df89ab8.png" alt="CrewAI" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/manus-storage/n8n_7ff20c9e.png" alt="n8n" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/openai_73a9a1b1.png" alt="OpenAI" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/gemini_c13269e9.png" alt="Gemini" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/langchain_9c5e065b.png" alt="LangChain" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/crewai_7df89ab8.png" alt="CrewAI" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/n8n_7ff20c9e.png" alt="n8n" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
               </div>
             ))}
           </div>
