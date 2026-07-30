@@ -13,6 +13,7 @@ import {
   step1Schema, step2Schema, step3Schema, step4Schema, step5Schema,
   step6Schema, step7Schema, step8Schema, step9Schema, step10Schema, applicationSchema, getFieldErrors
 } from "@shared/validation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const LOGO_URL = "/manus-storage/logo_neopolis_akademy_wise_ede57803.png";
 
@@ -70,20 +71,24 @@ function FieldError({ error }: { error?: string }) {
   );
 }
 
-const stepTitles = [
-  { icon: User, title: "Informations personnelles" },
-  { icon: Globe, title: "Localisation & Secteur" },
-  { icon: Brain, title: "Compétences techniques" },
-  { icon: Network, title: "Compétences métier" },
-  { icon: Network, title: "Réseau de distribution" },
-  { icon: Lightbulb, title: "Profil entrepreneurial" },
-  { icon: Brain, title: "Scénario Agent IA" },
-  { icon: MessageSquare, title: "Communication & Motivation" },
-  { icon: Link2, title: "Profil en ligne & Documents" },
-  { icon: Video, title: "Vidéo Pitch" },
-];
+function getStepTitles(t: (v: {fr: string; en: string; ar: string}) => string) {
+  return [
+    { icon: User, title: t({fr: "Informations personnelles", en: "Personal Information", ar: "المعلومات الشخصية"}) },
+    { icon: Globe, title: t({fr: "Localisation & Secteur", en: "Location & Sector", ar: "الموقع والقطاع"}) },
+    { icon: Brain, title: t({fr: "Compétences techniques", en: "Technical Skills", ar: "المهارات التقنية"}) },
+    { icon: Network, title: t({fr: "Compétences métier", en: "Business Skills", ar: "المهارات المهنية"}) },
+    { icon: Network, title: t({fr: "Réseau de distribution", en: "Distribution Network", ar: "شبكة التوزيع"}) },
+    { icon: Lightbulb, title: t({fr: "Profil entrepreneurial", en: "Entrepreneurial Profile", ar: "الملف الريادي"}) },
+    { icon: Brain, title: t({fr: "Scénario Agent IA", en: "AI Agent Scenario", ar: "سيناريو وكيل الذكاء الاصطناعي"}) },
+    { icon: MessageSquare, title: t({fr: "Communication & Motivation", en: "Communication & Motivation", ar: "التواصل والدافع"}) },
+    { icon: Link2, title: t({fr: "Profil en ligne & Documents", en: "Online Profile & Documents", ar: "الملف الشخصي والوثائق"}) },
+    { icon: Video, title: t({fr: "Vidéo Pitch", en: "Video Pitch", ar: "فيديو العرض"}) },
+  ];
+}
 
 export default function Apply() {
+  const { t } = useLanguage();
+  const stepTitles = getStepTitles(t);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -114,11 +119,11 @@ export default function Apply() {
   const MAX_VIDEO_SECONDS = 90;
 
   const pitchPrompts = [
-    { time: 0, text: "Présentez-vous (nom, parcours)" },
-    { time: 20, text: "Parlez de votre secteur d'expertise" },
-    { time: 40, text: "Décrivez votre cas d'usage agent IA" },
-    { time: 60, text: "Expliquez pourquoi vous êtes le bon candidat" },
-    { time: 75, text: "Concluez avec votre vision" },
+    { time: 0, text: t({fr: "Présentez-vous (nom, parcours)", en: "Introduce yourself (name, background)", ar: "قدّم نفسك (الاسم، المسار)"}) },
+    { time: 20, text: t({fr: "Parlez de votre secteur d'expertise", en: "Talk about your area of expertise", ar: "تحدث عن مجال خبرتك"}) },
+    { time: 40, text: t({fr: "Décrivez votre cas d'usage agent IA", en: "Describe your AI agent use case", ar: "صف حالة استخدام وكيل الذكاء الاصطناعي"}) },
+    { time: 60, text: t({fr: "Expliquez pourquoi vous êtes le bon candidat", en: "Explain why you are the right candidate", ar: "اشرح لماذا أنت المرشح المناسب"}) },
+    { time: 75, text: t({fr: "Concluez avec votre vision", en: "Conclude with your vision", ar: "اختم برؤيتك"}) },
   ];
 
   const getCurrentPrompt = () => {
@@ -203,7 +208,7 @@ export default function Apply() {
         });
       }, 1000);
     } catch (err: any) {
-      setCameraError("Impossible d'accéder à la caméra/micro. Vérifiez les permissions de votre navigateur.");
+      setCameraError(t({fr: "Impossible d'accéder à la caméra/micro. Vérifiez les permissions de votre navigateur.", en: "Unable to access camera/microphone. Check your browser permissions.", ar: "تعذر الوصول إلى الكاميرا/الميكروفون. تحقق من أذونات المتصفح."}));
     }
   };
 
@@ -240,12 +245,12 @@ export default function Apply() {
             }
           }
           setErrors(fieldErrs);
-          setServerError("Certains champs contiennent des erreurs. Veuillez vérifier et corriger.");
+          setServerError(t({fr: "Certains champs contiennent des erreurs. Veuillez vérifier et corriger.", en: "Some fields contain errors. Please check and correct.", ar: "بعض الحقول تحتوي على أخطاء. يرجى التحقق والتصحيح."}));
         } else {
-          setServerError("Une erreur est survenue. Veuillez réessayer.");
+          setServerError(t({fr: "Une erreur est survenue. Veuillez réessayer.", en: "An error occurred. Please try again.", ar: "حدث خطأ. يرجى المحاولة مرة أخرى."}));
         }
       } catch {
-        setServerError("Une erreur est survenue. Veuillez réessayer.");
+        setServerError(t({fr: "Une erreur est survenue. Veuillez réessayer.", en: "An error occurred. Please try again.", ar: "حدث خطأ. يرجى المحاولة مرة أخرى."}));
       }
     },
   });
@@ -434,15 +439,15 @@ export default function Apply() {
           <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
             <CheckCircle className="w-10 h-10" style={{ color: "var(--wise-positive)" }} />
           </div>
-          <h1 className="wise-display-md mb-4">Candidature soumise !</h1>
+          <h1 className="wise-display-md mb-4">{t({fr: "Candidature soumise !", en: "Application Submitted!", ar: "تم تقديم الطلب!"})}</h1>
           <p className="wise-body-md mb-8">{result.message}</p>
           <div className="wise-card-green p-8 mb-8">
-            <div className="text-3xl font-black mb-2" style={{ color: "var(--wise-positive-deep)" }}>Merci !</div>
-            <p className="text-sm mb-4" style={{ color: "var(--wise-mute)" }}>Votre candidature a bien été enregistrée</p>
-            <p className="text-base" style={{ color: "var(--wise-body)" }}>Notre équipe analysera votre profil et vous recevrez un email de confirmation avec les prochaines étapes.</p>
+            <div className="text-3xl font-black mb-2" style={{ color: "var(--wise-positive-deep)" }}>{t({fr: "Merci !", en: "Thank you!", ar: "شكراً!"})}</div>
+            <p className="text-sm mb-4" style={{ color: "var(--wise-mute)" }}>{t({fr: "Votre candidature a bien été enregistrée", en: "Your application has been successfully registered", ar: "تم تسجيل طلبك بنجاح"})}</p>
+            <p className="text-base" style={{ color: "var(--wise-body)" }}>{t({fr: "Notre équipe analysera votre profil et vous recevrez un email de confirmation avec les prochaines étapes.", en: "Our team will analyze your profile and you will receive a confirmation email with next steps.", ar: "سيقوم فريقنا بتحليل ملفك الشخصي وستتلقى بريداً إلكترونياً للتأكيد مع الخطوات التالية."})}</p>
           </div>
-          <p className="wise-body-md mb-6">Si votre profil est retenu, vous serez contacté sous 48h.</p>
-          <Link href="/"><button className="wise-btn-secondary">Retour à l'accueil</button></Link>
+          <p className="wise-body-md mb-6">{t({fr: "Si votre profil est retenu, vous serez contacté sous 48h.", en: "If your profile is selected, you will be contacted within 48 hours.", ar: "إذا تم اختيار ملفك، سيتم الاتصال بك خلال 48 ساعة."})}</p>
+          <Link href="/"><button className="wise-btn-secondary">{t({fr: "Retour à l'accueil", en: "Back to Home", ar: "العودة إلى الرئيسية"})}</button></Link>
         </div>
       </div>
     );
@@ -453,7 +458,7 @@ export default function Apply() {
       <nav className="sticky top-0 z-50 backdrop-blur-md" style={{ backgroundColor: "rgba(255,255,255,0.85)", borderBottom: "1px solid var(--wise-canvas-soft)" }}>
         <div className="container flex items-center justify-between h-16">
           <Link href="/"><div className="flex items-center gap-2 cursor-pointer"><img src={LOGO_URL} alt="Neopolis Akademy" className="h-8 object-contain" /></div></Link>
-          <Link href="/"><button className="wise-btn-tertiary text-sm px-4 py-2 flex items-center gap-2"><ArrowLeft className="w-4 h-4" /> Retour</button></Link>
+          <Link href="/"><button className="wise-btn-tertiary text-sm px-4 py-2 flex items-center gap-2"><ArrowLeft className="w-4 h-4" /> {t({fr: "Retour", en: "Back", ar: "رجوع"})}</button></Link>
         </div>
       </nav>
 
@@ -468,7 +473,7 @@ export default function Apply() {
             {stepTitles[step - 1] && (() => { const Icon = stepTitles[step - 1].icon; return <Icon className="w-4 h-4 md:w-5 md:h-5" style={{ color: "var(--wise-positive)" }} />; })()}
             <h1 className="text-xl md:text-2xl font-bold" style={{ color: "var(--wise-ink)" }}>{stepTitles[step - 1]?.title}</h1>
           </div>
-          <p className="wise-body-sm">Étape {step} sur {totalSteps}</p>
+          <p className="wise-body-sm">{t({fr: `Étape ${step} sur ${totalSteps}`, en: `Step ${step} of ${totalSteps}`, ar: `الخطوة ${step} من ${totalSteps}`})}</p>
           <div className="mt-4 h-2 rounded-full overflow-hidden" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
             <motion.div
               className="h-full rounded-full"
@@ -519,23 +524,23 @@ export default function Apply() {
             className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Prénom *</Label>
-                <Input value={formData.firstName} onChange={e => updateField("firstName", e.target.value)} placeholder="Votre prénom" className={errors.firstName ? "border-destructive" : ""} />
+                <Label>{t({fr: "Prénom", en: "First Name", ar: "الاسم الأول"})} *</Label>
+                <Input value={formData.firstName} onChange={e => updateField("firstName", e.target.value)} placeholder={t({fr: "Votre prénom", en: "Your first name", ar: "اسمك الأول"})} className={errors.firstName ? "border-destructive" : ""} />
                 <FieldError error={errors.firstName} />
               </div>
               <div className="space-y-2">
-                <Label>Nom *</Label>
-                <Input value={formData.lastName} onChange={e => updateField("lastName", e.target.value)} placeholder="Votre nom" className={errors.lastName ? "border-destructive" : ""} />
+                <Label>{t({fr: "Nom", en: "Last Name", ar: "اسم العائلة"})} *</Label>
+                <Input value={formData.lastName} onChange={e => updateField("lastName", e.target.value)} placeholder={t({fr: "Votre nom", en: "Your last name", ar: "اسم عائلتك"})} className={errors.lastName ? "border-destructive" : ""} />
                 <FieldError error={errors.lastName} />
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Email *</Label>
+              <Label>{t({fr: "Email", en: "Email", ar: "البريد الإلكتروني"})} *</Label>
               <Input type="email" value={formData.email} onChange={e => updateField("email", e.target.value)} placeholder="votre@email.com" className={errors.email ? "border-destructive" : ""} />
               <FieldError error={errors.email} />
             </div>
             <div className="space-y-2">
-              <Label>Téléphone *</Label>
+              <Label>{t({fr: "Téléphone", en: "Phone", ar: "الهاتف"})} *</Label>
               <Input value={formData.phone} onChange={e => updateField("phone", e.target.value)} placeholder="+216 XX XXX XXX" className={errors.phone ? "border-destructive" : ""} />
               <FieldError error={errors.phone} />
             </div>
@@ -552,34 +557,34 @@ export default function Apply() {
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
             className="space-y-6">
             <div className="space-y-2">
-              <Label>Pays de résidence *</Label>
+              <Label>{t({fr: "Pays de résidence", en: "Country of Residence", ar: "دولة الإقامة"})} *</Label>
               <Select value={formData.country} onValueChange={v => updateField("country", v)}>
-                <SelectTrigger className={errors.country ? "border-destructive" : ""}><SelectValue placeholder="Sélectionnez votre pays" /></SelectTrigger>
+                <SelectTrigger className={errors.country ? "border-destructive" : ""}><SelectValue placeholder={t({fr: "Sélectionnez votre pays", en: "Select your country", ar: "اختر بلدك"})} /></SelectTrigger>
                 <SelectContent>{africanCountries.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
               </Select>
               <FieldError error={errors.country} />
             </div>
             <div className="space-y-2">
-              <Label>Ville *</Label>
-              <Input value={formData.city} onChange={e => updateField("city", e.target.value)} placeholder="Votre ville" className={errors.city ? "border-destructive" : ""} />
+              <Label>{t({fr: "Ville", en: "City", ar: "المدينة"})} *</Label>
+              <Input value={formData.city} onChange={e => updateField("city", e.target.value)} placeholder={t({fr: "Votre ville", en: "Your city", ar: "مدينتك"})} className={errors.city ? "border-destructive" : ""} />
               <FieldError error={errors.city} />
             </div>
             <div className="space-y-2">
-              <Label>Secteur d'activité *</Label>
+              <Label>{t({fr: "Secteur d'activité", en: "Industry Sector", ar: "قطاع النشاط"})} *</Label>
               <Select value={formData.sector} onValueChange={v => updateField("sector", v)}>
-                <SelectTrigger className={errors.sector ? "border-destructive" : ""}><SelectValue placeholder="Sélectionnez votre secteur" /></SelectTrigger>
+                <SelectTrigger className={errors.sector ? "border-destructive" : ""}><SelectValue placeholder={t({fr: "Sélectionnez votre secteur", en: "Select your sector", ar: "اختر قطاعك"})} /></SelectTrigger>
                 <SelectContent>{sectors.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
               </Select>
               <FieldError error={errors.sector} />
             </div>
             <div className="space-y-2">
-              <Label>Poste actuel *</Label>
-              <Input value={formData.currentRole} onChange={e => updateField("currentRole", e.target.value)} placeholder="Ex: Chef de projet, Développeur senior..." className={errors.currentRole ? "border-destructive" : ""} />
+              <Label>{t({fr: "Poste actuel", en: "Current Role", ar: "المنصب الحالي"})} *</Label>
+              <Input value={formData.currentRole} onChange={e => updateField("currentRole", e.target.value)} placeholder={t({fr: "Ex: Chef de projet, Développeur senior...", en: "E.g.: Project Manager, Senior Developer...", ar: "مثال: مدير مشروع، مطور أول..."})} className={errors.currentRole ? "border-destructive" : ""} />
               <FieldError error={errors.currentRole} />
             </div>
             <div className="space-y-2">
-              <Label>Années d'expérience *</Label>
-              <Input type="number" min="0" max="50" value={formData.yearsExperience} onChange={e => updateField("yearsExperience", e.target.value)} placeholder="Ex: 5" className={errors.yearsExperience ? "border-destructive" : ""} />
+              <Label>{t({fr: "Années d'expérience", en: "Years of Experience", ar: "سنوات الخبرة"})} *</Label>
+              <Input type="number" min="0" max="50" value={formData.yearsExperience} onChange={e => updateField("yearsExperience", e.target.value)} placeholder={t({fr: "Ex: 5", en: "E.g.: 5", ar: "مثال: 5"})} className={errors.yearsExperience ? "border-destructive" : ""} />
               <FieldError error={errors.yearsExperience} />
             </div>
           </motion.div>
@@ -594,19 +599,19 @@ export default function Apply() {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
             className="space-y-6">
-            <SelectField label="Niveau en programmation *" value={formData.programmingLevel} onChange={v => updateField("programmingLevel", v)} error={errors.programmingLevel}
-              options={[["none","Aucun"],["beginner","Débutant"],["intermediate","Intermédiaire"],["advanced","Avancé"],["expert","Expert"]]} />
-            <SelectField label="Connaissances en IA *" value={formData.aiKnowledge} onChange={v => updateField("aiKnowledge", v)} error={errors.aiKnowledge}
-              options={[["none","Aucune"],["basic","Basique"],["intermediate","Intermédiaire"],["advanced","Avancé"],["expert","Expert"]]} />
-            <SelectField label="Expérience Cloud *" value={formData.cloudExperience} onChange={v => updateField("cloudExperience", v)} error={errors.cloudExperience}
-              options={[["none","Aucune"],["basic","Basique"],["intermediate","Intermédiaire"],["advanced","Avancé"],["expert","Expert"]]} />
+            <SelectField label={t({fr: "Niveau en programmation", en: "Programming Level", ar: "مستوى البرمجة"}) + " *"} value={formData.programmingLevel} onChange={v => updateField("programmingLevel", v)} error={errors.programmingLevel}
+              options={[["none",t({fr:"Aucun",en:"None",ar:"لا شيء"})],["beginner",t({fr:"Débutant",en:"Beginner",ar:"مبتدئ"})],["intermediate",t({fr:"Intermédiaire",en:"Intermediate",ar:"متوسط"})],["advanced",t({fr:"Avancé",en:"Advanced",ar:"متقدم"})],["expert",t({fr:"Expert",en:"Expert",ar:"خبير"})]]} />
+            <SelectField label={t({fr: "Connaissances en IA", en: "AI Knowledge", ar: "معرفة الذكاء الاصطناعي"}) + " *"} value={formData.aiKnowledge} onChange={v => updateField("aiKnowledge", v)} error={errors.aiKnowledge}
+              options={[["none",t({fr:"Aucune",en:"None",ar:"لا شيء"})],["basic",t({fr:"Basique",en:"Basic",ar:"أساسي"})],["intermediate",t({fr:"Intermédiaire",en:"Intermediate",ar:"متوسط"})],["advanced",t({fr:"Avancé",en:"Advanced",ar:"متقدم"})],["expert",t({fr:"Expert",en:"Expert",ar:"خبير"})]]} />
+            <SelectField label={t({fr: "Expérience Cloud", en: "Cloud Experience", ar: "خبرة السحابة"}) + " *"} value={formData.cloudExperience} onChange={v => updateField("cloudExperience", v)} error={errors.cloudExperience}
+              options={[["none",t({fr:"Aucune",en:"None",ar:"لا شيء"})],["basic",t({fr:"Basique",en:"Basic",ar:"أساسي"})],["intermediate",t({fr:"Intermédiaire",en:"Intermediate",ar:"متوسط"})],["advanced",t({fr:"Avancé",en:"Advanced",ar:"متقدم"})],["expert",t({fr:"Expert",en:"Expert",ar:"خبير"})]]} />
             <div className="space-y-2">
-              <Label>Outils techniques maîtrisés</Label>
-              <Textarea value={formData.technicalTools} onChange={e => updateField("technicalTools", e.target.value)} placeholder="Ex: Python, JavaScript, AWS, Docker, LangChain..." rows={3} />
+              <Label>{t({fr: "Outils techniques maîtrisés", en: "Technical Tools Mastered", ar: "الأدوات التقنية المتقنة"})}</Label>
+              <Textarea value={formData.technicalTools} onChange={e => updateField("technicalTools", e.target.value)} placeholder={t({fr: "Ex: Python, JavaScript, AWS, Docker, LangChain...", en: "E.g.: Python, JavaScript, AWS, Docker, LangChain...", ar: "مثال: Python, JavaScript, AWS, Docker, LangChain..."})} rows={3} />
             </div>
             <div className="space-y-2">
-              <Label>Certifications existantes</Label>
-              <Textarea value={formData.certifications} onChange={e => updateField("certifications", e.target.value)} placeholder="Ex: AWS Certified, Google Cloud, PMP..." rows={3} />
+              <Label>{t({fr: "Certifications existantes", en: "Existing Certifications", ar: "الشهادات الحالية"})}</Label>
+              <Textarea value={formData.certifications} onChange={e => updateField("certifications", e.target.value)} placeholder={t({fr: "Ex: AWS Certified, Google Cloud, PMP...", en: "E.g.: AWS Certified, Google Cloud, PMP...", ar: "مثال: AWS Certified, Google Cloud, PMP..."})} rows={3} />
             </div>
           </motion.div>
         )}
@@ -620,12 +625,12 @@ export default function Apply() {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
             className="space-y-6">
-            <SelectField label="Expertise sectorielle *" value={formData.sectorExpertise} onChange={v => updateField("sectorExpertise", v)} error={errors.sectorExpertise}
-              options={[["junior","Junior (< 2 ans)"],["intermediate","Intermédiaire (2-5 ans)"],["senior","Senior (5-10 ans)"],["expert","Expert (10+ ans)"]]} />
-            <SelectField label="Réseau client existant *" value={formData.clientNetwork} onChange={v => updateField("clientNetwork", v)} error={errors.clientNetwork}
-              options={[["none","Aucun"],["small","Petit (< 10 contacts)"],["medium","Moyen (10-50 contacts)"],["large","Large (50+ contacts)"]]} />
-            <SelectField label="Expérience en développement commercial *" value={formData.businessDevelopment} onChange={v => updateField("businessDevelopment", v)} error={errors.businessDevelopment}
-              options={[["none","Aucune"],["basic","Basique"],["intermediate","Intermédiaire"],["advanced","Avancé"]]} />
+            <SelectField label={t({fr: "Expertise sectorielle", en: "Sector Expertise", ar: "الخبرة القطاعية"}) + " *"} value={formData.sectorExpertise} onChange={v => updateField("sectorExpertise", v)} error={errors.sectorExpertise}
+              options={[["junior",t({fr:"Junior (< 2 ans)",en:"Junior (< 2 years)",ar:"مبتدئ (أقل من سنتين)"})],["intermediate",t({fr:"Intermédiaire (2-5 ans)",en:"Intermediate (2-5 years)",ar:"متوسط (2-5 سنوات)"})],["senior",t({fr:"Senior (5-10 ans)",en:"Senior (5-10 years)",ar:"متقدم (5-10 سنوات)"})],["expert",t({fr:"Expert (10+ ans)",en:"Expert (10+ years)",ar:"خبير (10+ سنوات)"})]]} />
+            <SelectField label={t({fr: "Réseau client existant", en: "Existing Client Network", ar: "شبكة العملاء الحالية"}) + " *"} value={formData.clientNetwork} onChange={v => updateField("clientNetwork", v)} error={errors.clientNetwork}
+              options={[["none",t({fr:"Aucun",en:"None",ar:"لا شيء"})],["small",t({fr:"Petit (< 10 contacts)",en:"Small (< 10 contacts)",ar:"صغير (أقل من 10 جهات اتصال)"})],["medium",t({fr:"Moyen (10-50 contacts)",en:"Medium (10-50 contacts)",ar:"متوسط (10-50 جهة اتصال)"})],["large",t({fr:"Large (50+ contacts)",en:"Large (50+ contacts)",ar:"كبير (50+ جهة اتصال)"})]]} />
+            <SelectField label={t({fr: "Expérience en développement commercial", en: "Business Development Experience", ar: "خبرة التطوير التجاري"}) + " *"} value={formData.businessDevelopment} onChange={v => updateField("businessDevelopment", v)} error={errors.businessDevelopment}
+              options={[["none",t({fr:"Aucune",en:"None",ar:"لا شيء"})],["basic",t({fr:"Basique",en:"Basic",ar:"أساسي"})],["intermediate",t({fr:"Intermédiaire",en:"Intermediate",ar:"متوسط"})],["advanced",t({fr:"Avancé",en:"Advanced",ar:"متقدم"})]]} />
           </motion.div>
         )}
 
@@ -639,24 +644,24 @@ export default function Apply() {
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
             className="space-y-6">
             <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-200 mb-4">
-              <p className="text-sm text-emerald-800 font-medium">Cette section évalue votre capacité à distribuer des solutions IA auprès de PME/TPE dans votre secteur.</p>
+              <p className="text-sm text-emerald-800 font-medium">{t({fr: "Cette section évalue votre capacité à distribuer des solutions IA auprès de PME/TPE dans votre secteur.", en: "This section evaluates your ability to distribute AI solutions to SMEs in your sector.", ar: "يقيّم هذا القسم قدرتك على توزيع حلول الذكاء الاصطناعي على الشركات الصغيرة والمتوسطة في قطاعك."})}</p>
             </div>
             <div className="space-y-2">
-              <Label>Décrivez votre réseau de distribution potentiel</Label>
+              <Label>{t({fr: "Décrivez votre réseau de distribution potentiel", en: "Describe your potential distribution network", ar: "صف شبكة التوزيع المحتملة"})}</Label>
               <Textarea value={formData.distributionNetwork} onChange={e => updateField("distributionNetwork", e.target.value)}
-                placeholder="Décrivez vos contacts B2B, partenaires potentiels, canaux de distribution que vous pourriez activer pour vendre des solutions IA (associations professionnelles, chambres de commerce, réseaux d'entrepreneurs, anciens clients, etc.)" rows={5} className={errors.distributionNetwork ? "border-destructive" : ""} />
+                placeholder={t({fr: "Décrivez vos contacts B2B, partenaires potentiels, canaux de distribution...", en: "Describe your B2B contacts, potential partners, distribution channels...", ar: "صف جهات اتصالك B2B، الشركاء المحتملين، قنوات التوزيع..."})} rows={5} className={errors.distributionNetwork ? "border-destructive" : ""} />
               <FieldError error={errors.distributionNetwork} />
             </div>
-            <SelectField label="Niveau de contacts dans l'industrie *" value={formData.industryContacts} onChange={v => updateField("industryContacts", v)} error={errors.industryContacts}
-              options={[["none","Aucun contact"],["few","Quelques contacts (< 5)"],["moderate","Contacts modérés (5-20)"],["extensive","Réseau étendu (20-100)"],["very_extensive","Très étendu (100+)"]]} />
+            <SelectField label={t({fr: "Niveau de contacts dans l'industrie", en: "Industry Contact Level", ar: "مستوى الاتصالات في الصناعة"}) + " *"} value={formData.industryContacts} onChange={v => updateField("industryContacts", v)} error={errors.industryContacts}
+              options={[["none",t({fr:"Aucun contact",en:"No contacts",ar:"لا جهات اتصال"})],["few",t({fr:"Quelques contacts (< 5)",en:"Few contacts (< 5)",ar:"بعض الجهات (أقل من 5)"})],["moderate",t({fr:"Contacts modérés (5-20)",en:"Moderate contacts (5-20)",ar:"جهات متوسطة (5-20)"})],["extensive",t({fr:"Réseau étendu (20-100)",en:"Extensive network (20-100)",ar:"شبكة واسعة (20-100)"})],["very_extensive",t({fr:"Très étendu (100+)",en:"Very extensive (100+)",ar:"شبكة كبيرة جداً (100+)"})]]} />
             <div className="space-y-2">
-              <Label>Partenariats existants</Label>
+              <Label>{t({fr: "Partenariats existants", en: "Existing Partnerships", ar: "الشراكات الحالية"})}</Label>
               <Textarea value={formData.existingPartnerships} onChange={e => updateField("existingPartnerships", e.target.value)}
-                placeholder="Listez vos partenariats professionnels actuels (entreprises, distributeurs, revendeurs, intégrateurs...)" rows={4} className={errors.existingPartnerships ? "border-destructive" : ""} />
+                placeholder={t({fr: "Listez vos partenariats professionnels actuels...", en: "List your current professional partnerships...", ar: "اذكر شراكاتك المهنية الحالية..."})} rows={4} className={errors.existingPartnerships ? "border-destructive" : ""} />
               <FieldError error={errors.existingPartnerships} />
             </div>
-            <SelectField label="Connaissance du marché cible *" value={formData.targetMarketKnowledge} onChange={v => updateField("targetMarketKnowledge", v)} error={errors.targetMarketKnowledge}
-              options={[["none","Aucune"],["basic","Basique"],["good","Bonne"],["excellent","Excellente"],["expert","Expert du marché"]]} />
+            <SelectField label={t({fr: "Connaissance du marché cible", en: "Target Market Knowledge", ar: "معرفة السوق المستهدف"}) + " *"} value={formData.targetMarketKnowledge} onChange={v => updateField("targetMarketKnowledge", v)} error={errors.targetMarketKnowledge}
+              options={[["none",t({fr:"Aucune",en:"None",ar:"لا شيء"})],["basic",t({fr:"Basique",en:"Basic",ar:"أساسي"})],["good",t({fr:"Bonne",en:"Good",ar:"جيدة"})],["excellent",t({fr:"Excellente",en:"Excellent",ar:"ممتازة"})],["expert",t({fr:"Expert du marché",en:"Market Expert",ar:"خبير السوق"})]]} />
           </motion.div>
         )}
 
@@ -670,20 +675,20 @@ export default function Apply() {
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
             className="space-y-6">
             <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-200 mb-4">
-              <p className="text-sm text-emerald-800 font-medium">Cette section évalue votre profil psychologique d'entrepreneur. Soyez honnête, il n'y a pas de mauvaise réponse.</p>
+              <p className="text-sm text-emerald-800 font-medium">{t({fr: "Cette section évalue votre profil psychologique d'entrepreneur. Soyez honnête, il n'y a pas de mauvaise réponse.", en: "This section evaluates your entrepreneurial psychological profile. Be honest, there are no wrong answers.", ar: "يقيّم هذا القسم ملفك النفسي الريادي. كن صادقاً، لا توجد إجابات خاطئة."})}</p>
             </div>
-            <SelectField label="Tolérance au risque *" value={formData.riskTolerance} onChange={v => updateField("riskTolerance", v)} error={errors.riskTolerance}
-              options={[["very_low","Très faible - J'évite tout risque"],["low","Faible - Je préfère la sécurité"],["moderate","Modérée - Risques calculés"],["high","Élevée - J'accepte les risques importants"],["very_high","Très élevée - Je recherche le risque"]]} />
-            <SelectField label="Niveau d'autonomie *" value={formData.autonomyLevel} onChange={v => updateField("autonomyLevel", v)} error={errors.autonomyLevel}
-              options={[["needs_guidance","Besoin d'accompagnement constant"],["somewhat_autonomous","Relativement autonome"],["autonomous","Autonome"],["very_autonomous","Très autonome"],["fully_independent","Totalement indépendant"]]} />
-            <SelectField label="Résilience face aux échecs *" value={formData.resilienceLevel} onChange={v => updateField("resilienceLevel", v)} error={errors.resilienceLevel}
-              options={[["low","Faible - Les échecs me découragent"],["moderate","Modérée - Je me relève après un temps"],["high","Élevée - Je rebondis rapidement"],["very_high","Très élevée - Les échecs me motivent"]]} />
-            <SelectField label="Style de leadership *" value={formData.leadershipStyle} onChange={v => updateField("leadershipStyle", v)} error={errors.leadershipStyle}
-              options={[["follower","Suiveur - Je préfère exécuter"],["collaborative","Collaboratif - Je travaille en équipe"],["situational","Situationnel - Je m'adapte"],["visionary","Visionnaire - J'inspire les autres"],["transformational","Transformationnel - Je change les choses"]]} />
+            <SelectField label={t({fr: "Tolérance au risque", en: "Risk Tolerance", ar: "تحمل المخاطر"}) + " *"} value={formData.riskTolerance} onChange={v => updateField("riskTolerance", v)} error={errors.riskTolerance}
+              options={[["very_low",t({fr:"Très faible - J'évite tout risque",en:"Very low - I avoid all risk",ar:"منخفض جداً - أتجنب كل مخاطرة"})],["low",t({fr:"Faible - Je préfère la sécurité",en:"Low - I prefer safety",ar:"منخفض - أفضل الأمان"})],["moderate",t({fr:"Modérée - Risques calculés",en:"Moderate - Calculated risks",ar:"معتدل - مخاطر محسوبة"})],["high",t({fr:"Élevée - J'accepte les risques importants",en:"High - I accept significant risks",ar:"عالي - أقبل المخاطر الكبيرة"})],["very_high",t({fr:"Très élevée - Je recherche le risque",en:"Very high - I seek risk",ar:"عالي جداً - أبحث عن المخاطرة"})]]} />
+            <SelectField label={t({fr: "Niveau d'autonomie", en: "Autonomy Level", ar: "مستوى الاستقلالية"}) + " *"} value={formData.autonomyLevel} onChange={v => updateField("autonomyLevel", v)} error={errors.autonomyLevel}
+              options={[["needs_guidance",t({fr:"Besoin d'accompagnement constant",en:"Needs constant guidance",ar:"يحتاج إرشاد مستمر"})],["somewhat_autonomous",t({fr:"Relativement autonome",en:"Somewhat autonomous",ar:"مستقل نسبياً"})],["autonomous",t({fr:"Autonome",en:"Autonomous",ar:"مستقل"})],["very_autonomous",t({fr:"Très autonome",en:"Very autonomous",ar:"مستقل جداً"})],["fully_independent",t({fr:"Totalement indépendant",en:"Fully independent",ar:"مستقل تماماً"})]]} />
+            <SelectField label={t({fr: "Résilience face aux échecs", en: "Resilience to Failure", ar: "المرونة أمام الفشل"}) + " *"} value={formData.resilienceLevel} onChange={v => updateField("resilienceLevel", v)} error={errors.resilienceLevel}
+              options={[["low",t({fr:"Faible - Les échecs me découragent",en:"Low - Failures discourage me",ar:"منخفض - الفشل يثبطني"})],["moderate",t({fr:"Modérée - Je me relève après un temps",en:"Moderate - I recover after some time",ar:"معتدل - أتعافى بعد فترة"})],["high",t({fr:"Élevée - Je rebondis rapidement",en:"High - I bounce back quickly",ar:"عالي - أنهض بسرعة"})],["very_high",t({fr:"Très élevée - Les échecs me motivent",en:"Very high - Failures motivate me",ar:"عالي جداً - الفشل يحفزني"})]]} />
+            <SelectField label={t({fr: "Style de leadership", en: "Leadership Style", ar: "أسلوب القيادة"}) + " *"} value={formData.leadershipStyle} onChange={v => updateField("leadershipStyle", v)} error={errors.leadershipStyle}
+              options={[["follower",t({fr:"Suiveur - Je préfère exécuter",en:"Follower - I prefer to execute",ar:"تابع - أفضل التنفيذ"})],["collaborative",t({fr:"Collaboratif - Je travaille en équipe",en:"Collaborative - I work in teams",ar:"تعاوني - أعمل في فريق"})],["situational",t({fr:"Situationnel - Je m'adapte",en:"Situational - I adapt",ar:"ظرفي - أتكيف"})],["visionary",t({fr:"Visionnaire - J'inspire les autres",en:"Visionary - I inspire others",ar:"رؤيوي - ألهم الآخرين"})],["transformational",t({fr:"Transformationnel - Je change les choses",en:"Transformational - I change things",ar:"تحويلي - أغير الأشياء"})]]} />
             <div className="space-y-2">
-              <Label>Expériences entrepreneuriales passées</Label>
+              <Label>{t({fr: "Expériences entrepreneuriales passées", en: "Past Entrepreneurial Experiences", ar: "التجارب الريادية السابقة"})}</Label>
               <Textarea value={formData.entrepreneurialExperience} onChange={e => updateField("entrepreneurialExperience", e.target.value)}
-                placeholder="Décrivez vos expériences entrepreneuriales : création d'entreprise, projets personnels, freelance, side projects, initiatives dans votre entreprise actuelle..." rows={5} className={errors.entrepreneurialExperience ? "border-destructive" : ""} />
+                placeholder={t({fr: "Décrivez vos expériences entrepreneuriales : création d'entreprise, projets personnels, freelance...", en: "Describe your entrepreneurial experiences: business creation, personal projects, freelance...", ar: "صف تجاربك الريادية: إنشاء شركة، مشاريع شخصية، عمل حر..."})} rows={5} className={errors.entrepreneurialExperience ? "border-destructive" : ""} />
               <FieldError error={errors.entrepreneurialExperience} />
             </div>
           </motion.div>
@@ -699,27 +704,27 @@ export default function Apply() {
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
             className="space-y-6">
             <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 mb-4">
-              <p className="text-sm text-primary font-medium">Décrivez un scénario concret où un agent IA pourrait remplacer un humain dans un processus métier que vous maîtrisez. C'est le cœur de votre candidature.</p>
+              <p className="text-sm text-primary font-medium">{t({fr: "Décrivez un scénario concret où un agent IA pourrait remplacer un humain dans un processus métier que vous maîtrisez. C'est le cœur de votre candidature.", en: "Describe a concrete scenario where an AI agent could replace a human in a business process you master. This is the core of your application.", ar: "صف سيناريو ملموس حيث يمكن لوكيل ذكاء اصطناعي أن يحل محل إنسان في عملية تجارية تتقنها. هذا هو جوهر ترشيحك."})}</p>
             </div>
             <div className="space-y-2">
-              <Label>Secteur cible du scénario *</Label>
+              <Label>{t({fr: "Secteur cible du scénario", en: "Target Sector for Scenario", ar: "القطاع المستهدف للسيناريو"})} *</Label>
               <Input value={formData.aiAgentSector} onChange={e => updateField("aiAgentSector", e.target.value)}
-                placeholder="Ex: Comptabilité PME, Service client e-commerce, Gestion immobilière..." className={errors.aiAgentSector ? "border-destructive" : ""} />
+                placeholder={t({fr: "Ex: Comptabilité PME, Service client e-commerce, Gestion immobilière...", en: "E.g.: SME Accounting, E-commerce Customer Service, Real Estate Management...", ar: "مثال: محاسبة الشركات الصغيرة، خدمة عملاء التجارة الإلكترونية..."})} className={errors.aiAgentSector ? "border-destructive" : ""} />
               <FieldError error={errors.aiAgentSector} />
             </div>
             <div className="space-y-2">
-              <Label>Scénario concret * <span className="text-muted-foreground">(min. 100 caractères)</span></Label>
+              <Label>{t({fr: "Scénario concret", en: "Concrete Scenario", ar: "السيناريو الملموس"})} * <span className="text-muted-foreground">(min. 100 {t({fr: "caractères", en: "characters", ar: "حرف"})})</span></Label>
               <Textarea value={formData.aiAgentScenario} onChange={e => updateField("aiAgentScenario", e.target.value)}
-                placeholder="Décrivez en détail un cas d'usage concret : Quel processus métier ? Quel humain est remplacé ? Quelles tâches l'agent IA effectue-t-il ? Comment fonctionne-t-il au quotidien ? Quel est le gain pour l'entreprise cliente ? Comment le distribuer à grande échelle ?" rows={8} className={errors.aiAgentScenario ? "border-destructive" : ""} />
+                placeholder={t({fr: "Décrivez en détail un cas d'usage concret : Quel processus métier ? Quel humain est remplacé ? Quelles tâches l'agent IA effectue-t-il ?", en: "Describe in detail a concrete use case: What business process? What human is replaced? What tasks does the AI agent perform?", ar: "صف بالتفصيل حالة استخدام ملموسة: ما هي العملية التجارية؟ من يتم استبداله؟ ما المهام التي يؤديها الوكيل؟"})} rows={8} className={errors.aiAgentScenario ? "border-destructive" : ""} />
               <div className="flex justify-between">
                 <FieldError error={errors.aiAgentScenario} />
                 <span className="text-xs text-muted-foreground">{formData.aiAgentScenario.length}/5000</span>
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Impact attendu et potentiel de distribution * <span className="text-muted-foreground">(min. 50 caractères)</span></Label>
+              <Label>{t({fr: "Impact attendu et potentiel de distribution", en: "Expected Impact and Distribution Potential", ar: "التأثير المتوقع وإمكانية التوزيع"})} * <span className="text-muted-foreground">(min. 50 {t({fr: "caractères", en: "characters", ar: "حرف"})})</span></Label>
               <Textarea value={formData.aiAgentImpact} onChange={e => updateField("aiAgentImpact", e.target.value)}
-                placeholder="Quel impact concret pour les PME/TPE ? Combien d'entreprises pourraient être ciblées ? Quel modèle de revenus envisagez-vous ? Comment passer à l'échelle ?" rows={5} className={errors.aiAgentImpact ? "border-destructive" : ""} />
+                placeholder={t({fr: "Quel impact concret pour les PME/TPE ? Combien d'entreprises pourraient être ciblées ?", en: "What concrete impact for SMEs? How many businesses could be targeted?", ar: "ما التأثير الملموس على الشركات الصغيرة؟ كم عدد الشركات المستهدفة؟"})} rows={5} className={errors.aiAgentImpact ? "border-destructive" : ""} />
               <div className="flex justify-between">
                 <FieldError error={errors.aiAgentImpact} />
                 <span className="text-xs text-muted-foreground">{formData.aiAgentImpact.length}/3000</span>
@@ -738,17 +743,17 @@ export default function Apply() {
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
             className="space-y-6">
             <div className="space-y-2">
-              <Label>Langues parlées</Label>
-              <Input value={formData.languages} onChange={e => updateField("languages", e.target.value)} placeholder="Ex: Français (natif), Anglais (courant), Arabe (intermédiaire)" />
+              <Label>{t({fr: "Langues parlées", en: "Languages Spoken", ar: "اللغات المتحدثة"})}</Label>
+              <Input value={formData.languages} onChange={e => updateField("languages", e.target.value)} placeholder={t({fr: "Ex: Français (natif), Anglais (courant), Arabe (intermédiaire)", en: "E.g.: French (native), English (fluent), Arabic (intermediate)", ar: "مثال: العربية (أم،), الفرنسية (طليق), الإنجليزية (متوسط)"})} />
             </div>
-            <SelectField label="Aisance en prise de parole publique *" value={formData.publicSpeaking} onChange={v => updateField("publicSpeaking", v)} error={errors.publicSpeaking}
-              options={[["none","Aucune expérience"],["basic","Basique (petits groupes)"],["intermediate","Intermédiaire (conférences)"],["advanced","Avancé (keynotes, médias)"]]} />
-            <SelectField label="Expérience en vente *" value={formData.salesExperience} onChange={v => updateField("salesExperience", v)} error={errors.salesExperience}
-              options={[["none","Aucune"],["less_1y","Moins d'1 an"],["1_3y","1 à 3 ans"],["3_5y","3 à 5 ans"],["more_5y","Plus de 5 ans"]]} />
+            <SelectField label={t({fr: "Aisance en prise de parole publique", en: "Public Speaking Comfort", ar: "الراحة في التحدث العام"}) + " *"} value={formData.publicSpeaking} onChange={v => updateField("publicSpeaking", v)} error={errors.publicSpeaking}
+              options={[["none",t({fr:"Aucune expérience",en:"No experience",ar:"لا خبرة"})],["basic",t({fr:"Basique (petits groupes)",en:"Basic (small groups)",ar:"أساسي (مجموعات صغيرة)"})],["intermediate",t({fr:"Intermédiaire (conférences)",en:"Intermediate (conferences)",ar:"متوسط (مؤتمرات)"})],["advanced",t({fr:"Avancé (keynotes, médias)",en:"Advanced (keynotes, media)",ar:"متقدم (كلمات رئيسية، إعلام)"})]]} />
+            <SelectField label={t({fr: "Expérience en vente", en: "Sales Experience", ar: "خبرة المبيعات"}) + " *"} value={formData.salesExperience} onChange={v => updateField("salesExperience", v)} error={errors.salesExperience}
+              options={[["none",t({fr:"Aucune",en:"None",ar:"لا شيء"})],["less_1y",t({fr:"Moins d'1 an",en:"Less than 1 year",ar:"أقل من سنة"})],["1_3y",t({fr:"1 à 3 ans",en:"1 to 3 years",ar:"1 إلى 3 سنوات"})],["3_5y",t({fr:"3 à 5 ans",en:"3 to 5 years",ar:"3 إلى 5 سنوات"})],["more_5y",t({fr:"Plus de 5 ans",en:"More than 5 years",ar:"أكثر من 5 سنوات"})]]} />
             <div className="space-y-2">
-              <Label>Lettre de motivation * <span className="text-muted-foreground">(min. 50 caractères)</span></Label>
+              <Label>{t({fr: "Lettre de motivation", en: "Cover Letter", ar: "رسالة التحفيز"})} * <span className="text-muted-foreground">(min. 50 {t({fr: "caractères", en: "characters", ar: "حرف"})})</span></Label>
               <Textarea value={formData.motivation} onChange={e => updateField("motivation", e.target.value)}
-                placeholder="Expliquez pourquoi vous souhaitez devenir AI Solutions Partner - Ambassadeur Certifié et comment vous comptez contribuer à la transformation IA dans votre secteur..." rows={6} className={errors.motivation ? "border-destructive" : ""} />
+                placeholder={t({fr: "Expliquez pourquoi vous souhaitez devenir AI Solutions Partner...", en: "Explain why you want to become an AI Solutions Partner...", ar: "اشرح لماذا تريد أن تصبح شريك حلول الذكاء الاصطناعي..."})} rows={6} className={errors.motivation ? "border-destructive" : ""} />
               <div className="flex justify-between">
                 <FieldError error={errors.motivation} />
                 <span className="text-xs text-muted-foreground">{formData.motivation.length}/5000</span>
@@ -767,36 +772,36 @@ export default function Apply() {
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
             className="space-y-6">
             <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 mb-4">
-              <p className="text-sm text-primary font-medium">Partagez vos profils en ligne et documents pour compléter votre candidature.</p>
+              <p className="text-sm text-primary font-medium">{t({fr: "Partagez vos profils en ligne et documents pour compléter votre candidature.", en: "Share your online profiles and documents to complete your application.", ar: "شارك ملفاتك الشخصية عبر الإنترنت والوثائق لإكمال ترشيحك."})}</p>
             </div>
             <div className="space-y-2">
               <Label>LinkedIn</Label>
-              <Input value={formData.linkedinUrl} onChange={e => updateField("linkedinUrl", e.target.value)} placeholder="https://linkedin.com/in/votre-profil" />
+              <Input value={formData.linkedinUrl} onChange={e => updateField("linkedinUrl", e.target.value)} placeholder="https://linkedin.com/in/your-profile" />
             </div>
             <div className="space-y-2">
               <Label>Twitter / X</Label>
-              <Input value={formData.twitterUrl} onChange={e => updateField("twitterUrl", e.target.value)} placeholder="https://x.com/votre-profil" />
+              <Input value={formData.twitterUrl} onChange={e => updateField("twitterUrl", e.target.value)} placeholder="https://x.com/your-profile" />
             </div>
             <div className="space-y-2">
               <Label>GitHub</Label>
-              <Input value={formData.githubUrl} onChange={e => updateField("githubUrl", e.target.value)} placeholder="https://github.com/votre-profil" />
+              <Input value={formData.githubUrl} onChange={e => updateField("githubUrl", e.target.value)} placeholder="https://github.com/your-profile" />
             </div>
             <div className="space-y-2">
-              <Label>Site web personnel</Label>
-              <Input value={formData.websiteUrl} onChange={e => updateField("websiteUrl", e.target.value)} placeholder="https://votre-site.com" />
+              <Label>{t({fr: "Site web personnel", en: "Personal Website", ar: "الموقع الشخصي"})}</Label>
+              <Input value={formData.websiteUrl} onChange={e => updateField("websiteUrl", e.target.value)} placeholder="https://your-site.com" />
             </div>
             <div className="space-y-2">
-              <Label>Autre réseau social</Label>
+              <Label>{t({fr: "Autre réseau social", en: "Other Social Network", ar: "شبكة اجتماعية أخرى"})}</Label>
               <Input value={formData.otherSocialUrl} onChange={e => updateField("otherSocialUrl", e.target.value)} placeholder="https://..." />
             </div>
 
             {/* File uploads */}
             <div className="border-t pt-6 mt-6" style={{ borderColor: "var(--wise-canvas-soft)" }}>
-              <h3 className="heading-md text-foreground mb-4">Documents</h3>
-              <p className="text-sm text-muted-foreground mb-4">Ajoutez votre CV et une photo de profil pour compléter votre dossier de candidature.</p>
+              <h3 className="heading-md text-foreground mb-4">{t({fr: "Documents", en: "Documents", ar: "الوثائق"})}</h3>
+              <p className="text-sm text-muted-foreground mb-4">{t({fr: "Ajoutez votre CV et une photo de profil pour compléter votre dossier de candidature.", en: "Add your CV and a profile photo to complete your application.", ar: "أضف سيرتك الذاتية وصورة شخصية لإكمال ملف ترشيحك."})}</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label className="font-semibold">CV (PDF, DOC, DOCX) <span className="text-xs text-muted-foreground font-normal">— max 10 Mo</span></Label>
+                  <Label className="font-semibold">{t({fr: "CV (PDF, DOC, DOCX)", en: "Resume (PDF, DOC, DOCX)", ar: "السيرة الذاتية (PDF, DOC, DOCX)"})} <span className="text-xs text-muted-foreground font-normal">— max 10 {t({fr: "Mo", en: "MB", ar: "ميغابايت"})}</span></Label>
                   <input ref={cvInputRef} type="file" accept=".pdf,.doc,.docx" className="hidden" onChange={e => { if (e.target.files?.[0]) setCvFile(e.target.files[0]); }} />
                   <div
                     className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200 hover:border-primary/50 hover:bg-primary/5 ${cvFile ? 'border-primary/40 bg-primary/5' : ''}`}
@@ -810,19 +815,19 @@ export default function Apply() {
                         </div>
                         <p className="text-sm text-primary font-semibold">{cvFile.name}</p>
                         <p className="text-xs text-muted-foreground">{(cvFile.size / 1024 / 1024).toFixed(2)} Mo</p>
-                        <p className="text-xs text-primary/70 underline">Changer le fichier</p>
+                        <p className="text-xs text-primary/70 underline">{t({fr: "Changer le fichier", en: "Change file", ar: "تغيير الملف"})}</p>
                       </div>
                     ) : (
                       <div className="space-y-2">
                         <Upload className="w-10 h-10 mx-auto text-muted-foreground/60" />
-                        <p className="text-sm font-medium text-foreground">Cliquez pour uploader votre CV</p>
-                        <p className="text-xs text-muted-foreground">PDF, DOC ou DOCX</p>
+                        <p className="text-sm font-medium text-foreground">{t({fr: "Cliquez pour uploader votre CV", en: "Click to upload your resume", ar: "انقر لتحميل سيرتك الذاتية"})}</p>
+                        <p className="text-xs text-muted-foreground">PDF, DOC {t({fr: "ou", en: "or", ar: "أو"})} DOCX</p>
                       </div>
                     )}
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="font-semibold">Photo de profil (JPG, PNG) <span className="text-xs text-muted-foreground font-normal">— max 5 Mo</span></Label>
+                  <Label className="font-semibold">{t({fr: "Photo de profil (JPG, PNG)", en: "Profile Photo (JPG, PNG)", ar: "صورة الملف الشخصي (JPG, PNG)"})} <span className="text-xs text-muted-foreground font-normal">— max 5 {t({fr: "Mo", en: "MB", ar: "ميغابايت"})}</span></Label>
                   <input ref={photoInputRef} type="file" accept=".jpg,.jpeg,.png,.webp" className="hidden" onChange={e => { if (e.target.files?.[0]) setPhotoFile(e.target.files[0]); }} />
                   <div
                     className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200 hover:border-primary/50 hover:bg-primary/5 ${photoFile ? 'border-primary/40 bg-primary/5' : ''}`}
@@ -836,15 +841,15 @@ export default function Apply() {
                         </div>
                         <p className="text-sm text-primary font-semibold">{photoFile.name}</p>
                         <p className="text-xs text-muted-foreground">{(photoFile.size / 1024 / 1024).toFixed(2)} Mo</p>
-                        <p className="text-xs text-primary/70 underline">Changer la photo</p>
+                        <p className="text-xs text-primary/70 underline">{t({fr: "Changer la photo", en: "Change photo", ar: "تغيير الصورة"})}</p>
                       </div>
                     ) : (
                       <div className="space-y-2">
                         <div className="w-16 h-16 mx-auto rounded-full bg-muted/30 flex items-center justify-center">
                           <User className="w-8 h-8 text-muted-foreground/60" />
                         </div>
-                        <p className="text-sm font-medium text-foreground">Cliquez pour uploader votre photo</p>
-                        <p className="text-xs text-muted-foreground">JPG, PNG ou WebP</p>
+                        <p className="text-sm font-medium text-foreground">{t({fr: "Cliquez pour uploader votre photo", en: "Click to upload your photo", ar: "انقر لتحميل صورتك"})}</p>
+                        <p className="text-xs text-muted-foreground">JPG, PNG {t({fr: "ou", en: "or", ar: "أو"})} WebP</p>
                       </div>
                     )}
                   </div>
@@ -864,7 +869,7 @@ export default function Apply() {
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
             className="space-y-6">
             <div className="p-4 rounded-lg bg-primary/5 border border-primary/20 mb-4">
-              <p className="text-sm text-primary font-medium">Enregistrez une courte vidéo (90 secondes max) pour vous présenter et nous convaincre de vous sélectionner. Un compte à rebours de 3 secondes vous laissera le temps de vous préparer.</p>
+              <p className="text-sm text-primary font-medium">{t({fr: "Enregistrez une courte vidéo (90 secondes max) pour vous présenter et nous convaincre de vous sélectionner. Un compte à rebours de 3 secondes vous laissera le temps de vous préparer.", en: "Record a short video (90 seconds max) to introduce yourself and convince us to select you. A 3-second countdown will give you time to prepare.", ar: "سجل فيديو قصير (90 ثانية كحد أقصى) لتقديم نفسك وإقناعنا باختيارك. عد تنازلي من 3 ثوانٍ سيمنحك وقتاً للاستعداد."})}</p>
             </div>
 
             {/* Video preview area */}
@@ -883,8 +888,8 @@ export default function Apply() {
                   <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-4 border-2 border-white/20">
                     <Video className="w-10 h-10 text-white/70" />
                   </div>
-                  <p className="text-base md:text-lg font-medium text-white">Prêt à enregistrer votre pitch</p>
-                  <p className="text-xs md:text-sm text-white/50 mt-1">Endroit calme et bien éclairé</p>
+                  <p className="text-base md:text-lg font-medium text-white">{t({fr: "Prêt à enregistrer votre pitch", en: "Ready to record your pitch", ar: "مستعد لتسجيل عرضك"})}</p>
+                  <p className="text-xs md:text-sm text-white/50 mt-1">{t({fr: "Endroit calme et bien éclairé", en: "Quiet and well-lit place", ar: "مكان هادئ ومضاء جيداً"})}</p>
                 </div>
               )}
 
@@ -893,7 +898,7 @@ export default function Apply() {
                 <div className="absolute inset-0 flex items-center justify-center bg-black/70 z-10">
                   <div className="text-center">
                     <div className="text-7xl font-bold text-white animate-pulse">{countdown}</div>
-                    <p className="text-white/70 mt-2 text-lg">Préparez-vous...</p>
+                    <p className="text-white/70 mt-2 text-lg">{t({fr: "Préparez-vous...", en: "Get ready...", ar: "استعد..."})}</p>
                   </div>
                 </div>
               )}
@@ -930,10 +935,10 @@ export default function Apply() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-                    <Mic className="w-3.5 h-3.5" /> Niveau audio
+                    <Mic className="w-3.5 h-3.5" /> {t({fr: "Niveau audio", en: "Audio level", ar: "مستوى الصوت"})}
                   </span>
                   <span className={`text-xs font-medium ${audioLevel > 0.1 ? 'text-green-600' : 'text-amber-500'}`}>
-                    {audioLevel > 0.1 ? '✓ Audio détecté' : '⚠ Parlez plus fort'}
+                    {audioLevel > 0.1 ? t({fr: '✓ Audio détecté', en: '✓ Audio detected', ar: '✓ تم الكشف عن الصوت'}) : t({fr: '⚠ Parlez plus fort', en: '⚠ Speak louder', ar: '⚠ تحدث بصوت أعلى'})}
                   </span>
                 </div>
                 <div className="h-3 bg-gray-100 rounded-full overflow-hidden border border-gray-200">
@@ -943,9 +948,9 @@ export default function Apply() {
                   />
                 </div>
                 <div className="flex justify-between text-[10px] text-muted-foreground">
-                  <span>Faible</span>
-                  <span>Optimal</span>
-                  <span>Fort</span>
+                  <span>{t({fr: "Faible", en: "Low", ar: "ضعيف"})}</span>
+                  <span>{t({fr: "Optimal", en: "Optimal", ar: "مثالي"})}</span>
+                  <span>{t({fr: "Fort", en: "Loud", ar: "قوي"})}</span>
                 </div>
               </div>
             )}
@@ -961,25 +966,25 @@ export default function Apply() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               {!isRecording && !recordedBlob && countdown === 0 && (
                 <Button onClick={startRecording} className="btn-pill bg-red-600 hover:bg-red-700 text-white px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base w-full sm:w-auto">
-                  <Circle className="w-4 h-4 md:w-5 md:h-5 mr-2 fill-white" /> Démarrer l'enregistrement
+                  <Circle className="w-4 h-4 md:w-5 md:h-5 mr-2 fill-white" /> {t({fr: "Démarrer l'enregistrement", en: "Start Recording", ar: "بدء التسجيل"})}
                 </Button>
               )}
               {isRecording && (
                 <Button onClick={stopRecording} className="btn-pill bg-gray-800 hover:bg-gray-900 text-white px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base w-full sm:w-auto">
-                  <Square className="w-4 h-4 md:w-5 md:h-5 mr-2 fill-white" /> Arrêter
+                  <Square className="w-4 h-4 md:w-5 md:h-5 mr-2 fill-white" /> {t({fr: "Arrêter", en: "Stop", ar: "إيقاف"})}
                 </Button>
               )}
               {!isRecording && recordedBlob && (
                 <div className="flex flex-col items-center gap-2 w-full">
                   <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
                     <Button variant="outline" onClick={resetRecording} className="btn-pill w-full sm:w-auto">
-                      Recommencer
+                      {t({fr: "Recommencer", en: "Restart", ar: "إعادة"})}
                     </Button>
                     <div className="text-xs md:text-sm text-green-600 font-medium flex items-center gap-1 bg-green-50 px-3 py-1.5 rounded-full">
-                      <CheckCircle className="w-3.5 h-3.5 md:w-4 md:h-4" /> Vidéo ({Math.round(recordedBlob.size / 1024 / 1024 * 10) / 10} Mo)
+                      <CheckCircle className="w-3.5 h-3.5 md:w-4 md:h-4" /> {t({fr: "Vidéo", en: "Video", ar: "فيديو"})} ({Math.round(recordedBlob.size / 1024 / 1024 * 10) / 10} {t({fr: "Mo", en: "MB", ar: "ميغابايت"})})
                     </div>
                   </div>
-                  <p className="text-xs text-muted-foreground text-center">Relisez votre vidéo ci-dessus avant de soumettre</p>
+                  <p className="text-xs text-muted-foreground text-center">{t({fr: "Relisez votre vidéo ci-dessus avant de soumettre", en: "Review your video above before submitting", ar: "راجع الفيديو أعلاه قبل الإرسال"})}</p>
                 </div>
               )}
             </div>
@@ -989,30 +994,30 @@ export default function Apply() {
               <div className="p-4 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/10">
                 <p className="font-semibold text-foreground mb-3 flex items-center gap-2">
                   <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs">?</span>
-                  Guide de votre pitch (90 secondes)
+                  {t({fr: "Guide de votre pitch (90 secondes)", en: "Pitch Guide (90 seconds)", ar: "دليل العرض (90 ثانية)"})}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div className="flex items-start gap-2 p-2 rounded-lg bg-white/60">
                     <span className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-primary text-[10px] font-bold shrink-0 mt-0.5">1</span>
-                    <div><p className="text-xs font-medium text-foreground">0-20s : Présentation</p><p className="text-[11px] text-muted-foreground">Nom, parcours, secteur</p></div>
+                    <div><p className="text-xs font-medium text-foreground">{t({fr: "0-20s : Présentation", en: "0-20s: Introduction", ar: "0-20ث: التقديم"})}</p><p className="text-[11px] text-muted-foreground">{t({fr: "Nom, parcours, secteur", en: "Name, background, sector", ar: "الاسم، المسار، القطاع"})}</p></div>
                   </div>
                   <div className="flex items-start gap-2 p-2 rounded-lg bg-white/60">
                     <span className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-primary text-[10px] font-bold shrink-0 mt-0.5">2</span>
-                    <div><p className="text-xs font-medium text-foreground">20-40s : Expertise</p><p className="text-[11px] text-muted-foreground">Votre secteur et réseau</p></div>
+                    <div><p className="text-xs font-medium text-foreground">{t({fr: "20-40s : Expertise", en: "20-40s: Expertise", ar: "20-40ث: الخبرة"})}</p><p className="text-[11px] text-muted-foreground">{t({fr: "Votre secteur et réseau", en: "Your sector and network", ar: "قطاعك وشبكتك"})}</p></div>
                   </div>
                   <div className="flex items-start gap-2 p-2 rounded-lg bg-white/60">
                     <span className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-primary text-[10px] font-bold shrink-0 mt-0.5">3</span>
-                    <div><p className="text-xs font-medium text-foreground">40-60s : Cas d'usage IA</p><p className="text-[11px] text-muted-foreground">Scénario concret d'agent IA</p></div>
+                    <div><p className="text-xs font-medium text-foreground">{t({fr: "40-60s : Cas d'usage IA", en: "40-60s: AI Use Case", ar: "40-60ث: حالة استخدام الذكاء الاصطناعي"})}</p><p className="text-[11px] text-muted-foreground">{t({fr: "Scénario concret d'agent IA", en: "Concrete AI agent scenario", ar: "سيناريو ملموس لوكيل ذكاء اصطناعي"})}</p></div>
                   </div>
                   <div className="flex items-start gap-2 p-2 rounded-lg bg-white/60">
                     <span className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-primary text-[10px] font-bold shrink-0 mt-0.5">4</span>
-                    <div><p className="text-xs font-medium text-foreground">60-90s : Conclusion</p><p className="text-[11px] text-muted-foreground">Pourquoi vous, votre vision</p></div>
+                    <div><p className="text-xs font-medium text-foreground">{t({fr: "60-90s : Conclusion", en: "60-90s: Conclusion", ar: "60-90ث: الخاتمة"})}</p><p className="text-[11px] text-muted-foreground">{t({fr: "Pourquoi vous, votre vision", en: "Why you, your vision", ar: "لماذا أنت، رؤيتك"})}</p></div>
                   </div>
                 </div>
               </div>
             )}
 
-            <p className="text-xs text-muted-foreground text-center">Cette étape est optionnelle mais fortement recommandée. Les candidats avec vidéo sont prioritaires dans la sélection.</p>
+            <p className="text-xs text-muted-foreground text-center">{t({fr: "Cette étape est optionnelle mais fortement recommandée. Les candidats avec vidéo sont prioritaires dans la sélection.", en: "This step is optional but highly recommended. Candidates with video are prioritized in selection.", ar: "هذه الخطوة اختيارية ولكن ينصح بها بشدة. المرشحون الذين لديهم فيديو لهم الأولوية في الاختيار."})}</p>
           </motion.div>
         )}
         </AnimatePresence>
@@ -1021,17 +1026,17 @@ export default function Apply() {
         <div className="flex justify-between items-center mt-6 md:mt-10 pt-4 md:pt-6 gap-3" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
           {step > 1 ? (
             <button onClick={handleBack} className="wise-btn-tertiary flex items-center gap-1 md:gap-2 text-sm md:text-base px-3 md:px-4 py-2 md:py-3">
-              <ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4" /> Précédent
+              <ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4" /> {t({fr: "Précédent", en: "Previous", ar: "السابق"})}
             </button>
           ) : <div />}
 
           {step < totalSteps ? (
             <button onClick={handleNext} className="wise-btn-primary flex items-center gap-1 md:gap-2 text-sm md:text-base px-4 md:px-6 py-2 md:py-3">
-              Suivant <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              {t({fr: "Suivant", en: "Next", ar: "التالي"})} <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
             </button>
           ) : (
             <button onClick={handleSubmit} disabled={submitMutation.isPending || uploading} className="wise-btn-primary flex items-center gap-1 md:gap-2 text-xs md:text-base px-3 md:px-6 py-2 md:py-3" style={{ opacity: (submitMutation.isPending || uploading) ? 0.6 : 1 }}>
-              {(submitMutation.isPending || uploading) ? <><Loader2 className="w-4 h-4 animate-spin" /> Envoi...</> : <>Soumettre ma candidature <CheckCircle className="w-4 h-4" /></>}
+              {(submitMutation.isPending || uploading) ? <><Loader2 className="w-4 h-4 animate-spin" /> {t({fr: "Envoi...", en: "Sending...", ar: "إرسال..."})}</> : <>{t({fr: "Soumettre ma candidature", en: "Submit my application", ar: "تقديم ترشيحي"})} <CheckCircle className="w-4 h-4" /></>}
             </button>
           )}
         </div>
@@ -1045,11 +1050,12 @@ function SelectField({ label, value, onChange, error, options }: {
   label: string; value: string; onChange: (v: string) => void; error?: string;
   options: [string, string][];
 }) {
+  const { t } = useLanguage();
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className={error ? "border-destructive" : ""}><SelectValue placeholder="Sélectionnez..." /></SelectTrigger>
+        <SelectTrigger className={error ? "border-destructive" : ""}><SelectValue placeholder={t({fr: "Sélectionnez...", en: "Select...", ar: "اختر..."})} /></SelectTrigger>
         <SelectContent>{options.map(([val, label]) => <SelectItem key={val} value={val}>{label}</SelectItem>)}</SelectContent>
       </Select>
       <FieldError error={error} />
