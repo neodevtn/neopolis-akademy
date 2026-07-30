@@ -30,7 +30,14 @@ type ViewMode = "browse" | "course" | "quiz-simulate" | "exam-simulate" | "edit-
 
 export default function AdminContentManager() {
   const { user, isAuthenticated } = useAuth();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  // Helper to resolve body which can be string or {en, fr} translation object
+  const resolveBody = (body: any): string => {
+    if (!body) return '';
+    if (typeof body === 'string') return body;
+    if (typeof body === 'object' && body !== null) return body[lang] || body.en || body.fr || JSON.stringify(body);
+    return String(body);
+  };
   const [viewMode, setViewMode] = useState<ViewMode>("browse");
   const [selectedCourseId, setSelectedCourseId] = useState<string>("");
   const [selectedCertId, setSelectedCertId] = useState<string>("");
@@ -293,7 +300,7 @@ export default function AdminContentManager() {
                       )}
                     </div>
                     {block.type === "content" && (
-                      <div className="prose prose-sm max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: block.body?.replace(/\n/g, "<br/>") || "" }} />
+                      <div className="prose prose-sm max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: resolveBody(block.body).replace(/\n/g, "<br/>") }} />
                     )}
                     {block.type === "video" && (
                       <div className="bg-gray-100 rounded p-3 text-sm">
@@ -312,7 +319,36 @@ export default function AdminContentManager() {
                     )}
                     {block.type === "transcript" && (
                       <div className="bg-purple-50 rounded p-3 text-sm text-purple-700 max-h-32 overflow-y-auto">
-                        {block.body?.substring(0, 300)}...
+                        {resolveBody(block.body).substring(0, 300)}...
+                      </div>
+                    )}
+                    {block.type === "text" && (
+                      <div className="prose prose-sm max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: resolveBody(block.content).replace(/\n/g, "<br/>") }} />
+                    )}
+                    {block.type === "single_choice_exercise" && (
+                      <div className="bg-indigo-50 rounded p-3 text-sm">
+                        <CheckCircle2 className="w-4 h-4 inline mr-1 text-indigo-600" /> QCM : {resolveBody(block.question)}
+                        <div className="ml-5 mt-1 text-xs text-gray-500">{block.options?.length || 0} options</div>
+                      </div>
+                    )}
+                    {block.type === "bucket_sort" && (
+                      <div className="bg-orange-50 rounded p-3 text-sm">
+                        <Layers className="w-4 h-4 inline mr-1 text-orange-600" /> Tri par catégories : {resolveBody(block.title)}
+                      </div>
+                    )}
+                    {block.type === "comparison" && (
+                      <div className="bg-cyan-50 rounded p-3 text-sm">
+                        <Layers className="w-4 h-4 inline mr-1 text-cyan-600" /> Comparaison ({block.items?.length || 0} éléments)
+                      </div>
+                    )}
+                    {block.type === "tabbed_content" && (
+                      <div className="bg-teal-50 rounded p-3 text-sm">
+                        <Layers className="w-4 h-4 inline mr-1 text-teal-600" /> Contenu à onglets ({block.tabs?.length || 0} onglets)
+                      </div>
+                    )}
+                    {block.type === "download" && (
+                      <div className="bg-green-50 rounded p-3 text-sm">
+                        <FileText className="w-4 h-4 inline mr-1 text-green-600" /> Téléchargement : {block.title || block.filename || "fichier"}
                       </div>
                     )}
                   </div>
@@ -334,7 +370,7 @@ export default function AdminContentManager() {
                     .map((ex: any) => (
                       <div key={ex.id || ex._idx} className="border rounded p-3 mb-2 bg-gray-50">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="font-medium text-sm">{ex.title || `Exercice ${ex._idx + 1}`}</span>
+                          <span className="font-medium text-sm">{resolveBody(ex.title) || `Exercice ${ex._idx + 1}`}</span>
                           <div className="flex gap-1">
                             {ex.difficulty && <Badge variant="outline" className="text-xs">{ex.difficulty}</Badge>}
                             {viewMode === "edit-course" && (
@@ -347,8 +383,8 @@ export default function AdminContentManager() {
                             )}
                           </div>
                         </div>
-                        <p className="text-xs text-gray-600">{ex.prompt?.substring(0, 200)}</p>
-                        {ex.instructions && <p className="text-xs text-blue-600 mt-1">📋 {ex.instructions.substring(0, 150)}</p>}
+                        <p className="text-xs text-gray-600">{resolveBody(ex.prompt).substring(0, 200)}</p>
+                        {ex.instructions && <p className="text-xs text-blue-600 mt-1">📋 {resolveBody(ex.instructions).substring(0, 150)}</p>}
                       </div>
                     ))}
                 </div>
@@ -732,19 +768,19 @@ export default function AdminContentManager() {
               <div className="space-y-3">
                 <div>
                   <label className="text-xs font-medium text-gray-600">Titre</label>
-                  <Input value={editingExamQ.title || ""} onChange={(e) => setEditingExamQ({ ...editingExamQ, title: e.target.value })} />
+                  <Input value={typeof editingExamQ.title === "object" ? (editingExamQ.title.fr || editingExamQ.title.en || "") : (editingExamQ.title || "")} onChange={(e) => setEditingExamQ({ ...editingExamQ, title: e.target.value })} />
                 </div>
                 <div>
                   <label className="text-xs font-medium text-gray-600">Prompt</label>
-                  <Textarea value={editingExamQ.prompt || ""} onChange={(e) => setEditingExamQ({ ...editingExamQ, prompt: e.target.value })} rows={4} />
+                  <Textarea value={typeof editingExamQ.prompt === "object" ? (editingExamQ.prompt.fr || editingExamQ.prompt.en || "") : (editingExamQ.prompt || "")} onChange={(e) => setEditingExamQ({ ...editingExamQ, prompt: e.target.value })} rows={4} />
                 </div>
                 <div>
                   <label className="text-xs font-medium text-gray-600">Instructions</label>
-                  <Textarea value={editingExamQ.instructions || ""} onChange={(e) => setEditingExamQ({ ...editingExamQ, instructions: e.target.value })} rows={3} />
+                  <Textarea value={typeof editingExamQ.instructions === "object" ? (editingExamQ.instructions.fr || editingExamQ.instructions.en || "") : (editingExamQ.instructions || "")} onChange={(e) => setEditingExamQ({ ...editingExamQ, instructions: e.target.value })} rows={3} />
                 </div>
                 <div>
                   <label className="text-xs font-medium text-gray-600">Correction</label>
-                  <Textarea value={editingExamQ.correction || ""} onChange={(e) => setEditingExamQ({ ...editingExamQ, correction: e.target.value })} rows={3} />
+                  <Textarea value={typeof editingExamQ.correction === "object" ? (editingExamQ.correction.fr || editingExamQ.correction.en || "") : (editingExamQ.correction || "")} onChange={(e) => setEditingExamQ({ ...editingExamQ, correction: e.target.value })} rows={3} />
                 </div>
               </div>
               <DialogFooter>

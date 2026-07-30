@@ -917,3 +917,11 @@
 ## Bugs signalés (30 juillet 2026)
 - [x] Bug chiffres page d'accueil : les stats (300M, 92M, 30%, 220 Milliards $) affichent 0 sur mobile (fix: margin 0px + fallback 3s)
 - [x] Bug rôle admin : le compte apprenant demo a accès admin (rôle promu pendant l'audit, remis en user via SQL)
+
+## Bug crash admin consultation/édition cours (30 juillet 2026)
+- [x] Fix TypeError: body?.replace is not a function dans AdminContentManager (resolveBody helper + tous block types)
+- [x] Fix crash édition exercices admin (typeof checks pour exercise edit dialog)
+- [x] Ajout renderers manquants: text, single_choice_exercise, bucket_sort, comparison, tabbed_content, download
+- [x] Fix exercises rendering: title, prompt, instructions avec resolveBody()
+- [x] Backend Zod schemas élargis pour accepter string | {en,fr} (updateQuizzes, updateMockExamQuestion, addMockExamQuestion, updateExercise)
+- [x] Fix TypeScript errors: z.record(z.string()) -> z.record(z.string(), z.string()) pour Zod v4

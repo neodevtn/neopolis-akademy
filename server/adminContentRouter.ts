@@ -103,13 +103,13 @@ export const adminContentRouter = router({
       courseId: z.string(),
       lessonKey: z.string(),
       questions: z.array(z.object({
-        question: z.string(),
+        question: z.union([z.string(), z.record(z.string(), z.string())]),
         choices: z.array(z.object({
           id: z.string(),
-          text: z.string(),
+          text: z.union([z.string(), z.record(z.string(), z.string())]),
         })),
         correctId: z.string(),
-        explanation: z.string(),
+        explanation: z.union([z.string(), z.record(z.string(), z.string())]),
       })),
     }))
     .mutation(async ({ input }) => {
@@ -138,14 +138,14 @@ export const adminContentRouter = router({
     .input(z.object({
       questionId: z.string(),
       data: z.object({
-        question: z.string(),
+        question: z.union([z.string(), z.record(z.string(), z.string())]),
         choices: z.array(z.object({
           id: z.string(),
-          text: z.string(),
+          text: z.union([z.string(), z.record(z.string(), z.string())]),
         })),
         correctChoiceIds: z.array(z.string()),
-        explanation: z.string(),
-        domain: z.string().optional(),
+        explanation: z.union([z.string(), z.record(z.string(), z.string())]),
+        domain: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
       }),
     }))
     .mutation(async ({ input }) => {
@@ -163,14 +163,14 @@ export const adminContentRouter = router({
   addMockExamQuestion: adminProcedure
     .input(z.object({
       certificationId: z.string(),
-      domain: z.string(),
-      question: z.string(),
+      domain: z.union([z.string(), z.record(z.string(), z.string())]),
+      question: z.union([z.string(), z.record(z.string(), z.string())]),
       choices: z.array(z.object({
         id: z.string(),
-        text: z.string(),
+        text: z.union([z.string(), z.record(z.string(), z.string())]),
       })),
       correctChoiceIds: z.array(z.string()),
-      explanation: z.string(),
+      explanation: z.union([z.string(), z.record(z.string(), z.string())]),
     }))
     .mutation(async ({ input }) => {
       const dataDir = getDataDir();
@@ -220,11 +220,11 @@ export const adminContentRouter = router({
       courseId: z.string(),
       exerciseIndex: z.number(),
       data: z.object({
-        prompt: z.string().optional(),
-        instructions: z.string().optional(),
-        correction: z.string().optional(),
+        prompt: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
+        instructions: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
+        correction: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
         rubric: z.any().optional(),
-        title: z.string().optional(),
+        title: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
         difficulty: z.string().optional(),
       }),
     }))
