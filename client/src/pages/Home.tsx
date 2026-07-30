@@ -549,12 +549,12 @@ export default function Home() {
                   <span className="inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm" style={{ background: "var(--wise-primary)", color: "var(--wise-ink)" }}>1</span>
                 </div>
                 <div>
-                  <h3 className="wise-display-xs mb-2">Génération de Leads</h3>
+                  <h3 className="wise-display-xs mb-2">{t({ fr: "Génération de Leads", en: "Lead Generation", ar: "توليد العملاء المحتملين" })}</h3>
                   <p className="wise-body-md mb-3">
-                    L'Ambassadeur prospecte en <strong>B2B</strong> par tous les moyens (réseau, événements, cold outreach, recommandations) pour identifier des projets IA potentiels auprès des entreprises de son secteur.
+                    {t({ fr: "L'Ambassadeur prospecte en B2B par tous les moyens (réseau, événements, cold outreach, recommandations) pour identifier des projets IA potentiels auprès des entreprises de son secteur.", en: "The Ambassador prospects in B2B through all means (networking, events, cold outreach, referrals) to identify potential AI projects with companies in their sector.", ar: "يقوم السفير بالبحث B2B بكل الطرق (الشبكات، الأحداث، الاتصال البارد، التوصيات) لتحديد مشاريع الذكاء الاصطناعي المحتملة لدى الشركات في قطاعهم." })}
                   </p>
                   <div className="wise-card-sage p-4 inline-block">
-                    <p className="wise-body-sm font-medium">→ Le projet identifié est envoyé vers <strong>la Centrale d'Étude et d'Évaluation</strong> de Neopolis</p>
+                    <p className="wise-body-sm font-medium">→ {t({ fr: "Le projet identifié est envoyé vers la Centrale d'Étude et d'Évaluation de Neopolis", en: "The identified project is sent to Neopolis Study and Evaluation Center", ar: "يتم إرسال المشروع المحدد إلى مركز Neopolis للدراسة والتقييم" })}</p>
                   </div>
                 </div>
               </div>
@@ -602,9 +602,9 @@ export default function Home() {
                   <span className="inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm" style={{ background: "var(--wise-accent-cyan)", color: "#fff" }}>3</span>
                 </div>
                 <div>
-                  <h3 className="wise-display-xs mb-2">Contractualisation</h3>
+                  <h3 className="wise-display-xs mb-2">{t({ fr: "Contractualisation", en: "Contracting", ar: "التعاقد" })}</h3>
                   <p className="wise-body-md">
-                    Signature du contrat avec le client. Définition du périmètre, des livrables, du calendrier et des conditions commerciales. L'Ambassadeur est impliqué dans la relation client.
+                    {t({ fr: "Signature du contrat avec le client. Définition du périmètre, des livrables, du calendrier et des conditions commerciales. L'Ambassadeur est impliqué dans la relation client.", en: "Contract signing with the client. Definition of scope, deliverables, timeline and commercial terms. The Ambassador is involved in the client relationship.", ar: "توقيع العقد مع العميل. تحديد النطاق والمخرجات والجدول الزمني والشروط التجارية. يشارك السفير في علاقة العميل." })}
                   </p>
                 </div>
               </div>
@@ -618,9 +618,9 @@ export default function Home() {
                   <span className="inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm" style={{ background: "var(--wise-accent-coral)", color: "#fff" }}>4</span>
                 </div>
                 <div>
-                  <h3 className="wise-display-xs mb-2">Implémentation</h3>
+                  <h3 className="wise-display-xs mb-2">{t({ fr: "Implémentation", en: "Implementation", ar: "التنفيذ" })}</h3>
                   <p className="wise-body-md">
-                    Déploiement de la solution IA par l'équipe technique de Neopolis Development. L'Ambassadeur assure le lien avec le client et facilite l'adoption de la solution.
+                    {t({ fr: "Déploiement de la solution IA par l'équipe technique de Neopolis Development. L'Ambassadeur assure le lien avec le client et facilite l'adoption de la solution.", en: "Deployment of the AI solution by Neopolis Development's technical team. The Ambassador ensures the link with the client and facilitates solution adoption.", ar: "نشر حل الذكاء الاصطناعي من قبل فريق Neopolis Development التقني. يضمن السفير الربط مع العميل ويسهل اعتماد الحل." })}
                   </p>
                 </div>
               </div>
@@ -634,9 +634,9 @@ export default function Home() {
                   <span className="inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm" style={{ background: "var(--wise-accent-pear)", color: "var(--wise-ink)" }}>5</span>
                 </div>
                 <div>
-                  <h3 className="wise-display-xs mb-2">Monitoring & Revenus Récurrents</h3>
+                  <h3 className="wise-display-xs mb-2">{t({ fr: "Monitoring & Revenus Récurrents", en: "Monitoring & Recurring Revenue", ar: "المراقبة والإيرادات المتكررة" })}</h3>
                   <p className="wise-body-md">
-                    Suivi de la solution en production. L'Ambassadeur génère des <strong>revenus récurrents passifs</strong> sur la consommation de tokens du client pendant toute la durée de vie du projet.
+                    {t({ fr: "Suivi de la solution en production. L'Ambassadeur génère des revenus récurrents passifs sur la consommation de tokens du client pendant toute la durée de vie du projet.", en: "Monitoring of the solution in production. The Ambassador generates passive recurring revenue from the client's token consumption throughout the project lifecycle.", ar: "مراقبة الحل في الإنتاج. يولد السفير إيرادات متكررة سلبية من استهلاك العميل للرموز طوال دورة حياة المشروع." })}
                   </p>
                 </div>
               </div>
