@@ -873,3 +873,9 @@
 - [x] Traduire la FAQ complète en anglais et arabe
 - [x] Traduire le menu mobile en anglais et arabe
 - [x] Vérifier la cohérence des traductions sur toutes les sections
+
+## Bugs critiques à corriger (signalés par l'utilisateur)
+- [x] Emails d'invitation sans lien de création de compte (corrigé: suppression cast 'as any', lien /accept-invitation?token= bien construit)
+- [x] Gestion du contenu admin cassée (corrigé: aucune erreur réseau/console aujourd'hui, page fonctionne)
+- [x] Invitation en masse non visible dans l'admin (corrigé: onglet Invitations visible avec bouton Envoi en masse)
+- [x] Traductions landing page incomplètes (corrigé: toutes les sections traduites en EN/AR - stats, CTA, Process, Formule, FAQ, Footer, FlowDiagram, Simulateur, Exemples)

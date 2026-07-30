@@ -499,7 +499,7 @@ export const appRouter = router({
         // Send invitation email
         try {
           const baseUrl = process.env.VITE_APP_URL || "https://akademy.neodev.click";
-          const invitationLink = `${baseUrl}/accept-invitation?token=${(invitation as any).token || ""}`;
+          const invitationLink = `${baseUrl}/accept-invitation?token=${invitation.token}`;
           await sendInvitationEmail({
             to: input.email,
             name: input.name || null,
@@ -543,7 +543,7 @@ export const appRouter = router({
         for (const inv of input.invitations) {
           try {
             const invitation = await createInvitation(inv.email, inv.name || null, ctx.user.id);
-            const invitationLink = `${baseUrl}/accept-invitation?token=${(invitation as any).token || ""}`;
+            const invitationLink = `${baseUrl}/accept-invitation?token=${invitation.token}`;
             try {
               await sendInvitationEmail({
                 to: inv.email,
@@ -573,7 +573,7 @@ export const appRouter = router({
         // Re-create invitation (old one will be superseded)
         const invitation = await createInvitation(input.email, null, ctx.user.id);
         const baseUrl = process.env.VITE_APP_URL || "https://akademy.neodev.click";
-        const invitationLink = `${baseUrl}/accept-invitation?token=${(invitation as any).token || ""}`;
+        const invitationLink = `${baseUrl}/accept-invitation?token=${invitation.token}`;
         await sendInvitationEmail({
           to: input.email,
           name: null,

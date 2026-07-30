@@ -2,16 +2,17 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Cookie, Shield } from "lucide-react";
 import { Link } from "wouter";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const COOKIE_CONSENT_KEY = "neopolis_cookie_consent";
 
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
     if (!consent) {
-      // Delay display slightly for better UX
       const timer = setTimeout(() => setVisible(true), 1500);
       return () => clearTimeout(timer);
     }
@@ -20,7 +21,6 @@ export default function CookieConsent() {
   const handleAccept = () => {
     localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
     setVisible(false);
-    // Recharger pour activer le script analytics
     window.location.reload();
   };
 
@@ -48,7 +48,6 @@ export default function CookieConsent() {
               boxShadow: "0 -4px 32px rgba(0, 0, 0, 0.08), 0 -1px 8px rgba(0, 0, 0, 0.04)",
             }}
           >
-            {/* Icon + Text */}
             <div className="flex items-start gap-3 flex-1">
               <div
                 className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center mt-0.5"
@@ -58,18 +57,21 @@ export default function CookieConsent() {
               </div>
               <div>
                 <p className="text-sm font-semibold mb-1" style={{ color: "var(--wise-ink)" }}>
-                  Nous respectons votre vie privée
+                  {t({ fr: "Nous respectons votre vie privée", en: "We respect your privacy", ar: "نحن نحترم خصوصيتك" })}
                 </p>
                 <p className="text-xs leading-relaxed" style={{ color: "var(--wise-ink-soft)" }}>
-                  Ce site utilise uniquement des cookies techniques nécessaires au fonctionnement (authentification, session). Aucun cookie publicitaire n'est utilisé.{" "}
+                  {t({
+                    fr: "Ce site utilise uniquement des cookies techniques nécessaires au fonctionnement (authentification, session). Aucun cookie publicitaire n'est utilisé.",
+                    en: "This site only uses technical cookies necessary for operation (authentication, session). No advertising cookies are used.",
+                    ar: "يستخدم هذا الموقع فقط ملفات تعريف الارتباط التقنية الضرورية للتشغيل (المصادقة، الجلسة). لا يتم استخدام أي ملفات تعريف ارتباط إعلانية."
+                  })}{" "}
                   <Link href="/mentions-legales" className="underline" style={{ color: "var(--wise-positive-deep)" }}>
-                    En savoir plus
+                    {t({ fr: "En savoir plus", en: "Learn more", ar: "اعرف المزيد" })}
                   </Link>
                 </p>
               </div>
             </div>
 
-            {/* Buttons */}
             <div className="flex items-center gap-2 flex-shrink-0 w-full md:w-auto">
               <button
                 onClick={handleRefuse}
@@ -80,7 +82,7 @@ export default function CookieConsent() {
                   background: "transparent",
                 }}
               >
-                Refuser
+                {t({ fr: "Refuser", en: "Decline", ar: "رفض" })}
               </button>
               <button
                 onClick={handleAccept}
@@ -91,7 +93,7 @@ export default function CookieConsent() {
                 }}
               >
                 <Shield size={12} />
-                Accepter
+                {t({ fr: "Accepter", en: "Accept", ar: "قبول" })}
               </button>
             </div>
           </div>

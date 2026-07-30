@@ -128,17 +128,17 @@ function AnimatedSection({ children, className, style, id }: { children: React.R
 /* ─── Logout Button ─── */
 function LogoutButton() {
   const { isAuthenticated, logout, user } = useAuth();
-
+  const { t } = useLanguage();
   if (!isAuthenticated) return null;
 
   return (
     <button
       onClick={() => logout()}
       className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full transition-all hover:bg-red-50 text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300"
-      title={`Déconnexion (${user?.name || ''})`}
+      title={t({ fr: `Déconnexion (${user?.name || ''})`, en: `Logout (${user?.name || ''})`, ar: `تسجيل الخروج (${user?.name || ''})` })}
     >
       <LogOut size={13} />
-      <span className="hidden md:inline">Déconnexion</span>
+      <span className="hidden md:inline">{t({ fr: "Déconnexion", en: "Logout", ar: "خروج" })}</span>
     </button>
   );
 }
@@ -146,6 +146,7 @@ function LogoutButton() {
 /* ─── Resume Reading Widget ─── */
 function ResumeReadingWidget() {
   const { isAuthenticated } = useAuth();
+  const { t } = useLanguage();
   const { getLastVisitedCourse, isLoading } = useTrainingProgress();
 
   if (!isAuthenticated || isLoading) return null;
@@ -181,7 +182,7 @@ function ResumeReadingWidget() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full" style={{ background: "oklch(90% 0.06 145 / 0.5)", color: "oklch(40% 0.12 145)" }}>
-                  Reprendre la lecture
+                  {t({ fr: "Reprendre la lecture", en: "Resume reading", ar: "استئناف القراءة" })}
                 </span>
                 {cert && <span className="text-xs text-muted-foreground">{(cert as any).icon}</span>}
               </div>
@@ -196,7 +197,7 @@ function ResumeReadingWidget() {
                   />
                 </div>
                 <span className="text-xs font-medium" style={{ color: "oklch(45% 0.08 145)" }}>
-                  Chapitre {lastVisited.chapterIndex + 1}/{lastVisited.totalChapters}
+                  {t({ fr: `Chapitre ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}`, en: `Chapter ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}`, ar: `الفصل ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}` })}
                 </span>
               </div>
             </div>
@@ -353,28 +354,28 @@ export default function Home() {
               <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-coral)" }}>
                 <TrendingDown size={20} style={{ color: "var(--wise-accent-coral)" }} className="mb-3" />
                 <p className="wise-display-sm mb-1"><AnimatedStat value={300} suffix="M" /></p>
-                <p className="wise-body-sm" style={{ color: "var(--wise-accent-coral)", fontWeight: 600 }}>d'emplois exposés à l'automatisation</p>
+                <p className="wise-body-sm" style={{ color: "var(--wise-accent-coral)", fontWeight: 600 }}>{t({ fr: "d'emplois exposés à l'automatisation", en: "jobs exposed to automation", ar: "وظيفة معرّضة للأتمتة" })}</p>
                 <p className="wise-label mt-2">Goldman Sachs, 2023</p>
               </motion.div>
 
               <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-cyan)" }}>
                 <Users size={20} style={{ color: "var(--wise-accent-cyan)" }} className="mb-3" />
                 <p className="wise-display-sm mb-1"><AnimatedStat value={92} suffix="M" /></p>
-                <p className="wise-body-sm" style={{ color: "var(--wise-accent-cyan)", fontWeight: 600 }}>d'emplois déplacés d'ici 2030</p>
+                <p className="wise-body-sm" style={{ color: "var(--wise-accent-cyan)", fontWeight: 600 }}>{t({ fr: "d'emplois déplacés d'ici 2030", en: "jobs displaced by 2030", ar: "وظيفة ستُستبدل بحلول 2030" })}</p>
                 <p className="wise-label mt-2">WEF Future of Jobs 2025</p>
               </motion.div>
 
               <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-pear)" }}>
                 <Shield size={20} style={{ color: "oklch(64% 0.18 95)" }} className="mb-3" />
                 <p className="wise-display-sm mb-1"><AnimatedStat value={30} suffix="%" /></p>
-                <p className="wise-body-sm" style={{ color: "oklch(52% 0.14 95)", fontWeight: 600 }}>des heures de travail automatisées</p>
+                <p className="wise-body-sm" style={{ color: "oklch(52% 0.14 95)", fontWeight: 600 }}>{t({ fr: "des heures de travail automatisées", en: "of work hours automated", ar: "من ساعات العمل مؤتمتة" })}</p>
                 <p className="wise-label mt-2">McKinsey Global Institute</p>
               </motion.div>
 
               <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-mint)" }}>
                 <TrendingDown size={20} style={{ color: "var(--wise-positive-deep)" }} className="mb-3" />
-                <p className="wise-display-sm mb-1"><AnimatedStat value={220} suffix=" Milliards $" /></p>
-                <p className="wise-body-sm" style={{ color: "var(--wise-positive-deep)", fontWeight: 600 }}>de SaaS menacés par les agents IA</p>
+                <p className="wise-display-sm mb-1"><AnimatedStat value={220} suffix={t({ fr: " Milliards $", en: "B $", ar: " مليار $" })} /></p>
+                <p className="wise-body-sm" style={{ color: "var(--wise-positive-deep)", fontWeight: 600 }}>{t({ fr: "de SaaS menacés par les agents IA", en: "of SaaS threatened by AI agents", ar: "من SaaS مهددة بوكلاء الذكاء الاصطناعي" })}</p>
                 <p className="wise-label mt-2">Gartner, 2025</p>
               </motion.div>
           </motion.div>
@@ -383,9 +384,9 @@ export default function Home() {
           <motion.div variants={fadeInUp} className="text-center">
             <button className="wise-btn-tertiary">
               <Zap size={16} />
-              Ne subissez pas la disruption. Devenez l'acteur du changement.
+              {t({ fr: "Ne subissez pas la disruption. Devenez l'acteur du changement.", en: "Don't suffer the disruption. Become the agent of change.", ar: "لا تكن ضحية التحوّل. كن صانع التغيير." })}
             </button>
-            <p className="wise-label mt-4">Sources : WEF Future of Jobs 2025, Goldman Sachs 2023/2026, McKinsey Global Institute, Gartner 2025</p>
+            <p className="wise-label mt-4">{t({ fr: "Sources : WEF Future of Jobs 2025, Goldman Sachs 2023/2026, McKinsey Global Institute, Gartner 2025", en: "Sources: WEF Future of Jobs 2025, Goldman Sachs 2023/2026, McKinsey Global Institute, Gartner 2025", ar: "المصادر: WEF Future of Jobs 2025, Goldman Sachs 2023/2026, McKinsey Global Institute, Gartner 2025" })}</p>
           </motion.div>
         </div>
       </AnimatedSection>
@@ -568,27 +569,27 @@ export default function Home() {
                   <span className="inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm" style={{ background: "var(--wise-sage)", color: "#fff" }}>2</span>
                 </div>
                 <div>
-                  <h3 className="wise-display-xs mb-2">Étude & Évaluation</h3>
+                  <h3 className="wise-display-xs mb-2">{t({ fr: "Étude & Évaluation", en: "Study & Assessment", ar: "الدراسة والتقييم" })}</h3>
                   <p className="wise-body-md mb-4">
-                    La Centrale classe le projet selon 3 axes pour déterminer la solution optimale :
+                    {t({ fr: "La Centrale classe le projet selon 3 axes pour déterminer la solution optimale :", en: "The Central classifies the project along 3 axes to determine the optimal solution:", ar: "تصنّف المركزية المشروع وفق 3 محاور لتحديد الحل الأمثل:" })}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                     <div className="wise-card-sage p-4 text-center">
-                      <p className="wise-label mb-1">Taille du projet</p>
-                      <p className="wise-body-sm font-semibold">Petit · Moyen · Grand</p>
+                      <p className="wise-label mb-1">{t({ fr: "Taille du projet", en: "Project size", ar: "حجم المشروع" })}</p>
+                      <p className="wise-body-sm font-semibold">{t({ fr: "Petit · Moyen · Grand", en: "Small · Medium · Large", ar: "صغير · متوسط · كبير" })}</p>
                     </div>
                     <div className="wise-card-sage p-4 text-center">
-                      <p className="wise-label mb-1">Besoin identifié</p>
+                      <p className="wise-label mb-1">{t({ fr: "Besoin identifié", en: "Identified need", ar: "الحاجة المحددة" })}</p>
                       <p className="wise-body-sm font-semibold">Smarter Employees · Faster Processes · Transformational Products</p>
                     </div>
                     <div className="wise-card-sage p-4 text-center">
-                      <p className="wise-label mb-1">Solution proposée</p>
-                      <p className="wise-body-sm font-semibold">Logiciel sans IA · Outils standard · Workflow automation · Agent full autonome</p>
+                      <p className="wise-label mb-1">{t({ fr: "Solution proposée", en: "Proposed solution", ar: "الحل المقترح" })}</p>
+                      <p className="wise-body-sm font-semibold">{t({ fr: "Logiciel sans IA · Outils standard · Workflow automation · Agent full autonome", en: "Non-AI software · Standard tools · Workflow automation · Full autonomous agent", ar: "برمجيات بدون ذكاء اصطناعي · أدوات قياسية · أتمتة سير العمل · وكيل مستقل بالكامل" })}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-2 p-3 rounded-lg" style={{ background: "var(--tint-mint)" }}>
                     <Users size={16} className="flex-shrink-0 mt-0.5" style={{ color: "var(--wise-positive-deep)" }} />
-                    <p className="wise-body-sm">La Centrale peut <strong>affilier d'autres Ambassadeurs ou experts en renfort</strong> au projet selon sa complexité.</p>
+                    <p className="wise-body-sm" dangerouslySetInnerHTML={{ __html: t({ fr: "La Centrale peut <strong>affilier d'autres Ambassadeurs ou experts en renfort</strong> au projet selon sa complexité.", en: "The Central can <strong>affiliate other Ambassadors or expert reinforcements</strong> to the project based on its complexity.", ar: "يمكن للمركزية <strong>إشراك سفراء آخرين أو خبراء كدعم</strong> للمشروع حسب تعقيده." }) }} />
                   </div>
                 </div>
               </div>
@@ -647,30 +648,30 @@ export default function Home() {
           <motion.div variants={fadeInUp} className="max-w-4xl mx-auto">
             <div className="wise-card p-8 md:p-10" style={{ background: "var(--tint-mint)" }}>
               <div className="text-center mb-8">
-                <span className="wise-eyebrow mb-3 inline-flex">Rémunération</span>
-                <h3 className="wise-display-sm">Votre modèle de revenus</h3>
+                <span className="wise-eyebrow mb-3 inline-flex">{t({ fr: "Rémunération", en: "Compensation", ar: "التعويض" })}</span>
+                <h3 className="wise-display-sm">{t({ fr: "Votre modèle de revenus", en: "Your revenue model", ar: "نموذج إيراداتك" })}</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="wise-card p-6 text-center">
-                  <p className="wise-display-md mb-2" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>20% à 60%</p>
-                  <p className="wise-body-md font-semibold mb-2">Frais de Setup</p>
-                  <p className="wise-body-sm">Selon votre niveau d'implication dans le projet (prospection, accompagnement, coordination)</p>
+                  <p className="wise-display-md mb-2" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>{t({ fr: "20% à 60%", en: "20% to 60%", ar: "20% إلى 60%" })}</p>
+                  <p className="wise-body-md font-semibold mb-2">{t({ fr: "Frais de Setup", en: "Setup Fees", ar: "رسوم الإعداد" })}</p>
+                  <p className="wise-body-sm">{t({ fr: "Selon votre niveau d'implication dans le projet (prospection, accompagnement, coordination)", en: "Based on your level of involvement in the project (prospecting, support, coordination)", ar: "حسب مستوى مشاركتك في المشروع (التنقيب، المرافقة، التنسيق)" })}</p>
                 </div>
                 <div className="wise-card p-6 text-center">
                   <p className="wise-display-md mb-2" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>10%</p>
-                  <p className="wise-body-md font-semibold mb-2">Tokens consommés (Run)</p>
-                  <p className="wise-body-sm">Revenus récurrents sur la consommation de tokens pendant toute la vie du projet client</p>
+                  <p className="wise-body-md font-semibold mb-2">{t({ fr: "Tokens consommés (Run)", en: "Tokens consumed (Run)", ar: "الرموز المستهلكة (Run)" })}</p>
+                  <p className="wise-body-sm">{t({ fr: "Revenus récurrents sur la consommation de tokens pendant toute la vie du projet client", en: "Recurring revenue on token consumption throughout the client project lifetime", ar: "إيرادات متكررة على استهلاك الرموز طوال عمر مشروع العميل" })}</p>
                 </div>
               </div>
               <p className="wise-body-sm text-center mt-6" style={{ color: "var(--wise-sage)" }}>
-                Plus vous apportez de projets et plus vous êtes impliqué, plus vos revenus augmentent — avec un effet cumulatif sur le long terme.
+                {t({ fr: "Plus vous apportez de projets et plus vous êtes impliqué, plus vos revenus augmentent — avec un effet cumulatif sur le long terme.", en: "The more projects you bring and the more involved you are, the more your revenue grows — with a cumulative long-term effect.", ar: "كلما جلبت المزيد من المشاريع وزادت مشاركتك، زادت إيراداتك — مع تأثير تراكمي على المدى الطويل." })}
               </p>
             </div>
           </motion.div>
 
           {/* Diagramme de flux */}
           <motion.div variants={fadeInUp} className="max-w-4xl mx-auto mt-14 mb-14">
-            <h3 className="wise-display-sm text-center mb-8">Le flux d'un projet</h3>
+            <h3 className="wise-display-sm text-center mb-8">{t({ fr: "Le flux d'un projet", en: "Project workflow", ar: "مسار المشروع" })}</h3>
             <FlowDiagram />
           </motion.div>
 
@@ -687,14 +688,14 @@ export default function Home() {
           <motion.div variants={fadeInUp}>
             <Rocket size={36} style={{ color: "var(--wise-positive-deep)" }} className="mx-auto mb-6" />
             <h2 className="wise-display-xl mb-5" style={{ textWrap: "balance" }}>
-              Ne subissez pas la disruption.<br />Devenez-en l'acteur.
+              <span dangerouslySetInnerHTML={{ __html: t({ fr: "Ne subissez pas la disruption.<br />Devenez-en l'acteur.", en: "Don't suffer the disruption.<br />Become the agent of change.", ar: "لا تكن ضحية التحوّل.<br />كن صانع التغيير." }) }} />
             </h2>
             <p className="wise-body-lg mb-10 max-w-[42ch] mx-auto">
-              Formation et certification 100% gratuites – 296 places seulement
+              {t({ fr: "Formation et certification 100% gratuites – 296 places seulement", en: "Training and certification 100% free – only 296 spots", ar: "تدريب وشهادة مجانية 100% – 296 مقعداً فقط" })}
             </p>
             <Link href="/apply">
               <button className="wise-btn-primary text-base md:text-lg px-8 md:px-10 py-4 md:py-5 flex items-center gap-3 mx-auto">
-                Postuler maintenant <ArrowRight size={20} />
+                {t({ fr: "Postuler maintenant", en: "Apply now", ar: "قدّم الآن" })} <ArrowRight size={20} />
               </button>
             </Link>
           </motion.div>
@@ -705,8 +706,8 @@ export default function Home() {
       <AnimatedSection id="faq" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-12">
           <motion.div variants={fadeInUp} className="text-center mb-14">
-            <span className="wise-eyebrow mb-4 inline-flex">Support</span>
-            <h2 className="wise-display-md">Questions fréquentes</h2>
+            <span className="wise-eyebrow mb-4 inline-flex">{t({ fr: "Support", en: "Support", ar: "الدعم" })}</span>
+            <h2 className="wise-display-md">{t({ fr: "Questions fréquentes", en: "Frequently Asked Questions", ar: "الأسئلة الشائعة" })}</h2>
           </motion.div>
           <motion.div variants={staggerContainer} className="max-w-3xl mx-auto space-y-3">
             {faqItems.map((item, i) => (
@@ -752,7 +753,7 @@ export default function Home() {
               </p>
               <div className="flex items-center gap-1.5 mt-2">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--wise-positive-deep)" }}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                <span className="wise-body-sm" style={{ color: "var(--wise-positive-deep)" }}>Registered Partner du Claude Partner Network</span>
+                <span className="wise-body-sm" style={{ color: "var(--wise-positive-deep)" }}>{t({ fr: "Registered Partner du Claude Partner Network", en: "Registered Partner of the Claude Partner Network", ar: "شريك مسجل في Claude Partner Network" })}</span>
               </div>
             </div>
             <div>
@@ -777,7 +778,7 @@ export default function Home() {
               <h4 className="wise-label mb-3">{t({ fr: "Contact", en: "Contact", ar: "الاتصال" })}</h4>
               <ul className="space-y-1.5">
                 <li><a href="mailto:info@neopolis-dev.com" className="wise-body-sm hover:underline">info@neopolis-dev.com</a></li>
-                <li><a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="wise-body-sm hover:underline">À propos de Neopolis Dev ↗</a></li>
+                <li><a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="wise-body-sm hover:underline">{t({ fr: "À propos de Neopolis Dev ↗", en: "About Neopolis Dev ↗", ar: "حول Neopolis Dev ↗" })}</a></li>
                 <li><a href="https://www.anthropic.com/news/claude-partner-network" target="_blank" rel="noopener noreferrer" className="wise-body-sm hover:underline">Claude Partner Network ↗</a></li>
               </ul>
             </div>
@@ -823,6 +824,7 @@ function StatCard({ value, label, source, highlight }: { value: string; label: s
 }
 
 function FormulaCard({ icon, step, title, description, badge, image }: { icon: React.ReactNode; step: string; title: string; description: string; badge: string; image: string }) {
+  const { t } = useLanguage();
   return (
     <motion.div
       whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3, ease: [0.23, 1, 0.32, 1] } }}
@@ -839,7 +841,7 @@ function FormulaCard({ icon, step, title, description, badge, image }: { icon: R
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <span className="absolute top-3 right-3 text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm" style={{ backgroundColor: "rgba(255,255,255,0.9)", color: "var(--wise-ink)" }}>
-          ÉTAPE {step}
+          {t({ fr: "ÉTAPE", en: "STEP", ar: "المرحلة" })} {step}
         </span>
       </div>
 
@@ -939,6 +941,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 }
 
 function AnimatedChart() {
+  const { t, lang } = useLanguage();
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartInstanceRef = useRef<ChartJS | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -1045,11 +1048,11 @@ function AnimatedChart() {
     });
 
     return () => { chartInstanceRef.current?.destroy(); };
-  }, [isInView]);
+  }, [isInView, lang]);
 
   return (
     <motion.div variants={fadeInUp} className="wise-card mb-8 md:mb-12">
-      <h3 className="wise-display-xs mb-1" style={{ color: "var(--wise-accent-coral)" }}>Emplois exposés à l'automatisation IA (en millions)</h3>
+      <h3 className="wise-display-xs mb-1" style={{ color: "var(--wise-accent-coral)" }}>{t({ fr: "Emplois exposés à l'automatisation IA (en millions)", en: "Jobs exposed to AI automation (in millions)", ar: "الوظائف المعرّضة لأتمتة الذكاء الاصطناعي (بالملايين)" })}</h3>
       <p className="wise-label mb-4">WEF (85M/2025, 92M/2030) · Goldman Sachs (300M/2030) · McKinsey (400-800M/2030)</p>
       <div ref={chartContainerRef} className="h-[280px] md:h-[340px]">
         <canvas ref={canvasRef}></canvas>
@@ -1059,6 +1062,7 @@ function AnimatedChart() {
 }
 
 function JobLossChart() {
+  const { t, lang } = useLanguage();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<ChartJS | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -1076,12 +1080,12 @@ function JobLossChart() {
       data: {
         labels: ["2025", "2026", "2027", "2028", "2029", "2030"],
         datasets: [
-          { label: "Saisie de données", data: [100, 82, 65, 48, 35, 22], borderColor: "#9fe870", backgroundColor: "rgba(159,232,112,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#9fe870" },
-          { label: "Service client", data: [100, 85, 70, 55, 42, 30], borderColor: "#38c8ff", backgroundColor: "rgba(56,200,255,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#38c8ff" },
-          { label: "Comptabilité", data: [100, 88, 75, 62, 50, 40], borderColor: "#ffc091", backgroundColor: "rgba(255,192,145,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#ffc091" },
-          { label: "Développeurs", data: [100, 90, 78, 65, 55, 45], borderColor: "#ffd11a", backgroundColor: "rgba(255,209,26,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#ffd11a" },
-          { label: "Traduction", data: [100, 78, 58, 40, 28, 18], borderColor: "#d03238", backgroundColor: "rgba(208,50,56,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#d03238" },
-          { label: "Juridique", data: [100, 92, 82, 72, 62, 52], borderColor: "#c5edab", backgroundColor: "rgba(197,237,171,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#c5edab" },
+          { label: t({ fr: "Saisie de données", en: "Data Entry", ar: "إدخال البيانات" }), data: [100, 82, 65, 48, 35, 22], borderColor: "#9fe870", backgroundColor: "rgba(159,232,112,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#9fe870" },
+          { label: t({ fr: "Service client", en: "Customer Service", ar: "خدمة العملاء" }), data: [100, 85, 70, 55, 42, 30], borderColor: "#38c8ff", backgroundColor: "rgba(56,200,255,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#38c8ff" },
+          { label: t({ fr: "Comptabilité", en: "Accounting", ar: "المحاسبة" }), data: [100, 88, 75, 62, 50, 40], borderColor: "#ffc091", backgroundColor: "rgba(255,192,145,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#ffc091" },
+          { label: t({ fr: "Développeurs", en: "Developers", ar: "المطورون" }), data: [100, 90, 78, 65, 55, 45], borderColor: "#ffd11a", backgroundColor: "rgba(255,209,26,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#ffd11a" },
+          { label: t({ fr: "Traduction", en: "Translation", ar: "الترجمة" }), data: [100, 78, 58, 40, 28, 18], borderColor: "#d03238", backgroundColor: "rgba(208,50,56,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#d03238" },
+          { label: t({ fr: "Juridique", en: "Legal", ar: "القانونية" }), data: [100, 92, 82, 72, 62, 52], borderColor: "#c5edab", backgroundColor: "rgba(197,237,171,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#c5edab" },
         ],
       },
       options: {
@@ -1090,7 +1094,7 @@ function JobLossChart() {
         animation: { duration: 1500, easing: "easeOutQuart" },
         plugins: {
           legend: { position: "bottom", labels: { color: "#e8ebe6", font: { size: 11, family: "Inter" }, boxWidth: 12, padding: 16, usePointStyle: true } },
-          title: { display: true, text: "Emplois restants (%) - Projection 2025-2030", color: "#e8ebe6", font: { size: 14, weight: "bold", family: "Inter" }, padding: { bottom: 16 } },
+          title: { display: true, text: t({ fr: "Emplois restants (%) - Projection 2025-2030", en: "Remaining Jobs (%) - Projection 2025-2030", ar: "الوظائف المتبقية (%) - توقعات 2025-2030" }), color: "#e8ebe6", font: { size: 14, weight: "bold", family: "Inter" }, padding: { bottom: 16 } },
         },
         scales: {
           x: { ticks: { color: "#868685", font: { family: "Inter" } }, grid: { color: "rgba(255,255,255,0.04)" } },
@@ -1101,7 +1105,7 @@ function JobLossChart() {
     });
 
     return () => { chartRef.current?.destroy(); };
-  }, [isInView]);
+  }, [isInView, lang]);
 
   return (
     <div ref={containerRef} className="wise-card-dark" style={{ height: "340px", padding: "20px" }}>
@@ -1219,6 +1223,7 @@ function NetworkGraph() {
 }
 
 function HeroGraphic() {
+  const { t } = useLanguage();
   return (
     <div className="relative w-full flex items-center justify-center" style={{ height: "320px" }}>
       {/* Masquer sur mobile pour performance */}
@@ -1446,7 +1451,7 @@ function HeroGraphic() {
       >
         <div className="flex items-center gap-2">
           <Globe size={14} style={{ color: "var(--wise-accent-cyan)" }} />
-          <span className="text-xs font-semibold" style={{ color: "var(--wise-ink)" }}>Certification internationale</span>
+          <span className="text-xs font-semibold" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Certification internationale", en: "International certification", ar: "شهادة دولية" })}</span>
         </div>
       </motion.div>
     </div>
@@ -1482,7 +1487,7 @@ function MobileMenuButton() {
                 <a href="#partenaires" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</a>
                 <a href="#faq" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>FAQ</a>
                 <div className="h-px my-1" style={{ background: "var(--wise-rule)" }} />
-                <a href="/training" onClick={() => setOpen(false)} className="text-sm font-semibold py-2.5 px-3 rounded-lg bg-emerald-50 text-emerald-700 transition-colors">Training 🎓</a>
+                <a href="/training" onClick={() => setOpen(false)} className="text-sm font-semibold py-2.5 px-3 rounded-lg bg-emerald-50 text-emerald-700 transition-colors">{t({ fr: "Formation 🎓", en: "Training 🎓", ar: "التدريب 🎓" })}</a>
               </nav>
             </div>
           </motion.div>
@@ -1495,15 +1500,16 @@ function MobileMenuButton() {
 
 /* ─── Flow Diagram (animated on scroll) ─── */
 function FlowDiagram() {
+  const { t } = useLanguage();
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   const steps = [
-    { id: "ambassadeur", label: "Ambassadeur", sub: "Prospection B2B", color: "var(--wise-primary)", icon: "🎯" },
-    { id: "centrale", label: "Centrale", sub: "Étude & Évaluation", color: "var(--wise-sage)", icon: "🔬" },
-    { id: "contrat", label: "Contrat", sub: "Contractualisation", color: "var(--wise-accent-cyan)", icon: "📋" },
-    { id: "implementation", label: "Neopolis", sub: "Implémentation", color: "var(--wise-accent-coral)", icon: "⚙️" },
-    { id: "client", label: "Client", sub: "Monitoring & Run", color: "var(--wise-accent-pear)", icon: "🏢" },
+    { id: "ambassadeur", label: t({ fr: "Ambassadeur", en: "Ambassador", ar: "السفير" }), sub: t({ fr: "Prospection B2B", en: "B2B Prospecting", ar: "التنقيب B2B" }), color: "var(--wise-primary)", icon: "🎯" },
+    { id: "centrale", label: t({ fr: "Centrale", en: "Central", ar: "المركز" }), sub: t({ fr: "Étude & Évaluation", en: "Study & Evaluation", ar: "الدراسة والتقييم" }), color: "var(--wise-sage)", icon: "🔬" },
+    { id: "contrat", label: t({ fr: "Contrat", en: "Contract", ar: "العقد" }), sub: t({ fr: "Contractualisation", en: "Contracting", ar: "التعاقد" }), color: "var(--wise-accent-cyan)", icon: "📋" },
+    { id: "implementation", label: "Neopolis", sub: t({ fr: "Implémentation", en: "Implementation", ar: "التنفيذ" }), color: "var(--wise-accent-coral)", icon: "⚙️" },
+    { id: "client", label: "Client", sub: t({ fr: "Monitoring & Run", en: "Monitoring & Run", ar: "المراقبة والتشغيل" }), color: "var(--wise-accent-pear)", icon: "🏢" },
   ];
 
   const stepVariant = {
@@ -1629,6 +1635,7 @@ function FlowDiagram() {
 
 /* ─── Revenue Simulator ─── */
 function RevenueSimulator() {
+  const { t } = useLanguage();
   const [projects, setProjects] = useState(3);
   const [avgSetup, setAvgSetup] = useState(5000);
   const [implication, setImplication] = useState(40);
@@ -1644,17 +1651,17 @@ function RevenueSimulator() {
       <div className="text-center mb-8">
         <span className="wise-eyebrow mb-3 inline-flex">
           <Sparkles size={12} />
-          Simulateur
+          {t({ fr: "Simulateur", en: "Simulator", ar: "محاكي" })}
         </span>
-        <h3 className="wise-display-sm">Estimez vos revenus potentiels</h3>
-        <p className="wise-body-sm mt-2 max-w-[48ch] mx-auto">Ajustez les paramètres pour simuler vos gains en tant qu'Ambassadeur certifié.</p>
+        <h3 className="wise-display-sm">{t({ fr: "Estimez vos revenus potentiels", en: "Estimate your potential earnings", ar: "قدّر أرباحك المحتملة" })}</h3>
+        <p className="wise-body-sm mt-2 max-w-[48ch] mx-auto">{t({ fr: "Ajustez les paramètres pour simuler vos gains en tant qu'Ambassadeur certifié.", en: "Adjust the parameters to simulate your earnings as a Certified Ambassador.", ar: "اضبط المعايير لمحاكاة أرباحك كسفير معتمد." })}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Inputs */}
         <div className="space-y-6">
           <div>
-            <label className="wise-label mb-2 block">Nombre de projets apportés / an</label>
+            <label className="wise-label mb-2 block">{t({ fr: "Nombre de projets apportés / an", en: "Number of projects brought / year", ar: "عدد المشاريع المقدمة / سنة" })}</label>
             <input
               type="range"
               min={1}
@@ -1665,13 +1672,13 @@ function RevenueSimulator() {
             />
             <div className="flex justify-between mt-1">
               <span className="wise-label">1</span>
-              <span className="font-semibold text-sm" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>{projects} projets</span>
+              <span className="font-semibold text-sm" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>{projects} {t({ fr: "projets", en: "projects", ar: "مشاريع" })}</span>
               <span className="wise-label">20</span>
             </div>
           </div>
 
           <div>
-            <label className="wise-label mb-2 block">Frais de setup moyen par projet (€)</label>
+            <label className="wise-label mb-2 block">{t({ fr: "Frais de setup moyen par projet (€)", en: "Average setup fee per project (€)", ar: "رسوم الإعداد المتوسطة لكل مشروع (€)" })}</label>
             <input
               type="range"
               min={1000}
@@ -1689,7 +1696,7 @@ function RevenueSimulator() {
           </div>
 
           <div>
-            <label className="wise-label mb-2 block">Votre taux d'implication (%)</label>
+            <label className="wise-label mb-2 block">{t({ fr: "Votre taux d'implication (%)", en: "Your involvement rate (%)", ar: "نسبة مشاركتك (%)" })}</label>
             <input
               type="range"
               min={20}
@@ -1707,7 +1714,7 @@ function RevenueSimulator() {
           </div>
 
           <div>
-            <label className="wise-label mb-2 block">Consommation tokens mensuelle / projet (€)</label>
+            <label className="wise-label mb-2 block">{t({ fr: "Consommation tokens mensuelle / projet (€)", en: "Monthly token consumption / project (€)", ar: "استهلاك الرموز الشهري / مشروع (€)" })}</label>
             <input
               type="range"
               min={100}
@@ -1729,61 +1736,61 @@ function RevenueSimulator() {
         <div className="flex flex-col justify-center">
           <div className="wise-card-sage p-6 md:p-8 space-y-5">
             <div>
-              <p className="wise-label mb-1">Revenus Setup (one-shot)</p>
+              <p className="wise-label mb-1">{t({ fr: "Revenus Setup (one-shot)", en: "Setup Revenue (one-shot)", ar: "إيرادات الإعداد (دفعة واحدة)" })}</p>
               <p className="wise-display-sm" style={{ color: "var(--wise-ink)", fontFamily: "var(--font-mono)" }}>
                 {setupRevenue.toLocaleString("fr-FR")} €
               </p>
-              <p className="wise-body-sm mt-1">{projects} projets × {avgSetup.toLocaleString("fr-FR")}€ × {implication}%</p>
+              <p className="wise-body-sm mt-1">{projects} {t({ fr: "projets", en: "projects", ar: "مشاريع" })} × {avgSetup.toLocaleString("fr-FR")}€ × {implication}%</p>
             </div>
             <div className="border-t pt-5" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
-              <p className="wise-label mb-1">Revenus récurrents (10% tokens)</p>
+              <p className="wise-label mb-1">{t({ fr: "Revenus récurrents (10% tokens)", en: "Recurring Revenue (10% tokens)", ar: "إيرادات متكررة (10% رموز)" })}</p>
               <p className="wise-display-sm" style={{ color: "var(--wise-ink)", fontFamily: "var(--font-mono)" }}>
                 {monthlyRecurring.toLocaleString("fr-FR")} €<span className="text-sm font-normal"> /mois</span>
               </p>
               <p className="wise-body-sm mt-1">{projects} × {monthlyTokens.toLocaleString("fr-FR")}€ × 10% = {annualRecurring.toLocaleString("fr-FR")} €/an</p>
             </div>
             <div className="border-t pt-5" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
-              <p className="wise-label mb-1">Total 1ère année estimé</p>
+              <p className="wise-label mb-1">{t({ fr: "Total 1ère année estimé", en: "Estimated 1st year total", ar: "إجمالي السنة الأولى المقدّر" })}</p>
               <p className="wise-display-md" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>
                 {totalFirstYear.toLocaleString("fr-FR")} €
               </p>
-              <p className="wise-body-sm mt-1">Setup + 12 mois de récurrent</p>
+              <p className="wise-body-sm mt-1">{t({ fr: "Setup + 12 mois de récurrent", en: "Setup + 12 months recurring", ar: "الإعداد + 12 شهراً متكرراً" })}</p>
             </div>
           </div>
           <p className="wise-label text-center mt-4">
-            * Estimation indicative basée sur vos paramètres
+            * {t({ fr: "* Estimation indicative basée sur vos paramètres", en: "* Indicative estimate based on your parameters", ar: "* تقدير إرشادي بناءً على معاييرك" })}
           </p>
         </div>
       </div>
 
       {/* Exemples concrets */}
       <div className="mt-10 pt-8 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-        <h4 className="wise-display-xs text-center mb-6">Exemples concrets de projets</h4>
-        <p className="wise-body-sm text-center mb-8 max-w-[56ch] mx-auto">Scénarios réalistes dans le contexte Afrique / MENA — les montants varient selon la complexité.</p>
+        <h4 className="wise-display-xs text-center mb-6">{t({ fr: "Exemples concrets de projets", en: "Concrete project examples", ar: "أمثلة ملموسة للمشاريع" })}</h4>
+        <p className="wise-body-sm text-center mb-8 max-w-[56ch] mx-auto">{t({ fr: "Scénarios réalistes dans le contexte Afrique / MENA — les montants varient selon la complexité.", en: "Realistic scenarios in the Africa / MENA context — amounts vary depending on complexity.", ar: "سيناريوهات واقعية في سياق أفريقيا / الشرق الأوسط — المبالغ تختلف حسب التعقيد." })}</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Agence de voyage */}
           <div className="wise-card-sage p-5">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-lg">✈️</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Agence de Voyage</p>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Agence de Voyage", en: "Travel Agency", ar: "وكالة سفر" })}</p>
             </div>
-            <p className="wise-body-sm mb-3">Chatbot IA multilingue (arabe/français) pour devis Omra & circuits touristiques, avec relance automatique des prospects inactifs</p>
+            <p className="wise-body-sm mb-3">{t({ fr: "Chatbot IA multilingue (arabe/français) pour devis Omra & circuits touristiques, avec relance automatique des prospects inactifs", en: "Multilingual AI chatbot (Arabic/French) for Omra quotes & tourist circuits, with automatic follow-up of inactive prospects", ar: "روبوت محادثة ذكي متعدد اللغات (عربي/فرنسي) لعروض العمرة والرحلات السياحية، مع متابعة تلقائية للعملاء المحتملين" })}</p>
             <div className="space-y-1">
               <div className="flex justify-between">
-                <span className="wise-label">Setup</span>
+                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>6 000 €</span>
               </div>
               <div className="flex justify-between">
-                <span className="wise-label">Tokens/mois</span>
+                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>800 €</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">Votre gain (40%)</span>
+                <span className="wise-label">{t({ fr: "Votre gain (40%)", en: "Your earnings (40%)", ar: "أرباحك (40%)" })}</span>
                 <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>2 400 € + 80 €/mois</span>
               </div>
               <div className="flex justify-between pt-1">
-                <span className="wise-label">ROI client</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>+35% de conversions</span>
+                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "+35% de conversions", en: "+35% conversions", ar: "+35% تحويلات" })}</span>
               </div>
             </div>
           </div>
@@ -1792,25 +1799,25 @@ function RevenueSimulator() {
           <div className="wise-card-sage p-5">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-lg">📣</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Agence Marketing</p>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Agence Marketing", en: "Marketing Agency", ar: "وكالة تسويق" })}</p>
             </div>
-            <p className="wise-body-sm mb-3">Agent autonome de création de contenu social media (posts, visuels, planning) pour clients PME au Maghreb</p>
+            <p className="wise-body-sm mb-3">{t({ fr: "Agent autonome de création de contenu social media (posts, visuels, planning) pour clients PME au Maghreb", en: "Autonomous social media content creation agent (posts, visuals, planning) for SME clients in the Maghreb", ar: "وكيل مستقل لإنشاء محتوى وسائل التواصل الاجتماعي (منشورات، مرئيات، تخطيط) لعملاء الشركات الصغيرة في المغرب العربي" })}</p>
             <div className="space-y-1">
               <div className="flex justify-between">
-                <span className="wise-label">Setup</span>
+                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>10 000 €</span>
               </div>
               <div className="flex justify-between">
-                <span className="wise-label">Tokens/mois</span>
+                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>1 500 €</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">Votre gain (45%)</span>
+                <span className="wise-label">{t({ fr: "Votre gain (45%)", en: "Your earnings (45%)", ar: "أرباحك (45%)" })}</span>
                 <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>4 500 € + 150 €/mois</span>
               </div>
               <div className="flex justify-between pt-1">
-                <span className="wise-label">ROI client</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>3 employés remplacés</span>
+                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "3 employés remplacés", en: "3 employees replaced", ar: "3 موظفين مستبدلين" })}</span>
               </div>
             </div>
           </div>
@@ -1819,25 +1826,25 @@ function RevenueSimulator() {
           <div className="wise-card-sage p-5">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-lg">🛡️</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Compagnie d'Assurance</p>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Compagnie d'Assurance", en: "Insurance Company", ar: "شركة تأمين" })}</p>
             </div>
-            <p className="wise-body-sm mb-3">Workflow automation pour le traitement des sinistres : extraction documents, vérification fraude, calcul indemnités</p>
+            <p className="wise-body-sm mb-3">{t({ fr: "Workflow automation pour le traitement des sinistres : extraction documents, vérification fraude, calcul indemnités", en: "Workflow automation for claims processing: document extraction, fraud verification, compensation calculation", ar: "أتمتة سير العمل لمعالجة المطالبات: استخراج المستندات، التحقق من الاحتيال، حساب التعويضات" })}</p>
             <div className="space-y-1">
               <div className="flex justify-between">
-                <span className="wise-label">Setup</span>
+                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>45 000 €</span>
               </div>
               <div className="flex justify-between">
-                <span className="wise-label">Tokens/mois</span>
+                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>8 000 €</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">Votre gain (50%)</span>
+                <span className="wise-label">{t({ fr: "Votre gain (50%)", en: "Your earnings (50%)", ar: "أرباحك (50%)" })}</span>
                 <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>22 500 € + 800 €/mois</span>
               </div>
               <div className="flex justify-between pt-1">
-                <span className="wise-label">ROI client</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>-60% temps traitement</span>
+                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "-60% temps traitement", en: "-60% processing time", ar: "-60% وقت المعالجة" })}</span>
               </div>
             </div>
           </div>
@@ -1846,25 +1853,25 @@ function RevenueSimulator() {
           <div className="wise-card-sage p-5">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-lg">🏦</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Banque Régionale</p>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Banque Régionale", en: "Regional Bank", ar: "بنك إقليمي" })}</p>
             </div>
-            <p className="wise-body-sm mb-3">Agent IA d'analyse de dossiers de crédit PME/TPE : scoring automatisé, vérification KYC et recommandation d'offres</p>
+            <p className="wise-body-sm mb-3">{t({ fr: "Agent IA d'analyse de dossiers de crédit PME/TPE : scoring automatisé, vérification KYC et recommandation d'offres", en: "AI agent for SME credit file analysis: automated scoring, KYC verification and offer recommendations", ar: "وكيل ذكاء اصطناعي لتحليل ملفات الائتمان: تسجيل تلقائي، التحقق من KYC وتوصيات العروض" })}</p>
             <div className="space-y-1">
               <div className="flex justify-between">
-                <span className="wise-label">Setup</span>
+                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>60 000 €</span>
               </div>
               <div className="flex justify-between">
-                <span className="wise-label">Tokens/mois</span>
+                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>12 000 €</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">Votre gain (55%)</span>
+                <span className="wise-label">{t({ fr: "Votre gain (55%)", en: "Your earnings (55%)", ar: "أرباحك (55%)" })}</span>
                 <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>33 000 € + 1 200 €/mois</span>
               </div>
               <div className="flex justify-between pt-1">
-                <span className="wise-label">ROI client</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>x4 dossiers traités/jour</span>
+                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "x4 dossiers traités/jour", en: "x4 files processed/day", ar: "x4 ملفات معالجة/يوم" })}</span>
               </div>
             </div>
           </div>
@@ -1873,25 +1880,25 @@ function RevenueSimulator() {
           <div className="wise-card-sage p-5">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-lg">🩺</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Cabinet Médical</p>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Cabinet Médical", en: "Medical Practice", ar: "عيادة طبية" })}</p>
             </div>
-            <p className="wise-body-sm mb-3">Assistant IA pour prise de RDV, tri des urgences, rappels patients et pré-diagnostic orienté (cliniques privées Casablanca/Alger)</p>
+            <p className="wise-body-sm mb-3">{t({ fr: "Assistant IA pour prise de RDV, tri des urgences, rappels patients et pré-diagnostic orienté (cliniques privées Casablanca/Alger)", en: "AI assistant for appointment booking, emergency triage, patient reminders and guided pre-diagnosis (private clinics Casablanca/Algiers)", ar: "مساعد ذكاء اصطناعي لحجز المواعيد، فرز الطوارئ، تذكيرات المرضى والتشخيص المبدئي (عيادات خاصة الدار البيضاء/الجزائر)" })}</p>
             <div className="space-y-1">
               <div className="flex justify-between">
-                <span className="wise-label">Setup</span>
+                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>8 000 €</span>
               </div>
               <div className="flex justify-between">
-                <span className="wise-label">Tokens/mois</span>
+                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>600 €</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">Votre gain (40%)</span>
+                <span className="wise-label">{t({ fr: "Votre gain (40%)", en: "Your earnings (40%)", ar: "أرباحك (40%)" })}</span>
                 <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>3 200 € + 60 €/mois</span>
               </div>
               <div className="flex justify-between pt-1">
-                <span className="wise-label">ROI client</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>-70% appels manqués</span>
+                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "-70% appels manqués", en: "-70% missed calls", ar: "-70% مكالمات فائتة" })}</span>
               </div>
             </div>
           </div>
@@ -1900,25 +1907,25 @@ function RevenueSimulator() {
           <div className="wise-card-sage p-5">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-lg">🚢</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Société Import-Export</p>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Société Import-Export", en: "Import-Export Company", ar: "شركة استيراد وتصدير" })}</p>
             </div>
-            <p className="wise-body-sm mb-3">Agent de suivi logistique : tracking conteneurs, alertes douanes, génération documents d'import (ports Tanger Med, Abidjan)</p>
+            <p className="wise-body-sm mb-3">{t({ fr: "Agent de suivi logistique : tracking conteneurs, alertes douanes, génération documents d'import (ports Tanger Med, Abidjan)", en: "Logistics tracking agent: container tracking, customs alerts, import document generation (Tanger Med, Abidjan ports)", ar: "وكيل متابعة لوجستية: تتبع الحاويات، تنبيهات الجمارك، إنشاء مستندات الاستيراد (ميناء طنجة المتوسط، أبيدجان)" })}</p>
             <div className="space-y-1">
               <div className="flex justify-between">
-                <span className="wise-label">Setup</span>
+                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>35 000 €</span>
               </div>
               <div className="flex justify-between">
-                <span className="wise-label">Tokens/mois</span>
+                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>6 000 €</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">Votre gain (50%)</span>
+                <span className="wise-label">{t({ fr: "Votre gain (50%)", en: "Your earnings (50%)", ar: "أرباحك (50%)" })}</span>
                 <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>17 500 € + 600 €/mois</span>
               </div>
               <div className="flex justify-between pt-1">
-                <span className="wise-label">ROI client</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>-45% retards douane</span>
+                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "-45% retards douane", en: "-45% customs delays", ar: "-45% تأخيرات جمركية" })}</span>
               </div>
             </div>
           </div>
@@ -1927,25 +1934,25 @@ function RevenueSimulator() {
           <div className="wise-card-sage p-5">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-lg">🏗️</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>Promoteur Immobilier</p>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Promoteur Immobilier", en: "Real Estate Developer", ar: "مطور عقاري" })}</p>
             </div>
-            <p className="wise-body-sm mb-3">Chatbot de qualification acheteurs, visite virtuelle IA et génération de compromis (programmes neufs Maroc/Tunisie)</p>
+            <p className="wise-body-sm mb-3">{t({ fr: "Chatbot de qualification acheteurs, visite virtuelle IA et génération de compromis (programmes neufs Maroc/Tunisie)", en: "Buyer qualification chatbot, AI virtual tours and sales agreement generation (new builds Morocco/Tunisia)", ar: "روبوت محادثة لتأهيل المشترين، جولات افتراضية بالذكاء الاصطناعي وإنشاء عقود البيع (مشاريع جديدة المغرب/تونس)" })}</p>
             <div className="space-y-1">
               <div className="flex justify-between">
-                <span className="wise-label">Setup</span>
+                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>14 000 €</span>
               </div>
               <div className="flex justify-between">
-                <span className="wise-label">Tokens/mois</span>
+                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>1 800 €</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">Votre gain (45%)</span>
+                <span className="wise-label">{t({ fr: "Votre gain (45%)", en: "Your earnings (45%)", ar: "أرباحك (45%)" })}</span>
                 <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>6 300 € + 180 €/mois</span>
               </div>
               <div className="flex justify-between pt-1">
-                <span className="wise-label">ROI client</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>+50% leads qualifiés</span>
+                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "+50% leads qualifiés", en: "+50% qualified leads", ar: "+50% عملاء محتملين مؤهلين" })}</span>
               </div>
             </div>
           </div>
@@ -1954,25 +1961,25 @@ function RevenueSimulator() {
           <div className="wise-card-sage p-5">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-lg">🎓</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>École Privée / Université</p>
+              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "École Privée / Université", en: "Private School / University", ar: "مدرسة خاصة / جامعة" })}</p>
             </div>
-            <p className="wise-body-sm mb-3">Plateforme de tutorat IA personnalisé et correction automatique d'examens pour établissements privés (Sénégal, Côte d'Ivoire)</p>
+            <p className="wise-body-sm mb-3">{t({ fr: "Plateforme de tutorat IA personnalisé et correction automatique d'examens pour établissements privés (Sénégal, Côte d'Ivoire)", en: "Personalized AI tutoring platform and automatic exam grading for private institutions (Senegal, Ivory Coast)", ar: "منصة تعليم خصوصي بالذكاء الاصطناعي وتصحيح تلقائي للامتحانات للمؤسسات الخاصة (السنغال، ساحل العاج)" })}</p>
             <div className="space-y-1">
               <div className="flex justify-between">
-                <span className="wise-label">Setup</span>
+                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>12 000 €</span>
               </div>
               <div className="flex justify-between">
-                <span className="wise-label">Tokens/mois</span>
+                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
                 <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>1 200 €</span>
               </div>
               <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">Votre gain (45%)</span>
+                <span className="wise-label">{t({ fr: "Votre gain (45%)", en: "Your earnings (45%)", ar: "أرباحك (45%)" })}</span>
                 <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>5 400 € + 120 €/mois</span>
               </div>
               <div className="flex justify-between pt-1">
-                <span className="wise-label">ROI client</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>-80% temps correction</span>
+                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "-80% temps correction", en: "-80% grading time", ar: "-80% وقت التصحيح" })}</span>
               </div>
             </div>
           </div>
