@@ -5,9 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle, GraduationCap, LogIn, Mail } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Login() {
   const [, navigate] = useLocation();
+  const { t } = useLanguage();
 
   // Login state
   const [loginEmail, setLoginEmail] = useState("");
@@ -30,7 +32,7 @@ export default function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        setLoginError(data.error || "Erreur de connexion");
+        setLoginError(data.error || t({ fr: "Erreur de connexion", en: "Login error", ar: "خطأ في تسجيل الدخول" }));
         setLoginLoading(false);
         return;
       }
@@ -42,7 +44,7 @@ export default function Login() {
         window.location.href = "/training";
       }
     } catch (err) {
-      setLoginError("Erreur réseau. Veuillez réessayer.");
+      setLoginError(t({ fr: "Erreur réseau. Veuillez réessayer.", en: "Network error. Please try again.", ar: "خطأ في الشبكة. يرجى المحاولة مرة أخرى." }));
       setLoginLoading(false);
     }
   };
@@ -57,7 +59,7 @@ export default function Login() {
             <span className="text-2xl font-bold text-foreground">Neopolis Akademy</span>
           </div>
           <p className="text-muted-foreground text-sm">
-            Plateforme de formation certifiante en Intelligence Artificielle
+            {t({ fr: "Plateforme de formation certifiante en Intelligence Artificielle", en: "Certified AI Training Platform", ar: "منصة تدريب معتمدة في الذكاء الاصطناعي" })}
           </p>
         </div>
 
@@ -66,21 +68,21 @@ export default function Login() {
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2 text-lg">
               <LogIn className="w-5 h-5" />
-              Connexion
+              {t({ fr: "Connexion", en: "Login", ar: "تسجيل الدخول" })}
             </CardTitle>
             <CardDescription>
-              Accédez à votre espace de formation
+              {t({ fr: "Accédez à votre espace de formation", en: "Access your training space", ar: "الوصول إلى مساحة التدريب الخاصة بك" })}
             </CardDescription>
           </CardHeader>
 
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="login-email">Email</Label>
+                <Label htmlFor="login-email">{t({ fr: "Email", en: "Email", ar: "البريد الإلكتروني" })}</Label>
                 <Input
                   id="login-email"
                   type="email"
-                  placeholder="votre@email.com"
+                  placeholder={t({ fr: "votre@email.com", en: "your@email.com", ar: "بريدك@email.com" })}
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
                   required
@@ -88,7 +90,7 @@ export default function Login() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="login-password">Mot de passe</Label>
+                <Label htmlFor="login-password">{t({ fr: "Mot de passe", en: "Password", ar: "كلمة المرور" })}</Label>
                 <Input
                   id="login-password"
                   type="password"
@@ -108,7 +110,9 @@ export default function Login() {
               )}
 
               <Button type="submit" className="w-full" disabled={loginLoading}>
-                {loginLoading ? "Connexion en cours..." : "Se connecter"}
+                {loginLoading
+                  ? t({ fr: "Connexion en cours...", en: "Logging in...", ar: "جاري تسجيل الدخول..." })
+                  : t({ fr: "Se connecter", en: "Log in", ar: "تسجيل الدخول" })}
               </Button>
             </form>
 
@@ -118,11 +122,14 @@ export default function Login() {
                 <Mail className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
-                    Accès sur invitation uniquement
+                    {t({ fr: "Accès sur invitation uniquement", en: "Invitation-only access", ar: "الوصول بدعوة فقط" })}
                   </p>
                   <p className="text-xs text-amber-700 dark:text-amber-400/80 leading-relaxed">
-                    L'inscription est réservée aux candidats invités ou dont la candidature a été acceptée.
-                    Si vous avez reçu un email d'invitation, utilisez le lien qu'il contient pour créer votre compte.
+                    {t({
+                      fr: "L'inscription est réservée aux candidats invités ou dont la candidature a été acceptée. Si vous avez reçu un email d'invitation, utilisez le lien qu'il contient pour créer votre compte.",
+                      en: "Registration is reserved for invited candidates or those whose application has been accepted. If you received an invitation email, use the link it contains to create your account.",
+                      ar: "التسجيل مخصص للمرشحين المدعوين أو الذين تم قبول طلبهم. إذا تلقيت بريدًا إلكترونيًا للدعوة، استخدم الرابط الموجود فيه لإنشاء حسابك."
+                    })}
                   </p>
                 </div>
               </div>
@@ -134,7 +141,7 @@ export default function Login() {
                 onClick={() => navigate("/apply")}
                 className="text-xs text-muted-foreground hover:text-primary transition-colors"
               >
-                Vous souhaitez devenir ambassadeur ? Postulez ici
+                {t({ fr: "Vous souhaitez devenir ambassadeur ? Postulez ici", en: "Want to become an ambassador? Apply here", ar: "هل تريد أن تصبح سفيرًا؟ تقدم هنا" })}
               </button>
             </div>
           </CardContent>

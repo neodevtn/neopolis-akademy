@@ -949,7 +949,8 @@ function AnimatedChart() {
   const hasAnimated = useRef(false);
 
   useEffect(() => {
-    if (!isInView || !canvasRef.current || hasAnimated.current) return;
+    if (!isInView || !canvasRef.current) return;
+    const shouldAnimate = !hasAnimated.current;
     hasAnimated.current = true;
 
     if (chartInstanceRef.current) chartInstanceRef.current.destroy();
