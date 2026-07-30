@@ -925,3 +925,11 @@
 - [x] Fix exercises rendering: title, prompt, instructions avec resolveBody()
 - [x] Backend Zod schemas élargis pour accepter string | {en,fr} (updateQuizzes, updateMockExamQuestion, addMockExamQuestion, updateExercise)
 - [x] Fix TypeScript errors: z.record(z.string()) -> z.record(z.string(), z.string()) pour Zod v4
+
+## Onglets EN/FR dans les dialogues d'édition admin
+- [x] Ajouter onglets EN/FR dans le dialogue d'édition des questions d'examen mock
+- [x] Ajouter onglets EN/FR dans le dialogue d'édition des quiz
+- [x] Ajouter onglets EN/FR dans le dialogue d'édition des exercices
+- [x] Ajouter onglets EN/FR dans le dialogue d'édition des blocs de contenu (body)
+- [x] Anglais comme langue par défaut (fallback si pas de traduction FR)
+- [x] Helpers getI18n/setI18n pour normalisation string <-> {en,fr}

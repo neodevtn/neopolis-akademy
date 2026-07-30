@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
@@ -49,6 +50,24 @@ export default function AdminContentManager() {
   const [editingBlock, setEditingBlock] = useState<{ lessonIdx: number; chapterIdx: number; blockIdx: number; content: string } | null>(null);
   const [editingQuiz, setEditingQuiz] = useState<any>(null);
   const [editingExamQ, setEditingExamQ] = useState<any>(null);
+  const [editLang, setEditLang] = useState<"en" | "fr">("en");
+
+  // Helpers for bilingual editing
+  const getI18n = (field: any, l: "en" | "fr"): string => {
+    if (!field) return '';
+    if (typeof field === 'string') return l === 'en' ? field : ''; // strings are treated as EN
+    if (typeof field === 'object') return field[l] || '';
+    return String(field);
+  };
+  const setI18n = (field: any, l: "en" | "fr", value: string): Record<string, string> => {
+    if (!field || typeof field === 'string') {
+      // Convert string to bilingual object
+      const obj = { en: field || '', fr: '' };
+      obj[l] = value;
+      return obj;
+    }
+    return { ...field, [l]: value };
+  };
   const [selectedQuizKey, setSelectedQuizKey] = useState("");
   const [examQuestions, setExamQuestions] = useState<any[]>([]);
 
@@ -291,8 +310,11 @@ export default function AdminContentManager() {
                             lessonIdx: selectedLessonIdx,
                             chapterIdx: selectedChapterIdx,
                             blockIdx: bi,
-                            content: typeof block.body === "string" ? block.body : JSON.stringify(block, null, 2),
-                          });
+                            content: typeof block.body === "string" ? block.body : (typeof block.body === "object" && block.body !== null && (block.body.en || block.body.fr)) ? JSON.stringify(block.body) : JSON.stringify(block, null, 2),
+                            isI18nBody: typeof block.body === "object" && block.body !== null && (block.body.en !== undefined || block.body.fr !== undefined),
+                            bodyEn: typeof block.body === "object" && block.body?.en ? block.body.en : (typeof block.body === "string" ? block.body : ""),
+                            bodyFr: typeof block.body === "object" && block.body?.fr ? block.body.fr : "",
+                          } as any);
                           setEditDialogOpen(true);
                         }}>
                           <Edit3 className="w-3 h-3" />
@@ -714,30 +736,61 @@ export default function AdminContentManager() {
   // ─── EDIT DIALOG ───
   const renderEditDialog = () => {
     if (editingBlock) {
+      const eb = editingBlock as any;
       return (
         <Dialog open={editDialogOpen} onOpenChange={(o) => { if (!o) { setEditDialogOpen(false); setEditingBlock(null); } }}>
           <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Éditer le contenu du bloc</DialogTitle>
             </DialogHeader>
-            <Textarea
-              value={editingBlock.content}
-              onChange={(e) => setEditingBlock({ ...editingBlock, content: e.target.value })}
-              rows={15}
-              className="font-mono text-xs"
-            />
+            {eb.isI18nBody ? (
+              <Tabs value={editLang} onValueChange={(v) => setEditLang(v as "en" | "fr")} className="w-full">
+                <TabsList className="mb-3">
+                  <TabsTrigger value="en">🇬🇧 English (default)</TabsTrigger>
+                  <TabsTrigger value="fr">🇫🇷 Français</TabsTrigger>
+                </TabsList>
+                <TabsContent value="en">
+                  <Textarea
+                    value={eb.bodyEn || ""}
+                    onChange={(e) => setEditingBlock({ ...eb, bodyEn: e.target.value } as any)}
+                    rows={15}
+                    className="font-mono text-xs"
+                    placeholder="English content (default)"
+                  />
+                </TabsContent>
+                <TabsContent value="fr">
+                  <Textarea
+                    value={eb.bodyFr || ""}
+                    onChange={(e) => setEditingBlock({ ...eb, bodyFr: e.target.value } as any)}
+                    rows={15}
+                    className="font-mono text-xs"
+                    placeholder="Contenu français (optionnel)"
+                  />
+                </TabsContent>
+              </Tabs>
+            ) : (
+              <Textarea
+                value={editingBlock.content}
+                onChange={(e) => setEditingBlock({ ...editingBlock, content: e.target.value })}
+                rows={15}
+                className="font-mono text-xs"
+              />
+            )}
             <DialogFooter>
               <Button variant="outline" onClick={() => { setEditDialogOpen(false); setEditingBlock(null); }}>Annuler</Button>
               <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={() => {
                 const course = courseDetailQuery.data;
                 if (!course) return;
                 const blocks = [...(course.lessons[editingBlock.lessonIdx].chapters[editingBlock.chapterIdx].blocks || [])];
-                try {
-                  // Try to parse as JSON first
-                  blocks[editingBlock.blockIdx] = JSON.parse(editingBlock.content);
-                } catch {
-                  // If not JSON, update the body field
-                  blocks[editingBlock.blockIdx] = { ...blocks[editingBlock.blockIdx], body: editingBlock.content };
+                if (eb.isI18nBody) {
+                  // Save as bilingual object
+                  blocks[editingBlock.blockIdx] = { ...blocks[editingBlock.blockIdx], body: { en: eb.bodyEn || "", fr: eb.bodyFr || "" } };
+                } else {
+                  try {
+                    blocks[editingBlock.blockIdx] = JSON.parse(editingBlock.content);
+                  } catch {
+                    blocks[editingBlock.blockIdx] = { ...blocks[editingBlock.blockIdx], body: editingBlock.content };
+                  }
                 }
                 updateChapterMut.mutate({
                   courseId: selectedCourseId,
@@ -765,24 +818,30 @@ export default function AdminContentManager() {
               <DialogHeader>
                 <DialogTitle>Éditer l'exercice</DialogTitle>
               </DialogHeader>
-              <div className="space-y-3">
-                <div>
-                  <label className="text-xs font-medium text-gray-600">Titre</label>
-                  <Input value={typeof editingExamQ.title === "object" ? (editingExamQ.title.fr || editingExamQ.title.en || "") : (editingExamQ.title || "")} onChange={(e) => setEditingExamQ({ ...editingExamQ, title: e.target.value })} />
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-gray-600">Prompt</label>
-                  <Textarea value={typeof editingExamQ.prompt === "object" ? (editingExamQ.prompt.fr || editingExamQ.prompt.en || "") : (editingExamQ.prompt || "")} onChange={(e) => setEditingExamQ({ ...editingExamQ, prompt: e.target.value })} rows={4} />
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-gray-600">Instructions</label>
-                  <Textarea value={typeof editingExamQ.instructions === "object" ? (editingExamQ.instructions.fr || editingExamQ.instructions.en || "") : (editingExamQ.instructions || "")} onChange={(e) => setEditingExamQ({ ...editingExamQ, instructions: e.target.value })} rows={3} />
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-gray-600">Correction</label>
-                  <Textarea value={typeof editingExamQ.correction === "object" ? (editingExamQ.correction.fr || editingExamQ.correction.en || "") : (editingExamQ.correction || "")} onChange={(e) => setEditingExamQ({ ...editingExamQ, correction: e.target.value })} rows={3} />
-                </div>
-              </div>
+              <Tabs value={editLang} onValueChange={(v) => setEditLang(v as "en" | "fr")} className="w-full">
+                <TabsList className="mb-3">
+                  <TabsTrigger value="en">🇬🇧 English (default)</TabsTrigger>
+                  <TabsTrigger value="fr">🇫🇷 Français</TabsTrigger>
+                </TabsList>
+                <TabsContent value={editLang} className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-gray-600">Titre ({editLang.toUpperCase()})</label>
+                    <Input value={getI18n(editingExamQ.title, editLang)} onChange={(e) => setEditingExamQ({ ...editingExamQ, title: setI18n(editingExamQ.title, editLang, e.target.value) })} />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-gray-600">Prompt ({editLang.toUpperCase()})</label>
+                    <Textarea value={getI18n(editingExamQ.prompt, editLang)} onChange={(e) => setEditingExamQ({ ...editingExamQ, prompt: setI18n(editingExamQ.prompt, editLang, e.target.value) })} rows={4} />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-gray-600">Instructions ({editLang.toUpperCase()})</label>
+                    <Textarea value={getI18n(editingExamQ.instructions, editLang)} onChange={(e) => setEditingExamQ({ ...editingExamQ, instructions: setI18n(editingExamQ.instructions, editLang, e.target.value) })} rows={3} />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-gray-600">Correction ({editLang.toUpperCase()})</label>
+                    <Textarea value={getI18n(editingExamQ.correction, editLang)} onChange={(e) => setEditingExamQ({ ...editingExamQ, correction: setI18n(editingExamQ.correction, editLang, e.target.value) })} rows={3} />
+                  </div>
+                </TabsContent>
+              </Tabs>
               <DialogFooter>
                 <Button variant="outline" onClick={() => { setEditDialogOpen(false); setEditingExamQ(null); }}>Annuler</Button>
                 <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={() => {
@@ -814,48 +873,54 @@ export default function AdminContentManager() {
             <DialogHeader>
               <DialogTitle>{editingExamQ.isNew ? "Ajouter une question" : "Éditer la question"}</DialogTitle>
             </DialogHeader>
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs font-medium text-gray-600">Domaine</label>
-                <Input value={typeof editingExamQ.domain === "object" ? (editingExamQ.domain.fr || editingExamQ.domain.en || "") : (editingExamQ.domain || "")} onChange={(e) => setEditingExamQ({ ...editingExamQ, domain: e.target.value })} />
-              </div>
-              <div>
-                <label className="text-xs font-medium text-gray-600">Question</label>
-                <Textarea value={typeof editingExamQ.question === "object" ? (editingExamQ.question.fr || editingExamQ.question.en || "") : (editingExamQ.question || "")} onChange={(e) => setEditingExamQ({ ...editingExamQ, question: e.target.value })} rows={3} />
-              </div>
-              <div>
-                <label className="text-xs font-medium text-gray-600">Choix</label>
-                {editingExamQ.choices?.map((c: any, ci: number) => (
-                  <div key={ci} className="flex items-center gap-2 mb-1">
-                    <input
-                      type="checkbox"
-                      checked={(editingExamQ.correctChoiceIds || []).includes(c.id)}
-                      onChange={(e) => {
-                        const ids = [...(editingExamQ.correctChoiceIds || [])];
-                        if (e.target.checked) ids.push(c.id);
-                        else ids.splice(ids.indexOf(c.id), 1);
-                        setEditingExamQ({ ...editingExamQ, correctChoiceIds: ids });
-                      }}
-                      className="w-4 h-4"
-                    />
-                    <Input
-                      value={typeof c.text === "object" ? (c.text.fr || c.text.en || "") : c.text}
-                      onChange={(e) => {
-                        const choices = [...editingExamQ.choices];
-                        choices[ci] = { ...choices[ci], text: e.target.value };
-                        setEditingExamQ({ ...editingExamQ, choices });
-                      }}
-                      className="flex-1"
-                      placeholder={`Choix ${c.id}`}
-                    />
-                  </div>
-                ))}
-              </div>
-              <div>
-                <label className="text-xs font-medium text-gray-600">Explication</label>
-                <Textarea value={typeof editingExamQ.explanation === "object" ? (editingExamQ.explanation.fr || editingExamQ.explanation.en || "") : (editingExamQ.explanation || "")} onChange={(e) => setEditingExamQ({ ...editingExamQ, explanation: e.target.value })} rows={2} />
-              </div>
-            </div>
+            <Tabs value={editLang} onValueChange={(v) => setEditLang(v as "en" | "fr")} className="w-full">
+              <TabsList className="mb-3">
+                <TabsTrigger value="en">🇬🇧 English (default)</TabsTrigger>
+                <TabsTrigger value="fr">🇫🇷 Français</TabsTrigger>
+              </TabsList>
+              <TabsContent value={editLang} className="space-y-3">
+                <div>
+                  <label className="text-xs font-medium text-gray-600">Domaine ({editLang.toUpperCase()})</label>
+                  <Input value={getI18n(editingExamQ.domain, editLang)} onChange={(e) => setEditingExamQ({ ...editingExamQ, domain: setI18n(editingExamQ.domain, editLang, e.target.value) })} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-600">Question ({editLang.toUpperCase()})</label>
+                  <Textarea value={getI18n(editingExamQ.question, editLang)} onChange={(e) => setEditingExamQ({ ...editingExamQ, question: setI18n(editingExamQ.question, editLang, e.target.value) })} rows={3} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-600">Choix ({editLang.toUpperCase()})</label>
+                  {editingExamQ.choices?.map((c: any, ci: number) => (
+                    <div key={ci} className="flex items-center gap-2 mb-1">
+                      <input
+                        type="checkbox"
+                        checked={(editingExamQ.correctChoiceIds || []).includes(c.id)}
+                        onChange={(e) => {
+                          const ids = [...(editingExamQ.correctChoiceIds || [])];
+                          if (e.target.checked) ids.push(c.id);
+                          else ids.splice(ids.indexOf(c.id), 1);
+                          setEditingExamQ({ ...editingExamQ, correctChoiceIds: ids });
+                        }}
+                        className="w-4 h-4"
+                      />
+                      <Input
+                        value={getI18n(c.text, editLang)}
+                        onChange={(e) => {
+                          const choices = [...editingExamQ.choices];
+                          choices[ci] = { ...choices[ci], text: setI18n(c.text, editLang, e.target.value) };
+                          setEditingExamQ({ ...editingExamQ, choices });
+                        }}
+                        className="flex-1"
+                        placeholder={`Choix ${c.id}`}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-600">Explication ({editLang.toUpperCase()})</label>
+                  <Textarea value={getI18n(editingExamQ.explanation, editLang)} onChange={(e) => setEditingExamQ({ ...editingExamQ, explanation: setI18n(editingExamQ.explanation, editLang, e.target.value) })} rows={2} />
+                </div>
+              </TabsContent>
+            </Tabs>
             <DialogFooter>
               <Button variant="outline" onClick={() => { setEditDialogOpen(false); setEditingExamQ(null); }}>Annuler</Button>
               <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={() => {
@@ -898,39 +963,45 @@ export default function AdminContentManager() {
             <DialogHeader>
               <DialogTitle>Éditer la question de quiz</DialogTitle>
             </DialogHeader>
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs font-medium text-gray-600">Question</label>
-                <Textarea value={typeof editingQuiz.question === "object" ? (editingQuiz.question.fr || editingQuiz.question.en || "") : (editingQuiz.question || "")} onChange={(e) => setEditingQuiz({ ...editingQuiz, question: e.target.value })} rows={3} />
-              </div>
-              <div>
-                <label className="text-xs font-medium text-gray-600">Choix (cocher la bonne réponse)</label>
-                {editingQuiz.choices?.map((c: any, ci: number) => (
-                  <div key={ci} className="flex items-center gap-2 mb-1">
-                    <input
-                      type="radio"
-                      name="correctQuiz"
-                      checked={editingQuiz.correctId === c.id}
-                      onChange={() => setEditingQuiz({ ...editingQuiz, correctId: c.id })}
-                      className="w-4 h-4"
-                    />
-                    <Input
-                      value={typeof c.text === "object" ? (c.text.fr || c.text.en || "") : c.text}
-                      onChange={(e) => {
-                        const choices = [...editingQuiz.choices];
-                        choices[ci] = { ...choices[ci], text: e.target.value };
-                        setEditingQuiz({ ...editingQuiz, choices });
-                      }}
-                      className="flex-1"
-                    />
-                  </div>
-                ))}
-              </div>
-              <div>
-                <label className="text-xs font-medium text-gray-600">Explication</label>
-                <Textarea value={typeof editingQuiz.explanation === "object" ? (editingQuiz.explanation.fr || editingQuiz.explanation.en || "") : (editingQuiz.explanation || "")} onChange={(e) => setEditingQuiz({ ...editingQuiz, explanation: e.target.value })} rows={2} />
-              </div>
-            </div>
+            <Tabs value={editLang} onValueChange={(v) => setEditLang(v as "en" | "fr")} className="w-full">
+              <TabsList className="mb-3">
+                <TabsTrigger value="en">🇬🇧 English (default)</TabsTrigger>
+                <TabsTrigger value="fr">🇫🇷 Français</TabsTrigger>
+              </TabsList>
+              <TabsContent value={editLang} className="space-y-3">
+                <div>
+                  <label className="text-xs font-medium text-gray-600">Question ({editLang.toUpperCase()})</label>
+                  <Textarea value={getI18n(editingQuiz.question, editLang)} onChange={(e) => setEditingQuiz({ ...editingQuiz, question: setI18n(editingQuiz.question, editLang, e.target.value) })} rows={3} />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-600">Choix ({editLang.toUpperCase()}) — cocher la bonne réponse</label>
+                  {editingQuiz.choices?.map((c: any, ci: number) => (
+                    <div key={ci} className="flex items-center gap-2 mb-1">
+                      <input
+                        type="radio"
+                        name="correctQuiz"
+                        checked={editingQuiz.correctId === c.id}
+                        onChange={() => setEditingQuiz({ ...editingQuiz, correctId: c.id })}
+                        className="w-4 h-4"
+                      />
+                      <Input
+                        value={getI18n(c.text, editLang)}
+                        onChange={(e) => {
+                          const choices = [...editingQuiz.choices];
+                          choices[ci] = { ...choices[ci], text: setI18n(c.text, editLang, e.target.value) };
+                          setEditingQuiz({ ...editingQuiz, choices });
+                        }}
+                        className="flex-1"
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-600">Explication ({editLang.toUpperCase()})</label>
+                  <Textarea value={getI18n(editingQuiz.explanation, editLang)} onChange={(e) => setEditingQuiz({ ...editingQuiz, explanation: setI18n(editingQuiz.explanation, editLang, e.target.value) })} rows={2} />
+                </div>
+              </TabsContent>
+            </Tabs>
             <DialogFooter>
               <Button variant="outline" onClick={() => { setEditDialogOpen(false); setEditingQuiz(null); }}>Annuler</Button>
               <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={() => {
