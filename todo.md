@@ -852,3 +852,4 @@
 - [x] Admin: Mode simulation (simuler un quiz/exercice sans enregistrer les résultats)
 - [x] Admin: Mode édition (modifier le contenu des cours, questions de quiz, exercices)
 - [x] Créer un cours "IA pour les nuls" pour non-informaticiens (JSON + quiz + intégration training index)
+- [x] Intégrer des vidéos YouTube explicatives dans chaque leçon du cours IA pour les nuls (10 vidéos, 2 par leçon)
