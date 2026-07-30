@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -65,7 +66,7 @@ const levelConfig = {
 };
 
 export default function TrainingDashboard() {
-  const { lang, toggleLang, t } = useLanguage();
+  const { lang, t } = useLanguage();
   const { getCertProgress, getLastVisitedCourse } = useTrainingProgress();
   const { isAuthenticated, loading: authLoading, user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -114,13 +115,7 @@ export default function TrainingDashboard() {
               >
                 {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </button>
-              <button
-                onClick={toggleLang}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border hover:bg-secondary text-sm font-medium transition-colors"
-              >
-                <span>{lang === "en" ? "🇬🇧" : "🇫🇷"}</span>
-                {lang === "en" ? "EN" : "FR"}
-              </button>
+              <LanguageSwitcher />
             </div>
           </div>
         </header>
@@ -173,13 +168,7 @@ export default function TrainingDashboard() {
             >
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
-            <button
-              onClick={toggleLang}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border hover:bg-secondary text-sm font-medium transition-colors"
-            >
-              <span>{lang === "en" ? "🇬🇧" : "🇫🇷"}</span>
-              {lang === "en" ? "EN" : "FR"}
-            </button>
+            <LanguageSwitcher />
             {user?.role === "admin" && (
               <Link href="/admin" className="text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-400 hover:bg-amber-500/25 transition-colors hidden sm:block">
                 Admin
@@ -363,7 +352,7 @@ export default function TrainingDashboard() {
 
         <motion.div variants={staggerContainer} className="grid md:grid-cols-2 gap-5 mb-10">
           {certCompletionData.map((cert) => {
-            const level = ((cert.level as any).en as string).toLowerCase() as keyof typeof levelConfig;
+            const level = (((cert.level as any)?.en || "beginner") as string).toLowerCase() as keyof typeof levelConfig;
             const config = levelConfig[level] || levelConfig.beginner;
             return (
               <motion.div key={cert.id} variants={fadeInUp}>

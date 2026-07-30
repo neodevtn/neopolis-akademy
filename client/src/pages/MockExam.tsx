@@ -1,4 +1,5 @@
 import { Link, useParams, useLocation } from "wouter";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
@@ -20,7 +21,7 @@ interface Answer {
 
 export default function MockExam() {
   const { certId } = useParams<{ certId: string }>();
-  const { lang, toggleLang, t } = useLanguage();
+  const { lang, t } = useLanguage();
   const [, navigate] = useLocation();
   const { isAuthenticated, loading: authLoading, user } = useAuth();
   const { isCertComplete } = useTrainingProgress();
@@ -338,13 +339,7 @@ export default function MockExam() {
               <span className="text-xl font-bold text-slate-800">Neopolis</span>
               <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">Mock Exam</span>
             </div>
-            <button
-              onClick={toggleLang}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 hover:bg-slate-50 text-sm font-medium transition-colors"
-            >
-              <span className="text-base">{lang === "en" ? "🇬🇧" : "🇫🇷"}</span>
-              {lang === "en" ? "EN" : "FR"}
-            </button>
+            <LanguageSwitcher />
           </div>
         </header>
 
@@ -574,13 +569,7 @@ export default function MockExam() {
               {t({ en: "Results", fr: "Résultats" })}
             </span>
           </div>
-          <button
-            onClick={toggleLang}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-200 hover:bg-slate-50 text-sm font-medium transition-colors"
-          >
-            <span className="text-base">{lang === "en" ? "🇬🇧" : "🇫🇷"}</span>
-            {lang === "en" ? "EN" : "FR"}
-          </button>
+          <LanguageSwitcher />
         </div>
       </header>
 

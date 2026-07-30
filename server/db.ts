@@ -421,6 +421,19 @@ export async function getInvitations(page: number = 1, pageSize: number = 20) {
   return { invitations, total, page, pageSize };
 }
 
+export async function getInvitationByToken(token: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [invitation] = await db.select().from(userInvitations).where(eq(userInvitations.token, token)).limit(1);
+  return invitation || null;
+}
+
+export async function markInvitationAccepted(token: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(userInvitations).set({ status: "accepted", acceptedAt: new Date() }).where(eq(userInvitations.token, token));
+}
+
 export async function getAdminAnalytics() {
   const db = await getDb();
   if (!db) throw new Error("Database not available");

@@ -1,4 +1,5 @@
 import { Link, useParams } from "wouter";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -24,7 +25,7 @@ const staggerContainer = {
 
 export default function TrainingCertification() {
   const { certId } = useParams<{ certId: string }>();
-  const { lang, toggleLang, t } = useLanguage();
+  const { lang, t } = useLanguage();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { isCourseComplete, getCertProgress, isCertComplete, isLoading: progressLoading, isLessonComplete } = useTrainingProgress();
@@ -158,13 +159,7 @@ export default function TrainingCertification() {
             >
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
-            <button
-              onClick={toggleLang}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border hover:bg-secondary text-sm font-medium transition-colors"
-            >
-              <span>{lang === "en" ? "🇬🇧" : "🇫🇷"}</span>
-              {lang === "en" ? "EN" : "FR"}
-            </button>
+            <LanguageSwitcher />
           </div>
         </div>
       </header>

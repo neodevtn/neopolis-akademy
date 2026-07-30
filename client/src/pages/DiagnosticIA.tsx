@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -1186,7 +1187,7 @@ const INITIAL_STATE: ProcessSheet = {
 };
 
 export default function DiagnosticIA() {
-  const { t, lang, toggleLang } = useLanguage();
+  const { t, lang } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const [step, setStep] = useState(0);
   const [process, setProcess] = useState<ProcessSheet>(INITIAL_STATE);
@@ -1601,9 +1602,7 @@ export default function DiagnosticIA() {
             <button onClick={toggleTheme} className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground">
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
-            <button onClick={toggleLang} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border hover:bg-secondary text-sm font-medium transition-colors">
-              <span>{lang === "en" ? "EN" : "FR"}</span>
-            </button>
+            <LanguageSwitcher />
           </div>
         </div>
       </header>

@@ -18,6 +18,7 @@ import TrainingCourse from "./pages/TrainingCourse";
 import MockExam from "./pages/MockExam";
 import DemoLogin from "./pages/DemoLogin";
 import Login from "./pages/Login";
+import AcceptInvitation from "./pages/AcceptInvitation";
 import DiagnosticIA from "./pages/DiagnosticIA";
 import CookieConsent from "./components/CookieConsent";
 
@@ -34,6 +35,7 @@ function Router() {
       <Route path={"/training/:certId"} component={TrainingCertification} />
       <Route path={"/training/:certId/:courseId"} component={TrainingCourse} />
       <Route path={"/mock-exam/:certId"} component={MockExam} />
+      <Route path={"/accept-invitation"} component={AcceptInvitation} />
       <Route path={"/login"} component={Login} />
       <Route path={"/demo-login"} component={Login} />
       <Route path={"/diagnostic"} component={DiagnosticIA} />

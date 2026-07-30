@@ -66,27 +66,85 @@ export function registerAuthRoutes(app: Express) {
     }
   });
 
-  // POST /api/auth/register - Create a new account
+  // POST /api/auth/register - DISABLED: registration only via invitation
   app.post("/api/auth/register", async (req: Request, res: Response) => {
-    const { email, password, name } = req.body || {};
+    res.status(403).json({ error: "L'inscription libre est d\u00e9sactiv\u00e9e. Vous devez recevoir une invitation pour cr\u00e9er un compte." });
+  });
 
-    if (!email || !password || !name) {
-      res.status(400).json({ error: "Nom, email et mot de passe requis" });
+  // GET /api/auth/validate-invitation?token=xxx - Validate an invitation token
+  app.get("/api/auth/validate-invitation", async (req: Request, res: Response) => {
+    const { token } = req.query;
+    if (!token || typeof token !== "string") {
+      res.status(400).json({ error: "Token d'invitation manquant" });
+      return;
+    }
+    try {
+      const invitation = await db.getInvitationByToken(token);
+      if (!invitation) {
+        res.status(404).json({ error: "Invitation introuvable ou invalide" });
+        return;
+      }
+      if (invitation.status === "accepted") {
+        res.status(410).json({ error: "Cette invitation a d\u00e9j\u00e0 \u00e9t\u00e9 utilis\u00e9e" });
+        return;
+      }
+      if (invitation.status === "expired" || new Date(invitation.expiresAt) < new Date()) {
+        res.status(410).json({ error: "Cette invitation a expir\u00e9" });
+        return;
+      }
+      res.json({ valid: true, email: invitation.email, name: invitation.name });
+    } catch (error) {
+      console.error("[Auth] Validate invitation failed", error);
+      res.status(500).json({ error: "Erreur lors de la validation" });
+    }
+  });
+
+  // POST /api/auth/accept-invitation - Create account from invitation token
+  app.post("/api/auth/accept-invitation", async (req: Request, res: Response) => {
+    const { token, password, name } = req.body || {};
+
+    if (!token || !password) {
+      res.status(400).json({ error: "Token et mot de passe requis" });
       return;
     }
 
     if (password.length < 6) {
-      res.status(400).json({ error: "Le mot de passe doit contenir au moins 6 caractères" });
+      res.status(400).json({ error: "Le mot de passe doit contenir au moins 6 caract\u00e8res" });
       return;
     }
 
-    const normalizedEmail = email.toLowerCase().trim();
-
     try {
+      const invitation = await db.getInvitationByToken(token);
+      if (!invitation) {
+        res.status(404).json({ error: "Invitation introuvable ou invalide" });
+        return;
+      }
+      if (invitation.status === "accepted") {
+        res.status(410).json({ error: "Cette invitation a d\u00e9j\u00e0 \u00e9t\u00e9 utilis\u00e9e" });
+        return;
+      }
+      if (invitation.status === "expired" || new Date(invitation.expiresAt) < new Date()) {
+        res.status(410).json({ error: "Cette invitation a expir\u00e9" });
+        return;
+      }
+
+      const normalizedEmail = invitation.email.toLowerCase().trim();
+      const finalName = (name || invitation.name || "Apprenant").trim();
+
       // Check if email already exists
       const existingUser = await db.getUserByEmail(normalizedEmail);
       if (existingUser) {
-        res.status(409).json({ error: "Un compte avec cet email existe déjà" });
+        // User already exists - just set password and mark invitation accepted
+        await db.setUserPasswordHash(existingUser.openId, await bcrypt.hash(password, SALT_ROUNDS));
+        await db.markInvitationAccepted(token);
+
+        const sessionToken = await sdk.createSessionToken(existingUser.openId, {
+          name: existingUser.name || finalName,
+          expiresInMs: SESSION_DURATION_MS,
+        });
+        const cookieOptions = getSessionCookieOptions(req);
+        res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: SESSION_DURATION_MS });
+        res.json({ success: true, name: existingUser.name || finalName });
         return;
       }
 
@@ -99,18 +157,21 @@ export function registerAuthRoutes(app: Express) {
       // Create user
       await db.upsertUser({
         openId,
-        name: name.trim(),
+        name: finalName,
         email: normalizedEmail,
         loginMethod: "email",
         lastSignedIn: new Date(),
       });
 
-      // Set password hash separately (upsertUser doesn't handle it)
+      // Set password hash
       await db.setUserPasswordHash(openId, passwordHash);
+
+      // Mark invitation as accepted
+      await db.markInvitationAccepted(token);
 
       // Create session token
       const sessionToken = await sdk.createSessionToken(openId, {
-        name: name.trim(),
+        name: finalName,
         expiresInMs: SESSION_DURATION_MS,
       });
 
@@ -118,10 +179,10 @@ export function registerAuthRoutes(app: Express) {
       const cookieOptions = getSessionCookieOptions(req);
       res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: SESSION_DURATION_MS });
 
-      res.json({ success: true, name: name.trim() });
+      res.json({ success: true, name: finalName });
     } catch (error) {
-      console.error("[Auth] Register failed", error);
-      res.status(500).json({ error: "Erreur lors de l'inscription" });
+      console.error("[Auth] Accept invitation failed", error);
+      res.status(500).json({ error: "Erreur lors de la cr\u00e9ation du compte" });
     }
   });
 }

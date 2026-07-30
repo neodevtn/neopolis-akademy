@@ -13,10 +13,11 @@ import { Link } from "wouter";
 import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Columns3, Bell, BellRing, UserX, FileCheck } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
+import { AdminNavbar } from "@/components/AdminNavbar";
 
 const LOGO_URL = "/manus-storage/logo_neopolis_akademy_9c9a0823.png";
 
-type TabType = "candidatures" | "kanban" | "communications" | "analytics" | "activity";
+type TabType = "candidatures" | "kanban" | "communications" | "invitations" | "analytics" | "activity";
 
 // Notification type icons
 const NOTIF_ICONS: Record<string, { icon: any; color: string }> = {
@@ -47,6 +48,12 @@ export default function AdminDashboard() {
   const [commType, setCommType] = useState<string>("announcement");
   const [notifOpen, setNotifOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
+
+  // Invitation mass sending state
+  const [invitDialog, setInvitDialog] = useState(false);
+  const [invitEmails, setInvitEmails] = useState("");
+  const [invitMessage, setInvitMessage] = useState("");
+  const [invitLang, setInvitLang] = useState<"fr" | "en">("fr");
 
   // Close notification panel on outside click
   useEffect(() => {
@@ -137,6 +144,24 @@ export default function AdminDashboard() {
 
   const analyticsQuery = trpc.adminTools.analytics.getLearnerAnalytics.useQuery(undefined, { enabled: activeTab === "analytics" });
   const activityLogQuery = trpc.adminTools.activityLog.list.useQuery(undefined, { enabled: activeTab === "activity" });
+
+  // Invitations
+  const invitationsQuery = trpc.admin.getInvitations.useQuery(undefined, { enabled: activeTab === "invitations" });
+  const bulkInviteMutation = trpc.admin.bulkCreateInvitations.useMutation({
+    onSuccess: (data) => {
+      invitationsQuery.refetch();
+      setInvitDialog(false);
+      setInvitEmails("");
+      setInvitMessage("");
+      toast.success(`${data.sent} invitation(s) envoyée(s) sur ${data.total}`);
+      if (data.failed > 0) toast.error(`${data.failed} invitation(s) échouée(s)`);
+    },
+    onError: () => toast.error("Erreur lors de l'envoi des invitations"),
+  });
+  const resendInviteMutation = trpc.admin.resendInvitation.useMutation({
+    onSuccess: () => { invitationsQuery.refetch(); toast.success("Invitation renvoyée"); },
+    onError: () => toast.error("Erreur lors du renvoi"),
+  });
 
   // Notifications
   const notifCountQuery = trpc.adminTools.notifications.unreadCount.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin", refetchInterval: 30000 });
@@ -250,101 +275,91 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
-      {/* Header */}
-      <nav className="sticky top-0 z-50" style={{ backgroundColor: "var(--wise-canvas)", borderBottom: "1px solid var(--wise-canvas-soft)" }}>
-        <div className="container flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
-            <img src={LOGO_URL} alt="Neopolis Akademy" className="h-8 object-contain" />
-            <span className="text-xs font-semibold ml-2 px-2 py-0.5 rounded-full" style={{ backgroundColor: "var(--wise-primary-pale)", color: "var(--wise-positive-deep)" }}>Admin</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button onClick={() => setActiveTab("candidatures")} className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${activeTab === "candidatures" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "candidatures" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "candidatures" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Candidatures</button>
-            <button onClick={() => setActiveTab("communications")} className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${activeTab === "communications" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "communications" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "communications" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Communications</button>
-            <button onClick={() => setActiveTab("kanban")} className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${activeTab === "kanban" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "kanban" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "kanban" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Kanban</button>
-            <button onClick={() => setActiveTab("analytics")} className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${activeTab === "analytics" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "analytics" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "analytics" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Évaluation</button>
-            <button onClick={() => setActiveTab("activity")} className={`text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${activeTab === "activity" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "activity" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "activity" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Activité</button>
-            <Link href="/admin/training" className="text-sm font-medium px-3 py-1.5 rounded-lg transition-colors hover:bg-gray-100" style={{ color: "var(--wise-mute)" }}>Suivi Apprenants</Link>
-            <Link href="/admin/content" className="text-sm font-medium px-3 py-1.5 rounded-lg transition-colors hover:bg-gray-100" style={{ color: "var(--wise-mute)" }}>Contenu</Link>
-
-            {/* Notification Bell */}
-            <div className="relative ml-2" ref={notifRef}>
-              <button
-                onClick={() => setNotifOpen(!notifOpen)}
-                className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                title="Notifications"
-              >
-                <Bell className="w-5 h-5" style={{ color: "var(--wise-mute)" }} />
-                {(notifCountQuery.data?.count || 0) > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center animate-pulse">
-                    {notifCountQuery.data!.count > 9 ? "9+" : notifCountQuery.data!.count}
-                  </span>
-                )}
-              </button>
-
-              {/* Notification Dropdown */}
-              {notifOpen && (
-                <div className="absolute right-0 top-full mt-2 w-96 max-h-[480px] bg-card border border-border rounded-xl shadow-xl overflow-hidden z-[100]">
-                  <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-                    <h3 className="text-sm font-semibold">Notifications</h3>
-                    <div className="flex items-center gap-2">
-                      {(notifCountQuery.data?.count || 0) > 0 && (
-                        <button
-                          onClick={() => markAllReadMutation.mutate()}
-                          className="text-xs text-primary hover:underline"
-                        >
-                          Tout marquer comme lu
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  <div className="overflow-y-auto max-h-[400px]">
-                    {notifListQuery.isLoading ? (
-                      <div className="flex justify-center py-8"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
-                    ) : !notifListQuery.data?.items?.length ? (
-                      <div className="text-center py-10">
-                        <Bell className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
-                        <p className="text-sm text-muted-foreground">Aucune notification</p>
-                      </div>
-                    ) : (
-                      notifListQuery.data.items.map((notif: any) => {
-                        const meta = NOTIF_ICONS[notif.type] || NOTIF_ICONS.system;
-                        const IconComp = meta.icon;
-                        return (
-                          <div
-                            key={notif.id}
-                            className={`flex items-start gap-3 px-4 py-3 border-b border-border/50 hover:bg-accent/30 transition-colors cursor-pointer ${notif.isRead === 0 ? "bg-primary/5" : ""}`}
-                            onClick={() => { if (notif.isRead === 0) markReadMutation.mutate({ id: notif.id }); }}
-                          >
-                            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: `${meta.color}15` }}>
-                              <IconComp className="w-4 h-4" style={{ color: meta.color }} />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className={`text-sm ${notif.isRead === 0 ? "font-semibold" : "font-normal text-muted-foreground"}`}>{notif.title}</p>
-                              {notif.message && <p className="text-xs text-muted-foreground mt-0.5 truncate">{notif.message}</p>}
-                              <p className="text-[10px] text-muted-foreground/70 mt-1">
-                                {new Date(notif.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
-                              </p>
-                            </div>
-                            {notif.isRead === 0 && (
-                              <div className="w-2 h-2 rounded-full bg-primary shrink-0 mt-2" />
-                            )}
-                          </div>
-                        );
-                      })
+      {/* Shared Admin Navigation */}
+      <AdminNavbar
+        activePage="candidatures"
+        notificationSlot={
+          <div className="relative" ref={notifRef}>
+            <button
+              onClick={() => setNotifOpen(!notifOpen)}
+              className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              title="Notifications"
+            >
+              <Bell className="w-5 h-5" style={{ color: "var(--wise-mute)" }} />
+              {(notifCountQuery.data?.count || 0) > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center animate-pulse">
+                  {notifCountQuery.data!.count > 9 ? "9+" : notifCountQuery.data!.count}
+                </span>
+              )}
+            </button>
+            {notifOpen && (
+              <div className="absolute right-0 top-full mt-2 w-96 max-h-[480px] bg-card border border-border rounded-xl shadow-xl overflow-hidden z-[100]">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+                  <h3 className="text-sm font-semibold">Notifications</h3>
+                  <div className="flex items-center gap-2">
+                    {(notifCountQuery.data?.count || 0) > 0 && (
+                      <button
+                        onClick={() => markAllReadMutation.mutate()}
+                        className="text-xs text-primary hover:underline"
+                      >
+                        Tout marquer comme lu
+                      </button>
                     )}
                   </div>
                 </div>
-              )}
-            </div>
-
-            <Link href="/">
-              <button className="wise-btn-tertiary text-sm flex items-center gap-2 ml-2">
-                <ArrowLeft className="w-4 h-4" /> Retour
-              </button>
-            </Link>
+                <div className="overflow-y-auto max-h-[400px]">
+                  {notifListQuery.isLoading ? (
+                    <div className="flex justify-center py-8"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
+                  ) : !notifListQuery.data?.items?.length ? (
+                    <div className="text-center py-10">
+                      <Bell className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
+                      <p className="text-sm text-muted-foreground">Aucune notification</p>
+                    </div>
+                  ) : (
+                    notifListQuery.data.items.map((notif: any) => {
+                      const meta = NOTIF_ICONS[notif.type] || NOTIF_ICONS.system;
+                      const IconComp = meta.icon;
+                      return (
+                        <div
+                          key={notif.id}
+                          className={`flex items-start gap-3 px-4 py-3 border-b border-border/50 hover:bg-accent/30 transition-colors cursor-pointer ${notif.isRead === 0 ? "bg-primary/5" : ""}`}
+                          onClick={() => { if (notif.isRead === 0) markReadMutation.mutate({ id: notif.id }); }}
+                        >
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: `${meta.color}15` }}>
+                            <IconComp className="w-4 h-4" style={{ color: meta.color }} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className={`text-sm ${notif.isRead === 0 ? "font-semibold" : "font-normal text-muted-foreground"}`}>{notif.title}</p>
+                            {notif.message && <p className="text-xs text-muted-foreground mt-0.5 truncate">{notif.message}</p>}
+                            <p className="text-[10px] text-muted-foreground/70 mt-1">
+                              {new Date(notif.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                            </p>
+                          </div>
+                          {notif.isRead === 0 && (
+                            <div className="w-2 h-2 rounded-full bg-primary shrink-0 mt-2" />
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            )}
           </div>
+        }
+      />
+
+      {/* Sub-tabs for this page */}
+      <div className="border-b" style={{ backgroundColor: "var(--wise-canvas)" }}>
+        <div className="container flex items-center gap-1 py-2 overflow-x-auto">
+          <button onClick={() => setActiveTab("candidatures")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "candidatures" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "candidatures" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "candidatures" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Candidatures</button>
+          <button onClick={() => setActiveTab("communications")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "communications" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "communications" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "communications" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Communications</button>
+          <button onClick={() => setActiveTab("invitations")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "invitations" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "invitations" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "invitations" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Invitations</button>
+          <button onClick={() => setActiveTab("kanban")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "kanban" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "kanban" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "kanban" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Kanban</button>
+          <button onClick={() => setActiveTab("analytics")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "analytics" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "analytics" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "analytics" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Évaluation</button>
+          <button onClick={() => setActiveTab("activity")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "activity" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "activity" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "activity" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Activité</button>
         </div>
-      </nav>
+      </div>
 
       <div className="container py-10">
         {/* ==================== CANDIDATURES TAB ==================== */}
@@ -638,6 +653,66 @@ export default function AdminDashboard() {
                   ))}
                   {(!communicationsQuery.data?.items || communicationsQuery.data.items.length === 0) && (
                     <tr><td colSpan={6} className="p-12 text-center text-muted-foreground">Aucune communication envoyée.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+
+        {/* ==================== INVITATIONS TAB ==================== */}
+        {activeTab === "invitations" && (
+          <>
+            <div className="flex items-center justify-between mb-8">
+              <h1 className="wise-display-md">Invitations</h1>
+              <Button className="gap-2" onClick={() => setInvitDialog(true)}>
+                <Plus className="w-4 h-4" /> Envoi en masse
+              </Button>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-4 mb-6">
+              <StatCard icon={<Mail className="w-4 h-4" />} value={invitationsQuery.data?.invitations?.length || 0} label="Total invitations" />
+              <StatCard icon={<CheckCircle className="w-4 h-4" />} value={invitationsQuery.data?.invitations?.filter((i: any) => i.status === "accepted").length || 0} label="Acceptées" />
+              <StatCard icon={<Clock className="w-4 h-4" />} value={invitationsQuery.data?.invitations?.filter((i: any) => i.status === "pending").length || 0} label="En attente" />
+            </div>
+
+            {/* Invitations list */}
+            <div className="wise-card overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Email</th>
+                    <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Nom</th>
+                    <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Statut</th>
+                    <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Envoyée le</th>
+                    <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Expire le</th>
+                    <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invitationsQuery.data?.invitations?.map((inv: any) => (
+                    <tr key={inv.id} className="border-t border-border">
+                      <td className="p-4 font-medium text-foreground">{inv.email}</td>
+                      <td className="p-4 text-muted-foreground">{inv.name || "—"}</td>
+                      <td className="p-4">
+                        {inv.status === "pending" && <span className="wise-badge-warning">En attente</span>}
+                        {inv.status === "accepted" && <span className="wise-badge-positive">Acceptée</span>}
+                        {inv.status === "expired" && <span className="wise-badge-negative">Expirée</span>}
+                      </td>
+                      <td className="p-4 text-xs text-muted-foreground">{new Date(inv.createdAt).toLocaleDateString("fr-FR")}</td>
+                      <td className="p-4 text-xs text-muted-foreground">{inv.expiresAt ? new Date(inv.expiresAt).toLocaleDateString("fr-FR") : "—"}</td>
+                      <td className="p-4">
+                        {inv.status === "pending" && (
+                          <Button size="sm" variant="outline" className="text-xs gap-1" disabled={resendInviteMutation.isPending} onClick={() => resendInviteMutation.mutate({ email: inv.email })}>
+                            <Send className="w-3 h-3" /> Renvoyer
+                          </Button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                  {(!invitationsQuery.data?.invitations || invitationsQuery.data.invitations.length === 0) && (
+                    <tr><td colSpan={6} className="p-12 text-center text-muted-foreground">Aucune invitation envoyée.</td></tr>
                   )}
                 </tbody>
               </table>
@@ -1072,6 +1147,74 @@ export default function AdminDashboard() {
         </DialogContent>
       </Dialog>
 
+      {/* Bulk Invitation Dialog */}
+      <Dialog open={invitDialog} onOpenChange={setInvitDialog}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Mail className="w-5 h-5" /> Envoi d'invitations en masse
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div>
+              <Label className="text-xs">Emails (un par ligne, format: email ou email,nom)</Label>
+              <Textarea
+                className="mt-1 font-mono text-xs"
+                rows={8}
+                placeholder={"ahmed@example.com, Ahmed Ben Ali\nfatima@example.com, Fatima Mansouri\nkarim@example.com"}
+                value={invitEmails}
+                onChange={(e) => setInvitEmails(e.target.value)}
+              />
+              <p className="text-xs text-muted-foreground mt-1">Maximum 100 invitations par envoi</p>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-xs">Langue de l'email</Label>
+                <Select value={invitLang} onValueChange={(v) => setInvitLang(v as "fr" | "en")}>
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="fr">Français</SelectItem>
+                    <SelectItem value="en">English</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-xs">Nombre détecté</Label>
+                <p className="text-lg font-bold mt-2" style={{ color: "var(--wise-positive)" }}>
+                  {invitEmails.trim() ? invitEmails.trim().split("\n").filter(l => l.trim()).length : 0} email(s)
+                </p>
+              </div>
+            </div>
+            <div>
+              <Label className="text-xs">Message personnalisé (optionnel)</Label>
+              <Textarea
+                className="mt-1 text-xs"
+                rows={3}
+                placeholder="Message additionnel à inclure dans l'email d'invitation..."
+                value={invitMessage}
+                onChange={(e) => setInvitMessage(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setInvitDialog(false)}>Annuler</Button>
+            <Button
+              disabled={!invitEmails.trim() || bulkInviteMutation.isPending}
+              onClick={() => {
+                const lines = invitEmails.trim().split("\n").filter(l => l.trim());
+                const invitations = lines.map(line => {
+                  const parts = line.split(",").map(p => p.trim());
+                  return { email: parts[0], name: parts[1] || undefined };
+                });
+                bulkInviteMutation.mutate({ invitations, language: invitLang, message: invitMessage || undefined });
+              }}
+            >
+              {bulkInviteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Send className="w-4 h-4 mr-1" />}
+              Envoyer les invitations
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       {/* CV Viewer Dialog */}
       <Dialog open={!!cvViewerUrl} onOpenChange={(open) => { if (!open) setCvViewerUrl(null); }}>
         <DialogContent className="sm:max-w-4xl max-h-[90vh]">

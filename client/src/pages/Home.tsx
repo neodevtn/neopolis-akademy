@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "wouter";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import {
@@ -63,8 +65,8 @@ function AnimatedStat({ value, suffix = "", prefix = "" }: { value: number; suff
 }
 
 /* ─── Asset URLs ─── */
-const LOGO_URL = "/manus-storage/neopolis_logo_transparent_0b0de1c9.png";
-const LOGO_ICON = "/manus-storage/favicon_neopolis_d1316b46.png";
+const LOGO_URL = "/manus-storage/neopolis_dev_logo_4x_4011a55b.png";
+const LOGO_ICON = "/manus-storage/neopolis_dev_logo_original_60dc435f.png";
 const HERO_IMG = "/manus-storage/hero_tunisian_ai_08a6f956.png";
 const CERT_IMG = "/manus-storage/step2_certification_b2f65035.png";
 const ELEARNING_IMG = "/manus-storage/step1_elearning_d87a7198.png";
@@ -213,6 +215,7 @@ function ResumeReadingWidget() {
 }
 
 export default function Home() {
+  const { t, lang } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -223,47 +226,47 @@ export default function Home() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--wise-canvas)" }}>
-      {/* ─── Navigation (Bubble N10 floating-on-scroll morph) ─── */}
+      {/* ─── Navigation (Modern minimal header) ─── */}
       <motion.nav
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 right-0 z-50 flex justify-center"
-        style={{ height: "66px" }}
+        className="fixed top-0 left-0 right-0 z-50"
       >
         <div
-          className="flex items-center gap-5 w-full transition-all duration-[420ms]"
+          className="flex items-center w-full transition-all duration-[380ms]"
           style={{
-            maxWidth: scrolled ? "min(64rem, calc(100% - 1.5rem))" : "100%",
-            height: "66px",
-            paddingInline: scrolled ? "1.1rem" : "clamp(1.25rem, 4vw, 3rem)",
-            background: scrolled ? "oklch(97% 0.012 95 / 0.9)" : "oklch(97% 0.012 95 / 0.82)",
-            backdropFilter: "blur(18px) saturate(160%)",
-            WebkitBackdropFilter: "blur(18px) saturate(160%)",
-            border: "1px solid transparent",
-            borderBottomColor: scrolled ? "oklch(86% 0.014 90)" : "oklch(86% 0.014 90)",
-            borderRadius: scrolled ? "999px" : "0",
-            transform: scrolled ? "translateY(0.7rem)" : "translateY(0)",
-            boxShadow: scrolled ? "0 24px 56px -20px oklch(20% 0.012 250 / 0.18), 0 2px 6px oklch(20% 0.012 250 / 0.08)" : "none",
+            height: scrolled ? "56px" : "64px",
+            paddingInline: "clamp(1rem, 3vw, 2.5rem)",
+            background: "rgba(255, 255, 255, 0.97)",
+            backdropFilter: "blur(12px) saturate(140%)",
+            WebkitBackdropFilter: "blur(12px) saturate(140%)",
+            borderBottom: scrolled ? "1px solid rgba(0,0,0,0.06)" : "1px solid transparent",
+            boxShadow: scrolled ? "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)" : "none",
             transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         >
-          <div className="flex items-center gap-2">
-            <img src={LOGO_ICON} alt="Neopolis Akademy" className="h-9 md:hidden object-contain" />
-            <img src={LOGO_URL} alt="Neopolis Akademy" className="hidden md:block h-12 object-contain" />
-          </div>
-          <div className="hidden lg:flex items-center gap-0.5 ml-auto">
-            <NavLink href="#formule">La Formule</NavLink>
-            <NavLink href="#pourquoi">Pourquoi maintenant</NavLink>
-            <NavLink href="#partenaires">Partenaires</NavLink>
+          {/* Logo */}
+          <Link href="/" className="flex items-center shrink-0">
+            <img src={LOGO_URL} alt="Neopolis Development" className="h-8 md:h-9 object-contain" />
+          </Link>
+
+          {/* Center nav links */}
+          <div className="hidden lg:flex items-center gap-1 mx-auto">
+            <NavLink href="#formule">{t({ fr: "La Formule", en: "The Formula", ar: "الصيغة" })}</NavLink>
+            <NavLink href="#pourquoi">{t({ fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" })}</NavLink>
+            <NavLink href="#partenaires">{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</NavLink>
             <NavLink href="#faq">FAQ</NavLink>
-            <Link href="/training" className="text-[11px] font-semibold px-3.5 py-1.5 ml-2 rounded-full transition-all duration-200 bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-md">Training</Link>
+            <Link href="/training" className="text-[11px] font-semibold px-3.5 py-1.5 ml-1 rounded-full transition-all duration-200 bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-md">{t({ fr: "Formation", en: "Training", ar: "التدريب" })}</Link>
           </div>
-          <div className="flex items-center gap-2.5 ml-auto lg:ml-3">
+
+          {/* Right actions */}
+          <div className="flex items-center gap-2 ml-auto lg:ml-0 shrink-0">
+            <LanguageSwitcher />
             <LogoutButton />
             <Link href="/apply">
-              <button className="wise-btn-primary flex items-center gap-1.5 text-xs md:text-sm px-4 md:px-5 py-2 md:py-2.5 shadow-sm hover:shadow-md transition-shadow">
-                Postuler <ChevronRight size={14} />
+              <button className="flex items-center gap-1.5 text-xs md:text-sm font-semibold px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 hover:shadow-md active:scale-[0.97]">
+                {t({ fr: "Postuler", en: "Apply", ar: "تقدّم" })} <ChevronRight size={14} />
               </button>
             </Link>
             <MobileMenuButton />
@@ -283,42 +286,42 @@ export default function Home() {
               {/* Eyebrow */}
               <motion.div variants={fadeInUp} className="wise-eyebrow mb-6">
                 <span className="w-2 h-2 rounded-full" style={{ background: "var(--wise-primary)" }} />
-                <span>Programme 2026 · Places limitées</span>
+                <span>{t({ fr: "Programme 2026 · Places limitées", en: "Program 2026 · Limited spots", ar: "برنامج 2026 · أماكن محدودة" })}</span>
               </motion.div>
 
               {/* Title */}
               <motion.h1 variants={fadeInUp} className="wise-display-mega mb-5" style={{ textWrap: "balance" }}>
-                Transformez la menace de l'IA{" "}
-                <span className="wise-highlight">en opportunité</span>
+                {t({ fr: "Transformez la menace de l'IA", en: "Turn the AI threat", ar: "حوّل تهديد الذكاء الاصطناعي" })}{" "}
+                <span className="wise-highlight">{t({ fr: "en opportunité", en: "into opportunity", ar: "إلى فرصة" })}</span>
               </motion.h1>
 
               {/* Lede */}
               <motion.p variants={fadeInUp} className="wise-body-lg max-w-[46ch] mb-8">
-                Formation certifiante <strong style={{ fontWeight: 600, color: "var(--wise-ink)" }}>100% gratuite</strong>.
+                {t({ fr: "Formation certifiante", en: "Certified training", ar: "تدريب معتمد" })} <strong style={{ fontWeight: 600, color: "var(--wise-ink)" }}>{t({ fr: "100% gratuite", en: "100% free", ar: "مجاني 100%" })}</strong>.
                 <br />
-                Devenez{" "}
-                <strong style={{ fontWeight: 600, color: "var(--wise-ink)" }}>AI Solutions Partner</strong> et conquérez le marché de l'IA agentique.
+                {t({ fr: "Devenez", en: "Become an", ar: "كن" })}{" "}
+                <strong style={{ fontWeight: 600, color: "var(--wise-ink)" }}>AI Solutions Partner</strong> {t({ fr: "et conquérez le marché de l'IA agentique.", en: "and conquer the agentic AI market.", ar: "واغزُ سوق الذكاء الاصطناعي الوكيلي." })}
               </motion.p>
 
               {/* CTA buttons */}
               <motion.div variants={fadeInUp} className="flex flex-wrap gap-3 mb-6">
                 <Link href="/apply">
                   <button className="wise-btn-primary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">
-                    Déposer ma candidature <ArrowRight size={18} />
+                    {t({ fr: "Déposer ma candidature", en: "Submit my application", ar: "تقديم طلبي" })} <ArrowRight size={18} />
                   </button>
                 </Link>
                 <a href="#formule">
                   <button className="wise-btn-secondary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">
-                    Découvrir le programme
+                    {t({ fr: "Découvrir le programme", en: "Discover the program", ar: "اكتشف البرنامج" })}
                   </button>
                 </a>
               </motion.div>
 
               {/* Hero note (chips) */}
               <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-2">
-                <span className="wise-badge-positive">100% Gratuit</span>
-                <span className="wise-badge-positive">296 places</span>
-                <span className="wise-badge-negative">Avant le 31 août 2026</span>
+                <span className="wise-badge-positive">{t({ fr: "100% Gratuit", en: "100% Free", ar: "مجاني 100%" })}</span>
+                <span className="wise-badge-positive">{t({ fr: "296 places", en: "296 spots", ar: "296 مقعد" })}</span>
+                <span className="wise-badge-negative">{t({ fr: "Avant le 31 août 2026", en: "Before August 31, 2026", ar: "قبل 31 أوت 2026" })}</span>
               </motion.div>
             </motion.div>
 
@@ -341,10 +344,10 @@ export default function Home() {
       <AnimatedSection id="pourquoi" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-12 md:py-20">
           <motion.div variants={fadeInUp} className="text-center mb-10 md:mb-14">
-            <span className="wise-eyebrow mb-4 inline-flex">Urgence du marché</span>
-            <h2 className="wise-display-md mb-4">Pourquoi se transformer maintenant ?</h2>
+            <span className="wise-eyebrow mb-4 inline-flex">{t({ fr: "Urgence du marché", en: "Market urgency", ar: "إلحاح السوق" })}</span>
+            <h2 className="wise-display-md mb-4">{t({ fr: "Pourquoi se transformer maintenant ?", en: "Why transform now?", ar: "لماذا التحوّل الآن؟" })}</h2>
             <p className="wise-body-lg max-w-[52ch] mx-auto">
-              L'IA agentique redéfinit le marché du travail. Ceux qui ne s'adaptent pas seront remplacés.
+              {t({ fr: "L'IA agentique redéfinit le marché du travail. Ceux qui ne s'adaptent pas seront remplacés.", en: "Agentic AI is redefining the job market. Those who don't adapt will be replaced.", ar: "الذكاء الاصطناعي الوكيلي يعيد تشكيل سوق العمل. من لا يتكيّف سيُستبدل." })}
             </p>
           </motion.div>
 
@@ -461,13 +464,7 @@ export default function Home() {
                 description="Créateur de Claude, l'un des LLM les plus avancés au monde. En tant que Registered Partner du CPN, nous offrons un accès facilité à la certification Claude Certified Architect (CCA) via un voucher gratuit pour nos candidats."
               />
             </motion.div>
-            <motion.div variants={scaleIn}>
-              <PartnerCard
-                name="Alibaba Cloud"
-                logo="/manus-storage/logo_alibaba_cloud_847f5740.png"
-                description="Infrastructure cloud mondiale. Notre partenariat garantit des ressources de calcul puissantes, des modèles ML complémentaires et une infrastructure on-premise pour l'Afrique."
-              />
-            </motion.div>
+
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
@@ -481,7 +478,7 @@ export default function Home() {
                 {[
                   "Ressources humaines et techniques dédiées",
                   "Agents IA prêts à l'emploi (ready-to-use)",
-                  "Accès multi-LLM (Claude, Qwen, DeepSeek...)",
+                  "Accès multi-LLM (Claude, Gemini, OpenAI...)",
                   "Infrastructure serveurs on-premise puissante",
                   "Accompagnement commercial et marketing",
                   "Support technique continu",
@@ -735,10 +732,10 @@ export default function Home() {
             {[...Array(2)].map((_, i) => (
               <div key={i} className="marquee-content">
                 <img src="/manus-storage/logo_anthropic_e6ab4160.png" alt="Anthropic" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/manus-storage/logo_alibaba_cloud_847f5740.png" alt="Alibaba Cloud" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+
                 <img src="/manus-storage/claude_ba4537f3.png" alt="Claude" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/manus-storage/qwen_16966e0b.png" alt="Qwen" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/manus-storage/deepseek_e0aeb5f8.png" alt="DeepSeek" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+
+
                 <img src="/manus-storage/openai_73a9a1b1.png" alt="OpenAI" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
                 <img src="/manus-storage/gemini_c13269e9.png" alt="Gemini" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
                 <img src="/manus-storage/langchain_9c5e065b.png" alt="LangChain" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
@@ -757,7 +754,7 @@ export default function Home() {
             <div className="md:col-span-1">
               <img src={LOGO_URL} alt="Neopolis Akademy" className="h-12 object-contain mb-3" />
               <p className="wise-body-sm">
-                Transformer la menace de l'IA en opportunité.
+                {t({ fr: "Transformer la menace de l'IA en opportunité.", en: "Turning the AI threat into opportunity.", ar: "تحويل تهديد الذكاء الاصطناعي إلى فرصة." })}
               </p>
               <div className="flex items-center gap-1.5 mt-2">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--wise-positive-deep)" }}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -765,25 +762,25 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <h4 className="wise-label mb-3">Programme</h4>
+              <h4 className="wise-label mb-3">{t({ fr: "Programme", en: "Program", ar: "البرنامج" })}</h4>
               <ul className="space-y-1.5">
-                <li><a href="#formule" className="wise-body-sm hover:underline">La Formule</a></li>
-                <li><a href="#pourquoi" className="wise-body-sm hover:underline">Pourquoi maintenant</a></li>
-                <li><a href="#partenaires" className="wise-body-sm hover:underline">Partenaires</a></li>
-                <li><a href="#process" className="wise-body-sm hover:underline">Process Commercial</a></li>
+                <li><a href="#formule" className="wise-body-sm hover:underline">{t({ fr: "La Formule", en: "The Formula", ar: "الصيغة" })}</a></li>
+                <li><a href="#pourquoi" className="wise-body-sm hover:underline">{t({ fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" })}</a></li>
+                <li><a href="#partenaires" className="wise-body-sm hover:underline">{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</a></li>
+                <li><a href="#process" className="wise-body-sm hover:underline">{t({ fr: "Process Commercial", en: "Sales Process", ar: "العملية التجارية" })}</a></li>
                 <li><a href="#faq" className="wise-body-sm hover:underline">FAQ</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="wise-label mb-3">Outils</h4>
+              <h4 className="wise-label mb-3">{t({ fr: "Outils", en: "Tools", ar: "الأدوات" })}</h4>
               <ul className="space-y-1.5">
-                <li><Link href="/training" className="wise-body-sm hover:underline">Training</Link></li>
-                <li><Link href="/diagnostic" className="wise-body-sm hover:underline">Diagnostic IA</Link></li>
-                <li><Link href="/apply" className="wise-body-sm hover:underline">Postuler</Link></li>
+                <li><Link href="/training" className="wise-body-sm hover:underline">{t({ fr: "Formation", en: "Training", ar: "التدريب" })}</Link></li>
+                <li><Link href="/diagnostic" className="wise-body-sm hover:underline">{t({ fr: "Diagnostic IA", en: "AI Diagnostic", ar: "تشخيص الذكاء الاصطناعي" })}</Link></li>
+                <li><Link href="/apply" className="wise-body-sm hover:underline">{t({ fr: "Postuler", en: "Apply", ar: "تقدّم" })}</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="wise-label mb-3">Contact</h4>
+              <h4 className="wise-label mb-3">{t({ fr: "Contact", en: "Contact", ar: "الاتصال" })}</h4>
               <ul className="space-y-1.5">
                 <li><a href="mailto:info@neopolis-dev.com" className="wise-body-sm hover:underline">info@neopolis-dev.com</a></li>
                 <li><a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="wise-body-sm hover:underline">À propos de Neopolis Dev ↗</a></li>
@@ -793,7 +790,7 @@ export default function Home() {
           </div>
           <div className="mt-8 pt-6" style={{ borderTop: "1px solid var(--wise-rule)" }}>
             <p className="text-center wise-body-sm" style={{ color: "var(--wise-mute)" }}>
-              © 2026 <a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="hover:underline">Neopolis Development</a>. Tous droits réservés. · <Link href="/mentions-legales" className="hover:underline">Mentions légales</Link>
+              © 2026 <a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="hover:underline">Neopolis Development</a>. {t({ fr: "Tous droits réservés.", en: "All rights reserved.", ar: "جميع الحقوق محفوظة." })} · <Link href="/mentions-legales" className="hover:underline">{t({ fr: "Mentions légales", en: "Legal notice", ar: "الإشعار القانوني" })}</Link>
             </p>
           </div>
         </div>
@@ -810,11 +807,10 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   return (
     <a
       href={href}
-      className="whitespace-nowrap text-[11px] font-medium px-2.5 py-1.5 rounded-md relative group transition-all duration-200 hover:bg-gray-50"
-      style={{ color: "var(--wise-ink-muted, #64748b)" }}
+      className="whitespace-nowrap text-[12.5px] font-medium px-3 py-2 rounded-md relative group transition-all duration-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50"
     >
       {children}
-      <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-0 h-[1.5px] rounded-full group-hover:w-2/3 transition-all duration-300 ease-out" style={{ backgroundColor: "var(--wise-primary)" }} />
+      <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-[2px] rounded-full group-hover:w-3/5 transition-all duration-300 ease-out bg-emerald-600" />
     </a>
   );
 }
@@ -1124,7 +1120,7 @@ function NetworkGraph() {
   const nodes = [
     { id: "neopolis", label: "Neopolis", x: 50, y: 50, size: 28, color: "#9fe870" },
     { id: "anthropic", label: "Anthropic", x: 20, y: 20, size: 22, color: "#d4a574" },
-    { id: "alibaba", label: "Alibaba Cloud", x: 80, y: 20, size: 22, color: "#ff8c42" },
+    { id: "openai", label: "OpenAI", x: 80, y: 20, size: 22, color: "#10a37f" },
     { id: "agents", label: "Agents IA", x: 15, y: 70, size: 18, color: "#38c8ff" },
     { id: "llm", label: "Multi-LLM", x: 85, y: 70, size: 18, color: "#a78bfa" },
     { id: "infra", label: "Infra", x: 30, y: 90, size: 16, color: "#34d399" },
@@ -1133,14 +1129,14 @@ function NetworkGraph() {
 
   const edges = [
     { from: "neopolis", to: "anthropic" },
-    { from: "neopolis", to: "alibaba" },
+    { from: "neopolis", to: "openai" },
     { from: "neopolis", to: "agents" },
     { from: "neopolis", to: "llm" },
     { from: "neopolis", to: "infra" },
     { from: "neopolis", to: "support" },
     { from: "anthropic", to: "agents" },
-    { from: "alibaba", to: "llm" },
-    { from: "alibaba", to: "infra" },
+    { from: "openai", to: "llm" },
+    { from: "openai", to: "infra" },
   ];
 
   return (
@@ -1345,8 +1341,8 @@ function HeroGraphic() {
       {/* Nœuds satellites - Orbite extérieure */}
       {[
         { label: "Claude", angle: 0, icon: "ai" },
-        { label: "Qwen", angle: 72, icon: "ai" },
-        { label: "DeepSeek", angle: 144, icon: "ai" },
+        { label: "Gemini", angle: 72, icon: "ai" },
+        { label: "OpenAI", angle: 144, icon: "ai" },
         { label: "Agents", angle: 216, icon: "bot" },
         { label: "Deploy", angle: 288, icon: "rocket" },
       ].map((node, i) => {

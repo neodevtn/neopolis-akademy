@@ -854,3 +854,12 @@
 - [x] Créer un cours "IA pour les nuls" pour non-informaticiens (JSON + quiz + intégration training index)
 - [x] Intégrer des vidéos YouTube explicatives dans chaque leçon du cours IA pour les nuls (10 vidéos, 2 par leçon)
 - [x] Redesign header: retirer éléments non pertinents (Registered Partner, Diagnostic IA, À propos), soigner le design, déplacer vers footer
+- [x] Enlever toute mention de technologie chinoise du site
+- [x] Ajouter anglais et arabe comme langues sur le site vitrine (header, hero, footer, sections clés)
+- [x] Utiliser le logo original Neopolis Development + changer complètement le style du header
+- [x] Corriger le mail d'invitation avec lien direct de création de compte (pas de registration libre)
+- [x] Ajouter la fonction d'envoi massif d'invitations dans l'espace admin
+- [x] Fix TypeScript errors in AdminDashboard.tsx (invitations query uses .items instead of .invitations)
+- [x] Fix AdminContentManager - content page not working
+- [x] Unify admin navigation menu across all admin pages (Dashboard, Content, Training)
+- [x] Analyze and fix server log errors (stale Vite pre-transform errors cleared, no actual runtime errors)

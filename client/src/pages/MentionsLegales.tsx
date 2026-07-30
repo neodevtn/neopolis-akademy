@@ -51,7 +51,7 @@ export default function MentionsLegales() {
             Toute reproduction, représentation, modification, publication, adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite, sauf autorisation écrite préalable de Neopolis Development.
           </p>
           <p className="wise-body-md">
-            Les marques "Claude", "Anthropic" et "Claude Certified Architect" sont la propriété d'Anthropic, PBC. Les marques "Alibaba Cloud" et "Qwen" sont la propriété d'Alibaba Group. Leur utilisation sur ce site est faite dans le cadre des programmes partenaires respectifs.
+            Les marques "Claude", "Anthropic" et "Claude Certified Architect" sont la propriété d'Anthropic, PBC. Leur utilisation sur ce site est faite dans le cadre du programme Claude Partner Network.
           </p>
         </section>
 

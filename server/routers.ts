@@ -499,7 +499,7 @@ export const appRouter = router({
         // Send invitation email
         try {
           const baseUrl = process.env.VITE_APP_URL || "https://akademy.neodev.click";
-          const invitationLink = `${baseUrl}/register?token=${(invitation as any).token || ""}`;
+          const invitationLink = `${baseUrl}/accept-invitation?token=${(invitation as any).token || ""}`;
           await sendInvitationEmail({
             to: input.email,
             name: input.name || null,
@@ -522,6 +522,66 @@ export const appRouter = router({
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await getInvitations(input?.page || 1, input?.pageSize || 20);
+      }),
+
+    bulkCreateInvitations: protectedProcedure
+      .input(z.object({
+        invitations: z.array(z.object({
+          email: z.string().email(),
+          name: z.string().optional(),
+        })).min(1).max(100),
+        language: z.enum(["fr", "en"]).optional().default("fr"),
+        message: z.string().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        const results: { email: string; success: boolean; error?: string }[] = [];
+        const baseUrl = process.env.VITE_APP_URL || "https://akademy.neodev.click";
+
+        for (const inv of input.invitations) {
+          try {
+            const invitation = await createInvitation(inv.email, inv.name || null, ctx.user.id);
+            const invitationLink = `${baseUrl}/accept-invitation?token=${(invitation as any).token || ""}`;
+            try {
+              await sendInvitationEmail({
+                to: inv.email,
+                name: inv.name || null,
+                language: input.language,
+                invitedBy: ctx.user.name || "Neopolis Akademy Admin",
+                invitationLink,
+                message: input.message,
+              });
+            } catch (emailErr) {
+              console.error(`[Admin] Bulk invitation email failed for ${inv.email}:`, emailErr);
+            }
+            results.push({ email: inv.email, success: true });
+          } catch (err: any) {
+            results.push({ email: inv.email, success: false, error: err.message || "Unknown error" });
+          }
+        }
+        return { total: input.invitations.length, sent: results.filter(r => r.success).length, failed: results.filter(r => !r.success).length, results };
+      }),
+
+    resendInvitation: protectedProcedure
+      .input(z.object({ email: z.string().email() }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        // Re-create invitation (old one will be superseded)
+        const invitation = await createInvitation(input.email, null, ctx.user.id);
+        const baseUrl = process.env.VITE_APP_URL || "https://akademy.neodev.click";
+        const invitationLink = `${baseUrl}/accept-invitation?token=${(invitation as any).token || ""}`;
+        await sendInvitationEmail({
+          to: input.email,
+          name: null,
+          language: "fr",
+          invitedBy: ctx.user.name || "Neopolis Akademy Admin",
+          invitationLink,
+        });
+        return { success: true };
       }),
 
     getAnalytics: protectedProcedure

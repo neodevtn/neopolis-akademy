@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "wouter";
+import { AdminNavbar } from "@/components/AdminNavbar";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { getLoginUrl } from "@/const";
@@ -189,7 +190,7 @@ export default function AdminTraining() {
 
     return (
       <div className="min-h-screen bg-background">
-        <Header />
+        <AdminNavbar activePage="training" />
         <div className="max-w-6xl mx-auto px-6 py-8">
           <Button variant="outline" size="sm" onClick={() => setSelectedUserId(null)} className="mb-6 gap-1.5">
             <ChevronLeft className="w-4 h-4" /> Retour à la liste
@@ -332,7 +333,7 @@ export default function AdminTraining() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <AdminNavbar activePage="training" />
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         <motion.div initial="hidden" animate="visible" variants={fadeIn}>
@@ -413,11 +414,7 @@ export default function AdminTraining() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-              <Link href="/admin">
-                <Button variant="outline" size="sm" className="gap-1.5">
-                  <ArrowLeft className="w-4 h-4" /> Candidatures
-                </Button>
-              </Link>
+
             </div>
           </div>
 
@@ -887,31 +884,7 @@ function AnalyticsPanel({ data, isLoading }: { data: any; isLoading: boolean }) 
 
 /* ─── Sub-components ─── */
 
-function Header() {
-  return (
-    <header className="sticky top-0 z-30 bg-card/80 backdrop-blur-md border-b border-border">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <img src={LOGO_URL} alt="Neopolis Akademy" className="h-8 object-contain" />
-          <span className="text-xs bg-primary/15 text-primary px-2.5 py-1 rounded-full font-semibold tracking-wide uppercase">Admin</span>
-          <span className="text-xs text-muted-foreground font-medium ml-2">/ Gestion Formation</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link href="/admin">
-            <Button variant="outline" size="sm" className="gap-1.5 text-sm">
-              <ArrowLeft className="w-4 h-4" /> Candidatures
-            </Button>
-          </Link>
-          <Link href="/">
-            <Button variant="outline" size="sm" className="text-sm">
-              Retour au site
-            </Button>
-          </Link>
-        </div>
-      </div>
-    </header>
-  );
-}
+// Header replaced by AdminNavbar
 
 function StatCard({ icon, value, label }: { icon: React.ReactNode; value: number | string; label: string }) {
   return (

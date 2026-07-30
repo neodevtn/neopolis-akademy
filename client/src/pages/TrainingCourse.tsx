@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Link, useParams } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
@@ -3188,7 +3189,7 @@ function LessonSidebar({
 
 export default function TrainingCourse() {
   const { certId, courseId } = useParams<{ certId: string; courseId: string }>();
-  const { lang, toggleLang, t } = useLanguage();
+  const { lang, t } = useLanguage();
   const { isAuthenticated, loading: authLoading, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { isLessonComplete, markLessonComplete, getNextUnlockedLesson, isCourseComplete, getChapterProgress: getPersistedChapterProgress, saveChapterProgress: persistChapterProgress } = useTrainingProgress();
@@ -3450,13 +3451,7 @@ export default function TrainingCourse() {
             >
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
-            <button
-              onClick={toggleLang}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border hover:bg-secondary text-sm font-medium transition-colors"
-            >
-              <span>{lang === "en" ? "🇬🇧" : "🇫🇷"}</span>
-              {lang === "en" ? "EN" : "FR"}
-            </button>
+            <LanguageSwitcher />
             <button
               onClick={() => logout()}
               className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full transition-all hover:bg-red-50 dark:hover:bg-red-950/30 text-red-600 dark:text-red-400 hover:text-red-700 border border-red-200 dark:border-red-800 hover:border-red-300"
