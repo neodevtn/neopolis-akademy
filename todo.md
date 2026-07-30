@@ -913,3 +913,7 @@
 - [x] Fix bug: "No content available" quand progress=10/10 (initialChapter hors limites, clampé à max index)
 - [x] Fix bug: ** markdown brut dans la description du chapitre Module Complete (screenDescription strip)
 - [x] Enrichissement contenu Module Introduction (1788 chars EN / 2077 chars FR)
+
+## Bugs signalés (30 juillet 2026)
+- [x] Bug chiffres page d'accueil : les stats (300M, 92M, 30%, 220 Milliards $) affichent 0 sur mobile (fix: margin 0px + fallback 3s)
+- [x] Bug rôle admin : le compte apprenant demo a accès admin (rôle promu pendant l'audit, remis en user via SQL)

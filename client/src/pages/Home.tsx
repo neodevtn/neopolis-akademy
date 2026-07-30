@@ -39,11 +39,22 @@ ChartJS.register(...registerables);
 function useCountUp(end: number, duration = 2000, startOnView = true) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref as React.RefObject<Element>, { once: true, margin: "-100px" });
+  const inView = useInView(ref as React.RefObject<Element>, { once: true, margin: "0px" });
   const started = useRef(false);
 
   useEffect(() => {
-    if (!startOnView || !inView || started.current) return;
+    if (!startOnView) return;
+    if (!inView && !started.current) {
+      // Fallback: if inView never triggers (e.g. element hidden by parent animation), start after 3s
+      const fallback = setTimeout(() => {
+        if (!started.current) {
+          started.current = true;
+          setCount(end);
+        }
+      }, 3000);
+      return () => clearTimeout(fallback);
+    }
+    if (!inView || started.current) return;
     started.current = true;
     const startTime = performance.now();
     const animate = (now: number) => {
@@ -945,7 +956,7 @@ function AnimatedChart() {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartInstanceRef = useRef<ChartJS | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const isInView = useInView(chartContainerRef, { once: true, margin: "-100px" });
+  const isInView = useInView(chartContainerRef, { once: true, margin: "0px" });
   const hasAnimated = useRef(false);
 
   useEffect(() => {
