@@ -907,3 +907,9 @@
 - [x] Correction bug critique : AdminContentManager crash simulation examen (useLanguage + t())
 - [x] Correction bug mineur : Markdown ** dans titres sidebar et headings (strip asterisks)
 - [x] Tests unitaires : 16/16 passent (scoring, courseQuality, auth, email)
+
+## Correction Module Introduction vide
+- [x] Ajouter un contenu d'introduction au chapitre "Module Introduction" du cours Claude Platform Model Foundations
+- [x] Fix bug: "No content available" quand progress=10/10 (initialChapter hors limites, clampé à max index)
+- [x] Fix bug: ** markdown brut dans la description du chapitre Module Complete (screenDescription strip)
+- [x] Enrichissement contenu Module Introduction (1788 chars EN / 2077 chars FR)

@@ -2610,7 +2610,7 @@ function LessonViewer({
                 screenTitle = textLines[0].trim().replace(/^#{1,6}\s+/, '').replace(/\*\*/g, '');
                 // If second line is a short description (< 120 chars), use it
                 if (textLines.length > 1 && textLines[1].trim().length < 120 && textLines[1].trim().length > 20) {
-                  screenDescription = textLines[1].trim().replace(/^#{1,6}\s+/, '');
+                  screenDescription = textLines[1].trim().replace(/^#{1,6}\s+/, '').replace(/\*\*/g, '');
                 }
               }
             }
@@ -3716,7 +3716,7 @@ export default function TrainingCourse() {
                     isReviewMode={isReviewMode}
                     courseExercises={courseExercises}
                     onChapterChange={handleChapterChange}
-                    initialChapter={isSingleLessonCourse ? (chapterProgress?.current ?? 0) : undefined}
+                    initialChapter={isSingleLessonCourse ? Math.min(chapterProgress?.current ?? 0, (displayedLesson?.chapters?.length || 1) - 1) : undefined}
                   />
                 </div>
               </motion.div>
