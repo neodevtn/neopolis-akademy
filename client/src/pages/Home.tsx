@@ -1522,128 +1522,130 @@ function FlowDiagram() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   const steps = [
-    { id: "ambassadeur", label: t({ fr: "Ambassadeur", en: "Ambassador", ar: "السفير" }), sub: t({ fr: "Prospection B2B", en: "B2B Prospecting", ar: "التنقيب B2B" }), color: "var(--wise-primary)", icon: "🎯" },
-    { id: "centrale", label: t({ fr: "Centrale", en: "Central", ar: "المركز" }), sub: t({ fr: "Étude & Évaluation", en: "Study & Evaluation", ar: "الدراسة والتقييم" }), color: "var(--wise-sage)", icon: "🔬" },
-    { id: "contrat", label: t({ fr: "Contrat", en: "Contract", ar: "العقد" }), sub: t({ fr: "Contractualisation", en: "Contracting", ar: "التعاقد" }), color: "var(--wise-accent-cyan)", icon: "📋" },
-    { id: "implementation", label: "Neopolis", sub: t({ fr: "Implémentation", en: "Implementation", ar: "التنفيذ" }), color: "var(--wise-accent-coral)", icon: "⚙️" },
-    { id: "client", label: "Client", sub: t({ fr: "Monitoring & Run", en: "Monitoring & Run", ar: "المراقبة والتشغيل" }), color: "var(--wise-accent-pear)", icon: "🏢" },
+    { id: "ambassadeur", label: t({ fr: "Ambassadeur", en: "Ambassador", ar: "السفير" }), sub: t({ fr: "Prospection B2B", en: "B2B Prospecting", ar: "التنقيب B2B" }), bg: "var(--wise-primary-pale)", iconColor: "var(--wise-primary)", icon: Target },
+    { id: "centrale", label: t({ fr: "Centrale", en: "Central", ar: "المركز" }), sub: t({ fr: "Étude & Évaluation", en: "Study & Evaluation", ar: "الدراسة والتقييم" }), bg: "var(--tint-cyan)", iconColor: "var(--wise-accent-cyan)", icon: Shield },
+    { id: "contrat", label: t({ fr: "Contrat", en: "Contract", ar: "العقد" }), sub: t({ fr: "Contractualisation", en: "Contracting", ar: "التعاقد" }), bg: "var(--tint-mint)", iconColor: "oklch(0.45 0.12 160)", icon: BookOpen },
+    { id: "implementation", label: "Neopolis", sub: t({ fr: "Implémentation", en: "Implementation", ar: "التنفيذ" }), bg: "var(--tint-coral)", iconColor: "var(--wise-accent-coral)", icon: Rocket },
+    { id: "client", label: "Client", sub: t({ fr: "Monitoring & Run", en: "Monitoring & Run", ar: "المراقبة والتشغيل" }), bg: "var(--tint-pear)", iconColor: "oklch(0.50 0.12 110)", icon: CheckCircle2 },
   ];
 
   const stepVariant = {
-    hidden: { opacity: 0, y: 20, scale: 0.9 },
+    hidden: { opacity: 0, y: 16, scale: 0.95 },
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
       scale: 1,
       transition: {
-        delay: i * 0.18,
-        duration: 0.5,
+        delay: i * 0.12,
+        duration: 0.45,
         ease: [0.23, 1, 0.32, 1] as [number, number, number, number],
       },
     }),
   };
 
   const arrowVariant = {
-    hidden: { opacity: 0, scaleX: 0 },
+    hidden: { opacity: 0, x: -4 },
     visible: (i: number) => ({
       opacity: 1,
-      scaleX: 1,
+      x: 0,
       transition: {
-        delay: i * 0.18 + 0.12,
-        duration: 0.35,
+        delay: i * 0.12 + 0.08,
+        duration: 0.3,
         ease: [0.23, 1, 0.32, 1] as [number, number, number, number],
       },
     }),
   };
 
   return (
-    <div ref={ref} className="wise-card p-6 md:p-10">
-      {/* Desktop flow */}
-      <div className="hidden md:flex items-center justify-between gap-2">
-        {steps.map((step, i) => (
-          <div key={step.id} className="flex items-center gap-2 flex-1">
-            <motion.div
-              className="flex flex-col items-center text-center flex-1"
-              custom={i}
-              initial="hidden"
-              animate={isInView ? "visible" : "hidden"}
-              variants={stepVariant}
-            >
-              <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-3 shadow-sm"
-                style={{ backgroundColor: step.color, opacity: 0.9 }}
-              >
-                {step.icon}
-              </div>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{step.label}</p>
-              <p className="wise-label text-[10px] mt-0.5">{step.sub}</p>
-            </motion.div>
-            {i < steps.length - 1 && (
+    <div ref={ref} className="wise-card p-5 md:p-8">
+      {/* Desktop flow - compact with arrows */}
+      <div className="hidden md:flex items-center justify-between">
+        {steps.map((step, i) => {
+          const Icon = step.icon;
+          return (
+            <div key={step.id} className="flex items-center">
               <motion.div
-                className="flex-shrink-0 flex items-center origin-left"
+                className="flex flex-col items-center text-center"
                 custom={i}
                 initial="hidden"
                 animate={isInView ? "visible" : "hidden"}
-                variants={arrowVariant}
+                variants={stepVariant}
               >
-                <div className="w-6 h-0.5" style={{ background: "var(--wise-sage)", opacity: 0.5 }}></div>
-                <ChevronRight size={14} style={{ color: "var(--wise-sage)" }} />
+                <div
+                  className="w-14 h-14 rounded-xl flex items-center justify-center mb-2"
+                  style={{ backgroundColor: step.bg }}
+                >
+                  <Icon size={24} style={{ color: step.iconColor }} />
+                </div>
+                <p className="font-semibold text-xs" style={{ color: "var(--neo-ink)" }}>{step.label}</p>
+                <p className="text-[10px] font-medium mt-0.5" style={{ color: "var(--neo-ink-muted)" }}>{step.sub}</p>
               </motion.div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Mobile flow (vertical) */}
-      <div className="md:hidden flex flex-col gap-4">
-        {steps.map((step, i) => (
-          <motion.div
-            key={step.id}
-            custom={i}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-            variants={stepVariant}
-          >
-            <div className="flex items-center gap-4">
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0 shadow-sm"
-                style={{ backgroundColor: step.color, opacity: 0.9 }}
-              >
-                {step.icon}
-              </div>
-              <div>
-                <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{step.label}</p>
-                <p className="wise-label text-xs">{step.sub}</p>
-              </div>
+              {i < steps.length - 1 && (
+                <motion.div
+                  className="flex items-center mx-3 lg:mx-4"
+                  custom={i}
+                  initial="hidden"
+                  animate={isInView ? "visible" : "hidden"}
+                  variants={arrowVariant}
+                >
+                  <div className="w-5 lg:w-8 h-[2px] rounded-full" style={{ background: "var(--wise-primary)", opacity: 0.35 }}></div>
+                  <ArrowRight size={18} strokeWidth={2.5} style={{ color: "var(--wise-primary)", opacity: 0.7 }} />
+                </motion.div>
+              )}
             </div>
-            {i < steps.length - 1 && (
-              <div className="ml-6 h-4 border-l-2 border-dashed" style={{ borderColor: "var(--wise-sage)", opacity: 0.4 }}></div>
-            )}
-          </motion.div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* Legend */}
+      {/* Mobile flow - compact horizontal scroll */}
+      <div className="md:hidden flex items-center gap-1 overflow-x-auto pb-2">
+        {steps.map((step, i) => {
+          const Icon = step.icon;
+          return (
+            <div key={step.id} className="flex items-center flex-shrink-0">
+              <motion.div
+                className="flex flex-col items-center text-center"
+                custom={i}
+                initial="hidden"
+                animate={isInView ? "visible" : "hidden"}
+                variants={stepVariant}
+              >
+                <div
+                  className="w-11 h-11 rounded-lg flex items-center justify-center mb-1.5"
+                  style={{ backgroundColor: step.bg }}
+                >
+                  <Icon size={18} style={{ color: step.iconColor }} />
+                </div>
+                <p className="font-semibold text-[10px]" style={{ color: "var(--neo-ink)" }}>{step.label}</p>
+                <p className="text-[9px] font-medium" style={{ color: "var(--neo-ink-muted)" }}>{step.sub}</p>
+              </motion.div>
+              {i < steps.length - 1 && (
+                <ArrowRight size={14} strokeWidth={2.5} className="mx-1.5 flex-shrink-0" style={{ color: "var(--wise-primary)", opacity: 0.6 }} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Compact legend */}
       <motion.div
-        className="mt-8 pt-6 border-t"
-        style={{ borderColor: "rgba(0,0,0,0.06)" }}
+        className="mt-5 pt-4 border-t flex flex-wrap justify-center gap-x-6 gap-y-2"
+        style={{ borderColor: "var(--neo-border)" }}
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ delay: 1.0, duration: 0.5 }}
+        transition={{ delay: 0.7, duration: 0.4 }}
       >
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-          <div className="flex items-center gap-2 justify-center">
-            <div className="w-3 h-3 rounded-full" style={{ background: "var(--wise-primary)" }}></div>
-            <span className="wise-body-sm">Ambassadeur apporte le lead</span>
-          </div>
-          <div className="flex items-center gap-2 justify-center">
-            <div className="w-3 h-3 rounded-full" style={{ background: "var(--wise-sage)" }}></div>
-            <span className="wise-body-sm">Neopolis évalue & implémente</span>
-          </div>
-          <div className="flex items-center gap-2 justify-center">
-            <div className="w-3 h-3 rounded-full" style={{ background: "var(--wise-accent-pear)" }}></div>
-            <span className="wise-body-sm">Client bénéficie de la solution</span>
-          </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--wise-primary)" }}></div>
+          <span className="text-xs" style={{ color: "var(--neo-ink-secondary)" }}>{t({ fr: "Ambassadeur apporte le lead", en: "Ambassador brings the lead", ar: "السفير يجلب العميل" })}</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--wise-accent-cyan)" }}></div>
+          <span className="text-xs" style={{ color: "var(--neo-ink-secondary)" }}>{t({ fr: "Neopolis évalue & implémente", en: "Neopolis evaluates & implements", ar: "Neopolis تقيّم وتنفّذ" })}</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full" style={{ background: "oklch(0.50 0.12 110)" }}></div>
+          <span className="text-xs" style={{ color: "var(--neo-ink-secondary)" }}>{t({ fr: "Client bénéficie de la solution", en: "Client benefits from the solution", ar: "العميل يستفيد من الحل" })}</span>
         </div>
       </motion.div>
     </div>

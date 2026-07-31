@@ -959,3 +959,4 @@
 - [x] Transformer la section 5 étapes Ambassador en stepper horizontal interactif (pastilles cliquables)
 - [x] Corriger le problème de contraste titre/fond dans cette section
 - [x] Corriger les caractères unicode échappés (\u00b7 et \u2192) affichés littéralement
+- [x] Refaire le diagramme "Project workflow" : couleurs adaptées au thème, flèches entre étapes, design dynamique compact
