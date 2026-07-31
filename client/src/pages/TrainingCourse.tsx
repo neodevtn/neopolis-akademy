@@ -2274,8 +2274,11 @@ function LessonViewer({
         );
       }
       case "video": {
-        const videoId = block.videoId || "";
-        const videoKey = videoId;
+        const rawVideoId = block.videoId || "";
+        const videoId = typeof rawVideoId === 'object' ? (rawVideoId[lang] || rawVideoId.en || rawVideoId.fr || "") : rawVideoId;
+        const videoKey = typeof rawVideoId === 'object' ? (rawVideoId.fr || rawVideoId.en || "") : rawVideoId;
+        const videoTitle = typeof block.title === 'object' && block.title !== null && ('fr' in block.title || 'en' in block.title) ? (block.title[lang] || block.title.en || block.title.fr || "Video") : (block.title || "Video");
+        const videoWatchUrl = typeof block.watchUrl === 'object' ? (block.watchUrl[lang] || block.watchUrl.en || block.watchUrl.fr || "") : (block.watchUrl || "");
         const isVideoComplete = completedVideos.has(videoKey);
         const isPlaying = playingVideos.has(videoKey);
         return (
@@ -2295,7 +2298,7 @@ function LessonViewer({
                   <PlayCircle className="w-4 h-4 text-red-500 shrink-0" />
                 )}
                 <span className="font-medium text-sm text-foreground">
-                  {block.title || "Video"}
+                  {videoTitle}
                 </span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 font-semibold uppercase">
                   {t({ en: "Video", fr: "Vidéo" })}
@@ -2310,7 +2313,7 @@ function LessonViewer({
                 >
                   <img
                     src={getYouTubeThumbnail(videoId)}
-                    alt={block.title || "Video"}
+                    alt={videoTitle}
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
@@ -2324,7 +2327,7 @@ function LessonViewer({
                 <div className="aspect-video rounded-lg overflow-hidden bg-black">
                   <iframe
                     src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1`}
-                    title={block.title || "Video"}
+                    title={videoTitle}
                     className="w-full h-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerPolicy="no-referrer-when-downgrade"
@@ -2349,9 +2352,9 @@ function LessonViewer({
                     : t({ en: "Mark as watched", fr: "Marquer comme vue" })
                   }
                 </Button>
-                {block.watchUrl && (
+                {videoWatchUrl && (
                   <a
-                    href={block.watchUrl}
+                    href={videoWatchUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
