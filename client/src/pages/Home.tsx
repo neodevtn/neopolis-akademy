@@ -793,7 +793,6 @@ export default function Home() {
               <h4 className="wise-label mb-3">{t({ fr: "Outils", en: "Tools", ar: "الأدوات" })}</h4>
               <ul className="space-y-1.5">
                 <li><Link href="/training" className="wise-body-sm hover:underline">{t({ fr: "Formation", en: "Training", ar: "التدريب" })}</Link></li>
-                <li><Link href="/diagnostic" className="wise-body-sm hover:underline">{t({ fr: "Diagnostic IA", en: "AI Diagnostic", ar: "تشخيص الذكاء الاصطناعي" })}</Link></li>
                 <li><Link href="/apply" className="wise-body-sm hover:underline">{t({ fr: "Postuler", en: "Apply", ar: "تقدّم" })}</Link></li>
               </ul>
             </div>

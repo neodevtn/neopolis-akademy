@@ -965,3 +965,4 @@
 - [x] Ajouter des vidéos anglaises équivalentes dans "IA pour les nuls" (garder FR, ajouter EN)
 - [x] Supprimer blocs "Tech ecosystem" et "What we provide", améliorer design Anthropic/Claude
 - [x] Réduire les espaces verticaux excessifs entre les sections de la landing page
+- [x] Supprimer le lien "Diagnostic IA" du footer (accessible uniquement aux utilisateurs authentifiés)
