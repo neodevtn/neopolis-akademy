@@ -1,0 +1,747 @@
+{
+  "courseId": "full_stack_ai_application_developer__04",
+  "sourceCourseTitle": "Full-Stack AI Application Developer / Testing and Deployment",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "Unit Tests and API Contract Tests for AI Endpoints"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_01_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "By the end of this lesson you will be able to:\n• Write unit tests that isolate AI endpoint logic from external model providers.\n• Define and validate API contracts using schema-based tools such as Pydantic and OpenAPI.\n• Understand how to assert on structured AI responses without relying on live model calls.\n• Apply test-driven practices to improve reliability and maintainability of AI-powered APIs."
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_02",
+          "title": {
+            "en": "Unit Tests and API Contract Tests for AI Endpoints"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Testing AI endpoints requires a layered strategy. Unit tests verify the business logic surrounding a model call — input sanitization, prompt construction, response parsing, and error handling — without invoking the real model. You stub or mock the provider client so tests remain fast and deterministic.\n\nAPI contract tests go one level higher: they validate that your endpoint honours a published interface. Tools like Pydantic enforce request and response schemas at runtime, while frameworks such as Schemathesis or Dredd generate test cases directly from an OpenAPI specification. This guarantees that any change breaking the contract is caught before deployment.\n\nFor AI endpoints specifically, contract tests should cover: required fields in the response envelope (e.g., choices, usage, finish_reason), HTTP status codes for malformed inputs, and latency budget assertions. Combining unit tests with contract tests gives a safety net that catches both logic regressions and interface drift early in the CI pipeline."
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **Unit Test Isolation**: Replace the provider SDK with a stub or mock so tests execute offline, deterministically, and in milliseconds.\n• **API Contract**: A formal agreement on request/response shape, status codes, and error formats, typically expressed as an OpenAPI or JSON Schema document.\n• **Schema Validation**: Libraries like Pydantic (Python) or Zod (TypeScript) enforce that data structures match the declared contract at both test time and runtime.\n• **Regression Safety Net**: Running unit and contract tests on every pull request prevents interface drift and logic regressions from reaching production."
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "What is the primary reason to mock the AI provider client in unit tests?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "To reduce the cost of API tokens used during testing"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "To make tests fast, deterministic, and independent of external services"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "To test the provider's model quality"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "To bypass authentication middleware"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Mocking the provider removes the dependency on a live network and non-deterministic model output, ensuring tests run quickly and produce consistent results regardless of external service state."
+                }
+              },
+              {
+                "question": {
+                  "en": "Which of the following best describes an API contract test?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "A test that measures the model's accuracy on a benchmark dataset"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "A test that checks database query performance"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "A test that validates the endpoint conforms to its published request and response schema"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "A test that monitors server CPU usage under load"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "API contract tests verify that an endpoint honours its declared interface — correct field names, types, status codes — ensuring consumers and producers remain compatible as the codebase evolves."
+                }
+              },
+              {
+                "question": {
+                  "en": "Which tool is commonly used to auto-generate API contract tests directly from an OpenAPI specification?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "pytest-benchmark"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Locust"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Schemathesis"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Alembic"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Schemathesis reads an OpenAPI or GraphQL schema and automatically generates and runs test cases, making it ideal for validating that an AI endpoint matches its published contract without writing tests by hand."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_01_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Unit tests for AI endpoints should mock the provider client to achieve fast, offline, deterministic test runs that validate your logic — not the model.\n• API contract tests enforce that your endpoint's request/response shapes remain consistent with the OpenAPI or JSON Schema specification across all changes.\n• Integrating both test types into CI/CD catches regressions and interface drift before they reach production, significantly reducing debugging costs downstream."
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 1: Unit Tests and API Contract Tests for AI Endpoints! You now understand how to isolate AI endpoint logic for unit testing, define and enforce API contracts with schema tools, and integrate both test types into a CI pipeline. In the next lesson you will explore how to mock AI providers in depth and replay recorded conversations to build a robust, offline test harness."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "Mocking Providers and Replaying Conversations"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_02_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "By the end of this lesson you will be able to:\n• Implement provider mocks that return controlled, fixture-based responses for any AI SDK call.\n• Record live AI conversations and replay them deterministically in tests using cassette-style libraries.\n• Handle streaming responses in mocks to test SSE and chunk-based consumer logic.\n• Choose the right mocking strategy — inline stub, recorded cassette, or contract mock — for different testing scenarios."
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_02",
+          "title": {
+            "en": "Mocking Providers and Replaying Conversations"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "AI provider mocking operates at multiple levels. The simplest approach is an inline stub: replace the SDK client with a class or function that returns a hard-coded fixture. This is fast to write and sufficient for unit tests, but brittle when the provider's response shape changes.\n\nA more powerful technique is cassette-based recording and replay, popularised by libraries like VCR.py or the Node.js package nock. On a first run the library proxies real HTTP calls to the provider and serialises all requests and responses to a YAML or JSON file. Subsequent runs replay from the cassette without hitting the network, making the test suite entirely offline while preserving realistic response payloads.\n\nStreaming responses require special handling because they arrive as Server-Sent Events or chunked HTTP bodies. Your mock must yield an async generator that emits the same delta objects the real SDK produces, allowing you to test UI streaming logic, buffer management, and token counting against realistic sequences. Recording streaming cassettes requires capturing each chunk in order and replaying them with configurable inter-chunk delays."
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **Inline Stub**: A minimal replacement object that returns a fixed response, useful for isolated unit tests but requires manual updates when the provider schema changes.\n• **Cassette Recording**: A record-and-replay mechanism that captures real HTTP interactions to a file, enabling deterministic offline testing with realistic payloads.\n• **Streaming Mock**: An async generator mock that emits delta chunks in the same format as the live provider, essential for testing SSE consumers and real-time UI logic.\n• **Fixture Lifecycle**: Best practice is to version cassette files alongside your code, refresh them periodically against staging, and lint them for sensitive data before committing."
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "What is a cassette in the context of AI provider testing?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "An audio recording of a voice AI assistant session"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "A serialised file of recorded HTTP interactions replayed during tests"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "A configuration file for provider API keys"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "A schema definition for request validation"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "In VCR-style testing, a cassette is a file (usually YAML or JSON) that stores recorded HTTP request/response pairs. Tests replay these interactions offline, producing deterministic results without network access."
+                }
+              },
+              {
+                "question": {
+                  "en": "When mocking a streaming AI response, what must the mock return?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "A single JSON object with the complete response text"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "An async generator yielding delta chunk objects that mirror the provider's SSE format"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "A synchronous list of strings representing each token"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "A WebSocket connection to a local echo server"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Streaming AI APIs deliver responses as a sequence of delta chunks via SSE. The mock must replicate this behaviour with an async generator so that consumer logic — buffering, rendering, token counting — can be tested accurately."
+                }
+              },
+              {
+                "question": {
+                  "en": "Why should cassette files be scanned for sensitive data before being committed to version control?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Because cassettes increase repository size and slow down clones"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Because recorded interactions may contain API keys, personal data, or proprietary prompts that should not be exposed"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Because version control systems cannot store YAML files correctly"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Because cassette files are automatically deleted by CI runners"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "HTTP cassettes capture full request and response payloads, which may include Authorization headers, user data in prompts, or confidential business logic. Auditing and redacting cassettes before commit prevents accidental secret exposure."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_02_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Inline stubs are the fastest way to mock an AI provider for unit tests, while cassette recording provides more realistic payloads and protects against provider schema drift.\n• Streaming mocks must reproduce the async generator pattern of the real SDK so that all downstream consumer logic is exercised accurately during tests.\n• Cassette files should be versioned with the code, refreshed against staging periodically, and scanned for sensitive data before being committed to any repository."
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Excellent work completing Lesson 2: Mocking Providers and Replaying Conversations! You can now build a robust offline test harness using inline stubs, cassette recordings, and streaming mocks. These skills ensure your test suite runs fast and deterministically regardless of provider availability. Next, you will learn how to deploy your AI application to cloud, serverless, and container targets."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Deployment to Cloud, Serverless, and Container Targets"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_03_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "By the end of this lesson you will be able to:\n• Compare cloud VM, serverless function, and container deployment models for AI applications.\n• Containerise an AI API service with Docker, applying best practices for image size and security.\n• Deploy a containerised AI service to a managed platform such as Cloud Run, AWS App Runner, or Azure Container Apps.\n• Configure auto-scaling, cold-start mitigation, and health checks appropriate for AI workloads."
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_02",
+          "title": {
+            "en": "Deployment to Cloud, Serverless, and Container Targets"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Choosing the right deployment target for an AI application depends on latency tolerance, traffic patterns, and operational complexity. Virtual machine deployments offer maximum control but require manual scaling and OS maintenance. Serverless functions (AWS Lambda, Google Cloud Functions, Azure Functions) eliminate server management and scale to zero, but face cold-start latency and execution time limits that can be problematic for streaming responses.\n\nContainers strike a balance: package your application, its dependencies, and a lightweight base image into a portable artefact deployable to any Kubernetes cluster, managed container service, or local environment. Managed container platforms — Cloud Run, App Runner, Azure Container Apps — add auto-scaling and HTTPS termination without requiring you to manage cluster infrastructure.\n\nFor AI workloads, critical deployment considerations include: setting minimum instance counts to avoid cold starts on latency-sensitive paths, configuring request timeout values to accommodate longer model inference times, and defining readiness and liveness probes that reflect application warm-up time. Multi-stage Docker builds keep images lean by separating build tooling from the runtime layer, and non-root user directives harden security."
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **Multi-Stage Docker Build**: A Dockerfile pattern that uses separate build and runtime stages to produce a minimal, secure production image free of build tools.\n• **Managed Container Platform**: Services like Cloud Run or Azure Container Apps that handle orchestration, auto-scaling, and HTTPS, reducing operational overhead compared to self-managed Kubernetes.\n• **Cold Start Mitigation**: Techniques such as setting a minimum number of warm instances or using provisioned concurrency to prevent latency spikes when a serverless or container service scales from zero.\n• **Health Probes**: Readiness and liveness HTTP endpoints that inform the platform when the service is ready to accept traffic and when it should be restarted, critical for AI services with non-trivial startup times."
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "What is the main benefit of a multi-stage Docker build for an AI API service?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "It allows you to run multiple services inside a single container"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "It produces a smaller, more secure image by excluding build-time tools from the final runtime layer"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "It enables the container to auto-scale based on GPU usage"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "It automatically rotates API keys at deployment time"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Multi-stage builds compile or install dependencies in an intermediate stage and copy only the necessary artefacts to the final runtime image, significantly reducing image size and removing tools that could be exploited in production."
+                }
+              },
+              {
+                "question": {
+                  "en": "Why is setting a minimum instance count important when deploying an AI API to a serverless or managed container platform?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "It prevents the platform from charging for idle compute time"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "It eliminates cold starts by keeping at least one warm instance ready to serve requests"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "It enforces a maximum concurrency limit on the AI model"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "It disables health probes for faster deployments"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Without a warm instance, the platform must spin up a new container from scratch on the first request after a period of inactivity, introducing cold-start latency. Keeping at least one instance warm guarantees consistent response times for latency-sensitive AI endpoints."
+                }
+              },
+              {
+                "question": {
+                  "en": "Which deployment model offers the least operational overhead while still supporting containerised AI workloads?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Self-managed Kubernetes cluster on bare-metal servers"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Virtual machine with manually configured Nginx reverse proxy"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Managed container platform such as Google Cloud Run or Azure Container Apps"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "On-premises data centre with manual capacity planning"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Managed container platforms abstract away cluster management, auto-scaling configuration, and TLS termination, allowing teams to focus on application code while still benefiting from container portability and reproducibility."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_03_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Container deployments offer the best balance of portability, reproducibility, and operational simplicity for AI APIs, especially on managed platforms like Cloud Run or Azure Container Apps.\n• Multi-stage Docker builds and non-root user policies are essential practices for producing lean, secure production images.\n• Always configure minimum warm instances, appropriate request timeouts, and health probes to handle the longer startup and inference times characteristic of AI workloads."
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Well done completing Lesson 3: Deployment to Cloud, Serverless, and Container Targets! You now understand the trade-offs between deployment models, how to containerise an AI service with Docker best practices, and how to configure managed platforms for reliable, low-latency operation. In the final lesson you will learn how to manage environment variables and secrets safely and compile a complete release checklist before going to production."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "Environment Variables, Secrets, and Release Checklist"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_04_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "By the end of this lesson you will be able to:\n• Distinguish between environment variables and secrets, and apply appropriate storage mechanisms for each.\n• Integrate a secrets manager (e.g., AWS Secrets Manager, HashiCorp Vault, or GCP Secret Manager) into an AI application's deployment pipeline.\n• Prevent secret leakage through environment variable hygiene, .gitignore discipline, and CI/CD vault references.\n• Compile and execute a production release checklist covering tests, secrets rotation, rollback strategy, and observability validation."
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_02",
+          "title": {
+            "en": "Environment Variables, Secrets, and Release Checklist"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Environment variables externalise configuration from code, enabling the same container image to behave differently across development, staging, and production. Non-sensitive configuration — feature flags, log levels, model names — can be stored as plain environment variables. Sensitive values — API keys, database passwords, provider tokens — must never be stored in source code, Dockerfiles, or plain-text CI configuration.\n\nSecrets managers solve this by storing encrypted values centrally and granting time-scoped, identity-based access. At runtime, your application or deployment pipeline fetches the secret via an authenticated API call and injects it as an environment variable or a mounted file. This approach enables secret rotation without code changes and provides an audit trail of every access.\n\nA release checklist formalises the steps required before and after every production deployment. For AI applications it typically includes: all CI tests green, contract tests against staging passed, secrets rotated if required, environment variable parity verified between staging and production, rollback procedure documented and tested, error budget reviewed, and observability dashboards confirmed active. Executing this checklist as a pull-request gate or a pre-deployment GitHub Actions job ensures no step is skipped under release pressure."
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **Environment Variable Hygiene**: The practice of never hardcoding secrets in source files, using .env files only locally with .gitignore, and referencing secrets by name in CI/CD rather than storing their values.\n• **Secrets Manager**: A managed service (AWS Secrets Manager, GCP Secret Manager, HashiCorp Vault) that stores, rotates, and audits access to sensitive credentials with fine-grained IAM policies.\n• **Secret Rotation**: The process of periodically replacing credentials with new values without downtime, typically automated by the secrets manager and decoupled from application deployments.\n• **Release Checklist**: A versioned, executable list of verification steps — tests, secrets audit, rollback plan, observability check — that must pass before a deployment is considered production-ready."
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "Where should production AI provider API keys be stored in a cloud deployment?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Hardcoded in the application source code for reliability"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "In a .env file committed to the repository"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "In a secrets manager such as AWS Secrets Manager or HashiCorp Vault, injected at runtime"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "In a public environment variable on the container image"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Secrets managers encrypt credentials at rest, provide IAM-controlled access, and maintain an audit log of every read. Injecting secrets at runtime via the secrets manager avoids embedding sensitive values in code, images, or plaintext configuration files."
+                }
+              },
+              {
+                "question": {
+                  "en": "What is the primary advantage of automated secret rotation for an AI application?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "It increases the token rate limit of the AI provider"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "It limits the blast radius of a compromised credential by ensuring each key has a short validity window"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "It reduces the cold-start latency of serverless functions"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "It automatically upgrades the underlying model version"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Rotating secrets automatically means that even if a credential is exfiltrated, it becomes invalid within hours or days. This drastically reduces the window of opportunity for an attacker and limits potential damage."
+                }
+              },
+              {
+                "question": {
+                  "en": "Which of the following items belongs on a release checklist for a production AI application deployment?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Confirming that the developer's local machine has the latest IDE version"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Verifying that all CI tests pass, secrets are current, rollback procedure is documented, and observability dashboards are active"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Ensuring the product roadmap slide deck is updated"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Checking that the staging database has been deleted to save costs"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "A production release checklist for an AI application must confirm technical readiness across multiple dimensions: test suite health, secrets hygiene, a tested rollback path, and live observability — all before traffic is shifted to the new version."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_04_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Sensitive credentials such as AI provider API keys must always be stored in a dedicated secrets manager and injected at runtime, never hardcoded or committed to version control.\n• Automated secret rotation minimises the impact of credential compromise by limiting each key's validity window and providing a full audit trail of access.\n• A formal, executable release checklist — covering tests, secrets, rollback, and observability — is the final quality gate that transforms a passing build into a safe production deployment."
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Outstanding work completing Lesson 4: Environment Variables, Secrets, and Release Checklist! You now have a comprehensive understanding of secure configuration management and the operational discipline required to release AI applications safely. You are ready for the capstone lab, where you will deploy your full-stack AI application end-to-end and submit a complete runbook documenting every step of your deployment, secrets management, and rollback strategy. Good luck!"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}

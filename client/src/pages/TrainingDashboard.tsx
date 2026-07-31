@@ -73,6 +73,20 @@ export default function TrainingDashboard() {
   const { isAuthenticated, loading: authLoading, user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
+  // IDs of the new Full-Stack AI Engineering certifications
+  const FULL_STACK_AI_CERT_IDS = new Set([
+    "full_stack_ai_application_developer",
+    "ai_data_engineering_rag_practitioner",
+    "advanced_rag_evaluation_specialist",
+    "llmops_ai_observability_engineer",
+    "llm_application_security_red_teaming_specialist",
+    "ai_production_infrastructure_model_serving_engineer",
+    "open_source_llms_fine_tuning_engineer",
+    "ai_product_management_human_centered_ux_specialist",
+    "ai_governance_compliance_responsible_ai_leader",
+    "ai_finops_cost_engineering_specialist",
+  ]);
+
   const certCompletionData = useMemo(() => {
     return trainingIndex.certifications.map((cert) => {
       const courses = trainingIndex.courses.filter((c) => c.certId === cert.id);
@@ -80,7 +94,7 @@ export default function TrainingDashboard() {
       const totalLessonsMap: Record<string, number> = {};
       courses.forEach((c) => { totalLessonsMap[c.id] = c.lessonCount || 1; });
       const progressPct = getCertProgress(courseIds, totalLessonsMap);
-      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, courseCount: cert.courseCount, totalExercises: cert.totalExercises, totalVideos: cert.totalVideos, progress: progressPct, completed: progressPct >= 100 };
+      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, courseCount: cert.courseCount, totalExercises: cert.totalExercises, totalVideos: cert.totalVideos, totalDownloads: (cert as any).totalDownloads || 0, progress: progressPct, completed: progressPct >= 100 };
     });
   }, [getCertProgress]);
 
@@ -346,15 +360,19 @@ export default function TrainingDashboard() {
           );
         })()}
 
-        {/* Certification Paths */}
+        {/* Certification Paths — Anthropic Official */}
         <motion.div variants={fadeIn} className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-foreground">
-            {t({ en: "Certification Paths", fr: "Parcours de certification" })}
-          </h2>
+          <div>
+            <h2 className="text-xl font-semibold text-foreground">
+              {t({ en: "Anthropic Official Certifications", fr: "Certifications Officielles Anthropic" })}
+            </h2>
+            <p className="text-sm text-muted-foreground mt-0.5">{t({ en: "Validated by Anthropic — Claude Associate, Developer, Architect", fr: "Validées par Anthropic — Claude Associate, Developer, Architect" })}</p>
+          </div>
+          <span className="text-xs bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2.5 py-1 rounded-full font-semibold">Official</span>
         </motion.div>
 
         <motion.div variants={staggerContainer} className="grid md:grid-cols-2 gap-5 mb-10">
-          {certCompletionData.map((cert) => {
+          {certCompletionData.filter((cert) => !FULL_STACK_AI_CERT_IDS.has(cert.id)).map((cert) => {
             const level = (((cert.level as any)?.en || "beginner") as string).toLowerCase() as keyof typeof levelConfig;
             const config = levelConfig[level] || levelConfig.beginner;
             return (
@@ -399,10 +417,10 @@ export default function TrainingDashboard() {
                         {cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}
                       </span>
                     )}
-                    {(cert as any).totalDownloads > 0 && (
+                    {cert.totalDownloads > 0 && (
                       <span className="flex items-center gap-1">
                         <Download className="w-3.5 h-3.5" />
-                        {(cert as any).totalDownloads} {t({ en: "downloads", fr: "téléchargements" })}
+                        {cert.totalDownloads} {t({ en: "downloads", fr: "téléchargements" })}
                       </span>
                     )}
                   </div>
@@ -419,6 +437,47 @@ export default function TrainingDashboard() {
                       {cert.progress}%
                     </span>
                     <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+
+        {/* Full-Stack AI Engineering section */}
+        <motion.div variants={fadeIn} className="mb-4 flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-foreground">
+              {t({ en: "Full-Stack AI Engineering", fr: "Ingénierie IA Full-Stack" })}
+            </h2>
+            <p className="text-sm text-muted-foreground mt-0.5">{t({ en: "Production-grade AI: RAG, LLMOps, Security, Infrastructure, Governance, FinOps", fr: "IA production : RAG, LLMOps, Sécurité, Infrastructure, Gouvernance, FinOps" })}</p>
+          </div>
+          <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2.5 py-1 rounded-full font-semibold">New</span>
+        </motion.div>
+
+        <motion.div variants={staggerContainer} className="grid md:grid-cols-2 gap-5 mb-10">
+          {certCompletionData.filter((cert) => FULL_STACK_AI_CERT_IDS.has(cert.id)).map((cert) => {
+            const level = (((cert.level as any)?.en || "beginner") as string).toLowerCase() as keyof typeof levelConfig;
+            const config = levelConfig[level] || levelConfig.beginner;
+            return (
+              <motion.div key={cert.id} variants={fadeInUp}>
+                <Link href={`/training/${cert.id}`} className="group block bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md hover:border-blue-400/30 transition-all duration-200">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/40 flex items-center justify-center text-2xl">{cert.icon}</div>
+                    <span className={`text-[11px] px-2.5 py-1 rounded-full font-semibold ${config.color}`}>{t(config.label)}</span>
+                  </div>
+                  <h3 className="text-base font-semibold text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-2 leading-tight">{t(cert.title)}</h3>
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2 leading-relaxed">{t(cert.description)}</p>
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
+                    <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" />{cert.courseCount} {t({ en: "courses", fr: "cours" })}</span>
+                    <span className="flex items-center gap-1"><Dumbbell className="w-3.5 h-3.5" />{cert.totalExercises} {t({ en: "exercises", fr: "exercices" })}</span>
+                    {cert.totalVideos > 0 && <span className="flex items-center gap-1"><Play className="w-3.5 h-3.5" />{cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}</span>}
+                    {cert.totalDownloads > 0 && <span className="flex items-center gap-1"><Download className="w-3.5 h-3.5" />{cert.totalDownloads} {t({ en: "downloads", fr: "téléchargements" })}</span>}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden"><div className={`h-full rounded-full transition-all duration-500 ${cert.completed ? "bg-emerald-500" : "bg-blue-500"}`} style={{ width: `${cert.progress}%` }} /></div>
+                    <span className={`text-xs font-semibold ${cert.completed ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"}`}>{cert.progress}%</span>
+                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-blue-500 transition-colors" />
                   </div>
                 </Link>
               </motion.div>

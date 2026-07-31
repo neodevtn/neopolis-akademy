@@ -1,0 +1,771 @@
+{
+  "courseId": "advanced_rag_evaluation_specialist__04",
+  "sourceCourseTitle": "Advanced Rag Evaluation Specialist / Continuous Improvement",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "Regression tests for RAG changes"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to design a reliable regression test suite for RAG across retrieval, generation, and attribution layers 2) How to build gold datasets, fixtures, and CI gates that catch degradations early 3) How to interpret metric diffs, control flakiness, and prevent silent regressions in production"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "RAG systems change frequently (embeddings, retrievers, chunking, rerankers, prompts, and generators), so layered regression testing is essential. Use unit tests for components (e.g., tokenizer/chunker), integration tests for retrieval pipelines (retriever + reranker), and end-to-end tests for answer quality and groundedness. Create gold datasets: (a) retrieval sets with queries and expected relevant document IDs, (b) answer sets with references/citations, and (c) adversarial/slice sets (long queries, entities, multi-hop). Track metrics by layer: retrieval (Recall@k, Precision@k, MRR, nDCG), attribution/groundedness (supportedness, citation accuracy), and generation (Exact Match, token F1, ROUGE-L, answerability). Stabilize tests by pinning versions, snapshotting indexes/embeddings, fixing top_k, setting temperature=0, seeding data order, and caching reranker/model outputs where feasible. Run CI on pull requests with acceptance thresholds and bootstrap-based significance checks, and schedule nightly full suites. Use slice analysis, cost/latency monitoring, and change logs for traceability. Treat regressions with a triage process and avoid masking problems (e.g., arbitrarily raising k)."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Golden sets: Curated queries with expected relevant docs, canonical answers, and source citations\n• Metrics by layer: Recall@k/MRR for retrieval; groundedness/attribution checks; EM/F1/ROUGE-L for answers; plus latency and cost budgets\n• Test stability: Temperature=0, seeded order, fixed top_k, snapshot embeddings/index, version pinning for retrievers/rerankers"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "After switching to larger chunk sizes, CI shows stable answer F1 but a 15% drop in retrieval Recall@10 for entity-heavy queries. What should you do first?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Increase top_k to mask the drop and move on"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Reproduce and analyze slice-level diffs under deterministic settings, expand the retrieval gold set for entity-heavy queries, and consider reverting the change"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Lower the acceptance threshold so the build passes"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Ignore it because end-to-end F1 is unchanged"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Investigate the retrieval-layer regression with deterministic runs and slice analysis, strengthen the gold set to cover the affected slice, and roll back if needed; masking or ignoring hides real risk."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Which setup most reduces flakiness in RAG regression tests?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Sample fewer queries and use higher generation temperature"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Use many retries with random seeds and average the scores"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Freeze index/embeddings and reranker versions, seed data order, set temperature=0 with fixed max tokens and top_k, and snapshot fixtures"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Only compare cost and latency across builds"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Deterministic generation, pinned artifacts, seeded ordering, and snapshotting remove major sources of nondeterminism and make failures actionable."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Which metric best detects retrieval regressions without conflating generation quality?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Recall@k or MRR against gold relevant documents"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "ROUGE-L against a reference answer"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "BLEU between model answer and gold answer"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Sentiment score of the generated answer"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Retrieval metrics like Recall@k and MRR isolate the retriever/reranker performance from the generator, revealing true retrieval regressions."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Test by layer and by slice; do not rely on a single end-to-end score\n• Stabilize tests with pinned artifacts, seeds, and temperature=0; track latency and cost alongside quality\n• Gate changes in CI with significance-aware thresholds and roll back on regressions"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand how to build stable, layered regression tests for RAG and use them to safely evolve your system."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "Human feedback loops and annotation workflows"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to capture and structure explicit and implicit feedback for RAG systems 2) How to design annotation guidelines, QA processes, and agreement checks for reliable labels 3) How to operationalize feedback into evals, dataset updates, and safer deployments"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Feedback loops turn user signals and annotations into continuous improvements. Collect explicit signals (thumbs up/down, 5-point ratings, pairwise preferences, suggested fixes), implicit signals (clicks, dwell time, abandonment), and issue reports. Define a labeling schema for RAG: relevance grades for retrieved docs, answer correctness, groundedness/attribution (is the claim supported by cited passages?), completeness, and safety. Produce thorough guidelines with positive/negative examples and edge cases, and run calibration rounds. Ensure quality with inter-annotator agreement (e.g., Cohen's kappa, Krippendorff's alpha), hidden gold checks, spot audits, and reviewer workflows. Triage feedback: deduplicate, categorize, prioritize high-impact slices, and protect privacy/PII. Integrate labels: improve retriever/reranker training data, update prompts, fix indexing/chunking, and add cases to evaluation suites. Use active learning/uncertainty sampling to select items for annotation. Version datasets and label schemas, and measure loop health (throughput, agreement, time-to-fix, regression reoccurrence). Deploy improvements with feature flags and monitor post-release."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Feedback types: Explicit ratings/preferences and user corrections; implicit signals like clicks and dwell time\n• Quality control: Clear guidelines, calibration rounds, gold checks, and inter-annotator agreement (Cohen's kappa/Krippendorff's alpha)\n• Integration: Convert labeled data into evals and training sets; close the loop with tickets, feature flags, and monitoring"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You need reliable 0/1/2 relevance labels for retrieved passages. What is the most important step before launching annotators at scale?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Hire only domain experts and skip training"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Publish precise guidelines with positive/negative examples and run calibration rounds with gold questions and feedback"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Pay per label to maximize throughput and rely on majority vote"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Sample only easy, short queries to reduce disagreement"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Clear instructions plus calibration with gold items are the strongest predictors of reliable labels, even with mixed annotator backgrounds."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Users click 'report an issue' for incorrect or ungrounded answers. What is the safest workflow to turn this into improvements?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Immediately fine-tune on the flagged Q/A pairs without review"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Automatically delete any documents that were cited in flagged answers"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Triage and deduplicate, validate with annotators, add cases to the evaluation suite, then deploy a fix behind a feature flag and monitor"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Ignore reports until at least 100 users flag the same issue"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "A controlled loop—triage, validate, convert to evals, and guarded deployment—prevents regressions and preserves safety."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Which approach best monitors annotator quality over time?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Track inter-annotator agreement (e.g., Cohen's kappa) with hidden gold checks and periodic reviewer audits"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Only measure labels per hour and reward the fastest workers"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Accept labels if the average task rating is above 4/5"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Let the model auto-approve or reject annotators without human oversight"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "IAA plus gold checks and audits provides reliable, longitudinal visibility into labeling quality; speed alone is insufficient."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Close the loop: capture, triage, label, validate, integrate, and monitor\n• High-quality guidelines, calibration, and IAA are essential for trustworthy labels\n• Convert feedback into evals and guarded changes; measure loop health and prevent regressions"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You can now design robust human feedback loops and annotation workflows that continuously improve RAG systems."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Experiment tracking and release gates"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to design reproducible experiment tracking for RAG systems (datasets, prompts, retrievers, indexes, models, and evaluators). 2) How to define and automate release gates tied to evaluation thresholds, risk, and business SLAs. 3) How to operationalize experiments in CI/CD with canaries, shadowing, approvals, and rollback procedures."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Experiment tracking ensures results are reproducible and comparable across iterations. Each run should capture immutable metadata: code commit/artefact version, dataset and query set versions, prompt template hash, retriever parameters (e.g., top_k, filters), index snapshot ID, model and tokenizer versions, evaluator versions, random seeds, and environment details. For RAG, track both offline and online metrics: answer correctness/utility (LLM-graded or human), faithfulness/groundedness, citation accuracy, retrieval precision/recall, latency, cost per query, and safety/PII incidents. Statistical rigor matters: use fixed test sets, holdouts, and significance testing or Bayesian estimation when comparing variants. Release gates are policy rules that block promotion unless multi-metric thresholds are satisfied (e.g., faithfulness ≥ 0.9, citation accuracy ≥ 0.95, latency p95 ≤ 800 ms, safety incidents = 0). Gates can be risk-weighted, applying stricter criteria for high-impact domains. Progressive delivery reduces risk: shadow traffic validates correctness without user impact; canaries expose a small slice with automatic abort thresholds; A/B tests measure business impact. Automate gates in CI/CD so a pipeline promotes only when metrics, sample sizes, and checks pass, with human sign-off for exceptions and documented rollback plans."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Experiment lineage and versioning: Record code, data, prompts, retriever/index snapshots, models, and evaluator versions to ensure exact reproducibility.\n• Release gates and policies: Multi-metric, risk-aware thresholds that must be met before promotion, covering quality, latency, cost, and safety.\n• Progressive delivery: Shadow, canary, and A/B strategies with automatic aborts and rollbacks to minimize user risk during releases."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You increased retriever top_k from 5 to 20 and saw a quality change. What is essential to record so others can reproduce the result exactly?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Only the new top_k value and overall accuracy"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Dataset version, prompt template hash, model version, retriever params, index snapshot, evaluator version, and code commit"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "A screenshot of the dashboard"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Time of day and developer name"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Reproducibility requires full lineage: data, code, prompts, retriever/index settings, models, and evaluator versions."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "When should a release gate for a RAG system block promotion?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Whenever any metric changes at all"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "If average correctness improves but latency is unchanged"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "If a required threshold (e.g., citation accuracy or safety) falls below policy even if some metrics improve"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Only when stakeholders manually request a block"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Gates enforce policy across multiple dimensions; failing a critical threshold (quality/safety/latency/cost) should block release."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "What is the safest way to validate online impact after passing offline gates?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Run a shadow or canary rollout with guardrails and automatic rollback thresholds"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Roll out to 100% of users immediately"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Skip online validation if offline scores were high"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Rely on developer intuition without monitoring"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Progressive delivery (shadow/canary) limits blast radius while measuring real-world impact with guardrails."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Track full lineage (code, data, prompts, retriever/index, models, evaluators) for reproducible RAG experiments.\n• Define multi-metric, risk-aware release gates and automate them in CI/CD.\n• Use shadowing/canaries with clear abort and rollback criteria to de-risk releases."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand how to track RAG experiments rigorously and enforce release gates safely in production."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "Reporting to product and business stakeholders"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to translate RAG evaluation metrics into business impact and risk. 2) How to build stakeholder-ready dashboards and reports that are concise and trustworthy. 3) How to make decision-ready recommendations with clear trade-offs and next steps."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Effective reporting starts with audience alignment. For product and business leaders, begin with a one-page executive summary: what changed, observed impact, risk, and the decision being requested (go/no-go/iterate). Tie technical metrics to outcomes: answer acceptance and faithfulness map to ticket deflection and CSAT; latency p95 maps to conversion and satisfaction; cost/query maps to gross margin; safety incidents map to compliance risk. Present results with uncertainty: include sample sizes, confidence intervals, and known biases (e.g., domain skew). Segment results by cohorts (intent, channel, locale) to reveal where improvements matter most. Use simple visuals and consistent definitions (north-star metric, leading indicators, guardrail metrics). State release readiness against SLAs/SLOs and policy gates, list trade-offs (quality vs. latency vs. cost), and quantify incremental impact (e.g., +4% acceptance → −3% tickets/month). Close with actionable next steps, owners, and timelines, and link to experiment lineage for auditability."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• North-star metrics and guardrails: Define the primary business outcome and supporting constraints (quality, latency, cost, safety).\n• Communicating uncertainty: Report point estimates with confidence intervals and sample sizes to avoid overclaiming.\n• Decision-ready storytelling: Lead with impact, risk, and a clear ask; keep methods and lineage available in an appendix."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "For a self-serve support assistant, which metric best aligns with a business outcome to highlight in an executive summary?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Model perplexity on a generic corpus"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Answer acceptance/deflection rate on target intents"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Total training FLOPs"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Maximum token window size"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Acceptance/deflection directly maps to fewer support tickets and cost savings, a clear business outcome."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "How should you present uncertainty in reported quality improvements?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Report a single number without caveats to avoid confusion"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Hide uncertainty unless asked"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Show mean effect with confidence intervals and sample sizes, noting key assumptions"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Use disclaimers only, without numbers"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Confidence intervals and sample sizes convey reliability and help stakeholders judge risk."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "What should the executive summary of a release-readiness report lead with?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "A one-sentence statement of what changed, observed impact, risks, and the decision ask"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Full architecture diagrams"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "A glossary of terms"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Detailed prompt templates"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Executives need a concise decision framing first; detailed methods can follow in appendices."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Translate technical metrics into business terms (deflection, CSAT, margin) with uncertainty and sample sizes.\n• Use consistent, decision-focused reporting: impact, risks, trade-offs, and a clear ask.\n• Provide drill-downs and lineage for auditability while keeping the main narrative concise."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You can now communicate RAG evaluation results clearly to product and business stakeholders and drive informed decisions."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}

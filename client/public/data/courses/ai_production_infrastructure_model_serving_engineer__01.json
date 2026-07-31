@@ -1,0 +1,771 @@
+{
+  "courseId": "ai_production_infrastructure_model_serving_engineer__01",
+  "sourceCourseTitle": "Ai Production Infrastructure Model Serving Engineer / Infrastructure Foundations",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "CPU, GPU, serverless and managed API tradeoffs"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to choose between CPU, GPU, serverless, and managed APIs based on latency, throughput, and cost. 2) How workload shape (steady vs spiky) influences scaling strategies, batching, and cold starts. 3) How to estimate capacity and cost per request/token to select the right deployment model."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Hardware choice: CPUs are general-purpose and cost-effective for small models, classical ML, and pre/post-processing; they struggle with large transformer inference due to limited parallelism. GPUs accelerate matrix ops and attention, delivering higher throughput per dollar for medium/large models (e.g., 7B+), especially with batching, quantization, and tensor cores. VRAM gates model size; quantization (INT8/4) and paged attention help fit models and increase throughput. Performance and cost: Latency targets (p50/p95), tokens/sec, and concurrency determine capacity. Batching trades single-request latency for throughput; dynamic batching and KV-cache reuse help. Aim for high utilization without breaching SLOs; estimate cost/request as (node_hourly_cost / sustained_req_per_hour). Hosting models: Self-managed (VMs/Kubernetes) offers full control, custom kernels, and predictable costs at the expense of operational overhead (autoscaling, observability, upgrades). Serverless functions are easy and scale-to-zero with per-invocation pricing but often CPU-only, have time/memory limits, and suffer cold starts. Serverless containers/Jobs add more resources and sometimes GPUs with autoscaling and simpler ops. Managed model APIs (e.g., vendor LLM endpoints) provide fastest time-to-value, strong SLAs, and enterprise features (security/compliance) but less control over models, limits on customization, data policies, and potentially higher variable cost. Workload shape: Steady traffic favors dedicated instances; spiky or sporadic workloads benefit from serverless or managed APIs with provisioned/warm capacity to mitigate cold starts. Data/compliance: Sensitive data may require VPC peering/private endpoints or self-hosting. Pricing gotchas: egress fees, per-token pricing variability, idle GPU burn, and spot/preemptible interruption rates."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Workload shape: Steady vs spiky demand dictates whether to use dedicated GPUs, serverless scale-to-zero, or managed APIs with warm pools.\n• Throughput vs latency: Batching and quantization increase throughput/$ but can raise p95 latency—tune to SLOs and monitor utilization.\n• Control vs convenience: Self-hosting maximizes control and predictability; serverless/managed minimize ops but limit customization and can increase variable cost."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You need interactive chat inference with spiky traffic (0→1000 RPS), strict p95 latency, and a small team. Which approach best balances latency, scale, and ops burden?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Self-managed GPU cluster on Kubernetes with custom autoscalers."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Use a managed model API that supports streaming and provisioned/warm capacity."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "CPU-only serverless functions with aggressive concurrency."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "On-prem CPUs with manual scaling."
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "A managed API with streaming and provisioned/warm capacity removes most ops burden, handles bursty scale, and meets latency SLOs better than CPU FaaS or DIY autoscaling under sudden spikes."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You must compute 10M embeddings over a week at lowest possible cost; latency is unimportant, interruptions are acceptable. What should you choose?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "A low-latency managed API with strict SLAs."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "A fixed on-demand H100 cluster running 24/7."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Spot/preemptible GPU instances orchestrated as batch jobs with queuing and batching."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "CPU-only functions with massive parallelism."
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Spot/preemptible GPUs offer the best $/compute for batch workloads tolerant to restarts; add queuing and batching to maximize utilization and checkpoint progress."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You serve a 7B model that fits on a single 24 GB GPU, steady 50 RPS, tight budget, and need custom preprocessing. Best option?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Self-host a single-GPU service with tuned batching and autoscaling to a small replica set."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "CPU-only serverless to scale to zero."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Fully managed per-token API with no customization."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Multi-GPU model-parallel cluster."
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "A single-GPU service gives control, predictable costs, and sufficient performance for a 7B model; CPU FaaS will be too slow, and managed per-token APIs may cost more and limit customization."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Match hardware and hosting model to workload shape, SLOs, and budget.\n• Use batching, quantization, and utilization monitoring to optimize throughput/cost without violating latency SLOs.\n• Prefer managed/serverless for bursty or low-ops needs; self-host for control, customization, and predictable steady loads."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand the tradeoffs across CPU, GPU, serverless, and managed APIs and can choose the right approach for your AI workloads."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "Containerizing AI apps"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to build minimal, reproducible Docker images for CPU/GPU AI services. 2) How to package models and dependencies to reduce cold starts while keeping images maintainable. 3) How to run containers reliably with health checks, non-root users, and GPU configuration."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Base images and compatibility: Choose a base aligned with your stack (e.g., python:3.11-slim for CPU, nvidia/cuda:<major.minor>-runtime for GPU). Ensure CUDA, cuDNN, and framework wheels (e.g., PyTorch/TensorFlow) match the host driver; runtime images are smaller than devel images. Build practices: Use multi-stage builds to compile artifacts then copy only runtime deps; pin versions with lockfiles; leverage .dockerignore; cache layers by installing dependencies before copying app code; clean APT caches and avoid unnecessary tools. Security and reproducibility: Run as a non-root user, minimize attack surface (slim images), scan images, and pin checksums for downloaded models. Packaging models: To reduce cold starts, either bake model weights into a separate image layer (updated occasionally) or implement a startup warm phase to download to a writable volume/cache; verify integrity via checksum. Serving: Provide an HTTP/gRPC interface (e.g., FastAPI + Uvicorn/Gunicorn) or a specialized server (Triton, vLLM, TGI). Configure ENTRYPOINT/CMD, HEALTHCHECK, and structured logging to stdout/stderr. Performance: Preload models on startup, enable torch.no_grad(), select dtype (e.g., float16/bfloat16), configure thread counts, and batch requests where appropriate. GPU runtime: Install NVIDIA Container Toolkit on hosts and run with --gpus; set CUDA_VISIBLE_DEVICES as needed. Orchestration: Expose ports, add readiness/liveness/startup probes, and set resource limits/requests. For multi-arch (x86_64/arm64), use buildx and test images on target hardware."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• CUDA/image alignment: Match CUDA/cuDNN and framework wheels to the host driver to ensure GPUs are visible and performant.\n• Layering and caching: Use multi-stage builds, lockfiles, and model layers to speed builds and reduce cold starts.\n• Runtime hardening: Run as non-root, define HEALTHCHECK and probes, and keep images minimal for security and faster pulls."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You need a GPU-enabled container for PyTorch 2.x with CUDA 12.1 on A100 and want the GPU visible at runtime. What is the correct setup?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Use python:3.11-slim and install only CPU wheels; run normally."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Base on nvidia/cuda:12.1-runtime with matching cuDNN, install the CUDA-enabled PyTorch wheel, and run with NVIDIA Container Toolkit (--gpus all)."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Use alpine:latest and compile everything from source for minimal size."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Bundle a CUDA toolkit in the app directory and set PATH at runtime."
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "A CUDA runtime base plus CUDA-enabled framework wheels and the NVIDIA Container Toolkit (--gpus all) ensures driver/runtime compatibility and GPU visibility."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You want to reduce cold starts caused by downloading large model weights but still update weights monthly. What approach works best?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Always download weights on each container start to ensure freshness."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Mount weights into a temporary emptyDir volume at deploy time for every pod."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Bake weights into a dedicated image layer (with checksum pinning) and rebuild that layer when weights change."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Mount a remote filesystem and fetch weights on every request for consistency."
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Baking weights into a separate layer avoids startup downloads and leverages registry/layer caching; update only when weights change to keep deploys fast."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Your Kubernetes liveness probe restarts the container while the model is still loading (needs ~60s). What is the best fix?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Add a startupProbe and increase initial delays/timeouts so readiness/liveness start after the warm-up period."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Increase replica count so restarts are less noticeable."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Remove health checks entirely to avoid restarts."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Build a debug image with more tools to investigate later."
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Use startupProbe to allow long initialization without failing liveness; configure readiness to signal healthy only after the model is loaded."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Choose base images that match CUDA/framework requirements; verify GPU visibility at runtime.\n• Use multi-stage builds, .dockerignore, and pinned deps to create small, reproducible images.\n• Preload models, define health checks, and run as non-root to improve reliability and security in production."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You can now build, harden, and run GPU-ready containers for AI services with fast startup and reliable operations."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Queues, workers and async inference"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to design asynchronous inference using queues, workers, and result stores to avoid API timeouts 2) How to choose and configure messaging systems, delivery semantics, retries, and dead-letter queues 3) How to optimize throughput and latency with batching, backpressure, autoscaling, and idempotent processing"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Asynchronous inference decouples request intake from model execution using a message queue and a worker pool. A typical flow: (1) The API receives a request, validates it, generates a job_id/idempotency key, stores large payloads in object storage if needed, and enqueues a small message (metadata + pointers). (2) The API immediately returns 202 Accepted with the job_id. (3) Workers pull messages, load the model (ideally pre-warmed), perform inference, and write results to a result store (cache/DB/object storage). (4) The client polls a GET /jobs/{id} endpoint, subscribes via WebSocket/SSE, or uses a callback/webhook to receive completion.\n\nSelect a queue based on semantics: RabbitMQ/SQS/Redis Streams for work queues; Kafka/PubSub for high-throughput streams and replays. Prefer at-least-once delivery with idempotent workers. Use visibility timeouts/acknowledgements, exponential backoff retries, and dead-letter queues (DLQs). Keep messages small; pass URIs to large inputs/outputs. Implement idempotency by upserting results keyed by job_id and ensuring side effects (writes, notifications) are safe to repeat.\n\nPerformance: Raise GPU/CPU utilization via micro-batching and dynamic batching (e.g., NVIDIA Triton), while bounding queueing delay (e.g., 10–50 ms). Group requests by shape (e.g., sequence length buckets) to reduce padding overhead. Apply backpressure using queue length limits, per-worker concurrency, and request shedding. Scale workers horizontally based on queue depth/lag, GPU utilization, and processing latency; isolate hot models with dedicated queues and autoscaling policies. Monitor throughput, p50–p99 latency, retries, DLQ size, and end-to-end SLA from request to result."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Delivery semantics: at-least-once vs at-most-once, acknowledgements/visibility timeout, retry with exponential backoff, and dead-letter queues for poison messages\n• Batching strategies: micro-batching/dynamic batching to raise GPU utilization while respecting latency budgets; bucketing/padding to align tensor shapes\n• Backpressure and autoscaling: scale workers on queue depth/lag (e.g., with KEDA), cap concurrency, and shed load to protect latency SLOs"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You need to serve sporadic, long-running model inferences without client timeouts and with safe retries. Which architecture fits best?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Keep synchronous HTTP and raise timeouts substantially"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Accept the request, enqueue to a durable work queue with an idempotency key, return a job_id, and have workers process and store results"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Write requests to local disk and run a cron job every minute"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Send jobs via UDP directly to the model server to reduce overhead"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "A queue + worker pattern decouples intake from processing, supports retries with visibility timeouts and DLQs, and provides a job_id for polling/callbacks."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You must maximize GPU utilization for many small requests while keeping added latency under ~50 ms. What should you do?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Pin each request to a dedicated GPU to avoid interference"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Disable queueing and process strictly one request at a time"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Enable dynamic batching/micro-batching to accumulate requests briefly before inference"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Route failed jobs to a DLQ to increase average throughput"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Dynamic batching briefly accumulates requests to increase GPU occupancy, improving throughput with a small, controlled latency budget."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Your queue provides at-least-once delivery, so a job may be processed twice. How do you prevent bad side effects?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Make processing idempotent by upserting results keyed by job_id and de-duplicating notifications"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Disable retries so each message is handled at most once"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Switch to at-most-once delivery to avoid duplicates even if you lose jobs"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Keep all state in memory so duplicates are ignored automatically"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Idempotent writes and deduplication by job_id allow safe at-least-once processing without double-charging or duplicate side effects."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Use a durable queue + worker pool to decouple intake from inference and avoid request timeouts\n• Favor at-least-once delivery with idempotent workers, bounded retries, and DLQs; keep messages small and store large payloads externally\n• Improve efficiency with dynamic batching, backpressure, and autoscaling on queue depth and GPU utilization"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand how to design and run asynchronous inference with queues, workers, batching, and robust delivery semantics."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "Secrets, config and environment promotion"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to manage secrets securely (storage, injection, rotation, and access control) 2) How to structure configuration for services across dev/staging/prod using the 12‑factor approach 3) How to promote releases safely with GitOps/CI-CD, approvals, and progressive delivery"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Secrets management: Store sensitive material (API keys, DB creds, tokens) in a dedicated secrets manager (e.g., cloud Secrets Manager, KMS-backed Kubernetes Secrets, or Vault). Encrypt at rest with KMS and in transit (TLS). Prefer workload identity (IAM roles/service accounts) to avoid long-lived static keys. Scope permissions via least privilege and namespacing. Rotate regularly with automation; use short-lived, dynamically issued credentials when available. Inject secrets at runtime via environment variables, mounted files/volumes, or a sidecar/agent; avoid baking into images or committing to Git. Audit access and changes.\n\nConfiguration management: Follow the 12-factor principle—config is externalized from the code. Use declarative manifests and templates (Helm/Kustomize/Terraform) with environment overlays to vary endpoints, feature flags, and resource limits. Validate config with schemas and enforce policies (OPA/Conftest). Keep a clear precedence order and default-safe values.\n\nEnvironment promotion: Build once, promote the same artifact (image digest) from dev → staging → prod. Use GitOps: desired state (manifests/overlays) lives in Git; promotions are PRs that change only environment references (e.g., image tag/digest or Helm values). A controller (e.g., Argo CD/Flux) reconciles after approvals and automated checks (tests, security/policy scans). Apply progressive delivery (canary/blue‑green) with health gates (SLOs, error budget, latency, rollback on regression). Ensure database migrations are safe (backward compatible/online). Maintain audit trails and drift detection."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Secret management best practices: encryption with KMS, least privilege IAM, rotation/dynamic creds, and runtime injection (not in images/Git)\n• Build once, promote via GitOps using immutable image digests and environment overlays for config differences\n• Progressive delivery: canary/blue‑green with automated health checks, approval gates, and fast rollback"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "How should you store and provide model provider API keys across dev/staging/prod without committing them to the repo?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Commit encrypted keys to Git and decrypt them in the app at runtime using a hard-coded passphrase"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Use a cloud secrets manager or Vault with KMS, grant workload identity to services, and inject secrets at runtime"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Hard-code keys as environment variables in deployment manifests"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Copy plaintext keys to each node and reference them by file path"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "A dedicated secrets manager with KMS and workload identity provides secure storage, least-privilege access, rotation, and auditability."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You want reproducible, auditable promotion from staging to production using the same build artifact. What approach is best?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Rebuild the image for production with prod-specific configs baked in"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "kubectl apply production manifests from your laptop once tests pass"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Use GitOps: open a PR that updates the prod overlay to the same image digest used in staging; merge after checks and approvals"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Manually edit environment variables in the running pods to match staging"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "GitOps promotes the same artifact via a PR to environment manifests, enabling approvals, automated checks, and a clear audit trail."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You must rotate a database password used by inference workers without baking new images or exposing secrets. What practice minimizes outage risk?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Use a secrets manager with versioned secrets or dynamic creds; inject by reference and trigger hot-reload so workers pick up the new version, then revoke the old"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Embed the new password into the container image to avoid runtime changes"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Set a new env var and restart all services simultaneously"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Share one permanent admin password across all environments to avoid rotation complexity"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Versioned/dynamic secrets with controlled rollout and hot-reload reduce downtime and exposure while enabling safe rotation and rollback."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Centralize secrets with KMS-backed storage, least-privilege access, and automated rotation; inject at runtime, never in images or Git\n• Externalize and template configuration; build once and promote the same artifact via GitOps with environment overlays\n• Use progressive delivery with health gates and rollbacks to safely promote changes across environments"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You can now manage secrets and configuration securely and promote releases safely across environments."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}

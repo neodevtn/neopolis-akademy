@@ -1,0 +1,771 @@
+{
+  "courseId": "open_source_llms_fine_tuning_engineer__02",
+  "sourceCourseTitle": "Open Source Llms Fine Tuning Engineer / Datasets and Evaluation",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "Dataset design and formatting for instruction tuning"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to design a clear, consistent schema for instruction tuning datasets 2) How to format single turn and multi turn chat data using role aware templates 3) How to apply quality control, safety, deduplication, and licensing checks before training"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Instruction tuning aligns a pretrained language model to follow user instructions using supervised fine tuning on instruction response examples. A good dataset maximizes signal while minimizing noise and leakage.\n\nSchema design: Each example should contain fields that the target model and training code expect. Common fields include id, system (policy or persona), instruction (user goal), optional input or context, response (assistant ground truth), and metadata such as source, license, language, difficulty, topic, safety flags, and quality rating. For chat style SFT, store a messages array with role labeled turns (system, user, assistant) and optional tool calls and tool results so that turn taking is explicit.\n\nFormatting: Use a deterministic chat template compatible with the model family. This typically includes role tags, separators, and end of turn markers. Apply the same template for every example to avoid spurious variation. For single turn formats, use prompt completion pairs with clear separators between instruction, optional context, and the expected answer. Ensure all samples end with the model specific end of sequence token during training.\n\nQuality controls: Remove duplicates and near duplicates using hashing and approximate matching (n gram overlap, MinHash, or embedding similarity). Normalize whitespace and punctuation, standardize code blocks and markdown, and strip system artifacts. Redact or filter PII and unsafe content according to your deployment policy. Prefer verified or high confidence answers; avoid synthetic hallucinations unless validated. Keep refusal examples and safety demonstrations labeled so the model learns safe behavior.\n\nLength and constraints: Respect context window limits. Truncate or segment long inputs while keeping full target responses when possible. Balance tasks, domains, and difficulty so the model does not overfit narrow patterns. Include multilingual signals only if the target model and tokenizer support them, and tag language explicitly.\n\nLicensing and provenance: Track dataset source and license for each record. Avoid training on content whose terms prohibit redistribution or derivative ML use. Store dataset and preprocessing code versions for reproducibility.\n\nTool use and function calls: When supervising tool use, include structured turns that capture the assistant decision to call a tool, the tool input, the tool output, and the final user facing response. Keep these elements in the same example so the training loss covers the rationale and the result."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Record schema: instruction, optional context, response, system, and rich metadata\n• Chat formatting: consistent role tokens and end of turn markers matched to the target model template\n• Quality gates: deduplication, normalization, safety and PII filtering, and license tracking"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You are preparing SFT data for a chat model that must respect a system policy and can call external tools. Which record structure best preserves supervision for training?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "A single string concatenating instruction and answer without separators"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "An ordered messages array with roles (system, user, assistant) plus optional tool call and tool result turns, along with metadata like source and license"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Two fields only: prompt and completion with no role information"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Assistant responses only; infer the rest during training"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Role labeled messages and explicit tool turns allow the model to learn when and how to respond or call tools, while metadata supports governance."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You have math word problems with step by step worked solutions. How should you format examples to reduce leakage and improve learning?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Put the full solution steps inside the user instruction so the model can copy them"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Include both correct and incorrect answers in the assistant output to increase diversity"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Keep only the problem text in the user input and place the complete, verified solution steps in the assistant response with a consistent final answer tag"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Strip solutions and keep only the final numeric answer to save tokens"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Avoid placing target information in the prompt. Provide full, structured solutions in the supervised response to teach reasoning."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Your target context window is limited. Which preprocessing step most effectively preserves training signal under a tight token budget?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Enforce a max input length, segment long contexts, keep complete target responses, and add explicit end of sequence markers"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Drop any example longer than 512 tokens regardless of content"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Randomly truncate assistant outputs to fit the window"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Concatenate unrelated short samples into one long training example"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Prioritize preserving targets while controlling input length with deterministic truncation or segmentation to maintain learning signal."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Use a role aware schema and deterministic template aligned with the target model\n• Enforce rigorous deduplication, normalization, safety, and licensing checks\n• Preserve supervision signal by keeping outputs complete and managing input length"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand how to design, format, and quality control datasets for instruction tuning."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "Train/validation/test split strategies"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to choose appropriate random, stratified, group, and temporal split strategies 2) How to prevent data leakage with global deduplication and grouping 3) How to build reproducible splits and obtain reliable performance estimates"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Goals of splitting: Train uses most data for fitting the model, validation guides model selection and early stopping, and test provides a final unbiased estimate. Good splits preserve distribution while preventing leakage of information.\n\nStrategies: Random splits are simple but can leak signals when correlated samples exist. Stratified splits maintain class or attribute proportions (task type, language, difficulty). Group aware splits keep all examples sharing a group identifier (user, repository, document, conversation thread, problem family) in the same split to avoid leakage. Temporal splits respect time order for time evolving data (train on past, validate on recent, test on future) to better reflect deployment.\n\nLeakage prevention: Perform global deduplication before splitting using exact hashing and approximate methods (n gram Jaccard with MinHash or SimHash, or embedding similarity with LSH). Blocklist evaluation items from training. For code tasks, split by repository or problem id. For QA over documents, split by document or source. For multi turn chats, keep entire threads intact within one split.\n\nSizing and balance: Typical ratios are 80 10 10 or 90 5 5 for large datasets, but use more validation if heavy hyperparameter search is expected. Ensure stratification across key attributes so validation and test reflect deployment. For small datasets, use k fold cross validation or repeated stratified splits and report mean and variance.\n\nReproducibility: Fix random seeds, log the split script and dataset version, and persist the list of ids per split. Verify splits by measuring overlap and near duplicate rates between splits. Document the rationale (e.g., temporal, group aware) and any deviations from overall distribution.\n\nMonitoring shift: Compare label distributions, lengths, topics, and languages across splits. Large discrepancies indicate potential bias and unstable evaluation."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Group and time aware splits reduce leakage from correlated samples\n• Global deduplication should occur before creating splits\n• Stratification preserves distribution across train, validation, and test"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You have customer support chats with multiple conversations per customer. How should you split the data to avoid leakage?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Randomly shuffle all messages and split at the message level"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Group by customer id so all conversations for a customer land in the same split"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Split by message length buckets regardless of customer"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Assign conversations to splits based on the weekday they occurred"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Grouping by customer prevents correlated conversations from appearing across splits, which would inflate evaluation."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Your corpus contains many near duplicate questions. What is the best practice before creating train, validation, and test sets?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Deduplicate only within the training set after splitting"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Lowercase everything and proceed with random splitting"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Run global deduplication using n gram or embedding similarity with LSH, remove near duplicates, then perform the split"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Increase test size to compensate for duplicates"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Global deduplication before splitting prevents information about test items from leaking into train or validation."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You are splitting multi turn forum threads for evaluation. How do you avoid context leakage between splits?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Keep each entire thread within a single split rather than splitting at the post level"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Randomly sample posts from all threads to each split"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Move the first post to train and the rest to test"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Shuffle replies into validation to increase diversity"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Threads contain strong dependencies across posts. Keeping the thread intact in one split avoids training on context that appears in evaluation."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Choose split strategies that reflect deployment and minimize leakage\n• Deduplicate globally and keep correlated groups together\n• Make splits reproducible and verify distributions across splits"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You can now design robust, leakage resistant data splits and evaluate models with confidence."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Baseline evaluation before fine-tuning"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to design and run a reproducible baseline evaluation for an open-source LLM. 2) How to choose representative datasets and task-appropriate metrics (e.g., accuracy/EM for QA, F1 for NER, pass@k for code). 3) How to control confounders (prompts, decoding, seeds) and summarize results with error bars and targeted error analysis."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "A strong baseline quantifies what your starting model can do before you change weights, ensuring any post–fine-tuning gains are real and attributable. Select evaluation sets that reflect how the model will be used: public benchmarks (e.g., MMLU, GSM8K, HellaSwag) for general ability and in-domain dev/test sets for product tasks. Define clear, task-appropriate metrics: exact match or accuracy for short-form QA/math, F1 for classification/NER, ROUGE/BLEU or model-based similarity for summarization, and pass@k for code generation. Use an evaluation harness (e.g., EleutherAI lm-eval-harness or a custom script) to standardize prompts, stop criteria, and metrics. Control confounders by fixing the prompt template, context and few-shot examples, decoding (temperature=0, consistent max_new_tokens), and random seeds; prefer deterministic decoding for baselines. Report uncertainty via multiple shards, bootstrap confidence intervals, or paired tests (e.g., McNemar) when comparing models. Log everything needed for reproducibility: model and tokenizer versions/commits, evaluation code hash, datasets and their versions, prompts, decoding parameters, and hardware. Perform error analysis by clustering failures (reasoning, factuality, formatting) to inform data collection and fine-tuning targets. Be aware of potential pretraining contamination on public benchmarks; document this risk and complement with private, leakage-checked evals."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Evaluation harnesses: Standardize prompts, decoding, and metrics to make runs comparable.\n• Deterministic baselines: Use temperature=0, fixed prompts, and seeds to eliminate sampling variance.\n• Statistical uncertainty: Use bootstrapping or paired tests and report confidence intervals when comparing models."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You want baseline numbers that are comparable across model versions. Which setup is best practice?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Use temperature=0.7 and top_p=0.9 and average a single sample per example."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Use temperature=0 (greedy), a fixed prompt template and few-shot examples, and a constant max_new_tokens."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Enable dynamic stop sequences and vary beam size per example to fit outputs."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Only fix the random seed; vary prompt examples to keep the model challenged."
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Deterministic decoding with fixed prompts and output limits removes confounders, making baselines directly comparable."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Which primary metric is most appropriate for a GSM8K math reasoning baseline?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "BLEU score versus the reference solution."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Exact match (accuracy) on the normalized final numeric answer."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Perplexity on the problem statements."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "ROUGE-L against reference reasoning steps."
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "GSM8K is evaluated by whether the final answer matches after normalization; intermediate wording is not scored."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "After fine-tuning you see a +1.5 point accuracy gain on a 500-example dev set. What should you do before claiming improvement?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Estimate uncertainty (e.g., bootstrap 95% CI or a paired test like McNemar) to check statistical significance."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Increase temperature to see more diverse outputs."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Change stop tokens to encourage longer answers."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Switch to a completely different dataset to confirm the gain."
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Paired significance testing or bootstrap CIs determine if the observed gain is larger than expected random variation."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Establish a deterministic, well-documented baseline to attribute changes to fine-tuning rather than setup drift.\n• Use task-appropriate datasets and metrics and report uncertainty with confidence intervals.\n• Perform targeted error analysis to guide data collection and objective design."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand how to design and run a rigorous baseline evaluation and can apply it before any fine-tuning."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "Bias, leakage and data quality checks"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to identify and measure dataset and model bias across subpopulations. 2) How to detect and prevent data leakage (train–test overlap, label leakage, and prompt/template leakage). 3) How to run scalable data quality checks (deduplication, overlap scanning, label error detection, language/PII filters) and document governance."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Bias refers to systematic performance or content differences across groups (e.g., gender, race, locale) and can manifest as stereotyping, toxicity disparities, or unequal error rates. Measure bias with subgroup metrics (e.g., accuracy gaps, toxicity rate differences) and controlled prompting so groups see comparable contexts; report uncertainty and practical significance. Leakage occurs when information from the target leaks into training or evaluation: label leakage (answers embedded in inputs), split leakage (duplicates/near-duplicates across train/dev/test), or prompt/template leakage (including ground-truth fields in the prompt). Prevent leakage with careful templating, rigorous split strategies (by source/user/time), and overlap scanning. Data quality checks improve reliability: deduplicate and remove near-duplicates using MinHash/LSH or SimHash on n-grams; compute n-gram overlap from training to eval sets to flag contamination risks; run language ID and basic quality heuristics (length, non-linguistic content). Detect likely label errors with agreement checks or tools like cleanlab-style confident learning; fix systemic formatting issues that break evaluation (e.g., missing final answer tags). Protect privacy by detecting and masking PII (e.g., emails, phone numbers) with pattern matchers and NER. For governance, validate licenses/consent, log provenance, and create datasheets/model cards documenting collection, filters, and known limitations. Finally, validate that mitigations do not overfit: keep a leak-free holdout, re-run subgroup and aggregate metrics, and monitor regressions."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Data leakage: Information from targets or same-source items appears in inputs or across splits; prevent with source/time/user splits and strict prompt templates.\n• Dedup and overlap checks: Use MinHash/LSH or SimHash over n-grams to remove near-duplicates and scan train–eval overlap.\n• Bias assessment: Compute subgroup metrics with matched contexts and confidence intervals; do not rely on aggregate scores alone."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You are building a code dataset from GitHub and notice files from the same repository appear in both train and test. What split strategy best prevents leakage?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Randomly split by file across the entire corpus."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Split by repository so all files from a repo live entirely in one split."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Shuffle lines within files to reduce similarity."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Lower the learning rate to reduce memorization."
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Grouping by source (repository) ensures highly similar files don’t straddle splits, preventing split leakage."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Which approach is most suitable to detect near-duplicate text at scale before splitting or evaluation?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Pairwise cosine similarity over TF–IDF for all document pairs."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Manual spot checks on a random sample."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "MinHash with locality-sensitive hashing (LSH) over character/word n-grams."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Edit distance (Levenshtein) computed for every pair of documents."
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "MinHash/LSH scales to large corpora and effectively surfaces near-duplicates by approximating Jaccard similarity over n-grams."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You observe higher toxicity rates for prompts that mention a protected group compared to matched neutral prompts. What is the best next step to make your analysis robust and actionable?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Ignore the difference because the sample is small."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Report a single overall toxicity rate across all prompts."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Compute per-group toxicity with matched prompts and bootstrap confidence intervals, then prioritize mitigations based on effect size and uncertainty."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Remove all prompts mentioning any group from the dataset."
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Subgroup metrics with uncertainty and controlled context reveal real disparities and guide targeted mitigations without masking issues."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Prevent leakage with source/time/user-aware splits and strict prompt templates.\n• Run scalable deduplication and overlap scans; fix label/format errors and scrub PII.\n• Measure and report subgroup metrics with confidence intervals and document data governance."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You can now identify bias, prevent leakage, and implement robust data quality checks in your fine-tuning pipeline."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}

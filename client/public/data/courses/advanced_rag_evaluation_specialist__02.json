@@ -1,0 +1,771 @@
+{
+  "courseId": "advanced_rag_evaluation_specialist__02",
+  "sourceCourseTitle": "Advanced Rag Evaluation Specialist / Advanced Retrieval Patterns",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "Query rewriting, decomposition and HyDE"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to rewrite and normalize user queries to reduce ambiguity and improve retriever match quality. 2) How to decompose complex, multi-hop questions into smaller sub-queries and recombine results. 3) How to apply HyDE (Hypothetical Document Embeddings) to synthesize pseudo-passages for higher-recall retrieval and when to avoid it."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Query rewriting transforms the original user input into a form that better matches the corpus and retriever. Techniques include normalization (spelling, casing, lemmatization), canonicalization (expanding acronyms and aliases), disambiguation (adding entity, time, or location qualifiers), paraphrasing to bridge lexical gaps for dense retrievers, and context incorporation from the conversation or task. Effective rewriting improves precision without over-constraining recall.\n\nQuestion decomposition breaks multi-hop or compound questions into sub-queries that can be answered independently, then aggregated. Common patterns: conjunctive decomposition (A and B), relational/hop-based (entity -> relation -> attribute), temporal decomposition (then vs now), and constraint extraction (topic, facet, filter). Execution plans include sequential retrieval with working memory, tree-based decomposition, and iterative refinement using LLMs to generate and verify sub-questions. Pitfalls include error propagation, answer aggregation conflicts, and excessive latency; mitigations include re-ranking, caching partial results, and limiting fan-out.\n\nHyDE (Hypothetical Document Embeddings) prompts an LLM to draft a short, plausible answer-like passage for the query. You embed that synthetic passage and retrieve real documents by similarity, optionally re-ranking with a cross-encoder. HyDE improves recall when the query is short, under-specified, or uses vocabulary that differs from the corpus. Risks: anchoring to hallucinated details, topic drift, and added cost/latency. Mitigations: keep the hypothetical passage concise, avoid fabricated named entities, constrain style to neutral summaries, and always validate with retrieved sources."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Query rewriting: Normalize, disambiguate, and paraphrase to align the query with corpus language and retriever behavior.\n• Question decomposition: Split complex intents into executable sub-queries; sequence retrieval and aggregate answers carefully.\n• HyDE: Generate a hypothetical passage to embed for retrieval, boosting recall while guarding against hallucination anchoring."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "A user asks: \"jaguar habitat.\" Your corpus includes both wildlife articles and car manuals. What is the best first step to improve retrieval precision without losing recall?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Apply HyDE to generate a long descriptive passage."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Rewrite the query to disambiguate the entity, e.g., \"jaguar (animal) natural range\"."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Decompose into two sub-queries and retrieve both equally."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Only increase top_k from 5 to 50."
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Disambiguating the entity in the rewrite steers the retriever to wildlife content and prevents car-related false positives with minimal cost."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You need to answer: \"Which company acquired the startup founded by the creator of Framework X?\" What pattern most reliably finds supporting evidence?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Single-shot dense retrieval with the full question."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Decompose: (1) Identify the creator of Framework X; (2) Find their startup; (3) Retrieve acquisition details."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "HyDE on the final answer to guide retrieval."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "BM25 only with high term boosts."
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "This is a multi-hop relation. Decomposition reduces ambiguity at each step and improves the chance of retrieving precise evidence."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "In a niche scientific domain with sparse overlap between user phrasing and corpus language, recall is low for short queries. Which technique is most likely to increase recall quickly?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Tighten filters to reduce the candidate set."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Use HyDE to create a concise, neutral hypothetical passage, then retrieve with its embedding."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Shorten the query to a single keyword."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Only add a stronger re-ranker without changing retrieval."
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "HyDE helps bridge vocabulary gaps by embedding a semantically rich pseudo-passage, often boosting recall in low-overlap settings."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Query rewriting improves alignment with the corpus and reduces ambiguity.\n• Decomposition turns multi-hop questions into tractable steps with better evidence quality.\n• HyDE can raise recall in sparse or lexically mismatched settings but must be constrained to avoid anchoring errors."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "Multi-query and multi-index retrieval"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to generate and manage multiple query variants to boost recall and reduce false negatives. 2) How to retrieve across multiple indexes (BM25, dense, code, tables, multimodal) and fuse results effectively. 3) How to route queries, deduplicate, re-rank, and balance quality with cost and latency."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Multi-query retrieval issues diverse paraphrases or facet-focused variants to cover different lexical/semantic angles. Generation strategies include synonym/phrase expansions, step-back generalizations (ask for the principle, then specifics), entity/alias injection, and constraint-focused variants (time, locale, version). Control fan-out using diversity selection (e.g., MMR on embeddings), ceilings on variants, and early stopping when marginal recall plateaus.\n\nResult fusion combines hits from each variant. Robust methods include Reciprocal Rank Fusion (RRF), which is rank-based and avoids score normalization, and weighted fusion with min–max or z-score normalization plus learned weights. After fusion, deduplicate by stable doc IDs and re-rank with a cross-encoder or LLM-as-a-reranker. Guardrails: cap per-variant top_k, shard-parallelize, and cache frequent variants.\n\nMulti-index retrieval queries different indexes specialized by signal or modality: BM25 for exact terms, dense vectors for semantics, code/AST indexes for programming queries, table/SQL for structured facts, and image/audio embeddings for multimodal RAG. Routing options include: always-on fusion (query all), learned routing (classifier chooses indexes), or rules (e.g., presence of code fences -> code index). Normalize scores before weighted fusion across heterogeneous indexes or prefer RRF. Evaluate with recall@k, MRR, nDCG, diversity metrics, and end-task quality; track cost and p95 latency. Typical pitfalls: topic drift from too many variants, double-counting near-duplicates, and unnecessary index fan-out increasing cost."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Multi-query generation: Create diverse, high-coverage variants and prune with MMR or entropy heuristics.\n• Fusion and re-ranking: Use RRF or normalized weighted fusion, deduplicate, then cross-encode for precision.\n• Multi-index routing: Select specialized indexes via rules or a learned gate; balance recall with cost/latency."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You have BM25, dense, and a code-aware index. For the query \"How to mock HTTP requests in Go?\", which strategy best balances recall and precision?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Use only dense retrieval to avoid lexical bias."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Route primarily to the code index, but also fuse top results from BM25 and dense via RRF, then re-rank."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Query all indexes and return the union without re-ranking."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Generate many BM25 paraphrases and ignore other indexes."
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "A code-focused index captures programming structure; fusing with BM25/dense via RRF adds coverage. Re-ranking refines precision."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Your multi-query generator produces 8 variants, but latency is high. You want to keep recall while reducing cost. What should you do?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Keep 8 variants to avoid recall loss."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Select the top 3 diverse variants using MMR, cap per-variant top_k, and fuse results."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Reduce k to 1 for each variant to minimize work."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Query every variant against every index with no throttling to maximize coverage."
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "MMR preserves diversity with fewer variants; capping per-variant top_k and fusing maintains high marginal recall at lower latency."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You need a fusion method that works well across heterogeneous rankers without relying on calibrated scores. What should you choose?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Sum raw retriever scores from each index."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Reciprocal Rank Fusion (RRF)."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Filter by a cosine similarity threshold only."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Return the first non-empty list from a fixed priority order."
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "RRF is rank-based, robust to score scale differences, and performs well when combining diverse retrievers."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Multi-query boosts recall; control fan-out with diversity selection and top_k caps.\n• RRF or normalized weighted fusion plus re-ranking yields strong precision across variants and indexes.\n• Multi-index routing leverages specialized strengths while managing cost and latency."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Reranking and contextual compression"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How reranking with cross-encoders and diversification (e.g., MMR) boosts precision of top results after initial retrieval 2) How contextual compression trims passages to only query-relevant spans while preserving provenance 3) How to evaluate trade-offs between accuracy, latency, and cost using metrics like nDCG@k, Recall@k, and time per query"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Initial retrieval (BM25, dense embeddings) favors recall, but the top-k often contains off-target or redundant chunks. Reranking uses a more expensive model (e.g., cross-encoder monoT5, MiniLM/MS MARCO cross-encoders) to score each candidate with the query, delivering higher precision in the final context window. Diversification methods like Maximal Marginal Relevance (MMR) balance relevance with novelty to reduce redundancy across selected chunks. Contextual compression further reduces context by extracting or summarizing only the spans needed to answer the query—via extractive filters (similarity thresholds, salience models) or LLM-based answer-focused summarization—while retaining citations and character offsets to support grounding. A common pattern is: high-recall retriever → reranker over top-N (e.g., 100) → compression to produce a compact, provenance-rich context. Tune chunk size/stride to avoid cutting entities mid-span. Evaluate with nDCG@k/MRR (ordering quality), Recall@k (coverage), factuality/faithfulness of answers, and latency/cost; choose N and compression aggressiveness to meet SLA without losing critical evidence."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Cross-encoder reranking: A bi-text model scores query–document pairs for high-precision ordering of candidates.\n• Maximal Marginal Relevance (MMR): Selects items maximizing relevance while minimizing redundancy to improve coverage.\n• Contextual compression: Extracts or summarizes minimal evidence spans and preserves citations to ground the LLM’s answer."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You retrieve 100 passages with good recall but noisy ordering. Which approach most reliably boosts precision of the final top-10 context?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Increase chunk size so each passage is longer"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Apply a cross-encoder reranker over the top-100 and keep the top-10"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Average query and document embeddings before ranking"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Randomly shuffle to avoid positional bias"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Cross-encoders jointly score query–passage pairs and deliver higher precision among top results than lightweight embedding similarity alone."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "In MMR-based selection, what is the effect of decreasing the relevance weight (lambda) while keeping other settings fixed?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Higher emphasis on relevance and less diversity"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "No change; lambda does not affect selection"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "More diversity/novelty at the expense of pure relevance"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Fewer items are selected overall"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Lower lambda shifts selection toward items that add novelty (lower redundancy), increasing diversity while slightly reducing relevance priority."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Which practice best reduces hallucinations when using contextual compression in RAG?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Extract minimal supporting spans and keep citation metadata (source IDs and offsets)"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Compress aggressively using abstractive summaries without references"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Remove overlapping spans to minimize token count regardless of content"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Rely on the model’s parametric memory instead of retrieved evidence"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Grounding requires traceable evidence. Keeping concise, source-linked spans preserves provenance and reduces unsupported generations."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Use high-recall retrieval, then rerank for precision and diversify with MMR.\n• Apply contextual compression to keep only evidence-bearing spans and citations.\n• Optimize N, k, and compression aggressiveness using nDCG/Recall and latency/cost metrics."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "Agentic RAG and retrieval planning"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to design agentic RAG loops that plan, retrieve, read, and verify across multiple steps 2) Retrieval planning strategies: query decomposition, source routing, adaptive k, and stopping rules 3) How to instrument, evaluate, and budget multi-hop retrieval for accuracy, cost, and latency"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Agentic RAG turns the LLM into a planner that decides what to retrieve, from where, and in which order. A typical loop is Plan → Retrieve → Read → Reason → Verify → Stop. The planner decomposes complex questions into sub-goals, selects tools or sources (vector store, keyword search, web, SQL, code), formulates/reforms queries, and sets budgets (k per hop, maximum hops, token caps). Adaptive strategies route sub-questions to the best source (e.g., code Q&A to a docs index, current events to web) and adjust k based on uncertainty. Stopping criteria include confidence thresholds (e.g., entailment score from evidence), self-consistency across sampled answers, or lack-of-progress signals. Verification adds robustness via evidence checking (citation coverage), cross-checking with alternative queries, or answerability detection that returns “not enough information.” Logging traces of actions, queries, and evidence enables step-level evaluation (sub-answer accuracy, evidence recall/precision) and cost control (per-hop tokens, API calls)."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Query decomposition and planning: Break multi-hop tasks into ordered sub-questions with per-hop retrieval plans.\n• Source routing and tool use: Choose the right index or external tool for each sub-goal and reformulate queries as needed.\n• Verification and stopping: Use confidence signals, entailment/citation checks, and early stopping to control cost and improve reliability."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You face a multi-hop question requiring two documents from different sources. What is the best first step in an agentic RAG system?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Increase top-k on a single retriever and hope both appear"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Decompose into sub-questions and plan retrieval per hop with source routing"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Use a longer context window without changing retrieval"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Skip retrieval and answer from parametric knowledge"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Decomposition plus per-hop planning and routing finds the right evidence from each source with higher reliability than blindly increasing k."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "How can you limit cost while maintaining accuracy in agentic retrieval planning?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Always set k=50 and limit to one hop"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Disable verification to reduce steps"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Use a budgeted planner: adaptive k, maximum hops, and early stopping at a confidence threshold"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Force web browsing on every step for redundancy"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Budgeted planning with adaptive k and early stopping controls tokens and calls while preserving accuracy when confidence is sufficient."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Which signal most strongly indicates the planner should reformulate the query or change sources during a hop?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Low overlap between retrieved spans and entities/relations in the current sub-goal"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "High confidence from the verifier"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Plenty of remaining token budget"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "The previous hop succeeded"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "If retrieved evidence does not mention key entities/relations for the sub-goal, the planner should reformulate or route to a different source."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Agentic RAG structures retrieval as planned, multi-step loops with tools and routing.\n• Adaptive k, source selection, and stopping rules balance accuracy with latency/cost.\n• Verification (entailment, citation coverage, self-consistency) increases reliability on complex queries."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}

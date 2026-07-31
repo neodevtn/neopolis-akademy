@@ -1,0 +1,699 @@
+{
+  "courseId": "open_source_llms_fine_tuning_engineer__04",
+  "sourceCourseTitle": "Open-Source LLMs and Fine-Tuning Engineer / Packaging and Deployment",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "Adapter Saving and Merging"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_01_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "type": "content",
+          "body": {
+            "en": "In this lesson you will learn:\n• How to save LoRA and other PEFT adapters to disk and to the Hugging Face Hub\n• The difference between keeping adapters separate and merging them into the base model weights\n• How to use merge_and_unload() to produce a standalone fine-tuned model\n• Best practices for versioning and organizing adapter checkpoints for production use"
+          }
+        },
+        {
+          "id": "lesson_01_chapter_02",
+          "title": {
+            "en": "Adapter Saving and Merging"
+          },
+          "type": "content",
+          "body": {
+            "en": "After fine-tuning with PEFT, your adapter weights are a small delta on top of the frozen base model. Saving them with model.save_pretrained() writes only the adapter config and weights, typically a few hundred megabytes instead of tens of gigabytes. You can push directly to the Hub with push_to_hub().\n\nWhen you need a self-contained model—for inference servers that do not support PEFT, or for export to ONNX or GGUF—you merge the adapter back into the base weights using merge_and_unload(). This call folds the low-rank matrices into the original weight tensors, returning a standard HuggingFace model with no adapter overhead. Always save the merged model separately; the original base model and adapter should be retained for reproducibility. Quantized adapters (QLoRA) must be dequantized before merging to avoid precision loss in the fused weights."
+          }
+        },
+        {
+          "id": "lesson_01_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "type": "content",
+          "body": {
+            "en": "• **PEFT adapter checkpoint**: A lightweight directory containing adapter_config.json and adapter weights, loadable on top of any compatible base model.\n• **merge_and_unload()**: PEFT method that permanently folds adapter parameters into the base model weights, producing a dependency-free HuggingFace model.\n• **QLoRA dequantization**: The process of converting 4-bit quantized base weights back to full precision before merging to preserve numerical accuracy.\n• **Hub versioning**: Using repository commits and tags on Hugging Face Hub to track adapter versions alongside their corresponding base model revision hashes."
+          }
+        },
+        {
+          "id": "lesson_01_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "type": "checkpoint",
+          "questions": [
+            {
+              "question": {
+                "en": "What is the primary advantage of saving only the PEFT adapter rather than the full fine-tuned model?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "The adapter runs faster at inference time without the base model"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "The adapter files are far smaller because they store only the delta weights, not the full model parameters"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Adapters are automatically converted to ONNX format during saving"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Saving an adapter removes the need to track the base model version"
+                  }
+                }
+              ],
+              "correctId": "b",
+              "explanation": {
+                "en": "PEFT adapters store only the low-rank delta matrices added during fine-tuning, which are orders of magnitude smaller than the full base model weights, making storage and distribution much more efficient."
+              }
+            },
+            {
+              "question": {
+                "en": "Which PEFT method call produces a standalone HuggingFace model with no remaining adapter dependency?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "model.save_pretrained()"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "model.push_to_hub()"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "model.merge_and_unload()"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "model.disable_adapter_layers()"
+                  }
+                }
+              ],
+              "correctId": "c",
+              "explanation": {
+                "en": "merge_and_unload() folds the adapter's low-rank matrices directly into the base model weight tensors, returning a standard model that can be used without the PEFT library."
+              }
+            },
+            {
+              "question": {
+                "en": "Why must QLoRA adapters be dequantized before merging into the base model?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "The Hugging Face Hub does not accept quantized model files"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Dequantization is required to enable push_to_hub functionality"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Merging quantized weights directly would introduce precision errors into the fused weight tensors"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "QLoRA adapters cannot be saved without dequantization"
+                  }
+                }
+              ],
+              "correctId": "c",
+              "explanation": {
+                "en": "When base model weights are stored in 4-bit precision, merging adapter matrices without dequantizing first causes significant numerical precision loss in the resulting fused weights, degrading model quality."
+              }
+            }
+          ]
+        },
+        {
+          "id": "lesson_01_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "type": "content",
+          "body": {
+            "en": "• Saving only the adapter checkpoint dramatically reduces storage and transfer costs while preserving the ability to reproduce the fine-tuned model from any compatible base revision.\n• merge_and_unload() is the standard path to a portable, self-contained model ready for ONNX export, quantization pipelines, or deployment to servers that do not support the PEFT library.\n• Always record the exact base model name and revision hash alongside your adapter so that merging or inference can be reliably reproduced months later."
+          }
+        },
+        {
+          "id": "lesson_01_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "type": "content",
+          "body": {
+            "en": "Congratulations on completing Adapter Saving and Merging! You now understand how to persist lightweight PEFT adapters, when to merge them into a standalone model, and how to handle quantized adapters safely. These skills form the foundation of an efficient fine-tuning workflow. Continue to the next lesson to learn how to document your model and dataset professionally with model cards and dataset cards."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "Model Card and Dataset Documentation"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_02_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "type": "content",
+          "body": {
+            "en": "In this lesson you will learn:\n• The purpose and structure of a Hugging Face model card and why it matters for responsible AI\n• How to write each section of a model card including intended use, limitations, training details, and evaluation results\n• How to create a dataset card that documents provenance, preprocessing, and licensing\n• How to use the huggingface_hub library and YAML front matter to generate machine-readable metadata"
+          }
+        },
+        {
+          "id": "lesson_02_chapter_02",
+          "title": {
+            "en": "Model Card and Dataset Documentation"
+          },
+          "type": "content",
+          "body": {
+            "en": "A model card is a structured document published alongside a model repository that communicates what the model does, how it was trained, its known limitations, and how it should—and should not—be used. It is the primary artifact that enables other practitioners, auditors, and regulators to assess fitness for purpose.\n\nThe Hugging Face model card spec uses YAML front matter for machine-readable fields such as language, license, datasets, metrics, and base_model. The prose sections cover model description, intended uses, out-of-scope uses, biases, training data, training procedure, evaluation results, and a carbon footprint estimate. Dataset cards follow a parallel structure focusing on data sources, collection methodology, preprocessing steps, known quality issues, and the license governing redistribution. The ModelCard class in huggingface_hub lets you create, validate, and push cards programmatically, ensuring metadata stays consistent with the repository contents."
+          }
+        },
+        {
+          "id": "lesson_02_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "type": "content",
+          "body": {
+            "en": "• **Model card YAML front matter**: Machine-readable metadata block at the top of README.md that populates Hub search filters for language, license, task type, datasets used, and evaluation metrics.\n• **Intended use vs. out-of-scope use**: Explicitly documenting what the model is designed for and what it should not be used for reduces misuse and provides a baseline for governance audits.\n• **Dataset card provenance section**: Records original data sources, collection dates, filtering criteria, and any third-party licenses so downstream users can assess legal and ethical compliance.\n• **Carbon footprint reporting**: Including compute hours, hardware type, and region-based carbon intensity in training details supports reproducibility and environmental accountability."
+          }
+        },
+        {
+          "id": "lesson_02_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "type": "checkpoint",
+          "questions": [
+            {
+              "question": {
+                "en": "What is the role of YAML front matter in a Hugging Face model card README?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "It stores the model weights in a compressed text format"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "It provides machine-readable metadata that populates Hub search filters and dataset links"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "It defines the Python dependencies required to run the model"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "It replaces the need for a separate LICENSE file in the repository"
+                  }
+                }
+              ],
+              "correctId": "b",
+              "explanation": {
+                "en": "YAML front matter at the top of README.md is parsed by the Hugging Face Hub to populate structured fields like language, license, tags, and metrics, making the model discoverable and comparable through filters."
+              }
+            },
+            {
+              "question": {
+                "en": "Which section of a model card explicitly documents scenarios for which the model should NOT be used?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Training Procedure"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Evaluation Results"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Out-of-Scope Uses"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Carbon Footprint"
+                  }
+                }
+              ],
+              "correctId": "c",
+              "explanation": {
+                "en": "The Out-of-Scope Uses section explicitly lists applications and contexts for which the model was not designed or tested, helping users and auditors identify misuse risks."
+              }
+            },
+            {
+              "question": {
+                "en": "Which huggingface_hub class allows you to create, validate, and programmatically push a model card to a repository?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "DatasetCard"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "HfApi"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "ModelCard"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "RepoCard"
+                  }
+                }
+              ],
+              "correctId": "c",
+              "explanation": {
+                "en": "The ModelCard class in huggingface_hub provides methods to load, edit, validate against the spec, and push model card content programmatically, keeping documentation in sync with model artifacts."
+              }
+            }
+          ]
+        },
+        {
+          "id": "lesson_02_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "type": "content",
+          "body": {
+            "en": "• A well-written model card is not optional documentation—it is a governance artifact that communicates risk, enables reproducibility, and satisfies emerging AI regulatory requirements.\n• YAML front matter transforms a README into machine-readable metadata, enabling automated discoverability, comparison, and compliance checking across thousands of Hub repositories.\n• Dataset cards are equally important: documenting provenance, preprocessing, and licensing protects downstream users from legal exposure and supports responsible data stewardship."
+          }
+        },
+        {
+          "id": "lesson_02_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "type": "content",
+          "body": {
+            "en": "Excellent work completing Model Card and Dataset Documentation! You can now write professional, standards-compliant model and dataset cards that serve both human readers and automated governance systems. This documentation foundation will directly support the lab where you publish your final benchmark and model card to the Hugging Face Hub. Next, explore how to serve your fine-tuned model efficiently in production environments."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Serving Fine-Tuned Models"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_03_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "type": "content",
+          "body": {
+            "en": "In this lesson you will learn:\n• The main serving frameworks for open-source LLMs including vLLM, TGI, and Ollama\n• How continuous batching and PagedAttention improve GPU utilization during inference\n• How to optimize a fine-tuned model for serving using quantization and compiled kernels\n• Deployment options ranging from local endpoints to cloud-managed inference services"
+          }
+        },
+        {
+          "id": "lesson_03_chapter_02",
+          "title": {
+            "en": "Serving Fine-Tuned Models"
+          },
+          "type": "content",
+          "body": {
+            "en": "Deploying a fine-tuned LLM for production requires more than loading the model and calling generate(). Serving frameworks handle batching, memory management, and API compatibility so your model can serve many concurrent users efficiently.\n\nvLLM implements PagedAttention, which manages the KV-cache in non-contiguous memory blocks analogous to virtual memory paging, dramatically increasing throughput by eliminating memory waste. Text Generation Inference (TGI) from Hugging Face offers continuous batching, token streaming, and an OpenAI-compatible REST API, making it a drop-in backend for existing toolchains. Ollama targets local and edge deployment with a simple CLI and automatic GGUF quantization. For cloud deployment, options include Hugging Face Inference Endpoints, AWS SageMaker, Google Cloud Vertex AI, and Azure ML managed endpoints. Quantizing the merged model to 4-bit or 8-bit with bitsandbytes or AWQ before serving reduces VRAM requirements without significant quality loss, enabling deployment on smaller GPU instances."
+          }
+        },
+        {
+          "id": "lesson_03_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "type": "content",
+          "body": {
+            "en": "• **PagedAttention**: A memory management algorithm used by vLLM that stores KV-cache in fixed-size blocks, reducing memory fragmentation and enabling higher batch sizes at the same VRAM budget.\n• **Continuous batching**: A scheduling strategy where new requests join the active compute batch as soon as sequence slots free up, maximizing GPU utilization compared to static batching.\n• **OpenAI-compatible API**: TGI and vLLM expose /v1/chat/completions and /v1/completions endpoints, allowing any application built for OpenAI's API to switch to a self-hosted model with no code changes.\n• **Inference quantization**: Post-training quantization methods such as AWQ or GPTQ compress model weights to 4-bit integers, reducing VRAM and memory bandwidth requirements while preserving most of the model's accuracy."
+          }
+        },
+        {
+          "id": "lesson_03_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "type": "checkpoint",
+          "questions": [
+            {
+              "question": {
+                "en": "What problem does PagedAttention primarily solve in LLM serving?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "It reduces the number of transformer layers needed for inference"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "It eliminates KV-cache memory fragmentation, allowing more requests to be batched on the same GPU"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "It compresses model weights to 4-bit precision automatically"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "It converts the model to ONNX format for faster CPU inference"
+                  }
+                }
+              ],
+              "correctId": "b",
+              "explanation": {
+                "en": "PagedAttention manages KV-cache memory in fixed-size non-contiguous blocks, similar to OS virtual memory paging, which eliminates wasted reserved memory and allows vLLM to serve significantly more concurrent requests on the same hardware."
+              }
+            },
+            {
+              "question": {
+                "en": "Which serving framework is best suited for local and edge deployment with automatic GGUF quantization support?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "vLLM"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Text Generation Inference (TGI)"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Ollama"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Triton Inference Server"
+                  }
+                }
+              ],
+              "correctId": "c",
+              "explanation": {
+                "en": "Ollama is specifically designed for local and edge deployment, providing a simple CLI interface and automatically converting models to GGUF format for efficient CPU and GPU inference on consumer hardware."
+              }
+            },
+            {
+              "question": {
+                "en": "What is the key advantage of continuous batching over static batching in an LLM inference server?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Continuous batching stores model weights in CPU RAM to free GPU memory"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "New requests are inserted into the active batch as sequence slots free up, maximizing GPU utilization"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Continuous batching automatically quantizes each request to reduce compute"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "It processes each request sequentially to guarantee response order"
+                  }
+                }
+              ],
+              "correctId": "b",
+              "explanation": {
+                "en": "In continuous batching, completed sequences immediately free their slot so waiting requests can join the batch without waiting for the entire batch to finish, which keeps GPU compute utilization much higher than static batching."
+              }
+            }
+          ]
+        },
+        {
+          "id": "lesson_03_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "type": "content",
+          "body": {
+            "en": "• vLLM's PagedAttention and continuous batching are the current state of the art for high-throughput GPU serving, delivering significantly more requests per second than naive inference loops.\n• TGI's OpenAI-compatible API allows fine-tuned open-source models to slot directly into existing application stacks with minimal integration work.\n• Applying post-training quantization (AWQ, GPTQ) before deployment can reduce VRAM requirements by up to 75%, making it economically viable to serve large models on smaller, cheaper GPU instances."
+          }
+        },
+        {
+          "id": "lesson_03_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "type": "content",
+          "body": {
+            "en": "Well done completing Serving Fine-Tuned Models! You now understand the leading serving frameworks, the memory and batching optimizations that make production LLM deployment practical, and the deployment options available across cloud and local environments. In the final lesson, you will learn how to manage the cost, governance, and full lifecycle of your deployed fine-tuned models."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "Cost, Governance and Lifecycle Management"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_04_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "type": "content",
+          "body": {
+            "en": "In this lesson you will learn:\n• How to estimate and monitor the total cost of fine-tuning and serving open-source LLMs\n• Key governance frameworks and checklists for responsible deployment of fine-tuned models\n• How to version, retire, and replace models as part of a structured MLOps lifecycle\n• Strategies for monitoring model performance drift and triggering retraining pipelines"
+          }
+        },
+        {
+          "id": "lesson_04_chapter_02",
+          "title": {
+            "en": "Cost, Governance and Lifecycle Management"
+          },
+          "type": "content",
+          "body": {
+            "en": "Managing a fine-tuned LLM in production involves ongoing cost control, governance accountability, and a disciplined lifecycle process. Fine-tuning costs are dominated by GPU compute: track hours, instance type, and cloud region using experiment tracking tags so each adapter checkpoint has an associated cost record. Serving costs scale with tokens per second and concurrency; use autoscaling and spot or preemptible instances where latency SLAs allow.\n\nGovernance requires maintaining an audit trail from training data through deployment, including data licenses, bias evaluations, and sign-off records. Implement role-based access controls on model repositories and restrict who can promote a model to production. Define a lifecycle policy: models enter staging after evaluation, graduate to production after approval, and are deprecated with a sunset date when a better version is ready. Monitor production traffic for distribution shift using embedding-space drift detectors or output quality proxies, and feed alerts into automated retraining triggers. Versioning adapters and merged checkpoints with semantic version tags makes rollback straightforward when regressions are detected."
+          }
+        },
+        {
+          "id": "lesson_04_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "type": "content",
+          "body": {
+            "en": "• **Total cost of ownership (TCO)**: The sum of fine-tuning compute, storage for checkpoints and datasets, serving infrastructure, and human engineering time—all of which must be tracked per model version to justify continued investment.\n• **Model governance audit trail**: A documented chain of custody from raw training data (with licenses and consent records) through preprocessing, training runs, evaluations, and deployment approvals.\n• **Staging → Production promotion gate**: A formal checkpoint where evaluation metrics, bias audits, and stakeholder sign-offs must all pass before a model version is exposed to production traffic.\n• **Distribution shift monitoring**: Continuously comparing the statistical properties of live inputs or model outputs against a reference baseline to detect when the model is operating outside its validated distribution."
+          }
+        },
+        {
+          "id": "lesson_04_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "type": "checkpoint",
+          "questions": [
+            {
+              "question": {
+                "en": "Which serving cost optimization strategy is most appropriate when a workload can tolerate occasional interruptions and has no strict latency SLA?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Using on-demand dedicated GPU instances reserved for three years"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Running inference exclusively on CPU to avoid GPU costs entirely"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Deploying on spot or preemptible GPU instances to reduce cost significantly"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Disabling continuous batching to reduce power consumption"
+                  }
+                }
+              ],
+              "correctId": "c",
+              "explanation": {
+                "en": "Spot or preemptible instances are offered by cloud providers at 60-90% discounts in exchange for the possibility of interruption. Batch or async workloads with flexible SLAs are ideal candidates, making this a common cost optimization for LLM serving."
+              }
+            },
+            {
+              "question": {
+                "en": "What is the purpose of a staging-to-production promotion gate in a model lifecycle policy?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "It automatically compresses the model weights before deployment to production"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "It ensures evaluation metrics, bias audits, and stakeholder approvals are all satisfied before live traffic exposure"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "It converts the model to ONNX format to meet production performance requirements"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "It merges all pending adapter checkpoints into a single release candidate"
+                  }
+                }
+              ],
+              "correctId": "b",
+              "explanation": {
+                "en": "A promotion gate is a formal review step that requires quantitative evaluation benchmarks, bias and safety assessments, and human sign-offs to all pass before a model version is deployed to production, reducing the risk of regressions or harmful outputs reaching users."
+              }
+            },
+            {
+              "question": {
+                "en": "Which technique is used to detect when a deployed model is receiving inputs that differ significantly from its training distribution?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Adapter merging"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Continuous batching"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Distribution shift monitoring using embedding-space drift detectors"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "YAML front matter validation"
+                  }
+                }
+              ],
+              "correctId": "c",
+              "explanation": {
+                "en": "Distribution shift monitoring compares statistical properties of live inputs or outputs—often using embedding-space distance metrics or output quality proxies—against a reference baseline to detect when the model is being asked to handle data outside its validated distribution, signaling a need for retraining."
+              }
+            }
+          ]
+        },
+        {
+          "id": "lesson_04_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "type": "content",
+          "body": {
+            "en": "• Tracking TCO per model version—including compute, storage, and engineering time—enables data-driven decisions about whether to retrain, replace, or retire a model and justifies infrastructure investments.\n• A rigorous governance audit trail from data provenance through deployment approval is increasingly required by AI regulations and enterprise risk policies, and must be built into the workflow from the start.\n• Distribution shift monitoring with automated retraining triggers closes the production feedback loop, ensuring that a fine-tuned model's quality is maintained as the real-world data it processes evolves over time."
+          }
+        },
+        {
+          "id": "lesson_04_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "type": "content",
+          "body": {
+            "en": "Congratulations on completing Cost, Governance and Lifecycle Management—the final lesson of the Packaging and Deployment course! You are now equipped to manage fine-tuned LLMs responsibly across their entire lifecycle, from cost-efficient serving to governance-compliant retirement. Proceed to the hands-on lab to publish your final benchmark results and model card to the Hugging Face Hub and earn your Open-Source LLMs and Fine-Tuning Engineer certification."
+          }
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}

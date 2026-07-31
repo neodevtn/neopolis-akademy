@@ -1,0 +1,747 @@
+{
+  "courseId": "ai_data_engineering_rag_practitioner__02",
+  "sourceCourseTitle": "AI Data Engineering and RAG Practitioner / Chunking and Embeddings",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "Fixed, Semantic, Recursive and Document-Aware Chunking Strategies"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_01_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "By the end of this lesson, you will be able to:\n\n• Explain the differences between fixed, semantic, recursive, and document-aware chunking strategies.\n• Identify the trade-offs of each chunking approach in terms of retrieval quality and computational cost.\n• Select the most appropriate chunking strategy based on document type and retrieval goals.\n• Understand how chunk size and overlap affect embedding quality and context preservation."
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_02",
+          "title": {
+            "en": "Chunking Strategies in RAG Pipelines"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Chunking is the process of splitting documents into smaller units before embedding and indexing. The strategy chosen directly impacts retrieval accuracy.\n\n**Fixed chunking** splits text into equal-size windows (e.g., 512 tokens) with optional overlap. It is simple and fast but ignores semantic boundaries, often cutting sentences mid-thought.\n\n**Semantic chunking** groups sentences or paragraphs by topic similarity using embedding cosine distance. It preserves meaning but is computationally heavier.\n\n**Recursive chunking** applies a hierarchy of separators (paragraphs → sentences → words) until chunks reach the target size. It respects natural language structure better than fixed splitting.\n\n**Document-aware chunking** leverages the document's own structure — headings, sections, tables, and metadata — to define chunk boundaries. It is ideal for structured formats like PDFs, HTML, and Markdown, ensuring that each chunk is semantically self-contained and contextually meaningful."
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **Chunk overlap**: A sliding window of repeated tokens between consecutive chunks ensures that context spanning a boundary is not lost during retrieval.\n• **Semantic boundary**: A natural division in text where the topic or intent changes, used by semantic and document-aware strategies to produce coherent chunks.\n• **Separator hierarchy**: In recursive chunking, a prioritized list of delimiters (e.g., '\\n\\n', '\\n', ' ') applied in order to achieve target chunk sizes while preserving structure.\n• **Chunk granularity**: The level of detail captured per chunk; finer granularity improves precision but may reduce recall if the answer spans multiple chunks."
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "Which chunking strategy splits text strictly by a fixed number of tokens regardless of sentence boundaries?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Semantic chunking"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Recursive chunking"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Fixed chunking"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Document-aware chunking"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Fixed chunking divides text into equal-size windows based on a token or character count, without considering sentence or paragraph boundaries."
+                }
+              },
+              {
+                "question": {
+                  "en": "What is the primary advantage of document-aware chunking over fixed chunking?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "It is faster to compute because it uses no embeddings"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "It produces smaller chunks that fit in memory more easily"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "It leverages document structure to create semantically self-contained chunks"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "It always generates chunks of equal length for consistent indexing"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Document-aware chunking uses the inherent structure of the document (headings, sections, tables) to define boundaries, ensuring each chunk is contextually complete and meaningful."
+                }
+              },
+              {
+                "question": {
+                  "en": "In recursive chunking, what happens when a chunk produced by the first separator is still larger than the target size?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "The chunk is discarded and the document is skipped"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "The next separator in the hierarchy is applied to further split the chunk"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "The chunk is truncated at the exact token limit with no further processing"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "An embedding model is used to find the best split point automatically"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Recursive chunking applies separators in order of priority. If a chunk remains too large after the first split, the algorithm recursively applies the next separator until the target size is reached."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_01_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Fixed chunking is the simplest and fastest strategy but sacrifices semantic coherence; it is best used as a baseline or for uniform plain-text corpora.\n• Recursive and semantic chunking improve retrieval quality by respecting natural language boundaries, with semantic chunking offering the highest coherence at a greater computational cost.\n• Document-aware chunking is the recommended strategy for structured documents, as it aligns chunk boundaries with the document's own logical sections, maximizing context preservation."
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 1: Fixed, Semantic, Recursive and Document-Aware Chunking Strategies!\n\nYou now understand the four principal chunking approaches used in RAG pipelines, their trade-offs, and when to apply each one. This foundational knowledge will guide your decisions when designing data ingestion pipelines that maximize retrieval accuracy.\n\nIn the next lesson, you will explore how to select the right embedding model for your use case, including multilingual scenarios."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "Embedding Model Selection and Multilingual Embeddings"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_02_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "By the end of this lesson, you will be able to:\n\n• Evaluate embedding models based on benchmark performance, context window size, and dimensionality.\n• Distinguish between monolingual and multilingual embedding models and their appropriate use cases.\n• Understand the impact of embedding model choice on semantic search quality and latency.\n• Apply best practices for aligning embedding models between indexing and query time."
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_02",
+          "title": {
+            "en": "Embedding Model Selection and Multilingual Embeddings"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "An embedding model converts text into dense numerical vectors that capture semantic meaning. Selecting the right model is critical for retrieval quality.\n\n**Key selection criteria** include: context window size (how many tokens can be embedded at once), output dimensionality (higher dimensions capture more nuance but increase storage and compute), and benchmark scores such as MTEB (Massive Text Embedding Benchmark).\n\nPopular models include OpenAI's text-embedding-3-large, Cohere Embed v3, and open-source options like BGE-M3 and E5-mistral. Each offers different cost, latency, and accuracy trade-offs.\n\n**Multilingual embeddings** such as multilingual-e5-large, LaBSE, and BGE-M3 encode text from dozens of languages into a shared vector space, enabling cross-lingual retrieval. This is essential for global applications where documents and queries may be in different languages.\n\nA critical rule is **embedding symmetry**: the same model must be used at both index time and query time. Mixing models invalidates the vector space and produces incorrect similarity scores."
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **MTEB (Massive Text Embedding Benchmark)**: A standardized leaderboard evaluating embedding models across retrieval, classification, clustering, and semantic similarity tasks, widely used to compare models objectively.\n• **Dimensionality**: The length of the output vector; common sizes are 384, 768, and 1536. Higher dimensionality can improve expressiveness but increases index size and query latency.\n• **Cross-lingual retrieval**: The ability to match a query in one language to relevant documents in a different language using a shared multilingual vector space.\n• **Matryoshka Representation Learning (MRL)**: A technique that allows a single embedding model to produce vectors of variable length without retraining, enabling flexible dimension selection based on resource constraints."
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "What is the primary purpose of the MTEB benchmark in the context of embedding model selection?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "To measure the inference speed of embedding models on GPU hardware"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "To provide a standardized comparison of embedding models across multiple NLP tasks"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "To train new embedding models using transfer learning"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "To determine the maximum token context window of a model"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "MTEB evaluates embedding models across a wide range of tasks including retrieval, classification, and clustering, providing a standardized leaderboard for objective model comparison."
+                }
+              },
+              {
+                "question": {
+                  "en": "Why is embedding symmetry a critical requirement in RAG pipelines?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Because different models output vectors of different types that cannot be stored together"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Because using different models at index and query time produces an incoherent vector space, leading to incorrect similarity scores"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Because multilingual models are always slower than monolingual models at query time"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Because the MTEB benchmark requires all models in a pipeline to be from the same provider"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Each embedding model defines its own vector space. If you embed documents with model A but queries with model B, the resulting vectors occupy different spaces and cosine similarity calculations become meaningless."
+                }
+              },
+              {
+                "question": {
+                  "en": "Which of the following best describes Matryoshka Representation Learning (MRL)?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "A technique for training multilingual models using parallel corpora from nested language families"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "A method for chunking documents into hierarchically nested segments before embedding"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "An approach that trains a single model to produce valid embeddings at multiple truncated vector lengths"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "A compression algorithm that reduces vector index size by 50% without accuracy loss"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "MRL trains embedding models so that any prefix of the output vector is itself a meaningful embedding. This allows practitioners to choose shorter vectors for speed-sensitive applications without retraining."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_02_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Embedding model selection is a multi-dimensional decision balancing MTEB benchmark scores, context window size, output dimensionality, latency, and cost; no single model is universally optimal.\n• Multilingual embedding models such as BGE-M3 and LaBSE enable cross-lingual retrieval by projecting text from many languages into a shared semantic space, which is essential for global or polyglot corpora.\n• Embedding symmetry — using the same model at both index and query time — is a non-negotiable requirement for producing valid similarity scores in a vector search system."
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 2: Embedding Model Selection and Multilingual Embeddings!\n\nYou now have a solid framework for choosing embedding models based on task requirements, language diversity, and resource constraints. Understanding the role of MTEB, dimensionality, and embedding symmetry will help you build more reliable and accurate RAG pipelines.\n\nIn the next lesson, you will learn how to maintain data quality in your vector store through deduplication, normalization, and content hashing."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Deduplication, Normalization and Content Hashing"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_03_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "By the end of this lesson, you will be able to:\n\n• Explain why deduplication and normalization are essential for maintaining a clean, high-quality vector index.\n• Apply content hashing techniques to detect exact and near-duplicate chunks before indexing.\n• Describe common text normalization steps and their impact on embedding consistency.\n• Design a data quality pipeline that integrates deduplication, normalization, and hashing before embedding."
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_02",
+          "title": {
+            "en": "Deduplication, Normalization and Content Hashing"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Maintaining a clean vector index is as important as the embedding model itself. Dirty data leads to redundant retrieval results, inflated index sizes, and degraded generation quality.\n\n**Normalization** standardizes text before embedding: lowercasing, whitespace trimming, Unicode normalization (NFC/NFKC), removal of boilerplate headers and footers, and HTML tag stripping. Consistent normalization ensures that semantically identical text produces consistent embeddings.\n\n**Content hashing** assigns a deterministic fingerprint (e.g., SHA-256 or MD5) to each chunk's text after normalization. Before indexing, the pipeline checks whether a hash already exists in the store. If it does, the chunk is skipped, preventing exact duplicates from inflating the index.\n\n**Near-duplicate detection** goes further, using techniques like MinHash or SimHash to find chunks that are highly similar but not byte-identical. These are common when documents share boilerplate sections or when multiple versions of the same document are ingested. Removing near-duplicates improves retrieval diversity and reduces noise in the context window passed to the language model."
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **Content hash**: A fixed-length cryptographic or locality-sensitive fingerprint derived from chunk text, used as a unique identifier to detect and skip already-indexed content during ingestion.\n• **Unicode normalization (NFC/NFKC)**: A process that converts equivalent Unicode representations of characters into a canonical form, preventing the same word from generating different embeddings due to invisible encoding differences.\n• **MinHash / SimHash**: Probabilistic hashing algorithms that estimate the Jaccard similarity between text chunks efficiently, enabling scalable near-duplicate detection across large corpora.\n• **Boilerplate removal**: The elimination of repeated, non-informative content such as legal disclaimers, navigation menus, and page headers that would otherwise pollute the vector index with redundant vectors."
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "What is the primary purpose of applying content hashing to text chunks before indexing them?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "To compress the chunk text and reduce storage costs in the vector database"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "To detect and skip exact duplicate chunks, preventing redundant entries in the vector index"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "To encrypt chunk content for data privacy compliance"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "To generate the embedding vector directly without using a neural model"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Content hashing produces a deterministic fingerprint for each chunk. By checking whether the hash already exists in the store, the pipeline can skip re-indexing identical content, keeping the index clean and compact."
+                }
+              },
+              {
+                "question": {
+                  "en": "Why is Unicode normalization (e.g., NFKC) an important preprocessing step before generating embeddings?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "It translates non-English text into English before embedding to improve retrieval scores"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "It removes all punctuation from the text to reduce vocabulary size"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "It ensures that visually identical characters with different encodings produce the same representation, leading to consistent embeddings"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "It converts all text to ASCII, which most embedding models require as input"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Unicode allows multiple byte sequences to represent the same character. NFKC normalization canonicalizes these representations so that semantically identical text always produces the same token sequence and thus the same embedding."
+                }
+              },
+              {
+                "question": {
+                  "en": "Which algorithm is most appropriate for scalable near-duplicate detection across millions of text chunks?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "SHA-256 cryptographic hashing"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "TF-IDF cosine similarity computed for every pair of chunks"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "MinHash or SimHash locality-sensitive hashing"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "BM25 full-text search over the entire corpus"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "MinHash and SimHash are locality-sensitive hashing techniques that approximate Jaccard similarity efficiently. Unlike pairwise comparisons, they scale to millions of documents by grouping similar items into hash buckets without exhaustive comparison."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_03_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Text normalization — including Unicode canonicalization, whitespace trimming, and boilerplate removal — must be applied consistently before embedding to ensure that semantically identical text always maps to the same vector region.\n• Content hashing with SHA-256 or similar algorithms provides a fast, deterministic mechanism for exact duplicate detection, preventing redundant vectors from degrading index quality and increasing storage costs.\n• Near-duplicate detection using MinHash or SimHash is essential for large-scale corpora where multiple document versions or shared boilerplate sections create soft duplicates that exact hashing cannot catch."
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 3: Deduplication, Normalization and Content Hashing!\n\nYou now understand how to build a robust data quality layer for your RAG ingestion pipeline. By combining normalization, exact-duplicate hashing, and near-duplicate detection, you can maintain a clean, efficient vector index that improves both retrieval precision and generation quality.\n\nIn the final lesson, you will explore how to keep your index up to date over time through incremental indexing and intelligent re-index triggers."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "Incremental Indexing and Re-index Triggers"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_04_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "By the end of this lesson, you will be able to:\n\n• Explain the difference between full re-indexing and incremental indexing and when each is appropriate.\n• Identify common triggers that should initiate a re-indexing operation in a production RAG system.\n• Design a change-detection strategy using metadata timestamps and content hashes.\n• Understand the challenges of index drift and stale vectors in long-running RAG applications."
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_02",
+          "title": {
+            "en": "Incremental Indexing and Re-index Triggers"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "In production RAG systems, source documents are rarely static. Incremental indexing ensures that your vector store reflects the current state of your corpus without requiring expensive full re-indexing operations.\n\n**Incremental indexing** processes only new or modified documents since the last indexing run. It relies on change detection mechanisms: comparing document modification timestamps, file checksums, or content hashes against records stored in a metadata catalog.\n\n**Re-index triggers** are events that signal the need to update the index. Common triggers include: a document's last-modified timestamp changing, a content hash mismatch indicating that the document body has changed, a new document being added to the source, a document being deleted (requiring vector removal), or a change in the chunking strategy or embedding model (requiring full re-indexing).\n\n**Index drift** occurs when the vector store diverges from the source of truth over time. This manifests as stale vectors pointing to outdated content, missing vectors for new documents, and orphaned vectors for deleted documents. A well-designed incremental pipeline must handle all three cases: upsert for new and modified chunks, and delete for removed ones. Scheduled audits comparing source document inventories against indexed vector IDs help detect and remediate drift."
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **Incremental indexing**: An ingestion strategy that processes only documents that are new, modified, or deleted since the last run, significantly reducing compute cost compared to full re-indexing.\n• **Metadata catalog**: A persistent store (e.g., a database table) that records each document's ID, last-modified timestamp, content hash, and indexing status, used as the source of truth for change detection.\n• **Upsert operation**: A combined insert-or-update operation on the vector store that adds a new vector if the document is new, or replaces existing vectors if the document has changed.\n• **Index drift**: The gradual divergence between the contents of a vector index and the current state of the source documents, caused by missed updates, deletions, or re-chunking events that were not propagated to the index."
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "Which event should unconditionally trigger a full re-indexing of all documents rather than an incremental update?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "A single document being added to the source corpus"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "A change in the embedding model or chunking strategy used by the pipeline"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "A document's last-modified timestamp being updated"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "A content hash mismatch detected for one document"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Changing the embedding model or chunking strategy alters the vector space and chunk boundaries for all documents. Existing vectors become incompatible with new queries, making a full re-index mandatory."
+                }
+              },
+              {
+                "question": {
+                  "en": "What is the role of a metadata catalog in an incremental indexing pipeline?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "It stores the raw text of all documents to avoid re-reading source files during embedding"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "It caches embedding vectors to speed up repeated queries against the same chunks"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "It records document identifiers, hashes, and timestamps to enable change detection between indexing runs"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "It maps vector IDs to their corresponding language model prompts for audit purposes"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "The metadata catalog acts as a registry of all previously indexed documents. By comparing current source metadata against catalog records, the pipeline can identify which documents are new, changed, or deleted without re-embedding everything."
+                }
+              },
+              {
+                "question": {
+                  "en": "How should a RAG ingestion pipeline handle a document that has been permanently deleted from the source corpus?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Leave the existing vectors in the index; stale vectors will be filtered at query time"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Mark the document as inactive in the metadata catalog but retain its vectors to avoid re-indexing costs"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Delete all vector entries associated with that document from the vector store and remove its record from the metadata catalog"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Replace the document's vectors with zero vectors to neutralize them during similarity search"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Deleted documents must have their corresponding vectors removed from the vector store and their catalog records purged. Retaining orphaned vectors causes the index to return outdated or inaccessible content in retrieval results, degrading answer quality."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_04_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Incremental indexing reduces operational costs by processing only changed or new documents; a metadata catalog combining timestamps and content hashes is the standard mechanism for reliable change detection.\n• Re-index triggers fall into two categories: document-level triggers (add, modify, delete) that require targeted upsert or delete operations, and system-level triggers (model or strategy changes) that require a complete re-index of the entire corpus.\n• Index drift is an inevitable risk in long-running systems and must be proactively managed through scheduled audits that reconcile the vector store's contents against the current source document inventory."
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 4: Incremental Indexing and Re-index Triggers!\n\nYou have now mastered the operational side of RAG data pipelines. Understanding how to detect changes, trigger targeted updates, and prevent index drift is what separates a prototype RAG system from a production-grade one.\n\nYou have completed all four lessons in the Chunking and Embeddings course. Proceed to the lab exercise where you will compare three chunking strategies on the same corpus and measure their impact on retrieval quality — putting everything you have learned into practice."
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}

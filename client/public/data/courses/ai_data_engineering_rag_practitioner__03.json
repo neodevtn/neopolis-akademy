@@ -1,0 +1,771 @@
+{
+  "courseId": "ai_data_engineering_rag_practitioner__03",
+  "sourceCourseTitle": "Ai Data Engineering Rag Practitioner / Vector and Hybrid Search",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "Vector search basics: cosine, dot product, HNSW, IVF"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How cosine similarity, dot product, and Euclidean distance differ and when to use each 2) How HNSW and IVF accelerate nearest neighbor search and the key tuning parameters 3) How to reason about recall vs. latency trade-offs and evaluate ANN quality"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Vector search retrieves items by comparing high-dimensional embeddings. Common metrics: Euclidean (L2) distance, cosine distance (1 − cosine similarity), and inner product (dot product). For L2-normalized vectors, cosine similarity and dot product induce the same ranking; without normalization, dot product favors larger-norm vectors.\n\nApproximate nearest neighbor (ANN) indexes trade a small, controllable loss in recall for large latency reductions vs. brute-force search. HNSW (Hierarchical Navigable Small World) builds a multi-layer small-world graph. Search starts at the top layer and descends, expanding a candidate set controlled by ef_search. Key parameters: M (graph degree, higher increases recall/memory), ef_construction (larger improves recall/build time), ef_search (larger improves recall/query time). HNSW supports fast incremental inserts and high recall at low latency.\n\nIVF (Inverted File) partitions vectors via a coarse quantizer (e.g., k-means) into 'lists' (centroids). At query time, only the closest lists (nprobe) are scanned; within lists, exact (IVF-Flat) or compressed (e.g., PQ/OPQ in some systems) distances are computed. Tuning lists balances index granularity; nprobe balances recall vs. speed. IVF typically prefers bulk training on data and is efficient for batch-oriented workloads.\n\nEvaluation focuses on recall@k (vs. exact search), latency (P50/P95), memory, and build time. Metric choice must align with the embedding model and task: cosine for semantic similarity with normalized embeddings, L2 for geometry-preserving spaces, inner product for models trained with margin-based objectives. Filters and metadata constraints can be handled by pre-filtering candidates, post-filter re-ranking, or index partitioning."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Metric selection: Cosine vs. dot product vs. L2; normalization changes ranking behavior\n• HNSW trade-offs: M/ef_construction/ef_search tune memory, build time, recall, and latency\n• IVF trade-offs: lists (coarse partitions) and nprobe (lists searched) control recall/speed"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You use an embedding model that outputs L2-normalized vectors for semantic search. Which similarity choice preserves the intended ranking?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Euclidean (L2) distance on unnormalized vectors"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Cosine similarity (or dot product) on L2-normalized vectors"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Manhattan (L1) distance regardless of normalization"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Hamming distance on quantized codes"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "With L2-normalized vectors, cosine similarity and dot product induce the same ranking and align with semantic similarity objectives."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You need sub-50 ms queries on ~10M vectors with continuous inserts and high recall. Which index is the best starting point?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Brute-force scan (no index)"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "HNSW with tuned ef_search and reasonable M"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "IVF with very few lists and nprobe=1"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Sort vectors by norm and pick the largest"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "HNSW provides high recall and fast incremental inserts; tuning ef_search balances recall and latency."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "What happens if you switch from cosine similarity on normalized vectors to raw dot product without normalization?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Rankings remain identical"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Search becomes equivalent to L2 distance"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Items with larger vector norms are favored, changing rankings"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "All distances collapse to zero"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Without normalization, dot product scales with vector norms, biasing results toward larger-magnitude embeddings."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Choose a metric that matches your model and normalize when appropriate\n• HNSW excels at high-recall, low-latency search with live inserts\n• IVF trades accuracy for speed via lists and nprobe; tune them to balance recall and latency"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "pgvector in Postgres for small-to-medium RAG"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to install pgvector, model schemas, and store embeddings in Postgres 2) How to choose metrics and create IVFFlat/HNSW indexes with the right parameters 3) How to run kNN and hybrid (keyword + vector) queries for effective RAG"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "pgvector adds a vector data type and kNN indexing to Postgres, making it practical for small-to-medium RAG systems that benefit from SQL, transactions, and unified storage.\n\nSetup and schema: CREATE EXTENSION pgvector; define columns as vector(d), where d matches your embedding dimension (e.g., 384, 768, 1536). Example: CREATE TABLE docs (id bigserial PRIMARY KEY, content text, meta jsonb, embedding vector(768)); Insert embeddings from your application using parameter binding and cast (e.g., $1::vector).\n\nSimilarity operators and opclasses: <-> computes L2 distance, <#> computes inner product, <=> computes cosine distance. Choose a matching operator class for indexes: vector_l2_ops, vector_ip_ops, or vector_cosine_ops. Query with ORDER BY embedding <-> $1::vector (or <#>, <=>) LIMIT k.\n\nIndexes: Two common ANN indexes are IVFFlat and HNSW. IVFFlat partitions data into lists and scans nprobe lists at query time. Build after bulk-loading data so the quantizer can train well: CREATE INDEX docs_embedding_ivf ON docs USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100); Tune per-query with SET ivfflat.probes = 10; higher probes improves recall. HNSW supports incremental inserts and strong recall: CREATE INDEX docs_embedding_hnsw ON docs USING hnsw (embedding vector_l2_ops) WITH (m = 16, ef_construction = 200); Tune search with SET hnsw.ef_search = 80; higher values increase recall and latency.\n\nHybrid retrieval: Combine Postgres full-text search with vector search. Create a tsvector column (generated or materialized) and GIN index for text: to_tsvector('english', content). You can rank by (a) two-stage retrieval (vector kNN -> filter/rerank with text or vice versa), (b) weighted scoring (e.g., ts_rank * wt_text − distance * wt_vec), or (c) rank fusion like RRF: 1/(k + rank). Example pattern: get top-N by text and top-N by vector in CTEs, UNION ALL, then aggregate by id with SUM of RRF scores.\n\nOperational notes: ANALYZE after loading to help planners; keep dimensions consistent; choose cosine for normalized embeddings; monitor P95 latency and recall@k vs. exact scan to validate quality. For small-to-medium deployments (e.g., up to a few million embeddings on a single node), pgvector offers good performance; beyond that, consider sharding or specialized vector stores."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Operators: <-> (L2), <#> (inner product), <=> (cosine); pick a matching index opclass\n• IVFFlat: build after data load; tune lists (index) and probes (query) for recall/latency\n• HNSW: good for incremental updates; tune m, ef_construction, and ef_search"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You want cosine distance with IVFFlat on a docs(embedding) column. Which combination is correct?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "ORDER BY embedding <=> $1::vector with index opclass vector_cosine_ops"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "ORDER BY embedding <-> $1::vector with index opclass vector_ip_ops"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "ORDER BY embedding <#> $1::vector with index opclass vector_cosine_ops"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "ORDER BY embedding <=> $1::vector with a btree index"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Use the <=> operator for cosine distance and the vector_cosine_ops opclass for the index. IVFFlat is specified via USING ivfflat."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "For best IVFFlat quality, when should you create the index relative to data loading?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Before loading any data"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "After bulk-loading most data so the quantizer can train well"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Only after running VACUUM FULL"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "It does not matter; training is not required"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "IVF trains a coarse quantizer during index build; building after loading representative data improves partitioning and recall."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "What is a practical SQL pattern for hybrid search (keyword + vector) in Postgres?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Use only ORDER BY random() to diversify results"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Run text search and vector search separately without combining"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Rank fusion: take top-N from text and vector, UNION ALL, then aggregate with a formula like RRF"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Create two GIN indexes on the vector column"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Hybrid retrieval commonly uses rank fusion (e.g., RRF) or weighted scoring to combine text and vector results for better recall and relevance."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• pgvector adds a vector type, distance operators, and ANN indexes to Postgres\n• Match operators and opclasses to your metric; tune IVFFlat probes or HNSW ef_search for recall\n• Hybrid search in SQL is straightforward with full-text search + vector kNN and rank fusion"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Qdrant for dedicated vector search and payload filtering"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How Qdrant organizes collections, vectors, and payloads to deliver fast ANN search with precise server-side filtering. 2) How to model data using named vectors and payload schemas, and when to add payload indexes for high-cardinality filters. 3) How to design performant queries with must/should/must_not filters, range and geo constraints, score thresholds, and HNSW search parameters for accuracy and throughput."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Qdrant is a vector database optimized for approximate nearest neighbor (ANN) search with rich, server-side payload filtering. Data lives in collections that hold points. Each point stores one or more vectors and an associated payload (structured metadata). Qdrant’s ANN engine is built on HNSW graphs, where ef (size of the candidate list at query time) trades latency for recall, and m/ef_construct control index build quality and memory. Distance metrics (Cosine, Dot, Euclidean) determine how similarity is scored.\n\nPayload filtering allows you to constrain vector search results by metadata without additional application-side joins. Filters support boolean logic via must, should, and must_not; field matches (exact or any-of), numeric ranges (gt/gte/lt/lte), existence checks, geo filters (radius or bounding box on lat/lon fields), and ID-based selection. For high-selectivity queries at scale, you can create payload indexes to accelerate filters (e.g., keyword, integer/float, and geo). Proper indexing avoids scanning large payloads during ANN.\n\nQdrant supports named vectors so a single point can carry multiple embeddings (e.g., title and body), each with its own distance metric and search params. You can choose between storing vectors fully in RAM or enabling on-disk optimizations; optional quantization can reduce memory at some accuracy cost. Query design typically combines a vector, a filter (e.g., tenant_id, doc_type, time range), a limit/top-k, and parameters like ef and score_threshold. Good practice: index frequently-filtered fields, keep filters selective but not overly narrow, and tune ef to recover recall when filters shrink the candidate set."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• HNSW search parameters: ef improves recall at higher latency; distance metric shapes scoring.\n• Payload filtering: must/should/must_not logic with match, range, exists, and geo constraints executed server-side.\n• Data modeling: use named vectors per modality and payload indexes on high-cardinality, frequently-filtered fields."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You frequently filter by tenant_id and doc_type over tens of millions of points. What is the best way to keep query latency low while doing vector search?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Fetch all results client-side and filter in the application"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Create payload indexes on tenant_id and doc_type and use a must filter in the vector search"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Increase the top-k dramatically to compensate"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Switch to Euclidean distance regardless of data"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Server-side payload filtering with indexes on frequently-used fields avoids scanning payloads and keeps latency low during ANN search."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Your queries must return only documents from the last 30 days while maintaining good semantic recall. What should you do?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Apply a must range filter on a timestamp field and increase ef to recover recall"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Disable filtering and prune results on the client"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Use must_not filters to exclude all older dates individually"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Lower top-k to compensate for the filter"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "A server-side range filter restricts the candidate set, and raising ef helps maintain recall despite the narrower pool."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You want each item to carry both a title vector and a body vector with different distance metrics. Which Qdrant feature enables this?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Named vectors"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Single default vector only"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Payload-only indexing without vectors"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Client-side concatenation of embeddings"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Named vectors let a point store multiple vectors with independent configurations and search parameters."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Use payload indexes for fields that appear in most filters to keep ANN queries fast.\n• Tune ef and top-k together; increase ef when filters shrink the candidate pool to sustain recall.\n• Model multiple modalities with named vectors and apply server-side filters for precise, low-latency retrieval."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand how Qdrant combines fast vector search with powerful payload filtering and how to model and tune for production workloads."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "Hybrid BM25 + vector + reranking"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) Why hybrid retrieval that blends BM25 (lexical) and vector (semantic) search improves both precision and recall. 2) How to fuse ranked lists with robust methods like Reciprocal Rank Fusion (RRF) and score normalization. 3) How to apply neural re-ranking (cross-encoders) to top-k candidates to boost final answer quality within tight latency budgets."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Lexical (BM25) search excels at exact term matching, handling acronyms, numbers, and rare keywords, while dense vector search captures semantic similarity and paraphrases. Hybrid retrieval combines both to reduce false negatives (missed relevant items) and false positives. A common pipeline is: (1) Retrieve top-n_bm25 via BM25 and top-n_vec via ANN; (2) Merge and deduplicate candidates; (3) Fuse rankings using a method robust to score scale differences such as Reciprocal Rank Fusion (RRF), or apply calibrated score normalization and weighted sum; (4) Optionally apply a neural cross-encoder re-ranker over the top-r fused candidates to maximize precision@k.\n\nKey design choices include selecting candidate pool sizes (n_bm25, n_vec), choosing a fusion strategy (RRF is simple and strong), and setting r (re-rank depth) based on latency and model cost. Re-ranking models (e.g., cross-encoders from open-source or hosted APIs) score query–document pairs directly, typically improving ordering within the top results. Guardrails include consistent text preprocessing across indices, lightweight deduplication, and careful score handling (since BM25 and vector scores are not commensurate without normalization). Evaluate with recall@k and nDCG; tune candidate sizes and fusion weights to maximize downstream task quality while meeting SLOs."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Complementarity: BM25 captures exact terms; vectors capture semantics—together they raise recall and precision.\n• Fusion: Use Reciprocal Rank Fusion or normalized weighted fusion to combine ranked lists reliably.\n• Re-ranking: A cross-encoder applied to the fused top-k often yields the biggest gains in precision@k."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "Your product search must reliably match exact model numbers and acronyms while still understanding paraphrases. Which stage ensures exact matches are not missed?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Vector ANN retrieval only"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "BM25 lexical retrieval"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Neural re-ranking only"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Client-side string matching after retrieval"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "BM25 (lexical) is best at exact term matching (IDs, acronyms, rare tokens), complementing vector search’s semantic coverage."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You have two ranked lists—BM25 and vector—with incompatible score scales. What is a robust way to combine them without delicate score calibration?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Add the raw scores directly"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Reciprocal Rank Fusion (RRF) over the two rankings"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Drop one list to avoid mixing scales"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Average the document lengths"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "RRF combines rankings based on positions, not raw scores, making it robust to heterogeneous scoring scales."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You want to improve precision in the final top-20 without changing your indexes. What is the most effective next step?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Increase BM25 n-gram size only"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Apply a cross-encoder re-ranker to the fused top-100 and return the best 20"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Lower candidate pool sizes to reduce noise"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Switch to a larger embedding model and keep everything else the same"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Neural re-ranking on a moderate candidate set typically delivers the largest precision gains for the final top-k."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Hybrid retrieval combines BM25 and vectors to balance exact matching and semantic understanding.\n• Use RRF (or careful normalization) to fuse rankings from heterogeneous scorers.\n• Apply cross-encoder re-ranking on a small fused pool to maximize precision within latency and cost budgets."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You can now design and tune a hybrid retrieval pipeline that fuses BM25 with vector search and uses neural re-ranking for high-quality results."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}

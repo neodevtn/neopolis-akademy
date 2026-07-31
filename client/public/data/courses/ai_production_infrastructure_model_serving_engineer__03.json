@@ -1,0 +1,771 @@
+{
+  "courseId": "ai_production_infrastructure_model_serving_engineer__03",
+  "sourceCourseTitle": "Ai Production Infrastructure Model Serving Engineer / Model Serving with vLLM",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "Model serving architecture patterns"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How online, streaming, and batch/async LLM serving patterns differ and when to use each 2) How to design scalable, low-latency inference stacks using batching, caching, parallelism, and autoscaling 3) How to operate reliable services with routing, rate limiting, safe deployments (canary/A-B), and observability tied to SLOs"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Serving patterns: Online (sync) inference optimizes tail latency for interactive workloads, often with streaming tokens; Async/batch optimizes throughput and cost for non-interactive jobs by queueing requests. Single-tenant vs multi-tenant: Dedicated-model pods simplify isolation; multi-model servers improve GPU utilization by loading/evicting models on demand with a loading cache. Stateless vs stateful: Keep application servers stateless and manage state (tokens, KV cache) in the inference tier; persistent KV cache can reduce time-to-first-token (TTFT) for continued chats. Throughput tactics: Micro/continuous batching merges requests at decode time for higher tokens/sec without large latency penalties; request admission and max queue times protect SLOs. Parallelism: Tensor parallelism (TP) shards model weights across GPUs; pipeline parallelism (PP) splits layers into stages—choose the smallest configuration that meets latency targets to limit cross-GPU overhead. Caching and quantization: Tokenization cache, prompt cache, and KV cache reuse speed up repeated prompts; quantization (e.g., 8/4-bit) reduces memory footprint with some quality/speed trade-offs. Platform: Containerize the inference server behind an API gateway and a request router; use K8s with HPA/KEDA to scale on GPU utilization, queue depth, or tokens/sec. Operations: Rate limiting and per-tenant quotas prevent overload; blue/green or canary rollouts limit risk; observability should track TTFT, decode tokens/sec, queue latency, cache hit rate, error codes, and cost per 1k tokens."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Online vs async/batch: Optimize for p95 latency vs throughput/cost by choosing synchronous or queued processing.\n• Single- vs multi-model serving: Dedicated pods simplify isolation; multi-tenant servers maximize GPU utilization via on-demand loading/eviction.\n• Batching, caching, and parallelism: Continuous batching + KV/prompt caching + right-sized TP/PP deliver strong tokens/sec with acceptable latency."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "Your chat service experiences bursty traffic and rising p95 latency. What should you prioritize first to stabilize latency without massively overprovisioning GPUs?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Add more pods immediately without changing the request pipeline"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Introduce admission control with a short queue and enable continuous/micro-batching; autoscale on queue depth or tokens/sec"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Increase max tokens per request so each call runs longer"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Disable rate limiting to let all traffic through"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Admission control plus continuous batching increases throughput and smooths bursts; scaling on queue depth/tokens/sec aligns capacity with demand while protecting tail latency."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You must host 50 small models for many teams on limited GPUs. Which architecture best balances utilization and cold starts?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "One dedicated GPU pod per model with fixed capacity"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "One giant pod running all models permanently loaded"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "A multi-tenant server that hot-loads/evicts models with a loading cache and per-model quotas"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Batch all traffic once per day to a single job"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "A multi-tenant server improves GPU utilization by loading models on demand, while quotas and caching limit cold-start impact and protect tenants."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You need to deploy a new model version with minimal risk while measuring impact on p95 latency and cost. What rollout strategy should you use?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Canary release with a small traffic split, SLO guardrails, and automatic rollback"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Full cutover immediately to the new version"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Randomly terminate old pods to force traffic to the new model"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Disable monitoring to avoid noise during rollout"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Canarying sends a small, measurable slice of traffic to the new model; if SLOs regress, you can roll back safely before full rollout."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Choose online vs async/batch based on interactivity, SLOs, and cost.\n• Combine continuous batching, caching, and the right parallelism to maximize tokens/sec per GPU while meeting p95 latency.\n• Protect reliability with routing, quotas, autoscaling on meaningful signals, and safe deployment strategies like canary or blue/green."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand core serving patterns for LLMs and can design scalable, reliable architectures for production workloads."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "vLLM basics and OpenAI-compatible endpoints"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How vLLM achieves high throughput using PagedAttention, KV cache paging, and continuous batching 2) How to start and configure the vLLM server (model selection, tensor parallelism, max context) 3) How to call vLLM’s OpenAI-compatible /v1 endpoints for chat/completions, streaming, and embeddings 4) How to monitor and tune for TTFT, tokens/sec, and memory usage"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Architecture: vLLM’s PagedAttention stores KV cache in fixed-size blocks to avoid fragmentation and to page inactive blocks between GPU and CPU memory. Continuous batching merges compatible requests at the decode step, raising tokens/sec with modest latency impact. Server: Start with a single command (e.g., vllm serve --model <hf-repo-or-path>) which exposes OpenAI-compatible routes on port 8000 by default: /v1/chat/completions, /v1/completions, /v1/embeddings, and /v1/models. Common flags include --tensor-parallel-size for multi-GPU sharding, --max-model-len to cap context length, --gpu-memory-utilization to control allocator aggressiveness, and --dtype for precision. Clients: Use the OpenAI SDK by pointing base_url to http://<host>:8000/v1 and providing any api_key placeholder; enable streaming with stream=true to receive tokens as server-sent events. Operations: Track TTFT, decode tokens/sec, queue latency, and memory paging. Tune concurrency (max requests), batching limits, and context length to meet SLOs while preventing OOM via sensible --max-model-len and adequate CPU swap space for KV paging."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• PagedAttention and KV cache: Block-based KV management reduces fragmentation and enables GPU↔CPU paging for long contexts.\n• Continuous batching: Dynamically groups decode steps across requests to boost throughput with limited latency impact.\n• OpenAI-compatible API: Serve /v1/chat/completions, /v1/completions, /v1/embeddings; point OpenAI clients at base_url=http://<host>:8000/v1 and use stream=true for token streaming."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "Which vLLM design choice primarily enables high throughput without a large latency penalty for interactive workloads?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "First-come-first-served decoding with no batching"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Continuous batching combined with block-wise KV cache (PagedAttention)"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Running each request on a separate dedicated GPU regardless of size"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Disabling caching to simplify memory management"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "vLLM merges decode steps across requests (continuous batching) and uses PagedAttention to manage KV cache efficiently, increasing tokens/sec with modest latency overhead."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You want to use the OpenAI Python client against a local vLLM server. What is required?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Proxy the request through OpenAI’s hosted API"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Only set an environment variable; no code changes"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Set base_url to http://localhost:8000/v1 and provide any api_key; then call chat/completions as usual"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Manually compile custom CUDA kernels before each request"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "vLLM exposes OpenAI-compatible endpoints; point the client’s base_url to your server and supply a placeholder api_key to authenticate against vLLM."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Long-context prompts occasionally OOM your GPU. What configuration helps without changing the model?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Lower --max-model-len and/or increase CPU KV paging (e.g., --swap-space) while tuning --gpu-memory-utilization"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Disable PagedAttention to simplify memory management"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Turn off batching so each request uses the full GPU"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Force FP32 everywhere to avoid numerical issues"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Capping context length and enabling sufficient CPU swap space for KV paging reduces peak GPU memory while preserving functionality; tuning memory utilization avoids overcommit."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• vLLM scales interactive serving via PagedAttention and continuous batching to raise tokens/sec.\n• Start vLLM with a single command and tune tensor parallelism, max context, and memory utilization to meet SLOs.\n• Use OpenAI-compatible endpoints by pointing clients at /v1; enable streaming for lower perceived latency."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You can now run vLLM, call its OpenAI-compatible APIs, and tune performance and memory for production use."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Batching, KV cache, throughput and latency optimization"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How vLLM’s continuous batching and scheduling work and how to tune them for different traffic patterns. 2) How the KV cache and PagedAttention manage memory and speed, including prompt/prefix caching and prefill vs. decode behavior. 3) Practical techniques to optimize throughput and latency: controlling concurrent sequences and batched tokens, chunked prefill, speculative decoding, and sizing to GPU memory limits."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "LLM serving has two phases: prefill (encoding the entire prompt) and decode (generating tokens iteratively). Prefill is compute- and memory-heavy at sequence length, while decode is dominated by many small steps. vLLM increases efficiency with continuous batching: it admits new requests and merges them dynamically, interleaving decode steps across many sequences so the GPU stays busy. This improves tokens-per-second (TPS) without waiting for batch boundaries.\n\nKV cache stores the key/value tensors for each layer and token so the model can reuse past context during decoding. vLLM implements PagedAttention, which organizes KV tensors into fixed-size blocks that can be allocated, reused, and evicted without large contiguous allocations. This reduces fragmentation and allows high GPU memory utilization while supporting many concurrent sequences. Prompt/prefix caching lets requests that share the same prefix (e.g., a common system prompt) reuse precomputed KV blocks, dramatically reducing prefill time.\n\nThroughput–latency trade-offs: increasing the number of concurrent sequences or the total tokens processed per step raises throughput but can increase per-request and tail latency (head-of-line blocking), especially when long prompts arrive. Techniques to mitigate this include limiting the maximum number of batched tokens, capping concurrent sequences, and using chunked prefill so long prompts are processed in smaller slices that interleave fairly with decoding traffic. Speculative decoding (using a cheap draft model or lookahead) can boost decode TPS when acceptance rates are high. Hardware parallelism (e.g., tensor parallelism across GPUs) increases capacity but introduces inter-GPU communication; choose sizes that match your interconnect bandwidth. Always budget KV cache memory for worst-case context and output lengths; longer contexts linearly increase KV memory usage and can reduce the number of sequences that fit concurrently."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Continuous batching: Dynamically merges and schedules requests so decode steps from many sequences share GPU time, maximizing utilization.\n• KV cache with PagedAttention: Stores past keys/values in fixed-size blocks to reduce fragmentation, enable reuse/eviction, and support prompt/prefix caching.\n• Throughput–latency knobs: Limit concurrent sequences and batched tokens, use chunked prefill for long prompts, consider speculative decoding, and size context/output to fit GPU memory."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "Your service mixes many short chat requests with occasional very long prompts. P99 latency spikes when long prompts arrive. What change most directly reduces tail latency without sacrificing overall throughput too much?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Increase batch size as much as possible to maximize GPU utilization"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Limit total batched tokens per step and enable chunked prefill so long prompts interleave with others"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Disable batching entirely so each request runs alone"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Allow unbounded output lengths to amortize prefill cost"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Capping batched tokens and chunking prefill prevents long prompts from monopolizing compute, reducing head-of-line blocking and improving tail latency while preserving batching benefits."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Users share the same long system prompt across requests. How can you cut prefill latency and GPU cost for these requests?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Lower temperature to reduce compute"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Use larger tensor parallel size"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Enable prompt/prefix KV cache so shared prefixes reuse cached blocks"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Disable streaming"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Prefix caching reuses KV blocks for identical tokenized prefixes, avoiding repeated prefill compute and reducing latency."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You observe frequent OOMs when allowing very long contexts and outputs. What is the most reliable mitigation while keeping quality stable?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Reduce maximum context/output lengths or concurrent sequences to fit KV cache in GPU memory"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Increase temperature to shorten outputs"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Turn off PagedAttention"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Randomly drop requests during prefill"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "KV memory scales with context and active sequences. Capping lengths and/or concurrency reduces memory pressure without changing model quality."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Continuous batching and chunked prefill help balance throughput and tail latency under mixed traffic.\n• PagedAttention-backed KV cache and prefix caching are central to vLLM’s efficiency and memory scalability.\n• Tune concurrency (sequences and batched tokens) and context/output limits to meet TPS targets within GPU memory and latency SLOs; consider speculative decoding for additional decode speedups."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand how vLLM batches requests, manages the KV cache, and how to optimize throughput and latency in practice."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "Production stack, routing and autoscaling"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to assemble a production-grade vLLM serving stack: networking, storage, observability, and CI/CD. 2) Request routing patterns for multi-model, multi-replica clusters, including session affinity and canarying. 3) Autoscaling strategies using queue depth, tokens/sec, and GPU metrics to meet latency SLOs while controlling cost."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "A typical production architecture includes: an API gateway (auth, rate limiting, TLS), a request router, a pool of vLLM servers (each managing one or more GPUs), model storage (e.g., object storage for weights), feature/config management, and observability (metrics, logs, traces). For Kubernetes, use a Service/Ingress in front of vLLM pods; in VM environments, place a load balancer in front of instances.\n\nRouting: Keep request affinity for the lifetime of a generation to preserve KV cache in the chosen replica. Route by model ID and replica health; use weighted routing for canary releases and gradual traffic shifting between model versions. For multi-GPU tensor-parallel models, treat each replica as a placement group and avoid mid-request re-routing. Employ priority queues or per-tenant limits to protect SLOs and fairness.\n\nObservability and SLOs: Track queue time, time-to-first-token (TTFT), tokens/sec (prefill and decode), P50/P95/P99 latency, GPU utilization and memory, KV block usage, and error rates (OOM, timeout, overload). Export metrics to Prometheus and visualize with Grafana; use logs for prompts/latency (with privacy controls) and traces to see where time is spent.\n\nAutoscaling: Scale replicas based on leading indicators (request queue depth or admitted-but-waiting tokens) rather than only GPU utilization. Tokens-per-second per replica is a capacity metric; when observed load approaches capacity and queue time rises, scale out. For Kubernetes, combine Horizontal Pod Autoscaler (HPA) or KEDA with custom metrics (e.g., queued requests, queued tokens, TTFT). Pair with a Cluster Autoscaler to add GPU nodes. Consider scale-to-zero for low-traffic models with warm pools to reduce cold-start impact. Right-size pods to GPU memory and enable GPU partitioning (MIG) when appropriate to run multiple small models per GPU without interference.\n\nResilience: Use readiness/liveness probes, surge/rolling upgrades, and canaries to limit blast radius. Keep model weights in local persistent cache to reduce cold-load times; pre-warm frequently used models. Implement backpressure: when queues exceed thresholds, shed load gracefully or return retry-after to keep SLOs."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Session affinity: Keep a request stream on the same replica to reuse KV cache and avoid restarts mid-generation.\n• SLO-driven routing and scaling: Use queue time, TTFT, and tokens/sec as primary signals; apply weighted routing for canaries and A/B tests.\n• Kubernetes/VM integration: Pair vLLM replicas with autoscaling (HPA/KEDA + cluster autoscaler), GPU-aware scheduling, and comprehensive observability to manage cost and reliability."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You deploy multiple replicas of the same vLLM model. Some generations lose KV cache benefits after a network retry, increasing latency. What routing change helps most?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Randomly select a new replica on each retry"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Use session affinity so the request stays on the same replica for the generation"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Disable batching across all replicas"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Increase batch size on all replicas"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Session affinity preserves the on-replica KV cache across retries for the same generation, reducing repeated prefill work and latency."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Your P99 TTFT grows during traffic spikes even though average GPU utilization looks moderate. Which autoscaling signal is most effective to trigger earlier scale-out?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Average CPU utilization on the node"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Request queue depth or queued tokens per replica"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Disk free space on the host"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Number of active Kubernetes pods in the namespace"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Queue depth (or queued tokens) is a leading indicator of contention and correlates with TTFT; scaling on it reduces tail latency faster than lagging GPU utilization metrics."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You want to canary a new model version at 5% of traffic while maintaining SLOs. What is the safest approach?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Immediately route 50% of traffic to the new version to gather data quickly"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Weighted routing at 5% with separate autoscaling and health checks for the canary"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Replace the old model entirely and roll back if needed"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Route the canary only during peak hours for better stress testing"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Weighted routing limits exposure while collecting metrics; separate health checks/autoscaling ensure issues in the canary don’t degrade the stable fleet."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Production readiness hinges on session-aware routing, robust observability, and controlled rollouts.\n• Autoscale on leading indicators like queue depth and tokens/sec, and pair pod autoscaling with GPU node autoscaling.\n• Keep models warm, use canaries and weighted routing for safe changes, and implement backpressure to protect latency SLOs under load."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You can now design a production stack for vLLM, route traffic intelligently, and autoscale to meet SLOs reliably."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}

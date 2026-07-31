@@ -1,0 +1,747 @@
+{
+  "courseId": "ai_data_engineering_rag_practitioner__04",
+  "sourceCourseTitle": "AI Data Engineering and RAG Practitioner / Grounded Answers and Citations",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "Prompt Templates for Grounded Answers"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_01_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "In this lesson you will learn:\n• How to design prompt templates that anchor LLM responses to retrieved context\n• The role of system prompts, context blocks, and user query placeholders in grounded RAG\n• Strategies to prevent hallucination through explicit instruction patterns\n• How to evaluate whether a prompt template produces faithful, grounded outputs"
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_02",
+          "title": {
+            "en": "Prompt Templates for Grounded Answers"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "A grounded prompt template is the contract between your retrieval pipeline and the language model. It consists of three zones: a system instruction that tells the model to rely only on provided context, a context block populated at runtime with retrieved document chunks, and the user query. The system instruction should explicitly forbid fabrication: 'Answer using only the passages below. If the answer is not present, say you do not know.' The context block should include chunk text, source identifiers, and optionally relevance scores. Separators such as XML-style tags (<context>, <question>) improve model parsing. Chain-of-thought variants ask the model to cite evidence before stating a conclusion, reducing hallucination rates. Template versioning and A/B testing are essential because small wording changes can dramatically shift faithfulness metrics such as RAGAS AnswerFaithfulness and ContextPrecision."
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Grounded prompt template: A structured prompt that constrains the LLM to answer only from retrieved context, using explicit system instructions and clearly delimited context blocks.\n• Hallucination suppression instruction: A directive within the system prompt that instructs the model to abstain rather than fabricate when context is insufficient.\n• Context block: The runtime-populated section of a prompt containing retrieved chunks with source IDs, enabling traceability from answer back to document.\n• Faithfulness metrics (RAGAS): Quantitative scores such as AnswerFaithfulness and ContextRecall that measure how well LLM outputs stay grounded in provided evidence."
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "What is the primary purpose of a system instruction in a grounded RAG prompt template?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "To increase the creativity and variety of the model's responses"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "To constrain the model to answer only from the provided context and abstain when the answer is absent"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "To compress retrieved chunks before passing them to the model"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "To route the query to the correct vector index"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "The system instruction is the explicit directive that tells the LLM to rely solely on provided context and to say 'I don't know' rather than hallucinate, which is the foundation of a grounded RAG prompt."
+                }
+              },
+              {
+                "question": {
+                  "en": "Which of the following prompt structures best supports traceability from an LLM answer back to its source document?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "A single free-text field combining context and question with no separators"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "A context block containing only raw chunk text without identifiers"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "A context block that includes chunk text alongside source IDs and optionally relevance scores"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "A prompt that omits context and relies on the model's parametric knowledge"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Including source IDs (and optionally relevance scores) inside the context block allows the model to reference them in its answer, enabling direct traceability from response text back to the originating document or chunk."
+                }
+              },
+              {
+                "question": {
+                  "en": "Which RAGAS metric specifically measures whether the LLM's answer is supported by the retrieved context?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "ContextRecall"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "AnswerRelevancy"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "AnswerFaithfulness"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "MeanReciprocalRank"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "AnswerFaithfulness in the RAGAS framework measures the fraction of claims in the generated answer that are directly supported by the provided context, making it the key metric for grounding quality."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_01_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• A well-structured grounded prompt template has three zones—system instruction, runtime context block, and user query—and XML-style delimiters improve model parsing accuracy.\n• Explicit hallucination suppression instructions ('use only the passages below') are the single most effective lever for reducing LLM fabrication in RAG systems.\n• Template versioning and automated faithfulness evaluation (e.g., RAGAS AnswerFaithfulness) are production necessities, not optional quality checks."
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 1: Prompt Templates for Grounded Answers! You now understand how to architect prompts that keep language model outputs anchored to retrieved evidence, how to structure context blocks for traceability, and how to measure grounding quality with RAGAS metrics. In the next lesson you will learn how to surface citations and source attribution in the user interface, transforming raw source IDs into trustworthy, clickable references for end users."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "Citations and Source Attribution UX"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_02_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "In this lesson you will learn:\n• How to extract and render inline citations from LLM-generated answers\n• UX patterns for source attribution that build user trust in RAG applications\n• How to link citation markers in text to rich source metadata (title, URL, page)\n• Best practices for handling conflicting or low-confidence citations gracefully"
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_02",
+          "title": {
+            "en": "Citations and Source Attribution UX"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Citations close the trust loop between an AI answer and its documentary evidence. The pipeline starts in the prompt: each retrieved chunk is labeled with a reference token such as [1] or [DOC:invoice_policy_v2]. The LLM is instructed to embed these tokens inline as it writes. Post-generation, a parser extracts the tokens, deduplicates them, and maps each to a metadata record containing title, URL or file path, page number, and confidence score. On the frontend, tokens render as superscript links or hover cards that display a snippet of the source chunk. Design principles include progressive disclosure (show a compact badge first, expand on click), confidence banding (color or icon indicating retrieval score), and always providing a 'View full document' affordance. When the model cites a source that was not in the retrieved set—a hallucinated citation—server-side validation catches the mismatch and replaces the badge with a warning icon. Accessibility requires that citation links have descriptive aria-labels, not just numeric markers."
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Inline citation token: A reference marker (e.g., [1] or [DOC:id]) embedded by the LLM within its answer text, enabling post-generation extraction and linkage to source metadata.\n• Progressive disclosure: A UX pattern where citations are shown as compact badges initially and expand into rich previews (title, snippet, URL) only when the user interacts, reducing visual noise.\n• Citation validation: Server-side checking that every citation token in the LLM output corresponds to an actually retrieved chunk, flagging or removing hallucinated references.\n• Confidence banding: Visual differentiation of citations by retrieval score (e.g., green/yellow/red indicators), helping users assess how strongly a passage supports the answer."
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "What is the first step in a citation pipeline that ensures the LLM can produce traceable inline references?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Running a second LLM call to add citations after the answer is generated"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Labeling each retrieved chunk with a reference token in the prompt before generation"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Asking the user to manually select which sources are relevant"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Storing all document embeddings in a relational database"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Labeling chunks with reference tokens (e.g., [1], [DOC:id]) in the context block before the LLM generates its response is the foundational step; it gives the model identifiers to embed inline, enabling downstream extraction and linkage."
+                }
+              },
+              {
+                "question": {
+                  "en": "Which UX pattern minimises visual clutter while still providing users access to full citation details?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Displaying every source chunk in full immediately below the answer"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Omitting citations entirely to keep the interface clean"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Progressive disclosure: compact badge by default, expanding to rich preview on interaction"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Replacing the answer text with raw retrieved chunks"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Progressive disclosure keeps the primary answer readable by showing compact citation markers, while expanding to show title, snippet, and URL on demand, balancing transparency with usability."
+                }
+              },
+              {
+                "question": {
+                  "en": "How should a RAG system handle a citation token in the LLM output that does not correspond to any retrieved chunk?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Display it as a normal citation since the model is likely correct"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Perform a new retrieval query at render time to find a matching document"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Server-side validation should flag or replace it with a warning indicator to signal a hallucinated reference"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Remove the entire answer and ask the user to rephrase the query"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Citation validation cross-references every token in the LLM output against the set of actually retrieved chunks. A mismatch indicates a hallucinated citation and should be flagged with a warning icon rather than silently displayed as trustworthy."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_02_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Inline citation tokens must be introduced in the prompt's context block so the LLM can embed them during generation; retrofitting citations via a second pass is less reliable and adds latency.\n• Progressive disclosure and confidence banding are the two most impactful UX patterns for making citations trustworthy and accessible without overwhelming the interface.\n• Server-side citation validation is a non-negotiable safeguard that prevents hallucinated references from reaching users as seemingly authoritative sources."
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 2: Citations and Source Attribution UX! You can now design end-to-end citation pipelines—from token injection in prompts, through server-side validation, to accessible and progressively disclosed frontend components. In the next lesson you will explore access control and document-level permissions, ensuring that users can only retrieve and cite documents they are authorised to access."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Access Control and Document-Level Permissions"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_03_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "In this lesson you will learn:\n• Why document-level access control is critical in multi-tenant RAG deployments\n• How Access Control Lists (ACLs) are stored and enforced at query time in vector stores\n• Techniques for propagating identity context (JWT, OAuth scopes) into retrieval filters\n• How to simulate and audit ACL enforcement to prevent data leakage across user boundaries"
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_02",
+          "title": {
+            "en": "Access Control and Document-Level Permissions"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "In a production RAG system serving multiple user roles or tenants, every retrieved chunk must be authorised for the requesting identity. The architecture layers access control at ingestion and retrieval. During ingestion, each document chunk's metadata is enriched with an ACL field—a list of user IDs, group IDs, or role names permitted to read it. At query time, the retrieval layer applies a metadata pre-filter so only chunks whose ACL includes the caller's identity are candidates for ANN search. This filter must be applied before—not after—ranking to prevent leaking chunk content through relevance scores. Identity context flows from the API gateway via JWT claims or OAuth 2.0 scopes into the retrieval service. A dedicated ACL resolver normalises group memberships and role expansions before constructing the filter. Row-level security in relational metadata stores (e.g., PostgreSQL RLS) can complement vector-store filters for hybrid architectures. Audit logs must record every retrieval event with the caller identity and the set of document IDs evaluated, supporting compliance reviews and breach investigations."
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Document-level ACL: Metadata attached to each chunk at ingestion time specifying which user IDs, group IDs, or roles are permitted to retrieve it, enforced as a pre-filter during ANN search.\n• Identity propagation: The mechanism by which the authenticated caller's identity (JWT claims, OAuth scopes) is securely passed from the API gateway into the retrieval service to construct access filters.\n• Pre-filter enforcement: Applying ACL filters before approximate nearest-neighbour ranking so that unauthorised chunk content is never ranked or scored, eliminating side-channel leakage.\n• Retrieval audit log: An immutable record of every retrieval event capturing caller identity, query vector hash, and evaluated document IDs, required for compliance and breach forensics."
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "At which stage of the RAG pipeline should ACL metadata be attached to document chunks?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "At query time, by fetching permissions from an identity provider for each search request"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "During ingestion, so that each chunk's metadata record already contains its permitted readers"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "After the LLM generates its answer, to redact unauthorised content post-hoc"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Only in the frontend, by hiding citations the user should not see"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "ACL metadata must be attached at ingestion time so it is stored alongside each vector in the index. This enables the retrieval layer to apply a pre-filter efficiently without a separate per-request permission lookup for every candidate chunk."
+                }
+              },
+              {
+                "question": {
+                  "en": "Why must ACL pre-filters be applied before approximate nearest-neighbour (ANN) ranking rather than after?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Post-ranking filters are computationally more expensive"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Applying filters after ranking could expose unauthorised chunk content through relevance scores, creating a side-channel leak"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Vector stores do not support filtering after ranking"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Pre-filters improve embedding quality for authorised documents"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "If ACL filtering is applied post-ranking, the similarity scores of unauthorised chunks have already been computed and could indirectly reveal information about their content. Pre-filtering ensures unauthorised chunks are never considered during the search at all."
+                }
+              },
+              {
+                "question": {
+                  "en": "What role does an ACL resolver play in the identity propagation flow?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "It encrypts JWT tokens before they are sent to the vector store"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "It generates embeddings for user queries based on their role"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "It normalises group memberships and role expansions into a flat list of permitted IDs used to construct the retrieval filter"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "It caches LLM responses per user to reduce API costs"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "An ACL resolver translates hierarchical roles and group memberships into the flat set of identifiers needed to build the vector-store metadata filter. Without this normalisation step, nested group hierarchies could be incorrectly evaluated, causing either over-sharing or access denial."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_03_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• ACL metadata must be written to each chunk at ingestion time and enforced as a pre-filter before ANN ranking to prevent both direct leakage and side-channel information disclosure.\n• Identity context (JWT claims, OAuth scopes) must flow securely from the API gateway through the ACL resolver into the retrieval filter—never derived client-side.\n• Retrieval audit logs are a compliance and security requirement: every query event should record caller identity and the candidate document IDs evaluated, not just the final answer."
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 3: Access Control and Document-Level Permissions! You now know how to architect a multi-tenant RAG system where every retrieved chunk is filtered by the caller's identity, how to propagate JWT and OAuth context into vector-store pre-filters, and how to audit retrieval events for compliance. In the final lesson you will bring everything together by learning how to manage production refresh cycles, scheduling jobs, monitoring pipeline health, and executing rollbacks when things go wrong."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "Production Refresh, Jobs, Monitoring and Rollback"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_04_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "In this lesson you will learn:\n• How to design incremental and full refresh pipelines that keep vector indexes current with changing source data\n• How to schedule, orchestrate, and monitor RAG pipeline jobs using workflow tools\n• Key observability signals—latency, retrieval quality, answer faithfulness—to track in production\n• How to implement index versioning and rollback strategies to recover from bad refreshes"
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_02",
+          "title": {
+            "en": "Production Refresh, Jobs, Monitoring and Rollback"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "A production RAG service degrades if its vector index drifts from the underlying knowledge base. Refresh pipelines solve this by re-ingesting changed documents on a schedule or event trigger. Incremental refresh detects document additions, updates, and deletions via change-data-capture (CDC) events or timestamp comparisons, re-embeds only affected chunks, and upserts them into the index—minimising compute cost. Full refresh rebuilds the entire index from scratch and is used for embedding model upgrades or major schema changes. Orchestration tools such as Apache Airflow, Prefect, or Dagster schedule jobs, manage retries, and send alerts on failure. Observability requires three layers: infrastructure metrics (job duration, CPU/memory), retrieval metrics (recall@k, MRR tracked via a golden query set), and answer quality metrics (faithfulness, answer relevancy sampled daily). Index versioning—maintaining a 'blue' live index and a 'green' candidate index—enables zero-downtime refreshes and instant rollback by re-pointing the query router to the previous version if quality metrics degrade. Canary rollouts let a small traffic percentage hit the new index before full promotion."
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Incremental refresh: A pipeline strategy that re-processes only added, modified, or deleted documents detected via CDC events or timestamp comparisons, reducing re-ingestion cost relative to full rebuilds.\n• Blue/green index versioning: Maintaining two index versions simultaneously—a live 'blue' index serving production traffic and a 'green' candidate—allowing atomic traffic cutover and instant rollback.\n• Golden query set: A curated, fixed set of representative queries with expected answers used to automatically benchmark retrieval recall and answer faithfulness after every refresh.\n• Canary rollout: Routing a small fraction of production traffic to a newly refreshed index to detect quality regressions before committing a full traffic cutover."
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "What is the primary advantage of incremental refresh over full index rebuild?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Incremental refresh produces higher-quality embeddings for unchanged documents"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "It reduces compute and time cost by re-processing only documents that have changed since the last refresh"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "It eliminates the need for an orchestration tool like Airflow"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "It allows the vector store to automatically detect embedding model upgrades"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Incremental refresh processes only the delta of changed documents (adds, updates, deletes), making it far cheaper in compute and faster to complete than rebuilding the entire index, which is reserved for scenarios like embedding model upgrades."
+                }
+              },
+              {
+                "question": {
+                  "en": "In a blue/green index versioning strategy, what triggers a rollback to the blue (previous) index?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "The green index finishes building successfully"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "A scheduled maintenance window occurs"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Quality metrics such as faithfulness or recall on the golden query set degrade below an acceptable threshold after the green index is promoted"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "The number of documents in the green index exceeds that of the blue index"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Rollback is triggered when post-promotion monitoring detects that the new (green) index causes retrieval recall, faithfulness, or other quality metrics to fall below defined thresholds. The query router is then re-pointed to the stable blue index with no downtime."
+                }
+              },
+              {
+                "question": {
+                  "en": "Which observability layer specifically measures whether the knowledge base refresh has maintained or improved answer quality?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Infrastructure metrics (job duration, CPU usage)"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Network throughput metrics from the API gateway"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Answer quality metrics such as faithfulness and answer relevancy sampled against a golden query set"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Token usage metrics from the LLM API billing dashboard"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Answer quality metrics (faithfulness, answer relevancy) evaluated against a fixed golden query set are the definitive signal for whether a refresh has maintained knowledge quality. Infrastructure metrics tell you if the job ran; answer quality metrics tell you if it ran correctly."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_04_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Incremental refresh via CDC or timestamp detection is the default strategy for keeping production indexes current; full rebuild is reserved for embedding model migrations or major schema changes.\n• Blue/green index versioning with canary rollouts provides zero-downtime deployments and a fast, reliable rollback path when quality regressions are detected post-promotion.\n• Production observability requires all three layers—infrastructure, retrieval quality, and answer quality—with a golden query set as the automated regression gate after every refresh cycle."
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 4: Production Refresh, Jobs, Monitoring and Rollback! You have now mastered the full operational lifecycle of a production RAG service—from incremental ingestion pipelines and orchestrated job scheduling, through three-layer observability, to safe deployments with blue/green versioning and canary rollouts. You are ready for the final lab, where you will build a complete RAG service incorporating citations, ACL simulation, and a live refresh pipeline end to end."
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}

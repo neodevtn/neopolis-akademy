@@ -1,0 +1,771 @@
+{
+  "courseId": "full_stack_ai_application_developer__03",
+  "sourceCourseTitle": "Full Stack Ai Application Developer / Frontend AI UX",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "Next.js App Router for full-stack AI apps"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How the Next.js App Router, React Server Components (RSC), Route Handlers, and Server Actions work together to build secure, full‑stack AI features. 2) How to stream model responses and tool results from Route Handlers/RSC with proper caching, revalidation, and Edge runtime considerations. 3) How to structure auth, data access, and observability for production deployments (e.g., Vercel) while keeping secrets server‑side."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "The App Router (app/ directory) enables server‑first UI via React Server Components, nested layouts, and streaming. Route Handlers (app/api/*/route.ts) are file‑based endpoints ideal for AI model calls, RAG pipelines, and webhooks; they can run in the Edge or Node runtime and support streamed responses. Server Actions let you mutate data securely from UI events without exposing credentials to the client. Data fetching in RSC supports fine‑grained caching and revalidation (cache: \"no-store\", revalidate, tags), which is crucial for AI outputs that vary per user or time. Streaming with RSC and Route Handlers improves perceived latency by progressively revealing tokens, tool progress, or partial results. Keep provider keys and embeddings pipelines on the server, attach user/session context for authorization, and log requests/latency/tokens for monitoring."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• App Router + RSC: Server‑first rendering with nested layouts and streaming for responsive AI UIs.\n• Route Handlers & Server Actions: Secure server execution for model calls, RAG, and mutations without exposing secrets.\n• Caching & Revalidation: Control freshness (no-store, revalidate, tags) so user‑specific AI outputs bypass static caches."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You need to stream tokens from an AI summarizer to the UI. Where should the model call run in an App Router app?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "In a client component useEffect calling the model directly from the browser."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "In a Route Handler (app/api/summarize/route.ts) that returns a streamed response."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "In getServerSideProps of the pages/ directory."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "In middleware for every request."
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Route Handlers provide server‑side execution, access to secrets, and support for streaming responses to the client."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Personalized RAG results must never be cached. Which setting fits best for the server component fetching them?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Use default fetch caching."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Use force-cache with long revalidation."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Use cache: \"no-store\" (or revalidate: 0) and optionally tag-based revalidation."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Precompute at build time (SSG)."
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "User‑specific, time‑varying data should bypass caches. no-store (or revalidate: 0) ensures fresh fetches."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Where should you store provider API keys for calling models from your app?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "LocalStorage on the client."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Public NEXT_PUBLIC_* environment variables."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Server-side environment variables read within Route Handlers/Server Actions."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Send the key from the client on each request."
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Secrets must remain server‑side; Route Handlers/Server Actions can read process.env and never expose keys to the browser."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• App Router + RSC enable server‑first, streaming UIs for AI features.\n• Route Handlers/Server Actions are the secure place for model calls and RAG operations.\n• Control caching and revalidation to balance freshness, performance, and correctness."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "Chat UI states: loading, streaming, tool calls, citations, errors"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to design clear loading and streaming states for conversational UIs. 2) How to visualize tool calls (function calls) and surface citations without cluttering the chat. 3) How to handle errors gracefully, including retries, rate limits, and partial failures."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "A robust chat UI models message lifecycle states: idle, composing, sending, loading, streaming, tool-calling, completed, and error. Streaming (e.g., via SSE) should render a single growing assistant bubble with a typing indicator and preserve scroll position; only autoscroll when the user is at the bottom. Tool calls should be transparent: show an in‑progress status (e.g., “Searching…”) and reveal structured results when ready, optionally with collapsible details. Citations increase trust: place inline markers that map to a sidebar or footer list with source titles, snippets, and links, and allow hover/scroll‑to‑highlight. Errors should be actionable: display a concise message, keep user input intact for retry, and offer fallback actions (retry with backoff, switch model, trim context). Add telemetry (latency, token counts) and guardrails (timeouts, token limits) to protect UX under load."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Streaming UX: One growing bubble with typing indicator; preserve scroll and allow user interaction during streams.\n• Tool Calls: Show in‑progress steps and final structured results; make intermediate states visible but unobtrusive.\n• Citations & Errors: Inline markers mapped to a source list; clear, recoverable errors with retries and fallbacks."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "For a chat that streams assistant tokens over SSE, which pattern provides the best UX?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Wait for completion, then render the full message at once."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Render one growing assistant bubble with a typing indicator; autoscroll only if the user is at the bottom."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Append each token as a separate bubble."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Disable input and show only a spinner until completion."
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "A single growing bubble communicates progress without overwhelming the timeline and maintains user control over scrolling."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Your assistant triggers a long-running tool (e.g., web search). What is the best way to represent this?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Hide the process and show only the final text."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Insert an extra user bubble saying the tool is running."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Show an assistant in‑progress status (e.g., “Searching…”), then reveal structured results in a collapsible panel when ready."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Block the UI with a modal until the tool finishes."
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Explicit, lightweight progress plus structured results preserves context and sets expectations without blocking the conversation."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You want transparent sourcing for an answer built from documents. Which UI is most effective?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Add a raw URL list after the message."
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Use inline superscript markers [1], [2] that map to a sidebar/footer list with titles and allow scroll‑to‑highlight."
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Place all citations before the message."
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Hide citations by default to reduce clutter."
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Inline markers tied to a source list make it easy to verify claims and navigate to evidence without disrupting reading flow."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Stream progressively with a single growing bubble and sensible autoscroll.\n• Make tool calls visible with clear, unobtrusive progress and structured results.\n• Use inline citations and actionable error states to build trust and resilience."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Forms for prompts, files, settings, language and model choice"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to design prompt, file, and settings forms that clearly convey model capabilities and constraints 2) How to implement language and model pickers with sensible defaults, capability hints, and safe fallbacks 3) How to validate inputs, handle streaming/stop actions, and persist choices for a smooth AI UX"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Great AI UX starts with predictable forms that set expectations. Prompt inputs should support multiline text, templating variables, and preview of the effective system/user instructions. File inputs need clear type/size limits, client-side checks, and parsing status before sending to the model. Settings like temperature, max tokens, safety level, and top_p should expose safe defaults, short help text, and reset-to-default actions. Language and model pickers should reflect capabilities (e.g., function calling, vision, context window, supported languages) and handle unavailability with graceful fallbacks. Provide streaming with an accessible Stop/Cancel, error states that preserve user inputs, and persistence of recent selections per conversation."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Prompt input and templates: Multiline, variables, previews, and autosave\n• File uploads: Explicit limits, safe parsing, progress, and content extraction\n• Settings and model/language pickers: Helpful defaults, capability hints, and fallbacks"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "Which control design best communicates and manages model randomness for end users?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "A temperature slider (0–2) with a brief tooltip and a reset-to-default action"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "A color theme picker"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "A font size selector"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Only a link to a model card without an adjustable control"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Temperature is best exposed as a bounded slider with helper text and a quick reset, making the determinism trade-off clear and recoverable."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "When enabling file uploads for AI summarization, which UX is safest and most informative?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Allow any file up to 5GB and start processing immediately"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Restrict to supported types, show size limits, scan/parse on the client when possible, preview extracted text, and confirm before sending"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Hide upload status to reduce visual clutter"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Let uploads continue silently after navigation without warning"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Restricting types/size, showing limits and progress, previewing extracted content, and confirming reduces errors and privacy risks."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "How should a language setting interact with model choice for reliable responses?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Tie UI language and response language together so they always match"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Detect the user's locale but allow overriding the response language per conversation and warn if the chosen model lacks that language"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Force English for all responses"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Randomize response language to evaluate model diversity"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Separating UI and response language provides control; warn or disable selections when a model lacks adequate language support."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Make constraints visible: limits, capabilities, defaults, and reset options\n• Validate early: file types/sizes, prompt length vs. context window, required fields\n• Persist and guide: remember choices, provide tooltips/model cards, and graceful fallbacks"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You can now design effective AI forms for prompts, files, settings, language, and model choice that are predictable, safe, and easy to use."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "Accessibility and responsive behavior for AI workflows"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to apply WCAG 2.2 AA to chats, forms, and streaming AI results 2) How to implement ARIA live regions, focus management, and keyboard support for AI workflows 3) How to design responsive, mobile-friendly layouts that respect safe areas, motion preferences, and low-bandwidth conditions"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Accessible AI UIs honor perceivability, operability, understandability, and robustness. For streaming responses, use an aria-live=polite region to announce updates without stealing focus, and provide a visible, keyboard-focusable Stop/Cancel. Manage focus so that after send, focus remains in the composer; do not jump users to the transcript. Ensure labels and descriptions for controls (prompt, upload, settings) and meet contrast ratios. Provide captions/transcripts for generated media, alt text for images, and reduced motion animations when prefers-reduced-motion is set. Responsiveness means reflow on small screens, large touch targets, sticky composer above the on-screen keyboard with safe-area insets, and efficient rendering to avoid scroll jank. Handle offline/slow networks with resilient retries and accessible status messages."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Live regions for streaming: aria-live=polite with batched updates and progress\n• Focus and keyboard: keep focus in composer, ESC/Stop support, logical tab order, skip links\n• Responsive layout: reflowing transcript, sticky composer with safe-area padding, large targets"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "For streaming assistant responses, which ARIA strategy is recommended to balance announcements with usability?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "role=alert with aria-live=assertive for every token"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "A single aria-live=polite region that batches updates and announces completion"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "No ARIA since streaming is visually apparent"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Move keyboard focus to the output area for each partial token"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "aria-live=polite avoids interrupting users, and batching updates reduces verbosity while still announcing progress and completion."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "What is the best focus pattern for keyboard users after submitting a prompt while a response streams?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Keep focus in the composer, provide a reachable Stop/Cancel, and announce updates via a live region"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Move focus into the transcript so users can read partial tokens"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Trap focus inside a loading spinner until completion"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Remove focus so screen readers are not distracted"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Maintaining focus ensures uninterrupted input, while a Stop/Cancel control and live announcements preserve control and context."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Which responsive rule helps prevent the mobile keyboard from obscuring the chat composer?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Use a fixed 100vh chat body without accounting for safe-area insets"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Make the composer sticky at the bottom with env(safe-area-inset-bottom) padding and resize on viewport changes"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Disable pinch-zoom to keep the layout stable"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Set minimum target size to 24px for controls"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "A sticky composer that respects safe-area insets and responds to viewport changes remains visible above the on-screen keyboard."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Use aria-live=polite and clear status text for streaming and background tasks\n• Maintain predictable focus and keyboard access; never trap or steal focus during generation\n• Design for small screens: reflow content, safe-area padding, large targets, and reduced motion"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You can now build accessible, responsive AI workflows that perform well across devices and assistive technologies."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}

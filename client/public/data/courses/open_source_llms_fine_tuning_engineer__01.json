@@ -1,0 +1,699 @@
+{
+  "courseId": "open_source_llms_fine_tuning_engineer__01",
+  "sourceCourseTitle": "Open-Source LLMs and Fine-Tuning Engineer / Open-Source Model Ecosystem",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "Model Families, Licenses and Use Cases"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_01_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "type": "content",
+          "body": {
+            "en": "By the end of this lesson, you will be able to:\n\n• Identify the major open-source LLM families and their architectural lineage\n• Understand the key differences between popular open-source licenses (Apache 2.0, MIT, Llama Community License)\n• Map model families to appropriate real-world use cases\n• Evaluate trade-offs between model size, capability, and deployment constraints"
+          }
+        },
+        {
+          "id": "lesson_01_chapter_02",
+          "title": {
+            "en": "Model Families, Licenses and Use Cases"
+          },
+          "type": "content",
+          "body": {
+            "en": "The open-source LLM landscape is organized around model families — groups of models sharing an architecture, training methodology, and release lineage. Key families include Meta's Llama series (Llama 2, Llama 3), Mistral AI's Mistral and Mixtral models, the Falcon family from TII, and Google's Gemma. Each family offers multiple size variants (7B, 13B, 70B parameters) to balance performance and resource cost.\n\nLicenses define what you can legally do with a model. Apache 2.0 and MIT licenses allow broad commercial use with minimal restrictions. The Llama Community License permits commercial use but restricts redistribution at scale. Some models use custom licenses that prohibit specific applications.\n\nUse cases drive model selection: instruction-following models (e.g., Llama-3-Instruct, Mistral-Instruct) excel at chat and task completion; base models suit continued pre-training; code-specialized models like DeepSeek Coder or CodeLlama target software engineering tasks; embedding models like BGE or E5 power semantic search and RAG pipelines."
+          }
+        },
+        {
+          "id": "lesson_01_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "type": "content",
+          "body": {
+            "en": "• **Model Family**: A lineage of models sharing architecture and training data provenance, often released in multiple parameter sizes (e.g., Llama 3 8B, 70B).\n• **Open-Source License**: Legal terms governing use, modification, and redistribution — critical for commercial deployments; always verify license compatibility before shipping to production.\n• **Instruction-Tuned vs. Base Model**: Instruction-tuned models are fine-tuned on human-preference data (RLHF/DPO) and respond to prompts directly; base models require prompting or further fine-tuning to be useful.\n• **Parameter Count as Proxy**: Larger models generally perform better but require more GPU memory and inference time; quantized smaller models can rival larger FP16 models in practice."
+          }
+        },
+        {
+          "id": "lesson_01_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "type": "checkpoint",
+          "questions": [
+            {
+              "question": {
+                "en": "Which license is most permissive for unrestricted commercial use of an open-source LLM?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Llama Community License"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Apache 2.0"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Creative Commons BY-NC"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "OpenRAIL-M"
+                  }
+                }
+              ],
+              "correctId": "b",
+              "explanation": {
+                "en": "Apache 2.0 is one of the most permissive open-source licenses, allowing commercial use, modification, and distribution with minimal conditions. The Llama Community License restricts large-scale redistribution, CC BY-NC prohibits commercial use, and OpenRAIL-M includes behavioral use restrictions."
+              }
+            },
+            {
+              "question": {
+                "en": "You need a model to power a customer-facing chatbot that answers questions about a product catalog. Which model variant is the most appropriate starting point?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "A base pre-trained model with no fine-tuning"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "An embedding model like BGE-Large"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "An instruction-tuned chat model like Llama-3-8B-Instruct"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "A code-specialized model like CodeLlama"
+                  }
+                }
+              ],
+              "correctId": "c",
+              "explanation": {
+                "en": "Instruction-tuned chat models are trained to follow prompts and engage in dialogue, making them the natural choice for a customer-facing chatbot. Base models lack instruction-following behavior, embedding models produce vectors not text, and code models are optimized for programming tasks."
+              }
+            },
+            {
+              "question": {
+                "en": "The Mixtral 8x7B model belongs to which architectural category?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Dense transformer with 56B active parameters"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Mixture-of-Experts (MoE) model activating a subset of parameters per token"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Retrieval-augmented generation model with built-in search"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Encoder-only model similar to BERT"
+                  }
+                }
+              ],
+              "correctId": "b",
+              "explanation": {
+                "en": "Mixtral 8x7B uses a Mixture-of-Experts architecture where only 2 out of 8 expert layers are activated per token, giving it roughly 13B active parameters during inference despite having 47B total parameters. This delivers strong performance with lower inference cost than a dense 47B model."
+              }
+            }
+          ]
+        },
+        {
+          "id": "lesson_01_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "type": "content",
+          "body": {
+            "en": "• The open-source LLM ecosystem is organized into model families (Llama, Mistral, Falcon, Gemma) each offering multiple size variants — understanding lineage helps predict capability and community support.\n• License type is a non-negotiable first filter: always validate Apache 2.0, MIT, or equivalent permissive licensing before committing a model to a commercial production pipeline.\n• Match the model variant to the task: instruction-tuned models for dialogue and task completion, base models for continued pre-training, code models for software tasks, and embedding models for semantic search and RAG."
+          }
+        },
+        {
+          "id": "lesson_01_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "type": "content",
+          "body": {
+            "en": "Congratulations on completing Lesson 1: Model Families, Licenses and Use Cases!\n\nYou now have a solid foundation for navigating the open-source LLM landscape. You can identify major model families, interpret their licenses, and match model variants to real-world deployment scenarios.\n\nIn the next lesson, you will explore the Hugging Face Hub — the central registry for discovering, evaluating, and loading these models — along with model cards, datasets, and community resources that accelerate development."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "Hugging Face Hub, Model Cards and Datasets"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_02_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "type": "content",
+          "body": {
+            "en": "By the end of this lesson, you will be able to:\n\n• Navigate the Hugging Face Hub to discover and evaluate models and datasets\n• Read and interpret a model card to assess suitability, limitations, and intended use\n• Use the Hub's filtering and search capabilities to find task-specific resources\n• Access and preview datasets using the Hugging Face datasets library"
+          }
+        },
+        {
+          "id": "lesson_02_chapter_02",
+          "title": {
+            "en": "Hugging Face Hub, Model Cards and Datasets"
+          },
+          "type": "content",
+          "body": {
+            "en": "The Hugging Face Hub (huggingface.co) is the central repository for the open-source ML community, hosting over 500,000 models, 150,000 datasets, and thousands of Spaces (interactive demos). It provides a git-based versioning system for model weights, tokenizer configs, and documentation.\n\nModel Cards are structured README files that accompany every model repository. A well-written model card describes the model's intended use, training data, evaluation results, ethical considerations, and known limitations. The Hub enforces a standard schema so downstream tooling can parse key metadata automatically.\n\nThe datasets library (pip install datasets) provides a unified API to load, stream, and preprocess any dataset hosted on the Hub. Datasets are stored in Apache Arrow format for memory efficiency and support streaming for datasets too large to fit in RAM.\n\nHub authentication via User Access Tokens (huggingface_hub login or HF_TOKEN env variable) is required to download gated models like Llama 3 or Gemma. The huggingface_hub Python library exposes programmatic search, file upload, and repository management, enabling CI/CD integration."
+          }
+        },
+        {
+          "id": "lesson_02_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "type": "content",
+          "body": {
+            "en": "• **Model Card**: A structured markdown document describing a model's purpose, training data, evaluation benchmarks, bias analysis, and usage instructions — the primary due-diligence artifact before adopting a model.\n• **Gated Model**: A model that requires the user to accept a license agreement and receive Hub approval before downloading; examples include Meta's Llama family and Google's Gemma.\n• **datasets Library**: Hugging Face's Python library for loading, streaming, and transforming datasets with a consistent API, backed by Apache Arrow for zero-copy memory efficiency.\n• **Hub Spaces**: Interactive web applications (Gradio or Streamlit) hosted on the Hub that allow you to demo and evaluate models without local GPU infrastructure."
+          }
+        },
+        {
+          "id": "lesson_02_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "type": "checkpoint",
+          "questions": [
+            {
+              "question": {
+                "en": "What is the primary purpose of a model card on the Hugging Face Hub?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "To store the model's binary weights in a compressed format"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "To document intended use, training data, evaluation results, limitations, and ethical considerations"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "To provide a live API endpoint for inference requests"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "To list the hardware requirements for local deployment only"
+                  }
+                }
+              ],
+              "correctId": "b",
+              "explanation": {
+                "en": "A model card is a structured documentation artifact — not a weight file or API. Its purpose is to transparently communicate what the model is designed for, what data trained it, how it performs on benchmarks, and what its limitations and risks are, enabling informed adoption decisions."
+              }
+            },
+            {
+              "question": {
+                "en": "You want to load a large dataset (500 GB) for training without downloading it entirely to disk. Which Hugging Face datasets feature should you use?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "load_dataset with split='train[:100%]'"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "load_dataset with streaming=True"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "datasets.load_from_disk()"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "datasets.concatenate_datasets()"
+                  }
+                }
+              ],
+              "correctId": "b",
+              "explanation": {
+                "en": "Setting streaming=True in load_dataset enables on-the-fly data fetching row by row without downloading the full dataset to disk. This is essential for very large datasets that exceed local storage or RAM capacity. The other options either require full local availability or serve different purposes."
+              }
+            },
+            {
+              "question": {
+                "en": "Which of the following is required to download a gated model like Meta Llama 3 from the Hugging Face Hub?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "A paid Hugging Face Pro subscription"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Accepting the model's license on the Hub and authenticating with a User Access Token"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Submitting a formal research proposal to Meta"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Downloading the weights directly from Meta's GitHub repository"
+                  }
+                }
+              ],
+              "correctId": "b",
+              "explanation": {
+                "en": "Gated models require two steps: (1) visiting the model's Hub page and accepting the license agreement with your Hugging Face account, and (2) authenticating your local environment with a User Access Token via huggingface-cli login or the HF_TOKEN environment variable. No paid subscription is required."
+              }
+            }
+          ]
+        },
+        {
+          "id": "lesson_02_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "type": "content",
+          "body": {
+            "en": "• The Hugging Face Hub is the central discovery layer for the open-source ML ecosystem — mastering its search filters, tags, and leaderboard integrations dramatically accelerates model selection.\n• Always read the model card before deploying: it surfaces training data sources, known failure modes, and license terms that are not visible from benchmark scores alone.\n• The datasets library's streaming mode is a critical tool for working with large-scale training corpora without prohibitive storage requirements, and its Arrow-backed format ensures efficient preprocessing pipelines."
+          }
+        },
+        {
+          "id": "lesson_02_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "type": "content",
+          "body": {
+            "en": "Congratulations on completing Lesson 2: Hugging Face Hub, Model Cards and Datasets!\n\nYou can now confidently navigate the Hub to discover models, interpret model cards as due-diligence documents, and work with datasets at scale using the streaming API.\n\nIn Lesson 3, you will move from discovery to execution — learning how to load models with the Transformers pipeline abstraction and understand tokenization fundamentals that underpin every text-based LLM workflow."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Transformers Pipeline and Tokenizer Basics"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_03_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "type": "content",
+          "body": {
+            "en": "By the end of this lesson, you will be able to:\n\n• Use the Hugging Face pipeline() abstraction to run inference with any supported model in a few lines of code\n• Explain how tokenizers convert raw text into token IDs and back\n• Understand the role of special tokens (BOS, EOS, PAD, UNK) in language model inputs\n• Identify common tokenizer types (BPE, WordPiece, SentencePiece) and their trade-offs"
+          }
+        },
+        {
+          "id": "lesson_03_chapter_02",
+          "title": {
+            "en": "Transformers Pipeline and Tokenizer Basics"
+          },
+          "type": "content",
+          "body": {
+            "en": "The Hugging Face transformers library is the standard interface for loading and running open-source models. The pipeline() function provides a high-level abstraction: you specify a task (e.g., 'text-generation', 'text-classification', 'summarization') and a model identifier, and the library handles model loading, tokenization, inference, and decoding automatically.\n\nUnder the hood, every pipeline runs a tokenizer before the model. Tokenizers convert raw text strings into sequences of integer token IDs that the model can process. The most common algorithms are Byte-Pair Encoding (BPE), used by GPT-family and Llama models; WordPiece, used by BERT; and SentencePiece, used by T5 and many multilingual models. All split text into subword units, balancing vocabulary size against coverage of rare words.\n\nSpecial tokens are reserved IDs with structural meaning: the Beginning-of-Sequence token (BOS/CLS) marks input start; End-of-Sequence (EOS/SEP) marks the end; PAD tokens align sequences in a batch to equal length; and chat models add role-specific tokens like [INST] or <|user|>. Mishandling special tokens is a leading cause of degraded model performance when building custom inference pipelines."
+          }
+        },
+        {
+          "id": "lesson_03_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "type": "content",
+          "body": {
+            "en": "• **pipeline() Abstraction**: A high-level Hugging Face API that wraps tokenization, model forward pass, and post-processing into a single callable, supporting tasks like text-generation, summarization, NER, and question answering.\n• **Tokenization**: The process of converting text into discrete integer token IDs via a learned vocabulary; subword tokenization (BPE, WordPiece, SentencePiece) balances vocabulary efficiency with the ability to represent rare or unseen words.\n• **Special Tokens**: Reserved vocabulary entries (BOS, EOS, PAD, UNK, role markers) that convey structural information to the model beyond the raw text content — essential for correct prompt formatting.\n• **AutoTokenizer / AutoModelForCausalLM**: Auto-classes that inspect a model's config and load the correct architecture and tokenizer automatically, eliminating the need to hard-code model class names."
+          }
+        },
+        {
+          "id": "lesson_03_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "type": "checkpoint",
+          "questions": [
+            {
+              "question": {
+                "en": "What does the Hugging Face pipeline() function return when called with task='text-generation' and a prompt string?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "A raw tensor of logits from the final model layer"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "A list of dictionaries containing the generated text string(s)"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "A tokenized input_ids tensor ready for model.generate()"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "A probability distribution over the next token only"
+                  }
+                }
+              ],
+              "correctId": "b",
+              "explanation": {
+                "en": "The text-generation pipeline handles the full inference lifecycle and returns a Python list of dictionaries, each containing a 'generated_text' key with the decoded output string. Raw tensors and token IDs are internal intermediate steps that the pipeline abstracts away from the caller."
+              }
+            },
+            {
+              "question": {
+                "en": "Which tokenization algorithm is used by the Llama 3 family of models?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "WordPiece"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Unigram Language Model"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Byte-Pair Encoding (BPE)"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Character-level tokenization"
+                  }
+                }
+              ],
+              "correctId": "c",
+              "explanation": {
+                "en": "Llama models (including Llama 3) use a Byte-Pair Encoding tokenizer with a vocabulary of 128,000 tokens in Llama 3. BPE iteratively merges the most frequent adjacent byte pairs to form subword units. WordPiece is used by BERT, and Unigram LM is used by SentencePiece-based models like T5."
+              }
+            },
+            {
+              "question": {
+                "en": "Why is it important to use padding tokens when batching multiple sequences together for inference?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Padding tokens increase the model's vocabulary size dynamically"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Transformer models require all sequences in a batch to have identical length; padding fills shorter sequences to match the longest"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Padding tokens act as separators between different documents in a sequence"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Padding is only needed for encoder-decoder models, not decoder-only LLMs"
+                  }
+                }
+              ],
+              "correctId": "b",
+              "explanation": {
+                "en": "Transformer computations are performed on fixed-shape tensors, so all sequences in a batch must share the same token length. PAD tokens fill the shorter sequences to match the longest sequence in the batch. An attention mask is passed alongside to tell the model which positions are real tokens versus padding, preventing padding positions from influencing the output."
+              }
+            }
+          ]
+        },
+        {
+          "id": "lesson_03_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "type": "content",
+          "body": {
+            "en": "• The pipeline() abstraction is the fastest path from model name to working inference, but understanding the tokenization step it wraps is essential for building correct, production-grade prompting and batching logic.\n• Subword tokenization algorithms (BPE, WordPiece, SentencePiece) are the foundation of every modern LLM — a mismatch between the tokenizer used during training and inference will silently degrade model performance.\n• Special tokens are load-bearing structural elements, not optional metadata — always use the model's designated chat template and special token configuration when formatting prompts for instruction-tuned models."
+          }
+        },
+        {
+          "id": "lesson_03_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "type": "content",
+          "body": {
+            "en": "Congratulations on completing Lesson 3: Transformers Pipeline and Tokenizer Basics!\n\nYou now understand how to move from a model identifier to running inference using pipeline(), how tokenizers transform text into model-consumable inputs, and how special tokens shape model behavior.\n\nIn the final lesson, you will integrate everything learned so far to make a principled architectural decision: when to call a hosted API, when to run a model locally, and when fine-tuning is necessary — a decision framework every LLM engineer needs to master."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "Choosing Between API, Local Model and Fine-Tune"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_04_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "type": "content",
+          "body": {
+            "en": "By the end of this lesson, you will be able to:\n\n• Apply a structured decision framework to choose between hosted API, local model deployment, and fine-tuning\n• Evaluate cost, latency, data privacy, and customization trade-offs for each deployment strategy\n• Recognize the scenarios where fine-tuning adds clear value versus scenarios where prompt engineering suffices\n• Document a model selection rationale suitable for an engineering design review"
+          }
+        },
+        {
+          "id": "lesson_04_chapter_02",
+          "title": {
+            "en": "Choosing Between API, Local Model and Fine-Tune"
+          },
+          "type": "content",
+          "body": {
+            "en": "Every LLM deployment starts with three strategic options. Hosted API (OpenAI, Anthropic, Mistral AI, Cohere) offers the fastest time-to-value with no infrastructure overhead, but introduces data privacy concerns, vendor lock-in, per-token costs that scale with usage, and network latency. It is the right default for prototyping and low-volume production where data sensitivity is low.\n\nLocal model deployment (running a model on your own GPU cluster or edge hardware) eliminates API costs at scale and keeps data on-premises, satisfying strict data governance requirements (HIPAA, GDPR, financial regulation). The trade-off is infrastructure ownership, DevOps complexity, and higher upfront cost. Quantized models (GGUF via llama.cpp, GPTQ, AWQ) reduce GPU memory requirements significantly.\n\nFine-tuning is warranted when the base or instruction-tuned model consistently fails on your specific domain despite careful prompt engineering — for example, adapting a model to a proprietary coding style, a specialized scientific vocabulary, or a specific output schema. Techniques include full fine-tuning, LoRA/QLoRA (parameter-efficient), and instruction fine-tuning on curated task datasets. Fine-tuning adds training cost, data curation effort, and an ongoing model maintenance burden; it should be a deliberate choice, not a default."
+          }
+        },
+        {
+          "id": "lesson_04_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "type": "content",
+          "body": {
+            "en": "• **Hosted API**: A managed inference service exposing LLM capabilities via REST endpoints; optimized for rapid prototyping and low operational overhead, with trade-offs in data control and per-token pricing.\n• **Local Deployment**: Running model weights on owned or leased GPU infrastructure; mandatory for air-gapped environments, regulated data, or high-throughput workloads where per-token API costs become prohibitive.\n• **Quantization**: Reducing model weight precision (e.g., FP16 → INT4) to decrease GPU memory footprint and increase throughput, often with minimal quality degradation; key formats include GGUF, GPTQ, and AWQ.\n• **Fine-Tuning Decision Criteria**: Fine-tuning is justified when prompt engineering cannot bridge the gap to required task performance, when consistent output format adherence is needed, or when the model must internalize proprietary domain knowledge unavailable at pre-training time."
+          }
+        },
+        {
+          "id": "lesson_04_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "type": "checkpoint",
+          "questions": [
+            {
+              "question": {
+                "en": "A healthcare company needs to process patient records with an LLM to extract clinical entities. Their data is covered by HIPAA. Which deployment strategy is most appropriate?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "OpenAI GPT-4 API with default settings"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Local deployment of an open-source model on the company's on-premises infrastructure"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "A public Hugging Face Space running a shared model"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "A third-party API with no data processing agreement"
+                  }
+                }
+              ],
+              "correctId": "b",
+              "explanation": {
+                "en": "HIPAA-regulated patient data must not be transmitted to third-party API endpoints without a signed Business Associate Agreement (BAA) and appropriate data handling controls. Local deployment on on-premises infrastructure keeps patient data within the organization's security perimeter, satisfying regulatory requirements. Public Spaces and unagreed third-party APIs are clearly non-compliant."
+              }
+            },
+            {
+              "question": {
+                "en": "You have a general-purpose Llama-3-8B-Instruct model and want it to consistently output valid JSON matching a specific schema. After extensive prompt engineering, the model still occasionally generates malformed JSON. What is the most targeted next step?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Switch to a larger 70B model via API to solve the formatting issue"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Fine-tune the model on a curated dataset of (instruction, valid JSON output) pairs"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Re-train the model from scratch on your domain data"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Accept the malformed outputs and post-process them with regex"
+                  }
+                }
+              ],
+              "correctId": "b",
+              "explanation": {
+                "en": "When prompt engineering cannot reliably enforce a specific output format, supervised fine-tuning on (instruction, correct-format output) pairs is the targeted and cost-effective solution. It teaches the model the exact schema adherence required. Re-training from scratch is extremely expensive and unnecessary. A larger model helps general capability but not necessarily strict format adherence, and regex post-processing is brittle."
+              }
+            },
+            {
+              "question": {
+                "en": "Which quantization format is most commonly used for running LLMs efficiently on CPU or low-VRAM GPU environments with llama.cpp?"
+              },
+              "choices": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "GPTQ"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "AWQ"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "GGUF"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "BF16"
+                  }
+                }
+              ],
+              "correctId": "c",
+              "explanation": {
+                "en": "GGUF (GPT-Generated Unified Format) is the standard format used by llama.cpp and compatible runtimes like Ollama and LM Studio. It supports various quantization levels (Q4_K_M, Q5_K_M, Q8_0, etc.) and is optimized for CPU inference and low-VRAM GPU offloading. GPTQ and AWQ are GPU-focused quantization formats, and BF16 is a floating-point precision format, not a quantization scheme."
+              }
+            }
+          ]
+        },
+        {
+          "id": "lesson_04_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "type": "content",
+          "body": {
+            "en": "• The API vs. local vs. fine-tune decision is driven by four primary axes: data privacy requirements, cost at scale, latency constraints, and the performance gap that prompt engineering alone cannot close.\n• Local deployment with quantized models (GGUF, GPTQ, AWQ) has dramatically lowered the infrastructure barrier, making on-premises LLM deployment viable for teams without large GPU clusters.\n• Fine-tuning is a powerful but costly tool — always exhaust prompt engineering and retrieval-augmented generation (RAG) approaches first; reserve fine-tuning for genuine capability or format-adherence gaps that cannot be addressed at inference time."
+          }
+        },
+        {
+          "id": "lesson_04_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "type": "content",
+          "body": {
+            "en": "Congratulations on completing Lesson 4: Choosing Between API, Local Model and Fine-Tune!\n\nYou have completed the Open-Source Model Ecosystem course. You now possess a comprehensive foundation: from understanding model families and licenses, to navigating the Hugging Face Hub, to running inference with the Transformers library, to making principled architectural decisions about deployment strategy.\n\nYou are ready to tackle the capstone lab: selecting and documenting 3 candidate models for a real-world use case with full rationale covering capability, license, deployment strategy, and trade-off analysis. Good luck!"
+          }
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}

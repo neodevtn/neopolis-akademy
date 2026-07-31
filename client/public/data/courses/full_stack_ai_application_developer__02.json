@@ -1,0 +1,747 @@
+{
+  "courseId": "full_stack_ai_application_developer__02",
+  "sourceCourseTitle": "Full-Stack AI Application Developer / Backend APIs for AI",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "FastAPI Project Structure, Routers, Schemas, and Dependency Injection"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_01__chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "In this lesson you will learn:\n\n• How to scaffold a production-ready FastAPI project with a clean, scalable folder structure\n• How to organise routes using APIRouter and split concerns across multiple modules\n• How to define request and response schemas with Pydantic v2 for automatic validation and serialisation\n• How to leverage FastAPI's dependency injection system to share logic such as database sessions, authentication, and configuration across endpoints"
+            }
+          }
+        },
+        {
+          "id": "lesson_01__chapter_02",
+          "title": {
+            "en": "FastAPI Project Structure, Routers, Schemas, and Dependency Injection"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "FastAPI encourages a layered architecture. A typical layout separates concerns into app/api/routers (route handlers), app/schemas (Pydantic models), app/services (business logic), app/models (ORM models), and app/core (config, security). Each feature area gets its own router file, which is then registered on the main FastAPI instance with a prefix and tags.\n\nPydantic v2 schemas provide automatic JSON validation, serialisation, and OpenAPI documentation generation. Defining both request and response models ensures strict contracts between client and server.\n\nDependency injection via Depends() allows reusable, testable components. A database session factory, a current-user extractor, or a settings object can all be injected into any path operation without repeating boilerplate. Dependencies can be nested, enabling composable security layers and middleware-like behaviour at the function level."
+            }
+          }
+        },
+        {
+          "id": "lesson_01__chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **APIRouter**: A mini-application object that groups related path operations. Routers are mounted onto the main app with app.include_router(), keeping each feature module self-contained and independently testable.\n\n• **Pydantic BaseModel**: The foundation for all schemas. Fields are type-annotated, and validators run automatically on assignment. Response models prevent accidental data leakage by whitelisting output fields.\n\n• **Depends()**: FastAPI's dependency injection primitive. A dependency is any callable; its return value is injected into the path operation. Yield-based dependencies support teardown logic, making them ideal for database sessions.\n\n• **Lifespan Events**: The lifespan context manager (replacing deprecated on_event hooks) handles startup and shutdown logic such as initialising connection pools or ML model loading."
+            }
+          }
+        },
+        {
+          "id": "lesson_01__chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "Which FastAPI mechanism is used to share reusable logic—such as a database session—across multiple path operations?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Middleware classes"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "The Depends() function"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Global variables"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "APIRouter tags"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Depends() is FastAPI's dependency injection primitive. Any callable wrapped in Depends() is resolved per request and its return value is injected into the path operation, enabling clean, testable sharing of sessions, configs, and authenticated users."
+                }
+              },
+              {
+                "question": {
+                  "en": "What is the primary purpose of defining a Pydantic response_model on a FastAPI endpoint?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "To speed up JSON serialisation by skipping validation"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "To automatically generate SQL migrations"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "To whitelist output fields and prevent accidental data leakage"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "To enable background task execution"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "A response_model tells FastAPI which fields to include in the response. Even if the underlying object contains sensitive fields like hashed passwords, only the fields declared in the response model are serialised and returned to the client."
+                }
+              },
+              {
+                "question": {
+                  "en": "How should multiple feature areas (e.g., users, items, chat) best be organised in a FastAPI project?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "All routes defined in a single main.py file for simplicity"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Each feature in its own APIRouter module, mounted on the main app with include_router()"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Using Flask Blueprints imported into FastAPI"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Separate FastAPI instances started on different ports"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Splitting features into individual APIRouter modules and mounting them with app.include_router() keeps code modular, testable, and maintainable. Each router can declare its own prefix, tags, and dependencies without polluting the main application file."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_01__chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• A well-structured FastAPI project separates routers, schemas, services, models, and core configuration into dedicated modules, making the codebase scalable and easy to navigate.\n\n• Pydantic schemas act as the single source of truth for request validation and response serialisation, automatically powering OpenAPI documentation with no extra effort.\n\n• Dependency injection with Depends() is the idiomatic FastAPI way to share cross-cutting concerns—database sessions, auth, settings—across endpoints in a composable, testable manner."
+            }
+          }
+        },
+        {
+          "id": "lesson_01__chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 1: FastAPI Project Structure, Routers, Schemas, and Dependency Injection!\n\nYou now have a solid foundation for building organised, maintainable FastAPI backends. You understand how to structure a project for scale, define strict data contracts with Pydantic, and leverage dependency injection to keep your code clean and testable.\n\nIn the next lesson, you will build on this foundation by implementing async inference endpoints, streaming responses with Server-Sent Events, and graceful request cancellation—critical skills for exposing AI models over HTTP."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "Async Inference Endpoints, Streaming Responses, and Cancellation"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_02__chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "In this lesson you will learn:\n\n• How to write fully asynchronous FastAPI endpoints that call AI inference backends without blocking the event loop\n• How to stream token-by-token AI responses to clients using Server-Sent Events (SSE) and StreamingResponse\n• How to implement graceful cancellation so resources are freed when a client disconnects mid-stream\n• Best practices for timeout handling and back-pressure when integrating with slow or rate-limited AI providers"
+            }
+          }
+        },
+        {
+          "id": "lesson_02__chapter_02",
+          "title": {
+            "en": "Async Inference Endpoints, Streaming Responses, and Cancellation"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "AI inference—especially with large language models—is inherently latency-sensitive. Using async def path operations in FastAPI ensures the event loop is never blocked while awaiting model responses, allowing the server to handle many concurrent requests efficiently.\n\nFor streaming, FastAPI's StreamingResponse accepts an async generator. Each yielded chunk is sent immediately to the client. When using the OpenAI SDK or similar clients, you iterate over the async stream and forward chunks formatted as SSE data events (data: {json}\\n\\n). This lets the UI render tokens progressively.\n\nCancellation is handled by checking request.is_disconnected() inside the generator loop. When the client closes the connection, the generator can break early, cancel the underlying async task, and release model compute resources. Using asyncio.wait_for() adds an explicit timeout so runaway requests do not consume server resources indefinitely."
+            }
+          }
+        },
+        {
+          "id": "lesson_02__chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **async def endpoints**: Declaring path operations with async def allows FastAPI to run them on the event loop without thread pool offloading. All I/O-bound calls (HTTP to AI APIs, database queries) must use await to avoid blocking.\n\n• **StreamingResponse**: A FastAPI response class that accepts an async generator or iterator. It sets Transfer-Encoding: chunked and flushes each yielded value immediately, enabling real-time streaming to browsers and API clients.\n\n• **Server-Sent Events (SSE)**: A simple HTTP protocol for server-to-client streaming. Each message follows the format data: <payload>\\n\\n. FastAPI does not have a dedicated SSE class, so StreamingResponse with media_type='text/event-stream' is the idiomatic approach.\n\n• **Cancellation & Disconnection**: Checking await request.is_disconnected() inside the generator loop allows early exit when clients disconnect, preventing wasted computation and avoiding resource leaks in long-running inference calls."
+            }
+          }
+        },
+        {
+          "id": "lesson_02__chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "Why should AI inference endpoints in FastAPI be declared with async def rather than def?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Because async def endpoints run in separate processes for better isolation"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Because async def endpoints can use await for I/O, preventing event loop blocking during long inference calls"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Because sync def endpoints cannot return JSON responses"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Because FastAPI only supports async def for POST endpoints"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "With async def, the event loop suspends the coroutine at each await point and serves other requests in the meantime. A regular def endpoint is run in a thread pool, which wastes threads during slow I/O. For AI inference which may take seconds, async def is the correct choice."
+                }
+              },
+              {
+                "question": {
+                  "en": "What is the correct media_type to set on a StreamingResponse when implementing Server-Sent Events?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "application/json"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "application/octet-stream"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "text/event-stream"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "multipart/form-data"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "SSE requires the Content-Type header to be text/event-stream. This tells the browser's EventSource API and HTTP clients to treat the response as a stream of discrete events rather than a single body, enabling progressive rendering of AI-generated tokens."
+                }
+              },
+              {
+                "question": {
+                  "en": "How can a FastAPI streaming endpoint detect that the client has disconnected and stop the inference call early?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "By catching a ConnectionResetError exception from the socket layer"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "By periodically calling await request.is_disconnected() and breaking the generator loop when it returns True"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "By setting a fixed response timeout in uvicorn configuration"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Disconnection cannot be detected; the stream always runs to completion"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "FastAPI exposes await request.is_disconnected() which returns True once the client closes the TCP connection. Polling this inside the async generator loop enables the server to break early, cancel the upstream AI API call, and free compute resources instead of completing a response nobody will receive."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_02__chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Async inference endpoints keep the FastAPI event loop unblocked, enabling high concurrency even when AI providers take multiple seconds to respond.\n\n• StreamingResponse with an async generator and media_type='text/event-stream' is the idiomatic pattern for delivering token-by-token AI output over SSE, dramatically improving perceived latency for end users.\n\n• Graceful cancellation via request.is_disconnected() is essential in production to prevent wasted GPU compute and runaway API costs when clients abandon requests mid-stream."
+            }
+          }
+        },
+        {
+          "id": "lesson_02__chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 2: Async Inference Endpoints, Streaming Responses, and Cancellation!\n\nYou can now build high-performance, non-blocking AI endpoints that stream output progressively to clients and handle disconnections cleanly. These are foundational skills for any production AI API.\n\nIn the next lesson, you will harden your API with authentication, rate limiting, quotas, robust input validation, and audit logging—the security and compliance layer every production AI application requires."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Auth, Rate Limits, Quotas, Input Validation, and Audit Logs"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_03__chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "In this lesson you will learn:\n\n• How to implement JWT-based authentication and API key authentication in FastAPI using dependency injection\n• How to enforce per-user rate limits and token quotas to protect AI endpoints from abuse and control costs\n• How to apply deep input validation with Pydantic validators and custom constraints specific to AI payloads\n• How to build a structured audit log that records every request, user identity, token usage, and outcome for compliance and debugging"
+            }
+          }
+        },
+        {
+          "id": "lesson_03__chapter_02",
+          "title": {
+            "en": "Auth, Rate Limits, Quotas, Input Validation, and Audit Logs"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Authentication for AI APIs typically uses JWT bearer tokens or static API keys. A reusable get_current_user dependency decodes and validates the JWT, raising HTTP 401 if invalid or expired. For API keys, a lookup against a hashed store provides the same result. Role-based access control (RBAC) can then restrict premium model access to authorised tiers.\n\nRate limiting is implemented as a dependency using a sliding-window counter stored in Redis. Each request increments a key namespaced to the user and time window; if the counter exceeds the threshold, HTTP 429 is returned. Token quotas track cumulative LLM token usage per user per billing period and reject requests once the quota is exhausted.\n\nPydantic validators enforce constraints on AI-specific inputs: maximum prompt length, disallowed content patterns, and JSON schema conformance. Field-level validators using @field_validator run before the endpoint body executes.\n\nAudit logs record every inference request as a structured JSON event including timestamp, user_id, endpoint, input hash, token counts, latency, and status code. Writing these asynchronously to a database or log aggregation service keeps them out of the critical path."
+            }
+          }
+        },
+        {
+          "id": "lesson_03__chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **JWT Authentication**: JSON Web Tokens carry signed claims (user ID, roles, expiry). FastAPI's OAuth2PasswordBearer scheme extracts the token from the Authorization header; python-jose or PyJWT validates the signature and decodes claims.\n\n• **Sliding-Window Rate Limiting**: A Redis-backed counter with an expiry equal to the window size tracks request counts per user. This approach is more accurate than fixed-window and prevents burst exploitation at window boundaries.\n\n• **Token Quotas**: AI APIs charge per token. Storing cumulative token usage in a database and checking it before each request prevents runaway spend. Quota resets are scheduled with a cron job or APScheduler.\n\n• **Audit Logging**: Structured logs (JSON lines) written to a persistent store provide a tamper-evident record for compliance, debugging, and cost attribution. Each log entry should include a unique request ID for distributed tracing correlation."
+            }
+          }
+        },
+        {
+          "id": "lesson_03__chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "What HTTP status code should a FastAPI endpoint return when a user exceeds their rate limit?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "400 Bad Request"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "401 Unauthorized"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "403 Forbidden"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "429 Too Many Requests"
+                    }
+                  }
+                ],
+                "correctId": "d",
+                "explanation": {
+                  "en": "RFC 6585 defines 429 Too Many Requests as the correct status code for rate limiting. It should be accompanied by a Retry-After header indicating when the client may retry. Using 429 allows clients and API gateways to handle rate limiting gracefully without confusing it with authentication or authorisation failures."
+                }
+              },
+              {
+                "question": {
+                  "en": "Where is the most appropriate place to run Pydantic input validation for an AI chat endpoint's prompt field?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Inside the LLM provider SDK call, after sending the request"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "In the Pydantic request schema using @field_validator, before the endpoint body executes"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "In a post-response middleware after the response has been sent"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "In the frontend before the API call is made"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Pydantic @field_validator decorators run during model instantiation, which happens before the path operation function body executes. This is the earliest and most efficient point to reject invalid input, preventing unnecessary downstream processing and providing clear validation error messages to the client."
+                }
+              },
+              {
+                "question": {
+                  "en": "Why should audit logs for AI endpoints record the input hash rather than the raw input?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Because hashes are faster to write to disk than raw text"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "To reduce storage costs while still enabling deduplication and integrity verification without storing potentially sensitive prompts"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Because raw inputs cannot be serialised to JSON"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Hashing is required by the OpenAI API terms of service"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Storing the hash (e.g., SHA-256) of the input rather than the raw prompt reduces storage volume, avoids persisting potentially sensitive user data in audit tables, and still allows deduplication checks and integrity verification. Raw prompts, if required for compliance, should be stored in encrypted, access-controlled storage separate from general audit logs."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_03__chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• JWT-based authentication and API key validation implemented as FastAPI dependencies provide a reusable, composable security layer that can be applied to any endpoint without code duplication.\n\n• Redis-backed sliding-window rate limiting and token quota checks protect AI endpoints from abuse and prevent unexpected cost overruns—critical concerns when every request consumes paid compute.\n\n• Structured audit logs with request IDs, user identities, token counts, and latency metrics are essential for compliance, incident investigation, and cost attribution in production AI applications."
+            }
+          }
+        },
+        {
+          "id": "lesson_03__chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 3: Auth, Rate Limits, Quotas, Input Validation, and Audit Logs!\n\nYour API is now hardened with a comprehensive security and observability layer. You can authenticate users, throttle abuse, enforce spending limits, validate AI-specific inputs, and maintain a full audit trail.\n\nIn the final lesson, you will learn how to handle file uploads, offload long-running AI jobs to background workers, manage task queues, and persist results in object storage—completing the full picture of a production-grade AI backend."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "File Upload, Background Jobs, Queues, and Storage"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_04__chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "In this lesson you will learn:\n\n• How to handle single and multi-file uploads in FastAPI with validation for file type, size, and content safety\n• How to offload long-running AI tasks—such as document processing or batch inference—to background workers using FastAPI BackgroundTasks and Celery\n• How to design a reliable task queue architecture with Redis or RabbitMQ as the broker and expose job status polling endpoints\n• How to store uploaded files and generated AI artefacts in object storage (S3-compatible) and manage lifecycle policies"
+            }
+          }
+        },
+        {
+          "id": "lesson_04__chapter_02",
+          "title": {
+            "en": "File Upload, Background Jobs, Queues, and Storage"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "FastAPI handles file uploads via UploadFile, which provides async streaming reads. Validation should check MIME type (using python-magic for true type detection, not just the extension), enforce a maximum size by reading in chunks, and scan for malicious content where required. Files should never be written to the application container's local disk in production; instead, stream directly to object storage using aioboto3 or the MinIO async client.\n\nFor AI workloads that exceed a few seconds—embedding generation, PDF extraction, audio transcription—the request-response model is unsuitable. FastAPI BackgroundTasks handles lightweight fire-and-forget jobs within the same process. For heavier workloads requiring retries, prioritisation, and horizontal scaling, Celery with a Redis or RabbitMQ broker is the standard choice.\n\nThe client submits a job and receives a job_id immediately (HTTP 202 Accepted). A GET /jobs/{job_id} endpoint polls job status from the backend store. Completed jobs include a signed URL to the result artefact in object storage, which expires after a configured TTL for security."
+            }
+          }
+        },
+        {
+          "id": "lesson_04__chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **UploadFile & SpooledTemporaryFile**: FastAPI's UploadFile wraps a SpooledTemporaryFile that stays in memory for small files and spills to disk for large ones. Always call await file.read() in chunks to avoid loading multi-gigabyte uploads into memory.\n\n• **BackgroundTasks vs Celery**: BackgroundTasks runs after the response is sent, in the same process. It is suitable for lightweight tasks like sending emails. Celery distributes tasks across worker processes or machines, supports retries, scheduling, and result backends—essential for production AI job pipelines.\n\n• **202 Accepted Pattern**: The asynchronous job pattern returns HTTP 202 with a job_id immediately, then exposes a status endpoint. This decouples upload latency from processing latency and allows clients to poll or receive webhook callbacks when work completes.\n\n• **Object Storage & Presigned URLs**: S3-compatible stores (AWS S3, MinIO, GCS) persist files independently of the application lifecycle. Presigned URLs grant time-limited, unauthenticated access to specific objects, allowing clients to download results directly without proxying through the API server."
+            }
+          }
+        },
+        {
+          "id": "lesson_04__chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "What HTTP status code should a FastAPI endpoint return immediately after accepting a long-running AI job for background processing?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "200 OK with the completed result"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "201 Created with the new resource URL"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "202 Accepted with a job_id for status polling"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "204 No Content because processing has not finished"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "HTTP 202 Accepted signals that the request has been received and will be processed asynchronously. Returning a job_id allows the client to poll a status endpoint. This pattern decouples submission latency from processing latency and prevents HTTP timeouts on long-running AI tasks like transcription or batch inference."
+                }
+              },
+              {
+                "question": {
+                  "en": "Why is it a security risk to rely solely on the file extension to validate uploaded file types in an AI API?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "File extensions slow down the validation process significantly"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Extensions can be trivially renamed; true file type must be determined by inspecting the file's magic bytes using a library like python-magic"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "FastAPI does not support reading file extensions from UploadFile"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Extensions are not preserved when files are uploaded over HTTPS"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "An attacker can rename a malicious executable to .pdf and bypass extension-only checks. python-magic reads the file's magic bytes (the first few bytes that identify the true format) to determine the actual MIME type regardless of the filename extension, providing reliable content-based validation."
+                }
+              },
+              {
+                "question": {
+                  "en": "What is the main advantage of using presigned URLs to deliver AI-generated artefacts to clients?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Presigned URLs compress the file automatically before download"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "They allow clients to download files directly from object storage without routing traffic through the API server, reducing server load and egress costs"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Presigned URLs permanently grant public access to the stored object"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "They are required by AWS S3 to enable multi-part uploads"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Presigned URLs embed authentication credentials and an expiry time directly in the URL, allowing the client to fetch objects directly from S3 or MinIO. This offloads bandwidth from the API server, reduces latency, and lowers infrastructure costs. The time-limited nature ensures access is automatically revoked after the TTL expires."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_04__chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• File uploads must be validated using magic-byte inspection, size limits, and chunk-based streaming to object storage—never to local container disk—ensuring security and scalability.\n\n• The 202 Accepted / job_id polling pattern decouples AI task submission from completion, preventing HTTP timeouts and enabling horizontal worker scaling with Celery and a message broker.\n\n• Presigned URLs from S3-compatible object storage deliver results directly to clients without burdening the API server, completing an efficient, production-grade AI data pipeline."
+            }
+          }
+        },
+        {
+          "id": "lesson_04__chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 4: File Upload, Background Jobs, Queues, and Storage!\n\nYou have now mastered all four pillars of production AI backend development: project architecture, async streaming, security and observability, and async job processing with durable storage.\n\nYou are ready to tackle the hands-on lab: implementing a secure /api/chat endpoint that combines JWT authentication, streaming SSE responses, rate limiting, audit logging, and conversation persistence—bringing together everything you have learned in this course. Good luck!"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}

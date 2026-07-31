@@ -1,0 +1,747 @@
+{
+  "courseId": "advanced_rag_evaluation_specialist__03",
+  "sourceCourseTitle": "Advanced RAG and Evaluation Specialist / Evaluation Pipelines",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "Synthetic Dataset Generation for RAG Evaluation"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_01_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "In this lesson, you will learn:\n\n• Why synthetic datasets are essential when labeled evaluation data is scarce or unavailable\n• How to design and generate question-context-answer triples from a corpus using LLMs\n• Techniques to ensure diversity, difficulty coverage, and realistic noise in synthetic data\n• Best practices for validating and filtering generated samples before use in evaluation pipelines"
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_02",
+          "title": {
+            "en": "Synthetic Dataset Generation for RAG Evaluation"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Evaluating a RAG system requires ground-truth data: questions paired with relevant contexts and reference answers. In production, such datasets are expensive and slow to create manually. Synthetic generation solves this by prompting an LLM to produce question-answer pairs directly from your document corpus.\n\nThe standard pipeline involves three steps. First, chunk your documents into passages. Second, prompt a capable LLM (e.g., GPT-4 or Claude) to generate one or more questions that are answerable from each passage, along with a reference answer grounded in that passage. Third, optionally introduce distractor passages to simulate hard negatives.\n\nKey considerations include controlling question type diversity (factoid, multi-hop, abstractive), tuning difficulty, and filtering low-quality samples using a secondary LLM judge or heuristics such as answer length and overlap with the source. Tools like RAGAS, Giskard, and LlamaIndex Evaluation support automated synthetic dataset creation, offering configurable templates and quality checks. Always hold out a manually curated sample to audit synthetic data quality before trusting evaluation scores derived from it."
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **Question-Context-Answer Triple**: The atomic unit of a RAG evaluation dataset; the question tests retrieval, the context provides grounding, and the answer enables generation assessment.\n• **Hard Negatives**: Passages that are topically related but do not contain the answer; including them stress-tests retrieval precision.\n• **LLM-Based Data Synthesis**: Using a frontier model as a question and answer generator over your corpus, guided by prompt templates that enforce answer grounding.\n• **Quality Filtering**: Post-generation steps such as answer faithfulness checks, deduplication, and length heuristics that remove noisy or trivially easy samples."
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "What is the primary reason practitioners use synthetic datasets for RAG evaluation rather than solely relying on manually labeled data?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Synthetic data always produces higher evaluation scores"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Manual annotation is too expensive and time-consuming at scale"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "LLMs cannot process manually labeled datasets"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Synthetic data eliminates the need for document chunking"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Creating high-quality labeled evaluation datasets manually requires significant human effort and domain expertise. Synthetic generation allows teams to bootstrap evaluation data quickly and at scale, making it the pragmatic choice when labeled data is scarce."
+                }
+              },
+              {
+                "question": {
+                  "en": "In a synthetic RAG evaluation dataset, what is a 'hard negative'?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "A question that has no correct answer in the corpus"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "A reference answer that is deliberately incorrect"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "A passage that is topically related but does not contain the answer"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "A question generated with maximum difficulty settings"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Hard negatives are passages that are semantically similar to the relevant passage but do not actually answer the question. Including them in retrieval evaluation forces the retriever to distinguish truly relevant documents from plausible distractors."
+                }
+              },
+              {
+                "question": {
+                  "en": "Which of the following is a recommended quality filtering step after generating synthetic QA pairs?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Increasing the temperature of the generation model"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Using a secondary LLM judge to verify answer faithfulness to the source passage"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Replacing all factoid questions with abstractive ones"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Removing all passages longer than 100 tokens"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "A secondary LLM judge can verify whether each generated answer is actually grounded in its source passage, filtering out hallucinated or misaligned QA pairs before they corrupt evaluation metrics."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_01_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Synthetic dataset generation enables scalable RAG evaluation by automating the creation of question-context-answer triples from your document corpus using LLMs.\n• Including hard negatives and diverse question types (factoid, multi-hop, abstractive) produces a more realistic and challenging benchmark that better predicts real-world system performance.\n• Always validate synthetic data with quality filtering steps and a manually curated audit sample before trusting the evaluation results derived from it."
+            }
+          }
+        },
+        {
+          "id": "lesson_01_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 1: Synthetic Dataset Generation for RAG Evaluation!\n\nYou now understand how to bootstrap evaluation datasets using LLM-based synthesis, how to design realistic benchmarks with hard negatives and question diversity, and how to apply quality filters to ensure reliable evaluation. These skills form the foundation of every evaluation pipeline you will build throughout this course.\n\nUp next: Lesson 2 — Retrieval Metrics: Recall, Precision, MRR, and nDCG."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "Retrieval Metrics: Recall, Precision, MRR, nDCG"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_02_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "In this lesson, you will learn:\n\n• How to define and compute Recall@K and Precision@K for retrieval evaluation\n• The intuition and formula behind Mean Reciprocal Rank (MRR) for ranked retrieval lists\n• How Normalized Discounted Cumulative Gain (nDCG) captures graded relevance and rank position\n• When to prefer each metric based on the characteristics of your RAG application"
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_02",
+          "title": {
+            "en": "Retrieval Metrics: Recall, Precision, MRR, nDCG"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Retrieval quality determines the ceiling of any RAG system. If the retriever fails to surface relevant passages, even the best generator cannot produce accurate answers. Quantifying retrieval quality requires metrics that account for both relevance and rank.\n\nRecall@K measures the fraction of all relevant documents retrieved within the top-K results. It answers: 'Did we find everything we needed?' Precision@K measures the fraction of top-K retrieved documents that are actually relevant, answering: 'How much of what we returned was useful?' There is an inherent tension between these two metrics.\n\nMean Reciprocal Rank (MRR) focuses on the rank of the first relevant document. For each query, the reciprocal rank is 1/rank_of_first_relevant; MRR is the mean across all queries. It is ideal when users only care about the top result.\n\nnDCG (Normalized Discounted Cumulative Gain) is the most expressive metric. It handles graded relevance (e.g., highly relevant, partially relevant, not relevant) and discounts the gain of relevant documents found at lower ranks using a logarithmic penalty. DCG is normalized by the ideal DCG (IDCG) to produce a score between 0 and 1 that is comparable across queries with different numbers of relevant documents. For RAG, nDCG@K is often the preferred metric because it aligns with the reality that passages vary in how well they answer a question."
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **Recall@K**: The proportion of relevant documents found in the top-K retrieved results; prioritized when missing a relevant document is costly.\n• **Precision@K**: The proportion of top-K retrieved documents that are relevant; prioritized when returning irrelevant context is harmful (e.g., noisy LLM input).\n• **Mean Reciprocal Rank (MRR)**: The average of reciprocal ranks of the first relevant result across queries; best suited for single-answer or navigational queries.\n• **nDCG@K**: Normalized Discounted Cumulative Gain at rank K; accounts for graded relevance and rank position, making it the most comprehensive retrieval metric for RAG systems."
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "A RAG system retrieves 5 documents for a query. 3 of them are relevant. There are 6 relevant documents in total in the corpus. What is the Recall@5 for this query?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "0.60"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "0.50"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "0.83"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "0.40"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Recall@K = (number of relevant documents retrieved in top-K) / (total number of relevant documents). Here: 3 / 6 = 0.50. Precision@5 would be 3/5 = 0.60, but the question asks for Recall."
+                }
+              },
+              {
+                "question": {
+                  "en": "For a query where the first relevant document appears at rank 3, what is the Reciprocal Rank used in MRR computation?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "3.0"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "0.5"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "0.33"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "1.0"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Reciprocal Rank = 1 / rank_of_first_relevant_document = 1 / 3 ≈ 0.33. MRR is then the mean of these reciprocal ranks across all evaluation queries."
+                }
+              },
+              {
+                "question": {
+                  "en": "Why is nDCG generally preferred over Precision@K and Recall@K for evaluating RAG retrieval?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "nDCG is easier to compute and requires no relevance labels"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "nDCG accounts for graded relevance levels and penalizes relevant documents found at lower ranks"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "nDCG always produces higher scores than other metrics"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "nDCG ignores rank position and focuses only on total relevant documents found"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "nDCG handles graded relevance (documents can be highly, partially, or not relevant) and applies a logarithmic discount to gains at lower ranks, reflecting the real cost of finding important context buried deep in a retrieval list."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_02_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Recall@K and Precision@K measure coverage and relevance purity respectively, and the right choice depends on whether missing relevant documents or including irrelevant ones is more harmful for your use case.\n• MRR is a concise metric focused on the rank of the first relevant result, making it ideal for question-answering scenarios where users need a single correct passage.\n• nDCG@K is the most comprehensive retrieval metric for RAG because it simultaneously handles graded relevance and rank position, providing a normalized score that is comparable across queries."
+            }
+          }
+        },
+        {
+          "id": "lesson_02_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 2: Retrieval Metrics!\n\nYou can now compute and interpret Recall@K, Precision@K, MRR, and nDCG, and you understand which metric to prioritize for different RAG use cases. Strong retrieval evaluation skills allow you to diagnose bottlenecks before they manifest as poor generation quality.\n\nUp next: Lesson 3 — Generation Metrics: Faithfulness, Helpfulness, and Correctness."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Generation Metrics: Faithfulness, Helpfulness, Correctness"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_03_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "In this lesson, you will learn:\n\n• How faithfulness measures whether a generated answer is grounded in the retrieved context without hallucination\n• How helpfulness captures the utility and completeness of an answer from the user's perspective\n• How correctness evaluates factual accuracy against a reference answer or ground truth\n• How these three metrics complement each other and where each can fail independently"
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_02",
+          "title": {
+            "en": "Generation Metrics: Faithfulness, Helpfulness, Correctness"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Once retrieval is evaluated, you must assess what the LLM generates with the retrieved context. Three dimensions dominate RAG generation evaluation.\n\nFaithfulness measures whether every claim in the generated answer is supported by the retrieved context. A faithful answer never introduces information beyond what the context provides, even if that information is true. The RAGAS framework operationalizes faithfulness by decomposing the answer into atomic claims and verifying each against the context using an LLM judge. A score of 1.0 means all claims are grounded; 0.0 means none are.\n\nHelpfulness (sometimes called answer relevancy) measures how well the answer actually addresses the user's question. An answer can be perfectly faithful yet still unhelpful if it cites tangentially related context or buries the key information. Helpfulness is typically assessed by an LLM judge that asks whether the response would satisfy the user's intent.\n\nCorrectness measures factual accuracy relative to a ground-truth reference answer. Unlike faithfulness, correctness is not restricted to the context; it compares the generated answer to known facts. Metrics include exact match, F1 over tokens, BERTScore for semantic similarity, and LLM-based semantic correctness scoring. In practice, faithfulness and correctness can diverge: a model may faithfully reproduce a wrong passage (high faithfulness, low correctness) or correctly answer from memory while ignoring the context (low faithfulness, high correctness)."
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **Faithfulness**: The degree to which every claim in the generated answer is attributable to the retrieved context; low faithfulness indicates hallucination relative to the provided documents.\n• **Helpfulness / Answer Relevancy**: A measure of whether the answer is responsive, complete, and useful to the user's original question, independent of factual accuracy.\n• **Correctness**: Factual accuracy of the generated answer compared to a gold-standard reference; assessed via token overlap, semantic similarity, or LLM-based grading.\n• **Faithfulness vs. Correctness Divergence**: A critical failure mode where the model faithfully reproduces an incorrect retrieved passage, or conversely, produces a correct answer that is not grounded in context."
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "A RAG system produces an answer that is factually correct but introduces details not present in any retrieved document. Which metric is most directly violated?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Correctness"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Helpfulness"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Faithfulness"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Precision@K"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Faithfulness measures whether claims in the answer are grounded in the retrieved context. Introducing details not present in the retrieved documents violates faithfulness, regardless of whether those details happen to be factually true."
+                }
+              },
+              {
+                "question": {
+                  "en": "The RAGAS framework measures faithfulness by which approach?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Computing BLEU score between the answer and the context"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Decomposing the answer into atomic claims and verifying each against the context with an LLM"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Measuring cosine similarity between answer and question embeddings"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Counting the number of sentences in the answer that exceed 20 words"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "RAGAS operationalizes faithfulness by breaking the generated answer into individual atomic claims, then using an LLM to check whether each claim can be inferred from the provided context. The faithfulness score is the proportion of claims that pass this verification."
+                }
+              },
+              {
+                "question": {
+                  "en": "Which scenario describes the faithfulness-correctness divergence failure mode?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "The retriever returns highly relevant documents but the generator ignores them"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "The answer is helpful but scores poorly on nDCG"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "The model faithfully reproduces a retrieved passage that contains factually wrong information"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "The answer contains more tokens than the retrieved context"
+                    }
+                  }
+                ],
+                "correctId": "c",
+                "explanation": {
+                  "en": "Faithfulness-correctness divergence occurs when the model scores high on faithfulness (all claims come from the context) but low on correctness because the retrieved context itself was factually inaccurate. This highlights that faithfulness alone is insufficient to guarantee answer quality."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_03_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• Faithfulness, helpfulness, and correctness are complementary generation metrics; a complete evaluation pipeline measures all three because each can fail independently of the others.\n• Faithfulness is the anti-hallucination metric: it ensures that generated claims are grounded in retrieved context, making it critical for trust and attribution in production RAG systems.\n• Faithfulness and correctness can diverge, revealing whether failures originate in the retriever (wrong documents retrieved) or in the generator (hallucination or ignoring context), which guides targeted system improvements."
+            }
+          }
+        },
+        {
+          "id": "lesson_03_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 3: Generation Metrics!\n\nYou now understand how to evaluate the quality of LLM-generated answers across three essential dimensions: faithfulness to retrieved context, helpfulness to the user, and factual correctness against ground truth. Combining these metrics with the retrieval metrics from Lesson 2 gives you a complete picture of RAG system performance.\n\nUp next: Lesson 4 — LLM-as-Judge Calibration and Bias."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "LLM-as-Judge Calibration and Bias"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "id": "lesson_04_chapter_01",
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "In this lesson, you will learn:\n\n• What LLM-as-judge means and why it has become the dominant approach for scalable RAG evaluation\n• The key biases that affect LLM judges including position bias, verbosity bias, and self-enhancement bias\n• How to calibrate an LLM judge using human annotations and scoring rubrics\n• Practical mitigation strategies such as swap augmentation, panel judging, and chain-of-thought scoring"
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_02",
+          "title": {
+            "en": "LLM-as-Judge Calibration and Bias"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "As RAG evaluation scales beyond what human annotators can review, practitioners rely on powerful LLMs to score system outputs. An LLM judge receives a question, optionally retrieved context, a generated answer, and a scoring rubric, then outputs a score or preference judgment. Frameworks like RAGAS, MT-Bench, and Prometheus have popularized this approach.\n\nHowever, LLM judges carry systematic biases. Position bias causes judges to favor answers presented first in pairwise comparisons. Verbosity bias causes judges to prefer longer answers regardless of quality. Self-enhancement bias means a model tends to rate outputs from itself or similar models more favorably. Sycophancy bias causes judges to prefer answers that agree with their own prior outputs or the framing of the prompt.\n\nCalibration is the process of aligning LLM judge scores with human judgment. This involves collecting a human-annotated calibration set, computing correlation coefficients (Cohen's kappa, Spearman rho) between judge scores and human scores, and iterating on judge prompts and rubrics until agreement is acceptable.\n\nMitigation strategies include: swap augmentation (presenting each answer pair in both orders and averaging scores to cancel position bias), panel judging (using multiple diverse LLMs and aggregating scores), chain-of-thought scoring (requiring the judge to reason step by step before assigning a score), and reference-guided scoring (providing a gold reference answer to anchor the rubric). These techniques together produce judges that are more reliable, consistent, and aligned with human evaluators."
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_03",
+          "title": {
+            "en": "Key Concepts"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• **Position Bias**: The tendency of an LLM judge to favor whichever answer is presented first in a pairwise prompt, independent of actual quality; mitigated by swap augmentation.\n• **Verbosity Bias**: The systematic preference for longer, more elaborated answers even when a shorter answer is more accurate or appropriate; addressed by explicit rubric instructions penalizing unnecessary length.\n• **Self-Enhancement Bias**: The tendency of a model to rate outputs from itself or architecturally similar models more favorably; mitigated by using diverse judge models from different providers.\n• **Calibration**: The alignment process between LLM judge scores and human gold-standard annotations, measured by inter-rater agreement metrics and improved by prompt engineering and rubric refinement."
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_04",
+          "title": {
+            "en": "Checkpoint"
+          },
+          "block": {
+            "type": "checkpoint",
+            "questions": [
+              {
+                "question": {
+                  "en": "Which technique directly addresses position bias in LLM-as-judge pairwise evaluation?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "Increasing the temperature of the judge model"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "Swap augmentation: presenting each pair in both orders and averaging the resulting scores"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "Restricting all answers to a maximum of 100 tokens before judging"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "Using the same model as both the generator and the judge"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Swap augmentation counteracts position bias by evaluating each pair twice with the answers in reversed order. If the judge is truly assessing quality rather than position, the scores should remain consistent; averaging both directions cancels systematic positional preferences."
+                }
+              },
+              {
+                "question": {
+                  "en": "What is verbosity bias in the context of LLM-as-judge evaluation?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "The tendency of LLM judges to produce excessively long evaluation reports"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "The tendency of LLM judges to prefer longer answers regardless of their actual quality"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "The tendency of generator models to produce answers that are too brief"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "A bias caused by using verbose prompts in the judge's system message"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Verbosity bias refers to the systematic tendency of LLM judges to score longer or more elaborated answers more favorably, even when a concise answer is equally or more correct. This can be mitigated through rubric instructions that explicitly reward conciseness when appropriate."
+                }
+              },
+              {
+                "question": {
+                  "en": "How is LLM judge calibration typically measured and validated?"
+                },
+                "choices": [
+                  {
+                    "id": "a",
+                    "text": {
+                      "en": "By measuring the BLEU score between judge outputs and reference answers"
+                    }
+                  },
+                  {
+                    "id": "b",
+                    "text": {
+                      "en": "By computing inter-rater agreement metrics such as Cohen's kappa or Spearman correlation against human gold-standard annotations"
+                    }
+                  },
+                  {
+                    "id": "c",
+                    "text": {
+                      "en": "By counting the number of tokens in each judge response"
+                    }
+                  },
+                  {
+                    "id": "d",
+                    "text": {
+                      "en": "By measuring the latency of the judge model on a benchmark dataset"
+                    }
+                  }
+                ],
+                "correctId": "b",
+                "explanation": {
+                  "en": "Calibration validation requires a human-annotated reference set. Agreement between LLM judge scores and human scores is measured using statistical metrics like Cohen's kappa (for categorical labels) or Spearman rank correlation (for ordinal scores). High agreement indicates the judge is a reliable proxy for human evaluation."
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "lesson_04_chapter_05",
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "• LLM-as-judge is a scalable and increasingly accurate method for RAG evaluation, but it is subject to systematic biases including position bias, verbosity bias, and self-enhancement bias that can silently distort results.\n• Calibration — aligning judge scores with human annotations using inter-rater agreement metrics — is essential before trusting LLM judge outputs for production evaluation decisions.\n• Practical mitigation strategies including swap augmentation, panel judging with diverse models, and chain-of-thought scoring significantly improve judge reliability and should be standard practice in any robust evaluation pipeline."
+            }
+          }
+        },
+        {
+          "id": "lesson_04_chapter_06",
+          "title": {
+            "en": "Module Complete"
+          },
+          "block": {
+            "type": "content",
+            "body": {
+              "en": "Congratulations on completing Lesson 4: LLM-as-Judge Calibration and Bias!\n\nYou now have a complete theoretical and practical foundation in RAG evaluation. You understand how to generate synthetic datasets, measure retrieval quality with recall, precision, MRR, and nDCG, assess generation quality with faithfulness, helpfulness, and correctness, and deploy calibrated LLM judges that are robust to common biases.\n\nYou are now ready to put everything together in the hands-on lab: Build an Automated RAG Evaluation Run with Synthetic Dataset. Good luck!"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}

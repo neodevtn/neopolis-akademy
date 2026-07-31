@@ -1,0 +1,771 @@
+{
+  "courseId": "ai_finops_cost_engineering_specialist__01",
+  "sourceCourseTitle": "Ai Finops Cost Engineering Specialist / AI Cost Foundations",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "Cost drivers: tokens, inference, GPU, storage, vector DB"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How tokens, inference behavior, GPU utilization, storage, and vector databases drive AI costs. 2) How workload characteristics (context length, batch size, quantization, index type, replication) affect cost and latency. 3) Practical levers to reduce spend without harming quality: prompt compression, caching, batching, quantization, right-sizing GPUs, and index tuning."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Tokens: Most hosted LLMs price per 1K or 1M tokens, often with different rates for input vs output. Total token cost = input tokens × rate_in + output tokens × rate_out. Long system prompts, unnecessary context, and high output caps inflate spend. Caching prompts and compressing context lower input tokens; constraining max output and using function/tool outputs reduce output tokens.\nInference: For self-hosted models, the dominant driver is GPU time per request. Throughput (tokens/s) depends on model size, precision (FP16 vs INT8/4), batch size, and KV-cache reuse. Micro-batching increases utilization; quantization reduces memory bandwidth and can raise throughput with minor quality impact.\nGPU: Cloud GPU cost is billed per hour; effective cost per token drops as utilization rises. Right-size memory to model needs (avoid overprovisioning), prefer reserved/savings plans or spot where appropriate, colocate model and data to minimize idle waits, and monitor p95 latency vs utilization to avoid over-batching.\nStorage: Object storage holds logs, prompts, and embeddings. Costs come from GB-month, requests, and egress. Apply lifecycle policies (hot → warm → cold), compress text, and deduplicate embeddings.\nVector DB: Cost scales with number of vectors, dimensionality, index type, and replication. HNSW offers fast recall with higher memory; IVF/IVFPQ reduces memory with some recall trade-off. Read/write mix matters: write-heavy workloads pay more for rebuild/compaction; read-heavy workloads pay for query CPU and memory. Tuning parameters (efSearch, nprobe), reducing dimensionality, and lowering replicas reduce spend."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Token spend is driven by prompt length and output caps; reduce via prompt compression, RAG with minimal relevant context, and caching.\n• Inference and GPU costs depend on throughput and utilization; micro-batching and quantization lower cost per token while maintaining latency targets.\n• Storage and vector DB costs scale with vectors × dimensions × replicas and index parameters; tune for read/write mix and acceptable recall."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "Your chat app’s LLM costs spiked after adding a long system prompt and large context window. What change most directly reduces token charges with minimal quality impact?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Increase temperature to diversify outputs"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Compress the system prompt and retrieve only the top-k relevant snippets via RAG"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Switch to a model with a larger context window"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Disable streaming on responses"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Shortening the static prompt and injecting only minimal relevant context cuts input tokens without harming answer quality."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You host an LLM on GPUs and see low utilization due to many small concurrent requests. What change best improves throughput and lowers per-request cost while meeting p95 latency SLOs?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Enable micro-batching with a small queue delay (e.g., 50 ms) and batch size up to 16"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Increase max output tokens by 2x"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Pin each request to a dedicated GPU"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Run weights in float32 for maximum precision"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Micro-batching raises GPU occupancy and tokens/sec, reducing cost per request while keeping latency within a small batching window."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Vector DB spend is high for a read-heavy RAG service using HNSW indexes with 1536-d embeddings and 3 replicas. Which action most likely reduces cost with acceptable recall trade-offs?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Lower HNSW efSearch and switch to IVF-PQ to shrink memory footprint"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Increase replication to 4 for higher availability"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Increase embedding dimensionality to 2048"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Disable data lifecycle policies"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Reducing efSearch and using product quantization lowers RAM and CPU costs; replication or larger embeddings would increase spend."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Token volume is the primary driver for hosted LLMs; trim prompts and cap outputs.\n• GPU time drives self-hosted inference cost; maximize utilization via batching and quantization.\n• Vector DB and storage scale with dimensions, count, and replicas; tune indexes and lifecycle policies."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You can now identify major AI cost drivers and apply practical techniques to reduce spend without sacrificing outcomes."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "Unit economics by user, request, workflow and outcome"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to define unit economics at the request, user, workflow, and outcome levels. 2) How to build cost formulas that include tokens, GPU time, vector queries, storage, and overheads. 3) How to allocate shared and fixed costs and link cost to business outcomes (cost per successful result)."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Requests: Cost per request aggregates variable components: C_req = (tokens_in × rate_in) + (tokens_out × rate_out) + (GPU_seconds × $/sec) + (vector_queries × $/query) + (egress × $/GB) + orchestration overhead. Track p50/p95 cost and latency.\nUsers: Cost per user per period = sum of their request costs + allocated fixed costs (e.g., support, storage) attributable to that user. Segment by cohort (free vs paid) to reveal margin differences.\nWorkflows: Multi-step pipelines include embedding creation, retrieval, ranking, generation, and post-processing. Attribute cost to each step to find the highest-cost stages and optimize (e.g., cache embeddings, batch retrieval, reduce re-ranking calls).\nOutcomes: Cost per successful outcome = average cost per attempt ÷ success rate. Tie definition of success to business goals (issue resolved, document drafted, lead qualified). This reframes spending in terms of value delivered, not just activity.\nFixed/Shared Costs: Amortize fine-tuning, model hosting, and reserved GPUs over time or usage. Driver-based allocation (GPU-seconds, tokens processed, storage GB-month) aligns incentives better than flat splits.\nMeasurement: Instrument token counts, GPU time, vector ops, and cache hit rates. Use tagging to attribute costs to users/teams/workflows, and run sensitivity analyses (e.g., token caps, batch size, efSearch) to forecast unit cost changes."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• C_request blends token, GPU, vector, and network/storage costs; track by percentile and by feature.\n• Allocate fixed costs using driver-based metrics (GPU-seconds, tokens, GB-month) to keep usage and cost aligned.\n• Cost per successful outcome connects spend to value via funnel metrics like acceptance or resolution rate."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "A Q&A request averages 800 input tokens and 200 output tokens. The model charges $0.50 per 1M input tokens and $1.50 per 1M output tokens. The workflow makes 1 vector query priced at $0.01 per 1,000 queries. What is the estimated cost per request?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "$0.00071"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "$0.00090"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "$0.00150"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "$0.00041"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Input: 800×0.50/1,000,000 = $0.0004; Output: 200×1.50/1,000,000 = $0.0003; Vector: 1×0.01/1,000 = $0.00001. Total ≈ $0.00071."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Your assistant costs $0.02 per request and has a 40% success rate (accepted answers). What is the cost per successful outcome, ignoring fixed costs?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "$0.02"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "$0.04"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "$0.05"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "$0.08"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Cost per success = cost per attempt ÷ success rate = $0.02 ÷ 0.4 = $0.05."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You share a reserved GPU pool across teams. Which allocation method best aligns costs with usage for unit economics reporting?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Even split per user regardless of activity"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Proportional to measured GPU-seconds (and related drivers like tokens processed) per team"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Allocate by each team’s revenue contribution"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Random rotation each month"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Driver-based allocation (e.g., GPU-seconds, tokens) reflects actual consumption and encourages efficient use."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Define units clearly: per request, per user-period, per workflow stage, and per successful outcome.\n• Use driver-based formulas to attribute both variable and fixed costs.\n• Optimize the largest contributors first and measure impact on cost per success, not just cost per request."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You can now model unit economics across requests, users, workflows, and outcomes and tie spend to value."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "Forecasting pilots vs production adoption"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to forecast AI costs by separating pilot (POC) activity from production adoption and usage intensity 2) How to use funnel conversion, ramp curves, and leading indicators to build scenarios with confidence ranges 3) How to translate adoption forecasts into capacity (GPU/endpoint) and budget plans while managing risk"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Pilots and production behave differently. Pilots (POCs) are short-lived, low-scale, high-variance experiments intended to validate feasibility and value. Production adoption is longer-lived, stabilized, and governed by SLOs, compliance, and change controls. Effective forecasting separates: 1) volume (how many pilots enter the funnel, how many convert to production), 2) intensity (tokens/calls per user or per workflow; GPU-seconds per request), and 3) timing (ramp curves from launch to steady state). A funnel-based approach models stages: discovery → pilot → limited production (canary) → full production. Each stage has a conversion rate and lead time. Production ramps follow S-curves or phased rollouts (e.g., 5%/20%/50%/100%). Usage intensity shifts from exploratory (spiky, prompt-heavy) to operational (more consistent rates tied to business events). Key drivers to capture: user counts, requests per user, token mix (prompt vs completion), concurrency, model choice (and cost per 1K tokens or per GPU-hour), caching/hybrid strategies, guardrails that affect re-tries, seasonality, and vendor rate limits. Forecast uncertainty with range assumptions (min/base/max) or probability distributions and use scenario or Monte Carlo simulation to produce P50/P90 cost bands. Leading indicators improve accuracy: backlog of pilots, security reviews completed, API key requests, feature flags enabled, approval tickets, and early SLO metrics (latency/error rates) that gate rollouts. Translate forecasts into capacity needs (e.g., peak TPS, GPU-hours, endpoint autoscaling headroom), reserve or right-size capacity, and tie budgets to adoption milestones with stage gates to control spend risk."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Funnel-based forecasting: Model pilot → production conversion rates and lead times to estimate when workloads go live\n• Ramp curves and steady state: Use phased rollouts or S-curves for production usage growth and steady-state intensity\n• Scenario ranges and leading indicators: Apply min/base/max (or Monte Carlo) and track signals like approvals, API keys, and early TPS to refine forecasts"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "You have 25 active pilots per month, a 40% pilot-to-production conversion in 60 days, and each production app is expected to reach 10M tokens/day by week 6 of rollout. What approach best estimates production tokens next quarter?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Multiply pilot tokens by 40% and assume immediate steady state"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Apply a funnel with 60-day lag, model phased ramp to 10M/day by week 6, and sum cohorts over weeks"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Assume 10M/day for all 25 apps starting next week"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Use last month’s total vendor bill as the forecast for next quarter"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "A cohort-based funnel with the observed 60-day lag and ramp to steady state captures timing and growth, producing a realistic next-quarter total."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Your leadership requests a risk-aware budget for production adoption. Which method best incorporates uncertainty from conversion and usage intensity?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Use a single average conversion rate and average tokens/user"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Only track peak day usage from each pilot"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Build min/base/max distributions for conversion, ramp, and tokens; run scenario/Monte Carlo to produce P50/P90 budgets"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Exclude pilots from the model until they are in production"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Probability ranges and simulation yield P50/P90 budgets that reflect uncertainty in conversion and intensity."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Mid-quarter, which leading indicator most reliably signals that production capacity may exceed plan soon?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "A surge in successful security/architecture approvals for multiple pilots entering rollout"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "A week of unusually low vendor latency"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "One pilot’s prompt changes increasing token count"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "A marketing blog post about AI initiatives"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Stage-gate approvals are strong precursors of imminent production rollouts and capacity needs."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Separate pilots from production; use funnel conversion, lags, and ramp curves\n• Forecast with ranges and leading indicators to produce P50/P90 budgets\n• Translate adoption into capacity plans (TPS/GPU-hours) and staged budgets to manage risk"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "Cost allocation and tagging"
+      },
+      "completionRule": "all_chapters",
+      "chapters": [
+        {
+          "title": {
+            "en": "What You Will Learn"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn: 1) How to design a robust tagging and metadata taxonomy for AI workloads across clouds and vendors 2) How to allocate shared AI costs (GPU clusters, gateways, vector databases) fairly using usage-based drivers 3) How to enforce tagging, remediate untagged spend, and operationalize showback/chargeback"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Core Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Cost allocation assigns spend to business owners using consistent dimensions. For AI, include: application/product, team/cost center, environment (dev/test/prod), workload type (training vs inference), model/provider, region, and data sensitivity. Implement tags/labels on cloud resources (AWS tags, Azure tags, GCP labels) and propagate metadata through AI platforms (ML platforms, model registries, inference gateways) so each request or job carries project/team identifiers. Where vendors lack native tags (e.g., hosted LLM APIs), use per-project API keys or a proxy/gateway that injects headers and logs usage by owner. Shared services (GPU clusters, feature stores, vector DBs, gateways) require allocation bases that reflect causal consumption: GPU-hours, tokens, requests, storage GB-months, read/write ops, or concurrency. Choose drivers that are measurable, auditable, and aligned with cost causality; consider floors/minimums for underutilization, and separate fixed vs variable components. Establish showback (visibility without billing) before chargeback (internal billing) to drive behavior. Handle untagged or partially tagged spend with automated policies: required-tag enforcement at create time, policy-as-code, budget alerts, and periodic backfill using resource ancestry (projects/subscriptions/accounts), IAM ownership, or service logs. Group costs with Cost Categories (AWS), Cost Allocation Rules (Azure), or Labels/Projects (GCP) to create business views. Maintain a controlled tag dictionary, validate values (e.g., via OPA/Tag Policies), and version changes. Integrate allocation outputs with finance (GL/cost centers) and define unit economics (cost per 1K tokens, per request, per GPU-hour) to benchmark teams and models."
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Concepts"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Tagging taxonomy: Standardized keys for app/team/env/workload/model/region with governance and validation\n• Allocation bases: Use causal drivers (GPU-hours, tokens, requests, storage) and separate fixed vs variable costs\n• Showback vs chargeback: Start with transparency, then bill internally once data quality and buy-in are achieved"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "checkpoint",
+              "questions": [
+                {
+                  "question": {
+                    "en": "A shared GPU inference cluster serves three products. Product A uses 50% of tokens, B uses 30%, C uses 20% during the month; there is also 10% idle time. What is the fairest allocation approach?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Split equally across A, B, and C"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Allocate variable costs by actual usage (tokens/GPU-hours) and distribute idle as a fixed overhead or minimum commitment"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Bill only the product with the highest peak TPS"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Charge all idle time to Product C to incentivize optimization"
+                      }
+                    }
+                  ],
+                  "correctId": "b",
+                  "explanation": {
+                    "en": "Usage-based allocation reflects cost causality; handle idle as shared overhead or via minimums to discourage underutilization."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "Your untagged AI spend is 30%. Leadership wants rapid improvement without disrupting deployments. What is the best near-term plan?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Ignore untagged costs this quarter and revisit later"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Manually tag resources once per quarter"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Enforce required tags at resource creation, backfill tags using automation and logs, and classify remaining spend into a Cost Category ‘Unallocated’"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Delete all untagged resources immediately"
+                      }
+                    }
+                  ],
+                  "correctId": "c",
+                  "explanation": {
+                    "en": "Prevention plus automated remediation improves data quality quickly while maintaining continuity; grouping untagged spend preserves visibility."
+                  }
+                },
+                {
+                  "question": {
+                    "en": "You use a hosted LLM API that does not support per-request tags. How should you attribute those costs by team?"
+                  },
+                  "choices": [
+                    {
+                      "id": "a",
+                      "text": {
+                        "en": "Issue per-team API keys or route through a gateway that logs team/project metadata and reconcile invoice with usage logs"
+                      }
+                    },
+                    {
+                      "id": "b",
+                      "text": {
+                        "en": "Allocate evenly across all active teams"
+                      }
+                    },
+                    {
+                      "id": "c",
+                      "text": {
+                        "en": "Tag the cloud account instead and assume it applies to all requests"
+                      }
+                    },
+                    {
+                      "id": "d",
+                      "text": {
+                        "en": "Stop using the vendor until they add tagging"
+                      }
+                    }
+                  ],
+                  "correctId": "a",
+                  "explanation": {
+                    "en": "Per-team keys or a proxy/gateway provide auditable usage by owner, enabling accurate allocation against the vendor invoice."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Key Takeaways"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Define and enforce a standardized tagging schema; propagate metadata through AI platforms\n• Allocate shared costs with causal, auditable drivers and separate fixed vs variable components\n• Use automation to remediate untagged spend and operationalize showback/chargeback"
+              }
+            }
+          ]
+        },
+        {
+          "title": {
+            "en": "Module Complete"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "exercises": []
+}
