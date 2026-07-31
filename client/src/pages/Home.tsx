@@ -283,7 +283,7 @@ export default function Home() {
 
       {/* ─── Hero Band (Bubble cream paper) ─── */}
       <section className="overflow-hidden pt-[66px]" style={{ background: "var(--wise-canvas)" }}>
-        <div className="container" style={{ padding: "clamp(2.5rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
+        <div className="container" style={{ padding: "clamp(1.5rem, 3vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
           <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-6 lg:gap-12 items-center">
             <motion.div
               initial="hidden"
@@ -348,8 +348,8 @@ export default function Home() {
       <ResumeReadingWidget />
 
       {/* ─── Pourquoi maintenant (Gris Band) ─── */}
-      <AnimatedSection id="pourquoi" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
-        <div className="container py-12 md:py-20">
+      <AnimatedSection id="pourquoi" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+        <div className="container py-8 md:py-12">
           <motion.div variants={fadeInUp} className="text-center mb-10 md:mb-14">
             <span className="wise-eyebrow mb-4 inline-flex">{t({ fr: "Urgence du marché", en: "Market urgency", ar: "إلحاح السوق" })}</span>
             <h2 className="wise-display-md mb-4">{t({ fr: "Pourquoi se transformer maintenant ?", en: "Why transform now?", ar: "لماذا التحوّل الآن؟" })}</h2>
@@ -404,9 +404,9 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── La Formule (Green Band) ─── */}
-      <AnimatedSection id="formule" style={{ background: "var(--wise-canvas)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
-        <div className="container py-12">
-          <motion.div variants={fadeInUp} className="text-center mb-14">
+      <AnimatedSection id="formule" style={{ background: "var(--wise-canvas)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+        <div className="container py-8">
+          <motion.div variants={fadeInUp} className="text-center mb-8">
             <span className="wise-badge-positive mb-4">{t({ fr: "100% Gratuit", en: "100% Free", ar: "مجاني 100%" })}</span>
             <h2 className="wise-display-md mb-4">{t({ fr: "La Formule Complète", en: "The Complete Formula", ar: "الصيغة الكاملة" })}</h2>
             <p className="wise-body-lg max-w-[52ch] mx-auto">
@@ -518,8 +518,8 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── AI Solutions Partner Section ─── */}
-      <AnimatedSection style={{ background: "var(--wise-canvas)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
-        <div className="container py-12">
+      <AnimatedSection style={{ background: "var(--wise-canvas)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+        <div className="container py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
             <motion.div variants={fadeInLeft}>
               <span className="wise-eyebrow mb-6 inline-flex">
@@ -545,8 +545,8 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── Process Commercial & Modèle Économique ─── */}
-      <AnimatedSection id="process" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
-        <div className="container py-12 md:py-20">
+      <AnimatedSection id="process" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+        <div className="container py-8 md:py-12">
           <motion.div variants={fadeInUp} className="text-center mb-12 md:mb-16">
             <span className="wise-eyebrow mb-4 inline-flex" style={{ color: "var(--neo-ink-secondary)" }}>
               <Zap size={12} />
@@ -706,8 +706,8 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── CTA Band ─── */}
-      <AnimatedSection style={{ background: "var(--tint-mint)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
-        <div className="container py-10 md:py-20 text-center">
+      <AnimatedSection style={{ background: "var(--tint-mint)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+        <div className="container py-6 md:py-10 text-center">
           <motion.div variants={fadeInUp}>
             <Rocket size={36} style={{ color: "var(--wise-positive-deep)" }} className="mx-auto mb-6" />
             <h2 className="wise-display-xl mb-5" style={{ textWrap: "balance" }}>
@@ -726,9 +726,9 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── FAQ Section ─── */}
-      <AnimatedSection id="faq" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
-        <div className="container py-12">
-          <motion.div variants={fadeInUp} className="text-center mb-14">
+      <AnimatedSection id="faq" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+        <div className="container py-8">
+          <motion.div variants={fadeInUp} className="text-center mb-8">
             <span className="wise-eyebrow mb-4 inline-flex">{t({ fr: "Support", en: "Support", ar: "الدعم" })}</span>
             <h2 className="wise-display-md">{t({ fr: "Questions fréquentes", en: "Frequently Asked Questions", ar: "الأسئلة الشائعة" })}</h2>
           </motion.div>
