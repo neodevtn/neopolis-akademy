@@ -966,10 +966,10 @@
 - [x] Supprimer blocs "Tech ecosystem" et "What we provide", améliorer design Anthropic/Claude
 - [x] Réduire les espaces verticaux excessifs entre les sections de la landing page
 - [x] Supprimer le lien "Diagnostic IA" du footer (accessible uniquement aux utilisateurs authentifiés)
-- [ ] Afficher une seule vidéo par page (pas deux vidéos sur le même écran)
-- [ ] Implémenter YouTube IFrame API Player avec détection auto 80% visionnage
-- [ ] Bouton "Marquer comme vue" en fallback manuel
-- [ ] Bloquer le bouton "Suivant" tant que la vidéo n'est pas marquée comme vue
+- [x] Afficher une seule vidéo par page (pas deux vidéos sur le même écran)
+- [x] Implémenter YouTube IFrame API Player avec détection auto 80% visionnage
+- [x] Bouton "Marquer comme vue" en fallback manuel
+- [x] Bloquer le bouton "Suivant" tant que la vidéo n'est pas marquée comme vue
 
 ## Diagnostic IA Avancé — BPMN + Recommandations détaillées (31 juillet 2026)
 - [x] Créer la page AdvancedDiagnosticIA.tsx avec designer de processus BPMN

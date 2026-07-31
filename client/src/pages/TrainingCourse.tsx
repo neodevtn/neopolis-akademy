@@ -2108,6 +2108,10 @@ function LessonViewer({
   // validatedChapter tracks the highest chapter index that was VALIDATED (quiz passed or exercises completed)
   // This is what gets persisted as progress - NOT the navigation position
   const [validatedChapter, setValidatedChapter] = useState(initialChapter ?? 0);
+  // YouTube IFrame API: track which video iframes are mounted (videoKey -> iframe ref)
+  const videoIframeRefs = useRef<Map<string, HTMLIFrameElement>>(new Map());
+  // Track video watch progress locally (videoKey -> percentage 0-100)
+  const [videoWatchProgress, setVideoWatchProgress] = useState<Map<string, number>>(new Map());
   const [showQuiz, setShowQuiz] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
   const [showChapterQuiz, setShowChapterQuiz] = useState(false);
@@ -2205,6 +2209,57 @@ function LessonViewer({
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setReadingProgress(0);
   }, [currentChapter, totalChapters]);
+
+  // YouTube IFrame API: listen for postMessage events to detect 80% watch threshold
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (!event.data || typeof event.data !== 'string') return;
+      try {
+        const data = JSON.parse(event.data);
+        // YouTube sends {event: 'infoDelivery', info: {currentTime, duration, ...}}
+        if (data.event === 'infoDelivery' && data.info) {
+          const { currentTime, duration } = data.info;
+          if (duration && currentTime && duration > 0) {
+            const pct = (currentTime / duration) * 100;
+            // Find which iframe sent this message
+            videoIframeRefs.current.forEach((iframe, videoKey) => {
+              try {
+                if (iframe.contentWindow === event.source) {
+                  setVideoWatchProgress(prev => {
+                    const newMap = new Map(prev);
+                    newMap.set(videoKey, Math.max(newMap.get(videoKey) || 0, pct));
+                    return newMap;
+                  });
+                  // Auto-mark as complete at 80%
+                  if (pct >= 80 && !completedVideos.has(videoKey)) {
+                    toggleVideoComplete(videoKey);
+                  }
+                }
+              } catch (_) {}
+            });
+          }
+        }
+      } catch (_) {}
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [completedVideos, toggleVideoComplete]);
+
+  // Poll YouTube IFrame API for current time (every 2s when a video is playing)
+  useEffect(() => {
+    if (playingVideos.size === 0) return;
+    const interval = setInterval(() => {
+      videoIframeRefs.current.forEach((iframe, videoKey) => {
+        if (playingVideos.has(videoKey)) {
+          try {
+            iframe.contentWindow?.postMessage(JSON.stringify({ event: 'listening' }), '*');
+            iframe.contentWindow?.postMessage(JSON.stringify({ event: 'command', func: 'getVideoData', args: [] }), '*');
+          } catch (_) {}
+        }
+      });
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [playingVideos]);
 
   // Only persist progress when validatedChapter advances (quiz passed or exercises completed)
   useEffect(() => {
@@ -2327,7 +2382,11 @@ function LessonViewer({
               ) : (
                 <div className="aspect-video rounded-lg overflow-hidden bg-black">
                   <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1`}
+                    ref={(el) => {
+                      if (el) videoIframeRefs.current.set(videoKey, el);
+                      else videoIframeRefs.current.delete(videoKey);
+                    }}
+                    src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`}
                     title={videoTitle}
                     className="w-full h-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -2826,18 +2885,29 @@ function LessonViewer({
                 : [];
               const allExercisesCompleted = chapterExerciseIds.length === 0 || chapterExerciseIds.every((id: string) => completedExercises.has(id));
               const isGatedByExercises = isQuizOrCheckpointChapter && chapterExerciseIds.length > 0 && !allExercisesCompleted && !isReviewMode;
+              // Video gate: block Next if current chapter has video blocks that haven't been watched
+              const chapterVideoKeys = (chapter?.blocks || [])
+                .filter((b: any) => b.type === 'video')
+                .map((b: any) => {
+                  const rawId = b.videoId || "";
+                  return typeof rawId === 'object' ? (rawId.fr || rawId.en || "") : rawId;
+                })
+                .filter(Boolean);
+              const allVideosWatched = chapterVideoKeys.length === 0 || chapterVideoKeys.every((k: string) => completedVideos.has(k));
+              const isGatedByVideo = chapterVideoKeys.length > 0 && !allVideosWatched && !isReviewMode;
               const chapterTitle = resolveI18n(chapter?.title, 'en');
               const isStructuralChapter = /^(Module Introduction|Key Takeaways|Module Complete)$/i.test(chapterTitle);
               const isTeachingChapter = chapter?.type === 'teaching' && !isStructuralChapter;
               const needsQuiz = isTeachingChapter && !isReviewMode && !chapterQuizPassed.has(currentChapter);
 
+              const isGated = isGatedByExercises || isGatedByVideo;
               return (
                 <div className="flex items-center gap-2">
                   <span className="kbd-hint hidden md:inline-flex">→</span>
                   <Button
                     variant="ghost"
                     size="sm"
-                    disabled={isGatedByExercises}
+                    disabled={isGated}
                     onClick={() => {
                       if (needsQuiz) {
                         setShowChapterQuiz(true);
@@ -2853,10 +2923,12 @@ function LessonViewer({
                         setShowChapterQuiz(false);
                       }
                     }}
-                    className={`gap-1 font-medium ${isGatedByExercises ? 'text-muted-foreground cursor-not-allowed' : 'text-[#c75b3a] hover:text-[#a84a2e]'}`}
-                    title={isGatedByExercises ? (lang === 'fr' ? 'Répondez correctement à toutes les questions pour continuer' : 'Answer all questions correctly to continue') : undefined}
+                    className={`gap-1 font-medium ${isGated ? 'text-muted-foreground cursor-not-allowed' : 'text-[#c75b3a] hover:text-[#a84a2e]'}`}
+                    title={isGatedByVideo ? (lang === 'fr' ? 'Regardez la vidéo pour continuer (ou marquez-la comme vue)' : 'Watch the video to continue (or mark it as watched)') : isGatedByExercises ? (lang === 'fr' ? 'Répondez correctement à toutes les questions pour continuer' : 'Answer all questions correctly to continue') : undefined}
                   >
-                    {isGatedByExercises ? (
+                    {isGatedByVideo ? (
+                      <>{t({ en: "🎥 Watch video to continue", fr: "🎥 Regardez la vidéo pour continuer" })}</>
+                    ) : isGatedByExercises ? (
                       <>{t({ en: "Complete all exercises", fr: "Complétez les exercices" })}</>
                     ) : (
                       <>{t({ en: "Next", fr: "Suivant" })} →</>
