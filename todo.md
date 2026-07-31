@@ -966,3 +966,24 @@
 - [x] Supprimer blocs "Tech ecosystem" et "What we provide", améliorer design Anthropic/Claude
 - [x] Réduire les espaces verticaux excessifs entre les sections de la landing page
 - [x] Supprimer le lien "Diagnostic IA" du footer (accessible uniquement aux utilisateurs authentifiés)
+- [ ] Afficher une seule vidéo par page (pas deux vidéos sur le même écran)
+- [ ] Implémenter YouTube IFrame API Player avec détection auto 80% visionnage
+- [ ] Bouton "Marquer comme vue" en fallback manuel
+- [ ] Bloquer le bouton "Suivant" tant que la vidéo n'est pas marquée comme vue
+
+## Diagnostic IA Avancé — BPMN + Recommandations détaillées (31 juillet 2026)
+- [x] Créer la page AdvancedDiagnosticIA.tsx avec designer de processus BPMN
+- [x] Permettre la décomposition en sous-processus et traitements unitaires
+- [x] Pour chaque traitement unitaire : formulaire d'évaluation détaillé (type de données, volume, complexité)
+- [x] Moteur de recommandation IA ultra-détaillé par traitement :
+  - [x] Modèle exact recommandé (Claude Sonnet 4, Haiku, Opus, avec/sans extended thinking)
+  - [x] Mode d'utilisation (Claude.ai chat, API directe, SDK Python/TS, Claude Code CLI, Bedrock, Vertex AI, Computer Use)
+  - [x] Architecture (appel simple, chaîne de prompts, agent autonome multi-étapes, RAG, fine-tuning/customisation)
+  - [x] Niveau d'autonomie (humain dans la boucle, supervision légère, autonome complet)
+  - [x] Estimation RAG si nécessaire (volume docs, type embeddings, stratégie chunking)
+  - [x] Estimation fine-tuning si nécessaire (dataset, coût, délai)
+  - [x] Estimation coûts (tokens/mois, coût API mensuel, infrastructure)
+- [x] Vue projection post-implémentation : redesign du processus global après IA
+- [x] Estimation des gains probables (temps, coût, qualité, satisfaction)
+- [x] Enregistrer route /diagnostic-avance (protégée, auth requise)
+- [x] Lien depuis le TrainingDashboard vers le diagnostic avancé

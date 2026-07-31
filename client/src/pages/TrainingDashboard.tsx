@@ -19,6 +19,7 @@ import {
   PlayCircle,
   LogOut,
   Download,
+  Brain,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
@@ -441,6 +442,29 @@ export default function TrainingDashboard() {
                 </p>
               </div>
               <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-blue-600 transition-colors" />
+            </div>
+          </Link>
+        </motion.div>
+
+        {/* Advanced Diagnostic Link */}
+        <motion.div variants={fadeInUp} className="mb-10">
+          <Link href="/diagnostic-avance" className="group block bg-gradient-to-r from-purple-50 to-fuchsia-50 dark:from-purple-950/30 dark:to-fuchsia-950/30 rounded-2xl border border-purple-200 dark:border-purple-800 p-6 hover:shadow-md hover:border-purple-300 dark:hover:border-purple-700 transition-all duration-200">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center flex-shrink-0">
+                <Brain className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-0.5">
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {t({ en: "Advanced AI Diagnostic (BPMN)", fr: "Diagnostic IA Avanc\u00e9 (BPMN)" })}
+                  </h3>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 font-semibold uppercase">Pro</span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {t({ en: "Design BPMN processes, get ultra-detailed AI recommendations per task (model, SDK, RAG, fine-tuning, costs) and project post-implementation gains.", fr: "Designez vos processus BPMN, obtenez des recommandations IA ultra-d\u00e9taill\u00e9es par t\u00e2che (mod\u00e8le, SDK, RAG, fine-tuning, co\u00fbts) et projetez les gains post-impl\u00e9mentation." })}
+                </p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-purple-600 transition-colors" />
             </div>
           </Link>
         </motion.div>

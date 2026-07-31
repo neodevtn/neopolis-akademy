@@ -20,6 +20,7 @@ import DemoLogin from "./pages/DemoLogin";
 import Login from "./pages/Login";
 import AcceptInvitation from "./pages/AcceptInvitation";
 import DiagnosticIA from "./pages/DiagnosticIA";
+import AdvancedDiagnosticIA from "./pages/AdvancedDiagnosticIA";
 import CookieConsent from "./components/CookieConsent";
 
 function Router() {
@@ -39,6 +40,7 @@ function Router() {
       <Route path={"/login"} component={Login} />
       <Route path={"/demo-login"} component={Login} />
       <Route path={"/diagnostic"} component={DiagnosticIA} />
+      <Route path={"/diagnostic-avance"} component={AdvancedDiagnosticIA} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
