@@ -471,7 +471,7 @@ export default function Home() {
                 {/* Header with logos */}
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "rgba(255,255,255,0.1)", backdropFilter: "blur(8px)" }}>
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "#ffffff" }}>
                       <img src="/api/assets/logo_anthropic_e6ab4160.png" alt="Anthropic" className="w-8 h-8 object-contain" />
                     </div>
                     <div>
@@ -503,9 +503,9 @@ export default function Home() {
                   </div>
                   <div className="flex flex-col items-center justify-center">
                     <div className="text-center">
-                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl mb-2" style={{ background: "rgba(255,255,255,0.08)" }}>
+                      <div className="inline-flex items-center gap-3 px-5 py-3 rounded-xl mb-2" style={{ background: "rgba(255,255,255,0.08)" }}>
+                        <img src="/manus-storage/logo_claude_ai_48b660b5.png" alt="Claude AI" className="w-10 h-10 object-contain" />
                         <span className="text-2xl font-bold text-white">Claude</span>
-                        <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "#d4a574", color: "#1a1a2e" }}>AI</span>
                       </div>
                       <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>{t({ fr: "Modèle IA le plus avancé au monde", en: "World's most advanced AI model", ar: "أكثر نماذج الذكاء الاصطناعي تقدمًا" })}</p>
                     </div>
