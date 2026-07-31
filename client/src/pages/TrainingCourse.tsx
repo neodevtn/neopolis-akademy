@@ -2832,7 +2832,7 @@ function LessonViewer({
 
           {/* Video Recommendations - shown on last chapter only */}
           {isLastChapter && !isReviewMode && (
-            <VideoRecommendations lesson={lesson} lang={lang} t={t} />
+            <VideoRecommendations lesson={lesson} lang={lang} t={t} lessonId={`${courseId}__${lessonIndex}`} certId={certId} />
           )}
 
                     {/* Chapter navigation */}

@@ -1,4 +1,7 @@
-import { ExternalLink, Play, BookOpen, Lightbulb, Tv } from 'lucide-react';
+import { useState } from 'react';
+import { ExternalLink, Play, BookOpen, Lightbulb, Tv, Flag, X, AlertTriangle, Clock, LinkIcon, HelpCircle } from 'lucide-react';
+import { trpc } from '@/lib/trpc';
+import { toast } from 'sonner';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface I18nText {
@@ -24,7 +27,11 @@ interface VideoRecommendationsProps {
   };
   lang: string;
   t: (i18n: { en: string; fr: string }) => string;
+  lessonId?: string;
+  certId?: string;
 }
+
+type FeedbackReason = 'not_relevant' | 'obsolete' | 'broken_link' | 'other';
 
 // ─── Curated Video Database ───────────────────────────────────────────────────
 const VIDEO_DATABASE: RecommendedVideo[] = [
@@ -215,13 +222,173 @@ function getTypeBadge(type: RecommendedVideo['type'], t: VideoRecommendationsPro
   }
 }
 
+// ─── Feedback Reason Config ──────────────────────────────────────────────────
+function getFeedbackReasons(t: VideoRecommendationsProps['t']): { value: FeedbackReason; label: string; icon: typeof Flag }[] {
+  return [
+    { value: 'not_relevant', label: t({ en: 'Not relevant to this lesson', fr: 'Pas pertinent pour cette leçon' }), icon: Flag },
+    { value: 'obsolete', label: t({ en: 'Outdated / Obsolete content', fr: 'Contenu obsolète / dépassé' }), icon: Clock },
+    { value: 'broken_link', label: t({ en: 'Broken link / Video unavailable', fr: 'Lien cassé / Vidéo indisponible' }), icon: LinkIcon },
+    { value: 'other', label: t({ en: 'Other reason', fr: 'Autre raison' }), icon: HelpCircle },
+  ];
+}
+
+// ─── Feedback Popover Component ──────────────────────────────────────────────
+function FeedbackPopover({ videoId, videoTitle, lessonId, certId, t, onDismissed }: {
+  videoId: string;
+  videoTitle: string;
+  lessonId: string;
+  certId: string;
+  t: VideoRecommendationsProps['t'];
+  onDismissed: (videoId: string) => void;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedReason, setSelectedReason] = useState<FeedbackReason | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const submitMutation = trpc.videoFeedback.submit.useMutation({
+    onSuccess: (data) => {
+      if (data.alreadyReported) {
+        toast.info(t({ en: 'You already reported this video', fr: 'Vous avez déjà signalé cette vidéo' }));
+      } else {
+        toast.success(t({ en: 'Thank you for your feedback! This video will be hidden.', fr: 'Merci pour votre retour ! Cette vidéo sera masquée.' }));
+      }
+      onDismissed(videoId);
+      setIsOpen(false);
+      setSelectedReason(null);
+      setIsSubmitting(false);
+    },
+    onError: () => {
+      toast.error(t({ en: 'Failed to submit feedback. Please try again.', fr: 'Échec de l\'envoi. Veuillez réessayer.' }));
+      setIsSubmitting(false);
+    },
+  });
+
+  const handleSubmit = () => {
+    if (!selectedReason) return;
+    setIsSubmitting(true);
+    submitMutation.mutate({
+      videoId,
+      lessonId,
+      certId,
+      reason: selectedReason,
+    });
+  };
+
+  const reasons = getFeedbackReasons(t);
+
+  return (
+    <div className="relative">
+      {/* Trigger Button */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
+        className="p-1 rounded-md text-muted-foreground/60 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-150 opacity-0 group-hover:opacity-100 focus:opacity-100"
+        title={t({ en: 'Report this video', fr: 'Signaler cette vidéo' })}
+        aria-label={t({ en: 'Report this video', fr: 'Signaler cette vidéo' })}
+      >
+        <Flag className="w-3.5 h-3.5" />
+      </button>
+
+      {/* Popover */}
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 z-40"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setIsOpen(false);
+            }}
+          />
+          {/* Panel */}
+          <div
+            className="absolute right-0 top-full mt-1 z-50 w-64 bg-popover text-popover-foreground border border-border rounded-xl shadow-xl p-3 animate-in fade-in-0 zoom-in-95 slide-in-from-top-2"
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
+                <span className="text-xs font-semibold">
+                  {t({ en: 'Report Video', fr: 'Signaler la vidéo' })}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsOpen(false); }}
+                className="p-0.5 rounded hover:bg-muted transition-colors"
+              >
+                <X className="w-3.5 h-3.5 text-muted-foreground" />
+              </button>
+            </div>
+
+            {/* Video title preview */}
+            <p className="text-[10px] text-muted-foreground mb-2 line-clamp-1 italic">
+              {videoTitle}
+            </p>
+
+            {/* Reason selection */}
+            <div className="space-y-1.5 mb-3">
+              {reasons.map(({ value, label, icon: ReasonIcon }) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelectedReason(value); }}
+                  className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] text-left transition-all duration-150 ${
+                    selectedReason === value
+                      ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800'
+                      : 'hover:bg-muted border border-transparent'
+                  }`}
+                >
+                  <ReasonIcon className={`w-3.5 h-3.5 flex-shrink-0 ${selectedReason === value ? 'text-red-500' : 'text-muted-foreground'}`} />
+                  <span className="leading-tight">{label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Submit */}
+            <button
+              type="button"
+              disabled={!selectedReason || isSubmitting}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleSubmit(); }}
+              className="w-full py-1.5 px-3 rounded-lg text-[11px] font-medium bg-red-500 hover:bg-red-600 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150 active:scale-[0.97]"
+            >
+              {isSubmitting
+                ? t({ en: 'Sending...', fr: 'Envoi...' })
+                : t({ en: 'Submit Report', fr: 'Envoyer le signalement' })
+              }
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Component ───────────────────────────────────────────────────────────
-export function VideoRecommendations({ lesson, lang, t }: VideoRecommendationsProps) {
+export function VideoRecommendations({ lesson, lang, t, lessonId, certId }: VideoRecommendationsProps) {
+  const [dismissedVideos, setDismissedVideos] = useState<Set<string>>(new Set());
+
   const resolveText = (txt: I18nText | string | undefined): string => {
     if (!txt) return '';
     if (typeof txt === 'string') return txt;
     return (lang === 'fr' ? txt.fr : txt.en) || txt.en || txt.fr || '';
   };
+
+  // Fetch user's previously reported videos to hide them
+  const { data: feedbackData } = trpc.videoFeedback.getMyFeedback.useQuery(
+    { certId: certId || '' },
+    { enabled: !!certId }
+  );
+
+  const reportedVideoIds = new Set(
+    (feedbackData?.map(f => f.videoId) || []).concat(Array.from(dismissedVideos))
+  );
 
   // Build lesson text for matching
   const lessonTitle = resolveText(lesson.title);
@@ -231,12 +398,17 @@ export function VideoRecommendations({ lesson, lang, t }: VideoRecommendationsPr
   // Extract keywords
   const keywords = extractKeywords(lesson, lang);
 
-  // Score and rank videos
+  // Score and rank videos, excluding reported ones
   const scoredVideos = VIDEO_DATABASE
+    .filter(video => !reportedVideoIds.has(video.videoId))
     .map(video => ({ video, score: scoreVideo(video, keywords, lessonText) }))
     .filter(({ score }) => score >= 5) // Minimum relevance threshold
     .sort((a, b) => b.score - a.score)
     .slice(0, 5); // Top 5 recommendations
+
+  const handleDismissed = (videoId: string) => {
+    setDismissedVideos(prev => new Set(Array.from(prev).concat([videoId])));
+  };
 
   // Don't render if no relevant videos found
   if (scoredVideos.length === 0) return null;
@@ -301,10 +473,23 @@ export function VideoRecommendations({ lesson, lang, t }: VideoRecommendationsPr
                   {video.title}
                 </h4>
                 <div className="flex items-center justify-between mt-2">
-                  <span className="text-[10px] text-muted-foreground truncate max-w-[70%]">
+                  <span className="text-[10px] text-muted-foreground truncate max-w-[60%]">
                     {video.channel}
                   </span>
-                  <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-[#c75b3a] transition-colors flex-shrink-0" />
+                  <div className="flex items-center gap-1">
+                    {/* Feedback button */}
+                    {lessonId && certId && (
+                      <FeedbackPopover
+                        videoId={video.videoId}
+                        videoTitle={video.title}
+                        lessonId={lessonId}
+                        certId={certId}
+                        t={t}
+                        onDismissed={handleDismissed}
+                      />
+                    )}
+                    <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-[#c75b3a] transition-colors flex-shrink-0" />
+                  </div>
                 </div>
               </div>
             </a>

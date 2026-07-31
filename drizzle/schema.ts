@@ -289,3 +289,20 @@ export const adminNotifications = mysqlTable("admin_notifications", {
 });
 export type AdminNotification = typeof adminNotifications.$inferSelect;
 export type InsertAdminNotification = typeof adminNotifications.$inferInsert;
+
+
+/**
+ * Video recommendation feedback - tracks user reports of irrelevant/obsolete videos
+ */
+export const videoFeedback = mysqlTable("video_feedback", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(), // references users.id
+  videoId: varchar("videoId", { length: 32 }).notNull(), // YouTube video ID
+  lessonId: varchar("lessonId", { length: 255 }).notNull(), // lesson identifier
+  certId: varchar("certId", { length: 255 }).notNull(), // certification identifier
+  reason: mysqlEnum("reason", ["not_relevant", "obsolete", "broken_link", "other"]).notNull(),
+  comment: text("comment"), // optional user comment
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type VideoFeedback = typeof videoFeedback.$inferSelect;
+export type InsertVideoFeedback = typeof videoFeedback.$inferInsert;

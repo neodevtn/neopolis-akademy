@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getAdminAnalytics, exportLearnersCSV } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getAdminAnalytics, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback } from "./db";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
 import { notifyOwner } from "./_core/notification";
@@ -427,6 +427,27 @@ export const appRouter = router({
       }))
       .mutation(async ({ ctx, input }) => {
         return await toggleVideoProgress(ctx.user.id, input.courseId, input.youtubeId);
+      }),
+  }),
+
+  // ============ Video Feedback (Recommendations) ============
+  videoFeedback: router({
+    submit: protectedProcedure
+      .input(z.object({
+        videoId: z.string().min(1).max(32),
+        lessonId: z.string().min(1),
+        certId: z.string().min(1),
+        reason: z.enum(["not_relevant", "obsolete", "broken_link", "other"]),
+        comment: z.string().max(500).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        return await submitVideoFeedback(ctx.user.id, input.videoId, input.lessonId, input.certId, input.reason, input.comment);
+      }),
+
+    getMyFeedback: protectedProcedure
+      .input(z.object({ certId: z.string().optional() }).optional())
+      .query(async ({ ctx, input }) => {
+        return await getUserVideoFeedback(ctx.user.id, input?.certId);
       }),
   }),
 

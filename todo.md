@@ -1002,3 +1002,10 @@
 - [x] Intégrer le composant dans TrainingCourse après le dernier chapitre de chaque leçon
 - [x] Afficher 3-5 vidéos recommandées par leçon (titre, durée, type: tutoriel/complémentaire/avancé)
 - [x] Système de matching par mots-clés du contenu de la leçon
+
+## Feedback vidéo recommandations - Bouton "Pas pertinent / Obsolète"
+- [x] Créer la table video_feedback en base de données (userId, videoId, lessonId, reason, createdAt)
+- [x] Créer l'endpoint tRPC pour soumettre un feedback vidéo
+- [x] Ajouter le bouton "Pas pertinent" sur chaque carte de recommandation vidéo
+- [x] Filtrer les vidéos signalées par l'utilisateur dans les recommandations futures
+- [x] Afficher un feedback visuel (toast) après signalement

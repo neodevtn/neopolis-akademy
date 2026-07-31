@@ -1,6 +1,6 @@
 import { eq, desc, sql, and, count } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -539,4 +539,41 @@ export async function setUserPasswordHash(openId: string, passwordHash: string) 
   if (!db) throw new Error("Database not available");
 
   await db.update(users).set({ passwordHash }).where(eq(users.openId, openId));
+}
+
+
+// ============ Video Feedback (Recommendations) ============
+
+export async function submitVideoFeedback(userId: number, videoId: string, lessonId: string, certId: string, reason: "not_relevant" | "obsolete" | "broken_link" | "other", comment?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Check if user already submitted feedback for this video in this lesson
+  const existing = await db.select().from(videoFeedback)
+    .where(and(
+      eq(videoFeedback.userId, userId),
+      eq(videoFeedback.videoId, videoId),
+      eq(videoFeedback.lessonId, lessonId)
+    )).limit(1);
+  
+  if (existing.length > 0) {
+    return { alreadyReported: true };
+  }
+  
+  await db.insert(videoFeedback).values({ userId, videoId, lessonId, certId, reason, comment });
+  return { alreadyReported: false };
+}
+
+export async function getUserVideoFeedback(userId: number, certId?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  if (certId) {
+    return await db.select({ videoId: videoFeedback.videoId, lessonId: videoFeedback.lessonId })
+      .from(videoFeedback)
+      .where(and(eq(videoFeedback.userId, userId), eq(videoFeedback.certId, certId)));
+  }
+  return await db.select({ videoId: videoFeedback.videoId, lessonId: videoFeedback.lessonId })
+    .from(videoFeedback)
+    .where(eq(videoFeedback.userId, userId));
 }
