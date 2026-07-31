@@ -956,3 +956,6 @@
 - [x] Ajouter compteur totalDownloads par certification dans trainingIndex.json
 - [x] Afficher le compteur downloads dans l'UI (TrainingCertification, TrainingDashboard, AdminContentManager)
 - [x] Corriger le curseur pointer sur l'élément "Don't suffer the disruption" (ce n'est pas un bouton)
+- [x] Transformer la section 5 étapes Ambassador en stepper horizontal interactif (pastilles cliquables)
+- [x] Corriger le problème de contraste titre/fond dans cette section
+- [x] Corriger les caractères unicode échappés (\u00b7 et \u2192) affichés littéralement
