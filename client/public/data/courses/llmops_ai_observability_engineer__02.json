@@ -17,7 +17,15 @@
           "type": "content",
           "body": {
             "en": "In this lesson, you will learn how to:\n\n• Instrument LLM API calls to capture provider and model metadata in trace spans\n• Record token usage (prompt tokens, completion tokens, total tokens) as span attributes\n• Measure and attach end-to-end latency for each model invocation\n• Structure trace spans according to LLMOps observability best practices"
-          }
+          },
+          "blocks": [
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=TDcT9ao47Tk",
+              "title": "Observability for AI Apps feat. LangSmith, Langfuse",
+              "label": "Course Video"
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_02",
@@ -200,7 +208,15 @@
           "type": "content",
           "body": {
             "en": "Retrieval-Augmented Generation (RAG) pipelines consist of multiple distinct steps, each of which should be individually traced. A typical RAG trace hierarchy begins with a root span for the entire query, then nests child spans for each processing stage.\n\nThe embedding step converts the user query into a vector. Its span should record the embedding model name, input token count, and latency. The retrieval step queries a vector store; its span should capture the number of candidates requested (top-k), the number of results returned, each document's ID and similarity score, and the vector database provider.\n\nWhen a reranker is applied, a dedicated child span records the reranking model name, the input document count, and the output document count after filtering by a score threshold. Recording before-and-after score distributions allows teams to evaluate whether reranking improves context quality.\n\nUsing OpenTelemetry, each stage is represented as a child span under a common parent. Span links or baggage can propagate the original query context across all child spans, enabling full-pipeline analysis in tools like Jaeger, Grafana Tempo, or LangSmith."
-          }
+          },
+          "blocks": [
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=HH887f9sozs",
+              "title": "Langfuse vs LangSmith (2025) – Best Tool for LLM Prompt Tracking",
+              "label": "Recommended Viewing"
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_03",
@@ -517,7 +533,15 @@
           "type": "content",
           "body": {
             "en": "Congratulations on completing Lesson 3: Trace Tool Calls and Agent Loops!\n\nYou now know how to instrument agentic AI workflows with structured traces that capture the full reasoning cycle, individual tool invocations, and loop safety signals. These traces are essential for debugging agent failures and optimizing multi-step task performance.\n\nIn the final lesson, you will learn how to implement redaction and privacy controls in your trace pipelines to protect sensitive user data."
-          }
+          },
+          "blocks": [
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=epnPfe5am3I",
+              "title": "Get Started with Langfuse - Open-Source LLM Monitoring",
+              "label": "Tutorial"
+            }
+          ]
         }
       ]
     },

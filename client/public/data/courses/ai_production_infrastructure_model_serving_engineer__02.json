@@ -19,6 +19,12 @@
               "body": {
                 "en": "In this lesson you will learn: 1) How core Kubernetes primitives (Pods, Deployments, Services, Ingress, ConfigMaps/Secrets, Volumes) map to AI inference and batch workloads 2) How to configure probes, resources, autoscaling, and rollouts for resilient model serving 3) How to assemble a minimal, secure, observable model-serving stack using native K8s or operators like KServe"
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=0ZVu0A4wWQg",
+              "title": "vLLM Production Stack Deep Dive",
+              "label": "Course Video"
             }
           ]
         },
@@ -223,6 +229,12 @@
               "body": {
                 "en": "GPUs are advertised to Kubernetes through a device plugin (commonly NVIDIA's). Workloads request GPUs as extended resources (e.g., resources.requests/limits: {\"nvidia.com/gpu\": 1}). Best practice is to set equal requests and limits for GPUs; native overcommit is not supported. The device plugin injects environment variables (e.g., CUDA_VISIBLE_DEVICES) and mounts to make allocated devices available within containers.\nUse dedicated GPU node pools (separate node groups) with labels (e.g., accelerator=nvidia) to target placement and simplify autoscaling. Taint GPU nodes (e.g., nvidia.com/gpu=true:NoSchedule) so only Pods with matching tolerations can land there, preventing accidental scheduling of CPU-only workloads. Combine nodeSelector or node/pod affinity with tolerations to precisely control placement. For spreading or bin-packing, use topologySpreadConstraints, anti-affinity, and PriorityClasses to protect latency-critical inference from preemption.\nMulti-GPU Pods request multiple devices on a single node (e.g., \"nvidia.com/gpu\": 4). For A100/H100, Multi-Instance GPU (MIG) partitions a physical GPU into isolated profiles (e.g., 1g.5gb). With the NVIDIA GPU Operator and MIG enabled, the device plugin advertises profile-specific resources (e.g., nvidia.com/mig-1g.5gb), allowing fine-grained scheduling. Time-slicing (via device plugin configuration) and NVIDIA MPS can increase utilization for small inference workloads, at the cost of strict isolation compared to MIG.\nTopology awareness matters for performance. Kubernetes' topology manager can align CPU, memory, and PCIe devices (e.g., single-numa-node policy), reducing cross-NUMA traffic. NVIDIA GPU Feature Discovery labels nodes with GPU capabilities to aid scheduling decisions. For runtime, use a RuntimeClass configured with nvidia-container-runtime when required by your environment. Operationally, the NVIDIA GPU Operator automates driver, toolkit, DCGM exporter, and device plugin deployment.\nAutoscaling GPU capacity typically uses a separate autoscaling node group for GPU instances. The HPA (or KEDA for custom metrics like queue length) scales Pods; the Cluster Autoscaler or Karpenter then adds/removes GPU nodes to satisfy unschedulable Pods. Monitor GPU utilization and memory with DCGM/Prometheus and set PriorityClasses so critical inference preempts lower-priority batch jobs if necessary."
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=q5IF2PHA5SA",
+              "title": "vLLM: Easily Deploying & Serving LLMs",
+              "label": "Recommended Viewing"
             }
           ]
         },
@@ -570,6 +582,12 @@
               "body": {
                 "en": "Congratulations! You have completed this lesson. You now understand how the NVIDIA GPU Operator equips Kubernetes clusters for GPU workloads and how to configure it for isolation, telemetry, and reliable scheduling."
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=F3DqahobXZQ",
+              "title": "Deploying and Monitoring LLM Inference Endpoints",
+              "label": "Tutorial"
             }
           ]
         }

@@ -19,6 +19,12 @@
               "body": {
                 "en": "In this lesson you will learn: 1) How to choose between CPU, GPU, serverless, and managed APIs based on latency, throughput, and cost. 2) How workload shape (steady vs spiky) influences scaling strategies, batching, and cold starts. 3) How to estimate capacity and cost per request/token to select the right deployment model."
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=q5IF2PHA5SA",
+              "title": "vLLM: Easily Deploying & Serving LLMs",
+              "label": "Course Video"
             }
           ]
         },
@@ -223,6 +229,12 @@
               "body": {
                 "en": "Base images and compatibility: Choose a base aligned with your stack (e.g., python:3.11-slim for CPU, nvidia/cuda:<major.minor>-runtime for GPU). Ensure CUDA, cuDNN, and framework wheels (e.g., PyTorch/TensorFlow) match the host driver; runtime images are smaller than devel images. Build practices: Use multi-stage builds to compile artifacts then copy only runtime deps; pin versions with lockfiles; leverage .dockerignore; cache layers by installing dependencies before copying app code; clean APT caches and avoid unnecessary tools. Security and reproducibility: Run as a non-root user, minimize attack surface (slim images), scan images, and pin checksums for downloaded models. Packaging models: To reduce cold starts, either bake model weights into a separate image layer (updated occasionally) or implement a startup warm phase to download to a writable volume/cache; verify integrity via checksum. Serving: Provide an HTTP/gRPC interface (e.g., FastAPI + Uvicorn/Gunicorn) or a specialized server (Triton, vLLM, TGI). Configure ENTRYPOINT/CMD, HEALTHCHECK, and structured logging to stdout/stderr. Performance: Preload models on startup, enable torch.no_grad(), select dtype (e.g., float16/bfloat16), configure thread counts, and batch requests where appropriate. GPU runtime: Install NVIDIA Container Toolkit on hosts and run with --gpus; set CUDA_VISIBLE_DEVICES as needed. Orchestration: Expose ports, add readiness/liveness/startup probes, and set resource limits/requests. For multi-arch (x86_64/arm64), use buildx and test images on target hardware."
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=0ZVu0A4wWQg",
+              "title": "vLLM Office Hours #21 - vLLM Production Stack Deep Dive",
+              "label": "Recommended Viewing"
             }
           ]
         },
@@ -570,6 +582,12 @@
               "body": {
                 "en": "Congratulations! You have completed this lesson. You now understand how to design and run asynchronous inference with queues, workers, batching, and robust delivery semantics."
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=F3DqahobXZQ",
+              "title": "Deploying and Monitoring LLM Inference Endpoints",
+              "label": "Tutorial"
             }
           ]
         }

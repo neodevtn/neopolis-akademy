@@ -19,6 +19,12 @@
               "body": {
                 "en": "In this lesson you will learn: 1) How online, streaming, and batch/async LLM serving patterns differ and when to use each 2) How to design scalable, low-latency inference stacks using batching, caching, parallelism, and autoscaling 3) How to operate reliable services with routing, rate limiting, safe deployments (canary/A-B), and observability tied to SLOs"
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=F3DqahobXZQ",
+              "title": "Deploying and Monitoring LLM Inference Endpoints",
+              "label": "Course Video"
             }
           ]
         },
@@ -223,6 +229,12 @@
               "body": {
                 "en": "Architecture: vLLM’s PagedAttention stores KV cache in fixed-size blocks to avoid fragmentation and to page inactive blocks between GPU and CPU memory. Continuous batching merges compatible requests at the decode step, raising tokens/sec with modest latency impact. Server: Start with a single command (e.g., vllm serve --model <hf-repo-or-path>) which exposes OpenAI-compatible routes on port 8000 by default: /v1/chat/completions, /v1/completions, /v1/embeddings, and /v1/models. Common flags include --tensor-parallel-size for multi-GPU sharding, --max-model-len to cap context length, --gpu-memory-utilization to control allocator aggressiveness, and --dtype for precision. Clients: Use the OpenAI SDK by pointing base_url to http://<host>:8000/v1 and providing any api_key placeholder; enable streaming with stream=true to receive tokens as server-sent events. Operations: Track TTFT, decode tokens/sec, queue latency, and memory paging. Tune concurrency (max requests), batching limits, and context length to meet SLOs while preventing OOM via sensible --max-model-len and adequate CPU swap space for KV paging."
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=0ZVu0A4wWQg",
+              "title": "vLLM Production Stack Deep Dive",
+              "label": "Recommended Viewing"
             }
           ]
         },
@@ -570,6 +582,12 @@
               "body": {
                 "en": "Congratulations! You have completed this lesson. You now understand how vLLM batches requests, manages the KV cache, and how to optimize throughput and latency in practice."
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=q5IF2PHA5SA",
+              "title": "vLLM: Easily Deploying & Serving LLMs",
+              "label": "Tutorial"
             }
           ]
         }

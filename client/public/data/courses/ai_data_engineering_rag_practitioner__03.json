@@ -19,6 +19,12 @@
               "body": {
                 "en": "In this lesson you will learn: 1) How cosine similarity, dot product, and Euclidean distance differ and when to use each 2) How HNSW and IVF accelerate nearest neighbor search and the key tuning parameters 3) How to reason about recall vs. latency trade-offs and evaluate ANN quality"
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=o126p1QN_RI",
+              "title": "Complete RAG Crash Course With Langchain In 2 Hours",
+              "label": "Course Video"
             }
           ]
         },
@@ -223,6 +229,12 @@
               "body": {
                 "en": "pgvector adds a vector data type and kNN indexing to Postgres, making it practical for small-to-medium RAG systems that benefit from SQL, transactions, and unified storage.\n\nSetup and schema: CREATE EXTENSION pgvector; define columns as vector(d), where d matches your embedding dimension (e.g., 384, 768, 1536). Example: CREATE TABLE docs (id bigserial PRIMARY KEY, content text, meta jsonb, embedding vector(768)); Insert embeddings from your application using parameter binding and cast (e.g., $1::vector).\n\nSimilarity operators and opclasses: <-> computes L2 distance, <#> computes inner product, <=> computes cosine distance. Choose a matching operator class for indexes: vector_l2_ops, vector_ip_ops, or vector_cosine_ops. Query with ORDER BY embedding <-> $1::vector (or <#>, <=>) LIMIT k.\n\nIndexes: Two common ANN indexes are IVFFlat and HNSW. IVFFlat partitions data into lists and scans nprobe lists at query time. Build after bulk-loading data so the quantizer can train well: CREATE INDEX docs_embedding_ivf ON docs USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100); Tune per-query with SET ivfflat.probes = 10; higher probes improves recall. HNSW supports incremental inserts and strong recall: CREATE INDEX docs_embedding_hnsw ON docs USING hnsw (embedding vector_l2_ops) WITH (m = 16, ef_construction = 200); Tune search with SET hnsw.ef_search = 80; higher values increase recall and latency.\n\nHybrid retrieval: Combine Postgres full-text search with vector search. Create a tsvector column (generated or materialized) and GIN index for text: to_tsvector('english', content). You can rank by (a) two-stage retrieval (vector kNN -> filter/rerank with text or vice versa), (b) weighted scoring (e.g., ts_rank * wt_text − distance * wt_vec), or (c) rank fusion like RRF: 1/(k + rank). Example pattern: get top-N by text and top-N by vector in CTEs, UNION ALL, then aggregate by id with SUM of RRF scores.\n\nOperational notes: ANALYZE after loading to help planners; keep dimensions consistent; choose cosine for normalized embeddings; monitor P95 latency and recall@k vs. exact scan to validate quality. For small-to-medium deployments (e.g., up to a few million embeddings on a single node), pgvector offers good performance; beyond that, consider sharding or specialized vector stores."
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=T04AA_hhOsw",
+              "title": "Building Robust RAG Systems with LangChain & LlamaIndex",
+              "label": "Recommended Viewing"
             }
           ]
         },
@@ -570,6 +582,12 @@
               "body": {
                 "en": "Congratulations! You have completed this lesson. You now understand how Qdrant combines fast vector search with powerful payload filtering and how to model and tune for production workloads."
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=mHxLXzYjQRE",
+              "title": "Production RAG with LangChain & Vector Databases – Full Course",
+              "label": "Tutorial"
             }
           ]
         }

@@ -987,3 +987,11 @@
 - [x] Estimation des gains probables (temps, coût, qualité, satisfaction)
 - [x] Enregistrer route /diagnostic-avance (protégée, auth requise)
 - [x] Lien depuis le TrainingDashboard vers le diagnostic avancé
+
+## Fix: Incohérence des stats et ajout vidéos YouTube
+- [x] Analyser et corriger l'incohérence des compteurs entre niveaux (dashboard/certification/cours/leçon)
+- [x] Identifier les sources de données hardcodées dans TrainingCertification.tsx et TrainingCourse.tsx
+- [x] Unifier la logique de comptage : tous les niveaux doivent calculer depuis le contenu réel
+- [x] Rechercher et intégrer des vidéos YouTube récentes pour les 10 nouvelles certifications
+- [x] Ajouter des blocs vidéo (cours principal + vidéos complémentaires + tutoriels) dans les fichiers de cours
+- [x] Recomputer les stats à tous les niveaux et vérifier la cohérence

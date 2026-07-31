@@ -19,6 +19,12 @@
               "body": {
                 "en": "In this lesson you will learn: 1) How to design a clear, consistent schema for instruction tuning datasets 2) How to format single turn and multi turn chat data using role aware templates 3) How to apply quality control, safety, deduplication, and licensing checks before training"
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=6S59Y0ckTm4",
+              "title": "Road To Learn Finetuning LLM With Custom Data - LoRA QLoRA",
+              "label": "Course Video"
             }
           ]
         },
@@ -223,6 +229,12 @@
               "body": {
                 "en": "Goals of splitting: Train uses most data for fitting the model, validation guides model selection and early stopping, and test provides a final unbiased estimate. Good splits preserve distribution while preventing leakage of information.\n\nStrategies: Random splits are simple but can leak signals when correlated samples exist. Stratified splits maintain class or attribute proportions (task type, language, difficulty). Group aware splits keep all examples sharing a group identifier (user, repository, document, conversation thread, problem family) in the same split to avoid leakage. Temporal splits respect time order for time evolving data (train on past, validate on recent, test on future) to better reflect deployment.\n\nLeakage prevention: Perform global deduplication before splitting using exact hashing and approximate methods (n gram Jaccard with MinHash or SimHash, or embedding similarity with LSH). Blocklist evaluation items from training. For code tasks, split by repository or problem id. For QA over documents, split by document or source. For multi turn chats, keep entire threads intact within one split.\n\nSizing and balance: Typical ratios are 80 10 10 or 90 5 5 for large datasets, but use more validation if heavy hyperparameter search is expected. Ensure stratification across key attributes so validation and test reflect deployment. For small datasets, use k fold cross validation or repeated stratified splits and report mean and variance.\n\nReproducibility: Fix random seeds, log the split script and dataset version, and persist the list of ids per split. Verify splits by measuring overlap and near duplicate rates between splits. Document the rationale (e.g., temporal, group aware) and any deviations from overall distribution.\n\nMonitoring shift: Compare label distributions, lengths, topics, and languages across splits. Large discrepancies indicate potential bias and unstable evaluation."
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=l5a_uKnbEr4",
+              "title": "LoRA, QLoRA Indepth Mathematical Intuition",
+              "label": "Recommended Viewing"
             }
           ]
         },
@@ -570,6 +582,12 @@
               "body": {
                 "en": "Congratulations! You have completed this lesson. You now understand how to design and run a rigorous baseline evaluation and can apply it before any fine-tuning."
               }
+            },
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=D3pXSkGceY0",
+              "title": "How to Fine Tune your own LLM using LoRA (on a CUSTOM dataset!)",
+              "label": "Tutorial"
             }
           ]
         }

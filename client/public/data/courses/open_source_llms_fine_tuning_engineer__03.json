@@ -19,7 +19,15 @@
             "body": {
               "en": "In this lesson you will learn:\n• The definition and mechanics of full fine-tuning for large language models\n• The core motivation behind Parameter-Efficient Fine-Tuning (PEFT) methods\n• A side-by-side comparison of compute, memory, and storage trade-offs\n• When to choose full fine-tuning versus a PEFT approach for a given task"
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=D3pXSkGceY0",
+              "title": "How to Fine Tune your own LLM using LoRA (on a CUSTOM dataset!)",
+              "label": "Course Video"
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_02",
@@ -216,7 +224,15 @@
             "body": {
               "en": "LoRA (Low-Rank Adaptation) hypothesizes that the weight updates needed during fine-tuning lie in a low-dimensional subspace. Instead of updating a weight matrix W directly, LoRA freezes W and adds two small matrices A and B such that the effective update is ΔW = B × A, where the rank r of these matrices is much smaller than the original dimensions. Only A and B are trained, reducing trainable parameters dramatically.\n\nQLoRA (Quantized LoRA) combines LoRA with 4-bit NormalFloat quantization (NF4) of the frozen base model weights, introduced by Dettmers et al. in 2023. The base model is loaded in 4-bit precision with double quantization to further compress memory, while LoRA adapters are computed in 16-bit. This allows fine-tuning of 65B-parameter models on a single 48 GB GPU — previously impossible. Implementation relies on the bitsandbytes library for quantization and the PEFT library for LoRA configuration. Key parameters include rank r (typically 4–64), lora_alpha (scaling factor), lora_dropout, and target_modules specifying which linear layers receive adapters."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=6TF_00jiivk",
+              "title": "qLoRa in Action: A Fine-Tuning Tutorial",
+              "label": "Recommended Viewing"
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_03",
@@ -553,7 +569,15 @@
             "body": {
               "en": "Well done completing Lesson 3! You now understand the TRL SFTTrainer workflow end-to-end — from configuring a LoraConfig and SFTConfig to launching training and saving the resulting adapter. This knowledge forms the practical backbone of any supervised fine-tuning project with open-source LLMs. In the final lesson, you will learn how to tune the key hyperparameters governing training quality and how to recognize and debug common failure modes that arise during fine-tuning."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "video",
+              "url": "https://www.youtube.com/watch?v=6S59Y0ckTm4",
+              "title": "Road To Learn Finetuning LLM With Custom Data",
+              "label": "Tutorial"
+            }
+          ]
         }
       ]
     },
