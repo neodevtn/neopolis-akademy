@@ -22,6 +22,7 @@ import { ComparisonBox } from "@/components/ComparisonBox";
 import { MatchingExercise } from "@/components/MatchingExercise";
 import { SingleChoiceExercise } from "@/components/SingleChoiceExercise";
 import { ChapterQuiz } from "@/components/ChapterQuiz";
+import { CourseIllustration } from "@/components/CourseIllustration";
 import { motion, AnimatePresence } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 
@@ -2679,11 +2680,73 @@ function LessonViewer({
           })()}
 
           {/* Render all blocks in the current chapter */}
-          {chapter && (
-            <div className="space-y-8">
-              {chapter.blocks.map((block: any, idx: number) => renderBlock(block, idx))}
-            </div>
-          )}
+          {chapter && (() => {
+            // Detect if this screen is sparse (little content) to show illustration
+            const allBlocks = chapter.blocks || [];
+            const contentBlocks = allBlocks.filter((b: any) => b.type === 'content');
+            const hasVideo = allBlocks.some((b: any) => b.type === 'video');
+            const hasExercise = allBlocks.some((b: any) => b.type === 'exercise' || b.type === 'quiz' || b.type === 'checkpoint');
+            const hasBucketSort = allBlocks.some((b: any) => b.type === 'bucket_sort');
+            const hasFlipCards = allBlocks.some((b: any) => b.type === 'flip_cards');
+            const hasMatching = allBlocks.some((b: any) => b.type === 'matching');
+            const hasInteractive = hasVideo || hasExercise || hasBucketSort || hasFlipCards || hasMatching;
+            // Get screen title for illustration theme detection
+            const firstCB = contentBlocks[0];
+            let illustTitle = '';
+            let illustContent = '';
+            let contentAfterTitle = '';
+            if (firstCB) {
+              const body = firstCB.body || {};
+              const text = typeof body === 'string' ? body : (body[lang] || body.en || '');
+              illustTitle = text.split('\n').find((l: string) => l.trim().length > 0) || '';
+              illustContent = text;
+              // Compute content remaining after title (and optional description) removal
+              const lines = text.split('\n');
+              const firstNonEmpty = lines.findIndex((l: string) => l.trim().length > 0);
+              if (firstNonEmpty >= 0) {
+                const remaining = [...lines];
+                remaining.splice(firstNonEmpty, 1);
+                const secondNonEmpty = remaining.findIndex((l: string) => l.trim().length > 0);
+                if (secondNonEmpty >= 0) {
+                  const secondLine = remaining[secondNonEmpty].trim().replace(/^#{1,6}\s+/, '');
+                  if (secondLine.length < 120 && secondLine.length > 20) {
+                    remaining.splice(secondNonEmpty, 1);
+                  }
+                }
+                contentAfterTitle = remaining.join('\n').trim();
+              }
+            }
+            // Compute total text length across all content blocks
+            const totalTextLen = contentBlocks.reduce((acc: number, b: any) => {
+              const body = b.body || {};
+              const text = typeof body === 'string' ? body : (body[lang] || body.en || '');
+              return acc + text.trim().length;
+            }, 0);
+            // Screen is sparse if:
+            // 1. No interactive elements (video, exercise, etc.)
+            // 2. AND either: total text is very short (<400), OR content after title removal is short (<200) with no markdown structure
+            const hasMarkdownStructure = contentAfterTitle.includes('\n**') || contentAfterTitle.includes('\n1.') || contentAfterTitle.includes('\n- ') || contentAfterTitle.includes('\n•');
+            const isSparse = !hasInteractive && (
+              totalTextLen < 400 ||
+              (contentAfterTitle.length < 200 && !hasMarkdownStructure)
+            );
+            return (
+              <div className="space-y-8">
+                {isSparse && (
+                  <div className="w-full flex justify-center py-4">
+                    <div className="w-full max-w-sm h-52 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900/40 dark:to-blue-950/30 border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+                      <CourseIllustration
+                        title={illustTitle}
+                        content={illustContent}
+                        className="w-full h-full"
+                      />
+                    </div>
+                  </div>
+                )}
+                {allBlocks.map((block: any, idx: number) => renderBlock(block, idx))}
+              </div>
+            );
+          })()}
 
           {/* Chapter Quiz (shown between teaching chapters) */}
           {showChapterQuiz && (
