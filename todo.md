@@ -961,3 +961,4 @@
 - [x] Corriger les caractères unicode échappés (\u00b7 et \u2192) affichés littéralement
 - [x] Refaire le diagramme "Project workflow" : couleurs adaptées au thème, flèches entre étapes, design dynamique compact
 - [x] Refaire la section "Concrete project examples" : afficher titre + ROI client seulement, bouton "Afficher plus" pour déplier les détails
+- [x] Refaire la section "Our Technology Partners" : plus compacte, meilleure présentation, moins d'espace vertical

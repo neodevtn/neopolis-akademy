@@ -450,60 +450,74 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── Partenariats (Sage Band) ─── */}
-      <AnimatedSection id="partenaires" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 3rem)" }}>
-        <div className="container py-12">
-          <motion.div variants={fadeInUp} className="text-center mb-14">
-            <span className="wise-eyebrow mb-4 inline-flex">{t({ fr: "Écosystème", en: "Ecosystem", ar: "النظام البيئي" })}</span>
-            <h2 className="wise-display-md mb-4">{t({ fr: "Nos Partenaires Technologiques", en: "Our Technology Partners", ar: "شركاؤنا التكنولوجيون" })}</h2>
-            <p className="wise-body-lg max-w-[52ch] mx-auto">
-              {t({ fr: "Neopolis Development, Registered Partner du Claude Partner Network, construit un écosystème pour déployer l'IA agentique en Afrique et MENA.", en: "Neopolis Development, Registered Partner of the Claude Partner Network, is building an ecosystem to deploy agentic AI in Africa and MENA.", ar: "Neopolis Development، شريك مسجل في شبكة Claude Partner Network، يبني نظاماً بيئياً لنشر الذكاء الاصطناعي الوكيلي في أفريقيا والشرق الأوسط وشمال أفريقيا." })} <a href="https://www.anthropic.com/news/claude-partner-network" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "var(--wise-positive-deep)" }}>Claude Partner Network</a>
-            </p>
-            <p className="wise-body-sm mt-2" style={{ color: "var(--wise-mute)" }}>
-              {t({ fr: "Statut Select en cours d'obtention", en: "Select status in progress", ar: "حالة Select قيد الحصول" })}
+      <AnimatedSection id="partenaires" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3.5rem) clamp(1.25rem, 4vw, 3rem)" }}>
+        <div className="container py-6">
+          <motion.div variants={fadeInUp} className="text-center mb-8">
+            <span className="wise-eyebrow mb-3 inline-flex">{t({ fr: "Écosystème", en: "Ecosystem", ar: "النظام البيئي" })}</span>
+            <h2 className="wise-display-md mb-3" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Nos Partenaires Technologiques", en: "Our Technology Partners", ar: "شركاؤنا التكنولوجيون" })}</h2>
+            <p className="wise-body-md max-w-[56ch] mx-auto" style={{ color: "var(--wise-ink-muted)" }}>
+              {t({ fr: "Registered Partner du Claude Partner Network — écosystème IA agentique Afrique & MENA.", en: "Registered Partner of the Claude Partner Network — agentic AI ecosystem for Africa & MENA.", ar: "شريك مسجل في شبكة Claude Partner Network — نظام بيئي للذكاء الاصطناعي الوكيلي لأفريقيا والشرق الأوسط." })} <a href="https://www.anthropic.com/news/claude-partner-network" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "var(--wise-positive-deep)" }}>CPN ↗</a>
             </p>
           </motion.div>
 
-          <motion.div variants={staggerContainer} className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mb-8 md:mb-12">
-            <motion.div variants={scaleIn}>
-              <PartnerCard
-                name="Anthropic"
-                logo="/api/assets/logo_anthropic_e6ab4160.png"
-                description={t({ fr: "Créateur de Claude, l'un des LLM les plus avancés au monde. En tant que Registered Partner du CPN, nous offrons un accès facilité à la certification Claude Certified Architect (CCA) via un voucher gratuit pour nos candidats.", en: "Creator of Claude, one of the most advanced LLMs in the world. As a Registered Partner of the CPN, we offer easy access to the Claude Certified Architect (CCA) certification via a free voucher for our candidates.", ar: "منشئ Claude، أحد أكثر نماذج اللغة الكبيرة تقدماً في العالم. بصفتنا شريكاً مسجلاً في شبكة CPN، نقدم وصولاً سهلاً إلى شهادة Claude Certified Architect (CCA) عبر قسيمة مجانية لمرشحينا." })}
-              />
+          {/* Compact layout: Anthropic card + tech badges + features in one row */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
+            {/* Anthropic Partner Card - compact */}
+            <motion.div variants={scaleIn} className="wise-card p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden" style={{ background: "var(--wise-canvas)" }}>
+                  <img src="/api/assets/logo_anthropic_e6ab4160.png" alt="Anthropic" className="w-7 h-7 object-contain" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-base" style={{ color: "var(--wise-ink)" }}>Anthropic</h3>
+                  <span className="text-xs" style={{ color: "var(--wise-mute)" }}>Registered Partner</span>
+                </div>
+              </div>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--wise-ink-muted)" }}>
+                {t({ fr: "Voucher CCA gratuit pour nos candidats. Accès facilité à la certification Claude Certified Architect.", en: "Free CCA voucher for our candidates. Easy access to Claude Certified Architect certification.", ar: "قسيمة CCA مجانية لمرشحينا. وصول سهل إلى شهادة Claude Certified Architect." })}
+              </p>
             </motion.div>
 
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">
-            {/* Graphique animé - Réseau de nœuds */}
-            <motion.div variants={fadeInLeft} className="relative flex items-center justify-center">
-              <NetworkGraph />
-            </motion.div>
-            <motion.div variants={fadeInRight}>
-              <h3 className="wise-display-xs mb-4">{t({ fr: "Ce que nous fournissons", en: "What we provide", ar: "ما نوفره" })}</h3>
-              <div className="space-y-2">
+            {/* Tech ecosystem - compact network badges */}
+            <motion.div variants={fadeInUp} className="wise-card p-5">
+              <h4 className="font-semibold text-sm mb-3" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Écosystème technologique", en: "Tech ecosystem", ar: "النظام التقني" })}</h4>
+              <div className="flex flex-wrap gap-2">
                 {[
-                  t({ fr: "Ressources humaines et techniques dédiées", en: "Dedicated human and technical resources", ar: "موارد بشرية وتقنية مخصصة" }),
-                  t({ fr: "Agents IA prêts à l'emploi (ready-to-use)", en: "Ready-to-use AI agents", ar: "وكلاء ذكاء اصطناعي جاهزون للاستخدام" }),
-                  t({ fr: "Accès multi-LLM (Claude, Gemini, OpenAI...)", en: "Multi-LLM access (Claude, Gemini, OpenAI...)", ar: "الوصول إلى نماذج لغة متعددة (Claude, Gemini, OpenAI...)" }),
-                  t({ fr: "Infrastructure serveurs on-premise puissante", en: "Powerful on-premise server infrastructure", ar: "بنية تحتية قوية للخوادم المحلية" }),
-                  t({ fr: "Accompagnement commercial et marketing", en: "Commercial and marketing support", ar: "الدعم التجاري والتسويقي" }),
-                  t({ fr: "Support technique continu", en: "Continuous technical support", ar: "الدعم الفني المستمر" }),
+                  { label: "Neopolis", color: "#9fe870" },
+                  { label: "Anthropic", color: "#d4a574" },
+                  { label: "OpenAI", color: "#10a37f" },
+                  { label: "Agents IA", color: "#38c8ff" },
+                  { label: "Multi-LLM", color: "#a78bfa" },
+                  { label: "Infra", color: "#34d399" },
+                  { label: "Support", color: "#fbbf24" },
+                ].map((item) => (
+                  <span key={item.label} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: `${item.color}18`, color: "var(--wise-ink)" }}>
+                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
+                    {item.label}
+                  </span>
+                ))}
+              </div>
+              <p className="text-xs mt-3" style={{ color: "var(--wise-mute)" }}>
+                {t({ fr: "Statut Select en cours d'obtention", en: "Select status in progress", ar: "حالة Select قيد الحصول" })}
+              </p>
+            </motion.div>
+
+            {/* What we provide - compact list */}
+            <motion.div variants={fadeInRight} className="wise-card p-5">
+              <h4 className="font-semibold text-sm mb-3" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Ce que nous fournissons", en: "What we provide", ar: "ما نوفره" })}</h4>
+              <div className="space-y-1.5">
+                {[
+                  t({ fr: "Ressources humaines & techniques", en: "Human & technical resources", ar: "موارد بشرية وتقنية" }),
+                  t({ fr: "Agents IA prêts à l'emploi", en: "Ready-to-use AI agents", ar: "وكلاء ذكاء اصطناعي جاهزون" }),
+                  t({ fr: "Multi-LLM (Claude, Gemini, OpenAI)", en: "Multi-LLM (Claude, Gemini, OpenAI)", ar: "نماذج متعددة (Claude, Gemini, OpenAI)" }),
+                  t({ fr: "Infra serveurs on-premise", en: "On-premise server infra", ar: "بنية تحتية محلية" }),
+                  t({ fr: "Support commercial & marketing", en: "Commercial & marketing support", ar: "دعم تجاري وتسويقي" }),
+                  t({ fr: "Support technique continu", en: "Continuous tech support", ar: "دعم فني مستمر" }),
                 ].map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.08, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-                    viewport={{ once: true }}
-                    whileHover={{ x: 4, transition: { duration: 0.2 } }}
-                    className="flex items-center gap-3 py-2 px-3 rounded-lg cursor-default"
-                  >
-                    <span className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "var(--wise-primary)" }}>
-                      <CheckCircle2 size={14} style={{ color: "var(--wise-ink)" }} />
-                    </span>
-                    <span className="text-sm font-medium" style={{ color: "var(--wise-ink)" }}>{item}</span>
-                  </motion.div>
+                  <div key={i} className="flex items-center gap-2">
+                    <CheckCircle2 size={13} style={{ color: "var(--wise-positive-deep)", flexShrink: 0 }} />
+                    <span className="text-xs" style={{ color: "var(--wise-ink-muted)" }}>{item}</span>
+                  </div>
                 ))}
               </div>
             </motion.div>
