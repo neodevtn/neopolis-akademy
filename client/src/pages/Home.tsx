@@ -460,68 +460,60 @@ export default function Home() {
             </p>
           </motion.div>
 
-          {/* Compact layout: Anthropic card + tech badges + features in one row */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
-            {/* Anthropic Partner Card - compact */}
-            <motion.div variants={scaleIn} className="wise-card p-5">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden" style={{ background: "var(--wise-canvas)" }}>
-                  <img src="/api/assets/logo_anthropic_e6ab4160.png" alt="Anthropic" className="w-7 h-7 object-contain" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-base" style={{ color: "var(--wise-ink)" }}>Anthropic</h3>
-                  <span className="text-xs" style={{ color: "var(--wise-mute)" }}>Registered Partner</span>
-                </div>
-              </div>
-              <p className="text-sm leading-relaxed" style={{ color: "var(--wise-ink-muted)" }}>
-                {t({ fr: "Voucher CCA gratuit pour nos candidats. Accès facilité à la certification Claude Certified Architect.", en: "Free CCA voucher for our candidates. Easy access to Claude Certified Architect certification.", ar: "قسيمة CCA مجانية لمرشحينا. وصول سهل إلى شهادة Claude Certified Architect." })}
-              </p>
-            </motion.div>
-
-            {/* Tech ecosystem - compact network badges */}
-            <motion.div variants={fadeInUp} className="wise-card p-5">
-              <h4 className="font-semibold text-sm mb-3" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Écosystème technologique", en: "Tech ecosystem", ar: "النظام التقني" })}</h4>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { label: "Neopolis", color: "#9fe870" },
-                  { label: "Anthropic", color: "#d4a574" },
-                  { label: "OpenAI", color: "#10a37f" },
-                  { label: "Agents IA", color: "#38c8ff" },
-                  { label: "Multi-LLM", color: "#a78bfa" },
-                  { label: "Infra", color: "#34d399" },
-                  { label: "Support", color: "#fbbf24" },
-                ].map((item) => (
-                  <span key={item.label} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: `${item.color}18`, color: "var(--wise-ink)" }}>
-                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
-                    {item.label}
-                  </span>
-                ))}
-              </div>
-              <p className="text-xs mt-3" style={{ color: "var(--wise-mute)" }}>
-                {t({ fr: "Statut Select en cours d'obtention", en: "Select status in progress", ar: "حالة Select قيد الحصول" })}
-              </p>
-            </motion.div>
-
-            {/* What we provide - compact list */}
-            <motion.div variants={fadeInRight} className="wise-card p-5">
-              <h4 className="font-semibold text-sm mb-3" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Ce que nous fournissons", en: "What we provide", ar: "ما نوفره" })}</h4>
-              <div className="space-y-1.5">
-                {[
-                  t({ fr: "Ressources humaines & techniques", en: "Human & technical resources", ar: "موارد بشرية وتقنية" }),
-                  t({ fr: "Agents IA prêts à l'emploi", en: "Ready-to-use AI agents", ar: "وكلاء ذكاء اصطناعي جاهزون" }),
-                  t({ fr: "Multi-LLM (Claude, Gemini, OpenAI)", en: "Multi-LLM (Claude, Gemini, OpenAI)", ar: "نماذج متعددة (Claude, Gemini, OpenAI)" }),
-                  t({ fr: "Infra serveurs on-premise", en: "On-premise server infra", ar: "بنية تحتية محلية" }),
-                  t({ fr: "Support commercial & marketing", en: "Commercial & marketing support", ar: "دعم تجاري وتسويقي" }),
-                  t({ fr: "Support technique continu", en: "Continuous tech support", ar: "دعم فني مستمر" }),
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <CheckCircle2 size={13} style={{ color: "var(--wise-positive-deep)", flexShrink: 0 }} />
-                    <span className="text-xs" style={{ color: "var(--wise-ink-muted)" }}>{item}</span>
+          {/* Premium Anthropic/Claude partnership card */}
+          <motion.div variants={scaleIn} className="max-w-3xl mx-auto">
+            <div className="relative overflow-hidden rounded-2xl" style={{ background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)" }}>
+              {/* Subtle gradient accent */}
+              <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-20" style={{ background: "radial-gradient(circle, #d4a574 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
+              <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full opacity-10" style={{ background: "radial-gradient(circle, #9fe870 0%, transparent 70%)", transform: "translate(-30%, 30%)" }} />
+              
+              <div className="relative p-8 md:p-10">
+                {/* Header with logos */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "rgba(255,255,255,0.1)", backdropFilter: "blur(8px)" }}>
+                      <img src="/api/assets/logo_anthropic_e6ab4160.png" alt="Anthropic" className="w-8 h-8 object-contain" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-lg">Anthropic</h3>
+                      <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: "rgba(212,165,116,0.2)", color: "#d4a574" }}>Registered Partner</span>
+                    </div>
                   </div>
-                ))}
+                  <a href="https://www.anthropic.com/news/claude-partner-network" target="_blank" rel="noopener noreferrer" className="text-xs font-medium px-3 py-1.5 rounded-full transition-colors" style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)" }}>
+                    Claude Partner Network ↗
+                  </a>
+                </div>
+
+                {/* Main content */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <p className="text-sm leading-relaxed mb-4" style={{ color: "rgba(255,255,255,0.75)" }}>
+                      {t({ fr: "Neopolis Development est Registered Partner du Claude Partner Network. Nos candidats bénéficient d'un accès privilégié à l'écosystème Anthropic.", en: "Neopolis Development is a Registered Partner of the Claude Partner Network. Our candidates benefit from privileged access to the Anthropic ecosystem.", ar: "Neopolis Development شريك مسجل في شبكة Claude Partner Network. يستفيد مرشحونا من وصول مميز إلى نظام Anthropic البيئي." })}
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ background: "rgba(159,232,112,0.15)" }}>
+                        <CheckCircle2 size={14} style={{ color: "#9fe870" }} />
+                        <span className="text-xs font-medium" style={{ color: "#9fe870" }}>{t({ fr: "Voucher CCA gratuit", en: "Free CCA voucher", ar: "قسيمة CCA مجانية" })}</span>
+                      </div>
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ background: "rgba(159,232,112,0.15)" }}>
+                        <CheckCircle2 size={14} style={{ color: "#9fe870" }} />
+                        <span className="text-xs font-medium" style={{ color: "#9fe870" }}>{t({ fr: "Certification CCA", en: "CCA Certification", ar: "شهادة CCA" })}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="text-center">
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl mb-2" style={{ background: "rgba(255,255,255,0.08)" }}>
+                        <span className="text-2xl font-bold text-white">Claude</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: "#d4a574", color: "#1a1a2e" }}>AI</span>
+                      </div>
+                      <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>{t({ fr: "Modèle IA le plus avancé au monde", en: "World's most advanced AI model", ar: "أكثر نماذج الذكاء الاصطناعي تقدمًا" })}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         </div>
       </AnimatedSection>
 

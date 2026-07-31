@@ -963,3 +963,4 @@
 - [x] Refaire la section "Concrete project examples" : afficher titre + ROI client seulement, bouton "Afficher plus" pour déplier les détails
 - [x] Refaire la section "Our Technology Partners" : plus compacte, meilleure présentation, moins d'espace vertical
 - [x] Ajouter des vidéos anglaises équivalentes dans "IA pour les nuls" (garder FR, ajouter EN)
+- [x] Supprimer blocs "Tech ecosystem" et "What we provide", améliorer design Anthropic/Claude
