@@ -940,3 +940,10 @@
 - [x] Fix: storage.ts retourne /api/assets/ pour les nouveaux uploads
 - [x] Fix: /manus-storage/ redirige 301 vers /api/assets/ pour compatibilité DB existante
 - [x] Cache-Control: max-age=3600, must-revalidate (au lieu de 1 an immutable via CloudFront)
+
+## Chapitres Tutoriels vidéo YouTube (31 juillet 2026)
+- [x] Ajouter chapitre Tutoriels à la fin de chaque cours Developer Foundations (5 cours)
+- [x] Ajouter chapitre Tutoriels à la fin de chaque cours Architect Foundations (7 cours)
+- [x] Ajouter chapitre Tutoriels à la fin de chaque cours Architect Professional (5 cours)
+- [x] Vidéos YouTube pertinentes et pratiques pour chaque module
+- [x] Pas de quiz dans les chapitres tutoriels
