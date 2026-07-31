@@ -947,3 +947,11 @@
 - [x] Ajouter chapitre Tutoriels à la fin de chaque cours Architect Professional (5 cours)
 - [x] Vidéos YouTube pertinentes et pratiques pour chaque module
 - [x] Pas de quiz dans les chapitres tutoriels
+
+## Enrichissement tutoriels + correction compteurs (31 juillet 2026)
+- [x] Enrichir les chapitres tutoriels avec 5-8 vidéos YouTube par cours (au lieu de 3)
+- [x] Mettre à jour lessonCount dans trainingIndex.json pour refléter les nouveaux chapitres
+- [x] Mettre à jour totalVideos dans trainingIndex.json pour chaque certification
+- [x] Mettre à jour le champ videos[] dans chaque cours de trainingIndex.json
+- [x] Ajouter compteur totalDownloads par certification dans trainingIndex.json
+- [x] Afficher le compteur downloads dans l'UI (TrainingCertification, TrainingDashboard, AdminContentManager)

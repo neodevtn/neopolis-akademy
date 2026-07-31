@@ -206,6 +206,12 @@ export default function TrainingCertification() {
                 {cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}
               </span>
             )}
+            {cert.totalDownloads > 0 && (
+              <span className="flex items-center gap-1.5">
+                <Download className="w-4 h-4" />
+                {cert.totalDownloads} {t({ en: "downloads", fr: "téléchargements" })}
+              </span>
+            )}
           </div>
         </motion.div>
 
@@ -338,11 +344,13 @@ export default function TrainingCertification() {
         )}
 
         {/* Progress Summary Cards */}
-        <motion.div variants={fadeInUp} className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+        <motion.div variants={fadeInUp} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-8">
           {(() => {
             const totalChapters = courses.reduce((sum, c) => sum + (c.lessonCount || 0), 0);
             const completedChapters = Object.values(courseProgressMap).reduce((sum, p) => sum + p.completed, 0);
             const totalExercises = courses.reduce((sum, c) => sum + (c.exerciseCount || 0), 0);
+            const totalVideos = courses.reduce((sum, c) => sum + (c.videos?.length || 0), 0);
+            const totalDownloads = courses.reduce((sum, c) => sum + ((c as any).downloadCount || 0), 0);
             const completedCourses = courses.filter(c => (courseProgressMap[c.id]?.pct ?? 0) >= 100).length;
             return (
               <>
@@ -367,6 +375,24 @@ export default function TrainingCertification() {
                   <div className="text-lg font-bold text-foreground">{completedCourses}/{courses.length}</div>
                   <div className="text-[11px] text-muted-foreground mt-0.5">{t({ en: "Courses", fr: "Cours" })}</div>
                 </div>
+                {totalVideos > 0 && (
+                <div className="bg-card rounded-xl border border-border p-4 text-center">
+                  <div className="w-9 h-9 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mx-auto mb-2">
+                    <PlayCircle className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div className="text-lg font-bold text-foreground">{totalVideos}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">{t({ en: "Videos", fr: "Vid\u00e9os" })}</div>
+                </div>
+                )}
+                {totalDownloads > 0 && (
+                <div className="bg-card rounded-xl border border-border p-4 text-center">
+                  <div className="w-9 h-9 rounded-lg bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center mx-auto mb-2">
+                    <Download className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                  </div>
+                  <div className="text-lg font-bold text-foreground">{totalDownloads}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">{t({ en: "Downloads", fr: "T\u00e9l\u00e9chargements" })}</div>
+                </div>
+                )}
                 <div className="bg-card rounded-xl border border-border p-4 text-center">
                   <div className="w-9 h-9 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center mx-auto mb-2">
                     <Brain className="w-4 h-4 text-violet-600 dark:text-violet-400" />
@@ -462,6 +488,12 @@ export default function TrainingCertification() {
                           <span className="flex items-center gap-1">
                             <PlayCircle className="w-3 h-3" />
                             {course.videos.length} {t({ en: "videos", fr: "vidéos" })}
+                          </span>
+                        )}
+                        {(course as any).downloadCount > 0 && (
+                          <span className="flex items-center gap-1">
+                            <Download className="w-3 h-3" />
+                            {(course as any).downloadCount} {t({ en: "downloads", fr: "téléchargements" })}
                           </span>
                         )}
                       </div>

@@ -18,7 +18,7 @@ import {
 import {
   ArrowLeft, BookOpen, FileText, HelpCircle, Play, Edit3, Eye,
   ChevronRight, Search, GraduationCap, CheckCircle2, XCircle,
-  Plus, Trash2, Save, RefreshCw, Layers, PenTool,
+  Plus, Trash2, Save, RefreshCw, Layers, PenTool, Download, PlayCircle as PlayCircleIcon,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -169,6 +169,8 @@ export default function AdminContentManager() {
                 <span className="flex items-center gap-1"><BookOpen className="w-3 h-3" />{cert.courseCount} cours</span>
                 <span className="flex items-center gap-1"><Layers className="w-3 h-3" />{cert.totalLessons} leçons</span>
                 <span className="flex items-center gap-1"><PenTool className="w-3 h-3" />{cert.totalExercises} exercices</span>
+                {cert.totalVideos > 0 && <span className="flex items-center gap-1"><PlayCircleIcon className="w-3 h-3" />{cert.totalVideos} vidéos</span>}
+                {(cert as any).totalDownloads > 0 && <span className="flex items-center gap-1"><Download className="w-3 h-3" />{(cert as any).totalDownloads} téléchargements</span>}
               </div>
               <div className="flex gap-2">
                 <Button size="sm" variant="outline" className="text-xs" onClick={() => {

@@ -18,6 +18,7 @@ import {
   ArrowLeft,
   PlayCircle,
   LogOut,
+  Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
@@ -276,11 +277,12 @@ export default function TrainingDashboard() {
         </motion.div>
 
         {/* Stats Row */}
-        <motion.div variants={fadeInUp} className="grid grid-cols-4 gap-3 md:gap-4 mb-10">
+        <motion.div variants={fadeInUp} className="grid grid-cols-5 gap-3 md:gap-4 mb-10">
           {[
             { value: String(trainingIndex.certifications.length), label: { en: "Certifications", fr: "Certifications" }, icon: <GraduationCap className="w-4 h-4" /> },
             { value: String(trainingIndex.courses.length), label: { en: "Courses", fr: "Cours" }, icon: <BookOpen className="w-4 h-4" /> },
             { value: String(trainingIndex.certifications.reduce((s, c) => s + c.totalVideos, 0)), label: { en: "Videos", fr: "Vidéos" }, icon: <Play className="w-4 h-4" /> },
+            { value: String(trainingIndex.certifications.reduce((s, c) => s + (c as any).totalDownloads || 0, 0)), label: { en: "Downloads", fr: "Téléchargements" }, icon: <Download className="w-4 h-4" /> },
             { value: String(trainingIndex.certifications.reduce((s, c) => s + c.totalExercises, 0)) + "+", label: { en: "Exercises", fr: "Exercices" }, icon: <Dumbbell className="w-4 h-4" /> },
           ].map((stat, i) => (
             <motion.div
@@ -394,6 +396,12 @@ export default function TrainingDashboard() {
                       <span className="flex items-center gap-1">
                         <Play className="w-3.5 h-3.5" />
                         {cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}
+                      </span>
+                    )}
+                    {(cert as any).totalDownloads > 0 && (
+                      <span className="flex items-center gap-1">
+                        <Download className="w-3.5 h-3.5" />
+                        {(cert as any).totalDownloads} {t({ en: "downloads", fr: "téléchargements" })}
                       </span>
                     )}
                   </div>
