@@ -15,6 +15,7 @@ import {
   BookOpen,
   ArrowRight,
   ChevronDown,
+  ChevronUp,
   Play,
   CheckCircle2,
   Sparkles,
@@ -1655,6 +1656,7 @@ function FlowDiagram() {
 /* ─── Revenue Simulator ─── */
 function RevenueSimulator() {
   const { t } = useLanguage();
+  const [expandedCards, setExpandedCards] = useState<Set<number>>(new Set());
   const [projects, setProjects] = useState(3);
   const [avgSetup, setAvgSetup] = useState(5000);
   const [implication, setImplication] = useState(40);
@@ -1786,226 +1788,79 @@ function RevenueSimulator() {
       <div className="mt-10 pt-8 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
         <h4 className="wise-display-xs text-center mb-6">{t({ fr: "Exemples concrets de projets", en: "Concrete project examples", ar: "أمثلة ملموسة للمشاريع" })}</h4>
         <p className="wise-body-sm text-center mb-8 max-w-[56ch] mx-auto">{t({ fr: "Scénarios réalistes dans le contexte Afrique / MENA — les montants varient selon la complexité.", en: "Realistic scenarios in the Africa / MENA context — amounts vary depending on complexity.", ar: "سيناريوهات واقعية في سياق أفريقيا / الشرق الأوسط — المبالغ تختلف حسب التعقيد." })}</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Agence de voyage */}
-          <div className="wise-card-sage p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">✈️</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Agence de Voyage", en: "Travel Agency", ar: "وكالة سفر" })}</p>
-            </div>
-            <p className="wise-body-sm mb-3">{t({ fr: "Chatbot IA multilingue (arabe/français) pour devis Omra & circuits touristiques, avec relance automatique des prospects inactifs", en: "Multilingual AI chatbot (Arabic/French) for Omra quotes & tourist circuits, with automatic follow-up of inactive prospects", ar: "روبوت محادثة ذكي متعدد اللغات (عربي/فرنسي) لعروض العمرة والرحلات السياحية، مع متابعة تلقائية للعملاء المحتملين" })}</p>
-            <div className="space-y-1">
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>6 000 €</span>
+        {(() => {
+          const toggleCard = (idx: number) => {
+            setExpandedCards(prev => {
+              const next = new Set(prev);
+              if (next.has(idx)) next.delete(idx); else next.add(idx);
+              return next;
+            });
+          };
+          const projectExamples = [
+            { icon: "✈️", title: t({ fr: "Agence de Voyage", en: "Travel Agency", ar: "وكالة سفر" }), roi: t({ fr: "+35% conversions", en: "+35% conversions", ar: "+35% تحويلات" }), desc: t({ fr: "Chatbot IA multilingue (arabe/français) pour devis Omra & circuits touristiques, avec relance automatique des prospects inactifs", en: "Multilingual AI chatbot (Arabic/French) for Omra quotes & tourist circuits, with automatic follow-up of inactive prospects", ar: "روبوت محادثة ذكي متعدد اللغات" }), setup: "6 000 €", tokens: "800 €", earnings: "2 400 € + 80 €/mois", pct: "40%" },
+            { icon: "📣", title: t({ fr: "Agence Marketing", en: "Marketing Agency", ar: "وكالة تسويق" }), roi: t({ fr: "3 employés remplacés", en: "3 employees replaced", ar: "3 موظفين مستبدلين" }), desc: t({ fr: "Agent autonome de création de contenu social media (posts, visuels, planning) pour clients PME au Maghreb", en: "Autonomous social media content creation agent (posts, visuals, planning) for SME clients in the Maghreb", ar: "وكيل مستقل لإنشاء محتوى وسائل التواصل الاجتماعي" }), setup: "10 000 €", tokens: "1 500 €", earnings: "4 500 € + 150 €/mois", pct: "45%" },
+            { icon: "🛡️", title: t({ fr: "Compagnie d'Assurance", en: "Insurance Company", ar: "شركة تأمين" }), roi: t({ fr: "-60% temps traitement", en: "-60% processing time", ar: "-60% وقت المعالجة" }), desc: t({ fr: "Workflow automation pour le traitement des sinistres : extraction documents, vérification fraude, calcul indemnités", en: "Workflow automation for claims processing: document extraction, fraud verification, compensation calculation", ar: "أتمتة سير العمل لمعالجة المطالبات" }), setup: "45 000 €", tokens: "8 000 €", earnings: "22 500 € + 800 €/mois", pct: "50%" },
+            { icon: "🏦", title: t({ fr: "Banque Régionale", en: "Regional Bank", ar: "بنك إقليمي" }), roi: t({ fr: "x4 dossiers traités/jour", en: "x4 files processed/day", ar: "x4 ملفات معالجة/يوم" }), desc: t({ fr: "Agent IA d'analyse de dossiers de crédit PME/TPE : scoring automatisé, vérification KYC et recommandation d'offres", en: "AI agent for SME credit file analysis: automated scoring, KYC verification and offer recommendations", ar: "وكيل ذكاء اصطناعي لتحليل ملفات الائتمان" }), setup: "60 000 €", tokens: "12 000 €", earnings: "33 000 € + 1 200 €/mois", pct: "55%" },
+            { icon: "🩺", title: t({ fr: "Cabinet Médical", en: "Medical Practice", ar: "عيادة طبية" }), roi: t({ fr: "-70% appels manqués", en: "-70% missed calls", ar: "-70% مكالمات فائتة" }), desc: t({ fr: "Assistant IA pour prise de RDV, tri des urgences, rappels patients et pré-diagnostic orienté", en: "AI assistant for appointment booking, emergency triage, patient reminders and guided pre-diagnosis", ar: "مساعد ذكاء اصطناعي لحجز المواعيد" }), setup: "8 000 €", tokens: "600 €", earnings: "3 200 € + 60 €/mois", pct: "40%" },
+            { icon: "🚢", title: t({ fr: "Société Import-Export", en: "Import-Export Company", ar: "شركة استيراد وتصدير" }), roi: t({ fr: "-45% retards douane", en: "-45% customs delays", ar: "-45% تأخيرات جمركية" }), desc: t({ fr: "Agent de suivi logistique : tracking conteneurs, alertes douanes, génération documents d'import (ports Tanger Med, Abidjan)", en: "Logistics tracking agent: container tracking, customs alerts, import document generation", ar: "وكيل متابعة لوجستية" }), setup: "35 000 €", tokens: "6 000 €", earnings: "17 500 € + 600 €/mois", pct: "50%" },
+            { icon: "🏗️", title: t({ fr: "Promoteur Immobilier", en: "Real Estate Developer", ar: "مطور عقاري" }), roi: t({ fr: "+50% leads qualifiés", en: "+50% qualified leads", ar: "+50% عملاء محتملين مؤهلين" }), desc: t({ fr: "Chatbot de qualification acheteurs, visite virtuelle IA et génération de compromis (programmes neufs Maroc/Tunisie)", en: "Buyer qualification chatbot, AI virtual tours and sales agreement generation", ar: "روبوت محادثة لتأهيل المشترين" }), setup: "14 000 €", tokens: "1 800 €", earnings: "6 300 € + 180 €/mois", pct: "45%" },
+            { icon: "🎓", title: t({ fr: "École Privée / Université", en: "Private School / University", ar: "مدرسة خاصة / جامعة" }), roi: t({ fr: "-80% temps correction", en: "-80% grading time", ar: "-80% وقت التصحيح" }), desc: t({ fr: "Plateforme de tutorat IA personnalisé et correction automatique d'examens pour établissements privés", en: "Personalized AI tutoring platform and automatic exam grading for private institutions", ar: "منصة تعليم خصوصي بالذكاء الاصطناعي" }), setup: "12 000 €", tokens: "1 200 €", earnings: "5 400 € + 120 €/mois", pct: "45%" },
+          ];
+          return (
+        <>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {projectExamples.map((p: any, idx: number) => (
+            <div key={idx} className="wise-card-sage p-4 flex flex-col">
+              {/* Always visible: icon + title + ROI */}
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-lg">{p.icon}</span>
+                <p className="font-semibold text-sm" style={{ color: "var(--neo-ink)" }}>{p.title}</p>
               </div>
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>800 €</span>
-              </div>
-              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">{t({ fr: "Votre gain (40%)", en: "Your earnings (40%)", ar: "أرباحك (40%)" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>2 400 € + 80 €/mois</span>
-              </div>
-              <div className="flex justify-between pt-1">
+              <div className="flex items-center gap-1.5 mb-2">
                 <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "+35% de conversions", en: "+35% conversions", ar: "+35% تحويلات" })}</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{p.roi}</span>
               </div>
+              {/* Expand/collapse button */}
+              <button
+                onClick={() => toggleCard(idx)}
+                className="flex items-center gap-1 text-xs font-medium mt-auto pt-2 border-t cursor-pointer"
+                style={{ borderColor: "rgba(0,0,0,0.06)", color: "var(--wise-primary)" }}
+              >
+                {expandedCards.has(idx) ? (
+                  <><ChevronUp size={14} /> {t({ fr: "Masquer", en: "Show less", ar: "إخفاء" })}</>
+                ) : (
+                  <><ChevronDown size={14} /> {t({ fr: "Afficher plus", en: "Show more", ar: "عرض المزيد" })}</>
+                )}
+              </button>
+              {/* Expanded details */}
+              {expandedCards.has(idx) && (
+                <div className="mt-3 space-y-2 animate-in fade-in duration-200">
+                  <p className="wise-body-sm">{p.desc}</p>
+                  <div className="space-y-1 pt-2">
+                    <div className="flex justify-between">
+                      <span className="wise-label">Setup</span>
+                      <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>{p.setup}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="wise-label">Tokens/mois</span>
+                      <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>{p.tokens}</span>
+                    </div>
+                    <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
+                      <span className="wise-label">{t({ fr: `Votre gain (${p.pct})`, en: `Your earnings (${p.pct})`, ar: `أرباحك (${p.pct})` })}</span>
+                      <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>{p.earnings}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-
-          {/* Agence marketing */}
-          <div className="wise-card-sage p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">📣</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Agence Marketing", en: "Marketing Agency", ar: "وكالة تسويق" })}</p>
-            </div>
-            <p className="wise-body-sm mb-3">{t({ fr: "Agent autonome de création de contenu social media (posts, visuels, planning) pour clients PME au Maghreb", en: "Autonomous social media content creation agent (posts, visuals, planning) for SME clients in the Maghreb", ar: "وكيل مستقل لإنشاء محتوى وسائل التواصل الاجتماعي (منشورات، مرئيات، تخطيط) لعملاء الشركات الصغيرة في المغرب العربي" })}</p>
-            <div className="space-y-1">
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>10 000 €</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>1 500 €</span>
-              </div>
-              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">{t({ fr: "Votre gain (45%)", en: "Your earnings (45%)", ar: "أرباحك (45%)" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>4 500 € + 150 €/mois</span>
-              </div>
-              <div className="flex justify-between pt-1">
-                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "3 employés remplacés", en: "3 employees replaced", ar: "3 موظفين مستبدلين" })}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Assurance */}
-          <div className="wise-card-sage p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">🛡️</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Compagnie d'Assurance", en: "Insurance Company", ar: "شركة تأمين" })}</p>
-            </div>
-            <p className="wise-body-sm mb-3">{t({ fr: "Workflow automation pour le traitement des sinistres : extraction documents, vérification fraude, calcul indemnités", en: "Workflow automation for claims processing: document extraction, fraud verification, compensation calculation", ar: "أتمتة سير العمل لمعالجة المطالبات: استخراج المستندات، التحقق من الاحتيال، حساب التعويضات" })}</p>
-            <div className="space-y-1">
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>45 000 €</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>8 000 €</span>
-              </div>
-              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">{t({ fr: "Votre gain (50%)", en: "Your earnings (50%)", ar: "أرباحك (50%)" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>22 500 € + 800 €/mois</span>
-              </div>
-              <div className="flex justify-between pt-1">
-                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "-60% temps traitement", en: "-60% processing time", ar: "-60% وقت المعالجة" })}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Banque */}
-          <div className="wise-card-sage p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">🏦</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Banque Régionale", en: "Regional Bank", ar: "بنك إقليمي" })}</p>
-            </div>
-            <p className="wise-body-sm mb-3">{t({ fr: "Agent IA d'analyse de dossiers de crédit PME/TPE : scoring automatisé, vérification KYC et recommandation d'offres", en: "AI agent for SME credit file analysis: automated scoring, KYC verification and offer recommendations", ar: "وكيل ذكاء اصطناعي لتحليل ملفات الائتمان: تسجيل تلقائي، التحقق من KYC وتوصيات العروض" })}</p>
-            <div className="space-y-1">
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>60 000 €</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>12 000 €</span>
-              </div>
-              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">{t({ fr: "Votre gain (55%)", en: "Your earnings (55%)", ar: "أرباحك (55%)" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>33 000 € + 1 200 €/mois</span>
-              </div>
-              <div className="flex justify-between pt-1">
-                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "x4 dossiers traités/jour", en: "x4 files processed/day", ar: "x4 ملفات معالجة/يوم" })}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Cabinet médecin */}
-          <div className="wise-card-sage p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">🩺</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Cabinet Médical", en: "Medical Practice", ar: "عيادة طبية" })}</p>
-            </div>
-            <p className="wise-body-sm mb-3">{t({ fr: "Assistant IA pour prise de RDV, tri des urgences, rappels patients et pré-diagnostic orienté (cliniques privées Casablanca/Alger)", en: "AI assistant for appointment booking, emergency triage, patient reminders and guided pre-diagnosis (private clinics Casablanca/Algiers)", ar: "مساعد ذكاء اصطناعي لحجز المواعيد، فرز الطوارئ، تذكيرات المرضى والتشخيص المبدئي (عيادات خاصة الدار البيضاء/الجزائر)" })}</p>
-            <div className="space-y-1">
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>8 000 €</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>600 €</span>
-              </div>
-              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">{t({ fr: "Votre gain (40%)", en: "Your earnings (40%)", ar: "أرباحك (40%)" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>3 200 € + 60 €/mois</span>
-              </div>
-              <div className="flex justify-between pt-1">
-                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "-70% appels manqués", en: "-70% missed calls", ar: "-70% مكالمات فائتة" })}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Import-Export */}
-          <div className="wise-card-sage p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">🚢</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Société Import-Export", en: "Import-Export Company", ar: "شركة استيراد وتصدير" })}</p>
-            </div>
-            <p className="wise-body-sm mb-3">{t({ fr: "Agent de suivi logistique : tracking conteneurs, alertes douanes, génération documents d'import (ports Tanger Med, Abidjan)", en: "Logistics tracking agent: container tracking, customs alerts, import document generation (Tanger Med, Abidjan ports)", ar: "وكيل متابعة لوجستية: تتبع الحاويات، تنبيهات الجمارك، إنشاء مستندات الاستيراد (ميناء طنجة المتوسط، أبيدجان)" })}</p>
-            <div className="space-y-1">
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>35 000 €</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>6 000 €</span>
-              </div>
-              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">{t({ fr: "Votre gain (50%)", en: "Your earnings (50%)", ar: "أرباحك (50%)" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>17 500 € + 600 €/mois</span>
-              </div>
-              <div className="flex justify-between pt-1">
-                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "-45% retards douane", en: "-45% customs delays", ar: "-45% تأخيرات جمركية" })}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Promoteur immobilier */}
-          <div className="wise-card-sage p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">🏗️</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Promoteur Immobilier", en: "Real Estate Developer", ar: "مطور عقاري" })}</p>
-            </div>
-            <p className="wise-body-sm mb-3">{t({ fr: "Chatbot de qualification acheteurs, visite virtuelle IA et génération de compromis (programmes neufs Maroc/Tunisie)", en: "Buyer qualification chatbot, AI virtual tours and sales agreement generation (new builds Morocco/Tunisia)", ar: "روبوت محادثة لتأهيل المشترين، جولات افتراضية بالذكاء الاصطناعي وإنشاء عقود البيع (مشاريع جديدة المغرب/تونس)" })}</p>
-            <div className="space-y-1">
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>14 000 €</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>1 800 €</span>
-              </div>
-              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">{t({ fr: "Votre gain (45%)", en: "Your earnings (45%)", ar: "أرباحك (45%)" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>6 300 € + 180 €/mois</span>
-              </div>
-              <div className="flex justify-between pt-1">
-                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "+50% leads qualifiés", en: "+50% qualified leads", ar: "+50% عملاء محتملين مؤهلين" })}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* École privée */}
-          <div className="wise-card-sage p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">🎓</span>
-              <p className="font-semibold text-sm" style={{ color: "var(--wise-ink)" }}>{t({ fr: "École Privée / Université", en: "Private School / University", ar: "مدرسة خاصة / جامعة" })}</p>
-            </div>
-            <p className="wise-body-sm mb-3">{t({ fr: "Plateforme de tutorat IA personnalisé et correction automatique d'examens pour établissements privés (Sénégal, Côte d'Ivoire)", en: "Personalized AI tutoring platform and automatic exam grading for private institutions (Senegal, Ivory Coast)", ar: "منصة تعليم خصوصي بالذكاء الاصطناعي وتصحيح تلقائي للامتحانات للمؤسسات الخاصة (السنغال، ساحل العاج)" })}</p>
-            <div className="space-y-1">
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Setup", en: "Setup", ar: "الإعداد" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>12 000 €</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="wise-label">{t({ fr: "Tokens/mois", en: "Tokens/month", ar: "رموز/شهر" })}</span>
-                <span className="font-semibold text-xs" style={{ fontFamily: "var(--font-mono)" }}>1 200 €</span>
-              </div>
-              <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                <span className="wise-label">{t({ fr: "Votre gain (45%)", en: "Your earnings (45%)", ar: "أرباحك (45%)" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>5 400 € + 120 €/mois</span>
-              </div>
-              <div className="flex justify-between pt-1">
-                <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{t({ fr: "-80% temps correction", en: "-80% grading time", ar: "-80% وقت التصحيح" })}</span>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
         <p className="wise-label text-center mt-6">
-          Tous les scénarios sont basés sur des cas réels du marché Afrique/MENA — les montants varient selon la taille et la complexité du projet.
+          {t({ fr: "Tous les scénarios sont basés sur des cas réels du marché Afrique/MENA — les montants varient selon la taille et la complexité du projet.", en: "All scenarios are based on real cases from the Africa/MENA market — amounts vary depending on size and complexity.", ar: "جميع السيناريوهات مبنية على حالات حقيقية من سوق أفريقيا/الشرق الأوسط — المبالغ تختلف حسب الحجم والتعقيد." })}
         </p>
+        </>
+          );
+        })()}
       </div>
     </div>
   );
