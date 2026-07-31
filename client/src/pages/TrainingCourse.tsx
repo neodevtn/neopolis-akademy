@@ -23,6 +23,7 @@ import { MatchingExercise } from "@/components/MatchingExercise";
 import { SingleChoiceExercise } from "@/components/SingleChoiceExercise";
 import { ChapterQuiz } from "@/components/ChapterQuiz";
 import { CourseIllustration } from "@/components/CourseIllustration";
+import { VideoRecommendations } from "@/components/VideoRecommendations";
 import { motion, AnimatePresence } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 
@@ -2828,6 +2829,11 @@ function LessonViewer({
           )}
           </motion.div>
           </AnimatePresence>
+
+          {/* Video Recommendations - shown on last chapter only */}
+          {isLastChapter && !isReviewMode && (
+            <VideoRecommendations lesson={lesson} lang={lang} t={t} />
+          )}
 
                     {/* Chapter navigation */}
           <div className="mt-8 pt-5 border-t border-[#e8e5e0] dark:border-slate-700">

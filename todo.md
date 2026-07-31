@@ -995,3 +995,10 @@
 - [x] Rechercher et intégrer des vidéos YouTube récentes pour les 10 nouvelles certifications
 - [x] Ajouter des blocs vidéo (cours principal + vidéos complémentaires + tutoriels) dans les fichiers de cours
 - [x] Recomputer les stats à tous les niveaux et vérifier la cohérence
+
+## Système de recommandation vidéos complémentaires
+- [x] Créer une base de données de vidéos YouTube complémentaires par thème/sujet
+- [x] Créer le composant VideoRecommendations (section en fin de leçon)
+- [x] Intégrer le composant dans TrainingCourse après le dernier chapitre de chaque leçon
+- [x] Afficher 3-5 vidéos recommandées par leçon (titre, durée, type: tutoriel/complémentaire/avancé)
+- [x] Système de matching par mots-clés du contenu de la leçon
