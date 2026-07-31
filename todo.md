@@ -955,3 +955,4 @@
 - [x] Mettre à jour le champ videos[] dans chaque cours de trainingIndex.json
 - [x] Ajouter compteur totalDownloads par certification dans trainingIndex.json
 - [x] Afficher le compteur downloads dans l'UI (TrainingCertification, TrainingDashboard, AdminContentManager)
+- [x] Corriger le curseur pointer sur l'élément "Don't suffer the disruption" (ce n'est pas un bouton)

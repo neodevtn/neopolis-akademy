@@ -393,10 +393,10 @@ export default function Home() {
 
           {/* CTA bottom */}
           <motion.div variants={fadeInUp} className="text-center">
-            <button className="wise-btn-tertiary">
+            <span className="wise-btn-tertiary" style={{ cursor: "default" }}>
               <Zap size={16} />
               {t({ fr: "Ne subissez pas la disruption. Devenez l'acteur du changement.", en: "Don't suffer the disruption. Become the agent of change.", ar: "لا تكن ضحية التحوّل. كن صانع التغيير." })}
-            </button>
+            </span>
             <p className="wise-label mt-4">{t({ fr: "Sources : WEF Future of Jobs 2025, Goldman Sachs 2023/2026, McKinsey Global Institute, Gartner 2025", en: "Sources: WEF Future of Jobs 2025, Goldman Sachs 2023/2026, McKinsey Global Institute, Gartner 2025", ar: "المصادر: WEF Future of Jobs 2025, Goldman Sachs 2023/2026, McKinsey Global Institute, Gartner 2025" })}</p>
           </motion.div>
         </div>
