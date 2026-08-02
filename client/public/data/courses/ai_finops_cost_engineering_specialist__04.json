@@ -26,7 +26,8 @@
               "title": "LLM Cost Optimization: Token Economics for Agentic FinOps",
               "label": "Course Video"
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -39,7 +40,8 @@
                 "en": "Budgets for AI should reflect workload patterns and risk tolerance. Common scopes include per-project, per-team, per-model, per-training run, and per-environment (dev/test/prod). Establish a baseline using historical costs and usage (GPU-hours, tokens, storage I/O), then set thresholds using burn-rate metrics (e.g., daily spend vs. time-elapsed budget) and forecasts. Alerts should be multi-level: early-warning (60–70%), action-required (80–90%), and hard-stop or executive notification at 100% or forecast-to-exceed. Anomaly detection complements threshold alerts by flagging statistically unusual spikes (e.g., 3–5× variance from baseline), which is valuable for volatile AI workloads with auto-scaling or misconfigured hyperparameters.\n\nAlert channels include email, chat (Slack/Teams), incident systems, and webhooks to automation. Automation patterns: pause/suspend queued jobs, scale down inference replicas, disable auto-scaling, or require re-approval to continue. Many teams integrate alerts with workflow tools (e.g., Jira/ServiceNow) and CI/CD to create traceable approvals.\n\nApproval workflows typically use: 1) Pre-approval gates for high-risk operations (e.g., launching large GPU clusters or long training runs), 2) Just-in-time approvals triggered by threshold breaches (e.g., continue above 80% budget), and 3) Exception windows with strict timeboxing and caps. Guardrails can be policy-as-code (e.g., Kubernetes admission policies), quotas/limits (max GPUs per namespace), budget-based actions, and scheduled time limits (training curfew windows).\n\nAI-specific considerations: distribute budgets to reflect the cost profile—training (burst, high GPU), fine-tuning (intermittent), inference (steady or event-driven), and data pipelines (ETL/feature stores). Track unit metrics such as $/1K tokens, $/training hour, $/model checkpoint, and GPU utilization to refine budgets. Implement job-level metadata (tags/labels) for cost attribution. Use runbooks to specify what to do at each alert tier (e.g., checkpoint and pause training at 90%, require product owner approval to proceed)."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -52,7 +54,8 @@
                 "en": "• Budget scope and burn rate: Define budgets by project/model/run and monitor spend vs. time to detect overspend early.\n• Alerts and anomalies: Combine threshold alerts with variance-based anomaly detection to catch spikes from autoscaling or misconfiguration.\n• Approval and enforcement: Use pre-approvals, JIT approvals, and policy-based guardrails (quotas, timeboxes) to prevent runaway costs."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -169,7 +172,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -182,7 +186,8 @@
                 "en": "• Use burn-rate-aware budgets and multi-tier alerts to catch overspend early.\n• Pair threshold alerts with anomaly detection to surface unexpected spikes.\n• Implement pre-approvals, JIT approvals, and policy-based guardrails to prevent runaway AI costs."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -195,7 +200,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -217,7 +223,8 @@
                 "en": "In this lesson you will learn: 1) How to attribute AI costs using reliable metering (GPU-hours, tokens, storage, egress) 2) How to design showback and chargeback models, including shared cost allocation 3) How to build rate cards and unit economics (e.g., $/1K tokens, $/inference) to drive accountability"
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -236,7 +243,8 @@
               "title": "How to Reduce AI Token Usage in 2026",
               "label": "Recommended Viewing"
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -249,7 +257,8 @@
                 "en": "• Allocation drivers: Choose a cost-correlated metric (GPU-hours, tokens, requests) for fair distribution.\n• Shared cost apportionment: Distribute cluster overhead, storage, and networking using transparent, documented rules.\n• Rate cards and unit economics: Price per unit (e.g., $/A100-hour, $/1K tokens) to enable predictable chargeback."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -366,7 +375,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -379,7 +389,8 @@
                 "en": "• Start with showback to validate data quality and allocation logic.\n• Use cost-correlated drivers (GPU-hours, tokens) and transparent rules for shared costs.\n• Publish rate cards and unit metrics to enable predictable, fair chargeback."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -392,7 +403,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -414,7 +426,8 @@
                 "en": "In this lesson you will learn: 1) How to build and prioritize a cost optimization backlog that balances savings, risk, and effort across teams. 2) How to establish governance cadences and ownership so backlog items move to closure. 3) How to design executive reporting that links optimization work to business outcomes with clear metrics, targets, and narratives."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -427,7 +440,8 @@
                 "en": "An optimization backlog is a transparent, continuously updated queue of cost-saving and efficiency opportunities (rightsizing, autoscaling, storage tiering, commitment coverage, architectural changes, AI/ML workload tuning). It must include standardized metadata: estimated annualized savings, effort (person-days), risk, dependencies, required approvals, owner, target date, and confidence in estimates.\nPrioritization should be objective. Common models include ICE (Impact, Confidence, Effort) and WSJF (Weighted Shortest Job First), which incorporate cost of delay and time-to-value. Where possible, link items to unit economics (e.g., cost per inference, cost per transaction) so prioritization reflects customer value, not just raw spend.\nGovernance ensures flow: assign a DRI per item, run a regular FinOps/engineering review (weekly or biweekly), and track throughput, cycle time, and realized vs. potential savings. Integrate backlog items into engineering roadmaps to avoid ad-hoc work that stalls.\nExecutive reporting should present: a savings funnel (identified → approved → implemented → realized), coverage metrics (commitment coverage, utilization), forecast accuracy, month-over-month variance with a bridge (usage/volume, rate/price, mix), and progress toward OKRs. Tie each report to actions: what was done, what’s next, and who is accountable."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -440,7 +454,8 @@
                 "en": "• Prioritization Models: Use frameworks like ICE or WSJF to rank items by impact, effort, confidence, and time-to-value.\n• Savings Funnel and Realization: Track identified vs. realized savings and aging to ensure opportunities convert into outcomes.\n• Executive Metrics: Report unit costs, variance bridges (volume/rate/mix), commitment coverage/utilization, and forecast accuracy with clear owners and dates."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -557,7 +572,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -570,7 +586,8 @@
                 "en": "• Use objective models (ICE/WSJF) to prioritize high-ROI, quick-win optimizations.\n• Govern the backlog with DRIs, cadences, and SLAs to convert potential into realized savings.\n• Executive reporting should tie drivers to outcomes and actions via variance bridges, unit costs, and a savings funnel."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -589,7 +606,8 @@
               "title": "LLM Cost Optimization in 2025: FinOps Strategies",
               "label": "Tutorial"
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -611,7 +629,8 @@
                 "en": "In this lesson you will learn: 1) How to implement guardrails that control spend while enabling rapid experimentation. 2) How to fund and monitor innovation with budgets, policies, and self-service platforms. 3) How to use metrics and feedback loops to adjust governance without creating friction."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -624,7 +643,8 @@
                 "en": "Sustained cost discipline comes from guardrails, not hard gates. Preventive controls (approved blueprints, quotas, Service Control Policies, cost-aware defaults) and detective controls (budgets, anomaly detection, alerts) enable safe autonomy. Golden paths (templates for common stacks and AI workloads) embed rightsizing, autoscaling, lifecycle policies, and tagging from day one.\nInnovation needs ring-fenced budgets (portfolios, sandboxes) with spend caps, TTL/auto-teardown, and exception processes. Treat experiments as time-bound with explicit hypotheses and cost-of-learning limits. Use self-service portals that expose unit-cost estimates before launch and show real-time spend after.\nIntegrate cost into the SDLC: pre-deploy checks (policy-as-code and cost impact in CI), architecture reviews that include unit economics, and post-deploy monitoring with anomaly detection. Create a lightweight waiver process with expiration dates to avoid permanent exceptions.\nAlign incentives: showback/chargeback to product owners, OKRs that balance efficiency with customer value, and transparency via dashboards. Measure success with trendable KPIs: unit cost targets, waste eliminated, budget adherence, and experiment throughput."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -637,7 +657,8 @@
                 "en": "• Guardrails vs. Gates: Prefer preventive and detective guardrails that guide choices over hard approvals that slow delivery.\n• Innovation Funding: Use ring-fenced budgets with caps, TTL, and anomaly detection to enable safe, rapid experiments.\n• Cost in the SDLC: Embed policy-as-code and cost checks in CI/CD and reviews; use dashboards and showback to create continuous feedback."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -754,7 +775,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -767,7 +789,8 @@
                 "en": "• Use guardrails (quotas, policy-as-code, budgets) to enable safe autonomy instead of hard gates.\n• Fund innovation with ring-fenced, capped environments and auto-teardown to limit cost-of-learning.\n• Embed cost checks into CI/CD and reviews; track unit costs and anomalies to iterate governance quickly."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -780,7 +803,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now sustain effective cost controls while preserving speed and innovation."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     }

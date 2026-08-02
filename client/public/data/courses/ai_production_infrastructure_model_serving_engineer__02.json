@@ -26,7 +26,8 @@
               "title": "vLLM Production Stack Deep Dive",
               "label": "Course Video"
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -39,7 +40,8 @@
                 "en": "Pods are the atomic unit of scheduling and run one or more containers that share networking and volumes. For AI inference, a Pod typically runs a model server (e.g., NVIDIA Triton, TorchServe, or a FastAPI/Uvicorn app) plus optional sidecars for logging, metrics, or model downloaders. Deployments manage stateless replicas and enable rolling updates, canaries, and self-healing via ReplicaSets. Use StatefulSets when stable network IDs and persistent storage are required (e.g., sharded vector indexes or on-disk caches). Jobs and CronJobs run finite tasks such as offline batch scoring, data preparation, or model evaluation.\nServices provide a stable virtual IP/DNS name for Pods; use ClusterIP internally, NodePort/LoadBalancer for external access, and Ingress or a Gateway (or a service mesh) to handle HTTP routing, TLS, and traffic policies. ConfigMaps and Secrets decouple configuration from images—store model URIs, feature flags, and API tokens; mount them as env vars or volumes. Volumes and PersistentVolumeClaims (via CSI drivers) hold model weights, embeddings, and caches; emptyDir or ephemeral-storage limits support scratch space. Use readiness probes to gate traffic until a model is warmed, liveness probes to recover from deadlocks, and startup probes for long cold starts. Resource requests/limits guide scheduling and protect nodes; pair them with Horizontal Pod Autoscaling (HPA) on CPU, memory, or custom metrics (e.g., queue depth via KEDA) to meet latency SLOs.\nAdopt Pod Disruption Budgets to preserve capacity during maintenance, and topology constraints or anti-affinity to spread replicas. Employ RBAC, Namespaces, and NetworkPolicies for least-privilege and isolation. Run as non-root with a read-only root filesystem when possible; mount only the volumes you need. Expose Prometheus metrics and structured logs for observability; use tracing to follow request flows. Operators/CRDs such as KServe provide higher-level abstractions (e.g., canary routing, dynamic scaling, model management) atop these primitives."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -52,7 +54,8 @@
                 "en": "• Pod: Smallest deployable unit; one or more containers sharing network and volumes\n• Deployment/ReplicaSet: Manages stateless replicas, rollouts, rollbacks, and self-healing\n• Service/Ingress: Stable service discovery and external HTTP(S) routing to your model endpoints\n• ConfigMap/Secret: Externalize configuration and credentials; mount as env vars or files\n• Volumes/PVC/CSI: Persistent and ephemeral storage for model weights, caches, and artifacts\n• Probes/HPA: Readiness/liveness/startup probes for resilience; autoscale on CPU/custom metrics\n• Jobs/CronJobs: Finite, batch-style AI tasks such as offline inference or preprocessing\n• Operators/CRDs (e.g., KServe): Higher-level model-serving APIs and traffic management"
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -169,7 +172,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -182,7 +186,8 @@
                 "en": "• Deployments + Services + HPA are the backbone of scalable, reliable inference endpoints\n• Probes, resource requests/limits, and PDBs improve correctness, availability, and operability\n• ConfigMaps/Secrets and PVCs cleanly separate configuration, credentials, and model artifacts"
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -195,7 +200,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand how core Kubernetes primitives map to AI inference and batch workloads, and can apply them to build secure, observable, and scalable services."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -217,7 +223,8 @@
                 "en": "In this lesson you will learn: 1) How GPUs are exposed to Kubernetes via the NVIDIA device plugin and GPU Operator 2) How to schedule GPU workloads using extended resources, node pools, labels, taints/tolerations, and affinity 3) Techniques for multi-GPU, MIG, time-slicing, and autoscaling dedicated GPU capacity"
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -236,7 +243,8 @@
               "title": "vLLM: Easily Deploying & Serving LLMs",
               "label": "Recommended Viewing"
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -249,7 +257,8 @@
                 "en": "• NVIDIA device plugin: Exposes GPUs as extended resources to the scheduler\n• Extended resources: Request GPUs with \"nvidia.com/gpu\"; set requests=limits for correct allocation\n• Dedicated GPU node pools: Separate node groups with labels for targeting and cost control\n• Taints/tolerations: Isolate GPU nodes (e.g., nvidia.com/gpu=true:NoSchedule) to admit only GPU Pods\n• Affinity/anti-affinity & topology spread: Control placement, spread load, and avoid noisy neighbors\n• MIG and time-slicing: Partition GPUs or share via slices; trade isolation vs. utilization\n• PriorityClasses/preemption: Protect latency-critical inference from being evicted by lower-priority work\n• Autoscaling: HPA/KEDA scales Pods; Cluster Autoscaler/Karpenter scales GPU nodes"
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -366,7 +375,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -379,7 +389,8 @@
                 "en": "• Request GPUs via extended resources and isolate capacity with taints/tolerations and labels\n• Use MIG for strong isolation or time-slicing for higher utilization of small workloads\n• Scale Pods with HPA/KEDA and scale GPU nodes with Cluster Autoscaler/Karpenter"
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -392,7 +403,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now schedule GPU workloads effectively using node pools, taints/tolerations, affinity, and autoscaling, and choose between MIG or time-slicing for utilization and isolation."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -414,7 +426,8 @@
                 "en": "In this lesson you will learn: 1) What the NVIDIA GPU Operator is and the components it manages in Kubernetes 2) How to install and configure the operator (drivers, device plugin, DCGM, NFD, MIG) across different environments 3) Operational best practices for upgrades, security, scheduling, and troubleshooting"
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -427,7 +440,8 @@
                 "en": "The NVIDIA GPU Operator automates deployment and lifecycle management of NVIDIA GPU software on Kubernetes clusters. It installs and reconciles GPU stack components as DaemonSets/Deployments and CRs so nodes become GPU-ready without manual steps.\n\nKey components managed:\n• NVIDIA Driver: Provides kernel modules and user-space libraries. The operator can deploy a driver container (privileged) or be configured to use pre-installed/cloud-managed drivers (driver.enabled=false).\n• NVIDIA Container Toolkit: Enables Docker/Containerd runtimes to expose GPUs inside containers (nvidia-container-runtime, libnvidia-container).\n• Kubernetes Device Plugin: Discovers GPUs and advertises the extended resource nvidia.com/gpu. It performs health checks and can support time-slicing and MIG-aware scheduling.\n• DCGM + DCGM Exporter: Data Center GPU Manager provides low-level telemetry and health; the exporter exposes Prometheus metrics for observability.\n• MIG Manager (on MIG-capable GPUs such as A100/H100): Automates creation of MIG profiles/instances according to a ClusterPolicy, enabling GPU partitioning.\n• Node Feature Discovery (optional): Labels nodes with GPU capabilities (e.g., vendor, model, MIG profiles) to enable topology-aware scheduling via nodeSelectors/affinity.\n• NVIDIA Fabric Manager (NVSwitch/NVLink systems): Manages fabrics on multi-GPU servers for high-bandwidth interconnects.\n\nInstallation patterns:\n• Helm chart or OperatorHub/OLM: Apply a ClusterPolicy to toggle components (drivers, toolkit, dcgm, mig, nfd) and set version pinning.\n• OpenShift: The operator can leverage the Driver Toolkit to build driver modules matching the cluster kernel.\n• Managed clouds (GKE/AKS/EKS): Often drivers are provided by the platform; deploy the operator with driver disabled but keep device plugin, toolkit, and DCGM for standardized scheduling/telemetry.\n\nScheduling and isolation:\n• Request GPUs with resource requests/limits on nvidia.com/gpu. One integer unit maps to one full GPU unless using MIG or time-slicing.\n• MIG partitions a GPU into isolated GPU Instances/Compute Instances; the device plugin advertises granular resources (e.g., nvidia.com/mig-1g.5gb).\n• Time-slicing (via device plugin configs) multiplexes a GPU among pods with enforced timeslices; less isolation than MIG but higher utilization.\n\nOperations and security:\n• Privileged DaemonSets are required for driver/toolkit components; restrict node selection and apply PodSecurity/NetworkPolicies.\n• Upgrades are coordinated by the operator; drain nodes where necessary to reload drivers or reconfigure MIG.\n• Troubleshooting uses operator and component logs, device plugin health endpoints, and DCGM metrics to trace issues."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -440,7 +454,8 @@
                 "en": "• ClusterPolicy CR: Central configuration object controlling which GPU components the operator installs and how they are versioned and configured\n• Device Plugin Resources: GPUs are advertised as nvidia.com/gpu (or MIG-specific resources) and consumed via pod resource requests/limits for scheduling\n• MIG vs Time-Slicing: MIG provides hard isolation and QoS guarantees; time-slicing shares a GPU without memory isolation, trading determinism for utilization"
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -557,7 +572,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -570,7 +586,8 @@
                 "en": "• The GPU Operator automates end-to-end GPU stack management (drivers, toolkit, device plugin, DCGM, MIG)\n• Use ClusterPolicy to enable/disable components and align with your environment (on-prem vs managed cloud)\n• Choose MIG for strong isolation or time-slicing for higher sharing; schedule via nvidia.com/* resources and node labels"
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -589,7 +606,8 @@
               "title": "Deploying and Monitoring LLM Inference Endpoints",
               "label": "Tutorial"
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -611,7 +629,8 @@
                 "en": "In this lesson you will learn: 1) How to collect GPU telemetry in Kubernetes using DCGM, Prometheus, and Grafana 2) Which GPU health and performance metrics matter and how to alert on them 3) Common GPU failure modes (OOM, throttling, ECC, Xid errors, device health) and remediation strategies"
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -624,7 +643,8 @@
                 "en": "Telemetry pipeline:\n• DCGM (Data Center GPU Manager) exposes low-level stats (utilization, memory, power, clocks, temperature, ECC, NVLink/PCIe). The dcgm-exporter (usually deployed by the GPU Operator) publishes Prometheus metrics per GPU/MIG instance.\n• Prometheus scrapes dcgm-exporter and stores time series; Grafana dashboards visualize GPU utilization, memory headroom, ECC, thermals, and per-pod usage (via labels).\n• Complementary tools: nvidia-smi for ad-hoc inspection; dcgmi for health checks; node logs (dmesg, driver logs) for Xid codes.\n\nKey metrics to monitor and alert on:\n• Utilization and saturation: sm_util, mem_copy_util, and memory_used vs memory_total for headroom and capacity planning.\n• Thermal/power: temperature, power_draw vs power_limit; throttle_reasons indicating thermal or power capping.\n• Reliability: correctable/uncorrectable ECC errors; Xid error counts; PCIe replay errors; NVLink link states.\n• Health and availability: device plugin health status; time to first byte/latency at the application layer to catch soft failures.\n• MIG awareness: metrics per MIG device (e.g., memory usage of a 1g.5gb slice) to avoid overcommit.\n\nCommon failure modes and remediation:\n• GPU OOM (CUDA out-of-memory): Application allocates more device memory than available (or than a MIG slice provides). Remediate by reducing batch size, enabling gradient checkpointing, using memory-efficient kernels, or requesting larger/MIG-suitable resources.\n• Throttling (thermal/power): High temperatures or power limits cause clocks to drop. Improve chassis airflow, clean filters, raise power limits within spec, or lower workload intensity; monitor throttle_reasons to distinguish thermal vs power cap.\n• ECC errors: Spikes in correctable errors may precede uncorrectable faults; persistent uncorrectable ECC may require node drain, GPU reset, or RMA. Enable alerts and track trend lines.\n• Xid errors: Driver-reported faults like memory page faults or device loss; e.g., Xid 31 (GPU memory page fault), Xid 79 (GPU has fallen off the bus). Often results in CUDA context loss and pod restarts. Investigate PCIe stability, drivers, and thermals; consider firmware/driver updates.\n• Device plugin health failures: The plugin marks devices unhealthy; scheduler avoids them. Drain the node, inspect driver/DCGM logs, and perform a GPU reset or node reboot.\n• MIG reconfiguration issues: Changing MIG mode or profiles requires GPUs to be idle; operator may drain pods before reconfiguring. Ensure proper disruption windows and PDBs.\n• Infrastructure-induced failures: Insufficient PSU, overheating, or flaky risers/NVLink bridges can manifest as intermittent Xids and performance drops; validate hardware health.\n\nAlerting and SLOs:\n• Define alerts for high memory utilization, sustained thermal throttling, rising ECC, and recurrent Xids per device.\n• Create availability SLOs that combine GPU readiness (device healthy), pod success rate, and latency tail metrics to capture user impact.\n• Runbooks should include quick commands (nvidia-smi, dcgmi diag), log paths, and remediation steps (cordon/drain, reset, rollback drivers)."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -637,7 +657,8 @@
                 "en": "• DCGM Exporter: Exposes standardized GPU metrics for Prometheus, including MIG-aware labels for per-slice visibility\n• Xid Errors: Driver-level error codes indicating GPU faults; repeated or severe Xids often require node drain, driver/firmware updates, or hardware checks\n• GPU OOM vs Pod OOM: CUDA OOM occurs on device memory and restarts the app; Pod OOMKill is from system memory pressure—telemetry distinguishes these paths"
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -754,7 +775,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -767,7 +789,8 @@
                 "en": "• Use DCGM + Prometheus to monitor utilization, memory, thermals, power, ECC, and Xid errors (including per-MIG visibility)\n• Most production issues trace to memory exhaustion, throttling, or hardware/driver faults—alert early and follow runbooks\n• Isolate unhealthy devices via the device plugin and Kubernetes drain workflows to protect SLOs while you remediate"
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -780,7 +803,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now implement GPU telemetry pipelines, interpret health signals, and respond effectively to common failure modes."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     }

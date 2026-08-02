@@ -26,7 +26,8 @@
               "title": "Building Robust RAG Systems with LangChain & LlamaIndex",
               "label": "Course Video"
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -39,7 +40,8 @@
                 "en": "RAG systems change frequently (embeddings, retrievers, chunking, rerankers, prompts, and generators), so layered regression testing is essential. Use unit tests for components (e.g., tokenizer/chunker), integration tests for retrieval pipelines (retriever + reranker), and end-to-end tests for answer quality and groundedness. Create gold datasets: (a) retrieval sets with queries and expected relevant document IDs, (b) answer sets with references/citations, and (c) adversarial/slice sets (long queries, entities, multi-hop). Track metrics by layer: retrieval (Recall@k, Precision@k, MRR, nDCG), attribution/groundedness (supportedness, citation accuracy), and generation (Exact Match, token F1, ROUGE-L, answerability). Stabilize tests by pinning versions, snapshotting indexes/embeddings, fixing top_k, setting temperature=0, seeding data order, and caching reranker/model outputs where feasible. Run CI on pull requests with acceptance thresholds and bootstrap-based significance checks, and schedule nightly full suites. Use slice analysis, cost/latency monitoring, and change logs for traceability. Treat regressions with a triage process and avoid masking problems (e.g., arbitrarily raising k)."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -52,7 +54,8 @@
                 "en": "• Golden sets: Curated queries with expected relevant docs, canonical answers, and source citations\n• Metrics by layer: Recall@k/MRR for retrieval; groundedness/attribution checks; EM/F1/ROUGE-L for answers; plus latency and cost budgets\n• Test stability: Temperature=0, seeded order, fixed top_k, snapshot embeddings/index, version pinning for retrievers/rerankers"
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -169,7 +172,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -182,7 +186,8 @@
                 "en": "• Test by layer and by slice; do not rely on a single end-to-end score\n• Stabilize tests with pinned artifacts, seeds, and temperature=0; track latency and cost alongside quality\n• Gate changes in CI with significance-aware thresholds and roll back on regressions"
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -195,7 +200,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand how to build stable, layered regression tests for RAG and use them to safely evolve your system."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -217,7 +223,8 @@
                 "en": "In this lesson you will learn: 1) How to capture and structure explicit and implicit feedback for RAG systems 2) How to design annotation guidelines, QA processes, and agreement checks for reliable labels 3) How to operationalize feedback into evals, dataset updates, and safer deployments"
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -236,7 +243,8 @@
               "title": "Learn RAG From Scratch – Python AI Tutorial",
               "label": "Recommended Viewing"
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -249,7 +257,8 @@
                 "en": "• Feedback types: Explicit ratings/preferences and user corrections; implicit signals like clicks and dwell time\n• Quality control: Clear guidelines, calibration rounds, gold checks, and inter-annotator agreement (Cohen's kappa/Krippendorff's alpha)\n• Integration: Convert labeled data into evals and training sets; close the loop with tickets, feature flags, and monitoring"
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -366,7 +375,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -379,7 +389,8 @@
                 "en": "• Close the loop: capture, triage, label, validate, integrate, and monitor\n• High-quality guidelines, calibration, and IAA are essential for trustworthy labels\n• Convert feedback into evals and guarded changes; measure loop health and prevent regressions"
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -392,7 +403,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now design robust human feedback loops and annotation workflows that continuously improve RAG systems."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -414,7 +426,8 @@
                 "en": "In this lesson you will learn: 1) How to design reproducible experiment tracking for RAG systems (datasets, prompts, retrievers, indexes, models, and evaluators). 2) How to define and automate release gates tied to evaluation thresholds, risk, and business SLAs. 3) How to operationalize experiments in CI/CD with canaries, shadowing, approvals, and rollback procedures."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -427,7 +440,8 @@
                 "en": "Experiment tracking ensures results are reproducible and comparable across iterations. Each run should capture immutable metadata: code commit/artefact version, dataset and query set versions, prompt template hash, retriever parameters (e.g., top_k, filters), index snapshot ID, model and tokenizer versions, evaluator versions, random seeds, and environment details. For RAG, track both offline and online metrics: answer correctness/utility (LLM-graded or human), faithfulness/groundedness, citation accuracy, retrieval precision/recall, latency, cost per query, and safety/PII incidents. Statistical rigor matters: use fixed test sets, holdouts, and significance testing or Bayesian estimation when comparing variants. Release gates are policy rules that block promotion unless multi-metric thresholds are satisfied (e.g., faithfulness ≥ 0.9, citation accuracy ≥ 0.95, latency p95 ≤ 800 ms, safety incidents = 0). Gates can be risk-weighted, applying stricter criteria for high-impact domains. Progressive delivery reduces risk: shadow traffic validates correctness without user impact; canaries expose a small slice with automatic abort thresholds; A/B tests measure business impact. Automate gates in CI/CD so a pipeline promotes only when metrics, sample sizes, and checks pass, with human sign-off for exceptions and documented rollback plans."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -440,7 +454,8 @@
                 "en": "• Experiment lineage and versioning: Record code, data, prompts, retriever/index snapshots, models, and evaluator versions to ensure exact reproducibility.\n• Release gates and policies: Multi-metric, risk-aware thresholds that must be met before promotion, covering quality, latency, cost, and safety.\n• Progressive delivery: Shadow, canary, and A/B strategies with automatic aborts and rollbacks to minimize user risk during releases."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -557,7 +572,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -570,7 +586,8 @@
                 "en": "• Track full lineage (code, data, prompts, retriever/index, models, evaluators) for reproducible RAG experiments.\n• Define multi-metric, risk-aware release gates and automate them in CI/CD.\n• Use shadowing/canaries with clear abort and rollback criteria to de-risk releases."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -589,7 +606,8 @@
               "title": "Complete RAG Crash Course With Langchain",
               "label": "Tutorial"
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -611,7 +629,8 @@
                 "en": "In this lesson you will learn: 1) How to translate RAG evaluation metrics into business impact and risk. 2) How to build stakeholder-ready dashboards and reports that are concise and trustworthy. 3) How to make decision-ready recommendations with clear trade-offs and next steps."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -624,7 +643,8 @@
                 "en": "Effective reporting starts with audience alignment. For product and business leaders, begin with a one-page executive summary: what changed, observed impact, risk, and the decision being requested (go/no-go/iterate). Tie technical metrics to outcomes: answer acceptance and faithfulness map to ticket deflection and CSAT; latency p95 maps to conversion and satisfaction; cost/query maps to gross margin; safety incidents map to compliance risk. Present results with uncertainty: include sample sizes, confidence intervals, and known biases (e.g., domain skew). Segment results by cohorts (intent, channel, locale) to reveal where improvements matter most. Use simple visuals and consistent definitions (north-star metric, leading indicators, guardrail metrics). State release readiness against SLAs/SLOs and policy gates, list trade-offs (quality vs. latency vs. cost), and quantify incremental impact (e.g., +4% acceptance → −3% tickets/month). Close with actionable next steps, owners, and timelines, and link to experiment lineage for auditability."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -637,7 +657,8 @@
                 "en": "• North-star metrics and guardrails: Define the primary business outcome and supporting constraints (quality, latency, cost, safety).\n• Communicating uncertainty: Report point estimates with confidence intervals and sample sizes to avoid overclaiming.\n• Decision-ready storytelling: Lead with impact, risk, and a clear ask; keep methods and lineage available in an appendix."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -754,7 +775,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -767,7 +789,8 @@
                 "en": "• Translate technical metrics into business terms (deflection, CSAT, margin) with uncertainty and sample sizes.\n• Use consistent, decision-focused reporting: impact, risks, trade-offs, and a clear ask.\n• Provide drill-downs and lineage for auditability while keeping the main narrative concise."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -780,7 +803,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now communicate RAG evaluation results clearly to product and business stakeholders and drive informed decisions."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     }

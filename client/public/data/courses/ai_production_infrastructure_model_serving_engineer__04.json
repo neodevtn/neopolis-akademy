@@ -26,7 +26,8 @@
               "title": "vLLM: Easily Deploying & Serving LLMs",
               "label": "Course Video"
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -39,7 +40,8 @@
                 "en": "Health checks ensure a service is running and ready to receive traffic. Liveness probes answer whether the process should be restarted; keep them simple and fast (e.g., thread/event loop alive). Readiness probes verify dependencies needed to serve requests, such as the model loaded in memory, GPU availability, tokenizer present, or connection to feature stores; fail readiness to remove the pod from load balancing without restarts. Startup probes prevent premature liveness failures during cold start and model warm-up. In Kubernetes, configure probe endpoints with sensible timeouts, periods, and failure thresholds to avoid flapping. For gRPC, use the standard gRPC health checking protocol; for HTTP, expose lightweight /live, /ready endpoints. Load testing validates that the service meets SLOs (e.g., p95 and p99 latency, error rate) at target QPS/RPS and concurrency. Use realistic request distributions (payload sizes, token lengths) and warm up models to avoid cold-start bias. Prefer open-loop traffic (rate-based) to evaluate queueing behavior and tail latency; closed-loop (concurrency-based) is useful for client perspective. Examine resource telemetry (CPU, GPU utilization, memory, I/O, network) and saturation indicators (queue depth, in-flight requests). Tools include k6, Locust, JMeter, Vegeta, wrk2; coordinate distributed generators and isolate the system under test. Identify capacity inflection points and implement backpressure, timeouts, and autoscaling policies."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -52,7 +54,8 @@
                 "en": "• Liveness vs Readiness vs Startup: Liveness checks process health; readiness checks serving capability and dependencies; startup gates initial warm-up.\n• Open-loop vs Closed-loop testing: Rate-based traffic reveals queueing and tail latency; concurrency-based tests reflect client throughput under backpressure.\n• Tail latency and SLOs: Track p95/p99 latency and error rates; manage with request limiting, batching, autoscaling, and resource isolation."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -169,7 +172,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -182,7 +186,8 @@
                 "en": "• Keep liveness simple; put dependency checks in readiness; use startup to cover cold-start and model warm-up.\n• Validate SLOs with realistic, rate-based load tests, watching tail latency, error budgets, and resource saturation.\n• Control tail latency with backpressure, batching, and autoscaling; set probe thresholds and timeouts to avoid flapping."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -195,7 +200,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand how to design robust health checks and execute meaningful load tests to ensure reliable model serving."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -217,7 +223,8 @@
                 "en": "In this lesson you will learn: 1) How blue/green and canary releases reduce risk and downtime 2) How to define metrics, guardrails, and automated rollback policies 3) How to manage schema, config, and model version compatibility for safe rollbacks."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -236,7 +243,8 @@
               "title": "Deploying and Monitoring LLM Inference Endpoints",
               "label": "Recommended Viewing"
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -249,7 +257,8 @@
                 "en": "• Blue/green: Two identical stacks; pre-warm and flip traffic for instant rollback.\n• Canary: Progressive traffic shifting with metric guardrails and automated promotion or rollback.\n• Compatibility: Backward-compatible schemas, config and model assets enable safe, fast reversions."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -366,7 +375,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -379,7 +389,8 @@
                 "en": "• Use blue/green for zero-downtime cutovers and instant rollback; pre-warm models and caches.\n• Use canary for progressive risk reduction with metric guardrails and automated rollback.\n• Maintain backward compatibility (schemas, configs, models) so rollbacks are fast, safe, and reversible."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -392,7 +403,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now plan blue/green and canary releases with automated rollbacks for reliable model serving."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -414,7 +426,8 @@
                 "en": "In this lesson you will learn: 1) How to design multi-provider/model fallback using health checks, timeouts, circuit breakers, and routing policies. 2) How to implement graceful degradation patterns (reduced features, cached or summarised results, smaller/local models) to protect user experience under failures or quota limits. 3) How to measure, test, and monitor fallback effectiveness with SLIs/SLOs, retry budgets, tracing, and chaos testing while maintaining security and compliance."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -427,7 +440,8 @@
                 "en": "Provider fallback ensures continuity when a primary LLM/model or vendor is slow, unavailable, rate-limited, or returns errors. Common failure modes include latency spikes (tail latency), HTTP/transport failures, quota exhaustion (429), token/context limit errors, and regional outages. Robust clients use layered defenses: timeouts aligned to user SLAs, bounded retries with exponential backoff and jitter, and circuit breakers to stop calling unhealthy dependencies. Hedged requests can reduce tail latency by racing a secondary provider and canceling the loser. Fallback policies should be explicit decision trees (e.g., primary -> secondary -> local model -> cached template) guided by health signals, cost ceilings, and compliance rules (data residency, PII handling). Graceful degradation prioritizes delivering a useful, cheaper result over failing hard: shorten context, switch to a smaller or distilled model, return a cached/previous answer, or provide a structured error with next steps. Observability is essential: track SLIs such as success rate, p95 latency, fallback rate, and user-visible quality metrics; use tracing to attribute time spent per provider and to confirm cancellations work. Test the plan with fault injection (timeouts, 429s), chaos experiments, and game days. Document runbooks for when to change weights, disable a provider, or adjust budgets."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -440,7 +454,8 @@
                 "en": "• Circuit breaker: Stops calls to an unhealthy provider after error/latency thresholds, then probes (half-open) before resuming.\n• Hedged requests: Send a duplicate request to an alternate provider after a short delay; use the first successful response and cancel the rest to cut tail latency at some extra cost.\n• Graceful degradation: Predefined fallback behaviors (reduced context, simpler prompts, cached/approximate answers, local model inference) that preserve core functionality under stress while meeting SLOs and compliance constraints."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -557,7 +572,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -570,7 +586,8 @@
                 "en": "• Design explicit fallback decision trees guided by health signals, cost, and compliance.\n• Use bounded timeouts, backoff, circuit breakers, and (optionally) hedged requests to control tail latency and errors.\n• Measure and test with SLIs/SLOs, tracing, and chaos experiments; document runbooks and guardrails for safe operation."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -589,7 +606,8 @@
               "title": "vLLM Production Stack Deep Dive",
               "label": "Tutorial"
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -611,7 +629,8 @@
                 "en": "In this lesson you will learn: 1) How to run a production readiness review (PRR) for AI model serving, including SLOs, capacity, security, and resilience. 2) How to plan safe releases using canary/blue–green, feature flags, and automated rollback with runbooks and on-call readiness. 3) How to validate readiness with load/soak tests, quality evaluations, monitoring/alerting, cost guardrails, and disaster recovery objectives."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -624,7 +643,8 @@
                 "en": "A production readiness review (PRR) is a cross-functional checklist and sign-off that confirms a system can meet user and business requirements under real traffic. Define SLIs (e.g., success rate, p95 latency, quality/hallucination rate, cost per request) and SLOs with error budgets to gate releases. Validate capacity with load tests (peak + margin), stress/failover tests, and soak tests to uncover leaks. Ensure environment parity and automated, reproducible deployments. Choose a release strategy: canary (progressive traffic shifting based on guardrail metrics), blue–green (switch between two identical environments), or feature flags (enable/disable behavior without redeploying). Prepare operational readiness: dashboards, actionable alerts (symptom-based), logging/tracing, runbooks, and on-call rotations. Establish rollback that is fast and safe (one-click, versioned artifacts, backward-compatible schemas/prompts). Address security and privacy: mTLS, authZ, secrets management, PII redaction, data residency, vendor risk. Plan disaster recovery with RTO/RPO and test backups and regional failover. For AI systems, integrate offline/online evaluation, canary quality gates, prompt/model versioning, and dataset lineage. Add cost controls (quotas, budgets, rate limiting) to prevent runaway spend."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -637,7 +657,8 @@
                 "en": "• SLOs and error budgets: Quantified targets (e.g., 99.5% success, p95 < 1.5s, hallucination rate < X%) that gate releases and trigger rollback when exhausted.\n• Canary vs blue–green: Canary gradually shifts a small percentage of traffic to a new version with metric guards; blue–green swaps entire environments for fast rollback and minimal downtime.\n• Runbooks and rollback: Documented, automated procedures to diagnose issues and revert safely; ensure backward compatibility for prompts/schemas and idempotent deployments."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -754,7 +775,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -767,7 +789,8 @@
                 "en": "• A PRR confirms SLOs, capacity, security, observability, and DR are in place before go-live.\n• Prefer progressive delivery (canary, feature flags) with automated rollback and clear metric guards.\n• AI-specific checks include quality gates, prompt/model versioning, data lineage, and cost guardrails."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -780,7 +803,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now conduct a production readiness review and plan safe, observable releases for model-serving systems."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     }

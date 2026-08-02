@@ -1044,7 +1044,8 @@ function JobLossChart() {
     });
 
     return () => { chartRef.current?.destroy(); };
-  }, [isInView, lang]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInView, lang]); // t is derived from lang, no need to add it
 
   return (
     <div ref={containerRef} className="wise-card-dark" style={{ height: "340px", padding: "20px" }}>

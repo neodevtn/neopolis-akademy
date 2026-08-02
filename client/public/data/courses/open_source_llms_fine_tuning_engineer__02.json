@@ -26,7 +26,8 @@
               "title": "Road To Learn Finetuning LLM With Custom Data - LoRA QLoRA",
               "label": "Course Video"
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -39,7 +40,8 @@
                 "en": "Instruction tuning aligns a pretrained language model to follow user instructions using supervised fine tuning on instruction response examples. A good dataset maximizes signal while minimizing noise and leakage.\n\nSchema design: Each example should contain fields that the target model and training code expect. Common fields include id, system (policy or persona), instruction (user goal), optional input or context, response (assistant ground truth), and metadata such as source, license, language, difficulty, topic, safety flags, and quality rating. For chat style SFT, store a messages array with role labeled turns (system, user, assistant) and optional tool calls and tool results so that turn taking is explicit.\n\nFormatting: Use a deterministic chat template compatible with the model family. This typically includes role tags, separators, and end of turn markers. Apply the same template for every example to avoid spurious variation. For single turn formats, use prompt completion pairs with clear separators between instruction, optional context, and the expected answer. Ensure all samples end with the model specific end of sequence token during training.\n\nQuality controls: Remove duplicates and near duplicates using hashing and approximate matching (n gram overlap, MinHash, or embedding similarity). Normalize whitespace and punctuation, standardize code blocks and markdown, and strip system artifacts. Redact or filter PII and unsafe content according to your deployment policy. Prefer verified or high confidence answers; avoid synthetic hallucinations unless validated. Keep refusal examples and safety demonstrations labeled so the model learns safe behavior.\n\nLength and constraints: Respect context window limits. Truncate or segment long inputs while keeping full target responses when possible. Balance tasks, domains, and difficulty so the model does not overfit narrow patterns. Include multilingual signals only if the target model and tokenizer support them, and tag language explicitly.\n\nLicensing and provenance: Track dataset source and license for each record. Avoid training on content whose terms prohibit redistribution or derivative ML use. Store dataset and preprocessing code versions for reproducibility.\n\nTool use and function calls: When supervising tool use, include structured turns that capture the assistant decision to call a tool, the tool input, the tool output, and the final user facing response. Keep these elements in the same example so the training loss covers the rationale and the result."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -52,7 +54,8 @@
                 "en": "• Record schema: instruction, optional context, response, system, and rich metadata\n• Chat formatting: consistent role tokens and end of turn markers matched to the target model template\n• Quality gates: deduplication, normalization, safety and PII filtering, and license tracking"
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -169,7 +172,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -182,7 +186,8 @@
                 "en": "• Use a role aware schema and deterministic template aligned with the target model\n• Enforce rigorous deduplication, normalization, safety, and licensing checks\n• Preserve supervision signal by keeping outputs complete and managing input length"
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -195,7 +200,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand how to design, format, and quality control datasets for instruction tuning."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -217,7 +223,8 @@
                 "en": "In this lesson you will learn: 1) How to choose appropriate random, stratified, group, and temporal split strategies 2) How to prevent data leakage with global deduplication and grouping 3) How to build reproducible splits and obtain reliable performance estimates"
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -236,7 +243,8 @@
               "title": "LoRA, QLoRA Indepth Mathematical Intuition",
               "label": "Recommended Viewing"
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -249,7 +257,8 @@
                 "en": "• Group and time aware splits reduce leakage from correlated samples\n• Global deduplication should occur before creating splits\n• Stratification preserves distribution across train, validation, and test"
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -366,7 +375,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -379,7 +389,8 @@
                 "en": "• Choose split strategies that reflect deployment and minimize leakage\n• Deduplicate globally and keep correlated groups together\n• Make splits reproducible and verify distributions across splits"
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -392,7 +403,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now design robust, leakage resistant data splits and evaluate models with confidence."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -414,7 +426,8 @@
                 "en": "In this lesson you will learn: 1) How to design and run a reproducible baseline evaluation for an open-source LLM. 2) How to choose representative datasets and task-appropriate metrics (e.g., accuracy/EM for QA, F1 for NER, pass@k for code). 3) How to control confounders (prompts, decoding, seeds) and summarize results with error bars and targeted error analysis."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -427,7 +440,8 @@
                 "en": "A strong baseline quantifies what your starting model can do before you change weights, ensuring any post–fine-tuning gains are real and attributable. Select evaluation sets that reflect how the model will be used: public benchmarks (e.g., MMLU, GSM8K, HellaSwag) for general ability and in-domain dev/test sets for product tasks. Define clear, task-appropriate metrics: exact match or accuracy for short-form QA/math, F1 for classification/NER, ROUGE/BLEU or model-based similarity for summarization, and pass@k for code generation. Use an evaluation harness (e.g., EleutherAI lm-eval-harness or a custom script) to standardize prompts, stop criteria, and metrics. Control confounders by fixing the prompt template, context and few-shot examples, decoding (temperature=0, consistent max_new_tokens), and random seeds; prefer deterministic decoding for baselines. Report uncertainty via multiple shards, bootstrap confidence intervals, or paired tests (e.g., McNemar) when comparing models. Log everything needed for reproducibility: model and tokenizer versions/commits, evaluation code hash, datasets and their versions, prompts, decoding parameters, and hardware. Perform error analysis by clustering failures (reasoning, factuality, formatting) to inform data collection and fine-tuning targets. Be aware of potential pretraining contamination on public benchmarks; document this risk and complement with private, leakage-checked evals."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -440,7 +454,8 @@
                 "en": "• Evaluation harnesses: Standardize prompts, decoding, and metrics to make runs comparable.\n• Deterministic baselines: Use temperature=0, fixed prompts, and seeds to eliminate sampling variance.\n• Statistical uncertainty: Use bootstrapping or paired tests and report confidence intervals when comparing models."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -557,7 +572,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -570,7 +586,8 @@
                 "en": "• Establish a deterministic, well-documented baseline to attribute changes to fine-tuning rather than setup drift.\n• Use task-appropriate datasets and metrics and report uncertainty with confidence intervals.\n• Perform targeted error analysis to guide data collection and objective design."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -589,7 +606,8 @@
               "title": "How to Fine Tune your own LLM using LoRA (on a CUSTOM dataset!)",
               "label": "Tutorial"
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -611,7 +629,8 @@
                 "en": "In this lesson you will learn: 1) How to identify and measure dataset and model bias across subpopulations. 2) How to detect and prevent data leakage (train–test overlap, label leakage, and prompt/template leakage). 3) How to run scalable data quality checks (deduplication, overlap scanning, label error detection, language/PII filters) and document governance."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -624,7 +643,8 @@
                 "en": "Bias refers to systematic performance or content differences across groups (e.g., gender, race, locale) and can manifest as stereotyping, toxicity disparities, or unequal error rates. Measure bias with subgroup metrics (e.g., accuracy gaps, toxicity rate differences) and controlled prompting so groups see comparable contexts; report uncertainty and practical significance. Leakage occurs when information from the target leaks into training or evaluation: label leakage (answers embedded in inputs), split leakage (duplicates/near-duplicates across train/dev/test), or prompt/template leakage (including ground-truth fields in the prompt). Prevent leakage with careful templating, rigorous split strategies (by source/user/time), and overlap scanning. Data quality checks improve reliability: deduplicate and remove near-duplicates using MinHash/LSH or SimHash on n-grams; compute n-gram overlap from training to eval sets to flag contamination risks; run language ID and basic quality heuristics (length, non-linguistic content). Detect likely label errors with agreement checks or tools like cleanlab-style confident learning; fix systemic formatting issues that break evaluation (e.g., missing final answer tags). Protect privacy by detecting and masking PII (e.g., emails, phone numbers) with pattern matchers and NER. For governance, validate licenses/consent, log provenance, and create datasheets/model cards documenting collection, filters, and known limitations. Finally, validate that mitigations do not overfit: keep a leak-free holdout, re-run subgroup and aggregate metrics, and monitor regressions."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -637,7 +657,8 @@
                 "en": "• Data leakage: Information from targets or same-source items appears in inputs or across splits; prevent with source/time/user splits and strict prompt templates.\n• Dedup and overlap checks: Use MinHash/LSH or SimHash over n-grams to remove near-duplicates and scan train–eval overlap.\n• Bias assessment: Compute subgroup metrics with matched contexts and confidence intervals; do not rely on aggregate scores alone."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -754,7 +775,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -767,7 +789,8 @@
                 "en": "• Prevent leakage with source/time/user-aware splits and strict prompt templates.\n• Run scalable deduplication and overlap scans; fix label/format errors and scrub PII.\n• Measure and report subgroup metrics with confidence intervals and document data governance."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -780,7 +803,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now identify bias, prevent leakage, and implement robust data quality checks in your fine-tuning pipeline."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     }

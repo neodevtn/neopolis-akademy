@@ -11,6 +11,7 @@ import Apply from "./pages/Apply";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminTraining from "./pages/AdminTraining";
 import AdminContentManager from "./pages/AdminContentManager";
+import AdminErrors from "./pages/AdminErrors";
 import MentionsLegales from "./pages/MentionsLegales";
 import TrainingDashboard from "./pages/TrainingDashboard";
 import TrainingCertification from "./pages/TrainingCertification";
@@ -31,6 +32,7 @@ function Router() {
       <Route path={"/admin"} component={AdminDashboard} />
       <Route path={"/admin/training"} component={AdminTraining} />
       <Route path={"/admin/content"} component={AdminContentManager} />
+      <Route path={"/admin/errors"} component={AdminErrors} />
       <Route path={"/mentions-legales"} component={MentionsLegales} />
       <Route path={"/training"} component={TrainingDashboard} />
       <Route path={"/training/:certId"} component={TrainingCertification} />

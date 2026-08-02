@@ -26,7 +26,8 @@
               "title": "AI Model Penetration: Testing LLMs for Prompt Injection",
               "label": "Course Video"
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -39,7 +40,8 @@
                 "en": "An LLM app’s attack surface spans inputs (user prompts, uploaded files, retrieved web/content, system prompts), orchestration (agents, function calling, tool routers), and side-effecting sinks (code execution, file I/O, HTTP calls, DB writes, email/transactions, UI rendering). Map trust boundaries where untrusted content crosses into privileged capabilities—especially RAG pipelines, tool/agent layers, and third-party APIs. Common threats include direct/indirect prompt injection, insecure output handling (HTML/JS/SQL/shell injection), tool abuse and over-privilege, data exfiltration via connectors, training data poisoning, model denial of service (token/cost abuse), and logging/telemetry leaks. Effective mapping uses an asset inventory, data flow diagrams with sources/sinks, capability inventories for tools, and attack trees to enumerate misuse paths. Mitigations include allowlists and schema validation for tools, least privilege and scoped credentials, sandboxing and time/network/file guards, robust input/output filters, provenance checks in RAG, and continuous red-teaming with safety/eval gates."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -52,7 +54,8 @@
                 "en": "• Trust boundaries and data/capability flows: Identify where untrusted content enters and which sinks can cause side effects.\n• Tool/agent capability surface: Enumerate tools, required privileges, argument schemas, and guardrails; apply least privilege and approvals.\n• Untrusted inputs beyond the chat box: Treat retrieved pages, PDFs, plugin responses, and prior model outputs as tainted and validate before use."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -169,7 +172,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -182,7 +186,8 @@
                 "en": "• Treat all retrieved/generated text as untrusted when it can influence tools, code, or rendering.\n• Map tools and side-effecting sinks first; apply least privilege, allowlists, schema/regex guards, and sandboxing.\n• Use DFDs, attack trees, and continuous red-teaming/evals to keep the threat model current as capabilities change."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -195,7 +200,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -217,7 +223,8 @@
                 "en": "In this lesson you will learn: 1) The major OWASP LLM Top 10 risk areas and why they matter 2) How to recognize common attack scenarios and failure modes in LLM apps 3) How to apply layered mitigations, testing, and governance aligned to these categories."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -236,7 +243,8 @@
               "title": "Stop Prompt Injection, Guardrail Bypass & Output Leakage",
               "label": "Recommended Viewing"
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -249,7 +257,8 @@
                 "en": "• Prompt injection (direct and indirect): Untrusted content can steer models and tools; lexical filtering alone is insufficient—constrain capabilities and validate arguments.\n• Insecure output handling: Model output rendered or executed without sanitization/escaping enables HTML/JS/SQL/shell injection—use safe parsers, sandboxes, and strict content types.\n• Supply chain and plugin/tool security: Review models, gateways, and plugins; maintain SBOMs, pin versions, scope secrets, and implement least-privilege, allowlists, and approvals."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -366,7 +375,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -379,7 +389,8 @@
                 "en": "• Map OWASP LLM risks to concrete components: inputs, retrieval, tools/agents, sinks, and monitoring.\n• Combine guardrails: constrain capabilities, validate inputs/outputs, sanitize/sandbox, and rate limit/budget.\n• Verify continuously with red-teaming and evals; enforce governance via SBOMs, reviews, and least-privilege access."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -392,7 +403,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -414,7 +426,8 @@
                 "en": "In this lesson you will learn: 1) How to map end-to-end data flows for LLM applications, including prompts, context retrieval, and tool calls 2) How to identify and validate trust boundaries where identities, networks, or privilege levels change 3) How to design and enforce least-privilege tool permissions, with scoping, egress controls, and auditing"
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -427,7 +440,8 @@
                 "en": "Modern LLM applications involve multiple moving parts: the client (web/mobile), API gateway and auth, an orchestrator/agent, prompt construction and policy filters, a vector database or other retrieval stores (RAG), the LLM provider (self-hosted or SaaS), and external tools (plugins, APIs, databases, code execution sandboxes). Mapping data flows means tracing how data moves among these components: user input → preprocessing/redaction → embedding/indexing (for ingestion) → retrieval → prompt assembly (system + developer + user + context) → model inference → tool invocation(s) → post-processing → response, while also capturing logging/telemetry and storage of artifacts. Identify data types (e.g., public, internal, secrets, PII) and mark where each is processed or persisted.\nTrust boundaries are points where trust assumptions change, such as: user device → your frontend; frontend → backend; your network → third-party model provider; your orchestrator → external tools; tenant A → tenant B; human-in-the-loop review; browser sandbox → server; online → offline batch. Each boundary requires authentication, authorization, input validation, output handling, and monitoring. For LLMs, prompt injection often attempts to cross these boundaries by coercing the agent to exfiltrate data or invoke tools outside intent, so treat model outputs as untrusted until validated.\nTool permissions govern what an LLM agent can do when calling tools. Apply least privilege with: capability scoping (only the minimal tools), resource scoping (per-tenant/database/collection), allowlists for hosts/endpoints, argument schemas with strict validation, rate/egress limits, time-bound and context-bound credentials, and human approval for high-risk actions (e.g., financial transactions, code deployment). Use isolation for risky tools (network sandbox, read-only FS), secrets segmentation (per-tool tokens), signed tool invocations, and audit logs that capture who/what/when/why. Align with policy-as-code to enforce constraints consistently across environments."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -440,7 +454,8 @@
                 "en": "• Data Flow Diagram (DFD): Visual map of external entities, processes, data stores, and data flows that reveals where controls are needed\n• Trust Boundary: A point where identity, privilege, or network isolation changes and where validation, authentication, and authorization must occur\n• Tool Permission Scoping: Restricting tool capabilities by action, data scope, time, and network egress to contain prompt-injection and tool-abuse risks"
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -557,7 +572,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -570,7 +586,8 @@
                 "en": "• Map all prompt, retrieval, tool, and logging flows to see where sensitive data moves\n• Treat LLM outputs and tool responses as untrusted across trust boundaries; validate and constrain them\n• Enforce least-privilege tool permissions with scoped credentials, allowlists, argument validation, and auditing"
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -589,7 +606,8 @@
               "title": "Guardrails for LLM Applications | Complete Tutorial for AI Developers",
               "label": "Tutorial"
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -611,7 +629,8 @@
                 "en": "In this lesson you will learn: 1) How to structure clear, complete threat model documentation for LLM applications 2) How to capture scope, assumptions, DFDs, trust boundaries, and a tool-permission matrix 3) How to record risks, controls, and validation plans as a living, versioned artifact"
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -624,7 +643,8 @@
                 "en": "Effective threat model documentation explains how and why the system is secure, and how it will be tested. Core sections include: scope and objectives; assumptions and out-of-scope; architecture overview with data flow diagrams (DFDs) and trust boundaries; data classification (PII, secrets, internal); assets and external entities; entry points; misuse/abuse cases; threat enumeration (e.g., STRIDE for integrity/availability/spoofing risks and LINDDUN for privacy; plus LLM-specific issues like prompt injection, tool abuse, data leakage, model supply chain, and training data poisoning); risk rating (likelihood × impact with clear criteria); mitigations mapped to controls and owners; residual risk with sign-off; and a verification plan (red-team scenarios, automated tests, canary prompts, tool invocation tests, egress checks). For LLM apps, document prompt channels (system, developer, user), safety policies, content filters, and the tool-permission matrix: for each tool, define allowed actions, scopes (tenant/db/collection/host allowlist), auth method, rate/egress limits, approval requirements, and audit fields.\nMake it a living document: store in version control, link to architecture-as-code and IaC, update on every material change (new tool, new data store, new provider), and include a change log. Use templates or tools (e.g., OWASP Threat Dragon, Microsoft Threat Modeling Tool, IriusRisk) to standardize content and export diagrams. Tie each risk to verification artifacts (test cases, monitors, SLOs) to ensure controls are effective and regressions are caught."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -637,7 +657,8 @@
                 "en": "• Threat Model Template: Standard sections (scope, assumptions, DFDs, risks, controls, verification) ensure consistency and coverage\n• Tool Permission Matrix: A table capturing each tool’s actions, scope, auth, egress limits, approval, and audit fields for LLM agents\n• Verification Traceability: Each identified risk links to specific tests, monitors, and owners, enabling continuous validation and audits"
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -754,7 +775,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -767,7 +789,8 @@
                 "en": "• A good threat model is a living, version-controlled document with clear scope, DFDs, and explicit assumptions\n• LLM-specific sections (prompt channels, safety policies, tool-permission matrix) make risks and controls concrete\n• Link every risk to controls, owners, and tests to ensure continuous verification and auditability"
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -780,7 +803,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now create and maintain effective, auditable threat model documentation for LLM applications."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     }

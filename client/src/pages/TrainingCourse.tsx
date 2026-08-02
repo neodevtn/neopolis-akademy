@@ -1592,7 +1592,8 @@ function LessonQuiz({
       [choices[i], choices[j]] = [choices[j], choices[i]];
     }
     return choices;
-  }, [q?.id, currentQ, attemptCount]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [q?.id, currentQ, attemptCount]); // q is questions[currentQ], q?.id is sufficient
 
   if (questions.length === 0) return null;
   if (quizComplete) {
@@ -2125,7 +2126,7 @@ function LessonViewer({
   // Track navigation direction for slide-in animation
   const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
 
-  const chapters = lesson.chapters || [];
+  const chapters = useMemo(() => lesson.chapters || [], [lesson.chapters]);
   const totalChapters = chapters.length;
 
   // Reading progress state
@@ -2155,7 +2156,8 @@ function LessonViewer({
       setSlideDirection(initialChapter > currentChapter ? 'right' : 'left');
       setCurrentChapter(initialChapter);
     }
-  }, [initialChapter]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialChapter]); // intentionally excludes currentChapter to avoid loops
 
   // When lesson changes, reset chapter position
   useEffect(() => {
@@ -2170,7 +2172,8 @@ function LessonViewer({
       setChapterQuizPassed(new Set());
       setCompletedExercises(new Set());
     }
-  }, [lesson.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lesson.id]); // intentionally excludes initialChapter to only reset on lesson change
 
   // Reading progress tracking + scroll-to-top visibility
   useEffect(() => {
@@ -2235,7 +2238,8 @@ function LessonViewer({
     if (validatedChapter > 0) {
       onChapterChange?.(validatedChapter, totalChapters);
     }
-  }, [validatedChapter, totalChapters]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [validatedChapter, totalChapters]); // onChapterChange is stable (useCallback in parent)
 
   const chapter = chapters[currentChapter];
 
@@ -3040,7 +3044,7 @@ function LessonSidebarContent({
         const chapterBlocks = showSubScreens ? (chaptersData[idx]?.blocks || []) : [];
 
         return (
-          <div key={lesson.id || idx}>
+          <div key={lesson.id ? `${lesson.id}_${idx}` : `lesson_${idx}`}>
             {sectionBoundaries[idx] && (
               <p className="text-xs font-bold uppercase tracking-wider px-3 pt-4 pb-1 text-primary/80 border-t border-border/50 mt-2">
                 {sectionBoundaries[idx]}
@@ -3219,7 +3223,8 @@ export default function TrainingCourse() {
       setChapterProgress({ current: persistedChapterInit.chapterIndex, total: persistedChapterInit.totalChapters });
       hasInitializedChapter.current = true;
     }
-  }, [persistedChapterInit]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [persistedChapterInit]); // chapterProgress excluded to run only on init
 
   // Stable callback for chapter changes (prevents infinite re-render in LessonViewer)
   // MUST be declared before any conditional returns (Rules of Hooks)

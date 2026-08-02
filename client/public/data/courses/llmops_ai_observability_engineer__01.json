@@ -26,7 +26,8 @@
               "title": "Prompt Versioning Explained | The Missing Piece of Production LLMOps",
               "label": "Course Video"
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -39,7 +40,8 @@
                 "en": "MLOps focuses on the lifecycle of traditional ML models: data management, training pipelines, validation, model registry, deployment, and drift/quality monitoring. Typical practices include CI/CD/CT for data and models, feature stores, reproducible training, canary/blue-green deployments, and monitoring data drift, concept drift, and serving parity.\n\nLLMOps extends MLOps to generative AI systems. It adds prompt and template management, retrieval-augmented generation (RAG) pipelines, tool/function calling, guardrails and safety checks, evaluation of faithfulness and toxicity, prompt/model/version lineage, prompt/inference caching, cost/latency/token monitoring, and human/AI feedback loops. Because LLM outputs are stochastic and context-dependent, LLMOps emphasizes scenario-based eval sets, automatic metrics (e.g., groundedness), human review, and continuous prompt/retrieval/model iteration.\n\nApplication observability instruments the running system for reliability and performance: logs, metrics, and traces (often via OpenTelemetry), RED/USE methods, SLOs/SLIs, error budgets, and distributed tracing across services. It answers \"what is happening\" in production and where latency/errors occur in the request path.\n\nHow they interact: observability shows symptoms (e.g., p95 latency, errors), while MLOps/LLMOps target ML-specific causes (data drift, prompt regressions, hallucinations). For LLM apps, combine service-level telemetry (requests, traces, saturation) with ML/LLM signals (prompt versions, retrieval quality, token counts, safety flags, eval scores). Governance spans all three: lineage, approvals, privacy/security, and auditability."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -52,7 +54,8 @@
                 "en": "• MLOps vs LLMOps: MLOps centers on datasets, features, training, and classic inference; LLMOps adds prompts, retrieval/tooling, generative evals, and safety/guardrails.\n• App observability: System-wide telemetry (logs/metrics/traces) for reliability, latency, and SLOs; complementary to but distinct from ML/LLM quality monitoring.\n• Unified telemetry: Correlate trace IDs with model/prompt versions, token counts, RAG scores, and eval results to debug quality, cost, and latency end to end."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -169,7 +172,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -182,7 +186,8 @@
                 "en": "• MLOps manages data/model lifecycles; LLMOps adds prompt, retrieval, tools, and generative evals/safety.\n• Application observability reveals runtime behavior (latency, errors, traces) across services.\n• Combine system telemetry with ML/LLM signals to diagnose quality, reliability, and cost holistically."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -195,7 +200,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now distinguish MLOps, LLMOps, and app observability and know how to instrument and monitor LLM systems end to end."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -217,7 +223,8 @@
                 "en": "In this lesson you will learn: 1) The end-to-end LLM application lifecycle from prompt to feedback 2) Key design choices, telemetry, and risks at each stage 3) How to iterate using evaluations and feedback to improve quality, latency, and cost"
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -236,7 +243,8 @@
               "title": "LLM Ops Tutorial: Prompt Engineering, Versioning, and Management",
               "label": "Recommended Viewing"
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -249,7 +257,8 @@
                 "en": "• Stage responsibilities: Prompt (instruction quality), Retrieval (context quality), Tools (capability and control), Model (generation), Output (validation/safety), Feedback (learning).\n• Instrumentation: Correlate trace IDs with prompt/template IDs, retriever scores, tool calls, model params, tokens, and eval metrics.\n• Iteration loop: Use eval sets and real-user feedback to adjust prompts, retriever, tools, and model for continuous improvement."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -366,7 +375,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -379,7 +389,8 @@
                 "en": "• Each lifecycle stage has distinct responsibilities and risks; instrument them with correlated telemetry.\n• Reliability requires both system observability and ML/LLM quality signals.\n• Continuous improvement comes from evals and feedback-driven iteration across prompts, retrieval, tools, and models."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -392,7 +403,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now design, instrument, and iterate on each stage of the LLM application lifecycle."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -414,7 +426,8 @@
                 "en": "In this lesson you will learn: 1) How to define Quality, Latency, Cost, and Safety (QLCS) as measurable SLIs and set SLO targets. 2) How to use error budgets and burn-rate alerting to operate LLM systems. 3) How to manage trade-offs (e.g., model choice, temperature, caching, routing, guardrails) to meet SLOs."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -427,7 +440,8 @@
                 "en": "SLOs (Service Level Objectives) are target levels for user-facing performance; SLIs (Service Level Indicators) are the measurements; SLAs are contractual commitments. In LLMOps, four core SLO dimensions matter:\n\nQuality: How well the system achieves task goals. Common SLIs include exact match/accuracy (for structured Q&A), BLEU/ROUGE for summarization (with caution), factuality/hallucination rate, relevance score for RAG, toxicity/harassment rate, user satisfaction (CSAT/Thumbs-up), and intervention/escalation rate. Use offline eval suites (gold datasets, unit tests) and online signals (A/B tests, implicit feedback). Calibrate with human review for safety-critical tasks.\n\nLatency: How quickly users receive useful output. SLIs include time-to-first-token (TTFT), time-to-last-token (TTLT), end-to-end latency, and tail latency (p95/p99). Track by request class (e.g., cold vs. warm cache), and consider queue time, retrieval time, model compute time, and post-processing.\n\nCost: Resources consumed per outcome. SLIs include tokens per request, cost per 1k tokens (input/output), cost per successful task, GPU-seconds per request, or monthly cost per active user. Track cache hit rate, prompt length, and model/router mix. Define SLOs as budget ceilings (e.g., ≤ $0.01 per request p95; ≤ $X/day).\n\nSafety: Risk of harmful or policy-violating outputs. SLIs include policy-violation rate, unsafe content rate, jailbreak success rate, PII redaction failure rate, and moderation false-negative rate. Use layered defenses: prompt hardening, safety classifiers, allow/deny lists, and human-in-the-loop.\n\nTrade-offs: Increasing context or using larger models often improves quality but increases latency and cost; aggressive safety filters may add latency or reduce recall. Techniques to balance include: caching (prompt/embedding), streaming responses (improve perceived latency), response truncation/early cutoff, adaptive routing (easy vs. hard queries), temperature/top-p tuning, reranking smaller candidates before large-model calls, and selective safety checks.\n\nError budgets and alerting: An SLO of 99% success implies 1% error budget. Use multi-window, multi-burn-rate alerts (e.g., 14.4× over 5 min; 2× over 1 h) for fast detection and stability. Align SLO windows with user expectations (e.g., weekly for consumer chat, daily for enterprise)."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -440,7 +454,8 @@
                 "en": "• SLIs vs SLOs vs SLAs: What you measure, what you target, what you promise.\n• Error budgets and burn-rate alerts: Quantify allowable failure and detect rapid budget consumption.\n• Q–L–C–S trade-offs: Techniques (caching, routing, streaming, guardrails) to optimize one dimension without breaking others."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -557,7 +572,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -570,7 +586,8 @@
                 "en": "• Define clear SLIs for Quality, Latency, Cost, and Safety and set realistic SLO targets.\n• Use error budgets and burn-rate alerts to operate proactively.\n• Balance Q–L–C–S with tactics like caching, streaming, routing, and guardrails."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -589,7 +606,8 @@
               "title": "Config-Based Development for LLMs: Versioning, Routing, & Evaluating",
               "label": "Tutorial"
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -611,7 +629,8 @@
                 "en": "In this lesson you will learn: 1) The purpose and differences between logs, traces, and metrics in AI/LLM systems. 2) How to instrument LLM pipelines (retrieval, prompting, generation, safety) with OpenTelemetry-style signals. 3) How to use each signal for debugging, SLOs, and governance while controlling cost and privacy."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -624,7 +643,8 @@
                 "en": "Logs: Immutable, timestamped records of events with rich, often high-cardinality context. For LLM apps, prefer structured logs (JSON) containing request_id, user/session (pseudonymized), prompt ID/template version, input hash, retrieved document IDs/snippets, model name/params (temperature, top_p), token counts, moderation results, cost estimates, and output summary or full text (with redaction). Use log levels, sampling, PII scrubbing, and retention policies to control privacy and storage cost.\n\nTraces: Causal view of a single request across services. A trace contains spans (e.g., HTTP ingress → embed → vector search → rerank → prompt build → model call → safety check → post-processing). Each span has start/end timestamps, attributes (e.g., index_name, k, model, prompt_tokens), events (e.g., retry, timeout), and status. Propagate context using W3C Trace Context (trace_id, span_id). Traces pinpoint where latency or errors occur and link to logs via IDs; exemplars can link metrics to representative traces.\n\nMetrics: Aggregated, numeric time series for SLOs and alerting. Types: counters (tokens_consumed_total, requests_total, violations_total), gauges (queue_depth), and histograms (latency_ms, prompt_length_tokens). Compute p50/p95, error rate, cost per minute, cache hit ratio. Keep label cardinality under control (e.g., limit to model_name, route, tenant) to avoid excessive series.\n\nChoosing signals: Use metrics for SLOs/alerts and capacity planning; traces to localize issues and analyze tail latency; logs to debug content correctness, safety incidents, and audits. Combine them: alert (metric) → jump to exemplar trace → inspect related logs for prompts/docs/outputs.\n\nGovernance and cost: Redact PII in logs, use content hashing, separate sensitive payload storage, and apply retention windows. Sample verbose logs, keep full traces for problem segments, and downsample low-value metrics. Document schemas to ensure consistency across components."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -637,7 +657,8 @@
                 "en": "• Structured logs capture rich context (prompts, retrieved docs, outputs) for debugging and audits.\n• Distributed traces connect components end-to-end with spans, timings, and errors to localize issues.\n• Metrics provide aggregated SLIs/SLOs (latency, error, cost) and power alerting; manage label cardinality."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -754,7 +775,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -767,7 +789,8 @@
                 "en": "• Use metrics for SLOs and alerting, traces to localize issues, and logs to debug content and safety.\n• Propagate trace context and align schemas so signals can be correlated.\n• Control privacy and cost with redaction, sampling, and label cardinality limits."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -780,7 +803,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     }

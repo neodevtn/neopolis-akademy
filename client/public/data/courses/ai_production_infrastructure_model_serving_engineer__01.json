@@ -26,7 +26,8 @@
               "title": "vLLM: Easily Deploying & Serving LLMs",
               "label": "Course Video"
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -39,7 +40,8 @@
                 "en": "Hardware choice: CPUs are general-purpose and cost-effective for small models, classical ML, and pre/post-processing; they struggle with large transformer inference due to limited parallelism. GPUs accelerate matrix ops and attention, delivering higher throughput per dollar for medium/large models (e.g., 7B+), especially with batching, quantization, and tensor cores. VRAM gates model size; quantization (INT8/4) and paged attention help fit models and increase throughput. Performance and cost: Latency targets (p50/p95), tokens/sec, and concurrency determine capacity. Batching trades single-request latency for throughput; dynamic batching and KV-cache reuse help. Aim for high utilization without breaching SLOs; estimate cost/request as (node_hourly_cost / sustained_req_per_hour). Hosting models: Self-managed (VMs/Kubernetes) offers full control, custom kernels, and predictable costs at the expense of operational overhead (autoscaling, observability, upgrades). Serverless functions are easy and scale-to-zero with per-invocation pricing but often CPU-only, have time/memory limits, and suffer cold starts. Serverless containers/Jobs add more resources and sometimes GPUs with autoscaling and simpler ops. Managed model APIs (e.g., vendor LLM endpoints) provide fastest time-to-value, strong SLAs, and enterprise features (security/compliance) but less control over models, limits on customization, data policies, and potentially higher variable cost. Workload shape: Steady traffic favors dedicated instances; spiky or sporadic workloads benefit from serverless or managed APIs with provisioned/warm capacity to mitigate cold starts. Data/compliance: Sensitive data may require VPC peering/private endpoints or self-hosting. Pricing gotchas: egress fees, per-token pricing variability, idle GPU burn, and spot/preemptible interruption rates."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -52,7 +54,8 @@
                 "en": "• Workload shape: Steady vs spiky demand dictates whether to use dedicated GPUs, serverless scale-to-zero, or managed APIs with warm pools.\n• Throughput vs latency: Batching and quantization increase throughput/$ but can raise p95 latency—tune to SLOs and monitor utilization.\n• Control vs convenience: Self-hosting maximizes control and predictability; serverless/managed minimize ops but limit customization and can increase variable cost."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -169,7 +172,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -182,7 +186,8 @@
                 "en": "• Match hardware and hosting model to workload shape, SLOs, and budget.\n• Use batching, quantization, and utilization monitoring to optimize throughput/cost without violating latency SLOs.\n• Prefer managed/serverless for bursty or low-ops needs; self-host for control, customization, and predictable steady loads."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -195,7 +200,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand the tradeoffs across CPU, GPU, serverless, and managed APIs and can choose the right approach for your AI workloads."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -217,7 +223,8 @@
                 "en": "In this lesson you will learn: 1) How to build minimal, reproducible Docker images for CPU/GPU AI services. 2) How to package models and dependencies to reduce cold starts while keeping images maintainable. 3) How to run containers reliably with health checks, non-root users, and GPU configuration."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -236,7 +243,8 @@
               "title": "vLLM Office Hours #21 - vLLM Production Stack Deep Dive",
               "label": "Recommended Viewing"
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -249,7 +257,8 @@
                 "en": "• CUDA/image alignment: Match CUDA/cuDNN and framework wheels to the host driver to ensure GPUs are visible and performant.\n• Layering and caching: Use multi-stage builds, lockfiles, and model layers to speed builds and reduce cold starts.\n• Runtime hardening: Run as non-root, define HEALTHCHECK and probes, and keep images minimal for security and faster pulls."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -366,7 +375,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -379,7 +389,8 @@
                 "en": "• Choose base images that match CUDA/framework requirements; verify GPU visibility at runtime.\n• Use multi-stage builds, .dockerignore, and pinned deps to create small, reproducible images.\n• Preload models, define health checks, and run as non-root to improve reliability and security in production."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -392,7 +403,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now build, harden, and run GPU-ready containers for AI services with fast startup and reliable operations."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -414,7 +426,8 @@
                 "en": "In this lesson you will learn: 1) How to design asynchronous inference using queues, workers, and result stores to avoid API timeouts 2) How to choose and configure messaging systems, delivery semantics, retries, and dead-letter queues 3) How to optimize throughput and latency with batching, backpressure, autoscaling, and idempotent processing"
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -427,7 +440,8 @@
                 "en": "Asynchronous inference decouples request intake from model execution using a message queue and a worker pool. A typical flow: (1) The API receives a request, validates it, generates a job_id/idempotency key, stores large payloads in object storage if needed, and enqueues a small message (metadata + pointers). (2) The API immediately returns 202 Accepted with the job_id. (3) Workers pull messages, load the model (ideally pre-warmed), perform inference, and write results to a result store (cache/DB/object storage). (4) The client polls a GET /jobs/{id} endpoint, subscribes via WebSocket/SSE, or uses a callback/webhook to receive completion.\n\nSelect a queue based on semantics: RabbitMQ/SQS/Redis Streams for work queues; Kafka/PubSub for high-throughput streams and replays. Prefer at-least-once delivery with idempotent workers. Use visibility timeouts/acknowledgements, exponential backoff retries, and dead-letter queues (DLQs). Keep messages small; pass URIs to large inputs/outputs. Implement idempotency by upserting results keyed by job_id and ensuring side effects (writes, notifications) are safe to repeat.\n\nPerformance: Raise GPU/CPU utilization via micro-batching and dynamic batching (e.g., NVIDIA Triton), while bounding queueing delay (e.g., 10–50 ms). Group requests by shape (e.g., sequence length buckets) to reduce padding overhead. Apply backpressure using queue length limits, per-worker concurrency, and request shedding. Scale workers horizontally based on queue depth/lag, GPU utilization, and processing latency; isolate hot models with dedicated queues and autoscaling policies. Monitor throughput, p50–p99 latency, retries, DLQ size, and end-to-end SLA from request to result."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -440,7 +454,8 @@
                 "en": "• Delivery semantics: at-least-once vs at-most-once, acknowledgements/visibility timeout, retry with exponential backoff, and dead-letter queues for poison messages\n• Batching strategies: micro-batching/dynamic batching to raise GPU utilization while respecting latency budgets; bucketing/padding to align tensor shapes\n• Backpressure and autoscaling: scale workers on queue depth/lag (e.g., with KEDA), cap concurrency, and shed load to protect latency SLOs"
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -557,7 +572,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -570,7 +586,8 @@
                 "en": "• Use a durable queue + worker pool to decouple intake from inference and avoid request timeouts\n• Favor at-least-once delivery with idempotent workers, bounded retries, and DLQs; keep messages small and store large payloads externally\n• Improve efficiency with dynamic batching, backpressure, and autoscaling on queue depth and GPU utilization"
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -589,7 +606,8 @@
               "title": "Deploying and Monitoring LLM Inference Endpoints",
               "label": "Tutorial"
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -611,7 +629,8 @@
                 "en": "In this lesson you will learn: 1) How to manage secrets securely (storage, injection, rotation, and access control) 2) How to structure configuration for services across dev/staging/prod using the 12‑factor approach 3) How to promote releases safely with GitOps/CI-CD, approvals, and progressive delivery"
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -624,7 +643,8 @@
                 "en": "Secrets management: Store sensitive material (API keys, DB creds, tokens) in a dedicated secrets manager (e.g., cloud Secrets Manager, KMS-backed Kubernetes Secrets, or Vault). Encrypt at rest with KMS and in transit (TLS). Prefer workload identity (IAM roles/service accounts) to avoid long-lived static keys. Scope permissions via least privilege and namespacing. Rotate regularly with automation; use short-lived, dynamically issued credentials when available. Inject secrets at runtime via environment variables, mounted files/volumes, or a sidecar/agent; avoid baking into images or committing to Git. Audit access and changes.\n\nConfiguration management: Follow the 12-factor principle—config is externalized from the code. Use declarative manifests and templates (Helm/Kustomize/Terraform) with environment overlays to vary endpoints, feature flags, and resource limits. Validate config with schemas and enforce policies (OPA/Conftest). Keep a clear precedence order and default-safe values.\n\nEnvironment promotion: Build once, promote the same artifact (image digest) from dev → staging → prod. Use GitOps: desired state (manifests/overlays) lives in Git; promotions are PRs that change only environment references (e.g., image tag/digest or Helm values). A controller (e.g., Argo CD/Flux) reconciles after approvals and automated checks (tests, security/policy scans). Apply progressive delivery (canary/blue‑green) with health gates (SLOs, error budget, latency, rollback on regression). Ensure database migrations are safe (backward compatible/online). Maintain audit trails and drift detection."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -637,7 +657,8 @@
                 "en": "• Secret management best practices: encryption with KMS, least privilege IAM, rotation/dynamic creds, and runtime injection (not in images/Git)\n• Build once, promote via GitOps using immutable image digests and environment overlays for config differences\n• Progressive delivery: canary/blue‑green with automated health checks, approval gates, and fast rollback"
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -754,7 +775,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -767,7 +789,8 @@
                 "en": "• Centralize secrets with KMS-backed storage, least-privilege access, and automated rotation; inject at runtime, never in images or Git\n• Externalize and template configuration; build once and promote the same artifact via GitOps with environment overlays\n• Use progressive delivery with health gates and rollbacks to safely promote changes across environments"
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -780,7 +803,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now manage secrets and configuration securely and promote releases safely across environments."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     }

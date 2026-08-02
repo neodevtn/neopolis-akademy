@@ -26,7 +26,8 @@
               "title": "RAG Tutorial 2025: Complete Introduction to Retrieval Augmented Generation",
               "label": "Course Video"
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -39,7 +40,8 @@
                 "en": "RAG systems rely on high-quality retrieval to ground model outputs. Four common failure modes degrade answer quality:\n\n• Missing context (low recall): The retriever fails to fetch relevant evidence. Causes include sparse indexing, poor query formulation, inadequate chunking, or tight top-k cutoffs. Diagnostics: low Recall@k, low MRR, minimal lexical/semantic overlap with gold evidence, high answer abstentions. Mitigations: hybrid BM25+dense retrieval, multi-query expansion, larger k with reranking, better chunking (overlap, windowed), coverage tests against gold corpora.\n\n• Wrong context (low precision): The retriever returns topically similar but irrelevant passages (spurious correlations, overly short chunks, lexical traps). Diagnostics: high rank of distractors, high cross-encoder irrelevance score, error spikes on ambiguous queries. Mitigations: cross-encoder reranking, hard-negative mining, query rewriting/disambiguation, field-scoped search and filters, passage length/section constraints.\n\n• Stale context (out-of-date): Retrieved passages are outdated relative to the question time. Diagnostics: timestamps older than freshness SLA, answers contradict recent updates, recency-weighted precision drops. Mitigations: time-aware ranking (BM25+time decay), TTL and re-embedding policies, streaming/append-only indexes, source-of-truth pinning for latest versions, cache invalidation on updates.\n\n• Conflicting context (contradictions): Retrieved passages disagree (duplicates with drift, multiple authorities). Diagnostics: NLI-based contradiction detection among retrieved passages, source/version divergence, inconsistent numeric values. Mitigations: authority/recency weighting, version canonicalization, de-duplication and document clustering, consensus aggregation (majority/median), explicit citation with per-claim provenance and tie-breaking rules.\n\nEvaluating these modes requires targeted test sets: recall stress tests (multi-hop, paraphrases), distractor-rich precision tests, temporal change sets, and contradiction suites. Instrumentation includes Recall@k, Precision@k, nDCG, MRR, recency-weighted metrics, contradiction rate among top-k, and answer groundedness with per-citation checks."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -52,7 +54,8 @@
                 "en": "• Missing context: Recall failure where relevant evidence is not retrieved; improve with hybrid retrieval, larger k + reranking, and query expansion\n• Wrong context: Precision failure returning on-topic but irrelevant passages; improve with hard-negative training and cross-encoder reranking\n• Stale context: Outdated evidence dominates; mitigate with time-aware scoring, TTL, and authoritative latest-version pinning"
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -169,7 +172,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -182,7 +186,8 @@
                 "en": "• Missing, wrong, stale, and conflicting context are distinct retrieval failures that require targeted diagnostics\n• Use hybrid retrieval, reranking, and query rewriting to boost recall and precision\n• Enforce freshness, authority, and contradiction resolution to ensure reliable, grounded answers"
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -195,7 +200,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand common RAG context failure modes, how to detect them, and how to mitigate them in production systems."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -217,7 +223,8 @@
                 "en": "In this lesson you will learn: 1) A practical taxonomy of hallucinations that appear even in grounded (RAG) systems 2) How to evaluate faithfulness and attribution with automated and human-in-the-loop methods 3) Techniques to reduce hallucinations through prompts, decoding constraints, retrieval design, and verification"
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -236,7 +243,8 @@
               "title": "Learn RAG From Scratch – Python AI Tutorial",
               "label": "Recommended Viewing"
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -249,7 +257,8 @@
                 "en": "• Attribution hallucination: Claim not truly supported by the cited passages\n• Fabrication: Model invents facts when evidence is missing; mitigate with abstention and stronger refusal policies\n• Faithfulness evaluation: Measure whether each claim is entailed by retrieved evidence using NLI, LLM-as-judge, and span-level checks"
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -366,7 +375,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -379,7 +389,8 @@
                 "en": "• Grounded systems still hallucinate when claims are unsupported, distorted, or contradicted by evidence\n• Evaluate faithfulness at claim level with entailment and per-claim citations\n• Reduce hallucinations via evidence-first prompting, constrained quoting, tool-use, abstention, and post-generation verification"
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -392,7 +403,8 @@
                 "en": "Congratulations! You have completed this lesson. You can now classify, evaluate, and mitigate hallucinations in grounded RAG pipelines."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -414,7 +426,8 @@
                 "en": "In this lesson you will learn: 1) How to distinguish retrieval failures (missing, noisy, stale, or mis-ranked evidence) from generation failures (hallucination, poor grounding, bad aggregation, or instruction-following errors). 2) Practical signals and tests to localize faults, including oracle-context tests, coverage@k, and citation checks. 3) A step-by-step diagnosis workflow and targeted remediations for each failure type."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -427,7 +440,8 @@
                 "en": "A RAG system has two main stages: retrieval (find and rank evidence) and generation (compose an answer grounded in that evidence). Distinguishing which stage failed is essential for effective fixes.\n\nRetrieval failures: (a) Recall gaps — relevant documents not retrieved due to weak queries, poor embeddings, missing synonyms, or over-tight filters. (b) Precision/noise — many irrelevant chunks crowd out good ones due to loose filters, overly small chunks, or bad reranking. (c) Freshness/index issues — outdated or unindexed content. (d) Chunking/metadata — chunks too small/large, no overlap, missing titles or section tags; poor document IDs.\n\nGeneration failures: (a) Hallucination — model states facts absent from context. (b) Misaggregation — merges conflicting passages incorrectly, wrong arithmetic, or chronology errors. (c) Grounding/attribution errors — correct fact but wrong or missing citation. (d) Instruction-following — ignores constraints (format, scope, refusal policy). Causes include prompts that over-prioritize fluency, high temperature, or excessive/unstructured context.\n\nDiagnosis workflow: 1) Reproduce the query with logs: retrieved IDs, scores, chunk texts, and the final prompt. 2) Coverage check: does any retrieved item contain the gold evidence? Compute hit rate/recall@k. Low coverage implies retrieval failure. 3) Oracle-context test: supply the correct passages directly. If the model still errs, the fault is in generation; if it succeeds, the fault is in retrieval/ranking. 4) Ablations: (a) Empty-context run to see closed-book hallucination tendency. (b) Reranker only vs retriever only to isolate ranking issues. 5) Signals: answer mentions entities absent from context, contradictory citations, very low lexical/semantic overlap with retrieved passages, or citations clustered after unsupported claims indicate generation problems; relevant passages appearing beyond top-k or missing key terms indicate retrieval shortcomings.\n\nRemediation: Retrieval — improve query rewriting, add hybrid (BM25 + dense) retrieval, tune top-k and max tokens per doc, increase chunk overlap, enrich metadata, refresh the index, or add domain-specific synonyms. Generation — constrain to cite-then-summarize patterns, require passage IDs per claim, reduce temperature, add reasoning scaffolds for aggregation, and use groundedness/citation validators post hoc."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -440,7 +454,8 @@
                 "en": "• Retrieval coverage: Measure hit rate/recall@k against gold passages to detect missing evidence.\n• Oracle-context test: Give the model the correct passages; errors then indicate generation issues.\n• Precision vs recall tuning: Balance top-k, reranking, chunk size/overlap, and hybrid retrieval to reduce noise while capturing required evidence."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -557,7 +572,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -570,7 +586,8 @@
                 "en": "• Use coverage@k and oracle-context tests to separate retrieval from generation errors.\n• Retrieval fixes target recall, precision, freshness, and chunking; generation fixes target grounding, aggregation, and instruction-following.\n• Log IDs, scores, and citations to make failures auditable and reproducible."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -589,7 +606,8 @@
               "title": "Building Robust RAG Systems with LangChain & LlamaIndex",
               "label": "Tutorial"
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -611,7 +629,8 @@
                 "en": "In this lesson you will learn: 1) How to write precise, minimal golden answers that are unambiguous and testable. 2) How to define expected citations (doc IDs, sections, or spans) and evaluate grounding rigorously. 3) How to score content and citations separately to detect unsupported claims and missing evidence."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -624,7 +643,8 @@
                 "en": "Golden answers are canonical, concise references used to judge model outputs. They should include only necessary facts, normalize units and names, and avoid stylistic fluff so that matching is deterministic. When multiple phrasings are acceptable, represent them as a set of valid variants (string set, regex, or semantic equivalence rules) rather than a verbose paragraph.\n\nExpected citations specify which sources can support each golden fact. They can be defined at different granularities: document-level (doc ID or canonical URL), section-level (headers/anchors), or span-level (character/token offsets). For many enterprise RAG systems, span- or section-level is preferred to avoid crediting entire documents for unsupported claims. Accept lists can allow multiple valid sources for the same fact.\n\nEvaluation design: (a) Content scoring — exact match, fuzzy/normalized match, or semantic similarity with guardrails (e.g., unit normalization and tolerant date formats). (b) Citation scoring — verify that the output cites at least one acceptable source for each atomic claim; compute citation precision/recall or claim coverage. (c) Coupling — report separate content and citation scores, plus a groundedness flag (content correct AND properly supported). Penalize extra unsupported claims even if the main fact is correct.\n\nImplementation tips: normalize URLs and IDs, version the corpus, snapshot timestamps, and store golds with source IDs to prevent drift. Avoid answer leakage by not putting full gold text verbatim into prompts during evaluation. Build a claim-level schema to map answer segments to required citations. Common pitfalls include overly long gold answers, ambiguous wording, stale golds after document updates, and accepting open-web sources when only curated repositories are allowed."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -637,7 +657,8 @@
                 "en": "• Golden answer: Minimal, unambiguous canonical response with normalized entities and units; may include multiple valid variants.\n• Expected citations: Enumerated acceptable doc IDs/sections/spans for each fact; match can be strict or soft depending on policy.\n• Scoring split: Evaluate content correctness and citation grounding separately; require both for a fully grounded pass."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -754,7 +775,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -767,7 +789,8 @@
                 "en": "• Golden answers must be concise, normalized, and unambiguous, with variants encoded explicitly.\n• Expected citations define acceptable sources at doc/section/span level and should support claim-by-claim checks.\n• Report separate content and citation scores; only answers that are both correct and supported are fully grounded."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -780,7 +803,8 @@
                 "en": "Great work! You can now design robust golden answers and expected-citation rules to evaluate RAG groundedness accurately and consistently."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     }

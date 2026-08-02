@@ -1100,3 +1100,8 @@
 - [x] Ajouter un monitoring d'erreurs côté client (ErrorReporter)
 - [x] Configurer ESLint avec react-hooks/rules-of-hooks
 - [x] Extraire ProcessStepper en composant propre (fix hooks-in-callback)
+
+## Dashboard Erreurs & Corrections ESLint
+- [x] Dashboard admin "Erreurs client" (graphique temporel + liste filtrable)
+- [x] Corriger warnings exhaustive-deps (TrainingCourse.tsx + Home.tsx)
+- [x] Résoudre duplicate key chapter_13 (Architect Professional) - 627 chapitres corrigés

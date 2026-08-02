@@ -26,7 +26,8 @@
               "title": "Learn RAG From Scratch – Python AI Tutorial from a LangChain Engineer",
               "label": "Course Video"
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -39,7 +40,8 @@
                 "en": "RAG augments an LLM with up-to-date, task-relevant context retrieved from external knowledge sources at query time. The pipeline typically includes: (1) Ingestion: collect sources (files, web, databases), normalize, deduplicate, and apply text extraction and cleaning. (2) Chunking: split documents into semantically coherent segments with overlap to preserve context; attach metadata (source, author, timestamp, ACL, schema). (3) Embeddings and Indexing: create vector representations and store alongside sparse indexes (BM25) to enable hybrid retrieval; add filters on metadata (time, type, tenant). (4) Retrieval: route the query (optionally expanded or rewritten) to the index, retrieve top-k candidates, and apply a cross-encoder reranker to improve precision. (5) Prompt Assembly: format citations and snippets into a templated prompt; constrain length and deduplicate. (6) Generation: have the LLM answer grounded in retrieved context, optionally with tool use (e.g., calculators, SQL) and guardrails. (7) Post-processing: cite sources, red-team checks, PII scrubbing, and caching of results. Architectural choices trade off quality, latency, and cost: hybrid search often improves recall; reranking boosts precision; smaller chunk sizes help localization but can lose context; larger chunks increase recall but risk dilution. Evaluate with retrieval metrics (recall@k, MRR), answer metrics (faithfulness, exact match, factuality), latency SLOs, and cost per query. Avoid RAG when: the task is deterministic or purely structured (e.g., SQL lookups or rules-based extraction); the domain is narrow and stable where fine-tuning a small model is cheaper and faster; strict offline or ultra-low latency constraints make retrieval infeasible; or governance disallows exposing or transporting sensitive data into prompts even with filtering. In such cases, alternatives include direct database queries, search-only UX, fine-tuning, or knowledge distillation into smaller models."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -52,7 +54,8 @@
                 "en": "• Retrieval strategies: Sparse (BM25), dense (vector), and hybrid retrieval; query rewriting and expansion to improve recall.\n• Index and chunk design: Semantic chunking with overlap, rich metadata, and embeddings to balance context with precision.\n• When not to use RAG: Prefer structured queries, deterministic pipelines, or fine-tuning when data is stable, outputs must be exact, or latency/governance constraints block retrieval."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -169,7 +172,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -182,7 +186,8 @@
                 "en": "• RAG augments LLMs with retrieved, cited context to improve factuality and freshness.\n• Architectural choices (hybrid retrieval, chunking, reranking, caching) control the quality-latency-cost trade-offs.\n• Avoid RAG for deterministic, structured, or highly constrained tasks where databases, rules, or fine-tuning are superior."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -195,7 +200,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -217,7 +223,8 @@
                 "en": "In this lesson you will learn: 1) How to build a comprehensive source inventory with ownership, lineage, sensitivity, and SLAs. 2) How to design freshness pipelines using CDC, incremental indexing, versioning, and invalidation to keep RAG up to date. 3) How to enforce access control with per-tenant partitioning, per-chunk ACL metadata, retrieval-time filtering, and auditable access."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -236,7 +243,8 @@
               "title": "RAG Tutorial 2025 #1: Complete Introduction to Retrieval Augmented Generation",
               "label": "Recommended Viewing"
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -249,7 +257,8 @@
                 "en": "• Source inventory and ownership: Document who owns each source, its SLA, sensitivity, and lineage to support governance and incident response.\n• Freshness and versioning: Use CDC/webhooks for incremental updates, version documents/chunks, and invalidate stale entries promptly.\n• ACL enforcement: Store per-chunk ACL metadata and enforce retrieval-time filtering; partition indexes per tenant if needed and scope caches by identity."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -366,7 +375,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -379,7 +389,8 @@
                 "en": "• Maintain a source inventory with owners, SLAs, sensitivity, and lineage for every input to RAG.\n• Meet freshness SLAs using incremental, event-driven pipelines with versioning and invalidation.\n• Enforce ACLs at retrieval with per-chunk metadata, identity-scoped caches, and audit logs; partition by tenant when isolation is required."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -392,7 +403,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -414,7 +426,8 @@
                 "en": "In this lesson you will learn: 1) How to select and configure robust parsers for PDFs, HTML, Markdown, CSV, and structured records (e.g., JSON/Parquet) 2) How to preserve and normalize structure (headings, tables, links, code, reading order) into chunkable text with reliable citations 3) How to handle quality issues (OCR for scans, encoding, line wraps) and attach source-aware metadata for effective RAG retrieval."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -427,7 +440,8 @@
                 "en": "Reliable RAG pipelines start with faithful parsing that preserves semantics and provenance. For PDFs, prefer native text extraction (e.g., PDFMiner/PyMuPDF) and fall back to OCR for scanned pages; fix issues like broken line wraps, hyphenation, and detect reading order; extract tables with table-aware tools (e.g., Camelot/Tabula) and keep page numbers and bounding boxes for citations. HTML should be parsed via the DOM, stripping boilerplate (nav/ads) and retaining semantic blocks (h1–h6, p, li, table, code, figure); resolve relative links, capture anchors, and normalize whitespace; chunk by headings or DOM boundaries. Markdown should be parsed with an AST to preserve headings, lists, code fences, and tables; convert to normalized plain text while keeping structure markers for later chunking. CSV and record-oriented data (JSON, Parquet) should be read with schema-aware libraries to preserve types, headers, and nulls; treat rows or logical groups as records and avoid lossy stringification. Across formats, normalize encodings (UTF-8), unify newline conventions, and attach source metadata (source_uri, page or section path, mime_type, checksum) at both document and chunk levels. Chunking strategies should respect natural boundaries (pages, headings, list items, table rows) and target token budgets while maintaining context for accurate grounding and citations."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -440,7 +454,8 @@
                 "en": "• Format-aware extraction: Use parsers that understand layout and semantics for each file type.\n• Structure-preserving normalization: Keep headings, tables, links, code blocks, and reading order before chunking.\n• Provenance metadata: Attach source_uri, page/anchor, mime_type, checksums, and parser/ocr details to each chunk."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -557,7 +572,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -570,7 +586,8 @@
                 "en": "• Use format-specific parsers and hybrid OCR strategies to maximize fidelity.\n• Normalize and chunk along semantic boundaries while retaining structure and citations.\n• Attach rich, consistent metadata (source, section/page, types) at document and chunk levels."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -589,7 +606,8 @@
               "title": "RAG Tutorial 2026: Complete Introduction to Retrieval Augmented Generation",
               "label": "Tutorial"
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -611,7 +629,8 @@
                 "en": "In this lesson you will learn: 1) How to design a metadata schema that supports trustworthy citations and precise filtering 2) How to capture provenance, structure, and access control at both document and chunk levels 3) How to implement consistent typing, normalization, and indexing across vector and keyword stores for scalable RAG."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -624,7 +643,8 @@
                 "en": "Effective metadata enables grounding (citations) and control (filtering). At minimum, include identifiers (doc_id, chunk_id, chunk_index), source fields (source_uri, mime_type, checksum/hash/etag), structural locators (page, html_anchor, section_path, span_offsets), and timestamps (created_at, updated_at, valid_from/valid_to). Provenance should track pipeline_version, extractor/ocr details, embedding_model/version, and quality/confidence. Distinguish document-level fields (authors, title, canonical_source, language, ACL defaults) from chunk-level fields (page/section, chunk_index, local offsets, entities). For filtering, define type-safe facets such as product, region, environment, version, tags, language, and access controls (tenant_id, allowed_groups/roles, sensitivity/classification). Normalize value types (string, int, bool, datetime, array) and avoid free-form comma-separated strings. Ensure your vector database supports filtering on these fields; if not, maintain a synchronized keyword/relational index for complex filters and join on ids. For citations, store precise anchors (page numbers, HTML ids/XPaths, character offsets) so UIs can generate clickable references and highlights. Use namespaces or an embedding_version field to prevent mixing vectors across model upgrades. Finally, document the schema, enforce it in ingestion, and validate at write time to keep metadata consistent over time."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -637,7 +657,8 @@
                 "en": "• Citation metadata: doc_id/source_uri with page or anchor plus span_offsets enable accurate, clickable references.\n• Filter facets and ACLs: type-safe fields (tenant_id, roles, region, product, dates) support precise, auditable retrieval scopes.\n• Versioning and provenance: embedding_version, pipeline_version, checksum, and confidence enable deduplication, rollbacks, and quality control."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -754,7 +775,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -767,7 +789,8 @@
                 "en": "• Separate document-level and chunk-level metadata and enforce consistent types.\n• Store precise citation anchors (page/anchor/offsets) and provenance for trustworthy answers.\n• Design filterable facets and ACLs; version embeddings and pipelines to manage change safely."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -780,7 +803,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     }

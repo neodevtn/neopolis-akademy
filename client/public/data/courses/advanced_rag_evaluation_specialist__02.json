@@ -26,7 +26,8 @@
               "title": "Complete RAG Crash Course With Langchain In 2 Hours",
               "label": "Course Video"
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -39,7 +40,8 @@
                 "en": "Query rewriting transforms the original user input into a form that better matches the corpus and retriever. Techniques include normalization (spelling, casing, lemmatization), canonicalization (expanding acronyms and aliases), disambiguation (adding entity, time, or location qualifiers), paraphrasing to bridge lexical gaps for dense retrievers, and context incorporation from the conversation or task. Effective rewriting improves precision without over-constraining recall.\n\nQuestion decomposition breaks multi-hop or compound questions into sub-queries that can be answered independently, then aggregated. Common patterns: conjunctive decomposition (A and B), relational/hop-based (entity -> relation -> attribute), temporal decomposition (then vs now), and constraint extraction (topic, facet, filter). Execution plans include sequential retrieval with working memory, tree-based decomposition, and iterative refinement using LLMs to generate and verify sub-questions. Pitfalls include error propagation, answer aggregation conflicts, and excessive latency; mitigations include re-ranking, caching partial results, and limiting fan-out.\n\nHyDE (Hypothetical Document Embeddings) prompts an LLM to draft a short, plausible answer-like passage for the query. You embed that synthetic passage and retrieve real documents by similarity, optionally re-ranking with a cross-encoder. HyDE improves recall when the query is short, under-specified, or uses vocabulary that differs from the corpus. Risks: anchoring to hallucinated details, topic drift, and added cost/latency. Mitigations: keep the hypothetical passage concise, avoid fabricated named entities, constrain style to neutral summaries, and always validate with retrieved sources."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -52,7 +54,8 @@
                 "en": "• Query rewriting: Normalize, disambiguate, and paraphrase to align the query with corpus language and retriever behavior.\n• Question decomposition: Split complex intents into executable sub-queries; sequence retrieval and aggregate answers carefully.\n• HyDE: Generate a hypothetical passage to embed for retrieval, boosting recall while guarding against hallucination anchoring."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -169,7 +172,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -182,7 +186,8 @@
                 "en": "• Query rewriting improves alignment with the corpus and reduces ambiguity.\n• Decomposition turns multi-hop questions into tractable steps with better evidence quality.\n• HyDE can raise recall in sparse or lexically mismatched settings but must be constrained to avoid anchoring errors."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -195,7 +200,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -217,7 +223,8 @@
                 "en": "In this lesson you will learn: 1) How to generate and manage multiple query variants to boost recall and reduce false negatives. 2) How to retrieve across multiple indexes (BM25, dense, code, tables, multimodal) and fuse results effectively. 3) How to route queries, deduplicate, re-rank, and balance quality with cost and latency."
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -236,7 +243,8 @@
               "title": "Production RAG with LangChain & Vector Databases",
               "label": "Recommended Viewing"
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -249,7 +257,8 @@
                 "en": "• Multi-query generation: Create diverse, high-coverage variants and prune with MMR or entropy heuristics.\n• Fusion and re-ranking: Use RRF or normalized weighted fusion, deduplicate, then cross-encode for precision.\n• Multi-index routing: Select specialized indexes via rules or a learned gate; balance recall with cost/latency."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -366,7 +375,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -379,7 +389,8 @@
                 "en": "• Multi-query boosts recall; control fan-out with diversity selection and top_k caps.\n• RRF or normalized weighted fusion plus re-ranking yields strong precision across variants and indexes.\n• Multi-index routing leverages specialized strengths while managing cost and latency."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -392,7 +403,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -414,7 +426,8 @@
                 "en": "In this lesson you will learn: 1) How reranking with cross-encoders and diversification (e.g., MMR) boosts precision of top results after initial retrieval 2) How contextual compression trims passages to only query-relevant spans while preserving provenance 3) How to evaluate trade-offs between accuracy, latency, and cost using metrics like nDCG@k, Recall@k, and time per query"
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -427,7 +440,8 @@
                 "en": "Initial retrieval (BM25, dense embeddings) favors recall, but the top-k often contains off-target or redundant chunks. Reranking uses a more expensive model (e.g., cross-encoder monoT5, MiniLM/MS MARCO cross-encoders) to score each candidate with the query, delivering higher precision in the final context window. Diversification methods like Maximal Marginal Relevance (MMR) balance relevance with novelty to reduce redundancy across selected chunks. Contextual compression further reduces context by extracting or summarizing only the spans needed to answer the query—via extractive filters (similarity thresholds, salience models) or LLM-based answer-focused summarization—while retaining citations and character offsets to support grounding. A common pattern is: high-recall retriever → reranker over top-N (e.g., 100) → compression to produce a compact, provenance-rich context. Tune chunk size/stride to avoid cutting entities mid-span. Evaluate with nDCG@k/MRR (ordering quality), Recall@k (coverage), factuality/faithfulness of answers, and latency/cost; choose N and compression aggressiveness to meet SLA without losing critical evidence."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -440,7 +454,8 @@
                 "en": "• Cross-encoder reranking: A bi-text model scores query–document pairs for high-precision ordering of candidates.\n• Maximal Marginal Relevance (MMR): Selects items maximizing relevance while minimizing redundancy to improve coverage.\n• Contextual compression: Extracts or summarizes minimal evidence spans and preserves citations to ground the LLM’s answer."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -557,7 +572,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -570,7 +586,8 @@
                 "en": "• Use high-recall retrieval, then rerank for precision and diversify with MMR.\n• Apply contextual compression to keep only evidence-bearing spans and citations.\n• Optimize N, k, and compression aggressiveness using nDCG/Recall and latency/cost metrics."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -589,7 +606,8 @@
               "title": "RAG Tutorial 2026: Complete Introduction to RAG",
               "label": "Tutorial"
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     },
@@ -611,7 +629,8 @@
                 "en": "In this lesson you will learn: 1) How to design agentic RAG loops that plan, retrieve, read, and verify across multiple steps 2) Retrieval planning strategies: query decomposition, source routing, adaptive k, and stopping rules 3) How to instrument, evaluate, and budget multi-hop retrieval for accuracy, cost, and latency"
               }
             }
-          ]
+          ],
+          "id": "chapter_01"
         },
         {
           "title": {
@@ -624,7 +643,8 @@
                 "en": "Agentic RAG turns the LLM into a planner that decides what to retrieve, from where, and in which order. A typical loop is Plan → Retrieve → Read → Reason → Verify → Stop. The planner decomposes complex questions into sub-goals, selects tools or sources (vector store, keyword search, web, SQL, code), formulates/reforms queries, and sets budgets (k per hop, maximum hops, token caps). Adaptive strategies route sub-questions to the best source (e.g., code Q&A to a docs index, current events to web) and adjust k based on uncertainty. Stopping criteria include confidence thresholds (e.g., entailment score from evidence), self-consistency across sampled answers, or lack-of-progress signals. Verification adds robustness via evidence checking (citation coverage), cross-checking with alternative queries, or answerability detection that returns “not enough information.” Logging traces of actions, queries, and evidence enables step-level evaluation (sub-answer accuracy, evidence recall/precision) and cost control (per-hop tokens, API calls)."
               }
             }
-          ]
+          ],
+          "id": "chapter_02"
         },
         {
           "title": {
@@ -637,7 +657,8 @@
                 "en": "• Query decomposition and planning: Break multi-hop tasks into ordered sub-questions with per-hop retrieval plans.\n• Source routing and tool use: Choose the right index or external tool for each sub-goal and reformulate queries as needed.\n• Verification and stopping: Use confidence signals, entailment/citation checks, and early stopping to control cost and improve reliability."
               }
             }
-          ]
+          ],
+          "id": "chapter_03"
         },
         {
           "title": {
@@ -754,7 +775,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "id": "chapter_04"
         },
         {
           "title": {
@@ -767,7 +789,8 @@
                 "en": "• Agentic RAG structures retrieval as planned, multi-step loops with tools and routing.\n• Adaptive k, source selection, and stopping rules balance accuracy with latency/cost.\n• Verification (entailment, citation coverage, self-consistency) increases reliability on complex queries."
               }
             }
-          ]
+          ],
+          "id": "chapter_05"
         },
         {
           "title": {
@@ -780,7 +803,8 @@
                 "en": "Congratulations! You have completed this lesson. You now understand the core concepts and can apply them in practice."
               }
             }
-          ]
+          ],
+          "id": "chapter_06"
         }
       ]
     }
