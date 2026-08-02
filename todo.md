@@ -1030,3 +1030,6 @@
 - [x] Corriger la carte "Reprendre la lecture" (fond vert/hue 145 → bleu hue 255)
 - [x] Supprimer la dernière occurrence de hue 145 (chevron vert)
 - [x] Vérification visuelle complète de la landing page
+
+## Fix logo Claude cassé
+- [x] Remplacer l'image cassée du logo Claude (logo_claude_ai_48b660b5.png) par le logo officiel Claude (icône app arrondie)

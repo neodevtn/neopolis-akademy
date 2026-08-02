@@ -504,7 +504,7 @@ export default function Home() {
                   <div className="flex flex-col items-center justify-center">
                     <div className="text-center">
                       <div className="inline-flex items-center gap-3 px-5 py-3 rounded-xl mb-2" style={{ background: "rgba(255,255,255,0.08)" }}>
-                        <img src="/manus-storage/logo_claude_ai_48b660b5.png" alt="Claude AI" className="w-10 h-10 object-contain" />
+                        <img src="/manus-storage/claude_ai_icon_cf4b47af.png" alt="Claude AI" className="w-10 h-10 object-contain" />
                         <span className="text-2xl font-bold text-white">Claude</span>
                       </div>
                       <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>{t({ fr: "Modèle IA le plus avancé au monde", en: "World's most advanced AI model", ar: "أكثر نماذج الذكاء الاصطناعي تقدمًا" })}</p>
