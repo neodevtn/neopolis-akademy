@@ -1081,6 +1081,12 @@
 - [x] ExerciseRenderer : shuffledOptions state + shuffle on handleReset pour single/multi/checklist
 - [x] LessonQuiz : useMemo shuffledChoices dépendant de q.id + currentQ + attemptCount
 
+## Fix progression non affichée sur le dashboard
+- [x] Fix getCompletedUnits : retourner fraction (chapterIndex/totalChapters) pour cours single-lesson
+- [x] Fix isLessonComplete : gérer correctement les cours single-lesson avec chapter progress
+- [x] Fix getNextUnlockedLesson : gérer correctement les cours single-lesson
+- [x] Fix TrainingCertification : utiliser getChapterProgress pour le calcul par cours
+
 ## Bloquer navigation si flip cards non retournées et exercices non faits
 - [x] FlipCardsGrid : ajouter callback onAllFlipped quand toutes les cartes ont été vues au moins une fois
 - [x] TrainingCourse : tracker les flip cards complétées par chapitre

@@ -28,7 +28,7 @@ export default function TrainingCertification() {
   const { lang, t } = useLanguage();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const { isCourseComplete, getCertProgress, isCertComplete, isLoading: progressLoading, isLessonComplete } = useTrainingProgress();
+  const { isCourseComplete, getCertProgress, isCertComplete, isLoading: progressLoading, isLessonComplete, getChapterProgress } = useTrainingProgress();
 
   const cert = trainingIndex.certifications.find((c) => c.id === certId);
   if (!cert) {
@@ -61,15 +61,27 @@ export default function TrainingCertification() {
     const map: Record<string, { completed: number; total: number; pct: number }> = {};
     courses.forEach((c) => {
       const total = c.lessonCount || 0;
-      let completed = 0;
-      for (let i = 0; i < total; i++) {
-        if (isLessonComplete(c.id, i)) completed++;
+      if (total === 1) {
+        // Single-lesson course: use chapter progress for fractional completion
+        const chapterProg = getChapterProgress(c.id, 0);
+        if (chapterProg && chapterProg.totalChapters > 1) {
+          const pct = Math.round((chapterProg.chapterIndex / chapterProg.totalChapters) * 100);
+          map[c.id] = { completed: chapterProg.chapterIndex, total: chapterProg.totalChapters, pct };
+        } else {
+          const completed = isLessonComplete(c.id, 0) ? 1 : 0;
+          map[c.id] = { completed, total: 1, pct: completed * 100 };
+        }
+      } else {
+        let completed = 0;
+        for (let i = 0; i < total; i++) {
+          if (isLessonComplete(c.id, i)) completed++;
+        }
+        const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+        map[c.id] = { completed, total, pct };
       }
-      const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
-      map[c.id] = { completed, total, pct };
     });
     return map;
-  }, [courses, isLessonComplete]);
+  }, [courses, isLessonComplete, getChapterProgress]);
 
   // Fetch exam history
   const { data: examHistory } = trpc.training.getExamHistory.useQuery(

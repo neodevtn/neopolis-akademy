@@ -121,18 +121,26 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
 
   // Helper: for single-lesson courses (1 lesson with N chapters), chapter progress IS the progression unit
   // Returns how many "units" are completed for a given course considering both lesson-level and chapter-level progress
+  // For single-lesson courses (totalUnits === 1), returns a fraction between 0 and 1 representing chapter progress
   const getCompletedUnits = useCallback((courseId: string, totalUnits: number): number => {
     // First check lesson-level completions
     const lessonCompletions = progressData.filter((p) => p.courseId === courseId).length;
     if (lessonCompletions > 0) return lessonCompletions;
     
-    // For single-lesson courses, check chapter progress
+    // For single-lesson courses (lessonCount === 1), use chapter progress as fractional completion
     const chapterEntry = chapterProgressData.find(
       (cp) => cp.courseId === courseId && cp.lessonIndex === 0
     );
-    if (chapterEntry && chapterEntry.totalChapters === totalUnits) {
-      // chapterIndex is 0-based current position, chapters 0..chapterIndex-1 are completed
-      return chapterEntry.chapterIndex;
+    if (chapterEntry) {
+      if (totalUnits === 1 && chapterEntry.totalChapters > 1) {
+        // Single-lesson course: return fraction of 1 based on chapter progress
+        // chapterIndex is the current position (0-based), chapters before it are completed
+        return chapterEntry.chapterIndex / chapterEntry.totalChapters;
+      }
+      if (chapterEntry.totalChapters === totalUnits) {
+        // Multi-lesson course where chapters map 1:1 to lessons
+        return chapterEntry.chapterIndex;
+      }
     }
     return 0;
   }, [progressData, chapterProgressData]);
@@ -151,9 +159,17 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
       const chapterEntry = chapterProgressData.find(
         (cp) => cp.courseId === courseId && cp.lessonIndex === 0
       );
-      if (chapterEntry && chapterEntry.totalChapters === (course.lessonCount || 1)) {
-        // This is a single-lesson course using chapters as units
-        return lessonIndex < chapterEntry.chapterIndex;
+      if (chapterEntry) {
+        const courseLessonCount = course.lessonCount || 1;
+        if (courseLessonCount === 1 && chapterEntry.totalChapters > 1) {
+          // Single-lesson course: chapter index represents progress within the single lesson
+          // The lesson is complete only when all chapters are done
+          return chapterEntry.chapterIndex >= chapterEntry.totalChapters;
+        }
+        if (chapterEntry.totalChapters === courseLessonCount) {
+          // Multi-lesson course where chapters map to lessons
+          return lessonIndex < chapterEntry.chapterIndex;
+        }
       }
     }
     return false;
@@ -181,8 +197,14 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
     const chapterEntry = chapterProgressData.find(
       (cp) => cp.courseId === courseId && cp.lessonIndex === 0
     );
-    if (chapterEntry && chapterEntry.totalChapters === totalLessons) {
-      return Math.min(chapterEntry.chapterIndex, totalLessons);
+    if (chapterEntry) {
+      if (totalLessons === 1 && chapterEntry.totalChapters > 1) {
+        // Single-lesson course: return 0 (still in the only lesson) or 1 (completed)
+        return chapterEntry.chapterIndex >= chapterEntry.totalChapters ? 1 : 0;
+      }
+      if (chapterEntry.totalChapters === totalLessons) {
+        return Math.min(chapterEntry.chapterIndex, totalLessons);
+      }
     }
     return 0;
   }, [progressData, chapterProgressData]);
