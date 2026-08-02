@@ -1033,3 +1033,10 @@
 
 ## Fix logo Claude cassé
 - [x] Remplacer l'image cassée du logo Claude (logo_claude_ai_48b660b5.png) par le logo officiel Claude (icône app arrondie)
+
+## Fix images + Optimisation + Parallax
+- [x] Diagnostiquer le problème d'affichage des images en production (CDN convertit PNG→WebP, mismatch MIME type)
+- [x] Re-uploader les images en format JPEG natif pour compatibilité navigateur
+- [x] Optimiser le poids des images (4.2 MB → 51-110 KB par image, réduction de 95%)
+- [x] Ajouter un effet parallax subtil (useScroll + useTransform) sur l'image "Devenez AI Solutions Partner"
+- [x] Ajouter un glow background blur derrière l'image parallax pour la profondeur
