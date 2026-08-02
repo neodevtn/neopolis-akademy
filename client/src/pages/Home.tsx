@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ProcessStepper } from "@/components/ProcessStepper";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "wouter";
 import { motion, useInView, AnimatePresence, useScroll, useTransform } from "framer-motion";
@@ -579,113 +580,8 @@ export default function Home() {
           </motion.div>
 
           {/* Stepper horizontal interactif - 5 phases */}
-          {(() => {
-            const [activePhase, setActivePhase] = useState(0);
-            const phases = [
-              {
-                color: "var(--neo-primary)",
-                textColor: "#fff",
-                title: t({ fr: "G\u00e9n\u00e9ration de Leads", en: "Lead Generation", ar: "\u062a\u0648\u0644\u064a\u062f \u0627\u0644\u0639\u0645\u0644\u0627\u0621 \u0627\u0644\u0645\u062d\u062a\u0645\u0644\u064a\u0646" }),
-                description: t({ fr: "L'Ambassadeur prospecte en B2B par tous les moyens (r\u00e9seau, \u00e9v\u00e9nements, cold outreach, recommandations) pour identifier des projets IA potentiels aupr\u00e8s des entreprises de son secteur.", en: "The Ambassador prospects in B2B through all means (networking, events, cold outreach, referrals) to identify potential AI projects with companies in their sector.", ar: "\u064a\u0642\u0648\u0645 \u0627\u0644\u0633\u0641\u064a\u0631 \u0628\u0627\u0644\u0628\u062d\u062b B2B \u0628\u0643\u0644 \u0627\u0644\u0637\u0631\u0642 (\u0627\u0644\u0634\u0628\u0643\u0627\u062a\u060c \u0627\u0644\u0623\u062d\u062f\u0627\u062b\u060c \u0627\u0644\u0627\u062a\u0635\u0627\u0644 \u0627\u0644\u0628\u0627\u0631\u062f\u060c \u0627\u0644\u062a\u0648\u0635\u064a\u0627\u062a) \u0644\u062a\u062d\u062f\u064a\u062f \u0645\u0634\u0627\u0631\u064a\u0639 \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a \u0627\u0644\u0645\u062d\u062a\u0645\u0644\u0629 \u0644\u062f\u0649 \u0627\u0644\u0634\u0631\u0643\u0627\u062a \u0641\u064a \u0642\u0637\u0627\u0639\u0647\u0645." }),
-                extra: <div className="wise-card-sage p-4 inline-block mt-3"><p className="wise-body-sm font-medium">→ {t({ fr: "Le projet identifi\u00e9 est envoy\u00e9 vers la Centrale d'\u00c9tude et d'\u00c9valuation de Neopolis", en: "The identified project is sent to Neopolis Study and Evaluation Center", ar: "\u064a\u062a\u0645 \u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0627\u0644\u0645\u062d\u062f\u062f \u0625\u0644\u0649 \u0645\u0631\u0643\u0632 Neopolis \u0644\u0644\u062f\u0631\u0627\u0633\u0629 \u0648\u0627\u0644\u062a\u0642\u064a\u064a\u0645" })}</p></div>
-              },
-              {
-                color: "var(--neo-primary)",
-                textColor: "#fff",
-                title: t({ fr: "\u00c9tude & \u00c9valuation", en: "Study & Assessment", ar: "\u0627\u0644\u062f\u0631\u0627\u0633\u0629 \u0648\u0627\u0644\u062a\u0642\u064a\u064a\u0645" }),
-                description: t({ fr: "La Centrale classe le projet selon 3 axes pour d\u00e9terminer la solution optimale :", en: "The Central classifies the project along 3 axes to determine the optimal solution:", ar: "\u062a\u0635\u0646\u0651\u0641 \u0627\u0644\u0645\u0631\u0643\u0632\u064a\u0629 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0648\u0641\u0642 3 \u0645\u062d\u0627\u0648\u0631 \u0644\u062a\u062d\u062f\u064a\u062f \u0627\u0644\u062d\u0644 \u0627\u0644\u0623\u0645\u062b\u0644:" }),
-                extra: (
-                  <>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4 mb-4">
-                      <div className="wise-card-sage p-4 text-center">
-                        <p className="wise-label mb-1">{t({ fr: "Taille du projet", en: "Project size", ar: "\u062d\u062c\u0645 \u0627\u0644\u0645\u0634\u0631\u0648\u0639" })}</p>
-                        <p className="wise-body-sm font-semibold">{t({ fr: "Petit · Moyen · Grand", en: "Small · Medium · Large", ar: "\u0635\u063a\u064a\u0631 · \u0645\u062a\u0648\u0633\u0637 · \u0643\u0628\u064a\u0631" })}</p>
-                      </div>
-                      <div className="wise-card-sage p-4 text-center">
-                        <p className="wise-label mb-1">{t({ fr: "Besoin identifi\u00e9", en: "Identified need", ar: "\u0627\u0644\u062d\u0627\u062c\u0629 \u0627\u0644\u0645\u062d\u062f\u062f\u0629" })}</p>
-                        <p className="wise-body-sm font-semibold">Smarter Employees · Faster Processes · Transformational Products</p>
-                      </div>
-                      <div className="wise-card-sage p-4 text-center">
-                        <p className="wise-label mb-1">{t({ fr: "Solution propos\u00e9e", en: "Proposed solution", ar: "\u0627\u0644\u062d\u0644 \u0627\u0644\u0645\u0642\u062a\u0631\u062d" })}</p>
-                        <p className="wise-body-sm font-semibold">{t({ fr: "Logiciel sans IA · Outils standard · Workflow automation · Agent full autonome", en: "Non-AI software · Standard tools · Workflow automation · Full autonomous agent", ar: "\u0628\u0631\u0645\u062c\u064a\u0627\u062a \u0628\u062f\u0648\u0646 \u0630\u0643\u0627\u0621 \u0627\u0635\u0637\u0646\u0627\u0639\u064a · \u0623\u062f\u0648\u0627\u062a \u0642\u064a\u0627\u0633\u064a\u0629 · \u0623\u062a\u0645\u062a\u0629 \u0633\u064a\u0631 \u0627\u0644\u0639\u0645\u0644 · \u0648\u0643\u064a\u0644 \u0645\u0633\u062a\u0642\u0644 \u0628\u0627\u0644\u0643\u0627\u0645\u0644" })}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-2 p-3 rounded-lg" style={{ background: "var(--neo-primary-light)" }}>
-                      <Users size={16} className="flex-shrink-0 mt-0.5" style={{ color: "var(--neo-primary)" }} />
-                      <p className="wise-body-sm" dangerouslySetInnerHTML={{ __html: t({ fr: "La Centrale peut <strong>affilier d'autres Ambassadeurs ou experts en renfort</strong> au projet selon sa complexit\u00e9.", en: "The Central can <strong>affiliate other Ambassadors or expert reinforcements</strong> to the project based on its complexity.", ar: "\u064a\u0645\u0643\u0646 \u0644\u0644\u0645\u0631\u0643\u0632\u064a\u0629 <strong>\u0625\u0634\u0631\u0627\u0643 \u0633\u0641\u0631\u0627\u0621 \u0622\u062e\u0631\u064a\u0646 \u0623\u0648 \u062e\u0628\u0631\u0627\u0621 \u0643\u062f\u0639\u0645</strong> \u0644\u0644\u0645\u0634\u0631\u0648\u0639 \u062d\u0633\u0628 \u062a\u0639\u0642\u064a\u062f\u0647." }) }} />
-                    </div>
-                  </>
-                )
-              },
-              {
-                color: "var(--neo-primary)",
-                textColor: "#fff",
-                title: t({ fr: "Contractualisation", en: "Contracting", ar: "\u0627\u0644\u062a\u0639\u0627\u0642\u062f" }),
-                description: t({ fr: "Signature du contrat avec le client. D\u00e9finition du p\u00e9rim\u00e8tre, des livrables, du calendrier et des conditions commerciales. L'Ambassadeur est impliqu\u00e9 dans la relation client.", en: "Contract signing with the client. Definition of scope, deliverables, timeline and commercial terms. The Ambassador is involved in the client relationship.", ar: "\u062a\u0648\u0642\u064a\u0639 \u0627\u0644\u0639\u0642\u062f \u0645\u0639 \u0627\u0644\u0639\u0645\u064a\u0644. \u062a\u062d\u062f\u064a\u062f \u0627\u0644\u0646\u0637\u0627\u0642 \u0648\u0627\u0644\u0645\u062e\u0631\u062c\u0627\u062a \u0648\u0627\u0644\u062c\u062f\u0648\u0644 \u0627\u0644\u0632\u0645\u0646\u064a \u0648\u0627\u0644\u0634\u0631\u0648\u0637 \u0627\u0644\u062a\u062c\u0627\u0631\u064a\u0629. \u064a\u0634\u0627\u0631\u0643 \u0627\u0644\u0633\u0641\u064a\u0631 \u0641\u064a \u0639\u0644\u0627\u0642\u0629 \u0627\u0644\u0639\u0645\u064a\u0644." }),
-                extra: null
-              },
-              {
-                color: "var(--neo-primary)",
-                textColor: "#fff",
-                title: t({ fr: "Impl\u00e9mentation", en: "Implementation", ar: "\u0627\u0644\u062a\u0646\u0641\u064a\u0630" }),
-                description: t({ fr: "D\u00e9ploiement de la solution IA par l'\u00e9quipe technique de Neopolis Development. L'Ambassadeur assure le lien avec le client et facilite l'adoption de la solution.", en: "Deployment of the AI solution by Neopolis Development's technical team. The Ambassador ensures the link with the client and facilitates solution adoption.", ar: "\u0646\u0634\u0631 \u062d\u0644 \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a \u0645\u0646 \u0642\u0628\u0644 \u0641\u0631\u064a\u0642 Neopolis Development \u0627\u0644\u062a\u0642\u0646\u064a. \u064a\u0636\u0645\u0646 \u0627\u0644\u0633\u0641\u064a\u0631 \u0627\u0644\u0631\u0628\u0637 \u0645\u0639 \u0627\u0644\u0639\u0645\u064a\u0644 \u0648\u064a\u0633\u0647\u0644 \u0627\u0639\u062a\u0645\u0627\u062f \u0627\u0644\u062d\u0644." }),
-                extra: null
-              },
-              {
-                color: "var(--neo-primary)",
-                textColor: "#fff",
-                title: t({ fr: "Monitoring & Revenus R\u00e9currents", en: "Monitoring & Recurring Revenue", ar: "\u0627\u0644\u0645\u0631\u0627\u0642\u0628\u0629 \u0648\u0627\u0644\u0625\u064a\u0631\u0627\u062f\u0627\u062a \u0627\u0644\u0645\u062a\u0643\u0631\u0631\u0629" }),
-                description: t({ fr: "Suivi de la solution en production. L'Ambassadeur g\u00e9n\u00e8re des revenus r\u00e9currents passifs sur la consommation de tokens du client pendant toute la dur\u00e9e de vie du projet.", en: "Monitoring of the solution in production. The Ambassador generates passive recurring revenue from the client's token consumption throughout the project lifecycle.", ar: "\u0645\u0631\u0627\u0642\u0628\u0629 \u0627\u0644\u062d\u0644 \u0641\u064a \u0627\u0644\u0625\u0646\u062a\u0627\u062c. \u064a\u0648\u0644\u062f \u0627\u0644\u0633\u0641\u064a\u0631 \u0625\u064a\u0631\u0627\u062f\u0627\u062a \u0645\u062a\u0643\u0631\u0631\u0629 \u0633\u0644\u0628\u064a\u0629 \u0645\u0646 \u0627\u0633\u062a\u0647\u0644\u0627\u0643 \u0627\u0644\u0639\u0645\u064a\u0644 \u0644\u0644\u0631\u0645\u0648\u0632 \u0637\u0648\u0627\u0644 \u062f\u0648\u0631\u0629 \u062d\u064a\u0627\u0629 \u0627\u0644\u0645\u0634\u0631\u0648\u0639." }),
-                extra: null
-              },
-            ];
-            return (
-              <motion.div variants={fadeInUp} className="max-w-4xl mx-auto mb-14">
-                {/* Stepper dots + labels */}
-                <div className="flex items-center justify-between mb-8 relative">
-                  {/* Connecting line */}
-                  <div className="absolute top-5 left-[5%] right-[5%] h-0.5" style={{ background: "var(--neo-border)" }} />
-                  {phases.map((phase, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setActivePhase(i)}
-                      className="relative flex flex-col items-center gap-2 group z-10"
-                      style={{ cursor: "pointer" }}
-                    >
-                      <span
-                        className="inline-flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm transition-all duration-200"
-                        style={{
-                          background: activePhase === i ? phase.color : "var(--neo-surface-raised)",
-                          color: activePhase === i ? phase.textColor : "var(--neo-ink-secondary)",
-                          border: activePhase === i ? "none" : "2px solid var(--neo-border)",
-                          transform: activePhase === i ? "scale(1.15)" : "scale(1)",
-                          boxShadow: activePhase === i ? "0 4px 12px rgba(0,0,0,0.15)" : "none"
-                        }}
-                      >
-                        {i + 1}
-                      </span>
-                      <span
-                        className="text-[11px] md:text-xs font-medium text-center max-w-[80px] md:max-w-[100px] leading-tight transition-colors duration-200"
-                        style={{ color: activePhase === i ? "var(--neo-ink)" : "var(--neo-ink-muted)" }}
-                      >
-                        {phase.title}
-                      </span>
-                    </button>
-                  ))}
-                </div>
+          <ProcessStepper />
 
-                {/* Content panel */}
-                <div
-                  className="wise-card p-6 md:p-8 relative overflow-hidden"
-                  style={{ borderTop: `3px solid ${phases[activePhase].color}` }}
-                >
-                  <h3 className="wise-display-xs mb-3" style={{ color: "var(--neo-ink)" }}>{phases[activePhase].title}</h3>
-                  <p className="wise-body-md" style={{ color: "var(--neo-ink-secondary)" }}>{phases[activePhase].description}</p>
-                  {phases[activePhase].extra}
-                </div>
-              </motion.div>
-            );
-          })()}
 
           {/* Rémunération */}
           <motion.div variants={fadeInUp} className="max-w-4xl mx-auto">

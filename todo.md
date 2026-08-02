@@ -1094,3 +1094,9 @@
 - [x] TrainingCourse : gater le bouton Next si exercices (exercise blocks) non complétés
 - [x] TrainingCourse : bloquer aussi la navigation clavier (ArrowRight) quand gaté
 - [x] MatchingExercise : passer onComplete depuis TrainingCourse pour tracker la complétion
+
+## Stabilité & Monitoring
+- [x] Tester toutes les certifications (Developer, Architect) pour crashes
+- [x] Ajouter un monitoring d'erreurs côté client (ErrorReporter)
+- [x] Configurer ESLint avec react-hooks/rules-of-hooks
+- [x] Extraire ProcessStepper en composant propre (fix hooks-in-callback)
