@@ -1065,3 +1065,12 @@
 - [x] Simplifier la barre de stats (intégrer dans l'onglet catalogue)
 - [x] Guidance "Commencez ici" pour les nouveaux utilisateurs (0% progression)
 - [x] Supprimer la redondance entre section progression et ordre d'étude
+
+## YouTube IFrame Player API + Navigation verrouillée
+- [x] Créer composant YouTubePlayer avec API IFrame Player (pas simple iframe)
+- [x] Détecter automatiquement 80%+ de visionnage via onStateChange + getCurrentTime
+- [x] Auto-marquer la vidéo comme vue quand 80% atteint
+- [x] Garder le bouton "Marquer comme vue" en fallback manuel
+- [x] Bloquer le bouton "Suivant" tant que la vidéo du chapitre n'est pas marquée comme vue
+- [x] Afficher une barre de progression de visionnage sous la vidéo
+- [x] Afficher un message explicatif quand le bouton Suivant est bloqué

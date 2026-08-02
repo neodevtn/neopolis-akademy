@@ -24,6 +24,7 @@ import { SingleChoiceExercise } from "@/components/SingleChoiceExercise";
 import { ChapterQuiz } from "@/components/ChapterQuiz";
 import { CourseIllustration } from "@/components/CourseIllustration";
 import { VideoRecommendations } from "@/components/VideoRecommendations";
+import { YouTubePlayer } from "@/components/YouTubePlayer";
 import { motion, AnimatePresence } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 
@@ -2074,12 +2075,7 @@ function LessonViewer({
   onComplete,
   matchedVideos,
   completedVideos,
-  expandedVideos,
-  playingVideos,
-  toggleVideo,
-  startPlayingVideo,
   toggleVideoComplete,
-  getYouTubeThumbnail,
   isReviewMode = false,
   courseExercises = [],
   onChapterChange,
@@ -2094,12 +2090,7 @@ function LessonViewer({
   onComplete: () => void;
   matchedVideos: any[];
   completedVideos: Set<string>;
-  expandedVideos: Set<string>;
-  playingVideos: Set<string>;
-  toggleVideo: (id: string) => void;
-  startPlayingVideo: (id: string) => void;
   toggleVideoComplete: (id: string) => void;
-  getYouTubeThumbnail: (id: string) => string;
   isReviewMode?: boolean;
   courseExercises?: any[];
   onChapterChange?: (current: number, total: number) => void;
@@ -2109,10 +2100,7 @@ function LessonViewer({
   // validatedChapter tracks the highest chapter index that was VALIDATED (quiz passed or exercises completed)
   // This is what gets persisted as progress - NOT the navigation position
   const [validatedChapter, setValidatedChapter] = useState(initialChapter ?? 0);
-  // YouTube IFrame API: track which video iframes are mounted (videoKey -> iframe ref)
-  const videoIframeRefs = useRef<Map<string, HTMLIFrameElement>>(new Map());
-  // Track video watch progress locally (videoKey -> percentage 0-100)
-  const [videoWatchProgress, setVideoWatchProgress] = useState<Map<string, number>>(new Map());
+
   const [showQuiz, setShowQuiz] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
   const [showChapterQuiz, setShowChapterQuiz] = useState(false);
@@ -2211,56 +2199,7 @@ function LessonViewer({
     setReadingProgress(0);
   }, [currentChapter, totalChapters]);
 
-  // YouTube IFrame API: listen for postMessage events to detect 80% watch threshold
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (!event.data || typeof event.data !== 'string') return;
-      try {
-        const data = JSON.parse(event.data);
-        // YouTube sends {event: 'infoDelivery', info: {currentTime, duration, ...}}
-        if (data.event === 'infoDelivery' && data.info) {
-          const { currentTime, duration } = data.info;
-          if (duration && currentTime && duration > 0) {
-            const pct = (currentTime / duration) * 100;
-            // Find which iframe sent this message
-            videoIframeRefs.current.forEach((iframe, videoKey) => {
-              try {
-                if (iframe.contentWindow === event.source) {
-                  setVideoWatchProgress(prev => {
-                    const newMap = new Map(prev);
-                    newMap.set(videoKey, Math.max(newMap.get(videoKey) || 0, pct));
-                    return newMap;
-                  });
-                  // Auto-mark as complete at 80%
-                  if (pct >= 80 && !completedVideos.has(videoKey)) {
-                    toggleVideoComplete(videoKey);
-                  }
-                }
-              } catch (_) {}
-            });
-          }
-        }
-      } catch (_) {}
-    };
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [completedVideos, toggleVideoComplete]);
-
-  // Poll YouTube IFrame API for current time (every 2s when a video is playing)
-  useEffect(() => {
-    if (playingVideos.size === 0) return;
-    const interval = setInterval(() => {
-      videoIframeRefs.current.forEach((iframe, videoKey) => {
-        if (playingVideos.has(videoKey)) {
-          try {
-            iframe.contentWindow?.postMessage(JSON.stringify({ event: 'listening' }), '*');
-            iframe.contentWindow?.postMessage(JSON.stringify({ event: 'command', func: 'getVideoData', args: [] }), '*');
-          } catch (_) {}
-        }
-      });
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [playingVideos]);
+  // YouTube video tracking is now handled by the YouTubePlayer component internally
 
   // Only persist progress when validatedChapter advances (quiz passed or exercises completed)
   useEffect(() => {
@@ -2337,96 +2276,18 @@ function LessonViewer({
         const videoTitle = typeof block.title === 'object' && block.title !== null && ('fr' in block.title || 'en' in block.title) ? (block.title[lang] || block.title.en || block.title.fr || "Video") : (block.title || "Video");
         const videoWatchUrl = typeof block.watchUrl === 'object' ? (block.watchUrl[lang] || block.watchUrl.en || block.watchUrl.fr || "") : (block.watchUrl || "");
         const isVideoComplete = completedVideos.has(videoKey);
-        const isPlaying = playingVideos.has(videoKey);
         return (
-          <div
+          <YouTubePlayer
             key={blockIdx}
-            className={`border rounded-xl overflow-hidden transition-colors ${
-              isVideoComplete
-                ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-900/10"
-                : "border-border bg-card"
-            }`}
-          >
-            <div className="flex items-center justify-between p-3 border-b border-border/50">
-              <div className="flex items-center gap-3">
-                {isVideoComplete ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                ) : (
-                  <PlayCircle className="w-4 h-4 text-red-500 shrink-0" />
-                )}
-                <span className="font-medium text-sm text-foreground">
-                  {videoTitle}
-                </span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 font-semibold uppercase">
-                  {t({ en: "Video", fr: "Vidéo" })}
-                </span>
-              </div>
-            </div>
-            <div className="px-3 pt-3 pb-3">
-              {!isPlaying ? (
-                <div
-                  className="aspect-video rounded-lg overflow-hidden bg-black relative cursor-pointer group"
-                  onClick={() => startPlayingVideo(videoKey)}
-                >
-                  <img
-                    src={getYouTubeThumbnail(videoId)}
-                    alt={videoTitle}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
-                    <div className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                      <PlayCircle className="w-7 h-7 text-white fill-white" />
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="aspect-video rounded-lg overflow-hidden bg-black">
-                  <iframe
-                    ref={(el) => {
-                      if (el) videoIframeRefs.current.set(videoKey, el);
-                      else videoIframeRefs.current.delete(videoKey);
-                    }}
-                    src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`}
-                    title={videoTitle}
-                    className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    allowFullScreen
-                  />
-                </div>
-              )}
-              <div className="flex items-center justify-between mt-3">
-                <Button
-                  variant={isVideoComplete ? "outline" : "default"}
-                  size="sm"
-                  onClick={() => toggleVideoComplete(videoKey)}
-                  className={`gap-1.5 text-xs ${
-                    isVideoComplete
-                      ? "border-emerald-300 text-emerald-700 dark:border-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
-                      : "bg-primary hover:bg-primary/90 text-primary-foreground"
-                  }`}
-                >
-                  <Check className="w-3.5 h-3.5" />
-                  {isVideoComplete
-                    ? t({ en: "Completed", fr: "Terminée" })
-                    : t({ en: "Mark as watched", fr: "Marquer comme vue" })
-                  }
-                </Button>
-                {videoWatchUrl && (
-                  <a
-                    href={videoWatchUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <PlayCircle className="w-3.5 h-3.5" />
-                    {t({ en: "Watch on YouTube", fr: "Regarder sur YouTube" })}
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
+            videoId={videoId}
+            videoKey={videoKey}
+            title={videoTitle}
+            isCompleted={isVideoComplete}
+            onMarkComplete={toggleVideoComplete}
+            watchUrl={videoWatchUrl}
+            lang={lang}
+            t={t}
+          />
         );
       }
       case "transcript": {
@@ -3076,7 +2937,7 @@ function LessonSidebarContent({
 
         // Check if this lesson has a matching video
         const lessonTitle = resolveI18n(lesson.title, "en").toLowerCase().trim();
-        const hasVideo = videos.some((v: any) => (v.title || "").toLowerCase().trim() === lessonTitle);
+        const hasVideo = videos.some((v: any) => resolveI18n(v.title, "en").toLowerCase().trim() === lessonTitle);
         
         // Determine chapter/lesson type icon
         const chType = lesson.chapterType || '';
@@ -3337,8 +3198,7 @@ export default function TrainingCourse() {
   const { isAuthenticated, loading: authLoading, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { isLessonComplete, markLessonComplete, getNextUnlockedLesson, isCourseComplete, getChapterProgress: getPersistedChapterProgress, saveChapterProgress: persistChapterProgress } = useTrainingProgress();
-  const [expandedVideos, setExpandedVideos] = useState<Set<string>>(new Set());
-  const [playingVideos, setPlayingVideos] = useState<Set<string>>(new Set());
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
   const [chapterProgress, setChapterProgress] = useState<{ current: number; total: number } | null>(null);
@@ -3528,18 +3388,6 @@ export default function TrainingCourse() {
     : getNextUnlockedLesson(course.id, totalLessons);
   const videos = course.videos || [];
 
-  const toggleVideo = (videoId: string) => {
-    setExpandedVideos((prev) => {
-      const next = new Set(prev);
-      if (next.has(videoId)) next.delete(videoId);
-      else next.add(videoId);
-      return next;
-    });
-  };
-
-  const startPlayingVideo = (videoId: string) => {
-    setPlayingVideos((prev) => new Set(prev).add(videoId));
-  };
 
   const toggleVideoComplete = (videoId: string) => {
     if (isAuthenticated && courseId) {
@@ -3556,10 +3404,6 @@ export default function TrainingCourse() {
     }
   };
 
-  // Get YouTube thumbnail URL from youtube_id
-  const getYouTubeThumbnail = (youtubeId: string) => {
-    return `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`;
-  };
 
   const handleMarkLessonComplete = (lessonIndex: number) => {
     if (certId && courseId) {
@@ -3764,7 +3608,7 @@ export default function TrainingCourse() {
             // Match videos to this lesson by title
             const lessonTitle = resolveI18n(displayedLesson.title, "en").toLowerCase().trim();
             const lessonVideos = videos.filter((v: any) => {
-              const vTitle = (v.title || "").toLowerCase().trim();
+              const vTitle = resolveI18n(v.title, "en").toLowerCase().trim();
               return vTitle === lessonTitle;
             });
 
@@ -3851,12 +3695,7 @@ export default function TrainingCourse() {
                     }}
                     matchedVideos={lessonVideos}
                     completedVideos={completedVideos}
-                    expandedVideos={expandedVideos}
-                    playingVideos={playingVideos}
-                    toggleVideo={toggleVideo}
-                    startPlayingVideo={startPlayingVideo}
                     toggleVideoComplete={toggleVideoComplete}
-                    getYouTubeThumbnail={getYouTubeThumbnail}
                     isReviewMode={isReviewMode}
                     courseExercises={courseExercises}
                     onChapterChange={handleChapterChange}
