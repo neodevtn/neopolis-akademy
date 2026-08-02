@@ -1055,3 +1055,13 @@
 - [x] Logo Neopolis au centre avec ombre douce
 - [x] Animations fluides : rotation conic-gradient, flottement des nœuds, dots circulants
 - [x] Badges flottants "Certification CCA" et "Certification internationale" conservés
+
+## Refonte UX/UI Training Dashboard (simplification)
+- [x] Supprimer la grille de 16 mini-barres de progression du haut (trop dense)
+- [x] Ajouter des onglets de navigation (Mon Parcours / Catalogue / Parcours recommandé)
+- [x] Onglet "Mon Parcours" : progression globale + widget reprise lecture + prochaine étape
+- [x] Onglet "Catalogue" : cartes de certifications avec filtres par catégorie
+- [x] Onglet "Parcours recommandé" : ordre d'étude séquentiel clair
+- [x] Simplifier la barre de stats (intégrer dans l'onglet catalogue)
+- [x] Guidance "Commencez ici" pour les nouveaux utilisateurs (0% progression)
+- [x] Supprimer la redondance entre section progression et ordre d'étude

@@ -20,11 +20,18 @@ import {
   LogOut,
   Download,
   Brain,
+  Compass,
+  Library,
+  Route,
+  Sparkles,
+  CheckCircle2,
+  Circle,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -67,11 +74,14 @@ const levelConfig = {
   },
 };
 
+type TabId = "my-path" | "catalog" | "recommended";
+
 export default function TrainingDashboard() {
   const { lang, t } = useLanguage();
   const { getCertProgress, getLastVisitedCourse } = useTrainingProgress();
   const { isAuthenticated, loading: authLoading, user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const [activeTab, setActiveTab] = useState<TabId>("my-path");
 
   // Group configuration for the 4 certification tracks
   const GROUP_CONFIG = {
@@ -129,13 +139,22 @@ export default function TrainingDashboard() {
       const totalLessonsMap: Record<string, number> = {};
       courses.forEach((c) => { totalLessonsMap[c.id] = c.lessonCount || 1; });
       const progressPct = getCertProgress(courseIds, totalLessonsMap);
-      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, courseCount: cert.courseCount, totalExercises: cert.totalExercises, totalVideos: cert.totalVideos, totalDownloads: (cert as any).totalDownloads || 0, progress: progressPct, completed: progressPct >= 100 };
+      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, courseCount: cert.courseCount, totalExercises: cert.totalExercises, totalVideos: cert.totalVideos, totalDownloads: (cert as any).totalDownloads || 0, progress: progressPct, completed: progressPct >= 100, group: (cert as any).group };
     });
   }, [getCertProgress]);
 
   const completedCount = certCompletionData.filter((c) => c.completed).length;
   const totalCount = certCompletionData.length;
   const overallPct = Math.round(certCompletionData.reduce((sum, c) => sum + c.progress, 0) / totalCount);
+
+  // Find the next recommended certification to start
+  const nextCertToStart = useMemo(() => {
+    for (const cert of trainingIndex.certifications) {
+      const data = certCompletionData.find((c) => c.id === cert.id);
+      if (data && data.progress < 100) return data;
+    }
+    return null;
+  }, [certCompletionData]);
 
   // Loading state
   if (authLoading) {
@@ -198,6 +217,12 @@ export default function TrainingDashboard() {
     );
   }
 
+  const tabs: { id: TabId; label: { en: string; fr: string }; icon: React.ReactNode }[] = [
+    { id: "my-path", label: { en: "My Progress", fr: "Mon Parcours" }, icon: <Compass className="w-4 h-4" /> },
+    { id: "catalog", label: { en: "Catalog", fr: "Catalogue" }, icon: <Library className="w-4 h-4" /> },
+    { id: "recommended", label: { en: "Learning Path", fr: "Parcours recommandé" }, icon: <Route className="w-4 h-4" /> },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -242,273 +267,516 @@ export default function TrainingDashboard() {
         </div>
       </header>
 
-      <motion.main
-        className="max-w-7xl mx-auto px-6 py-10"
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        {/* Welcome + Tabs */}
+        <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
+          {/* Greeting */}
+          <div className="mb-6">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-1">
+              {t({ en: `Welcome back${user?.name ? `, ${user.name.split(' ')[0]}` : ''}`, fr: `Bienvenue${user?.name ? `, ${user.name.split(' ')[0]}` : ''}` })}
+            </h1>
+            <p className="text-muted-foreground">
+              {t({ en: "Continue your AI certification journey.", fr: "Continuez votre parcours de certification IA." })}
+            </p>
+          </div>
+
+          {/* Tab Navigation */}
+          <div className="flex items-center gap-1 p-1 bg-secondary/50 rounded-xl w-fit mb-8">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  activeTab === tab.id
+                    ? "bg-card text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {tab.icon}
+                <span className="hidden sm:inline">{t(tab.label)}</span>
+              </button>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Tab Content */}
+        <AnimatePresence mode="wait">
+          {activeTab === "my-path" && (
+            <motion.div
+              key="my-path"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3, ease: easeOut }}
+            >
+              <MyPathTab
+                overallPct={overallPct}
+                completedCount={completedCount}
+                totalCount={totalCount}
+                certCompletionData={certCompletionData}
+                nextCertToStart={nextCertToStart}
+                t={t}
+                getLastVisitedCourse={getLastVisitedCourse}
+              />
+            </motion.div>
+          )}
+          {activeTab === "catalog" && (
+            <motion.div
+              key="catalog"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3, ease: easeOut }}
+            >
+              <CatalogTab
+                certCompletionData={certCompletionData}
+                GROUP_CONFIG={GROUP_CONFIG}
+                t={t}
+              />
+            </motion.div>
+          )}
+          {activeTab === "recommended" && (
+            <motion.div
+              key="recommended"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3, ease: easeOut }}
+            >
+              <RecommendedTab
+                certCompletionData={certCompletionData}
+                t={t}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Diagnostic Tools - always visible at bottom */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+          className="mt-12 space-y-4"
+        >
+          <h2 className="text-lg font-semibold text-foreground mb-4">
+            {t({ en: "AI Tools", fr: "Outils IA" })}
+          </h2>
+          <motion.div variants={fadeInUp}>
+            <Link href="/diagnostic" className="group block bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-2xl border border-blue-200 dark:border-blue-800 p-5 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-200">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center flex-shrink-0">
+                  <BookOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-base font-semibold text-foreground mb-0.5">
+                    {t({ en: "AI Automatability Diagnostic", fr: "Diagnostic d'automatisabilité IA" })}
+                  </h3>
+                  <p className="text-sm text-muted-foreground line-clamp-1">
+                    {t({ en: "Evaluate the AI potential of your business processes.", fr: "Évaluez le potentiel IA de vos processus métier." })}
+                  </p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-blue-600 transition-colors flex-shrink-0" />
+              </div>
+            </Link>
+          </motion.div>
+          <motion.div variants={fadeInUp}>
+            <Link href="/diagnostic-avance" className="group block bg-gradient-to-r from-purple-50 to-fuchsia-50 dark:from-purple-950/30 dark:to-fuchsia-950/30 rounded-2xl border border-purple-200 dark:border-purple-800 p-5 hover:shadow-md hover:border-purple-300 dark:hover:border-purple-700 transition-all duration-200">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center flex-shrink-0">
+                  <Brain className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <h3 className="text-base font-semibold text-foreground">
+                      {t({ en: "Advanced AI Diagnostic (BPMN)", fr: "Diagnostic IA Avancé (BPMN)" })}
+                    </h3>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 font-semibold uppercase">Pro</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground line-clamp-1">
+                    {t({ en: "Design BPMN processes, get ultra-detailed AI recommendations.", fr: "Designez vos processus BPMN, obtenez des recommandations IA détaillées." })}
+                  </p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-purple-600 transition-colors flex-shrink-0" />
+              </div>
+            </Link>
+          </motion.div>
+        </motion.div>
+      </main>
+    </div>
+  );
+}
+
+/* ─── Tab: My Path ─── */
+function MyPathTab({
+  overallPct,
+  completedCount,
+  totalCount,
+  certCompletionData,
+  nextCertToStart,
+  t,
+  getLastVisitedCourse,
+}: {
+  overallPct: number;
+  completedCount: number;
+  totalCount: number;
+  certCompletionData: any[];
+  nextCertToStart: any;
+  t: (obj: { en: string; fr: string }) => string;
+  getLastVisitedCourse: () => any;
+}) {
+  const lastVisited = getLastVisitedCourse();
+  const course = lastVisited ? trainingIndex.courses.find((c) => c.id === lastVisited.courseId) : null;
+  const cert = course ? trainingIndex.certifications.find((c) => c.id === course.certId) : null;
+  const isNewUser = overallPct === 0;
+
+  return (
+    <div className="space-y-6">
+      {/* Progress Overview - compact */}
+      <div className="bg-card rounded-2xl border border-border p-6 shadow-sm">
+        <div className="flex items-center gap-5">
+          <div className="relative w-20 h-20 flex-shrink-0">
+            <svg className="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="6" className="text-secondary" />
+              <circle
+                cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="6"
+                className="text-primary"
+                strokeDasharray={`${2 * Math.PI * 34}`}
+                strokeDashoffset={`${2 * Math.PI * 34 * (1 - overallPct / 100)}`}
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-lg font-bold text-foreground">{overallPct}%</span>
+            </div>
+          </div>
+          <div className="flex-1">
+            <h2 className="text-lg font-semibold text-foreground mb-1">
+              {t({ en: "Overall Progress", fr: "Progression globale" })}
+            </h2>
+            <p className="text-sm text-muted-foreground mb-2">
+              {completedCount}/{totalCount} {t({ en: "certifications completed", fr: "certifications complétées" })}
+            </p>
+            {/* Compact progress bar */}
+            <div className="w-full h-2 rounded-full bg-secondary overflow-hidden">
+              <div
+                className="h-full rounded-full bg-primary transition-all duration-700"
+                style={{ width: `${overallPct}%` }}
+              />
+            </div>
+            {completedCount === totalCount && completedCount > 0 && (
+              <div className="flex items-center gap-1.5 mt-2 text-amber-600 dark:text-amber-400">
+                <Trophy className="w-4 h-4" />
+                <span className="text-sm font-semibold">{t({ en: "All Complete!", fr: "Tout terminé !" })}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Resume Learning OR Start Here (for new users) */}
+      {isNewUser ? (
+        <div className="bg-gradient-to-br from-primary/5 to-emerald-500/5 dark:from-primary/10 dark:to-emerald-500/10 rounded-2xl border border-primary/20 p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-primary" />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground">
+              {t({ en: "Start your journey here!", fr: "Commencez votre parcours ici !" })}
+            </h3>
+          </div>
+          <p className="text-sm text-muted-foreground mb-4 ml-[52px]">
+            {t({ en: "We recommend starting with the first certification. Follow the learning path for the best experience.", fr: "Nous recommandons de commencer par la première certification. Suivez le parcours recommandé pour une expérience optimale." })}
+          </p>
+          {nextCertToStart && (
+            <Link
+              href={`/training/${nextCertToStart.id}`}
+              className="group ml-[52px] inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 transition-all duration-200 active:scale-[0.97]"
+            >
+              {t({ en: "Start first course", fr: "Commencer le premier cours" })}
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          )}
+        </div>
+      ) : lastVisited && course ? (
+        <Link
+          href={`/training/${course.certId}/${course.id}`}
+          className="group block bg-gradient-to-r from-primary/5 to-emerald-500/5 dark:from-primary/10 dark:to-emerald-500/10 rounded-2xl border border-primary/20 dark:border-primary/30 p-5 hover:shadow-md hover:border-primary/40 transition-all duration-200"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <PlayCircle className="w-6 h-6 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                  {t({ en: "Continue reading", fr: "Reprendre la lecture" })}
+                </span>
+                {cert && <span className="text-xs text-muted-foreground">{cert.icon}</span>}
+              </div>
+              <h3 className="text-sm md:text-base font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                {t(course.title)}
+              </h3>
+              <div className="flex items-center gap-3 mt-1.5">
+                <div className="flex-1 max-w-[200px] h-1.5 rounded-full bg-secondary overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-primary transition-all duration-500"
+                    style={{ width: `${Math.round(((lastVisited.chapterIndex + 1) / lastVisited.totalChapters) * 100)}%` }}
+                  />
+                </div>
+                <span className="text-xs text-muted-foreground font-medium">
+                  {t({ en: `Chapter ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}`, fr: `Chapitre ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}` })}
+                </span>
+              </div>
+            </div>
+            <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+          </div>
+        </Link>
+      ) : null}
+
+      {/* Next step suggestion */}
+      {!isNewUser && nextCertToStart && nextCertToStart.progress > 0 && nextCertToStart.progress < 100 && (
+        <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-3">
+            <Compass className="w-4 h-4 text-primary" />
+            <h3 className="text-sm font-semibold text-foreground">
+              {t({ en: "Next recommended step", fr: "Prochaine étape recommandée" })}
+            </h3>
+          </div>
+          <Link
+            href={`/training/${nextCertToStart.id}`}
+            className="group flex items-center gap-4 p-3 rounded-xl bg-secondary/40 hover:bg-secondary/70 transition-colors"
+          >
+            <span className="text-2xl">{nextCertToStart.icon}</span>
+            <div className="flex-1 min-w-0">
+              <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors truncate">
+                {t(nextCertToStart.title)}
+              </h4>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="flex-1 max-w-[150px] h-1.5 rounded-full bg-secondary overflow-hidden">
+                  <div className="h-full rounded-full bg-primary" style={{ width: `${nextCertToStart.progress}%` }} />
+                </div>
+                <span className="text-xs text-muted-foreground">{nextCertToStart.progress}%</span>
+              </div>
+            </div>
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          </Link>
+        </div>
+      )}
+
+      {/* Quick stats - minimal */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {[
+          { value: String(trainingIndex.certifications.length), label: { en: "Certifications", fr: "Certifications" }, icon: <GraduationCap className="w-4 h-4" /> },
+          { value: String(trainingIndex.courses.length), label: { en: "Courses", fr: "Cours" }, icon: <BookOpen className="w-4 h-4" /> },
+          { value: String(trainingIndex.certifications.reduce((s, c) => s + c.totalVideos, 0)), label: { en: "Videos", fr: "Vidéos" }, icon: <Play className="w-4 h-4" /> },
+          { value: String(trainingIndex.certifications.reduce((s, c) => s + c.totalExercises, 0)) + "+", label: { en: "Exercises", fr: "Exercices" }, icon: <Dumbbell className="w-4 h-4" /> },
+        ].map((stat, i) => (
+          <div key={i} className="flex items-center gap-3 bg-card rounded-xl border border-border p-3.5 shadow-sm">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary flex-shrink-0">
+              {stat.icon}
+            </div>
+            <div>
+              <div className="text-lg font-bold text-foreground leading-tight">{stat.value}</div>
+              <div className="text-[11px] text-muted-foreground font-medium">{t(stat.label)}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Tab: Catalog ─── */
+function CatalogTab({
+  certCompletionData,
+  GROUP_CONFIG,
+  t,
+}: {
+  certCompletionData: any[];
+  GROUP_CONFIG: any;
+  t: (obj: { en: string; fr: string }) => string;
+}) {
+  const [selectedGroup, setSelectedGroup] = useState<string>("all");
+
+  type GroupKey = keyof typeof GROUP_CONFIG;
+  const groups = Object.entries(GROUP_CONFIG) as [GroupKey, any][];
+
+  const filteredCerts = selectedGroup === "all"
+    ? certCompletionData
+    : certCompletionData.filter((cert) => cert.group === selectedGroup);
+
+  return (
+    <div className="space-y-6">
+      {/* Filter pills */}
+      <div className="flex flex-wrap gap-2">
+        <button
+          onClick={() => setSelectedGroup("all")}
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+            selectedGroup === "all"
+              ? "bg-primary text-primary-foreground shadow-sm"
+              : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
+          }`}
+        >
+          {t({ en: "All", fr: "Tout" })} ({certCompletionData.length})
+        </button>
+        {groups.sort((a, b) => a[1].order - b[1].order).map(([key, cfg]) => {
+          const keyStr = key as string;
+          const count = certCompletionData.filter((c) => c.group === keyStr).length;
+          if (count === 0) return null;
+          return (
+            <button
+              key={keyStr}
+              onClick={() => setSelectedGroup(keyStr)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                selectedGroup === keyStr
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
+              }`}
+            >
+              {t(cfg.label).split(' ').slice(0, 2).join(' ')} ({count})
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Certification cards */}
+      <motion.div
         initial="hidden"
         animate="visible"
         variants={staggerContainer}
+        className="grid md:grid-cols-2 gap-5"
       >
-        {/* Hero Section */}
-        <motion.div variants={fadeInUp} className="mb-10">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-                {t({ en: "Claude Certification Training", fr: "Formation Certification Claude" })}
-              </h1>
-            </div>
-          </div>
-          <p className="text-muted-foreground ml-[52px]">
-            {t({
-              en: "Prepare for your Claude certifications with structured courses, exercises, and mock exams.",
-              fr: "Préparez vos certifications Claude avec des cours structurés, exercices et examens blancs.",
-            })}
-          </p>
-        </motion.div>
-
-        {/* Progress Overview Card */}
-        <motion.div variants={fadeInUp} className="bg-card rounded-2xl border border-border p-6 md:p-8 mb-8 shadow-sm">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            {/* Left: Progress circle + text */}
-            <div className="flex items-center gap-5">
-              <div className="relative w-20 h-20 flex-shrink-0">
-                <svg className="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
-                  <circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="6" className="text-secondary" />
-                  <circle
-                    cx="40" cy="40" r="34" fill="none" stroke="currentColor" strokeWidth="6"
-                    className="text-primary"
-                    strokeDasharray={`${2 * Math.PI * 34}`}
-                    strokeDashoffset={`${2 * Math.PI * 34 * (1 - overallPct / 100)}`}
-                    strokeLinecap="round"
-                  />
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-lg font-bold text-foreground">{overallPct}%</span>
-                </div>
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-foreground mb-1">
-                  {t({ en: "Overall Progress", fr: "Progression globale" })}
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  {completedCount}/{totalCount} {t({ en: "certifications completed", fr: "certifications complétées" })}
-                </p>
-                {completedCount === totalCount && completedCount > 0 && (
-                  <div className="flex items-center gap-1.5 mt-2 text-amber-600 dark:text-amber-400">
-                    <Trophy className="w-4 h-4" />
-                    <span className="text-sm font-semibold">{t({ en: "All Complete!", fr: "Tout terminé !" })}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-            {/* Right: Mini progress per cert */}
-            <div className="grid grid-cols-2 gap-3 md:gap-4">
-              {certCompletionData.map((cert) => (
-                <div key={cert.id} className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-secondary/50">
-                  <span className="text-xl flex-shrink-0">{cert.icon}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs font-medium text-foreground truncate">{t(cert.title)}</div>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <div className="flex-1 h-1.5 rounded-full bg-secondary overflow-hidden">
-                        <div
-                          className="h-full rounded-full bg-primary transition-all duration-500"
-                          style={{ width: `${cert.progress}%` }}
-                        />
-                      </div>
-                      <span className="text-[10px] font-semibold text-muted-foreground">{cert.progress}%</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Stats Row */}
-        <motion.div variants={fadeInUp} className="grid grid-cols-5 gap-3 md:gap-4 mb-10">
-          {[
-            { value: String(trainingIndex.certifications.length), label: { en: "Certifications", fr: "Certifications" }, icon: <GraduationCap className="w-4 h-4" /> },
-            { value: String(trainingIndex.courses.length), label: { en: "Courses", fr: "Cours" }, icon: <BookOpen className="w-4 h-4" /> },
-            { value: String(trainingIndex.certifications.reduce((s, c) => s + c.totalVideos, 0)), label: { en: "Videos", fr: "Vidéos" }, icon: <Play className="w-4 h-4" /> },
-            { value: String(trainingIndex.certifications.reduce((s, c) => s + (c as any).totalDownloads || 0, 0)), label: { en: "Downloads", fr: "Téléchargements" }, icon: <Download className="w-4 h-4" /> },
-            { value: String(trainingIndex.certifications.reduce((s, c) => s + c.totalExercises, 0)) + "+", label: { en: "Exercises", fr: "Exercices" }, icon: <Dumbbell className="w-4 h-4" /> },
-          ].map((stat, i) => (
-            <motion.div
-              key={i}
-              variants={scaleIn}
-              className="bg-card rounded-xl border border-border p-4 text-center shadow-sm"
-            >
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary mx-auto mb-2">
-                {stat.icon}
-              </div>
-              <div className="text-xl md:text-2xl font-bold text-foreground">{stat.value}</div>
-              <div className="text-[11px] md:text-xs text-muted-foreground font-medium">{t(stat.label)}</div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Resume Reading Widget */}
-        {(() => {
-          const lastVisited = getLastVisitedCourse();
-          if (!lastVisited) return null;
-          const course = trainingIndex.courses.find((c) => c.id === lastVisited.courseId);
-          if (!course) return null;
-          const cert = trainingIndex.certifications.find((c) => c.id === course.certId);
+        {filteredCerts.map((cert) => {
+          const groupCfg = GROUP_CONFIG[cert.group as GroupKey] || GROUP_CONFIG.divers;
+          const level = (((cert.level as any)?.en || "beginner") as string).toLowerCase() as keyof typeof levelConfig;
+          const config = levelConfig[level] || levelConfig.beginner;
           return (
-            <motion.div variants={fadeInUp} className="mb-8">
+            <motion.div key={cert.id} variants={fadeInUp}>
               <Link
-                href={`/training/${course.certId}/${course.id}`}
-                className="group block bg-gradient-to-r from-primary/5 to-emerald-500/5 dark:from-primary/10 dark:to-emerald-500/10 rounded-2xl border border-primary/20 dark:border-primary/30 p-5 hover:shadow-md hover:border-primary/40 transition-all duration-200"
+                href={`/training/${cert.id}`}
+                className={`group block bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md ${groupCfg.hoverBorder} transition-all duration-200`}
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <PlayCircle className="w-6 h-6 text-primary" />
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`w-12 h-12 rounded-xl ${groupCfg.iconBg} flex items-center justify-center text-2xl`}>{cert.icon}</div>
+                  <span className={`text-[11px] px-2.5 py-1 rounded-full font-semibold ${config.color}`}>{t(config.label)}</span>
+                </div>
+                <h3 className={`text-base font-semibold text-foreground ${groupCfg.hoverText} transition-colors mb-2 leading-tight`}>{t(cert.title)}</h3>
+                <p className="text-sm text-muted-foreground mb-4 line-clamp-2 leading-relaxed">{t(cert.description)}</p>
+                <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
+                  <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" />{cert.courseCount} {t({ en: "courses", fr: "cours" })}</span>
+                  <span className="flex items-center gap-1"><Dumbbell className="w-3.5 h-3.5" />{cert.totalExercises} {t({ en: "exercises", fr: "exercices" })}</span>
+                  {cert.totalVideos > 0 && <span className="flex items-center gap-1"><Play className="w-3.5 h-3.5" />{cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}</span>}
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden">
+                    <div className={`h-full rounded-full transition-all duration-500 ${cert.completed ? "bg-emerald-500" : groupCfg.progressColor}`} style={{ width: `${cert.progress}%` }} />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                        {t({ en: "Continue reading", fr: "Reprendre la lecture" })}
-                      </span>
-                      {cert && <span className="text-xs text-muted-foreground">{cert.icon}</span>}
-                    </div>
-                    <h3 className="text-sm md:text-base font-semibold text-foreground group-hover:text-primary transition-colors truncate">
-                      {t(course.title)}
-                    </h3>
-                    <div className="flex items-center gap-3 mt-1.5">
-                      <div className="flex-1 max-w-[200px] h-1.5 rounded-full bg-secondary overflow-hidden">
-                        <div
-                          className="h-full rounded-full bg-primary transition-all duration-500"
-                          style={{ width: `${Math.round(((lastVisited.chapterIndex + 1) / lastVisited.totalChapters) * 100)}%` }}
-                        />
-                      </div>
-                      <span className="text-xs text-muted-foreground font-medium">
-                        {t({ en: `Chapter ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}`, fr: `Chapitre ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}` })}
-                      </span>
-                    </div>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                  <span className={`text-xs font-semibold ${cert.completed ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"}`}>{cert.progress}%</span>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground transition-colors" />
                 </div>
               </Link>
             </motion.div>
           );
-        })()}
-
-        {/* Certification Paths — 4 dynamic groups */}
-        {(Object.entries(GROUP_CONFIG) as [GroupKey, typeof GROUP_CONFIG[GroupKey]][]).sort((a, b) => a[1].order - b[1].order).map(([groupKey, groupCfg]) => {
-          const groupCerts = certCompletionData.filter((cert) => {
-            const rawCert = trainingIndex.certifications.find((c) => c.id === cert.id);
-            return (rawCert as any)?.group === groupKey;
-          });
-          if (groupCerts.length === 0) return null;
-          return (
-            <div key={groupKey}>
-              <motion.div variants={fadeIn} className="mb-4 flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold text-foreground">{t(groupCfg.label)}</h2>
-                  <p className="text-sm text-muted-foreground mt-0.5">{t(groupCfg.subtitle)}</p>
-                </div>
-                <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${groupCfg.badgeColor}`}>{groupCfg.badge}</span>
-              </motion.div>
-              <motion.div variants={staggerContainer} className="grid md:grid-cols-2 gap-5 mb-10">
-                {groupCerts.map((cert) => {
-                  const level = (((cert.level as any)?.en || "beginner") as string).toLowerCase() as keyof typeof levelConfig;
-                  const config = levelConfig[level] || levelConfig.beginner;
-                  return (
-                    <motion.div key={cert.id} variants={fadeInUp}>
-                      <Link
-                        href={`/training/${cert.id}`}
-                        className={`group block bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md ${groupCfg.hoverBorder} transition-all duration-200`}
-                      >
-                        <div className="flex items-start justify-between mb-4">
-                          <div className={`w-12 h-12 rounded-xl ${groupCfg.iconBg} flex items-center justify-center text-2xl`}>{cert.icon}</div>
-                          <span className={`text-[11px] px-2.5 py-1 rounded-full font-semibold ${config.color}`}>{t(config.label)}</span>
-                        </div>
-                        <h3 className={`text-base font-semibold text-foreground ${groupCfg.hoverText} transition-colors mb-2 leading-tight`}>{t(cert.title)}</h3>
-                        <p className="text-sm text-muted-foreground mb-4 line-clamp-2 leading-relaxed">{t(cert.description)}</p>
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
-                          <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" />{cert.courseCount} {t({ en: "courses", fr: "cours" })}</span>
-                          <span className="flex items-center gap-1"><Dumbbell className="w-3.5 h-3.5" />{cert.totalExercises} {t({ en: "exercises", fr: "exercices" })}</span>
-                          {cert.totalVideos > 0 && <span className="flex items-center gap-1"><Play className="w-3.5 h-3.5" />{cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}</span>}
-                          {cert.totalDownloads > 0 && <span className="flex items-center gap-1"><Download className="w-3.5 h-3.5" />{cert.totalDownloads} {t({ en: "downloads", fr: "téléchargements" })}</span>}
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden">
-                            <div className={`h-full rounded-full transition-all duration-500 ${cert.completed ? "bg-emerald-500" : groupCfg.progressColor}`} style={{ width: `${cert.progress}%` }} />
-                          </div>
-                          <span className={`text-xs font-semibold ${cert.completed ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"}`}>{cert.progress}%</span>
-                          <ChevronRight className="w-4 h-4 text-muted-foreground transition-colors" />
-                        </div>
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </motion.div>
-            </div>
-          );
         })}
+      </motion.div>
+    </div>
+  );
+}
 
-        {/* Diagnostic IA CTA */}
-        <motion.div variants={fadeInUp} className="mb-10">
-          <Link href="/diagnostic" className="group block bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-2xl border border-blue-200 dark:border-blue-800 p-6 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-200">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center flex-shrink-0">
-                <BookOpen className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-foreground mb-0.5">
-                  {t({ en: "AI Automatability Diagnostic", fr: "Diagnostic d'automatisabilit\u00e9 IA" })}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {t({ en: "Evaluate the AI potential of your business processes using the DATAS-STD-BPM-AI-001 methodology.", fr: "\u00c9valuez le potentiel IA de vos processus m\u00e9tier selon la m\u00e9thodologie DATAS-STD-BPM-AI-001 de Data Services." })}
-                </p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-blue-600 transition-colors" />
-            </div>
-          </Link>
-        </motion.div>
-
-        {/* Advanced Diagnostic Link */}
-        <motion.div variants={fadeInUp} className="mb-10">
-          <Link href="/diagnostic-avance" className="group block bg-gradient-to-r from-purple-50 to-fuchsia-50 dark:from-purple-950/30 dark:to-fuchsia-950/30 rounded-2xl border border-purple-200 dark:border-purple-800 p-6 hover:shadow-md hover:border-purple-300 dark:hover:border-purple-700 transition-all duration-200">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center flex-shrink-0">
-                <Brain className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-0.5">
-                  <h3 className="text-lg font-semibold text-foreground">
-                    {t({ en: "Advanced AI Diagnostic (BPMN)", fr: "Diagnostic IA Avanc\u00e9 (BPMN)" })}
-                  </h3>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 font-semibold uppercase">Pro</span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {t({ en: "Design BPMN processes, get ultra-detailed AI recommendations per task (model, SDK, RAG, fine-tuning, costs) and project post-implementation gains.", fr: "Designez vos processus BPMN, obtenez des recommandations IA ultra-d\u00e9taill\u00e9es par t\u00e2che (mod\u00e8le, SDK, RAG, fine-tuning, co\u00fbts) et projetez les gains post-impl\u00e9mentation." })}
-                </p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-purple-600 transition-colors" />
-            </div>
-          </Link>
-        </motion.div>
-
-        {/* Recommended Study Order */}
-        <motion.div variants={fadeInUp} className="bg-card rounded-2xl border border-border p-6 shadow-sm overflow-hidden">
-          <h2 className="text-base font-semibold text-foreground mb-5">
-            {t({ en: "Recommended Study Order", fr: "Ordre d'étude recommandé" })}
+/* ─── Tab: Recommended Path ─── */
+function RecommendedTab({
+  certCompletionData,
+  t,
+}: {
+  certCompletionData: any[];
+  t: (obj: { en: string; fr: string }) => string;
+}) {
+  return (
+    <div className="space-y-6">
+      <div className="bg-card rounded-2xl border border-border p-6 shadow-sm">
+        <div className="flex items-center gap-3 mb-2">
+          <Route className="w-5 h-5 text-primary" />
+          <h2 className="text-lg font-semibold text-foreground">
+            {t({ en: "Recommended Learning Path", fr: "Parcours d'apprentissage recommandé" })}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {trainingIndex.certifications.map((cert, i) => (
-              <div key={cert.id} className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-secondary/40">
-                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/15 text-primary text-xs font-bold flex-shrink-0">
-                  {i + 1}
+        </div>
+        <p className="text-sm text-muted-foreground mb-6 ml-8">
+          {t({ en: "Follow this order for the best learning experience. Each certification builds on the previous one.", fr: "Suivez cet ordre pour une expérience d'apprentissage optimale. Chaque certification s'appuie sur la précédente." })}
+        </p>
+
+        <div className="space-y-3">
+          {trainingIndex.certifications.map((cert, i) => {
+            const data = certCompletionData.find((c) => c.id === cert.id);
+            const isCompleted = data?.completed;
+            const isInProgress = data && data.progress > 0 && !isCompleted;
+            const isLocked = i > 0 && !certCompletionData.find((c) => c.id === trainingIndex.certifications[i - 1].id)?.completed;
+
+            return (
+              <Link
+                key={cert.id}
+                href={`/training/${cert.id}`}
+                className={`group flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 ${
+                  isCompleted
+                    ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800"
+                    : isInProgress
+                    ? "bg-primary/5 border-primary/20 hover:border-primary/40 hover:shadow-sm"
+                    : "bg-card border-border hover:border-border hover:shadow-sm"
+                }`}
+              >
+                {/* Step number / status */}
+                <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${
+                  isCompleted
+                    ? "bg-emerald-100 dark:bg-emerald-900/50"
+                    : isInProgress
+                    ? "bg-primary/10"
+                    : "bg-secondary"
+                }`}>
+                  {isCompleted ? (
+                    <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                  ) : isInProgress ? (
+                    <span className="text-sm font-bold text-primary">{i + 1}</span>
+                  ) : (
+                    <span className="text-sm font-bold text-muted-foreground">{i + 1}</span>
+                  )}
                 </div>
-                <span className="text-sm font-medium text-foreground leading-tight">{t(cert.title)}</span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      </motion.main>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{cert.icon}</span>
+                    <h3 className={`text-sm font-semibold truncate ${
+                      isCompleted ? "text-emerald-700 dark:text-emerald-400" : "text-foreground"
+                    }`}>
+                      {t(cert.title)}
+                    </h3>
+                  </div>
+                  {isInProgress && data && (
+                    <div className="flex items-center gap-2 mt-1.5 ml-7">
+                      <div className="flex-1 max-w-[120px] h-1.5 rounded-full bg-secondary overflow-hidden">
+                        <div className="h-full rounded-full bg-primary" style={{ width: `${data.progress}%` }} />
+                      </div>
+                      <span className="text-xs text-muted-foreground">{data.progress}%</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Action */}
+                {isCompleted ? (
+                  <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 px-2 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/50">
+                    {t({ en: "Done", fr: "Terminé" })}
+                  </span>
+                ) : isInProgress ? (
+                  <span className="text-xs font-medium text-primary px-2 py-1 rounded-full bg-primary/10">
+                    {t({ en: "In progress", fr: "En cours" })}
+                  </span>
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
