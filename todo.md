@@ -1047,3 +1047,11 @@
 - [x] Supprimer le composant NetworkGraph inutilisé
 - [x] Optimiser l'image (42 KB, 800x600)
 - [x] Conserver les badges flottants "Certification CCA" et "Certification internationale"
+
+## Refonte graphique orbital hero (animation)
+- [x] Recréer le graphique orbital animé avec palette bleu marine
+- [x] Orbites circulaires propres (2 anneaux concentriques)
+- [x] Nœuds avec lettres sur fond coloré (dégradé bleu marine)
+- [x] Logo Neopolis au centre avec ombre douce
+- [x] Animations fluides : rotation conic-gradient, flottement des nœuds, dots circulants
+- [x] Badges flottants "Certification CCA" et "Certification internationale" conservés

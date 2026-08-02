@@ -1160,23 +1160,156 @@ function JobLossChart() {
 
 function HeroGraphic() {
   const { t } = useLanguage();
-  return (
-    <div className="relative w-full flex items-center justify-center" style={{ minHeight: "360px" }}>
-      {/* Hero illustration */}
-      <motion.div
-        className="relative"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-      >
-        <img
-          src="/api/assets/hero_neopolis_v3_opt_c59e6c11.jpg"
-          alt="Parcours de formation IA - De l'apprentissage à la certification"
-          className="w-full max-w-md mx-auto object-contain"
-          loading="eager"
-        />
-      </motion.div>
+  
+  const orbitNodes = [
+    { label: "Claude", icon: "C", angle: 0, orbit: 1, color: "#d4a574" },
+    { label: "Agents", icon: "A", angle: 45, orbit: 2, color: "#4a6fa5" },
+    { label: "Business", icon: "B", angle: 90, orbit: 1, color: "#2c4a7c" },
+    { label: "Deploy", icon: "D", angle: 135, orbit: 2, color: "#3d5a8e" },
+    { label: "Support", icon: "S", angle: 180, orbit: 1, color: "#6b7fa8" },
+    { label: "Formation", icon: "F", angle: 225, orbit: 2, color: "#1e3a6e" },
+    { label: "Gemini", icon: "G", angle: 270, orbit: 1, color: "#5a7a9e" },
+    { label: "OpenAI", icon: "O", angle: 315, orbit: 2, color: "#3d5a8e" },
+  ];
 
+  return (
+    <div className="relative w-full flex items-center justify-center" style={{ minHeight: "400px" }}>
+      {/* Orbital system */}
+      <div className="relative" style={{ width: "380px", height: "380px" }}>
+        
+        {/* Orbit rings */}
+        <motion.div
+          className="absolute rounded-full border"
+          style={{
+            width: "240px", height: "240px",
+            top: "50%", left: "50%",
+            transform: "translate(-50%, -50%)",
+            borderColor: "rgba(30, 58, 110, 0.15)",
+          }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
+        />
+        <motion.div
+          className="absolute rounded-full border"
+          style={{
+            width: "340px", height: "340px",
+            top: "50%", left: "50%",
+            transform: "translate(-50%, -50%)",
+            borderColor: "rgba(30, 58, 110, 0.10)",
+          }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1.2, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
+        />
+
+        {/* Subtle rotating glow on outer ring */}
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: "340px", height: "340px",
+            top: "50%", left: "50%",
+            transform: "translate(-50%, -50%)",
+            background: "conic-gradient(from 0deg, transparent 0%, rgba(30,58,110,0.08) 10%, transparent 20%)",
+          }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        />
+
+        {/* Center logo */}
+        <motion.div
+          className="absolute flex items-center justify-center rounded-full shadow-lg"
+          style={{
+            width: "90px", height: "90px",
+            top: "50%", left: "50%",
+            transform: "translate(-50%, -50%)",
+            background: "white",
+            boxShadow: "0 4px 30px rgba(30, 58, 110, 0.15)",
+          }}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
+        >
+          <img src={LOGO_ICON} alt="Neopolis" className="w-14 h-14 object-contain" />
+        </motion.div>
+
+        {/* Orbital nodes */}
+        {orbitNodes.map((node, i) => {
+          const radius = node.orbit === 1 ? 120 : 170;
+          const angleRad = (node.angle * Math.PI) / 180;
+          const x = Math.cos(angleRad) * radius;
+          const y = Math.sin(angleRad) * radius;
+          
+          return (
+            <motion.div
+              key={node.label}
+              className="absolute flex flex-col items-center gap-1"
+              style={{
+                top: "50%",
+                left: "50%",
+              }}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ 
+                opacity: 1, 
+                scale: 1,
+                x: x - 20,
+                y: y - 20,
+              }}
+              transition={{ 
+                duration: 0.6, 
+                delay: 0.5 + i * 0.1, 
+                ease: [0.23, 1, 0.32, 1] 
+              }}
+            >
+              <motion.div
+                className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md"
+                style={{ 
+                  backgroundColor: node.color,
+                  boxShadow: `0 2px 12px ${node.color}40`,
+                }}
+                animate={{ 
+                  y: [0, node.orbit === 1 ? -3 : 3, 0],
+                }}
+                transition={{ 
+                  duration: 3 + i * 0.3, 
+                  repeat: Infinity, 
+                  ease: "easeInOut",
+                  delay: i * 0.2,
+                }}
+              >
+                {node.icon}
+              </motion.div>
+              <span className="text-[10px] font-semibold whitespace-nowrap" style={{ color: "#475569" }}>
+                {node.label}
+              </span>
+            </motion.div>
+          );
+        })}
+
+        {/* Animated connection dots traveling along orbits */}
+        {[0, 1, 2].map((i) => (
+          <motion.div
+            key={`dot-${i}`}
+            className="absolute w-2 h-2 rounded-full"
+            style={{
+              top: "50%",
+              left: "50%",
+              backgroundColor: "#1e3a6e",
+              opacity: 0.6,
+            }}
+            animate={{
+              x: [120, 0, -120, 0, 120].map(v => v - 4),
+              y: [0, 120, 0, -120, 0].map(v => v - 4),
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "linear",
+              delay: i * 2.6,
+            }}
+          />
+        ))}
+      </div>
 
       {/* Badges flottants */}
       <motion.div
