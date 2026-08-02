@@ -1109,3 +1109,6 @@
 ## Persistance Erreurs & Cleanup
 - [x] Persister les erreurs client en base de données (table client_errors)
 - [x] Nettoyer les unused imports (TrainingCourse.tsx, Home.tsx) - 25+ warnings résolus
+
+## Détail Candidature
+- [x] Ajouter vue détail candidature en cliquant sur une ligne du tableau (modale)

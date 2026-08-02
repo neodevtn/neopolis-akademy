@@ -42,6 +42,7 @@ export default function AdminDashboard() {
   const [newNote, setNewNote] = useState("");
   const [noteCategory, setNoteCategory] = useState<string>("general");
   const [cvViewerUrl, setCvViewerUrl] = useState<string | null>(null);
+  const [detailApp, setDetailApp] = useState<any | null>(null);
   const [commDialog, setCommDialog] = useState(false);
   const [commSubject, setCommSubject] = useState("");
   const [commBody, setCommBody] = useState("");
@@ -436,7 +437,7 @@ export default function AdminDashboard() {
                   <tbody>
                     {applications.map((app: any) => (
                       <React.Fragment key={app.id}>
-                        <tr className="border-t border-border hover:bg-secondary/50 transition-colors cursor-pointer" onClick={() => setExpandedId(expandedId === app.id ? null : app.id)}>
+                        <tr className="border-t border-border hover:bg-secondary/50 transition-colors cursor-pointer" onClick={() => setDetailApp(app)}>
                           <td className="p-4" onClick={(e) => e.stopPropagation()}>
                             <input type="checkbox" checked={selectedIds.includes(app.id)} onChange={() => toggleSelect(app.id)} className="rounded border-border" />
                           </td>
@@ -1215,6 +1216,154 @@ export default function AdminDashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {/* Candidature Detail Dialog */}
+      <Dialog open={!!detailApp} onOpenChange={(open) => { if (!open) setDetailApp(null); }}>
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
+          {detailApp && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-3">
+                  {detailApp.photoFileUrl ? (
+                    <img src={detailApp.photoFileUrl} alt="" className="w-12 h-12 rounded-full object-cover border border-border" />
+                  ) : (
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-sm font-medium">
+                      {detailApp.firstName?.[0]}{detailApp.lastName?.[0]}
+                    </div>
+                  )}
+                  <div>
+                    <div className="text-lg font-semibold">{detailApp.firstName} {detailApp.lastName}</div>
+                    <div className="text-sm text-muted-foreground font-normal">{detailApp.email} · {detailApp.phone}</div>
+                  </div>
+                </DialogTitle>
+              </DialogHeader>
+
+              {/* Score & Status bar */}
+              <div className="flex items-center gap-4 py-3 px-4 rounded-lg bg-secondary/40 border border-border mt-2">
+                <div className="flex-1">
+                  <div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Score global</div>
+                  <div className="text-2xl font-bold" style={{ color: getScoreColor(Number(detailApp.scoreTotal)) }}>{Number(detailApp.scoreTotal).toFixed(1)}%</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    Technique: {Number(detailApp.scoreTechnique).toFixed(0)}% · Métier: {Number(detailApp.scoreMetier).toFixed(0)}% · Communication: {Number(detailApp.scoreCommunication).toFixed(0)}%
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="mb-1">{getStatusBadge(detailApp.status)}</div>
+                  <div className="text-xs text-muted-foreground">Candidature du {new Date(detailApp.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</div>
+                </div>
+              </div>
+
+              {/* Detail sections */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
+                <DetailSection title="Informations personnelles">
+                  <DetailItem label="Pays" value={detailApp.country} />
+                  <DetailItem label="Ville" value={detailApp.city} />
+                  <DetailItem label="Poste actuel" value={detailApp.currentRole} />
+                  <DetailItem label="Secteur" value={detailApp.sector} />
+                  <DetailItem label="Années d'expérience" value={`${detailApp.yearsExperience} ans`} />
+                </DetailSection>
+
+                <DetailSection title="Compétences techniques">
+                  <DetailItem label="Programmation" value={getLabel(detailApp.programmingLevel)} />
+                  <DetailItem label="Connaissances IA" value={getLabel(detailApp.aiKnowledge)} />
+                  <DetailItem label="Cloud" value={getLabel(detailApp.cloudExperience)} />
+                  <DetailItem label="Outils" value={detailApp.technicalTools || "—"} />
+                  <DetailItem label="Certifications" value={detailApp.certifications || "—"} />
+                </DetailSection>
+
+                <DetailSection title="Communication & Vente">
+                  <DetailItem label="Prise de parole" value={getLabel(detailApp.publicSpeaking)} />
+                  <DetailItem label="Exp. commerciale" value={getLabel(detailApp.salesExperience)} />
+                  <DetailItem label="Langues" value={detailApp.languages || "—"} />
+                </DetailSection>
+
+                <DetailSection title="Réseau de distribution">
+                  <DetailItem label="Contacts industrie" value={getLabel(detailApp.industryContacts)} />
+                  <DetailItem label="Connaissance marché" value={getLabel(detailApp.targetMarketKnowledge)} />
+                  {detailApp.distributionNetwork && (
+                    <div className="mt-2">
+                      <span className="text-xs text-muted-foreground">Réseau :</span>
+                      <p className="text-xs text-foreground mt-1 bg-background p-2 rounded border border-border">{detailApp.distributionNetwork}</p>
+                    </div>
+                  )}
+                </DetailSection>
+
+                <DetailSection title="Profil entrepreneurial">
+                  <DetailItem label="Tolérance au risque" value={getLabel(detailApp.riskTolerance)} />
+                  <DetailItem label="Autonomie" value={getLabel(detailApp.autonomyLevel)} />
+                  <DetailItem label="Résilience" value={getLabel(detailApp.resilienceLevel)} />
+                  <DetailItem label="Leadership" value={getLabel(detailApp.leadershipStyle)} />
+                </DetailSection>
+
+                <DetailSection title="Scénario Agent IA">
+                  <DetailItem label="Secteur cible" value={detailApp.aiAgentSector || "—"} />
+                  {detailApp.aiAgentScenario && (
+                    <div className="mt-2">
+                      <p className="text-xs text-foreground bg-background p-2 rounded border border-border max-h-24 overflow-y-auto">{detailApp.aiAgentScenario}</p>
+                    </div>
+                  )}
+                </DetailSection>
+
+                <div className="md:col-span-2">
+                  <DetailSection title="Motivation">
+                    <p className="text-sm text-foreground bg-background p-3 rounded border border-border max-h-32 overflow-y-auto">{detailApp.motivation}</p>
+                  </DetailSection>
+                </div>
+
+                {/* Liens & Documents */}
+                <div className="md:col-span-2">
+                  <DetailSection title="Liens & Documents">
+                    <div className="flex flex-wrap gap-3 mt-1">
+                      {detailApp.linkedinUrl && <a href={detailApp.linkedinUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-blue-600 hover:underline"><Linkedin className="w-4 h-4" /> LinkedIn</a>}
+                      {detailApp.twitterUrl && <a href={detailApp.twitterUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-blue-600 hover:underline"><Twitter className="w-4 h-4" /> Twitter/X</a>}
+                      {detailApp.githubUrl && <a href={detailApp.githubUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-blue-600 hover:underline"><Github className="w-4 h-4" /> GitHub</a>}
+                      {detailApp.websiteUrl && <a href={detailApp.websiteUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-blue-600 hover:underline"><Globe className="w-4 h-4" /> Site web</a>}
+                    </div>
+                    <div className="flex gap-2 mt-3 flex-wrap">
+                      {detailApp.cvFileUrl && (
+                        <button onClick={() => { setDetailApp(null); setTimeout(() => setCvViewerUrl(detailApp.cvFileUrl), 200); }} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-lg text-xs text-primary hover:bg-primary/10 transition-colors">
+                          <Eye className="w-3.5 h-3.5" /> Consulter CV
+                        </button>
+                      )}
+                      {detailApp.photoFileUrl && (
+                        <a href={detailApp.photoFileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded-lg text-xs text-primary hover:bg-primary/10 transition-colors">
+                          <Camera className="w-3.5 h-3.5" /> Photo
+                        </a>
+                      )}
+                      {detailApp.videoFileUrl && (
+                        <a href={detailApp.videoFileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg text-xs text-red-600 hover:bg-red-100 transition-colors">
+                          <Video className="w-3.5 h-3.5" /> Vidéo pitch
+                        </a>
+                      )}
+                    </div>
+                  </DetailSection>
+                </div>
+              </div>
+
+              {/* Action buttons */}
+              <DialogFooter className="flex-wrap gap-2 mt-4 pt-4 border-t border-border">
+                <Button size="sm" variant="outline" className="text-xs gap-1.5" disabled={exportPDFMutation.isPending} onClick={() => { exportPDFMutation.mutate({ applicationId: detailApp.id }); }}>
+                  {exportPDFMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : <FileText className="w-3 h-3" />}
+                  Exporter PDF
+                </Button>
+                <Button size="sm" variant="outline" className="text-xs gap-1.5" onClick={() => { setDetailApp(null); setTimeout(() => setNoteDialog({ open: true, targetType: "application", targetId: detailApp.id, targetName: `${detailApp.firstName} ${detailApp.lastName}` }), 200); }}>
+                  <StickyNote className="w-3 h-3" /> Notes
+                </Button>
+                {detailApp.status !== "selectionne" && (
+                  <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white text-xs gap-1.5" onClick={() => { setDetailApp(null); setTimeout(() => { setDecisionDialog({ open: true, appId: detailApp.id, status: "selectionne", app: detailApp }); setDecisionNotes(""); }, 200); }}>
+                    <CheckCircle className="w-3 h-3" /> Sélectionner
+                  </Button>
+                )}
+                {detailApp.status !== "refuse" && (
+                  <Button size="sm" variant="destructive" className="text-xs gap-1.5" onClick={() => { setDetailApp(null); setTimeout(() => { setDecisionDialog({ open: true, appId: detailApp.id, status: "refuse", app: detailApp }); setDecisionNotes(""); }, 200); }}>
+                    <XCircle className="w-3 h-3" /> Refuser
+                  </Button>
+                )}
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
       {/* CV Viewer Dialog */}
       <Dialog open={!!cvViewerUrl} onOpenChange={(open) => { if (!open) setCvViewerUrl(null); }}>
         <DialogContent className="sm:max-w-4xl max-h-[90vh]">
