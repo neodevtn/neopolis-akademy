@@ -3059,60 +3059,9 @@ function LessonSidebarContent({
                 <Eye className="w-3.5 h-3.5 text-amber-500 shrink-0 ml-auto" />
               )}
             </button>
-            {/* Sub-screens (blocks) for active chapter - Skilljar style */}
-            {showSubScreens && chapterBlocks.length > 1 && (
-              <div className="ml-5 mt-0.5 mb-1 border-l-2 border-border pl-3 space-y-0.5">
-                {chapterBlocks.map((block: any, screenIdx: number) => {
-                  const isActiveScreen = activeScreenIndex === screenIdx;
-                  // Determine screen title from block
-                  let screenTitle = '';
-                  if (block.type === 'content') {
-                    const body = block.body || {};
-                    const text = typeof body === 'string' ? body : (body[lang] || body.en || '');
-                    const firstLine = text.split('\n').find((l: string) => l.trim().length > 0) || '';
-                    screenTitle = firstLine.trim().replace(/\*\*/g, '').substring(0, 40);
-                  } else if (block.type === 'checkpoint' || block.type === 'bucket_sort') {
-                    screenTitle = 'Checkpoint';
-                  } else if (block.type === 'flip_cards') {
-                    screenTitle = lang === 'fr' ? 'Cartes mémoire' : 'Flip Cards';
-                  } else if (block.type === 'single_choice_exercise') {
-                    screenTitle = lang === 'fr' ? 'Exercice' : 'Exercise';
-                  } else if (block.type === 'tabbed_content') {
-                    screenTitle = lang === 'fr' ? 'Contenu' : 'Content';
-                  } else if (block.type === 'download') {
-                    screenTitle = lang === 'fr' ? 'Téléchargement' : 'Download';
-                  } else {
-                    screenTitle = block.type || (lang === 'fr' ? 'Écran' : 'Screen');
-                  }
-                  // Determine if this screen is validated (before current active position)
-                  const isScreenValidated = activeLessonIndex !== null && screenIdx < activeLessonIndex;
-                  // For single-lesson courses, screens before the active chapter are validated
-                  const isChapterValidated = completed || (screenIdx < (activeLessonIndex ?? 0));
-                  return (
-                    <button
-                      key={screenIdx}
-                      onClick={() => onScreenClick?.(idx, screenIdx)}
-                      className={`w-full text-left flex items-center gap-2 px-2 py-1.5 rounded text-xs transition-colors ${
-                        isActiveScreen
-                          ? 'text-[#c75b3a] font-medium bg-[#c75b3a]/5'
-                          : isChapterValidated
-                          ? 'text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'
-                          : 'text-muted-foreground hover:text-foreground hover:bg-secondary/30'
-                      }`}
-                    >
-                      {isChapterValidated && !isActiveScreen ? (
-                        <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
-                      ) : (
-                        <span className="text-[10px]">{isActiveScreen ? '●' : '○'}</span>
-                      )}
-                      <span className="truncate">{screenTitle}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+
             {/* Chapter progress indicator for the currently displayed lesson (non-sub-screen mode) */}
-            {idx === displayedLessonIndex && chapterProgress && chapterProgress.total > 1 && !completed && !showSubScreens && (
+            {idx === displayedLessonIndex && chapterProgress && chapterProgress.total > 1 && !completed && (
               <div className="ml-7 mr-3 mt-0.5 mb-1">
                 <div className="flex items-center gap-1.5">
                   <div className="flex-1 flex gap-0.5">
