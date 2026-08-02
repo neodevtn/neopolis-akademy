@@ -264,7 +264,7 @@ export default function Home() {
             <NavLink href="#pourquoi">{t({ fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" })}</NavLink>
             <NavLink href="#partenaires">{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</NavLink>
             <NavLink href="#faq">FAQ</NavLink>
-            <Link href="/training" className="text-[11px] font-semibold px-3.5 py-1.5 ml-1 rounded-full transition-all duration-200 bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-md">{t({ fr: "Formation", en: "Training", ar: "التدريب" })}</Link>
+            <Link href="/training" className="text-[11px] font-semibold px-3.5 py-1.5 ml-1 rounded-full transition-all duration-200 text-white hover:shadow-md" style={{ background: "#1e3a6e" }}>{t({ fr: "Formation", en: "Training", ar: "التدريب" })}</Link>
           </div>
 
           {/* Right actions */}
@@ -363,31 +363,31 @@ export default function Home() {
 
           {/* Stats cards grid */}
           <motion.div variants={staggerContainer} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 md:mb-12">
-              <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-coral)" }}>
-                <TrendingDown size={20} style={{ color: "var(--wise-accent-coral)" }} className="mb-3" />
+              <motion.div variants={scaleIn} className="wise-card">
+                <TrendingDown size={20} style={{ color: "var(--neo-primary)" }} className="mb-3" />
                 <p className="wise-display-sm mb-1"><AnimatedStat value={300} suffix="M" /></p>
-                <p className="wise-body-sm" style={{ color: "var(--wise-accent-coral)", fontWeight: 600 }}>{t({ fr: "d'emplois exposés à l'automatisation", en: "jobs exposed to automation", ar: "وظيفة معرّضة للأتمتة" })}</p>
+                <p className="wise-body-sm" style={{ color: "var(--neo-ink-secondary)", fontWeight: 600 }}>{t({ fr: "d'emplois exposés à l'automatisation", en: "jobs exposed to automation", ar: "وظيفة معرّضة للأتمتة" })}</p>
                 <p className="wise-label mt-2">Goldman Sachs, 2023</p>
               </motion.div>
 
-              <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-cyan)" }}>
-                <Users size={20} style={{ color: "var(--wise-accent-cyan)" }} className="mb-3" />
+              <motion.div variants={scaleIn} className="wise-card">
+                <Users size={20} style={{ color: "var(--neo-primary)" }} className="mb-3" />
                 <p className="wise-display-sm mb-1"><AnimatedStat value={92} suffix="M" /></p>
-                <p className="wise-body-sm" style={{ color: "var(--wise-accent-cyan)", fontWeight: 600 }}>{t({ fr: "d'emplois déplacés d'ici 2030", en: "jobs displaced by 2030", ar: "وظيفة ستُستبدل بحلول 2030" })}</p>
+                <p className="wise-body-sm" style={{ color: "var(--neo-ink-secondary)", fontWeight: 600 }}>{t({ fr: "d'emplois déplacés d'ici 2030", en: "jobs displaced by 2030", ar: "وظيفة ستُستبدل بحلول 2030" })}</p>
                 <p className="wise-label mt-2">WEF Future of Jobs 2025</p>
               </motion.div>
 
-              <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-pear)" }}>
-                <Shield size={20} style={{ color: "oklch(64% 0.18 95)" }} className="mb-3" />
+              <motion.div variants={scaleIn} className="wise-card">
+                <Shield size={20} style={{ color: "var(--neo-primary)" }} className="mb-3" />
                 <p className="wise-display-sm mb-1"><AnimatedStat value={30} suffix="%" /></p>
-                <p className="wise-body-sm" style={{ color: "oklch(52% 0.14 95)", fontWeight: 600 }}>{t({ fr: "des heures de travail automatisées", en: "of work hours automated", ar: "من ساعات العمل مؤتمتة" })}</p>
+                <p className="wise-body-sm" style={{ color: "var(--neo-ink-secondary)", fontWeight: 600 }}>{t({ fr: "des heures de travail automatisées", en: "of work hours automated", ar: "من ساعات العمل مؤتمتة" })}</p>
                 <p className="wise-label mt-2">McKinsey Global Institute</p>
               </motion.div>
 
-              <motion.div variants={scaleIn} className="wise-card" style={{ background: "var(--tint-mint)" }}>
-                <TrendingDown size={20} style={{ color: "var(--wise-positive-deep)" }} className="mb-3" />
+              <motion.div variants={scaleIn} className="wise-card">
+                <TrendingDown size={20} style={{ color: "var(--neo-primary)" }} className="mb-3" />
                 <p className="wise-display-sm mb-1"><AnimatedStat value={220} suffix={t({ fr: " Milliards $", en: "B $", ar: " مليار $" })} /></p>
-                <p className="wise-body-sm" style={{ color: "var(--wise-positive-deep)", fontWeight: 600 }}>{t({ fr: "de SaaS menacés par les agents IA", en: "of SaaS threatened by AI agents", ar: "من SaaS مهددة بوكلاء الذكاء الاصطناعي" })}</p>
+                <p className="wise-body-sm" style={{ color: "var(--neo-ink-secondary)", fontWeight: 600 }}>{t({ fr: "de SaaS menacés par les agents IA", en: "of SaaS threatened by AI agents", ar: "من SaaS مهددة بوكلاء الذكاء الاصطناعي" })}</p>
                 <p className="wise-label mt-2">Gartner, 2025</p>
               </motion.div>
           </motion.div>
@@ -456,7 +456,7 @@ export default function Home() {
             <span className="wise-eyebrow mb-3 inline-flex">{t({ fr: "Écosystème", en: "Ecosystem", ar: "النظام البيئي" })}</span>
             <h2 className="wise-display-md mb-3" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Nos Partenaires Technologiques", en: "Our Technology Partners", ar: "شركاؤنا التكنولوجيون" })}</h2>
             <p className="wise-body-md max-w-[56ch] mx-auto" style={{ color: "var(--wise-ink-muted)" }}>
-              {t({ fr: "Registered Partner du Claude Partner Network — écosystème IA agentique Afrique & MENA.", en: "Registered Partner of the Claude Partner Network — agentic AI ecosystem for Africa & MENA.", ar: "شريك مسجل في شبكة Claude Partner Network — نظام بيئي للذكاء الاصطناعي الوكيلي لأفريقيا والشرق الأوسط." })} <a href="https://www.anthropic.com/news/claude-partner-network" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "var(--wise-positive-deep)" }}>CPN ↗</a>
+              {t({ fr: "Registered Partner du Claude Partner Network — écosystème IA agentique Afrique & MENA.", en: "Registered Partner of the Claude Partner Network — agentic AI ecosystem for Africa & MENA.", ar: "شريك مسجل في شبكة Claude Partner Network — نظام بيئي للذكاء الاصطناعي الوكيلي لأفريقيا والشرق الأوسط." })} <a href="https://www.anthropic.com/news/claude-partner-network" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "var(--neo-primary)" }}>CPN ↗</a>
             </p>
           </motion.div>
 
@@ -465,7 +465,7 @@ export default function Home() {
             <div className="relative overflow-hidden rounded-2xl" style={{ background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)" }}>
               {/* Subtle gradient accent */}
               <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-20" style={{ background: "radial-gradient(circle, #d4a574 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
-              <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full opacity-10" style={{ background: "radial-gradient(circle, #9fe870 0%, transparent 70%)", transform: "translate(-30%, 30%)" }} />
+              <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full opacity-10" style={{ background: "radial-gradient(circle, #6b9fff 0%, transparent 70%)", transform: "translate(-30%, 30%)" }} />
               
               <div className="relative p-8 md:p-10">
                 {/* Header with logos */}
@@ -491,13 +491,13 @@ export default function Home() {
                       {t({ fr: "Neopolis Development est Registered Partner du Claude Partner Network. Nos candidats bénéficient d'un accès privilégié à l'écosystème Anthropic.", en: "Neopolis Development is a Registered Partner of the Claude Partner Network. Our candidates benefit from privileged access to the Anthropic ecosystem.", ar: "Neopolis Development شريك مسجل في شبكة Claude Partner Network. يستفيد مرشحونا من وصول مميز إلى نظام Anthropic البيئي." })}
                     </p>
                     <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ background: "rgba(159,232,112,0.15)" }}>
-                        <CheckCircle2 size={14} style={{ color: "#9fe870" }} />
-                        <span className="text-xs font-medium" style={{ color: "#9fe870" }}>{t({ fr: "Voucher CCA gratuit", en: "Free CCA voucher", ar: "قسيمة CCA مجانية" })}</span>
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ background: "rgba(212,165,116,0.15)" }}>
+                        <CheckCircle2 size={14} style={{ color: "#d4a574" }} />
+                        <span className="text-xs font-medium" style={{ color: "#d4a574" }}>{t({ fr: "Voucher CCA gratuit", en: "Free CCA voucher", ar: "قسيمة CCA مجانية" })}</span>
                       </div>
-                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ background: "rgba(159,232,112,0.15)" }}>
-                        <CheckCircle2 size={14} style={{ color: "#9fe870" }} />
-                        <span className="text-xs font-medium" style={{ color: "#9fe870" }}>{t({ fr: "Certification CCA", en: "CCA Certification", ar: "شهادة CCA" })}</span>
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ background: "rgba(212,165,116,0.15)" }}>
+                        <CheckCircle2 size={14} style={{ color: "#d4a574" }} />
+                        <span className="text-xs font-medium" style={{ color: "#d4a574" }}>{t({ fr: "Certification CCA", en: "CCA Certification", ar: "شهادة CCA" })}</span>
                       </div>
                     </div>
                   </div>
@@ -563,14 +563,14 @@ export default function Home() {
             const [activePhase, setActivePhase] = useState(0);
             const phases = [
               {
-                color: "var(--wise-primary)",
-                textColor: "var(--wise-ink)",
+                color: "var(--neo-primary)",
+                textColor: "#fff",
                 title: t({ fr: "G\u00e9n\u00e9ration de Leads", en: "Lead Generation", ar: "\u062a\u0648\u0644\u064a\u062f \u0627\u0644\u0639\u0645\u0644\u0627\u0621 \u0627\u0644\u0645\u062d\u062a\u0645\u0644\u064a\u0646" }),
                 description: t({ fr: "L'Ambassadeur prospecte en B2B par tous les moyens (r\u00e9seau, \u00e9v\u00e9nements, cold outreach, recommandations) pour identifier des projets IA potentiels aupr\u00e8s des entreprises de son secteur.", en: "The Ambassador prospects in B2B through all means (networking, events, cold outreach, referrals) to identify potential AI projects with companies in their sector.", ar: "\u064a\u0642\u0648\u0645 \u0627\u0644\u0633\u0641\u064a\u0631 \u0628\u0627\u0644\u0628\u062d\u062b B2B \u0628\u0643\u0644 \u0627\u0644\u0637\u0631\u0642 (\u0627\u0644\u0634\u0628\u0643\u0627\u062a\u060c \u0627\u0644\u0623\u062d\u062f\u0627\u062b\u060c \u0627\u0644\u0627\u062a\u0635\u0627\u0644 \u0627\u0644\u0628\u0627\u0631\u062f\u060c \u0627\u0644\u062a\u0648\u0635\u064a\u0627\u062a) \u0644\u062a\u062d\u062f\u064a\u062f \u0645\u0634\u0627\u0631\u064a\u0639 \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a \u0627\u0644\u0645\u062d\u062a\u0645\u0644\u0629 \u0644\u062f\u0649 \u0627\u0644\u0634\u0631\u0643\u0627\u062a \u0641\u064a \u0642\u0637\u0627\u0639\u0647\u0645." }),
                 extra: <div className="wise-card-sage p-4 inline-block mt-3"><p className="wise-body-sm font-medium">→ {t({ fr: "Le projet identifi\u00e9 est envoy\u00e9 vers la Centrale d'\u00c9tude et d'\u00c9valuation de Neopolis", en: "The identified project is sent to Neopolis Study and Evaluation Center", ar: "\u064a\u062a\u0645 \u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0627\u0644\u0645\u062d\u062f\u062f \u0625\u0644\u0649 \u0645\u0631\u0643\u0632 Neopolis \u0644\u0644\u062f\u0631\u0627\u0633\u0629 \u0648\u0627\u0644\u062a\u0642\u064a\u064a\u0645" })}</p></div>
               },
               {
-                color: "var(--wise-sage)",
+                color: "var(--neo-primary)",
                 textColor: "#fff",
                 title: t({ fr: "\u00c9tude & \u00c9valuation", en: "Study & Assessment", ar: "\u0627\u0644\u062f\u0631\u0627\u0633\u0629 \u0648\u0627\u0644\u062a\u0642\u064a\u064a\u0645" }),
                 description: t({ fr: "La Centrale classe le projet selon 3 axes pour d\u00e9terminer la solution optimale :", en: "The Central classifies the project along 3 axes to determine the optimal solution:", ar: "\u062a\u0635\u0646\u0651\u0641 \u0627\u0644\u0645\u0631\u0643\u0632\u064a\u0629 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0648\u0641\u0642 3 \u0645\u062d\u0627\u0648\u0631 \u0644\u062a\u062d\u062f\u064a\u062f \u0627\u0644\u062d\u0644 \u0627\u0644\u0623\u0645\u062b\u0644:" }),
@@ -590,30 +590,30 @@ export default function Home() {
                         <p className="wise-body-sm font-semibold">{t({ fr: "Logiciel sans IA · Outils standard · Workflow automation · Agent full autonome", en: "Non-AI software · Standard tools · Workflow automation · Full autonomous agent", ar: "\u0628\u0631\u0645\u062c\u064a\u0627\u062a \u0628\u062f\u0648\u0646 \u0630\u0643\u0627\u0621 \u0627\u0635\u0637\u0646\u0627\u0639\u064a · \u0623\u062f\u0648\u0627\u062a \u0642\u064a\u0627\u0633\u064a\u0629 · \u0623\u062a\u0645\u062a\u0629 \u0633\u064a\u0631 \u0627\u0644\u0639\u0645\u0644 · \u0648\u0643\u064a\u0644 \u0645\u0633\u062a\u0642\u0644 \u0628\u0627\u0644\u0643\u0627\u0645\u0644" })}</p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-2 p-3 rounded-lg" style={{ background: "var(--tint-mint)" }}>
-                      <Users size={16} className="flex-shrink-0 mt-0.5" style={{ color: "var(--wise-positive-deep)" }} />
+                    <div className="flex items-start gap-2 p-3 rounded-lg" style={{ background: "var(--neo-primary-light)" }}>
+                      <Users size={16} className="flex-shrink-0 mt-0.5" style={{ color: "var(--neo-primary)" }} />
                       <p className="wise-body-sm" dangerouslySetInnerHTML={{ __html: t({ fr: "La Centrale peut <strong>affilier d'autres Ambassadeurs ou experts en renfort</strong> au projet selon sa complexit\u00e9.", en: "The Central can <strong>affiliate other Ambassadors or expert reinforcements</strong> to the project based on its complexity.", ar: "\u064a\u0645\u0643\u0646 \u0644\u0644\u0645\u0631\u0643\u0632\u064a\u0629 <strong>\u0625\u0634\u0631\u0627\u0643 \u0633\u0641\u0631\u0627\u0621 \u0622\u062e\u0631\u064a\u0646 \u0623\u0648 \u062e\u0628\u0631\u0627\u0621 \u0643\u062f\u0639\u0645</strong> \u0644\u0644\u0645\u0634\u0631\u0648\u0639 \u062d\u0633\u0628 \u062a\u0639\u0642\u064a\u062f\u0647." }) }} />
                     </div>
                   </>
                 )
               },
               {
-                color: "var(--wise-accent-cyan)",
+                color: "var(--neo-primary)",
                 textColor: "#fff",
                 title: t({ fr: "Contractualisation", en: "Contracting", ar: "\u0627\u0644\u062a\u0639\u0627\u0642\u062f" }),
                 description: t({ fr: "Signature du contrat avec le client. D\u00e9finition du p\u00e9rim\u00e8tre, des livrables, du calendrier et des conditions commerciales. L'Ambassadeur est impliqu\u00e9 dans la relation client.", en: "Contract signing with the client. Definition of scope, deliverables, timeline and commercial terms. The Ambassador is involved in the client relationship.", ar: "\u062a\u0648\u0642\u064a\u0639 \u0627\u0644\u0639\u0642\u062f \u0645\u0639 \u0627\u0644\u0639\u0645\u064a\u0644. \u062a\u062d\u062f\u064a\u062f \u0627\u0644\u0646\u0637\u0627\u0642 \u0648\u0627\u0644\u0645\u062e\u0631\u062c\u0627\u062a \u0648\u0627\u0644\u062c\u062f\u0648\u0644 \u0627\u0644\u0632\u0645\u0646\u064a \u0648\u0627\u0644\u0634\u0631\u0648\u0637 \u0627\u0644\u062a\u062c\u0627\u0631\u064a\u0629. \u064a\u0634\u0627\u0631\u0643 \u0627\u0644\u0633\u0641\u064a\u0631 \u0641\u064a \u0639\u0644\u0627\u0642\u0629 \u0627\u0644\u0639\u0645\u064a\u0644." }),
                 extra: null
               },
               {
-                color: "var(--wise-accent-coral)",
+                color: "var(--neo-primary)",
                 textColor: "#fff",
                 title: t({ fr: "Impl\u00e9mentation", en: "Implementation", ar: "\u0627\u0644\u062a\u0646\u0641\u064a\u0630" }),
                 description: t({ fr: "D\u00e9ploiement de la solution IA par l'\u00e9quipe technique de Neopolis Development. L'Ambassadeur assure le lien avec le client et facilite l'adoption de la solution.", en: "Deployment of the AI solution by Neopolis Development's technical team. The Ambassador ensures the link with the client and facilitates solution adoption.", ar: "\u0646\u0634\u0631 \u062d\u0644 \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064a \u0645\u0646 \u0642\u0628\u0644 \u0641\u0631\u064a\u0642 Neopolis Development \u0627\u0644\u062a\u0642\u0646\u064a. \u064a\u0636\u0645\u0646 \u0627\u0644\u0633\u0641\u064a\u0631 \u0627\u0644\u0631\u0628\u0637 \u0645\u0639 \u0627\u0644\u0639\u0645\u064a\u0644 \u0648\u064a\u0633\u0647\u0644 \u0627\u0639\u062a\u0645\u0627\u062f \u0627\u0644\u062d\u0644." }),
                 extra: null
               },
               {
-                color: "var(--wise-accent-pear)",
-                textColor: "var(--wise-ink)",
+                color: "var(--neo-primary)",
+                textColor: "#fff",
                 title: t({ fr: "Monitoring & Revenus R\u00e9currents", en: "Monitoring & Recurring Revenue", ar: "\u0627\u0644\u0645\u0631\u0627\u0642\u0628\u0629 \u0648\u0627\u0644\u0625\u064a\u0631\u0627\u062f\u0627\u062a \u0627\u0644\u0645\u062a\u0643\u0631\u0631\u0629" }),
                 description: t({ fr: "Suivi de la solution en production. L'Ambassadeur g\u00e9n\u00e8re des revenus r\u00e9currents passifs sur la consommation de tokens du client pendant toute la dur\u00e9e de vie du projet.", en: "Monitoring of the solution in production. The Ambassador generates passive recurring revenue from the client's token consumption throughout the project lifecycle.", ar: "\u0645\u0631\u0627\u0642\u0628\u0629 \u0627\u0644\u062d\u0644 \u0641\u064a \u0627\u0644\u0625\u0646\u062a\u0627\u062c. \u064a\u0648\u0644\u062f \u0627\u0644\u0633\u0641\u064a\u0631 \u0625\u064a\u0631\u0627\u062f\u0627\u062a \u0645\u062a\u0643\u0631\u0631\u0629 \u0633\u0644\u0628\u064a\u0629 \u0645\u0646 \u0627\u0633\u062a\u0647\u0644\u0627\u0643 \u0627\u0644\u0639\u0645\u064a\u0644 \u0644\u0644\u0631\u0645\u0648\u0632 \u0637\u0648\u0627\u0644 \u062f\u0648\u0631\u0629 \u062d\u064a\u0627\u0629 \u0627\u0644\u0645\u0634\u0631\u0648\u0639." }),
                 extra: null
@@ -669,24 +669,24 @@ export default function Home() {
 
           {/* Rémunération */}
           <motion.div variants={fadeInUp} className="max-w-4xl mx-auto">
-            <div className="wise-card p-8 md:p-10" style={{ background: "var(--tint-mint)" }}>
+            <div className="wise-card p-8 md:p-10" style={{ background: "var(--neo-primary-light)" }}>
               <div className="text-center mb-8">
                 <span className="wise-eyebrow mb-3 inline-flex" style={{ color: "var(--neo-ink-secondary)" }}>{t({ fr: "Rémunération", en: "Compensation", ar: "التعويض" })}</span>
                 <h3 className="wise-display-sm" style={{ color: "var(--neo-ink)" }}>{t({ fr: "Votre modèle de revenus", en: "Your revenue model", ar: "نموذج إيراداتك" })}</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="wise-card p-6 text-center">
-                  <p className="wise-display-md mb-2" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>{t({ fr: "20% à 60%", en: "20% to 60%", ar: "20% إلى 60%" })}</p>
+                  <p className="wise-display-md mb-2" style={{ color: "var(--neo-primary)", fontFamily: "var(--font-mono)" }}>{t({ fr: "20% à 60%", en: "20% to 60%", ar: "20% إلى 60%" })}</p>
                   <p className="wise-body-md font-semibold mb-2">{t({ fr: "Frais de Setup", en: "Setup Fees", ar: "رسوم الإعداد" })}</p>
                   <p className="wise-body-sm">{t({ fr: "Selon votre niveau d'implication dans le projet (prospection, accompagnement, coordination)", en: "Based on your level of involvement in the project (prospecting, support, coordination)", ar: "حسب مستوى مشاركتك في المشروع (التنقيب، المرافقة، التنسيق)" })}</p>
                 </div>
                 <div className="wise-card p-6 text-center">
-                  <p className="wise-display-md mb-2" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>10%</p>
+                  <p className="wise-display-md mb-2" style={{ color: "var(--neo-primary)", fontFamily: "var(--font-mono)" }}>10%</p>
                   <p className="wise-body-md font-semibold mb-2">{t({ fr: "Tokens consommés (Run)", en: "Tokens consumed (Run)", ar: "الرموز المستهلكة (Run)" })}</p>
                   <p className="wise-body-sm">{t({ fr: "Revenus récurrents sur la consommation de tokens pendant toute la vie du projet client", en: "Recurring revenue on token consumption throughout the client project lifetime", ar: "إيرادات متكررة على استهلاك الرموز طوال عمر مشروع العميل" })}</p>
                 </div>
               </div>
-              <p className="wise-body-sm text-center mt-6" style={{ color: "var(--wise-sage)" }}>
+              <p className="wise-body-sm text-center mt-6" style={{ color: "var(--neo-ink-muted)" }}>
                 {t({ fr: "Plus vous apportez de projets et plus vous êtes impliqué, plus vos revenus augmentent — avec un effet cumulatif sur le long terme.", en: "The more projects you bring and the more involved you are, the more your revenue grows — with a cumulative long-term effect.", ar: "كلما جلبت المزيد من المشاريع وزادت مشاركتك، زادت إيراداتك — مع تأثير تراكمي على المدى الطويل." })}
               </p>
             </div>
@@ -706,18 +706,18 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── CTA Band ─── */}
-      <AnimatedSection style={{ background: "var(--tint-mint)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+      <AnimatedSection style={{ background: "var(--neo-primary)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-6 md:py-10 text-center">
           <motion.div variants={fadeInUp}>
-            <Rocket size={36} style={{ color: "var(--wise-positive-deep)" }} className="mx-auto mb-6" />
-            <h2 className="wise-display-xl mb-5" style={{ textWrap: "balance" }}>
+            <Rocket size={36} style={{ color: "#ffffff" }} className="mx-auto mb-6" />
+            <h2 className="wise-display-xl mb-5" style={{ textWrap: "balance", color: "#ffffff" }}>
               <span dangerouslySetInnerHTML={{ __html: t({ fr: "Ne subissez pas la disruption.<br />Devenez-en l'acteur.", en: "Don't suffer the disruption.<br />Become the agent of change.", ar: "لا تكن ضحية التحوّل.<br />كن صانع التغيير." }) }} />
             </h2>
-            <p className="wise-body-lg mb-10 max-w-[42ch] mx-auto">
+            <p className="wise-body-lg mb-10 max-w-[42ch] mx-auto" style={{ color: "rgba(255,255,255,0.85)" }}>
               {t({ fr: "Formation et certification 100% gratuites – 296 places seulement", en: "Training and certification 100% free – only 296 spots", ar: "تدريب وشهادة مجانية 100% – 296 مقعداً فقط" })}
             </p>
             <Link href="/apply">
-              <button className="wise-btn-primary text-base md:text-lg px-8 md:px-10 py-4 md:py-5 flex items-center gap-3 mx-auto">
+              <button className="text-base md:text-lg px-8 md:px-10 py-4 md:py-5 flex items-center gap-3 mx-auto font-semibold rounded-lg transition-all" style={{ background: "#ffffff", color: "var(--neo-primary)" }}>
                 {t({ fr: "Postuler maintenant", en: "Apply now", ar: "قدّم الآن" })} <ArrowRight size={20} />
               </button>
             </Link>
@@ -775,8 +775,8 @@ export default function Home() {
                 {t({ fr: "Transformer la menace de l'IA en opportunité.", en: "Turning the AI threat into opportunity.", ar: "تحويل تهديد الذكاء الاصطناعي إلى فرصة." })}
               </p>
               <div className="flex items-center gap-1.5 mt-2">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--wise-positive-deep)" }}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                <span className="wise-body-sm" style={{ color: "var(--wise-positive-deep)" }}>{t({ fr: "Registered Partner du Claude Partner Network", en: "Registered Partner of the Claude Partner Network", ar: "شريك مسجل في Claude Partner Network" })}</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--neo-primary)" }}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <span className="wise-body-sm" style={{ color: "var(--neo-primary)" }}>{t({ fr: "Registered Partner du Claude Partner Network", en: "Registered Partner of the Claude Partner Network", ar: "شريك مسجل في Claude Partner Network" })}</span>
               </div>
             </div>
             <div>
@@ -827,7 +827,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
       className="whitespace-nowrap text-[12.5px] font-medium px-3 py-2 rounded-md relative group transition-all duration-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50"
     >
       {children}
-      <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-[2px] rounded-full group-hover:w-3/5 transition-all duration-300 ease-out bg-emerald-600" />
+      <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-[2px] rounded-full group-hover:w-3/5 transition-all duration-300 ease-out" style={{ background: "#1e3a6e" }} />
     </a>
   );
 }
@@ -838,7 +838,7 @@ function StatCard({ value, label, source, highlight }: { value: string; label: s
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
       className={highlight ? "wise-card-green text-center h-full" : "wise-card-sage text-center h-full"}
     >
-      <p className="text-3xl md:text-4xl lg:text-5xl font-black mb-2 md:mb-3" style={{ color: highlight ? "var(--wise-positive-deep)" : "var(--wise-ink)" }}>{value}</p>
+      <p className="text-3xl md:text-4xl lg:text-5xl font-black mb-2 md:mb-3" style={{ color: highlight ? "var(--neo-primary)" : "var(--wise-ink)" }}>{value}</p>
       <p className="wise-body-md mb-2">{label}</p>
       <p className="text-xs" style={{ color: "var(--wise-mute)" }}>{source}</p>
     </motion.div>
@@ -870,7 +870,7 @@ function FormulaCard({ icon, step, title, description, badge, image }: { icon: R
       {/* Contenu */}
       <div className="flex items-center gap-3 mb-3">
         <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
-          <span style={{ color: "var(--wise-positive-deep)" }}>{icon}</span>
+          <span style={{ color: "var(--neo-primary)" }}>{icon}</span>
         </div>
         <h3 className="wise-display-xs">{title}</h3>
       </div>
@@ -911,7 +911,7 @@ function ImpactItem({ icon, title, desc }: { icon: React.ReactNode; title: strin
     <motion.div
       whileHover={{ x: 4, transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] } }}
       className="flex gap-4 p-4 rounded-xl"
-      style={{ background: "var(--tint-mint)" }}
+      style={{ background: "var(--neo-primary-light)" }}
     >
       <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "var(--wise-primary)" }}>
         <span style={{ color: "var(--wise-ink)" }}>{icon}</span>
@@ -988,12 +988,12 @@ function AnimatedChart() {
           {
             label: "Goldman Sachs (emplois expos\u00e9s, M)",
             data: [30, 85, 150, 220, 300],
-            borderColor: "#ff6b6b",
-            backgroundColor: "rgba(255,107,107,0.1)",
+            borderColor: "#1e3a6e",
+            backgroundColor: "rgba(30,58,110,0.08)",
             fill: true,
             tension: 0.4,
-            pointBackgroundColor: "#ff6b6b",
-            pointBorderColor: "#ff6b6b",
+            pointBackgroundColor: "#1e3a6e",
+            pointBorderColor: "#1e3a6e",
             pointRadius: 5,
             pointHoverRadius: 7,
             borderWidth: 3,
@@ -1001,12 +1001,12 @@ function AnimatedChart() {
           {
             label: "WEF (emplois d\u00e9plac\u00e9s, M)",
             data: [12, 40, 85, 88, 92],
-            borderColor: "#38c8ff",
-            backgroundColor: "rgba(56,200,255,0.08)",
+            borderColor: "#94a3b8",
+            backgroundColor: "rgba(148,163,184,0.06)",
             fill: true,
             tension: 0.4,
-            pointBackgroundColor: "#38c8ff",
-            pointBorderColor: "#38c8ff",
+            pointBackgroundColor: "#94a3b8",
+            pointBorderColor: "#94a3b8",
             pointRadius: 4,
             pointHoverRadius: 6,
             borderWidth: 2.5,
@@ -1014,12 +1014,12 @@ function AnimatedChart() {
           {
             label: "McKinsey (sc\u00e9nario haut, M)",
             data: [50, 150, 300, 550, 800],
-            borderColor: "#ffc091",
-            backgroundColor: "rgba(255,192,145,0.05)",
+            borderColor: "#dc1428",
+            backgroundColor: "rgba(220,20,40,0.05)",
             fill: false,
             tension: 0.4,
-            pointBackgroundColor: "#ffc091",
-            pointBorderColor: "#ffc091",
+            pointBackgroundColor: "#dc1428",
+            pointBorderColor: "#dc1428",
             pointRadius: 3,
             pointHoverRadius: 5,
             borderWidth: 2,
@@ -1075,7 +1075,7 @@ function AnimatedChart() {
 
   return (
     <motion.div variants={fadeInUp} className="wise-card mb-8 md:mb-12">
-      <h3 className="wise-display-xs mb-1" style={{ color: "var(--wise-accent-coral)" }}>{t({ fr: "Emplois exposés à l'automatisation IA (en millions)", en: "Jobs exposed to AI automation (in millions)", ar: "الوظائف المعرّضة لأتمتة الذكاء الاصطناعي (بالملايين)" })}</h3>
+      <h3 className="wise-display-xs mb-1" style={{ color: "var(--neo-primary)" }}>{t({ fr: "Emplois exposés à l'automatisation IA (en millions)", en: "Jobs exposed to AI automation (in millions)", ar: "الوظائف المعرّضة لأتمتة الذكاء الاصطناعي (بالملايين)" })}</h3>
       <p className="wise-label mb-4">WEF (85M/2025, 92M/2030) · Goldman Sachs (300M/2030) · McKinsey (400-800M/2030)</p>
       <div ref={chartContainerRef} className="h-[280px] md:h-[340px]">
         <canvas ref={canvasRef}></canvas>
@@ -1103,12 +1103,12 @@ function JobLossChart() {
       data: {
         labels: ["2025", "2026", "2027", "2028", "2029", "2030"],
         datasets: [
-          { label: t({ fr: "Saisie de données", en: "Data Entry", ar: "إدخال البيانات" }), data: [100, 82, 65, 48, 35, 22], borderColor: "#9fe870", backgroundColor: "rgba(159,232,112,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#9fe870" },
-          { label: t({ fr: "Service client", en: "Customer Service", ar: "خدمة العملاء" }), data: [100, 85, 70, 55, 42, 30], borderColor: "#38c8ff", backgroundColor: "rgba(56,200,255,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#38c8ff" },
-          { label: t({ fr: "Comptabilité", en: "Accounting", ar: "المحاسبة" }), data: [100, 88, 75, 62, 50, 40], borderColor: "#ffc091", backgroundColor: "rgba(255,192,145,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#ffc091" },
-          { label: t({ fr: "Développeurs", en: "Developers", ar: "المطورون" }), data: [100, 90, 78, 65, 55, 45], borderColor: "#ffd11a", backgroundColor: "rgba(255,209,26,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#ffd11a" },
-          { label: t({ fr: "Traduction", en: "Translation", ar: "الترجمة" }), data: [100, 78, 58, 40, 28, 18], borderColor: "#d03238", backgroundColor: "rgba(208,50,56,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#d03238" },
-          { label: t({ fr: "Juridique", en: "Legal", ar: "القانونية" }), data: [100, 92, 82, 72, 62, 52], borderColor: "#c5edab", backgroundColor: "rgba(197,237,171,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#c5edab" },
+          { label: t({ fr: "Saisie de données", en: "Data Entry", ar: "إدخال البيانات" }), data: [100, 82, 65, 48, 35, 22], borderColor: "#1e3a6e", backgroundColor: "rgba(30,58,110,0.12)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#1e3a6e" },
+          { label: t({ fr: "Service client", en: "Customer Service", ar: "خدمة العملاء" }), data: [100, 85, 70, 55, 42, 30], borderColor: "#3d5a8e", backgroundColor: "rgba(61,90,142,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#3d5a8e" },
+          { label: t({ fr: "Comptabilité", en: "Accounting", ar: "المحاسبة" }), data: [100, 88, 75, 62, 50, 40], borderColor: "#6b7fa8", backgroundColor: "rgba(107,127,168,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#6b7fa8" },
+          { label: t({ fr: "Développeurs", en: "Developers", ar: "المطورون" }), data: [100, 90, 78, 65, 55, 45], borderColor: "#94a3b8", backgroundColor: "rgba(148,163,184,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#94a3b8" },
+          { label: t({ fr: "Traduction", en: "Translation", ar: "الترجمة" }), data: [100, 78, 58, 40, 28, 18], borderColor: "#dc1428", backgroundColor: "rgba(220,20,40,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#dc1428" },
+          { label: t({ fr: "Juridique", en: "Legal", ar: "القانونية" }), data: [100, 92, 82, 72, 62, 52], borderColor: "#b8c4d4", backgroundColor: "rgba(184,196,212,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#b8c4d4" },
         ],
       },
       options: {
@@ -1139,13 +1139,13 @@ function JobLossChart() {
 
 function NetworkGraph() {
   const nodes = [
-    { id: "neopolis", label: "Neopolis", x: 50, y: 50, size: 28, color: "#9fe870" },
+    { id: "neopolis", label: "Neopolis", x: 50, y: 50, size: 28, color: "#1e3a6e" },
     { id: "anthropic", label: "Anthropic", x: 20, y: 20, size: 22, color: "#d4a574" },
-    { id: "openai", label: "OpenAI", x: 80, y: 20, size: 22, color: "#10a37f" },
-    { id: "agents", label: "Agents IA", x: 15, y: 70, size: 18, color: "#38c8ff" },
-    { id: "llm", label: "Multi-LLM", x: 85, y: 70, size: 18, color: "#a78bfa" },
-    { id: "infra", label: "Infra", x: 30, y: 90, size: 16, color: "#34d399" },
-    { id: "support", label: "Support", x: 70, y: 90, size: 16, color: "#fbbf24" },
+    { id: "openai", label: "OpenAI", x: 80, y: 20, size: 22, color: "#3d5a8e" },
+    { id: "agents", label: "Agents IA", x: 15, y: 70, size: 18, color: "#4a6fa5" },
+    { id: "llm", label: "Multi-LLM", x: 85, y: 70, size: 18, color: "#6b7fa8" },
+    { id: "infra", label: "Infra", x: 30, y: 90, size: 16, color: "#94a3b8" },
+    { id: "support", label: "Support", x: 70, y: 90, size: 16, color: "#94a3b8" },
   ];
 
   const edges = [
@@ -1174,7 +1174,7 @@ function NetworkGraph() {
               y1={`${fromNode.y}%`}
               x2={`${toNode.x}%`}
               y2={`${toNode.y}%`}
-              stroke="rgba(159,232,112,0.3)"
+              stroke="rgba(30,58,110,0.3)"
               strokeWidth="1.5"
               initial={{ pathLength: 0, opacity: 0 }}
               whileInView={{ pathLength: 1, opacity: 1 }}
@@ -1191,7 +1191,7 @@ function NetworkGraph() {
             <motion.circle
               key={`particle-${i}`}
               r="3"
-              fill="#9fe870"
+              fill="#1e3a6e"
               initial={{ opacity: 0.8 }}
               animate={{
                 cx: [`${fromNode.x}%`, `${toNode.x}%`],
@@ -1308,7 +1308,7 @@ function HeroGraphic() {
               key={`line-${i}`}
               x1="200" y1="200"
               x2={x} y2={y}
-              stroke="rgba(159,232,112,0.12)"
+              stroke="rgba(30,58,110,0.12)"
               strokeWidth="1"
               initial={{ opacity: 0 }}
               animate={{ opacity: [0.1, 0.3, 0.1] }}
@@ -1322,7 +1322,7 @@ function HeroGraphic() {
           <motion.circle
             key={`particle-orbit-${i}`}
             r="3"
-            fill="#9fe870"
+            fill="#1e3a6e"
             opacity="0.8"
             animate={{
               cx: [
@@ -1348,8 +1348,8 @@ function HeroGraphic() {
           width: "110px",
           height: "110px",
           background: "#ffffff",
-          boxShadow: "0 0 40px rgba(159,232,112,0.4), 0 0 80px rgba(159,232,112,0.15), 0 4px 20px rgba(0,0,0,0.1)",
-          border: "3px solid rgba(159,232,112,0.6)",
+          boxShadow: "0 0 40px rgba(30,58,110,0.25), 0 0 80px rgba(30,58,110,0.1), 0 4px 20px rgba(0,0,0,0.1)",
+          border: "3px solid rgba(30,58,110,0.4)",
           left: "50%",
           top: "50%",
           transform: "translate(-50%, -50%)",
@@ -1382,14 +1382,14 @@ function HeroGraphic() {
             <motion.div
               className="w-10 h-10 rounded-full flex items-center justify-center"
               style={{
-                backgroundColor: "rgba(159,232,112,0.15)",
-                border: "1.5px solid rgba(159,232,112,0.4)",
+                backgroundColor: "rgba(30,58,110,0.1)",
+                border: "1.5px solid rgba(30,58,110,0.3)",
                 backdropFilter: "blur(4px)",
               }}
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ duration: 2.5 + i * 0.3, repeat: Infinity, ease: "easeInOut" }}
             >
-              <span className="text-xs font-bold" style={{ color: "#9fe870" }}>
+              <span className="text-xs font-bold" style={{ color: "#1e3a6e" }}>
                 {node.label.charAt(0)}
               </span>
             </motion.div>
@@ -1421,13 +1421,13 @@ function HeroGraphic() {
             <motion.div
               className="w-8 h-8 rounded-full flex items-center justify-center"
               style={{
-                backgroundColor: "rgba(56,200,255,0.1)",
-                border: "1px solid rgba(56,200,255,0.3)",
+                backgroundColor: "rgba(30,58,110,0.06)",
+                border: "1px solid rgba(30,58,110,0.2)",
               }}
               animate={{ scale: [1, 1.08, 1] }}
               transition={{ duration: 3 + i * 0.4, repeat: Infinity, ease: "easeInOut" }}
             >
-              <span className="text-xs font-bold" style={{ color: "#38c8ff" }}>
+              <span className="text-xs font-bold" style={{ color: "#3d5a8e" }}>
                 {node.label.charAt(0)}
               </span>
             </motion.div>
@@ -1510,7 +1510,7 @@ function MobileMenuButton() {
                 <a href="#partenaires" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</a>
                 <a href="#faq" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>FAQ</a>
                 <div className="h-px my-1" style={{ background: "var(--wise-rule)" }} />
-                <a href="/training" onClick={() => setOpen(false)} className="text-sm font-semibold py-2.5 px-3 rounded-lg bg-emerald-50 text-emerald-700 transition-colors">{t({ fr: "Formation 🎓", en: "Training 🎓", ar: "التدريب 🎓" })}</a>
+                <a href="/training" onClick={() => setOpen(false)} className="text-sm font-semibold py-2.5 px-3 rounded-lg transition-colors" style={{ background: "rgba(30,58,110,0.08)", color: "#1e3a6e" }}>{t({ fr: "Formation 🎓", en: "Training 🎓", ar: "التدريب 🎓" })}</a>
               </nav>
             </div>
           </motion.div>
@@ -1528,11 +1528,11 @@ function FlowDiagram() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   const steps = [
-    { id: "ambassadeur", label: t({ fr: "Ambassadeur", en: "Ambassador", ar: "السفير" }), sub: t({ fr: "Prospection B2B", en: "B2B Prospecting", ar: "التنقيب B2B" }), bg: "var(--wise-primary-pale)", iconColor: "var(--wise-primary)", icon: Target },
-    { id: "centrale", label: t({ fr: "Centrale", en: "Central", ar: "المركز" }), sub: t({ fr: "Étude & Évaluation", en: "Study & Evaluation", ar: "الدراسة والتقييم" }), bg: "var(--tint-cyan)", iconColor: "var(--wise-accent-cyan)", icon: Shield },
-    { id: "contrat", label: t({ fr: "Contrat", en: "Contract", ar: "العقد" }), sub: t({ fr: "Contractualisation", en: "Contracting", ar: "التعاقد" }), bg: "var(--tint-mint)", iconColor: "oklch(0.45 0.12 160)", icon: BookOpen },
-    { id: "implementation", label: "Neopolis", sub: t({ fr: "Implémentation", en: "Implementation", ar: "التنفيذ" }), bg: "var(--tint-coral)", iconColor: "var(--wise-accent-coral)", icon: Rocket },
-    { id: "client", label: "Client", sub: t({ fr: "Monitoring & Run", en: "Monitoring & Run", ar: "المراقبة والتشغيل" }), bg: "var(--tint-pear)", iconColor: "oklch(0.50 0.12 110)", icon: CheckCircle2 },
+    { id: "ambassadeur", label: t({ fr: "Ambassadeur", en: "Ambassador", ar: "السفير" }), sub: t({ fr: "Prospection B2B", en: "B2B Prospecting", ar: "التنقيب B2B" }), bg: "var(--neo-primary-light)", iconColor: "var(--neo-primary)", icon: Target },
+    { id: "centrale", label: t({ fr: "Centrale", en: "Central", ar: "المركز" }), sub: t({ fr: "Étude & Évaluation", en: "Study & Evaluation", ar: "الدراسة والتقييم" }), bg: "var(--neo-primary-light)", iconColor: "var(--neo-primary)", icon: Shield },
+    { id: "contrat", label: t({ fr: "Contrat", en: "Contract", ar: "العقد" }), sub: t({ fr: "Contractualisation", en: "Contracting", ar: "التعاقد" }), bg: "var(--neo-primary-light)", iconColor: "var(--neo-primary)", icon: BookOpen },
+    { id: "implementation", label: "Neopolis", sub: t({ fr: "Implémentation", en: "Implementation", ar: "التنفيذ" }), bg: "var(--neo-primary-light)", iconColor: "var(--neo-primary)", icon: Rocket },
+    { id: "client", label: "Client", sub: t({ fr: "Monitoring & Run", en: "Monitoring & Run", ar: "المراقبة والتشغيل" }), bg: "var(--neo-primary-light)", iconColor: "var(--neo-primary)", icon: CheckCircle2 },
   ];
 
   const stepVariant = {
@@ -1646,7 +1646,7 @@ function FlowDiagram() {
           <span className="text-xs" style={{ color: "var(--neo-ink-secondary)" }}>{t({ fr: "Ambassadeur apporte le lead", en: "Ambassador brings the lead", ar: "السفير يجلب العميل" })}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--wise-accent-cyan)" }}></div>
+          <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--neo-primary)" }}></div>
           <span className="text-xs" style={{ color: "var(--neo-ink-secondary)" }}>{t({ fr: "Neopolis évalue & implémente", en: "Neopolis evaluates & implements", ar: "Neopolis تقيّم وتنفّذ" })}</span>
         </div>
         <div className="flex items-center gap-1.5">
@@ -1698,7 +1698,7 @@ function RevenueSimulator() {
             />
             <div className="flex justify-between mt-1">
               <span className="wise-label">1</span>
-              <span className="font-semibold text-sm" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>{projects} {t({ fr: "projets", en: "projects", ar: "مشاريع" })}</span>
+              <span className="font-semibold text-sm" style={{ color: "var(--neo-primary)", fontFamily: "var(--font-mono)" }}>{projects} {t({ fr: "projets", en: "projects", ar: "مشاريع" })}</span>
               <span className="wise-label">20</span>
             </div>
           </div>
@@ -1716,7 +1716,7 @@ function RevenueSimulator() {
             />
             <div className="flex justify-between mt-1">
               <span className="wise-label">1 000€</span>
-              <span className="font-semibold text-sm" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>{avgSetup.toLocaleString("fr-FR")} €</span>
+              <span className="font-semibold text-sm" style={{ color: "var(--neo-primary)", fontFamily: "var(--font-mono)" }}>{avgSetup.toLocaleString("fr-FR")} €</span>
               <span className="wise-label">30 000€</span>
             </div>
           </div>
@@ -1734,7 +1734,7 @@ function RevenueSimulator() {
             />
             <div className="flex justify-between mt-1">
               <span className="wise-label">20%</span>
-              <span className="font-semibold text-sm" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>{implication}%</span>
+              <span className="font-semibold text-sm" style={{ color: "var(--neo-primary)", fontFamily: "var(--font-mono)" }}>{implication}%</span>
               <span className="wise-label">60%</span>
             </div>
           </div>
@@ -1752,7 +1752,7 @@ function RevenueSimulator() {
             />
             <div className="flex justify-between mt-1">
               <span className="wise-label">100€</span>
-              <span className="font-semibold text-sm" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>{monthlyTokens.toLocaleString("fr-FR")} €/mois</span>
+              <span className="font-semibold text-sm" style={{ color: "var(--neo-primary)", fontFamily: "var(--font-mono)" }}>{monthlyTokens.toLocaleString("fr-FR")} €/mois</span>
               <span className="wise-label">5 000€</span>
             </div>
           </div>
@@ -1777,7 +1777,7 @@ function RevenueSimulator() {
             </div>
             <div className="border-t pt-5" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
               <p className="wise-label mb-1">{t({ fr: "Total 1ère année estimé", en: "Estimated 1st year total", ar: "إجمالي السنة الأولى المقدّر" })}</p>
-              <p className="wise-display-md" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>
+              <p className="wise-display-md" style={{ color: "var(--neo-primary)", fontFamily: "var(--font-mono)" }}>
                 {totalFirstYear.toLocaleString("fr-FR")} €
               </p>
               <p className="wise-body-sm mt-1">{t({ fr: "Setup + 12 mois de récurrent", en: "Setup + 12 months recurring", ar: "الإعداد + 12 شهراً متكرراً" })}</p>
@@ -1823,7 +1823,7 @@ function RevenueSimulator() {
               </div>
               <div className="flex items-center gap-1.5 mb-2">
                 <span className="wise-label">{t({ fr: "ROI client", en: "Client ROI", ar: "عائد العميل" })}</span>
-                <span className="font-semibold text-xs" style={{ color: "var(--wise-accent-cyan)", fontFamily: "var(--font-mono)" }}>{p.roi}</span>
+                <span className="font-semibold text-xs" style={{ color: "var(--neo-ink-secondary)", fontFamily: "var(--font-mono)" }}>{p.roi}</span>
               </div>
               {/* Expand/collapse button */}
               <button
@@ -1852,7 +1852,7 @@ function RevenueSimulator() {
                     </div>
                     <div className="flex justify-between pt-2 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
                       <span className="wise-label">{t({ fr: `Votre gain (${p.pct})`, en: `Your earnings (${p.pct})`, ar: `أرباحك (${p.pct})` })}</span>
-                      <span className="font-semibold text-xs" style={{ color: "var(--wise-positive-deep)", fontFamily: "var(--font-mono)" }}>{p.earnings}</span>
+                      <span className="font-semibold text-xs" style={{ color: "var(--neo-primary)", fontFamily: "var(--font-mono)" }}>{p.earnings}</span>
                     </div>
                   </div>
                 </div>

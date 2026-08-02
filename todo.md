@@ -1012,3 +1012,12 @@
 
 ## Redesign badges flottants hero
 - [x] Remplacer les badges "Certification CCA" et "Certification internationale" (wise-card blanc/bordure) par des pills gradient modernes (vert gradient + violet gradient, texte blanc, rounded-full, shadow)
+
+## Refonte charte graphique — Harmonie avec le logo Neopolis
+- [x] Mettre à jour les CSS variables (--wise-primary → bleu marine, supprimer tint-coral/cyan/pear)
+- [x] Remplacer tous les fonds colorés (tint-*) par blanc/slate-50/bleu-pâle dans Home.tsx
+- [x] Unifier les icônes en slate-400 ou bleu marine (supprimer coral, cyan, pear, lime)
+- [x] Refaire les badges/pills en bleu marine + rouge carmin uniquement
+- [x] Refaire les graphiques Chart.js en bleu marine + gris
+- [x] Refaire la section CTA finale en bleu marine fond + texte blanc
+- [x] Vérification visuelle complète
