@@ -31,15 +31,7 @@ export default function TrainingCertification() {
   const { isCourseComplete, getCertProgress, isCertComplete, isLoading: progressLoading, isLessonComplete, getChapterProgress } = useTrainingProgress();
 
   const cert = trainingIndex.certifications.find((c) => c.id === certId);
-  if (!cert) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-muted-foreground">{t({ en: "Certification not found", fr: "Certification introuvable" })}</p>
-      </div>
-    );
-  }
-
-  const courses = trainingIndex.courses.filter((c) => c.certId === certId);
+  const courses = cert ? trainingIndex.courses.filter((c) => c.certId === certId) : [];
   const courseIds = courses.map((c) => c.id);
 
   const totalLessonsMap = useMemo(() => {
@@ -88,6 +80,14 @@ export default function TrainingCertification() {
     { certificationId: certId },
     { enabled: isAuthenticated && !!certId }
   );
+
+  if (!cert) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <p className="text-muted-foreground">{t({ en: "Certification not found", fr: "Certification introuvable" })}</p>
+      </div>
+    );
+  }
 
   const bestPassingScore = useMemo(() => {
     if (!examHistory || examHistory.length === 0) return null;
