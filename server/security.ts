@@ -70,12 +70,16 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
     "camera=(self), microphone=(self), geolocation=()"
   );
 
-  // Content Security Policy (permissive enough for the app to work)
+  // Content Security Policy (hardened)
+  const isDev = process.env.NODE_ENV === "development";
+  const scriptSrc = isDev
+    ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://manus-analytics.com" // unsafe-eval needed for Vite HMR in dev
+    : "script-src 'self' 'unsafe-inline' https://manus-analytics.com"; // No unsafe-eval in production
   res.setHeader(
     "Content-Security-Policy",
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://manus-analytics.com", // needed for Vite HMR in dev + Chart.js + analytics
+      scriptSrc,
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: https: blob:",
@@ -83,8 +87,13 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
       "connect-src 'self' https: wss:", // needed for tRPC, OAuth, analytics, Vite HMR
       "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://youtube.com",
       "frame-ancestors 'none'",
+      "base-uri 'self'", // Prevent base tag injection
+      "form-action 'self'", // Restrict form submissions to same origin
+      "upgrade-insecure-requests", // Force HTTPS for all subresources
     ].join("; ")
   );
+  // Strict-Transport-Security (HSTS) - enforce HTTPS for 1 year
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
 
   next();
 }

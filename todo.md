@@ -1118,3 +1118,8 @@
 - [x] Ajouter 7 index de base de données manquants (déjà existants via migrations SQL)
 - [x] Optimiser getApplicationStats avec requête agrégée SQL (GROUP BY status)
 - [x] Décomposer TrainingCourse.tsx en sous-composants (3808→637 lignes + 5 sous-fichiers)
+
+## Tests, Lazy-loading & Sécurité
+- [x] Tests unitaires pour sous-composants extraits (contentDetectors) - 24 tests ajoutés
+- [x] Lazy-loading des données JSON de cours (cache mémoire + prefetch cours suivant)
+- [x] Header CSP renforcé (unsafe-eval retiré en prod, base-uri, form-action, HSTS)

@@ -21,6 +21,7 @@ import { trpc } from "@/lib/trpc";
 import { resolveI18n } from "./training/contentDetectors";
 import LessonViewer from "./training/LessonViewer";
 import LessonSidebar from "./training/LessonSidebar";
+import { useCourseData, prefetchCourse } from "@/hooks/useCourseData";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -89,93 +90,8 @@ export default function TrainingCourse() {
   const course = trainingIndex.courses.find((c: any) => c.id === courseId);
   const cert = trainingIndex.certifications.find((c: any) => c.id === certId);
 
-  const [courseLessons, setCourseLessons] = useState<any[]>([]);
-  const [lessonsLoading, setLessonsLoading] = useState(true);
-
-  const [courseExercises, setCourseExercises] = useState<any[]>([]);
-  const [courseSections, setCourseSections] = useState<any[]>([]);
-
-
-  useEffect(() => {
-    if (!courseId) return;
-    setLessonsLoading(true);
-    fetch(`/data/courses/${courseId}.json`)
-      .then((res) => res.json())
-      .then((data) => {
-        // Normalize course data: convert chapter.block (singular) to chapter.blocks (plural)
-        const normalizedLessons = (data.lessons || []).map((lesson: any) => ({
-          ...lesson,
-          chapters: (lesson.chapters || []).map((ch: any) => {
-            // Normalize block (singular) into blocks (plural)
-            const existingBlocks = ch.blocks && ch.blocks.length > 0 ? [...ch.blocks] : [];
-            if (ch.block) {
-              const block = ch.block;
-              let extraBlocks: any[];
-              if (block.type === 'content' && block.body) {
-                extraBlocks = [{ type: 'content', body: block.body }];
-              } else if (block.type === 'checkpoint' && block.questions) {
-                extraBlocks = block.questions.map((q: any, qi: number) => ({
-                  type: 'single_choice_exercise',
-                  id: `checkpoint_q${qi}`,
-                  question: q.question,
-                  options: (q.choices || []).map((c: any) => ({
-                    id: c.id,
-                    text: c.text,
-                  })),
-                  correctAnswer: q.correctId || q.answer || 'a',
-                  explanation: q.explanation,
-                }));
-              } else if (block.type === 'video') {
-                extraBlocks = [block];
-              } else {
-                extraBlocks = [block];
-              }
-              const mergedBlocks = existingBlocks.length > 0
-                ? [...existingBlocks, ...extraBlocks]
-                : extraBlocks;
-              return { ...ch, blocks: mergedBlocks };
-            }
-            // Handle chapters with direct body/questions fields (no block/blocks wrapper)
-            if (existingBlocks.length === 0) {
-              let generatedBlocks: any[] = [];
-              if (ch.body) {
-                generatedBlocks.push({ type: 'content', body: ch.body });
-              }
-              if (ch.type === 'checkpoint' && ch.questions) {
-                const qBlocks = ch.questions.map((q: any, qi: number) => ({
-                  type: 'single_choice_exercise',
-                  id: `checkpoint_q${qi}`,
-                  question: q.question,
-                  options: (q.choices || []).map((c: any) => ({
-                    id: c.id,
-                    text: c.text,
-                  })),
-                  correctAnswer: q.correctId || q.answer || 'a',
-                  explanation: q.explanation,
-                }));
-                generatedBlocks = [...generatedBlocks, ...qBlocks];
-              }
-              if (generatedBlocks.length > 0) {
-                return { ...ch, blocks: generatedBlocks };
-              }
-            }
-            return ch;
-          }),
-        }));
-        setCourseLessons(normalizedLessons);
-        setCourseExercises(data.exercises || []);
-        setCourseSections(data.sections || []);
-
-        setLessonsLoading(false);
-      })
-      .catch(() => {
-        setCourseLessons([]);
-        setCourseExercises([]);
-        setCourseSections([]);
-
-        setLessonsLoading(false);
-      });
-  }, [courseId]);
+  // Course data with caching and prefetching
+  const { courseLessons, courseExercises, courseSections, loading: lessonsLoading } = useCourseData(courseId);
 
   // Loading state
   if (authLoading) {
@@ -231,8 +147,18 @@ export default function TrainingCourse() {
       </div>
     );
   }
-  // Sequential lock guard: prevent direct URL access to locked courses
+  // Prefetch next course in certification path for instant navigation
   const certCourses = trainingIndex.courses.filter((c: any) => c.certId === certId);
+  const currentCourseIdx = certCourses.findIndex((c: any) => c.id === courseId);
+  useEffect(() => {
+    if (currentCourseIdx >= 0 && currentCourseIdx < certCourses.length - 1) {
+      const nextCourse = certCourses[currentCourseIdx + 1];
+      prefetchCourse(nextCourse.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseId]);
+
+  // Sequential lock guard: prevent direct URL access to locked courses
   const courseIdx = certCourses.findIndex((c: any) => c.id === courseId);
   if (courseIdx > 0) {
     const prevCourse = certCourses[courseIdx - 1];
