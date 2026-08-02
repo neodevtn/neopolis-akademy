@@ -1162,153 +1162,201 @@ function HeroGraphic() {
   const { t } = useLanguage();
   
   const orbitNodes = [
-    { label: "Claude", icon: "C", angle: 0, orbit: 1, color: "#d4a574" },
-    { label: "Agents", icon: "A", angle: 45, orbit: 2, color: "#4a6fa5" },
-    { label: "Business", icon: "B", angle: 90, orbit: 1, color: "#2c4a7c" },
-    { label: "Deploy", icon: "D", angle: 135, orbit: 2, color: "#3d5a8e" },
-    { label: "Support", icon: "S", angle: 180, orbit: 1, color: "#6b7fa8" },
-    { label: "Formation", icon: "F", angle: 225, orbit: 2, color: "#1e3a6e" },
-    { label: "Gemini", icon: "G", angle: 270, orbit: 1, color: "#5a7a9e" },
-    { label: "OpenAI", icon: "O", angle: 315, orbit: 2, color: "#3d5a8e" },
+    { label: "Claude", icon: "C", angle: 30, orbit: 2, color: "#d4a574" },
+    { label: "Agents", icon: "A", angle: 90, orbit: 2, color: "#4a6fa5" },
+    { label: "Business", icon: "B", angle: 150, orbit: 2, color: "#2c4a7c" },
+    { label: "Deploy", icon: "D", angle: 210, orbit: 2, color: "#3d5a8e" },
+    { label: "Support", icon: "S", angle: 270, orbit: 2, color: "#6b7fa8" },
+    { label: "Formation", icon: "F", angle: 330, orbit: 2, color: "#1e3a6e" },
+    { label: "Gemini", icon: "G", angle: 60, orbit: 1, color: "#5a7a9e" },
+    { label: "OpenAI", icon: "O", angle: 180, orbit: 1, color: "#3d5a8e" },
+    { label: "RAG", icon: "R", angle: 300, orbit: 1, color: "#2c4a7c" },
   ];
 
-  return (
-    <div className="relative w-full flex items-center justify-center" style={{ minHeight: "340px" }}>
-      {/* Orbital system */}
-      <div className="relative" style={{ width: "300px", height: "300px" }}>
-        
-        {/* Orbit rings */}
-        <motion.div
-          className="absolute rounded-full border"
-          style={{
-            width: "190px", height: "190px",
-            top: "50%", left: "50%",
-            transform: "translate(-50%, -50%)",
-            borderColor: "rgba(30, 58, 110, 0.15)",
-          }}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] }}
-        />
-        <motion.div
-          className="absolute rounded-full border"
-          style={{
-            width: "270px", height: "270px",
-            top: "50%", left: "50%",
-            transform: "translate(-50%, -50%)",
-            borderColor: "rgba(30, 58, 110, 0.10)",
-          }}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.2, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
-        />
+  // Container size and orbit radii
+  const size = 320;
+  const center = size / 2;
+  const innerRadius = 72;
+  const outerRadius = 130;
 
-        {/* Subtle rotating glow on outer ring */}
+  return (
+    <div className="relative w-full flex items-center justify-center" style={{ minHeight: "360px" }}>
+      {/* Orbital system - use SVG for precise positioning */}
+      <div className="relative" style={{ width: `${size}px`, height: `${size}px` }}>
+        
+        {/* SVG for orbit rings and connection lines */}
+        <svg
+          className="absolute inset-0"
+          width={size}
+          height={size}
+          viewBox={`0 0 ${size} ${size}`}
+          style={{ overflow: "visible" }}
+        >
+          {/* Inner orbit ring */}
+          <motion.circle
+            cx={center}
+            cy={center}
+            r={innerRadius}
+            fill="none"
+            stroke="rgba(30, 58, 110, 0.12)"
+            strokeWidth="1"
+            strokeDasharray="4 4"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+          />
+          {/* Outer orbit ring */}
+          <motion.circle
+            cx={center}
+            cy={center}
+            r={outerRadius}
+            fill="none"
+            stroke="rgba(30, 58, 110, 0.10)"
+            strokeWidth="1"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 1.8, delay: 0.2, ease: "easeOut" }}
+          />
+          {/* Subtle connection lines from center to outer nodes */}
+          {orbitNodes.filter(n => n.orbit === 2).map((node, i) => {
+            const angleRad = (node.angle * Math.PI) / 180;
+            const endX = center + Math.cos(angleRad) * outerRadius;
+            const endY = center + Math.sin(angleRad) * outerRadius;
+            return (
+              <motion.line
+                key={`line-${node.label}`}
+                x1={center}
+                y1={center}
+                x2={endX}
+                y2={endY}
+                stroke="rgba(30, 58, 110, 0.06)"
+                strokeWidth="1"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.6 + i * 0.08, ease: "easeOut" }}
+              />
+            );
+          })}
+        </svg>
+
+        {/* Rotating glow effect on outer ring */}
         <motion.div
-          className="absolute rounded-full"
+          className="absolute"
           style={{
-            width: "270px", height: "270px",
-            top: "50%", left: "50%",
-            transform: "translate(-50%, -50%)",
-            background: "conic-gradient(from 0deg, transparent 0%, rgba(30,58,110,0.08) 10%, transparent 20%)",
+            width: `${outerRadius * 2}px`,
+            height: `${outerRadius * 2}px`,
+            top: `${center - outerRadius}px`,
+            left: `${center - outerRadius}px`,
+            borderRadius: "50%",
+            background: "conic-gradient(from 0deg, transparent 0%, rgba(30,58,110,0.06) 8%, transparent 16%)",
           }}
           animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
         />
 
         {/* Center logo */}
         <motion.div
           className="absolute flex items-center justify-center rounded-full shadow-lg"
           style={{
-            width: "70px", height: "70px",
-            top: "50%", left: "50%",
-            transform: "translate(-50%, -50%)",
+            width: "64px",
+            height: "64px",
+            top: `${center - 32}px`,
+            left: `${center - 32}px`,
             background: "white",
-            boxShadow: "0 4px 30px rgba(30, 58, 110, 0.15)",
+            boxShadow: "0 4px 24px rgba(30, 58, 110, 0.12)",
           }}
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.6, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
         >
-          <img src={LOGO_ICON} alt="Neopolis" className="w-11 h-11 object-contain" />
+          <img src={LOGO_ICON} alt="Neopolis" className="w-10 h-10 object-contain" />
         </motion.div>
 
-        {/* Orbital nodes */}
+        {/* Orbital nodes - positioned with absolute pixel offsets from top-left */}
         {orbitNodes.map((node, i) => {
-          const radius = node.orbit === 1 ? 90 : 128;
+          const radius = node.orbit === 1 ? innerRadius : outerRadius;
           const angleRad = (node.angle * Math.PI) / 180;
-          const x = Math.cos(angleRad) * radius;
-          const y = Math.sin(angleRad) * radius;
+          const nodeX = center + Math.cos(angleRad) * radius;
+          const nodeY = center + Math.sin(angleRad) * radius;
+          const nodeSize = node.orbit === 1 ? 28 : 32;
           
           return (
             <motion.div
               key={node.label}
-              className="absolute flex flex-col items-center gap-1"
+              className="absolute flex flex-col items-center"
               style={{
-                top: "50%",
-                left: "50%",
+                top: `${nodeY - nodeSize / 2}px`,
+                left: `${nodeX - nodeSize / 2}px`,
+                width: `${nodeSize}px`,
               }}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ 
-                opacity: 1, 
-                scale: 1,
-                x: x - 16,
-                y: y - 16,
-              }}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ 
-                duration: 0.6, 
-                delay: 0.5 + i * 0.1, 
+                duration: 0.5, 
+                delay: 0.5 + i * 0.08, 
                 ease: [0.23, 1, 0.32, 1] 
               }}
             >
               <motion.div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-md"
+                className="rounded-full flex items-center justify-center text-white font-bold shadow-md"
                 style={{ 
+                  width: `${nodeSize}px`,
+                  height: `${nodeSize}px`,
+                  fontSize: node.orbit === 1 ? "10px" : "11px",
                   backgroundColor: node.color,
-                  boxShadow: `0 2px 12px ${node.color}40`,
+                  boxShadow: `0 2px 10px ${node.color}30`,
                 }}
                 animate={{ 
-                  y: [0, node.orbit === 1 ? -3 : 3, 0],
+                  scale: [1, 1.05, 1],
                 }}
                 transition={{ 
-                  duration: 3 + i * 0.3, 
+                  duration: 3 + i * 0.4, 
                   repeat: Infinity, 
                   ease: "easeInOut",
-                  delay: i * 0.2,
+                  delay: i * 0.3,
                 }}
               >
                 {node.icon}
               </motion.div>
-              <span className="text-[9px] font-semibold whitespace-nowrap" style={{ color: "#475569" }}>
+              <span 
+                className="font-semibold whitespace-nowrap mt-1" 
+                style={{ color: "#475569", fontSize: "8px" }}
+              >
                 {node.label}
               </span>
             </motion.div>
           );
         })}
 
-        {/* Animated connection dots traveling along orbits */}
-        {[0, 1, 2].map((i) => (
-          <motion.div
-            key={`dot-${i}`}
-            className="absolute w-2 h-2 rounded-full"
-            style={{
-              top: "50%",
-              left: "50%",
-              backgroundColor: "#1e3a6e",
-              opacity: 0.6,
-            }}
-            animate={{
-              x: [90, 0, -90, 0, 90].map(v => v - 4),
-              y: [0, 90, 0, -90, 0].map(v => v - 4),
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "linear",
-              delay: i * 2.6,
-            }}
-          />
-        ))}
+        {/* Animated pulse dots on the outer orbit */}
+        {[0, 1, 2].map((i) => {
+          const startAngle = i * 120; // evenly spaced
+          return (
+            <motion.div
+              key={`pulse-${i}`}
+              className="absolute rounded-full"
+              style={{
+                width: "6px",
+                height: "6px",
+                backgroundColor: "#1e3a6e",
+                opacity: 0.5,
+                top: `${center - 3}px`,
+                left: `${center - 3}px`,
+              }}
+              animate={{
+                x: Array.from({ length: 37 }, (_, k) => Math.cos(((startAngle + k * 10) * Math.PI) / 180) * outerRadius),
+                y: Array.from({ length: 37 }, (_, k) => Math.sin(((startAngle + k * 10) * Math.PI) / 180) * outerRadius),
+                opacity: [0.3, 0.6, 0.3],
+              }}
+              transition={{
+                duration: 12,
+                repeat: Infinity,
+                ease: "linear",
+                delay: i * 4,
+              }}
+            />
+          );
+        })}
       </div>
 
       {/* Badges flottants */}

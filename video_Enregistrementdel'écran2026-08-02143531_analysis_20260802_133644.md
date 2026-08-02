@@ -1,0 +1,9 @@
+Based on the provided video, the orbital graph animation has several noticeable issues, primarily concerning the connecting lines between the central node and the orbiting nodes.
+
+Here is a detailed breakdown of what is wrong:
+
+*   **Disconnected Lines:** The most prominent issue is that the lines intended to connect the central "Neopolis" node to the orbiting nodes (specifically "Support" and "Claude") are not properly attached to the nodes themselves.
+*   **The "Claude" Node Issue:** The line connecting to the "Claude" node is severely disjointed. Its end point floats in space, significantly detached from the node. As the "Claude" node moves clockwise along its orbit, the end of the line moves as well, but it lags behind and remains disconnected, appearing as a separate, unanchored visual element.
+*   **The "Support" Node Issue:** The line connecting to the "Support" node also suffers from a similar, though slightly less pronounced, issue. The line's end point does not perfectly align with the center of the "Support" node, and as the node moves counter-clockwise, the connection appears imprecise and slightly detached.
+*   **Animation Smoothness:** While the nodes generally follow their circular paths, the animation does not appear perfectly smooth. There is a slight jitter or unevenness in the movement, particularly noticeable with the "Support" node, making the rotation feel somewhat jerky rather than fluid.
+*   **Overall Visual Impression:** The failure of the connecting lines to anchor correctly to the moving nodes breaks the illusion of a cohesive graph. The lines appear to be rendered and animated independently of the nodes they are meant to connect, resulting in a buggy and unpolished visual experience.
