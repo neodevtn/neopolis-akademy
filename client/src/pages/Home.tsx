@@ -183,17 +183,17 @@ function ResumeReadingWidget() {
           href={`/training/${(course as any).certId}/${course.id}`}
           className="group block rounded-2xl border p-4 md:p-5 hover:shadow-lg transition-all duration-200"
           style={{
-            background: "linear-gradient(135deg, oklch(96% 0.02 145 / 0.5), oklch(97% 0.015 95 / 0.5))",
-            borderColor: "oklch(82% 0.06 145 / 0.4)",
+            background: "linear-gradient(135deg, oklch(96% 0.01 255 / 0.5), oklch(97% 0.01 255 / 0.5))",
+            borderColor: "oklch(82% 0.04 255 / 0.4)",
           }}
         >
           <div className="flex items-center gap-4">
-            <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "oklch(90% 0.06 145 / 0.4)" }}>
-              <PlayCircle className="w-5 h-5 md:w-6 md:h-6" style={{ color: "oklch(45% 0.15 145)" }} />
+            <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "oklch(90% 0.04 255 / 0.4)" }}>
+              <PlayCircle className="w-5 h-5 md:w-6 md:h-6" style={{ color: "var(--neo-primary)" }} />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full" style={{ background: "oklch(90% 0.06 145 / 0.5)", color: "oklch(40% 0.12 145)" }}>
+                <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full" style={{ background: "var(--neo-primary-light)", color: "var(--neo-primary)" }}>
                   {t({ fr: "Reprendre la lecture", en: "Resume reading", ar: "استئناف القراءة" })}
                 </span>
                 {cert && <span className="text-xs text-muted-foreground">{(cert as any).icon}</span>}
@@ -202,18 +202,18 @@ function ResumeReadingWidget() {
                 {typeof (course as any).title === 'object' ? ((course as any).title.fr || (course as any).title.en) : (course as any).title}
               </h3>
               <div className="flex items-center gap-3 mt-1.5">
-                <div className="flex-1 max-w-[200px] h-1.5 rounded-full overflow-hidden" style={{ background: "oklch(88% 0.02 145 / 0.6)" }}>
+                <div className="flex-1 max-w-[200px] h-1.5 rounded-full overflow-hidden" style={{ background: "oklch(88% 0.02 255 / 0.6)" }}>
                   <div
                     className="h-full rounded-full transition-all duration-500"
-                    style={{ width: `${progressPct}%`, background: "oklch(55% 0.15 145)" }}
+                    style={{ width: `${progressPct}%`, background: "var(--neo-primary)" }}
                   />
                 </div>
-                <span className="text-xs font-medium" style={{ color: "oklch(45% 0.08 145)" }}>
+                <span className="text-xs font-medium" style={{ color: "var(--neo-ink-secondary)" }}>
                   {t({ fr: `Chapitre ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}`, en: `Chapter ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}`, ar: `الفصل ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}` })}
                 </span>
               </div>
             </div>
-            <ChevronRight className="w-5 h-5 flex-shrink-0 group-hover:translate-x-0.5 transition-transform" style={{ color: "oklch(55% 0.1 145)" }} />
+            <ChevronRight className="w-5 h-5 flex-shrink-0 group-hover:translate-x-0.5 transition-transform" style={{ color: "var(--neo-primary)" }} />
           </div>
         </Link>
       </motion.div>
@@ -292,7 +292,7 @@ export default function Home() {
             >
               {/* Eyebrow */}
               <motion.div variants={fadeInUp} className="wise-eyebrow mb-6">
-                <span className="w-2 h-2 rounded-full" style={{ background: "var(--wise-primary)" }} />
+                <span className="w-2 h-2 rounded-full" style={{ background: "var(--neo-primary)" }} />
                 <span>{t({ fr: "Programme 2026 · Places limitées", en: "Program 2026 · Limited spots", ar: "برنامج 2026 · أماكن محدودة" })}</span>
               </motion.div>
 
@@ -869,7 +869,7 @@ function FormulaCard({ icon, step, title, description, badge, image }: { icon: R
 
       {/* Contenu */}
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
+        <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: "var(--neo-primary-light)" }}>
           <span style={{ color: "var(--neo-primary)" }}>{icon}</span>
         </div>
         <h3 className="wise-display-xs">{title}</h3>
@@ -913,7 +913,7 @@ function ImpactItem({ icon, title, desc }: { icon: React.ReactNode; title: strin
       className="flex gap-4 p-4 rounded-xl"
       style={{ background: "var(--neo-primary-light)" }}
     >
-      <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "var(--wise-primary)" }}>
+      <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "var(--neo-primary)" }}>
         <span style={{ color: "var(--wise-ink)" }}>{icon}</span>
       </div>
       <div>
@@ -1462,7 +1462,7 @@ function HeroGraphic() {
         transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", delay: 0.5 }}
         className="absolute -top-2 right-0 hidden md:block"
       >
-        <div className="flex items-center gap-2 px-4 py-2.5 rounded-full shadow-md" style={{ background: "linear-gradient(135deg, var(--wise-primary), oklch(0.72 0.19 145))", border: "none" }}>
+        <div className="flex items-center gap-2 px-4 py-2.5 rounded-full shadow-md" style={{ background: "linear-gradient(135deg, #1e3a6e, #3d5a8e)", border: "none" }}>
           <Sparkles size={14} className="text-white" />
           <span className="text-xs font-bold text-white tracking-wide">Certification CCA</span>
         </div>
@@ -1489,7 +1489,7 @@ function MobileMenuButton() {
       <button
         onClick={() => setOpen(!open)}
         className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg"
-        style={{ backgroundColor: "var(--wise-primary-pale)" }}
+        style={{ backgroundColor: "var(--neo-primary-light)" }}
         aria-label="Menu"
       >
         {open ? <X size={20} style={{ color: "var(--wise-ink)" }} /> : <Menu size={20} style={{ color: "var(--wise-ink)" }} />}
@@ -1594,8 +1594,8 @@ function FlowDiagram() {
                   animate={isInView ? "visible" : "hidden"}
                   variants={arrowVariant}
                 >
-                  <div className="w-5 lg:w-8 h-[2px] rounded-full" style={{ background: "var(--wise-primary)", opacity: 0.35 }}></div>
-                  <ArrowRight size={18} strokeWidth={2.5} style={{ color: "var(--wise-primary)", opacity: 0.7 }} />
+                  <div className="w-5 lg:w-8 h-[2px] rounded-full" style={{ background: "var(--neo-primary)", opacity: 0.35 }}></div>
+                  <ArrowRight size={18} strokeWidth={2.5} style={{ color: "var(--neo-primary)", opacity: 0.7 }} />
                 </motion.div>
               )}
             </div>
@@ -1626,7 +1626,7 @@ function FlowDiagram() {
                 <p className="text-[9px] font-medium" style={{ color: "var(--neo-ink-muted)" }}>{step.sub}</p>
               </motion.div>
               {i < steps.length - 1 && (
-                <ArrowRight size={14} strokeWidth={2.5} className="mx-1.5 flex-shrink-0" style={{ color: "var(--wise-primary)", opacity: 0.6 }} />
+                <ArrowRight size={14} strokeWidth={2.5} className="mx-1.5 flex-shrink-0" style={{ color: "var(--neo-primary)", opacity: 0.6 }} />
               )}
             </div>
           );
@@ -1642,7 +1642,7 @@ function FlowDiagram() {
         transition={{ delay: 0.7, duration: 0.4 }}
       >
         <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--wise-primary)" }}></div>
+          <div className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--neo-primary)" }}></div>
           <span className="text-xs" style={{ color: "var(--neo-ink-secondary)" }}>{t({ fr: "Ambassadeur apporte le lead", en: "Ambassador brings the lead", ar: "السفير يجلب العميل" })}</span>
         </div>
         <div className="flex items-center gap-1.5">
@@ -1694,7 +1694,7 @@ function RevenueSimulator() {
               max={20}
               value={projects}
               onChange={(e) => setProjects(Number(e.target.value))}
-              className="w-full accent-[var(--wise-primary)]"
+              className="w-full accent-[var(--neo-primary)]"
             />
             <div className="flex justify-between mt-1">
               <span className="wise-label">1</span>
@@ -1712,7 +1712,7 @@ function RevenueSimulator() {
               step={1000}
               value={avgSetup}
               onChange={(e) => setAvgSetup(Number(e.target.value))}
-              className="w-full accent-[var(--wise-primary)]"
+              className="w-full accent-[var(--neo-primary)]"
             />
             <div className="flex justify-between mt-1">
               <span className="wise-label">1 000€</span>
@@ -1730,7 +1730,7 @@ function RevenueSimulator() {
               step={5}
               value={implication}
               onChange={(e) => setImplication(Number(e.target.value))}
-              className="w-full accent-[var(--wise-primary)]"
+              className="w-full accent-[var(--neo-primary)]"
             />
             <div className="flex justify-between mt-1">
               <span className="wise-label">20%</span>
@@ -1748,7 +1748,7 @@ function RevenueSimulator() {
               step={100}
               value={monthlyTokens}
               onChange={(e) => setMonthlyTokens(Number(e.target.value))}
-              className="w-full accent-[var(--wise-primary)]"
+              className="w-full accent-[var(--neo-primary)]"
             />
             <div className="flex justify-between mt-1">
               <span className="wise-label">100€</span>
@@ -1829,7 +1829,7 @@ function RevenueSimulator() {
               <button
                 onClick={() => toggleCard(idx)}
                 className="flex items-center gap-1 text-xs font-medium mt-auto pt-2 border-t cursor-pointer"
-                style={{ borderColor: "rgba(0,0,0,0.06)", color: "var(--wise-primary)" }}
+                style={{ borderColor: "rgba(0,0,0,0.06)", color: "var(--neo-primary)" }}
               >
                 {expandedCards.has(idx) ? (
                   <><ChevronUp size={14} /> {t({ fr: "Masquer", en: "Show less", ar: "إخفاء" })}</>

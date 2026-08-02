@@ -1021,3 +1021,12 @@
 - [x] Refaire les graphiques Chart.js en bleu marine + gris
 - [x] Refaire la section CTA finale en bleu marine fond + texte blanc
 - [x] Vérification visuelle complète
+
+## Harmonisation finale landing page — badges et composants restants
+- [x] Remplacer wise-badge-positive (fond vert) par fond bleu marine pâle
+- [x] Remplacer wise-card-green (fond vert) par fond bleu marine pâle
+- [x] Remplacer toutes les références wise-primary par neo-primary dans Home.tsx
+- [x] Corriger le badge Certification CCA (gradient vert → bleu marine)
+- [x] Corriger la carte "Reprendre la lecture" (fond vert/hue 145 → bleu hue 255)
+- [x] Supprimer la dernière occurrence de hue 145 (chevron vert)
+- [x] Vérification visuelle complète de la landing page
