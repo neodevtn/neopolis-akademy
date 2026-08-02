@@ -1112,3 +1112,9 @@
 
 ## Détail Candidature
 - [x] Ajouter vue détail candidature en cliquant sur une ligne du tableau (modale)
+
+## Audit - Actions Critiques
+- [x] Code-splitting React.lazy pour toutes les routes (15 pages lazy-loaded)
+- [x] Ajouter 7 index de base de données manquants (déjà existants via migrations SQL)
+- [x] Optimiser getApplicationStats avec requête agrégée SQL (GROUP BY status)
+- [x] Décomposer TrainingCourse.tsx en sous-composants (3808→637 lignes + 5 sous-fichiers)

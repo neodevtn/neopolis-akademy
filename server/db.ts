@@ -143,12 +143,33 @@ export async function getApplicationStats() {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  const all = await db.select().from(applications);
-  const total = all.length;
-  const enAttente = all.filter(a => a.status === "en_attente").length;
-  const selectionne = all.filter(a => a.status === "selectionne").length;
-  const refuse = all.filter(a => a.status === "refuse").length;
-  const avgScore = total > 0 ? all.reduce((sum, a) => sum + Number(a.scoreTotal), 0) / total : 0;
+  // Optimized: single SQL aggregate query instead of loading all rows into JS
+  const result = await db.select({
+    status: applications.status,
+    count: count(),
+    avgScore: sql<string>`AVG(${applications.scoreTotal})`,
+  }).from(applications).groupBy(applications.status);
+  
+  let total = 0;
+  let enAttente = 0;
+  let selectionne = 0;
+  let refuse = 0;
+  let totalScoreSum = 0;
+  let totalCount = 0;
+  
+  for (const row of result) {
+    const c = Number(row.count);
+    total += c;
+    totalCount += c;
+    const avg = parseFloat(row.avgScore || "0");
+    totalScoreSum += avg * c;
+    
+    if (row.status === "en_attente") enAttente = c;
+    else if (row.status === "selectionne") selectionne = c;
+    else if (row.status === "refuse") refuse = c;
+  }
+  
+  const avgScore = totalCount > 0 ? totalScoreSum / totalCount : 0;
   
   return { total, enAttente, selectionne, refuse, avgScore };
 }

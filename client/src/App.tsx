@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
@@ -6,46 +7,61 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { TrainingProgressProvider } from "./contexts/TrainingProgressContext";
-import Home from "./pages/Home";
-import Apply from "./pages/Apply";
-import AdminDashboard from "./pages/AdminDashboard";
-import AdminTraining from "./pages/AdminTraining";
-import AdminContentManager from "./pages/AdminContentManager";
-import AdminErrors from "./pages/AdminErrors";
-import MentionsLegales from "./pages/MentionsLegales";
-import TrainingDashboard from "./pages/TrainingDashboard";
-import TrainingCertification from "./pages/TrainingCertification";
-import TrainingCourse from "./pages/TrainingCourse";
-import MockExam from "./pages/MockExam";
-import DemoLogin from "./pages/DemoLogin";
-import Login from "./pages/Login";
-import AcceptInvitation from "./pages/AcceptInvitation";
-import DiagnosticIA from "./pages/DiagnosticIA";
-import AdvancedDiagnosticIA from "./pages/AdvancedDiagnosticIA";
 import CookieConsent from "./components/CookieConsent";
+
+// ─── Code-splitting: lazy-load all heavy pages ───
+const Home = lazy(() => import("./pages/Home"));
+const Apply = lazy(() => import("./pages/Apply"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const AdminTraining = lazy(() => import("./pages/AdminTraining"));
+const AdminContentManager = lazy(() => import("./pages/AdminContentManager"));
+const AdminErrors = lazy(() => import("./pages/AdminErrors"));
+const MentionsLegales = lazy(() => import("./pages/MentionsLegales"));
+const TrainingDashboard = lazy(() => import("./pages/TrainingDashboard"));
+const TrainingCertification = lazy(() => import("./pages/TrainingCertification"));
+const TrainingCourse = lazy(() => import("./pages/TrainingCourse"));
+const MockExam = lazy(() => import("./pages/MockExam"));
+const Login = lazy(() => import("./pages/Login"));
+const AcceptInvitation = lazy(() => import("./pages/AcceptInvitation"));
+const DiagnosticIA = lazy(() => import("./pages/DiagnosticIA"));
+const AdvancedDiagnosticIA = lazy(() => import("./pages/AdvancedDiagnosticIA"));
+
+// ─── Loading fallback ───
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+        <p className="text-muted-foreground text-sm font-medium">Chargement...</p>
+      </div>
+    </div>
+  );
+}
 
 function Router() {
   return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/apply"} component={Apply} />
-      <Route path={"/admin"} component={AdminDashboard} />
-      <Route path={"/admin/training"} component={AdminTraining} />
-      <Route path={"/admin/content"} component={AdminContentManager} />
-      <Route path={"/admin/errors"} component={AdminErrors} />
-      <Route path={"/mentions-legales"} component={MentionsLegales} />
-      <Route path={"/training"} component={TrainingDashboard} />
-      <Route path={"/training/:certId"} component={TrainingCertification} />
-      <Route path={"/training/:certId/:courseId"} component={TrainingCourse} />
-      <Route path={"/mock-exam/:certId"} component={MockExam} />
-      <Route path={"/accept-invitation"} component={AcceptInvitation} />
-      <Route path={"/login"} component={Login} />
-      <Route path={"/demo-login"} component={Login} />
-      <Route path={"/diagnostic"} component={DiagnosticIA} />
-      <Route path={"/diagnostic-avance"} component={AdvancedDiagnosticIA} />
-      <Route path={"/404"} component={NotFound} />
-      <Route component={NotFound} />
-    </Switch>
+    <Suspense fallback={<PageLoader />}>
+      <Switch>
+        <Route path={"/"} component={Home} />
+        <Route path={"/apply"} component={Apply} />
+        <Route path={"/admin"} component={AdminDashboard} />
+        <Route path={"/admin/training"} component={AdminTraining} />
+        <Route path={"/admin/content"} component={AdminContentManager} />
+        <Route path={"/admin/errors"} component={AdminErrors} />
+        <Route path={"/mentions-legales"} component={MentionsLegales} />
+        <Route path={"/training"} component={TrainingDashboard} />
+        <Route path={"/training/:certId"} component={TrainingCertification} />
+        <Route path={"/training/:certId/:courseId"} component={TrainingCourse} />
+        <Route path={"/mock-exam/:certId"} component={MockExam} />
+        <Route path={"/accept-invitation"} component={AcceptInvitation} />
+        <Route path={"/login"} component={Login} />
+        <Route path={"/demo-login"} component={Login} />
+        <Route path={"/diagnostic"} component={DiagnosticIA} />
+        <Route path={"/diagnostic-avance"} component={AdvancedDiagnosticIA} />
+        <Route path={"/404"} component={NotFound} />
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 
