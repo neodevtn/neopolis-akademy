@@ -81,6 +81,13 @@ export default function TrainingCertification() {
     { enabled: isAuthenticated && !!certId }
   );
 
+  const bestPassingScore = useMemo(() => {
+    if (!examHistory || examHistory.length === 0) return null;
+    const passing = examHistory.filter((a: any) => a.score >= 720);
+    if (passing.length === 0) return null;
+    return passing.reduce((best: any, curr: any) => curr.score > best.score ? curr : best);
+  }, [examHistory]);
+
   if (!cert) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -88,13 +95,6 @@ export default function TrainingCertification() {
       </div>
     );
   }
-
-  const bestPassingScore = useMemo(() => {
-    if (!examHistory || examHistory.length === 0) return null;
-    const passing = examHistory.filter((a: any) => a.score >= 720);
-    if (passing.length === 0) return null;
-    return passing.reduce((best: any, curr: any) => curr.score > best.score ? curr : best);
-  }, [examHistory]);
 
   const isLoading = authLoading || progressLoading;
 

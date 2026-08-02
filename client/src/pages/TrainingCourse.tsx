@@ -1579,10 +1579,22 @@ function LessonQuiz({
           })
           .catch(() => setQuestions([]));
       });
-  }, [certId, courseId, lessonIndex]);
+    }, [certId, courseId, lessonIndex]);
+
+  // MUST declare all hooks before any early return to respect React rules
+  const q = questions[currentQ];
+  const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+  const shuffledChoices = useMemo(() => {
+    if (!q || !q.choices) return [];
+    const choices = [...q.choices];
+    for (let i = choices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [choices[i], choices[j]] = [choices[j], choices[i]];
+    }
+    return choices;
+  }, [q?.id, currentQ, attemptCount]);
 
   if (questions.length === 0) return null;
-
   if (quizComplete) {
     return (
       <motion.div
@@ -1934,24 +1946,9 @@ function LessonQuiz({
     );
   }
 
-  const q = questions[currentQ];
   if (!q) return null;
 
   const isCorrect = selected && q.correctChoiceIds.includes(selected);
-
-  // Option letters for Skilljar style
-  const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
-
-  // Shuffle choices for current question (changes on question change and retry)
-  const shuffledChoices = useMemo(() => {
-    if (!q.choices) return [];
-    const choices = [...q.choices];
-    for (let i = choices.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [choices[i], choices[j]] = [choices[j], choices[i]];
-    }
-    return choices;
-  }, [q.id, currentQ, attemptCount]);
 
   return (
     <motion.div

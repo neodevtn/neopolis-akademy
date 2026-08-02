@@ -81,6 +81,18 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
     }
   }, [loading, allQuestions.length]);
 
+  // MUST declare all hooks before any early return to respect React rules
+  const q = useMemo(() => {
+    const question = questions[currentQ];
+    if (!question) return null;
+    const shuffledChoices = [...(question.choices || [])];
+    for (let i = shuffledChoices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledChoices[i], shuffledChoices[j]] = [shuffledChoices[j], shuffledChoices[i]];
+    }
+    return { ...question, choices: shuffledChoices };
+  }, [questions, currentQ, attemptCount]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
@@ -148,18 +160,6 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
     );
   }
 
-  // Current question with shuffled choices
-  const q = useMemo(() => {
-    const question = questions[currentQ];
-    if (!question) return null;
-    // Shuffle choices order using Fisher-Yates
-    const shuffledChoices = [...(question.choices || [])];
-    for (let i = shuffledChoices.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledChoices[i], shuffledChoices[j]] = [shuffledChoices[j], shuffledChoices[i]];
-    }
-    return { ...question, choices: shuffledChoices };
-  }, [questions, currentQ, attemptCount]);
   if (!q) return null;
 
   return (
