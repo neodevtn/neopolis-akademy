@@ -2199,7 +2199,7 @@ function LessonViewer({
         if (ch && !isReviewMode) {
           const blocks = ch.blocks || [];
           // Video gate
-          const videoKeys = blocks.filter((b: any) => b.type === 'video').map((b: any) => { const rawId = b.videoId || ''; return typeof rawId === 'object' ? (rawId.fr || rawId.en || '') : rawId; }).filter(Boolean);
+          const videoKeys = blocks.filter((b: any) => b.type === 'video').map((b: any) => { let rawId = b.videoId || ''; if (!rawId && b.url) { const m = (b.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/); if (m) rawId = m[1]; } if (!rawId && b.id && typeof b.id === 'string' && b.id.length >= 8 && b.id.length <= 15) rawId = b.id; return typeof rawId === 'object' ? (rawId.fr || rawId.en || '') : rawId; }).filter(Boolean);
           if (videoKeys.length > 0 && !videoKeys.every((k: string) => completedVideos.has(k))) return;
           // Flip cards gate
           const hasFlips = blocks.some((b: any) => b.type === 'flip_cards' && (b.cards || []).length > 0);
@@ -2276,7 +2276,8 @@ function LessonViewer({
           }
         }
         // Skip the first line of the first content block since it's used as the screen title
-        if (blockIdx === 0) {
+        const isFirstContentBlock = blockIdx === (chapter?.blocks || []).findIndex((b: any) => b.type === 'content');
+        if (isFirstContentBlock) {
           const lines = text.split('\n');
           const firstNonEmpty = lines.findIndex((l: string) => l.trim().length > 0);
           if (firstNonEmpty >= 0) {
@@ -2302,7 +2303,15 @@ function LessonViewer({
         );
       }
       case "video": {
-        const rawVideoId = block.videoId || "";
+        // Extract YouTube ID from multiple possible fields: videoId, id, or url
+        let rawVideoId = block.videoId || "";
+        if (!rawVideoId && block.url) {
+          const urlMatch = (block.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+          if (urlMatch) rawVideoId = urlMatch[1];
+        }
+        if (!rawVideoId && block.id && typeof block.id === 'string' && block.id.length >= 8 && block.id.length <= 15) {
+          rawVideoId = block.id;
+        }
         const videoId = typeof rawVideoId === 'object' ? (rawVideoId[lang] || rawVideoId.en || rawVideoId.fr || "") : rawVideoId;
         const videoKey = typeof rawVideoId === 'object' ? (rawVideoId.fr || rawVideoId.en || "") : rawVideoId;
         const videoTitle = typeof block.title === 'object' && block.title !== null && ('fr' in block.title || 'en' in block.title) ? (block.title[lang] || block.title.en || block.title.fr || "Video") : (block.title || "Video");
@@ -2790,7 +2799,9 @@ function LessonViewer({
               const chapterVideoKeys = (chapter?.blocks || [])
                 .filter((b: any) => b.type === 'video')
                 .map((b: any) => {
-                  const rawId = b.videoId || "";
+                  let rawId = b.videoId || "";
+                  if (!rawId && b.url) { const m = (b.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/); if (m) rawId = m[1]; }
+                  if (!rawId && b.id && typeof b.id === 'string' && b.id.length >= 8 && b.id.length <= 15) rawId = b.id;
                   return typeof rawId === 'object' ? (rawId.fr || rawId.en || "") : rawId;
                 })
                 .filter(Boolean);
@@ -2988,7 +2999,7 @@ function LessonSidebarContent({
 
         // Check if this lesson has a matching video
         const lessonTitle = resolveI18n(lesson.title, "en").toLowerCase().trim();
-        const hasVideo = videos.some((v: any) => resolveI18n(v.title, "en").toLowerCase().trim() === lessonTitle);
+        const hasVideo = videos.some((v: any) => (resolveI18n(v.title, "en") || "").toLowerCase().trim() === lessonTitle);
         
         // Determine chapter/lesson type icon
         const chType = lesson.chapterType || '';
@@ -3260,7 +3271,67 @@ export default function TrainingCourse() {
     fetch(`/data/courses/${courseId}.json`)
       .then((res) => res.json())
       .then((data) => {
-        setCourseLessons(data.lessons || []);
+        // Normalize course data: convert chapter.block (singular) to chapter.blocks (plural)
+        const normalizedLessons = (data.lessons || []).map((lesson: any) => ({
+          ...lesson,
+          chapters: (lesson.chapters || []).map((ch: any) => {
+            // Normalize block (singular) into blocks (plural)
+            const existingBlocks = ch.blocks && ch.blocks.length > 0 ? [...ch.blocks] : [];
+            if (ch.block) {
+              const block = ch.block;
+              let extraBlocks: any[] = [];
+              if (block.type === 'content' && block.body) {
+                extraBlocks = [{ type: 'content', body: block.body }];
+              } else if (block.type === 'checkpoint' && block.questions) {
+                extraBlocks = block.questions.map((q: any, qi: number) => ({
+                  type: 'single_choice_exercise',
+                  id: `checkpoint_q${qi}`,
+                  question: q.question,
+                  options: (q.choices || []).map((c: any) => ({
+                    id: c.id,
+                    text: c.text,
+                  })),
+                  correctAnswer: q.correctId || q.answer || 'a',
+                  explanation: q.explanation,
+                }));
+              } else if (block.type === 'video') {
+                extraBlocks = [block];
+              } else {
+                extraBlocks = [block];
+              }
+              const mergedBlocks = existingBlocks.length > 0
+                ? [...existingBlocks, ...extraBlocks]
+                : extraBlocks;
+              return { ...ch, blocks: mergedBlocks };
+            }
+            // Handle chapters with direct body/questions fields (no block/blocks wrapper)
+            if (existingBlocks.length === 0) {
+              let generatedBlocks: any[] = [];
+              if (ch.body) {
+                generatedBlocks.push({ type: 'content', body: ch.body });
+              }
+              if (ch.type === 'checkpoint' && ch.questions) {
+                const qBlocks = ch.questions.map((q: any, qi: number) => ({
+                  type: 'single_choice_exercise',
+                  id: `checkpoint_q${qi}`,
+                  question: q.question,
+                  options: (q.choices || []).map((c: any) => ({
+                    id: c.id,
+                    text: c.text,
+                  })),
+                  correctAnswer: q.correctId || q.answer || 'a',
+                  explanation: q.explanation,
+                }));
+                generatedBlocks = [...generatedBlocks, ...qBlocks];
+              }
+              if (generatedBlocks.length > 0) {
+                return { ...ch, blocks: generatedBlocks };
+              }
+            }
+            return ch;
+          }),
+        }));
+        setCourseLessons(normalizedLessons);
         setCourseExercises(data.exercises || []);
         setCourseSections(data.sections || []);
 
@@ -3606,9 +3677,9 @@ export default function TrainingCourse() {
             if (!isSingleLessonCourse && !isReviewMode && !isCurrentLesson) return null;
 
             // Match videos to this lesson by title
-            const lessonTitle = resolveI18n(displayedLesson.title, "en").toLowerCase().trim();
+            const lessonTitle = (resolveI18n(displayedLesson.title, "en") || "").toLowerCase().trim();
             const lessonVideos = videos.filter((v: any) => {
-              const vTitle = resolveI18n(v.title, "en").toLowerCase().trim();
+              const vTitle = (resolveI18n(v.title, "en") || "").toLowerCase().trim();
               return vTitle === lessonTitle;
             });
 
