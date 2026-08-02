@@ -1173,15 +1173,15 @@ function HeroGraphic() {
   ];
 
   return (
-    <div className="relative w-full flex items-center justify-center" style={{ minHeight: "400px" }}>
+    <div className="relative w-full flex items-center justify-center" style={{ minHeight: "340px" }}>
       {/* Orbital system */}
-      <div className="relative" style={{ width: "380px", height: "380px" }}>
+      <div className="relative" style={{ width: "300px", height: "300px" }}>
         
         {/* Orbit rings */}
         <motion.div
           className="absolute rounded-full border"
           style={{
-            width: "240px", height: "240px",
+            width: "190px", height: "190px",
             top: "50%", left: "50%",
             transform: "translate(-50%, -50%)",
             borderColor: "rgba(30, 58, 110, 0.15)",
@@ -1193,7 +1193,7 @@ function HeroGraphic() {
         <motion.div
           className="absolute rounded-full border"
           style={{
-            width: "340px", height: "340px",
+            width: "270px", height: "270px",
             top: "50%", left: "50%",
             transform: "translate(-50%, -50%)",
             borderColor: "rgba(30, 58, 110, 0.10)",
@@ -1207,7 +1207,7 @@ function HeroGraphic() {
         <motion.div
           className="absolute rounded-full"
           style={{
-            width: "340px", height: "340px",
+            width: "270px", height: "270px",
             top: "50%", left: "50%",
             transform: "translate(-50%, -50%)",
             background: "conic-gradient(from 0deg, transparent 0%, rgba(30,58,110,0.08) 10%, transparent 20%)",
@@ -1220,7 +1220,7 @@ function HeroGraphic() {
         <motion.div
           className="absolute flex items-center justify-center rounded-full shadow-lg"
           style={{
-            width: "90px", height: "90px",
+            width: "70px", height: "70px",
             top: "50%", left: "50%",
             transform: "translate(-50%, -50%)",
             background: "white",
@@ -1230,12 +1230,12 @@ function HeroGraphic() {
           animate={{ scale: 1 }}
           transition={{ duration: 0.6, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
         >
-          <img src={LOGO_ICON} alt="Neopolis" className="w-14 h-14 object-contain" />
+          <img src={LOGO_ICON} alt="Neopolis" className="w-11 h-11 object-contain" />
         </motion.div>
 
         {/* Orbital nodes */}
         {orbitNodes.map((node, i) => {
-          const radius = node.orbit === 1 ? 120 : 170;
+          const radius = node.orbit === 1 ? 90 : 128;
           const angleRad = (node.angle * Math.PI) / 180;
           const x = Math.cos(angleRad) * radius;
           const y = Math.sin(angleRad) * radius;
@@ -1252,8 +1252,8 @@ function HeroGraphic() {
               animate={{ 
                 opacity: 1, 
                 scale: 1,
-                x: x - 20,
-                y: y - 20,
+                x: x - 16,
+                y: y - 16,
               }}
               transition={{ 
                 duration: 0.6, 
@@ -1262,7 +1262,7 @@ function HeroGraphic() {
               }}
             >
               <motion.div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-md"
                 style={{ 
                   backgroundColor: node.color,
                   boxShadow: `0 2px 12px ${node.color}40`,
@@ -1279,7 +1279,7 @@ function HeroGraphic() {
               >
                 {node.icon}
               </motion.div>
-              <span className="text-[10px] font-semibold whitespace-nowrap" style={{ color: "#475569" }}>
+              <span className="text-[9px] font-semibold whitespace-nowrap" style={{ color: "#475569" }}>
                 {node.label}
               </span>
             </motion.div>
@@ -1298,8 +1298,8 @@ function HeroGraphic() {
               opacity: 0.6,
             }}
             animate={{
-              x: [120, 0, -120, 0, 120].map(v => v - 4),
-              y: [0, 120, 0, -120, 0].map(v => v - 4),
+              x: [90, 0, -90, 0, 90].map(v => v - 4),
+              y: [0, 90, 0, -90, 0].map(v => v - 4),
             }}
             transition={{
               duration: 8,
