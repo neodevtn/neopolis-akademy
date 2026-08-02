@@ -1831,8 +1831,8 @@ function LessonQuiz({
                     if (!c.id.startsWith(certId)) return false;
                     const titleEn = typeof c.title === "object" ? c.title.en : c.title;
                     // Match by keyword overlap between domain and course title
-                    const domainWords = domainEn.toLowerCase().split(/[\s,&]+/).filter((w: string) => w.length > 3);
-                    const titleLower = titleEn.toLowerCase();
+                    const domainWords = (domainEn || "").toLowerCase().split(/[\s,&]+/).filter((w: string) => w.length > 3);
+                    const titleLower = (titleEn || "").toLowerCase();
                     return domainWords.some((w: string) => titleLower.includes(w));
                   });
                   return (
@@ -2928,13 +2928,13 @@ function LessonSidebarContent({
       const sectionLessons = section.lessons || [];
       if (sectionLessons.length > 0) {
         // Find the first non-generic lesson title in this section for boundary matching
-        const uniqueTitle = sectionLessons.find((t: string) => !genericTitles.has(t.toLowerCase()));
+        const uniqueTitle = sectionLessons.find((t: string) => t && !genericTitles.has(t.toLowerCase()));
         let foundIdx = -1;
         if (uniqueTitle) {
           // Search from expected position to handle repeated titles
           for (let i = searchFrom; i < lessons.length; i++) {
             const lt = lessons[i].title ? (typeof lessons[i].title === 'object' ? resolveI18n(lessons[i].title, 'en') : lessons[i].title) : '';
-            if (lt.toLowerCase() === uniqueTitle.toLowerCase()) {
+            if (lt && uniqueTitle && lt.toLowerCase() === uniqueTitle.toLowerCase()) {
               // The section starts at the first lesson before this unique one (could be Module Introduction)
               foundIdx = Math.max(searchFrom, i - sectionLessons.indexOf(uniqueTitle));
               break;
@@ -2995,13 +2995,13 @@ function LessonSidebarContent({
         }
 
         // Check if this lesson has a matching video
-        const lessonTitle = resolveI18n(lesson.title, "en").toLowerCase().trim();
+        const lessonTitle = (resolveI18n(lesson.title, "en") || "").toLowerCase().trim();
         const hasVideo = videos.some((v: any) => (resolveI18n(v.title, "en") || "").toLowerCase().trim() === lessonTitle);
         
         // Determine chapter/lesson type icon
         const chType = lesson.chapterType || '';
         const hasBucketSort = lesson.hasBucketSort || false;
-        const lessonTitleEn = resolveI18n(lesson.title, "en").toLowerCase();
+        const lessonTitleEn = (resolveI18n(lesson.title, "en") || "").toLowerCase();
         const isModuleComplete = lessonTitleEn.includes('module complete') || lessonTitleEn.includes('module terminé');
         const isKeyTakeaways = lessonTitleEn.includes('key takeaway') || lessonTitleEn.includes('points clés');
         
