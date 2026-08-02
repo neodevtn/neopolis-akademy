@@ -1105,3 +1105,7 @@
 - [x] Dashboard admin "Erreurs client" (graphique temporel + liste filtrable)
 - [x] Corriger warnings exhaustive-deps (TrainingCourse.tsx + Home.tsx)
 - [x] Résoudre duplicate key chapter_13 (Architect Professional) - 627 chapitres corrigés
+
+## Persistance Erreurs & Cleanup
+- [x] Persister les erreurs client en base de données (table client_errors)
+- [x] Nettoyer les unused imports (TrainingCourse.tsx, Home.tsx) - 25+ warnings résolus

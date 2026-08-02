@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { AdminNavbar } from "@/components/AdminNavbar";
@@ -17,58 +17,29 @@ export default function AdminErrors() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const errorsQuery = trpc.system.getClientErrors.useQuery(
-    { limit: 100 },
+    { limit: 100, source: sourceFilter === "all" ? undefined : sourceFilter, search: searchQuery.trim() || undefined },
+    { enabled: isAuthenticated && user?.role === "admin", refetchInterval: 15_000 }
+  );
+
+  const statsQuery = trpc.system.getClientErrorStats.useQuery(
+    undefined,
     { enabled: isAuthenticated && user?.role === "admin", refetchInterval: 15_000 }
   );
 
   const errors = errorsQuery.data || [];
 
-  const filteredErrors = useMemo(() => {
-    let result = errors;
-    if (sourceFilter !== "all") {
-      result = result.filter((e) => e.source === sourceFilter);
-    }
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(
-        (e) =>
-          e.message.toLowerCase().includes(q) ||
-          e.url.toLowerCase().includes(q) ||
-          (e.stack && e.stack.toLowerCase().includes(q))
-      );
-    }
-    return result;
-  }, [errors, sourceFilter, searchQuery]);
+  // Filtering is now done server-side, just use the results directly
+  const filteredErrors = errors;
 
-  // Temporal chart data: group errors by hour (last 24h)
-  const chartData = useMemo(() => {
-    const now = Date.now();
-    const hours: { label: string; count: number; boundary: number }[] = [];
-    for (let i = 23; i >= 0; i--) {
-      const hourStart = now - (i + 1) * 3600_000;
-      const hourEnd = now - i * 3600_000;
-      const inHour = errors.filter((e) => e.receivedAt >= hourStart && e.receivedAt < hourEnd);
-      const boundaryCount = inHour.filter((e) => e.source === "boundary").length;
-      const d = new Date(hourEnd);
-      hours.push({
-        label: `${d.getHours().toString().padStart(2, "0")}:00`,
-        count: inHour.length,
-        boundary: boundaryCount,
-      });
-    }
-    return hours;
-  }, [errors]);
-
+  // Use server-computed stats and chart data
+  const chartData = statsQuery.data?.hourlyData || [];
   const maxCount = Math.max(...chartData.map((d) => d.count), 1);
-
-  // Stats summary
-  const stats = useMemo(() => {
-    const total = errors.length;
-    const boundary = errors.filter((e) => e.source === "boundary").length;
-    const window_ = errors.filter((e) => e.source === "window").length;
-    const promise = errors.filter((e) => e.source === "promise").length;
-    return { total, boundary, window: window_, promise };
-  }, [errors]);
+  const stats = {
+    total: statsQuery.data?.total || 0,
+    boundary: statsQuery.data?.boundary || 0,
+    window: statsQuery.data?.window || 0,
+    promise: statsQuery.data?.promise || 0,
+  };
 
   if (loading) {
     return (
@@ -173,12 +144,12 @@ export default function AdminErrors() {
                   />
                 </div>
                 <span className="text-[9px] hidden md:block" style={{ color: "var(--wise-mute)" }}>
-                  {i % 3 === 0 ? d.label : ""}
+                  {i % 3 === 0 ? d.hour : ""}
                 </span>
                 {/* Tooltip */}
                 <div className="absolute bottom-full mb-1 hidden group-hover:block z-10">
                   <div className="bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
-                    {d.label}: {d.count} erreur{d.count !== 1 ? "s" : ""}
+                    {d.hour}: {d.count} erreur{d.count !== 1 ? "s" : ""}
                     {d.boundary > 0 && ` (${d.boundary} crash${d.boundary !== 1 ? "es" : ""})`}
                   </div>
                 </div>

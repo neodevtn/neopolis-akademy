@@ -6,7 +6,6 @@ import { Link } from "wouter";
 import { motion, useInView, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import {
   ChevronRight,
-  GraduationCap,
   Award,
   Globe,
   Users,
@@ -17,7 +16,6 @@ import {
   ArrowRight,
   ChevronDown,
   ChevronUp,
-  Play,
   CheckCircle2,
   Sparkles,
   Target,
@@ -34,7 +32,6 @@ import { faqItems as faqItemsData } from "@/data/faqData";
 
 // Chart.js
 import { Chart as ChartJS, registerables } from "chart.js";
-import { Line } from "react-chartjs-2";
 ChartJS.register(...registerables);
 
 /* ─── Animated Counter Hook ─── */
@@ -81,11 +78,11 @@ function AnimatedStat({ value, suffix = "", prefix = "" }: { value: number; suff
 /* ─── Asset URLs ─── */
 const LOGO_URL = "/api/assets/neopolis_dev_logo_4x_4011a55b.png";
 const LOGO_ICON = "/api/assets/neopolis_dev_logo_original_60dc435f.png";
-const HERO_IMG = "/api/assets/hero_tunisian_ai_08a6f956.png";
+// const HERO_IMG = "/api/assets/hero_tunisian_ai_08a6f956.png";
 const CERT_IMG = "/api/assets/step2_certification_navy_v2_d57b236e.jpg";
 const ELEARNING_IMG = "/api/assets/step1_elearning_navy_v2_fde423cb.jpg";
 const AFRICA_IMG = "/api/assets/step3_ambassador_navy_v2_e1ca59ba.jpg";
-const PARTNER_IMG = "/api/assets/wise_partnership_illustration_b3c56284.png";
+// const PARTNER_IMG = "/api/assets/wise_partnership_illustration_b3c56284.png";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -100,10 +97,7 @@ const fadeInLeft = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: easeOut } },
 };
 
-const fadeInRight = {
-  hidden: { opacity: 0, x: 40 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: easeOut } },
-};
+// fadeInRight kept for potential future use
 
 const staggerContainer = {
   hidden: {},
@@ -245,7 +239,7 @@ function ParallaxImage() {
 }
 
 export default function Home() {
-  const { t, lang } = useLanguage();
+  const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -748,18 +742,6 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   );
 }
 
-function StatCard({ value, label, source, highlight }: { value: string; label: string; source: string; highlight?: boolean }) {
-  return (
-    <motion.div
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className={highlight ? "wise-card-green text-center h-full" : "wise-card-sage text-center h-full"}
-    >
-      <p className="text-3xl md:text-4xl lg:text-5xl font-black mb-2 md:mb-3" style={{ color: highlight ? "var(--neo-primary)" : "var(--wise-ink)" }}>{value}</p>
-      <p className="wise-body-md mb-2">{label}</p>
-      <p className="text-xs" style={{ color: "var(--wise-mute)" }}>{source}</p>
-    </motion.div>
-  );
-}
 
 function FormulaCard({ icon, step, title, description, badge, image }: { icon: React.ReactNode; step: string; title: string; description: string; badge: string; image: string }) {
   const { t } = useLanguage();
@@ -804,42 +786,6 @@ function FormulaCard({ icon, step, title, description, badge, image }: { icon: R
     </motion.div>
   );
 }
-
-function PartnerCard({ name, description, logo }: { name: string; description: string; logo: string }) {
-  return (
-    <motion.div
-      whileHover={{ y: -4, transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] } }}
-      className="wise-card h-full"
-    >
-      <div className="flex items-center gap-4 mb-5">
-        <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden" style={{ background: "var(--wise-canvas-soft)" }}>
-          <img src={logo} alt={name} className="w-8 h-8 object-contain" />
-        </div>
-        <h3 className="wise-display-xs">{name}</h3>
-      </div>
-      <p className="wise-body-md">{description}</p>
-    </motion.div>
-  );
-}
-
-function ImpactItem({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
-  return (
-    <motion.div
-      whileHover={{ x: 4, transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] } }}
-      className="flex gap-4 p-4 rounded-xl"
-      style={{ background: "var(--neo-primary-light)" }}
-    >
-      <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "var(--neo-primary)" }}>
-        <span style={{ color: "var(--wise-ink)" }}>{icon}</span>
-      </div>
-      <div>
-        <p className="wise-body-sm" style={{ fontWeight: 600 }}>{title}</p>
-        <p className="wise-label">{desc}</p>
-      </div>
-    </motion.div>
-  );
-}
-
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
   return (
@@ -888,7 +834,6 @@ function AnimatedChart() {
 
   useEffect(() => {
     if (!isInView || !canvasRef.current) return;
-    const shouldAnimate = !hasAnimated.current;
     hasAnimated.current = true;
 
     if (chartInstanceRef.current) chartInstanceRef.current.destroy();
@@ -1000,59 +945,6 @@ function AnimatedChart() {
   );
 }
 
-function JobLossChart() {
-  const { t, lang } = useLanguage();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const chartRef = useRef<ChartJS | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true });
-
-  useEffect(() => {
-    if (!canvasRef.current || !isInView) return;
-    if (chartRef.current) chartRef.current.destroy();
-
-    const ctx = canvasRef.current.getContext("2d");
-    if (!ctx) return;
-
-    chartRef.current = new ChartJS(ctx, {
-      type: "line",
-      data: {
-        labels: ["2025", "2026", "2027", "2028", "2029", "2030"],
-        datasets: [
-          { label: t({ fr: "Saisie de données", en: "Data Entry", ar: "إدخال البيانات" }), data: [100, 82, 65, 48, 35, 22], borderColor: "#1e3a6e", backgroundColor: "rgba(30,58,110,0.12)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#1e3a6e" },
-          { label: t({ fr: "Service client", en: "Customer Service", ar: "خدمة العملاء" }), data: [100, 85, 70, 55, 42, 30], borderColor: "#3d5a8e", backgroundColor: "rgba(61,90,142,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#3d5a8e" },
-          { label: t({ fr: "Comptabilité", en: "Accounting", ar: "المحاسبة" }), data: [100, 88, 75, 62, 50, 40], borderColor: "#6b7fa8", backgroundColor: "rgba(107,127,168,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#6b7fa8" },
-          { label: t({ fr: "Développeurs", en: "Developers", ar: "المطورون" }), data: [100, 90, 78, 65, 55, 45], borderColor: "#94a3b8", backgroundColor: "rgba(148,163,184,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#94a3b8" },
-          { label: t({ fr: "Traduction", en: "Translation", ar: "الترجمة" }), data: [100, 78, 58, 40, 28, 18], borderColor: "#dc1428", backgroundColor: "rgba(220,20,40,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#dc1428" },
-          { label: t({ fr: "Juridique", en: "Legal", ar: "القانونية" }), data: [100, 92, 82, 72, 62, 52], borderColor: "#b8c4d4", backgroundColor: "rgba(184,196,212,0.08)", fill: true, tension: 0.4, borderWidth: 2.5, pointRadius: 3, pointBackgroundColor: "#b8c4d4" },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: { duration: 1500, easing: "easeOutQuart" },
-        plugins: {
-          legend: { position: "bottom", labels: { color: "#e8ebe6", font: { size: 11, family: "Inter" }, boxWidth: 12, padding: 16, usePointStyle: true } },
-          title: { display: true, text: t({ fr: "Emplois restants (%) - Projection 2025-2030", en: "Remaining Jobs (%) - Projection 2025-2030", ar: "الوظائف المتبقية (%) - توقعات 2025-2030" }), color: "#e8ebe6", font: { size: 14, weight: "bold", family: "Inter" }, padding: { bottom: 16 } },
-        },
-        scales: {
-          x: { ticks: { color: "#868685", font: { family: "Inter" } }, grid: { color: "rgba(255,255,255,0.04)" } },
-          y: { ticks: { color: "#868685", font: { family: "Inter" }, callback: (v: any) => v + "%" }, grid: { color: "rgba(255,255,255,0.04)" }, min: 0, max: 110 },
-        },
-        interaction: { intersect: false, mode: "index" },
-      },
-    });
-
-    return () => { chartRef.current?.destroy(); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isInView, lang]); // t is derived from lang, no need to add it
-
-  return (
-    <div ref={containerRef} className="wise-card-dark" style={{ height: "340px", padding: "20px" }}>
-      <canvas ref={canvasRef}></canvas>
-    </div>
-  );
-}
 
 
 function HeroGraphic() {

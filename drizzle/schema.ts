@@ -306,3 +306,21 @@ export const videoFeedback = mysqlTable("video_feedback", {
 });
 export type VideoFeedback = typeof videoFeedback.$inferSelect;
 export type InsertVideoFeedback = typeof videoFeedback.$inferInsert;
+
+/**
+ * Client errors - persisted error reports from the frontend
+ */
+export const clientErrors = mysqlTable("client_errors", {
+  id: int("id").autoincrement().primaryKey(),
+  message: varchar("message", { length: 500 }).notNull(),
+  stack: text("stack"),
+  source: mysqlEnum("source", ["window", "promise", "boundary", "manual"]).notNull(),
+  url: varchar("url", { length: 500 }).notNull(),
+  componentStack: text("componentStack"),
+  clientTimestamp: timestamp("clientTimestamp").notNull(),
+  ip: varchar("ip", { length: 45 }), // IPv4 or IPv6
+  userAgent: varchar("userAgent", { length: 500 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type ClientError = typeof clientErrors.$inferSelect;
+export type InsertClientError = typeof clientErrors.$inferInsert;

@@ -9,8 +9,8 @@ import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
-  BookOpen, Lock, LogIn, LogOut, ArrowRight, Moon, Sun, Menu, X, Clock, Check, Filter, Video, Eye,
-  Dumbbell, FileText, ChevronDown, Brain, Target, Trophy, GraduationCap, Puzzle, Download, ArrowUp, Timer
+  BookOpen, Lock, LogIn, LogOut, ArrowRight, Moon, Sun, Menu, X, Check, Filter, Video, Eye,
+  FileText, ChevronDown, Brain, Target, Trophy, GraduationCap, Download, ArrowUp, Timer
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
@@ -159,7 +159,7 @@ function detectCalloutBoxes(lines: string[]): { label: string; text: string; sta
     
     // Collect content lines until next empty line or end
     let content = '';
-    const startContent = j;
+    const _startContent = j;
     while (j < lines.length && lines[j].trim() !== '') {
       content += (content ? '\n' : '') + lines[j].trim();
       j++;
@@ -229,7 +229,7 @@ function detectInlineTabs(lines: string[]): InlineTabBlock[] {
     while (j < lines.length && lines[j].trim() === '') j++;
     
     const labels: string[] = [];
-    const labelsStart = j;
+    const _labelsStart = j;
     while (j < lines.length) {
       const t = lines[j].trim();
       if (t === '') { j++; continue; }
@@ -486,7 +486,7 @@ function detectNumberedLists(lines: string[]): NumberedListBlock[] {
 
   for (let i = 0; i < lines.length; i++) {
     if (visited.has(i)) continue;
-    const match = lines[i].trim().match(/^(\d+)[\.)]\.?\s+(.+)/);
+    const match = lines[i].trim().match(/^(\d+)[.)]\.?\s+(.+)/);
     if (!match || parseInt(match[1]) !== 1) continue;
 
     // Found a "1. ..." line - collect consecutive numbered items
@@ -497,13 +497,13 @@ function detectNumberedLists(lines: string[]): NumberedListBlock[] {
 
     while (j < lines.length) {
       const trimmed = lines[j].trim();
-      const numMatch = trimmed.match(/^(\d+)[\.)]\.?\s+(.+)/);
+      const numMatch = trimmed.match(/^(\d+)[.)]\.?\s+(.+)/);
       if (numMatch && parseInt(numMatch[1]) === expectedNum) {
         // Collect multi-line item (continuation lines until next numbered item or empty+numbered)
         let itemText = numMatch[2];
         let k = j + 1;
         // Check for continuation lines (non-empty, non-numbered)
-        while (k < lines.length && lines[k].trim() !== '' && !lines[k].trim().match(/^\d+[\.)]\.?\s/)) {
+        while (k < lines.length && lines[k].trim() !== '' && !lines[k].trim().match(/^\d+[.)]\.?\s/)) {
           itemText += ' ' + lines[k].trim();
           k++;
         }
@@ -566,7 +566,7 @@ function detectAccordionBlocks(lines: string[], excludedLines: Set<number>): Acc
       !/[.;,)]$/.test(trimmed) &&
       !trimmed.startsWith('-') &&
       !trimmed.startsWith('•') &&
-      !trimmed.match(/^\d+[\.)]\.?\s/) &&
+      !trimmed.match(/^\d+[.)]\.?\s/) &&
       trimmed.split(/\s+/).length <= 12
     ) {
       // Check that previous line is empty (or start of content)
@@ -595,7 +595,7 @@ function detectAccordionBlocks(lines: string[], excludedLines: Set<number>): Acc
               !/[.;,)]$/.test(peekTrimmed) &&
               !peekTrimmed.startsWith('-') &&
               !peekTrimmed.startsWith('•') &&
-              !peekTrimmed.match(/^\d+[\.)]\.?\s/) &&
+              !peekTrimmed.match(/^\d+[.)]\.?\s/) &&
               peekTrimmed.split(/\s+/).length <= 12
             ) {
               break; // Next section heading found
@@ -822,7 +822,7 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
   const tocBlocks: { startIdx: number; endIdx: number; items: string[] }[] = [];
   const tocLineSet = new Set<number>();
   // Look for TOC pattern: after first non-empty line (title), find 3+ consecutive short topic lines
-  let firstNonEmptyIdx = lines.findIndex(l => l.trim() !== '');
+  const firstNonEmptyIdx = lines.findIndex(l => l.trim() !== '');
   if (firstNonEmptyIdx >= 0) {
     // Find next non-empty line after the first one (skip empty lines)
     let searchStart = firstNonEmptyIdx + 1;
@@ -882,7 +882,7 @@ function PageContent({ content, lang }: { content: string; lang: string }) {
   });
 
   // Heuristic helpers
-  const isShortLine = (line: string) => line.trim().length > 0 && line.trim().length <= 60;
+  const _isShortLine = (line: string) => line.trim().length > 0 && line.trim().length <= 60;
   const isMetaLine = (line: string) => /^(Estimated time|Instructions|Duration|Time|Note|Tip|Warning|Important|Example|Exercise|Step \d):/i.test(line.trim());
 
   // Detect sub-section headings with pattern "Title: description" (e.g. "Tokens: the unit of input, output, and cost")
@@ -1949,7 +1949,7 @@ function LessonQuiz({
 
   if (!q) return null;
 
-  const isCorrect = selected && q.correctChoiceIds.includes(selected);
+  const _isCorrect = selected && q.correctChoiceIds.includes(selected);
 
   return (
     <motion.div
@@ -2082,7 +2082,7 @@ function LessonViewer({
   certId,
   courseId,
   onComplete,
-  matchedVideos,
+  matchedVideos: _matchedVideos,
   completedVideos,
   toggleVideoComplete,
   isReviewMode = false,
@@ -2450,7 +2450,7 @@ function LessonViewer({
         const dlTitle = block.title ? (typeof block.title === 'object' ? (block.title[lang] || block.title.en || '') : block.title) : '';
         const dlDesc = block.description ? (typeof block.description === 'object' ? (block.description[lang] || block.description.en || '') : block.description) : '';
         const dlUrl = block.download_url || block.url || '';
-        const dlFilename = block.filename || 'file';
+        const _dlFilename = block.filename || 'file';
         const dlColor = block.color || '#cbcadb';
         const dlImage = block.image || {};
         const dlImageSrc = typeof dlImage === 'object' ? (dlImage.src || '') : '';
@@ -2897,8 +2897,8 @@ function LessonSidebarContent({
   onLessonClick,
   chapterProgress,
   displayedLessonIndex,
-  onScreenClick,
-  activeScreenIndex,
+  onScreenClick: _onScreenClick,
+  activeScreenIndex: _activeScreenIndex,
   chaptersData,
   sections,
 }: {
@@ -3017,7 +3017,7 @@ function LessonSidebarContent({
         const hasTabbedContent = lessonBlocks.includes('tabbed_content');
         const hasExerciseBlock = lessonBlocks.includes('single_choice_exercise');
         
-        let typeIcon: React.ReactNode = null;
+        let typeIcon: React.ReactNode;
         if (chType === 'quiz' || lessonTitleEn.includes('quiz')) {
           typeIcon = <Brain className="w-3 h-3 text-purple-500 shrink-0" />;
         } else if (chType === 'exercise' || hasExerciseBlock || hasBucketSort) {
@@ -3041,7 +3041,7 @@ function LessonSidebarContent({
 
         // Get sub-screens (blocks) for this chapter when it's the active one
         const showSubScreens = isActive && chaptersData && chaptersData[idx];
-        const chapterBlocks = showSubScreens ? (chaptersData[idx]?.blocks || []) : [];
+        const _chapterBlocks = showSubScreens ? (chaptersData[idx]?.blocks || []) : [];
 
         return (
           <div key={lesson.id ? `${lesson.id}_${idx}` : `lesson_${idx}`}>
@@ -3281,7 +3281,7 @@ export default function TrainingCourse() {
             const existingBlocks = ch.blocks && ch.blocks.length > 0 ? [...ch.blocks] : [];
             if (ch.block) {
               const block = ch.block;
-              let extraBlocks: any[] = [];
+              let extraBlocks: any[];
               if (block.type === 'content' && block.body) {
                 extraBlocks = [{ type: 'content', body: block.body }];
               } else if (block.type === 'checkpoint' && block.questions) {
@@ -3473,7 +3473,7 @@ export default function TrainingCourse() {
         if (set.has(videoId)) set.delete(videoId);
         else set.add(videoId);
         localStorage.setItem(`video_progress_${courseId}`, JSON.stringify(Array.from(set)));
-      } catch {}
+      } catch { /* ignore localStorage errors */ }
     }
   };
 
