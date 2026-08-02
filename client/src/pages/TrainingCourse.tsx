@@ -2118,6 +2118,10 @@ function LessonViewer({
   const [chapterQuizPassed, setChapterQuizPassed] = useState<Set<number>>(new Set());
   // Track completed exercises in quiz/checkpoint chapters (exerciseId -> true)
   const [completedExercises, setCompletedExercises] = useState<Set<string>>(new Set());
+  // Track chapters where all flip cards have been seen
+  const [flipCardsCompleted, setFlipCardsCompleted] = useState<Set<number>>(new Set());
+  // Track chapters where matching/bucket exercises have been completed
+  const [matchingCompleted, setMatchingCompleted] = useState<Set<string>>(new Set());
   // Track whether we're syncing from parent to avoid calling onChapterChange back
   const isSyncingFromParent = useRef(false);
   const prevLessonId = useRef(lesson.id);
@@ -2184,12 +2188,29 @@ function LessonViewer({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Keyboard shortcuts for navigation
+  // Keyboard shortcuts for navigation (respects gating)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't trigger if user is typing in an input
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (e.key === 'ArrowRight' && !isLastChapter) {
+        // Check all gates before allowing forward navigation
+        const ch = chapters[currentChapter];
+        if (ch && !isReviewMode) {
+          const blocks = ch.blocks || [];
+          // Video gate
+          const videoKeys = blocks.filter((b: any) => b.type === 'video').map((b: any) => { const rawId = b.videoId || ''; return typeof rawId === 'object' ? (rawId.fr || rawId.en || '') : rawId; }).filter(Boolean);
+          if (videoKeys.length > 0 && !videoKeys.every((k: string) => completedVideos.has(k))) return;
+          // Flip cards gate
+          const hasFlips = blocks.some((b: any) => b.type === 'flip_cards' && (b.cards || []).length > 0);
+          if (hasFlips && !flipCardsCompleted.has(currentChapter)) return;
+          // Matching gate
+          const matchIds = blocks.filter((b: any) => b.type === 'bucket_sort').map((b: any, i: number) => b.id || `bucket_${i}`);
+          if (matchIds.length > 0 && !matchIds.every((id: string) => matchingCompleted.has(id))) return;
+          // Single choice exercise gate
+          const scIds = blocks.filter((b: any) => b.type === 'single_choice_exercise').map((b: any, i: number) => b.id || `quiz_${i}`);
+          if (scIds.length > 0 && !scIds.every((id: string) => completedExercises.has(id))) return;
+        }
         setSlideDirection('right');
         setCurrentChapter(p => p + 1);
       } else if (e.key === 'ArrowLeft' && currentChapter > 0) {
@@ -2199,7 +2220,7 @@ function LessonViewer({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentChapter, isLastChapter]);
+  }, [currentChapter, isLastChapter, completedVideos, flipCardsCompleted, matchingCompleted, completedExercises, isReviewMode, chapters]);
 
   // When chapter changes from internal navigation (Next button, etc.) - only scroll
   useEffect(() => {
@@ -2343,7 +2364,7 @@ function LessonViewer({
         if (!cards.length) return null;
         return (
           <div key={blockIdx}>
-            <FlipCardsGrid cards={cards} lang={lang} />
+            <FlipCardsGrid cards={cards} lang={lang} onAllFlipped={() => setFlipCardsCompleted((prev) => { const next = new Set(Array.from(prev)); next.add(currentChapter); return next; })} />
           </div>
         );
       }
@@ -2371,11 +2392,12 @@ function LessonViewer({
       }
       case "bucket_sort": {
         if (!block.buckets || !block.cards) return null;
+        const matchingId = block.id || `bucket_${blockIdx}`;
         return (
           <div key={blockIdx}>
             <MatchingExercise
               exercise={{
-                id: block.id || `bucket_${blockIdx}`,
+                id: matchingId,
                 title: block.title,
                 instructions: block.instructions,
                 buckets: block.buckets,
@@ -2383,6 +2405,7 @@ function LessonViewer({
                 correction: block.correction,
               }}
               lang={lang as "en" | "fr"}
+              onComplete={() => setMatchingCompleted((prev) => { const next = new Set(Array.from(prev)); next.add(matchingId); return next; })}
             />
           </div>
         );
@@ -2773,12 +2796,27 @@ function LessonViewer({
                 .filter(Boolean);
               const allVideosWatched = chapterVideoKeys.length === 0 || chapterVideoKeys.every((k: string) => completedVideos.has(k));
               const isGatedByVideo = chapterVideoKeys.length > 0 && !allVideosWatched && !isReviewMode;
+              // Flip cards gate: block if chapter has flip_cards and not all have been flipped
+              const chapterHasFlipCards = (chapter?.blocks || []).some((b: any) => b.type === 'flip_cards' && (b.cards || []).length > 0);
+              const isGatedByFlipCards = chapterHasFlipCards && !flipCardsCompleted.has(currentChapter) && !isReviewMode;
+              // Matching/bucket sort gate: block if chapter has bucket_sort exercises not completed
+              const chapterMatchingIds = (chapter?.blocks || [])
+                .filter((b: any) => b.type === 'bucket_sort')
+                .map((b: any, i: number) => b.id || `bucket_${i}`);
+              const allMatchingCompleted = chapterMatchingIds.length === 0 || chapterMatchingIds.every((id: string) => matchingCompleted.has(id));
+              const isGatedByMatching = chapterMatchingIds.length > 0 && !allMatchingCompleted && !isReviewMode;
+              // Single choice exercise gate for ALL chapters (not just quiz/checkpoint)
+              const chapterSingleChoiceIds = (chapter?.blocks || [])
+                .filter((b: any) => b.type === 'single_choice_exercise')
+                .map((b: any, i: number) => b.id || `quiz_${i}`);
+              const allSingleChoiceCompleted = chapterSingleChoiceIds.length === 0 || chapterSingleChoiceIds.every((id: string) => completedExercises.has(id));
+              const isGatedBySingleChoice = chapterSingleChoiceIds.length > 0 && !allSingleChoiceCompleted && !isReviewMode;
               const chapterTitle = resolveI18n(chapter?.title, 'en');
               const isStructuralChapter = /^(Module Introduction|Key Takeaways|Module Complete)$/i.test(chapterTitle);
               const isTeachingChapter = chapter?.type === 'teaching' && !isStructuralChapter;
               const needsQuiz = isTeachingChapter && !isReviewMode && !chapterQuizPassed.has(currentChapter);
 
-              const isGated = isGatedByExercises || isGatedByVideo;
+              const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice;
               return (
                 <div className="flex items-center gap-2">
                   <span className="kbd-hint hidden md:inline-flex">→</span>
@@ -2802,11 +2840,13 @@ function LessonViewer({
                       }
                     }}
                     className={`gap-1 font-medium ${isGated ? 'text-muted-foreground cursor-not-allowed' : 'text-[#c75b3a] hover:text-[#a84a2e]'}`}
-                    title={isGatedByVideo ? (lang === 'fr' ? 'Regardez la vidéo pour continuer (ou marquez-la comme vue)' : 'Watch the video to continue (or mark it as watched)') : isGatedByExercises ? (lang === 'fr' ? 'Répondez correctement à toutes les questions pour continuer' : 'Answer all questions correctly to continue') : undefined}
+                    title={isGatedByVideo ? (lang === 'fr' ? 'Regardez la vidéo pour continuer (ou marquez-la comme vue)' : 'Watch the video to continue (or mark it as watched)') : isGatedByFlipCards ? (lang === 'fr' ? 'Retournez toutes les cartes pour continuer' : 'Flip all cards to continue') : (isGatedByExercises || isGatedBySingleChoice || isGatedByMatching) ? (lang === 'fr' ? 'Complétez tous les exercices pour continuer' : 'Complete all exercises to continue') : undefined}
                   >
                     {isGatedByVideo ? (
                       <>{t({ en: "🎥 Watch video to continue", fr: "🎥 Regardez la vidéo pour continuer" })}</>
-                    ) : isGatedByExercises ? (
+                    ) : isGatedByFlipCards ? (
+                      <>{t({ en: "🃏 Flip all cards to continue", fr: "🃏 Retournez toutes les cartes" })}</>
+                    ) : (isGatedByExercises || isGatedBySingleChoice || isGatedByMatching) ? (
                       <>{t({ en: "Complete all exercises", fr: "Complétez les exercices" })}</>
                     ) : (
                       <>{t({ en: "Next", fr: "Suivant" })} →</>

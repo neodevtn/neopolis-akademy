@@ -1080,3 +1080,11 @@
 - [x] ChapterQuiz : useMemo shuffled choices dépendant de attemptCount + currentQ
 - [x] ExerciseRenderer : shuffledOptions state + shuffle on handleReset pour single/multi/checklist
 - [x] LessonQuiz : useMemo shuffledChoices dépendant de q.id + currentQ + attemptCount
+
+## Bloquer navigation si flip cards non retournées et exercices non faits
+- [x] FlipCardsGrid : ajouter callback onAllFlipped quand toutes les cartes ont été vues au moins une fois
+- [x] TrainingCourse : tracker les flip cards complétées par chapitre
+- [x] TrainingCourse : gater le bouton Next si flip cards non toutes retournées
+- [x] TrainingCourse : gater le bouton Next si exercices (exercise blocks) non complétés
+- [x] TrainingCourse : bloquer aussi la navigation clavier (ArrowRight) quand gaté
+- [x] MatchingExercise : passer onComplete depuis TrainingCourse pour tracker la complétion

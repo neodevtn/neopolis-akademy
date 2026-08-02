@@ -84,11 +84,15 @@ interface FlipCardsGridProps {
     back: { en: string; fr: string } | string;
   }>;
   lang: string;
+  onAllFlipped?: () => void;
 }
 
-export function FlipCardsGrid({ cards, lang }: FlipCardsGridProps) {
+export function FlipCardsGrid({ cards, lang, onAllFlipped }: FlipCardsGridProps) {
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
+  // Track cards that have been flipped at least once (even if flipped back)
+  const [seenCards, setSeenCards] = useState<Set<number>>(new Set());
   const [lastFlipped, setLastFlipped] = useState<number | null>(null);
+  const allFlippedRef = useRef(false);
 
   const handleFlip = (idx: number) => {
     setFlippedCards((prev) => {
@@ -101,6 +105,17 @@ export function FlipCardsGrid({ cards, lang }: FlipCardsGridProps) {
       return next;
     });
     setLastFlipped(idx);
+    // Track that this card has been seen at least once
+    setSeenCards((prev) => {
+      const next = new Set(Array.from(prev));
+      next.add(idx);
+      // Check if all cards have been seen
+      if (next.size >= cards.length && !allFlippedRef.current) {
+        allFlippedRef.current = true;
+        onAllFlipped?.();
+      }
+      return next;
+    });
   };
 
   const resolveLang = (val: any): string => {
