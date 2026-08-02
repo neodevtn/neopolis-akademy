@@ -81,9 +81,9 @@ function AnimatedStat({ value, suffix = "", prefix = "" }: { value: number; suff
 const LOGO_URL = "/api/assets/neopolis_dev_logo_4x_4011a55b.png";
 const LOGO_ICON = "/api/assets/neopolis_dev_logo_original_60dc435f.png";
 const HERO_IMG = "/api/assets/hero_tunisian_ai_08a6f956.png";
-const CERT_IMG = "/api/assets/step2_certification_b2f65035.png";
-const ELEARNING_IMG = "/api/assets/step1_elearning_d87a7198.png";
-const AFRICA_IMG = "/api/assets/step3_ambassador_91fc256d.png";
+const CERT_IMG = "/manus-storage/step2_certification_navy_a6edcff3.png";
+const ELEARNING_IMG = "/manus-storage/step1_elearning_navy_773414ab.png";
+const AFRICA_IMG = "/manus-storage/step3_ambassador_navy_eb0425c4.png";
 const PARTNER_IMG = "/api/assets/wise_partnership_illustration_b3c56284.png";
 
 /* ─── Animation Variants ─── */
@@ -538,7 +538,7 @@ export default function Home() {
               </div>
             </motion.div>
             <motion.div variants={fadeInRight}>
-              <img src={AFRICA_IMG} alt="Réseau Afrique" className="w-full max-w-xs md:max-w-sm mx-auto object-contain rounded-3xl" />
+              <img src="/manus-storage/partner_section_navy_1658f64b.png" alt="AI Solutions Partner" className="w-full max-w-xs md:max-w-sm mx-auto object-contain rounded-3xl" />
             </motion.div>
           </div>
         </div>
