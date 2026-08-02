@@ -195,6 +195,19 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
   const interactionType = exercise.interactionType || 'free_text';
   const TypeIcon = TYPE_ICONS[interactionType] || FileText;
 
+  // Shuffle options on retry to prevent memorization
+  const [shuffledOptions, setShuffledOptions] = useState<ExerciseOption[]>(
+    () => {
+      if (!exercise.options) return [];
+      const opts = [...exercise.options];
+      for (let i = opts.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [opts[i], opts[j]] = [opts[j], opts[i]];
+      }
+      return opts;
+    }
+  );
+
   const getText = (field: LocalizedText | undefined | null): string => {
     if (!field) return '';
     return field[lang] || field.en || '';
@@ -305,6 +318,15 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
     clearDraft(exercise.id);
     setAutoSaveStatus('idle');
     setLastSavedAt('');
+    // Shuffle options order on retry to prevent memorization
+    if (exercise.options) {
+      const opts = [...exercise.options];
+      for (let i = opts.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [opts[i], opts[j]] = [opts[j], opts[i]];
+      }
+      setShuffledOptions(opts);
+    }
   };
 
   const toggleOption = (optionId: string) => {
@@ -462,9 +484,9 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
             )}
 
             {/* Single/Multi Choice */}
-            {(interactionType === 'single_choice' || interactionType === 'multi_choice') && exercise.options && (
+            {(interactionType === 'single_choice' || interactionType === 'multi_choice') && shuffledOptions.length > 0 && (
               <div className="space-y-2">
-                {exercise.options.map((option) => (
+                {shuffledOptions.map((option) => (
                   <button
                     key={option.id}
                     onClick={() => toggleOption(option.id)}
@@ -482,9 +504,9 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
             )}
 
             {/* Checklist */}
-            {interactionType === 'checklist' && exercise.options && (
+            {interactionType === 'checklist' && shuffledOptions.length > 0 && (
               <div className="space-y-2">
-                {exercise.options.map((option) => (
+                {shuffledOptions.map((option) => (
                   <label
                     key={option.id}
                     className="flex items-start gap-2 px-3 py-2 rounded-md border border-border hover:bg-muted/50 cursor-pointer text-sm"
@@ -519,9 +541,9 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
             )}
 
             {/* Show option results */}
-            {(interactionType === 'single_choice' || interactionType === 'multi_choice') && exercise.options && (
+            {(interactionType === 'single_choice' || interactionType === 'multi_choice') && shuffledOptions.length > 0 && (
               <div className="space-y-2">
-                {exercise.options.map((option) => {
+                {shuffledOptions.map((option) => {
                   const result = getOptionResult(option);
                   return (
                     <div
@@ -548,9 +570,9 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
             )}
 
             {/* Checklist results */}
-            {interactionType === 'checklist' && exercise.options && (
+            {interactionType === 'checklist' && shuffledOptions.length > 0 && (
               <div className="space-y-2">
-                {exercise.options.map((option) => (
+                {shuffledOptions.map((option) => (
                   <div
                     key={option.id}
                     className={`flex items-start gap-2 px-3 py-2 rounded-md border text-sm ${

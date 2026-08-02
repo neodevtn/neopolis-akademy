@@ -29,6 +29,7 @@ export function SingleChoiceExercise({
 }: SingleChoiceExerciseProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [shuffledOptions, setShuffledOptions] = useState<Option[]>(options);
 
   const isCorrect = selectedAnswer === correctAnswer;
 
@@ -50,6 +51,15 @@ export function SingleChoiceExercise({
   const handleReset = () => {
     setSelectedAnswer(null);
     setIsSubmitted(false);
+    // Shuffle the options order on retry to prevent memorization
+    setShuffledOptions(prev => {
+      const shuffled = [...prev];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    });
   };
 
   const getLetterLabel = (index: number) => String.fromCharCode(65 + index);
@@ -75,7 +85,7 @@ export function SingleChoiceExercise({
 
       {/* Options */}
       <div className="space-y-3 pl-1">
-        {options.map((option, idx) => {
+        {shuffledOptions.map((option, idx) => {
           const letter = getLetterLabel(idx);
           const isSelected = selectedAnswer === option.id;
           const isThisCorrect = option.id === correctAnswer;

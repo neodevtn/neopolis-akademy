@@ -1942,6 +1942,17 @@ function LessonQuiz({
   // Option letters for Skilljar style
   const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
+  // Shuffle choices for current question (changes on question change and retry)
+  const shuffledChoices = useMemo(() => {
+    if (!q.choices) return [];
+    const choices = [...q.choices];
+    for (let i = choices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [choices[i], choices[j]] = [choices[j], choices[i]];
+    }
+    return choices;
+  }, [q.id, currentQ, attemptCount]);
+
   return (
     <motion.div
       key={`q-${currentQ}-${attemptCount}`}
@@ -1974,7 +1985,7 @@ function LessonQuiz({
 
       {/* Choices - Skilljar style: A/B/C letter in coral */}
       <div className="space-y-3 mb-5">
-        {q.choices.map((choice: any, idx: number) => {
+        {shuffledChoices.map((choice: any, idx: number) => {
           const isSelected = selected === choice.id;
           const isCorrectChoice = q.correctChoiceIds.includes(choice.id);
           const letter = OPTION_LETTERS[idx] || choice.id.toUpperCase();

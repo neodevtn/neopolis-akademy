@@ -1074,3 +1074,9 @@
 - [x] Bloquer le bouton "Suivant" tant que la vidéo du chapitre n'est pas marquée comme vue
 - [x] Afficher une barre de progression de visionnage sous la vidéo
 - [x] Afficher un message explicatif quand le bouton Suivant est bloqué
+
+## Mélanger les réponses au retry
+- [x] SingleChoiceExercise : shuffledOptions state + Fisher-Yates sur handleReset
+- [x] ChapterQuiz : useMemo shuffled choices dépendant de attemptCount + currentQ
+- [x] ExerciseRenderer : shuffledOptions state + shuffle on handleReset pour single/multi/checklist
+- [x] LessonQuiz : useMemo shuffledChoices dépendant de q.id + currentQ + attemptCount
