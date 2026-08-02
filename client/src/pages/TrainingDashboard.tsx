@@ -280,6 +280,26 @@ export default function TrainingDashboard() {
             </p>
           </div>
 
+          {/* Quick stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+            {[
+              { value: String(trainingIndex.certifications.length), label: { en: "Certifications", fr: "Certifications" }, icon: <GraduationCap className="w-4 h-4" /> },
+              { value: String(trainingIndex.courses.length), label: { en: "Courses", fr: "Cours" }, icon: <BookOpen className="w-4 h-4" /> },
+              { value: String(trainingIndex.certifications.reduce((s: number, c: any) => s + c.totalVideos, 0)), label: { en: "Videos", fr: "Vidéos" }, icon: <Play className="w-4 h-4" /> },
+              { value: String(trainingIndex.certifications.reduce((s: number, c: any) => s + c.totalExercises, 0)) + "+", label: { en: "Exercises", fr: "Exercices" }, icon: <Dumbbell className="w-4 h-4" /> },
+            ].map((stat, i) => (
+              <div key={i} className="flex items-center gap-3 bg-card rounded-xl border border-border p-3.5 shadow-sm">
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary flex-shrink-0">
+                  {stat.icon}
+                </div>
+                <div>
+                  <div className="text-lg font-bold text-foreground leading-tight">{stat.value}</div>
+                  <div className="text-[11px] text-muted-foreground font-medium">{t(stat.label)}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
           {/* Tab Navigation */}
           <div className="flex items-center gap-1 p-1 bg-secondary/50 rounded-xl w-fit mb-8">
             {tabs.map((tab) => (
@@ -563,25 +583,7 @@ function MyPathTab({
         </div>
       )}
 
-      {/* Quick stats - minimal */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {[
-          { value: String(trainingIndex.certifications.length), label: { en: "Certifications", fr: "Certifications" }, icon: <GraduationCap className="w-4 h-4" /> },
-          { value: String(trainingIndex.courses.length), label: { en: "Courses", fr: "Cours" }, icon: <BookOpen className="w-4 h-4" /> },
-          { value: String(trainingIndex.certifications.reduce((s, c) => s + c.totalVideos, 0)), label: { en: "Videos", fr: "Vidéos" }, icon: <Play className="w-4 h-4" /> },
-          { value: String(trainingIndex.certifications.reduce((s, c) => s + c.totalExercises, 0)) + "+", label: { en: "Exercises", fr: "Exercices" }, icon: <Dumbbell className="w-4 h-4" /> },
-        ].map((stat, i) => (
-          <div key={i} className="flex items-center gap-3 bg-card rounded-xl border border-border p-3.5 shadow-sm">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary flex-shrink-0">
-              {stat.icon}
-            </div>
-            <div>
-              <div className="text-lg font-bold text-foreground leading-tight">{stat.value}</div>
-              <div className="text-[11px] text-muted-foreground font-medium">{t(stat.label)}</div>
-            </div>
-          </div>
-        ))}
-      </div>
+
     </div>
   );
 }
