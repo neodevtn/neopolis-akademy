@@ -1460,21 +1460,21 @@ function HeroGraphic() {
       <motion.div
         animate={{ y: [0, -6, 0] }}
         transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", delay: 0.5 }}
-        className="absolute -top-2 right-0 wise-card px-3 py-2 shadow-lg hidden md:block"
+        className="absolute -top-2 right-0 hidden md:block"
       >
-        <div className="flex items-center gap-2">
-          <Sparkles size={14} style={{ color: "var(--wise-primary)" }} />
-          <span className="text-xs font-semibold" style={{ color: "var(--wise-ink)" }}>Certification CCA</span>
+        <div className="flex items-center gap-2 px-4 py-2.5 rounded-full shadow-md" style={{ background: "linear-gradient(135deg, var(--wise-primary), oklch(0.72 0.19 145))", border: "none" }}>
+          <Sparkles size={14} className="text-white" />
+          <span className="text-xs font-bold text-white tracking-wide">Certification CCA</span>
         </div>
       </motion.div>
       <motion.div
         animate={{ y: [0, 6, 0] }}
         transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-2 left-0 wise-card px-3 py-2 shadow-lg hidden md:block"
+        className="absolute bottom-2 left-0 hidden md:block"
       >
-        <div className="flex items-center gap-2">
-          <Globe size={14} style={{ color: "var(--wise-accent-cyan)" }} />
-          <span className="text-xs font-semibold" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Certification internationale", en: "International certification", ar: "شهادة دولية" })}</span>
+        <div className="flex items-center gap-2 px-4 py-2.5 rounded-full shadow-md" style={{ background: "linear-gradient(135deg, oklch(0.60 0.15 240), oklch(0.55 0.18 270))", border: "none" }}>
+          <Globe size={14} className="text-white" />
+          <span className="text-xs font-bold text-white tracking-wide">{t({ fr: "Certification internationale", en: "International certification", ar: "شهادة دولية" })}</span>
         </div>
       </motion.div>
     </div>

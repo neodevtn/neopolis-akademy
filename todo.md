@@ -1009,3 +1009,6 @@
 - [x] Ajouter le bouton "Pas pertinent" sur chaque carte de recommandation vidéo
 - [x] Filtrer les vidéos signalées par l'utilisateur dans les recommandations futures
 - [x] Afficher un feedback visuel (toast) après signalement
+
+## Redesign badges flottants hero
+- [x] Remplacer les badges "Certification CCA" et "Certification internationale" (wise-card blanc/bordure) par des pills gradient modernes (vert gradient + violet gradient, texte blanc, rounded-full, shadow)
