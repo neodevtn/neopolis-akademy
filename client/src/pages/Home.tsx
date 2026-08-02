@@ -81,9 +81,9 @@ function AnimatedStat({ value, suffix = "", prefix = "" }: { value: number; suff
 const LOGO_URL = "/api/assets/neopolis_dev_logo_4x_4011a55b.png";
 const LOGO_ICON = "/api/assets/neopolis_dev_logo_original_60dc435f.png";
 const HERO_IMG = "/api/assets/hero_tunisian_ai_08a6f956.png";
-const CERT_IMG = "/manus-storage/step2_certification_navy_v2_c3ae7b19.jpg";
-const ELEARNING_IMG = "/manus-storage/step1_elearning_navy_v2_6ccd8001.jpg";
-const AFRICA_IMG = "/manus-storage/step3_ambassador_navy_v2_dc037583.jpg";
+const CERT_IMG = "/api/assets/step2_certification_navy_v2_d57b236e.jpg";
+const ELEARNING_IMG = "/api/assets/step1_elearning_navy_v2_fde423cb.jpg";
+const AFRICA_IMG = "/api/assets/step3_ambassador_navy_v2_e1ca59ba.jpg";
 const PARTNER_IMG = "/api/assets/wise_partnership_illustration_b3c56284.png";
 
 /* ─── Animation Variants ─── */
@@ -235,7 +235,7 @@ function ParallaxImage() {
     <motion.div ref={ref} style={{ y, scale }} className="relative">
       <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[var(--neo-primary)]/10 to-transparent -z-10 blur-2xl" />
       <img
-        src="/manus-storage/partner_section_navy_v2_edee6265.jpg"
+        src="/api/assets/partner_section_navy_v2_dc6ef3c5.jpg"
         alt="AI Solutions Partner"
         className="w-full max-w-xs md:max-w-sm mx-auto object-contain rounded-3xl shadow-xl"
       />
@@ -526,7 +526,7 @@ export default function Home() {
                   <div className="flex flex-col items-center justify-center">
                     <div className="text-center">
                       <div className="inline-flex items-center gap-3 px-5 py-3 rounded-xl mb-2" style={{ background: "rgba(255,255,255,0.08)" }}>
-                        <img src="/manus-storage/claude_ai_icon_cf4b47af.png" alt="Claude AI" className="w-10 h-10 object-contain" />
+                        <img src="/api/assets/claude_ai_icon_cf4b47af.png" alt="Claude AI" className="w-10 h-10 object-contain" />
                         <span className="text-2xl font-bold text-white">Claude</span>
                       </div>
                       <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>{t({ fr: "Modèle IA le plus avancé au monde", en: "World's most advanced AI model", ar: "أكثر نماذج الذكاء الاصطناعي تقدمًا" })}</p>
