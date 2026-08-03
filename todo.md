@@ -1154,3 +1154,7 @@
 - [x] Analyser les logs dev server (erreurs historiques déjà corrigées)
 - [x] Analyser les logs console navigateur (duplicate key chapter_13 déjà corrigé le 2 août)
 - [x] Corriger la fuite du passwordHash dans la réponse auth.me (SÉCURITÉ)
+
+## Rate Limiting Auth Endpoints
+- [x] Ajouter rate limiting sur POST /api/auth/login (max 5 tentatives par IP par 15 min)
+- [x] Ajouter rate limiting sur POST /api/auth/forgot-password (max 3 requêtes par IP par 15 min)

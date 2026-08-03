@@ -2,6 +2,7 @@ import type { Express, Request, Response } from "express";
 import crypto from "crypto";
 import { COOKIE_NAME, SESSION_DURATION_MS } from "@shared/const";
 import bcrypt from "bcryptjs";
+import rateLimit from "express-rate-limit";
 import * as db from "./db";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { sdk } from "./_core/sdk";
@@ -9,8 +10,26 @@ import { sdk } from "./_core/sdk";
 const SALT_ROUNDS = 10;
 
 export function registerAuthRoutes(app: Express) {
+  // Rate limiter for login: max 5 attempts per IP per 15 minutes
+  const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: "Trop de tentatives de connexion. Veuillez réessayer dans 15 minutes." },
+  });
+
+  // Rate limiter for forgot-password: max 3 requests per IP per 15 minutes
+  const forgotPasswordLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 3,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: "Trop de demandes de réinitialisation. Veuillez réessayer dans 15 minutes." },
+  });
+
   // POST /api/auth/login - Authenticate with email/password
-  app.post("/api/auth/login", async (req: Request, res: Response) => {
+  app.post("/api/auth/login", loginLimiter, async (req: Request, res: Response) => {
     const { email, password } = req.body || {};
 
     if (!email || !password) {
@@ -73,7 +92,7 @@ export function registerAuthRoutes(app: Express) {
   });
 
   // POST /api/auth/forgot-password - Request password reset email
-  app.post("/api/auth/forgot-password", async (req: Request, res: Response) => {
+  app.post("/api/auth/forgot-password", forgotPasswordLimiter, async (req: Request, res: Response) => {
     const { email } = req.body || {};
 
     if (!email) {
