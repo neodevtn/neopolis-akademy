@@ -1147,3 +1147,10 @@
 - [x] Ajouter le contexte utilisateur (Sentry.setUser) quand l'utilisateur est connecté
 - [x] Ajuster tracesSampleRate à 0.2 en production (garder 1.0 en dev)
 - [x] Personnaliser le style du widget feedback pour s'intégrer au design du site
+
+## Analyse Monitoring & Corrections
+- [x] Analyser les logs Sentry (aucune erreur capturée - projet récent)
+- [x] Analyser les logs de production (pas d'erreurs critiques, seulement "Missing session cookie" normal)
+- [x] Analyser les logs dev server (erreurs historiques déjà corrigées)
+- [x] Analyser les logs console navigateur (duplicate key chapter_13 déjà corrigé le 2 août)
+- [x] Corriger la fuite du passwordHash dans la réponse auth.me (SÉCURITÉ)
