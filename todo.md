@@ -1134,3 +1134,11 @@
 - [x] Pages frontend : Login, Register, Forgot Password, Reset Password
 - [x] Email de récupération de mot de passe (lien avec token)
 - [x] Intégrer avec le flux d'acceptation candidat (création compte auto)
+
+## Intégration Sentry (Monitoring)
+- [x] Créer le projet neopolis-akademy sur l'instance Sentry self-hosted (sentry.neopolis-dev.com)
+- [x] Installer @sentry/react SDK
+- [x] Configurer le suivi des bugs (Error Monitoring)
+- [x] Configurer le suivi des performances (Browser Tracing, tracesSampleRate: 1.0)
+- [x] Configurer Session Replay (replaysOnErrorSampleRate: 1.0)
+- [x] Configurer le widget User Feedback (labels en français)

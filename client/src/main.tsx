@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import { trpc } from "@/lib/trpc";
 import { initErrorReporter } from "@/lib/errorReporter";
 import { COOKIE_NAME, UNAUTHED_ERR_MSG } from '@shared/const';
@@ -8,6 +9,38 @@ import superjson from "superjson";
 import App from "./App";
 import { getLoginUrl } from "./const";
 import "./index.css";
+
+// Initialize Sentry for error monitoring, performance & user feedback
+Sentry.init({
+  dsn: "https://f1beaf088d01628e72b6cc5b96511906@sentry.neopolis-dev.com//102",
+  integrations: [
+    Sentry.browserTracingIntegration(),
+    Sentry.replayIntegration(),
+    Sentry.feedbackIntegration({
+      colorScheme: "light",
+      buttonLabel: "Signaler un problème",
+      submitButtonLabel: "Envoyer",
+      cancelButtonLabel: "Annuler",
+      formTitle: "Signaler un problème",
+      nameLabel: "Nom",
+      namePlaceholder: "Votre nom",
+      emailLabel: "Email",
+      emailPlaceholder: "votre@email.com",
+      messageLabel: "Description",
+      messagePlaceholder: "Décrivez le problème rencontré...",
+      successMessageText: "Merci pour votre retour !",
+      isNameRequired: true,
+      isEmailRequired: true,
+    }),
+  ],
+  // Performance Monitoring
+  tracesSampleRate: 1.0,
+  // Session Replay
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
+  // Environment
+  environment: import.meta.env.MODE,
+});
 
 // Initialize client-side error monitoring
 initErrorReporter();
