@@ -90,7 +90,16 @@ export default function Login() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="login-password">{t({ fr: "Mot de passe", en: "Password", ar: "كلمة المرور" })}</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="login-password">{t({ fr: "Mot de passe", en: "Password", ar: "كلمة المرور" })}</Label>
+                  <button
+                    type="button"
+                    onClick={() => navigate("/forgot-password")}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    {t({ fr: "Mot de passe oublié ?", en: "Forgot password?", ar: "نسيت كلمة المرور؟" })}
+                  </button>
+                </div>
                 <Input
                   id="login-password"
                   type="password"

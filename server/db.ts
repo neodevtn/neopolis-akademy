@@ -1,6 +1,6 @@
-import { eq, desc, sql, and, count } from "drizzle-orm";
+import { eq, desc, sql, and, count, gt } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -597,4 +597,59 @@ export async function getUserVideoFeedback(userId: number, certId?: string) {
   return await db.select({ videoId: videoFeedback.videoId, lessonId: videoFeedback.lessonId })
     .from(videoFeedback)
     .where(eq(videoFeedback.userId, userId));
+}
+
+// ============ Password Reset Tokens ============
+
+export async function createPasswordResetToken(userId: number, token: string, expiresAt: Date) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Invalidate any existing unused tokens for this user
+  await db.update(passwordResetTokens)
+    .set({ usedAt: new Date() })
+    .where(and(
+      eq(passwordResetTokens.userId, userId),
+      sql`${passwordResetTokens.usedAt} IS NULL`
+    ));
+
+  const result = await db.insert(passwordResetTokens).values({
+    userId,
+    token,
+    expiresAt,
+  });
+
+  return { id: result[0].insertId, userId, token, expiresAt };
+}
+
+export async function getValidPasswordResetToken(token: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db.select().from(passwordResetTokens)
+    .where(and(
+      eq(passwordResetTokens.token, token),
+      sql`${passwordResetTokens.usedAt} IS NULL`,
+      gt(passwordResetTokens.expiresAt, new Date())
+    ))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function markPasswordResetTokenUsed(token: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(passwordResetTokens)
+    .set({ usedAt: new Date() })
+    .where(eq(passwordResetTokens.token, token));
+}
+
+export async function getUserById(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
 }

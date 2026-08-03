@@ -25,6 +25,8 @@ const Login = lazy(() => import("./pages/Login"));
 const AcceptInvitation = lazy(() => import("./pages/AcceptInvitation"));
 const DiagnosticIA = lazy(() => import("./pages/DiagnosticIA"));
 const AdvancedDiagnosticIA = lazy(() => import("./pages/AdvancedDiagnosticIA"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 
 // ─── Loading fallback ───
 function PageLoader() {
@@ -56,6 +58,8 @@ function Router() {
         <Route path={"/accept-invitation"} component={AcceptInvitation} />
         <Route path={"/login"} component={Login} />
         <Route path={"/demo-login"} component={Login} />
+        <Route path={"/forgot-password"} component={ForgotPassword} />
+        <Route path={"/reset-password"} component={ResetPassword} />
         <Route path={"/diagnostic"} component={DiagnosticIA} />
         <Route path={"/diagnostic-avance"} component={AdvancedDiagnosticIA} />
         <Route path={"/404"} component={NotFound} />

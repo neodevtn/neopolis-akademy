@@ -254,7 +254,7 @@ function buildDecisionHtml(data: DecisionEmailData): string {
     refuseBody: `Après examen attentif de votre candidature au programme <strong>Neopolis Akademy</strong>, nous ne sommes malheureusement pas en mesure de retenir votre profil pour cette session.`,
     accessTitle: "Vos accès",
     accessPlatform: "Plateforme de formation",
-    accessLogin: "Connectez-vous avec l'email utilisé lors de votre candidature",
+    accessLogin: "Vous recevrez un email d'invitation séparé avec un lien pour créer votre compte et définir votre mot de passe.",
     recommendTitle: "Parcours recommandé",
     nextStepsTitle: "Prochaines étapes",
     acceptSteps: [
@@ -274,7 +274,7 @@ function buildDecisionHtml(data: DecisionEmailData): string {
     refuseBody: `After careful review of your application to the <strong>Neopolis Akademy</strong> program, we are unfortunately unable to retain your profile for this session.`,
     accessTitle: "Your Access",
     accessPlatform: "Training Platform",
-    accessLogin: "Log in with the email used during your application",
+    accessLogin: "You will receive a separate invitation email with a link to create your account and set your password.",
     recommendTitle: "Recommended Path",
     nextStepsTitle: "Next Steps",
     acceptSteps: [
@@ -792,4 +792,110 @@ export async function sendReminderEmail(data: ReminderEmailData): Promise<void> 
     throw new Error(`Reminder email sending failed: ${error.message}`);
   }
   console.log(`[Email] Reminder sent to ${data.to}`);
+}
+
+
+// ============================================================
+// PASSWORD RESET EMAIL
+// ============================================================
+
+interface PasswordResetEmailData {
+  to: string;
+  name: string;
+  resetLink: string;
+  language?: Language;
+}
+
+function buildPasswordResetHtml(data: PasswordResetEmailData): string {
+  const lang = data.language || "fr";
+  const name = data.name || data.to;
+
+  if (lang === "fr") {
+    return `
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"></head>
+<body style="font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f8; padding: 40px 0;">
+  <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+    <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 32px; text-align: center;">
+      <h1 style="color: white; margin: 0; font-size: 22px;">Neopolis Akademy</h1>
+      <p style="color: rgba(255,255,255,0.8); margin: 8px 0 0; font-size: 14px;">Réinitialisation de mot de passe</p>
+    </div>
+    <div style="padding: 32px;">
+      <p style="font-size: 16px; color: #333;">Bonjour <strong>${name}</strong>,</p>
+      <p style="font-size: 14px; color: #555; line-height: 1.6;">Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le bouton ci-dessous pour définir un nouveau mot de passe :</p>
+      <div style="text-align: center; margin: 32px 0;">
+        <a href="${data.resetLink}" style="display: inline-block; background: #e94560; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px;">Réinitialiser mon mot de passe</a>
+      </div>
+      <p style="font-size: 13px; color: #888; line-height: 1.5;">Ce lien est valable pendant <strong>1 heure</strong>. Si vous n'avez pas demandé cette réinitialisation, vous pouvez ignorer cet email en toute sécurité.</p>
+      <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;">
+      <p style="font-size: 12px; color: #aaa;">Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br><a href="${data.resetLink}" style="color: #e94560; word-break: break-all;">${data.resetLink}</a></p>
+    </div>
+  </div>
+</body>
+</html>`;
+  }
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"></head>
+<body style="font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f8; padding: 40px 0;">
+  <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+    <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 32px; text-align: center;">
+      <h1 style="color: white; margin: 0; font-size: 22px;">Neopolis Akademy</h1>
+      <p style="color: rgba(255,255,255,0.8); margin: 8px 0 0; font-size: 14px;">Password Reset</p>
+    </div>
+    <div style="padding: 32px;">
+      <p style="font-size: 16px; color: #333;">Hello <strong>${name}</strong>,</p>
+      <p style="font-size: 14px; color: #555; line-height: 1.6;">You have requested a password reset. Click the button below to set a new password:</p>
+      <div style="text-align: center; margin: 32px 0;">
+        <a href="${data.resetLink}" style="display: inline-block; background: #e94560; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px;">Reset my password</a>
+      </div>
+      <p style="font-size: 13px; color: #888; line-height: 1.5;">This link is valid for <strong>1 hour</strong>. If you did not request this reset, you can safely ignore this email.</p>
+      <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;">
+      <p style="font-size: 12px; color: #aaa;">If the button doesn't work, copy this link into your browser:<br><a href="${data.resetLink}" style="color: #e94560; word-break: break-all;">${data.resetLink}</a></p>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+function buildPasswordResetText(data: PasswordResetEmailData): string {
+  const lang = data.language || "fr";
+  const name = data.name || data.to;
+
+  if (lang === "fr") {
+    return `Bonjour ${name},\n\nVous avez demandé la réinitialisation de votre mot de passe sur Neopolis Akademy.\n\nCliquez sur ce lien pour définir un nouveau mot de passe :\n${data.resetLink}\n\nCe lien est valable pendant 1 heure.\n\nSi vous n'avez pas demandé cette réinitialisation, ignorez cet email.\n\n— L'équipe Neopolis Akademy`;
+  }
+
+  return `Hello ${name},\n\nYou have requested a password reset on Neopolis Akademy.\n\nClick this link to set a new password:\n${data.resetLink}\n\nThis link is valid for 1 hour.\n\nIf you did not request this reset, please ignore this email.\n\n— The Neopolis Akademy Team`;
+}
+
+export async function sendPasswordResetEmail(data: PasswordResetEmailData): Promise<void> {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (!resendApiKey) {
+    console.log(`[Email] RESEND_API_KEY not configured. Password reset email NOT sent to ${data.to}`);
+    return;
+  }
+
+  const resend = new Resend(resendApiKey);
+  const lang = data.language || "fr";
+  const subject = lang === "fr"
+    ? "Neopolis Akademy — Réinitialisation de votre mot de passe"
+    : "Neopolis Akademy — Reset your password";
+
+  const { error } = await resend.emails.send({
+    from: FROM_ADDRESS,
+    to: [data.to],
+    subject,
+    html: buildPasswordResetHtml(data),
+    text: buildPasswordResetText(data),
+  });
+
+  if (error) {
+    console.error(`[Email] Resend error for ${data.to}:`, error);
+    throw new Error(`Password reset email sending failed: ${error.message}`);
+  }
+  console.log(`[Email] Password reset email sent to ${data.to}`);
 }

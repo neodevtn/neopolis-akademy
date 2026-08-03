@@ -1127,3 +1127,10 @@
 ## Performance & Tests d'intégration
 - [x] Script Lighthouse automatisé avec rapport de performance (pnpm lighthouse)
 - [x] Tests d'intégration API pour endpoints tRPC admin (25 tests - 65 total)
+
+## Authentification Email/Mot de passe
+- [x] Ajouter champs password_hash et reset_token au schéma DB
+- [x] Créer endpoints login, register, forgot-password, reset-password
+- [x] Pages frontend : Login, Register, Forgot Password, Reset Password
+- [x] Email de récupération de mot de passe (lien avec token)
+- [x] Intégrer avec le flux d'acceptation candidat (création compte auto)
