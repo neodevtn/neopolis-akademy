@@ -1158,3 +1158,6 @@
 ## Rate Limiting Auth Endpoints
 - [x] Ajouter rate limiting sur POST /api/auth/login (max 5 tentatives par IP par 15 min)
 - [x] Ajouter rate limiting sur POST /api/auth/forgot-password (max 3 requêtes par IP par 15 min)
+
+## Header Button Conditionnel
+- [x] Bouton bleu header : "Se connecter" pour utilisateurs non connectés, "Formation" pour utilisateurs connectés

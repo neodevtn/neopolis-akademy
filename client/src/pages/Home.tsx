@@ -137,7 +137,6 @@ function LogoutButton() {
   const { isAuthenticated, logout, user } = useAuth();
   const { t } = useLanguage();
   if (!isAuthenticated) return null;
-
   return (
     <button
       onClick={() => logout()}
@@ -147,6 +146,23 @@ function LogoutButton() {
       <LogOut size={13} />
       <span className="hidden md:inline">{t({ fr: "Déconnexion", en: "Logout", ar: "خروج" })}</span>
     </button>
+  );
+}
+
+function HeaderTrainingButton() {
+  const { isAuthenticated } = useAuth();
+  const { t } = useLanguage();
+  if (isAuthenticated) {
+    return (
+      <Link href="/training" className="text-[11px] font-semibold px-3.5 py-1.5 ml-1 rounded-full transition-all duration-200 text-white hover:shadow-md" style={{ background: "#1e3a6e" }}>
+        {t({ fr: "Formation", en: "Training", ar: "التدريب" })}
+      </Link>
+    );
+  }
+  return (
+    <Link href="/login" className="text-[11px] font-semibold px-3.5 py-1.5 ml-1 rounded-full transition-all duration-200 text-white hover:shadow-md" style={{ background: "#1e3a6e" }}>
+      {t({ fr: "Se connecter", en: "Sign in", ar: "تسجيل الدخول" })}
+    </Link>
   );
 }
 
@@ -281,7 +297,7 @@ export default function Home() {
             <NavLink href="#pourquoi">{t({ fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" })}</NavLink>
             <NavLink href="#partenaires">{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</NavLink>
             <NavLink href="#faq">FAQ</NavLink>
-            <Link href="/training" className="text-[11px] font-semibold px-3.5 py-1.5 ml-1 rounded-full transition-all duration-200 text-white hover:shadow-md" style={{ background: "#1e3a6e" }}>{t({ fr: "Formation", en: "Training", ar: "التدريب" })}</Link>
+            <HeaderTrainingButton />
           </div>
 
           {/* Right actions */}
@@ -1175,6 +1191,7 @@ function HeroGraphic() {
 
 function MobileMenuButton() {
   const { t } = useLanguage();
+  const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -1202,7 +1219,7 @@ function MobileMenuButton() {
                 <a href="#partenaires" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</a>
                 <a href="#faq" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>FAQ</a>
                 <div className="h-px my-1" style={{ background: "var(--wise-rule)" }} />
-                <a href="/training" onClick={() => setOpen(false)} className="text-sm font-semibold py-2.5 px-3 rounded-lg transition-colors" style={{ background: "rgba(30,58,110,0.08)", color: "#1e3a6e" }}>{t({ fr: "Formation 🎓", en: "Training 🎓", ar: "التدريب 🎓" })}</a>
+                <a href={isAuthenticated ? "/training" : "/login"} onClick={() => setOpen(false)} className="text-sm font-semibold py-2.5 px-3 rounded-lg transition-colors" style={{ background: "rgba(30,58,110,0.08)", color: "#1e3a6e" }}>{isAuthenticated ? t({ fr: "Formation 🎓", en: "Training 🎓", ar: "التدريب 🎓" }) : t({ fr: "Se connecter 🔒", en: "Sign in 🔒", ar: "تسجيل الدخول 🔒" })}</a>
               </nav>
             </div>
           </motion.div>
