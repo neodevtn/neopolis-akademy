@@ -104,8 +104,39 @@ export function registerAuthRoutes(app: Express) {
       const normalizedEmail = email.toLowerCase().trim();
       const user = await db.getUserByEmail(normalizedEmail);
 
-      // Always return success to prevent email enumeration
+      // If no user account exists, check if they are an accepted candidate without an account
       if (!user) {
+        try {
+          // Check if this email belongs to an accepted candidate
+          const { getDb } = await import("./db");
+          const { applications, userInvitations } = await import("../drizzle/schema");
+          const { eq, and } = await import("drizzle-orm");
+          const dbConn = await getDb();
+          if (dbConn) {
+            const [candidate] = await dbConn.select().from(applications)
+              .where(and(eq(applications.email, normalizedEmail), eq(applications.status, "selectionne")));
+            
+            if (candidate) {
+              // Accepted candidate without account - send them an invitation
+              const { createInvitation } = await import("./db");
+              const { sendInvitationEmail } = await import("./email");
+              const invitation = await createInvitation(normalizedEmail, `${candidate.firstName} ${candidate.lastName}`.trim(), 1);
+              const baseUrl = `${req.protocol}://${req.get('host')}`;
+              const invitationLink = `${baseUrl}/accept-invitation?token=${invitation.token}`;
+              await sendInvitationEmail({
+                to: normalizedEmail,
+                name: `${candidate.firstName} ${candidate.lastName}`.trim(),
+                language: "fr",
+                invitedBy: "Neopolis Akademy",
+                invitationLink,
+              });
+              console.log(`[Auth] Sent invitation to accepted candidate without account: ${normalizedEmail}`);
+            }
+          }
+        } catch (invErr) {
+          console.error("[Auth] Error checking/sending invitation for candidate:", invErr);
+        }
+        // Always return same success message to prevent email enumeration
         res.json({ success: true, message: "Si un compte existe avec cet email, un lien de réinitialisation a été envoyé." });
         return;
       }

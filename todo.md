@@ -1161,3 +1161,7 @@
 
 ## Header Button Conditionnel
 - [x] Bouton bleu header : "Se connecter" pour utilisateurs non connectés, "Formation" pour utilisateurs connectés
+
+## Forgot Password - Fallback Invitation pour candidats acceptés
+- [x] Modifier forgot-password pour chercher dans applications (status=selectionne) si email pas trouvé dans users
+- [x] Envoyer automatiquement une invitation si candidat accepté sans compte
