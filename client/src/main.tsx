@@ -11,6 +11,8 @@ import { getLoginUrl } from "./const";
 import "./index.css";
 
 // Initialize Sentry for error monitoring, performance & user feedback
+const isProduction = import.meta.env.MODE === "production";
+
 Sentry.init({
   dsn: "https://f1beaf088d01628e72b6cc5b96511906@sentry.neopolis-dev.com//102",
   integrations: [
@@ -31,12 +33,36 @@ Sentry.init({
       successMessageText: "Merci pour votre retour !",
       isNameRequired: true,
       isEmailRequired: true,
+      // Neopolis brand styling
+      themeLight: {
+        background: "#ffffff",
+        foreground: "#1a1f36",
+        accentBackground: "#1e3a5f",
+        accentForeground: "#ffffff",
+        inputBackground: "#f8f9fc",
+        inputForeground: "#1a1f36",
+        inputBorder: "#e2e4ea",
+        inputBorderFocus: "#1e3a5f",
+        inputOutlineFocus: "rgba(30, 58, 95, 0.2)",
+        formBorderRadius: "12px",
+        submitBackground: "#1e3a5f",
+        submitBackgroundHover: "#162d4a",
+        submitForeground: "#ffffff",
+        submitBorder: "#1e3a5f",
+        submitOutlineFocus: "rgba(30, 58, 95, 0.3)",
+        cancelBackground: "transparent",
+        cancelBackgroundHover: "#f8f9fc",
+        cancelForeground: "#1a1f36",
+        cancelBorder: "#e2e4ea",
+      },
+      triggerLabel: "Signaler un problème",
+      triggerAriaLabel: "Ouvrir le formulaire de feedback",
     }),
   ],
-  // Performance Monitoring
-  tracesSampleRate: 1.0,
+  // Performance Monitoring — 0.2 in production, 1.0 in development
+  tracesSampleRate: isProduction ? 0.2 : 1.0,
   // Session Replay
-  replaysSessionSampleRate: 0.1,
+  replaysSessionSampleRate: isProduction ? 0.1 : 0.0,
   replaysOnErrorSampleRate: 1.0,
   // Environment
   environment: import.meta.env.MODE,

@@ -1142,3 +1142,8 @@
 - [x] Configurer le suivi des performances (Browser Tracing, tracesSampleRate: 1.0)
 - [x] Configurer Session Replay (replaysOnErrorSampleRate: 1.0)
 - [x] Configurer le widget User Feedback (labels en français)
+
+## Améliorations Sentry
+- [x] Ajouter le contexte utilisateur (Sentry.setUser) quand l'utilisateur est connecté
+- [x] Ajuster tracesSampleRate à 0.2 en production (garder 1.0 en dev)
+- [x] Personnaliser le style du widget feedback pour s'intégrer au design du site
