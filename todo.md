@@ -1123,3 +1123,7 @@
 - [x] Tests unitaires pour sous-composants extraits (contentDetectors) - 24 tests ajoutés
 - [x] Lazy-loading des données JSON de cours (cache mémoire + prefetch cours suivant)
 - [x] Header CSP renforcé (unsafe-eval retiré en prod, base-uri, form-action, HSTS)
+
+## Performance & Tests d'intégration
+- [x] Script Lighthouse automatisé avec rapport de performance (pnpm lighthouse)
+- [x] Tests d'intégration API pour endpoints tRPC admin (25 tests - 65 total)
