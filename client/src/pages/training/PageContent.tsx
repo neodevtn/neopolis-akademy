@@ -694,12 +694,37 @@ export default function PageContent({ content, lang }: { content: string; lang: 
         </li>
       );
     } else {
-      // Regular paragraph
-      elements.push(
-        <p key={i} className="text-[14.5px] leading-[1.75] mb-3 text-foreground/80">
-          {renderInlineFormatting(line)}
-        </p>
-      );
+      // Regular paragraph - detect very long lines that are concatenated sentences
+      const trimmedLine = line.trim();
+      if (trimmedLine.length > 250) {
+        // Split on sentence boundaries (period followed by capital letter) for readability
+        const sentences = trimmedLine.split(/\.(?=[A-Z])/).map((s, idx, arr) => 
+          idx < arr.length - 1 ? s + '.' : s
+        ).filter(s => s.trim().length > 0);
+        if (sentences.length > 1) {
+          elements.push(
+            <div key={i} className="mb-4 space-y-2">
+              {sentences.map((sentence, si) => (
+                <p key={si} className="text-[14.5px] leading-[1.75] text-foreground/80">
+                  {renderInlineFormatting(sentence.trim())}
+                </p>
+              ))}
+            </div>
+          );
+        } else {
+          elements.push(
+            <p key={i} className="text-[14.5px] leading-[1.85] mb-4 text-foreground/80">
+              {renderInlineFormatting(line)}
+            </p>
+          );
+        }
+      } else {
+        elements.push(
+          <p key={i} className="text-[14.5px] leading-[1.75] mb-3 text-foreground/80">
+            {renderInlineFormatting(line)}
+          </p>
+        );
+      }
     }
   }
 

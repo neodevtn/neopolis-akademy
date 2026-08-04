@@ -406,7 +406,7 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
           {getText(exercise.title) && (
             <>
               <span className="text-gray-300">·</span>
-              <span className="text-sm font-medium text-gray-700 truncate" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+              <span className="text-sm font-medium text-gray-700" style={{ fontFamily: 'Lora, Georgia, serif' }}>
                 {getText(exercise.title)}
               </span>
             </>

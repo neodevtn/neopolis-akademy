@@ -1225,3 +1225,6 @@
 
 ## Boutons de téléchargement cours BI
 - [x] Remplacer les liens markdown bruts par des boutons de téléchargement visuels dans le LessonViewer
+
+## Correction lisibilité exercices
+- [x] Corriger le rendu des exercices type "exercise" : espacement entre paragraphes, titre complet non tronqué
