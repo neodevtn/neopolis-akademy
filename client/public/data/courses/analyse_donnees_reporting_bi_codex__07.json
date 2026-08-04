@@ -10,6 +10,22 @@
       },
       "chapters": [
         {
+          "id": "chapter_00",
+          "title": {
+            "en": "Download Test Data",
+            "fr": "Télécharger les données de test"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Course Test Data\n\nDownload the files needed for this module's exercises:\n\n| File | Description | Size |\n|------|-------------|------|\n| [Complete Pack (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip) | All data files and SQL scripts | ~15 MB |\n| [CSV Files Only](/manus-storage/neopolis_bi_csv_94547789.zip) | 13 raw data CSV files | ~15 MB |\n| [SQL Scripts Only](/manus-storage/neopolis_bi_sql_d01aa309.zip) | OLTP, DW schemas, marts, assertions | ~10 KB |\n\n### Data Pack Contents\n\n**CSV Files (13 files):**\n\n| File | Rows | Description |\n|------|------|-------------|\n| `customers.csv` | 12,000 | Customers (5 countries, 5 segments) |\n| `products.csv` | 350 | Product catalog (5 categories) |\n| `sales_orders.csv` | 85,000 | Sales orders (2024-2026) |\n| `sales_order_lines.csv` | 260,000 | Detailed order lines |\n| `returns.csv` | 9,000 | Returns and refunds |\n| `inventory_movements.csv` | 120,000 | Inventory movements (5 warehouses) |\n| `web_sessions.csv` | 400,000 | Web sessions and conversions |\n| `marketing_spend.csv` | 4,800 | Marketing spend by channel |\n| `sales_targets.csv` | 3,600 | Monthly sales targets |\n| `support_tickets.csv` | 45,000 | Customer support tickets |\n| `fx_rates.csv` | 7,500+ | Daily exchange rates |\n| `calendar.csv` | 943 | Calendar table (2024-2026) |\n| `data_quality_issues.csv` | 10 | Catalog of injected anomalies |\n\n**SQL Scripts (6 files):**\n- `bi_codex_oltp_postgres.sql` — Complete PostgreSQL OLTP schema\n- `bi_codex_dw_postgres.sql` — Star schema Data Warehouse\n- `bi_codex_star_schema.sql` — Star schema DDL (reference)\n- `bi_codex_faulty_marts.sql` — Intentionally faulty marts (debugging exercises)\n- `expected_results.sql` — Reference queries for validation\n- `data_quality_assertions.sql` — Data quality test queries\n\n### Injected Data Anomalies (for exercises)\nThe data contains **10 intentional anomalies** you must detect:\n1. Duplicate customers (emails with `+dup` variants)\n2. Negative-margin products (cost > price)\n3. Orders shipped before order date\n4. Order lines referencing non-existent products\n5. Returns without matching orders\n6. Missing exchange rates for certain days\n7. Orders without detail lines\n8. Inactive customers with recent orders\n9. Months without sales targets\n10. Resolved tickets without satisfaction scores",
+                "fr": "## Données de test du cours\n\nTéléchargez les fichiers nécessaires pour réaliser les exercices de ce module :\n\n| Fichier | Description | Taille |\n|---------|-------------|--------|\n| [Pack complet (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip) | Tous les fichiers de données et scripts SQL | ~15 Mo |\n| [Fichiers CSV uniquement](/manus-storage/neopolis_bi_csv_94547789.zip) | 13 fichiers CSV de données brutes | ~15 Mo |\n| [Scripts SQL uniquement](/manus-storage/neopolis_bi_sql_d01aa309.zip) | Schémas OLTP, DW, marts, assertions | ~10 Ko |\n\n### Contenu du pack de données\n\n**Fichiers CSV (13 fichiers) :**\n\n| Fichier | Lignes | Description |\n|---------|--------|-------------|\n| `customers.csv` | 12 000 | Clients (5 pays, 5 segments) |\n| `products.csv` | 350 | Catalogue produits (5 catégories) |\n| `sales_orders.csv` | 85 000 | Commandes de vente (2024-2026) |\n| `sales_order_lines.csv` | 260 000 | Lignes de commande détaillées |\n| `returns.csv` | 9 000 | Retours et remboursements |\n| `inventory_movements.csv` | 120 000 | Mouvements de stock (5 entrepôts) |\n| `web_sessions.csv` | 400 000 | Sessions web et conversions |\n| `marketing_spend.csv` | 4 800 | Dépenses marketing par canal |\n| `sales_targets.csv` | 3 600 | Objectifs de vente mensuels |\n| `support_tickets.csv` | 45 000 | Tickets support client |\n| `fx_rates.csv` | 7 500+ | Taux de change quotidiens |\n| `calendar.csv` | 943 | Table calendrier (2024-2026) |\n| `data_quality_issues.csv` | 10 | Catalogue des anomalies injectées |\n\n**Scripts SQL (6 fichiers) :**\n- `bi_codex_oltp_postgres.sql` — Schéma OLTP PostgreSQL complet\n- `bi_codex_dw_postgres.sql` — Data Warehouse en étoile\n- `bi_codex_star_schema.sql` — DDL du schéma en étoile (référence)\n- `bi_codex_faulty_marts.sql` — Marts volontairement erronés (exercices de débogage)\n- `expected_results.sql` — Requêtes de référence pour validation\n- `data_quality_assertions.sql` — Tests de qualité de données\n\n### Anomalies de données injectées (pour exercices)\nLes données contiennent **10 anomalies intentionnelles** que vous devez détecter :\n1. Doublons clients (emails avec variantes `+dup`)\n2. Produits à marge négative (coût > prix)\n3. Commandes expédiées avant la date de commande\n4. Lignes de commande référençant des produits inexistants\n5. Retours sans commande d'origine\n6. Taux de change manquants pour certains jours\n7. Commandes sans lignes de détail\n8. Clients inactifs avec commandes récentes\n9. Mois sans objectifs de vente\n10. Tickets résolus sans score de satisfaction"
+              }
+            }
+          ]
+        },
+        {
           "id": "chapter_01",
           "title": {
             "en": "BI Tests and Non-Regression",
@@ -35,8 +51,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Practical Exercise\n\nCreate SQL tests and KPI controls that detect regressions. Define alert thresholds for each critical KPI. Build a test suite that runs before any report refresh.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nCréez des tests SQL et des contrôles KPI qui détectent les régressions. Définissez des seuils d'alerte pour chaque KPI critique. Construisez une suite de tests qui s'exécute avant chaque rafraîchissement de rapport.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
+                "en": "## Lab 08: Industrialize the BI Project\n\n### Objective\nCreate a complete quality assurance framework: regression tests, documentation, deployment plan, and Codex governance.\n\n### Data Required\n- [SQL pack](/manus-storage/neopolis_bi_sql_d01aa309.zip) → `data_quality_assertions.sql` and `expected_results.sql`\n\n### Tasks\n\n**Task 1: SQL Regression Tests (25 min)**\nCreate a test suite that validates:\n- KPI values stay within expected ranges after data refresh\n- No new orphan references appear\n- Row counts don't drop unexpectedly\n- Critical measures (CA Net, Margin) don't deviate > 5% from last run\n\nFormat:\n```sql\n-- Test: CA Net Q1 2025 should be between 10M and 50M EUR\nSELECT 'ca_net_q1_2025_range' AS test,\n       CASE WHEN SUM(net_amount_eur) BETWEEN 10000000 AND 50000000 \n            THEN 'PASS' ELSE 'FAIL' END AS status\nFROM dw.fact_sales fs\nJOIN dw.dim_date d ON fs.date_key = d.date_key\nWHERE d.year = 2025 AND d.quarter = 1;\n```\n\n**Task 2: Documentation Generation (20 min)**\nUse Codex to generate:\n- Data dictionary (all tables, columns, types, descriptions)\n- KPI catalog (name, formula, owner, update frequency)\n- Data lineage diagram (source → staging → mart → report)\n\nThen review for accuracy.\n\n**Task 3: Deployment Checklist (15 min)**\nCreate a release checklist for Power BI/Fabric:\n- [ ] All tests pass in dev\n- [ ] Data refresh successful\n- [ ] KPI values validated\n- [ ] Documentation updated\n- [ ] Stakeholder sign-off\n- [ ] Rollback plan documented\n\n**Task 4: Codex RACI Matrix (15 min)**\nDefine what Codex can do autonomously vs. what needs human review:\n\n| Task | Codex | Human | Notes |\n|------|-------|-------|-------|\n| Generate SQL | Execute | Review | Must validate logic |\n| Write DAX | Propose | Validate | Test edge cases |\n| Executive summary | Draft | Verify | Check every number |\n| Schema changes | Propose | Approve | Never auto-apply |\n\n### Deliverables\n| # | File | Description |\n|---|------|-------------|\n| 1 | `Regression_Tests.sql` | Complete test suite (15+ tests) |\n| 2 | `QA_Audit_Report.md` | Quality assurance findings |\n| 3 | `Release_Checklist.md` | Deployment checklist |\n| 4 | `Data_Lineage.md` | Source-to-report lineage |\n| 5 | `Codex_RACI.md` | Human/AI responsibility matrix |\n\n### Checkpoint\nExplain how to detect a KPI regression and what to do when Codex produces a plausible but incorrect analysis.",
+                "fr": "## Lab 08 : Industrialiser le projet BI\n\n### Objectif\nCréer un framework d'assurance qualité complet : tests de non-régression, documentation, plan de déploiement et gouvernance Codex.\n\n### Données requises\n- [Pack SQL](/manus-storage/neopolis_bi_sql_d01aa309.zip) → `data_quality_assertions.sql` et `expected_results.sql`\n\n### Tâches\n\n**Tâche 1 : Tests de non-régression SQL (25 min)**\nCréez une suite de tests qui valide :\n- Les valeurs KPI restent dans les plages attendues après rafraîchissement\n- Pas de nouvelles références orphelines\n- Les comptages de lignes ne chutent pas de manière inattendue\n- Les mesures critiques (CA Net, Marge) ne dévient pas de > 5% par rapport au dernier run\n\nFormat :\n```sql\n-- Test : CA Net T1 2025 doit être entre 10M et 50M EUR\nSELECT 'ca_net_q1_2025_range' AS test,\n       CASE WHEN SUM(net_amount_eur) BETWEEN 10000000 AND 50000000 \n            THEN 'PASS' ELSE 'FAIL' END AS status\nFROM dw.fact_sales fs\nJOIN dw.dim_date d ON fs.date_key = d.date_key\nWHERE d.year = 2025 AND d.quarter = 1;\n```\n\n**Tâche 2 : Génération de documentation (20 min)**\nUtilisez Codex pour générer :\n- Dictionnaire de données (toutes les tables, colonnes, types, descriptions)\n- Catalogue KPI (nom, formule, propriétaire, fréquence de mise à jour)\n- Diagramme de lignage (source → staging → mart → rapport)\n\nPuis vérifiez l'exactitude.\n\n**Tâche 3 : Checklist de déploiement (15 min)**\nCréez une checklist de release pour Power BI/Fabric :\n- [ ] Tous les tests passent en dev\n- [ ] Rafraîchissement des données réussi\n- [ ] Valeurs KPI validées\n- [ ] Documentation mise à jour\n- [ ] Validation des parties prenantes\n- [ ] Plan de rollback documenté\n\n**Tâche 4 : Matrice RACI Codex (15 min)**\nDéfinissez ce que Codex peut faire de manière autonome vs. ce qui nécessite une revue humaine :\n\n| Tâche | Codex | Humain | Notes |\n|-------|-------|--------|-------|\n| Générer SQL | Exécuter | Réviser | Valider la logique |\n| Écrire DAX | Proposer | Valider | Tester les cas limites |\n| Synthèse exécutive | Rédiger | Vérifier | Contrôler chaque chiffre |\n| Changements schéma | Proposer | Approuver | Jamais auto-appliquer |\n\n### Livrables\n| # | Fichier | Description |\n|---|---------|-------------|\n| 1 | `Regression_Tests.sql` | Suite de tests complète (15+ tests) |\n| 2 | `QA_Audit_Report.md` | Résultats d'assurance qualité |\n| 3 | `Release_Checklist.md` | Checklist de déploiement |\n| 4 | `Data_Lineage.md` | Lignage source-à-rapport |\n| 5 | `Codex_RACI.md` | Matrice de responsabilité humain/IA |\n\n### Checkpoint\nExpliquez comment détecter une régression KPI et quoi faire quand Codex produit une analyse plausible mais incorrecte."
               }
             }
           ]
@@ -197,18 +213,51 @@
           ]
         },
         {
-          "id": "chapter_11",
+          "id": "chapter_exercise_07",
           "title": {
-            "en": "Hands-on: Codex Agent Governance",
-            "fr": "TP : Gouvernance de l'agent Codex"
+            "en": "Lab 07 – Data Quality & Automation",
+            "fr": "TP 07 – Qualité des données et Automatisation"
           },
           "blocks": [
             {
-              "type": "content",
+              "type": "exercise",
               "body": {
-                "en": "## Practical Exercise\n\nDefine which tasks Codex can perform autonomously and which require human review. Write a RACI matrix for human/agent collaboration in BI.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nDéfinissez quelles tâches Codex peut effectuer de manière autonome et lesquelles nécessitent une revue humaine. Rédigez une matrice RACI pour la collaboration humain/agent en BI.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
-              }
+                "en": "## Lab 07 – Data Quality & Automation\n\n**Instructions:** Implement data quality checks and automation rules. Identify anomalies in the dataset using the data_quality_issues.csv catalog as reference.\n\n---\n\n### Numeric Answer Questions\n\nAfter processing the data with the tools taught in this module, enter your answers below. The platform will automatically validate your results.\n\n**Q1.** How many data quality issues are catalogued in data_quality_issues.csv?\n\n**Q2.** How many orders have no corresponding order lines?\n\n**Q3.** How many entries are in the fx_rates.csv file?\n\n",
+                "fr": "## TP 07 – Qualité des données et Automatisation\n\n**Instructions :** Implémentez des contrôles de qualité des données et des règles d'automatisation. Identifiez les anomalies dans le jeu de données en utilisant data_quality_issues.csv comme référence.\n\n---\n\n### Questions à réponse numérique\n\nAprès avoir traité les données avec les outils enseignés dans ce module, saisissez vos réponses ci-dessous. La plateforme validera automatiquement vos résultats.\n\n**Q1.** Combien d'anomalies de qualité sont cataloguées dans data_quality_issues.csv ?\n\n**Q2.** Combien de commandes n'ont aucune ligne de commande correspondante ?\n\n**Q3.** Combien d'entrées contient le fichier fx_rates.csv ?\n\n"
+              },
+              "exercise_type": "numeric_answers",
+              "questions": [
+                {
+                  "id": "m07_q01_total_dq_issues",
+                  "text": {
+                    "en": "How many data quality issues are catalogued in data_quality_issues.csv?",
+                    "fr": "Combien d'anomalies de qualité sont cataloguées dans data_quality_issues.csv ?"
+                  },
+                  "expected_value": 10,
+                  "unit": "anomalies",
+                  "tolerance": 0
+                },
+                {
+                  "id": "m07_q02_orders_without_lines",
+                  "text": {
+                    "en": "How many orders have no corresponding order lines?",
+                    "fr": "Combien de commandes n'ont aucune ligne de commande correspondante ?"
+                  },
+                  "expected_value": 3891,
+                  "unit": "commandes",
+                  "tolerance": 0
+                },
+                {
+                  "id": "m07_q03_fx_rates_total_entries",
+                  "text": {
+                    "en": "How many entries are in the fx_rates.csv file?",
+                    "fr": "Combien d'entrées contient le fichier fx_rates.csv ?"
+                  },
+                  "expected_value": 7526,
+                  "unit": "entrées",
+                  "tolerance": 0
+                }
+              ]
             }
           ]
         },

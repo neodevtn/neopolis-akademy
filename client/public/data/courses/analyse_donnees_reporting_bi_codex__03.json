@@ -10,6 +10,22 @@
       },
       "chapters": [
         {
+          "id": "chapter_00",
+          "title": {
+            "en": "Download Test Data",
+            "fr": "Télécharger les données de test"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Course Test Data\n\nDownload the files needed for this module's exercises:\n\n| File | Description | Size |\n|------|-------------|------|\n| [Complete Pack (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip) | All data files and SQL scripts | ~15 MB |\n| [CSV Files Only](/manus-storage/neopolis_bi_csv_94547789.zip) | 13 raw data CSV files | ~15 MB |\n| [SQL Scripts Only](/manus-storage/neopolis_bi_sql_d01aa309.zip) | OLTP, DW schemas, marts, assertions | ~10 KB |\n\n### Data Pack Contents\n\n**CSV Files (13 files):**\n\n| File | Rows | Description |\n|------|------|-------------|\n| `customers.csv` | 12,000 | Customers (5 countries, 5 segments) |\n| `products.csv` | 350 | Product catalog (5 categories) |\n| `sales_orders.csv` | 85,000 | Sales orders (2024-2026) |\n| `sales_order_lines.csv` | 260,000 | Detailed order lines |\n| `returns.csv` | 9,000 | Returns and refunds |\n| `inventory_movements.csv` | 120,000 | Inventory movements (5 warehouses) |\n| `web_sessions.csv` | 400,000 | Web sessions and conversions |\n| `marketing_spend.csv` | 4,800 | Marketing spend by channel |\n| `sales_targets.csv` | 3,600 | Monthly sales targets |\n| `support_tickets.csv` | 45,000 | Customer support tickets |\n| `fx_rates.csv` | 7,500+ | Daily exchange rates |\n| `calendar.csv` | 943 | Calendar table (2024-2026) |\n| `data_quality_issues.csv` | 10 | Catalog of injected anomalies |\n\n**SQL Scripts (6 files):**\n- `bi_codex_oltp_postgres.sql` — Complete PostgreSQL OLTP schema\n- `bi_codex_dw_postgres.sql` — Star schema Data Warehouse\n- `bi_codex_star_schema.sql` — Star schema DDL (reference)\n- `bi_codex_faulty_marts.sql` — Intentionally faulty marts (debugging exercises)\n- `expected_results.sql` — Reference queries for validation\n- `data_quality_assertions.sql` — Data quality test queries\n\n### Injected Data Anomalies (for exercises)\nThe data contains **10 intentional anomalies** you must detect:\n1. Duplicate customers (emails with `+dup` variants)\n2. Negative-margin products (cost > price)\n3. Orders shipped before order date\n4. Order lines referencing non-existent products\n5. Returns without matching orders\n6. Missing exchange rates for certain days\n7. Orders without detail lines\n8. Inactive customers with recent orders\n9. Months without sales targets\n10. Resolved tickets without satisfaction scores",
+                "fr": "## Données de test du cours\n\nTéléchargez les fichiers nécessaires pour réaliser les exercices de ce module :\n\n| Fichier | Description | Taille |\n|---------|-------------|--------|\n| [Pack complet (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip) | Tous les fichiers de données et scripts SQL | ~15 Mo |\n| [Fichiers CSV uniquement](/manus-storage/neopolis_bi_csv_94547789.zip) | 13 fichiers CSV de données brutes | ~15 Mo |\n| [Scripts SQL uniquement](/manus-storage/neopolis_bi_sql_d01aa309.zip) | Schémas OLTP, DW, marts, assertions | ~10 Ko |\n\n### Contenu du pack de données\n\n**Fichiers CSV (13 fichiers) :**\n\n| Fichier | Lignes | Description |\n|---------|--------|-------------|\n| `customers.csv` | 12 000 | Clients (5 pays, 5 segments) |\n| `products.csv` | 350 | Catalogue produits (5 catégories) |\n| `sales_orders.csv` | 85 000 | Commandes de vente (2024-2026) |\n| `sales_order_lines.csv` | 260 000 | Lignes de commande détaillées |\n| `returns.csv` | 9 000 | Retours et remboursements |\n| `inventory_movements.csv` | 120 000 | Mouvements de stock (5 entrepôts) |\n| `web_sessions.csv` | 400 000 | Sessions web et conversions |\n| `marketing_spend.csv` | 4 800 | Dépenses marketing par canal |\n| `sales_targets.csv` | 3 600 | Objectifs de vente mensuels |\n| `support_tickets.csv` | 45 000 | Tickets support client |\n| `fx_rates.csv` | 7 500+ | Taux de change quotidiens |\n| `calendar.csv` | 943 | Table calendrier (2024-2026) |\n| `data_quality_issues.csv` | 10 | Catalogue des anomalies injectées |\n\n**Scripts SQL (6 fichiers) :**\n- `bi_codex_oltp_postgres.sql` — Schéma OLTP PostgreSQL complet\n- `bi_codex_dw_postgres.sql` — Data Warehouse en étoile\n- `bi_codex_star_schema.sql` — DDL du schéma en étoile (référence)\n- `bi_codex_faulty_marts.sql` — Marts volontairement erronés (exercices de débogage)\n- `expected_results.sql` — Requêtes de référence pour validation\n- `data_quality_assertions.sql` — Tests de qualité de données\n\n### Anomalies de données injectées (pour exercices)\nLes données contiennent **10 anomalies intentionnelles** que vous devez détecter :\n1. Doublons clients (emails avec variantes `+dup`)\n2. Produits à marge négative (coût > prix)\n3. Commandes expédiées avant la date de commande\n4. Lignes de commande référençant des produits inexistants\n5. Retours sans commande d'origine\n6. Taux de change manquants pour certains jours\n7. Commandes sans lignes de détail\n8. Clients inactifs avec commandes récentes\n9. Mois sans objectifs de vente\n10. Tickets résolus sans score de satisfaction"
+              }
+            }
+          ]
+        },
+        {
           "id": "chapter_01",
           "title": {
             "en": "Star Schema Design with Codex",
@@ -35,8 +51,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Practical Exercise\n\nLearn to design a professional star schema with Codex, defining grain, dimensions, and facts for the Neopolis Market Intelligence dataset. The schema must support all 20 KPIs defined in the project brief.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nApprenez à concevoir un schéma en étoile professionnel avec Codex, en définissant le grain, les dimensions et les faits pour le dataset Neopolis Market Intelligence. Le schéma doit supporter les 20 KPI définis dans le brief projet.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
+                "en": "## Lab 03: Star Schema Design with Codex\n\n### Objective\nDesign and implement a star schema data warehouse from the OLTP source, using Codex as a design assistant.\n\n### Data Required\n- [SQL pack](/manus-storage/neopolis_bi_sql_d01aa309.zip) — Use `bi_codex_oltp_postgres.sql` as source\n- [CSV data](/manus-storage/neopolis_bi_csv_94547789.zip) for validation\n\n### Tasks\n\n**Task 1: Identify Facts and Dimensions (20 min)**\nFrom the OLTP schema, identify:\n- Fact tables (transactional events with measures)\n- Dimension tables (descriptive attributes)\n- Grain of each fact table (what does one row represent?)\n\nExpected facts: Sales, Returns, Inventory, Marketing, Support, Targets\n\n**Task 2: Design the Star Schema (30 min)**\nAsk Codex to propose a star schema. Then validate:\n- Are dimensions properly denormalized?\n- Is the grain clearly defined for each fact?\n- Are surrogate keys used?\n- Is there a proper date dimension?\n- Are slowly changing dimensions handled?\n\nReference: Compare with `bi_codex_star_schema.sql`\n\n**Task 3: Implement DDL (20 min)**\nWrite the CREATE TABLE statements for:\n- `dim_date`, `dim_customer`, `dim_product`, `dim_country`, `dim_channel`\n- `fact_sales`, `fact_returns`, `fact_inventory`\n\n**Task 4: ETL Logic (20 min)**\nWrite INSERT...SELECT statements to populate the DW from OLTP:\n- Handle currency conversion using `fx_rates`\n- Calculate derived measures (net_amount, margin)\n- Handle NULL values and missing references\n\n### Deliverables\n| # | File | Description |\n|---|------|-------------|\n| 1 | `star_schema_design.md` | Documented schema with grain definitions |\n| 2 | `star_schema_ddl.sql` | Complete DDL for all tables |\n| 3 | `etl_load.sql` | INSERT statements to populate the DW |\n\n### Evaluation Criteria\n- **Grain correctness** (30%) — Each fact table has a clearly defined, appropriate grain\n- **Dimension design** (25%) — Proper denormalization, surrogate keys, SCD handling\n- **ETL completeness** (25%) — All tables populated with correct transformations\n- **Currency handling** (20%) — Proper EUR conversion using fx_rates\n\n### Checkpoint\nJustify the grain of each fact table and explain why you chose that level of detail.",
+                "fr": "## Lab 03 : Conception du schéma en étoile avec Codex\n\n### Objectif\nConcevoir et implémenter un data warehouse en schéma en étoile à partir de la source OLTP, en utilisant Codex comme assistant de conception.\n\n### Données requises\n- [Pack SQL](/manus-storage/neopolis_bi_sql_d01aa309.zip) — Utilisez `bi_codex_oltp_postgres.sql` comme source\n- [Données CSV](/manus-storage/neopolis_bi_csv_94547789.zip) pour validation\n\n### Tâches\n\n**Tâche 1 : Identifier les faits et dimensions (20 min)**\nÀ partir du schéma OLTP, identifiez :\n- Tables de faits (événements transactionnels avec mesures)\n- Tables de dimensions (attributs descriptifs)\n- Grain de chaque table de faits (que représente une ligne ?)\n\nFaits attendus : Ventes, Retours, Inventaire, Marketing, Support, Objectifs\n\n**Tâche 2 : Concevoir le schéma en étoile (30 min)**\nDemandez à Codex de proposer un schéma en étoile. Puis validez :\n- Les dimensions sont-elles correctement dénormalisées ?\n- Le grain est-il clairement défini pour chaque fait ?\n- Les clés de substitution sont-elles utilisées ?\n- Y a-t-il une dimension date correcte ?\n- Les dimensions à évolution lente sont-elles gérées ?\n\nRéférence : Comparez avec `bi_codex_star_schema.sql`\n\n**Tâche 3 : Implémenter le DDL (20 min)**\nÉcrivez les instructions CREATE TABLE pour :\n- `dim_date`, `dim_customer`, `dim_product`, `dim_country`, `dim_channel`\n- `fact_sales`, `fact_returns`, `fact_inventory`\n\n**Tâche 4 : Logique ETL (20 min)**\nÉcrivez des instructions INSERT...SELECT pour peupler le DW depuis l'OLTP :\n- Gérer la conversion de devises avec `fx_rates`\n- Calculer les mesures dérivées (montant_net, marge)\n- Gérer les valeurs NULL et références manquantes\n\n### Livrables\n| # | Fichier | Description |\n|---|---------|-------------|\n| 1 | `star_schema_design.md` | Schéma documenté avec définitions de grain |\n| 2 | `star_schema_ddl.sql` | DDL complet pour toutes les tables |\n| 3 | `etl_load.sql` | Instructions INSERT pour peupler le DW |\n\n### Critères d'évaluation\n- **Justesse du grain** (30%) — Chaque table de faits a un grain clairement défini et approprié\n- **Conception des dimensions** (25%) — Dénormalisation correcte, clés de substitution, gestion SCD\n- **Complétude ETL** (25%) — Toutes les tables peuplées avec les bonnes transformations\n- **Gestion des devises** (20%) — Conversion EUR correcte via fx_rates\n\n### Checkpoint\nJustifiez le grain de chaque table de faits et expliquez pourquoi vous avez choisi ce niveau de détail."
               }
             }
           ]
@@ -92,8 +108,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Practical Exercise\n\nBuild the actual DDL for fact_sales, fact_returns, fact_inventory, fact_marketing, fact_support, fact_targets and all dimension tables. Validate referential integrity between facts and dimensions.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nConstruisez le DDL réel pour fact_sales, fact_returns, fact_inventory, fact_marketing, fact_support, fact_targets et toutes les tables de dimensions. Validez l'intégrité référentielle entre faits et dimensions.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
+                "en": "## Hands-on: Build Facts and Dimensions\n\n### Objective\nImplement the complete ETL pipeline from OLTP to star schema, handling all edge cases.\n\n### Tasks\n\n**Task 1: Build dim_date (10 min)**\n- Generate all dates from 2024-01-01 to 2026-12-31\n- Include: year, quarter, month, week, day_of_week, fiscal_year, fiscal_quarter\n- Mark weekends and holidays\n\n**Task 2: Build dim_customer with SCD Type 2 (20 min)**\n- Load all customers with surrogate keys\n- Handle the `is_active` flag as a slowly changing dimension\n- Include `valid_from` and `valid_to` columns\n\n**Task 3: Build fact_sales (30 min)**\n- Join orders → order_lines → products → fx_rates\n- Calculate: `net_amount_eur = line_total * fx_rate * (1 - discount_pct/100)`\n- Calculate: `cost_eur = quantity * product.cost_eur`\n- Calculate: `margin_eur = net_amount_eur - cost_eur`\n- Handle missing fx_rates (use closest available rate)\n- Handle orphan product references (exclude or flag)\n\n**Task 4: Validate the load (15 min)**\nRun reconciliation queries:\n- Total rows in fact_sales vs. total order_lines\n- Sum of net_amount_eur vs. expected range\n- No NULL foreign keys in fact tables\n\n### Deliverable\nComplete SQL scripts for dimension and fact table population with validation queries.",
+                "fr": "## TP : Construction des tables de faits et dimensions\n\n### Objectif\nImplémenter le pipeline ETL complet de l'OLTP au schéma en étoile, en gérant tous les cas limites.\n\n### Tâches\n\n**Tâche 1 : Construire dim_date (10 min)**\n- Générer toutes les dates du 01/01/2024 au 31/12/2026\n- Inclure : année, trimestre, mois, semaine, jour_semaine, année_fiscale, trimestre_fiscal\n- Marquer les weekends et jours fériés\n\n**Tâche 2 : Construire dim_customer avec SCD Type 2 (20 min)**\n- Charger tous les clients avec clés de substitution\n- Gérer le flag `is_active` comme dimension à évolution lente\n- Inclure les colonnes `valid_from` et `valid_to`\n\n**Tâche 3 : Construire fact_sales (30 min)**\n- Joindre orders → order_lines → products → fx_rates\n- Calculer : `net_amount_eur = line_total * fx_rate * (1 - discount_pct/100)`\n- Calculer : `cost_eur = quantity * product.cost_eur`\n- Calculer : `margin_eur = net_amount_eur - cost_eur`\n- Gérer les taux de change manquants (utiliser le taux le plus proche)\n- Gérer les références produit orphelines (exclure ou signaler)\n\n**Tâche 4 : Valider le chargement (15 min)**\nExécuter des requêtes de réconciliation :\n- Total de lignes dans fact_sales vs. total order_lines\n- Somme de net_amount_eur vs. plage attendue\n- Pas de clés étrangères NULL dans les tables de faits\n\n### Livrable\nScripts SQL complets pour le peuplement des dimensions et faits avec requêtes de validation."
               }
             }
           ]
@@ -149,8 +165,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Practical Exercise\n\nRun validation queries to ensure your data marts are correct: row counts match, amounts reconcile, no orphan keys, grain is consistent. Compare with expected_results.sql.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nExécutez des requêtes de validation pour vous assurer que vos data marts sont corrects : les comptages correspondent, les montants se réconcilient, pas de clés orphelines, le grain est cohérent. Comparez avec expected_results.sql.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
+                "en": "## Hands-on: Validate Data Marts\n\n### Objective\nDebug intentionally faulty data marts and produce corrected versions.\n\n### Data Required\n- [SQL pack](/manus-storage/neopolis_bi_sql_d01aa309.zip) → Use `bi_codex_faulty_marts.sql`\n\n### Tasks\n\n**Task 1: Identify errors in faulty marts (30 min)**\nLoad `bi_codex_faulty_marts.sql` and analyze each mart:\n1. `mart_revenue_faulty` — What's wrong with the CA net calculation?\n2. `mart_margin_faulty` — Why is the margin calculation incorrect?\n3. `mart_conversion_faulty` — What's the CROSS JOIN problem?\n4. `mart_target_attainment_faulty` — Why is the grain wrong?\n5. `mart_roas_faulty` — What currency issue exists?\n\n**Task 2: Write corrected marts (30 min)**\nFor each faulty mart, write the corrected SQL view.\n\n**Task 3: Reconciliation tests (15 min)**\nWrite queries that prove your corrected marts are accurate:\n- CA net should equal gross minus discounts minus approved refunds\n- Margin should use product cost, not unit price\n- Conversion rate should be per-country, not global\n\n### Deliverables\n| # | File | Description |\n|---|------|-------------|\n| 1 | `mart_errors_analysis.md` | Description of each error and its business impact |\n| 2 | `corrected_marts.sql` | Fixed SQL for all 5 marts |\n| 3 | `reconciliation_tests.sql` | Proof queries showing correctness |\n\n### Checkpoint\nExplain the business impact of each error (e.g., \"The faulty revenue mart overstates CA net by X% because...\")",
+                "fr": "## TP : Validation des data marts\n\n### Objectif\nDéboguer des data marts volontairement erronés et produire des versions corrigées.\n\n### Données requises\n- [Pack SQL](/manus-storage/neopolis_bi_sql_d01aa309.zip) → Utilisez `bi_codex_faulty_marts.sql`\n\n### Tâches\n\n**Tâche 1 : Identifier les erreurs dans les marts défectueux (30 min)**\nChargez `bi_codex_faulty_marts.sql` et analysez chaque mart :\n1. `mart_revenue_faulty` — Quel est le problème avec le calcul du CA net ?\n2. `mart_margin_faulty` — Pourquoi le calcul de marge est-il incorrect ?\n3. `mart_conversion_faulty` — Quel est le problème du CROSS JOIN ?\n4. `mart_target_attainment_faulty` — Pourquoi le grain est-il mauvais ?\n5. `mart_roas_faulty` — Quel problème de devise existe ?\n\n**Tâche 2 : Écrire les marts corrigés (30 min)**\nPour chaque mart défectueux, écrivez la vue SQL corrigée.\n\n**Tâche 3 : Tests de réconciliation (15 min)**\nÉcrivez des requêtes qui prouvent que vos marts corrigés sont exacts :\n- Le CA net doit être égal au brut moins remises moins remboursements approuvés\n- La marge doit utiliser le coût produit, pas le prix unitaire\n- Le taux de conversion doit être par pays, pas global\n\n### Livrables\n| # | Fichier | Description |\n|---|---------|-------------|\n| 1 | `mart_errors_analysis.md` | Description de chaque erreur et son impact métier |\n| 2 | `corrected_marts.sql` | SQL corrigé pour les 5 marts |\n| 3 | `reconciliation_tests.sql` | Requêtes de preuve montrant la justesse |\n\n### Checkpoint\nExpliquez l'impact métier de chaque erreur (ex: \"Le mart de CA défectueux surestime le CA net de X% parce que...\")"
               }
             }
           ]
@@ -197,18 +213,71 @@
           ]
         },
         {
-          "id": "chapter_11",
+          "id": "chapter_exercise_03",
           "title": {
-            "en": "Hands-on: Documentation and Lineage",
-            "fr": "TP : Documentation et lignage"
+            "en": "Lab 03 – Star Schema & Data Mart Construction",
+            "fr": "TP 03 – Construction du schéma en étoile et Data Mart"
           },
           "blocks": [
             {
-              "type": "content",
+              "type": "exercise",
               "body": {
-                "en": "## Practical Exercise\n\nGenerate complete documentation for your model: data dictionary, lineage diagram, transformation logic, and KPI definitions. Use Codex to draft, then review for accuracy.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nGénérez une documentation complète pour votre modèle : dictionnaire de données, diagramme de lignage, logique de transformation et définitions des KPI. Utilisez Codex pour rédiger, puis révisez pour l'exactitude.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
-              }
+                "en": "## Lab 03 – Star Schema & Data Mart Construction\n\n**Instructions:** Build a star schema from the OLTP data. Create fact and dimension tables, then calculate the following KPIs. Use the fx_rates.csv to convert all amounts to EUR.\n\n---\n\n### Numeric Answer Questions\n\nAfter processing the data with the tools taught in this module, enter your answers below. The platform will automatically validate your results.\n\n**Q1.** What is the total gross revenue (CA Brut) in EUR across all periods? (tolerance: ±0.01 EUR)\n\n**Q2.** What is the gross revenue (CA Brut) for 2025 in EUR? (tolerance: ±0.01 EUR)\n\n**Q3.** What is the net revenue (CA Net = CA Brut × (1 - discount%)) for 2025 in EUR? (tolerance: ±0.01 EUR)\n\n**Q4.** How many rows should the fact_sales table contain? (exclude cancelled orders and orphan products)\n\n**Q5.** What is the total approved refund amount in EUR? (tolerance: ±0.01 EUR)\n\n",
+                "fr": "## TP 03 – Construction du schéma en étoile et Data Mart\n\n**Instructions :** Construisez un schéma en étoile à partir des données OLTP. Créez les tables de faits et de dimensions, puis calculez les KPIs suivants. Utilisez fx_rates.csv pour convertir tous les montants en EUR.\n\n---\n\n### Questions à réponse numérique\n\nAprès avoir traité les données avec les outils enseignés dans ce module, saisissez vos réponses ci-dessous. La plateforme validera automatiquement vos résultats.\n\n**Q1.** Quel est le chiffre d'affaires brut total en EUR sur toutes les périodes ? (tolérance : ±0.01 EUR)\n\n**Q2.** Quel est le CA brut 2025 en EUR ? (tolérance : ±0.01 EUR)\n\n**Q3.** Quel est le CA net 2025 en EUR (CA Brut × (1 - remise%)) ? (tolérance : ±0.01 EUR)\n\n**Q4.** Combien de lignes doit contenir la table fact_sales ? (exclure commandes annulées et produits orphelins)\n\n**Q5.** Quel est le montant total des remboursements approuvés en EUR ? (tolérance : ±0.01 EUR)\n\n"
+              },
+              "exercise_type": "numeric_answers",
+              "questions": [
+                {
+                  "id": "m03_q01_ca_brut_total",
+                  "text": {
+                    "en": "What is the total gross revenue (CA Brut) in EUR across all periods?",
+                    "fr": "Quel est le chiffre d'affaires brut total en EUR sur toutes les périodes ?"
+                  },
+                  "expected_value": 21157609209.9,
+                  "unit": "EUR",
+                  "tolerance": 0.01
+                },
+                {
+                  "id": "m03_q02_ca_brut_2025",
+                  "text": {
+                    "en": "What is the gross revenue (CA Brut) for 2025 in EUR?",
+                    "fr": "Quel est le CA brut 2025 en EUR ?"
+                  },
+                  "expected_value": 8368575306.38,
+                  "unit": "EUR",
+                  "tolerance": 0.01
+                },
+                {
+                  "id": "m03_q03_ca_net_2025",
+                  "text": {
+                    "en": "What is the net revenue (CA Net = CA Brut × (1 - discount%)) for 2025 in EUR?",
+                    "fr": "Quel est le CA net 2025 en EUR (CA Brut × (1 - remise%)) ?"
+                  },
+                  "expected_value": 7584403534.36,
+                  "unit": "EUR",
+                  "tolerance": 0.01
+                },
+                {
+                  "id": "m03_q05_fact_sales_rows",
+                  "text": {
+                    "en": "How many rows should the fact_sales table contain? (exclude cancelled orders and orphan products)",
+                    "fr": "Combien de lignes doit contenir la table fact_sales ? (exclure commandes annulées et produits orphelins)"
+                  },
+                  "expected_value": 246937,
+                  "unit": "lignes",
+                  "tolerance": 0
+                },
+                {
+                  "id": "m03_q06_total_refunds_approved_eur",
+                  "text": {
+                    "en": "What is the total approved refund amount in EUR?",
+                    "fr": "Quel est le montant total des remboursements approuvés en EUR ?"
+                  },
+                  "expected_value": 13654131.47,
+                  "unit": "EUR",
+                  "tolerance": 0.01
+                }
+              ]
             }
           ]
         },

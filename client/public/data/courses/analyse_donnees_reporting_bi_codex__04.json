@@ -10,6 +10,22 @@
       },
       "chapters": [
         {
+          "id": "chapter_00",
+          "title": {
+            "en": "Download Test Data",
+            "fr": "Télécharger les données de test"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Course Test Data\n\nDownload the files needed for this module's exercises:\n\n| File | Description | Size |\n|------|-------------|------|\n| [Complete Pack (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip) | All data files and SQL scripts | ~15 MB |\n| [CSV Files Only](/manus-storage/neopolis_bi_csv_94547789.zip) | 13 raw data CSV files | ~15 MB |\n| [SQL Scripts Only](/manus-storage/neopolis_bi_sql_d01aa309.zip) | OLTP, DW schemas, marts, assertions | ~10 KB |\n\n### Data Pack Contents\n\n**CSV Files (13 files):**\n\n| File | Rows | Description |\n|------|------|-------------|\n| `customers.csv` | 12,000 | Customers (5 countries, 5 segments) |\n| `products.csv` | 350 | Product catalog (5 categories) |\n| `sales_orders.csv` | 85,000 | Sales orders (2024-2026) |\n| `sales_order_lines.csv` | 260,000 | Detailed order lines |\n| `returns.csv` | 9,000 | Returns and refunds |\n| `inventory_movements.csv` | 120,000 | Inventory movements (5 warehouses) |\n| `web_sessions.csv` | 400,000 | Web sessions and conversions |\n| `marketing_spend.csv` | 4,800 | Marketing spend by channel |\n| `sales_targets.csv` | 3,600 | Monthly sales targets |\n| `support_tickets.csv` | 45,000 | Customer support tickets |\n| `fx_rates.csv` | 7,500+ | Daily exchange rates |\n| `calendar.csv` | 943 | Calendar table (2024-2026) |\n| `data_quality_issues.csv` | 10 | Catalog of injected anomalies |\n\n**SQL Scripts (6 files):**\n- `bi_codex_oltp_postgres.sql` — Complete PostgreSQL OLTP schema\n- `bi_codex_dw_postgres.sql` — Star schema Data Warehouse\n- `bi_codex_star_schema.sql` — Star schema DDL (reference)\n- `bi_codex_faulty_marts.sql` — Intentionally faulty marts (debugging exercises)\n- `expected_results.sql` — Reference queries for validation\n- `data_quality_assertions.sql` — Data quality test queries\n\n### Injected Data Anomalies (for exercises)\nThe data contains **10 intentional anomalies** you must detect:\n1. Duplicate customers (emails with `+dup` variants)\n2. Negative-margin products (cost > price)\n3. Orders shipped before order date\n4. Order lines referencing non-existent products\n5. Returns without matching orders\n6. Missing exchange rates for certain days\n7. Orders without detail lines\n8. Inactive customers with recent orders\n9. Months without sales targets\n10. Resolved tickets without satisfaction scores",
+                "fr": "## Données de test du cours\n\nTéléchargez les fichiers nécessaires pour réaliser les exercices de ce module :\n\n| Fichier | Description | Taille |\n|---------|-------------|--------|\n| [Pack complet (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip) | Tous les fichiers de données et scripts SQL | ~15 Mo |\n| [Fichiers CSV uniquement](/manus-storage/neopolis_bi_csv_94547789.zip) | 13 fichiers CSV de données brutes | ~15 Mo |\n| [Scripts SQL uniquement](/manus-storage/neopolis_bi_sql_d01aa309.zip) | Schémas OLTP, DW, marts, assertions | ~10 Ko |\n\n### Contenu du pack de données\n\n**Fichiers CSV (13 fichiers) :**\n\n| Fichier | Lignes | Description |\n|---------|--------|-------------|\n| `customers.csv` | 12 000 | Clients (5 pays, 5 segments) |\n| `products.csv` | 350 | Catalogue produits (5 catégories) |\n| `sales_orders.csv` | 85 000 | Commandes de vente (2024-2026) |\n| `sales_order_lines.csv` | 260 000 | Lignes de commande détaillées |\n| `returns.csv` | 9 000 | Retours et remboursements |\n| `inventory_movements.csv` | 120 000 | Mouvements de stock (5 entrepôts) |\n| `web_sessions.csv` | 400 000 | Sessions web et conversions |\n| `marketing_spend.csv` | 4 800 | Dépenses marketing par canal |\n| `sales_targets.csv` | 3 600 | Objectifs de vente mensuels |\n| `support_tickets.csv` | 45 000 | Tickets support client |\n| `fx_rates.csv` | 7 500+ | Taux de change quotidiens |\n| `calendar.csv` | 943 | Table calendrier (2024-2026) |\n| `data_quality_issues.csv` | 10 | Catalogue des anomalies injectées |\n\n**Scripts SQL (6 fichiers) :**\n- `bi_codex_oltp_postgres.sql` — Schéma OLTP PostgreSQL complet\n- `bi_codex_dw_postgres.sql` — Data Warehouse en étoile\n- `bi_codex_star_schema.sql` — DDL du schéma en étoile (référence)\n- `bi_codex_faulty_marts.sql` — Marts volontairement erronés (exercices de débogage)\n- `expected_results.sql` — Requêtes de référence pour validation\n- `data_quality_assertions.sql` — Tests de qualité de données\n\n### Anomalies de données injectées (pour exercices)\nLes données contiennent **10 anomalies intentionnelles** que vous devez détecter :\n1. Doublons clients (emails avec variantes `+dup`)\n2. Produits à marge négative (coût > prix)\n3. Commandes expédiées avant la date de commande\n4. Lignes de commande référençant des produits inexistants\n5. Retours sans commande d'origine\n6. Taux de change manquants pour certains jours\n7. Commandes sans lignes de détail\n8. Clients inactifs avec commandes récentes\n9. Mois sans objectifs de vente\n10. Tickets résolus sans score de satisfaction"
+              }
+            }
+          ]
+        },
+        {
           "id": "chapter_01",
           "title": {
             "en": "Power Query for CSV Consolidation",
@@ -35,8 +51,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Practical Exercise\n\nUse Power Query to import all CSV files, handle type detection, clean data, and normalize currencies. Have Codex generate M scripts, then verify query folding where applicable.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nUtilisez Power Query pour importer tous les fichiers CSV, gérer la détection de types, nettoyer les données et normaliser les devises. Demandez à Codex de générer les scripts M, puis vérifiez le query folding quand applicable.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
+                "en": "## TP Excel 01: Multi-CSV Consolidation with Power Query\n\n### Objective\nImport, clean, and consolidate all CSV files using Power Query, with Codex generating the M scripts.\n\n### Data Required\n- [CSV data pack](/manus-storage/neopolis_bi_csv_94547789.zip) — Extract all 13 CSV files\n\n### Tasks\n\n**Task 1: Import CSV files with Power Query (20 min)**\nImport these files into Excel via Power Query:\n- `customers.csv`, `products.csv`, `sales_orders.csv`\n- `sales_order_lines.csv`, `returns.csv`, `fx_rates.csv`\n\nAsk Codex to generate the M script for each import.\n\n**Task 2: Type Detection and Cleaning (20 min)**\nFor each table:\n- Verify column types (dates, numbers, text)\n- Handle encoding issues (accented characters)\n- Remove leading/trailing spaces\n- Standardize NULL representations\n\n**Task 3: Currency Normalization (20 min)**\n- Merge `fx_rates` with `sales_order_lines` on date + currency\n- Create a calculated column: `amount_eur = line_total / fx_rate`\n- Handle missing rates (use previous day's rate)\n\n**Task 4: Query Folding Verification (15 min)**\n- Check which transformations preserve query folding\n- Document which steps break folding and why\n- Optimize the query plan\n\n### Codex Prompt to Use\n```\n\"Generate Power Query M scripts to import and clean the following CSV files: \ncustomers.csv, products.csv, sales_orders.csv, sales_order_lines.csv, \nreturns.csv, fx_rates.csv. For each:\n1. Auto-detect types\n2. Rename columns to PascalCase\n3. Handle NULL values\n4. Add a Source column identifying the file\nDocument each transformation step.\"\n```\n\n### Expected M Script (Reference)\n```m\nlet\n    Source = Csv.Document(File.Contents(\"customers.csv\"), [Delimiter=\",\", Encoding=65001]),\n    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),\n    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {\n        {\"customer_id\", type text}, {\"first_name\", type text}, {\"last_name\", type text},\n        {\"email\", type text}, {\"company\", type text}, {\"country\", type text},\n        {\"city\", type text}, {\"segment\", type text}, {\"created_date\", type date},\n        {\"is_active\", Int64.Type}, {\"lifetime_value\", type number}\n    }),\n    TrimmedText = Table.TransformColumns(ChangedTypes, {\n        {\"first_name\", Text.Trim}, {\"last_name\", Text.Trim}, {\"company\", Text.Trim}\n    })\nin\n    TrimmedText\n```\n\n### Deliverables\n| # | File | Description |\n|---|------|-------------|\n| 1 | `power_query_steps.md` | Documented M scripts for all imports |\n| 2 | `query_folding_analysis.md` | Which steps fold and which don't |\n| 3 | Excel workbook with all queries loaded |\n\n### Common Errors to Watch For\n- Mixed date formats (DD/MM vs MM/DD)\n- Decimal separators (comma vs. dot)\n- UTF-8 BOM issues\n- Empty rows at end of file\n\n### Checkpoint\nCodex generates an M script — you must correct at least one error in it.",
+                "fr": "## TP Excel 01 : Consolidation multi-CSV avec Power Query\n\n### Objectif\nImporter, nettoyer et consolider tous les fichiers CSV avec Power Query, en demandant à Codex de générer les scripts M.\n\n### Données requises\n- [Pack de données CSV](/manus-storage/neopolis_bi_csv_94547789.zip) — Extraire les 13 fichiers CSV\n\n### Tâches\n\n**Tâche 1 : Importer les fichiers CSV avec Power Query (20 min)**\nImportez ces fichiers dans Excel via Power Query :\n- `customers.csv`, `products.csv`, `sales_orders.csv`\n- `sales_order_lines.csv`, `returns.csv`, `fx_rates.csv`\n\nDemandez à Codex de générer le script M pour chaque import.\n\n**Tâche 2 : Détection de types et nettoyage (20 min)**\nPour chaque table :\n- Vérifier les types de colonnes (dates, nombres, texte)\n- Gérer les problèmes d'encodage (caractères accentués)\n- Supprimer les espaces en début/fin\n- Standardiser les représentations NULL\n\n**Tâche 3 : Normalisation des devises (20 min)**\n- Fusionner `fx_rates` avec `sales_order_lines` sur date + devise\n- Créer une colonne calculée : `amount_eur = line_total / fx_rate`\n- Gérer les taux manquants (utiliser le taux du jour précédent)\n\n**Tâche 4 : Vérification du Query Folding (15 min)**\n- Vérifier quelles transformations préservent le query folding\n- Documenter quelles étapes cassent le folding et pourquoi\n- Optimiser le plan de requête\n\n### Prompt Codex à utiliser\n```\n\"Génère des scripts Power Query M pour importer et nettoyer les fichiers CSV suivants : \ncustomers.csv, products.csv, sales_orders.csv, sales_order_lines.csv, \nreturns.csv, fx_rates.csv. Pour chacun :\n1. Détecte automatiquement les types\n2. Renomme les colonnes en PascalCase\n3. Gère les valeurs NULL\n4. Ajoute une colonne Source identifiant le fichier\nDocumente chaque étape de transformation.\"\n```\n\n### Script M attendu (Référence)\n```m\nlet\n    Source = Csv.Document(File.Contents(\"customers.csv\"), [Delimiter=\",\", Encoding=65001]),\n    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),\n    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {\n        {\"customer_id\", type text}, {\"first_name\", type text}, {\"last_name\", type text},\n        {\"email\", type text}, {\"company\", type text}, {\"country\", type text},\n        {\"city\", type text}, {\"segment\", type text}, {\"created_date\", type date},\n        {\"is_active\", Int64.Type}, {\"lifetime_value\", type number}\n    }),\n    TrimmedText = Table.TransformColumns(ChangedTypes, {\n        {\"first_name\", Text.Trim}, {\"last_name\", Text.Trim}, {\"company\", Text.Trim}\n    })\nin\n    TrimmedText\n```\n\n### Livrables\n| # | Fichier | Description |\n|---|---------|-------------|\n| 1 | `power_query_steps.md` | Scripts M documentés pour tous les imports |\n| 2 | `query_folding_analysis.md` | Quelles étapes se replient et lesquelles non |\n| 3 | Classeur Excel avec toutes les requêtes chargées |\n\n### Erreurs courantes à surveiller\n- Formats de date mixtes (JJ/MM vs MM/JJ)\n- Séparateurs décimaux (virgule vs. point)\n- Problèmes de BOM UTF-8\n- Lignes vides en fin de fichier\n\n### Checkpoint\nCodex génère un script M — vous devez corriger au moins une erreur dedans."
               }
             }
           ]
@@ -92,8 +108,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Practical Exercise\n\nCreate a Power Pivot data model with proper relationships, hierarchies, and a calendar table. Justify cardinalities and handle active/inactive relationships.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nCréez un modèle de données Power Pivot avec des relations appropriées, des hiérarchies et une table calendrier. Justifiez les cardinalités et gérez les relations actives/inactives.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
+                "en": "## TP Excel 02: Power Pivot Data Model\n\n### Objective\nBuild a relational data model in Power Pivot with proper relationships, hierarchies, and a calendar table.\n\n### Tasks\n\n**Task 1: Create the Data Model (20 min)**\nIn Power Pivot, create relationships between:\n- `sales_orders` → `customers` (many-to-one on customer_id)\n- `sales_order_lines` → `sales_orders` (many-to-one on order_id)\n- `sales_order_lines` → `products` (many-to-one on product_id)\n- `returns` → `sales_orders` (many-to-one on order_id)\n- `sales_orders` → `calendar` (many-to-one on order_date → date)\n\n**Task 2: Calendar Table (15 min)**\nCreate a dedicated calendar table with:\n- Date, Year, Quarter, Month, MonthName, Week\n- FiscalYear, FiscalQuarter\n- Mark as Date Table in Power Pivot\n\n**Task 3: Hierarchies (10 min)**\nCreate hierarchies:\n- Date: Year → Quarter → Month → Date\n- Product: Category → Subcategory → Product\n- Geography: Country → City\n\n**Task 4: Active vs. Inactive Relationships (15 min)**\n- Create an active relationship: orders → calendar (on order_date)\n- Create an inactive relationship: orders → calendar (on ship_date)\n- Explain when to use USERELATIONSHIP() in DAX\n\n### Codex Prompt\n```\n\"Propose a Power Pivot data model for these tables: customers, products, \nsales_orders, sales_order_lines, returns, calendar, fx_rates. \nDefine all relationships with cardinality and filter direction. \nIdentify any ambiguous relationships and suggest solutions.\"\n```\n\n### Deliverables\n| # | File | Description |\n|---|------|-------------|\n| 1 | Model diagram screenshot | Power Pivot relationship diagram |\n| 2 | `model_documentation.md` | All relationships with justification |\n\n### Common Errors\n- Bidirectional filters causing ambiguity\n- Missing calendar table relationship\n- Wrong cardinality (many-to-many instead of many-to-one)\n- Circular dependencies\n\n### Checkpoint\nJustify the cardinality of each relationship and explain why bidirectional filters are dangerous.",
+                "fr": "## TP Excel 02 : Modèle de données Power Pivot\n\n### Objectif\nConstruire un modèle de données relationnel dans Power Pivot avec des relations correctes, des hiérarchies et une table calendrier.\n\n### Tâches\n\n**Tâche 1 : Créer le modèle de données (20 min)**\nDans Power Pivot, créez les relations entre :\n- `sales_orders` → `customers` (plusieurs-à-un sur customer_id)\n- `sales_order_lines` → `sales_orders` (plusieurs-à-un sur order_id)\n- `sales_order_lines` → `products` (plusieurs-à-un sur product_id)\n- `returns` → `sales_orders` (plusieurs-à-un sur order_id)\n- `sales_orders` → `calendar` (plusieurs-à-un sur order_date → date)\n\n**Tâche 2 : Table calendrier (15 min)**\nCréer une table calendrier dédiée avec :\n- Date, Année, Trimestre, Mois, NomMois, Semaine\n- AnnéeFiscale, TrimestreFiscal\n- Marquer comme Table de dates dans Power Pivot\n\n**Tâche 3 : Hiérarchies (10 min)**\nCréer les hiérarchies :\n- Date : Année → Trimestre → Mois → Date\n- Produit : Catégorie → Sous-catégorie → Produit\n- Géographie : Pays → Ville\n\n**Tâche 4 : Relations actives vs. inactives (15 min)**\n- Créer une relation active : orders → calendar (sur order_date)\n- Créer une relation inactive : orders → calendar (sur ship_date)\n- Expliquer quand utiliser USERELATIONSHIP() en DAX\n\n### Prompt Codex\n```\n\"Propose un modèle de données Power Pivot pour ces tables : customers, products, \nsales_orders, sales_order_lines, returns, calendar, fx_rates. \nDéfinis toutes les relations avec cardinalité et direction de filtre. \nIdentifie les relations ambiguës et propose des solutions.\"\n```\n\n### Livrables\n| # | Fichier | Description |\n|---|---------|-------------|\n| 1 | Capture du diagramme | Diagramme des relations Power Pivot |\n| 2 | `model_documentation.md` | Toutes les relations avec justification |\n\n### Erreurs courantes\n- Filtres bidirectionnels causant des ambiguïtés\n- Relation manquante avec la table calendrier\n- Mauvaise cardinalité (plusieurs-à-plusieurs au lieu de plusieurs-à-un)\n- Dépendances circulaires\n\n### Checkpoint\nJustifiez la cardinalité de chaque relation et expliquez pourquoi les filtres bidirectionnels sont dangereux."
               }
             }
           ]
@@ -149,8 +165,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Practical Exercise\n\nBuild advanced DAX measures: net revenue, gross margin, return rate, YoY, MoM, rolling 12 months, target achievement. Test each measure with edge cases.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nConstruisez des mesures DAX avancées : CA net, marge brute, taux de retour, YoY, MoM, rolling 12 mois, atteinte objectif. Testez chaque mesure avec des cas limites.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
+                "en": "## TP Excel 03: Advanced DAX Measures\n\n### Objective\nCreate professional DAX measures for revenue, margin, returns, and target attainment.\n\n### Measures to Create\n\n**Revenue Measures:**\n```dax\nCA Brut = SUM(sales_order_lines[line_total])\n\nCA Net = \n    CALCULATE(\n        SUM(sales_order_lines[line_total]) * (1 - AVERAGE(sales_orders[discount_pct])/100)\n    ) - [Refunds Approved]\n\nRefunds Approved = \n    CALCULATE(SUM(returns[refund_amount]), returns[status] = \"approved\")\n```\n\n**Margin Measures:**\n```dax\nMarge Brute = [CA Net] - SUM(sales_order_lines[quantity] * RELATED(products[cost_eur]))\n\nTaux Marge = DIVIDE([Marge Brute], [CA Net], 0)\n```\n\n**Return Rate:**\n```dax\nTaux Retour = DIVIDE(\n    COUNTROWS(returns),\n    COUNTROWS(sales_orders),\n    0\n)\n```\n\n**Time Intelligence:**\n```dax\nCA Net YoY = [CA Net] - CALCULATE([CA Net], SAMEPERIODLASTYEAR(calendar[date]))\n\nCA Net MoM% = DIVIDE(\n    [CA Net] - CALCULATE([CA Net], DATEADD(calendar[date], -1, MONTH)),\n    CALCULATE([CA Net], DATEADD(calendar[date], -1, MONTH)),\n    0\n)\n\nRolling 12M = CALCULATE([CA Net], DATESINPERIOD(calendar[date], MAX(calendar[date]), -12, MONTH))\n```\n\n**Target Attainment:**\n```dax\nAtteinte Objectif = DIVIDE([CA Net], SUM(sales_targets[target_amount_eur]), 0)\n```\n\n### Tasks\n\n**Task 1:** Create all measures above (30 min)\n**Task 2:** Test each measure with edge cases (20 min)\n- What happens with no data for a period?\n- What about periods with returns but no sales?\n- Does the YoY work correctly at year boundaries?\n\n**Task 3:** Ask Codex to generate additional measures, then validate (15 min)\n\n### Deliverables\n| # | File | Description |\n|---|------|-------------|\n| 1 | `dax_measures.md` | All DAX formulas with explanations |\n| 2 | `dax_test_cases.md` | Test scenarios and expected results |\n\n### Checkpoint\nCorrect a deliberately faulty DAX measure provided by Codex.",
+                "fr": "## TP Excel 03 : Mesures DAX avancées\n\n### Objectif\nCréer des mesures DAX professionnelles pour le chiffre d'affaires, la marge, les retours et l'atteinte des objectifs.\n\n### Mesures à créer\n\n**Mesures de chiffre d'affaires :**\n```dax\nCA Brut = SUM(sales_order_lines[line_total])\n\nCA Net = \n    CALCULATE(\n        SUM(sales_order_lines[line_total]) * (1 - AVERAGE(sales_orders[discount_pct])/100)\n    ) - [Refunds Approved]\n\nRefunds Approved = \n    CALCULATE(SUM(returns[refund_amount]), returns[status] = \"approved\")\n```\n\n**Mesures de marge :**\n```dax\nMarge Brute = [CA Net] - SUM(sales_order_lines[quantity] * RELATED(products[cost_eur]))\n\nTaux Marge = DIVIDE([Marge Brute], [CA Net], 0)\n```\n\n**Taux de retour :**\n```dax\nTaux Retour = DIVIDE(\n    COUNTROWS(returns),\n    COUNTROWS(sales_orders),\n    0\n)\n```\n\n**Time Intelligence :**\n```dax\nCA Net YoY = [CA Net] - CALCULATE([CA Net], SAMEPERIODLASTYEAR(calendar[date]))\n\nCA Net MoM% = DIVIDE(\n    [CA Net] - CALCULATE([CA Net], DATEADD(calendar[date], -1, MONTH)),\n    CALCULATE([CA Net], DATEADD(calendar[date], -1, MONTH)),\n    0\n)\n\nRolling 12M = CALCULATE([CA Net], DATESINPERIOD(calendar[date], MAX(calendar[date]), -12, MONTH))\n```\n\n**Atteinte des objectifs :**\n```dax\nAtteinte Objectif = DIVIDE([CA Net], SUM(sales_targets[target_amount_eur]), 0)\n```\n\n### Tâches\n\n**Tâche 1 :** Créer toutes les mesures ci-dessus (30 min)\n**Tâche 2 :** Tester chaque mesure avec des cas limites (20 min)\n- Que se passe-t-il sans données pour une période ?\n- Qu'en est-il des périodes avec retours mais sans ventes ?\n- Le YoY fonctionne-t-il correctement aux changements d'année ?\n\n**Tâche 3 :** Demander à Codex de générer des mesures supplémentaires, puis les valider (15 min)\n\n### Livrables\n| # | Fichier | Description |\n|---|---------|-------------|\n| 1 | `dax_measures.md` | Toutes les formules DAX avec explications |\n| 2 | `dax_test_cases.md` | Scénarios de test et résultats attendus |\n\n### Checkpoint\nCorrigez une mesure DAX volontairement fausse fournie par Codex."
               }
             }
           ]
@@ -197,18 +213,91 @@
           ]
         },
         {
-          "id": "chapter_11",
+          "id": "chapter_exercise_04",
           "title": {
-            "en": "Hands-on: Auditable Excel Dashboards",
-            "fr": "TP : Tableaux de bord Excel auditables"
+            "en": "Lab 04 – Excel BI & DAX Measures",
+            "fr": "TP 04 – BI Excel et mesures DAX"
           },
           "blocks": [
             {
-              "type": "content",
+              "type": "exercise",
               "body": {
-                "en": "## Practical Exercise\n\nDesign a complete Excel dashboard for the commercial direction with slicers, pivots, KPI cards, and an audit page. Verify every number against SQL results.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nConcevez un tableau de bord Excel complet pour la direction commerciale avec segments, tableaux croisés, cartes KPI et une page d'audit. Vérifiez chaque chiffre par rapport aux résultats SQL.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
-              }
+                "en": "## Lab 04 – Excel BI & DAX Measures\n\n**Instructions:** Import the data into Excel/Power Pivot or Power BI. Create DAX measures to calculate the following KPIs for 2025.\n\n---\n\n### Numeric Answer Questions\n\nAfter processing the data with the tools taught in this module, enter your answers below. The platform will automatically validate your results.\n\n**Q1.** What is the Net Revenue for Q1 2025 in EUR? (tolerance: ±0.01 EUR)\n\n**Q2.** What is the gross margin rate for 2025? (in %) (tolerance: ±0.1 %)\n\n**Q3.** What is the return rate for 2025? (number of returns / number of orders, in %) (tolerance: ±0.1 %)\n\n**Q4.** CA Net Q1 2025 (EUR) - verify with DAX CALCULATE + DATESINPERIOD (tolerance: ±0.01 EUR)\n\n**Q5.** CA Net Q2 2025 (EUR) (tolerance: ±0.01 EUR)\n\n**Q6.** CA Net Q3 2025 (EUR) (tolerance: ±0.01 EUR)\n\n**Q7.** CA Net Q4 2025 (EUR) (tolerance: ±0.01 EUR)\n\n",
+                "fr": "## TP 04 – BI Excel et mesures DAX\n\n**Instructions :** Importez les données dans Excel/Power Pivot ou Power BI. Créez des mesures DAX pour calculer les KPIs suivants pour 2025.\n\n---\n\n### Questions à réponse numérique\n\nAprès avoir traité les données avec les outils enseignés dans ce module, saisissez vos réponses ci-dessous. La plateforme validera automatiquement vos résultats.\n\n**Q1.** Quel est le CA Net du T1 2025 en EUR ? (tolérance : ±0.01 EUR)\n\n**Q2.** Quel est le taux de marge brute 2025 ? (en %) (tolérance : ±0.1 %)\n\n**Q3.** Quel est le taux de retour 2025 ? (nombre de retours / nombre de commandes, en %) (tolérance : ±0.1 %)\n\n**Q4.** CA Net T1 2025 (EUR) - vérifier avec DAX CALCULATE + DATESINPERIOD (tolérance : ±0.01 EUR)\n\n**Q5.** CA Net T2 2025 (EUR) (tolérance : ±0.01 EUR)\n\n**Q6.** CA Net T3 2025 (EUR) (tolérance : ±0.01 EUR)\n\n**Q7.** CA Net T4 2025 (EUR) (tolérance : ±0.01 EUR)\n\n"
+              },
+              "exercise_type": "numeric_answers",
+              "questions": [
+                {
+                  "id": "m04_q01_ca_net_q1_2025",
+                  "text": {
+                    "en": "What is the Net Revenue for Q1 2025 in EUR?",
+                    "fr": "Quel est le CA Net du T1 2025 en EUR ?"
+                  },
+                  "expected_value": 1889854824.51,
+                  "unit": "EUR",
+                  "tolerance": 0.01
+                },
+                {
+                  "id": "m04_q03_taux_marge_2025",
+                  "text": {
+                    "en": "What is the gross margin rate for 2025? (in %)",
+                    "fr": "Quel est le taux de marge brute 2025 ? (en %)"
+                  },
+                  "expected_value": -4.91,
+                  "unit": "%",
+                  "tolerance": 0.1
+                },
+                {
+                  "id": "m04_q04_taux_retour_2025",
+                  "text": {
+                    "en": "What is the return rate for 2025? (number of returns / number of orders, in %)",
+                    "fr": "Quel est le taux de retour 2025 ? (nombre de retours / nombre de commandes, en %)"
+                  },
+                  "expected_value": 10.57,
+                  "unit": "%",
+                  "tolerance": 0.1
+                },
+                {
+                  "id": "m04_q06_ca_net_2025_q1",
+                  "text": {
+                    "en": "CA Net Q1 2025 (EUR) - verify with DAX CALCULATE + DATESINPERIOD",
+                    "fr": "CA Net T1 2025 (EUR) - vérifier avec DAX CALCULATE + DATESINPERIOD"
+                  },
+                  "expected_value": 1889854824.51,
+                  "unit": "EUR",
+                  "tolerance": 0.01
+                },
+                {
+                  "id": "m04_q06_ca_net_2025_q2",
+                  "text": {
+                    "en": "CA Net Q2 2025 (EUR)",
+                    "fr": "CA Net T2 2025 (EUR)"
+                  },
+                  "expected_value": 1908112169.68,
+                  "unit": "EUR",
+                  "tolerance": 0.01
+                },
+                {
+                  "id": "m04_q06_ca_net_2025_q3",
+                  "text": {
+                    "en": "CA Net Q3 2025 (EUR)",
+                    "fr": "CA Net T3 2025 (EUR)"
+                  },
+                  "expected_value": 1888899588.55,
+                  "unit": "EUR",
+                  "tolerance": 0.01
+                },
+                {
+                  "id": "m04_q06_ca_net_2025_q4",
+                  "text": {
+                    "en": "CA Net Q4 2025 (EUR)",
+                    "fr": "CA Net T4 2025 (EUR)"
+                  },
+                  "expected_value": 1897536951.61,
+                  "unit": "EUR",
+                  "tolerance": 0.01
+                }
+              ]
             }
           ]
         },

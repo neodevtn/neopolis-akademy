@@ -10,6 +10,22 @@
       },
       "chapters": [
         {
+          "id": "chapter_00",
+          "title": {
+            "en": "Download Test Data",
+            "fr": "Télécharger les données de test"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Course Test Data\n\nDownload the files needed for this module's exercises:\n\n| File | Description | Size |\n|------|-------------|------|\n| [Complete Pack (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip) | All data files and SQL scripts | ~15 MB |\n| [CSV Files Only](/manus-storage/neopolis_bi_csv_94547789.zip) | 13 raw data CSV files | ~15 MB |\n| [SQL Scripts Only](/manus-storage/neopolis_bi_sql_d01aa309.zip) | OLTP, DW schemas, marts, assertions | ~10 KB |\n\n### Data Pack Contents\n\n**CSV Files (13 files):**\n\n| File | Rows | Description |\n|------|------|-------------|\n| `customers.csv` | 12,000 | Customers (5 countries, 5 segments) |\n| `products.csv` | 350 | Product catalog (5 categories) |\n| `sales_orders.csv` | 85,000 | Sales orders (2024-2026) |\n| `sales_order_lines.csv` | 260,000 | Detailed order lines |\n| `returns.csv` | 9,000 | Returns and refunds |\n| `inventory_movements.csv` | 120,000 | Inventory movements (5 warehouses) |\n| `web_sessions.csv` | 400,000 | Web sessions and conversions |\n| `marketing_spend.csv` | 4,800 | Marketing spend by channel |\n| `sales_targets.csv` | 3,600 | Monthly sales targets |\n| `support_tickets.csv` | 45,000 | Customer support tickets |\n| `fx_rates.csv` | 7,500+ | Daily exchange rates |\n| `calendar.csv` | 943 | Calendar table (2024-2026) |\n| `data_quality_issues.csv` | 10 | Catalog of injected anomalies |\n\n**SQL Scripts (6 files):**\n- `bi_codex_oltp_postgres.sql` — Complete PostgreSQL OLTP schema\n- `bi_codex_dw_postgres.sql` — Star schema Data Warehouse\n- `bi_codex_star_schema.sql` — Star schema DDL (reference)\n- `bi_codex_faulty_marts.sql` — Intentionally faulty marts (debugging exercises)\n- `expected_results.sql` — Reference queries for validation\n- `data_quality_assertions.sql` — Data quality test queries\n\n### Injected Data Anomalies (for exercises)\nThe data contains **10 intentional anomalies** you must detect:\n1. Duplicate customers (emails with `+dup` variants)\n2. Negative-margin products (cost > price)\n3. Orders shipped before order date\n4. Order lines referencing non-existent products\n5. Returns without matching orders\n6. Missing exchange rates for certain days\n7. Orders without detail lines\n8. Inactive customers with recent orders\n9. Months without sales targets\n10. Resolved tickets without satisfaction scores",
+                "fr": "## Données de test du cours\n\nTéléchargez les fichiers nécessaires pour réaliser les exercices de ce module :\n\n| Fichier | Description | Taille |\n|---------|-------------|--------|\n| [Pack complet (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip) | Tous les fichiers de données et scripts SQL | ~15 Mo |\n| [Fichiers CSV uniquement](/manus-storage/neopolis_bi_csv_94547789.zip) | 13 fichiers CSV de données brutes | ~15 Mo |\n| [Scripts SQL uniquement](/manus-storage/neopolis_bi_sql_d01aa309.zip) | Schémas OLTP, DW, marts, assertions | ~10 Ko |\n\n### Contenu du pack de données\n\n**Fichiers CSV (13 fichiers) :**\n\n| Fichier | Lignes | Description |\n|---------|--------|-------------|\n| `customers.csv` | 12 000 | Clients (5 pays, 5 segments) |\n| `products.csv` | 350 | Catalogue produits (5 catégories) |\n| `sales_orders.csv` | 85 000 | Commandes de vente (2024-2026) |\n| `sales_order_lines.csv` | 260 000 | Lignes de commande détaillées |\n| `returns.csv` | 9 000 | Retours et remboursements |\n| `inventory_movements.csv` | 120 000 | Mouvements de stock (5 entrepôts) |\n| `web_sessions.csv` | 400 000 | Sessions web et conversions |\n| `marketing_spend.csv` | 4 800 | Dépenses marketing par canal |\n| `sales_targets.csv` | 3 600 | Objectifs de vente mensuels |\n| `support_tickets.csv` | 45 000 | Tickets support client |\n| `fx_rates.csv` | 7 500+ | Taux de change quotidiens |\n| `calendar.csv` | 943 | Table calendrier (2024-2026) |\n| `data_quality_issues.csv` | 10 | Catalogue des anomalies injectées |\n\n**Scripts SQL (6 fichiers) :**\n- `bi_codex_oltp_postgres.sql` — Schéma OLTP PostgreSQL complet\n- `bi_codex_dw_postgres.sql` — Data Warehouse en étoile\n- `bi_codex_star_schema.sql` — DDL du schéma en étoile (référence)\n- `bi_codex_faulty_marts.sql` — Marts volontairement erronés (exercices de débogage)\n- `expected_results.sql` — Requêtes de référence pour validation\n- `data_quality_assertions.sql` — Tests de qualité de données\n\n### Anomalies de données injectées (pour exercices)\nLes données contiennent **10 anomalies intentionnelles** que vous devez détecter :\n1. Doublons clients (emails avec variantes `+dup`)\n2. Produits à marge négative (coût > prix)\n3. Commandes expédiées avant la date de commande\n4. Lignes de commande référençant des produits inexistants\n5. Retours sans commande d'origine\n6. Taux de change manquants pour certains jours\n7. Commandes sans lignes de détail\n8. Clients inactifs avec commandes récentes\n9. Mois sans objectifs de vente\n10. Tickets résolus sans score de satisfaction"
+              }
+            }
+          ]
+        },
+        {
           "id": "chapter_01",
           "title": {
             "en": "Decision Framing",
@@ -35,8 +51,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Practical Exercise\n\nLearn to translate vague management requests into precise analytical questions. Practice with: 'Revenue is up but margins are down — what's happening?'\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nApprenez à traduire les demandes vagues de la direction en questions analytiques précises. Pratiquez avec : 'Le CA augmente mais les marges baissent — que se passe-t-il ?'\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
+                "en": "## Lab 07: Executive Reporting Pack\n\n### Objective\nProduce a complete executive reporting pack: translate a vague management request into analytical questions, build a KPI tree, and deliver an evidence-based executive summary.\n\n### Scenario\nThe CEO asks: \"Revenue is up but margins are shrinking and returns are increasing in some countries. What's going on?\"\n\n### Tasks\n\n**Task 1: Decision Framing (20 min)**\nTranslate the CEO's question into 5 specific analytical questions:\n1. Which countries show margin decline?\n2. What product categories drive the return increase?\n3. Is the revenue growth organic or discount-driven?\n4. What's the correlation between marketing spend and returns?\n5. Are specific channels underperforming?\n\n**Task 2: KPI Tree (20 min)**\nBuild a KPI decomposition tree:\n```\nCA Net\n├── CA Brut × (1 - Discount%)\n│   ├── Volume (units) × Prix moyen\n│   │   ├── Par pays\n│   │   ├── Par canal\n│   │   └── Par catégorie\n│   └── Discount rate by segment\n├── - Retours\n│   ├── Taux retour par catégorie\n│   └── Taux retour par pays\n└── Marge\n    ├── Marge brute par produit\n    └── Coût d'acquisition (CAC)\n```\n\n**Task 3: Evidence Table (20 min)**\nFor each finding, create an evidence row:\n| Finding | Query/Measure | Result | Confidence | Source |\n|---------|--------------|--------|------------|--------|\n| Margin decline in Morocco | ... | -12% YoY | High | fact_sales |\n\n**Task 4: Executive Summary with Codex (20 min)**\nAsk Codex to write the summary, then verify every claim against data.\n\n### Deliverables\n| # | File | Description |\n|---|------|-------------|\n| 1 | `Executive_Summary.md` | Verified executive summary |\n| 2 | `Decision_Log.md` | Decisions and their evidence |\n| 3 | `Evidence_Table.xlsx` | Complete evidence matrix |\n| 4 | `KPI_Tree.md` | Decomposition tree with values |\n\n### Evaluation Criteria\n- **Separation of facts/hypotheses/recommendations** (30%)\n- **Every claim traceable to a query** (30%)\n- **Actionable recommendations** (20%)\n- **Clear risk identification** (20%)\n\n### Checkpoint\nCorrect 3 unsupported conclusions in the Codex-generated summary.",
+                "fr": "## Lab 07 : Pack reporting exécutif\n\n### Objectif\nProduire un pack de reporting exécutif complet : traduire une demande vague de la direction en questions analytiques, construire un arbre KPI et livrer une synthèse exécutive basée sur les preuves.\n\n### Scénario\nLe CEO demande : \"Le chiffre d'affaires augmente mais les marges se réduisent et les retours augmentent dans certains pays. Que se passe-t-il ?\"\n\n### Tâches\n\n**Tâche 1 : Cadrage décisionnel (20 min)**\nTraduisez la question du CEO en 5 questions analytiques spécifiques :\n1. Quels pays montrent un déclin de marge ?\n2. Quelles catégories de produits causent l'augmentation des retours ?\n3. La croissance du CA est-elle organique ou tirée par les remises ?\n4. Quelle est la corrélation entre dépenses marketing et retours ?\n5. Certains canaux sous-performent-ils ?\n\n**Tâche 2 : Arbre KPI (20 min)**\nConstruisez un arbre de décomposition KPI :\n```\nCA Net\n├── CA Brut × (1 - Discount%)\n│   ├── Volume (unités) × Prix moyen\n│   │   ├── Par pays\n│   │   ├── Par canal\n│   │   └── Par catégorie\n│   └── Taux de remise par segment\n├── - Retours\n│   ├── Taux retour par catégorie\n│   └── Taux retour par pays\n└── Marge\n    ├── Marge brute par produit\n    └── Coût d'acquisition (CAC)\n```\n\n**Tâche 3 : Table de preuves (20 min)**\nPour chaque constat, créez une ligne de preuve :\n| Constat | Requête/Mesure | Résultat | Confiance | Source |\n|---------|---------------|----------|-----------|--------|\n| Déclin marge au Maroc | ... | -12% YoY | Élevée | fact_sales |\n\n**Tâche 4 : Synthèse exécutive avec Codex (20 min)**\nDemandez à Codex de rédiger la synthèse, puis vérifiez chaque affirmation contre les données.\n\n### Livrables\n| # | Fichier | Description |\n|---|---------|-------------|\n| 1 | `Executive_Summary.md` | Synthèse exécutive vérifiée |\n| 2 | `Decision_Log.md` | Décisions et leurs preuves |\n| 3 | `Evidence_Table.xlsx` | Matrice de preuves complète |\n| 4 | `KPI_Tree.md` | Arbre de décomposition avec valeurs |\n\n### Critères d'évaluation\n- **Séparation faits/hypothèses/recommandations** (30%)\n- **Chaque affirmation traçable à une requête** (30%)\n- **Recommandations actionnables** (20%)\n- **Identification claire des risques** (20%)\n\n### Checkpoint\nCorrigez 3 conclusions non supportées dans la synthèse générée par Codex."
               }
             }
           ]
@@ -197,18 +213,91 @@
           ]
         },
         {
-          "id": "chapter_11",
+          "id": "chapter_exercise_06",
           "title": {
-            "en": "Hands-on: Executive Summary with Codex",
-            "fr": "TP : Synthèse exécutive avec Codex"
+            "en": "Lab 06 – Executive Dashboard & Reporting",
+            "fr": "TP 06 – Dashboard exécutif et Reporting"
           },
           "blocks": [
             {
-              "type": "content",
+              "type": "exercise",
               "body": {
-                "en": "## Practical Exercise\n\nHave Codex draft an executive summary, then verify every conclusion against data. Correct at least 3 unsupported conclusions and cite the evidence.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nDemandez à Codex de rédiger une synthèse exécutive, puis vérifiez chaque conclusion par rapport aux données. Corrigez au moins 3 conclusions non supportées et citez les preuves.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
-              }
+                "en": "## Lab 06 – Executive Dashboard & Reporting\n\n**Instructions:** Build an executive dashboard with country-level and segment-level KPIs. Calculate margins, return rates, and average discounts by dimension.\n\n---\n\n### Numeric Answer Questions\n\nAfter processing the data with the tools taught in this module, enter your answers below. The platform will automatically validate your results.\n\n**Q1.** Gross margin rate for France in 2025 (%) (tolerance: ±0.1 %)\n\n**Q2.** Gross margin rate for Belgium in 2025 (%) (tolerance: ±0.1 %)\n\n**Q3.** Gross margin rate for Canada in 2025 (%) (tolerance: ±0.1 %)\n\n**Q4.** Return rate for France in 2025 (%) (tolerance: ±0.1 %)\n\n**Q5.** Return rate for Morocco in 2025 (%) (tolerance: ±0.1 %)\n\n**Q6.** Average discount for Enterprise segment in 2025 (%) (tolerance: ±0.1 %)\n\n**Q7.** Average discount for Startup segment in 2025 (%) (tolerance: ±0.1 %)\n\n",
+                "fr": "## TP 06 – Dashboard exécutif et Reporting\n\n**Instructions :** Construisez un dashboard exécutif avec des KPIs par pays et par segment. Calculez les marges, taux de retour et remises moyennes par dimension.\n\n---\n\n### Questions à réponse numérique\n\nAprès avoir traité les données avec les outils enseignés dans ce module, saisissez vos réponses ci-dessous. La plateforme validera automatiquement vos résultats.\n\n**Q1.** Taux de marge brute France 2025 (%) (tolérance : ±0.1 %)\n\n**Q2.** Taux de marge brute Belgique 2025 (%) (tolérance : ±0.1 %)\n\n**Q3.** Taux de marge brute Canada 2025 (%) (tolérance : ±0.1 %)\n\n**Q4.** Taux de retour France 2025 (%) (tolérance : ±0.1 %)\n\n**Q5.** Taux de retour Maroc 2025 (%) (tolérance : ±0.1 %)\n\n**Q6.** Remise moyenne segment Enterprise 2025 (%) (tolérance : ±0.1 %)\n\n**Q7.** Remise moyenne segment Startup 2025 (%) (tolérance : ±0.1 %)\n\n"
+              },
+              "exercise_type": "numeric_answers",
+              "questions": [
+                {
+                  "id": "m06_q01_taux_marge_france_2025",
+                  "text": {
+                    "en": "Gross margin rate for France in 2025 (%)",
+                    "fr": "Taux de marge brute France 2025 (%)"
+                  },
+                  "expected_value": 35.99,
+                  "unit": "%",
+                  "tolerance": 0.1
+                },
+                {
+                  "id": "m06_q01_taux_marge_belgique_2025",
+                  "text": {
+                    "en": "Gross margin rate for Belgium in 2025 (%)",
+                    "fr": "Taux de marge brute Belgique 2025 (%)"
+                  },
+                  "expected_value": 35.9,
+                  "unit": "%",
+                  "tolerance": 0.1
+                },
+                {
+                  "id": "m06_q01_taux_marge_canada_2025",
+                  "text": {
+                    "en": "Gross margin rate for Canada in 2025 (%)",
+                    "fr": "Taux de marge brute Canada 2025 (%)"
+                  },
+                  "expected_value": 6.71,
+                  "unit": "%",
+                  "tolerance": 0.1
+                },
+                {
+                  "id": "m06_q02_taux_retour_france_2025",
+                  "text": {
+                    "en": "Return rate for France in 2025 (%)",
+                    "fr": "Taux de retour France 2025 (%)"
+                  },
+                  "expected_value": 10.79,
+                  "unit": "%",
+                  "tolerance": 0.1
+                },
+                {
+                  "id": "m06_q02_taux_retour_maroc_2025",
+                  "text": {
+                    "en": "Return rate for Morocco in 2025 (%)",
+                    "fr": "Taux de retour Maroc 2025 (%)"
+                  },
+                  "expected_value": 10.89,
+                  "unit": "%",
+                  "tolerance": 0.1
+                },
+                {
+                  "id": "m06_q03_avg_discount_enterprise_2025",
+                  "text": {
+                    "en": "Average discount for Enterprise segment in 2025 (%)",
+                    "fr": "Remise moyenne segment Enterprise 2025 (%)"
+                  },
+                  "expected_value": 9.41,
+                  "unit": "%",
+                  "tolerance": 0.1
+                },
+                {
+                  "id": "m06_q03_avg_discount_startup_2025",
+                  "text": {
+                    "en": "Average discount for Startup segment in 2025 (%)",
+                    "fr": "Remise moyenne segment Startup 2025 (%)"
+                  },
+                  "expected_value": 9.4,
+                  "unit": "%",
+                  "tolerance": 0.1
+                }
+              ]
             }
           ]
         },

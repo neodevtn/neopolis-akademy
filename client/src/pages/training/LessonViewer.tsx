@@ -17,6 +17,7 @@ import { ComparisonBox } from "@/components/ComparisonBox";
 import { CourseIllustration } from "@/components/CourseIllustration";
 import PageContent from "./PageContent";
 import LessonQuiz from "./LessonQuiz";
+import NumericAnswerExercise from "@/components/NumericAnswerExercise";
 
 export default function LessonViewer({
   lesson,
@@ -444,6 +445,55 @@ export default function LessonViewer({
                 </div>
               </div>
             </a>
+          </div>
+        );
+      }
+      case "exercise": {
+        // Numeric answer exercises
+        if (block.exercise_type === "numeric_answers" && block.questions?.length > 0) {
+          const exTitle = block.body ? {
+            en: "Numeric Answer Exercise",
+            fr: "Exercice à réponses numériques"
+          } : { en: "Exercise", fr: "Exercice" };
+          // Use title from the exercise definition if available
+          const exerciseTitle = (() => {
+            const body = block.body || {};
+            const text = typeof body === 'string' ? body : (body[lang] || body.en || '');
+            const firstLine = text.split('\n').find((l: string) => l.trim().startsWith('##'));
+            if (firstLine) {
+              return { en: firstLine.replace(/^#+\s*/, ''), fr: firstLine.replace(/^#+\s*/, '') };
+            }
+            return exTitle;
+          })();
+          const exerciseInstructions = (() => {
+            const body = block.body || {};
+            const text = typeof body === 'string' ? body : (body[lang] || body.en || '');
+            const instrLine = text.split('\n').find((l: string) => l.trim().startsWith('**Instructions'));
+            if (instrLine) {
+              return { en: instrLine.replace(/\*\*/g, '').replace(/^Instructions\s*:?\s*/i, ''), fr: instrLine.replace(/\*\*/g, '').replace(/^Instructions\s*:?\s*/i, '') };
+            }
+            return { en: "Answer the following questions based on your data analysis.", fr: "Répondez aux questions suivantes en vous basant sur votre analyse des données." };
+          })();
+          return (
+            <div key={blockIdx} className="my-4">
+              <NumericAnswerExercise
+                questions={block.questions}
+                title={exerciseTitle}
+                instructions={exerciseInstructions}
+                lang={lang as "en" | "fr"}
+                courseId={courseId}
+                moduleId={`module_${lessonIndex + 1}`}
+              />
+            </div>
+          );
+        }
+        // Fallback: render as content
+        const exBody = block.body || {};
+        const exText = typeof exBody === 'string' ? exBody : (exBody[lang] || exBody.en || '');
+        if (!exText) return null;
+        return (
+          <div key={blockIdx} className="py-1">
+            <PageContent content={exText} lang={lang} />
           </div>
         );
       }

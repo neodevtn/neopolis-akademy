@@ -1,6 +1,6 @@
 import { eq, desc, sql, and, count, gt } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -764,4 +764,29 @@ export async function createInvitationWithTracking(email: string, name: string |
   });
 
   return { id: result[0].insertId, email, name, token, expiresAt, status: 'pending' as const };
+}
+
+
+// ============ Exercise Results ============
+export async function saveExerciseResult(userId: string, courseId: string, moduleId: string, score: number, totalQuestions: number, answersJson: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(exerciseResults).values({
+    userId,
+    courseId,
+    moduleId,
+    score,
+    totalQuestions,
+    answers: answersJson,
+  });
+  return { id: result[0].insertId, success: true };
+}
+
+export async function getExerciseResults(userId: string, courseId?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  if (courseId) {
+    return await db.select().from(exerciseResults).where(and(eq(exerciseResults.userId, userId), eq(exerciseResults.courseId, courseId))).orderBy(desc(exerciseResults.createdAt));
+  }
+  return await db.select().from(exerciseResults).where(eq(exerciseResults.userId, userId)).orderBy(desc(exerciseResults.createdAt));
 }

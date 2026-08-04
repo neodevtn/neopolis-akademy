@@ -1199,3 +1199,19 @@
 - [x] Ajouter bouton "Renvoyer invitation" par candidat
 - [x] Ajouter indicateurs visuels : compte créé (vert), invitation envoyée (orange), email invalide (rouge), en attente (gris)
 - [x] Dashboard délivrabilité : compteurs emails envoyés/délivrés/rebondis
+
+## Correction cours "Analyse de données, reporting et BI avec Codex" (04 août 2026)
+- [x] Générer les 13 fichiers CSV de données de test (seed=20260804)
+- [x] Générer les dumps SQL (OLTP, DW, star schema, faulty marts, expected results, data quality assertions)
+- [x] Uploader tous les fichiers de données et obtenir les URLs
+- [x] Réécrire les exercices/TP de chaque module avec présentation structurée et liens de téléchargement
+- [ ] Ajouter les fichiers de solutions (solution_lab_01 à solution_lab_07 + final)
+- [ ] Vérifier le rendu visuel des exercices corrigés
+
+## Exercices à réponses numériques déterministes (cours BI Codex)
+- [x] Calculer toutes les réponses numériques de référence à partir des CSV (CA net, marges, taux, etc.)
+- [x] Reformater les exercices pour demander des valeurs numériques précises (avec tolérance)
+- [x] Stocker les réponses attendues dans les JSON de cours (champ answers)
+- [x] Créer un composant UI de saisie de réponse numérique avec validation
+- [x] Intégrer la validation côté serveur (comparer réponse candidat vs réponse attendue avec tolérance)
+- [x] Enregistrer les résultats en base de données (score par exercice)

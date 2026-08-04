@@ -707,6 +707,34 @@ export const appRouter = router({
   // Enhanced admin tools (notes, tags, communications, bulk actions, analytics)
   adminTools: adminEnhancedRouter,
   adminContent: adminContentRouter,
+
+  // ============ Exercise Results (Numeric Answers) ============
+  exerciseResult: router({
+    save: protectedProcedure
+      .input(z.object({
+        courseId: z.string(),
+        moduleId: z.string(),
+        score: z.number(),
+        totalQuestions: z.number(),
+        answers: z.array(z.object({
+          questionId: z.string(),
+          userAnswer: z.string(),
+          isCorrect: z.boolean(),
+        })),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        // Store exercise results in DB
+        const { saveExerciseResult } = await import("./db");
+        return await saveExerciseResult(String(ctx.user.id), input.courseId, input.moduleId, input.score, input.totalQuestions, JSON.stringify(input.answers));
+      }),
+
+    getMyResults: protectedProcedure
+      .input(z.object({ courseId: z.string().optional() }).optional())
+      .query(async ({ ctx, input }) => {
+        const { getExerciseResults } = await import("./db");
+        return await getExerciseResults(String(ctx.user.id), input?.courseId);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

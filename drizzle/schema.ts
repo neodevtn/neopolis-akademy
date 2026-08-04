@@ -355,3 +355,19 @@ export const emailEvents = mysqlTable("email_events", {
 });
 export type EmailEvent = typeof emailEvents.$inferSelect;
 export type InsertEmailEvent = typeof emailEvents.$inferInsert;
+
+/**
+ * Exercise results - stores numeric answer exercise submissions
+ */
+export const exerciseResults = mysqlTable("exercise_results", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: varchar("userId", { length: 64 }).notNull(),
+  courseId: varchar("courseId", { length: 128 }).notNull(),
+  moduleId: varchar("moduleId", { length: 128 }).notNull(),
+  score: int("score").notNull(),
+  totalQuestions: int("totalQuestions").notNull(),
+  answers: text("answers"), // JSON string of individual answers
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type ExerciseResult = typeof exerciseResults.$inferSelect;
+export type InsertExerciseResult = typeof exerciseResults.$inferInsert;

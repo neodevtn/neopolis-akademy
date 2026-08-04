@@ -10,6 +10,22 @@
       },
       "chapters": [
         {
+          "id": "chapter_00",
+          "title": {
+            "en": "Download Test Data",
+            "fr": "Télécharger les données de test"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Course Test Data\n\nDownload the files needed for this module's exercises:\n\n| File | Description | Size |\n|------|-------------|------|\n| [Complete Pack (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip) | All data files and SQL scripts | ~15 MB |\n| [CSV Files Only](/manus-storage/neopolis_bi_csv_94547789.zip) | 13 raw data CSV files | ~15 MB |\n| [SQL Scripts Only](/manus-storage/neopolis_bi_sql_d01aa309.zip) | OLTP, DW schemas, marts, assertions | ~10 KB |\n\n### Data Pack Contents\n\n**CSV Files (13 files):**\n\n| File | Rows | Description |\n|------|------|-------------|\n| `customers.csv` | 12,000 | Customers (5 countries, 5 segments) |\n| `products.csv` | 350 | Product catalog (5 categories) |\n| `sales_orders.csv` | 85,000 | Sales orders (2024-2026) |\n| `sales_order_lines.csv` | 260,000 | Detailed order lines |\n| `returns.csv` | 9,000 | Returns and refunds |\n| `inventory_movements.csv` | 120,000 | Inventory movements (5 warehouses) |\n| `web_sessions.csv` | 400,000 | Web sessions and conversions |\n| `marketing_spend.csv` | 4,800 | Marketing spend by channel |\n| `sales_targets.csv` | 3,600 | Monthly sales targets |\n| `support_tickets.csv` | 45,000 | Customer support tickets |\n| `fx_rates.csv` | 7,500+ | Daily exchange rates |\n| `calendar.csv` | 943 | Calendar table (2024-2026) |\n| `data_quality_issues.csv` | 10 | Catalog of injected anomalies |\n\n**SQL Scripts (6 files):**\n- `bi_codex_oltp_postgres.sql` — Complete PostgreSQL OLTP schema\n- `bi_codex_dw_postgres.sql` — Star schema Data Warehouse\n- `bi_codex_star_schema.sql` — Star schema DDL (reference)\n- `bi_codex_faulty_marts.sql` — Intentionally faulty marts (debugging exercises)\n- `expected_results.sql` — Reference queries for validation\n- `data_quality_assertions.sql` — Data quality test queries\n\n### Injected Data Anomalies (for exercises)\nThe data contains **10 intentional anomalies** you must detect:\n1. Duplicate customers (emails with `+dup` variants)\n2. Negative-margin products (cost > price)\n3. Orders shipped before order date\n4. Order lines referencing non-existent products\n5. Returns without matching orders\n6. Missing exchange rates for certain days\n7. Orders without detail lines\n8. Inactive customers with recent orders\n9. Months without sales targets\n10. Resolved tickets without satisfaction scores",
+                "fr": "## Données de test du cours\n\nTéléchargez les fichiers nécessaires pour réaliser les exercices de ce module :\n\n| Fichier | Description | Taille |\n|---------|-------------|--------|\n| [Pack complet (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip) | Tous les fichiers de données et scripts SQL | ~15 Mo |\n| [Fichiers CSV uniquement](/manus-storage/neopolis_bi_csv_94547789.zip) | 13 fichiers CSV de données brutes | ~15 Mo |\n| [Scripts SQL uniquement](/manus-storage/neopolis_bi_sql_d01aa309.zip) | Schémas OLTP, DW, marts, assertions | ~10 Ko |\n\n### Contenu du pack de données\n\n**Fichiers CSV (13 fichiers) :**\n\n| Fichier | Lignes | Description |\n|---------|--------|-------------|\n| `customers.csv` | 12 000 | Clients (5 pays, 5 segments) |\n| `products.csv` | 350 | Catalogue produits (5 catégories) |\n| `sales_orders.csv` | 85 000 | Commandes de vente (2024-2026) |\n| `sales_order_lines.csv` | 260 000 | Lignes de commande détaillées |\n| `returns.csv` | 9 000 | Retours et remboursements |\n| `inventory_movements.csv` | 120 000 | Mouvements de stock (5 entrepôts) |\n| `web_sessions.csv` | 400 000 | Sessions web et conversions |\n| `marketing_spend.csv` | 4 800 | Dépenses marketing par canal |\n| `sales_targets.csv` | 3 600 | Objectifs de vente mensuels |\n| `support_tickets.csv` | 45 000 | Tickets support client |\n| `fx_rates.csv` | 7 500+ | Taux de change quotidiens |\n| `calendar.csv` | 943 | Table calendrier (2024-2026) |\n| `data_quality_issues.csv` | 10 | Catalogue des anomalies injectées |\n\n**Scripts SQL (6 fichiers) :**\n- `bi_codex_oltp_postgres.sql` — Schéma OLTP PostgreSQL complet\n- `bi_codex_dw_postgres.sql` — Data Warehouse en étoile\n- `bi_codex_star_schema.sql` — DDL du schéma en étoile (référence)\n- `bi_codex_faulty_marts.sql` — Marts volontairement erronés (exercices de débogage)\n- `expected_results.sql` — Requêtes de référence pour validation\n- `data_quality_assertions.sql` — Tests de qualité de données\n\n### Anomalies de données injectées (pour exercices)\nLes données contiennent **10 anomalies intentionnelles** que vous devez détecter :\n1. Doublons clients (emails avec variantes `+dup`)\n2. Produits à marge négative (coût > prix)\n3. Commandes expédiées avant la date de commande\n4. Lignes de commande référençant des produits inexistants\n5. Retours sans commande d'origine\n6. Taux de change manquants pour certains jours\n7. Commandes sans lignes de détail\n8. Clients inactifs avec commandes récentes\n9. Mois sans objectifs de vente\n10. Tickets résolus sans score de satisfaction"
+              }
+            }
+          ]
+        },
+        {
           "id": "chapter_01",
           "title": {
             "en": "DuckDB for BI Analytics",
@@ -35,8 +51,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Practical Exercise\n\nUsing DuckDB (or PostgreSQL), ingest all CSV files from the Neopolis Market Intelligence dataset:\n\n### Tasks\n1. Read all 13 CSV files\n2. Infer column types\n3. Detect problematic columns (high NULL rate, mixed types)\n4. Generate a profiling report with: row count, column count, NULL %, unique values, min/max for numerics\n5. Have Codex generate the profiling SQL\n\n### Files to Profile\n- `customers.csv` (12,000 rows)\n- `products.csv` (350 rows)\n- `sales_orders.csv` (85,000 rows)\n- `sales_order_lines.csv` (260,000 rows)\n- `returns.csv` (9,000 rows)\n- And 8 more...\n\n### Checkpoint\nIdentify at least 5 data quality issues from the profiling results.",
-                "fr": "## Exercice pratique\n\nEn utilisant DuckDB (ou PostgreSQL), ingérez tous les fichiers CSV du dataset Neopolis Market Intelligence :\n\n### Tâches\n1. Lire les 13 fichiers CSV\n2. Inférer les types de colonnes\n3. Détecter les colonnes problématiques (taux NULL élevé, types mixtes)\n4. Générer un rapport de profiling avec : nombre de lignes, nombre de colonnes, % NULL, valeurs uniques, min/max pour les numériques\n5. Demander à Codex de générer le SQL de profiling\n\n### Fichiers à profiler\n- `customers.csv` (12 000 lignes)\n- `products.csv` (350 lignes)\n- `sales_orders.csv` (85 000 lignes)\n- `sales_order_lines.csv` (260 000 lignes)\n- `returns.csv` (9 000 lignes)\n- Et 8 autres...\n\n### Checkpoint\nIdentifiez au moins 5 problèmes de qualité de données à partir des résultats du profiling."
+                "en": "## Lab 02: Data Profiling with DuckDB and SQL\n\n### Objective\nProfile all 13 CSV files from the Neopolis Market Intelligence dataset using DuckDB, detect data quality issues, and produce a comprehensive profiling report.\n\n### Prerequisites\n- Download the [CSV data pack](/manus-storage/neopolis_bi_csv_94547789.zip)\n- Install DuckDB: `pip install duckdb` or download from [duckdb.org](https://duckdb.org)\n\n### Tasks\n\n**Task 1: Ingest all CSV files (20 min)**\n```sql\n-- Example: Read all CSVs\nSELECT * FROM read_csv_auto('customers.csv') LIMIT 10;\nSELECT * FROM read_csv_auto('sales_orders.csv') LIMIT 10;\n```\n- Load all 13 files\n- Verify row counts match expected values\n- Check column types are correctly inferred\n\n**Task 2: Column profiling (30 min)**\nFor each table, generate:\n- Row count, column count\n- NULL percentage per column\n- Unique value count per column\n- Min/max for numeric columns\n- Sample values for text columns\n\n**Task 3: Detect anomalies (30 min)**\nUse SQL to find:\n- Duplicate customer emails\n- Products with negative margins\n- Orders shipped before order date\n- Orphan references (lines → products, returns → orders)\n- Missing FX rates\n\n**Task 4: Codex-assisted profiling (20 min)**\nAsk Codex to generate a complete profiling script. Then:\n- Compare its output with your manual findings\n- Identify what Codex missed\n- Document the differences\n\n### Deliverables\n| # | File | Description |\n|---|------|-------------|\n| 1 | `profiling_report.md` | Complete profiling results for all tables |\n| 2 | `data_quality_findings.md` | List of all anomalies detected with SQL evidence |\n| 3 | `codex_comparison.md` | Comparison between manual and Codex-generated profiling |\n\n### Evaluation Criteria\n- **Completeness** (30%) — All 13 tables profiled\n- **Anomaly detection** (40%) — At least 7/10 injected anomalies found\n- **SQL quality** (20%) — Queries are correct and efficient\n- **Documentation** (10%) — Clear, structured report\n\n### Checkpoint\nYou must identify at least 5 data quality issues from the profiling results before proceeding.",
+                "fr": "## Lab 02 : Profiling de données avec DuckDB et SQL\n\n### Objectif\nProfiler les 13 fichiers CSV du dataset Neopolis Market Intelligence avec DuckDB, détecter les problèmes de qualité de données et produire un rapport de profiling complet.\n\n### Prérequis\n- Téléchargez le [pack de données CSV](/manus-storage/neopolis_bi_csv_94547789.zip)\n- Installez DuckDB : `pip install duckdb` ou téléchargez depuis [duckdb.org](https://duckdb.org)\n\n### Tâches\n\n**Tâche 1 : Ingérer tous les fichiers CSV (20 min)**\n```sql\n-- Exemple : Lire tous les CSV\nSELECT * FROM read_csv_auto('customers.csv') LIMIT 10;\nSELECT * FROM read_csv_auto('sales_orders.csv') LIMIT 10;\n```\n- Charger les 13 fichiers\n- Vérifier que les nombres de lignes correspondent aux valeurs attendues\n- Vérifier que les types de colonnes sont correctement inférés\n\n**Tâche 2 : Profiling des colonnes (30 min)**\nPour chaque table, générer :\n- Nombre de lignes, nombre de colonnes\n- Pourcentage de NULL par colonne\n- Nombre de valeurs uniques par colonne\n- Min/max pour les colonnes numériques\n- Valeurs d'exemple pour les colonnes texte\n\n**Tâche 3 : Détecter les anomalies (30 min)**\nUtilisez SQL pour trouver :\n- Doublons d'emails clients\n- Produits à marge négative\n- Commandes expédiées avant la date de commande\n- Références orphelines (lignes → produits, retours → commandes)\n- Taux de change manquants\n\n**Tâche 4 : Profiling assisté par Codex (20 min)**\nDemandez à Codex de générer un script de profiling complet. Puis :\n- Comparez sa sortie avec vos résultats manuels\n- Identifiez ce que Codex a manqué\n- Documentez les différences\n\n### Livrables\n| # | Fichier | Description |\n|---|---------|-------------|\n| 1 | `profiling_report.md` | Résultats de profiling complets pour toutes les tables |\n| 2 | `data_quality_findings.md` | Liste de toutes les anomalies détectées avec preuves SQL |\n| 3 | `codex_comparison.md` | Comparaison entre profiling manuel et généré par Codex |\n\n### Critères d'évaluation\n- **Complétude** (30%) — Les 13 tables sont profilées\n- **Détection d'anomalies** (40%) — Au moins 7/10 anomalies injectées trouvées\n- **Qualité SQL** (20%) — Requêtes correctes et efficaces\n- **Documentation** (10%) — Rapport clair et structuré\n\n### Checkpoint\nVous devez identifier au moins 5 problèmes de qualité de données à partir des résultats du profiling avant de continuer."
               }
             }
           ]
@@ -92,8 +108,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Practical Exercise\n\nUsing the `data_quality_issues.csv` as reference, build SQL assertions that detect each known issue:\n\n### Tasks\n1. Write assertions for referential integrity\n2. Write assertions for duplicate detection\n3. Write assertions for currency consistency\n4. Write assertions for date range validity\n5. Compare your results with `expected_detection_query` in the issues file\n\n### Deliverable\nA `data_quality_assertions.sql` file with all tests and expected results.",
-                "fr": "## Exercice pratique\n\nEn utilisant `data_quality_issues.csv` comme référence, construisez des assertions SQL qui détectent chaque problème connu :\n\n### Tâches\n1. Écrire des assertions pour l'intégrité référentielle\n2. Écrire des assertions pour la détection de doublons\n3. Écrire des assertions pour la cohérence des devises\n4. Écrire des assertions pour la validité des plages de dates\n5. Comparer vos résultats avec `expected_detection_query` dans le fichier d'anomalies\n\n### Livrable\nUn fichier `data_quality_assertions.sql` avec tous les tests et résultats attendus."
+                "en": "## Hands-on: Build Data Quality Tests\n\n### Objective\nCreate a comprehensive suite of SQL assertions to validate data integrity across all tables.\n\n### Reference File\nUse `data_quality_assertions.sql` from the [SQL pack](/manus-storage/neopolis_bi_sql_d01aa309.zip) as a starting point.\n\n### Tasks\n\n**Task 1: Referential Integrity Tests (20 min)**\nWrite SQL assertions for:\n- Every `customer_id` in orders exists in customers\n- Every `product_id` in order lines exists in products\n- Every `order_id` in returns exists in orders\n\n**Task 2: Business Rule Tests (20 min)**\n- No negative quantities in order lines\n- `line_total ≈ quantity × unit_price` (tolerance: 0.01)\n- Ship date ≥ order date (flag violations)\n- Return date > order date\n\n**Task 3: Completeness Tests (15 min)**\n- No NULL in required fields\n- FX rates exist for all trading days\n- All countries have targets for all months\n\n**Task 4: Codex-Generated Assertions (15 min)**\nAsk Codex to generate additional assertions. Validate them against the data.\n\n### Expected Output Format\n```sql\nSELECT 'test_name' AS test,\n       COUNT(*) AS failures,\n       CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END AS status\nFROM ... WHERE ...;\n```\n\n### Deliverable\n`data_quality_tests.sql` — A complete test suite with at least 15 assertions.",
+                "fr": "## TP : Construire des tests de qualité de données\n\n### Objectif\nCréer une suite complète d'assertions SQL pour valider l'intégrité des données sur toutes les tables.\n\n### Fichier de référence\nUtilisez `data_quality_assertions.sql` du [pack SQL](/manus-storage/neopolis_bi_sql_d01aa309.zip) comme point de départ.\n\n### Tâches\n\n**Tâche 1 : Tests d'intégrité référentielle (20 min)**\nÉcrivez des assertions SQL pour :\n- Chaque `customer_id` dans les commandes existe dans customers\n- Chaque `product_id` dans les lignes de commande existe dans products\n- Chaque `order_id` dans les retours existe dans orders\n\n**Tâche 2 : Tests de règles métier (20 min)**\n- Pas de quantités négatives dans les lignes de commande\n- `line_total ≈ quantity × unit_price` (tolérance : 0.01)\n- Date d'expédition ≥ date de commande (signaler les violations)\n- Date de retour > date de commande\n\n**Tâche 3 : Tests de complétude (15 min)**\n- Pas de NULL dans les champs obligatoires\n- Taux de change existants pour tous les jours ouvrés\n- Tous les pays ont des objectifs pour tous les mois\n\n**Tâche 4 : Assertions générées par Codex (15 min)**\nDemandez à Codex de générer des assertions supplémentaires. Validez-les sur les données.\n\n### Format de sortie attendu\n```sql\nSELECT 'nom_du_test' AS test,\n       COUNT(*) AS failures,\n       CASE WHEN COUNT(*) = 0 THEN 'PASS' ELSE 'FAIL' END AS status\nFROM ... WHERE ...;\n```\n\n### Livrable\n`data_quality_tests.sql` — Une suite de tests complète avec au moins 15 assertions."
               }
             }
           ]
@@ -149,8 +165,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Practical Exercise\n\nUse Codex to generate a comprehensive profiling script, then validate its output:\n\n1. Ask Codex to profile `sales_order_lines` (260K rows)\n2. Verify the statistical distribution makes sense\n3. Identify outliers and anomalies\n4. Cross-reference with `data_quality_issues.csv`\n5. Document which issues Codex found vs. missed",
-                "fr": "## Exercice pratique\n\nUtilisez Codex pour générer un script de profiling complet, puis validez sa sortie :\n\n1. Demandez à Codex de profiler `sales_order_lines` (260K lignes)\n2. Vérifiez que la distribution statistique est cohérente\n3. Identifiez les outliers et anomalies\n4. Recoupez avec `data_quality_issues.csv`\n5. Documentez quels problèmes Codex a trouvés vs. manqués"
+                "en": "## Hands-on: Codex-Assisted SQL Profiling\n\n### Objective\nUse Codex to generate advanced profiling queries, then validate and improve them.\n\n### Data Required\n- [CSV data pack](/manus-storage/neopolis_bi_csv_94547789.zip) loaded into DuckDB or PostgreSQL\n\n### Tasks\n\n**Task 1: Statistical Profiling (25 min)**\nAsk Codex to generate queries for:\n- Distribution analysis (percentiles, histograms) for `lifetime_value`\n- Frequency analysis for categorical columns (`segment`, `category`, `channel`)\n- Time series patterns in `sales_orders` (daily/weekly/monthly volumes)\n- Correlation between `marketing_spend` and `conversions`\n\n**Task 2: Cross-Table Validation (25 min)**\nGenerate and validate queries that check:\n- Revenue reconciliation: `SUM(line_total)` per order vs. expected\n- Customer activity: orders per customer distribution\n- Product coverage: products never ordered\n- Geographic consistency: country in orders matches customer country\n\n**Task 3: Anomaly Detection Queries (20 min)**\nAsk Codex to write anomaly detection SQL for:\n- Statistical outliers (Z-score > 3) in `line_total`\n- Sudden spikes in daily order volume\n- Customers with suspiciously high return rates\n- Products with inconsistent pricing across orders\n\n### Deliverables\n| # | File | Description |\n|---|------|-------------|\n| 1 | `advanced_profiling.sql` | All profiling queries with comments |\n| 2 | `profiling_results.md` | Key findings from each query |\n| 3 | `codex_review_notes.md` | What Codex got right/wrong |\n\n### Checkpoint\nIdentify at least 3 insights that Codex missed or got wrong in its profiling queries.",
+                "fr": "## TP : Profiling SQL assisté par Codex\n\n### Objectif\nUtiliser Codex pour générer des requêtes de profiling avancées, puis les valider et les améliorer.\n\n### Données requises\n- [Pack de données CSV](/manus-storage/neopolis_bi_csv_94547789.zip) chargé dans DuckDB ou PostgreSQL\n\n### Tâches\n\n**Tâche 1 : Profiling statistique (25 min)**\nDemandez à Codex de générer des requêtes pour :\n- Analyse de distribution (percentiles, histogrammes) pour `lifetime_value`\n- Analyse de fréquence pour les colonnes catégorielles (`segment`, `category`, `channel`)\n- Patterns de séries temporelles dans `sales_orders` (volumes quotidiens/hebdomadaires/mensuels)\n- Corrélation entre `marketing_spend` et `conversions`\n\n**Tâche 2 : Validation inter-tables (25 min)**\nGénérez et validez des requêtes qui vérifient :\n- Réconciliation du CA : `SUM(line_total)` par commande vs. attendu\n- Activité client : distribution des commandes par client\n- Couverture produit : produits jamais commandés\n- Cohérence géographique : pays dans les commandes correspond au pays du client\n\n**Tâche 3 : Requêtes de détection d'anomalies (20 min)**\nDemandez à Codex d'écrire du SQL de détection d'anomalies pour :\n- Outliers statistiques (Z-score > 3) dans `line_total`\n- Pics soudains dans le volume quotidien de commandes\n- Clients avec des taux de retour anormalement élevés\n- Produits avec des prix incohérents entre commandes\n\n### Livrables\n| # | Fichier | Description |\n|---|---------|-------------|\n| 1 | `advanced_profiling.sql` | Toutes les requêtes de profiling avec commentaires |\n| 2 | `profiling_results.md` | Résultats clés de chaque requête |\n| 3 | `codex_review_notes.md` | Ce que Codex a bien/mal fait |\n\n### Checkpoint\nIdentifiez au moins 3 insights que Codex a manqués ou mal interprétés dans ses requêtes de profiling."
               }
             }
           ]
@@ -197,18 +213,121 @@
           ]
         },
         {
-          "id": "chapter_11",
+          "id": "chapter_exercise_02",
           "title": {
-            "en": "Hands-on: Optimize Queries",
-            "fr": "TP : Optimiser des requêtes"
+            "en": "Lab 02 – Data Profiling & Quality Assessment",
+            "fr": "TP 02 – Profilage des données et évaluation qualité"
           },
           "blocks": [
             {
-              "type": "content",
+              "type": "exercise",
               "body": {
-                "en": "## Practical Exercise\n\nUsing the `bi_codex_faulty_marts.sql` file which contains intentionally slow queries:\n\n1. Run EXPLAIN ANALYZE on each query\n2. Identify the bottleneck\n3. Ask Codex to suggest optimizations\n4. Validate the optimized version is actually faster\n5. Document before/after execution times",
-                "fr": "## Exercice pratique\n\nEn utilisant le fichier `bi_codex_faulty_marts.sql` qui contient des requêtes intentionnellement lentes :\n\n1. Exécutez EXPLAIN ANALYZE sur chaque requête\n2. Identifiez le goulot d'étranglement\n3. Demandez à Codex de suggérer des optimisations\n4. Validez que la version optimisée est réellement plus rapide\n5. Documentez les temps d'exécution avant/après"
-              }
+                "en": "## Lab 02 – Data Profiling & Quality Assessment\n\n**Instructions:** Using the provided CSV files, perform a complete data profiling. Use Python (pandas), SQL, or Excel to answer the following questions. Enter your numeric answers below.\n\n---\n\n### Numeric Answer Questions\n\nAfter processing the data with the tools taught in this module, enter your answers below. The platform will automatically validate your results.\n\n**Q1.** How many rows are in the customers.csv file?\n\n**Q2.** How many rows are in the products.csv file?\n\n**Q3.** How many rows are in the sales_orders.csv file?\n\n**Q4.** How many unique countries are represented in the customers table?\n\n**Q5.** How many unique customer segments exist?\n\n**Q6.** How many duplicate email addresses are there in customers.csv? (containing '+dup')\n\n**Q7.** How many products have a negative margin (cost > price)?\n\n**Q8.** How many orders have a ship_date earlier than the order_date?\n\n**Q9.** How many order lines reference a product_id not found in products.csv?\n\n**Q10.** How many returns reference an order_id not found in sales_orders.csv?\n\n",
+                "fr": "## TP 02 – Profilage des données et évaluation qualité\n\n**Instructions :** À partir des fichiers CSV fournis, réalisez un profilage complet des données. Utilisez Python (pandas), SQL ou Excel pour répondre aux questions suivantes. Saisissez vos réponses numériques ci-dessous.\n\n---\n\n### Questions à réponse numérique\n\nAprès avoir traité les données avec les outils enseignés dans ce module, saisissez vos réponses ci-dessous. La plateforme validera automatiquement vos résultats.\n\n**Q1.** Combien de lignes contient le fichier customers.csv ?\n\n**Q2.** Combien de lignes contient le fichier products.csv ?\n\n**Q3.** Combien de lignes contient le fichier sales_orders.csv ?\n\n**Q4.** Combien de pays distincts sont représentés dans la table clients ?\n\n**Q5.** Combien de segments clients distincts existent ?\n\n**Q6.** Combien d'adresses email en doublon existent dans customers.csv ? (contenant '+dup')\n\n**Q7.** Combien de produits ont une marge négative (coût > prix) ?\n\n**Q8.** Combien de commandes ont une date d'expédition antérieure à la date de commande ?\n\n**Q9.** Combien de lignes de commande référencent un product_id absent de products.csv ?\n\n**Q10.** Combien de retours référencent un order_id absent de sales_orders.csv ?\n\n"
+              },
+              "exercise_type": "numeric_answers",
+              "questions": [
+                {
+                  "id": "m02_q01_customers_rows",
+                  "text": {
+                    "en": "How many rows are in the customers.csv file?",
+                    "fr": "Combien de lignes contient le fichier customers.csv ?"
+                  },
+                  "expected_value": 12000,
+                  "unit": "lignes",
+                  "tolerance": 0
+                },
+                {
+                  "id": "m02_q02_products_rows",
+                  "text": {
+                    "en": "How many rows are in the products.csv file?",
+                    "fr": "Combien de lignes contient le fichier products.csv ?"
+                  },
+                  "expected_value": 350,
+                  "unit": "lignes",
+                  "tolerance": 0
+                },
+                {
+                  "id": "m02_q03_orders_rows",
+                  "text": {
+                    "en": "How many rows are in the sales_orders.csv file?",
+                    "fr": "Combien de lignes contient le fichier sales_orders.csv ?"
+                  },
+                  "expected_value": 85000,
+                  "unit": "lignes",
+                  "tolerance": 0
+                },
+                {
+                  "id": "m02_q06_unique_countries",
+                  "text": {
+                    "en": "How many unique countries are represented in the customers table?",
+                    "fr": "Combien de pays distincts sont représentés dans la table clients ?"
+                  },
+                  "expected_value": 5,
+                  "unit": "pays",
+                  "tolerance": 0
+                },
+                {
+                  "id": "m02_q07_unique_segments",
+                  "text": {
+                    "en": "How many unique customer segments exist?",
+                    "fr": "Combien de segments clients distincts existent ?"
+                  },
+                  "expected_value": 5,
+                  "unit": "segments",
+                  "tolerance": 0
+                },
+                {
+                  "id": "m02_q08_duplicate_emails",
+                  "text": {
+                    "en": "How many duplicate email addresses are there in customers.csv? (containing '+dup')",
+                    "fr": "Combien d'adresses email en doublon existent dans customers.csv ? (contenant '+dup')"
+                  },
+                  "expected_value": 24,
+                  "unit": "doublons",
+                  "tolerance": 0
+                },
+                {
+                  "id": "m02_q09_negative_margin_products",
+                  "text": {
+                    "en": "How many products have a negative margin (cost > price)?",
+                    "fr": "Combien de produits ont une marge négative (coût > prix) ?"
+                  },
+                  "expected_value": 5,
+                  "unit": "produits",
+                  "tolerance": 0
+                },
+                {
+                  "id": "m02_q10_shipped_before_ordered",
+                  "text": {
+                    "en": "How many orders have a ship_date earlier than the order_date?",
+                    "fr": "Combien de commandes ont une date d'expédition antérieure à la date de commande ?"
+                  },
+                  "expected_value": 42,
+                  "unit": "commandes",
+                  "tolerance": 0
+                },
+                {
+                  "id": "m02_q11_orphan_product_refs",
+                  "text": {
+                    "en": "How many order lines reference a product_id not found in products.csv?",
+                    "fr": "Combien de lignes de commande référencent un product_id absent de products.csv ?"
+                  },
+                  "expected_value": 52,
+                  "unit": "lignes",
+                  "tolerance": 0
+                },
+                {
+                  "id": "m02_q12_orphan_returns",
+                  "text": {
+                    "en": "How many returns reference an order_id not found in sales_orders.csv?",
+                    "fr": "Combien de retours référencent un order_id absent de sales_orders.csv ?"
+                  },
+                  "expected_value": 30,
+                  "unit": "retours",
+                  "tolerance": 0
+                }
+              ]
             }
           ]
         },

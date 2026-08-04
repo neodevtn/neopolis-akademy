@@ -10,6 +10,22 @@
       },
       "chapters": [
         {
+          "id": "chapter_00",
+          "title": {
+            "en": "Download Test Data",
+            "fr": "Télécharger les données de test"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Course Test Data\n\nDownload the files needed for this module's exercises:\n\n| File | Description | Size |\n|------|-------------|------|\n| [Complete Pack (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip) | All data files and SQL scripts | ~15 MB |\n| [CSV Files Only](/manus-storage/neopolis_bi_csv_94547789.zip) | 13 raw data CSV files | ~15 MB |\n| [SQL Scripts Only](/manus-storage/neopolis_bi_sql_d01aa309.zip) | OLTP, DW schemas, marts, assertions | ~10 KB |\n\n### Data Pack Contents\n\n**CSV Files (13 files):**\n\n| File | Rows | Description |\n|------|------|-------------|\n| `customers.csv` | 12,000 | Customers (5 countries, 5 segments) |\n| `products.csv` | 350 | Product catalog (5 categories) |\n| `sales_orders.csv` | 85,000 | Sales orders (2024-2026) |\n| `sales_order_lines.csv` | 260,000 | Detailed order lines |\n| `returns.csv` | 9,000 | Returns and refunds |\n| `inventory_movements.csv` | 120,000 | Inventory movements (5 warehouses) |\n| `web_sessions.csv` | 400,000 | Web sessions and conversions |\n| `marketing_spend.csv` | 4,800 | Marketing spend by channel |\n| `sales_targets.csv` | 3,600 | Monthly sales targets |\n| `support_tickets.csv` | 45,000 | Customer support tickets |\n| `fx_rates.csv` | 7,500+ | Daily exchange rates |\n| `calendar.csv` | 943 | Calendar table (2024-2026) |\n| `data_quality_issues.csv` | 10 | Catalog of injected anomalies |\n\n**SQL Scripts (6 files):**\n- `bi_codex_oltp_postgres.sql` — Complete PostgreSQL OLTP schema\n- `bi_codex_dw_postgres.sql` — Star schema Data Warehouse\n- `bi_codex_star_schema.sql` — Star schema DDL (reference)\n- `bi_codex_faulty_marts.sql` — Intentionally faulty marts (debugging exercises)\n- `expected_results.sql` — Reference queries for validation\n- `data_quality_assertions.sql` — Data quality test queries\n\n### Injected Data Anomalies (for exercises)\nThe data contains **10 intentional anomalies** you must detect:\n1. Duplicate customers (emails with `+dup` variants)\n2. Negative-margin products (cost > price)\n3. Orders shipped before order date\n4. Order lines referencing non-existent products\n5. Returns without matching orders\n6. Missing exchange rates for certain days\n7. Orders without detail lines\n8. Inactive customers with recent orders\n9. Months without sales targets\n10. Resolved tickets without satisfaction scores",
+                "fr": "## Données de test du cours\n\nTéléchargez les fichiers nécessaires pour réaliser les exercices de ce module :\n\n| Fichier | Description | Taille |\n|---------|-------------|--------|\n| [Pack complet (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip) | Tous les fichiers de données et scripts SQL | ~15 Mo |\n| [Fichiers CSV uniquement](/manus-storage/neopolis_bi_csv_94547789.zip) | 13 fichiers CSV de données brutes | ~15 Mo |\n| [Scripts SQL uniquement](/manus-storage/neopolis_bi_sql_d01aa309.zip) | Schémas OLTP, DW, marts, assertions | ~10 Ko |\n\n### Contenu du pack de données\n\n**Fichiers CSV (13 fichiers) :**\n\n| Fichier | Lignes | Description |\n|---------|--------|-------------|\n| `customers.csv` | 12 000 | Clients (5 pays, 5 segments) |\n| `products.csv` | 350 | Catalogue produits (5 catégories) |\n| `sales_orders.csv` | 85 000 | Commandes de vente (2024-2026) |\n| `sales_order_lines.csv` | 260 000 | Lignes de commande détaillées |\n| `returns.csv` | 9 000 | Retours et remboursements |\n| `inventory_movements.csv` | 120 000 | Mouvements de stock (5 entrepôts) |\n| `web_sessions.csv` | 400 000 | Sessions web et conversions |\n| `marketing_spend.csv` | 4 800 | Dépenses marketing par canal |\n| `sales_targets.csv` | 3 600 | Objectifs de vente mensuels |\n| `support_tickets.csv` | 45 000 | Tickets support client |\n| `fx_rates.csv` | 7 500+ | Taux de change quotidiens |\n| `calendar.csv` | 943 | Table calendrier (2024-2026) |\n| `data_quality_issues.csv` | 10 | Catalogue des anomalies injectées |\n\n**Scripts SQL (6 fichiers) :**\n- `bi_codex_oltp_postgres.sql` — Schéma OLTP PostgreSQL complet\n- `bi_codex_dw_postgres.sql` — Data Warehouse en étoile\n- `bi_codex_star_schema.sql` — DDL du schéma en étoile (référence)\n- `bi_codex_faulty_marts.sql` — Marts volontairement erronés (exercices de débogage)\n- `expected_results.sql` — Requêtes de référence pour validation\n- `data_quality_assertions.sql` — Tests de qualité de données\n\n### Anomalies de données injectées (pour exercices)\nLes données contiennent **10 anomalies intentionnelles** que vous devez détecter :\n1. Doublons clients (emails avec variantes `+dup`)\n2. Produits à marge négative (coût > prix)\n3. Commandes expédiées avant la date de commande\n4. Lignes de commande référençant des produits inexistants\n5. Retours sans commande d'origine\n6. Taux de change manquants pour certains jours\n7. Commandes sans lignes de détail\n8. Clients inactifs avec commandes récentes\n9. Mois sans objectifs de vente\n10. Tickets résolus sans score de satisfaction"
+              }
+            }
+          ]
+        },
+        {
           "id": "chapter_01",
           "title": {
             "en": "Project Brief and Data Loading",
@@ -35,8 +51,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Practical Exercise\n\nLoad all data sources, run initial profiling, and document the data landscape. Identify the key issues that will impact your analysis.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nChargez toutes les sources de données, exécutez le profiling initial et documentez le paysage de données. Identifiez les problèmes clés qui impacteront votre analyse.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
+                "en": "## Final Certification Project: BI 360 Mission\n\n### Title\n**Mission BI 360 — Performance Diagnostic and Executive Reporting for Neopolis Market Intelligence**\n\n### Scenario\nManagement observes revenue growth but declining margins and increasing returns in certain countries. You must use Codex and the test data to produce a complete BI diagnostic, analytical model, executive report, and action plan.\n\n### Data Required\n- [Complete data pack (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip)\n\n### Mandatory Tasks (10 deliverables)\n\n| # | Task | Deliverable |\n|---|------|-------------|\n| 1 | Load and validate data | `final/sql/data_load_validation.sql` |\n| 2 | Profile tables, detect anomalies | `final/reports/data_quality_report.md` |\n| 3 | Build star schema model | `final/sql/final_model.sql` |\n| 4 | Produce certified KPIs | `final/sql/final_kpis.sql` |\n| 5 | Build advanced Excel dashboard | `final/excel/final_excel_dashboard.xlsx` |\n| 6 | Specify Power BI report | `final/powerbi/final_powerbi_spec.md` |\n| 7 | Optimize 2+ slow queries | `final/reports/performance_report.md` |\n| 8 | Produce executive summary | `final/reports/executive_summary.md` |\n| 9 | Complete Codex prompt log | `final/prompt_log.md` |\n| 10 | Human validation matrix | `final/validation_evidence.xlsx` |\n\n### Grading (100 points)\n\n| Criterion | Points | Requirements |\n|-----------|--------|--------------|\n| Data quality & audit | 20 | All 10 anomalies detected, documented with SQL evidence |\n| BI Model | 20 | Correct grain, proper dimensions, working ETL |\n| SQL & DAX | 20 | Correct KPIs, optimized queries, time intelligence |\n| Excel/Power BI reporting | 20 | Complete dashboard, correct numbers, slicers working |\n| Executive summary & Codex governance | 20 | Traceable conclusions, RACI matrix, prompt log |\n\n### Pass Criteria\n- Score ≥ 75/100\n- No critical error on: CA net, gross margin, return rate, target attainment\n- Executive conclusions must be traceable to a query, measure, or visual\n- Prompt log must show how Codex was used AND how you validated its outputs\n\n### Timeline\n- **Phase 1** (2h): Data loading, profiling, quality audit\n- **Phase 2** (3h): Star schema, ETL, KPIs\n- **Phase 3** (3h): Excel dashboard, Power BI specification\n- **Phase 4** (2h): Executive summary, documentation, prompt log",
+                "fr": "## Projet final certifiant : Mission BI 360\n\n### Titre\n**Mission BI 360 — Diagnostic performance et reporting direction pour Neopolis Market Intelligence**\n\n### Scénario\nLa direction constate une hausse du chiffre d'affaires mais une baisse de marge et une augmentation des retours dans certains pays. Vous devez utiliser Codex et les données de test pour produire un diagnostic BI complet, un modèle analytique, un rapport exécutif et un plan d'actions.\n\n### Données requises\n- [Pack complet de données (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip)\n\n### Tâches obligatoires (10 livrables)\n\n| # | Tâche | Livrable |\n|---|-------|----------|\n| 1 | Charger et valider les données | `final/sql/data_load_validation.sql` |\n| 2 | Profiler les tables, détecter les anomalies | `final/reports/data_quality_report.md` |\n| 3 | Construire le modèle en étoile | `final/sql/final_model.sql` |\n| 4 | Produire les KPI certifiés | `final/sql/final_kpis.sql` |\n| 5 | Construire un dashboard Excel avancé | `final/excel/final_excel_dashboard.xlsx` |\n| 6 | Spécifier le rapport Power BI | `final/powerbi/final_powerbi_spec.md` |\n| 7 | Optimiser 2+ requêtes lentes | `final/reports/performance_report.md` |\n| 8 | Produire la synthèse exécutive | `final/reports/executive_summary.md` |\n| 9 | Prompt log Codex complet | `final/prompt_log.md` |\n| 10 | Matrice de validation humaine | `final/validation_evidence.xlsx` |\n\n### Barème (100 points)\n\n| Critère | Points | Exigences |\n|---------|--------|-----------|\n| Qualité des données et audit | 20 | Les 10 anomalies détectées, documentées avec preuves SQL |\n| Modèle BI | 20 | Grain correct, dimensions appropriées, ETL fonctionnel |\n| SQL et DAX | 20 | KPI corrects, requêtes optimisées, time intelligence |\n| Excel/Power BI reporting | 20 | Dashboard complet, chiffres corrects, segments fonctionnels |\n| Synthèse exécutive et gouvernance Codex | 20 | Conclusions traçables, matrice RACI, prompt log |\n\n### Conditions de réussite\n- Score ≥ 75/100\n- Aucune erreur critique sur : CA net, marge brute, taux de retour, atteinte objectif\n- Les conclusions exécutives doivent être traçables à une requête, mesure ou visuel\n- Le prompt log doit montrer comment Codex a été utilisé ET comment vous avez validé ses sorties\n\n### Planning\n- **Phase 1** (2h) : Chargement des données, profiling, audit qualité\n- **Phase 2** (3h) : Schéma en étoile, ETL, KPI\n- **Phase 3** (3h) : Dashboard Excel, spécification Power BI\n- **Phase 4** (2h) : Synthèse exécutive, documentation, prompt log"
               }
             }
           ]
@@ -197,18 +213,71 @@
           ]
         },
         {
-          "id": "chapter_11",
+          "id": "chapter_exercise_08",
           "title": {
-            "en": "Hands-on: Executive Delivery and Prompt Log",
-            "fr": "TP : Livraison exécutive et prompt log"
+            "en": "Lab 08 – Final Project: Complete BI Solution",
+            "fr": "TP 08 – Projet final : Solution BI complète"
           },
           "blocks": [
             {
-              "type": "content",
+              "type": "exercise",
               "body": {
-                "en": "## Practical Exercise\n\nProduce the final executive summary, prompt log, and validation evidence. Every conclusion must be traceable to a query, measure, or visual.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nProduisez la synthèse exécutive finale, le prompt log et les preuves de validation. Chaque conclusion doit être traçable à une requête, mesure ou visuel.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
-              }
+                "en": "## Lab 08 – Final Project: Complete BI Solution\n\n**Instructions:** Build a complete BI solution from raw data to executive dashboard. Validate your work by answering the following summary KPIs.\n\n---\n\n### Numeric Answer Questions\n\nAfter processing the data with the tools taught in this module, enter your answers below. The platform will automatically validate your results.\n\n**Q1.** Total Net Revenue across all periods (EUR) (tolerance: ±0.01 EUR)\n\n**Q2.** Overall gross margin rate (%) (tolerance: ±0.1 %)\n\n**Q3.** Overall return rate (%) (tolerance: ±0.1 %)\n\n**Q4.** Number of unique customers with at least one order\n\n**Q5.** Number of distinct products sold\n\n",
+                "fr": "## TP 08 – Projet final : Solution BI complète\n\n**Instructions :** Construisez une solution BI complète, des données brutes au dashboard exécutif. Validez votre travail en répondant aux KPIs de synthèse suivants.\n\n---\n\n### Questions à réponse numérique\n\nAprès avoir traité les données avec les outils enseignés dans ce module, saisissez vos réponses ci-dessous. La plateforme validera automatiquement vos résultats.\n\n**Q1.** CA Net total toutes périodes confondues (EUR) (tolérance : ±0.01 EUR)\n\n**Q2.** Taux de marge brute global (%) (tolérance : ±0.1 %)\n\n**Q3.** Taux de retour global (%) (tolérance : ±0.1 %)\n\n**Q4.** Nombre de clients uniques ayant au moins une commande\n\n**Q5.** Nombre de produits distincts vendus\n\n"
+              },
+              "exercise_type": "numeric_answers",
+              "questions": [
+                {
+                  "id": "m08_q01_ca_net_total",
+                  "text": {
+                    "en": "Total Net Revenue across all periods (EUR)",
+                    "fr": "CA Net total toutes périodes confondues (EUR)"
+                  },
+                  "expected_value": 19182448382.57,
+                  "unit": "EUR",
+                  "tolerance": 0.01
+                },
+                {
+                  "id": "m08_q03_taux_marge_total",
+                  "text": {
+                    "en": "Overall gross margin rate (%)",
+                    "fr": "Taux de marge brute global (%)"
+                  },
+                  "expected_value": -5.06,
+                  "unit": "%",
+                  "tolerance": 0.1
+                },
+                {
+                  "id": "m08_q04_taux_retour_total",
+                  "text": {
+                    "en": "Overall return rate (%)",
+                    "fr": "Taux de retour global (%)"
+                  },
+                  "expected_value": 10.59,
+                  "unit": "%",
+                  "tolerance": 0.1
+                },
+                {
+                  "id": "m08_q05_customers_with_orders",
+                  "text": {
+                    "en": "Number of unique customers with at least one order",
+                    "fr": "Nombre de clients uniques ayant au moins une commande"
+                  },
+                  "expected_value": 11990,
+                  "unit": "clients",
+                  "tolerance": 0
+                },
+                {
+                  "id": "m08_q06_products_sold",
+                  "text": {
+                    "en": "Number of distinct products sold",
+                    "fr": "Nombre de produits distincts vendus"
+                  },
+                  "expected_value": 401,
+                  "unit": "produits",
+                  "tolerance": 0
+                }
+              ]
             }
           ]
         },

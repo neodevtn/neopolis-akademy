@@ -10,6 +10,22 @@
       },
       "chapters": [
         {
+          "id": "chapter_00",
+          "title": {
+            "en": "Download Test Data",
+            "fr": "Télécharger les données de test"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Course Test Data\n\nDownload the files needed for this module's exercises:\n\n| File | Description | Size |\n|------|-------------|------|\n| [Complete Pack (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip) | All data files and SQL scripts | ~15 MB |\n| [CSV Files Only](/manus-storage/neopolis_bi_csv_94547789.zip) | 13 raw data CSV files | ~15 MB |\n| [SQL Scripts Only](/manus-storage/neopolis_bi_sql_d01aa309.zip) | OLTP, DW schemas, marts, assertions | ~10 KB |\n\n### Data Pack Contents\n\n**CSV Files (13 files):**\n\n| File | Rows | Description |\n|------|------|-------------|\n| `customers.csv` | 12,000 | Customers (5 countries, 5 segments) |\n| `products.csv` | 350 | Product catalog (5 categories) |\n| `sales_orders.csv` | 85,000 | Sales orders (2024-2026) |\n| `sales_order_lines.csv` | 260,000 | Detailed order lines |\n| `returns.csv` | 9,000 | Returns and refunds |\n| `inventory_movements.csv` | 120,000 | Inventory movements (5 warehouses) |\n| `web_sessions.csv` | 400,000 | Web sessions and conversions |\n| `marketing_spend.csv` | 4,800 | Marketing spend by channel |\n| `sales_targets.csv` | 3,600 | Monthly sales targets |\n| `support_tickets.csv` | 45,000 | Customer support tickets |\n| `fx_rates.csv` | 7,500+ | Daily exchange rates |\n| `calendar.csv` | 943 | Calendar table (2024-2026) |\n| `data_quality_issues.csv` | 10 | Catalog of injected anomalies |\n\n**SQL Scripts (6 files):**\n- `bi_codex_oltp_postgres.sql` — Complete PostgreSQL OLTP schema\n- `bi_codex_dw_postgres.sql` — Star schema Data Warehouse\n- `bi_codex_star_schema.sql` — Star schema DDL (reference)\n- `bi_codex_faulty_marts.sql` — Intentionally faulty marts (debugging exercises)\n- `expected_results.sql` — Reference queries for validation\n- `data_quality_assertions.sql` — Data quality test queries\n\n### Injected Data Anomalies (for exercises)\nThe data contains **10 intentional anomalies** you must detect:\n1. Duplicate customers (emails with `+dup` variants)\n2. Negative-margin products (cost > price)\n3. Orders shipped before order date\n4. Order lines referencing non-existent products\n5. Returns without matching orders\n6. Missing exchange rates for certain days\n7. Orders without detail lines\n8. Inactive customers with recent orders\n9. Months without sales targets\n10. Resolved tickets without satisfaction scores",
+                "fr": "## Données de test du cours\n\nTéléchargez les fichiers nécessaires pour réaliser les exercices de ce module :\n\n| Fichier | Description | Taille |\n|---------|-------------|--------|\n| [Pack complet (CSV + SQL)](/manus-storage/neopolis_bi_data_51142de6.zip) | Tous les fichiers de données et scripts SQL | ~15 Mo |\n| [Fichiers CSV uniquement](/manus-storage/neopolis_bi_csv_94547789.zip) | 13 fichiers CSV de données brutes | ~15 Mo |\n| [Scripts SQL uniquement](/manus-storage/neopolis_bi_sql_d01aa309.zip) | Schémas OLTP, DW, marts, assertions | ~10 Ko |\n\n### Contenu du pack de données\n\n**Fichiers CSV (13 fichiers) :**\n\n| Fichier | Lignes | Description |\n|---------|--------|-------------|\n| `customers.csv` | 12 000 | Clients (5 pays, 5 segments) |\n| `products.csv` | 350 | Catalogue produits (5 catégories) |\n| `sales_orders.csv` | 85 000 | Commandes de vente (2024-2026) |\n| `sales_order_lines.csv` | 260 000 | Lignes de commande détaillées |\n| `returns.csv` | 9 000 | Retours et remboursements |\n| `inventory_movements.csv` | 120 000 | Mouvements de stock (5 entrepôts) |\n| `web_sessions.csv` | 400 000 | Sessions web et conversions |\n| `marketing_spend.csv` | 4 800 | Dépenses marketing par canal |\n| `sales_targets.csv` | 3 600 | Objectifs de vente mensuels |\n| `support_tickets.csv` | 45 000 | Tickets support client |\n| `fx_rates.csv` | 7 500+ | Taux de change quotidiens |\n| `calendar.csv` | 943 | Table calendrier (2024-2026) |\n| `data_quality_issues.csv` | 10 | Catalogue des anomalies injectées |\n\n**Scripts SQL (6 fichiers) :**\n- `bi_codex_oltp_postgres.sql` — Schéma OLTP PostgreSQL complet\n- `bi_codex_dw_postgres.sql` — Data Warehouse en étoile\n- `bi_codex_star_schema.sql` — DDL du schéma en étoile (référence)\n- `bi_codex_faulty_marts.sql` — Marts volontairement erronés (exercices de débogage)\n- `expected_results.sql` — Requêtes de référence pour validation\n- `data_quality_assertions.sql` — Tests de qualité de données\n\n### Anomalies de données injectées (pour exercices)\nLes données contiennent **10 anomalies intentionnelles** que vous devez détecter :\n1. Doublons clients (emails avec variantes `+dup`)\n2. Produits à marge négative (coût > prix)\n3. Commandes expédiées avant la date de commande\n4. Lignes de commande référençant des produits inexistants\n5. Retours sans commande d'origine\n6. Taux de change manquants pour certains jours\n7. Commandes sans lignes de détail\n8. Clients inactifs avec commandes récentes\n9. Mois sans objectifs de vente\n10. Tickets résolus sans score de satisfaction"
+              }
+            }
+          ]
+        },
+        {
           "id": "chapter_01",
           "title": {
             "en": "Power BI Semantic Model",
@@ -35,8 +51,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Practical Exercise\n\nImport the data warehouse into Power BI, create relationships, roles, and hierarchies. Justify your modeling choices against the KPI requirements.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nImportez le data warehouse dans Power BI, créez les relations, rôles et hiérarchies. Justifiez vos choix de modélisation par rapport aux exigences KPI.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
+                "en": "## Lab 06: Power BI Semantic Model\n\n### Objective\nBuild a professional Power BI semantic model from the data warehouse, with proper relationships, roles, and hierarchies.\n\n### Data Required\n- [SQL pack](/manus-storage/neopolis_bi_sql_d01aa309.zip) → `bi_codex_dw_postgres.sql`\n- Or import [CSV files](/manus-storage/neopolis_bi_csv_94547789.zip) directly\n\n### Tasks\n\n**Task 1: Import and Model (30 min)**\n- Import all DW tables into Power BI\n- Create relationships matching the star schema\n- Configure filter directions (single direction by default)\n- Set up row-level security roles\n\n**Task 2: Hierarchies and Display (15 min)**\n- Date hierarchy: Year > Quarter > Month\n- Product hierarchy: Category > Subcategory > Product\n- Geography hierarchy: Region > Country > City\n- Configure sort orders and display formats\n\n**Task 3: Calculated Tables and Columns (15 min)**\n- Create a disconnected date slicer table\n- Add calculated columns for age groups, revenue bands\n- Create a \"Last Refresh\" table\n\n**Task 4: Documentation (15 min)**\n- Document every table and column with descriptions\n- Create a data dictionary in Power BI\n- Define KPI owners and update frequency\n\n### Deliverables\n| # | File | Description |\n|---|------|-------------|\n| 1 | `.pbix` file or detailed specification | Complete Power BI model |\n| 2 | `Semantic_Model_Documentation.md` | Full model documentation |\n\n### Checkpoint\nJustify your model design decisions and explain the filter flow.",
+                "fr": "## Lab 06 : Modèle sémantique Power BI\n\n### Objectif\nConstruire un modèle sémantique Power BI professionnel à partir du data warehouse, avec des relations correctes, des rôles et des hiérarchies.\n\n### Données requises\n- [Pack SQL](/manus-storage/neopolis_bi_sql_d01aa309.zip) → `bi_codex_dw_postgres.sql`\n- Ou importez les [fichiers CSV](/manus-storage/neopolis_bi_csv_94547789.zip) directement\n\n### Tâches\n\n**Tâche 1 : Importer et modéliser (30 min)**\n- Importer toutes les tables DW dans Power BI\n- Créer les relations correspondant au schéma en étoile\n- Configurer les directions de filtre (direction unique par défaut)\n- Mettre en place les rôles de sécurité au niveau des lignes\n\n**Tâche 2 : Hiérarchies et affichage (15 min)**\n- Hiérarchie date : Année > Trimestre > Mois\n- Hiérarchie produit : Catégorie > Sous-catégorie > Produit\n- Hiérarchie géographie : Région > Pays > Ville\n- Configurer les ordres de tri et formats d'affichage\n\n**Tâche 3 : Tables et colonnes calculées (15 min)**\n- Créer une table de segment de dates déconnectée\n- Ajouter des colonnes calculées pour tranches d'âge, bandes de CA\n- Créer une table \"Dernier rafraîchissement\"\n\n**Tâche 4 : Documentation (15 min)**\n- Documenter chaque table et colonne avec des descriptions\n- Créer un dictionnaire de données dans Power BI\n- Définir les propriétaires de KPI et la fréquence de mise à jour\n\n### Livrables\n| # | Fichier | Description |\n|---|---------|-------------|\n| 1 | Fichier `.pbix` ou spécification détaillée | Modèle Power BI complet |\n| 2 | `Semantic_Model_Documentation.md` | Documentation complète du modèle |\n\n### Checkpoint\nJustifiez vos décisions de conception du modèle et expliquez le flux des filtres."
               }
             }
           ]
@@ -92,8 +108,8 @@
             {
               "type": "content",
               "body": {
-                "en": "## Practical Exercise\n\nMaster advanced DAX: YoY variance, MoM growth, rolling 12 months, contribution by segment, filter context manipulation with CALCULATE, FILTER, ALL, ALLEXCEPT.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nMaîtrisez le DAX avancé : variance YoY, croissance MoM, rolling 12 mois, contribution par segment, manipulation du contexte de filtre avec CALCULATE, FILTER, ALL, ALLEXCEPT.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
+                "en": "## Hands-on: Advanced DAX — Context, Time Intelligence, Composable Measures\n\n### Objective\nMaster filter context manipulation and create composable time intelligence measures.\n\n### Measures to Implement\n\n**Time Intelligence Suite:**\n```dax\n// Year-over-Year\nCA Net YoY = \n    VAR CurrentPeriod = [CA Net]\n    VAR PriorYear = CALCULATE([CA Net], SAMEPERIODLASTYEAR('dim_date'[date_key]))\n    RETURN CurrentPeriod - PriorYear\n\nCA Net YoY% = DIVIDE([CA Net YoY], \n    CALCULATE([CA Net], SAMEPERIODLASTYEAR('dim_date'[date_key])), 0)\n\n// Month-over-Month\nCA Net MoM = [CA Net] - CALCULATE([CA Net], DATEADD('dim_date'[date_key], -1, MONTH))\n\n// Rolling 12 Months\nCA Net R12M = CALCULATE([CA Net], \n    DATESINPERIOD('dim_date'[date_key], MAX('dim_date'[date_key]), -12, MONTH))\n\n// Contribution %\nContribution Pays = DIVIDE([CA Net], CALCULATE([CA Net], ALL('dim_country')))\n```\n\n**Context Manipulation:**\n```dax\n// Compare current product to category average\nÉcart vs Catégorie = [CA Net] - CALCULATE([CA Net], \n    ALL('dim_product'[product_name]), ALL('dim_product'[subcategory]))\n\n// Running total\nCA Cumulé = CALCULATE([CA Net], \n    FILTER(ALL('dim_date'), 'dim_date'[date_key] <= MAX('dim_date'[date_key])))\n```\n\n### Tasks\n**Task 1:** Implement all measures above (30 min)\n**Task 2:** Create a \"Context Error\" scenario and fix it (20 min)\n**Task 3:** Ask Codex to explain a complex CALCULATE with nested filters (15 min)\n\n### Checkpoint\nExplain a filter context error and how CALCULATE resolves it.",
+                "fr": "## TP : DAX avancé — Contexte, Time Intelligence, Mesures composables\n\n### Objectif\nMaîtriser la manipulation du contexte de filtre et créer des mesures de time intelligence composables.\n\n### Mesures à implémenter\n\n**Suite Time Intelligence :**\n```dax\n// Year-over-Year\nCA Net YoY = \n    VAR CurrentPeriod = [CA Net]\n    VAR PriorYear = CALCULATE([CA Net], SAMEPERIODLASTYEAR('dim_date'[date_key]))\n    RETURN CurrentPeriod - PriorYear\n\nCA Net YoY% = DIVIDE([CA Net YoY], \n    CALCULATE([CA Net], SAMEPERIODLASTYEAR('dim_date'[date_key])), 0)\n\n// Month-over-Month\nCA Net MoM = [CA Net] - CALCULATE([CA Net], DATEADD('dim_date'[date_key], -1, MONTH))\n\n// Rolling 12 Months\nCA Net R12M = CALCULATE([CA Net], \n    DATESINPERIOD('dim_date'[date_key], MAX('dim_date'[date_key]), -12, MONTH))\n\n// Contribution %\nContribution Pays = DIVIDE([CA Net], CALCULATE([CA Net], ALL('dim_country')))\n```\n\n**Manipulation de contexte :**\n```dax\n// Comparer le produit actuel à la moyenne de la catégorie\nÉcart vs Catégorie = [CA Net] - CALCULATE([CA Net], \n    ALL('dim_product'[product_name]), ALL('dim_product'[subcategory]))\n\n// Total cumulé\nCA Cumulé = CALCULATE([CA Net], \n    FILTER(ALL('dim_date'), 'dim_date'[date_key] <= MAX('dim_date'[date_key])))\n```\n\n### Tâches\n**Tâche 1 :** Implémenter toutes les mesures ci-dessus (30 min)\n**Tâche 2 :** Créer un scénario \"Erreur de contexte\" et le corriger (20 min)\n**Tâche 3 :** Demander à Codex d'expliquer un CALCULATE complexe avec filtres imbriqués (15 min)\n\n### Checkpoint\nExpliquez une erreur de contexte de filtre et comment CALCULATE la résout."
               }
             }
           ]
@@ -197,18 +213,71 @@
           ]
         },
         {
-          "id": "chapter_11",
+          "id": "chapter_exercise_05",
           "title": {
-            "en": "Hands-on: Semantic Model Documentation",
-            "fr": "TP : Documentation du modèle sémantique"
+            "en": "Lab 05 – Advanced DAX & Time Intelligence",
+            "fr": "TP 05 – DAX avancé et Time Intelligence"
           },
           "blocks": [
             {
-              "type": "content",
+              "type": "exercise",
               "body": {
-                "en": "## Practical Exercise\n\nGenerate complete semantic model documentation: KPI dictionary, data lineage, measure ownership, and refresh schedule. Link each measure to its business owner.\n\n### Deliverable\nDocument your work in a markdown file with SQL queries, screenshots, and explanations.",
-                "fr": "## Exercice pratique\n\nGénérez une documentation complète du modèle sémantique : dictionnaire KPI, lignage de données, propriété des mesures et calendrier de rafraîchissement. Liez chaque mesure à son propriétaire métier.\n\n### Livrable\nDocumentez votre travail dans un fichier markdown avec requêtes SQL, captures d'écran et explications."
-              }
+                "en": "## Lab 05 – Advanced DAX & Time Intelligence\n\n**Instructions:** Create advanced DAX measures using time intelligence functions (SAMEPERIODLASTYEAR, DATEADD, TOTALYTD). Calculate year-over-year comparisons.\n\n---\n\n### Numeric Answer Questions\n\nAfter processing the data with the tools taught in this module, enter your answers below. The platform will automatically validate your results.\n\n**Q1.** What is the Net Revenue for 2024 in EUR? (tolerance: ±0.01 EUR)\n\n**Q2.** What is the YoY variation in EUR (2025 vs 2024)? (tolerance: ±0.01 EUR)\n\n**Q3.** What is the YoY variation in % (2025 vs 2024)? (tolerance: ±0.1 %)\n\n**Q4.** What is France's contribution to total Net Revenue 2025 (in %)? (tolerance: ±0.1 %)\n\n**Q5.** What is the Rolling 12 Months Net Revenue as of Dec 2025 in EUR? (tolerance: ±0.01 EUR)\n\n",
+                "fr": "## TP 05 – DAX avancé et Time Intelligence\n\n**Instructions :** Créez des mesures DAX avancées utilisant les fonctions Time Intelligence (SAMEPERIODLASTYEAR, DATEADD, TOTALYTD). Calculez les comparaisons année sur année.\n\n---\n\n### Questions à réponse numérique\n\nAprès avoir traité les données avec les outils enseignés dans ce module, saisissez vos réponses ci-dessous. La plateforme validera automatiquement vos résultats.\n\n**Q1.** Quel est le CA Net 2024 en EUR ? (tolérance : ±0.01 EUR)\n\n**Q2.** Quelle est la variation YoY en EUR (2025 vs 2024) ? (tolérance : ±0.01 EUR)\n\n**Q3.** Quelle est la variation YoY en % (2025 vs 2024) ? (tolérance : ±0.1 %)\n\n**Q4.** Quelle est la contribution de la France au CA Net total 2025 (en %) ? (tolérance : ±0.1 %)\n\n**Q5.** Quel est le CA Net glissant 12 mois au 31/12/2025 en EUR ? (tolérance : ±0.01 EUR)\n\n"
+              },
+              "exercise_type": "numeric_answers",
+              "questions": [
+                {
+                  "id": "m05_q01_ca_net_2024",
+                  "text": {
+                    "en": "What is the Net Revenue for 2024 in EUR?",
+                    "fr": "Quel est le CA Net 2024 en EUR ?"
+                  },
+                  "expected_value": 7610697481.29,
+                  "unit": "EUR",
+                  "tolerance": 0.01
+                },
+                {
+                  "id": "m05_q02_ca_net_yoy_amount",
+                  "text": {
+                    "en": "What is the YoY variation in EUR (2025 vs 2024)?",
+                    "fr": "Quelle est la variation YoY en EUR (2025 vs 2024) ?"
+                  },
+                  "expected_value": -26293946.94,
+                  "unit": "EUR",
+                  "tolerance": 0.01
+                },
+                {
+                  "id": "m05_q03_ca_net_yoy_pct",
+                  "text": {
+                    "en": "What is the YoY variation in % (2025 vs 2024)?",
+                    "fr": "Quelle est la variation YoY en % (2025 vs 2024) ?"
+                  },
+                  "expected_value": -0.35,
+                  "unit": "%",
+                  "tolerance": 0.1
+                },
+                {
+                  "id": "m05_q04_contribution_france_2025",
+                  "text": {
+                    "en": "What is France's contribution to total Net Revenue 2025 (in %)?",
+                    "fr": "Quelle est la contribution de la France au CA Net total 2025 (en %) ?"
+                  },
+                  "expected_value": 31.94,
+                  "unit": "%",
+                  "tolerance": 0.1
+                },
+                {
+                  "id": "m05_q05_ca_net_rolling_12m_dec2025",
+                  "text": {
+                    "en": "What is the Rolling 12 Months Net Revenue as of Dec 2025 in EUR?",
+                    "fr": "Quel est le CA Net glissant 12 mois au 31/12/2025 en EUR ?"
+                  },
+                  "expected_value": 7584403534.36,
+                  "unit": "EUR",
+                  "tolerance": 0.01
+                }
+              ]
             }
           ]
         },
