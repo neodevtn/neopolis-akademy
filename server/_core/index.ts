@@ -1,4 +1,5 @@
 import "dotenv/config";
+import * as Sentry from "@sentry/node";
 import express from "express";
 import { createServer } from "http";
 import net from "net";
@@ -71,6 +72,9 @@ async function startServer() {
   } else {
     serveStatic(app);
   }
+
+  // Sentry error handler - MUST be after all routes and before any other error handlers
+  Sentry.setupExpressErrorHandler(app);
 
   const preferredPort = parseInt(process.env.PORT || "3000");
   const port = await findAvailablePort(preferredPort);

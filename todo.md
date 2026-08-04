@@ -1165,3 +1165,9 @@
 ## Forgot Password - Fallback Invitation pour candidats acceptés
 - [x] Modifier forgot-password pour chercher dans applications (status=selectionne) si email pas trouvé dans users
 - [x] Envoyer automatiquement une invitation si candidat accepté sans compte
+
+## Sentry Backend (Node.js/Express)
+- [x] Installer @sentry/node
+- [x] Initialiser Sentry côté serveur via --import (ESM pattern)
+- [x] Configurer le tracing Express pour capturer les transactions backend
+- [x] Configurer le error handler Express (setupExpressErrorHandler)
