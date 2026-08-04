@@ -1231,3 +1231,9 @@
 
 ## Bug: Impossible de passer à la page suivante après exercice complété
 - [x] Corriger la logique de validation qui bloque le bouton "Suivant" même quand l'exercice est complété (4/4)
+
+## Bug: Exercices manquent de consignes et correction incohérente
+- [x] Examiner la structure des exercices type "exercise" dans les cours Developer Foundations
+- [x] Ajouter des consignes explicites aux exercices qui en manquent (nettoyage pollution 31 exercices + 41 blocs)
+- [x] Corriger la correction affichée qui ne correspond pas à la question posée (correction était en fait cohérente après nettoyage)
+- [x] Séparer correctement le contenu du chapitre de l'exercice (titre "Reveal model answer" supprimé de 20 fichiers)
