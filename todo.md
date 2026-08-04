@@ -1228,3 +1228,6 @@
 
 ## Correction lisibilité exercices
 - [x] Corriger le rendu des exercices type "exercise" : espacement entre paragraphes, titre complet non tronqué
+
+## Bug: Impossible de passer à la page suivante après exercice complété
+- [x] Corriger la logique de validation qui bloque le bouton "Suivant" même quand l'exercice est complété (4/4)

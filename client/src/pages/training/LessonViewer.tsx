@@ -807,8 +807,9 @@ export default function LessonViewer({
               const isGatedByFlipCards = chapterHasFlipCards && !flipCardsCompleted.has(currentChapter) && !isReviewMode;
               // Matching/bucket sort gate: block if chapter has bucket_sort exercises not completed
               const chapterMatchingIds = (chapter?.blocks || [])
+                .map((b: any, i: number) => ({ ...b, _blockIdx: i }))
                 .filter((b: any) => b.type === 'bucket_sort')
-                .map((b: any, i: number) => b.id || `bucket_${i}`);
+                .map((b: any) => b.id || `bucket_${b._blockIdx}`);
               const allMatchingCompleted = chapterMatchingIds.length === 0 || chapterMatchingIds.every((id: string) => matchingCompleted.has(id));
               const isGatedByMatching = chapterMatchingIds.length > 0 && !allMatchingCompleted && !isReviewMode;
               // Single choice exercise gate for ALL chapters (not just quiz/checkpoint)

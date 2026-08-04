@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   CheckCircle2,
@@ -95,6 +95,13 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
 
   const unplacedCards = exercise.cards.filter(c => !placements[c.id]);
   const allPlaced = unplacedCards.length === 0;
+
+  // If exercise was already completed (from localStorage), notify parent on mount
+  useEffect(() => {
+    if (savedAttempt && submitted) {
+      onComplete?.();
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCardClick = useCallback((cardId: string) => {
     if (submitted) return;
