@@ -1222,3 +1222,6 @@
 - [x] Recalculer toutes les réponses de référence avec les données corrigées
 - [x] Mettre à jour les JSON de cours avec les nouvelles réponses et taux fixes
 - [x] Re-uploader les fichiers CSV/SQL corrigés
+
+## Boutons de téléchargement cours BI
+- [x] Remplacer les liens markdown bruts par des boutons de téléchargement visuels dans le LessonViewer

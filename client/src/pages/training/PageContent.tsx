@@ -410,28 +410,61 @@ export default function PageContent({ content, lang }: { content: string; lang: 
     // Check if this line starts a markdown pipe table
     const mdTable = mdTables.find(t => t.startIdx === i);
     if (mdTable) {
-      elements.push(
-        <div key={`mdtable-${i}`} className="my-5 overflow-x-auto rounded-xl border border-[#e8e5e0] dark:border-slate-700">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="bg-[#f5f3ef] dark:bg-slate-800">
-                {mdTable.headers.map((h, hi) => (
-                  <th key={hi} className="text-left px-4 py-3 font-semibold text-foreground text-[13px] uppercase tracking-wide border-b border-[#e8e5e0] dark:border-slate-700">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {mdTable.rows.map((row, ri) => (
-                <tr key={ri} className={ri % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-[#faf9f7] dark:bg-slate-800/40'}>
-                  {row.map((cell, ci) => (
-                    <td key={ci} className="px-4 py-3 text-foreground/80 text-[13.5px] border-b border-[#e8e5e0]/60 dark:border-slate-700/60">{cell}</td>
+      // Check if this table contains download links (/manus-storage/)
+      const hasDownloadLinks = mdTable.rows.some(row => row.some(cell => cell.includes('/manus-storage/')));
+      if (hasDownloadLinks) {
+        // Render as download buttons instead of a table
+        elements.push(
+          <div key={`mdtable-${i}`} className="my-5 space-y-3">
+            {mdTable.rows.map((row, ri) => {
+              // Find the cell with the download link
+              const linkCell = row.find(cell => cell.includes('/manus-storage/'));
+              if (!linkCell) return null;
+              const linkMatch = linkCell.match(/\[([^\]]+)\]\(([^)]+)\)/);
+              if (!linkMatch) return null;
+              const linkText = linkMatch[1];
+              const linkUrl = linkMatch[2];
+              const description = row.find(cell => !cell.includes('/manus-storage/') && cell.length > 3 && !cell.includes('Mo') && !cell.includes('MB') && !cell.includes('Ko') && !cell.includes('KB')) || '';
+              const size = row.find(cell => /\d+.*(?:Mo|MB|Ko|KB)/i.test(cell)) || '';
+              return (
+                <a key={ri} href={linkUrl} download className="flex items-center gap-4 p-4 rounded-xl border border-[#e8e5e0] dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-[#f5f3ef] dark:hover:bg-slate-800 transition-colors group cursor-pointer no-underline">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-foreground group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">{linkText}</div>
+                    {description && <div className="text-xs text-muted-foreground mt-0.5 truncate">{description}</div>}
+                  </div>
+                  {size && <div className="text-xs text-muted-foreground font-medium px-2 py-1 rounded-md bg-[#f5f3ef] dark:bg-slate-800">{size}</div>}
+                </a>
+              );
+            })}
+          </div>
+        );
+      } else {
+        elements.push(
+          <div key={`mdtable-${i}`} className="my-5 overflow-x-auto rounded-xl border border-[#e8e5e0] dark:border-slate-700">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr className="bg-[#f5f3ef] dark:bg-slate-800">
+                  {mdTable.headers.map((h, hi) => (
+                    <th key={hi} className="text-left px-4 py-3 font-semibold text-foreground text-[13px] uppercase tracking-wide border-b border-[#e8e5e0] dark:border-slate-700">{renderInlineFormatting(h)}</th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      );
+              </thead>
+              <tbody>
+                {mdTable.rows.map((row, ri) => (
+                  <tr key={ri} className={ri % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-[#faf9f7] dark:bg-slate-800/40'}>
+                    {row.map((cell, ci) => (
+                      <td key={ci} className="px-4 py-3 text-foreground/80 text-[13.5px] border-b border-[#e8e5e0]/60 dark:border-slate-700/60">{renderInlineFormatting(cell)}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      }
       i = mdTable.endIdx - 1;
       continue;
     }
