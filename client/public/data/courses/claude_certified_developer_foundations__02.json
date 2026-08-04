@@ -148,62 +148,78 @@
             },
             {
               "type": "bucket_sort",
-              "buckets": [
-                {
-                  "id": "bucket_0",
-                  "label": {
-                    "en": "Never do this.Leave it off.Enable it, budget for the planning step.",
-                    "fr": "Ne faites jamais cela. Laissez-le désactivé. Activez-le, prévoyez un budget pour l'étape de planification."
-                  }
-                },
-                {
-                  "id": "bucket_1",
-                  "label": {
-                    "en": "Strip the thinking block out of conversation history to save context before the next tool call.",
-                    "fr": "Supprime le bloc de réflexion de l'historique de la conversation pour économiser le budget de contexte avant le prochain appel d'un outil."
-                  }
-                },
-                {
-                  "id": "bucket_2",
-                  "label": {
-                    "en": "Never do this.Leave it off.Enable it, budget for the planning step.",
-                    "fr": "Ne faites jamais cela. Laissez-le désactivé. Activez-le, prévoyez un budget pour l'étape de planification."
-                  }
-                }
-              ],
-              "id": "bucket_21",
+              "id": "checkpoint2_reflection_decision",
               "title": {
-                "en": "Checkpoint 2 · Decide when extended thinking earns its co...",
+                "en": "Checkpoint 2 · Decide when prolonged reflection is worth the cost",
                 "fr": "Checkpoint 2 · Décider quand la réflexion prolongée justifie son coût"
               },
               "instructions": {
-                "en": "Checkpoint 2 · Decide when extended thinking earns its cost Three tasks are described below. Match each task on the left to the correct extended-thinking decision on the right. There is one correct call per task.",
-                "fr": "Checkpoint 2 · Décider quand la réflexion prolongée justifie son coût Trois tâches sont décrites ci‑dessous. Associez chaque tâche à gauche à la bonne décision concernant la réflexion prolongée à droite. Il y a une seule réponse correcte par tâche."
+                "en": "Three tasks are described below. Drag each task on the left into the best decision category on the right about using prolonged internal reflection. There is one correct answer per task.",
+                "fr": "Trois tâches sont décrites ci‑dessous. Glissez chaque tâche à gauche vers la catégorie de décision à droite concernant l'utilisation d'une réflexion prolongée. Il y a une seule réponse correcte par tâche."
               },
+              "buckets": [
+                {
+                  "id": "never_use",
+                  "label": {
+                    "en": "Never use",
+                    "fr": "Ne jamais utiliser"
+                  }
+                },
+                {
+                  "id": "plan_and_budget",
+                  "label": {
+                    "en": "Plan & budget",
+                    "fr": "Planifier & budgéter"
+                  }
+                },
+                {
+                  "id": "trim_history",
+                  "label": {
+                    "en": "Prune history",
+                    "fr": "Purger l'historique"
+                  }
+                }
+              ],
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "ticket_classification",
                   "text": {
-                    "en": "Classify 50,000 support tickets into three labels overnight.",
+                    "en": "Classify 50,000 support tickets into three categories overnight.",
                     "fr": "Classer 50 000 tickets de support en trois catégories pendant la nuit."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "never_use"
                 },
                 {
-                  "id": "item_1",
+                  "id": "staged_refactor",
                   "text": {
-                    "en": "Never do this.Leave it off.Enable it, budget for the planning step.",
-                    "fr": "Ne faites jamais ça. Laissez‑le désactivé. Activez‑le, et prévoyez un budget pour l'étape de planification."
+                    "en": "Plan a multi‑stage refactor where each step depends on the previous step's outcome.",
+                    "fr": "Planifier une refactorisation en plusieurs étapes où chaque étape dépend du résultat de la précédente."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "plan_and_budget"
                 },
                 {
-                  "id": "item_2",
+                  "id": "prune_reflection_block",
                   "text": {
-                    "en": "Plan a multi-step refactor where each step depends on the previous one.",
-                    "fr": "Planifiez une refactorisation en plusieurs étapes où chaque étape dépend de la précédente."
+                    "en": "Remove the internal reflection block from conversation history to save context budget before the next tool call.",
+                    "fr": "Supprimer le bloc de réflexion de l'historique de conversation pour économiser le budget de contexte avant le prochain appel d'outil."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "trim_history"
+                },
+                {
+                  "id": "legal_contract",
+                  "text": {
+                    "en": "Draft a nuanced legal contract with multiple obligations and precedents to consider.",
+                    "fr": "Rédiger un contrat juridique nuancé avec plusieurs obligations et précédents à prendre en compte."
+                  },
+                  "correctBucket": "plan_and_budget"
+                },
+                {
+                  "id": "quick_fact_lookup",
+                  "text": {
+                    "en": "Answer a simple factual lookup (e.g., today's weather or a stock price).",
+                    "fr": "Répondre à une simple recherche factuelle (par ex. la météo du jour ou un cours boursier)."
+                  },
+                  "correctBucket": "never_use"
                 }
               ]
             },
@@ -321,134 +337,86 @@
             },
             {
               "type": "bucket_sort",
+              "id": "checkpoint3_bucket_sort",
+              "title": {
+                "en": "Checkpoint 3 · Find and fix the schema bug (session trace)",
+                "fr": "Point de contrôle 3 · Repérer et corriger le bug du schéma (trace de session)"
+              },
+              "instructions": {
+                "en": "Drag each card into the bucket that describes the correct fix or classification for the session trace. The trace shows an agent calling an external tool, receiving a result, then failing with an API validation error on the next request.",
+                "fr": "Déplacez chaque carte dans la catégorie qui décrit la correction ou la classification correcte pour la trace de session. La trace montre un agent appelant un outil, recevant un résultat, puis échouant avec une erreur de validation API lors de la requête suivante."
+              },
               "buckets": [
                 {
-                  "id": "bucket_0",
+                  "id": "description_update",
                   "label": {
-                    "en": "AUpdate the description on get_account_balance to add an exclusion condition.",
-                    "fr": "Mettre à jour la description de get_account_balance pour y ajouter une condition d'exclusion."
+                    "en": "Update description",
+                    "fr": "Mettre à jour la description"
                   }
                 },
                 {
-                  "id": "bucket_1",
+                  "id": "fix_tool_use_id",
                   "label": {
-                    "en": "BCorrect the tool_use_id on the tool_result block so it matches the id issued in the assistant turn.",
-                    "fr": "Corrigez le tool_use_id dans le bloc tool_result pour qu'il corresponde à l'id émis lors du tour de l'assistant."
+                    "en": "Correct tool_use_id",
+                    "fr": "Corriger tool_use_id"
                   }
                 },
                 {
-                  "id": "bucket_2",
+                  "id": "require_account_id",
                   "label": {
-                    "en": "CAdd a required array to the tool's input_schema so account_id cannot be omitted.",
-                    "fr": "Ajoutez un tableau 'required' à l'input_schema de l'outil afin que le champ account_id ne puisse pas être omis."
+                    "en": "Require account_id",
+                    "fr": "Rendre account_id obligatoire"
                   }
                 }
               ],
-              "id": "bucket_22",
-              "title": {
-                "en": "Checkpoint 3 · Spot and fix the schema bug The session tr...",
-                "fr": "Point de contrôle 3 · Repérer et corriger le bug du schéma La trace de session..."
-              },
-              "instructions": {
-                "en": "Checkpoint 3 · Spot and fix the schema bug The session trace below shows an agent calling a tool, receiving a result, and then failing with an API validation error on the next request. The schema is valid, the tool description is specific, and the tool result content is correct. One convention you need to know before reading the trace: tool_result blocks are always sent in the user role, even though the content is generated by your application rather than typed by a person. The role field marks who is sending the message to Claude, not who authored the underlying content. Turn 3 in the trace is labeled \"User (tool result)\" to make that assignment explicit. Read the trace, identify which message block is missing or mis-ordered, name the rule that was broken, and select the targeted fix from the three options below.",
-                "fr": "Point de contrôle 3 · Repérer et corriger le bug du schéma. La trace de session ci‑dessous montre un agent appelant un outil, recevant un résultat, puis échouant avec une erreur de validation API lors de la requête suivante. Le schéma est valide, la description de l'outil est précise et le contenu du résultat de l'outil est correct. Une convention à connaître avant de lire la trace : les blocs tool_result sont toujours envoyés avec le rôle user, même si le contenu est généré par votre application plutôt que saisi par une personne. Le champ role indique qui envoie le message à Claude, et non pas qui a rédigé le contenu sous‑jacent. Le tour 3 dans la trace est étiqueté \"User (tool result)\" pour rendre cette assignation explicite. Lisez la trace, identifiez quel bloc de message est manquant ou mal ordonné, nommez la règle qui a été enfreinte, et sélectionnez la correction ciblée parmi les trois options ci‑dessous."
-              },
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "card_1",
                   "text": {
-                    "en": "Session trace",
-                    "fr": "Trace de session"
+                    "en": "Tool response contains tool_result.tool_use_id = 'toolu_99' but the assistant previously emitted toolu_01.",
+                    "fr": "La réponse de l'outil contient tool_result.tool_use_id = 'toolu_99' alors que l'assistant a émis toolu_01."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "fix_tool_use_id"
                 },
                 {
-                  "id": "item_1",
+                  "id": "card_2",
                   "text": {
-                    "en": "Turn 1: User:",
-                    "fr": "Tour 1 : Utilisateur :"
+                    "en": "The get_account_balance description doesn't mention excluding closed or disabled accounts from balance checks.",
+                    "fr": "La description de get_account_balance ne mentionne pas d'exclure les comptes fermés ou désactivés lors de la vérification du solde."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "description_update"
                 },
                 {
-                  "id": "item_2",
+                  "id": "card_3",
                   "text": {
-                    "en": "[text]: \"What is the current balance for account A-4471?\"",
-                    "fr": "Quel est le solde actuel du compte A-4471 ?"
+                    "en": "API validation error: next request failed because 'account_id' was missing.",
+                    "fr": "Erreur de validation API : la requête suivante a échoué car 'account_id' était absent."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "require_account_id"
                 },
                 {
-                  "id": "item_3",
+                  "id": "card_4",
                   "text": {
-                    "en": "Turn 2: Assistant:",
-                    "fr": "Tour 2 : Assistant :"
+                    "en": "Add a 'required': ['account_id'] array to get_account_balance.input_schema so account_id cannot be omitted.",
+                    "fr": "Ajouter un tableau 'required': ['account_id'] à get_account_balance.input_schema pour que account_id ne puisse pas être omis."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "require_account_id"
                 },
                 {
-                  "id": "item_4",
+                  "id": "card_5",
                   "text": {
-                    "en": "[text]: \"I'll look that up.\"",
-                    "fr": "Je vais vérifier ça."
+                    "en": "Clarify the tool description: explicitly state which accounts the tool should ignore (e.g. closed, suspended).",
+                    "fr": "Clarifier la description de l'outil : indiquer explicitement quels comptes ignorer (ex. fermés, suspendus)."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "description_update"
                 },
                 {
-                  "id": "item_5",
+                  "id": "card_6",
                   "text": {
-                    "en": "[tool_use]: id=\"toolu_01\", name=\"get_account_balance\",",
-                    "fr": "[utilisation_outil] : id=\"toolu_01\", name=\"get_account_balance\","
+                    "en": "Fix the tool_result block so tool_use_id matches the id returned when the tool was invoked (e.g. 'toolu_01').",
+                    "fr": "Corriger le bloc tool_result pour que tool_use_id corresponde à l'id renvoyé lors de l'appel de l'outil (ex. 'toolu_01')."
                   },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_6",
-                  "text": {
-                    "en": "input={\"account_id\": \"A-4471\"}",
-                    "fr": "input={\"account_id\": \"A-4471\"}"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_7",
-                  "text": {
-                    "en": "Turn 3: User (tool result):",
-                    "fr": "Tour 3 : Utilisateur (résultat de l'outil) :"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_8",
-                  "text": {
-                    "en": "[tool_result]: tool_use_id=\"toolu_02\", content=\"Balance: $1,240.18\"",
-                    "fr": "[résultat_outil]: tool_use_id=\"toolu_02\", contenu=\"Balance: $1,240.18\""
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_9",
-                  "text": {
-                    "en": "Turn 4: API response:",
-                    "fr": "Tour 4 : réponse de l'API :"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_10",
-                  "text": {
-                    "en": "Error: invalid_request_error",
-                    "fr": "Erreur : invalid_request_error"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_11",
-                  "text": {
-                    "en": "\"tool_result block references unknown tool_use_id\"",
-                    "fr": "Le bloc tool_result fait référence à un tool_use_id inconnu"
-                  },
-                  "correctBucket": ""
+                  "correctBucket": "fix_tool_use_id"
                 }
               ]
             },
@@ -580,134 +548,78 @@
             },
             {
               "type": "bucket_sort",
+              "id": "checkpoint5_diagnostic",
+              "title": {
+                "en": "Checkpoint 5 · Diagnose context failure in session trace",
+                "fr": "Checkpoint 5 · Diagnostiquer la défaillance du contexte dans la trace de session"
+              },
+              "instructions": {
+                "en": "Read the session trace and the notes. For each card, decide whether it identifies the triggering turn, the failure mechanism, or a recommended correction. Drag each card into the appropriate category.",
+                "fr": "Lisez la trace de session et les notes. Pour chaque carte, identifiez si elle indique le tour déclencheur, le mécanisme de défaillance ou une correction recommandée. Placez chaque carte dans la catégorie appropriée."
+              },
               "buckets": [
                 {
-                  "id": "bucket_0",
+                  "id": "trigger_turn",
                   "label": {
-                    "en": "AAdd a clearer description to the apply_coverage_rule tool schema.",
-                    "fr": "Ajouter une description plus claire au schéma de l'outil apply_coverage_rule."
+                    "en": "Trigger Turn",
+                    "fr": "Tour déclencheur"
                   }
                 },
                 {
-                  "id": "bucket_1",
+                  "id": "mechanism",
                   "label": {
-                    "en": "BPrune fetch_policy_document results after each turn so that accumulated outputs do not crowd out current instructions, and apply compaction before turn 5.",
-                    "fr": "BPrune récupère les résultats de fetch_policy_document après chaque tour afin que les sorties accumulées n'évincent pas les instructions en cours, et effectue la compaction avant le 5e tour."
+                    "en": "Failure Mechanism",
+                    "fr": "Mécanisme de défaillance"
                   }
                 },
                 {
-                  "id": "bucket_2",
+                  "id": "fix",
                   "label": {
-                    "en": "CIncrease max_tokens in the API call to give Claude more room to respond.",
-                    "fr": "Augmentez max_tokens dans l'appel d'API pour donner à Claude plus de marge de manœuvre pour répondre."
+                    "en": "Recommended Fix",
+                    "fr": "Correction recommandée"
                   }
                 }
               ],
-              "id": "bucket_23",
-              "title": {
-                "en": "Checkpoint 5 · Diagnose the context failure The session t...",
-                "fr": "Checkpoint 5 · Diagnostiquer la défaillance du contexte La trace de session t..."
-              },
-              "instructions": {
-                "en": "Checkpoint 5 · Diagnose the context failure The session trace below shows a multi-turn agent run with degrading tool selections. Read the trace, identify which turn triggered the failure, name the mechanism, and select the one-line fix from the three options below.",
-                "fr": "Checkpoint 5 · Diagnostiquer la défaillance du contexte La trace de session ci-dessous montre l'exécution d'un agent en plusieurs tours avec des sélections d'outil qui se dégradent. Lisez la trace, identifiez quel tour a déclenché la défaillance, nommez le mécanisme, et sélectionnez la correction en une ligne parmi les trois options ci-dessous."
-              },
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "card_turn5",
                   "text": {
-                    "en": "Session trace",
-                    "fr": "Trace de session"
+                    "en": "Turn 5: agent invoked search_knowledge_base instead of apply_coverage_rule — incorrect tool selection; session tokens ~1,800.",
+                    "fr": "Tour 5 : l'agent a appelé search_knowledge_base au lieu d'apply_coverage_rule — mauvaise sélection d'outil ; ~1 800 tokens."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "trigger_turn"
                 },
                 {
-                  "id": "item_1",
+                  "id": "card_compaction_delay",
                   "text": {
-                    "en": "Click each turn to inspect it.",
-                    "fr": "Cliquez sur chaque échange pour l'inspecter."
+                    "en": "BPrune performs compaction only after the 5th turn; fetch_policy_document results are reloaded each turn, and accumulated outputs evict current instructions.",
+                    "fr": "BPrune effectue la compaction seulement après le 5e tour ; les résultats de fetch_policy_document sont rechargés à chaque tour et les sorties accumulées évincent les instructions en cours."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "mechanism"
                 },
                 {
-                  "id": "item_2",
+                  "id": "card_increase_max_tokens",
                   "text": {
-                    "en": "TurnTool calledResult size",
-                    "fr": "Taille de calledResult de TurnTool"
+                    "en": "Increase max_tokens in the API call to give Claude more room to respond.",
+                    "fr": "Augmenter max_tokens dans l'appel d'API pour donner à Claude plus de marge de manœuvre."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "fix"
                 },
                 {
-                  "id": "item_3",
+                  "id": "card_tool_schema",
                   "text": {
-                    "en": "1fetch_policy_document, correct selection2,400 tokens",
-                    "fr": "1 fetch_policy_document, sélection correcte, 2 400 tokens"
+                    "en": "Clarify the schema description for the apply_coverage_rule tool so the agent can select it reliably.",
+                    "fr": "Clarifier la description du schéma de l'outil apply_coverage_rule pour que l'agent puisse le sélectionner de manière fiable."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "fix"
                 },
                 {
-                  "id": "item_4",
+                  "id": "card_turns1to4_correct",
                   "text": {
-                    "en": "2fetch_policy_document, correct selection2,400 tokens",
-                    "fr": "2fetch_policy_document, sélection correcte, 2 400 tokens"
+                    "en": "Turns 1–4: fetch_policy_document was selected correctly; calledResult size of TurnTool = 1 for early turns (evidence of correct behavior before failure).",
+                    "fr": "Tours 1–4 : fetch_policy_document sélectionné correctement ; taille de calledResult de TurnTool = 1 pour les premiers tours (preuve d'un comportement correct avant la défaillance)."
                   },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_5",
-                  "text": {
-                    "en": "3fetch_policy_document, correct selection2,400 tokens",
-                    "fr": "3 fetch_policy_document, sélection correcte, 2 400 tokens"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_6",
-                  "text": {
-                    "en": "4fetch_policy_document, correct selection2,400 tokens",
-                    "fr": "4fetch_policy_document, sélection correcte, 2 400 tokens"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_7",
-                  "text": {
-                    "en": "5search_knowledge_base instead of apply_coverage_rule, wrong selection1,800 tokens",
-                    "fr": "5search_knowledge_base au lieu de apply_coverage_rule, mauvaise sélection — 1 800 tokens"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_8",
-                  "text": {
-                    "en": "6search_knowledge_base again, wrong selection (same as turn 5)1,800 tokens",
-                    "fr": "6search_knowledge_base à nouveau, mauvaise sélection (même que le tour 5) 1 800 tokens"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_9",
-                  "text": {
-                    "en": "7Session ends without resultN/A",
-                    "fr": "7 La session se termine sans résultat N/A"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_10",
-                  "text": {
-                    "en": "Turn 4",
-                    "fr": "Tour 4"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_11",
-                  "text": {
-                    "en": "fetch_policy_document, correct selection, 2,400 tokens. Last correct turn. Four large tool results (9,600 tokens) are now sitting in the context window, crowding the instructions that tell Claude which tool to use next.",
-                    "fr": "fetch_policy_document, sélection correcte, 2 400 tokens. Dernier tour correct. Quatre gros résultats d'outils (9 600 tokens) se trouvent maintenant dans la fenêtre de contexte, encombrant les instructions qui indiquent à Claude quel outil utiliser ensuite."
-                  },
-                  "correctBucket": ""
+                  "correctBucket": "mechanism"
                 }
               ]
             },
@@ -874,787 +786,85 @@
             },
             {
               "type": "bucket_sort",
+              "id": "checkpoint_7_memory_patterns",
+              "title": {
+                "en": "Checkpoint 7 · Choose the right memory pattern",
+                "fr": "Point de contrôle 7 · Choisir le bon modèle de mémoire"
+              },
+              "instructions": {
+                "en": "Read the use-case descriptions on the left and drag each to the correct memory scope on the right. There is exactly one correct scope per use case.",
+                "fr": "Lisez les descriptions des cas d'utilisation à gauche et associez chacune à la portée de mémoire correcte à droite. Il y a une seule portée correcte par cas."
+              },
               "buckets": [
                 {
-                  "id": "bucket_0",
+                  "id": "per_turn",
                   "label": {
-                    "en": "# Concatenating all prior session transcripts in-context",
-                    "fr": "# Concaténer, en contexte, toutes les transcriptions des sessions précédentes"
+                    "en": "Per turn",
+                    "fr": "Par tour"
                   }
                 },
                 {
-                  "id": "bucket_1",
+                  "id": "session",
                   "label": {
-                    "en": "full_history = []",
-                    "fr": "historique_complet = []"
+                    "en": "Session",
+                    "fr": "Session"
                   }
                 },
                 {
-                  "id": "bucket_2",
+                  "id": "cross_session",
                   "label": {
-                    "en": "for session in prior_sessions:",
-                    "fr": "for session in prior_sessions:"
+                    "en": "Cross-session",
+                    "fr": "Multi-session"
                   }
                 },
                 {
-                  "id": "bucket_3",
+                  "id": "no_memory",
                   "label": {
-                    "en": "full_history.extend(session[\"messages\"])",
-                    "fr": "full_history.extend(session[\"messages\"])"
-                  }
-                },
-                {
-                  "id": "bucket_4",
-                  "label": {
-                    "en": "return full_history",
-                    "fr": "renvoyer full_history"
-                  }
-                },
-                {
-                  "id": "bucket_5",
-                  "label": {
-                    "en": "Reveal model answer",
-                    "fr": "Révéler la réponse du modèle"
+                    "en": "No memory",
+                    "fr": "Sans mémoire"
                   }
                 }
               ],
-              "id": "bucket_24",
-              "title": {
-                "en": "Checkpoint 7 · Choose the right memory pattern Read the t...",
-                "fr": "Point de contrôle 7 · Choisir le bon memory pattern Lire le t..."
-              },
-              "instructions": {
-                "en": "Checkpoint 7 · Choose the right memory pattern Read the three agent use cases below. Match each agent use case on the left to the correct memory scope on the right. There is one correct scope per use case. A customer support agent assists the same user across daily check-ins over two weeks. Each session starts where the previous one left off. In-context memory: all state lives in the active conversation.External storage: write state to a database at session end, then read it back at session start.No persistent memory (stateless): each session starts fresh. A document formatter receives a file, applies a transformation, returns the output, and terminates. Each job is fully independent. In-context memory: all state lives in the active conversation.External storage: write state to a database at session end, then read it back at session start.No persistent memory (stateless): each session starts fresh. A coding assistant works with a developer across a multi-hour session. The session will not continue after it ends. In-context memory: all state lives in the active conversation.External storage: write state to a database at session end, then read it back at session start.No persistent memory (stateless): each session starts fresh.",
-                "fr": "Checkpoint 7 · Choisir le bon modèle de mémoire\n\nLisez les trois cas d'utilisation d'agents ci-dessous. Associez chaque cas d'utilisation (à gauche) à la portée de mémoire correcte (à droite). Il y a une seule portée correcte par cas d'utilisation.\n\nUn agent du support client accompagne le même utilisateur lors de points de suivi quotidiens sur deux semaines. Chaque session reprend là où la précédente s'était arrêtée.\nIn-context memory: tout l'état vit dans la conversation active.\nExternal storage: écrire l'état dans une base de données à la fin de la session, puis le relire au début de la session.\nNo persistent memory (stateless): chaque session repart de zéro.\n\nUn formateur de documents reçoit un fichier, applique une transformation, renvoie le résultat et se termine. Chaque tâche est entièrement indépendante.\nIn-context memory: tout l'état vit dans la conversation active.\nExternal storage: écrire l'état dans une base de données à la fin de la session, puis le relire au début de la session.\nNo persistent memory (stateless): chaque session repart de zéro.\n\nUn assistant de codage travaille avec un développeur lors d'une session de plusieurs heures. La session ne se poursuivra pas après sa fin.\nIn-context memory: tout l'état vit dans la conversation active.\nExternal storage: écrire l'état dans une base de données à la fin de la session, puis le relire au début de la session.\nNo persistent memory (stateless): chaque session repart de zéro."
-              },
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "card_1",
                   "text": {
-                    "en": "CumulativeDebug Task·8 min",
-                    "fr": "Tâche CumulativeDebug · 8 min"
+                    "en": "A chat assistant needs to remember the user's preferred writing style (tone, formal/informal) so future sessions adopt the same style.",
+                    "fr": "Un assistant de chat doit retenir le style d'écriture préféré de l'utilisateur (ton, formel/informel) afin que les sessions futures utilisent le même style."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "cross_session"
                 },
                 {
-                  "id": "item_1",
+                  "id": "card_2",
                   "text": {
-                    "en": "Cumulative debug task · Identify each bug",
-                    "fr": "Tâche cumulative de débogage · Identifier chaque bug"
+                    "en": "During a single multi-step form completion, the agent should keep answers given earlier in the same session to populate later fields, but not keep them after the session ends.",
+                    "fr": "Lors du remplissage d'un formulaire en plusieurs étapes, l'agent doit conserver les réponses données au cours de la même session pour remplir les champs suivants, sans les garder après la session."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "session"
                 },
                 {
-                  "id": "item_2",
+                  "id": "card_3",
                   "text": {
-                    "en": "The agent implementation below has four planted bugs, one in each of four layers: the schema layer, the streaming layer where the response is assembled and committed, the context layer where the message structure is built, and the memory layer.",
-                    "fr": "L'implémentation de l'agent ci‑dessous comporte quatre bogues intentionnellement introduits, un dans chacune des quatre couches : la couche de schéma, la couche de streaming où la réponse est assemblée et validée, la couche de contexte où la structure du message est construite, et la couche de mémoire."
+                    "en": "While generating a single reply, the agent tracks intermediate clarification questions and uses them only to produce the current response.",
+                    "fr": "Lors de la génération d'une seule réponse, l'agent suit des questions de clarification intermédiaires et les utilise uniquement pour produire la réponse en cours."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "per_turn"
                 },
                 {
-                  "id": "item_3",
+                  "id": "card_4",
                   "text": {
-                    "en": "Work through the two stages below. This screen covers Stage 1: identify each bug. Stage 2, writing the corrected version, is on the next screen.",
-                    "fr": "Effectuez les deux étapes ci‑dessous. Cet écran couvre l'Étape 1 : identifier chaque bogue. L'Étape 2, rédiger la version corrigée, se trouve sur l'écran suivant."
+                    "en": "A privacy-focused endpoint must never store any user content; each request is handled independently and nothing is persisted.",
+                    "fr": "Un point de terminaison axé sur la confidentialité ne doit rien stocker ; chaque requête est traitée indépendamment et rien n'est conservé."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "no_memory"
                 },
                 {
-                  "id": "item_4",
+                  "id": "card_5",
                   "text": {
-                    "en": "Buggy implementation",
-                    "fr": "Implémentation boguée"
+                    "en": "A customer support agent should recall past purchases and tickets from previous interactions with the same customer to provide consistent help across days.",
+                    "fr": "Un agent support client doit se souvenir des achats et tickets antérieurs du même client pour fournir une aide cohérente sur plusieurs jours."
                   },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_5",
-                  "text": {
-                    "en": "# --- TOOL DEFINITIONS ---",
-                    "fr": "# --- DÉFINITIONS DES OUTILS ---"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_6",
-                  "text": {
-                    "en": "tools = [",
-                    "fr": "tools = ["
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_7",
-                  "text": {
-                    "en": "{",
-                    "fr": "{"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_8",
-                  "text": {
-                    "en": "\"name\": \"get_customer_data\",",
-                    "fr": "\"name\": \"get_customer_data\","
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_9",
-                  "text": {
-                    "en": "\"description\": \"Gets data.\",",
-                    "fr": "\"description\": \"Gets data.\","
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_10",
-                  "text": {
-                    "en": "\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }",
-                    "fr": "\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_11",
-                  "text": {
-                    "en": "}",
-                    "fr": "}"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_12",
-                  "text": {
-                    "en": "]",
-                    "fr": "]"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_13",
-                  "text": {
-                    "en": "# --- AGENT LOOP ---",
-                    "fr": "# --- Boucle de l'agent ---"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_14",
-                  "text": {
-                    "en": "def run_agent(user_request, session_history):",
-                    "fr": "def run_agent(user_request, session_history):"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_15",
-                  "text": {
-                    "en": "messages = session_history + [{\"role\":\"user\",\"content\":user_request}]",
-                    "fr": "messages = session_history + [{\"role\":\"user\",\"content\":user_request}]"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_16",
-                  "text": {
-                    "en": "while True:",
-                    "fr": "while True:"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_17",
-                  "text": {
-                    "en": "blocks = {}",
-                    "fr": "blocks = {}"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_18",
-                  "text": {
-                    "en": "stop_seen = False",
-                    "fr": "stop_seen = False"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_19",
-                  "text": {
-                    "en": "with client.messages.stream(",
-                    "fr": "with client.messages.stream("
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_20",
-                  "text": {
-                    "en": "model=model, max_tokens=4096, tools=tools, messages=messages,",
-                    "fr": "model=model, max_tokens=4096, tools=tools, messages=messages,"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_21",
-                  "text": {
-                    "en": "thinking={\"type\": \"adaptive\"}",
-                    "fr": "thinking={\"type\": \"adaptive\"}"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_22",
-                  "text": {
-                    "en": ") as stream:",
-                    "fr": ") en tant que flux :"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_23",
-                  "text": {
-                    "en": "for event in stream:",
-                    "fr": "pour chaque événement dans le flux :"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_24",
-                  "text": {
-                    "en": "if event.type == \"content_block_start\":",
-                    "fr": "si event.type == \"content_block_start\":"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_25",
-                  "text": {
-                    "en": "blocks[event.index] = init_block(event)",
-                    "fr": "blocks[event.index] = init_block(event)"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_26",
-                  "text": {
-                    "en": "elif event.type == \"content_block_delta\":",
-                    "fr": "elif event.type == \"content_block_delta\":"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_27",
-                  "text": {
-                    "en": "apply_delta(blocks[event.index], event.delta)",
-                    "fr": "apply_delta(blocks[event.index], event.delta)"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_28",
-                  "text": {
-                    "en": "elif event.type == \"message_stop\":",
-                    "fr": "elif event.type == \"message_stop\":"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_29",
-                  "text": {
-                    "en": "stop_seen = True",
-                    "fr": "stop_seen = True"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_30",
-                  "text": {
-                    "en": "assistant_content = [b for b in assemble(blocks) if b[\"type\"] != \"thinking\"]",
-                    "fr": "assistant_content = [b for b in assemble(blocks) if b[\"type\"] != \"thinking\"]"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_31",
-                  "text": {
-                    "en": "messages.append({\"role\": \"assistant\", \"content\": assistant_content})",
-                    "fr": "messages.append({\"role\": \"assistant\", \"content\": assistant_content})"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_32",
-                  "text": {
-                    "en": "response = finalize(blocks)",
-                    "fr": "réponse = finaliser(blocs)"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_33",
-                  "text": {
-                    "en": "if response.stop_reason == \"end_turn\":",
-                    "fr": "si response.stop_reason == \"end_turn\":"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_34",
-                  "text": {
-                    "en": "return response",
-                    "fr": "retourner la réponse"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_35",
-                  "text": {
-                    "en": "for block in response.content:",
-                    "fr": "for block in response.content:"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_36",
-                  "text": {
-                    "en": "if block.type == \"tool_use\":",
-                    "fr": "if block.type == \"tool_use\":"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_37",
-                  "text": {
-                    "en": "result = execute_tool(block.name, block.input)",
-                    "fr": "résultat = execute_tool(block.name, block.input)"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_38",
-                  "text": {
-                    "en": "messages.append({\"role\":\"user\",\"content\":[{\"type\":\"tool_result\",",
-                    "fr": "messages.append({\"role\":\"user\",\"content\":[{\"type\":\"tool_result\","
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_39",
-                  "text": {
-                    "en": "\"tool_use_id\":block.id,\"content\":result}]})",
-                    "fr": "\"tool_use_id\":block.id,\"content\":result}]})"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_40",
-                  "text": {
-                    "en": "# --- MEMORY ---",
-                    "fr": "# --- MÉMOIRE ---"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_41",
-                  "text": {
-                    "en": "def build_session_history(prior_sessions):",
-                    "fr": "def construire_historique_de_session(sessions_précédentes):"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_42",
-                  "text": {
-                    "en": "# Concatenating all prior session transcripts in-context",
-                    "fr": "# Concaténer toutes les transcriptions des sessions précédentes en contexte"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_43",
-                  "text": {
-                    "en": "full_history = []",
-                    "fr": "full_history = []"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_44",
-                  "text": {
-                    "en": "for session in prior_sessions:",
-                    "fr": "pour chaque session dans prior_sessions :"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_45",
-                  "text": {
-                    "en": "full_history.extend(session[\"messages\"])",
-                    "fr": "full_history.extend(session[\"messages\"])"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_46",
-                  "text": {
-                    "en": "return full_history",
-                    "fr": "Retourne full_history"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_47",
-                  "text": {
-                    "en": "Stage 1: Identify each bug",
-                    "fr": "Étape 1 : Identifier chaque bug"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_48",
-                  "text": {
-                    "en": "The implementation above has four bugs, one in each of four layers. For each bug: name the layer it belongs to and write one sentence describing what it causes at runtime.",
-                    "fr": "L'implémentation ci‑dessus comporte quatre bugs, un dans chacune des quatre couches. Pour chaque bug : nommez la couche à laquelle il appartient et écrivez une phrase décrivant ce qu'il provoque à l'exécution."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_49",
-                  "text": {
-                    "en": "Reveal model answer",
-                    "fr": "Afficher la réponse du modèle"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_50",
-                  "text": {
-                    "en": "CumulativeDebug Task·10 min",
-                    "fr": "Tâche CumulativeDebug·10 min"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_51",
-                  "text": {
-                    "en": "Cumulative debug task · Write the corrected version",
-                    "fr": "Tâche cumulative de débogage · Écrire la version corrigée"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_52",
-                  "text": {
-                    "en": "Stage 2: write the corrected version of each bug identified on the previous screen. For each one, show the fixed code and name what it changes.",
-                    "fr": "Étape 2 : rédigez la version corrigée de chaque bug identifié sur l’écran précédent. Pour chacun, montrez le code corrigé et indiquez ce que cela modifie."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_53",
-                  "text": {
-                    "en": "Buggy implementation (for reference)",
-                    "fr": "Implémentation boguée (à titre de référence)"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_54",
-                  "text": {
-                    "en": "# --- TOOL DEFINITIONS ---",
-                    "fr": "# --- DÉFINITIONS DES OUTILS ---"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_55",
-                  "text": {
-                    "en": "tools = [",
-                    "fr": "outils = ["
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_56",
-                  "text": {
-                    "en": "{",
-                    "fr": "{"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_57",
-                  "text": {
-                    "en": "\"name\": \"get_customer_data\",",
-                    "fr": "\"name\": \"get_customer_data\","
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_58",
-                  "text": {
-                    "en": "\"description\": \"Gets data.\",",
-                    "fr": "\"description\": \"Récupère des données.\","
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_59",
-                  "text": {
-                    "en": "\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }",
-                    "fr": "\"input_schema\": { \"type\": \"object\", \"properties\": { \"id\": {\"type\":\"string\"} }, \"required\": [\"id\"] }"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_60",
-                  "text": {
-                    "en": "}",
-                    "fr": "}"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_61",
-                  "text": {
-                    "en": "]",
-                    "fr": "]"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_62",
-                  "text": {
-                    "en": "# --- AGENT LOOP ---",
-                    "fr": "# --- BOUCLE DE L'AGENT ---"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_63",
-                  "text": {
-                    "en": "def run_agent(user_request, session_history):",
-                    "fr": "def run_agent(user_request, session_history):"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_64",
-                  "text": {
-                    "en": "messages = session_history + [{\"role\":\"user\",\"content\":user_request}]",
-                    "fr": "messages = session_history + [{\"role\":\"user\",\"content\":user_request}]"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_65",
-                  "text": {
-                    "en": "while True:",
-                    "fr": "while True:"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_66",
-                  "text": {
-                    "en": "blocks = {}",
-                    "fr": "blocks = {}"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_67",
-                  "text": {
-                    "en": "stop_seen = False",
-                    "fr": "stop_vu = False"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_68",
-                  "text": {
-                    "en": "with client.messages.stream(",
-                    "fr": "avec client.messages.stream("
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_69",
-                  "text": {
-                    "en": "model=model, max_tokens=4096, tools=tools, messages=messages,",
-                    "fr": "model=model, max_tokens=4096, tools=tools, messages=messages,"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_70",
-                  "text": {
-                    "en": "thinking={\"type\": \"adaptive\"}",
-                    "fr": "thinking={\"type\": \"adaptive\"}"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_71",
-                  "text": {
-                    "en": ") as stream:",
-                    "fr": ") as stream:"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_72",
-                  "text": {
-                    "en": "for event in stream:",
-                    "fr": "pour chaque événement dans le flux :"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_73",
-                  "text": {
-                    "en": "if event.type == \"content_block_start\":",
-                    "fr": "if event.type == \"content_block_start\":"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_74",
-                  "text": {
-                    "en": "blocks[event.index] = init_block(event)",
-                    "fr": "blocks[event.index] = init_block(event)"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_75",
-                  "text": {
-                    "en": "elif event.type == \"content_block_delta\":",
-                    "fr": "elif event.type == \"content_block_delta\":"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_76",
-                  "text": {
-                    "en": "apply_delta(blocks[event.index], event.delta)",
-                    "fr": "apply_delta(blocks[event.index], event.delta)"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_77",
-                  "text": {
-                    "en": "elif event.type == \"message_stop\":",
-                    "fr": "elif event.type == \"message_stop\":"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_78",
-                  "text": {
-                    "en": "stop_seen = True",
-                    "fr": "stop_seen = True"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_79",
-                  "text": {
-                    "en": "assistant_content = [b for b in assemble(blocks) if b[\"type\"] != \"thinking\"]",
-                    "fr": "assistant_content = [b for b in assemble(blocks) if b[\"type\"] != \"thinking\"]"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_80",
-                  "text": {
-                    "en": "messages.append({\"role\": \"assistant\", \"content\": assistant_content})",
-                    "fr": "messages.append({\"role\": \"assistant\", \"content\": assistant_content})"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_81",
-                  "text": {
-                    "en": "response = finalize(blocks)",
-                    "fr": "réponse = finaliser(blocs)"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_82",
-                  "text": {
-                    "en": "if response.stop_reason == \"end_turn\":",
-                    "fr": "si response.stop_reason == \"end_turn\":"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_83",
-                  "text": {
-                    "en": "return response",
-                    "fr": "renvoyer la réponse"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_84",
-                  "text": {
-                    "en": "for block in response.content:",
-                    "fr": "for block in response.content:"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_85",
-                  "text": {
-                    "en": "if block.type == \"tool_use\":",
-                    "fr": "if block.type == \"tool_use\":"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_86",
-                  "text": {
-                    "en": "result = execute_tool(block.name, block.input)",
-                    "fr": "result = execute_tool(block.name, block.input)"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_87",
-                  "text": {
-                    "en": "messages.append({\"role\":\"user\",\"content\":[{\"type\":\"tool_result\",",
-                    "fr": "messages.append({\"role\":\"user\",\"content\":[{\"type\":\"tool_result\","
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_88",
-                  "text": {
-                    "en": "\"tool_use_id\":block.id,\"content\":result}]})",
-                    "fr": "\"tool_use_id\":block.id,\"content\":result}]})"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_89",
-                  "text": {
-                    "en": "# --- MEMORY ---",
-                    "fr": "# --- MÉMOIRE ---"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_90",
-                  "text": {
-                    "en": "def build_session_history(prior_sessions):",
-                    "fr": "def build_session_history(prior_sessions):"
-                  },
-                  "correctBucket": ""
+                  "correctBucket": "cross_session"
                 }
               ]
             },

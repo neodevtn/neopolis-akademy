@@ -326,174 +326,78 @@
           "blocks": [
             {
               "type": "bucket_sort",
+              "id": "cost_reliability_calculator_v1",
+              "title": {
+                "en": "Cost & Reliability Calculator",
+                "fr": "Calculateur coût & fiabilité"
+              },
+              "instructions": {
+                "en": "Use the calculator to explore configurations. Adjust model level, prompt caching, max_tokens ceiling and call-volume multiplier. Each card describes an action or requirement — drag each into the bucket that best represents its primary goal: reduce cost, improve reliability (latency/p95), or improve quality.",
+                "fr": "Utilisez le calculateur pour explorer des configurations. Ajustez le niveau de modèle, la mise en cache des prompts, le plafond max_tokens et le multiplicateur de volume d'appels. Chaque carte décrit une action ou une exigence — placez chaque carte dans le bucket correspondant à son objectif principal : réduire le coût, améliorer la fiabilité (latence p95) ou améliorer la qualité."
+              },
               "buckets": [
                 {
-                  "id": "bucket_0",
+                  "id": "cost",
                   "label": {
-                    "en": "A. Switching to Opus, because the most capable model is always safest.",
-                    "fr": "A. Passage à Opus, parce que le modèle le plus performant est toujours le plus sûr."
+                    "en": "Cost",
+                    "fr": "Coût"
                   }
                 },
                 {
-                  "id": "bucket_1",
+                  "id": "reliability",
                   "label": {
-                    "en": "B. Turning prompt caching on, because the 5,000-token system prompt is stable across all 50,000 requests, so caching it cuts the dominant input-cost driver.",
-                    "fr": "B. Activation de la mise en cache des prompts, car le system prompt de 5 000 tokens est stable sur l'ensemble des 50 000 requêtes, donc sa mise en cache réduit le principal facteur de coût des entrées."
+                    "en": "Reliability",
+                    "fr": "Fiabilité"
                   }
                 },
                 {
-                  "id": "bucket_2",
+                  "id": "quality",
                   "label": {
-                    "en": "C. Raising the max_tokens cap, because more headroom improves quality.",
-                    "fr": "C. Augmenter la limite max_tokens, car une plus grande marge améliore la qualité."
+                    "en": "Quality",
+                    "fr": "Qualité"
                   }
                 }
               ],
-              "id": "bucket_8",
-              "title": {
-                "en": "Cost & reliability calculator Use the calculator to explo...",
-                "fr": "Calculateur de coût et de fiabilité Utilisez le calculateur pour explo..."
-              },
-              "instructions": {
-                "en": "Cost & reliability calculator Use the calculator to explore configurations. Adjust the model tier, prompt caching, max_tokens cap, and call-volume multiplier; the readouts show monthly cost and p95 latency for each setting. Your goal: find a configuration that meets both the cost ceiling and the latency target at the same time. The calculator only displays values; it does not score your exploration. (Figures are representative for modeling; confirm current rates at publish time.)",
-                "fr": "Calculateur de coût et de fiabilité. Utilisez le calculateur pour explorer des configurations. Ajustez le niveau de modèle, le prompt caching, le plafond max_tokens et le multiplicateur du volume d'appels ; les lectures affichent le coût mensuel et la latence p95 pour chaque réglage. Votre objectif : trouver une configuration qui respecte à la fois le plafond de coût et l'objectif de latence en même temps. Le calculateur affiche uniquement des valeurs ; il n'évalue pas votre exploration. (Les chiffres sont représentatifs pour la modélisation ; confirmez les tarifs actuels au moment de la publication.)"
-              },
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "prompt_caching",
                   "text": {
-                    "en": "Scenario",
-                    "fr": "Scénario"
+                    "en": "Enable prompt caching because the system prompt (5,000 tokens) is stable across 50,000 requests — caching reduces repeated input token cost.",
+                    "fr": "Activer la mise en cache des prompts car le prompt système (5 000 tokens) est stable sur 50 000 requêtes — la mise en cache réduit le coût des tokens d'entrée répétés."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "cost"
                 },
                 {
-                  "id": "item_1",
+                  "id": "lower_model_tier",
                   "text": {
-                    "en": "A customer service agent processes 50,000 requests per month. The system prompt is 5,000 tokens and stable across requests. Average user input is 300 tokens, average output is 400 tokens. The cost ceiling is $800/month. The p95 latency target is 3 seconds.",
-                    "fr": "Un agent du service client traite 50 000 requêtes par mois. Le prompt système est de 5 000 tokens et reste stable entre les requêtes. L'entrée utilisateur moyenne est de 300 tokens, la sortie moyenne de 400 tokens. Le plafond de coût est de 800 $/mois. L'objectif de latence p95 est de 3 secondes."
+                    "en": "Reduce the model tier (choose a less expensive model) to lower per-call compute cost and keep monthly spend under the $800 budget.",
+                    "fr": "Baisser le niveau de modèle (choisir un modèle moins coûteux) pour réduire le coût par appel et maintenir les dépenses mensuelles sous le plafond de 800 $."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "cost"
                 },
                 {
-                  "id": "item_2",
+                  "id": "limit_concurrency_and_volume",
                   "text": {
-                    "en": "Model tier",
-                    "fr": "Niveau du modèle"
+                    "en": "Throttle concurrent requests or reduce the call-volume multiplier to ensure p95 latency stays below the 3-second target during peak traffic.",
+                    "fr": "Limiter la concurrence des requêtes ou réduire le multiplicateur de volume d'appels pour garantir que la latence p95 reste sous l'objectif de 3 secondes lors des pics de trafic."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "reliability"
                 },
                 {
-                  "id": "item_3",
+                  "id": "increase_max_tokens",
                   "text": {
-                    "en": "Haiku",
-                    "fr": "Haïku"
+                    "en": "Raise the max_tokens ceiling so responses aren't truncated for long customer interactions; this may increase latency and cost but improves completeness.",
+                    "fr": "Augmenter le plafond max_tokens pour éviter les réponses tronquées lors d'échanges clients longs ; cela peut augmenter la latence et le coût mais améliore l'exhaustivité."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "quality"
                 },
                 {
-                  "id": "item_4",
+                  "id": "choose_more_capable_model",
                   "text": {
-                    "en": "Sonnet",
-                    "fr": "Sonnet"
+                    "en": "Select a more capable (higher-quality) model for critical support cases to improve answer correctness and reduce failed handoffs to humans.",
+                    "fr": "Choisir un modèle plus performant (de meilleure qualité) pour les cas de support critiques afin d'améliorer la justesse des réponses et réduire les transferts vers des agents humains."
                   },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_5",
-                  "text": {
-                    "en": "Opus",
-                    "fr": "Opus"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_6",
-                  "text": {
-                    "en": "Prompt caching",
-                    "fr": "Mise en cache des prompts"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_7",
-                  "text": {
-                    "en": "On",
-                    "fr": "On"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_8",
-                  "text": {
-                    "en": "Max_tokens cap: 512",
-                    "fr": "Plafond max_tokens : 512"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_9",
-                  "text": {
-                    "en": "Call-volume multiplier: 1.0×",
-                    "fr": "Multiplicateur du volume d'appels : 1,0×"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_10",
-                  "text": {
-                    "en": "Est. monthly cost",
-                    "fr": "Coût mensuel estimé"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_11",
-                  "text": {
-                    "en": "$720",
-                    "fr": "720 $"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_12",
-                  "text": {
-                    "en": "Cost ceiling: $800/mo",
-                    "fr": "Plafond de coût : 800 $/mois"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_13",
-                  "text": {
-                    "en": "p95 latency",
-                    "fr": "latence p95"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_14",
-                  "text": {
-                    "en": "2.5s",
-                    "fr": "2,5 s"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_15",
-                  "text": {
-                    "en": "Latency target: ≤3s",
-                    "fr": "Objectif de latence : ≤3s"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_16",
-                  "text": {
-                    "en": "Decision: Once you have a configuration that meets both targets, which lever did the most work to get there?",
-                    "fr": "Décision : Une fois que vous disposez d'une configuration qui atteint les deux objectifs, quel levier a le plus contribué à y parvenir ?"
-                  },
-                  "correctBucket": ""
+                  "correctBucket": "quality"
                 }
               ]
             },

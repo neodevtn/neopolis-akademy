@@ -1183,3 +1183,7 @@
 - [x] Corriger violation Rules of Hooks (useEffect après return conditionnel) dans TrainingCourse.tsx
 - [x] Désactiver le masquage de texte dans Sentry Session Replay (maskAllText: false, blockAllMedia: false, maskAllInputs: false)
 - [x] Ajouter trust proxy pour corriger le rate limiter derrière Cloud Run/reverse proxy
+
+## Fix exercices bucket_sort cassés
+- [x] Corriger les 29 exercices bucket_sort avec catégories invalides et correctBucket vides
+- [x] Vérifier 0 exercices cassés restants

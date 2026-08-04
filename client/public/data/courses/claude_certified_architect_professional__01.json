@@ -128,99 +128,86 @@
             },
             {
               "type": "bucket_sort",
+              "id": "platform_layers_sort",
+              "title": {
+                "en": "Place each platform item into its layer",
+                "fr": "Placez chaque élément dans sa couche"
+              },
+              "instructions": {
+                "en": "Place each element into the correct layer. Click a platform item to select it, then click the appropriate bucket to place it. Click a placed item to return it to the pool. All 6 items must be placed before submitting.",
+                "fr": "Placez chaque élément dans la couche appropriée. Cliquez sur un élément de la plateforme pour le sélectionner, puis cliquez sur le bac correspondant pour le placer. Cliquez sur un élément placé pour le renvoyer dans la réserve. Les 6 éléments doivent être placés avant de soumettre."
+              },
               "buckets": [
                 {
-                  "id": "bucket_0",
+                  "id": "interface",
                   "label": {
-                    "en": "Claude Code",
-                    "fr": "Claude Code"
+                    "en": "Interface",
+                    "fr": "Interface"
                   }
                 },
                 {
-                  "id": "bucket_1",
+                  "id": "sdk",
                   "label": {
-                    "en": "MCP",
-                    "fr": "MCP"
+                    "en": "SDK",
+                    "fr": "SDK"
                   }
                 },
                 {
-                  "id": "bucket_2",
+                  "id": "infrastructure",
                   "label": {
-                    "en": "Agent SDK",
-                    "fr": "SDK d'agent"
-                  }
-                },
-                {
-                  "id": "bucket_3",
-                  "label": {
-                    "en": "Entry Points",
-                    "fr": "Points d'entrée"
-                  }
-                },
-                {
-                  "id": "bucket_4",
-                  "label": {
-                    "en": "Build-time Interfaces",
-                    "fr": "Interfaces à la compilation"
-                  }
-                },
-                {
-                  "id": "bucket_5",
-                  "label": {
-                    "en": "Delivery Routes",
-                    "fr": "Itinéraires de livraison"
+                    "en": "Infrastructure",
+                    "fr": "Infrastructure"
                   }
                 }
               ],
-              "id": "bucket_0",
-              "title": {
-                "en": "Place each piece in its layer Click a platform piece to s...",
-                "fr": "Placez chaque élément dans sa couche. Cliquez sur un élément de la plateforme pour s..."
-              },
-              "instructions": {
-                "en": "Place each piece in its layer Click a platform piece to select it, then click the right layer bucket to place it. Click a placed chip to return it to the pool. All 8 items must be placed before submitting.",
-                "fr": "Placez chaque élément dans sa couche. Cliquez sur un élément de la plateforme pour le sélectionner, puis cliquez sur le bac de la couche appropriée pour le placer. Cliquez sur un élément placé pour le renvoyer dans la réserve. Les 8 éléments doivent être placés avant de soumettre."
-              },
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "card_claude_ai",
                   "text": {
-                    "en": "claude.ai",
-                    "fr": "claude.ai"
+                    "en": "claude.ai — the web application where end users chat with and configure models.",
+                    "fr": "claude.ai — l'application web où les utilisateurs finaux discutent et configurent les modèles."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "interface"
                 },
                 {
-                  "id": "item_1",
+                  "id": "card_desktop_app",
                   "text": {
-                    "en": "Direct API",
-                    "fr": "API directe"
+                    "en": "Claude — desktop application (native client used by end users).",
+                    "fr": "Claude — application de bureau (client natif utilisé par les utilisateurs)."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "interface"
                 },
                 {
-                  "id": "item_2",
+                  "id": "card_direct_api",
                   "text": {
-                    "en": "Claude Desktop",
-                    "fr": "Claude — application de bureau"
+                    "en": "Direct API (HTTP/REST) — the programmatic entry point for sending requests to the platform.",
+                    "fr": "API directe (HTTP/REST) — point d'entrée programmatique pour envoyer des requêtes à la plateforme."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "infrastructure"
                 },
                 {
-                  "id": "item_3",
+                  "id": "card_client_sdks",
                   "text": {
-                    "en": "SDKs",
-                    "fr": "SDKs"
+                    "en": "Client SDKs — language libraries (Python, JavaScript, etc.) used by developers to integrate the platform.",
+                    "fr": "SDKs clients — bibliothèques (Python, JavaScript, etc.) utilisées par les développeurs pour intégrer la plateforme."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "sdk"
                 },
                 {
-                  "id": "item_4",
+                  "id": "card_agent_sdk",
                   "text": {
-                    "en": "Bedrock / Vertex / Foundry",
-                    "fr": "Bedrock / Vertex / Foundry"
+                    "en": "Agent SDK — toolkit for building autonomous assistants and orchestrating agents.",
+                    "fr": "SDK d'agent — kit d'outils pour construire des assistants autonomes et orchestrer des agents."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "sdk"
+                },
+                {
+                  "id": "card_cloud_providers",
+                  "text": {
+                    "en": "Cloud providers (Bedrock / Vertex / Foundry) — underlying compute and model hosting services.",
+                    "fr": "Fournisseurs cloud (Bedrock / Vertex / Foundry) — services d'hébergement des modèles et ressources de calcul sous-jacentes."
+                  },
+                  "correctBucket": "infrastructure"
                 }
               ]
             },
@@ -322,176 +309,216 @@
             },
             {
               "type": "bucket_sort",
-              "id": "matching_set_0",
+              "id": "behavior_properties_design_consequences",
               "title": {
-                "en": "Behavior properties to their design consequence",
-                "fr": "Propriétés de comportement et leurs conséquences sur la conception"
+                "en": "Behavioral properties and design consequences",
+                "fr": "Propriétés de comportement et conséquences sur la conception"
               },
               "instructions": {
-                "en": "Match the primitive to the job Match each item on the left to its match on the right across the three sets. This is the readiness check before the design half of the module. Answer all three sets, then submit. Match each property to the design consequence it creates.",
-                "fr": "Associez le primitif à la tâche. Associez chaque élément de gauche à son correspondant de droite dans les trois ensembles. Il s'agit du contrôle de préparation avant la partie conception du module. Répondez aux trois ensembles, puis soumettez. Associez chaque propriété à la conséquence de conception qu'elle engendre."
+                "en": "Match each behavioral property scenario to the design consequence. Drag each card to the category that best describes the design response required (e.g., UI, verification, retrieval). This is a short preparatory check before the design section — answer all items, then submit.",
+                "fr": "Associez chaque scénario relatif à une propriété de comportement à la conséquence de conception. Glissez chaque carte dans la catégorie qui décrit le mieux la réponse de conception requise (ex. interface, vérification, récupération). C'est un contrôle de préparation avant la partie conception — répondez à tous les éléments, puis soumettez."
               },
               "buckets": [
                 {
-                  "id": "option_0",
+                  "id": "non_determinism",
                   "label": {
                     "en": "Non-determinism",
-                    "fr": "Non-déterminisme"
+                    "fr": "Non‑déterminisme"
                   }
                 },
                 {
-                  "id": "option_1",
+                  "id": "limited_knowledge",
                   "label": {
-                    "en": "Knowledge boundary",
-                    "fr": "Limite des connaissances"
+                    "en": "Limited knowledge",
+                    "fr": "Connaissance limitée"
                   }
                 },
                 {
-                  "id": "option_2",
+                  "id": "limited_context",
                   "label": {
-                    "en": "Context as a finite resource",
-                    "fr": "Le contexte : une ressource limitée"
+                    "en": "Limited context",
+                    "fr": "Contexte limité"
                   }
                 },
                 {
-                  "id": "option_3",
+                  "id": "confidence_vs_accuracy",
                   "label": {
-                    "en": "Confidence is not correctness",
-                    "fr": "La confiance n'est pas l'exactitude."
+                    "en": "Confidence ≠ Accuracy",
+                    "fr": "Confiance ≠ Exactitude"
                   }
                 }
               ],
               "cards": [
                 {
-                  "id": "card_0",
+                  "id": "response_variability",
                   "text": {
-                    "en": "Non-determinism",
-                    "fr": "Non-déterminisme"
+                    "en": "The model can produce multiple valid outputs for the same input; the interface should accept variability and let users choose, edit, or request alternatives.",
+                    "fr": "Le modèle peut produire plusieurs réponses valides pour la même entrée ; l'interface doit accepter la variabilité et permettre de choisir, modifier ou demander des alternatives."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "non_determinism"
                 },
                 {
-                  "id": "card_1",
+                  "id": "hallucination_and_verification",
                   "text": {
-                    "en": "Knowledge boundary",
-                    "fr": "Limite des connaissances"
+                    "en": "The model invents facts or fills gaps beyond its knowledge; designs must surface uncertainty, show provenance, and make verification easy.",
+                    "fr": "Le modèle invente des faits ou complète des lacunes au‑delà de sa connaissance ; la conception doit afficher l'incertitude, indiquer la provenance et faciliter la vérification."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "limited_knowledge"
                 },
                 {
-                  "id": "card_2",
+                  "id": "no_real_time_data",
                   "text": {
-                    "en": "Context as a finite resource",
-                    "fr": "Le contexte comme ressource limitée"
+                    "en": "The model lacks real‑time or up‑to‑date information (e.g., current events); the UI should show data timestamps and provide mechanisms for retrieval or user updates.",
+                    "fr": "Le modèle n'a pas accès à des informations en temps réel (ex. événements actuels) ; l'interface doit afficher la date des données et offrir des mécanismes de récupération ou de mise à jour par l'utilisateur."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "limited_knowledge"
                 },
                 {
-                  "id": "card_3",
+                  "id": "context_window_limits",
                   "text": {
-                    "en": "Confidence is not correctness",
-                    "fr": "La confiance n'est pas synonyme d'exactitude."
+                    "en": "Long conversations or big documents exceed the model's context window; design must summarize, prioritize, or retrieve relevant context to keep interactions coherent.",
+                    "fr": "Les longues conversations ou gros documents dépassent la fenêtre contextuelle du modèle ; la conception doit résumer, prioriser ou récupérer le contexte pertinent pour maintenir la cohérence."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "limited_context"
+                },
+                {
+                  "id": "avoid_overtrust",
+                  "text": {
+                    "en": "The model may state incorrect answers confidently; designs should present calibration cues, encourage verification, and prevent user overreliance.",
+                    "fr": "Le modèle peut présenter des réponses incorrectes avec assurance ; la conception doit montrer des indices de calibration, encourager la vérification et prévenir la surconfiance de l'utilisateur."
+                  },
+                  "correctBucket": "confidence_vs_accuracy"
+                },
+                {
+                  "id": "token_and_embedding_limits",
+                  "text": {
+                    "en": "Token or embedding limits prevent sending entire documents to the model; design should use chunking, retrieval‑augmented generation, or progressive disclosure of content.",
+                    "fr": "Les limites de tokens ou d'embeddings empêchent d'envoyer des documents entiers au modèle ; la conception doit utiliser le découpage, la récupération augmentée ou la divulgation progressive du contenu."
+                  },
+                  "correctBucket": "limited_context"
                 }
               ]
             },
             {
               "type": "bucket_sort",
-              "id": "matching_set_1",
+              "id": "associer_elements_plateforme_couches",
               "title": {
-                "en": "Platform pieces to their layer",
+                "en": "Match platform elements to their layer",
                 "fr": "Associer les éléments de la plateforme à leur couche"
               },
               "instructions": {
-                "en": "Match the primitive to the job Match each item on the left to its match on the right across the three sets. This is the readiness check before the design half of the module. Answer all three sets, then submit. Match each property to the design consequence it creates.",
-                "fr": "Associez le primitif à sa fonction. Pour chaque série, associez chaque élément de gauche à son correspondant de droite. Il s'agit du contrôle de préparation avant la partie conception du module. Répondez aux trois séries, puis soumettez. Associez chaque propriété à la conséquence de conception qu'elle engendre."
+                "en": "Drag each item to the layer it belongs to. This is a preparation check before the module design phase. For each statement on the left, drop it into the correct layer on the right. When finished, submit your answers.",
+                "fr": "Glissez chaque élément vers la couche à laquelle il appartient. Il s'agit d'un contrôle de préparation avant la phase de conception du module. Pour chaque énoncé à gauche, déposez-le dans la couche correcte à droite. Lorsque vous avez terminé, soumettez vos réponses."
               },
               "buckets": [
                 {
-                  "id": "option_0",
+                  "id": "applications",
                   "label": {
-                    "en": "Claude Code",
-                    "fr": "Claude Code"
+                    "en": "Applications",
+                    "fr": "Applications"
                   }
                 },
                 {
-                  "id": "option_1",
+                  "id": "model_control_plane",
                   "label": {
-                    "en": "MCP",
-                    "fr": "MCP"
+                    "en": "Model Control Plane",
+                    "fr": "Plan de contrôle des modèles"
                   }
                 },
                 {
-                  "id": "option_2",
+                  "id": "infrastructure",
                   "label": {
-                    "en": "Bedrock",
-                    "fr": "Bedrock"
+                    "en": "Infrastructure",
+                    "fr": "Infrastructure"
                   }
                 }
               ],
               "cards": [
                 {
-                  "id": "card_0",
+                  "id": "ui_client_integration",
                   "text": {
-                    "en": "Claude Code",
-                    "fr": "Claude Code"
+                    "en": "Client UI that sends prompts to the API and displays model outputs",
+                    "fr": "Interface client qui envoie des prompts à l'API et affiche les résultats du modèle"
                   },
-                  "correctBucket": ""
+                  "correctBucket": "applications"
                 },
                 {
-                  "id": "card_1",
+                  "id": "client_sdks_sessions",
                   "text": {
-                    "en": "MCP",
-                    "fr": "MCP"
+                    "en": "Client libraries/SDKs used by developers to integrate the platform and manage user sessions",
+                    "fr": "Bibliothèques/SDK côté client utilisées par les développeurs pour intégrer la plateforme et gérer les sessions utilisateur"
                   },
-                  "correctBucket": ""
+                  "correctBucket": "applications"
                 },
                 {
-                  "id": "card_2",
+                  "id": "model_versioning_endpoints",
                   "text": {
-                    "en": "Bedrock",
-                    "fr": "Socle"
+                    "en": "Versioning, deployment and monitoring of model endpoints",
+                    "fr": "Gestion des versions, déploiement et supervision des endpoints de modèles"
                   },
-                  "correctBucket": ""
+                  "correctBucket": "model_control_plane"
+                },
+                {
+                  "id": "auth_quotas_billing",
+                  "text": {
+                    "en": "Authentication, quotas and usage billing controls exposed by the platform",
+                    "fr": "Mécanismes d'authentification, quotas et facturation d'utilisation fournis par la plateforme"
+                  },
+                  "correctBucket": "model_control_plane"
+                },
+                {
+                  "id": "compute_network_storage",
+                  "text": {
+                    "en": "Provisioning of compute instances, networking and persistent storage for model execution",
+                    "fr": "Provisionnement des instances de calcul, réseau et stockage persistant pour l'exécution des modèles"
+                  },
+                  "correctBucket": "infrastructure"
+                },
+                {
+                  "id": "gpu_drivers_orchestration",
+                  "text": {
+                    "en": "Low-level hardware and runtime concerns: GPU drivers, containers and orchestration",
+                    "fr": "Aspects bas niveau du matériel et du runtime : pilotes GPU, conteneurs et orchestration"
+                  },
+                  "correctBucket": "infrastructure"
                 }
               ]
             },
             {
               "type": "bucket_sort",
-              "id": "matching_set_2",
+              "id": "associer_primitives_roles",
               "title": {
-                "en": "Primitives to their job",
+                "en": "Match primitives to their role",
                 "fr": "Associer les primitives à leur rôle"
               },
               "instructions": {
-                "en": "Match the primitive to the job Match each item on the left to its match on the right across the three sets. This is the readiness check before the design half of the module. Answer all three sets, then submit. Match each property to the design consequence it creates.",
-                "fr": "Associez chaque primitive à sa fonction. Associez chaque élément de la colonne de gauche à son correspondant de la colonne de droite pour les trois séries. Il s'agit d'une vérification de préparation avant la partie conception du module. Répondez aux trois séries, puis soumettez. Associez chaque propriété à la conséquence de conception qu'elle entraîne."
+                "en": "Drag each card to the category that best describes the primitive's role. This is a readiness check before the module design phase. Classify all cards, then submit.",
+                "fr": "Faites glisser chaque carte vers la catégorie qui décrit le mieux le rôle de la primitive. Il s'agit d'une vérification de préparation avant la phase de conception du module. Classez toutes les cartes, puis soumettez."
               },
               "buckets": [
                 {
-                  "id": "option_0",
+                  "id": "outils",
                   "label": {
                     "en": "Tools",
                     "fr": "Outils"
                   }
                 },
                 {
-                  "id": "option_1",
+                  "id": "sous_agents",
                   "label": {
-                    "en": "Subagents",
+                    "en": "Sub-agents",
                     "fr": "Sous-agents"
                   }
                 },
                 {
-                  "id": "option_2",
+                  "id": "hooks",
                   "label": {
                     "en": "Hooks",
                     "fr": "Hooks"
                   }
                 },
                 {
-                  "id": "option_3",
+                  "id": "competences",
                   "label": {
                     "en": "Skills",
                     "fr": "Compétences"
@@ -500,36 +527,52 @@
               ],
               "cards": [
                 {
-                  "id": "card_0",
+                  "id": "c1",
                   "text": {
-                    "en": "Tools",
-                    "fr": "Outils"
+                    "en": "Perform an HTTP request to an external service to fetch data (e.g., call an API).",
+                    "fr": "Exécuter une requête HTTP vers un service externe pour obtenir des données (par ex. appeler une API)."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "outils"
                 },
                 {
-                  "id": "card_1",
+                  "id": "c2",
                   "text": {
-                    "en": "Subagents",
-                    "fr": "Sous-agents"
+                    "en": "Create an autonomous secondary agent that handles a subtask with its own context and state.",
+                    "fr": "Créer un agent secondaire autonome qui gère une sous-tâche avec son propre contexte et état."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "sous_agents"
                 },
                 {
-                  "id": "card_2",
+                  "id": "c3",
                   "text": {
-                    "en": "Hooks",
-                    "fr": "Hooks"
+                    "en": "Run code automatically at a specific point in the conversation (e.g., input validation or logging).",
+                    "fr": "Déclencher du code automatiquement à un point précis de la conversation (par ex. validation ou journalisation)."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "hooks"
                 },
                 {
-                  "id": "card_3",
+                  "id": "c4",
                   "text": {
-                    "en": "Skills",
-                    "fr": "Compétences"
+                    "en": "Provide a reusable capability such as text summarization or tone analysis used by the assistant.",
+                    "fr": "Fournir une capacité réutilisable comme le résumé de texte ou l'analyse du ton utilisée par l'assistant."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "competences"
+                },
+                {
+                  "id": "c5",
+                  "text": {
+                    "en": "Load and use a library or SDK to query a knowledge base or external datastore.",
+                    "fr": "Charger et utiliser une bibliothèque ou un SDK pour interroger une base de connaissances ou un stockage externe."
+                  },
+                  "correctBucket": "outils"
+                },
+                {
+                  "id": "c6",
+                  "text": {
+                    "en": "Delegate a specialized task (e.g., code generation) to a reusable module to simplify the main flow.",
+                    "fr": "Déléguer une tâche spécialisée (par ex. génération de code) à un module réutilisable pour simplifier le flux principal."
+                  },
+                  "correctBucket": "competences"
                 }
               ]
             },
@@ -642,99 +685,86 @@
             },
             {
               "type": "bucket_sort",
+              "id": "on_site_service_capabilities",
+              "title": {
+                "en": "Sort on-site service capabilities",
+                "fr": "Trier les capacités du service sur site"
+              },
+              "instructions": {
+                "en": "Sort each capability into the correct owner: AI assistant, existing systems, or a human decision. Click a capability to select it, then place it into the appropriate bucket on the right.",
+                "fr": "Classez chaque capacité selon le propriétaire approprié : Assistant IA, Systèmes existants ou Décision humaine. Cliquez sur une capacité pour la sélectionner, puis placez-la dans le compartiment correspondant à droite."
+              },
               "buckets": [
                 {
-                  "id": "bucket_0",
+                  "id": "assistant_ia",
                   "label": {
-                    "en": "Draft a follow-up email to the customer explaining the delay",
-                    "fr": "Rédige un e-mail de relance au client expliquant le retard."
+                    "en": "AI assistant",
+                    "fr": "Assistant IA"
                   }
                 },
                 {
-                  "id": "bucket_1",
+                  "id": "systemes_existants",
                   "label": {
-                    "en": "Tell the engineer whether the warranty applies to this serial number",
-                    "fr": "Indique à l'ingénieur si la garantie s'applique à ce numéro de série."
-                  }
-                },
-                {
-                  "id": "bucket_2",
-                  "label": {
-                    "en": "Decide whether to escalate a safety incident to the field manager",
-                    "fr": "Décider s'il faut faire remonter un incident de sécurité au responsable de terrain"
-                  }
-                },
-                {
-                  "id": "bucket_3",
-                  "label": {
-                    "en": "Claude",
-                    "fr": "Claude"
-                  }
-                },
-                {
-                  "id": "bucket_4",
-                  "label": {
-                    "en": "Existing Systems",
+                    "en": "Existing systems",
                     "fr": "Systèmes existants"
                   }
                 },
                 {
-                  "id": "bucket_5",
+                  "id": "decision_humaine",
                   "label": {
-                    "en": "Human",
-                    "fr": "Humain"
+                    "en": "Human decision",
+                    "fr": "Décision humaine"
                   }
                 }
               ],
-              "id": "bucket_1",
-              "title": {
-                "en": "Sort the field-service capabilities A field-service partn...",
-                "fr": "Trier les capacités du service sur site Un partenaire de service sur site..."
-              },
-              "instructions": {
-                "en": "Sort the field-service capabilities A field-service partner has handed you a request list for a knowledge assistant their engineers will use on-site. Click a capability to select it, then click the right owner bucket to place it. All 8 items must be placed before submitting.",
-                "fr": "Trier les capacités du service sur site. Un partenaire de service sur site vous a remis une liste de demandes pour un assistant de connaissances que leurs ingénieurs utiliseront sur place. Cliquez sur une capacité pour la sélectionner, puis cliquez sur le compartiment du propriétaire à droite pour la placer. Les 8 éléments doivent être placés avant de soumettre."
-              },
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "redige_email_relance",
                   "text": {
-                    "en": "Summarize the engineer's case notes into a one-page handover",
-                    "fr": "Résumez les notes de l'ingénieur en un document de passation d'une page."
+                    "en": "Draft a follow-up email to the customer explaining the delay.",
+                    "fr": "Rédiger un e-mail de relance au client expliquant le retard."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "assistant_ia"
                 },
                 {
-                  "id": "item_1",
+                  "id": "verifier_garantie_par_serie",
                   "text": {
-                    "en": "Return the current stock level of part SKU 78-A at the closest warehouse",
-                    "fr": "Retourner le niveau de stock actuel de la pièce SKU 78-A dans l'entrepôt le plus proche"
+                    "en": "Tell the engineer whether the warranty applies to this serial number.",
+                    "fr": "Indiquer à l'ingénieur si la garantie s'applique à ce numéro de série."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "systemes_existants"
                 },
                 {
-                  "id": "item_2",
+                  "id": "escalade_incident_securite",
                   "text": {
-                    "en": "Approve a refund above £2,000 if the engineer requests one",
-                    "fr": "Approuver un remboursement supérieur à £2 000 si l'ingénieur en fait la demande"
+                    "en": "Decide whether to escalate a security incident to the field manager.",
+                    "fr": "Décider s'il faut faire remonter un incident de sécurité au responsable de terrain."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "decision_humaine"
                 },
                 {
-                  "id": "item_3",
+                  "id": "resume_notes_pour_passation",
                   "text": {
-                    "en": "Extract the part number from a photo of the unit label",
-                    "fr": "Extraire le numéro de pièce à partir d'une photo de l'étiquette de l'unité."
+                    "en": "Summarize the engineer's notes into a one-page handover document.",
+                    "fr": "Résumer les notes de l'ingénieur en un document de passation d'une page."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "assistant_ia"
                 },
                 {
-                  "id": "item_4",
+                  "id": "niveau_stock_piece",
                   "text": {
-                    "en": "Calculate the total billable time across three job tickets",
-                    "fr": "Calculez le temps facturable total pour trois bons de travail."
+                    "en": "Return the current stock level for part SKU 78-A at the nearest warehouse.",
+                    "fr": "Retourner le niveau de stock actuel de la pièce SKU 78-A dans l'entrepôt le plus proche."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "systemes_existants"
+                },
+                {
+                  "id": "approuver_remboursement_eleve",
+                  "text": {
+                    "en": "Approve a refund greater than £2,000 if requested by the engineer.",
+                    "fr": "Approuver un remboursement supérieur à £2 000 si l'ingénieur en fait la demande."
+                  },
+                  "correctBucket": "decision_humaine"
                 }
               ]
             },
@@ -744,187 +774,86 @@
             },
             {
               "type": "bucket_sort",
-              "buckets": [
-                {
-                  "id": "bucket_0",
-                  "label": {
-                    "en": "Existing System",
-                    "fr": "Système existant"
-                  }
-                },
-                {
-                  "id": "bucket_1",
-                  "label": {
-                    "en": "Human",
-                    "fr": "Humain"
-                  }
-                },
-                {
-                  "id": "bucket_2",
-                  "label": {
-                    "en": "Issue the refund",
-                    "fr": "Effectuez le remboursement."
-                  }
-                },
-                {
-                  "id": "bucket_3",
-                  "label": {
-                    "en": "Claude",
-                    "fr": "Claude"
-                  }
-                },
-                {
-                  "id": "bucket_4",
-                  "label": {
-                    "en": "Existing System",
-                    "fr": "Système existant"
-                  }
-                },
-                {
-                  "id": "bucket_5",
-                  "label": {
-                    "en": "Human",
-                    "fr": "Humain"
-                  }
-                }
-              ],
-              "id": "bucket_2",
+              "id": "decomposer_demande_brief_partenaire_001",
               "title": {
-                "en": "Decompose the request A partner brief is below",
+                "en": "Decompose the request — partner brief below",
                 "fr": "Décomposer la demande — le brief du partenaire est ci‑dessous"
               },
               "instructions": {
-                "en": "Decompose the request A partner brief is below. For each step, select the right owner: what Claude does, what existing systems do, or what humans do. The previous checkpoint tested whether you could recognize the four properties; this one tests whether you can decompose the split.",
-                "fr": "Décomposez la demande — le brief du partenaire est ci‑dessous. Pour chaque étape, attribuez le bon responsable : ce que Claude fait, ce que font les systèmes existants, ou ce que font les humains. Le point de contrôle précédent vérifiait si vous pouviez reconnaître les quatre propriétés ; celui-ci teste si vous pouvez décomposer la répartition."
+                "en": "Decompose the partner brief below. For each step, assign the correct owner: what Claude (the assistant) does, what existing systems do, or what humans do.",
+                "fr": "Décomposez le brief du partenaire ci‑dessous. Pour chaque étape, attribuez le bon responsable : ce que fait Claude (l'assistant), ce que font les systèmes existants, ou ce que font les humains."
               },
+              "buckets": [
+                {
+                  "id": "claude",
+                  "label": {
+                    "en": "Claude",
+                    "fr": "Claude"
+                  }
+                },
+                {
+                  "id": "existing_systems",
+                  "label": {
+                    "en": "Existing systems",
+                    "fr": "Systèmes existants"
+                  }
+                },
+                {
+                  "id": "humans",
+                  "label": {
+                    "en": "Humans",
+                    "fr": "Humains"
+                  }
+                }
+              ],
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "read_exception_note",
                   "text": {
-                    "en": "The brief",
-                    "fr": "Le brief"
+                    "en": "Read the carrier's free-text exception note for an incoming shipment.",
+                    "fr": "Lire la note d'exception en texte libre du transporteur pour un envoi entrant."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "claude"
                 },
                 {
-                  "id": "item_1",
+                  "id": "determine_refund_eligibility",
                   "text": {
-                    "en": "A regional logistics partner wants an assistant that, for each inbound shipping exception: reads the carrier's free-text exception note, decides whether the shipment qualifies for an automatic refund under the partner's published policy, looks up the customer's contract tier, drafts a notification to the customer, and issues the refund.",
-                    "fr": "Un partenaire logistique régional souhaite un assistant qui, pour chaque exception d'expédition entrante : lit la note d'exception en texte libre du transporteur, décide si l'envoi donne droit à un remboursement automatique selon la politique publiée du partenaire, consulte le niveau de contrat du client, rédige une notification à l'intention du client, et effectue le remboursement."
+                    "en": "Decide whether the shipment qualifies for an automatic refund under the partner's published policy.",
+                    "fr": "Déterminer si l'expédition est éligible à un remboursement automatique selon la politique publiée du partenaire."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "claude"
                 },
                 {
-                  "id": "item_2",
+                  "id": "check_customer_contract",
                   "text": {
-                    "en": "Read the carrier's free-text exception note",
-                    "fr": "Lisez la note d'exception en texte libre du transporteur."
+                    "en": "Consult the customer's contract level and service terms.",
+                    "fr": "Consulter le niveau de contrat et les conditions de service du client."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "existing_systems"
                 },
                 {
-                  "id": "item_3",
+                  "id": "draft_customer_notification",
                   "text": {
-                    "en": "Claude",
-                    "fr": "Claude"
+                    "en": "Draft a notification message to the customer explaining the decision and next steps.",
+                    "fr": "Rédiger une notification à l'intention du client expliquant la décision et les prochaines étapes."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "claude"
                 },
                 {
-                  "id": "item_4",
+                  "id": "execute_refund_transaction",
                   "text": {
-                    "en": "Existing System",
-                    "fr": "Système existant"
+                    "en": "Execute the refund transaction through the payments system.",
+                    "fr": "Effectuer la transaction de remboursement via le système de paiement."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "existing_systems"
                 },
                 {
-                  "id": "item_5",
+                  "id": "escalate_ambiguous_cases",
                   "text": {
-                    "en": "Human",
-                    "fr": "Humain"
+                    "en": "Escalate ambiguous or disputed cases to a human specialist for review.",
+                    "fr": "Escalader les cas ambigus ou contestés vers un spécialiste humain pour examen."
                   },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_6",
-                  "text": {
-                    "en": "Decide whether the shipment qualifies for an automatic refund under the partner's published policy",
-                    "fr": "Déterminez si l'expédition est éligible à un remboursement automatique selon la politique publiée par le partenaire."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_7",
-                  "text": {
-                    "en": "Claude",
-                    "fr": "Claude"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_8",
-                  "text": {
-                    "en": "Existing System",
-                    "fr": "Système existant"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_9",
-                  "text": {
-                    "en": "Human",
-                    "fr": "Humain"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_10",
-                  "text": {
-                    "en": "Look up the customer's contract tier",
-                    "fr": "Recherchez le niveau de contrat du client."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_11",
-                  "text": {
-                    "en": "Claude",
-                    "fr": "Claude"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_12",
-                  "text": {
-                    "en": "Existing System",
-                    "fr": "Système existant"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_13",
-                  "text": {
-                    "en": "Human",
-                    "fr": "Humain"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_14",
-                  "text": {
-                    "en": "Draft the customer notification",
-                    "fr": "Rédiger la notification client"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_15",
-                  "text": {
-                    "en": "Claude",
-                    "fr": "Claude"
-                  },
-                  "correctBucket": ""
+                  "correctBucket": "humans"
                 }
               ]
             },
@@ -1094,107 +1023,78 @@
             },
             {
               "type": "bucket_sort",
-              "buckets": [
-                {
-                  "id": "bucket_0",
-                  "label": {
-                    "en": "↓",
-                    "fr": "↓"
-                  }
-                },
-                {
-                  "id": "bucket_1",
-                  "label": {
-                    "en": "3Synthesis sums returned verdicts into a report",
-                    "fr": "3. Synthèse : agrège les verdicts renvoyés dans un rapport"
-                  }
-                },
-                {
-                  "id": "bucket_2",
-                  "label": {
-                    "en": "↓",
-                    "fr": "↓"
-                  }
-                },
-                {
-                  "id": "bucket_3",
-                  "label": {
-                    "en": "4Irreversible action (auto-archive) taken with no human gate",
-                    "fr": "4 Action irréversible (archivage automatique) effectuée sans contrôle humain"
-                  }
-                },
-                {
-                  "id": "bucket_4",
-                  "label": {
-                    "en": "5No retry or gap-flag on a failed subagent",
-                    "fr": "Pas de retry ni de gap-flag sur un sous-agent défaillant."
-                  }
-                },
-                {
-                  "id": "bucket_5",
-                  "label": {
-                    "en": "6Shared trace ID propagated to every subagent",
-                    "fr": "L'ID de trace 6Shared est propagé à chaque sous-agent"
-                  }
-                }
-              ],
-              "id": "bucket_3",
+              "id": "critic_orchestration_design_v1",
               "title": {
                 "en": "Critique the orchestration design",
                 "fr": "Critiquer la conception de l'orchestration"
               },
               "instructions": {
-                "en": "Critique the orchestration design",
-                "fr": "Critiquer la conception de l'orchestration"
+                "en": "Classify each component or scenario according to whether it is acceptable, shows a missing control, or indicates a boundary/failure-containment problem. Drag each card into the best-matching category.",
+                "fr": "Classez chaque composant ou scénario selon s'il est acceptable, révèle un contrôle manquant, ou indique une faille de frontière / de confinement de défaillance. Glissez chaque carte dans la catégorie la plus adaptée."
               },
+              "buckets": [
+                {
+                  "id": "acceptable",
+                  "label": {
+                    "en": "Acceptable",
+                    "fr": "Acceptable"
+                  }
+                },
+                {
+                  "id": "missing_control",
+                  "label": {
+                    "en": "Missing control",
+                    "fr": "Contrôle manquant"
+                  }
+                },
+                {
+                  "id": "boundary_failure",
+                  "label": {
+                    "en": "Boundary failure",
+                    "fr": "Faille de frontière"
+                  }
+                }
+              ],
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "card_1",
                   "text": {
-                    "en": "Draft architecture submitted for review",
-                    "fr": "Ébauche d'architecture soumise pour examen"
+                    "en": "Draft architecture submitted for review: orchestrator assigns tasks to sub-agents and the design is reviewed before deployment.",
+                    "fr": "Ébauche d'architecture soumise pour examen : l'orchestrator distribue des tâches aux sous-agents et la conception est examinée avant déploiement."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "acceptable"
                 },
                 {
-                  "id": "item_1",
+                  "id": "card_2",
                   "text": {
-                    "en": "Below is a draft multi-agent architecture submitted for review: an orchestrator fanning a large document-classification job out to subagents. Six components are listed. Select the three that carry a control or failure-boundary defect.",
-                    "fr": "Ci-dessous se trouve un projet d'architecture multi-agent soumis à examen : un orchestrator qui répartit un important travail de classification de documents entre des sous-agents. Six composants sont listés. Sélectionnez les trois qui présentent un défaut de contrôle ou de frontière de défaillance."
+                    "en": "Synthesis component aggregates sub-agent verdicts into a consolidated report and highlights conflicts for human review.",
+                    "fr": "Composant de synthèse : agrège les verdicts des sous-agents dans un rapport consolidé et signale les conflits pour relecture humaine."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "acceptable"
                 },
                 {
-                  "id": "item_2",
+                  "id": "card_3",
                   "text": {
-                    "en": "Select exactly 3 components that carry a control or failure-boundary defect.",
-                    "fr": "Sélectionnez exactement 3 composants présentant un défaut de contrôle ou de frontière de défaillance."
+                    "en": "Automatic irreversible action: documents are archived automatically without any human confirmation or approval step.",
+                    "fr": "Action irréversible automatique : des documents sont archivés automatiquement sans confirmation ni validation humaine."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "missing_control"
                 },
                 {
-                  "id": "item_3",
+                  "id": "card_4",
                   "text": {
-                    "en": "1Orchestrator decomposes the corpus into per-document units",
-                    "fr": "Orchestrator décompose le corpus en unités par document"
+                    "en": "No retry nor gap-flag on failing sub-agent: when a sub-agent fails, its items are dropped silently and no gap is recorded for reprocessing.",
+                    "fr": "Pas de retry ni de gap-flag sur un sous-agent défaillant : lorsqu'un sous-agent échoue, ses éléments sont supprimés silencieusement et aucun créneau n'est enregistré pour retraitement."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "boundary_failure"
                 },
                 {
-                  "id": "item_4",
+                  "id": "card_5",
                   "text": {
-                    "en": "↓",
-                    "fr": "↓"
+                    "en": "Shared trace ID propagated unchanged to every sub-agent, coupling logs and making it hard to isolate which sub-agent caused an error.",
+                    "fr": "ID de trace partagé propagé tel quel à tous les sous-agents, couplant les logs et rendant difficile l'isolation du sous-agent responsable d'une erreur."
                   },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_5",
-                  "text": {
-                    "en": "2Subagents run in parallel, each returns a verdict",
-                    "fr": "2 sous-agents s'exécutent en parallèle, chacun rend un verdict."
-                  },
-                  "correctBucket": ""
+                  "correctBucket": "boundary_failure"
                 }
               ]
             },
@@ -1282,131 +1182,79 @@
             },
             {
               "type": "bucket_sort",
-              "buckets": [
-                {
-                  "id": "bucket_0",
-                  "label": {
-                    "en": "↓",
-                    "fr": "↓"
-                  }
-                },
-                {
-                  "id": "bucket_1",
-                  "label": {
-                    "en": "4Agent loop with tool entry point: refund, cancel, update-address",
-                    "fr": "Boucle 4Agent avec point d'entrée de l'outil : remboursement, annulation, mise à jour de l'adresse"
-                  }
-                },
-                {
-                  "id": "bucket_2",
-                  "label": {
-                    "en": "5(missing) Escalation path to human agent",
-                    "fr": "5 (manquant) Procédure d'escalade vers un agent humain"
-                  }
-                },
-                {
-                  "id": "bucket_3",
-                  "label": {
-                    "en": "↓",
-                    "fr": "↓"
-                  }
-                },
-                {
-                  "id": "bucket_4",
-                  "label": {
-                    "en": "↓",
-                    "fr": "↓"
-                  }
-                },
-                {
-                  "id": "bucket_5",
-                  "label": {
-                    "en": "6Response composer (Claude call)",
-                    "fr": "6. Compositeur de réponses (Claude call)"
-                  }
-                }
-              ],
-              "id": "bucket_4",
+              "id": "critique_diagram_001",
               "title": {
                 "en": "Critique the diagram",
                 "fr": "Critiquez le diagramme"
               },
               "instructions": {
-                "en": "Critique the diagram",
-                "fr": "Critiquez le diagramme"
+                "en": "Review the architecture diagram and sort the six listed components into two buckets: components that are well applied for routing, and components that are misapplied. Select exactly the three components that are misapplied for this routing design.",
+                "fr": "Passez en revue le schéma d'architecture et triez les six composants listés en deux catégories : composants bien appliqués pour le routage et composants mal appliqués. Sélectionnez exactement les trois composants qui sont mal appliqués pour cette conception de routage."
               },
+              "buckets": [
+                {
+                  "id": "misapplied",
+                  "label": {
+                    "en": "Misapplied",
+                    "fr": "Mal appliqué"
+                  }
+                },
+                {
+                  "id": "well_applied",
+                  "label": {
+                    "en": "Well applied",
+                    "fr": "Bien appliqué"
+                  }
+                }
+              ],
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "classifier_intent_claude",
                   "text": {
-                    "en": "Practice: review a partner's draft architecture",
-                    "fr": "Exercice : passer en revue le projet d'architecture d'un partenaire"
+                    "en": "1 Intent classifier (Claude call): a heavy Claude-based classifier invoked before routing decisions.",
+                    "fr": "1 Classificateur d'intention (appel à Claude) : classificateur lourd basé sur Claude invoqué avant les décisions de routage."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "misapplied"
                 },
                 {
-                  "id": "item_1",
+                  "id": "retrieval_order_status",
                   "text": {
-                    "en": "Below is a reference-architecture sketch of a customer-service assistant. Six components are listed. Select the three that are misapplied for this routing design.",
-                    "fr": "Ci‑dessous se trouve un schéma d'architecture de référence d'un assistant du service client. Six composants sont listés. Sélectionnez les trois qui sont mal appliqués pour cette conception de routage."
+                    "en": "2 Retrieval on 'Order Status Index': a dedicated index used to fetch order status for routing decisions.",
+                    "fr": "2 Récupération sur « Order Status Index » : index dédié pour récupérer le statut de commande lors du routage."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "well_applied"
                 },
                 {
-                  "id": "item_2",
+                  "id": "retrieval_product_manual",
                   "text": {
-                    "en": "Select exactly 3 components that are misapplied.",
-                    "fr": "Sélectionnez exactement 3 composants qui ont été mal appliqués."
+                    "en": "3 Retrieval on 'Product Manual Corpus': a separate retrieval component used to fetch product manuals during routing.",
+                    "fr": "3 Récupération sur le « Product Manual Corpus » : composant de recherche séparé pour retrouver des manuels produits lors du routage."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "misapplied"
                 },
                 {
-                  "id": "item_3",
+                  "id": "agent_tool_entry",
                   "text": {
-                    "en": "1Intent classifier (Claude call)",
-                    "fr": "1 Classificateur d'intention (appel à Claude)"
+                    "en": "4 Agent loop with tool entry point: handles refunds, cancellations, and address updates via tools invoked by agents.",
+                    "fr": "4 Boucle Agent avec point d'entrée d'outil : gère les remboursements, annulations et mises à jour d'adresse via des outils utilisés par les agents."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "well_applied"
                 },
                 {
-                  "id": "item_4",
+                  "id": "escalation_procedure",
                   "text": {
-                    "en": "↓",
-                    "fr": "↓"
+                    "en": "5 Escalation procedure to a human agent: defined hand-off path for complex or unresolved cases.",
+                    "fr": "5 Procédure d'escalade vers un agent humain : chemin de passage défini pour les cas complexes ou non résolus."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "well_applied"
                 },
                 {
-                  "id": "item_5",
+                  "id": "response_composer_claude",
                   "text": {
-                    "en": "↓",
-                    "fr": "↓"
+                    "en": "6 Response composer (Claude call): final response generation placed inside the routing layer.",
+                    "fr": "6 Compositeur de réponses (appel Claude) : génération finale des réponses placée dans la couche de routage."
                   },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_6",
-                  "text": {
-                    "en": "2Retrieval over \"Order Status Index\"",
-                    "fr": "2 Récupération sur \"Order Status Index\""
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_7",
-                  "text": {
-                    "en": "3Retrieval over \"Product Manual Corpus\"",
-                    "fr": "3 Récupération sur le « Product Manual Corpus »"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_8",
-                  "text": {
-                    "en": "↓",
-                    "fr": "↓"
-                  },
-                  "correctBucket": ""
+                  "correctBucket": "misapplied"
                 }
               ]
             },
@@ -1558,182 +1406,86 @@
             },
             {
               "type": "bucket_sort",
+              "id": "cost_latency_calculator_fix_v1",
+              "title": {
+                "en": "Cost & Latency Calculator",
+                "fr": "Calculateur coût et latence"
+              },
+              "instructions": {
+                "en": "Use the calculator to explore different configurations. Set the model level (Opus / Sonnet / Haiku), the context strategy (Monolithic / Progressive), daily call volume and extended-thinking (On / Off). Drag each item into the correct category: Controls (configuration options), Usage (input metrics), or Estimates (output metrics).",
+                "fr": "Utilisez le calculateur pour explorer différentes configurations. Définissez le niveau de modèle (Opus / Sonnet / Haïku), la stratégie de contexte (Monolithique / Progressive), le volume d'appels par jour et le raisonnement étendu (Activé / Désactivé). Glissez chaque élément dans la catégorie correcte : Contrôles (options de configuration), Utilisation (métriques d'entrée) ou Estimations (métriques de sortie)."
+              },
               "buckets": [
                 {
-                  "id": "bucket_0",
+                  "id": "configuration_controls",
                   "label": {
-                    "en": "Your rationale",
-                    "fr": "Votre raisonnement"
+                    "en": "Controls",
+                    "fr": "Contrôles"
                   }
                 },
                 {
-                  "id": "bucket_1",
+                  "id": "usage_metrics",
                   "label": {
-                    "en": "Reveal the model answer",
-                    "fr": "Afficher la réponse du modèle"
+                    "en": "Usage",
+                    "fr": "Utilisation"
                   }
                 },
                 {
-                  "id": "bucket_2",
+                  "id": "output_estimates",
                   "label": {
-                    "en": "The dominant constraint depends on which budget was tighter in your configuration. If latency is the binding constraint, the model tier and extended-thinking setting are load-bearing, those are the controls that most directly move latency. If cost is binding, the tier and context strategy are load-bearing. The load-bearing control is the one tied to whichever budget had the least margin. Naming it explicitly is what makes the configuration defensible rather than lucky.",
-                    "fr": "La contrainte dominante dépend du budget qui était le plus serré dans votre configuration. Si la latence est la contrainte déterminante, le niveau de modèle et le paramètre extended-thinking sont porteuses : ce sont les commandes qui influent le plus directement sur la latence. Si le coût est contraignant, le niveau de modèle et la stratégie de contexte sont déterminants. Le contrôle porteuse est celui lié au budget qui avait la moindre marge. Le nommer explicitement, c’est ce qui rend la configuration défendable plutôt que chanceuse."
+                    "en": "Estimates",
+                    "fr": "Estimations"
                   }
                 }
               ],
-              "id": "bucket_5",
-              "title": {
-                "en": "Cost & latency calculator Use the calculator to explore c...",
-                "fr": "Calculateur de coût et de latence Utilisez le calculateur pour explorer c..."
-              },
-              "instructions": {
-                "en": "Cost & latency calculator Use the calculator to explore configurations. Set the model tier (Opus / Sonnet / Haiku), context strategy (monolithic / progressive), call volume per day, and extended thinking (on / off). The readouts show cost and latency for each setting. Your goal: find a configuration that meets both the cost ceiling and the latency budget at the same time, the two cannot be traded against each other. The calculator only displays values; it does not score your exploration. More than one valid configuration exists.",
-                "fr": "Calculateur de coût et de latence Utilisez le calculateur pour explorer différentes configurations. Définissez le niveau de modèle (Opus / Sonnet / Haiku), la stratégie de contexte (monolithique / progressive), le volume d'appels par jour et la réflexion étendue (activée / désactivée). Les affichages indiquent le coût et la latence pour chaque réglage. Votre objectif : trouver une configuration qui respecte à la fois le plafond de coûts et le budget de latence en même temps ; les deux ne peuvent pas être échangés l'un contre l'autre. Le calculateur affiche uniquement des valeurs ; il n'évalue pas votre exploration. Il existe plus d'une configuration valide."
-              },
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "model_level",
                   "text": {
-                    "en": "Model tier",
-                    "fr": "Niveau de modèle"
+                    "en": "Model level — Opus / Sonnet / Haiku",
+                    "fr": "Niveau de modèle — Opus / Sonnet / Haïku"
                   },
-                  "correctBucket": ""
+                  "correctBucket": "configuration_controls"
                 },
                 {
-                  "id": "item_1",
+                  "id": "context_strategy",
                   "text": {
-                    "en": "OpusSonnetHaiku",
-                    "fr": "Opus Sonnet Haïku"
+                    "en": "Context strategy — Monolithic / Progressive",
+                    "fr": "Stratégie de contexte — Monolithique / Progressive"
                   },
-                  "correctBucket": ""
+                  "correctBucket": "configuration_controls"
                 },
                 {
-                  "id": "item_2",
+                  "id": "extended_thinking",
                   "text": {
-                    "en": "Context strategy",
-                    "fr": "Stratégie de contexte"
+                    "en": "Extended thinking — On / Off",
+                    "fr": "Raisonnement étendu — Activé / Désactivé"
                   },
-                  "correctBucket": ""
+                  "correctBucket": "configuration_controls"
                 },
                 {
-                  "id": "item_3",
+                  "id": "calls_per_day",
                   "text": {
-                    "en": "MonolithicProgressive",
-                    "fr": "Monolithique progressif"
+                    "en": "Calls per day (daily volume)",
+                    "fr": "Appels par jour (volume quotidien)"
                   },
-                  "correctBucket": ""
+                  "correctBucket": "usage_metrics"
                 },
                 {
-                  "id": "item_4",
-                  "text": {
-                    "en": "Calls per day",
-                    "fr": "Appels par jour"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_5",
-                  "text": {
-                    "en": "Extended thinking",
-                    "fr": "Raisonnement étendu"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_6",
-                  "text": {
-                    "en": "OffOn",
-                    "fr": "Désactivé/Activé"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_7",
+                  "id": "monthly_cost",
                   "text": {
                     "en": "Estimated monthly cost",
                     "fr": "Coût mensuel estimé"
                   },
-                  "correctBucket": ""
+                  "correctBucket": "output_estimates"
                 },
                 {
-                  "id": "item_8",
+                  "id": "average_latency",
                   "text": {
-                    "en": ",",
-                    "fr": ","
+                    "en": "Estimated average latency",
+                    "fr": "Latence moyenne estimée"
                   },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_9",
-                  "text": {
-                    "en": "Median latency",
-                    "fr": "Latence médiane"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_10",
-                  "text": {
-                    "en": ",",
-                    "fr": ","
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_11",
-                  "text": {
-                    "en": "Illustrative figures based on published list pricing as of June 2026 (current per-million-token input/output pricing for Opus, Sonnet, and Haiku, available at docs.claude.com). Verify current pricing and latency at docs.claude.com before relying on these numbers with a partner.",
-                    "fr": "Chiffres indicatifs basés sur les tarifs publics affichés en juin 2026 (tarification actuelle par million de tokens en entrée/sortie pour Opus, Sonnet et Haiku, disponible sur docs.claude.com). Vérifiez les tarifs et la latence actuels sur docs.claude.com avant de vous appuyer sur ces chiffres avec un partenaire."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_12",
-                  "text": {
-                    "en": "Decision: identify the load-bearing control",
-                    "fr": "Décision : identifier le contrôle porteur"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_13",
-                  "text": {
-                    "en": "Once you have a configuration where both readouts are within budget, ask: which single setting, if relaxed, would breach a budget first?",
-                    "fr": "Une fois que vous avez une configuration dans laquelle les deux mesures respectent le budget, demandez : quel paramètre unique, s'il était assoupli, ferait dépasser l'un des budgets en premier ?"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_14",
-                  "text": {
-                    "en": "A. The call volume, because it is the only input you cannot change.",
-                    "fr": "A. Le volume d'appels, car c'est la seule entrée que vous ne pouvez pas modifier."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_15",
-                  "text": {
-                    "en": "B. The dominant constraint's control, for example, if latency is the tight budget, the model tier or extended-thinking setting that drives latency.",
-                    "fr": "B. Le contrôle de la contrainte dominante : par exemple, si la latence est le budget le plus serré, le niveau du modèle ou le paramètre extended-thinking qui influe sur la latence."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_16",
-                  "text": {
-                    "en": "C. None; any setting can be changed freely once both readouts are green.",
-                    "fr": "C. Aucune ; tout réglage peut être modifié librement une fois que les deux indicateurs sont au vert."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_17",
-                  "text": {
-                    "en": "Once you have a passing configuration and have selected the correct answer above: in 2–3 sentences, name the dominant constraint in your passing configuration and identify the single setting that is load-bearing for it. Write your answer, then reveal the model answer below.",
-                    "fr": "Une fois que vous avez une configuration validée et que vous avez sélectionné la bonne réponse ci‑dessus : en 2–3 phrases, nommez la contrainte dominante dans votre configuration validée et identifiez le seul paramètre qui la soutient. Écrivez votre réponse, puis révélez la réponse modèle ci‑dessous."
-                  },
-                  "correctBucket": ""
+                  "correctBucket": "output_estimates"
                 }
               ]
             },
@@ -2064,206 +1816,85 @@
             },
             {
               "type": "bucket_sort",
-              "buckets": [
-                {
-                  "id": "bucket_0",
-                  "label": {
-                    "en": "A. Google Vertex AI, because the deciding tradeoff is latency: the 400ms requirement demands the lowest-latency path, and Vertex AI keeps the request path inside the firm's existing Google Cloud environment, minimizing network round-trip.",
-                    "fr": "A. Google Vertex AI, parce que le compromis déterminant est la latence : l'exigence de 400 ms impose le chemin à plus faible latence, et Vertex AI maintient le trajet de la requête à l'intérieur de l'environnement Google Cloud existant de l'entreprise, minimisant les allers-retours réseau."
-                  }
-                },
-                {
-                  "id": "bucket_1",
-                  "label": {
-                    "en": "B. Direct Anthropic API, because the deciding tradeoff is latency: the direct API has the fastest feature releases and lowest overhead.",
-                    "fr": "B. API directe d'Anthropic, car le compromis déterminant est la latence : l'API directe propose les mises à jour de fonctionnalités les plus rapides et la moindre surcharge."
-                  }
-                },
-                {
-                  "id": "bucket_2",
-                  "label": {
-                    "en": "C. AWS Bedrock, because the deciding tradeoff is latency: Bedrock's managed infrastructure is optimized for low-latency inference.",
-                    "fr": "C. AWS Bedrock, parce que le compromis décisif est la latence : l'infrastructure managée de Bedrock est optimisée pour l'inférence à faible latence."
-                  }
-                }
-              ],
-              "id": "bucket_6",
+              "id": "choose_entry_point_tradeoff_v1",
               "title": {
-                "en": "Pick the entry point and name the deciding tradeoff For e...",
+                "en": "Choose the entry point and name the decisive tradeoff (for example...)",
                 "fr": "Choisissez le point d'entrée et nommez le compromis décisif. Par exemple..."
               },
               "instructions": {
-                "en": "Pick the entry point and name the deciding tradeoff For each partner scenario, choose the option that names both the right entry point AND the tradeoff that drives the choice. A right entry point paired with the wrong reason is not correct, the reasoning is what's being tested. A worked example is shown for scenario 1; you complete scenarios 2 through 6.",
-                "fr": "Choisissez le point d’entrée et nommez le compromis décisif. Pour chaque scénario partenaire, sélectionnez l’option qui indique à la fois le bon point d’entrée ET le compromis qui motive ce choix. Un bon point d’entrée associé à la mauvaise raison n’est pas correct : c’est le raisonnement qui est évalué. Un exemple détaillé est fourni pour le scénario 1 ; vous complétez les scénarios 2 à 6."
+                "en": "For each partner scenario, select the option that indicates both the best entry point (product/API) AND the decisive tradeoff motivating that choice. A correct entry point paired with the wrong reason is NOT correct — you must match the point of entry to the tradeoff it addresses.",
+                "fr": "Pour chaque scénario partenaire, sélectionnez l'option qui indique à la fois le meilleur point d’entrée (produit/API) ET le compromis décisif qui motive ce choix. Un bon point d’entrée associé à la mauvaise raison n’est PAS correct : il faut faire correspondre le point d’entrée au compromis qu’il résout."
               },
+              "buckets": [
+                {
+                  "id": "claude_enterprise",
+                  "label": {
+                    "en": "Claude Enterprise",
+                    "fr": "Claude Enterprise"
+                  }
+                },
+                {
+                  "id": "vertex_ai",
+                  "label": {
+                    "en": "Vertex AI",
+                    "fr": "Vertex AI"
+                  }
+                },
+                {
+                  "id": "anthropic_api",
+                  "label": {
+                    "en": "Anthropic API",
+                    "fr": "API Anthropic"
+                  }
+                },
+                {
+                  "id": "aws_bedrock",
+                  "label": {
+                    "en": "AWS Bedrock",
+                    "fr": "AWS Bedrock"
+                  }
+                }
+              ],
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "card_1_ops_team_docs",
                   "text": {
-                    "en": "Scenario 1, worked example",
-                    "fr": "Scénario 1 — exemple résolu"
+                    "en": "Scenario: A non-technical operations team needs a conversational assistant to query approved internal documents. They want a ready-to-use product with simple deployment, strong governance (SSO, audit trails), and low operational overhead.",
+                    "fr": "Scénario : Une équipe opérationnelle non technique a besoin d'un assistant conversationnel capable d'interroger des documents internes approuvés. Elle veut un produit prêt à l’emploi, facile à déployer, avec une gouvernance solide (SSO, pistes d'audit) et un faible coût opérationnel."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "claude_enterprise"
                 },
                 {
-                  "id": "item_1",
+                  "id": "card_2_bank_core_integration",
                   "text": {
-                    "en": "A non-engineering operations team needs a chat assistant over approved internal docs.",
-                    "fr": "Une équipe opérationnelle non technique a besoin d'un assistant conversationnel capable d'interroger des documents internes approuvés."
+                    "en": "Scenario: A regional bank running primarily on AWS must deploy an assistant for loan officers that queries core banking data programmatically and integrates tightly with existing AWS infrastructure. They prioritize deep cloud integration and minimal changes to current networking and IAM.",
+                    "fr": "Scénario : Une banque régionale fonctionnant principalement sur AWS doit déployer un assistant pour les chargés de prêts qui interroge programmétiquement les données du core banking et s'intègre étroitement à l'infrastructure AWS existante. Elle privilégie une intégration cloud profonde et des modifications minimales du réseau et de l'IAM."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "aws_bedrock"
                 },
                 {
-                  "id": "item_2",
+                  "id": "card_3_low_latency_updates",
                   "text": {
-                    "en": "Correct choice: claude.ai with a Project, because the deciding tradeoff is audience: a non-technical team needs a ready-made entry point, not a build-time interface.",
-                    "fr": "Bon choix : claude.ai avec un Project, car le facteur décisif est l'audience : une équipe non technique a besoin d'un point d'entrée prêt à l'emploi, plutôt que d'une interface à développer."
+                    "en": "Scenario: A consumer-facing startup needs the fastest possible access to new model features and minimal API overhead to maintain very low latency for user-facing calls. Frequent feature updates and minimal additional hosting are critical.",
+                    "fr": "Scénario : Une startup orientée grand public a besoin d'un accès le plus rapide possible aux nouvelles fonctionnalités de modèles et d'une surcharge API minimale afin de maintenir une latence très faible pour les appels utilisateurs. Les mises à jour fréquentes et un hébergement minimal sont essentiels."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "anthropic_api"
                 },
                 {
-                  "id": "item_3",
+                  "id": "card_4_privileged_legal_docs",
                   "text": {
-                    "en": "Scenario 2. A regional bank wants to deploy a loan officer assistant that retrieves customer account data from a core banking system and generates draft loan summaries. The bank runs on AWS and has an existing enterprise agreement.",
-                    "fr": "Scénario 2. Une banque régionale souhaite déployer un assistant pour les chargés de prêts qui récupère les données de comptes clients depuis un système bancaire central et génère des synthèses préliminaires de prêts. La banque fonctionne sur AWS et dispose d’un accord d’entreprise existant."
+                    "en": "Scenario: A law firm must process privileged client documents. The legal director requires that any AI tools handling protected documents run within the firm's own audited infrastructure or within the same cloud project so that data never leaves their controlled environment.",
+                    "fr": "Scénario : Un cabinet d'avocats doit traiter des documents privilégiés. Le directeur juridique exige que tous les outils d'IA manipulant des documents protégés s'exécutent au sein de l'infrastructure auditée du cabinet ou du même projet cloud afin que les données ne quittent jamais leur environnement contrôlé."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "vertex_ai"
                 },
                 {
-                  "id": "item_4",
+                  "id": "card_5_enterprise_governance_multicloud",
                   "text": {
-                    "en": "A. AWS Bedrock, because the deciding tradeoff is integration depth: the assistant needs programmatic access to core banking data and must embed into the bank's existing AWS infrastructure.",
-                    "fr": "A. AWS Bedrock, car le compromis déterminant est la profondeur d'intégration : l'assistant a besoin d'un accès programmatique aux données de core banking et doit s'intégrer à l'infrastructure AWS existante de la banque."
+                    "en": "Scenario: A large multinational has strict enterprise governance, unified SSO, and audit/compliance requirements across multiple clouds. They prefer a vendor product that provides enterprise controls, admin tooling, and support for governance across user accounts.",
+                    "fr": "Scénario : Une multinationale dispose de règles de gouvernance strictes, d’un SSO unifié et d’exigences d’audit/conformité sur plusieurs clouds. Elle préfère un produit fournisseur qui offre des contrôles enterprise, des outils d'administration et un support de gouvernance pour les comptes utilisateurs."
                   },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_5",
-                  "text": {
-                    "en": "B. claude.ai Enterprise, because the deciding tradeoff is integration depth: the bank needs a governed product with SSO and audit controls.",
-                    "fr": "B. claude.ai Enterprise, car le compromis décisif est la profondeur d'intégration : la banque a besoin d'un produit répondant aux exigences de gouvernance avec SSO et des contrôles d'audit."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_6",
-                  "text": {
-                    "en": "C. Direct API, because the deciding tradeoff is integration depth: the direct API gives the most control over how requests are built.",
-                    "fr": "C. API directe, parce que le compromis déterminant est la profondeur d'intégration : l'API directe offre le plus de contrôle sur la façon dont les requêtes sont construites."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_7",
-                  "text": {
-                    "en": "Scenario 3. A law firm wants to use Claude to assist attorneys reviewing privileged documents. The firm's general counsel has determined that all AI tooling touching privileged material must run behind the firm's own audit infrastructure.",
-                    "fr": "Scénario 3. Un cabinet d'avocats souhaite utiliser Claude pour aider des avocats à examiner des documents protégés par le secret professionnel. Le directeur juridique du cabinet a décidé que tous les outils d'IA manipulant des documents protégés doivent être exécutés derrière l'infrastructure d'audit du cabinet."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_8",
-                  "text": {
-                    "en": "A. claude.ai Enterprise, because the deciding tradeoff is governance/control: Enterprise adds SSO, audit logging, and admin controls.",
-                    "fr": "A. claude.ai Enterprise, car le compromis décisif porte sur la gouvernance/contrôle : Enterprise ajoute SSO, la journalisation d'audit et des contrôles d'administration."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_9",
-                  "text": {
-                    "en": "B. Direct API or SDK behind the firm's own application and gateway, because the deciding tradeoff is governance/control: the firm must own the audit trail end to end, which requires routing through infrastructure the firm controls.",
-                    "fr": "B. API ou SDK directement derrière sa propre application et sa propre passerelle, car le compromis décisif porte sur la gouvernance/le contrôle : l'entreprise doit posséder la piste d'audit de bout en bout, ce qui nécessite d'acheminer le trafic via l'infrastructure qu'elle contrôle."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_10",
-                  "text": {
-                    "en": "C. AWS Bedrock, because the deciding tradeoff is regulatory residency: Bedrock provides regional data handling that satisfies privilege requirements.",
-                    "fr": "C. AWS Bedrock, car le compromis décisif est la résidence réglementaire : Bedrock fournit une gestion régionale des données qui satisfait aux exigences de privilège."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_11",
-                  "text": {
-                    "en": "Scenario 4. A global logistics company wants to give warehouse operations staff a Claude assistant for shift handoff notes and equipment checklist completion. The staff are non-technical and work from shared tablets on the floor.",
-                    "fr": "Scénario 4. Une entreprise mondiale de logistique souhaite fournir au personnel des opérations d'entrepôt un assistant Claude pour les notes de passation de service et pour compléter les listes de contrôle des équipements. Le personnel n'est pas technique et utilise des tablettes partagées sur le plancher de l'entrepôt."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_12",
-                  "text": {
-                    "en": "A. Direct API with a custom-built interface, because the deciding tradeoff is integration depth: a custom build gives full control over the experience.",
-                    "fr": "A. API directe avec une interface construite sur mesure, car le compromis décisif porte sur la profondeur d'intégration : une solution sur mesure offre un contrôle total sur l'expérience."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_13",
-                  "text": {
-                    "en": "B. claude.ai with a Project, because the deciding tradeoff is audience: non-technical staff need a ready-made interface they can use without training, and Projects provide the shared context the team needs.",
-                    "fr": "B. claude.ai avec un Project, car le compromis décisif est l'audience : le personnel non technique a besoin d'une interface prête à l'emploi qu'il peut utiliser sans formation, et les Projects fournissent le contexte partagé dont l'équipe a besoin."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_14",
-                  "text": {
-                    "en": "C. Claude Code, because the deciding tradeoff is audience: Claude Code runs on tablets and gives staff direct access to Claude's capabilities.",
-                    "fr": "C. Claude Code, parce que le compromis décisif est le public visé : Claude Code fonctionne sur des tablettes et donne au personnel un accès direct aux capacités de Claude."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_15",
-                  "text": {
-                    "en": "Scenario 5. A healthcare network needs to deploy a clinical documentation assistant that processes patient records. The network holds a BAA with AWS and has confirmed Bedrock is covered under that agreement. A competing proposal suggests using the direct Anthropic API with a separately negotiated BAA.",
-                    "fr": "Scénario 5. Un réseau de santé doit déployer un assistant de documentation clinique qui traite les dossiers des patients. Le réseau dispose d'un BAA avec AWS et a confirmé que Bedrock est couvert par cet accord. Une proposition concurrente suggère d'utiliser l'API directe d'Anthropic avec un BAA négocié séparément."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_16",
-                  "text": {
-                    "en": "A. AWS Bedrock, because the deciding tradeoff is regulatory residency: Bedrock pins data to a US region which satisfies HIPAA.",
-                    "fr": "A. AWS Bedrock, parce que le compromis décisif est la résidence réglementaire : Bedrock maintient les données dans une région américaine, ce qui satisfait HIPAA."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_17",
-                  "text": {
-                    "en": "B. Direct Anthropic API with a separately negotiated BAA, because the deciding tradeoff is governance/control: the direct API gives more control over how PHI flows through the system.",
-                    "fr": "B. API Anthropic directe avec un BAA négocié séparément, car le compromis décisif porte sur la gouvernance/le contrôle : l'API directe offre un meilleur contrôle sur la façon dont les PHI circulent dans le système."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_18",
-                  "text": {
-                    "en": "C. AWS Bedrock, because the deciding tradeoff is governance/control: the network's existing BAA covers this configuration, which eliminates the compliance risk before any other tradeoff applies.",
-                    "fr": "C. AWS Bedrock, parce que le compromis déterminant porte sur la gouvernance/contrôle : le BAA existant du réseau couvre cette configuration, ce qui élimine le risque de conformité avant que tout autre compromis n'entre en jeu."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_19",
-                  "text": {
-                    "en": "D. claude.ai Enterprise with a BAA, because the deciding tradeoff is governance/control: Enterprise adds HIPAA-ready configuration and audit controls.",
-                    "fr": "D. claude.ai Enterprise avec un BAA, parce que le compromis décisif est la gouvernance/contrôle : Enterprise ajoute une configuration prête pour HIPAA et des contrôles d'audit."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_20",
-                  "text": {
-                    "en": "Scenario 6. A financial services firm is building a high-frequency trade commentary system. The system must generate a short natural-language summary of each trade within 400 milliseconds of execution. The firm runs on GCP.",
-                    "fr": "Scénario 6. Une société de services financiers construit un système de commentaires pour le trading à haute fréquence. Le système doit générer un court résumé en langage naturel de chaque transaction dans les 400 millisecondes suivant son exécution. La société fonctionne sur GCP."
-                  },
-                  "correctBucket": ""
+                  "correctBucket": "claude_enterprise"
                 }
               ]
             },

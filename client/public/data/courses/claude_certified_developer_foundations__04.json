@@ -89,190 +89,79 @@
             },
             {
               "type": "bucket_sort",
+              "id": "complete_summary_eval_001",
+              "title": {
+                "en": "Complete a partial evaluation of a summarization feature",
+                "fr": "Compléter une évaluation partielle d'une fonctionnalité de résumé"
+              },
+              "instructions": {
+                "en": "Complete a partial evaluation of a summarization feature. This evaluation has two missing pieces. For the dataset, identify the specific output each input should produce. For the judge prompt, map each score range to its meaning. Drag each card into the correct category: either a dataset expected output or a scoring/rubric instruction for the judge.",
+                "fr": "Complète une évaluation partielle d’une fonctionnalité de résumé. Cette évaluation comporte deux lacunes. Pour le jeu de données, identifie la sortie spécifique que chaque cas d’entrée doit produire. Pour le prompt du juge, associe chaque plage de score à sa signification. Fais glisser chaque carte dans la catégorie correspondante : sortie attendue du jeu de données ou instruction de notation (barème)."
+              },
               "buckets": [
                 {
-                  "id": "bucket_0",
+                  "id": "dataset_outputs",
                   "label": {
-                    "en": "Expected behavior: {expected_behavior}",
-                    "fr": "Comportement attendu : {expected_behavior}"
+                    "en": "Dataset outputs",
+                    "fr": "Sorties attendues"
                   }
                 },
                 {
-                  "id": "bucket_1",
+                  "id": "scoring_rubric",
                   "label": {
-                    "en": "Return JSON with \"strengths\", \"weaknesses\", \"reasoning\", and \"score\".",
-                    "fr": "Retourner du JSON contenant \"strengths\", \"weaknesses\", \"reasoning\" et \"score\"."
-                  }
-                },
-                {
-                  "id": "bucket_2",
-                  "label": {
-                    "en": "Score scale: 1 to 3, 4 to 7, 8 to 10 (see below to complete the definitions).",
-                    "fr": "Échelle de notation : 1 à 3, 4 à 7, 8 à 10 (voir ci-dessous pour compléter les définitions)."
+                    "en": "Scoring rubric",
+                    "fr": "Barème"
                   }
                 }
               ],
-              "id": "bucket_29",
-              "title": {
-                "en": "Complete a partial eval for a summarization feature This ...",
-                "fr": "Compléter une évaluation partielle d'une fonctionnalité de résumé. Ceci ..."
-              },
-              "instructions": {
-                "en": "Complete a partial eval for a summarization feature This eval has two gaps. For the dataset, identify the specific output each input case should produce. For the judge prompt, match each score band to what it means. Drag each answer card from the bank onto its row below.",
-                "fr": "Complète une évaluation partielle d’une fonctionnalité de résumé. Cette évaluation comporte deux lacunes. Pour le jeu de données, identifie la sortie spécifique que chaque cas d’entrée doit produire. Pour le judge prompt, associe chaque plage de score à sa signification. Fais glisser chaque carte de réponse depuis la banque sur sa ligne ci‑dessous."
-              },
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "card_dataset_1",
                   "text": {
-                    "en": "dataset.json",
-                    "fr": "jeu_de_données.json"
+                    "en": "Input: 'Long support thread about a delayed refund, 14 messages'. Expected output: a 2-sentence summary that names the problem ('delayed refund') and the current status ('escalated').",
+                    "fr": "Entrée : 'Long fil de discussion du support au sujet d'un remboursement retardé, 14 messages'. Sortie attendue : un résumé en 2 phrases nommant le problème ('remboursement retardé') et le statut actuel ('transféré à un niveau supérieur')."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "dataset_outputs"
                 },
                 {
-                  "id": "item_1",
+                  "id": "card_dataset_2",
                   "text": {
-                    "en": "[",
-                    "fr": "["
+                    "en": "Input: 'Customer asks for feature clarification, 3 messages'. Expected output: a concise (1–3 sentence) summary stating the customer's question and recommended next steps.",
+                    "fr": "Entrée : 'Client demande une clarification sur une fonctionnalité, 3 messages'. Sortie attendue : un résumé concis (1–3 phrases) indiquant la question du client et les étapes suivantes recommandées."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "dataset_outputs"
                 },
                 {
-                  "id": "item_2",
+                  "id": "card_dataset_3",
                   "text": {
-                    "en": "{",
-                    "fr": "{"
+                    "en": "Input: 'Internal bug report with logs'. Expected output: a summary listing a root-cause hypothesis and a suggested priority label (e.g., P0 or P1).",
+                    "fr": "Entrée : 'Rapport de bug interne avec logs'. Sortie attendue : un résumé listant une hypothèse de cause racine et la priorité suggérée (par ex. P0 ou P1)."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "dataset_outputs"
                 },
                 {
-                  "id": "item_3",
+                  "id": "card_judge_1",
                   "text": {
-                    "en": "\"input\": \"Long support thread about a delayed refund, 14 messages.\",",
-                    "fr": "\"input\": \"Long fil de discussion du support au sujet d'un remboursement retardé, 14 messages.\""
+                    "en": "Score range '1–3': summary fails to capture the core issue; major omissions or inaccuracies.",
+                    "fr": "Plage de score '1–3' : le résumé ne capture pas le problème principal ; omissions ou erreurs majeures."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "scoring_rubric"
                 },
                 {
-                  "id": "item_4",
+                  "id": "card_judge_2",
                   "text": {
-                    "en": "\"expected_behavior\": \"A 2-sentence summary naming the issue (delayed",
-                    "fr": "\"expected_behavior\": \"Un résumé en 2 phrases nommant le problème (retardé"
+                    "en": "Score range '4–7': summary captures main points but misses some details or has minor inaccuracies.",
+                    "fr": "Plage de score '4–7' : le résumé couvre les points principaux mais manque certains détails ou contient des imprécisions mineures."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "scoring_rubric"
                 },
                 {
-                  "id": "item_5",
+                  "id": "card_judge_3",
                   "text": {
-                    "en": "refund) and the current status (escalated).\"",
-                    "fr": "remboursement) et le statut actuel (transféré à un niveau supérieur)."
+                    "en": "Score range '8–10': summary is accurate, concise, and actionable; clearly reflects the issue and status.",
+                    "fr": "Plage de score '8–10' : le résumé est précis, concis et exploitable ; reflète clairement le problème et le statut."
                   },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_6",
-                  "text": {
-                    "en": "},",
-                    "fr": "},"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_7",
-                  "text": {
-                    "en": "{",
-                    "fr": "{"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_8",
-                  "text": {
-                    "en": "\"input\": \"Meeting transcript where three action items are assigned.\",",
-                    "fr": "\"input\": \"Transcription de réunion où trois points d'action sont attribués.\","
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_9",
-                  "text": {
-                    "en": "\"expected_behavior\": \"\"",
-                    "fr": "\"expected_behavior\": \"\""
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_10",
-                  "text": {
-                    "en": "},",
-                    "fr": "},"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_11",
-                  "text": {
-                    "en": "{",
-                    "fr": "{"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_12",
-                  "text": {
-                    "en": "\"input\": \"Bug report with repro steps and one unrelated aside.\",",
-                    "fr": "\"input\": \"Rapport de bug avec des étapes de reproduction et une remarque sans rapport.\""
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_13",
-                  "text": {
-                    "en": "\"expected_behavior\": \"\"",
-                    "fr": "\"expected_behavior\": \"\""
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_14",
-                  "text": {
-                    "en": "}",
-                    "fr": "}"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_15",
-                  "text": {
-                    "en": "]",
-                    "fr": "]"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_16",
-                  "text": {
-                    "en": "judge_prompt.txt",
-                    "fr": "Je n'ai pas le contenu du fichier \"judge_prompt.txt\". Peux-tu coller le texte ici pour que je le traduise ?"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_17",
-                  "text": {
-                    "en": "You are grading a summary against its expected behavior.",
-                    "fr": "Vous évaluez un résumé par rapport à son comportement attendu."
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_18",
-                  "text": {
-                    "en": "Summary: {output}",
-                    "fr": "Résumé : {output}"
-                  },
-                  "correctBucket": ""
+                  "correctBucket": "scoring_rubric"
                 }
               ]
             },
@@ -350,134 +239,85 @@
             },
             {
               "type": "bucket_sort",
-              "buckets": [
-                {
-                  "id": "bucket_0",
-                  "label": {
-                    "en": "context = \"\\n\".join(c[\"content\"] for c in chunks) # extract .content",
-                    "fr": "context = \"\\n\".join(c[\"content\"] for c in chunks) # extraire .content"
-                  }
-                },
-                {
-                  "id": "bucket_1",
-                  "label": {
-                    "en": "prompt = build_prompt(question, context)",
-                    "fr": "prompt = build_prompt(question, contexte)"
-                  }
-                },
-                {
-                  "id": "bucket_2",
-                  "label": {
-                    "en": "# new test drives retrieve() -> build_prompt() together on real chunks",
-                    "fr": "# nouveau test : exécuter retrieve() -> build_prompt() ensemble sur des chunks réels"
-                  }
-                }
-              ],
-              "id": "bucket_30",
+              "id": "diagnose_test_level_exercise_v2",
               "title": {
-                "en": "Diagnose which test level a failure belongs to Try it now",
+                "en": "Diagnose which test level contains a failure — Try now",
                 "fr": "Diagnostiquez à quel niveau de test appartient une défaillance — Essayez maintenant"
               },
               "instructions": {
-                "en": "Diagnose which test level a failure belongs to Try it now. Read the trace below, where the end-to-end test fails while every unit test passes. Identify where the break is, name the mechanism, and choose both the targeted fix and the test level that would have caught it from the three options shown.",
-                "fr": "Diagnostiquez à quel niveau de test appartient une défaillance — Essayez maintenant. Lisez la trace ci‑dessous, où le test de bout en bout échoue alors que tous les tests unitaires réussissent. Identifiez où se situe la casse, nommez le mécanisme, et choisissez à la fois la correction ciblée et le niveau de test qui l'aurait détectée parmi les trois options présentées."
+                "en": "Read each short failure scenario below. Drag each card into the bucket that best identifies the test level where the defect originates (Unit / Integration / End-to-end / Infrastructure). For each, you should be able to name the mechanism (e.g. wrong key access, missing data, network timeout) and pick a targeted fix.",
+                "fr": "Lisez chaque court scénario de défaillance ci‑dessous. Glissez chaque carte dans la catégorie identifiant le niveau de test où se situe la défaillance (Unité / Intégration / Bout‑à‑bout / Infrastructure). Pour chacune, vous devriez pouvoir nommer le mécanisme (ex. mauvaise clé, données manquantes, timeout réseau) et choisir une correction ciblée."
               },
+              "buckets": [
+                {
+                  "id": "unit_test",
+                  "label": {
+                    "en": "Unit",
+                    "fr": "Unité"
+                  }
+                },
+                {
+                  "id": "integration_test",
+                  "label": {
+                    "en": "Integration",
+                    "fr": "Intégration"
+                  }
+                },
+                {
+                  "id": "end_to_end",
+                  "label": {
+                    "en": "End-to-end",
+                    "fr": "Bout‑à‑bout"
+                  }
+                },
+                {
+                  "id": "infrastructure",
+                  "label": {
+                    "en": "Infrastructure",
+                    "fr": "Infrastructure"
+                  }
+                }
+              ],
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "card_1",
                   "text": {
-                    "en": "PASS test_retrieve_unit returns 3 chunks for a known query",
-                    "fr": "PASS test_retrieve_unit renvoie 3 chunks pour une requête connue"
+                    "en": "Unit tests for retrieve() pass and return a list of dicts like {\"content\": \"...\"}. In the full pipeline, build_prompt concatenates chunk objects directly (forgot .content), so the model receives dicts and the E2E assertion fails. Where is the bug?",
+                    "fr": "Les tests unitaires de retrieve() passent et renvoient une liste de dicts comme {\"content\": \"...\"}. Dans le pipeline complet, build_prompt concatène les objets chunks directement (oubli de .content), donc le modèle reçoit des dicts et l'assertion E2E échoue. Où est la casse ?"
                   },
-                  "correctBucket": ""
+                  "correctBucket": "integration_test"
                 },
                 {
-                  "id": "item_1",
+                  "id": "card_2",
                   "text": {
-                    "en": "PASS test_model_call_functional returns a well-formed answer string",
-                    "fr": "PASS test_model_call_functional renvoie une chaîne de réponse bien formée"
+                    "en": "A unit test for a small utility fails: a helper that trims whitespace returns the wrong string. The failing function is isolated and its test reproduces the bug reliably.",
+                    "fr": "Un test unitaire pour un utilitaire échoue : une fonction qui supprime les espaces renvoie une chaîne incorrecte. La fonction défaillante est isolée et son test reproduit le bug de façon fiable."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "unit_test"
                 },
                 {
-                  "id": "item_2",
+                  "id": "card_3",
                   "text": {
-                    "en": "FAIL test_full_flow_e2e",
-                    "fr": "ÉCHEC : test_full_flow_e2e"
+                    "en": "Model functional tests (calling the model with a crafted prompt) pass, but the E2E run returns no mention of '30 days'. Investigation shows the retrieval index lacks the document that contains this sentence (indexing pipeline skipped recent data).",
+                    "fr": "Les tests fonctionnels du modèle (appel avec un prompt construit) passent, mais l'exécution E2E ne mentionne pas « 30 days ». L'enquête montre que l'index de récupération n'inclut pas le document contenant cette phrase (le pipeline d'indexation a sauté des données récentes)."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "end_to_end"
                 },
                 {
-                  "id": "item_3",
+                  "id": "card_4",
                   "text": {
-                    "en": "step 1 retrieve(q) ok -> [{\"content\": \"...\"}, ...]",
-                    "fr": "étape 1 retrieve(q) ok -> [{\"content\": \"...\"}, ...]"
+                    "en": "Integration test combining retrieve() and build_prompt on realistic chunks fails: build_prompt expects chunks to have key 'text' but retrieve() returns 'content'. Unit tests for each component exist and pass, but their contract is mismatched in composition.",
+                    "fr": "Le test d'intégration combinant retrieve() et build_prompt sur des chunks réalistes échoue : build_prompt attend la clé 'text' alors que retrieve() renvoie 'content'. Des tests unitaires pour chaque composant existent et passent, mais leur contrat diffère lors de la composition."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "integration_test"
                 },
                 {
-                  "id": "item_4",
+                  "id": "card_5",
                   "text": {
-                    "en": "step 2 build_prompt(chunks) ok -> chunks placed without .content",
-                    "fr": "étape 2 build_prompt(chunks) ok -> chunks placés sans .content"
+                    "en": "All code and tests are correct, but E2E runs intermittently fail because the model API returns 503 rate‑limit errors during peak hours. The failure is due to external networking or service quotas.",
+                    "fr": "Le code et les tests sont corrects, mais les runs E2E échouent de façon intermittente parce que l'API du modèle renvoie des 503 (limites de débit) aux heures de pointe. La défaillance vient du réseau externe ou des quotas du service."
                   },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_5",
-                  "text": {
-                    "en": "step 3 model.call(prompt) ok -> answer unrelated to the documents",
-                    "fr": "étape 3 model.call(prompt) ok -> réponse sans rapport avec les documents"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_6",
-                  "text": {
-                    "en": "step 4 assert \"30 days\" FAIL -> phrase not in answer",
-                    "fr": "étape 4 assert \"30 days\" ÉCHEC -> phrase non présente dans la réponse"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_7",
-                  "text": {
-                    "en": "Option A · fix the parser",
-                    "fr": "Option A · corriger l'analyseur"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_8",
-                  "text": {
-                    "en": "def parse_date(s): return dateutil.parse(s) # already passes its unit test",
-                    "fr": "def parse_date(s): return dateutil.parse(s) # passe déjà son test unitaire"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_9",
-                  "text": {
-                    "en": "Option B · fix the prompt wording",
-                    "fr": "Option B · corriger la formulation du prompt"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_10",
-                  "text": {
-                    "en": "prompt = \"Answer carefully and cite the policy.\" # rewords, ignores the seam",
-                    "fr": "prompt = \"Answer carefully and cite the policy.\" # reformule, ignore la faille"
-                  },
-                  "correctBucket": ""
-                },
-                {
-                  "id": "item_11",
-                  "text": {
-                    "en": "Option C · align the handoff + add an integration test",
-                    "fr": "Option C · aligner le transfert + ajouter un test d'intégration"
-                  },
-                  "correctBucket": ""
+                  "correctBucket": "infrastructure"
                 }
               ]
             },
@@ -678,55 +518,85 @@
             },
             {
               "type": "bucket_sort",
-              "buckets": [
-                {
-                  "id": "bucket_0",
-                  "label": {
-                    "en": "C single_agent(model=SMALL, retrieval=\"fetch_once\") # lever: model choice",
-                    "fr": "C single_agent(model=SMALL, retrieval=\"fetch_once\") # levier : choix du modèle"
-                  }
-                },
-                {
-                  "id": "bucket_1",
-                  "label": {
-                    "en": "D single_agent(model=SMALL, stream=True) # lever: streaming",
-                    "fr": "D single_agent(model=SMALL, stream=True) # activer : streaming"
-                  }
-                }
-              ],
-              "id": "bucket_31",
+              "id": "agent_cost_bucket_sort_v1",
               "title": {
-                "en": "Match each task to its agent type and cost lever Try it now",
+                "en": "Match each task to agent type and cost lever — Try now",
                 "fr": "Associez chaque tâche à son type d'agent et à son levier de coût — Essayez maintenant"
               },
               "instructions": {
-                "en": "Match each task to its agent type and cost lever Try it now. For each of the four scenarios below, select the configuration snippet that best matches it. Each snippet is labeled with its agent type and the primary cost lever it uses.",
-                "fr": "Associez chaque tâche à son type d'agent et à son levier de coût — Essayez maintenant. Pour chacun des quatre scénarios ci-dessous, sélectionnez l'extrait de configuration qui correspond le mieux. Chaque extrait est étiqueté avec son type d'agent et le levier de coût principal qu'il utilise."
+                "en": "For each scenario below, choose the configuration snippet that best matches the task. Each bucket represents an agent type and the main cost lever it uses (model choice, streaming, batching/caching, or parallel workers). Drag each task into the matching bucket.",
+                "fr": "Pour chaque scénario ci-dessous, sélectionnez l'extrait de configuration qui correspond le mieux à la tâche. Chaque catégorie représente un type d'agent et son levier de coût principal (choix du modèle, streaming, mise en lots/cache ou workers parallèles). Glissez chaque tâche dans la catégorie correspondante."
               },
+              "buckets": [
+                {
+                  "id": "model_choice",
+                  "label": {
+                    "en": "Model choice",
+                    "fr": "Choix du modèle"
+                  }
+                },
+                {
+                  "id": "streaming",
+                  "label": {
+                    "en": "Streaming",
+                    "fr": "Streaming"
+                  }
+                },
+                {
+                  "id": "batching_cache",
+                  "label": {
+                    "en": "Batching & caching",
+                    "fr": "Batching et cache"
+                  }
+                },
+                {
+                  "id": "parallel_workers",
+                  "label": {
+                    "en": "Parallel workers",
+                    "fr": "Workers parallèles"
+                  }
+                }
+              ],
               "cards": [
                 {
-                  "id": "item_0",
+                  "id": "email_summaries",
                   "text": {
-                    "en": "Labeled configuration snippets",
-                    "fr": "Extraits de configuration étiquetés"
+                    "en": "Generate short summaries for simple internal emails where cost is prioritized over maximum quality.",
+                    "fr": "Générer des résumés courts pour des e-mails internes simples où le coût prime sur la qualité maximale."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "model_choice"
                 },
                 {
-                  "id": "item_1",
+                  "id": "live_chat",
                   "text": {
-                    "en": "A orchestrator_worker(lead=LARGE, workers=SMALL, n=5) # lever: parallel split",
-                    "fr": "Un orchestrator_worker(lead=LARGE, workers=SMALL, n=5) # levier : répartition parallèle"
+                    "en": "Provide real-time chat responses that should be streamed token-by-token to the user for lower perceived latency.",
+                    "fr": "Fournir des réponses de chat en temps réel qui doivent être diffusées token par token pour une latence perçue plus faible."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "streaming"
                 },
                 {
-                  "id": "item_2",
+                  "id": "mass_personal_notifications",
                   "text": {
-                    "en": "B single_agent(model=SMALL, batch=True, cache=True) # lever: Message Batches API (~50% cost reduction) + prompt caching",
-                    "fr": "B single_agent(model=SMALL, batch=True, cache=True) # levier : l'API Message Batches (~50 % de réduction des coûts) + mise en cache des prompts"
+                    "en": "Send tens of thousands of personalized notifications daily with many similar prompts—minimize API calls and reuse prompts where possible.",
+                    "fr": "Envoyer des dizaines de milliers de notifications personnalisées par jour avec des prompts similaires : minimiser les appels API et réutiliser les prompts lorsque possible."
                   },
-                  "correctBucket": ""
+                  "correctBucket": "batching_cache"
+                },
+                {
+                  "id": "bulk_transcription",
+                  "text": {
+                    "en": "Transcribe a large library of audio/video files in parallel to finish the job as quickly as possible.",
+                    "fr": "Transcrire en parallèle une grande bibliothèque de fichiers audio/vidéo pour terminer le travail le plus rapidement possible."
+                  },
+                  "correctBucket": "parallel_workers"
+                },
+                {
+                  "id": "pipeline_orchestration",
+                  "text": {
+                    "en": "Coordinate an orchestrator that dispatches small worker agents to parallelize a multi-step ML pipeline and scale throughput.",
+                    "fr": "Orchestrer un coordinateur qui répartit de petits agents travailleurs pour paralléliser un pipeline ML en plusieurs étapes et augmenter le débit."
+                  },
+                  "correctBucket": "parallel_workers"
                 }
               ]
             },
