@@ -118,6 +118,17 @@ export default function TrainingDashboard() {
       iconBg: "bg-blue-50 dark:bg-blue-950/40",
       order: 3,
     },
+    bi_data_analytics: {
+      label: { en: "BI & Data", fr: "BI & Data" },
+      subtitle: { en: "Data profiling, star schema modeling, DAX, Power BI, executive reporting with Codex", fr: "Profiling de données, modélisation en étoile, DAX, Power BI, reporting exécutif avec Codex" },
+      badge: "BI",
+      badgeColor: "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400",
+      hoverBorder: "hover:border-orange-400/30",
+      hoverText: "group-hover:text-orange-600 dark:group-hover:text-orange-400",
+      progressColor: "bg-orange-500",
+      iconBg: "bg-orange-50 dark:bg-orange-950/40",
+      order: 4,
+    },
     divers: {
       label: { en: "Specialized Tracks", fr: "Parcours Spécialisés" },
       subtitle: { en: "Cross-functional certifications: business process transformation, applied AI", fr: "Certifications transversales : transformation des processus, IA appliquée" },
@@ -127,7 +138,7 @@ export default function TrainingDashboard() {
       hoverText: "group-hover:text-violet-600 dark:group-hover:text-violet-400",
       progressColor: "bg-violet-500",
       iconBg: "bg-violet-50 dark:bg-violet-950/40",
-      order: 4,
+      order: 5,
     },
   } as const;
   type GroupKey = keyof typeof GROUP_CONFIG;
@@ -635,7 +646,7 @@ function CatalogTab({
                   : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground"
               }`}
             >
-              {t(cfg.label).split(' ').slice(0, 2).join(' ')} ({count})
+              {t(cfg.label).split(' ').slice(0, 3).join(' ')} ({count})
             </button>
           );
         })}

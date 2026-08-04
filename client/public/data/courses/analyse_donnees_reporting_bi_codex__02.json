@@ -1,0 +1,234 @@
+{
+  "courseId": "analyse_donnees_reporting_bi_codex__02",
+  "sourceCourseTitle": "Analyse de données, reporting et BI avec Codex / Profiling avancé CSV et SQL",
+  "lessons": [
+    {
+      "id": "lesson_01",
+      "title": {
+        "en": "CSV Ingestion with DuckDB and SQL",
+        "fr": "Ingestion CSV avec DuckDB et SQL"
+      },
+      "chapters": [
+        {
+          "id": "chapter_01",
+          "title": {
+            "en": "DuckDB for BI Analytics",
+            "fr": "DuckDB pour l'analytique BI"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## DuckDB: The Analyst's Swiss Army Knife\n\nDuckDB is an in-process analytical database that excels at CSV/Parquet analysis without server setup.\n\n### Why DuckDB for BI Profiling?\n- **Zero setup** — No server, no configuration\n- **SQL-native** — Standard SQL with analytical extensions\n- **Fast** — Columnar engine optimized for aggregations\n- **CSV-friendly** — Auto-detects types, handles messy data\n\n### Getting Started\n```sql\n-- Read CSV directly\nSELECT * FROM read_csv_auto('customers.csv') LIMIT 10;\n\n-- Profile columns\nSELECT column_name, column_type, null_percentage\nFROM (SUMMARIZE SELECT * FROM read_csv_auto('customers.csv'));\n```\n\n**Resource:** [DuckDB Documentation](https://duckdb.org/docs/current/)",
+                "fr": "## DuckDB : Le couteau suisse de l'analyste\n\nDuckDB est une base de données analytique in-process qui excelle dans l'analyse CSV/Parquet sans configuration serveur.\n\n### Pourquoi DuckDB pour le profiling BI ?\n- **Zéro setup** — Pas de serveur, pas de configuration\n- **SQL natif** — SQL standard avec extensions analytiques\n- **Rapide** — Moteur colonnaire optimisé pour les agrégations\n- **CSV-friendly** — Détection automatique des types, gestion des données sales\n\n### Pour commencer\n```sql\n-- Lire un CSV directement\nSELECT * FROM read_csv_auto('customers.csv') LIMIT 10;\n\n-- Profiler les colonnes\nSELECT column_name, column_type, null_percentage\nFROM (SUMMARIZE SELECT * FROM read_csv_auto('customers.csv'));\n```\n\n**Ressource :** [Documentation DuckDB](https://duckdb.org/docs/current/)"
+              }
+            }
+          ]
+        },
+        {
+          "id": "chapter_02",
+          "title": {
+            "en": "Hands-on: Ingest and Profile CSVs",
+            "fr": "TP : Ingérer et profiler les CSV"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Practical Exercise\n\nUsing DuckDB (or PostgreSQL), ingest all CSV files from the Neopolis Market Intelligence dataset:\n\n### Tasks\n1. Read all 13 CSV files\n2. Infer column types\n3. Detect problematic columns (high NULL rate, mixed types)\n4. Generate a profiling report with: row count, column count, NULL %, unique values, min/max for numerics\n5. Have Codex generate the profiling SQL\n\n### Files to Profile\n- `customers.csv` (12,000 rows)\n- `products.csv` (350 rows)\n- `sales_orders.csv` (85,000 rows)\n- `sales_order_lines.csv` (260,000 rows)\n- `returns.csv` (9,000 rows)\n- And 8 more...\n\n### Checkpoint\nIdentify at least 5 data quality issues from the profiling results.",
+                "fr": "## Exercice pratique\n\nEn utilisant DuckDB (ou PostgreSQL), ingérez tous les fichiers CSV du dataset Neopolis Market Intelligence :\n\n### Tâches\n1. Lire les 13 fichiers CSV\n2. Inférer les types de colonnes\n3. Détecter les colonnes problématiques (taux NULL élevé, types mixtes)\n4. Générer un rapport de profiling avec : nombre de lignes, nombre de colonnes, % NULL, valeurs uniques, min/max pour les numériques\n5. Demander à Codex de générer le SQL de profiling\n\n### Fichiers à profiler\n- `customers.csv` (12 000 lignes)\n- `products.csv` (350 lignes)\n- `sales_orders.csv` (85 000 lignes)\n- `sales_order_lines.csv` (260 000 lignes)\n- `returns.csv` (9 000 lignes)\n- Et 8 autres...\n\n### Checkpoint\nIdentifiez au moins 5 problèmes de qualité de données à partir des résultats du profiling."
+              }
+            }
+          ]
+        },
+        {
+          "id": "chapter_03",
+          "title": {
+            "en": "Checkpoint",
+            "fr": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "### Checkpoint\n\nSubmit your profiling report showing:\n- Total tables profiled\n- Top 5 data quality issues found\n- SQL queries used for detection\n- Recommended next steps for each issue",
+                "fr": "### Checkpoint\n\nSoumettez votre rapport de profiling montrant :\n- Nombre total de tables profilées\n- Top 5 des problèmes de qualité détectés\n- Requêtes SQL utilisées pour la détection\n- Prochaines étapes recommandées pour chaque problème"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_02",
+      "title": {
+        "en": "Automated Data Quality Assertions",
+        "fr": "Assertions de qualité de données automatisées"
+      },
+      "chapters": [
+        {
+          "id": "chapter_04",
+          "title": {
+            "en": "Data Quality Framework",
+            "fr": "Framework de qualité de données"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Data Quality Assertions\n\nProfessional BI requires automated quality checks that run before any analysis.\n\n### Types of Assertions\n| Type | Example | Severity |\n|------|---------|----------|\n| Referential integrity | Order lines reference valid orders | Critical |\n| Uniqueness | Customer IDs are unique | Critical |\n| Completeness | No NULL in required fields | High |\n| Range validity | Prices > 0, dates in expected range | Medium |\n| Cross-table consistency | Sum of lines = order total | High |\n\n### SQL Pattern\n```sql\n-- Assertion: No orphan order lines\nSELECT COUNT(*) as orphan_lines\nFROM sales_order_lines sol\nLEFT JOIN sales_orders so ON sol.order_id = so.order_id\nWHERE so.order_id IS NULL;\n-- Expected: 0 (but dataset has intentional issues!)\n```",
+                "fr": "## Assertions de qualité de données\n\nLa BI professionnelle nécessite des contrôles qualité automatisés qui s'exécutent avant toute analyse.\n\n### Types d'assertions\n| Type | Exemple | Sévérité |\n|------|---------|----------|\n| Intégrité référentielle | Les lignes de commande référencent des commandes valides | Critique |\n| Unicité | Les IDs clients sont uniques | Critique |\n| Complétude | Pas de NULL dans les champs requis | Haute |\n| Validité de plage | Prix > 0, dates dans la plage attendue | Moyenne |\n| Cohérence inter-tables | Somme des lignes = total commande | Haute |\n\n### Pattern SQL\n```sql\n-- Assertion : Pas de lignes de commande orphelines\nSELECT COUNT(*) as orphan_lines\nFROM sales_order_lines sol\nLEFT JOIN sales_orders so ON sol.order_id = so.order_id\nWHERE so.order_id IS NULL;\n-- Attendu : 0 (mais le dataset a des problèmes intentionnels !)\n```"
+              }
+            }
+          ]
+        },
+        {
+          "id": "chapter_05",
+          "title": {
+            "en": "Hands-on: Build Quality Tests",
+            "fr": "TP : Construire des tests qualité"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Practical Exercise\n\nUsing the `data_quality_issues.csv` as reference, build SQL assertions that detect each known issue:\n\n### Tasks\n1. Write assertions for referential integrity\n2. Write assertions for duplicate detection\n3. Write assertions for currency consistency\n4. Write assertions for date range validity\n5. Compare your results with `expected_detection_query` in the issues file\n\n### Deliverable\nA `data_quality_assertions.sql` file with all tests and expected results.",
+                "fr": "## Exercice pratique\n\nEn utilisant `data_quality_issues.csv` comme référence, construisez des assertions SQL qui détectent chaque problème connu :\n\n### Tâches\n1. Écrire des assertions pour l'intégrité référentielle\n2. Écrire des assertions pour la détection de doublons\n3. Écrire des assertions pour la cohérence des devises\n4. Écrire des assertions pour la validité des plages de dates\n5. Comparer vos résultats avec `expected_detection_query` dans le fichier d'anomalies\n\n### Livrable\nUn fichier `data_quality_assertions.sql` avec tous les tests et résultats attendus."
+              }
+            }
+          ]
+        },
+        {
+          "id": "chapter_06",
+          "title": {
+            "en": "Checkpoint",
+            "fr": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "### Checkpoint\n\nRun your assertions and report:\n- How many of the known issues did you detect?\n- Any false positives?\n- Any issues NOT in the reference file that you discovered?",
+                "fr": "### Checkpoint\n\nExécutez vos assertions et rapportez :\n- Combien de problèmes connus avez-vous détectés ?\n- Des faux positifs ?\n- Des problèmes NON listés dans le fichier de référence que vous avez découverts ?"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_03",
+      "title": {
+        "en": "SQL Profiling with Codex",
+        "fr": "Profiling SQL avec Codex"
+      },
+      "chapters": [
+        {
+          "id": "chapter_07",
+          "title": {
+            "en": "Advanced SQL Profiling Patterns",
+            "fr": "Patterns de profiling SQL avancé"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Advanced SQL Profiling\n\n### Statistical Profiling\n```sql\n-- Distribution analysis\nSELECT \n  percentile_cont(0.25) WITHIN GROUP (ORDER BY amount) as p25,\n  percentile_cont(0.50) WITHIN GROUP (ORDER BY amount) as median,\n  percentile_cont(0.75) WITHIN GROUP (ORDER BY amount) as p75,\n  percentile_cont(0.95) WITHIN GROUP (ORDER BY amount) as p95\nFROM sales_order_lines;\n```\n\n### Anomaly Detection\n```sql\n-- Negative margins (intentional data quality issue)\nSELECT order_id, product_id, \n  selling_price - cost_price as margin\nFROM sales_order_lines\nWHERE selling_price < cost_price;\n```\n\n### Temporal Gaps\n```sql\n-- Missing dates in calendar\nSELECT d.date_value\nFROM dim_calendar d\nLEFT JOIN sales_orders so ON d.date_value = so.order_date\nWHERE so.order_id IS NULL AND d.is_business_day = true;\n```",
+                "fr": "## Profiling SQL avancé\n\n### Profiling statistique\n```sql\n-- Analyse de distribution\nSELECT \n  percentile_cont(0.25) WITHIN GROUP (ORDER BY amount) as p25,\n  percentile_cont(0.50) WITHIN GROUP (ORDER BY amount) as median,\n  percentile_cont(0.75) WITHIN GROUP (ORDER BY amount) as p75,\n  percentile_cont(0.95) WITHIN GROUP (ORDER BY amount) as p95\nFROM sales_order_lines;\n```\n\n### Détection d'anomalies\n```sql\n-- Marges négatives (problème de qualité intentionnel)\nSELECT order_id, product_id, \n  selling_price - cost_price as margin\nFROM sales_order_lines\nWHERE selling_price < cost_price;\n```\n\n### Lacunes temporelles\n```sql\n-- Dates manquantes dans le calendrier\nSELECT d.date_value\nFROM dim_calendar d\nLEFT JOIN sales_orders so ON d.date_value = so.order_date\nWHERE so.order_id IS NULL AND d.is_business_day = true;\n```"
+              }
+            }
+          ]
+        },
+        {
+          "id": "chapter_08",
+          "title": {
+            "en": "Hands-on: Codex-Assisted Profiling",
+            "fr": "TP : Profiling assisté par Codex"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Practical Exercise\n\nUse Codex to generate a comprehensive profiling script, then validate its output:\n\n1. Ask Codex to profile `sales_order_lines` (260K rows)\n2. Verify the statistical distribution makes sense\n3. Identify outliers and anomalies\n4. Cross-reference with `data_quality_issues.csv`\n5. Document which issues Codex found vs. missed",
+                "fr": "## Exercice pratique\n\nUtilisez Codex pour générer un script de profiling complet, puis validez sa sortie :\n\n1. Demandez à Codex de profiler `sales_order_lines` (260K lignes)\n2. Vérifiez que la distribution statistique est cohérente\n3. Identifiez les outliers et anomalies\n4. Recoupez avec `data_quality_issues.csv`\n5. Documentez quels problèmes Codex a trouvés vs. manqués"
+              }
+            }
+          ]
+        },
+        {
+          "id": "chapter_09",
+          "title": {
+            "en": "Checkpoint",
+            "fr": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "### Checkpoint\n\nDocument your Codex-assisted profiling session:\n- What prompts did you use?\n- What did Codex get right?\n- What did it miss or get wrong?\n- How did you validate the results?",
+                "fr": "### Checkpoint\n\nDocumentez votre session de profiling assistée par Codex :\n- Quels prompts avez-vous utilisés ?\n- Qu'est-ce que Codex a bien fait ?\n- Qu'a-t-il manqué ou mal fait ?\n- Comment avez-vous validé les résultats ?"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lesson_04",
+      "title": {
+        "en": "EXPLAIN Plans and Query Optimization",
+        "fr": "Plans EXPLAIN et optimisation de requêtes"
+      },
+      "chapters": [
+        {
+          "id": "chapter_10",
+          "title": {
+            "en": "Reading EXPLAIN Plans",
+            "fr": "Lire les plans EXPLAIN"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## PostgreSQL EXPLAIN for BI\n\n**Resource:** [PostgreSQL EXPLAIN Documentation](https://www.postgresql.org/docs/current/sql-explain.html)\n\n### Key Concepts\n- **Seq Scan** — Full table scan (expensive for large tables)\n- **Index Scan** — Uses an index (fast for selective queries)\n- **Hash Join** — Builds hash table for joins\n- **Sort** — Explicit sort operation (check if needed)\n- **Aggregate** — GROUP BY operations\n\n### Reading the Plan\n```sql\nEXPLAIN ANALYZE\nSELECT country, SUM(amount) as revenue\nFROM sales_orders so\nJOIN sales_order_lines sol ON so.order_id = sol.order_id\nWHERE so.order_date BETWEEN '2025-01-01' AND '2025-03-31'\nGROUP BY country;\n```\n\nLook for:\n- Actual vs. estimated rows (large discrepancies = stale statistics)\n- Sequential scans on large tables (need indexes?)\n- Sort operations (can they be avoided?)",
+                "fr": "## PostgreSQL EXPLAIN pour la BI\n\n**Ressource :** [Documentation PostgreSQL EXPLAIN](https://www.postgresql.org/docs/current/sql-explain.html)\n\n### Concepts clés\n- **Seq Scan** — Scan complet de table (coûteux pour les grandes tables)\n- **Index Scan** — Utilise un index (rapide pour les requêtes sélectives)\n- **Hash Join** — Construit une table de hachage pour les jointures\n- **Sort** — Opération de tri explicite (vérifier si nécessaire)\n- **Aggregate** — Opérations GROUP BY\n\n### Lire le plan\n```sql\nEXPLAIN ANALYZE\nSELECT country, SUM(amount) as revenue\nFROM sales_orders so\nJOIN sales_order_lines sol ON so.order_id = sol.order_id\nWHERE so.order_date BETWEEN '2025-01-01' AND '2025-03-31'\nGROUP BY country;\n```\n\nCherchez :\n- Lignes réelles vs. estimées (grands écarts = statistiques obsolètes)\n- Scans séquentiels sur grandes tables (besoin d'index ?)\n- Opérations de tri (peuvent-elles être évitées ?)"
+              }
+            }
+          ]
+        },
+        {
+          "id": "chapter_11",
+          "title": {
+            "en": "Hands-on: Optimize Queries",
+            "fr": "TP : Optimiser des requêtes"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "## Practical Exercise\n\nUsing the `bi_codex_faulty_marts.sql` file which contains intentionally slow queries:\n\n1. Run EXPLAIN ANALYZE on each query\n2. Identify the bottleneck\n3. Ask Codex to suggest optimizations\n4. Validate the optimized version is actually faster\n5. Document before/after execution times",
+                "fr": "## Exercice pratique\n\nEn utilisant le fichier `bi_codex_faulty_marts.sql` qui contient des requêtes intentionnellement lentes :\n\n1. Exécutez EXPLAIN ANALYZE sur chaque requête\n2. Identifiez le goulot d'étranglement\n3. Demandez à Codex de suggérer des optimisations\n4. Validez que la version optimisée est réellement plus rapide\n5. Documentez les temps d'exécution avant/après"
+              }
+            }
+          ]
+        },
+        {
+          "id": "chapter_12",
+          "title": {
+            "en": "Checkpoint",
+            "fr": "Checkpoint"
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "### Checkpoint\n\nSubmit your optimization report showing:\n- Original query and EXPLAIN plan\n- Identified bottleneck\n- Optimized query\n- Performance improvement (% faster)",
+                "fr": "### Checkpoint\n\nSoumettez votre rapport d'optimisation montrant :\n- Requête originale et plan EXPLAIN\n- Goulot d'étranglement identifié\n- Requête optimisée\n- Amélioration de performance (% plus rapide)"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1171,3 +1171,11 @@
 - [x] Initialiser Sentry côté serveur via --import (ESM pattern)
 - [x] Configurer le tracing Express pour capturer les transactions backend
 - [x] Configurer le error handler Express (setupExpressErrorHandler)
+
+## Intégration Cours BI (Analyse de données, reporting et BI avec Codex)
+- [x] Créer le groupe "bi_data_analytics" dans GROUP_CONFIG
+- [x] Créer la certification "analyse_donnees_reporting_bi_codex" dans trainingIndex.json
+- [x] Créer les 8 fichiers JSON de cours (modules 01-08) avec 4 leçons chacun
+- [x] Enregistrer les 8 cours dans trainingIndex.json
+- [x] Tester l'affichage dans le dashboard formation
+- [x] Corriger le bug de déploiement (dist/index.js path avec esbuild)
