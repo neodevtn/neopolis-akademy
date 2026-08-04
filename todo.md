@@ -1215,3 +1215,10 @@
 - [x] Créer un composant UI de saisie de réponse numérique avec validation
 - [x] Intégrer la validation côté serveur (comparer réponse candidat vs réponse attendue avec tolérance)
 - [x] Enregistrer les résultats en base de données (score par exercice)
+
+## Correction marges et taux de change fixes (cours BI Codex)
+- [x] Corriger les prix produits en MAD/TND pour obtenir des marges réalistes (36-37%)
+- [x] Fixer les taux de change de référence dans les énoncés (1 EUR = 10.90 MAD, 3.35 TND, 1.47 CAD, 1.08 USD)
+- [x] Recalculer toutes les réponses de référence avec les données corrigées
+- [x] Mettre à jour les JSON de cours avec les nouvelles réponses et taux fixes
+- [x] Re-uploader les fichiers CSV/SQL corrigés
