@@ -15,6 +15,7 @@ import { serveStatic, setupVite } from "./vite";
 import { securityHeaders, globalRateLimit, tRPCBatchLimit } from "../security";
 import certificateRouter from "../certificate";
 import { inactiveLearnerCheckHandler } from "../scheduledInactiveCheck";
+import resendWebhookRouter from "../resendWebhook";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -56,6 +57,9 @@ async function startServer() {
   registerAuthRoutes(app);
   registerDemoAuthRoutes(app); // Keep legacy demo route for backwards compatibility
   app.use(certificateRouter);
+
+  // Resend webhook for email delivery tracking
+  app.use(resendWebhookRouter);
 
   // Heartbeat scheduled handlers
   app.post("/api/scheduled/inactive-learner-check", inactiveLearnerCheckHandler);

@@ -185,6 +185,9 @@ export const userInvitations = mysqlTable("user_invitations", {
   invitedBy: int("invitedBy").notNull(), // admin userId
   status: mysqlEnum("status", ["pending", "accepted", "expired"]).default("pending").notNull(),
   token: varchar("token", { length: 128 }).notNull().unique(),
+  emailDeliveryStatus: mysqlEnum("emailDeliveryStatus", ["sent", "delivered", "bounced", "complained", "suppressed"]).default("sent"),
+  resendMessageId: varchar("resendMessageId", { length: 100 }), // Resend email ID for tracking
+  applicationId: int("applicationId"), // link to the original application if any
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   expiresAt: timestamp("expiresAt").notNull(),
   acceptedAt: timestamp("acceptedAt"),
@@ -338,3 +341,17 @@ export const passwordResetTokens = mysqlTable("password_reset_tokens", {
 });
 export type PasswordResetToken = typeof passwordResetTokens.$inferSelect;
 export type InsertPasswordResetToken = typeof passwordResetTokens.$inferInsert;
+
+/**
+ * Email events - webhook events from Resend for delivery tracking
+ */
+export const emailEvents = mysqlTable("email_events", {
+  id: int("id").autoincrement().primaryKey(),
+  resendMessageId: varchar("resendMessageId", { length: 100 }).notNull(),
+  type: mysqlEnum("type", ["sent", "delivered", "bounced", "complained", "opened", "clicked"]).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  reason: text("reason"), // bounce reason if applicable
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type EmailEvent = typeof emailEvents.$inferSelect;
+export type InsertEmailEvent = typeof emailEvents.$inferInsert;

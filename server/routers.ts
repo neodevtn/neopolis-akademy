@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getAdminAnalytics, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getAdminAnalytics, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus } from "./db";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
 import { notifyOwner } from "./_core/notification";
@@ -623,6 +623,84 @@ export const appRouter = router({
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await exportLearnersCSV();
+      }),
+
+    // ============ Selected Candidates Tracking ============
+    getSelectedCandidates: protectedProcedure
+      .query(async ({ ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        return await getSelectedCandidates();
+      }),
+
+    updateCandidateEmail: protectedProcedure
+      .input(z.object({
+        applicationId: z.number(),
+        newEmail: z.string().email(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        return await updateApplicationEmail(input.applicationId, input.newEmail);
+      }),
+
+    resendCandidateInvitation: protectedProcedure
+      .input(z.object({
+        applicationId: z.number(),
+        email: z.string().email(),
+        name: z.string().optional(),
+        language: z.enum(["fr", "en"]).optional().default("fr"),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        // Create invitation with tracking
+        const invitation = await createInvitationWithTracking(
+          input.email,
+          input.name || null,
+          ctx.user.id,
+          input.applicationId
+        );
+        const baseUrl = process.env.VITE_APP_URL || "https://akademy.neodev.click";
+        const invitationLink = `${baseUrl}/accept-invitation?token=${invitation.token}`;
+
+        try {
+          const { messageId } = await sendInvitationEmail({
+            to: input.email,
+            name: input.name || null,
+            language: input.language,
+            invitedBy: ctx.user.name || "Neopolis Akademy Admin",
+            invitationLink,
+          });
+
+          // Update invitation with resend message ID for tracking
+          if (messageId) {
+            const { getDb } = await import("./db");
+            const db = await getDb();
+            if (db) {
+              const { userInvitations } = await import("../drizzle/schema");
+              const { eq } = await import("drizzle-orm");
+              await db.update(userInvitations)
+                .set({ resendMessageId: messageId })
+                .where(eq(userInvitations.token, invitation.token));
+            }
+          }
+          return { success: true, messageId };
+        } catch (emailErr: any) {
+          console.error(`[Admin] Candidate invitation email failed for ${input.email}:`, emailErr);
+          return { success: false, error: emailErr.message || "Email sending failed" };
+        }
+      }),
+
+    getEmailDeliveryStats: protectedProcedure
+      .query(async ({ ctx }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        return await getEmailDeliveryStats();
       }),
   }),
 

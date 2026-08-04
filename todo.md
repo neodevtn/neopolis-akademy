@@ -1187,3 +1187,15 @@
 ## Fix exercices bucket_sort cassés
 - [x] Corriger les 29 exercices bucket_sort avec catégories invalides et correctBucket vides
 - [x] Vérifier 0 exercices cassés restants
+
+## Suivi candidats sélectionnés + Délivrabilité email (04 août 2026)
+- [x] Ajouter colonnes email_delivery_status et resend_message_id dans la table user_invitations
+- [x] Créer endpoint tRPC admin.getSelectedCandidates (vue dédiée candidats sélectionnés avec statut activation)
+- [x] Créer endpoint admin.updateCandidateEmail (modification email d'un candidat)
+- [x] Créer endpoint admin.resendInvitationForCandidate (renvoi invitation après correction email)
+- [x] Implémenter webhook Resend pour tracker bounced/delivered/opened
+- [x] Créer la vue admin "Candidats sélectionnés" avec tableau : nom, email, statut compte, statut email, actions
+- [x] Ajouter la modification d'email inline dans la vue admin
+- [x] Ajouter bouton "Renvoyer invitation" par candidat
+- [x] Ajouter indicateurs visuels : compte créé (vert), invitation envoyée (orange), email invalide (rouge), en attente (gris)
+- [x] Dashboard délivrabilité : compteurs emails envoyés/délivrés/rebondis

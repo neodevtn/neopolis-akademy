@@ -21,7 +21,8 @@ import {
   ChevronLeft, ChevronRight, Loader2, Shield, LogIn, Eye,
   UserPlus, Ban, ShieldCheck, Download, BarChart3, Mail,
   MoreVertical, UserX, UserCheck, TrendingUp, Activity,
-  Clock, CheckCircle2,
+  Clock, CheckCircle2, AlertTriangle, RefreshCw, Edit2, Send,
+  UserCog,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -47,6 +48,8 @@ export default function AdminTraining() {
   const [inviteName, setInviteName] = useState("");
   const [inviteLang, setInviteLang] = useState<"fr" | "en">("fr");
   const [inviteMessage, setInviteMessage] = useState("");
+  const [editEmailId, setEditEmailId] = useState<number | null>(null);
+  const [editEmailValue, setEditEmailValue] = useState("");
   const pageSize = 15;
 
   // Queries
@@ -77,6 +80,14 @@ export default function AdminTraining() {
     enabled: false, // manual trigger
   });
 
+  const selectedCandidatesQuery = trpc.admin.getSelectedCandidates.useQuery(undefined, {
+    enabled: isAuthenticated && user?.role === "admin" && activeTab === "selected",
+  });
+
+  const emailStatsQuery = trpc.admin.getEmailDeliveryStats.useQuery(undefined, {
+    enabled: isAuthenticated && user?.role === "admin" && activeTab === "selected",
+  });
+
   // Mutations
   const blockMutation = trpc.admin.blockUser.useMutation({
     onSuccess: (data) => {
@@ -101,6 +112,28 @@ export default function AdminTraining() {
       setInviteEmail("");
       setInviteName("");
       invitationsQuery.refetch();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const updateEmailMutation = trpc.admin.updateCandidateEmail.useMutation({
+    onSuccess: () => {
+      toast.success("Email mis à jour avec succès");
+      setEditEmailId(null);
+      setEditEmailValue("");
+      selectedCandidatesQuery.refetch();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const resendCandidateInvitationMutation = trpc.admin.resendCandidateInvitation.useMutation({
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success("Invitation renvoyée avec succès");
+      } else {
+        toast.error(data.error || "Échec de l'envoi");
+      }
+      selectedCandidatesQuery.refetch();
     },
     onError: (err) => toast.error(err.message),
   });
@@ -437,6 +470,9 @@ export default function AdminTraining() {
               <TabsTrigger value="invitations" className="gap-1.5">
                 <Mail className="w-4 h-4" /> Invitations
               </TabsTrigger>
+              <TabsTrigger value="selected" className="gap-1.5">
+                <UserCog className="w-4 h-4" /> Candidats sélectionnés
+              </TabsTrigger>
               <TabsTrigger value="analytics" className="gap-1.5">
                 <BarChart3 className="w-4 h-4" /> Analytics
               </TabsTrigger>
@@ -640,6 +676,27 @@ export default function AdminTraining() {
                   </Table>
                 )}
               </div>
+            </TabsContent>
+
+            {/* TAB: Selected Candidates */}
+            <TabsContent value="selected">
+              <SelectedCandidatesPanel
+                data={selectedCandidatesQuery.data}
+                emailStats={emailStatsQuery.data}
+                isLoading={selectedCandidatesQuery.isLoading}
+                editEmailId={editEmailId}
+                editEmailValue={editEmailValue}
+                setEditEmailId={setEditEmailId}
+                setEditEmailValue={setEditEmailValue}
+                onUpdateEmail={(applicationId: number, newEmail: string) => {
+                  updateEmailMutation.mutate({ applicationId, newEmail });
+                }}
+                onResendInvitation={(applicationId: number, email: string, name?: string) => {
+                  resendCandidateInvitationMutation.mutate({ applicationId, email, name });
+                }}
+                isUpdatingEmail={updateEmailMutation.isPending}
+                isResending={resendCandidateInvitationMutation.isPending}
+              />
             </TabsContent>
 
             {/* TAB: Analytics */}
@@ -894,6 +951,234 @@ function StatCard({ icon, value, label }: { icon: React.ReactNode; value: number
         <span className="text-xs uppercase tracking-wider font-medium">{label}</span>
       </div>
       <div className="text-2xl font-bold text-foreground">{value}</div>
+    </div>
+  );
+}
+
+/* ─── Selected Candidates Panel ─── */
+interface SelectedCandidatesPanelProps {
+  data: any[] | undefined;
+  emailStats: any | undefined;
+  isLoading: boolean;
+  editEmailId: number | null;
+  editEmailValue: string;
+  setEditEmailId: (id: number | null) => void;
+  setEditEmailValue: (val: string) => void;
+  onUpdateEmail: (applicationId: number, newEmail: string) => void;
+  onResendInvitation: (applicationId: number, email: string, name?: string) => void;
+  isUpdatingEmail: boolean;
+  isResending: boolean;
+}
+
+function SelectedCandidatesPanel({
+  data,
+  emailStats,
+  isLoading,
+  editEmailId,
+  editEmailValue,
+  setEditEmailId,
+  setEditEmailValue,
+  onUpdateEmail,
+  onResendInvitation,
+  isUpdatingEmail,
+  isResending,
+}: SelectedCandidatesPanelProps) {
+  if (isLoading) {
+    return (
+      <div className="p-12 text-center">
+        <Loader2 className="w-6 h-6 animate-spin mx-auto text-primary mb-3" />
+        <p className="text-sm text-muted-foreground">Chargement des candidats sélectionnés...</p>
+      </div>
+    );
+  }
+
+  if (!data || data.length === 0) {
+    return (
+      <div className="p-12 text-center">
+        <UserCog className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+        <p className="text-sm text-muted-foreground">Aucun candidat sélectionné pour le moment.</p>
+      </div>
+    );
+  }
+
+  // Compute stats
+  const totalSelected = data.length;
+  const accountsCreated = data.filter((c: any) => c.accountStatus === "active").length;
+  const invitationsSent = data.filter((c: any) => c.latestInvitation).length;
+  const bounced = data.filter((c: any) => c.latestInvitation?.emailDeliveryStatus === "bounced").length;
+  const pending = data.filter((c: any) => c.accountStatus === "no_account" && !c.latestInvitation).length;
+
+  return (
+    <div className="space-y-6">
+      {/* Email delivery stats */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div className="bg-card rounded-2xl border border-border p-4 shadow-sm">
+          <div className="flex items-center gap-2 mb-1 text-muted-foreground">
+            <Users className="w-4 h-4" />
+            <span className="text-xs uppercase tracking-wider font-medium">Sélectionnés</span>
+          </div>
+          <div className="text-xl font-bold text-foreground">{totalSelected}</div>
+        </div>
+        <div className="bg-card rounded-2xl border border-border p-4 shadow-sm">
+          <div className="flex items-center gap-2 mb-1 text-emerald-600">
+            <CheckCircle2 className="w-4 h-4" />
+            <span className="text-xs uppercase tracking-wider font-medium">Comptes actifs</span>
+          </div>
+          <div className="text-xl font-bold text-emerald-600">{accountsCreated}</div>
+        </div>
+        <div className="bg-card rounded-2xl border border-border p-4 shadow-sm">
+          <div className="flex items-center gap-2 mb-1 text-amber-600">
+            <Mail className="w-4 h-4" />
+            <span className="text-xs uppercase tracking-wider font-medium">Invitations envoyées</span>
+          </div>
+          <div className="text-xl font-bold text-amber-600">{invitationsSent}</div>
+        </div>
+        <div className="bg-card rounded-2xl border border-border p-4 shadow-sm">
+          <div className="flex items-center gap-2 mb-1 text-red-600">
+            <AlertTriangle className="w-4 h-4" />
+            <span className="text-xs uppercase tracking-wider font-medium">Email invalide</span>
+          </div>
+          <div className="text-xl font-bold text-red-600">{bounced}</div>
+        </div>
+        <div className="bg-card rounded-2xl border border-border p-4 shadow-sm">
+          <div className="flex items-center gap-2 mb-1 text-muted-foreground">
+            <Clock className="w-4 h-4" />
+            <span className="text-xs uppercase tracking-wider font-medium">En attente</span>
+          </div>
+          <div className="text-xl font-bold text-foreground">{pending}</div>
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Candidat</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Score</TableHead>
+              <TableHead>Statut compte</TableHead>
+              <TableHead>Statut email</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map((candidate: any) => {
+              const accountStatusBadge = candidate.accountStatus === "active"
+                ? { label: "Compte créé", class: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" }
+                : candidate.latestInvitation?.status === "accepted"
+                  ? { label: "Acceptée", class: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" }
+                  : candidate.latestInvitation
+                    ? { label: "Invitation envoyée", class: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400" }
+                    : { label: "En attente", class: "bg-gray-100 text-gray-700 dark:bg-gray-800/50 dark:text-gray-400" };
+
+              const emailStatusBadge = !candidate.latestInvitation
+                ? { label: "—", class: "" }
+                : candidate.latestInvitation.emailDeliveryStatus === "delivered"
+                  ? { label: "Délivré", class: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" }
+                  : candidate.latestInvitation.emailDeliveryStatus === "bounced"
+                    ? { label: "Rebondi", class: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" }
+                    : candidate.latestInvitation.emailDeliveryStatus === "complained"
+                      ? { label: "Spam", class: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400" }
+                      : candidate.latestInvitation.emailDeliveryStatus === "suppressed"
+                        ? { label: "Supprimé", class: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" }
+                        : { label: "Envoyé", class: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" };
+
+              const isEditing = editEmailId === candidate.id;
+
+              return (
+                <TableRow key={candidate.id}>
+                  <TableCell className="font-medium text-sm">
+                    {candidate.firstName} {candidate.lastName}
+                  </TableCell>
+                  <TableCell className="text-sm">
+                    {isEditing ? (
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="email"
+                          value={editEmailValue}
+                          onChange={(e) => setEditEmailValue(e.target.value)}
+                          className="h-8 text-sm w-56"
+                          autoFocus
+                        />
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 px-2"
+                          disabled={isUpdatingEmail || !editEmailValue}
+                          onClick={() => onUpdateEmail(candidate.id, editEmailValue)}
+                        >
+                          {isUpdatingEmail ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-8 px-2"
+                          onClick={() => { setEditEmailId(null); setEditEmailValue(""); }}
+                        >
+                          ✕
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span className={candidate.latestInvitation?.emailDeliveryStatus === "bounced" ? "text-red-600 line-through" : "text-foreground"}>
+                          {candidate.email}
+                        </span>
+                        <button
+                          className="text-muted-foreground hover:text-foreground transition-colors"
+                          onClick={() => { setEditEmailId(candidate.id); setEditEmailValue(candidate.email); }}
+                          title="Modifier l'email"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-sm font-medium">
+                    {Number(candidate.scoreTotal).toFixed(0)}%
+                  </TableCell>
+                  <TableCell>
+                    <span className={`text-xs px-2 py-1 rounded-full font-medium ${accountStatusBadge.class}`}>
+                      {accountStatusBadge.label}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    {emailStatusBadge.label === "—" ? (
+                      <span className="text-sm text-muted-foreground">—</span>
+                    ) : (
+                      <span className={`text-xs px-2 py-1 rounded-full font-medium ${emailStatusBadge.class}`}>
+                        {emailStatusBadge.label}
+                      </span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      {candidate.accountStatus !== "active" && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 px-2 text-xs gap-1"
+                          disabled={isResending}
+                          onClick={() => onResendInvitation(candidate.id, candidate.email, `${candidate.firstName} ${candidate.lastName}`)}
+                          title="Envoyer/Renvoyer l'invitation"
+                        >
+                          {isResending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
+                          Inviter
+                        </Button>
+                      )}
+                      {candidate.accountStatus === "active" && (
+                        <span className="text-xs text-emerald-600 font-medium flex items-center gap-1">
+                          <CheckCircle2 className="w-3.5 h-3.5" /> Actif
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }

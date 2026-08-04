@@ -630,11 +630,11 @@ export async function sendDecisionEmail(data: DecisionEmailData): Promise<void> 
 /**
  * Send an invitation email to join the platform.
  */
-export async function sendInvitationEmail(data: InvitationEmailData): Promise<void> {
+export async function sendInvitationEmail(data: InvitationEmailData): Promise<{ messageId?: string }> {
   const resendApiKey = process.env.RESEND_API_KEY;
   if (!resendApiKey) {
     console.log(`[Email] RESEND_API_KEY not configured. Invitation email NOT sent to ${data.to}`);
-    return;
+    return {};
   }
 
   const resend = new Resend(resendApiKey);
@@ -643,7 +643,7 @@ export async function sendInvitationEmail(data: InvitationEmailData): Promise<vo
     ? "Neopolis Akademy — Vous êtes invité(e) à rejoindre le programme"
     : "Neopolis Akademy — You are invited to join the program";
 
-  const { error } = await resend.emails.send({
+  const { data: emailData, error } = await resend.emails.send({
     from: FROM_ADDRESS,
     to: [data.to],
     subject,
@@ -655,7 +655,8 @@ export async function sendInvitationEmail(data: InvitationEmailData): Promise<vo
     console.error(`[Email] Resend error for ${data.to}:`, error);
     throw new Error(`Invitation email sending failed: ${error.message}`);
   }
-  console.log(`[Email] Invitation sent to ${data.to}`);
+  console.log(`[Email] Invitation sent to ${data.to}, messageId: ${emailData?.id}`);
+  return { messageId: emailData?.id };
 }
 
 

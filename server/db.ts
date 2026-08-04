@@ -1,6 +1,6 @@
 import { eq, desc, sql, and, count, gt } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -652,4 +652,116 @@ export async function getUserById(id: number) {
 
   const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
   return result.length > 0 ? result[0] : undefined;
+}
+
+
+// ============ Selected Candidates Tracking ============
+
+export async function getSelectedCandidates() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Get all applications with status "selectionne"
+  const selectedApps = await db.select({
+    id: applications.id,
+    firstName: applications.firstName,
+    lastName: applications.lastName,
+    email: applications.email,
+    phone: applications.phone,
+    country: applications.country,
+    scoreTotal: applications.scoreTotal,
+    createdAt: applications.createdAt,
+    updatedAt: applications.updatedAt,
+  }).from(applications).where(eq(applications.status, "selectionne")).orderBy(desc(applications.updatedAt));
+
+  // For each selected candidate, check if they have a user account and invitation status
+  const results = [];
+  for (const app of selectedApps) {
+    // Check if user account exists
+    const [userAccount] = await db.select({
+      id: users.id,
+      email: users.email,
+      createdAt: users.createdAt,
+      lastSignedIn: users.lastSignedIn,
+    }).from(users).where(eq(users.email, app.email)).limit(1);
+
+    // Get latest invitation for this email
+    const [latestInvitation] = await db.select().from(userInvitations)
+      .where(eq(userInvitations.email, app.email))
+      .orderBy(desc(userInvitations.createdAt))
+      .limit(1);
+
+    results.push({
+      ...app,
+      accountStatus: userAccount ? "active" as const : "no_account" as const,
+      userAccount: userAccount || null,
+      latestInvitation: latestInvitation || null,
+    });
+  }
+
+  return results;
+}
+
+export async function updateApplicationEmail(applicationId: number, newEmail: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(applications).set({ email: newEmail }).where(eq(applications.id, applicationId));
+  return { applicationId, newEmail };
+}
+
+export async function updateInvitationDeliveryStatus(resendMessageId: string, status: "sent" | "delivered" | "bounced" | "complained" | "suppressed") {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(userInvitations)
+    .set({ emailDeliveryStatus: status })
+    .where(eq(userInvitations.resendMessageId, resendMessageId));
+}
+
+export async function createEmailEvent(resendMessageId: string, type: "sent" | "delivered" | "bounced" | "complained" | "opened" | "clicked", email: string, reason?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.insert(emailEvents).values({ resendMessageId, type, email, reason });
+}
+
+export async function getEmailDeliveryStats() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const [stats] = await db.select({
+    total: count(),
+    delivered: sql<number>`SUM(CASE WHEN ${userInvitations.emailDeliveryStatus} = 'delivered' THEN 1 ELSE 0 END)`,
+    bounced: sql<number>`SUM(CASE WHEN ${userInvitations.emailDeliveryStatus} = 'bounced' THEN 1 ELSE 0 END)`,
+    suppressed: sql<number>`SUM(CASE WHEN ${userInvitations.emailDeliveryStatus} = 'suppressed' THEN 1 ELSE 0 END)`,
+    pending: sql<number>`SUM(CASE WHEN ${userInvitations.emailDeliveryStatus} = 'sent' OR ${userInvitations.emailDeliveryStatus} IS NULL THEN 1 ELSE 0 END)`,
+  }).from(userInvitations);
+
+  return {
+    total: stats.total || 0,
+    delivered: Number(stats.delivered) || 0,
+    bounced: Number(stats.bounced) || 0,
+    suppressed: Number(stats.suppressed) || 0,
+    pending: Number(stats.pending) || 0,
+  };
+}
+
+export async function createInvitationWithTracking(email: string, name: string | null, invitedBy: number, applicationId?: number, expiresInDays: number = 7) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const token = crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '');
+  const expiresAt = new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000);
+
+  const result = await db.insert(userInvitations).values({
+    email,
+    name,
+    invitedBy,
+    token,
+    expiresAt,
+    applicationId: applicationId || null,
+  });
+
+  return { id: result[0].insertId, email, name, token, expiresAt, status: 'pending' as const };
 }
