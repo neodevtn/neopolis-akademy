@@ -26,7 +26,23 @@ function getErrorFingerprint(error: ErrorReport): string {
   return `${error.message}::${error.source}::${(error.stack || '').slice(0, 100)}`;
 }
 
+// Patterns to ignore (build/deploy artifacts, not real bugs)
+const IGNORED_PATTERNS = [
+  'Failed to fetch dynamically imported module',
+  'Importing a module script failed',
+  'Loading module from',
+  'Loading chunk',
+  'ChunkLoadError',
+];
+
+function shouldIgnoreError(message: string): boolean {
+  return IGNORED_PATTERNS.some(pattern => message.includes(pattern));
+}
+
 async function sendReport(report: ErrorReport): Promise<void> {
+  // Ignore build/deploy errors (stale chunks after new deployment)
+  if (shouldIgnoreError(report.message)) return;
+
   // Rate limiting
   if (reportCount >= MAX_REPORTS_PER_SESSION) return;
   const now = Date.now();

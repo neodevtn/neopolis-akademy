@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { getLoginUrl } from "@/const";
-import { AlertTriangle, RefreshCw, Search, Filter, Clock, Globe, Code, Layers } from "lucide-react";
+import { AlertTriangle, RefreshCw, Search, Filter, Clock, Globe, Code, Layers, Trash2, CheckCircle } from "lucide-react";
+import { toast } from "sonner";
 
 type SourceFilter = "all" | "window" | "promise" | "boundary" | "manual";
 
@@ -15,6 +16,10 @@ export default function AdminErrors() {
   const { user, loading, isAuthenticated } = useAuth();
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+
+  const utils = trpc.useUtils();
 
   const errorsQuery = trpc.system.getClientErrors.useQuery(
     { limit: 100, source: sourceFilter === "all" ? undefined : sourceFilter, search: searchQuery.trim() || undefined },
@@ -26,10 +31,31 @@ export default function AdminErrors() {
     { enabled: isAuthenticated && user?.role === "admin", refetchInterval: 15_000 }
   );
 
-  const errors = errorsQuery.data || [];
+  const deleteMutation = trpc.system.deleteClientErrors.useMutation({
+    onSuccess: (data) => {
+      toast.success(`${data.deleted} erreur(s) supprimée(s)`);
+      setSelectedIds(new Set());
+      utils.system.getClientErrors.invalidate();
+      utils.system.getClientErrorStats.invalidate();
+    },
+    onError: () => {
+      toast.error("Erreur lors de la suppression");
+    },
+  });
 
-  // Filtering is now done server-side, just use the results directly
-  const filteredErrors = errors;
+  const clearAllMutation = trpc.system.clearAllClientErrors.useMutation({
+    onSuccess: () => {
+      toast.success("Toutes les erreurs ont été supprimées");
+      setSelectedIds(new Set());
+      utils.system.getClientErrors.invalidate();
+      utils.system.getClientErrorStats.invalidate();
+    },
+    onError: () => {
+      toast.error("Erreur lors de la suppression");
+    },
+  });
+
+  const errors = errorsQuery.data || [];
 
   // Use server-computed stats and chart data
   const chartData = statsQuery.data?.hourlyData || [];
@@ -39,6 +65,38 @@ export default function AdminErrors() {
     boundary: statsQuery.data?.boundary || 0,
     window: statsQuery.data?.window || 0,
     promise: statsQuery.data?.promise || 0,
+  };
+
+  const toggleSelect = (id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === errors.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(errors.map((e) => e.id)));
+    }
+  };
+
+  const handleDeleteSelected = () => {
+    if (selectedIds.size === 0) return;
+    deleteMutation.mutate({ ids: Array.from(selectedIds) });
+  };
+
+  const handleDeleteOne = (id: number) => {
+    deleteMutation.mutate({ ids: [id] });
+  };
+
+  const handleClearAll = () => {
+    if (confirm("Supprimer toutes les erreurs ? Cette action est irréversible.")) {
+      clearAllMutation.mutate();
+    }
   };
 
   if (loading) {
@@ -59,6 +117,13 @@ export default function AdminErrors() {
     );
   }
 
+  const sourceColors: Record<string, { bg: string; text: string; label: string }> = {
+    window: { bg: "#fef3c7", text: "#92400e", label: "Window" },
+    promise: { bg: "#dbeafe", text: "#1e40af", label: "Promise" },
+    boundary: { bg: "#fee2e2", text: "#991b1b", label: "Crash" },
+    manual: { bg: "#e0e7ff", text: "#3730a3", label: "Manuel" },
+  };
+
   return (
     <div className="min-h-screen" style={{ background: "var(--wise-canvas)" }}>
       <AdminNavbar activePage="errors" />
@@ -69,18 +134,29 @@ export default function AdminErrors() {
           <div>
             <h1 className="wise-display-sm" style={{ color: "var(--wise-ink)" }}>Monitoring Erreurs Client</h1>
             <p className="wise-body-md mt-1" style={{ color: "var(--wise-mute)" }}>
-              Dernières {errors.length} erreurs capturées en temps réel
+              {errors.length} erreur(s) • Les erreurs de build/déploiement sont automatiquement filtrées
             </p>
           </div>
-          <Button
-            onClick={() => errorsQuery.refetch()}
-            variant="outline"
-            className="flex items-center gap-2"
-            disabled={errorsQuery.isFetching}
-          >
-            <RefreshCw size={16} className={errorsQuery.isFetching ? "animate-spin" : ""} />
-            Actualiser
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={handleClearAll}
+              variant="outline"
+              className="flex items-center gap-2 text-red-600 border-red-200 hover:bg-red-50"
+              disabled={errors.length === 0}
+            >
+              <Trash2 size={14} />
+              Tout supprimer
+            </Button>
+            <Button
+              onClick={() => errorsQuery.refetch()}
+              variant="outline"
+              className="flex items-center gap-2"
+              disabled={errorsQuery.isFetching}
+            >
+              <RefreshCw size={16} className={errorsQuery.isFetching ? "animate-spin" : ""} />
+              Actualiser
+            </Button>
+          </div>
         </div>
 
         {/* Stats cards */}
@@ -168,8 +244,8 @@ export default function AdminErrors() {
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+        {/* Filters + bulk actions */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-4">
           <div className="relative flex-1">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--wise-mute)" }} />
             <Input
@@ -194,84 +270,153 @@ export default function AdminErrors() {
           </Select>
         </div>
 
-        {/* Error list */}
-        <div className="space-y-3">
-          {filteredErrors.length === 0 ? (
-            <div className="wise-card p-12 text-center">
-              <AlertTriangle size={32} className="mx-auto mb-3" style={{ color: "var(--wise-mute)" }} />
-              <p className="wise-body-md" style={{ color: "var(--wise-mute)" }}>
-                {errors.length === 0 ? "Aucune erreur enregistrée" : "Aucune erreur ne correspond aux filtres"}
-              </p>
-            </div>
-          ) : (
-            filteredErrors.map((error, idx) => (
-              <ErrorCard key={`${error.receivedAt}-${idx}`} error={error} />
-            ))
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ErrorCard({ error }: { error: { message: string; stack: string; source: string; url: string; timestamp: number; componentStack: string; receivedAt: number } }) {
-  const [expanded, setExpanded] = useState(false);
-
-  const sourceColors: Record<string, { bg: string; text: string; label: string }> = {
-    window: { bg: "#fef3c7", text: "#92400e", label: "Window" },
-    promise: { bg: "#dbeafe", text: "#1e40af", label: "Promise" },
-    boundary: { bg: "#fee2e2", text: "#991b1b", label: "Crash" },
-    manual: { bg: "#e0e7ff", text: "#3730a3", label: "Manuel" },
-  };
-
-  const source = sourceColors[error.source] || sourceColors.manual;
-  const time = new Date(error.receivedAt);
-
-  return (
-    <div
-      className="wise-card p-4 cursor-pointer transition-all hover:shadow-md"
-      onClick={() => setExpanded(!expanded)}
-      style={{ borderLeft: error.source === "boundary" ? "3px solid #ef4444" : undefined }}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <Badge style={{ backgroundColor: source.bg, color: source.text }} className="text-[10px] font-semibold">
-              {source.label}
-            </Badge>
-            <span className="text-xs" style={{ color: "var(--wise-mute)" }}>
-              {time.toLocaleDateString("fr-FR")} {time.toLocaleTimeString("fr-FR")}
+        {/* Bulk action bar */}
+        {selectedIds.size > 0 && (
+          <div className="flex items-center gap-3 mb-4 p-3 rounded-lg" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
+            <CheckCircle size={16} style={{ color: "var(--wise-positive)" }} />
+            <span className="wise-body-sm font-medium" style={{ color: "var(--wise-ink)" }}>
+              {selectedIds.size} erreur(s) sélectionnée(s)
             </span>
+            <Button
+              onClick={handleDeleteSelected}
+              size="sm"
+              variant="outline"
+              className="ml-auto flex items-center gap-1 text-red-600 border-red-200 hover:bg-red-50"
+              disabled={deleteMutation.isPending}
+            >
+              <Trash2 size={14} />
+              Supprimer la sélection
+            </Button>
           </div>
-          <p className="wise-body-sm font-medium truncate" style={{ color: "var(--wise-ink)" }}>
-            {error.message}
-          </p>
-          <p className="text-xs truncate mt-1" style={{ color: "var(--wise-mute)" }}>
-            {error.url}
-          </p>
-        </div>
-      </div>
+        )}
 
-      {expanded && (
-        <div className="mt-4 pt-4" style={{ borderTop: "1px solid var(--wise-canvas-soft)" }}>
-          {error.stack && (
-            <div className="mb-3">
-              <p className="wise-label mb-1" style={{ color: "var(--wise-mute)" }}>Stack Trace</p>
-              <pre className="text-xs p-3 rounded-lg overflow-x-auto whitespace-pre-wrap break-all" style={{ backgroundColor: "var(--wise-canvas-soft)", color: "var(--wise-ink)" }}>
-                {error.stack}
-              </pre>
+        {/* Error table */}
+        {errors.length === 0 ? (
+          <div className="wise-card p-12 text-center">
+            <AlertTriangle size={32} className="mx-auto mb-3" style={{ color: "var(--wise-mute)" }} />
+            <p className="wise-body-md" style={{ color: "var(--wise-mute)" }}>
+              Aucune erreur enregistrée
+            </p>
+          </div>
+        ) : (
+          <div className="wise-card overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr style={{ backgroundColor: "var(--wise-canvas-soft)", borderBottom: "1px solid var(--wise-canvas-soft)" }}>
+                    <th className="px-4 py-3 text-left w-10">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.size === errors.length && errors.length > 0}
+                        onChange={toggleSelectAll}
+                        className="rounded border-gray-300"
+                      />
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold" style={{ color: "var(--wise-mute)" }}>Date</th>
+                    <th className="px-4 py-3 text-left font-semibold" style={{ color: "var(--wise-mute)" }}>Type</th>
+                    <th className="px-4 py-3 text-left font-semibold" style={{ color: "var(--wise-mute)" }}>Message</th>
+                    <th className="px-4 py-3 text-left font-semibold" style={{ color: "var(--wise-mute)" }}>URL</th>
+                    <th className="px-4 py-3 text-center font-semibold w-20" style={{ color: "var(--wise-mute)" }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {errors.map((error) => {
+                    const source = sourceColors[error.source] || sourceColors.manual;
+                    const time = new Date(error.receivedAt);
+                    const isExpanded = expandedId === error.id;
+
+                    return (
+                      <tr key={error.id}>
+                        <td colSpan={6} className="p-0">
+                          <div>
+                            <div
+                              className="flex items-center cursor-pointer hover:bg-gray-50/50 transition-colors"
+                              style={{ borderBottom: "1px solid var(--wise-canvas-soft)" }}
+                            >
+                              <div className="px-4 py-3 w-10">
+                                <input
+                                  type="checkbox"
+                                  checked={selectedIds.has(error.id)}
+                                  onChange={(e) => { e.stopPropagation(); toggleSelect(error.id); }}
+                                  className="rounded border-gray-300"
+                                />
+                              </div>
+                              <div className="px-4 py-3 whitespace-nowrap" onClick={() => setExpandedId(isExpanded ? null : error.id)}>
+                                <span className="text-xs" style={{ color: "var(--wise-mute)" }}>
+                                  {time.toLocaleDateString("fr-FR")}
+                                </span>
+                                <br />
+                                <span className="text-[11px]" style={{ color: "var(--wise-mute)" }}>
+                                  {time.toLocaleTimeString("fr-FR")}
+                                </span>
+                              </div>
+                              <div className="px-4 py-3" onClick={() => setExpandedId(isExpanded ? null : error.id)}>
+                                <Badge style={{ backgroundColor: source.bg, color: source.text }} className="text-[10px] font-semibold">
+                                  {source.label}
+                                </Badge>
+                              </div>
+                              <div className="px-4 py-3 flex-1 min-w-0" onClick={() => setExpandedId(isExpanded ? null : error.id)}>
+                                <p className="text-xs font-medium truncate max-w-[400px]" style={{ color: "var(--wise-ink)" }}>
+                                  {error.message}
+                                </p>
+                              </div>
+                              <div className="px-4 py-3 min-w-0 max-w-[200px]" onClick={() => setExpandedId(isExpanded ? null : error.id)}>
+                                <p className="text-[11px] truncate" style={{ color: "var(--wise-mute)" }}>
+                                  {error.url.replace(/https?:\/\/[^/]+/, '')}
+                                </p>
+                              </div>
+                              <div className="px-4 py-3 text-center w-20">
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); handleDeleteOne(error.id); }}
+                                  className="p-1.5 rounded-md hover:bg-red-50 transition-colors text-gray-400 hover:text-red-500"
+                                  title="Supprimer cette erreur"
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              </div>
+                            </div>
+                            {/* Expanded detail */}
+                            {isExpanded && (
+                              <div className="px-6 py-4" style={{ backgroundColor: "var(--wise-canvas-soft)", borderBottom: "1px solid var(--wise-canvas-soft)" }}>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div>
+                                    <p className="wise-label mb-1 text-xs font-semibold" style={{ color: "var(--wise-mute)" }}>Message complet</p>
+                                    <p className="text-xs break-all" style={{ color: "var(--wise-ink)" }}>{error.message}</p>
+                                  </div>
+                                  <div>
+                                    <p className="wise-label mb-1 text-xs font-semibold" style={{ color: "var(--wise-mute)" }}>URL complète</p>
+                                    <p className="text-xs break-all" style={{ color: "var(--wise-ink)" }}>{error.url}</p>
+                                  </div>
+                                </div>
+                                {error.stack && (
+                                  <div className="mt-3">
+                                    <p className="wise-label mb-1 text-xs font-semibold" style={{ color: "var(--wise-mute)" }}>Stack Trace</p>
+                                    <pre className="text-[11px] p-3 rounded-lg overflow-x-auto whitespace-pre-wrap break-all max-h-48 overflow-y-auto" style={{ backgroundColor: "white", color: "var(--wise-ink)", border: "1px solid var(--wise-canvas-soft)" }}>
+                                      {error.stack}
+                                    </pre>
+                                  </div>
+                                )}
+                                {error.componentStack && (
+                                  <div className="mt-3">
+                                    <p className="wise-label mb-1 text-xs font-semibold" style={{ color: "var(--wise-mute)" }}>Component Stack</p>
+                                    <pre className="text-[11px] p-3 rounded-lg overflow-x-auto whitespace-pre-wrap break-all max-h-32 overflow-y-auto" style={{ backgroundColor: "white", color: "var(--wise-ink)", border: "1px solid var(--wise-canvas-soft)" }}>
+                                      {error.componentStack}
+                                    </pre>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
-          )}
-          {error.componentStack && (
-            <div>
-              <p className="wise-label mb-1" style={{ color: "var(--wise-mute)" }}>Component Stack</p>
-              <pre className="text-xs p-3 rounded-lg overflow-x-auto whitespace-pre-wrap break-all" style={{ backgroundColor: "var(--wise-canvas-soft)", color: "var(--wise-ink)" }}>
-                {error.componentStack}
-              </pre>
-            </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

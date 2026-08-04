@@ -3,7 +3,7 @@ import { notifyOwner } from "./notification";
 import { adminProcedure, publicProcedure, router } from "./trpc";
 import { getDb } from "../db";
 import { clientErrors } from "../../drizzle/schema";
-import { desc, eq, like, and, gte } from "drizzle-orm";
+import { desc, eq, like, and, gte, inArray, notLike } from "drizzle-orm";
 
 // Rate limit: max 10 reports per IP per minute
 const ipReportCounts = new Map<string, { count: number; resetAt: number }>();
@@ -19,6 +19,15 @@ function checkReportRateLimit(ip: string): boolean {
   entry.count++;
   return true;
 }
+
+// Patterns to filter out (build/deploy artifacts)
+const BUILD_ERROR_PATTERNS = [
+  '%Failed to fetch dynamically imported module%',
+  '%Importing a module script failed%',
+  '%Loading module from%',
+  '%Loading chunk%',
+  '%ChunkLoadError%',
+];
 
 export const systemRouter = router({
   health: publicProcedure
@@ -64,6 +73,19 @@ export const systemRouter = router({
         return { accepted: false } as const;
       }
 
+      // Filter out build/deploy errors server-side too
+      const isBuildError = [
+        'Failed to fetch dynamically imported module',
+        'Importing a module script failed',
+        'Loading module from',
+        'Loading chunk',
+        'ChunkLoadError',
+      ].some(pattern => input.message.includes(pattern));
+      
+      if (isBuildError) {
+        return { accepted: false, reason: 'build_error_filtered' } as const;
+      }
+
       // Persist to database
       try {
         const db = await getDb();
@@ -102,7 +124,7 @@ export const systemRouter = router({
       return { accepted: true } as const;
     }),
 
-  // Admin endpoint to view recent client errors
+  // Admin endpoint to view recent client errors (excludes build errors)
   getClientErrors: adminProcedure
     .input(
       z.object({
@@ -122,6 +144,10 @@ export const systemRouter = router({
       }
       if (input.since) {
         conditions.push(gte(clientErrors.createdAt, new Date(input.since)));
+      }
+      // Exclude build/deploy errors
+      for (const pattern of BUILD_ERROR_PATTERNS) {
+        conditions.push(notLike(clientErrors.message, pattern));
       }
 
       const db = await getDb();
@@ -148,7 +174,7 @@ export const systemRouter = router({
       }));
     }),
 
-  // Admin endpoint to get error stats
+  // Admin endpoint to get error stats (excludes build errors)
   getClientErrorStats: adminProcedure
     .query(async () => {
       const db = await getDb();
@@ -156,10 +182,13 @@ export const systemRouter = router({
       const now = new Date();
       const last24h = new Date(now.getTime() - 24 * 3600_000);
 
+      // Exclude build errors from stats
+      const buildExclusions = BUILD_ERROR_PATTERNS.map(p => notLike(clientErrors.message, p));
+      
       const recentErrors = await db
         .select()
         .from(clientErrors)
-        .where(gte(clientErrors.createdAt, last24h))
+        .where(and(gte(clientErrors.createdAt, last24h), ...buildExclusions))
         .orderBy(desc(clientErrors.createdAt));
 
       const total = recentErrors.length;
@@ -183,5 +212,36 @@ export const systemRouter = router({
       }
 
       return { total, boundary, window: window_, promise, hourlyData };
+    }),
+
+  // Admin endpoint to delete specific errors (mark as resolved)
+  deleteClientErrors: adminProcedure
+    .input(
+      z.object({
+        ids: z.array(z.number()).min(1).max(100),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return { deleted: 0 };
+      
+      const result = await db
+        .delete(clientErrors)
+        .where(inArray(clientErrors.id, input.ids));
+      
+      return { deleted: input.ids.length };
+    }),
+
+  // Admin endpoint to delete all errors (clear all)
+  clearAllClientErrors: adminProcedure
+    .mutation(async () => {
+      const db = await getDb();
+      if (!db) return { deleted: 0 };
+      
+      // Only delete non-build errors (build errors are already filtered)
+      const buildExclusions = BUILD_ERROR_PATTERNS.map(p => notLike(clientErrors.message, p));
+      await db.delete(clientErrors).where(and(...buildExclusions));
+      
+      return { success: true };
     }),
 });

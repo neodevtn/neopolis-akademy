@@ -1237,3 +1237,9 @@
 - [x] Ajouter des consignes explicites aux exercices qui en manquent (nettoyage pollution 31 exercices + 41 blocs)
 - [x] Corriger la correction affichée qui ne correspond pas à la question posée (correction était en fait cohérente après nettoyage)
 - [x] Séparer correctement le contenu du chapitre de l'exercice (titre "Reveal model answer" supprimé de 20 fichiers)
+
+## Refonte panneau monitoring erreurs admin
+- [x] Filtrer les erreurs de build (Failed to fetch dynamically imported module) — ne plus les catcher
+- [x] Afficher les erreurs dans un tableau (colonnes: date, type, message, URL, actions)
+- [x] Ajouter un bouton Supprimer par ligne pour permettre à l'admin de marquer comme résolu
+- [x] Persister la suppression côté serveur (endpoint tRPC)
