@@ -39,6 +39,9 @@ async function startServer() {
   const app = express();
   const server = createServer(app);
 
+  // Trust proxy (required for rate limiting behind Cloud Run/reverse proxy)
+  app.set("trust proxy", 1);
+
   // Security middlewares (F-001, F-002, F-003)
   app.disable("x-powered-by");
   app.use(securityHeaders);

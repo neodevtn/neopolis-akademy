@@ -17,7 +17,11 @@ Sentry.init({
   dsn: "https://f1beaf088d01628e72b6cc5b96511906@sentry.neopolis-dev.com//102",
   integrations: [
     Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration(),
+    Sentry.replayIntegration({
+      maskAllText: false,
+      blockAllMedia: false,
+      maskAllInputs: false,
+    }),
     Sentry.feedbackIntegration({
       colorScheme: "light",
       buttonLabel: "Signaler un problème",

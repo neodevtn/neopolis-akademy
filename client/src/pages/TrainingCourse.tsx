@@ -93,6 +93,17 @@ export default function TrainingCourse() {
   // Course data with caching and prefetching
   const { courseLessons, courseExercises, courseSections, loading: lessonsLoading } = useCourseData(courseId);
 
+  // Prefetch next course in certification path for instant navigation
+  const certCourses = trainingIndex.courses.filter((c: any) => c.certId === certId);
+  const currentCourseIdx = certCourses.findIndex((c: any) => c.id === courseId);
+  useEffect(() => {
+    if (currentCourseIdx >= 0 && currentCourseIdx < certCourses.length - 1) {
+      const nextCourse = certCourses[currentCourseIdx + 1];
+      prefetchCourse(nextCourse.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseId]);
+
   // Loading state
   if (authLoading) {
     return (
@@ -147,17 +158,6 @@ export default function TrainingCourse() {
       </div>
     );
   }
-  // Prefetch next course in certification path for instant navigation
-  const certCourses = trainingIndex.courses.filter((c: any) => c.certId === certId);
-  const currentCourseIdx = certCourses.findIndex((c: any) => c.id === courseId);
-  useEffect(() => {
-    if (currentCourseIdx >= 0 && currentCourseIdx < certCourses.length - 1) {
-      const nextCourse = certCourses[currentCourseIdx + 1];
-      prefetchCourse(nextCourse.id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [courseId]);
-
   // Sequential lock guard: prevent direct URL access to locked courses
   const courseIdx = certCourses.findIndex((c: any) => c.id === courseId);
   if (courseIdx > 0) {

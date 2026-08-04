@@ -1179,3 +1179,7 @@
 - [x] Enregistrer les 8 cours dans trainingIndex.json
 - [x] Tester l'affichage dans le dashboard formation
 - [x] Corriger le bug de déploiement (dist/index.js path avec esbuild)
+## Fix React Crash + Sentry Replay
+- [x] Corriger violation Rules of Hooks (useEffect après return conditionnel) dans TrainingCourse.tsx
+- [x] Désactiver le masquage de texte dans Sentry Session Replay (maskAllText: false, blockAllMedia: false, maskAllInputs: false)
+- [x] Ajouter trust proxy pour corriger le rate limiter derrière Cloud Run/reverse proxy
