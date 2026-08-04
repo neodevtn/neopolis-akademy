@@ -1205,8 +1205,8 @@
 - [x] Générer les dumps SQL (OLTP, DW, star schema, faulty marts, expected results, data quality assertions)
 - [x] Uploader tous les fichiers de données et obtenir les URLs
 - [x] Réécrire les exercices/TP de chaque module avec présentation structurée et liens de téléchargement
-- [ ] Ajouter les fichiers de solutions (solution_lab_01 à solution_lab_07 + final)
-- [ ] Vérifier le rendu visuel des exercices corrigés
+- [x] Ajouter les fichiers de solutions (solution_lab_01 à solution_lab_07 + final)
+- [x] Vérifier le rendu visuel des exercices corrigés
 
 ## Exercices à réponses numériques déterministes (cours BI Codex)
 - [x] Calculer toutes les réponses numériques de référence à partir des CSV (CA net, marges, taux, etc.)
