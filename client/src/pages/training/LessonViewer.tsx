@@ -145,7 +145,7 @@ export default function LessonViewer({
         if (ch && !isReviewMode) {
           const blocks = ch.blocks || [];
           // Video gate
-          const videoKeys = blocks.filter((b: any) => b.type === 'video').map((b: any) => { if (b.mp4Url) return b.id || ''; let rawId = b.videoId || ''; if (!rawId && b.url) { const m = (b.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/); if (m) rawId = m[1]; } if (!rawId && b.id && typeof b.id === 'string' && b.id.length >= 8 && b.id.length <= 15) rawId = b.id; return typeof rawId === 'object' ? (rawId.fr || rawId.en || '') : rawId; }).filter(Boolean);
+          const videoKeys = blocks.filter((b: any) => b.type === 'video').map((b: any) => { if (b.mp4Url || b.audioUrl) return b.id || ''; let rawId = b.videoId || ''; if (!rawId && b.url) { const m = (b.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/); if (m) rawId = m[1]; } if (!rawId && b.id && typeof b.id === 'string' && b.id.length >= 8 && b.id.length <= 15) rawId = b.id; return typeof rawId === 'object' ? (rawId.fr || rawId.en || '') : rawId; }).filter(Boolean);
           if (videoKeys.length > 0 && !videoKeys.every((k: string) => completedVideos.has(k))) return;
           // Flip cards gate
           const hasFlips = blocks.some((b: any) => b.type === 'flip_cards' && (b.cards || []).length > 0);
@@ -291,6 +291,66 @@ export default function LessonViewer({
                   <summary className="px-4 py-3 cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-2">
                     <FileText className="w-4 h-4" />
                     {t({en:'Video transcript',fr:'Transcription vid\u00E9o'})}
+                  </summary>
+                  <div className="px-4 pb-4 text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                    {block.transcriptSegments?.length > 0 ? (
+                      block.transcriptSegments.map((seg: any, i: number) => (
+                        <div key={i} className="mb-3">
+                          <p className="font-semibold text-foreground mb-1">{seg.heading}</p>
+                          <p>{seg.text}</p>
+                        </div>
+                      ))
+                    ) : block.transcript}
+                  </div>
+                </details>
+              )}
+            </div>
+          );
+        }
+        // Audio-only fallback (when mp4Url is null but audioUrl exists)
+        if (block.audioUrl) {
+          const audioTitle = typeof block.title === 'object' ? (block.title?.[lang] || block.title?.en || block.title?.fr || 'Audio') : (block.title || 'Audio');
+          const audioKey = block.id || `audio_${blockIdx}`;
+          const isAudioComplete = completedVideos.has(audioKey);
+          return (
+            <div key={blockIdx} className="my-6 rounded-xl border border-border overflow-hidden bg-card">
+              <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
+                <span className={`flex items-center justify-center w-7 h-7 rounded-full ${isAudioComplete ? 'bg-green-100 text-green-600' : 'bg-purple-100 text-purple-600'}`}>
+                  {isAudioComplete ? <CheckCircle2 className="w-4 h-4" /> : <PlayCircle className="w-4 h-4" />}
+                </span>
+                <span className="font-semibold text-foreground">{audioTitle}</span>
+                <span className="ml-2 px-2 py-0.5 text-xs font-bold rounded bg-purple-100 text-purple-700">AUDIO</span>
+                {isAudioComplete && <span className="ml-auto text-xs text-green-600 font-medium">\u2713 {t({en:'Listened',fr:'\u00C9cout\u00E9e'})}</span>}
+              </div>
+              <div className="px-4 py-4 bg-muted/30">
+                <p className="text-xs text-muted-foreground mb-2 italic">{t({en:'Local audio version with transcript support',fr:'Version audio locale avec support/transcription'})}</p>
+                <audio
+                  controls
+                  className="w-full"
+                  src={block.audioUrl}
+                  onEnded={() => toggleVideoComplete(audioKey)}
+                />
+              </div>
+              <div className="flex items-center justify-between px-4 py-2 border-t border-border">
+                <button
+                  onClick={() => toggleVideoComplete(audioKey)}
+                  className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
+                >
+                  <CheckCircle2 className="w-4 h-4" />
+                  {t({en:'Mark as listened (manual)',fr:'Marquer comme \u00E9cout\u00E9e (manuel)'})}
+                </button>
+                {block.slidesPdf && (
+                  <a href={block.slidesPdf} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
+                    <FileText className="w-4 h-4" />
+                    {t({en:'Slides PDF',fr:'Slides PDF'})}
+                  </a>
+                )}
+              </div>
+              {block.transcript && (
+                <details className="border-t border-border">
+                  <summary className="px-4 py-3 cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-2">
+                    <FileText className="w-4 h-4" />
+                    {t({en:'Transcript',fr:'Transcription'})}
                   </summary>
                   <div className="px-4 pb-4 text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
                     {block.transcriptSegments?.length > 0 ? (

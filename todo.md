@@ -1290,3 +1290,10 @@
 - [x] Critères d'évaluation bruts (<exercise_objective>, <grading_rules>, PASS/FAIL) visibles → fix: extractLearnerObjectives() parse required_elements en bullets propres
 - [x] Appliquer à tous les 17 TP/labs → fix global via composant CloudExerciseBlock
 - [x] Re-auditer production activité 2/9 → vérifié OK (4 steps détaillés, 2 bullets propres, aucun tag XML visible)
+
+## Audit médias production — 2 vidéos sans MP4
+- [ ] Upload 2 MP3 (ch03_ex08 + ch03_ex12) via manus-upload-file --webdev
+- [ ] Mettre à jour le JSON avec audioUrl pour ces 2 blocs
+- [ ] Adapter le composant vidéo pour afficher lecteur audio + transcript + slides quand audioUrl existe et mp4Url absent
+- [ ] Audit HTTP de tous les liens /manus-storage (8 MP4 + 2 MP3 + 3 PDF + 1 PNG = 14 liens)
+- [ ] Tableau d'audit dans le rapport final
