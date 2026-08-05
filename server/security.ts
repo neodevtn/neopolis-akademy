@@ -73,8 +73,8 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
   // Content Security Policy (hardened)
   const isDev = process.env.NODE_ENV === "development";
   const scriptSrc = isDev
-    ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://manus-analytics.com" // unsafe-eval needed for Vite HMR in dev
-    : "script-src 'self' 'unsafe-inline' https://manus-analytics.com"; // No unsafe-eval in production
+    ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://manus-analytics.com https://www.youtube.com" // unsafe-eval needed for Vite HMR in dev
+    : "script-src 'self' 'unsafe-inline' https://manus-analytics.com https://www.youtube.com"; // YouTube IFrame API needs script loading
   res.setHeader(
     "Content-Security-Policy",
     [

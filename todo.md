@@ -1264,3 +1264,7 @@
 ## Bug: Tableau mal organisé + contenu qui suit
 - [x] Première colonne du tableau trop étroite (mots coupés: "In-cont ext mem ory") - fix: whitespace-nowrap + min-width sur col 1
 - [x] Contenu après le tableau collé sans espacement (4ème ligne manquante) - fix: détection punct+uppercase en plus de camelCase
+
+## Bug: Vidéos YouTube non lisibles dans la page
+- [x] La vidéo affiche un écran noir au lieu du player YouTube embed - fix: ajout https://www.youtube.com au script-src CSP
+- [x] L'utilisateur est obligé de cliquer "Watch on YouTube" pour voir la vidéo - fix: le YouTube IFrame API peut maintenant se charger
