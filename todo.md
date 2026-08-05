@@ -1250,8 +1250,13 @@
 - [x] Mettre en surbrillance l'étape active
 
 ## Amélioration rendu prompt exercices
-- [ ] Parser le prompt pour détecter les blocs System:/User:/Broken prompt/ticket
-- [ ] Afficher System: et User: dans des blocs code stylisés
-- [ ] Afficher le contenu <ticket>...</ticket> dans un encadré distinct
-- [ ] Séparer visuellement les consignes (texte normal) du contenu technique
-- [ ] Supprimer la duplication du titre dans le prompt quand il est identique au title
+- [x] Parser le prompt pour détecter les blocs System:/User:/Broken prompt/ticket
+- [x] Afficher System: et User: dans des blocs code stylisés
+- [x] Afficher le contenu <ticket>...</ticket> dans un encadré distinct
+- [x] Séparer visuellement les consignes (texte normal) du contenu technique
+- [x] Supprimer la duplication du titre dans le prompt quand il est identique au title
+
+## Nettoyage exercices parasites et checkpoints redondants
+- [x] Supprimer 79 exercices parasites (Model answer, correct/incorrect, Pass/Retry) dans 14 fichiers
+- [x] Supprimer 23 checkpoint blocks redondants dans chapitres ayant déjà un bucket_sort
+- [x] Corriger le bug Screen 6 (Extended Thinking affiché comme free_text au lieu de bucket_sort)

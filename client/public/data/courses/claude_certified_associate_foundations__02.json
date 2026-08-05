@@ -1231,70 +1231,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_associate_foundations__02_013",
-      "courseId": "claude_certified_associate_foundations__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_05",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Model answer (S09_MODEL):\n\"You are a product analyst (role). Attached are 200 customer survey responses (context). Identify the three most frequently raised issues (task), ranked by how many responses mention each, and for each issue include one representative verbatim quote and the approximate share of responses it appears in (constraints). Use code execution to count accurately rather than estimating. Format as a ranked list, most frequent first (output format).\"\nDocumented improvements\nAdded role and context so the analysis is grounded in the actual responses\nReplaced the vague task with a specific, ranked, countable instruction\nAdded constraints (representative quote, share of responses) that make the output actionable\nSpecified code execution so the frequency counts are verified, not guessed\nSpecified the output format so the result is decision-ready",
-        "fr": "Réponse modèle (S09_MODEL):\n« Vous êtes un analyste produit (rôle). Ci-joint 200 réponses d'enquête client (contexte). Identifiez les trois problèmes les plus fréquemment évoqués (tâche), classés par le nombre de réponses qui mentionnent chacun, et pour chaque problème incluez une citation mot à mot représentative et la part approximative des réponses dans lesquelles elle apparaît (contraintes). Utilisez l'exécution du code pour compter avec précision plutôt que d'estimer. Formatez sous forme de liste classée, la plus fréquente en premier (format de sortie). »\nAméliorations documentées\nAjout du rôle et du contexte afin que l'analyse soit ancrée dans les réponses réelles\nRemplacement de la tâche vague par une instruction précise, classable et dénombrable\nAjout de contraintes (citation représentative, part des réponses) qui rendent la sortie exploitable\nSpécification de l'exécution du code afin que les comptages de fréquence soient vérifiés, et non supposés\nSpécification du format de sortie afin que le résultat soit prêt à la prise de décision"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Use Python to label and count issue mentions, then pick the top three issues and a representative verbatim quote for each.\n\nExample code (working):\n```python\nimport pandas as pd\nimport re\ndf = pd.read_csv(\"survey_responses.csv\")  # expects column 'response'\nresponses = df['response'].astype(str).tolist()\n\n# keyword mapping to issues (tune keywords to your data)\nissue_keywords = {\n  \"Slow load times\": [r\"slow\", r\"loading\", r\"lag\"],\n  \"Checkout bugs\": [r\"checkout\", r\"payment\", r\"card declined\", r\"error at checkout\"],\n  \"Customer support\": [r\"support\", r\"helpful\", r\"waited.*support\", r\"no reply\"]\n}\n\ncounts = {k:0 for k in issue_keywords}\nexamples = {k:None for k in issue_keywords}\n\nfor r in responses:\n  for issue, kws in issue_keywords.items():\n    if any(re.search(k, r, re.I) for k in kws):\n      counts[issue] += 1\n      if examples[issue] is None:\n        examples[issue] = r\n\ntotal = len(responses)\nranked = sorted(counts.items(), key=lambda x: x[1], reverse=True)\nfor i,(issue,c) in enumerate(ranked[:3],1):\n  share = round(100*c/total,1)\n  print(f\"{i}. {issue} — {c} responses (~{share}%)\\n   Representative quote: \\\"{examples[issue]}\\\"\\n\")\n```\n\nExample of decision-ready output (after running on 200 responses):\n1. Slow load times — 54 responses (~27.0%)  \n   Representative quote: \"The app takes forever to load pages, especially on mobile.\"  \n2. Checkout bugs — 43 responses (~21.5%)  \n   Representative quote: \"I keep getting an error during payment and my card is charged twice.\"  \n3. Customer support — 32 responses (~16.0%)  \n   Representative quote: \"Support never replied; I waited 5 days for a solution.\"  \n\nAdjust keywords and deduplication rules to improve accuracy (e.g., stemming, phrase matching, manual review of borderline cases).",
-        "fr": "Correction modèle (ce que l'étudiant doit produire)\n\n1) Méthode (brève, actionnable)\n- Charger les 200 réponses depuis un CSV/JSON en une liste Python.\n- Normaliser (lower(), remove punctuation, unicode normalize).\n- Définir pour chaque problème un petit ensemble de mots-clés/expressions représentatives.\n- Pour chaque réponse, détecter les mentions (une réponse peut compter pour plusieurs problèmes si elles sont explicitement évoquées).\n- Compter précisément les occurrences par problème, calculer part = count / 200.\n- Choisir pour chaque problème une citation mot à mot provenant d'une réponse classée dans ce problème (p. ex. la réponse contenant le plus de mots-clés pour ce problème).\n- Produire une liste classée (plus fréquent → moins fréquent) avec : rang, nom du problème, count, part, citation.\n\n2) Exemple de code fonctionnel (Python)\nresponses = [...]  # liste de 200 chaînes\nimport re, collections\ndef norm(s): return re.sub(r'[^\\w\\s]', '', s.lower())\nkeywords = {\n  \"prix élevé\": [\"cher\", \"trop cher\", \"prix élevé\", \"coûte trop\"],\n  \"interface confuse\": [\"interface\", \"confus\", \"difficile à utiliser\", \"trop de clics\"],\n  \"support lent\": [\"support\", \"aucune réponse\", \"temps de réponse\", \"lent\"]\n}\ntags_count = collections.Counter()\ntag_examples = {k: [] for k in keywords}\nfor r in responses:\n  nr = norm(r)\n  for tag, kws in keywords.items():\n    if any(k in nr for k in kws):\n      tags_count[tag] += 1\n      tag_examples[tag].append(r)\n# choisir citation représentative : réponse la plus courte ou la plus fréquente parmi tag_examples\nresult = []\ntotal = len(responses)\nfor tag, cnt in tags_count.most_common(3):\n  quote = max(tag_examples[tag], key=len)  # ou autre critère\n  result.append((tag, cnt, f\"{cnt/total:.1%}\", quote))\nprint(result)\n\n3) Format de sortie attendu (exemple)\n1. Prix élevé — 78 réponses — 39.0% — \"Le produit est trop cher pour la qualité.\"\n2. Interface confuse — 55 réponses — 27.5% — \"L'application est difficile à naviguer, beaucoup d'erreurs.\"\n3. Support lent — 20 réponses — 10.0% — \"Je n'ai reçu aucune réponse du support en 7 jours.\"\n\n4) Points de vigilance\n- Gérer mentions multiples (compter par mention, pas par réponse unique, si demandé).\n- Documenter règles de mappage (keywords) et limiter biais.\n- Vérifier qualitativement 10–20 cas pour valider l'assignation automatique."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Automation",
-        "Business Value",
-        "Context Design"
-      ],
-      "title": {
-        "en": "Model answer (S09_MODEL):",
-        "fr": "Réponse modèle (S09_MODEL) :"
-      }
-    },
-    {
-      "id": "ex_claude_certified_associate_foundations__02_014",
-      "courseId": "claude_certified_associate_foundations__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_06",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "All correct: You can map each weakness to a component. Notice that two of the four are under-specified and one is over-specified; calibration runs in both directions.",
-        "fr": "Tout est correct : Vous pouvez faire correspondre chaque faiblesse à un composant. Notez que deux des quatre sont sous-spécifiés et l'un est sur-spécifié ; la calibration se fait dans les deux sens."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Suggested mapping (four weaknesses → components), with diagnosis and short fixes:\n\n1) Ambiguous requirements → Specification (under‑specified)\n- Problem: vague success criteria cause inconsistent outputs.\n- Fix: add concrete acceptance criteria, examples, edge cases, prioritized constraints.\n\n2) Missing edge‑case coverage → Data (under‑specified)\n- Problem: training/validation sets lack rare but important cases.\n- Fix: augment with synthetic or collected edge cases; stratify evaluation.\n\n3) Overfitting / brittle behavior → Model (over‑specified)\n- Problem: model tuned too tightly to training idiosyncrasies; fails on distribution shift.\n- Fix: regularization, simpler architecture, cross‑validation, domain augmentation.\n\n4) Miscalibrated confidence and feedback loop → Evaluation / Calibration (bi‑directional)\n- Problem: scoring thresholds or reward signals are misaligned with real objectives.\n- Fix: recalibrate using temperature scaling, Platt scaling, or human‑in‑loop labels; update metrics to reflect downstream cost.\n\nWhy “calibration runs in both directions”\n- Calibration is the interface between model outputs and human objectives: you can tighten constraints (make outputs more conservative) or loosen them (allow more diversity). Concretely, adjust model temperature/thresholds or alter evaluation labels/weights; both model behavior and specification/evaluation must be tuned iteratively. Practical step: run small A/B tests changing one lever (e.g., threshold, loss weight) and measure real‑world impact, then repeat.",
-        "fr": "Corrections modèle — correspondance des faiblesses aux composants et actions correctives\n\n1) Faiblesse : objectif ambivalent (sous‑spécifié)  \n   - Composant : Instruction / tâche.  \n   - Justification : l'agent ne sait pas critères de réussite ni priorité.  \n   - Correctif : reformuler l'instruction en une phrase claire + critères mesurables (ex. \"résumer en ≤150 mots, conserver les 3 idées principales, citer sources\").\n\n2) Faiblesse : contexte insuffisant (sous‑spécifié)  \n   - Composant : Contexte / données d'entrée.  \n   - Justification : manque d'informations métier ou contraintes produit conduit à réponses inappropriées.  \n   - Correctif : fournir contexte clé (public cible, format attendu, exemples de données), ou une source de vérité unique.\n\n3) Faiblesse : format trop contraint (sur‑spécifié)  \n   - Composant : Contraintes de sortie / schéma.  \n   - Justification : contrainte excessive empêche solutions valides et fragilise la génération.  \n   - Correctif : assouplir (autoriser options), décrire intention plutôt que micro‑règles, ajouter validation post‑process.\n\n4) Faiblesse : exemples manquants ou non représentatifs  \n   - Composant : Exemples / few‑shot.  \n   - Justification : exemples biaisés entraînent comportements inattendus.  \n   - Correctif : fournir jeux d'exemples divers et contre‑exemples, inclure cas limites et erreurs types.\n\nCalibration bidirectionnelle (actionnable)  \n- Itérer : tester variations (plus strict / plus lâche) et mesurer qualité.  \n- Métriques : exactitude, couverture, robustesse aux cas limites.  \n- Processus : corriger composant ciblé → réévaluer → ajuster contraintes/exemples jusqu'à convergence."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Agentic Design",
-        "Architecture",
-        "Context Design"
-      ],
-      "title": {
-        "en": "All correct: You can map each weakness to a com...",
-        "fr": "Tout est correct : vous pouvez faire correspondre chaque faiblesse à un com..."
-      }
-    },
-    {
       "id": "ex_claude_certified_associate_foundations__02_015",
       "courseId": "claude_certified_associate_foundations__02",
       "lessonId": "lesson_01",
@@ -1324,70 +1260,6 @@
       "title": {
         "en": "Feedback: Re-read the prompts against the five ...",
         "fr": "Retour : Relisez les prompts par rapport aux cinq ..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_associate_foundations__02_016",
-      "courseId": "claude_certified_associate_foundations__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_09",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "incorrect: Return to Lessons 2 and 5. Run each prompt through the component stack first, then ask whether the strategy fits the task type.",
-        "fr": "faux : Revenez aux leçons 2 et 5. Exécutez chaque prompt d'abord par la pile de composants, puis demandez si la stratégie convient au type de tâche."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "Procedure (for each prompt)\n1. Identify task type: classification, summarization, transformation, code generation, creative writing, multi-step reasoning, etc.\n2. Run the prompt through the component stack:\n   - Goal/outcome (what success looks like)\n   - Inputs (all data provided; missing inputs?)\n   - Constraints/format (length, style, citations, libraries)\n   - Model strategy (direct answer, stepwise reasoning, few-shot, chain-of-thought)\n   - Tools/external data (APIs, retrieval, execution)\n   - Evaluation criteria (accuracy, faithfulness, test cases, readability)\n   - Safety/ethics (privacy, legality, harmful content)\n3. Ask: Does the chosen strategy map to the task type? If not, propose a concrete fix.\n\nTwo short examples\n- Example A (Lesson 2 — summarization): Prompt: “Summarize this 1,200-word article into 3 bullet points.” Stack: goal=concise coverage; inputs=article; constraint=3 bullets; strategy=abstractive summarization (no chain-of-thought). Fit? Yes. Improvement: require 1-line key takeaway + source paragraph references to increase faithfulness.\n- Example B (Lesson 5 — coding): Prompt: “Write a Python scraper for example.com.” Stack: goal=working function; inputs=URL, HTML sample; constraints=use requests+BeautifulSoup, handle errors; strategy=code generation + unit test. Fit? Partial. Fix: add explicit test cases, error handling requirements, and safety note to respect robots.txt; prefer API-based approach if site prohibits scraping.\n\nApply this checklist to every prompt; if mismatch, change strategy (e.g., swap chain-of-thought for direct extraction, add retrieval for factual tasks, add tests for code tasks).",
-        "fr": "Méthode modèle (à appliquer pour chaque prompt)\n\n1) Identifiez le type de tâche (résumé, génération créative, extraction factuelle, calcul, prise de décision, interaction multi‑tour).\n2) Décrivez la pile de composants attendue, par ordre d’exécution :\n   - Parseur d’entrée (validation, normalisation)\n   - Récupérateur/accès aux connaissances (docs, mémoire)\n   - Planificateur/stratege (structure du résultat)\n   - Moteur de raisonnement / chaîne de pensée (étapes intermédiaires)\n   - Outil externe si nécessaire (API, calculatrice)\n   - Vérificateur de cohérence/fact checking\n   - Formateur de sortie (ton, longueur, format)\n3) Exécutez la simulation: pour chaque composant, montrez l’état attendu (ex. le récupérateur renvoie 3 extraits pertinents ; le planificateur produit un plan en 4 sections).\n4) Évaluez l’adéquation de la stratégie selon critères concrets :\n   - Pertinence : les composants fournis couvrent-ils les besoins informationnels ?\n   - Précision/sûreté : vérificateur et sources contrôlent-ils les hallucinations ?\n   - Efficacité/latence : coût et temps acceptables pour la tâche ?\n   - Complexité : chaines longues apportent-elles de la valeur ou du risque ?\n   - Confidentialité/accès aux données sensibles\n5) Décision finale et ajustements recommandés (ex. ajouter une étape de fact-check si extraction factuelle ; éviter chain-of-thought explicite pour conformité).\n\nExemple bref : prompt = « Résume 5 pages techniques en 300 mots. »\n- Pile : parseur → récupérateur doc → planificateur 3‑parties → raisonnement → vérif. factuelle → formatter.\n- Simulation : récupérateur extrait 5 paragraphes clés ; plan -> intro/méthode/résultats ; vérif. compare faits clés à sources.\n- Conclusion : stratégie convenable ; ajouter vérif. pour éviter omissions/hallucinations."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "AI Safety",
-        "API Integration",
-        "Data Privacy"
-      ],
-      "title": {
-        "en": "incorrect: Return to Lessons 2 and 5. Run each ...",
-        "fr": "incorrect : Revenez aux leçons 2 et 5. Exécutez chacune ..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_associate_foundations__02_017",
-      "courseId": "claude_certified_associate_foundations__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_01",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped: Return to this checkpoint before the exercise at the end of the module. The five-component diagnosis you practice here is the same that you apply in the next exercise.",
-        "fr": "Sauté : retournez à ce point de contrôle avant l'exercice à la fin du module. Le diagnostic à cinq composants que vous pratiquez ici est le même que celui que vous appliquez dans l'exercice suivant."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Use a consistent five-part checklist to diagnose any prompt/task before building or evaluating a model-based solution. For each component, ask concrete questions and record decisions you can test.\n\n1) Objective (What success looks like)\n- Define the primary goal and measurable criteria (e.g., “concise 200–300 word summary capturing 3 key steps,” “F1 > 0.8 on labeled test set”).\n\n2) User & Stakeholders\n- Who uses the output? Skill level, biases, trust needs, compliance requirements. Note primary user actions and edge users.\n\n3) Inputs & Context\n- Exact inputs available (examples, docs, schema), variability, language, missing data. Specify required format and pre-processing rules.\n\n4) Model Behavior & Constraints\n- Desired style/format, allowed tools, latency/cost limits, and known model limitations. List forbidden behaviors (hallucination, legal advice) and guardrails.\n\n5) Evaluation & Failure Modes\n- Define tests, metrics, sample cases, and what counts as acceptable. Enumerate concrete failure modes (wrong facts, omission, unsafe output) and mitigation (post-checks, rejection thresholds, human review).\n\nApply this checklist before building prompts or pipelines; record answers so evaluation and iteration are reproducible.",
-        "fr": "Quand vous revenez à ce point de contrôle, appliquez systématiquement le diagnostic à cinq composants suivant. Une bonne correction contient, pour chaque composant, des réponses courtes et actionnables (1–2 phrases) plus au moins une mesure/critère et au moins une mitigation si pertinent.\n\n1) Objectif / tâche\n- Question : Quel est l’objectif précis (entrée→sortie) ?\n- À fournir : énoncé clair + exemple d’entrée/sortie.\n- Critère : métrique principale (ex. précision ≥ 90 %, F1, utilité humaine).\n\n2) Données / contextes d’entrée\n- Question : Quelles données seront fournies et quelles variations (langue, format, qualité) ?\n- À fournir : sources, taille, exemples d’anomalies.\n- Risques : données manquantes, biais, fuite d’informations sensibles.\n- Mitigation : validation d’entrée, anonymisation, jeux de test représentatifs.\n\n3) Méthode / modèle\n- Question : Quelle approche (règles, modèle pré‑entraîné, fine‑tuning) et quelles ressources ?\n- À fournir : architecture, paramètres importants, dépendances.\n- Risques : surapprentissage, dépendances non reproductibles.\n- Mitigation : cross‑validation, versioning, tests unitaires.\n\n4) Sorties / critères d’acceptation\n- Question : Quelles sorties sont attendues et comment les évaluer ?\n- À fournir : format de sortie, seuils, exemples acceptables/inacceptables.\n- Tests : cas normaux, cas limites, tests adverses.\n\n5) Contraintes & risques opérationnels\n- Question : contraintes temps, coûts, sécurité, conformité ?\n- À fournir : SLA, limites de coût, exigences légales.\n- Risques concrets : hallucinations, fuite de PII, latence excessive, dérive des données.\n- Mitigation : filtres de post‑traitement, monitoring, revue humaine, rollback plan.\n\nLivrable attendu : une page synthétique avec ces 5 sections complétées + 3 tests représentatifs et un plan de mitigation priorisé."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Architecture",
-        "Compliance",
-        "Context Design"
-      ],
-      "title": {
-        "en": "Skipped: Return to this checkpoint before the e...",
-        "fr": "Ignoré : Retournez à ce point de contrôle avant la fin..."
       }
     },
     {
@@ -1487,38 +1359,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_associate_foundations__02_021",
-      "courseId": "claude_certified_associate_foundations__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_05",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Model answer: revised prompt: \"You are a product analyst (role). Attached are 200 customer survey responses (context). Identify the three most frequently raised issues (task), ranked by how many responses mention each, and for each issue include one representative verbatim quote and the approximate share of responses it appears in (constraints). Use code execution to count accurately rather than estimating. Format as a ranked list, most frequent first (output format).\"\nDocumented improvements\nAdded role and context so the analysis is grounded in the actual responses\nReplaced the vague task with a specific, ranked, countable instruction\nAdded constraints (representative quote, share of responses) that make the output actionable\nSpecified code execution so the frequency counts are verified, not guessed\nSpecified the output format so the result is decision-ready",
-        "fr": "Réponse du modèle : prompt révisé : « Vous êtes un analyste produit (rôle). Ci-joint, 200 réponses à des enquêtes clients (contexte). Identifiez les trois problématiques les plus fréquemment évoquées (tâche), classées en fonction du nombre de réponses qui les mentionnent, et pour chaque problématique, inclure une citation mot à mot représentative et la part approximative des réponses dans lesquelles elle apparaît (contraintes). Utilisez l'exécution de code pour compter avec précision plutôt que d'estimer. Formatez sous forme de liste classée, la plus fréquente en premier (format de sortie). »\nAméliorations documentées\n- Ajout du rôle et du contexte afin que l'analyse soit ancrée dans les réponses réelles\n- Remplacement de la tâche vague par une instruction spécifique, classée et dénombrable\n- Ajout de contraintes (citation représentative, part des réponses) qui rendent le résultat exploitable\n- Précisé l'exécution de code afin que les décomptes de fréquence soient vérifiés, et non estimés\n- Précisé le format de sortie afin que le résultat soit prêt à la prise de décision"
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "Revised prompt:\nYou are a product analyst. Attached are 200 customer survey responses. Identify the three most frequently raised issues, ranked by how many responses mention each. For each issue include one representative verbatim quote and the approximate share of responses it appears in. Use code execution to count accurately rather than estimating. Format as a ranked list, most frequent first.\n\nWhy this is an improved prompt (concise rationale):\n- Adds a clear role (“product analyst”) so the responder applies appropriate analytical framing and terminology.\n- Supplies concrete context (“200 customer survey responses”) so counts and sample selection are grounded in the provided data.\n- Replaces vague instruction with a specific, measurable task (top 3 issues, ranked), enabling reproducible prioritization.\n- Introduces precise constraints (one verbatim quote; approximate share of responses) that make findings actionable for stakeholders and support estimation of impact.\n- Requires code execution for counting, eliminating guesswork and ensuring accurate frequency measurement (e.g., run a short Python/R script to normalize text, match issue keywords, and compute counts).\n- Specifies output format (ranked list, most frequent first) so results are immediately decision-ready and easy to consume.",
-        "fr": "Le prompt révisé est bon mais peut être rendu encore plus précis et accompagnée d’un exemple exécutable. Fournir aussi des consignes sur le prétraitement et la reproductibilité.\n\nPrompt final (à utiliser tel quel) :\nVous êtes un·e analyste produit. Ci-joint, 200 réponses à des enquêtes clients. Identifiez les trois problématiques les plus fréquemment évoquées, classées par nombre de réponses. Pour chaque problématique, fournissez : 1) le nombre exact de réponses, 2) la part (%) des réponses, 3) une citation mot à mot représentative. Utilisez du code pour compter précisément, appliquez un prétraitement (minuscule, suppression stopwords français), et fixez random_state pour reproductibilité. Formatez la sortie en liste classée, la plus fréquente en premier.\n\nExemple de code Python (fonctionnel) :\nresponses = [...]  # liste de 200 chaînes\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.cluster import KMeans\nfrom sklearn.metrics.pairwise import cosine_similarity\nimport numpy as np\n\nvec = TfidfVectorizer(stop_words='french', ngram_range=(1,2))\nX = vec.fit_transform(responses)\nk = 10\nkm = KMeans(n_clusters=k, random_state=42).fit(X)\nlabels = km.labels_\ncounts = np.bincount(labels, minlength=k)\ntop = np.argsort(counts)[::-1][:3]\n\nfor rank, idx in enumerate(top, 1):\n    inds = np.where(labels==idx)[0]\n    sims = cosine_similarity(X[inds], km.cluster_centers_[idx].reshape(1,-1)).flatten()\n    rep = responses[inds[np.argmax(sims)]]\n    cnt = len(inds)\n    print(f\"{rank}. {cnt} réponses ({cnt/len(responses):.1%}) — citation : \\\"{rep}\\\"\")\n\nPoints qu’une bonne correction doit couvrir :\n- Prétraitement textuel et langue (stopwords français, normalisation).\n- Choix méthode de regroupement (TF-IDF+KMeans vs embeddings sémantiques).\n- Reproductibilité (random_state).\n- Validation (inspection manuelle, seuils pour fusion/filtrage).\n- Format de sortie prêt à l’analyse décisionnelle."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Business Value",
-        "Context Design",
-        "Digital Transformation"
-      ],
-      "title": {
-        "en": "Model answer: revised prompt: \"You are a produc...",
-        "fr": "Réponse du modèle : prompt révisé : \"You are a produc..."
-      }
-    },
-    {
       "id": "ex_claude_certified_associate_foundations__02_022",
       "courseId": "claude_certified_associate_foundations__02",
       "lessonId": "lesson_01",
@@ -1583,38 +1423,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_associate_foundations__02_024",
-      "courseId": "claude_certified_associate_foundations__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_09",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped: Move on if you need to, but the end-of-module quiz assumes you can rebuild a weak prompt to full component coverage, not just spot what is missing.",
-        "fr": "Ignoré : Passez à autre chose si nécessaire, mais le quiz de fin de module suppose que vous pouvez reconstruire un prompt faible pour une couverture complète des composants, et pas seulement repérer ce qui manque."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "A strong rebuilt prompt restores all missing components so the model knows role, context, goal, constraints, and output format. Use this checklist and example.\n\nChecklist — components to add\n- Role: which persona or expertise the model should adopt.\n- Context/background: why the task matters and any input data.\n- Objective: a single clear goal or question to answer.\n- Audience and reading level.\n- Required sections/structure and length.\n- Tone and style.\n- Constraints (facts only, cite sources, no hallucinations, legal/ethical limits).\n- Output format (bullet list, JSON, headings, code block).\n- Examples or sample content to emulate, plus evaluation criteria.\n\nExample — weak prompt\n- “Write a blog post about AI safety.”\n\nRebuilt prompt — full coverage\n- Role: You are an experienced AI policy writer.\n- Context: For a technology company’s public blog aimed at nontechnical managers who must approve ML projects.\n- Objective: Explain top 5 practical AI safety controls they should require of vendors.\n- Audience & level: Nontechnical managers; concise, actionable.\n- Required structure: Title, 3–4 sentence intro, five numbered controls (each: what it is, why it matters, one concrete implementation step), 2–3 sentence conclusion.\n- Tone & voice: Professional, persuasive, plain English.\n- Constraints: No technical jargon; avoid speculation; base recommendations on industry best practices; cite one reputable source per control (inline parentheses).\n- Length: ~600–800 words.\n- Output format: Markdown with headings.\n\nThis rebuilt prompt gives the model everything needed to produce a focused, usable result rather than a vague draft.",
-        "fr": "Étapes concrètes pour reconstruire un prompt faible\n1) Identifier l’objectif précis (livrable, public, usage).  \n2) Définir le rôle du modèle (ex. « Rédige comme un journaliste tech senior »).  \n3) Fournir contexte et données d’entrée (faits, sources, contraintes temporelles).  \n4) Spécifier format de sortie (longueur, sections/titres, balisage, JSON).  \n5) Ajouter critères d’évaluation (exactitude, ton, citations, lisibilité).  \n6) Inclure exemples + cas limites (ex. si données manquantes).  \n7) Préciser contraintes éthiques/sécurité (pas de conseils médicaux, sources fiables).  \n\nTemplate compact (à remplir)\nTu es [rôle]. Tâche : [action précise]. Contexte : [contexte + données]. Contraintes : [longueur, ton, points à éviter]. Format : [structure/markdown/JSON]. Exemples : [1–2 exemples courts]. Critères : [3 critères auditables]. Questions si ambiguïté : [demander info].  \n\nExemple — partir de « Rédige un article sur le télétravail » → prompt reconstruit\nTu es un journaliste tech senior. Tâche : rédiger un article de 800±100 mots sur les bonnes pratiques du télétravail pour managers. Contexte : public = managers PME, 2026, inclure études récentes (au moins 2 sources). Contraintes : ton professionnel, pas de jargon, proposer 5 actions concrètes avec étapes. Format : titre, résumé (30–40 mots), 5 sections (problème, preuves, actions, outils recommandés, conclusion). Exemples : voir style de The Economist. Critères : citations vérifiables, langage clair, checklist finale. Si information manquante, demander précision sur l’audience.  \n\nChecklist que votre réponse devrait couvrir dans le quiz\n- Objectif explicite, rôle, contexte\n- Entrées et contraintes claires\n- Format de sortie défini et testable\n- Critères d’évaluation et exemples\n- Gestion des ambiguïtés et risques (sources, sécurité)"
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "AI Safety",
-        "Context Design",
-        "Evaluation"
-      ],
-      "title": {
-        "en": "Skipped: Move on if you need to, but the end-of...",
-        "fr": "Omis : Passez à autre chose si nécessaire, mais la fin de..."
-      }
-    },
-    {
       "id": "ex_claude_certified_associate_foundations__02_025",
       "courseId": "claude_certified_associate_foundations__02",
       "lessonId": "lesson_01",
@@ -1676,70 +1484,6 @@
       "title": {
         "en": "Feedback: Review the questions you missed: Q1 m...",
         "fr": "Commentaires : Revoyez les questions que vous avez manquées : Q1 m..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_associate_foundations__02_027",
-      "courseId": "claude_certified_associate_foundations__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_03",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "incorrect: Revisit the module before continuing. Prompting is the foundation every later module assumes. Run a prompt from your own work through the five components before retrying.",
-        "fr": "faux : Revoir le module avant de continuer. Le prompting est la base sur laquelle repose chaque module ultérieur. Faites passer un prompt issu de votre propre travail à travers les cinq composants avant de réessayer."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "Before continuing, reread the prior prompting module. Then pick one prompt from your own work and rewrite it using these five components, test it, and iterate.\n\nFive components (use these exact sections when rewriting):\n1. Goal — one clear sentence describing the desired outcome.\n2. Context — brief background the model needs (audience, source material, constraints).\n3. Role — the persona you want the model to adopt (e.g., “technical editor,” “customer-support agent”).\n4. Instructions — explicit step-by-step actions the model should perform (be specific about what to include/omit).\n5. Output format & evaluation criteria — exact format (length, headings, bullets, examples) and measurable success criteria.\n\nExample\nOriginal: “Write a summary of my research paper.”\nRewritten:\n- Goal: Produce a concise non-technical summary for a funding reviewer.\n- Context: 12-page paper on machine-learning fairness; audience is non-ML program officers.\n- Role: Act as a grant-reviewer-friendly science communicator.\n- Instructions: Summarize research question, methods, three key findings, and practical implications; avoid technical jargon; prioritize clarity.\n- Output format & evaluation: 200–250 words, three bullet takeaways, one-sentence practical implication; score successful if a reviewer can state the main finding and one implication after reading.\n\nRun the prompt, compare output to the evaluation criteria, then refine wording and constraints as needed.",
-        "fr": "Composants (exemples) : Rôle, Contexte, Tâche, Contraintes, Format de sortie.\n\nExemple — prompt initial (trop vague) :\n«Écris un article sur l'IA.»\n\nApplication des cinq composants\n- Rôle : Indiquez la persona/compétence — ex. «en tant que chercheur en IA senior».\n- Contexte : Pourquoi et pour qui — ex. «pour un bulletin interne d’ingénieurs produit, connaissance technique de base».\n- Tâche : Action précise — ex. «résumer les tendances 2026 et recommander 3 priorités techniques».\n- Contraintes : Limites mesurables — ex. «600–800 mots, langage non promotionnel, citer 3 sources récentes, éviter spéculations».\n- Format de sortie : Structure attendue — ex. «titre, résumé, 3 sections (tendances, risques, recommandations), conclusion en 2 phrases, liste de sources en format APA».\n\nPrompt amélioré (à copier) :\n«En tant que chercheur en IA senior, rédige pour un bulletin interne destiné à des ingénieurs produit un article de 600–800 mots qui résume les principales tendances en IA pour 2026 et propose 3 priorités techniques. Utilise un ton factuel, non promotionnel. Structure : titre, résumé (2 phrases), sections “Tendances”, “Risques”, “Recommandations” (une recommandation par section, argumentée), conclusion (2 phrases). Cite 3 sources récentes en format APA. Évite les spéculations non sourcées.»\n\nChecklist rapide pour l’étudiant :\n- Persona et audience précisés\n- Objectif et action clairs\n- Contraintes mesurables (longueur, style, citations)\n- Format de sortie défini\n- Tester et itérer (1–2 cycles) avant de poursuivre."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "API Integration",
-        "Agentic Design",
-        "Context Design"
-      ],
-      "title": {
-        "en": "incorrect: Revisit the module before continuing...",
-        "fr": "incorrect : Révisez le module avant de continuer..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_associate_foundations__02_028",
-      "courseId": "claude_certified_associate_foundations__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_04",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped: Return to complete the quiz before advancing.",
-        "fr": "Ignoré : Revenez pour terminer le quiz avant de continuer."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "You need to finish the required quiz before you can move on. Follow these concrete steps to resume and complete it:\n\n1. Return to the module\n   - Click the course “Back” or “Progress” link, open the module list, and select the module containing the quiz.\n   - Open the quiz tile and choose “Continue attempt” or “Start quiz.”\n\n2. Prepare quickly (10–20 minutes)\n   - Re-scan the module summary and any highlighted slides/notes.\n   - Use active recall: try to answer key objectives out loud or on scratch paper before opening the quiz.\n   - Prioritize questions you know first; mark harder ones and return.\n\n3. During the quiz\n   - Timebox each question if there’s a timer.\n   - Save frequently if there’s a manual save option; use the “Submit” button only when finished.\n   - For multiple choice, eliminate wrong answers to improve odds when unsure.\n\n4. If you can’t access or submit\n   - Try a different browser or incognito mode, clear cache, or disable extensions.\n   - Take a screenshot of errors and note the exact module/quiz name and time.\n   - Contact support/instructor with course name, module number, screenshot, and your account email requesting a reset or technical help.\n\n5. After submission\n   - Confirm your score/feedback and that progress shows as complete before advancing.\n\nCompleting the quiz ensures your progress is recorded and unlocks the next content; don’t advance until confirmed.",
-        "fr": "Interprétation et objectif\nLe message actuel \"Ignoré : Revenez pour terminer le quiz avant de continuer.\" est ambigu et peu actionnable. Une bonne réponse doit proposer un libellé clair, une mise en œuvre technique et anticiper risques/ergonomie.\n\nLibellé recommandé (exemples)\n- Bannière/inline : « Quiz non complété — terminez le quiz pour débloquer la suite. »\n- Modal bloquant : Titre « Quiz requis » ; Corps : « Vous devez terminer le quiz n°3 pour continuer. Voulez‑vous reprendre maintenant ? » Boutons : « Reprendre le quiz » / « Annuler ».\n- Petit rappel non bloquant : « Quiz en cours — 40 % complété. Continuer sans finir peut verrouiller l’accès. »\n\nImplémentation (extrait)\n- Désactiver bouton \"Continuer\" tant que quiz.completed !== true :\n```js\nconst continueBtn = document.getElementById('continue');\nfunction updateState(quizCompleted){\n  continueBtn.disabled = !quizCompleted;\n  continueBtn.setAttribute('aria-disabled', String(!quizCompleted));\n}\n```\n- Bloquer navigation via onbeforeunload si quiz inachevé :\n```js\nwindow.addEventListener('beforeunload', (e) => {\n  if(!quiz.completed){ e.preventDefault(); e.returnValue = ''; }\n});\n```\n\nRisques concrets à mentionner\n- Frustration/utilisateurs quittant la page\n- Contournement via désactivation JS\n- Perte de progression si autosave absent\n- Inaccessibilité (lecteurs d’écran) ou mauvaise localisation\n\nChecklist pour une bonne réponse\n- Message clair, actionnable et localisé\n- Comportement UX (bloquant vs informatif) justifié\n- Exemples de texte précis\n- Extraits techniques (désactivation bouton, beforeunload, autosave)\n- Considérations accessibilité et tests (keyboard, aria, i18n)\n- Mesures pour éviter contournement et perte de données (autosave, serveur-side check)"
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Error Handling",
-        "Fundamentals",
-        "Testing"
-      ],
-      "title": {
-        "en": "Skipped: Return to complete the quiz before adv...",
-        "fr": "Passé : Revenez pour terminer le quiz avant de continuer..."
       }
     }
   ]

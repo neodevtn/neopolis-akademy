@@ -435,10 +435,6 @@
                   }
                 }
               ]
-            },
-            {
-              "type": "checkpoint",
-              "exerciseId": "ex_claude_certified_architect_professional__02_002"
             }
           ],
           "completionRule": {
@@ -1540,70 +1536,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_architect_professional__02_015",
-      "courseId": "claude_certified_architect_professional__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_05",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Incorrect: Return to the Model-based vs. Code-based evals table and work through one item at a time, asking: is there a single correct answer that can be checked automatically, or does correctness require a judgment call? Then return to this checkpoint.",
-        "fr": "Faux : Retournez au tableau des évaluations basées sur le modèle et celles basées sur le code, et traitez un élément à la fois, en vous demandant s'il existe une seule réponse correcte qui peut être vérifiée automatiquement, ou si la correction nécessite un jugement. Puis revenez à ce point de contrôle."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Work through each table row with this checklist and record a clear classification plus evidence.\n\n1) Restate the item precisely. Example: “Summarization faithfulness for long articles.”\n\n2) Ask the core questions:\n   - Is there a single correct output (or a small set of correct outputs) that can be enumerated or deterministically checked?\n   - Can correctness be reduced to objective, measurable criteria (exact match, numeric threshold, presence/absence, structured-schema compliance)?\n\n3) If yes → mark as Code-based. Actionable steps:\n   - Define a strict acceptance test (exact match, regex, JSON schema validation, numeric tolerance).\n   - Write unit tests with positive/negative examples and edge cases.\n   - Use automated metrics (exact match, token overlap, scalar thresholds).\n   - Include sample test code or format for CI.\n\n4) If no → mark as Model-based. Actionable steps:\n   - Define an annotation rubric with concrete dimensions (accuracy, relevance, tone) and examples for each score.\n   - Specify labeling protocol: number of annotators, majority rule, adjudication, qualification tests, inter-annotator agreement target (e.g., Cohen’s kappa ≥ 0.6).\n   - Provide calibration examples and decision rules for common ambiguities.\n\n5) Handle hybrids:\n   - Split the item into a code-checkable subtask and a human-judgment subtask, and record both.\n\n6) Return to checkpoint:\n   - Summarize classifications, attach acceptance tests or rubric, flag ambiguous items for discussion, and list next steps (write tests or recruit annotators).\n\nExample quick classifications:\n- “Exact factual Q/A where answer is unique” → Code-based (exact match).\n- “Tone/appropriateness for a target audience” → Model-based (rubric + human labels).",
-        "fr": "Procédure actionnable — traiter chaque élément du tableau un par un :\n1) Définir critère de décision : « existe-t-il UNE seule réponse correcte vérifiable automatiquement ? »\n   - Oui → considérer comme objectif. Exemples : exactitude d’un calcul, présence/absence d’un token, sortie JSON valide, conformité à un schéma.\n   - Non → considérer comme subjectif. Ex. : qualité rédactionnelle, pertinence d’argument, jugement éthique.\n\n2) Pour les items objectifs (automatisables) :\n   - Écrire assertions unitaires précises (ex. equality check, regex, schéma JSON, tolérance numérique).\n   - Couvrir cas limites et données adversariales.\n   - Automatiser exécution et signaler erreurs reproductibles.\n\n3) Pour les items subjectifs (nécessitent jugement) :\n   - Créer une grille d’évaluation (rubric) avec critères mesurables et exemples d’ancrage (exemples acceptables / inacceptables).\n   - Former évaluateurs, mesurer inter-annotateur (Cohen’s kappa) et fixer seuils d’acceptation.\n   - Mettre en place double-review + arbitrage en cas de désaccord.\n\n4) Point de contrôle / boucle rétro :\n   - Journaliser décisions, taux d’accord, erreurs automatiques.\n   - Réviser rubriques/tests périodiquement à partir d’échantillons d’audit.\n   - Versionner critères et cas tests, et revalider les éléments modifiés.\n\nRisques concrets : tests trop stricts (faux négatifs), validations fragiles (brittle), dérive des évaluateurs, biais d’ancrage, attaques adversariales. Mitigations : tolérances explicites, robustesse des tests, calibration régulière, audits aléatoires."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "advanced",
-      "skillTags": [
-        "Architecture",
-        "Automation",
-        "Compliance"
-      ],
-      "title": {
-        "en": "Incorrect: Return to the Model-based vs. Code-b...",
-        "fr": "Incorrect : Retour à Model-based vs. Code-b..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_architect_professional__02_016",
-      "courseId": "claude_certified_architect_professional__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_06",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped: Move on if you need to but come back before the cumulative task.",
-        "fr": "Ignoré : Passez à autre chose si nécessaire, mais revenez avant la tâche cumulée."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "If you choose to skip an exercise now, treat it as a temporary deferment with a clear plan to return before the cumulative task. Do the following:\n\n1. Flag it immediately\n   - Add a calendar reminder 3–7 days before the cumulative deadline.\n   - Mark the exercise in your course tracker (priority: medium/high).\n\n2. Capture context in 5–10 minutes\n   - Copy the exercise prompt and any requirements into a “To-do” note.\n   - Record why you skipped (time, stuck on a subtask, waiting for resources).\n   - Save any partial work, error messages, or attempted approaches.\n\n3. Estimate and schedule\n   - Estimate remaining time needed (be realistic: 30–90 minutes).\n   - Block that time with a 15–30 minute buffer before the cumulative task.\n\n4. Reduce restart friction\n   - List prerequisites and required resources (links, datasets, docs).\n   - Write the specific next step to take when you return (e.g., “re-run tests; fix failing edge case in function validate_input”).\n   - Tag related exercises to revisit together if dependencies exist.\n\n5. If stuck on content\n   - Note the exact question you’re unsure about and one or two hypotheses.\n   - Plan to ask instructor/peers or search docs before your scheduled revisit.\n\nFollowing these steps ensures the skipped exercise won’t become last-minute work and you can integrate it into cumulative preparation efficiently.",
-        "fr": "Interprétation attendue et bonnes pratiques — que doit contenir une réponse de qualité\n\n1) Compréhension : reconnaître qu’on peut mettre de côté une tâche non cruciale mais qu’il faut la réintégrer avant la « tâche cumulée ». Expliquer brièvement pourquoi (priorisation, efficacité, dépendances).\n\n2) Actions concrètes à exécuter quand on « ignore » une tâche :\n- Marquer la tâche comme « différée » dans le gestionnaire de tâches.\n- Capturer le contexte minimal (objectif, état actuel, points ouverts, dépendances).\n- Estimer le temps nécessaire pour la reprise et une date/échéance de révision.\n- Créer un rappel/calendrier ou ticket avec notification avant la tâche cumulée.\n- Informer les parties prenantes si la tâche affecte d’autres personnes.\n\n3) Risques concrets à lister :\n- Oublier la tâche (perte de travail).\n- Perte de contexte rendant la reprise plus lente.\n- Blocage d’autres activités dépendantes.\n- Mauvaise coordination avec l’équipe.\n\n4) Checklist pour la réintégration (avant la tâche cumulée) :\n- Relire le contexte capturé.\n- Actualiser l’estimation et l’état des dépendances.\n- Tester/valider les résultats nécessaires pour la tâche cumulée.\n- Marquer « prêt » ou escalader si obstacles.\n\nExemple de note rapide à laisser : « Différé — raison : priorité X. État : 40% (tests manquants). Dépendances : API Y. Reprendre avant 2026-08-01. Temps estimé : 2h. »"
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "advanced",
-      "skillTags": [
-        "API Integration",
-        "Architecture",
-        "Computer Vision"
-      ],
-      "title": {
-        "en": "Skipped: Move on if you need to but come back b...",
-        "fr": "Ignoré : Passez à autre chose si besoin, mais revenez b..."
-      }
-    },
-    {
       "id": "ex_claude_certified_architect_professional__02_017",
       "courseId": "claude_certified_architect_professional__02",
       "lessonId": "lesson_01",
@@ -1633,102 +1565,6 @@
       "title": {
         "en": "Correct: Right. The stable 5,000-token system p...",
         "fr": "Correct : Exact. Le système stable de 5 000 tokens p..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_architect_professional__02_018",
-      "courseId": "claude_certified_architect_professional__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_08",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Partially correct: You found a working setup, but the load-bearing lever here isn't the model tier, it's caching the stable system prompt. At 50,000 calls with a 5,000-token fixed prefix, the cache hit is where the cost savings live. Re-look at what the cost readout does when you toggle caching.",
-        "fr": "Partiellement correct : Vous avez trouvé une configuration qui fonctionne, mais le levier déterminant ici n'est pas le niveau du modèle, c'est la mise en cache du stable system prompt. À 50 000 appels avec un préfixe fixe de 5 000-token, le cache hit est l'endroit où se font les économies de coût. Regardez à nouveau ce que fait l'affichage du coût lorsque vous basculez la mise en cache."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "What you should check and how to validate the claim that caching the stable system prompt is the cost lever (not model tier):\n\n1. Theory + quick math\n- Cached-savings = calls * prefix_tokens * cache_hit_rate.\n- Example: 50,000 calls × 5,000-token prefix = 250,000,000 prefix tokens. If input (prompt) billing is $0.02 per 1k tokens: savings ≈ (250,000,000 / 1,000) * $0.02 = $5,000 at 100% hit rate. Use this formula with your actual per‑1k price.\n\n2. Concrete validation steps\n- Baseline (cache off): run representative batch (e.g., 1000 calls), record prompt tokens, completion tokens, total tokens, estimated cost.\n- Turn caching on (ensure the cached object is exactly the stable system prompt — identical bytes/whitespace/tokenization), run same batch.\n- Compare: prompt-token count should drop roughly by prefix_tokens × calls × hit_rate; completion tokens should remain ~same.\n\n3. What to read in the cost UI/logs when toggling caching\n- Prompt tokens billed (should fall sharply when cache hits).\n- Total estimated cost (should decrease roughly by your calculated savings).\n- Cache hit rate / miss count (should explain residual billed prefix tokens).\n- Latency and any cache warm-up behavior.\n- Any “cached tokens” or “cached prompt usage” metric if available.\n\n4. Troubleshooting if numbers don’t match\n- Verify cache key: even tiny differences (timestamps, whitespace, different tokenization) break hits.\n- Check whether caching is per-model (ensure same model variant).\n- Check partial caching behavior and eviction/warm-up effects.\n- Re-run at scale to average out noise.\n\nFollow these steps and match observed savings to the calculated expectation; if they diverge, inspect cache key/tokens and hit-rate telemetry.",
-        "fr": "Points concrets à vérifier et comment prouver que la mise en cache du system prompt est le levier principal\n\n1) Hypothèse et formule simple\n- Si vous avez N appels, un préfixe fixe de T tokens (ici T = 5000) et un coût par token d’entrée c_in, l’économie attendue ≈ N × T × c_in × hit_rate. Utilisez cette formule pour estimer les gains attendus avant test.\n\n2) Test expérimental reproductible\n- Préparez deux séries de tests identiques (même prompt, mêmes entrées) : avec cache activé vs cache désactivé.\n- Exécutez suffisamment d’appels (ex. N = 50 000). Mesurez : coût total, coût input vs output, nombre total de tokens facturés, et taux de cache hit.\n- Assurez-vous que le system prompt est strictement identique (même encodage, pas d’espaces/retours) pour permettre le cache.\n\n3) Ce que doit afficher l’interface/le log\n- Avec cache ON : baisse importante du coût input; le tableau doit montrer des “cache hits” ou une valeur de tokens d’entrée beaucoup plus faible par appel.\n- Avec cache OFF : tokens d’entrée ≈ T par appel, coût input élevé.\n- Comparez coûts totaux et calculez hit_rate observé. Les économies réelles = différence de coût mesurée, et doivent être proches de la valeur estimée par la formule.\n\n4) Risques et vérifications\n- Risque : préfixe qui change subtilement (horodatage, identifiants dynamiques) casse le cache → vérifier stabilisation du prompt.\n- Risque : cache local/serveur non partagé entre instances → tester sur l’environnement de production cible.\n- Vérifier \"warm-up\" : premiers appels peuvent ne pas être mis en cache; excluez ou notez cette période.\n\n5) Conclusion attendue d’une bonne réponse\n- Montrer la formule chiffrée, fournir les résultats expérimentaux (N, T, hit_rate, coûts ON vs OFF) et conclure que la réduction de coût provient principalement des cache hits sur le system prompt, pas du niveau du modèle."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "advanced",
-      "skillTags": [
-        "Architecture",
-        "Batch Processing",
-        "Business Value"
-      ],
-      "title": {
-        "en": "Partially correct: You found a working setup, b...",
-        "fr": "Partiellement correct : Vous avez trouvé une configuration fonctionnelle, b..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_architect_professional__02_019",
-      "courseId": "claude_certified_architect_professional__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_09",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Incorrect: Two targets must be green at once. Start by caching the stable system prompt, then choose the lowest tier that still meets the latency target. Raising max_tokens works against you on both axes. Re-read the cost-and-reliability section, then try the calculator again.",
-        "fr": "Faux : Deux cibles doivent être vertes en même temps. Commencez par mettre en cache le stable system prompt, puis choisissez le niveau le plus bas qui respecte encore la cible de latence. L'augmentation de max_tokens vous nuit sur les deux axes. Relisez la section coûts et fiabilité, puis réessayez le calculateur."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "Correct framing: you must meet all required targets (cost, latency, reliability). Don’t treat “two green lights” as a rule — validate each SLO independently and together.\n\nStep-by-step practical plan\n1. Cache the stable system prompt server‑side. Keep only dynamic user content in the live request so fewer tokens are sent per call (store the system prompt in memory or a fast cache and prepend it locally when building the request).\n2. Measure end‑to‑end p95 latency under representative load (use wrk/vegeta/postman runner). Record tokens_in, tokens_out, and QPS.\n3. Pick the lowest model tier that satisfies your p95 latency and error‑rate SLO at that measured QPS (benchmark tiers, scaled replicas if needed). Don’t assume lower tier is always slower — measure.\n4. Reduce max_tokens to the actual needed output length (each extra token increases cost and response time). If you need long outputs, consider chunking or streaming to reduce perceived latency.\n5. Revisit the cost-and-reliability documentation, then plug your measured QPS and token counts into the cost calculator to compute $/month and check capacity headroom.\n6. Iterate: if cost too high, try further prompt compression, batching requests, or a lower tier with autoscaling; if latency too high, increase tier or add more replicas.\n\nConcrete checks: p95 latency <= target, error rate <= target, monthly cost <= budget. If any fail, loop steps 1–6.",
-        "fr": "Faux — vous n’avez pas besoin que \"deux cibles soient vertes en même temps\". Priorisez la cible principale (p. ex. latence) puis vérifiez que les autres restent acceptables. Correction modèle (actions concrètes) :\n\n1) Cachez le stable system prompt :\n   - Stockez localement le texte du prompt système et ne le renvoyez que s’il change.\n   - En pratique : envoyer le system prompt une fois lors d’une session ou passer un ID/template côté serveur, et joindre seulement l’input utilisateur ensuite.\n\n2) Choisissez le niveau le plus bas respectant la cible de latence :\n   - Mesurez p50/p95/p99 pour chaque niveau de modèle avec votre payload réel.\n   - Sélectionnez le niveau le moins coûteux dont le p95 < SLA.\n\n3) Réglez max_tokens intelligemment :\n   - Estimez la taille moyenne de réponse + marge (ex. +20 %), fixez max_tokens à cette valeur minimale.\n   - Pourquoi : max_tokens augmente le coût (coût ∝ tokens) et la latence maximale (décodage séquentiel).\n\n4) Refaire le calculateur (coûts & fiabilité) :\n   - Formule : coût_par_requête = (input_tokens + expected_output_tokens) * coût_par_token.\n   - Calculez coût horaire = coût_par_requête * QPS * 3600, ajoutez 30% de buffer pour pics/retentatives.\n   - Vérifiez p95 latency × QPS pour détecter contention.\n\nChecklist à fournir dans une bonne réponse :\n- emplacement du cache du prompt et logique d’invalidation\n- tokens estimés (in/out), max_tokens choisi et justification\n- mesures p50/p95/p99 par niveau de modèle\n- coût calculé et buffer de fiabilité\n- décision finale et trade-offs acceptés."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "advanced",
-      "skillTags": [
-        "Architecture",
-        "Batch Processing",
-        "Benchmarking"
-      ],
-      "title": {
-        "en": "Incorrect: Two targets must be green at once. S...",
-        "fr": "Incorrect : Deux cibles doivent être vertes en même temps. S..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_architect_professional__02_020",
-      "courseId": "claude_certified_architect_professional__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_10",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped: Move on if you need to, but the cost-and-latency tradeoff is tested again in the cumulative task. So come back before then.",
-        "fr": "Ignoré : Passez à autre chose si nécessaire, mais le compromis coût-latence est à nouveau testé dans la tâche cumulée. Revenez-y d'ici là."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "It’s fine to skip this exercise for now — but mark it and come back before the cumulative task. That task will require you to demonstrate practical tradeoffs between cost and latency, so prepare deliberately.\n\nWhat to note now (and review before returning)\n- Core tradeoffs: larger models → higher quality but greater token cost and higher latency; smaller models → lower cost and faster responses but potentially lower quality.\n- Concrete levers to practice: model selection, prompt/token length reduction, batching vs single requests, streaming (reduces perceived latency), caching, response truncation/stop sequences, parallelism limits, and early-stopping strategies.\n- Metrics to measure: median and P95 latency, tokens/request, cost/request (or cost per 1k tokens), accuracy/quality score. Record results in a simple table.\n\nActionable prep steps\n1. Bookmark this exercise and set a reminder to return before the cumulative task.\n2. Run 2–3 small experiments (50–200 requests each): vary model size, enable/disable streaming, vary prompt length. Collect latency (median/P95), tokens, and cost.\n3. Summarize findings: which config meets a target (e.g., <500 ms median latency at ≤$X per 1k requests) and what quality tradeoff occurs.\n4. Prepare a short justification (1–2 paragraphs) of your chosen configuration for the cumulative task, citing your measured metrics.\n\nComing back with this data will let you confidently optimize cost vs latency in the cumulative exercise.",
-        "fr": "Réponse attendue — correction modèle (français)\n\nReconnaître l’instruction et la gérer explicitement : noter que l’optimisation coût‑latence est différée, mais préparer tout ce qui permettra de la reprendre efficacement. Une bonne réponse doit contenir ces éléments concrets et actionnables :\n\n1. Action immédiate (ce qu’on fait maintenant)\n   - Marquer la tâche “différée” dans le backlog avec priorité et deadline pour la tâche cumulée.\n   - Ne pas effectuer d’optimisations immédiates qui modifieraient les baselines.\n\n2. Capturer un baseline reproductible (obligatoire)\n   - Enregistrer configuration exacte : modèle, version, quantization, instance HW, batch size, payload type.\n   - Mesurer et stocker : P50/P95/P99 latences, throughput, coût par requête et coût horaire, précision/metric métier.\n   - Méthodologie : nombre d’échantillons, warm‑up, variance, environnement (région, réseau).\n\n3. Plan d’expérimentation pour la tâche cumulée\n   - Variables à balayer : taille du modèle, quantize/ prune, batching, autoscaling, types d’instances, caching.\n   - Critères de succès : courbe coût vs latence, seuils acceptables (ex : P95 < X ms à coût ≤ Y €/1000 req).\n   - Scripts/automatisation : CI pour reproduire tests, logs pour audit.\n\n4. Risques à signaler\n   - Oublier de revenir au ticket, perte de baselines, dérive de configuration, instrumentation insuffisante.\n\nExemple de template à joindre au ticket : {env, modèle, commit, métriques P50/P95/P99, coût/unité, date, contact}."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "advanced",
-      "skillTags": [
-        "Architecture",
-        "Automation",
-        "Batch Processing"
-      ],
-      "title": {
-        "en": "Skipped: Move on if you need to, but the cost-a...",
-        "fr": "Ignoré : passez à autre chose si nécessaire, mais le coût-a..."
       }
     },
     {
@@ -1793,38 +1629,6 @@
       "title": {
         "en": "All correct.: You read the integration cleanly....",
         "fr": "Tout est correct : vous avez bien lu l'intégration...."
-      }
-    },
-    {
-      "id": "ex_claude_certified_architect_professional__02_023",
-      "courseId": "claude_certified_architect_professional__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_03",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Partially correct: You found most of them. The ones learners miss most are the forged user-asserted identity and the unlogged response path, both are silent failures that leave no audit trail. Re-read the constraint-to-integration matrix and reselect: check who asserts identity, what data crosses each boundary, and whether it's logged.",
-        "fr": "Partiellement correct : Vous en avez trouvé la plupart. Les éléments que les apprenants manquent le plus sont l'identité revendiquée par l'utilisateur, falsifiée, et le chemin de réponse non journalisé; tous deux constituent des échecs silencieux qui ne laissent aucune trace d'audit. Relisez la matrice contrainte-intégration et sélectionnez à nouveau : vérifiez qui affirme l'identité, quelles données franchissent chaque frontière et si elles sont journalisées."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Reselect checks using three focused questions for every row/column in the constraint→integration matrix: (1) Who asserts identity? (2) What data crosses this boundary? (3) Is it logged (and how)?\n\nConcrete checklist to apply to each integration point\n- Identity source and trust\n  - Identify the explicit identity assertion source (user input, IdP SSO, API key, upstream service, model output).\n  - Require cryptographic/assertion checks: signed JWTs, IdP metadata verification, mutual TLS, or signed assertions from the producer.\n  - Reject or flag unsigned/unstable assertions. Record the verifier and validation result.\n- Data crossing boundaries\n  - Enumerate data classes that cross (PII, credentials, prompts, responses, summaries, metadata).\n  - Classify sensitivity and enforce controls: encryption in transit, minimal disclosure, redaction.\n  - Record provenance: source, transformation steps, timestamps.\n- Logging and auditability\n  - Require an immutable audit event for every identity assertion and every response path entry/exit (include correlation ID).\n  - Ensure logs include: assertion issuer, assertion ID, validation result, data classification, boundary name, and response path step IDs.\n  - Use tamper-evident storage (append-only, signed/log-backend with integrity checks); retain per policy.\n  - Instrument distributed tracing so missing spans indicate unlogged paths; add CI tests that simulate edge cases and assert logs were created.\n- Detect silent failures\n  - Add runtime assertions that block responses if no audit event was emitted.\n  - Monitor for gaps (missing correlation IDs, truncated traces) and alert for forgeries or unlogged flows.\n\nImplement these checks as part of design reviews, threat models, and automated CI tests.",
-        "fr": "Points précis à vérifier et corriger (réponse que doit contenir une bonne solution) :\n\n1) Pour chaque frontière de la matrice, posez et documentez ces trois questions :\n   - Qui affirme l’identité à cette frontière ? (utilisateur, service tiers, token inter-service)\n   - Quelles données franchissent la frontière ? (nom d’utilisateur, token JWT, payload PHI/PII, métadonnées)\n   - Ces événements sont-ils journalisés ? (oui/non + emplacement du log)\n\n2) Risques silencieux à identifier et tests pratiques :\n   - Identité falsifiée : tester la rejouabilité et la falsification de tokens (replay d’un JWT expiré, modification du champ sub, signature invalide). Vérifier validation de signature + audience + expiration.\n   - Chemin de réponse non journalisé : simuler un cas où la réponse passe par un cache ou un proxy non instrumenté ; confirmer absence/presence d’entrée d’audit.\n\n3) Logs requis (format minimal/actionnable) :\n   - timestamp, boundary_id, correlation_id, source_ip, claimed_identity, auth_method, token_id/hash, action (accept/deny), data_hash, outcome.\n   - Stocker en append-only, horodatage centralisé (SIEM), rétention et contrôle d’accès.\n\n4) Contrôles à mettre en place :\n   - Auth mutualisée entre services, validation stricte des tokens, signature/nonce, enchaînement des logs via correlation_id, détection d’anomalies (replay, chemins sans logs).\n   - Marquage des données sensibles et règles de filtrage avant franchissement.\n\n4) Exemple d’action corrective : pour chaque ligne de la matrice, ajouter colonnes “claimant”, “data_items”, “logged? (path & location)”; exécuter tests d’injection/falsification et corriger les frontières où logged? = non."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "advanced",
-      "skillTags": [
-        "API Integration",
-        "Architecture",
-        "Automation"
-      ],
-      "title": {
-        "en": "Partially correct: You found most of them. The ...",
-        "fr": "Partiellement correct : Vous en avez trouvé la plupart. Le ..."
       }
     },
     {

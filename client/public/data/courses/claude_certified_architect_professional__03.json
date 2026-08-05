@@ -984,38 +984,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_architect_professional__03_007",
-      "courseId": "claude_certified_architect_professional__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_07",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Model answer\n1. Indirect prompt injection via the knowledge base. Retrieved content can carry instructions; mitigation is to treat retrieved text as untrusted and screen tool/content inputs, not just user input.\n2. Tool and action abuse on the refund tool. Mitigation is an action-authorization check that runs before the refund tool executes, independent of the model's output.\n3. Token-budget exhaustion on large knowledge-base documents. Mitigation is chunking and input limits plus budget monitoring so a large document cannot truncate the work silently.",
-        "fr": "Ignorer pour le moment\nRéponse du modèle\n1. Injection indirecte de prompt via la base de connaissances. Le contenu récupéré peut contenir des instructions ; la mitigation consiste à traiter le texte récupéré comme non fiable et à filtrer les entrées d’outils et de contenu, pas seulement l’entrée utilisateur.\n2. Abus d’outils et d’actions sur l’outil de remboursement. La mitigation est une vérification d'autorisation d'action qui s'exécute avant l'exécution de l’outil de remboursement, indépendamment de la sortie du modèle.\n3. Épuisement du budget de tokens sur les documents volumineux de la base de connaissances. La mitigation consiste en du chunking et des limites d'entrée, ainsi que la surveillance du budget, afin qu'un grand document ne puisse pas tronquer le travail silencieusement."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "1. Indirect prompt injection via the knowledge base\n- Risk: Retrieved passages may contain hidden instructions or adversarial prompts that influence model outputs.\n- Mitigations: Treat all retrieved content as untrusted input. Implement input-sanitization and instruction-scrubbing (remove imperative verbs, detect prompt-like patterns). Add provenance tags and source allowlists/denylists; prefer structured metadata over raw text. Run a lightweight classifier or regex rules to flag/remove instruction-like content before it reaches the model. Log and surface flagged items for human review.\n\n2. Tool and action abuse on the refund tool\n- Risk: The model could be tricked into triggering refunds or other privileged actions.\n- Mitigations: Enforce server-side action-authorization independent of model output: require an authentication token, role-based access control (RBAC), and an explicit signed approval step before executing refunds. Implement a pre-action policy check microservice that verifies intent, user identity, and business rules (limits, recent approvals). Require human-in-the-loop confirmations for high-value actions and record audit logs with diffs and timestamps.\n\n3. Token-budget exhaustion on large KB documents\n- Risk: Extremely large retrieved documents can exhaust model context, truncating critical content.\n- Mitigations: Chunk documents with size limits (max tokens per chunk), use retrieval-then-summarize pipelines, and enforce per-request token caps. Monitor token consumption and abort or stream responses when budgets approach limits. Prefer incremental retrieval and relevance scoring to avoid fetching whole documents; surface warnings when content was truncated.",
-        "fr": "1) Injection indirecte via la base de connaissances — risques concrets : documents contenant instructions (ex. \"Ignore previous instructions\", \"Process refund without auth\") ; fuite de contexte utilisateur. Mitigations actionnables :\n- Traiter tout contenu récupéré comme non fiable : désactiver l'exécution d'instructions trouvées dans le contenu (ne pas concaténer raw doc -> prompt).\n- Nettoyage automatique : enlever lignes commençant par verbes impératifs, balises \"instruction\", snippets de code ; appliquer un classifieur ML simple (entraînement sur exemples d'\"instructions\" vs \"données\") pour filtrer docs instructifs.\n- Provenance : joindre métadonnées (source, horodatage, score de confiance) et n'utiliser que docs au-dessus d'un seuil.\n- Tests : créer cas d'attaque avec phrases \"ignore previous\" pour vérifier rejet.\n\n2) Abus d’outils / action de remboursement — risques concrets : exécution non autorisée, fraude, replay attacks. Mitigations actionnables :\n- Gatekeeper d’autorisation indépendant du modèle : vérifier RBAC, signatures, et état de session avant d’exécuter l’outil.\n- Validation à 2 étapes : confirmation humaine ou challenge cryptographique (ex. signer requête avec une clé de service).\n- Journaux immuables et alerting en cas d’opération sensible ; révoquer clés compromises ; limiter taux/volume par compte.\n\n3) Épuisement du budget de tokens — risques concrets : gros docs tronquent contexte utile. Mitigations actionnables :\n- Chunking déterministe (ex. 1000 token chunks, overlap 100), résumé préalable par modèle pour docs > 5k tokens.\n- Enforcer : max_input_tokens global (ex. 4k) et rejeter/signer erreur claire si dépassé.\n- Priorisation de récupération (top-k par pertinence) et monitoring d’usage de tokens + alertes (SLOs pour latence/erreur)."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Architecture",
-        "Automation",
-        "Context Design"
-      ],
-      "title": {
-        "en": "Model answer",
-        "fr": "Passer pour le moment"
-      }
-    },
-    {
       "id": "ex_claude_certified_architect_professional__03_008",
       "courseId": "claude_certified_architect_professional__03",
       "lessonId": "lesson_01",
@@ -1304,70 +1272,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_architect_professional__03_017",
-      "courseId": "claude_certified_architect_professional__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_05",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped: Move on if you need to but come back before the cumulative task.",
-        "fr": "Sauté : Passez à autre chose si vous en avez besoin, mais revenez avant la tâche cumulée."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Acceptable approach when skipping a subtask — what a strong student would do:\n\n1. Decide intentionally\n- Timebox: skip only after a quick 5–15 minute assessment showing it’s low priority or blocked.\n- Record the reason (blocked, low value, needs data, out of scope).\n\n2. Mark it clearly\n- Add a visible TODO with metadata in code or issue tracker:\n  // TODO SKIPPED: blocked by API auth. Owner: @alice. Must revisit before cumulative task (due 2026-08-01).\n- Use labels: \"skipped\", \"blocked\", \"needs-revisit\".\n\n3. Capture dependencies & interface expectations\n- Document inputs/outputs, required contracts, and assumptions so later work can integrate cleanly.\n- Add minimal stubs/mocks so other tasks can proceed and CI can run.\n\n4. Schedule revisit checkpoints\n- Set a calendar reminder 1–2 weeks before the cumulative task and a second reminder 2–3 days before.\n- Add a ticket checklist: [ ] implement, [ ] unit tests, [ ] integration test, [ ] review.\n\n5. Risk mitigation\n- Note concrete risks (integration failure, hidden complexity) and contingency plans (pair with teammate, add extra buffer).\n- If high risk, do a short spike instead of full skip.\n\n6. On revisit\n- Run integration tests, remove stubs, update docs, and close the “skipped” label only after passing end-to-end checks.",
-        "fr": "Butée courte et contrôlée : l’idée est de s’interrompre consciemment puis de revenir avant une « tâche cumulée » (deadline ou point d’intégration). Correction modèle — ce que ferait un bon élève :\n\nDéfinition et objectif\n- Interruption volontaire et limitée pour recharger ou résoudre une micro-tâche sans compromettre l’intégration ultérieure.\n\nÉtapes actionnables\n1. Décidez pourquoi vous sautez (pause, info, micro-tâche) et combien de temps maximum (ex. 10–25 min).\n2. Capturez l’état : 1 phrase résumant l’avancement + 1 action concrète suivante (« Terminer section 2 ; reprendre à la ligne 42 »).\n3. Programmez un déclencheur clair : heure précise, minuterie, ou événement (ex. « revenir 30 min avant la réunion de synthèse »).\n4. Bloquez un tampon (10–15 min) avant la tâche cumulée pour ré-aligner et vérifier dépendances.\n5. Limitez l’activité pendant le saut (repos court, lecture ciblée, tâche non liée courte).\n6. Rituel de reprise : relire la phrase de capture + relancer l’outil/doc en <5 min.\n\nRisques concrets et mitigations\n- Perdre le contexte → note synthétique + capture d’écran.  \n- Procrastination prolongée → alarme et engagement public (messagerie, collègue).  \n- Sous-estimation du temps → ajouter buffer de 10–15 min.  \n- Conflits de priorité → vérifier calendrier avant de sauter.\n\nCritères de succès\n- Vous revenez au moins 10–15 min avant la tâche cumulée, relancez le travail en ≤5 min et respectez la deadline."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "advanced",
-      "skillTags": [
-        "API Integration",
-        "Architecture",
-        "Context Design"
-      ],
-      "title": {
-        "en": "Skipped: Move on if you need to but come back b...",
-        "fr": "Ignoré : Passe à autre chose si tu en as besoin, mais reviens b..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_architect_professional__03_018",
-      "courseId": "claude_certified_architect_professional__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_06",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped: Move on if you need to, but the cumulative task asks you to produce a risk assessment from scratch.",
-        "fr": "Ignoré : Passez à autre chose si nécessaire, mais la tâche globale vous demande de produire une évaluation des risques à partir de zéro."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Scope & objective\n- Assess risks to [system/project X], covering confidentiality, integrity, availability, legal/compliance, and operational impacts. Timebox: 4 weeks.\n\nMethod\n1. Asset inventory: list data, systems, people, third parties and value.\n2. Threat & vulnerability identification: map realistic threat actors (insider, external attacker, supplier failure) to specific vulnerabilities (unpatched software, weak access controls).\n3. Risk analysis: score likelihood and impact on 1–5 scales; compute Risk Score = Likelihood × Impact.\n4. Prioritization: sort by Risk Score, then by business criticality.\n5. Mitigation planning: assign controls, owners, deadlines, and residual risk.\n6. Monitoring & review: KPIs, monthly reviews, incident playbooks, annual reassessment.\n\nRisk register template (columns)\n- ID | Description | Asset | Threat | Vulnerability | Likelihood (1–5) | Impact (1–5) | Score | Controls (preventive/detective/corrective) | Residual Score | Owner | Target Date | Status\n\nExample entry\n- R1 | Data exfiltration of customer PII | Customer DB | External attacker | Weak MFA & unpatched DB | Likelihood 4 | Impact 5 | Score 20 | Enforce MFA, patching policy, network segmentation, IDS/IPS, logging & alerting | Residual 6 | IT Security Lead | 8 weeks | In progress\n\nConcrete mitigations\n- Patch management schedule, least privilege, MFA, encrypted backups, SLA clauses with vendors, incident response plan, privacy-impact assessment, regular tabletop exercises.\n\nAssumptions & data sources\n- Use logs, vulnerability scans, pen-tests, compliance reports, business impact analysis. Document assumptions and review with stakeholders.",
-        "fr": "Objectif : fournir une évaluation des risques complète et reproductible, utilisable dès zéro.\n\nÉtapes concrètes\n1. Définir le périmètre et les actifs (systèmes, données, personnes, fournisseurs). Documenter hypothèses.\n2. Identifier menaces et vulnérabilités par actif (brainstorm + sources : incidents passés, audits, threat intelligence).\n3. Choisir méthode d’analyse : évaluation qualitative (5x5 probabilité × impact) ou quantitative (valeur monétaire).\n4. Construire registre des risques (colonnes minimales : ID, actif, risque, cause, probabilité, impact, score, gravité, mesures existantes, actions recommandées, propriétaire, échéance, statut).\n   - Exemple de ligne : R1 | Base clients | Perte de données personnelles | défaut de chiffrement | Prob 4/5 | Impact 5/5 | Score 20 | Élevé | Chiffrement AES-256, IAM | Implémenter rotation clés + MFA | Propriétaire: SecOps | 3 mois | En cours\n5. Prioriser (seuils : score 1–8 faible, 9–15 moyen, 16–25 élevé). Allouer ressources selon criticité.\n6. Définir mesures de traitement : réduction (contrôles techniques/process), transfert (assurance), acceptation, évitement. Pour chaque mesure préciser coûts, bénéfices, indicateurs de succès.\n7. Plan de surveillance : KPIs (nombre d’incidents, temps MTTR, conformité patch), fréquence des revues (mensuelle/trim.), tests (pentest, exercises DR), reporting au management.\n8. Documenter risques résiduels et décisions d’acceptation. Tenir journal des changements.\n\nRisques concrets à vérifier : fuite de données, non-conformité réglementaire, panne d’infrastructure, compromission par tiers, biais de modèle, attaques adversariales, fraude interne, interruption chaîne d’approvisionnement, catastrophe naturelle.\n\nLivrables recommandés : registre des risques, heatmap, plan d’action avec propriétaires et calendrier, résumé exécutif pour la direction."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "advanced",
-      "skillTags": [
-        "Architecture",
-        "Compliance",
-        "Computer Vision"
-      ],
-      "title": {
-        "en": "Skipped: Move on if you need to, but the cumula...",
-        "fr": "Ignoré : Passe à autre chose si tu dois, mais le cumula..."
-      }
-    },
-    {
       "id": "ex_claude_certified_architect_professional__03_019",
       "courseId": "claude_certified_architect_professional__03",
       "lessonId": "lesson_01",
@@ -1560,38 +1464,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_architect_professional__03_025",
-      "courseId": "claude_certified_architect_professional__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_01",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped: Move on if you need to, but come back before the cumulative task, which asks you to instrument a flow like this one across several decisions at once.",
-        "fr": "Ignoré : Passez à autre chose si nécessaire, mais revenez avant la tâche cumulée, qui vous demande d'instrumenter un flux comme celui-ci à travers plusieurs décisions à la fois."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "If you skip this exercise now, set up a lightweight plan so you can pick it up precisely where you left off and finish the cumulative task reliably.\n\nImmediate actions before skipping\n- Create a short TODO item (issue/ticket) titled “Instrument flow across decisions — resume here,” with links to the exercise and cumulative task.\n- Capture current state: branch name or files changed, notebooks open, sample inputs, and any partial outputs.\n- Note blockers and assumptions (e.g., missing schema, unavailable service) so you don’t re-discover them later.\n\nPreparation checklist to complete before the cumulative task\n1. Identify decision points: list each decision node in the flow (inputs, outputs, model used, thresholds).\n2. Define telemetry for each decision: needed events (decision_evaluated, decision_outcome, decision_error), key fields (request_id, user_id, timestamp, input_hash, model_version, confidence), and retention rules.\n3. Choose tracing convention: single request_id propagated across all decisions; use parent/child decision ids.\n4. Instrumentation implementation plan: where to add logging/traces, use OpenTelemetry or your stack, sample code snippet pattern (log structured JSON with request_id and decision_id).\n5. Testing: unit tests for emitted events, end-to-end test to verify propagation and dashboard ingest.\n6. Monitoring & alerts: dashboards showing decision counts, drift, error rates, and an alert threshold.\n7. Privacy & compliance: ensure no PII in logs and add masking/obfuscation rules.\n\nRisks to note\n- Lost correlation if request_id isn’t propagated\n- Excessive logging costs or PII leakage\n- Inconsistent schemas across decisions\n\nHaving this documented and a small test harness will let you resume quickly and complete the cumulative instrumentation task.",
-        "fr": "Interprétation attendue\nTraitez \"Ignoré\" comme un skip contrôlé, pas comme une suppression. L’étudiant doit montrer comment marquer l’état, préserver le contexte, et garantir un retour avant la tâche cumulée.\n\nPoints concrets à couvrir (ordre d’implémentation)\n- Marquer l’état : ajouter un flag “skipped=true” + raison, timestamp, user/actor. Conserver la snapshot des inputs pour reprise.\n- Corrélation : générer flow_id + decision_id/parent_id pour tracer plusieurs décisions liées.\n- Événements observables : émettre decision_requested, decision_skipped, decision_resumed, decision_completed, decision_failed.\n- Métadonnées à logguer : flow_id, decision_id, timestamp, input_hash, outcome, confidence, duration, actor, retry_count.\n- Idempotence & reprise : stocker seed/inputs, version du modèle, et un point de reprise (cursor) pour ré-exécuter ou compenser.\n- Tests & validation : cas de reprise, replay deterministe, métriques (skip_rate, mean_time_to_resume).\n- Sécurité/PII : redaction configurable, ACLs, politique de conservation.\n\nExemple d’événement JSON\n{\"event\":\"decision_skipped\",\"flow_id\":\"F123\",\"decision_id\":\"D4\",\"ts\":\"2026-07-25T12:00:00Z\",\"reason\":\"await_external\",\"input_hash\":\"ab12\",\"actor\":\"agent-A\"}\n\nPseudocode minimal (JS-like)\nemitEvent(\"decision_skipped\", meta);\npersistState({flow_id, decision_id, inputs, skipped:true});\nonResume(()=> { loadState(); requeueDecision(); emitEvent(\"decision_resumed\", meta); });\n\nUne bonne réponse inclura ces éléments et montrera comment la reprise s’intègre avant la tâche cumulée."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "advanced",
-      "skillTags": [
-        "Agentic Design",
-        "Architecture",
-        "Compliance"
-      ],
-      "title": {
-        "en": "Skipped: Move on if you need to, but come back ...",
-        "fr": "Ignoré : Passez à autre chose si besoin, mais revenez ..."
-      }
-    },
-    {
       "id": "ex_claude_certified_architect_professional__03_026",
       "courseId": "claude_certified_architect_professional__03",
       "lessonId": "lesson_01",
@@ -1653,38 +1525,6 @@
       "title": {
         "en": "Not quite.: msgs[choice]+' Let stakes drive rou...",
         "fr": "Pas tout à fait.: msgs[choice]+' Let stakes drive rou..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_architect_professional__03_028",
-      "courseId": "claude_certified_architect_professional__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_04",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped: Move on if you need to, but come back before the cumulative task.",
-        "fr": "Ignoré : Pas besoin de continuer, mais revenez avant la tâche cumulée."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Skipping an exercise can be a productive choice if you manage it deliberately. A good model approach:\n\n1. Mark it clearly\n- Flag the exercise in your course system or add a “SKIPPED” tag in your notes.\n- Add a calendar reminder 3–7 days before the cumulative task (or earlier if multiple skips).\n\n2. Estimate effort and dependencies\n- Quick estimate: how long to complete (15 min, 1 hr, 3+ hrs).\n- Note prerequisite concepts required for the cumulative task; prioritize skipped items that cover those.\n\n3. Schedule a focused catch-up plan\n- Block a specific time (e.g., one 90–120 minute session or two 45-minute sessions) before the cumulative task.\n- Triage: do higher-impact/skilled items first (those heavily tested or core to later work).\n\n4. Active review steps when you return\n- Attempt the exercise under time constraints.\n- Compare to the model answer; annotate differences.\n- Summarize the core concept in one sentence and add a 3–5 item practice checklist.\n- If coding/prompting tasks, run and test examples until they work.\n\n5. Risk mitigation & support\n- Don’t accumulate many skips; limit to a small number.\n- Use office hours, peers, or forums if stuck.\n- Leave a 24–48 hour buffer to re-review before the cumulative.\n\nFollow these steps to skip smartly and ensure you’re prepared when the cumulative task arrives.",
-        "fr": "Correction modèle (que l'étudiant devrait viser) :\n\nInterprétation et action immédiate\n- Reconnaître l'instruction d'interruption et ne pas poursuivre la tâche cumulée.\n- Documenter précisément l'endroit où l'on s'arrête (étape, fichier, ligne, tests passing/failing).\n\nÉtat reproductible et sauvegarde\n- Committer le travail en cours sur une branche dédiée : \n  git checkout -b wip/stop-before-cumul\n  git add .\n  git commit -m \"WIP: interrompu avant tâche cumulée — état X, tests Y\"\n  git push origin wip/stop-before-cumul\n- Exporter l'environnement (requirements.txt, environment.yml) et snapshot des données si pertinentes.\n\nInstructions pour reprise\n- Rédiger un court README/TO-DO contenant :\n  - Point d'arrêt exact (fichiers, fonctions)\n  - Commandes pour reproduire l'état (build/test/run)\n  - Tests qui doivent passer et ceux qui échouent\n  - Dépendances externes et versions\n- Créer une issue/ ticket avec blocages connus et priorité.\n\nCommunication et rappel\n- Informer l'encadrant/équipe par message clair : exemple : \"Interrompu avant tâche cumulée — branch wip/stop-before-cumul. Voir README, tests unitaires échouent sur X. Besoin de Y pour continuer.\"\n- Programmer un rappel/calendrier pour revenir avant la date limite de la tâche cumulée.\n\nVérifications pré-reprise\n- À la reprise, exécuter : git pull, installer deps, lancer tests unitaires et un smoke test avant de poursuivre."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "advanced",
-      "skillTags": [
-        "Architecture",
-        "Business Value",
-        "Prompt Engineering"
-      ],
-      "title": {
-        "en": "Skipped: Move on if you need to, but come back ...",
-        "fr": "Ignoré : Passe à autre chose si nécessaire, mais reviens ..."
       }
     },
     {
@@ -1781,70 +1621,6 @@
       "title": {
         "en": "Not quite.: Either the control doesn't evidence...",
         "fr": "Pas tout à fait. Soit le contrôle ne met pas en évidence..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_architect_professional__03_032",
-      "courseId": "claude_certified_architect_professional__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_08",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped: You can skip, but the cumulative assembly asks you to defend control choices across a full deployment, so working this one now pays off there.",
-        "fr": "Ignoré : Vous pouvez ignorer, mais l'assemblage cumulatif vous demande de justifier les choix de contrôle sur l'ensemble du déploiement, donc le traiter maintenant vous sera utile là-bas."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "When the assembly asks you to “defend control choices,” reviewers expect clear, evidence-backed reasoning showing each control reduces specific risk, is implemented correctly, and is monitored. A strong answer includes: risk-to-control mapping, implementation detail, validation evidence, monitoring/metrics, ownership, residual risk, and a review cadence.\n\nConcrete checklist to defend one control (repeat per control):\n- Risk addressed: name the specific threat/vulnerability (e.g., “unauthenticated API abuse — excessive requests”).\n- Control objective: what the control must achieve (e.g., “limit requests per identity to prevent DoS and abuse”).\n- Implementation details: where and how it’s enforced (e.g., “rate limiting at API Gateway using token bucket, 100 req/min per API key; retries use exponential backoff”).\n- Validation evidence: tests and results (unit/integration tests, load tests, penetration test excerpts, config snapshots).\n- Monitoring & metrics: which KPIs and alerts (requests/min per key, 95th percentile latency, alert if >90% of keys hit limit for 10m).\n- Ownership & docs: control owner, runbook links, config repos, change approvals.\n- Residual risk & compensating controls: acknowledge limits (e.g., attackers rotate keys) and list mitigations (IP reputation blocking, WAF, anomaly detection).\n- Review cadence & audit trail: periodic re-evaluation schedule and where audit logs are stored.\n\nShort example:\nControl: API rate limit\n- Risk: credential stuffing / DoS\n- Objective: keep per-key requests ≤100/min\n- Impl: API Gateway token-bucket; config in repo; PR code review\n- Validation: load test report (link), unit tests\n- Monitor: metric “req_per_key_1m”, alert if >90th pct\n- Owner: Platform SRE; review quarterly\n- Residual: key rotation evasion mitigated by WAF + anomaly ML\n\nUse this pattern for each control across the deployment so reviewers can trace risk → control → evidence.",
-        "fr": "Bonne réponse attendue — structure et éléments concrets pour justifier les choix de contrôle sur l’ensemble du déploiement :\n\nStructure de justification à fournir pour chaque contrôle\n- Nom du contrôle.\n- Risque ciblé (concret).\n- Pourquoi ce contrôle (effet attendu).\n- Implémentation précise (technique, Outils/configs, paramètres).\n- Propriétaire opérationnel.\n- Indicateurs/mesures (métriques, SLO/alertes).\n- Preuve/validation (tests, audits, pentests).\n- Risque résiduel et mesures complémentaires.\n- Impact métier / compromis.\n\nContrôles exemplaires (avec détails actionnables)\n- Authentification forte (MFA + SSO OIDC, FIDO2 pour admins) — métrique : % comptes protégés, tentatives bloquées; vérif : revue logs, pentest phishing.\n- Contrôle d’accès (RBAC + principe de moindre privilège, JIT pour accès sensibles) — implémentation : rôles IAM, politique de révision trimestrielle.\n- Chiffrement (TLS1.3 en transit; KMS avec rotation automatique pour les données au repos) — preuve : scan TLS, rapport KMS.\n- Validation d’entrée/sortie + SCA (scanners SAST/DAST, dépendances signées) — métrique : vulnérabilités ouvertes vs résolues.\n- Protection périmétrique (WAF, rate limiting, IPS) — règles baselines + tuning par trafic réel.\n- CI/CD sécurisé (signing d’artefacts, scans SBOM, secrets detection), déploiements canaris.\n- Observabilité + IR (logs centralisés, alerting, runbooks, exercices IR et tests RTO/RPO).\n- Gouvernance et conformité (DPIA, mapping exigences régulatoires, revue de contrôle).\n\nPoints à expliciter pour l’assemblage cumulatif\n- Cartographier quels risques sont couverts par plusieurs contrôles (défense en profondeur) et où subsistent des dépendances uniques.\n- Priorisation basée sur impact/likelihood et coûts opérationnels.\n- Plan de vérification continue (tests automatisés, audits périodiques)."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "advanced",
-      "skillTags": [
-        "API Integration",
-        "Architecture",
-        "Automation"
-      ],
-      "title": {
-        "en": "Skipped: You can skip, but the cumulative assem...",
-        "fr": "Ignoré : Vous pouvez l'ignorer, mais l'assemblage cumulatif..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_architect_professional__03_033",
-      "courseId": "claude_certified_architect_professional__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_09",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped: This is the final exercise, so finish it before you leave the module.",
-        "fr": "Ignoré : C'est le dernier exercice, alors terminez-le avant de quitter le module."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Before leaving the module, complete and submit the final exercise by following this concise checklist and guidance.\n\nChecklist (actionable steps)\n1. Re-read the final-exercise instructions and grading rubric; note deliverables and acceptance criteria.  \n2. Confirm you’ve completed all required tasks (code, written answers, diagrams, demos). Mark each item done.  \n3. Run and verify any code or models: execute examples, run unit tests, and fix failing cases. Include exact commands and seeds so results are reproducible.  \n4. Prepare submission artifacts: source files, README with setup/run instructions, sample inputs/outputs, and screenshots or logs for evidence.  \n5. Write a 2–4 sentence summary of what you implemented, the main design choices, and remaining limitations or risks.  \n6. Self-check for rubric items: correctness, clarity, robustness, and safety/privacy considerations. Address any deficiencies.  \n7. Package and submit: push to repo or upload files, fill the submission form, and confirm receipt (screenshot or confirmation ID).  \n8. If stuck, contact the instructor/support with a concise issue summary and what you tried.\n\nQuick tips: leave clear comments, small commit history, and include how to reproduce your work.",
-        "fr": "Points qu’une bonne réponse finale doit contenir — checklist actionnable :\n\n1. Relire précisément l’énoncé : souligner les verbes d’action (implémenter, expliquer, comparer) et lister les livrables attendus (fichiers, format, durée, critères de rendu).\n2. Vérifier l’exhaustivité : chaque exigence doit être explicitement satisfaite (ex. “fonction X implémentée”, “tests unitaires fournis”, “résumé de 150‑200 mots”).\n3. Qualité technique / preuves : inclure code commenté + instructions d’exécution (commande exacte), captures d’écran ou sortie de test, et fichiers nommés selon la consigne (ex. projet_final_v1.zip).\n4. Justification et réflexions : expliquer brièvement les choix (2–4 phrases) et mentionner limites connues ou pistes d’amélioration.\n5. Tests et validation : fournir résultats de tests (pass/fail), cas de bord considérés, et étapes pour reproduire.\n6. Format et présentation : respecter format demandé (PDF, .py, .ipynb), orthographe, formatage, et références si utilisées.\n7. Soumission et confirmation : vérifier l’upload, conserver preuve (capture écran ou mail de confirmation), indiquer date/heure de soumission.\n\nErreurs fréquentes : livrable incomplet, absence de reproduction des résultats, noms de fichiers erronés, pas d’explication des choix. Actions finales : relire 5 min, zip/nommer correctement, soumettre, conserver preuve."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "advanced",
-      "skillTags": [
-        "AI Safety",
-        "Architecture",
-        "Data Privacy"
-      ],
-      "title": {
-        "en": "Skipped: This is the final exercise, so finish ...",
-        "fr": "Ignoré : Il s'agit du dernier exercice, alors terminez..."
       }
     }
   ]

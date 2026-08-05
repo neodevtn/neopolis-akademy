@@ -542,10 +542,6 @@
                   "correctBucket": "collaboratif"
                 }
               ]
-            },
-            {
-              "type": "checkpoint",
-              "exerciseId": "ex_claude_certified_associate_foundations__04_003"
             }
           ],
           "completionRule": {
@@ -1221,38 +1217,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_associate_foundations__04_013",
-      "courseId": "claude_certified_associate_foundations__04",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_07",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Strong map · all six correct: You kept the irreversible and high-accountability steps (5 and 6) human and placed the Skill and code execution correctly. That is the redesign pattern that holds up under audit.",
-        "fr": "Plan solide · tous les six éléments corrects : Vous avez conservé les étapes irréversibles et à haute responsabilité (5 et 6) humaines et avez placé correctement la Skill et l'exécution du code. C'est le modèle de refonte qui résiste à l'audit."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Correct design: keep irreversible/high-accountability actions human (steps 5–6), and run Skill + code execution earlier under controlled automation. A clear six-step pattern that “holds up under audit”:\n\n1. Capture request & context (automated) — record raw inputs, actor identity, timestamps.\n2. Pre-check & enrichment (automated) — validate schema, sanitize data, attach metadata, log results.\n3. Skill invocation (automated, sandboxed) — run the specialized model/skill to generate a proposed action or recommendation; log prompts, parameters, and outputs.\n4. Code execution simulation (automated, limited-privilege) — run non-destructive dry-run or emulation of side effects; produce a diff/impact report; record execution trace and resource access.\n5. Human review & approval (human) — reviewer inspects outputs, impact report, and logs; reviewer must sign/approve with reasons; require multi-person approval for high-risk cases.\n6. Human irreversible commit (human) — final “execute for real” step performed by an authorized human (or gated operator) that triggers actual side effects; log attestations, checksum of artifacts, and a unique commit ID.\n\nAudit controls to include: immutable logs, versioned code/skill artifacts, least-privilege sandboxes, test/rollback plans, separation of duties, time-stamped approvals, and retention policy for evidence. This mapping ensures automation does preparatory work while humans retain control over irreversible, accountable actions.",
-        "fr": "Correction modèle — Plan solide (6 éléments) :\n\n1) Ingestion des données (exécution du code) : pipelines automatisés, validations de format et d’intégrité, logging immuable.  \n2) Prétraitement & enrichissement (exécution du code) : transformations reproductibles, tests unitaires des transformations, versionnage des jeux.  \n3) Entraînement & réglage (exécution du code + Skill) : protocoles expérimentaux définis par l’expert (hypothèses, hyperparamètres), journal d’expériences (MLflow ou équivalent).  \n4) Évaluation & validation (exécution du code + Skill humain) : suites de tests (performance, robustesse, biais), revue humaine des métriques et des exemples échec.  \n5) Déploiement en production — action irréversible/haute responsabilité (HUMAIN) : gate manuel obligatoire, checklist d’acceptation, approbation signée par rôle désigné.  \n6) Exploitation, surveillance et rollback — responsabilité humaine (HUMAIN) : monitoring continu, alertes, procédure de rollback et post-mortem, auditabilité.\n\nPlacement de la Skill et de l’exécution du code : la Skill humaine doit définir exigences, critères d’acceptation et approuver les étapes irréversibles (5,6) ; le code exécute automatisation, tests et déploiements conditionnels.\n\nContrôles concrets à inclure : contrôle d’accès RBAC, journaux immuables, CI/CD with quality gates, canary release, tests adversariaux, revue d’éthique.  \nRisques identifiés et mitigations : déploiement irréversible sans rollback (mitiger par canary + bouton kill), métriques mal spécifiées (mitiger par revue humaine), manque d’audit (mitiger par logging signé).  \n\nChecklist d’approbation (exemples) : tests unitaires OK, biais/documentation fournie, plan de rollback, monitoring activé, approbation formelle — signer avec identité."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Automation",
-        "Context Design",
-        "Design Patterns"
-      ],
-      "title": {
-        "en": "Strong map · all six correct: You kept the irre...",
-        "fr": "Carte robuste · les six sont corrects : Vous avez conservé l'irre..."
-      }
-    },
-    {
       "id": "ex_claude_certified_associate_foundations__04_014",
       "courseId": "claude_certified_associate_foundations__04",
       "lessonId": "lesson_01",
@@ -1282,70 +1246,6 @@
       "title": {
         "en": "Feedback: Re-check the steps you delegated. The...",
         "fr": "Feedback : Revérifiez les étapes que vous avez déléguées. Le..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_associate_foundations__04_015",
-      "courseId": "claude_certified_associate_foundations__04",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_09",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "incorrect: Return to Lesson 5. Run each step against reversibility, stakes, and accountability before assigning it, and treat any irreversible step as human-retained by default.",
-        "fr": "Faux : Retour à la leçon 5. Exécutez chaque étape en évaluant la réversibilité, l'enjeu et la responsabilité avant de l'attribuer, et considérez toute étape irréversible comme sous contrôle humain par défaut."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Return to Lesson 5 and replace the vague instruction with a short decision procedure you can apply consistently. For each candidate step, evaluate three concrete criteria and record answers.\n\n1) Reversibility — can the action be undone without human intervention?\n   - Ask: Is there a reliable rollback or recovery path? How long and costly is recovery?\n   - Examples of irreversible: money transfers, publishing live content, deleting backups, firmware flashes, production deployments.\n\n2) Stakes — what’s the impact if the step fails or is misapplied?\n   - Classify: High (safety, legal, financial, reputation), Medium (service outages, moderate cost), Low (cosmetic, draft edits).\n   - High-stakes => require human retention or multi-person approval.\n\n3) Accountability — is the action auditable and does someone need to be identifiable for outcomes?\n   - Ask: Are logs, approvals, and clear owners required by policy or regulation?\n\nDecision rule (apply in this order):\n- If Reversibility = irreversible OR Stakes = High OR Accountability = insufficient → assign to human by default.\n- Otherwise, consider automation with safeguards (simulations, sandboxes, staged rollouts, confirmations, automated rollbacks).\n\nDocumentation: log the decision, rationale, and required safeguards (approvals, testing, monitoring). Example mitigation for borderline cases: automated pre-check + human confirmation prompt before execution.",
-        "fr": "Réponse correcte : Vrai. La consigne de la leçon 5 est exacte — chaque étape doit être évaluée sur la réversibilité, l’enjeu et la responsabilité avant assignation, et toute étape irréversible doit être sous contrôle humain par défaut.\n\nCorrection modèle (points qu’un bon élève doit montrer) :\n- Verdict clair : expliquer pourquoi “Faux” est incorrect et donner la bonne réponse (“Vrai”) en une phrase.\n- Réversibilité — critères actionnables : peut-on annuler l’action sans perte de données ou effets permanents ? Indicateurs concrets : possibilité de rollback < X minutes, snapshots disponibles, logs d’audit, test de restauration validé. Si non, considérer irréversible.\n- Enjeu — critères actionnables : évaluer gravité × probabilité (sécurité physique, confidentialité, impact légal, coût financier, réputation). Définir seuils qui imposent revue humaine (p.ex. tout impact > €100k, risque de violation de données).\n- Responsabilité — critères actionnables : nommer rôle(s) responsables, chaîne d’escalade, autorité de décision, compétences requises et preuve de formation.\n- Règle d’affectation : automatiser seulement si (réversible ET faible enjeu ET responsabilité claire). Sinon, contrôle humain par défaut.\n- Mesures de mitigation : confirmations multi‑facteurs, environnements de staging, tests canary, journaux immutables, délais d’annulation, procédures d’escalade.\n- Exemples concrets : automatique OK pour déploiements canary réversibles ; humain requis pour suppression de base de données en production, décisions létales, actions réglementées.\n\nInclure documentation et justification pour chaque décision d’automatisation."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "AI Safety",
-        "Automation",
-        "Cost Optimization"
-      ],
-      "title": {
-        "en": "incorrect: Return to Lesson 5. Run each step ag...",
-        "fr": "incorrect : Revenez à la leçon 5. Exécutez chaque étape à nouveau..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_associate_foundations__04_016",
-      "courseId": "claude_certified_associate_foundations__04",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_11",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped: Come back to this exercise before the quiz. The quiz scenarios use the same delegation-mapping decisions you practice here.",
-        "fr": "Ignoré : Revenez sur cet exercice avant le quiz. Les scénarios du quiz utilisent les mêmes décisions de delegation-mapping que vous pratiquez ici."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Complete this exercise before the quiz — focus on practicing delegation-mapping decisions. A strong answer should show you can systematically decide when work stays with a human, when it’s safe for the assistant to act autonomously, and when to use hybrid patterns (assistant + human review).\n\nKey checklist (what to practice and document)\n- Define decision criteria:\n  - Safety/risks (physical harm, medical/legal advice, financial loss)\n  - Ambiguity/intent (unclear goals or missing facts)\n  - Need for real-world access or privileged data\n  - Reversibility and cost of errors\n  - Regulatory or privacy constraints\n  - Value alignment / ethical sensitivity\n- Concrete mapping rules:\n  - High risk / high cost errors → human only\n  - Ambiguous intent or high values judgment → ask clarifying Qs or human-in-loop\n  - Low risk, well-specified, reversible → assistant autonomous\n  - Sensitive data → human oversight + strict logging or deny\n- Hybrid patterns:\n  - Assistant drafts + human approves for moderately risky tasks\n  - Assistant asks clarifying Qs, then completes simple actions\n  - Automated suggestion + escalation threshold for human review\n- Common risks to call out and mitigate:\n  - Incorrect or misleading outputs → require human verification\n  - Privacy/data leaks → redact or refuse; follow least-privilege\n  - Legal/regulatory noncompliance → human/legal review\n  - Escalation failure → explicit fallback/alert rules\n\nShort example mappings\n- Medical diagnosis: assistant provides general info and asks clarifying Qs; human clinician for diagnosis/treatment.\n- Content moderation: assistant flags content; human reviews borderline/appeals.\n- Scheduling low-risk meeting: assistant autonomous; scheduling with executives → human confirm.\n\nPractice: run 6–8 sample scenarios, apply criteria, write rule + justification, and note fallback/verification steps.",
-        "fr": "Une bonne correction montre des décisions de delegation-mapping claires, justifiées et testables. Points clés à couvrir :\n\n- Définition et catégories : préciser les modes de délégation (autonome, assistée / recommandation, requiert confirmation humaine, interdite) et critères appliqués.\n- Critères opérationnels et signaux : lister critères concrets (sensibilité des données, risque légal, impact sécurité/santé, besoin de jugement humain, information incomplète, demande explicite de l’utilisateur) et signaux détectables (mots-clés « paiement », « diagnostic », données personnelles, verbes d’action à haut impact).\n- Règles décisionnelles exemplaires :\n  - Autoriser autonome : tâches à faible risque et sans données sensibles (p. ex. recherche publique, résumé d’article).\n  - Assistée : recommandations pour décisions factuelles mais non critiques (p. ex. planification sans paiement).\n  - Confirmation humaine : actions irréversibles, paiements, modifications légales/contrats.\n  - Interdite : demande de fraude, instructions dangereuses, diagnostics cliniques complets.\n- Documentation et traçabilité : enregistrer la décision, critères déclenchants, justification, et option d’audit.\n- Tests et validation : cas d’usage positifs/négatifs, revues périodiques, métriques (taux d’escalade, erreurs).\n- Risques concrets à mentionner : sur-délégation (erreurs non détectées), sous-délégation (friction utilisateur), fuite de données, responsabilité légale, hallucinations.\n\nExemples concrets renforcent la réponse (p. ex. réservation payante → confirmation humaine)."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "AI Safety",
-        "Automation",
-        "Compliance"
-      ],
-      "title": {
-        "en": "Skipped: Come back to this exercise before the ...",
-        "fr": "Passé : Revenez à cet exercice avant le ..."
       }
     },
     {
@@ -1410,70 +1310,6 @@
       "title": {
         "en": "Feedback: Review the questions you missed: Q1 t...",
         "fr": "Retour d'information : Révisez les questions que vous avez manquées : Q1 t..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_associate_foundations__04_019",
-      "courseId": "claude_certified_associate_foundations__04",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_05",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "incorrect: Revisit the module before continuing. Delegation mapping underpins every safe workflow redesign. Re-run the exercise before retrying.",
-        "fr": "incorrect: Réexaminez le module avant de continuer. La cartographie de délégation est à la base de chaque refonte de workflow sûre. Réalisez à nouveau l'exercice avant de réessayer."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Rewritten, specific instructions you should use instead of the vague lines:\n\n1) Instead of “Revisit the module before continuing.”  \n   - Action: Review Module 3 (Delegation Mapping), Sections 2.1–2.3. Spend 15–20 minutes and complete the Module 3 checklist: confirm definitions, examples, and one worked example. Mark the module complete in the LMS before proceeding.\n\n2) Instead of “Delegation mapping underpins every safe workflow redesign.”  \n   - Action: For each workflow redesign, create a Delegation Map that documents: actors (names/roles), responsibilities, decision rights, required approvals, handoff points, and allowed exceptions. Attach the map to the redesign ticket and get sign-off from the process owner.\n\n3) Instead of “Re-run the exercise before retrying.”  \n   - Action: Run the full exercise end-to-end with current inputs and save the run log. Compare outputs to expected results, note discrepancies, fix the root cause, then run a second end-to-end test to validate the fix. Only retry submitting the redesign after two successful runs.\n\nUse these concrete steps and evidence (completed checklist, signed map, saved logs) as the entry criteria for moving to the next stage.",
-        "fr": "Problèmes identifiés\n- Trop vague : « Réexaminez le module » et « réalisez à nouveau l'exercice » ne disent pas quoi relire ni quelles preuves fournir.\n- Redondant et peu guidant : la phrase ne précise pas critères d’achèvement ni ressources.\n- Terme technique (« cartographie de délégation ») non contextualisé : l’apprenant peut ignorer les étapes attendues.\n\nCorrection modèle (message à afficher à l’apprenant)\nAction requise : relisez le module « Cartographie de délégation » (section 3.2) puis refaites l’exercice associé. Pour réussir, suivez ces étapes :\n1. Identifiez et listez les rôles (ex. : demandeur, approbateur, opérateur).\n2. Pour chaque rôle, précisez les actions autorisées et les limites (seuils, exceptions).\n3. Tracez les transferts d’autorité (qui délègue à qui) et notez les contrôles compensatoires.\n4. Documentez au moins un risque et la mesure de mitigation correspondante.\n5. Soumettez la carte (PDF ou capture d’écran) et un court commentaire (≤150 mots) expliquant vos choix.\n\nCritères d’acceptation\n- Carte complète (rôles + actions + délégations) + preuve visuelle.\n- Au moins un risque identifié avec mitigation.\n- Commentaire clair reliant la carte aux principes de sécurité du module.\n\nRaison : ces consignes rendent l’exercice mesurable, répétable et aligné sur la finalité pédagogique."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Context Design",
-        "Fundamentals",
-        "Output Formatting"
-      ],
-      "title": {
-        "en": "incorrect: Revisit the module before continuing...",
-        "fr": "incorrect : Revenez au module avant de continuer..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_associate_foundations__04_020",
-      "courseId": "claude_certified_associate_foundations__04",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_06",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped: Return to complete the quiz before advancing.",
-        "fr": "Ignoré : Revenez pour compléter le quiz avant de continuer."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "You saw the platform message because the course requires completing the quiz before moving on. To resolve it and complete the quiz, follow these concrete steps:\n\n1. Navigate back to the module or lesson containing the quiz (use the course sidebar or “Back” button).  \n2. Re-open the quiz page and read any instructions (time limits, question count, required passing score).  \n3. Complete every required question. If there are multipart items, ensure you expand and answer all subparts.  \n4. Click the quiz’s “Submit” (or “Finish”) button. Wait for a confirmation message or score screen before leaving the page — do not close the tab during submission.  \n5. Verify completion appears in your course progress or gradebook.\n\nIf you cannot reopen or submit the quiz:\n- Refresh the page, log out and back in, or try another supported browser (Chrome/Firefox).  \n- Disable ad-blockers or extensions that may block scripts/pop-ups.  \n- Clear cache/cookies if pages behave oddly.  \n- If the timer expired, check whether a retake is allowed or contact the instructor.\n\nWhen contacting support/instructor, include: course name, quiz title, timestamp, browser/version, and a screenshot of the error. This lets staff restore access or mark completion promptly.",
-        "fr": "Cette consigne indique que vous devez d’abord compléter le quiz avant de poursuivre. Correction modèle — actions concrètes et contrôle qualité à viser :\n\nÉtapes à suivre (actionnables)\n- Revenir à la page du quiz et lire toutes les consignes avant de débuter.\n- Allouer un créneau calme (temps estimé indiqué sur la plateforme).\n- Répondre à toutes les questions ; ne laisser aucune réponse « vide » si le système l’autorise.\n- Utiliser la fonction « sauvegarder » régulière et finaliser en cliquant sur « soumettre ».\n- Confirmer la soumission : capture d’écran ou message de confirmation affiché par la plateforme.\n\nCritères de réussite (preuve que l’on peut continuer)\n- Statut du module passe à « complété » ou score requis atteint.\n- Reçu/confirmation visible dans l’historique des activités.\n- Accès débloqué au contenu suivant.\n\nPoints de contrôle et bonnes pratiques\n- Lire les ressources associées au quiz pour éviter erreurs par manque de préparation.\n- Gérer le temps par question ; revenir aux questions non résolues si nécessaire.\n- Réviser les réponses clés avant soumission.\n\nRisques concrets à éviter\n- Continuer sans quiz -> progression bloquée ou validation manquante.\n- Perte de données si la soumission n’est pas confirmée.\n- Risque d’échec par précipitation.\n\nQue faire en cas de problème technique\n- Rafraîchir/vider le cache, changer de navigateur, reconnecter.\n- Capturer l’erreur et contacter le support ou l’instructeur avec captures d’écran et identifiants du quiz."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Error Handling",
-        "Fundamentals",
-        "Prompt Engineering"
-      ],
-      "title": {
-        "en": "Skipped: Return to complete the quiz before adv...",
-        "fr": "Ignoré : revenez terminer le quiz avant de continuer..."
       }
     }
   ]

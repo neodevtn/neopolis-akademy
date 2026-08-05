@@ -745,68 +745,6 @@
         "en": "Exercise: predict the behavior",
         "fr": "Exercice : prédire le comportement"
       }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__01_007",
-      "courseId": "claude_certified_developer_foundations__01",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_02",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "a: b",
-        "fr": "a : b"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "",
-        "fr": ""
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Development"
-      ],
-      "title": {
-        "en": "a: b",
-        "fr": "a: b"
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__01_008",
-      "courseId": "claude_certified_developer_foundations__01",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_03",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped: msg||'You can come back to this checkpoint any time before the recap using the sidebar.'",
-        "fr": "Skipped: msg||'Vous pouvez revenir à ce checkpoint à tout moment avant le récapitulatif en utilisant la barre latérale.'"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Improvement goals: make the message clearer, actionable, and scannable; indicate where to return and what skipping means; provide a direct way to reopen the checkpoint.\n\nConcise rewrite options\n- Concise: “You can revisit this checkpoint anytime before the recap from the sidebar.”\n- Friendly/CTA: “Skipped for now. Return to this checkpoint anytime before the recap—open the sidebar to continue.”\n- Explicit/Instructional: “Checkpoint skipped. To resume this step before the recap, open the sidebar (top-right) and select ‘Checkpoints’.”\n\nWhen to use each\n- Use the concise variant in tight UIs or inline tooltips.\n- Use the friendly/CTA variant when you want to prompt action and reduce drop-off.\n- Use the explicit variant for first-time users or accessibility-focused flows.\n\nAccessibility and UX details (actionable)\n- Provide a visible control that opens the sidebar and focus the reopened checkpoint (keyboard accessible).\n- Expose the message via aria-live politely so screen readers announce status changes.\n- Include a short undo link: “Undo” or “Reopen checkpoint.”\n- Localize strings and keep them ≤90 characters where space is limited.\n- Log skip events for analytics so you can refine timing and copy.\n\nOptional small implementation (HTML)\n<button onclick=\"openSidebar()\">Open sidebar</button>\n<span aria-live=\"polite\">Checkpoint skipped. You can revisit it anytime before the recap from the sidebar.</span>",
-        "fr": "Correction modèle — message d’interface et bonnes pratiques\n\nProblèmes concrets à corriger\n- Formulation trop longue : risque d’être tronquée ou ignorée.  \n- Contexte manquant : l’utilisateur ne sait pas où se trouve la « barre latérale ».  \n- Accessibilité : message non adapté aux lecteurs d’écran si uniquement visuel.  \n- Localisation : utilisation d’un texte littéral sans clé i18n empêche les variantes/pluriels.\n\nSuggestions précises et actionnables\n1. Raccourcir le libellé pour la lisibilité :  \n   Exemple recommandé : « Vous pouvez revenir à ce checkpoint via la barre latérale avant le récapitulatif. »\n2. Ajouter un lien/action visible et persistant (ICône + libellé) plutôt qu’un seul texte d’aide.  \n3. Positionner l’aide près de l’élément concerné (icône d’aide dans la barre latérale ou tooltip).  \n4. Accessibilité : ajouter aria-describedby sur le contrôle et un focusable anchor :  \n   aria-describedby=\"checkpoint-help\" et fournir le même texte dans un élément caché accessible.  \n5. Internationalisation : utiliser une clé i18n et permettre interpolation/pluriels.\n\nExemple i18n (JS/React, i18next) :\nconst msg = t('checkpoint.return', 'Vous pouvez revenir à ce checkpoint via la barre latérale avant le récapitulatif.');\n\nTests à effectuer\n- Vérifier affichage sur petits écrans et truncation.  \n- Tester avec lecteur d’écran.  \n- Vérifier toutes les traductions et longueurs."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "advanced",
-      "skillTags": [
-        "API Integration",
-        "Context Design",
-        "Development"
-      ],
-      "title": {
-        "en": "Skipped: msg||'You can come back to this checkp...",
-        "fr": "Ignoré : msg||'Vous pouvez revenir à ce point de contrôle..."
-      }
     }
   ]
 }
