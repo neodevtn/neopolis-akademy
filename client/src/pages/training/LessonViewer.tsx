@@ -17,6 +17,7 @@ import { ComparisonBox } from "@/components/ComparisonBox";
 import { CourseIllustration } from "@/components/CourseIllustration";
 import PageContent from "./PageContent";
 import { CloudExerciseBlock } from "@/components/CloudExerciseBlock";
+import { ProjectorPlayer } from "@/components/ProjectorPlayer";
 import LessonQuiz from "./LessonQuiz";
 import NumericAnswerExercise from "@/components/NumericAnswerExercise";
 
@@ -255,6 +256,64 @@ export default function LessonViewer({
           const mp4Title = typeof block.title === 'object' ? (block.title?.[lang] || block.title?.en || block.title?.fr || 'Video') : (block.title || 'Video');
           const mp4Key = block.id || `mp4_${blockIdx}`;
           const isMp4Complete = completedVideos.has(mp4Key);
+
+          // Use ProjectorPlayer if slide data exists (DataCamp Projector videos with blank zones)
+          if (block.projectorSlides && block.projectorSlides.length > 0 && block.projectorTimings) {
+            return (
+              <div key={blockIdx} className="my-6">
+                <div className="flex items-center gap-3 px-4 py-3 border border-border rounded-t-xl bg-card">
+                  <span className={`flex items-center justify-center w-7 h-7 rounded-full ${isMp4Complete ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+                    {isMp4Complete ? <CheckCircle2 className="w-4 h-4" /> : <PlayCircle className="w-4 h-4" />}
+                  </span>
+                  <span className="font-semibold text-foreground">{mp4Title}</span>
+                  <span className="ml-2 px-2 py-0.5 text-xs font-bold rounded bg-red-100 text-red-700">VIDÉO</span>
+                  {isMp4Complete && <span className="ml-auto text-xs text-green-600 font-medium">{t({en:'\u2713 Watched',fr:'\u2713 Vue'})}</span>}
+                </div>
+                <ProjectorPlayer
+                  mp4Url={block.mp4Url}
+                  slides={block.projectorSlides}
+                  timings={block.projectorTimings}
+                  duration={block.projectorDuration || 300}
+                  onEnded={() => toggleVideoComplete(mp4Key)}
+                />
+                <div className="flex items-center justify-between px-4 py-2 border border-t-0 border-border rounded-b-xl bg-card">
+                  <button
+                    onClick={() => toggleVideoComplete(mp4Key)}
+                    className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    {t({en:'Mark as watched (manual)',fr:'Marquer comme vue (manuel)'})}
+                  </button>
+                  {block.slidesPdf && (
+                    <a href={block.slidesPdf} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
+                      <FileText className="w-4 h-4" />
+                      {t({en:'Slides PDF',fr:'Slides PDF'})}
+                    </a>
+                  )}
+                </div>
+                {block.transcript && (
+                  <details className="border border-t-0 border-border rounded-b-xl mt-[-1px]">
+                    <summary className="px-4 py-3 cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-2">
+                      <FileText className="w-4 h-4" />
+                      {t({en:'Video transcript',fr:'Transcription vid\u00E9o'})}
+                    </summary>
+                    <div className="px-4 pb-4 text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                      {block.transcriptSegments?.length > 0 ? (
+                        block.transcriptSegments.map((seg: any, i: number) => (
+                          <div key={i} className="mb-3">
+                            <p className="font-semibold text-foreground mb-1">{seg.heading}</p>
+                            <p>{seg.text}</p>
+                          </div>
+                        ))
+                      ) : block.transcript}
+                    </div>
+                  </details>
+                )}
+              </div>
+            );
+          }
+
+          // Fallback: standard video player (no Projector data)
           return (
             <div key={blockIdx} className="my-6 rounded-xl border border-border overflow-hidden bg-card">
               <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
