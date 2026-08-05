@@ -193,6 +193,11 @@ export function ProjectorPlayer({ mp4Url, slides, timings, duration, onEnded }: 
   );
 }
 
+// Clean DataCamp image URLs: remove sizing suffix like " =90" or " =50"
+function cleanImageUrl(url: string): string {
+  return url.replace(/\s+=\d+$/, '').trim();
+}
+
 // Slide renderer component
 function SlideRenderer({ slide, slideNumber, totalSlides }: { slide: ProjectorSlide; slideNumber: number; totalSlides: number }) {
   if (slide.type === "TitleSlide") {
@@ -230,7 +235,7 @@ function SlideRenderer({ slide, slideNumber, totalSlides }: { slide: ProjectorSl
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
             {slide.images.filter((_, i) => i < Math.ceil(slide.images.length / 2)).map((img, i) => (
-              <img key={i} src={img.url} alt={img.alt} className="max-h-40 object-contain rounded mx-auto" />
+              <img key={i} src={cleanImageUrl(img.url)} alt={img.alt} loading="lazy" decoding="async" className="max-h-40 object-contain rounded mx-auto" />
             ))}
             {slide.contentLeft && (
               <div className="text-sm text-slate-200 leading-relaxed" dangerouslySetInnerHTML={{ __html: slide.contentLeft.replace(/\n/g, '<br/>') }} />
@@ -238,7 +243,7 @@ function SlideRenderer({ slide, slideNumber, totalSlides }: { slide: ProjectorSl
           </div>
           <div className="space-y-3">
             {slide.images.filter((_, i) => i >= Math.ceil(slide.images.length / 2)).map((img, i) => (
-              <img key={i} src={img.url} alt={img.alt} className="max-h-40 object-contain rounded mx-auto" />
+              <img key={i} src={cleanImageUrl(img.url)} alt={img.alt} loading="lazy" decoding="async" className="max-h-40 object-contain rounded mx-auto" />
             ))}
             {slide.contentRight && (
               <div className="text-sm text-slate-200 leading-relaxed" dangerouslySetInnerHTML={{ __html: slide.contentRight.replace(/\n/g, '<br/>') }} />
@@ -256,7 +261,7 @@ function SlideRenderer({ slide, slideNumber, totalSlides }: { slide: ProjectorSl
       {slide.images.length > 0 && (
         <div className="flex flex-wrap justify-center gap-4 mb-4">
           {slide.images.map((img, i) => (
-            <img key={i} src={img.url} alt={img.alt} className="max-h-48 object-contain rounded" />
+            <img key={i} src={cleanImageUrl(img.url)} alt={img.alt} loading="lazy" decoding="async" className="max-h-48 object-contain rounded" />
           ))}
         </div>
       )}

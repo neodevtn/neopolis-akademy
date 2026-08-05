@@ -1322,3 +1322,10 @@
 - [x] Navigation slides (dots + boutons prev/next)
 - [x] Barre de progression + seek
 - [x] Conserver transcripts + Slides PDF + progression
+
+## Correction images Projector cassées (suffixe DataCamp =XX)
+- [x] Nettoyer 28 suffixes de sizing dans le JSON (regex /\s+=\d+$/)
+- [x] Ajouter cleanImageUrl() défensif dans ProjectorPlayer
+- [x] Ajouter loading="lazy" decoding="async" sur toutes les images
+- [x] Vérifier 36/36 images HTTP 200 (avec -L pour redirections)
+- [x] Déployer en production
