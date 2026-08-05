@@ -717,13 +717,14 @@ export function detectConcatenatedTables(lines: string[]): { headers: string[]; 
       const rowLine = lines[j].trim();
       if (!rowLine) { endIdx = j + 1; continue; }
 
-      // Check if this row also has camelCase transitions
+      // Check if this row also has camelCase transitions OR punctuation+uppercase transitions
       const rowTransitions = (rowLine.match(/[a-z][A-Z]/g) || []).length;
-      if (rowTransitions < 1 && rowLine.length > 30) break;
-      if (rowTransitions < 1) break;
-
-      // Split row with limited splits to match column count
+      const punctTransitions = (rowLine.match(/[a-z.?!,;:)][A-Z]/g) || []).length;
+      // Try splitting first - if it produces the right column count, accept it
       const rowCells = rowLine.split(/(?<=[a-z.?!,;:)])(?=[A-Z])/);
+      if (rowTransitions < 1 && punctTransitions < 1 && rowLine.length > 30) break;
+      if (rowTransitions < 1 && punctTransitions < 1) break;
+
       // Accept rows that split into colCount cells (or close)
       if (rowCells.length >= colCount - 1 && rowCells.length <= colCount + 1) {
         // Normalize to exact colCount

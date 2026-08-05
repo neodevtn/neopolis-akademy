@@ -431,11 +431,11 @@ export default function PageContent({ content, lang }: { content: string; lang: 
     if (concatTable) {
       elements.push(
         <div key={`ctable-${i}`} className="my-5 overflow-x-auto rounded-xl border border-[#e8e5e0] dark:border-slate-700">
-          <table className="w-full text-sm border-collapse">
+          <table className="w-full text-sm border-collapse table-fixed">
             <thead>
               <tr className="bg-[#f5f3ef] dark:bg-slate-800">
                 {concatTable.headers.map((h, hi) => (
-                  <th key={hi} className="text-left px-4 py-3 font-semibold text-foreground text-[13px] uppercase tracking-wide border-b border-[#e8e5e0] dark:border-slate-700">{h}</th>
+                  <th key={hi} className={`text-left px-4 py-3 font-semibold text-foreground text-[13px] uppercase tracking-wide border-b border-[#e8e5e0] dark:border-slate-700 ${hi === 0 ? 'w-[140px] min-w-[140px] whitespace-nowrap' : ''}`}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -443,7 +443,7 @@ export default function PageContent({ content, lang }: { content: string; lang: 
               {concatTable.rows.map((row, ri) => (
                 <tr key={ri} className={ri % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-[#faf9f7] dark:bg-slate-800/40'}>
                   {row.map((cell, ci) => (
-                    <td key={ci} className="px-4 py-3 text-foreground/80 text-[13.5px] border-b border-[#e8e5e0]/60 dark:border-slate-700/60">{cell}</td>
+                    <td key={ci} className={`px-4 py-3 text-foreground/80 text-[13.5px] border-b border-[#e8e5e0]/60 dark:border-slate-700/60 ${ci === 0 ? 'whitespace-nowrap font-medium' : ''}`}>{cell}</td>
                   ))}
                 </tr>
               ))}

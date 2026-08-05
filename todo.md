@@ -1260,3 +1260,7 @@
 - [x] Supprimer 79 exercices parasites (Model answer, correct/incorrect, Pass/Retry) dans 14 fichiers
 - [x] Supprimer 23 checkpoint blocks redondants dans chapitres ayant déjà un bucket_sort
 - [x] Corriger le bug Screen 6 (Extended Thinking affiché comme free_text au lieu de bucket_sort)
+
+## Bug: Tableau mal organisé + contenu qui suit
+- [x] Première colonne du tableau trop étroite (mots coupés: "In-cont ext mem ory") - fix: whitespace-nowrap + min-width sur col 1
+- [x] Contenu après le tableau collé sans espacement (4ème ligne manquante) - fix: détection punct+uppercase en plus de camelCase
