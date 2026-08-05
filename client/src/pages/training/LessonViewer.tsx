@@ -263,14 +263,17 @@ export default function LessonViewer({
                 </span>
                 <span className="font-semibold text-foreground">{mp4Title}</span>
                 <span className="ml-2 px-2 py-0.5 text-xs font-bold rounded bg-red-100 text-red-700">VIDÉO</span>
-                {isMp4Complete && <span className="ml-auto text-xs text-green-600 font-medium">\u2713 {t({en:'Watched',fr:'Vue'})}</span>}
+                {isMp4Complete && <span className="ml-auto text-xs text-green-600 font-medium">{t({en:'\u2713 Watched',fr:'\u2713 Vue'})}</span>}
               </div>
               <video
                 controls
+                preload="metadata"
+                playsInline
                 className="w-full max-h-[480px] bg-black"
-                src={block.mp4Url}
                 onEnded={() => toggleVideoComplete(mp4Key)}
-              />
+              >
+                <source src={block.mp4Url} type="video/mp4" />
+              </video>
               <div className="flex items-center justify-between px-4 py-2 border-t border-border">
                 <button
                   onClick={() => toggleVideoComplete(mp4Key)}
@@ -320,16 +323,18 @@ export default function LessonViewer({
                 </span>
                 <span className="font-semibold text-foreground">{audioTitle}</span>
                 <span className="ml-2 px-2 py-0.5 text-xs font-bold rounded bg-purple-100 text-purple-700">AUDIO</span>
-                {isAudioComplete && <span className="ml-auto text-xs text-green-600 font-medium">\u2713 {t({en:'Listened',fr:'\u00C9cout\u00E9e'})}</span>}
+                {isAudioComplete && <span className="ml-auto text-xs text-green-600 font-medium">{t({en:'\u2713 Listened',fr:'\u2713 \u00C9cout\u00E9e'})}</span>}
               </div>
               <div className="px-4 py-4 bg-muted/30">
                 <p className="text-xs text-muted-foreground mb-2 italic">{t({en:'Local audio version with transcript support',fr:'Version audio locale avec support/transcription'})}</p>
                 <audio
                   controls
+                  preload="metadata"
                   className="w-full"
-                  src={block.audioUrl}
                   onEnded={() => toggleVideoComplete(audioKey)}
-                />
+                >
+                  <source src={block.audioUrl} type="audio/mpeg" />
+                </audio>
               </div>
               <div className="flex items-center justify-between px-4 py-2 border-t border-border">
                 <button

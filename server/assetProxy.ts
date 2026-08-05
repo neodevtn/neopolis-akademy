@@ -6,14 +6,35 @@ import { ENV } from "./_core/env";
  * relying on the platform's /manus-storage/ 307 redirect.
  * 
  * Problem: The platform intercepts /manus-storage/ at the edge and returns a
- * 307 redirect to a signed CloudFront URL (expires in ~1h). CloudFront returns
- * cache-control: max-age=31536000 (1 year). The browser caches the response
- * keyed by the signed URL. When the signed URL expires and the browser tries
- * to revalidate, CloudFront returns 403 → broken images.
+ * 307 redirect to a signed CloudFront URL. Browser extensions (ad blockers)
+ * and strict CSP can block these redirects → ERR_BLOCKED_BY_CLIENT.
  * 
- * Solution: Use /api/assets/ path which the platform doesn't intercept.
- * We fetch the file server-side and pipe it with proper cache headers.
+ * Solution: /api/assets/ path bypasses the platform edge. We fetch the file
+ * server-side and pipe it with proper headers including Range request support
+ * for video/audio streaming.
  */
+
+// MIME type map for common media extensions
+const MIME_MAP: Record<string, string> = {
+  ".mp4": "video/mp4",
+  ".webm": "video/webm",
+  ".mp3": "audio/mpeg",
+  ".wav": "audio/wav",
+  ".ogg": "audio/ogg",
+  ".pdf": "application/pdf",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".gif": "image/gif",
+  ".webp": "image/webp",
+  ".svg": "image/svg+xml",
+};
+
+function getMimeFromKey(key: string): string | null {
+  const ext = key.substring(key.lastIndexOf(".")).toLowerCase();
+  return MIME_MAP[ext] || null;
+}
+
 export function registerAssetProxy(app: Express) {
   app.get("/api/assets/*", async (req: Request, res: Response) => {
     const key = (req.params as Record<string, string>)[0];
@@ -22,7 +43,7 @@ export function registerAssetProxy(app: Express) {
       return;
     }
 
-    // Protect application files (CV, photos, videos) - require admin auth
+    // Protect application files - require admin auth
     if (key.startsWith("applications/")) {
       try {
         const { sdk } = await import("./_core/sdk");
@@ -43,6 +64,7 @@ export function registerAssetProxy(app: Express) {
     }
 
     try {
+      // Get presigned URL from forge
       const forgeUrl = new URL(
         "v1/storage/presign/get",
         ENV.forgeApiUrl.replace(/\/+$/, "") + "/",
@@ -66,25 +88,77 @@ export function registerAssetProxy(app: Express) {
         return;
       }
 
-      // Pipe the file directly - no redirect, no caching issues
-      const fileResp = await fetch(url);
-      if (!fileResp.ok) {
-        res.status(502).send("Storage file fetch error");
-        return;
-      }
+      // Determine content type from key extension (more reliable than upstream)
+      const mimeFromKey = getMimeFromKey(key);
 
-      const contentType = fileResp.headers.get("content-type");
-      if (contentType) res.set("Content-Type", contentType);
-      const contentLength = fileResp.headers.get("content-length");
-      if (contentLength) res.set("Content-Length", contentLength);
-      
-      // Cache for 1 hour with must-revalidate - the browser will get a fresh
-      // signed URL on each request after expiry instead of using a stale one
-      res.set("Cache-Control", "public, max-age=3600, must-revalidate");
-      res.set("Access-Control-Allow-Origin", "*");
-      
-      const arrayBuf = await fileResp.arrayBuffer();
-      res.send(Buffer.from(arrayBuf));
+      // Check if this is a Range request (video/audio seeking)
+      const rangeHeader = req.headers.range;
+
+      if (rangeHeader) {
+        // Handle Range request for streaming media
+        // First, do a HEAD to get content-length
+        const headResp = await fetch(url, { method: "HEAD" });
+        if (!headResp.ok) {
+          res.status(502).send("Storage file HEAD error");
+          return;
+        }
+
+        const totalSize = parseInt(headResp.headers.get("content-length") || "0", 10);
+        if (!totalSize) {
+          // Fallback: fetch entire file
+          const fileResp = await fetch(url);
+          const contentType = mimeFromKey || fileResp.headers.get("content-type") || "application/octet-stream";
+          res.set("Content-Type", contentType);
+          res.set("Accept-Ranges", "bytes");
+          res.set("Access-Control-Allow-Origin", "*");
+          const arrayBuf = await fileResp.arrayBuffer();
+          res.send(Buffer.from(arrayBuf));
+          return;
+        }
+
+        // Parse Range header: bytes=start-end
+        const parts = rangeHeader.replace(/bytes=/, "").split("-");
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : totalSize - 1;
+        const chunkSize = end - start + 1;
+
+        // Fetch the range from upstream
+        const rangeResp = await fetch(url, {
+          headers: { Range: `bytes=${start}-${end}` },
+        });
+
+        const contentType = mimeFromKey || rangeResp.headers.get("content-type") || "application/octet-stream";
+
+        res.status(206);
+        res.set("Content-Type", contentType);
+        res.set("Content-Length", String(chunkSize));
+        res.set("Content-Range", `bytes ${start}-${end}/${totalSize}`);
+        res.set("Accept-Ranges", "bytes");
+        res.set("Access-Control-Allow-Origin", "*");
+        res.set("Cache-Control", "public, max-age=3600, must-revalidate");
+
+        const arrayBuf = await rangeResp.arrayBuffer();
+        res.send(Buffer.from(arrayBuf));
+      } else {
+        // Full file request
+        const fileResp = await fetch(url);
+        if (!fileResp.ok) {
+          res.status(502).send("Storage file fetch error");
+          return;
+        }
+
+        const contentType = mimeFromKey || fileResp.headers.get("content-type") || "application/octet-stream";
+        const contentLength = fileResp.headers.get("content-length");
+
+        res.set("Content-Type", contentType);
+        if (contentLength) res.set("Content-Length", contentLength);
+        res.set("Accept-Ranges", "bytes");
+        res.set("Access-Control-Allow-Origin", "*");
+        res.set("Cache-Control", "public, max-age=3600, must-revalidate");
+
+        const arrayBuf = await fileResp.arrayBuffer();
+        res.send(Buffer.from(arrayBuf));
+      }
     } catch (err) {
       console.error("[AssetProxy] failed:", err);
       res.status(502).send("Asset proxy error");

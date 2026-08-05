@@ -1302,4 +1302,14 @@
 - [x] Remplacer "22 exercices" par "32 activités" dans trainingIndex.json
 - [x] Ajouter breakdown visible sur la fiche: 10 vidéos · 17 TP pratiques · 3 tris interactifs · 2 QCM · 3 téléchargements
 - [x] Carte cours: 3 chapitres · 32 activités · 10 vidéos · 3 téléchargements
-- [ ] Vérifier la fiche publique après publication
+- [x] Vérifier la fiche publique après publication → confirmé OK: 32 activités + breakdown + carte cours correct
+
+## Correction player vidéo/audio + PDF + UI ✓ Vue
+- [ ] Diagnostiquer ERR_BLOCKED_BY_CLIENT sur /manus-storage (proxy headers, Range requests)
+- [ ] Corriger le proxy storage pour supporter Range requests + Content-Type exact
+- [ ] Corriger le markup vidéo (<video controls preload="metadata" playsinline><source ...>)
+- [ ] Corriger le markup audio (<audio controls preload="metadata"><source ...>)
+- [ ] Corriger les liens PDF (ouverture/téléchargement sans ERR_BLOCKED_BY_CLIENT)
+- [ ] Corriger l'artefact UI "✓ Vue" → afficher "✓ Vue" ou "Vue" proprement
+- [ ] Tester la lecture réelle en production (readyState, duration, currentTime)
+- [ ] Rapport de vérification technique complet
