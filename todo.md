@@ -1273,3 +1273,14 @@
 - [x] Exercice ex_006 orphelin (chapter_06 inexistant) affichait la correction comme question
 - [x] Suppression de 55 exercices orphelins dans 9 fichiers de cours (chapterId inexistant)
 - [x] Nettoyage du texte 'Reveal model answers' dans les blocs de contenu
+
+## Import cours DataCamp n8n dans catégorie BI
+- [x] Upload des 8 vidéos MP4 + 3 slides PDF + 1 image via manus-upload-file
+- [x] Générer le fichier JSON du cours (3 chapitres, 32 activités)
+- [x] Intégrer les 10 vidéos avec transcripts FR segmentés
+- [x] Transformer les 17 CloudExercise en TP autonomes avec préparation environnement n8n
+- [x] Construire les 3 exercices DragAndDrop interactifs
+- [x] Construire les 2 QCM interactifs avec corrections masquées
+- [x] Enregistrer le cours dans l'index certifications (catégorie BI)
+- [x] Tester le rendu et déployer
+- [ ] Rapport de vérification avec compteurs

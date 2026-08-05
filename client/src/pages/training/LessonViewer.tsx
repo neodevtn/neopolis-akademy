@@ -16,6 +16,7 @@ import { TabbedContent } from "@/components/TabbedContent";
 import { ComparisonBox } from "@/components/ComparisonBox";
 import { CourseIllustration } from "@/components/CourseIllustration";
 import PageContent from "./PageContent";
+import { CloudExerciseBlock } from "@/components/CloudExerciseBlock";
 import LessonQuiz from "./LessonQuiz";
 import NumericAnswerExercise from "@/components/NumericAnswerExercise";
 
@@ -144,7 +145,7 @@ export default function LessonViewer({
         if (ch && !isReviewMode) {
           const blocks = ch.blocks || [];
           // Video gate
-          const videoKeys = blocks.filter((b: any) => b.type === 'video').map((b: any) => { let rawId = b.videoId || ''; if (!rawId && b.url) { const m = (b.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/); if (m) rawId = m[1]; } if (!rawId && b.id && typeof b.id === 'string' && b.id.length >= 8 && b.id.length <= 15) rawId = b.id; return typeof rawId === 'object' ? (rawId.fr || rawId.en || '') : rawId; }).filter(Boolean);
+          const videoKeys = blocks.filter((b: any) => b.type === 'video').map((b: any) => { if (b.mp4Url) return b.id || ''; let rawId = b.videoId || ''; if (!rawId && b.url) { const m = (b.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/); if (m) rawId = m[1]; } if (!rawId && b.id && typeof b.id === 'string' && b.id.length >= 8 && b.id.length <= 15) rawId = b.id; return typeof rawId === 'object' ? (rawId.fr || rawId.en || '') : rawId; }).filter(Boolean);
           if (videoKeys.length > 0 && !videoKeys.every((k: string) => completedVideos.has(k))) return;
           // Flip cards gate
           const hasFlips = blocks.some((b: any) => b.type === 'flip_cards' && (b.cards || []).length > 0);
@@ -249,6 +250,63 @@ export default function LessonViewer({
         );
       }
       case "video": {
+        // Check if this is a local MP4 video (DataCamp n8n course)
+        if (block.mp4Url) {
+          const mp4Title = typeof block.title === 'object' ? (block.title?.[lang] || block.title?.en || block.title?.fr || 'Video') : (block.title || 'Video');
+          const mp4Key = block.id || `mp4_${blockIdx}`;
+          const isMp4Complete = completedVideos.has(mp4Key);
+          return (
+            <div key={blockIdx} className="my-6 rounded-xl border border-border overflow-hidden bg-card">
+              <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
+                <span className={`flex items-center justify-center w-7 h-7 rounded-full ${isMp4Complete ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+                  {isMp4Complete ? <CheckCircle2 className="w-4 h-4" /> : <PlayCircle className="w-4 h-4" />}
+                </span>
+                <span className="font-semibold text-foreground">{mp4Title}</span>
+                <span className="ml-2 px-2 py-0.5 text-xs font-bold rounded bg-red-100 text-red-700">VIDÉO</span>
+                {isMp4Complete && <span className="ml-auto text-xs text-green-600 font-medium">\u2713 {t({en:'Watched',fr:'Vue'})}</span>}
+              </div>
+              <video
+                controls
+                className="w-full max-h-[480px] bg-black"
+                src={block.mp4Url}
+                onEnded={() => toggleVideoComplete(mp4Key)}
+              />
+              <div className="flex items-center justify-between px-4 py-2 border-t border-border">
+                <button
+                  onClick={() => toggleVideoComplete(mp4Key)}
+                  className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
+                >
+                  <CheckCircle2 className="w-4 h-4" />
+                  {t({en:'Mark as watched (manual)',fr:'Marquer comme vue (manuel)'})}
+                </button>
+                {block.slidesPdf && (
+                  <a href={block.slidesPdf} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
+                    <FileText className="w-4 h-4" />
+                    {t({en:'Slides PDF',fr:'Slides PDF'})}
+                  </a>
+                )}
+              </div>
+              {block.transcript && (
+                <details className="border-t border-border">
+                  <summary className="px-4 py-3 cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-2">
+                    <FileText className="w-4 h-4" />
+                    {t({en:'Video transcript',fr:'Transcription vid\u00E9o'})}
+                  </summary>
+                  <div className="px-4 pb-4 text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                    {block.transcriptSegments?.length > 0 ? (
+                      block.transcriptSegments.map((seg: any, i: number) => (
+                        <div key={i} className="mb-3">
+                          <p className="font-semibold text-foreground mb-1">{seg.heading}</p>
+                          <p>{seg.text}</p>
+                        </div>
+                      ))
+                    ) : block.transcript}
+                  </div>
+                </details>
+              )}
+            </div>
+          );
+        }
         // Extract YouTube ID from multiple possible fields: videoId, id, or url
         let rawVideoId = block.videoId || "";
         if (!rawVideoId && block.url) {
@@ -496,6 +554,9 @@ export default function LessonViewer({
             <PageContent content={exText} lang={lang} />
           </div>
         );
+      }
+      case "cloud_exercise": {
+        return <CloudExerciseBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} />;
       }
       default:
         return null;
