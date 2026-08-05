@@ -952,38 +952,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_architect_professional__03_006",
-      "courseId": "claude_certified_architect_professional__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_06",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Identify the risk categories present in this design and pair each with a mitigation.\nModel answer\n1. Indirect prompt injection via the knowledge base. Retrieved content can carry instructions; mitigation is to treat retrieved text as untrusted and screen tool/content inputs, not just user input.\n2. Tool and action abuse on the refund tool. Mitigation is an action-authorization check that runs before the refund tool executes, independent of the model's output.",
-        "fr": "Identifiez les catégories de risques présentes dans cette conception et associez chacune d'elles à une mesure d’atténuation.\nRévélez la réponse du modèle\nIgnorer pour l’instant\nRéponse du modèle\n1. injection de prompt indirecte via la base de connaissances. Le contenu récupéré peut contenir des instructions ; la mesure d’atténuation consiste à considérer le texte récupéré comme non fiable et à filtrer les entrées des outils et contenus, et pas seulement les entrées utilisateur.\n2. abus d’outil et d’action sur l’outil de remboursement. La mesure d’atténuation est une vérification d’autorisation d’action qui s’exécute avant l’exécution de l’outil de remboursement, indépendamment de la sortie du modèle."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "1) Indirect prompt‑injection via the knowledge base\n- Risk: Retrieved KB content can contain instructions or malicious tokens that the model will interpret as directives, causing undesired behavior.\n- Mitigations (concrete): treat all retrieved content as untrusted; strip or neutralize instruction-like fragments (e.g., remove prompt delimiters, \"ignore previous\", \"you are\" blocks) before concatenation; run a classifier to detect instruction-like or unsafe content and block or redact matches; attach provenance metadata and only allow high‑trust sources; limit which fields of KB entries are forwarded to the model; pass KB text as quoted user data (not system messages) and prepend a strict system prompt that forbids following embedded instructions.\n\n2) Tool/action abuse on the refund tool\n- Risk: The model (or attacker controlling model input) may trigger unauthorized refunds or supply malicious parameters.\n- Mitigations (concrete): never allow the model to directly call the refund API; enforce server‑side preconditions and authorization checks (RBAC) before executing any refund; require authenticated user identity + MFA or step‑up approval for sensitive actions; implement business logic validation (amount caps, frequency limits, account matching) on the backend; require signed intent (idempotency token + user confirmation) and maintain immutable audit logs; add anomaly detection/alerting for unusual refund patterns and require manual review for high‑risk cases.",
-        "fr": "1) Injection de prompt depuis la base de connaissances\nMesure : traiter tout contenu récupéré comme non fiable — appliquer un filtre d’instructions (regex + classifieur ML) pour supprimer/neutraliser directives, normaliser/échapper les caractères spéciaux, et n’injecter que champs de données autorisés (allowlist).\n\n2) Abus d’outil (ex. remboursement)\nMesure : enforcement indépendant avant exécution de l’outil — vérification d’autorisation/entitlement côté service d’orchestration, re-authentification ou 2FA pour montants sensibles, approbation humaine pour seuils définis.\n\n3) Fuite de données sensibles (PII)\nMesure : détection et masquage automatisés des PII (NER + règles), principe de moindre privilège sur champs renvoyés, journaux redacted et accès restreint.\n\n4) Empoisonnement ou corruption de la KB\nMesure : pipeline d’ingestion avec validation et revue, signatures/versioning des entrées, tests automatisés et rollback possible des versions corrompues.\n\n5) Hallucinations / réponses non vérifiées\nMesure : exiger source vérifiable pour assertions (citations); si aucune source fiable, renvoyer incertitude plutôt que compléter; test adversarial continu.\n\n6) Escalade de privilèges via enchaînement d’instructions\nMesure : scoper les capacités des sessions (capability tokens), limiter les APIs accessibles selon rôle et contexte, vérifications côté service, non par le modèle.\n\n7) Manque d’auditabilité\nMesure : journaliser toutes les décisions du modèle, inputs récupérés, appels d’outils et résultats (immutable logs, horodatage, IDs utilisateur) pour post-mortem.\n\n8) Disponibilité / abus (DoS)\nMesure : quotas, rate limiting, détection d’anomalies et circuit-breaker, alerting et isolation des sessions suspectes."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "API Integration",
-        "Architecture",
-        "Automation"
-      ],
-      "title": {
-        "en": "Identify the risk categories present in this de...",
-        "fr": "Identifiez les catégories de risque présentes dans ce de..."
-      }
-    },
-    {
       "id": "ex_claude_certified_architect_professional__03_008",
       "courseId": "claude_certified_architect_professional__03",
       "lessonId": "lesson_01",
@@ -1557,38 +1525,6 @@
       "title": {
         "en": "Correct.: You matched the control to the obliga...",
         "fr": "Correct.: Vous avez associé le contrôle à l'obliga..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_architect_professional__03_030",
-      "courseId": "claude_certified_architect_professional__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_06",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Right control, weak rationale.: The control fits, but the reason you picked isn't what survives an audit. Name the artifact the reviewer can inspect: the signed BAA plus the enabled configuration, not the intent behind the control. Then choose again.",
-        "fr": "Bon contrôle, raisonnement faible. Le contrôle convient, mais la raison que vous avez choisie n’est pas celle qui résiste à l’audit. Nommez l’artefact que le réviseur peut examiner : le BAA signé et la configuration activée, et non l’intention derrière le contrôle. Ensuite, choisissez à nouveau."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Artifact the reviewer will inspect: the signed Business Associate Agreement (BAA) with the vendor plus the actual enabled configuration and supporting evidence (configuration screenshots/JSON, policy documents, audit logs, and CI/CD templates)—not your intent or policy statements.\n\nChoose again (example):\n\n- Control: Enforce encryption and transport protections for all PHI stored or processed in cloud storage.\n- Concrete rationale tied to inspectable artifacts: “We have a signed BAA with the cloud provider and proof that server-side encryption with a customer-managed KMS key (SSE‑KMS) is enabled and TLS 1.2+ is enforced. Auditors can verify the BAA PDF, the S3/GCS bucket ‘Default encryption’ setting (showing SSE‑KMS and key ID), the KMS key policy, a bucket/object policy requiring aws:SecureTransport=true (or equivalent), and CloudTrail/storage access logs showing encrypted writes.”\n- Evidence to produce for an audit: signed BAA, bucket/config JSON or screenshot, KMS key metadata, bucket policy text, CloudTrail/log entries, and an automated Config/Policy rule showing compliance.\n\nReplace vague reasons (“we care about privacy”) with this artifact-based rationale.",
-        "fr": "Preuve observable exigée : fournissez le BAA signé (page de signature avec date et parties) ET des artefacts techniques prouvant que la protection est effectivement activée — pas l’intention. Exemples d’artefacts concrets à joindre :\n- BAA_scanned_signed.pdf (page de signature, date, nom du représentant) ;\n- capture d’écran de la console montrant “HIPAA / BAA mode: Enabled” ou “Audit logging: ON” avec horodatage et nom du service ;\n- export de configuration (JSON/YAML) montrant la clé “audit_logging: true” ou “encryption_at_rest: enabled” ;\n- entrée de journal montrant l’activation (timestamp, utilisateur) ou ticket de changement (ID, approbation) ; \n- logs d’accès prouvant que seuls comptes autorisés ont accédé après activation.\n\nRaison révisée et résistante à l’audit (exemple à fournir dans le contrôle) :\n« Les données PHI sont protégées par un accord contractuel (BAA signé le 2025-01-10) et par des contrôles techniques activés (audit logging et chiffrement au repos activés). Preuve : BAA_scanned_signed.pdf, config_export_2025-01-11.json, screenshot_console_2025-01-11.png, ticket_CHG-12345. »"
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "advanced",
-      "skillTags": [
-        "Architecture",
-        "Automation",
-        "Compliance"
-      ],
-      "title": {
-        "en": "Right control, weak rationale.: The control fit...",
-        "fr": "Contrôle approprié, raisonnement faible.: Le contrôle convenait..."
       }
     },
     {

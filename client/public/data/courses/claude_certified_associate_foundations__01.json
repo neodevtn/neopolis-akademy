@@ -944,38 +944,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_associate_foundations__01_003",
-      "courseId": "claude_certified_associate_foundations__01",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_03",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Relevant facts carry forward across sessions without re-entry.\nThe layers are independent. Use any combination based on what the task requires. A one-off question needs none of them, while a recurring analytical workflow might use all four.\nSkills\nCode Execution\nSkills are reusable procedures. Anthropic provides built-in Skills for common professional tasks: creating, editing, and analyzing Excel spreadsheets, Word documents, PowerPoint decks, and PDFs. Custom Skills can be added via settings for task-specific workflows. Skills live at the account level, not inside any one Project, and Claude invokes them automatically when relevant in any conversation, inside or outside a Project. A Project's own configuration is its standing instructions and knowledge base; an active Skill tells Claude to follow a defined procedure for that task type, consistently, wherever it applies.\nThere are two things to keep in mind about Skills:",
-        "fr": "Les faits pertinents se reportent d'une session à l'autre sans avoir à les ressaisir.\nLes couches sont indépendantes. Utilisez n'importe quelle combinaison en fonction de ce que nécessite la tâche.\nUne question ponctuelle n'a besoin d'aucune d'entre elles, tandis qu'un flux de travail analytique récurrent pourrait utiliser les quatre.\nSkills\nCode Execution\nLes Skills sont des procédures réutilisables. Anthropic fournit des Skills intégrés pour les tâches professionnelles courantes : créer, modifier et analyser des feuilles de calcul Excel, des documents Word, des présentations PowerPoint et des PDFs. Des Skills personnalisés peuvent être ajoutés via les paramètres pour des workflows spécifiques à la tâche. Les Skills existent au niveau du compte, et non à l'intérieur d'un Project, et Claude les invoque automatiquement lorsque cela est pertinent dans n'importe quelle conversation, à l'intérieur ou à l'extérieur d'un Project. La configuration propre à un Project est ses instructions permanentes et sa base de connaissances ; une Skill active indique à Claude de suivre une procédure définie pour ce type de tâche, de manière cohérente, où qu'elle s'applique.\nIl y a deux choses à garder à l'esprit concernant les Skills :"
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "1) Skills are reusable, account-level procedures — design them as robust, well-documented functions.\n- Define clear inputs, outputs, and error handling (e.g., “file: xlsx”, “sheet name”, “normalize dates” → returns cleaned DataFrame or error code).\n- Make them idempotent and deterministic so repeated invocations yield the same result.\n- Version and document each Skill (changes, intended scope, examples) so teams know when to upgrade consumption.\n- Provide unit/test cases (sample files and expected outputs) and logging so you can audit behavior across conversations and sessions.\n\n2) Skills are independent of Projects and of Claude’s standing instructions — manage scope, permissions, and data governance.\n- Skills don’t store project-specific knowledge; Projects supply contextual instructions and knowledge bases that Skills should treat as inputs.\n- Apply least-privilege access: limit who can add/modify Skills and what data they can access.\n- Parameterize Skills to be composable across workflows (e.g., “cleanup_level: strict/soft”); avoid hard-coded assumptions about formats or business rules.\n- Use Skills for repeatable tasks (Excel transforms, PDF extraction, code execution) and keep one-off logic in the Project’s instructions.\n\nPractical rule: use Skills for consistent, repeatable operations; keep project-specific policies and ephemeral context in Projects.",
-        "fr": "Points-clés qu’une bonne réponse couvrirait\n\n1) Deux choses à garder en tête sur les Skills\n- Niveau et portée : les Skills existent au niveau du compte (pas du Project) et sont invoqués automatiquement par Claude quand le contexte correspond. Concevez-les comme des services réutilisables, pas comme des scripts ad‑hoc.\n- Comportement attendu : un Skill doit décrire précisément l’entrée, la sortie, les étapes, les erreurs gérées, et les préconditions (idempotence, timeouts, validation). Claude suivra cette procédure de façon cohérente partout.\n\n2) Quand utiliser quelles couches\n- Question ponctuelle : aucune couche persistante nécessaire (stateless).\n- Flux analytique récurrent : utilisez combinaison de couches — mémoire pour faits persistants (avec TTL/contrôles), base de connaissances pour documents structurés, instructions permanentes pour contraintes du Project, et Skills pour actions automatisées.\n\n3) Risques concrets et mitigations\n- Fuite de données sensibles → appliquer RBAC, chiffrage, minimisation des données, TTL pour mémoire.\n- Invocation automatique inappropriée → ajouter filtres/triggers explicites et option “confirmation utilisateur”.\n- Conflits entre Skills/versioning → versionner, tests automatisés, circuit de rollback.\n- Données obsolètes → politique de rafraîchissement et validation humaine.\n\n4) Checklist de production pour un Skill (actionnable)\n- Nom/version, description, entrées/sorties, exemples, validations, gestion d’erreur, timeouts, tests unitaires, politique d’accès, logging/audit, procédure de rollback.\n\nExemple minimal (template) : \n{\"name\":\"ExportExcelV1\",\"trigger\":\"export request\",\"inputs\":\"table,format\",\"outputs\":\"file link\",\"steps\":[\"validate input\",\"generate spreadsheet\",\"store\",\"return link\"],\"permissions\":\"role:analyst\",\"ttl_logs\":\"90d\"}"
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Automation",
-        "Claude Platform",
-        "Context Design"
-      ],
-      "title": {
-        "en": "Relevant facts carry forward across sessions wi...",
-        "fr": "Les faits pertinents sont conservés d'une session à l'autre avec..."
-      }
-    },
-    {
       "id": "ex_claude_certified_associate_foundations__01_004",
       "courseId": "claude_certified_associate_foundations__01",
       "lessonId": "lesson_01",
@@ -1005,102 +973,6 @@
       "title": {
         "en": "A monthly report that got faster and more accur...",
         "fr": "Un rapport mensuel devenu plus rapide et plus précis..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_associate_foundations__01_005",
-      "courseId": "claude_certified_associate_foundations__01",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_05",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "CheckpointCapability Layer·5 min\nCheckpoint\nA recurring contract review workflow has five components. For each component, select which capability layer it belongs in: standing instructions, knowledge base, Skill, or Code Execution. Each layer is used at least once.\nClick a card to select it, then click a bucket to place it. Click a placed card to return it to the pool.\nThe instruction: \"Flag any clause that departs from the playbook and explain the departure in one sentence\"",
-        "fr": "CheckpointCapability couche • 5 min\nPoint de contrôle\nUn flux de travail récurrent pour la revue de contrat comporte cinq composants. Pour chaque composant, sélectionnez dans quelle couche de capacité il appartient : standing instructions, knowledge base, Skill, ou Code Execution. Chaque couche est utilisée au moins une fois.\nCliquez sur une carte pour la sélectionner, puis cliquez sur un seau pour la placer. Cliquez sur une carte placée pour la remettre dans le pool.\nL'instruction : « Signalez toute clause qui s'écarte du playbook et expliquez l'écart en une phrase »"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Layer: Standing instruction.\n\nReason: This is a persistent directive about how every review should be performed (what to flag and the required output format), so it belongs in Standing Instructions. The playbook it references should live in the Knowledge Base; detection logic can be implemented in a Skill or Code Execution step that uses that KB.\n\nImplementation (exact text to store as a standing instruction):\n\"Flag any clause that departs from the playbook and explain the departure in one sentence. For each flagged clause, return: Clause ID/heading — One-sentence departure explanation.\"\n\nExpected output format example:\n- Clause 5.2 (Indemnity) — \"Playbook requires mutual indemnity; this clause imposes unilateral indemnity on the supplier.\"\n\nNotes for integration:\n- Put the playbook documents in the Knowledge Base.\n- Implement the detection as a Skill (NLP comparison) or Code Execution (rule-based parser) that applies this standing instruction each run.\n- Keep the one-sentence explanation factual and cite the playbook reference when possible (e.g., \"See Playbook §3.1\").",
-        "fr": "1) Instruction opérationnelle — «Signalez toute clause qui s'écarte du playbook…» : Standing instructions.  \nRaison/action : Cible le comportement attendu de l'agent (directive récurrente, format de sortie et priorité) — doit être stockée comme instruction stable appliquée à chaque revue.\n\n2) Playbook des règles contractuelles (liste des clauses autorisées/défendues, exemples) : Knowledge base.  \nRaison/action : Référentiel de connaissances consultable pour décider si une clause dévie ; doit être indexé et consultable par ID/clause.\n\n3) Détection et classification de clause (NLP qui identifie type et compare au playbook) : Skill.  \nRaison/action : Composant réutilisable encapsulant la logique ML/NLP (classification, scoring de déviation) que l’agent appelle.\n\n4) Ingestion et extraction de texte (OCR, parsing PDF, segmentation en clauses) : Code Execution.  \nRaison/action : Opérations techniques sur les fichiers (extraction, normalisation, regex) exécutées via outils/plug-ins externes.\n\n5) Rédaction automatisée d’une phrase d’écart et génération du rapport exportable (formatage, journaux) : Skill + Code Execution (préférence Skill pour formulation).  \nRaison/action : La génération linguistique est une Skill (produit la phrase d’écart conforme aux standing instructions) ; l’export/archivage du rapport est Code Execution. (Si une seule couche doit être choisie : Skill pour la phrase.)\n\nRemarque pratique : stockez playbook et instructions séparément ; exposez la Skill d’analyse à des hooks Code Execution pour ingestion et export."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Agentic Design",
-        "Automation",
-        "Fundamentals"
-      ],
-      "title": {
-        "en": "Capability Layer",
-        "fr": "Couche de capacités Checkpoint · 5 min"
-      }
-    },
-    {
-      "id": "ex_claude_certified_associate_foundations__01_006",
-      "courseId": "claude_certified_associate_foundations__01",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_06",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "ExercisePlatform Selection·5 min\nExercise · Pick the right feature for the job\nThe selection decisions from this module are applied together. Entry point, capability layer, model tier, and context strategy are four related choices made for the same task. This exercise practices identifying them together.\nSix professional scenarios, six configuration cards. Match each scenario to the configuration that fits it. Each card is used once. Check your results when you're done. This should take you approximately five minutes.\nConfiguration Cards",
-        "fr": "Sélection de ExercisePlatform · 5 min\nExercice · Choisir la bonne fonctionnalité pour la tâche\nLes décisions de sélection de ce module s'appliquent ensemble. Le point d'entrée, la couche de capacité, le niveau du modèle et la stratégie de contexte sont quatre choix liés effectués pour la même tâche. Cet exercice vise à identifier ces éléments ensemble.\nSix scénarios professionnels, six cartes de configuration. Associez chaque scénario à la configuration qui lui convient. Chaque carte est utilisée une seule fois. Vérifiez vos résultats lorsque vous avez terminé. Cela devrait vous prendre environ cinq minutes.\nCartes de configuration"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Good matches focus on the task’s latency, safety, cost, and context needs. For each scenario choose: entry point (chat UI, API, plugin, or multimodal upload), capability layer (instruction-following, reasoning, tool use, retrieval), model tier (efficient vs high-capability vs domain-specialized), and context strategy (short prompt, few-shot, or retrieval-augmented chunking). Example mappings:\n\n1) Customer-support FAQ triage\n- Entry: chat UI / REST API\n- Capability: instruction-following + retrieval\n- Model tier: efficient / cost-conscious\n- Context: RAG from KB + short convo history; human escalation\n\n2) Creative marketing copy\n- Entry: interactive editor/chat\n- Capability: generative/creative\n- Model tier: high-capability creative model\n- Context: few-shot examples + brand style guide in prompt\n\n3) Legal contract review\n- Entry: document ingestion pipeline + chat\n- Capability: high-reasoning + source citation\n- Model tier: highest-capability, compliance-tuned\n- Context: RAG with chunking, explicit source attribution, human review\n\n4) Code assistant in IDE\n- Entry: editor plugin with streaming\n- Capability: code understanding + tool execution (run/tests)\n- Model tier: code-specialized or high-capability\n- Context: repo files in context + RAG; incremental context updates\n\n5) Medical summarization / clinical support\n- Entry: secure API integrated with EHR\n- Capability: high-accuracy + safety filters\n- Model tier: domain-tuned, risk-averse\n- Context: RAG on patient records, strict human-in-loop\n\n6) Image-based product recognition\n- Entry: multimodal upload API\n- Capability: vision-enabled + retrieval/classification\n- Model tier: multimodal/specialized\n- Context: image + metadata; deterministic post-checks\n\nQuick checklist when matching: required accuracy, permitted latency/cost, need for tool access, data sensitivity, and whether RAG or few-shot is best.",
-        "fr": "Si l’exercice ne fournit pas les scénarios ni les cartes, voici la CORRECTION MODÈLE qu’un étudiant devrait viser : une méthode concrète pour associer correctement point d’entrée, couche de capacité, niveau du modèle et stratégie de contexte.\n\n1) Catégories concrètes de choix\n- Point d’entrée : API synchrone, streaming, interface utilisateur interactive, job batch, SDK embarqué.\n- Couche de capacité : RAG (retrieval), outils/exécuteurs (calc, DB, navigateur), modération, chaîne de réflexion, vision.\n- Niveau du modèle : petit/low-latency (coût faible), général (équilibre), grand/spécialisé (haute précision).\n- Stratégie de contexte : system prompt + few-shot, retrieval + passage ranking, chunking + iterative summarization, mémoire à long terme.\n\n2) Règles d’appariement (actionnables)\n- Temps réel/UX interactif → API streaming + petit/modéré modèle + minimal system prompt + chunked prompts pour latence.\n- Réponses factuelles ou doc-heavy → API sync + RAG avec passage-ranking + grand modèle pour reranking + contrôle de cohérence.\n- Tâches sensibles/confidentielles → environnement privé/on-prem + filtre/IA locale + modèles fermés/sécurisés + minimiser contexte partagé et chiffrer logs.\n- Multimodal (images/vidéo) → point d’entrée multimodal + modèle vision-capable + pipeline de prétraitement + aligner contexte image+texte.\n- Calculs/exécutions → outil/code-executor + modèle capable de planification + vérification par exécution.\n- Batch analytics longue durée → job batch + modèle optimisé coût + summarization en pipeline.\n\n3) Risques concrets et mitigations\n- Hallucinations → RAG + source citations + fact-check step.\n- Fuites de données → chiffrage, suppression des logs, data minimization.\n- Latence/coût → modèle plus petit, caching, rate limits.\n- Erreurs d’outillage → sandboxing, tests unitaires, timeouts.\n\nUne bonne réponse associera chaque scénario à ces règles, justifiera le trade-off latence/coût/précision et proposera au moins une mitigation de risque pour chaque association."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "AI Safety",
-        "API Integration",
-        "Batch Processing"
-      ],
-      "title": {
-        "en": "ExercisePlatform Selection",
-        "fr": "Sélection de la plateforme d'exercices · 5 min"
-      }
-    },
-    {
-      "id": "ex_claude_certified_associate_foundations__01_007",
-      "courseId": "claude_certified_associate_foundations__01",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_07",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Exercise · Pick the right feature for the job\nThe selection decisions from this module are applied together. Entry point, capability layer, model tier, and context strategy are four related choices made for the same task. This exercise practices identifying them together.\nSix professional scenarios, six configuration cards. Match each scenario to the configuration that fits it. Each card is used once. Check your results when you're done. This should take you approximately five minutes.\nConfiguration Cards\nCardConfigurationReason",
-        "fr": "Exercice · Choisissez la bonne fonctionnalité pour la tâche\nLes décisions de sélection issues de ce module s'appliquent ensemble. Le point d'entrée, la couche de capacité, le niveau du modèle et la stratégie de contexte sont quatre choix liés effectués pour la même tâche. Cet exercice vise à les identifier ensemble.\nSix scénarios professionnels, six cartes de configuration. Associez chaque scénario à la configuration qui lui convient. Chaque carte est utilisée une fois. Vérifiez vos résultats lorsque vous avez terminé. Cela devrait vous prendre environ cinq minutes.\nCartes de configuration\nCardConfigurationReason"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Good answer shows clear, repeatable rules for matching entry point, capability layer, model tier, and context strategy — then applies them to each scenario. Below are six common scenario types with the exact configuration choices you should pick and why.\n\n1) High-volume simple classification (e.g., spam or intent labels)\n- Entry: backend batch API\n- Capability layer: lightweight classifier + rate limiting\n- Model tier: small/fast model\n- Context: minimal fixed prompt, no retrieval\n- Why: cost and throughput prioritized\n\n2) Knowledge-forward research assistant (detailed subject-matter answers)\n- Entry: web chat UI or API\n- Capability layer: RAG (retrieval) + citation formatting\n- Model tier: high-capacity LLM\n- Context: long dynamic context assembled from retrieved docs\n- Why: needs deep knowledge and citations\n\n3) Real-time conversational agent with low latency (live chat)\n- Entry: streaming WebSocket from client\n- Capability layer: streaming responses + light safety filters\n- Model tier: mid-tier low-latency model (or streaming-enabled high-tier)\n- Context: rolling short-window context + selective retrieval for recent facts\n- Why: latency critical, maintain coherence\n\n4) Sensitive/regulated data processing (PHI/PII)\n- Entry: on-prem API or VPC-hosted endpoint\n- Capability layer: strict redaction, auditing, access control\n- Model tier: private/fine-tuned model in secure environment\n- Context: minimal necessary context; avoid external retrieval unless sanitized\n- Why: compliance and data governance\n\n5) Multilingual customer support with KB lookups\n- Entry: omnichannel UI (web, mobile)\n- Capability layer: translation + RAG against multilingual KB\n- Model tier: robust multilingual mid/high model\n- Context: dynamic retrieval + user/session history\n- Why: accurate localized answers and continuity\n\n6) Code generation and tool execution (compile/run/tests)\n- Entry: developer IDE plugin or API\n- Capability layer: tool-calling + sandboxed execution + safety checks\n- Model tier: high-capacity model with code expertise\n- Context: include repo snippets + test cases; use instruction templates\n- Why: needs precise, testable outputs and tooling integration\n\nUse these rules to map any specific scenario to a configuration card: prioritize privacy/compliance, then latency/cost, then knowledge depth and tool requirements.",
-        "fr": "Critères à appliquer pour associer scénario ↔ carte (flux d’analyse rapide)\n1) Point d’entrée — Qui initie et comment (UI web, API serveur, plugin IDE, agent autonome, batch) ?  \n2) Couche de capacité — Besoin de mémoire/état, accès aux données externes, ou actions système (RAG/knowledge base, tool-using agent, pipeline de résumé) ?  \n3) Niveau du modèle — Contraintes latence/coût vs qualité/complexité (petit modèle pour tâches simples, grand modèle pour raisonnement complexe ou multiturn; modèle spécialisé pour code/médical).  \n4) Stratégie de contexte — Entrée courte, chunking + RAG, mise à jour d’état, ou streaming pour realtime ?  \n\nChecklist d’une bonne réponse (que l’étudiant doit couvrir)\n- Définir clairement l’objectif fonctionnel (output attendu).  \n- Justifier le point d’entrée par UX/interopérabilité.  \n- Expliquer pourquoi la couche de capacité répond aux besoins de données/actions.  \n- Choisir un niveau de modèle en justifiant latence/coût/qualité.  \n- Décrire la stratégie de contexte (ex. : RAG avec vecteurs + résumé incrémental).  \n- Mentionner risques et mitigtions concrètes.\n\nRisques concrets à lister\n- Hallucinations → RAG + vérification/aggrégation.  \n- Fuite de données sensibles → chiffrement, accès restreint, redaction.  \n- Latence/costs → modèle plus petit, batching, cache.  \n- Actions non contrôlées (agent) → sandboxing, permissions, confirmations.  \n\nExemples rapides d’appariement (modèle)  \n- FAQ client → Web UI, RAG sur base FAQ, petit modèle, RAG+cache.  \n- Analyse juridique longue → Batch, RAG+chunking, grand modèle, résumé progressif.  \n- Assistant dev → IDE plugin, tool-using model, modèle code-finetuned, contexte récurrent."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "AI Safety",
-        "API Integration",
-        "Agentic Design"
-      ],
-      "title": {
-        "en": "Exercise · Pick the right feature for the job",
-        "fr": "Exercice · Choisir la bonne fonctionnalité pour la tâche"
       }
     },
     {
@@ -1357,38 +1229,6 @@
       "title": {
         "en": "Feedback: Revisit the scenarios against the sel...",
         "fr": "Commentaires : Réexaminer les scénarios par rapport au sel..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_associate_foundations__01_023",
-      "courseId": "claude_certified_associate_foundations__01",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_03",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "All five correct: Full coverage across the module's selection framework. You applied the logic correctly across entry-point selection, Code Execution signals, model tiers, context management, and Project-scoped Memory.",
-        "fr": "Tous les cinq corrects : couverture complète du cadre de sélection du module. Vous avez appliqué la logique correctement à travers la sélection des points d’entrée, signaux Code Execution, niveaux du modèle, gestion du contexte et mémoire au niveau du projet."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Correct solution demonstrates concrete decision rules and implementation checks across each of the five selection dimensions:\n\n1. Entry‑point selection\n- Rule: Map user intent → entry point. E.g., “ask a clarifying question” → conversational entry; “run this test suite” → action/automation entry.\n- Implementation check: Ensure UI or API flags entry type; reject ambiguous requests with a clarification prompt.\n\n2. Code Execution signals\n- Signals: explicit user command to run code, file-system/tool access request, or operations with side effects.\n- Safety rule: Require explicit consent + validation for destructive ops; sandbox and resource limits for all executions.\n- Example: If request includes “run”, “execute”, or references local files → route to code-exec pipeline.\n\n3. Model tiers\n- Decision logic: match task complexity, latency, and cost. E.g., classification/short replies → smaller model; complex planning or code gen → high-capability model.\n- Fallback: start lower-tier, escalate if confidence low or complexity detected.\n- Metric: track accuracy vs cost and adjust thresholds.\n\n4. Context management\n- Strategy: prioritize recent & high-relevance fragments, keep strict token budget, use chunking + retrieval + rollup summaries.\n- Truncation policy: preserve latest user turns and system instructions, summarize older context automatically.\n- Test: simulate long sessions to verify coherent replies.\n\n5. Project‑scoped Memory\n- What to store: stable preferences, project configs, auth tokens (encrypted), non-sensitive task state.\n- Governance: explicit opt-in, TTL and versioning, scoped by project ID, access controls and audit logs.\n- Retrieval rule: fetch memory only when relevance score > threshold.\n\nValidation: unit tests for routing logic, simulated user flows, logging of decisions, and periodic audits for privacy/security compliance.",
-        "fr": "Éléments qu’une bonne correction doit contenir (concret et actionnable)\n\n- Points d’entrée : inventorier et classer (UI boutons, API, webhooks, ingestion batch). Pour chaque point : schéma d’entrée (JSON), validation strict (whitelist des champs, limites de taille), authentification & RBAC, tests de fuzzing.\n\n- Signaux “Code Execution” : définir signaux explicites (intent explicite + paramètre exécutable) et signaux heuristiques (pattern, taille, source). Mesures : confirmation explicite utilisateur pour actions sensibles, sandboxing (processus isolé, timeouts, cgroups), droits minimaux, journalisation des exécutions.\n\n- Niveaux du modèle : cartographier par sensibilité (ex. L0 = assistants locaux pour tâches non sensibles, L1 = modèles cloud pour synthèse, L2 = modèles hautes-capacités pour code/planification). Pour chaque niveau, définir redlines (données interdites), taux/latence cibles et fallback (mode restreint).\n\n- Gestion du contexte : stratégie de fenêtrage (truncate récency + résumé), chunking + retrieval-augmented generation, templates de prompt, budget tokens et monitoring d’usage. Tests de régression sur cohérence du contexte.\n\n- Mémoire au niveau projet : classifier mémoires (éphemère, session, persistante), TTL, chiffrement at-rest/in-transit, opt-in utilisateur, mécanisme de suppression, minimisation des données. Audit & métriques (utilisation, erreurs, alertes sécurité).\n\nRisques concrets : injection de code, fuite de données sensibles, escalade de privilèges, hallucinations. Contremesures : validation, sandbox, chiffrement, audits, tests adversariaux."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "AI Safety",
-        "API Integration",
-        "Automation"
-      ],
-      "title": {
-        "en": "All five correct: Full coverage across the modu...",
-        "fr": "Les cinq sont corrects : Couverture complète à travers le modu..."
       }
     },
     {

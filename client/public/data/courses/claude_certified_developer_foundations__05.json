@@ -1427,38 +1427,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_developer_foundations__05_004",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_04",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "(Confirm current model ID at platform.claude.com/docs/en/about-claude/models at build time.)\nIdentify the hardcoded value, then write the corrected function signature and the parameterized line that replaces it.\nCompare with model answer\nSkipped\nMove on if you need to but come back before the cumulative task. A later checkpoint plants a version of this same hardcoding defect among two others and is harder to spot under multi-layer load.",
-        "fr": "(Confirmez l'ID du modèle actuel sur platform.claude.com/docs/en/about-claude/models au moment du build.)\nIdentifiez la valeur codée en dur, puis écrivez la signature de fonction corrigée et la ligne paramétrée qui la remplace.\nComparez avec la réponse du modèle\nPassez pour l'instant\nIgnoré\nPassez à autre chose si nécessaire, mais revenez avant la tâche cumulée. Un point de contrôle ultérieur introduit une version de ce même défaut de hardcoding parmi deux autres et est plus difficile à repérer sous une charge à plusieurs niveaux."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "Hardcoded value (example): model=\"claude-2.1\" — confirm the actual current ID at platform.claude.com/docs/en/about-claude/models and replace this example if different.\n\nCorrected function signature (parameterize the model):\ndef call_claude(prompt: str, model: str = \"claude-2.1\") -> str:\n\nReplace the hardcoded line inside the function:\n# old (hardcoded):\n# response = client.generate(model=\"claude-2.1\", input=prompt)\n# new (parameterized):\nresponse = client.generate(model=model, input=prompt)\n\nNotes: set the default model to the current stable ID from the docs, or remove the default to force callers to pass it. Also consider exposing model as a configuration constant (CLAUDE_MODEL) for centralized control.",
-        "fr": "Hardcoded identifié\n- Valeur codée en dur : l'ID du modèle (ex. \"claude-2.1\" ou \"claude-instant-v1\") passé directement à client.responses.create(...).\n\nCorrection proposée (ex. Python)\n- Signature de fonction corrigée :\n  def generate_response(prompt: str, model_id: str = None) -> str:\n      import os\n      model_id = model_id or os.getenv(\"CLAUDE_MODEL\", \"claude-2.1\")\n      # (valider model_id si nécessaire)\n      response = client.responses.create(model=model_id, input=prompt)\n      return response.output_text\n\n- Ligne paramétrée qui remplace le hardcoding :\n  response = client.responses.create(model=model_id, input=prompt)\n\nComparaison avec la réponse du modèle\n- Erreur typique du modèle : la réponse laissait \"claude-2.1\" (ou autre) en dur dans client.responses.create(...), ce qui empêche le changement de version/environnement.\n\nRisques concrets et mitigations\n- Risques : déploiement cassé si l'ID est obsolète; impossibilité de tester/répliquer avec d'autres modèles; fuite d'implémentation rigide entre environnements.\n- Mitigations : lire l'ID depuis une variable d'environnement ou config, valider contre une whitelist, fournir un paramètre explicite pour tests, ajouter test CI qui injecte un model_id de test et détecte hardcodage (analyse statique ou test d'intégration)."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Claude Platform",
-        "Development",
-        "Output Formatting"
-      ],
-      "title": {
-        "en": "(Confirm current model ID at platform.claude.co...",
-        "fr": "(Confirmer l'ID du modèle actuel sur platform.claude.co... )"
-      }
-    },
-    {
       "id": "ex_claude_certified_developer_foundations__05_005",
       "courseId": "claude_certified_developer_foundations__05",
       "lessonId": "lesson_01",
@@ -1488,102 +1456,6 @@
       "title": {
         "en": "Identify the hardcoded value, then write the co...",
         "fr": "Identifiez la valeur codée en dur, puis écrivez le co..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_006",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_06",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Skipped\nMove on if you need to but come back before the cumulative task. A later checkpoint plants a version of this same hardcoding defect among two others and is harder to spot under multi-layer load.",
-        "fr": "Ignoré\nPassez à autre chose si nécessaire, mais revenez avant la tâche cumulée. Un point de contrôle ultérieur introduit une version du même défaut de hardcoding parmi deux autres et est plus difficile à repérer sous une charge à plusieurs couches.\nEnseignement Contribution Retour·12 min\nLe déplacement d'un actif de la réutilisation privée vers une infrastructure partagée qu'un mainteneur accepte\nVous avez déjà fait la majeure partie du travail qui rend un actif partageable. Lorsque vous l'avez empaqueté pour que votre propre équipe puisse le réutiliser, vous avez extrait les paramètres, écrit les hypothèses et regroupé l'évaluation. Les paramètres indiquent que l'actif peut être configuré plutôt que réécrit. Les hypothèses documentées indiquent au mainteneur quel environnement l'actif attend. L'évaluation empaquetée leur donne un moyen de confirmer qu'il fonctionne toujours. Un actif emballé pour la réutilisation interne est déjà proche de ce dont un mainteneur a besoin pour l'accepter."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "What to deliver as the asset author\n- Parameterize everything obvious: no literals for endpoints, credentials, file paths, or region IDs. Example: read API_URL and DB_CONN from a single config file or environment variables; fail loudly if missing.\n- Document assumptions: required OS, language/runtime versions, required services, network access, resource limits, and expected IAM roles.\n- Bundle tests and a reproducible eval: small script (eval.sh or pytest) that exercises core behavior and prints a pass/fail metric.\n- Provide a sample config (config.sample.yaml) and a minimal “quickstart” run command.\n- Add CI recipe and dependency lockfile (poetry.lock, Pipfile.lock, package-lock.json).\n- State license, maintainer, and upgrade/compatibility notes.\n\nChecklist a maintainer should use to accept the asset\n1. Sanity-run: use config.sample.yaml, run eval.sh, confirm identical results on supported platform.\n2. Scan for hardcoding: grep for URLs, credentials, paths, IPs, region names; confirm all are configurable.\n3. Security & secrets: run SAST/secret-scan; ensure no private keys or tokens remain.\n4. Dependency & license checks: verify pinned deps and compatible license.\n5. Environment assumptions: validate required runtime, disk, network, and IAM permissions are feasible in shared infra.\n6. Tests & CI: confirm unit/integration tests and a reproducible CI job exist.\n7. Metrics & monitoring: ensure the asset exposes health checks, logs, and resource metrics or add them.\n8. Versioning & changelog: confirm semantic versioning and upgrade guidance.\n\nConcrete risks to catch\n- Secrets or tenant-specific endpoints hardcoded\n- Implicit reliance on local developer tools/paths\n- Unpinned or vulnerable dependencies\n- Broken reproducibility (eval depends on developer environment)\n- Missing permissions or excessive privileges\n\nAccept only once all items pass or have tracked mitigation.",
-        "fr": "Points clés qu’une bonne réponse doit couvrir pour qu’un mainteneur accepte un actif déplacé de réutilisation privée vers une infrastructure partagée :\n\nChecklist actionable\n- Documentation minimale : README (usage), ASSUMPTIONS.md (environnements attendus), MAINTAINERS.md (contacts/ownership), CHANGELOG.md, LICENSE, SECURITY.md.\n- Paramétrisation complète : extraire tous les hard‑codes (URLs, chemins, credentials) vers variables de configuration ou variables d’environnement avec schéma (CONFIG_SCHEMA.json/yaml) et valeurs sûres par défaut.\n- Tests automatisés : unitaires, intégration (avec mocks d’infra), et tests d’acceptation multi‑locataires / charge. Inclure test de non‑régression et test de migration.\n- CI/CD reproductible : pipeline public (.github/workflows or gitlab-ci) qui construit, teste, scanne dépendances, génère artefacts versionnés et publie dans le registre.\n- Sécurité et dépendances : scan SAST/DAST, verrouillage de versions (lockfile), revue des secrets (secret scanning), politique de correctifs.\n- Observabilité & exploitation : métriques exposées, logs structurés, health endpoints, playbook de déploiement/rollback, SLA/temps de support.\n- Gouvernance : versioning sémantique, procédure de dépréciation, accord d’exploitation (on-call) et critères d’acceptation clairs.\n\nRisques concrets à vérifier\n- Hardcoded endpoints/credentials restant dans le code\n- Hypothèses d’environnement non documentées (ports, backends)\n- Dépendances non verrouillées provoquant régressions\n- Manque d’isolations provoquant fuite entre locataires\n- Absence de tests de charge et d’observabilité\n\nExigence finale : fournir un paquet (artefact + docs + pipeline) que le mainteneur peut cloner, exécuter les tests et déployer en production sans modifications manuelles."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "API Integration",
-        "Automation",
-        "Development"
-      ],
-      "title": {
-        "en": "Skipped",
-        "fr": "Ignoré"
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_007",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_07",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "CheckpointContributing back to the ecosystem·3 min\nCheckpoint 2: Choose the contribution channel and the readiness fix\nTry it now. Read the three cases below. Match each case to the channel built for it and match each case to the one readiness item the snippet is missing.\nCase A: A focused tool that wraps a single API into a clean function. The snippet is the function and nothing else.\nCase B: A full customer-service application a developer wants to share whole, including its UI and deployment scripts.",
-        "fr": "Checkpoint : Contribuer à l'écosystème · 3 min\nCheckpoint 2 : Choisir le canal de contribution et l’élément de préparation manquant à l’extrait\nEssayez-le maintenant. Lisez les trois cas ci-dessous. Associez chaque cas au canal qui lui est destiné et associez chaque cas à l’un des éléments de préparation manquants à l’extrait.\nCas A : Un outil ciblé qui encapsule une seule API dans une fonction propre. L’extrait est la fonction et rien d’autre.\nCas B : Une application complète de service client qu’un développeur souhaite partager dans son ensemble, y compris son UI et ses scripts de déploiement."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Case A\n- Channel: Tool snippet / single-function tool (code-snippet channel).\n- Missing readiness item: Usage documentation — include a docstring and a short example (or one-line README) showing how to call the function, expected inputs/outputs, and minimal error behavior.  \n- Actionable fix: Add a docstring with parameter types and a 2–3 line example use, plus one minimal unit test or example script so other devs can copy-paste and verify behavior.\n\nCase B\n- Channel: Full app repository / reference app (project-level channel — complete repo with UI and deployment).\n- Missing readiness item: Secrets and configuration hygiene — remove embedded keys and add documented environment configuration (example .env), plus clear deployment steps.  \n- Actionable fix: Strip all API keys/secrets, add an env.example file and README section describing required env vars, and include one-line deployment commands (or CI settings) so reviewers can safely run the app.",
-        "fr": "Cas A — Canal : Outil / « tool » (fragment de code exécutable)\nÉlément de préparation manquant (choisi) : Métadonnées d’interface (schéma d’entrée/sortie) + exemples d’utilisation.\nPourquoi : Un outil qui encapsule une seule API doit pouvoir être appelé de façon fiable par la plateforme ; l’extrait seul ne suffit.\nActions concrètes à ajouter :\n- Définir signature claire : noms et types des paramètres, format exact des réponses (JSON schema si applicable).\n- Fournir 2–3 exemples d’appel avec entrées attendues et sorties réelles.\n- Ajouter un court README indiquant but, préconditions, limites (timeouts, quotas) et erreurs possibles.\n- Inclure un petit test unitaire ou exemple de script montrant intégration.\n\nCas B — Canal : Application complète / dépôt de projet (app gallery ou repo)\nÉlément de préparation manquant (choisi) : Fichier de packaging / instructions de déploiement reproductible (Dockerfile, CI/CD, scripts).\nPourquoi : Pour partager une application complète il faut que d’autres puissent la lancer telle quelle.\nActions concrètes à ajouter :\n- Fournir Dockerfile et docker-compose.yml ou manifest cloud (Kubernetes, Terraform).\n- Documenter étapes de build/deploy dans README (prérequis, variables d’environnement, secrets).\n- Inclure scripts d’automatisation (makefile, scripts bash) et exemples de configuration pour l’environnement de test.\n- Ajouter licence, checklist de sécurité (ports exposés, secrets), et tests d’intégration minimal."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "API Integration",
-        "Automation",
-        "Business Value"
-      ],
-      "title": {
-        "en": "Contributing back to the ecosystem",
-        "fr": "Checkpoint — Redonner à l'écosystème · 3 min"
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_008",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_08",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Checkpoint 2: Choose the contribution channel and the readiness fix\nTry it now. Read the three cases below. Match each case to the channel built for it and match each case to the one readiness item the snippet is missing.\nCase A: A focused tool that wraps a single API into a clean function. The snippet is the function and nothing else.\nCase B: A full customer-service application a developer wants to share whole, including its UI and deployment scripts.\nCase C: A one-line fix to an existing Cookbook example. The snippet is the corrected line, carried in from a customer engagement.",
-        "fr": "Point de contrôle 2 : Choisir le canal de contribution et le correctif de préparation\nEssayez-le maintenant. Lisez les trois cas ci-dessous. Faites correspondre chaque cas au canal qui lui est destiné et faites correspondre chaque cas à l'unique élément de préparation qui manque dans le snippet.\nCas A : Un outil ciblé qui encapsule une seule API dans une fonction propre. L'extrait est la fonction et rien d'autre.\nCas B : Une application complète de service client qu'un développeur veut partager dans son intégralité, y compris son UI et ses scripts de déploiement.\nCas C : Un correctif d'une ligne pour un exemple Cookbook existant. L'extrait est la ligne corrigée, issue d'une interaction client."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Case A — Channel: Tool (single-purpose API wrapper).  \nMissing readiness item: runnable usage example + minimal tests. Provide a short README or code comment showing how to import the function, call it with sample inputs, expected output, and a tiny unit test. That lets reviewers validate behavior, dependency requirements, and error handling for a one‑function package.\n\nCase B — Channel: Application (full app with UI & deployment).  \nMissing readiness item: secret-sanitization + deployment instructions. Strip hard-coded API keys/credentials, add .env.example, and include clear deployment steps (required services, build/CI commands, env vars). This prevents leaking secrets and makes the app reproducible by reviewers.\n\nCase C — Channel: Cookbook (code snippet / example).  \nMissing readiness item: surrounding context so it’s runnable. Supply the corrected full code block (imports, surrounding lines, and minimal setup) and a short note describing why the change fixes the issue. That ensures the one-line fix can be validated and integrated into the existing cookbook example.",
-        "fr": "Cas A → Canal : Outils (outil ciblé / registry de fonctions)\nÉlément manquant unique : manifeste/métadonnées du tool (schema d’interface).\nPourquoi et correction : un extrait qui n’est que la fonction doit être accompagné d’un tool manifest (nom, description courte, signature des entrées/sorties, types, exemples d’appel, besoin d’authentification, limits). Ajoutez un fichier manifest.json/yaml + un exemple d’utilisation et un petit test unitaire qui montre l’entrée/sortie attendues.\n\nCas B → Canal : Application complète (marketplace / partage d’app)\nÉlément manquant unique : licence et notice de propriété (fichier LICENSE + mentions légales/confidentialité).\nPourquoi et correction : pour partager une app entière il faut un fichier LICENSE explicite (open source ou propriétaire), instructions de conformité (données utilisateur, vie privée), et une notice de déploiement/maintenance. Ajoutez LICENSE, README avec architecture, exigences, variables d’environnement, et une section « sécurité / données utilisateurs ».\n\nCas C → Canal : Cookbook / exemple de documentation\nÉlément manquant unique : test de régression / reproduction (snippet isolé + contexte).\nPourquoi et correction : une correction d’une ligne doit inclure un test minimal (ou étape de reproduction) et la référence à l’exemple original (fichier et ligne). Fournissez un test unitaire ou script de reproduction, la version du package, et un message de commit indiquant « fix: … » pour traçabilité."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "API Integration",
-        "Architecture",
-        "Business Value"
-      ],
-      "title": {
-        "en": "Checkpoint 2: Choose the contribution channel a...",
-        "fr": "Point de contrôle 2 : Choisissez le canal de contribution a..."
       }
     },
     {
@@ -1747,38 +1619,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_developer_foundations__05_018",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_04",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Partial · : +total+'/'+max",
-        "fr": "Partiel · : +total+'/'+max"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "A concise implementation that produces the intended display \"Partial · : total/max\", with input validation and examples.\n\nJavaScript (browser / Node)\n```js\nfunction formatPartial(total, max) {\n  if (!Number.isFinite(total) || !Number.isFinite(max)) throw new TypeError('total and max must be numbers');\n  max = Math.floor(max);\n  if (max <= 0) throw new RangeError('max must be > 0');\n  total = Math.max(0, Math.min(Math.floor(total), max)); // clamp to [0, max]\n  return `Partial · : ${total}/${max}`;\n}\n\n// Examples\nconsole.log(formatPartial(3, 10));  // \"Partial · : 3/10\"\nconsole.log(formatPartial(12, 10)); // \"Partial · : 10/10\" (clamped)\n```\n\nPython\n```py\ndef format_partial(total, max_):\n    if not isinstance(total, (int, float)) or not isinstance(max_, (int, float)):\n        raise TypeError(\"total and max must be numeric\")\n    max_ = int(max_)\n    if max_ <= 0:\n        raise ValueError(\"max must be > 0\")\n    total = max(0, min(int(total), max_))\n    return f\"Partial · : {total}/{max_}\"\n\n# Examples\nprint(format_partial(3, 10))   # \"Partial · : 3/10\"\n```\n\nNotes: validate inputs, clamp total to a valid range, and return the exact \"Partial · : total/max\" format.",
-        "fr": "Interprétation attendue : afficher proprement un score \"Partiel : total/max\" (texte visible, sécurisé et localisé). Points clés qu’une bonne réponse couvre\n- Validation des entrées (total et max numériques, max > 0).\n- Gestion des cas limites (max = 0, valeurs nulles, total > max).\n- Formatage localisé et arrondi (si nécessaire).\n- Accessibilité (label ARIA ou texte alternatif pour lecteurs d’écran).\n- Sécurité (pas d’injection si les valeurs proviennent de l’utilisateur).\n- Tests unitaires couvrant cas normaux et limites.\n\nExemples fonctionnels\n\nJavaScript (front-end simple)\nconst formatScore = (total, max) => {\n  if (total == null || max == null) return \"Partiel : —\";\n  total = Number(total); max = Number(max);\n  if (!isFinite(total) || !isFinite(max) || max <= 0) return \"Partiel : —\";\n  // afficher entier ou 1 décimale selon besoin\n  return `Partiel : ${Math.round(total)} / ${Math.round(max)}`;\n};\n\nReact (accessibilité)\n<span aria-label={`Partiel : ${total} sur ${max}`}>{formatScore(total, max)}</span>\n\nPython (back-end)\ndef format_score(total, max_):\n    if total is None or max_ is None: return \"Partiel : —\"\n    try:\n        total, max_ = float(total), float(max_)\n    except ValueError:\n        return \"Partiel : —\"\n    if max_ <= 0:\n        return \"Partiel : —\"\n    return f\"Partiel : {int(round(total))}/{int(round(max_))}\"\n\nTests à inclure\n- total = 0, max > 0\n- total > max\n- max = 0 ou None\n- valeurs non numériques\n- vérification d’affichage localisé et d’ARIA si interface utilisateur."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Development",
-        "Error Handling",
-        "Testing"
-      ],
-      "title": {
-        "en": "Partial · : +total+'/'+max",
-        "fr": "Partiel · : +total+'/'+max"
-      }
-    },
-    {
       "id": "ex_claude_certified_developer_foundations__05_019",
       "courseId": "claude_certified_developer_foundations__05",
       "lessonId": "lesson_01",
@@ -1808,101 +1648,6 @@
       "title": {
         "en": "Revisit: Channel and readiness are coupled. A f...",
         "fr": "Revoir : Channel et readiness sont couplés. A f..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_020",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_06",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Correct: `${correct}/${S07B_QS.length} correct. Review the rationale above each question.`",
-        "fr": "Bonnes réponses : `${correct}/${S07B_QS.length} correctes. Veuillez examiner le raisonnement au-dessus de chaque question.`"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Recommended user-facing message (clear, grammatical, screen-reader friendly):\n\nYou answered ${correct} out of ${S07B_QS.length} correctly. Review the rationale above each question.\n\nExample JavaScript template literal:\n\nconst total = S07B_QS.length;\nconst message = `You answered ${correct} out of ${total} correctly. Review the rationale above each question.`;\n\nWhy this is better\n- Full sentence (no trailing colon) reads naturally and works better with screen readers.  \n- “You answered X out of Y correctly” is unambiguous for users.  \n- Uses the explicit “out of” phrasing to avoid confusion about what the denominator represents.  \n- Ready for localization: keep the sentence structure so translators can adapt order; for full i18n, use a localization library and handle pluralization (e.g., “1 correct” vs “2 correct”).  \n\nOptional: handle singular vs plural in English if you want (e.g., “1 question” vs “2 questions”), or include percentage:  \n`You answered ${correct} of ${total} (${Math.round(correct/total*100)}%) correctly.`",
-        "fr": "Message d’affichage (format correct à utiliser) :\nBonnes réponses : ${correct}/${S07B_QS.length} correctes. Veuillez examiner le raisonnement indiqué au-dessus de chaque question.\n\nCorrection modèle — que doit contenir le raisonnement au-dessus de chaque question :\n- Résumé bref (1–2 phrases) : énoncé de la réponse correcte.\n- Évaluation de la réponse de l’étudiant : exacte / partiellement correcte / incorrecte.\n- Erreur précise identifiée : logique fausse, hypothèse non vérifiée, calcul erroné, mauvaise lecture de l’énoncé, confusion entre concepts, etc.\n- Preuve ou référence : point du texte/diagramme équation/ligne de calcul qui justifie la bonne réponse (citer l’étape exacte).\n- Correction pas à pas si l’étudiant s’est trompé : indiquer la procédure correcte et où il faut modifier.\n- Ressorces pour approfondir : page de cours, exemple corrigé, exercice similaire.\n\nExemple de feedback succinct pour une question :\nRéponse correcte : B. Votre réponse : C — Partiellement correcte. Erreur : vous avez appliqué la formule X sans vérifier la condition Y. Correction : appliquer la condition Y, recalculer selon l’équation (1) → résultat B. Voir section 3.2 du cours pour la démonstration.\n\nChecklist pour un bon commentaire :\n- Indique la nature précise de l’erreur (pas juste « faux »).\n- Montre une étape corrective claire.\n- Reste concis et actionnable.\n- Oriente vers ressources pour révision."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Computer Vision",
-        "Development",
-        "Template Design"
-      ],
-      "title": {
-        "en": "Correct: `${correct}/${S07B_QS.length} correct....",
-        "fr": "Correct : `${correct}/${S07B_QS.length} correct....`"
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_021",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_07",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "correct>=1?'':'incorrect': `Re-read each question and try again; the options remain open for another attempt.`",
-        "fr": "correct>=1?'':'incorrect': `Relisez chaque question et réessayez ; les options restent ouvertes pour une autre tentative.`"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "The original expression is syntactically incorrect (extra colon and misplaced backticks). A correct JavaScript ternary has the form condition ? exprIfTrue : exprIfFalse. Two common fixes depending on intent:\n\n1) Return an empty string when correct >= 1, otherwise return the full hint:\nconst message = correct >= 1\n  ? ''\n  : 'incorrect: Re-read each question and try again; the options remain open for another attempt.';\n\n2) Return a status and a separate hint (clearer):\nconst status = correct >= 1 ? 'correct' : 'incorrect';\nconst hint = status === 'incorrect'\n  ? 'Re-read each question and try again; the options remain open for another attempt.'\n  : '';\n\nExplanation: remove the extra colon and place the fallback expression after the single colon. Use template literals (`...`) only if you need interpolation, e.g. `\\`incorrect: ${hint}\\``.",
-        "fr": "Problème identifié : l’expression ternaire est mal formée (deux deux-points et usage mixte de backticks). En JavaScript la syntaxe correcte est : condition ? valeurSiVrai : valeurSiFaux.\n\nCorrection simple (chaîne littérale) :\nconst message = correct >= 1 ? '' : 'incorrect: Relisez chaque question et réessayez ; les options restent ouvertes pour une autre tentative.';\nconsole.log(message);\n\nSi vous préférez une template literal (utile si vous concaténez ou insérez des variables) :\nconst message = correct >= 1\n  ? ''\n  : `incorrect: Relisez chaque question et réessayez ; les options restent ouvertes pour une autre tentative.`;\nconsole.log(message);\n\nBonnes pratiques supplémentaires :\n- Vérifiez que correct est défini et converti en nombre : const n = Number(correct) || 0;\n- Plutôt qu’une chaîne vide, renvoyez null ou undefined si vous voulez signifier “pas de message” : const message = n >= 1 ? null : 'incorrect: ...';\n- Si le texte doit être affiché dans l’UI, gérez l’échappement/HTML pour éviter l’injection."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Development",
-        "Template Design"
-      ],
-      "title": {
-        "en": "correct>=1?'':'incorrect': `Re-read each questi...",
-        "fr": "correct>=1?'':'incorrect': `Relisez chaque question...`"
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_022",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_08",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Correct: The residency rule is a requirement, the platform that satisfies it is a design choice, gating promotion on an eval result is a deploy decision, and instrumenting cost and latency is operate. Writing the eval suite and rubric is test; gating promotion on its result is deploy.",
-        "fr": "Correct : La règle de résidence est une exigence, la plateforme qui la satisfait est un choix de conception, restreindre la promotion en fonction d'un résultat d'évaluation est une décision de déploiement, et instrumenter le coût et la latence relève de l'exploitation. Écrire la suite d'évaluation et la grille d'évaluation est un test ; restreindre la promotion en fonction de son résultat est un déploiement."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Correct mapping (with brief justification and examples):\n\n- Requirement — Residency rule: defines a constraint the system must satisfy (e.g., “customer data must remain in EU datacenters”); captured in product and compliance specs.\n\n- Design choice — Platform that satisfies the rule: selecting a cloud region, multi-region architecture, or on‑prem solution to meet the requirement (e.g., choose GCP europe-west1 + VPC isolation).\n\n- Test — Writing the eval suite and rubric: create the automated tests and pass/fail criteria that verify functional, privacy, and performance expectations (e.g., integration tests that assert data residency, and a rubric that scores model fairness/performance thresholds).\n\n- Deploy decision — Gating promotion on an eval result: implement CI/CD rules that block promotion if the eval suite fails or score < threshold (e.g., GitLab pipeline job “eval” must pass to promote image to prod).\n\n- Operate — Instrumenting cost and latency: run-time monitoring, logging, and alerting to observe SLOs and costs in production (e.g., Prometheus metrics, Grafana dashboards, cost reports, and alerts for latency/cost spikes).\n\nKey distinction: tests create the criteria and generate signals; deploy policies decide whether those signals allow promotion; operations continuously monitor and act on live behavior.",
-        "fr": "Correction modèle — formulation claire et classification des responsabilités :\n\n- Exigence : « La règle de résidence » est une exigence fonctionnelle / réglementaire (p. ex. données doivent rester dans l’UE).\n- Choix de conception : la plateforme qui satisfait cette exigence (p. ex. cloud régional, architecture multi-région) est un choix d’architecture/implémentation.\n- Test : « Écrire la suite d’évaluation et la grille d’évaluation » relève des tests — définir les cas, métriques, seuils et procédures (tests unitaires, d’intégration, tests d’acceptation, scénarios d’évaluation de sécurité et de conformité).\n- Décision de déploiement : « Restreindre la promotion en fonction d’un résultat d’évaluation » est une politique de déploiement (p. ex. gating dans le pipeline CI/CD : si score < seuil, bloquer promotion).\n- Exploitation (ops) : instrumenter le coût et la latence (métriques, traces, alerting) appartient à l’exploitation — implémenter métriques (Prometheus), tableaux de bord (Grafana) et SLO/SLI.\n\nPhrase révisée suggérée :\n« La règle de résidence est une exigence ; la plateforme qui la satisfait est un choix de conception ; écrire la suite d’évaluation et la grille est une activité de test ; restreindre la promotion selon le résultat de ces évaluations est une décision de déploiement ; instrumenter coût et latence relève de l’exploitation. »\n\nPoints d’action concrets : documenter exigences, choisir et justifier la plateforme, définir seuils de test formels, configurer gates CI/CD, mettre en place métriques et alerting."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Architecture",
-        "Automation",
-        "Compliance"
-      ],
-      "title": {
-        "en": "Correct: The residency rule is a requirement, t...",
-        "fr": "Correct : la règle de résidence est une exigence, t..."
       }
     },
     {
@@ -2031,38 +1776,6 @@
       "title": {
         "en": "Correct: Blank 1 wraps the fetched content, so ...",
         "fr": "Correct : Blank 1 entoure le contenu récupéré, donc ..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__05_028",
-      "courseId": "claude_certified_developer_foundations__05",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_14",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Partial · one boundary closed: You closed one boundary but left the other open. Treating fetched content as data without scoping the privileged component, or scoping it without guarding the fetched-content seam, still leaves the app only as contained as its weakest seam.",
-        "fr": "Partiel · une frontière fermée : Vous avez fermé une frontière mais laissé l'autre ouverte. Traiter le contenu récupéré comme des données sans délimiter le périmètre du composant privilégié, ou le délimiter sans protéger la jonction du contenu récupéré, laisse l’application aussi contenue que sa couture la plus faible."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Problem summary: closing only one boundary (either “treat fetched content as data” OR “scope the privileged component”) leaves an exploitable seam. You must both constrain the untrusted content and tightly define the interface the privileged component exposes.\n\nConcrete risks\n- Untrusted HTML/JS injected into a privileged context (XSS).\n- Privileged component exposing global APIs or accepting raw DOM/functions.\n- postMessage/IPC without origin or shape checks allowing capability escalation.\n- Missing CSP or sandbox lets fetched resources break out.\n\nPractical mitigations (actionable)\n1. Treat fetched content as untrusted and sanitize:\n   - Use a vetted sanitizer (e.g., DOMPurify) for HTML: sanitized = DOMPurify.sanitize(rawHtml).\n   - Prefer data formats (JSON) over HTML where possible.\n2. Isolate untrusted content:\n   - Use sandboxed iframe with restrictive attributes; avoid allow-same-origin/allow-scripts unless necessary.\n   - Use cross-origin iframes to enforce browser isolation.\nExample iframe + guarded messaging:\n- Parent:\n  const iframe = document.createElement('iframe');\n  iframe.sandbox = 'allow-scripts'; // minimal\n  iframe.src = 'https://untrusted.example';\n  window.addEventListener('message', (e) => {\n    if (e.origin !== 'https://untrusted.example') return;\n    if (!isValidMessage(e.data)) return;\n    handleCommand(e.data);\n  });\n3. Scope privileged component (capability pattern):\n   - Expose a minimal API that takes only plain data (no DOM nodes, no functions).\n   - Validate shape/values (schema validation) before acting.\n4. Harden environment:\n   - CSP, subresource integrity, drop credentials on fetch, CORS correct settings.\n5. Test seams:\n   - Red-team simulated adversarial content; fuzz message formats and HTML. \n\nChecklist to pass exercise: sanitize fetched content, isolate it (sandbox/origin), validate/whitelist message shape, limit privileges of exposed APIs, and enforce runtime origin/schema checks.",
-        "fr": "Problème résumé — vous avez partiellement fermé une frontière : le composant privilégié (ex. moteur d’exécution, DOM, base de données) accepte du contenu récupéré sans que la jonction entre contenu externe et périmètre privilégié soit protégée. Résultat : l’application n’est sécurisée que par la couture la plus faible.\n\nChecklist corrective (actions concrètes)\n- Définir explicitement le périmètre de confiance et traiter tout contenu extérieur comme non fiable.\n- Valider et normaliser le format avant toute utilisation (schéma JSON, XML XSD), rejeter tout écart.\n- Vérifier intégrité/authenticité (signature numérique, HMAC) avant ingestion.\n- Séparer processus/privileges : exécuter le parsing dans un sandox non-privilégié (process/container).\n- Ne pas insérer de contenu brut dans un contexte privilégié : appliquer encodage/escaping contextuel (HTML, SQL, shell).\n- Utiliser des APIs à surface restreinte (pas d’éval(), pas d’innerHTML sans contrôle).\n- Contrôler content-type et size; appliquer whitelists pour fichiers/ressources externes.\n- Mettre en place CSP, SameSite cookies, CORS stricts et vérification côté serveur.\n- Logging et alerting sur rejets/échecs de signature pour audits.\n- Tests d’intégration et fuzzing ciblant la jonction composant/contenu.\n\nRisques concrets\n- XSS, injection SQL/commande, désérialisation malveillante, exécution distante, exfiltration de données, élévation de privilèges.\n\nExemple minimal (pseudocode)\nif verifySignature(payload, key) and validateSchema(payload): safeProcess(parse(payload)) else: reject_and_log()"
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "API Integration",
-        "Context Design",
-        "Development"
-      ],
-      "title": {
-        "en": "Partial · one boundary closed: You closed one b...",
-        "fr": "Partiel · une limite fermée : Vous avez fermé une l..."
       }
     }
   ]

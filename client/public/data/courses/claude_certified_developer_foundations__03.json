@@ -625,38 +625,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_developer_foundations__03_002",
-      "courseId": "claude_certified_developer_foundations__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_02",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Permission modes and deny rules decide what the agent can do without asking. They do not decide where you, the human, still need to look before an action lands. That decision rests on one question, the same one that separates a safe mode from a risky one: what is the worst outcome if this action runs without a person checking it? The lower the cost of being wrong, the more you can let through. The higher the cost, and the harder it is to undo, the more a step needs a human gate before it executes.\nThat same worst-case question places the gate whether the agent is writing code or running unattended in an automated step such as a bot that comments on or blocks a pull request. Three placements follow from it:\nLet low-stakes, reversible actions through without a gate. A formatting fix or an edit confined to the working directory carries little cost if it is wrong, so requiring a human to approve each one buys oversight you do not need and slows the work. This is the case acceptEdits is built for.\nGate any action that is hard to undo or reaches a sensitive path: a write outside the working directory, a destructive shell command, or an edit to a security-relevant or protected file. The cost of a wrong call there is high, so the agent should pause and surface the action for a person before it runs. A deny rule enforces this deterministically, and default or plan mode keeps the prompt in place while you decide.\nNever let the agent be the only gate on a change to code your team has marked sensitive. There the agent’s work is an input to a human decision, not a replacement for one, so a person must review the change before it merges no matter how confident the agent or its own review sounds.",
-        "fr": "Les modes de permission et les règles de refus déterminent ce que l'agent peut faire sans demander. Ils ne décident pas où vous, l'humain, devez encore regarder avant qu'une action ne soit exécutée. Cette décision repose sur une question unique, la même qui sépare un mode sûr d'un mode risqué : quel est le pire résultat si cette action s'exécute sans qu'une personne ne la vérifie ? Plus le coût d'une erreur est faible, plus vous pouvez laisser passer. Plus le coût est élevé, et plus il est difficile d'annuler, plus une étape nécessite un contrôle humain avant son exécution.\nCette même question sur le pire des cas détermine le contrôle nécessaire, que l'agent écrive du code ou qu'il s'exécute sans supervision dans une étape automatisée telle qu'un bot qui commente ou bloque une pull request.\nTrois emplacements en résultent :\nLaissez passer sans contrôle les actions à faible enjeu et réversibles. Une correction de formatage ou une modification confinée au working directory a peu de coût si elle est erronée, donc exiger qu'un humain approuve chacune d'elles offre une supervision dont vous n'avez pas besoin et ralentit le travail. C'est le cas pour lequel acceptEdits est conçu.\nImplémentez un contrôle sur toute action difficile à annuler ou qui atteint un chemin sensible : une écriture en dehors du working directory, une commande shell destructive, ou une modification d'un fichier sensible à la sécurité ou protégé. Le coût d'un appel incorrect à cet endroit est élevé, donc l'agent devrait faire une pause et exposer l'action à une personne avant son exécution.\nUne règle de refus applique cela de manière déterministe, et default mode ou plan mode maintiennent le prompt en place pendant que vous décidez.\nNe laissez jamais l'agent être le seul filtre sur une modification du code que votre équipe a marquée comme sensible. Là, le travail de l'agent est une entrée dans une décision humaine, et non un remplacement, donc une personne doit examiner la modification avant qu'elle ne soit fusionnée, peu importe le niveau de confiance de l'agent ou de sa propre revue."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "Answer — how to place gates using the “worst-case” question\n\nCore rule (one sentence): before an agent runs an action, ask “what is the worst outcome if this runs without a person checking it?” Use the rated severity of that worst-case to decide:\n\n1. Low-stakes, reversible → allow automatically\n- Criteria: confined to working directory, non-destructive, easily reverted (formatting, lint fixes, documentation typos, local test runs).\n- Mode: acceptEdits / auto-apply.\n- Example: auto-format PR files and push branch updates without human approval.\n\n2. High-stakes or hard-to-undo → require a human gate\n- Criteria: writes outside working directory, destructive shell commands, database migrations, deploys, CI config changes.\n- Enforcement: require plan/default mode with explicit human approval; use deny rules to block execution until reviewed.\n- Example: attempt to run “rm -rf /” or update production infra files → pause and surface diff for approval.\n\n3. Sensitive files/areas → never let agent be sole gate\n- Criteria: security-sensitive code, auth/secret config, release scripts, dependency manifests.\n- Policy: agent outputs are advisory; require human review + designated approver before merge or deploy regardless of confidence.\n- Enforcement examples (deny-rule style): block writes to /.github/workflows, package.json, secrets.*; block merges unless “human-approved” label present.\n\nImplementation checklist\n- Define sensitive file list and irreversible actions.\n- Map actions to modes (acceptEdits, plan/default+human, deny).\n- Add deterministic deny rules for protected paths.\n- Log attempted actions and surface clear diffs and rationale for reviewers.",
-        "fr": "Correction modèle — Comment décider où imposer une vérification humaine\n\nRègle unique : pour chaque action, demandez « quel est le pire résultat si cette action s'exécute sans vérification humaine ? ». Classez et agissez selon le coût et l'irréversibilité.\n\nRisques concrets à considérer\n- Fuite ou exfiltration de données sensibles\n- Corruption irréversible de base de données / perte de données\n- Blocage/arrêt de services en production (downtime)\n- Escalade de privilèges ou modification de permissions\n- Injection de code malveillant dans la base source\n- Non-conformité réglementaire ou exposition d’identifiants\n\nRègles pratiques (implémentation)\n1. Actions autorisées automatiquement (acceptEdits)\n   - Changements de formatage, corrections locales dans working directory, commentaires non persistants.\n   - Condition : réversible via git revert ou confined to temp files.\n\n2. Actions soumises à approbation humaine\n   - Écriture hors working directory, exécution de commandes shell destructives, modification de fichiers de sécurité/ci/infra, déploiements en prod.\n   - Implémenter : pause explicite, création d’une PR non mergée, tag “requires-review”, notification aux code-owners.\n\n3. Refus déterministe\n   - Règle : si cible ∈ {secrets, infra/config prod, ACLs, DB migrations}, refuser l’exécution automatique et exiger approbation humaine.\n   - Exemple pseudo-règle :\n     if action.target in protected_files or action.type == destructive_shell: require_human_approval()\n\nPratiques opérationnelles\n- Toujours journaliser l’intention, la diff, la preuve d’approbation.\n- Mode défaut/plan : laisse le plan visible mais ne l’exécute pas sans approbation.\n- Ne laissez jamais l’agent seul pour des fichiers marqués “sensitive” — son travail doit être une entrée dans la décision humaine.\n- Revoir périodiquement la catégorisation des fichiers/actions."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Agentic Design",
-        "Automation",
-        "Business Value"
-      ],
-      "title": {
-        "en": "Permission modes and deny rules decide what the...",
-        "fr": "Les modes d'autorisation et les règles de refus déterminent ce que le..."
-      }
-    },
-    {
       "id": "ex_claude_certified_developer_foundations__03_003",
       "courseId": "claude_certified_developer_foundations__03",
       "lessonId": "lesson_01",
@@ -686,38 +654,6 @@
       "title": {
         "en": "Permission Modes & Human Gates",
         "fr": "Modes de CheckpointPermission et Human Gates · 4 min"
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__03_004",
-      "courseId": "claude_certified_developer_foundations__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_04",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Checkpoint 1: assemble the settings file and place the human gate\nTry it now. You are configuring Claude Code for a trusted local refactor of the payments module.\nThe refactor should auto-approve file edits but must never run destructive shell commands, and the file .env.production must never be readable by the agent. Below are settings.json pieces.\nPart 1: Select the setting.json pieces that assemble the correct configuration\nSelect two pieces.",
-        "fr": "Point de contrôle 1 : assembler le fichier settings.json et placer la porte humaine\nEssayez-le maintenant. Vous configurez Claude Code pour une refactorisation locale de confiance du module de paiements.\nLa refactorisation doit approuver automatiquement les modifications de fichiers mais ne doit jamais exécuter de commandes shell destructrices, et le fichier .env.production ne doit jamais être lisible par l'agent. Ci-dessous, des éléments de settings.json.\nPartie 1 : Sélectionnez les éléments de settings.json qui assemblent la configuration correcte\nSélectionnez deux éléments."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "{\n  \"project\": \"payments\",\n  \"mode\": \"trusted_local_refactor\",\n  \"allowed_actions\": [\"read_repo_metadata\", \"edit_files\"],\n  \"auto_approve_file_edits\": true,\n  \"allow_shell_commands\": false,\n  \"forbidden_shell_commands\": [\"rm\", \"rmdir\", \"mv\", \"dd\", \"sudo\", \"chmod\", \"chown\", \">:\",\"truncate\"],\n  \"forbidden_paths\": [\".env.production\"],\n  \"file_read_restrictions\": {\n    \".env.production\": false\n  }\n}\n\n{\n  \"human_gate\": {\n    \"type\": \"interactive\",\n    \"scope\": \"non-file-edit-actions\",\n    \"trigger_on\": [\"attempt_shell_command\", \"network_access\", \"deploy\", \"run_scripts\"],\n    \"require_human_approval\": true,\n    \"auto_approve_file_edits\": true,\n    \"approval_prompt\": \"This action requires a human approver. File edits in the payments module are auto-approved; any shell, deploy, or network action must be explicitly approved.\"\n  }\n}",
-        "fr": "Exemple minimal et correct (deux éléments de settings.json) :\n\n{\n  \"auto_approve_file_changes\": true,\n  \"safety\": {\n    \"allow_shell\": false,\n    \"deny_file_read_patterns\": [\".env.production\"],\n    \"require_human_for_shell\": true\n  }\n}\n\nPourquoi c’est correct\n- auto_approve_file_changes: true — autorise automatiquement l’application des modifications de fichiers (réfaktorisation approuvée automatiquement).\n- safety.allow_shell: false — empêche toute exécution de commandes shell (bloque les commandes potentiellement destructrices).\n- safety.deny_file_read_patterns: [\".env.production\"] — garantit que .env.production n’est jamais lisible par l’agent.\n- safety.require_human_for_shell: true — “porte humaine” : demande explicite d’un humain si une exécution shell devait être levée (défense en profondeur).\n\nVérifications à effectuer après déploiement\n- Tenter une lecture de .env.production via l’agent => réponse d’erreur/accès refusé.\n- Tenter d’exécuter une commande shell (rm, git clean...) => refus immédiat; si une requête d’exécution survient elle doit générer une alerte demandant approbation humaine.\n- Vérifier qu’un changement de fichiers du module paiements est appliqué automatiquement sans prompt.\n\nRisques résiduels (à surveiller)\n- Mauvaise syntaxe des patterns empêchant le blocage (.env.production vs **/.env.production).\n- Règles trop permissives ailleurs (ex. accès réseau ou interfaces CI)."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "AI Safety",
-        "Agentic Design",
-        "Automation"
-      ],
-      "title": {
-        "en": "Checkpoint 1: assemble the settings file and pl...",
-        "fr": "Point de contrôle 1 : assembler le fichier de configuration et pl..."
       }
     },
     {
@@ -849,38 +785,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_developer_foundations__03_009",
-      "courseId": "claude_certified_developer_foundations__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_02",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Checkpoint 2: drag the correct value\nTry it now. You are setting up a hook that enforces a path restriction, and the configuration below has two blanks.\nSelect the correct one: the lifecycle event that runs before a tool call executes, and the command the hook runs to block reads of .env.production.\n{\n\"hooks\": {\n\"________\": [\n{",
-        "fr": "Point de contrôle 2 : faites glisser la valeur correcte\nEssayez-le maintenant. Vous configurez un hook qui applique une restriction de chemin, et la configuration ci-dessous comporte deux espaces vides.\nSélectionnez le bon élément : l'événement du cycle de vie qui s'exécute avant l'exécution d'un appel d'outil, et la commande que le hook exécute pour bloquer les lectures de .env.production.\n{\n\"hooks\": {\n\"________\": [\n{"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Fill the lifecycle event with \"before_tool_call\" and run a command that removes all permissions for the file, e.g. \"chmod 000 .env.production\".\n\nExample JSON:\n{\n  \"hooks\": {\n    \"before_tool_call\": [\n      {\n        \"run\": \"chmod 000 .env.production\"\n      }\n    ]\n  }\n}\n\nWhy: before_tool_call runs just before any tool executes, so the hook can enforce path access rules. chmod 000 removes read/write/execute permissions for owner/group/others, preventing tools from reading .env.production (you may want to restore permissions after the tool run if legitimate reads are needed).",
-        "fr": "Remplissez la clé d’événement par onBeforeToolCall et exécutez une commande shell qui retire les droits de lecture (par exemple chmod 000). Exemple minimal fonctionnel :\n\n{\n  \"hooks\": {\n    \"onBeforeToolCall\": [\n      {\n        \"run\": \"chmod 000 .env.production\"\n      }\n    ]\n  }\n}\n\nPourquoi c’est correct et quoi compléter ensuite :\n- onBeforeToolCall est l’événement qui s’exécute avant l’appel d’un outil.\n- chmod 000 retire toutes les permissions (lecture/écriture/exécution) sur .env.production, empêchant toute lecture par l’outil.\n- Ajoutez impérativement un hook de nettoyage pour restaurer les permissions après l’appel (par ex. onAfterToolCall avec chmod 640 .env.production) afin d’éviter un verrouillage permanent.\n\nRisques concrets et mitigations :\n- Risque : l’outil a besoin de lire .env.production → vérifier préalablement si la variable doit être accessible.\n- Risque : perte d’accès système si le hook s’exécute avec des droits trop élevés → exécuter sous l’utilisateur contrôlé et tester en staging.\n- Risque : échec du hook laissant le fichier verrouillé → implémenter onError/onFinally pour restauration et journalisation des actions."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Business Value",
-        "Development",
-        "Error Handling"
-      ],
-      "title": {
-        "en": "Checkpoint 2: drag the correct value",
-        "fr": "Point de contrôle 2 : glissez la valeur correcte"
-      }
-    },
-    {
       "id": "ex_claude_certified_developer_foundations__03_010",
       "courseId": "claude_certified_developer_foundations__03",
       "lessonId": "lesson_01",
@@ -910,38 +814,6 @@
       "title": {
         "en": "Previously, we covered the mechanisms that give...",
         "fr": "Précédemment, nous avons abordé les mécanismes qui permettent..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__03_011",
-      "courseId": "claude_certified_developer_foundations__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_04",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Cost · Complexity · Risk\nCost: Skills add context cost upon activation, but a plugin adds installation and maintenance overhead. The question to ask is whether you want to pay the setup cost once, as you do with a plugin install, or repeatedly, as you do when every developer runs the same manual steps by hand.\nComplexity: A plugin that hard-codes absolute paths in its skills will install correctly for the author and fail for everyone else, because any path or environment assumption baked into a skill or hook command is the thing most likely to break across machines.\nRisk: A plugin carries the components it bundles into every install. It’s important to remember that a deny rule or hook the author relied on locally is not included unless it is explicitly listed as part of the bundle. If the skills or hooks are tied to a guardrail that is not included in the bundle, then the protection does not carry over to a teammate’s machine.\nCheckpointPackaging Workflows·3 min",
-        "fr": "Coût · Complexité · Risque\nCoût : les skills ajoutent un coût contextuel lors de l'activation, mais un plugin ajoute des frais d'installation et de maintenance. La question à se poser est de savoir si vous voulez payer le coût de configuration une fois, comme lors de l'installation d'un plugin, ou à répétition, comme lorsque chaque développeur exécute les mêmes étapes manuelles à la main.\nComplexité : Un plugin qui intègre en dur des chemins absolus dans ses skills s'installera correctement pour l'auteur et échouera pour tout le monde, car toute hypothèse de chemin ou d'environnement intégrée dans une skill ou une commande hook est ce qui est le plus susceptible de se casser sur différentes machines.\nRisque : Un plugin porte les composants qu'il bundle dans chaque installation. Il est important de se rappeler qu'une deny rule ou un hook sur lequel l'auteur comptait localement n'est pas inclus à moins qu'il ne soit explicitement listé comme faisant partie du bundle. Si les skills ou les hooks sont liés à un guardrail qui n'est pas inclus dans le bundle, alors la protection ne se transmet pas à la machine d'un coéquipier.\nCheckpointPackaging Workflows·3 min"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Cost\n- Decide by frequency and team size: if many developers repeatedly need the same setup, invest in a plugin (one-time install). If a few people occasionally need it or it’s highly experimental, use skills/manual steps to avoid maintenance overhead.\n- Quantify: estimate hours saved per developer × team size to justify plugin maintenance cost.\n\nComplexity\n- Don’t hard-code absolute paths or environment assumptions. Use:\n  - Relative paths, XDG / $HOME conventions, or environment variables.\n  - Declarative manifests (versioned metadata) and idempotent install scripts.\n  - Containers or reproducible environments when platform variance is high.\n- Provide automated install checks (post-install health checks) and fallback behavior when environment variables are missing.\n\nRisk (concrete risks and mitigations)\n- Risk: Guardrails/deny rules not bundled → teammates lose protections.\n  - Mitigation: Explicitly include guardrail definitions in the plugin bundle and fail-safe if absent.\n- Risk: Secrets accidentally bundled or leaked.\n  - Mitigation: Exclude secrets, use secret managers, and scan bundles for sensitive data.\n- Risk: Dependency/version mismatch or platform-specific failures.\n  - Mitigation: Pin versions, include compatibility matrix, and CI tests across target OSes.\n- Risk: Malicious or buggy bundled hooks affecting every install.\n  - Mitigation: Code review, signing, integrity checks (checksums), and least-privilege execution.\n\nDecision checklist before packaging\n1) How many users benefit? 2) How often will it run? 3) Can behavior be made environment-agnostic? 4) Are guardrails and tests bundled? 5) Is there CI and documentation to maintain it?",
-        "fr": "Décision synthétique\n- Choisir un plugin quand le travail doit être reproductible et déployé chez plusieurs devs (coût d’installation unique + maintenance centralisée). Choisir des skills locaux quand l’activation ponctuelle et légère évite le surcoût d’un bundle.\n\nRisques concrets\n- Hypothèses d’environnement (chemins absolus) cassant l’installation sur d’autres machines.\n- Absence de guardrails/deny rules dans le bundle → protections non transférées.\n- Fuite de secrets dans les hooks ou scripts inclus.\n- Dépendances vulnérables ou non verrouillées provoquant régressions.\n- Mécanismes d’installation non idempotents rendant les mises à jour dangereuses.\n\nActions et bonnes pratiques (checklist)\n- Ne jamais coder de chemins absolus : utiliser variables d’environnement, chemins relatifs, détection OS.\n- Inclure explicitement dans le manifest : hooks, deny rules, guards, permissions requises.\n- Fournir un script d’installation idempotent (+ rollback), et instructions d’upgrade.\n- Bundler et pinner les dépendances; exécuter SCA (scanning vulnérabilités) avant release.\n- Ajouter tests d’intégration multi-plateformes dans CI (Linux/macOS/Windows).\n- Signer les packages, documenter permissions et risques dans README.\n- Automatiser publication/versioning (CI/CD), et définir procédure d’urgence (revert).\n- Vérifier que tout guardrail nécessaire est inclus dans le bundle ou documenté pour installation manuelle.\n\nExemple de contenu minimal du bundle : manifest, hooks, deny-rules, install.sh, tests CI, README, changelog, licence."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Automation",
-        "Context Design",
-        "Cost Optimization"
-      ],
-      "title": {
-        "en": "Cost · Complexity · Risk",
-        "fr": "Coût · Complexité · Risque"
       }
     },
     {
@@ -1041,38 +913,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_developer_foundations__03_016",
-      "courseId": "claude_certified_developer_foundations__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_02",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Revisit Part 1: Without the deny rule on .env.production, the agent can read that file if it matches something in a broad operation. The deny rule is what enforces the path restriction at the configuration layer.",
-        "fr": "Revoir la Partie 1 : Sans la deny rule sur .env.production, l'agent peut lire ce fichier s'il correspond à quelque chose dans une opération à grande échelle. La deny rule est ce qui applique la restriction de chemin au niveau de la configuration."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Why the deny rule matters\n- Broad allow rules (e.g., \"allow read on files/**\") will match .env.production unless explicitly excluded. A deny rule is the configuration-layer safeguard that blocks that specific path regardless of broader permissions.\n\nWhat to do\n1. Add an explicit deny rule for .env.production.\n   Example policy (YAML-style):\n   policies:\n     - id: deny-prod-env\n       effect: deny\n       resources:\n         - path: \"/**/.env.production\"\n       actions: [\"read\", \"download\", \"list\"]\n       reason: \"Prevent agents from reading production secrets\"\n\n2. Ensure deny precedence\n   - Confirm your policy engine uses deny-overrides (deny must block even if an allow matches).\n   - If precedence is configurable, verify deny rules are evaluated before allows.\n\n3. Test and validate\n   - Unit test: run the agent operation that previously read files/** and assert access to .env.production returns \"access denied\".\n   - Integration test: simulate broad operation and verify all other permitted files remain accessible while .env.production is blocked.\n   - Check audit logs for denied attempts.\n\n4. Operational hygiene\n   - Rotate secrets if they were exposed during testing.\n   - Move secrets to a dedicated secret store (vault) and remove .env.production from repo.\n   - Add policy linting to CI to prevent accidental removal of deny rules.\n\nThese steps ensure the path restriction is enforced at config level and prevents secret leakage even when broad allowances exist.",
-        "fr": "Risques identifiés\n- Exfiltration de secrets (clés/API) depuis .env.production.\n- Escalade de privilèges si le fichier contient credentials.\n- Non‑conformité réglementaire et audit failing.\n- Attaques de reconnaissance/lateral movement si d’autres services lisent ce fichier.\n\nCorrection attendue (actionnable)\n1) Implémenter une deny rule explicite et prioritaire pour le chemin exact et motifs (ex.: \".env.production\", \"/**/.env.production\"). 2) Faire appliquer le principe de “deny-by-default” et évaluer les règles allow ensuite. 3) Déployer la règle dans la configuration et vérifier par tests automatisés et logs d’audit. 4) Surveiller et alerter sur tentatives d’accès refusées.\n\nExemple de règle (Rego / OPA)\npackage agent.access\ndeny[msg] {\n  input.path == \".env.production\"\n  msg = \"Accès interdit : fichier .env.production\"\n}\n\nExemple YAML générique pour config d’agent\ndeny_rules:\n  - id: deny_env_production\n    match: [\"**/.env.production\", \".env.production\"]\n    reason: \"Contient des secrets\"\n    action: \"deny\"\n    priority: 100\n\nVérification\n- Tests unitaires simulant accès à .env.production (doivent échouer).\n- Tests d’intégration en CI avec règles chargées.\n- Revue de logs pour confirmer entrées \"deny\" et déclenchement d’alertes.\n- Documenter la règle dans la politique de sécurité et plan de mitigation."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "API Integration",
-        "Agentic Design",
-        "Automation"
-      ],
-      "title": {
-        "en": "Revisit Part 1: Without the deny rule on .env.p...",
-        "fr": "Revoir la Partie 1 : sans la règle \"deny\" sur .env.p..."
-      }
-    },
-    {
       "id": "ex_claude_certified_developer_foundations__03_017",
       "courseId": "claude_certified_developer_foundations__03",
       "lessonId": "lesson_01",
@@ -1102,38 +942,6 @@
       "title": {
         "en": "Check both parts: Part 1 needs Pieces C and D t...",
         "fr": "Vérifie les deux parties : la partie 1 a besoin des Pièces C et D t..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__03_018",
-      "courseId": "claude_certified_developer_foundations__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_04",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Correct: PreToolUse fires before the tool call executes, which is when blocking is possible. A PostToolUse hook cannot block because the tool has already run. The command reads the tool call from stdin, checks the file path, and exits with code 2 to block it, and anything written to stderr becomes the message Claude sees.",
-        "fr": "Correct : PreToolUse se déclenche avant que l'appel d'outil ne s'exécute, ce qui est le moment où le blocage est possible. Un hook PostToolUse ne peut pas bloquer parce que l'outil a déjà été exécuté. La commande lit l'appel d'outil depuis stdin, vérifie le chemin du fichier et se termine avec le code 2 pour le bloquer, et tout ce qui est écrit sur stderr devient le message que Claude voit."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "Correct. PreToolUse runs before the external tool executes and is the only hook that can prevent the call. PostToolUse runs after the tool has already executed, so it cannot stop the tool. The PreToolUse hook receives the tool call on stdin; to block you must exit with code 2 and write a human-readable explanation to stderr (that text becomes the message Claude sees).\n\nExample PreToolUse script (Python):\n#!/usr/bin/env python3\nimport sys, json\n\ntry:\n    call = json.load(sys.stdin)            # tool call arrives as JSON on stdin\nexcept Exception:\n    sys.stderr.write(\"Malformed tool call\\n\")\n    sys.exit(2)\n\npath = call.get(\"path\", \"\")\nif not path.startswith(\"/allowed/\"):\n    sys.stderr.write(f\"Blocked: access to '{path}' is not permitted\\n\")\n    sys.exit(2)\n\n# allowed: exit 0 so the tool proceeds\nsys.exit(0)\n\nNotes:\n- Ensure your hook reads the expected field(s) from the tool call (e.g., \"path\").  \n- Any stderr text will be shown to Claude as the blocking reason.  \n- Use exit code 2 specifically to indicate a block.",
-        "fr": "Correction modèle — points clés et exemple opérationnel :\n\n1) Comportement : exact — PreToolUse s'exécute avant l'appel d'outil et peut empêcher l'exécution ; PostToolUse ne peut plus empêcher l'exécution (au mieux signaler un problème après coup).\n\n2) Convention de blocage : si le hook se termine avec le code de sortie 2, l'appel est bloqué et tout ce qui est écrit sur stderr devient le message remonté à Claude. Vérifier que votre plateforme utilise bien «2» pour ce comportement.\n\n3) Risques concrets et mitigations :\n- TOCTOU (race) : canonicaliser le chemin (realpath) et, si possible, ouvrir le fichier et vérifier le descripteur plutôt que le chemin textuel.\n- Symlinks/escapement : résoudre symlinks et interdire chemins hors répertoire autorisé.\n- Fuite d'informations : sanitizer/tronquer le message stderr (pas de traces internes ni chemins sensibles).\n- DOS : limiter taille du stderr et fréquence des validations.\n\n4) Exemple Python minimal (stdin contient JSON {\"path\": \"...\"}):\nimport sys, json, os\ndata = json.load(sys.stdin)\np = os.path.realpath(data.get(\"path\",\"\"))\nallowed = \"/safe/dir\"\nif not p.startswith(os.path.realpath(allowed)+os.sep):\n    sys.stderr.write(\"Accès refusé : chemin non autorisé\\n\")\n    sys.exit(2)\n# autorisé -> exit 0\nsys.exit(0)\n\nChecklist pour une bonne implémentation :\n- normalisation et résolution symlink (realpath)\n- comparaison sûre avec répertoire autorisé\n- ouverture/validation par descripteur si possible\n- nettoyage/tronquage du stderr\n- documenter le choix du code de sortie et son traitement par la plateforme."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Claude Platform",
-        "Development",
-        "Structured Output"
-      ],
-      "title": {
-        "en": "Correct: PreToolUse fires before the tool call ...",
-        "fr": "Correct : PreToolUse se déclenche avant l'appel de l'outil ..."
       }
     },
     {
@@ -1230,38 +1038,6 @@
       "title": {
         "en": "Correct: Each situation is matched to the one c...",
         "fr": "Correct : Chaque situation est associée à celle c..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__03_023",
-      "courseId": "claude_certified_developer_foundations__03",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_02",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Correct: The defect is the absolute path /Users/alexmorgan/projects/deploy-utils/validate.sh in step 1. It resolves to the author’s home directory, and a teammate who clones the repo to a different location has no such path, so the script reference fails. The fix is to reference the script relative to the project root using CLAUDE_PROJECT_DIR (or the equivalent variable), so the location resolves from the repo root no matter where the project is cloned.",
-        "fr": "Correction : Le défaut est le chemin absolu /Users/alexmorgan/projects/deploy-utils/validate.sh à l’étape 1. Il pointe vers le répertoire personnel de l’auteur, et un collègue qui clone le dépôt dans un autre emplacement n’a pas ce chemin, ce qui fait échouer la référence au script. La solution consiste à référencer le script par rapport à la racine du projet en utilisant CLAUDE_PROJECT_DIR (ou la variable équivalente), de sorte que l’emplacement se résolve à partir de la racine du dépôt peu importe l’endroit où le projet est cloné."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "Defect (succinct): Step 1 hardcodes an absolute path (/Users/alexmorgan/…), which only exists on the author’s machine. When others clone the repo to a different location the reference breaks.\n\nFix (concrete): Reference the script from the repo root via CLAUDE_PROJECT_DIR (or compute the repo root at runtime) and call it with a quoted path. Example CI / shell change:\n\nOriginal (bad)\nbash /Users/alexmorgan/projects/deploy-utils/validate.sh\n\nRecommended (good)\n# ensure CLAUDE_PROJECT_DIR is set or compute repo root as a fallback\nCLAUDE_PROJECT_DIR=${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}\nbash \"$CLAUDE_PROJECT_DIR/validate.sh\"\n\nNotes / checklist:\n- Export CLAUDE_PROJECT_DIR in your CI environment, or let the fallback compute the repo root.\n- Use quoted variable expansions to handle spaces.\n- Ensure validate.sh is executable (chmod +x validate.sh) and present in the repo at that relative path.\n- Test by cloning the repo into a different directory and running the step to confirm portability.",
-        "fr": "Problème concret : un chemin absolu (/Users/alexmorgan/…) dans l’étape 1 casse le workflow lorsqu’un collaborateur clone le dépôt ailleurs. Solution : référencer le script à partir de la racine du projet (CLAUDE_PROJECT_DIR ou équivalent), vérifier l’existence/exécutabilité, et fournir un fallback portable.\n\nExemple de correction (bash) à placer dans l’étape 1 :\n- définir / utiliser CLAUDE_PROJECT_DIR fourni par l’environnement CI ou calculer la racine git si absent ;\n- construire le chemin relatif vers deploy-utils/validate.sh ;\n- vérifier et exécuter.\n\nExemple :\n```\n: \"${CLAUDE_PROJECT_DIR:=$(git rev-parse --show-toplevel 2>/dev/null || pwd)}\"\nVALIDATE_SH=\"${CLAUDE_PROJECT_DIR}/deploy-utils/validate.sh\"\n\nif [ ! -f \"$VALIDATE_SH\" ]; then\n  echo \"Erreur : $VALIDATE_SH introuvable. Vérifiez la structure du dépôt.\" >&2\n  exit 1\nfi\nif [ ! -x \"$VALIDATE_SH\" ]; then\n  chmod +x \"$VALIDATE_SH\" 2>/dev/null || {\n    echo \"Erreur : $VALIDATE_SH n'est pas exécutable et chmod a échoué.\" >&2\n    exit 1\n  }\nfi\n\n\"$VALIDATE_SH\" \"$@\"\n```\n\nBonnes pratiques et risques adressés :\n- Risque : chemins absolus spécifiques à l’auteur → échec chez d’autres contributeurs/CI.\n- Risque : variable non définie → fallback sûr (git rev-parse ou PWD).\n- Toujours vérifier l’existence et l’exécutabilité, citer les variables, et afficher des messages d’erreur explicites pour faciliter le debugging."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Business Value",
-        "Claude Platform",
-        "Deployment"
-      ],
-      "title": {
-        "en": "Correct: The defect is the absolute path /Users...",
-        "fr": "Correct : Le défaut est le chemin absolu /Users..."
       }
     },
     {

@@ -944,38 +944,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_developer_foundations__04_002",
-      "courseId": "claude_certified_developer_foundations__04",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_02",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Comparing how the same output scores under each method often makes the right choice clear. Imagine a feature that should return the three capital cities of a region as a JSON array. One run returns the array in a different order than your reference string. An exact match scores as zero, because the characters do not line up, even though the answer is correct. A code grader that parses the JSON and checks membership scores it well, because all three cities are present and the structure is valid.\nNow imagine the feature should return a one-paragraph rationale for a recommendation. The code grader can confirm it is a non-empty string, which is nearly worthless here, and the exact match is hopeless, because no two good rationales are worded the same. Only a judge can say whether the rationale is faithful and complete. The method follows from the output structure: one correct form takes a match, a structural rule takes a code check, and open-ended quality takes a judge. There is also a cost dimension that the table understates. An exact match and a code check run locally and effectively cost nothing per case, so you can run thousands of them on every change.\nA judge is a second model call per case, so a thousand-case eval graded by a judge is a thousand extra API calls every time you run it. That is reasonable for a periodic full evaluation but wasteful as a tight inner loop. Many teams grade format and structure with code on every commit and reserve the judge for a slower, scheduled quality pass. Matching the grader to the task is partially about signal and partially about how often you can afford to run it.\nThe grader-selection table you can keep open while you build\nOf the three methods listed below, the judge is the only one you must build and tune, so it gets its own treatment here.",
-        "fr": "Comparer la façon dont le même résultat est noté selon chaque méthode permet souvent de clarifier le bon choix. Imaginez une fonctionnalité qui doit renvoyer les trois capitales d'une région sous forme de tableau JSON. Une exécution renvoie le tableau dans un ordre différent de celui de votre chaîne de référence. Une correspondance exacte est notée zéro, car les caractères ne concordent pas, même si la réponse est correcte. Un évaluateur de code qui analyse le JSON et vérifie l'appartenance obtient une bonne note, car les trois villes sont présentes et la structure est valide.\nMaintenant, imaginez que la fonctionnalité doit renvoyer une justification d'un paragraphe pour une recommandation. L'évaluateur de code peut confirmer qu'il s'agit d'une chaîne non vide, ce qui est presque inutile ici, et la correspondance exacte est sans espoir, car deux bonnes justifications ne sont jamais formulées de la même manière. Seul un juge peut dire si la justification est fidèle et complète. La méthode découle de la structure de sortie : une forme correcte repose sur une correspondance, une règle structurelle exige un contrôle de code, et une qualité ouverte nécessite un juge. Il existe également une dimension de coût que le tableau sous-estime. Une correspondance exacte et un contrôle de code s'exécutent localement et coûtent pratiquement rien par cas, vous pouvez donc les exécuter des milliers de fois à chaque changement.\nUn juge représente un deuxième appel de modèle par cas, de sorte qu'une évaluation sur mille cas notée par un juge équivaut à mille appels API supplémentaires à chaque exécution. Cela est raisonnable pour une évaluation complète périodique mais coûteux comme une boucle interne serrée. Beaucoup d'équipes évaluent le format et la structure avec du code à chaque commit et réservent le juge pour une passe qualité plus lente et planifiée. L'appariement de l'évaluateur à la tâche dépend en partie du signal et en partie de la fréquence à laquelle vous pouvez vous permettre de l'exécuter. Le tableau de sélection de l'évaluateur que vous pouvez laisser ouvert pendant que vous construisez.\nParmi les trois méthodes listées ci-dessous, le juge est le seul que vous devez construire et régler, il mérite donc son propre traitement ici."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Key principle — choose the grader that matches the output’s structure and your operating budget.\n\nConcrete mapping and examples\n- Exact match: use only for deterministic, canonical outputs (IDs, cryptographic hashes, single-token labels). Example: a fixed tag \"APPROVED\".\n- Code checks (parser/validator): use for structured outputs where content can be validated programmatically. Example: parse JSON, check array length and set membership (order-insensitive), validate schema, types, ranges, and units.\n- Judge (human or model): use for open-ended quality (rationales, summaries, creativity, faithfulness). Example: a one-paragraph rationale should be judged against a rubric for factual accuracy, relevance, completeness, and tone.\n\nOperational recommendations\n- Cheap, fast checks on every change: run exact match + code validators in pre-commit/CI. Implement parsers that do semantic checks (set equality, canonicalization, fuzzy string matching for synonyms).\n- Periodic quality audits with judges: run a sampled judge pass (stratified by failure-prone cases) nightly/weekly and a full judged regression less often.\n- Cost controls: cache judgments, use smaller models or crowd annotators for scale, and limit judge calls to identified drift or regressions.\n\nDesigning a judge\n- Create a clear rubric with binary and graded criteria (faithfulness, completeness, hallucination checks).\n- Seed with labeled examples, calibrate thresholds, measure inter-annotator agreement, and log explanations to debug failures.\n- Automate escalation rules: if code checks fail, block; if code checks pass but judge flags issues above threshold, trigger investigation.\n\nThis way you maximize signal per cost and only spend the expensive judge budget where it’s needed.",
-        "fr": "Points clés qu'une bonne réponse doit couvrir — spécifique et actionnable :\n\n1. Cartographier la méthode à l’objectif\n- Sorties déterministes/fixées (ex. JSON trié) : correspondance exacte ou contrôle de forme (JSON Schema).\n- Collections non ordonnées (ex. trois capitales) : comparer ensembles — trier ou vérifier appartenance/longueur plutôt que string equality.\n- Textes ouverts (ex. justification) : juge humain ou modèle-évaluateur sémantique.\n\n2. Actions pratiques immédiates\n- Canonicaliser les sorties structurées (trier clés, normaliser espaces/encodage).\n- Valider schéma via JSON Schema/Avro pour structure obligatoire.\n- Pour listes, utiliser set equality ou comparaison multiensembles.\n- Pour texte libre, employer un pipeline hybride : contrôles automatiques (non vide, longueur, présence d’entités/clés) + juge échantillonné pour fidélité/complétude.\n\n3. Conception et réglage du juge\n- Rédiger un rubric clair et exemples positifs/négatifs.\n- Calibrer avec un jeu étiqueté ; mesurer Cohen’s kappa / agreement.\n- Tuner prompts (few-shot), température basse, et utiliser votes multiples ou agrégation.\n- Optimiser coût : filtrer via contrôles low-cost, échantillonnage stratifié (p.ex. 5–10% ou tous les échecs auto), cache des évaluations inchangées.\n\n4. Risques concrets et mitigations\n- Faux négatifs (exact match) → canonicalisation.\n- Faux positifs (checks faibles) → règles plus strictes + tests unitaires.\n- Coût/latence du juge → échantillonnage, modèle plus petit pour pré-filtrage, cache.\n- Biais/incohérence du juge → rubric, formation des annotateurs, agrégation.\n\n5. Checklist d’implémentation\n- Définir type de sortie → choisir évaluateur.\n- Implémenter validations automatiques en CI.\n- Créer jeu de calibration + rubric.\n- Planifier fréquence/échantillonnage du juge et monitorer coût/fiabilité."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "API Integration",
-        "Automation",
-        "Business Value"
-      ],
-      "title": {
-        "en": "Comparing how the same output scores under each...",
-        "fr": "Comparer la manière dont une même sortie est notée selon chaque..."
-      }
-    },
-    {
       "id": "ex_claude_certified_developer_foundations__04_003",
       "courseId": "claude_certified_developer_foundations__04",
       "lessonId": "lesson_01",
@@ -1008,38 +976,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_developer_foundations__04_004",
-      "courseId": "claude_certified_developer_foundations__04",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_04",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Coverage matters more than perfection\nA larger evaluation set with slightly noisier automated grading usually reveals more than a small set of hand-graded cases. The point of an eval is to provide enough coverage to catch a regression, not to create the perfect rubric. Twenty cases that include irregular and edge inputs will catch a break that three carefully chosen cases never exercise. When you need more cases, you can have Claude generate additional ones from a small, labeled starting set. You can then spot-check the generated cases so the set stays honest. Coverage is the thing that catches edge cases, and coverage comes from volume.\nPut the three pieces together and the workflow is a loop: set a goal, write an initial prompt, run the eval, read where it failed, apply one prompt-engineering change, and run the eval again. You repeat the last two steps until the score holds where you need it. The eval is what tells you a change helped instead of just feeling different.\nThe strategy that makes the loop work is changing one component at a time. If you rewrite the prompt, add two examples, and switch the model all in one pass, and the score moves, you have learned nothing about which change caused it. Move one lever, re-run, read the per-case results, and keep the change only if the score goes up. This approach is slower for a single iteration, but far faster than the life of the feature, because it teaches you what drives the score. The per-case breakdown matters as much as the average. A steady average can hide a change that fixed three cases and broke three others. The per-case view shows that immediately, while the average conceals it.\nA low score is information to act on. When a case fails, the important question is not whether it failed, but why. A formatting failure points at the prompt's output instructions. A factual failure on retrieved content points at the retrieval step. A failure that only appears on long input points at context handling. The eval tells you a case failed, and the per-case output tells you the category, which is what turns the next iteration into a targeted fix rather than a guess.",
-        "fr": "La couverture compte plus que la perfection\nUn ensemble d'évaluations plus vaste, avec une notation automatisée légèrement plus bruyante, révèle généralement plus qu'un petit ensemble de cas notés manuellement. Le but d'une évaluation est de fournir une couverture suffisante pour attraper une régression, et non de créer la grille d'évaluation parfaite. Vingt cas qui incluent des entrées irrégulières et des cas limites permettront de mettre en évidence une faiblesse qu'un ensemble de trois cas soigneusement choisis n'explorera jamais. Lorsque vous avez besoin de plus de cas, vous pouvez faire générer des cas supplémentaires par Claude à partir d'un petit ensemble de départ étiqueté. Vous pouvez alors vérifier ponctuellement les cas générés pour que l'ensemble reste fiable. La couverture est ce qui capte les cas limites, et la couverture vient du volume.\nRéunir les trois éléments et le flux de travail devient une boucle : définir un objectif, écrire un prompt initial, lancer l'évaluation, lire où cela a échoué, apporter une modification d'ingénierie du prompt, puis relancer l'évaluation. Vous répétez les deux dernières étapes jusqu'à ce que le score soit stable à l'endroit souhaité. L'évaluation est ce qui vous dit qu'un changement a été utile, plutôt que d'avoir une simple impression de différence.\nLa stratégie qui fait fonctionner la boucle consiste à changer un seul composant à la fois. Si vous réécrivez le prompt, ajoutez deux exemples et changez le modèle en une seule passe, et que le score bouge, vous n'avez rien appris sur quelle modification l'a causé. Actionnez un levier à la fois, relancez, lisez les résultats par cas, et conservez le changement uniquement si le score augmente. Cette approche est plus lente pour une seule itération, mais bien plus rapide que la durée de vie de la fonctionnalité, car elle vous apprend ce qui conduit le score. Le décompte par cas compte autant que la moyenne. Une moyenne stable peut dissimuler un changement qui a corrigé trois cas et en a cassé trois autres. La vue par cas le montre immédiatement, tandis que la moyenne le dissimule.\nUn score faible est une information sur laquelle agir. Lorsque un cas échoue, la question importante n'est pas de savoir s'il a échoué, mais pourquoi. Un échec de formatage pointe les instructions de sortie du prompt. Un échec factuel sur le contenu récupéré pointe vers l'étape de récupération. Un échec qui n'apparaît que sur des entrées longues pointe vers la gestion du contexte. L'évaluation vous indique qu'un cas a échoué, et la sortie par cas vous indique la catégorie, ce qui transforme la prochaine itération en une correction ciblée plutôt qu'en une hypothèse."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "Goal: build a high‑coverage, fast feedback eval loop that guides targeted fixes.\n\nConcrete workflow\n1. Set a measurable goal (e.g., 90% pass rate on 200 cases; per-case pass/fail + category).\n2. Create an initial prompt and a small labeled seed set (5–20 representative cases: typical, edge, adversarial).\n3. Expand coverage: ask Claude to generate 100–500 diversified cases from the seed (request specific variations: length, edge values, malformed input). Spot‑check 10–20% to discard obvious errors.\n4. Implement automated grading with a permissive rubric (binary pass/fail + failure category). Accept some noise to gain volume.\n5. Run the eval, examine per-case results (not just average).\n6. Change exactly one component per iteration (prompt wording, examples, model version, retrieval method, post‑processing).\n7. Re-run, compare per-case diffs, and keep the change only if it improves targeted cases without introducing new regressions.\n8. Repeat until goal stabilizes. Version tests and keep a changelog.\n\nFailure categories → targeted fixes (examples)\n- Formatting errors → tighten output instructions and examples.\n- Retrieval/factual errors → improve retrieval queries, filters, or grounding.\n- Long-input/context errors → add chunking, summarization, or recency windows.\n- Ambiguity/hallucination → add clarifying questions or stricter constraints.\n\nMetrics & hygiene\n- Track per-case history, flaky cases, and inter‑run variance.\n- Prioritize high‑impact edge cases; regenerate synthetic cases when coverage gaps appear.",
-        "fr": "Objectif attendu — ce que doit contenir une bonne réponse\n- Justification claire : privilégier la couverture (volume + diversité) plutôt que quelques cas parfaits.\n- Workflow itératif opérationnel : définir objectif → écrire prompt prototype → lancer éval large → analyser échecs par cas → modifier un seul levier → relancer → conserver seulement si amélioration nette.\n- Règle expérimentale : ne changer qu’un seul composant à la fois (prompt, modèle, exemples, récupération, post‑traitement).\n- Métriques et visibilité : suivre pass/fail par cas, taux global, régressions par cas critiques, distribution des erreurs — la vue par cas est prioritaire sur la moyenne.\n- Génération de cas : méthode et contrôle qualité (ex. seed + génération automatique + vérification manuelle échantillonnée ~10%).\n\nChecklist opérationnelle (exécutable)\n1. Créer 20–200 cas couvrant cas limites, entrées irrégulières, longueurs extrêmes.\n2. Automatiser scoring (regex/heuristique + labels) et garder l’ID de cas.\n3. Exécuter baseline et exporter résultats par cas.\n4. Identifier catégories d’échec (formatage, factualité/retrieval, contexte long, hallucination).\n5. Choisir un levier à modifier → appliquer → relancer uniquement sur suite complète.\n6. Comparer par‑cas : conserver changement si amélioration nette sans régression critique.\n7. Rééchantillonner 10% des cas générés pour validation humaine.\n\nExemple de prompt pour générer variantes (Claude)\n\"À partir de ces 10 exemples marqués [insérer], génère 100 variantes couvrant : fautes typographiques, formulations ambiguës, entrées très longues, et entrées courtes. Marque chaque cas par type et fournis la réponse attendue.\"\n\nRisques concrets à surveiller : biais d’échantillon (générer trop de variantes similaires), sur‑optimisation sur heuristiques de scoring, fausses positives d’autoscoring, régressions masquées par moyennes."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "API Integration",
-        "Automation",
-        "Business Value"
-      ],
-      "title": {
-        "en": "Coverage matters more than perfection",
-        "fr": "La couverture prime sur la perfection."
-      }
-    },
-    {
       "id": "ex_claude_certified_developer_foundations__04_005",
       "courseId": "claude_certified_developer_foundations__04",
       "lessonId": "lesson_01",
@@ -1069,38 +1005,6 @@
       "title": {
         "en": "The strategy that makes the loop work is changi...",
         "fr": "La stratégie qui permet à la boucle de fonctionner est changi..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__04_006",
-      "courseId": "claude_certified_developer_foundations__04",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_06",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "The review found no bug in the model or in the prompt. The feature had never been measured against a message containing two dates, because nobody had defined the expected behavior for that case as a graded example. The dozen manual checks all used single-date messages, which is the input the builder pictured. There was no holdout set, so there was no signal that the two-date input existed in the population.\nThe missing graded set was the root cause. Some behavior change, most likely a prompt change naming which date to extract, corrected the output. The eval did not fix the extraction; it detected the failure, documented the expected behavior as a checkable case, and guarded against the same regression on every future change. The two-date message became case one in that set.\nOne way to find inputs like this before a customer does: ask the model to enumerate edge cases that could break the current implementation. Two dates in one sentence, no date at all, a relative date like \"next Tuesday.\" Turn the plausible ones into graded cases with a human-checked expected output. This is the same case-generation move the eval-building section covers, applied before launch rather than after.\nWhy this broke\nSuccess was judged by impression instead of a graded set. The eval is what surfaces failures and guards against regression. The prompt is what changes the output. Write the expected behavior down as graded cases before you ship, and use the model to help you find the edge inputs you did not think to test.",
-        "fr": "La revue n'a trouvé aucun bogue dans le modèle ou dans le prompt. La fonctionnalité n'avait jamais été mesurée sur un message contenant deux dates, car personne n'avait défini le comportement attendu pour ce cas comme un exemple gradué. La douzaine de vérifications manuelles utilisaient toutes des messages à date unique, qui est l'entrée que le builder a illustrée. Il n'y avait pas de holdout set, il n'y avait donc aucun signal indiquant que l'entrée à deux dates existait dans la population.\n\nLe manque de cet ensemble gradué était la cause première. Un changement de comportement, très probablement une modification du prompt indiquant quelle date extraire, a corrigé la sortie. L'éval n'a pas corrigé l'extraction; elle a détecté l'échec, documenté le comportement attendu comme un cas vérifiable, et protégé contre la même régression à chaque changement futur. Le message à deux dates est devenu le cas numéro un dans cet ensemble.\n\nUne façon de trouver des entrées comme celle-ci avant qu'un client ne le fasse : demander au modèle d'énumérer les cas limites qui pourraient casser l'implémentation actuelle. Deux dates dans une même phrase, aucune date du tout, une date relative comme « mardi prochain ». Transformez les cas plausibles en cas gradués avec une sortie attendue vérifiée manuellement. C'est la même démarche de génération de cas que couvre la section eval-building, appliquée avant le lancement plutôt qu'après.\n\nPourquoi cela a échoué\nLe succès était jugé sur l'impression plutôt que par un ensemble gradué. L'éval est ce qui fait surface les échecs et protège contre les régressions. Le prompt est ce qui modifie la sortie. Écrivez le comportement attendu sous forme de cas gradués avant de déployer, et utilisez le modèle pour vous aider à trouver les entrées limites que vous n'avez pas pensé tester."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "Root cause summary (one sentence)\n- Root cause: no graded test case for messages containing two dates, so the eval never flagged the behavior and it regressed when the prompt changed.\n\nConcrete actions to prevent this\n1. Define expected behavior up front\n   - Write clear rules: e.g., “If two dates appear, extract the earlier date” or “prefer the explicitly labeled date,” and how to handle relative dates/timezones.\n2. Build a graded test set before launch\n   - Include positive, negative, and edge cases; each item must have a human-checked expected output.\n3. Generate edge cases with the model\n   - Prompt example to use now:  \n     “List 20 realistic user inputs that could break a date-extraction system (include cases with 0 dates, 2+ dates, relative dates, ranges, ambiguous formats, timezones, typos).”\n4. Example graded cases (format: input → expected output)\n   - “Meeting on June 5 and June 12” → “2026-06-05” (rule: earlier date)\n   - “Can we meet next Tuesday?” → “2026-07-28” (relative → resolved to ISO using reference date)\n   - “No date mentioned” → “NONE”\n   - “From 3/4 to 3/6” → “2026-03-04 to 2026-03-06”\n5. Test harness & gating\n   - Automate eval runs on every prompt/model change; fail CI if graded accuracy drops.\n6. Monitoring & coverage analysis\n   - Collect real inputs, surface unseen patterns, add failing examples to graded set.\n7. Human review for ambiguous cases\n   - Mark and store policy decisions when ambiguity arises so graders are consistent.\n\nTakeaway\n- Don’t rely on impression; write graded cases first, use the model to find edge cases, and enforce them with automated regression checks.",
-        "fr": "Actions correctives à viser (concrètes et vérifiables)\n\n1) Créer un ensemble gradué et un holdout\n- Construire ~20 cas couvrant: une date unique, deux dates (ordre chronologique et texte), aucune date, date relative (“mardi prochain”), plages (“du 3 au 5 mai”), formats multiples (DD/MM/YYYY, MMM D), fuseaux, langues.\n- Marquer une portion (20–30%) comme holdout non utilisée pour développement.\n\n2) Spécifier le comportement attendu (exemples vérifiés)\n- Si une seule date → renvoyer sa date normalisée (ISO 8601).\n- Si deux dates → règle explicite (ex. \"renvoyer la plus proche/la première mentionnée/la plus ancienne\") et exemples.\n- Si aucune date → renvoyer null+raison.\nExemples:\n- Input: \"Réunion le 12/07/2026 ou le 09/08/2026.\" Output attendu: \"2026-07-12 (première mentionnée)\".\n- Input: \"Aucun rendez-vous.\" Output: null.\n\n3) Prompt modifié (exemple)\n\"Extrais la date cible du message. Si plusieurs dates, renvoie la PREMIÈRE MENTIONNÉE en ISO YYYY-MM-DD; si aucune, renvoie NULL. Réponse: <ISO ou NULL>.\"\n\n4) Procédé d’évaluation et prévention des régressions\n- Automatiser ces cas dans CI: seuil de précision minimal (p.ex. 95%) et alertes.\n- Inclure holdout dans évaluations périodiques.\n- Utiliser le modèle pour générer cas limites (prompt: \"Énumère 20 cas limites pour extraction de dates\") puis valider manuellement.\n\nRisques identifiés\n- Ambiguïtés de règles (quelle date choisir) → documenter clairement.\n- Formats/fuseaux non couverts → ajouter cas.\n- Surconfiance si pas de holdout → corriger via validation indépendante."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Automation",
-        "Development",
-        "Digital Transformation"
-      ],
-      "title": {
-        "en": "The review found no bug in the model or in the ...",
-        "fr": "L'examen n'a révélé aucun bug dans le modèle ni dans le ..."
       }
     },
     {
@@ -1264,38 +1168,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_developer_foundations__04_012",
-      "courseId": "claude_certified_developer_foundations__04",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_12",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Production introduces failures a prototype never sees. The difference between a resilient system and a fragile one is whether you decided in advance how each kind of failure is handled.\nEvery failure starts with one question: is it retriable or terminal?\nThe test is a single question: would waiting and trying the exact same request again plausibly work? If yes, it is retriable. If not, it is terminal. A rate limit clears with time; a malformed request will fail identically until the request itself is fixed.\nProduction traffic produces failures development never shows you: rate-limit responses, timeouts, malformed tool results, and transient network errors. The first decision for any failure is whether a later attempt is likely to succeed. If so, the failure is retriable. If not, retrying only wastes time and budget, making it terminal. A rate-limit response or a temporary server overload is retriable, because the same request will probably go through in a moment. A malformed request or an authentication failure is terminal, because retrying the identical bad request changes nothing. Every subsequent handling decision depends on which bucket a failure lands in. On the Anthropic API, the status code tells you the bucket. A 429 means you hit a rate limit and a 529 means the service is temporarily overloaded, both are retriable. A 400 means a bad request and a 401 means an auth failure, both are terminal. Server errors in the 5xx range, including a 500 internal error and a 504 timeout, are also retriable, because they are Anthropic-side faults that typically resolve on retry.\nRETRIABLE = {429, 529, 500, 502, 503, 504} # rate limit, overload, transient\nTERMINAL = {400, 401, 403, 404} # bad request, auth, missing",
-        "fr": "La production introduit des défaillances qu'aucun prototype ne voit.\nLa différence entre un système résilient et un système fragile tient à savoir si vous avez décidé à l'avance comment chaque type de défaillance est géré.\nChaque défaillance commence par une seule question : est-elle réessayable ou terminale ?\nLe test consiste en une seule question : attendre et réessayer exactement la même requête fonctionnerait-il raisonnablement ? Si oui, elle est réessayable. Sinon, elle est terminale.\nUne limitation de débit se dissipe avec le temps ; une requête mal formée échouera exactement de la même manière tant que la requête elle-même ne sera pas corrigée.\nLe trafic de production génère des défaillances que le développement ne vous montre jamais : des réponses liées à une rate limit, des timeouts, des résultats d'outils mal formés et des erreurs réseau transitoires.\nLa première décision pour toute défaillance est de savoir si une tentative ultérieure est susceptible de réussir. \nSi oui, la défaillance est réessayable. Sinon, réessayer ne fait que gaspiller du temps et du budget, la rendant terminale.\nUne réponse rate-limit ou une surcharge temporaire du serveur est réessayable, car la même requête aboutira probablement dans un instant.\nUne requête mal formée ou un échec d'authentification est terminal, car réessayer la même mauvaise requête ne change rien.\nChaque décision de gestion suivante dépend de la catégorie dans laquelle tombe une défaillance.\nSur l'Anthropic API, le code d'état vous indique la catégorie.\nUn 429 signifie que vous avez atteint une rate-limit et un 529 signifie que le service est temporairement surchargé, les deux étant réessayables.\nUn 400 signifie une mauvaise requête et un 401 signifie un échec d'authentification, les deux étant terminaux.\nLes erreurs serveur dans la plage 5xx, y compris un 500 Internal Server Error et un 504 timeout, sont aussi réessayables, car ce sont des fautes côté Anthropic qui se résolvent généralement lors d'un nouvel essai.\nRETRIABLE = {429, 529, 500, 502, 503, 504} # rate limit, overload, transient\nTERMINAL = {400, 401, 403, 404} # bad request, auth, missing"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Correct classification and a small, consistent handling policy are what make systems resilient.\n\nClassification (map status codes)\n- RETRIABLE = {429 (rate limit), 529 (overload), 500, 502, 503, 504} — transient server or rate problems; try again.\n- TERMINAL = {400 (bad request), 401 (auth), 403 (forbidden), 404 (not found)} — request or credentials are wrong; retrying unchanged request won’t help.\n\nConcrete handling rules\n- Respect server guidance: if response has Retry-After, wait that long before retrying.\n- For retriable codes: retry with exponential backoff + full jitter, limit attempts, and emit metrics (retry count, final outcome).\n- For terminal codes: stop retrying, surface the error to caller, log rich context, and alert if unexpected rates spike.\n- Non-idempotent ops (POST/transfer): only retry if you have an idempotency key or can safely make the operation idempotent. Otherwise return error to caller.\n- Timeouts: treat as retriable but only if idempotent or with idempotency keys.\n- Observability: record status code, request id, latency, Retry-After, and trace id. Alert if retry rate or terminal error rate exceeds thresholds.\n\nExample retry policy (pseudo)\n- max_attempts = 5\n- base = 200ms, factor = 2, jitter = random(0, base)\n- if Retry-After header -> sleep Retry-After and count as one attempt\n- abort immediately on TERMINAL codes\n\nThis yields predictable behavior: quick recovery from transient faults, immediate feedback on developer errors, and safe handling for non-idempotent operations.",
-        "fr": "Règle simple et première décision\n- Tester : \"Attendre et réessayer exactement la même requête fonctionnerait‑il raisonnablement ?\"\n  - Oui → réessayable. Non → terminale.\n\nCatégories et actions immédiates\n- RETRIABLE = {429, 529, 500, 502, 503, 504}\n  - Action : réessayer avec backoff exponentiel + jitter, limiter nombre d’essais.\n  - Exemple pratique : max_attempts = 5, base_delay = 200–500 ms, factor = 2, jitter random(0.5–1.5).\n  - Exiger idempotence (ou utiliser token d’idempotence) avant de réessayer des opérations mutatives.\n- TERMINAL = {400, 401, 403, 404}\n  - Action : ne pas réessayer la même requête ; corriger la requête ou authentification.\n  - Exception contrôlée : si 401 peut être causé par token expiré, implémenter une logique de refresh unique puis retenter une fois (considérer cela comme une transformation de la requête, pas un simple retry).\n\nOpérations d’exploitation à implémenter\n- Logging structuré : status, request_id, payload hash, retry_count, latency, backend_id.\n- Metrics/alerting : taux d’erreurs réessayables > seuil (ex. >1% sur 5min) → alerte.\n- Circuit breaker + backpressure : ouvrir circuit si taux d’erreurs réessayables élevé pour éviter thundering‑herd.\n- Runbook : seuils précis (ex. 5xx > 5% pendant 10 min → escalation infra).\n- Tests en production : chaos/chaîne de pannes pour valider comportements de retry, idempotence et observabilité.\n\nRisques concrets à mentionner\n- Boucles de retry causant amplification de charge.\n- Coûts/latence élevés dus à réessais non contrôlés.\n- Corruption d’état si opérations non idempotentes sont réessayées.\n- Silence des erreurs terminales entraînant mauvaise UX.\n\nPoints qu’une bonne réponse doit couvrir\n- définition claire réessayable vs terminale, mapping codes → action, stratégie de retry (backoff + jitter + limites), idempotence, observabilité/alerting, circuit breaker et runbook."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "API Integration",
-        "Claude Platform",
-        "Context Design"
-      ],
-      "title": {
-        "en": "Production introduces failures a prototype neve...",
-        "fr": "La production introduit des défaillances ; un prototype ne..."
-      }
-    },
-    {
       "id": "ex_claude_certified_developer_foundations__04_015",
       "courseId": "claude_certified_developer_foundations__04",
       "lessonId": "lesson_01",
@@ -1328,38 +1200,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_developer_foundations__04_016",
-      "courseId": "claude_certified_developer_foundations__04",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_04",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Revisit: Your expected_behavior restates the input (\"summarize the transcript\") instead of naming the output the feature should produce, or the rubric still has no scale. Without a defined expected output and an anchored scale, the judge drifts to a safe middle number around six. Name the specific output, then define what each score band means.",
-        "fr": "Revisiter : Votre expected_behavior reformule l'entrée (« résumer la transcription ») au lieu de nommer la sortie que la fonctionnalité devrait produire, ou le barème n'a toujours pas d'échelle. Sans une sortie attendue définie et une échelle ancrée, l'évaluateur dérive vers une valeur médiane autour de six. Nommez la sortie spécifique, puis définissez ce que signifie chaque plage de scores."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "Expected output (explicit): A single structured deliverable with three sections:\n1) Executive summary (<=150 words) stating meeting purpose and 2–3 key decisions (one sentence each).\n2) Action-item table (columns: action, owner, due date if mentioned, timestamp of mention, confidence flag High/Med/Low).\n3) Participants and overall sentiment (Positive/Neutral/Negative) with confidence score (0–100%).\n\nRubric (1–7, anchored):\n7 — Excellent: All three sections present; executive summary accurately captures the top 2–3 decisions; every action item extracted correctly with correct owners and due dates (if present); timestamps included; participant list correct; sentiment correctly labeled; no factual errors; concisely written.\n6 — Strong: As 7 but with one minor omission (e.g., one missing timestamp) or one low-impact wording inaccuracy.\n5 — Meets requirement: All sections present; most decisions and action items correct; at most one missing owner or one small factual mismatch; readable and concise.\n4 — Borderline: Sections present but multiple omissions (e.g., one decision missing and one action item wrong); some factual errors; sentiment or participants may be partially incorrect.\n3 — Weak: Major omissions (missing >1 decision or action items), several factual errors, or incorrect participants; deliverable still partially usable.\n2 — Very poor: Produces structure but largely incorrect or many hallucinated action items/owners; wrong sentiment.\n1 — Fail: Fails to produce required structure, invents facts, or output unreadable.\n\nScoring guidance: require >=5 for acceptance. Deduct one band per major error (false action item, missing owner, wrong decision); deduct half-band for minor issues (typo, missing timestamp).",
-        "fr": "Expected behavior (exemple) — nommer la sortie attendue : « Produire un résumé en français de la transcription en 5–7 phrases (50–80 mots) listant les 4 points-clés, en indiquant les intervenants correspondants et sans ajouter d’informations non présentes dans la transcription. »\n\nBarème détaillé (échelle 1–10) — critères pondérés : exactitude (40%), couverture des points-clés (30%), concision/style (15%), attribution des intervenants (10%), absence d’invention (5%).\n\nScores et signification concrète :\n- 9–10 (Excellent) : ≥95% d’exactitude factuelle; tous les points-clés (4) présents; longueur 50–80 mots; intervenants correctement attribués; 0 erreurs factuelles.\n- 7–8 (Bon) : 85–94% d’exactitude; 3–4 points-clés présents; 1 omission mineure ou 1 formulation ambiguë; 0–1 petites erreurs.\n- 5–6 (Acceptable) : 65–84% d’exactitude; 2–3 points-clés présents; longueur acceptable mais style maladroit; jusqu’à 2 erreurs factuelles mineures.\n- 3–4 (Insuffisant) : 40–64% d’exactitude; 1–2 points-clés présents; résume trop long/ court; 3+ erreurs mineures ou 1 erreur importante.\n- 1–2 (Inacceptable) : <40% d’exactitude; points-clés manquants ou inventés; style inadapté; erreurs factuelles majeures.\n\nChecklist d’évaluation rapide :\n- Les 4 points-clés sont-ils identifiables ? (oui/non)\n- Y a-t-il des ajouts non présents dans la transcription ? (oui/non)\n- Longueur entre 50–80 mots ? (oui/non)\n- Attributions des intervenants correctes ? (oui/non)\n\nDocumenter une phrase justificative (1–2 lignes) pour tout score ≤6 en précisant omissions et erreurs."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "API Integration",
-        "Business Value",
-        "Development"
-      ],
-      "title": {
-        "en": "Revisit: Your expected_behavior restates the in...",
-        "fr": "À revoir : Votre expected_behavior reformule le in..."
-      }
-    },
-    {
       "id": "ex_claude_certified_developer_foundations__04_017",
       "courseId": "claude_certified_developer_foundations__04",
       "lessonId": "lesson_01",
@@ -1389,38 +1229,6 @@
       "title": {
         "en": "Correct: You chose Option C and named the integ...",
         "fr": "Correct : Vous avez choisi l'option C et nommé l'intég..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__04_018",
-      "courseId": "claude_certified_developer_foundations__04",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_06",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Revisit: You picked Option A or B, but the parser and the model call both pass in the trace. A component that passes in isolation is not where an end-to-end-only failure lives. Look at step 2, where the chunks are placed into the prompt without reading the content field.",
-        "fr": "Revisiter : Vous avez choisi l'Option A ou B, mais le parser et l'appel au modèle passent tous deux la trace en paramètre. Un composant qui fonctionne isolément n'est pas l'endroit où réside une défaillance uniquement de bout en bout. Regardez l'étape 2, où les segments sont placés dans le prompt sans lire le champ de contenu."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "Likely root cause\n- The prompt assembly step is inserting chunk objects (or the wrong field) instead of the chunk.content string, so end-to-end prompts sent to the model lack the actual text even though parsing and model-call plumbing appear fine in isolation.\n\nConcrete fix steps\n1. Inspect step 2 code where you build the prompt. Replace any insertion of the chunk object (or chunk.id) with chunk.content.\n   - Example (Python): prompt_chunks = \"\\n\\n\".join(c[\"content\"] for c in chunks)\n     prompt = template.format(context=prompt_chunks)\n   - Example (JS): const promptChunks = chunks.map(c => c.content).join(\"\\n\\n\"); const prompt = template.replace(\"{context}\", promptChunks);\n2. Add defensive checks:\n   - Assert each chunk has a non-empty content field (raise/log if missing).\n   - Normalize/trim whitespace and ensure encoding is correct (UTF-8).\n   - Escape or sanitize delimiters if using structured separators.\n3. Add tests:\n   - Unit test: feed a small set of chunks with known content; assert final prompt contains those strings in order.\n   - E2E test: run through full pipeline and verify the model input trace includes the expected content.\n4. Improve logging/tracing:\n   - Log the final assembled prompt (or a redacted version) in the trace so end-to-end failures show what the model actually received.\n   - On failure, dump chunk list and final prompt for quick debugging.\n\nEdge cases to check\n- Field name mismatch (content vs text), empty chunks, wrong slicing/order, token limits truncating content.",
-        "fr": "Problème identifié\n- La trace (ou les segments) est passée deux fois : au parser et à l'appel modèle. À l’étape 2, on concatène les segments dans le prompt sans lire explicitement le champ content (p. ex. on utilise l’objet entier ou la clé incorrecte), donc le prompt contient des objets mal formés ou undefined. Un composant isolé peut sembler correct ; la défaillance n’apparaît qu’en intégration.\n\nCorrection concrète et actions\n1. Contrat de données explicite\n   - Définir le schéma attendu : [{ id, content: string, role?, meta? }].\n   - Valider dès la sortie du parser (runtime checks/TypeScript interface).\n\n2. Construction du prompt (ex. JS)\n   - Utiliser explicitement content :\n     const segmentsText = segments.map(s => String(s.content ?? '')).filter(Boolean).join('\\n');\n     const prompt = `${systemPrompt}\\n\\n${segmentsText}\\n\\n${userInstruction}`;\n3. Ne pas dupliquer la trace\n   - Envoyer la trace soit via un paramètre structuré (metadata) soit inline dans le prompt, pas les deux.\n   - Exemple : callModel({ prompt, traceId }) ou callModel({ messages: [...], trace: undefined })\n\n4. Tests et monitoring\n   - Test unitaire : parser -> segments -> buildPrompt -> assert(prompt contient uniquement content).\n   - Test d’intégration : bout en bout vérifiant que la même donnée n’est pas serialisée deux fois.\n   - Logs/metrics : journaliser tailles de prompt, clés manquantes, et erreurs de sérialisation.\n\nRisques concrets\n- Prompt corrompu (objets sérialisés) -> réponses incohérentes.\n- Fuite de métadonnées/confidentialité si trace envoyée deux fois.\n- Dépassement de tokens si duplication.\n\nCritère de réussite\n- Prompt final contient uniquement le texte prévu (champ content), validation verte sur schema, et aucun doublon de trace dans la requête modèle."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Business Value",
-        "Context Design",
-        "Development"
-      ],
-      "title": {
-        "en": "Revisit: You picked Option A or B, but the pars...",
-        "fr": "Revenir sur : Tu as choisi l'Option A ou B, mais les pars..."
       }
     },
     {
@@ -1517,38 +1325,6 @@
       "title": {
         "en": "Revisit: Revisit the model-selection default: s...",
         "fr": "Revoir : Revoir la valeur par défaut de la sélection de modèle : s..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__04_024",
-      "courseId": "claude_certified_developer_foundations__04",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_12",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Partial: You picked the right agent type but identified a lever that does not move the relevant constraint, or the reverse. The agent type and the lever are graded together for each scenario.",
-        "fr": "Partiel : Vous avez choisi le bon type d'agent mais identifié un levier qui ne fait pas bouger la contrainte pertinente, ou l'inverse. Le type d'agent et le levier sont évalués ensemble pour chaque scénario."
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "When you get “Partial” because the agent type and lever don’t move the same constraint, graders want to see a clear causal link between (A) the constraint you must change, (B) what the selected agent can actually change, and (C) a specific lever that will causally move that metric. To fix it, do the following:\n\n1. Restate the constraint precisely (metric + direction + acceptable range). Example: “Reduce average response latency from 800ms → 300ms.”\n2. Describe the agent’s capabilities (what it can control: parallelism, prompts, external tools, human handoff, sensors, model size, compute budget).\n3. Pick a lever that causally affects that metric and explain the causal chain in one line. Example: agent type = parallel executor; lever = split requests across 4 workers → reduces per-request latency by parallel processing; measure: median latency.\n4. If the lever doesn’t affect the metric, either choose a different lever or change the agent type to one that can use the lever (e.g., switch to pipeline/worker agent to use parallelism).\n5. Add a short validation plan: metric to track, experiment (A/B), expected improvement, and fallbacks.\n\nCommon mistakes to avoid: levers that only affect inputs (more data) when the constraint is throughput or levers that improve accuracy but worsen latency. Always show the causal link and a measurable validation.",
-        "fr": "Votre réponse mérite un crédit partiel. Voici ce qu’une correction complète devrait contenir, et comment corriger l’erreur « bon agent / mauvais levier » (ou inverse).\n\n1) Reformulation concise de la contrainte pertinente (ex. latence ≤ 200 ms, coût par requête ≤ 0,05 €).  \n2) Justification du type d’agent choisi : expliquer le rôle causal de l’agent par rapport à la contrainte (ex. agent d’orchestration pour réduire latence via placement/scale).  \n3) Analyse du levier proposé : décrire le mécanisme par lequel ce levier devrait agir sur la contrainte. Si cela ne fonctionne pas, préciser pourquoi (chemin causal manquant, effet négligeable, conflit d’objectifs).  \n4) Proposition alternative(s) de levier(s) qui déplaceraient effectivement la contrainte, avec ordre de priorité et estimation d’impact (qualitative ou quantitative). Exemples concrets : compression de modèle → -30% latence; mise en cache → -50% requêtes temps réel; migration vers GPU + batch → réduction coût/req.  \n5) Métriques et protocole d’évaluation : indicateurs (p95 latency, coût/req, taux d’erreur) + test A/B ou charge progressive + seuils d’acceptation.  \n6) Risques concrets et mitigations : régression de qualité (tester précision), coûts d’infra (budget cap), complexité opérationnelle (rollback plan), conformité/sécurité.\n\nExemple bref : si contrainte = latence et vous avez choisi un agent de formation (bon agent pour amélioration qualité) mais levier = augmenter dataset (n’aide pas la latence), corrigez en proposant modèle quantifié, distillation, ou infra d’exécution."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "intermediate",
-      "skillTags": [
-        "Agentic Design",
-        "Batch Processing",
-        "Development"
-      ],
-      "title": {
-        "en": "Partial: You picked the right agent type but id...",
-        "fr": "Partiel : Vous avez choisi le bon type d'agent mais l'identifiant..."
       }
     },
     {

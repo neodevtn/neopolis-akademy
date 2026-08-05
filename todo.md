@@ -1268,3 +1268,8 @@
 ## Bug: Vidéos YouTube non lisibles dans la page
 - [x] La vidéo affiche un écran noir au lieu du player YouTube embed - fix: ajout https://www.youtube.com au script-src CSP
 - [x] L'utilisateur est obligé de cliquer "Watch on YouTube" pour voir la vidéo - fix: le YouTube IFrame API peut maintenant se charger
+
+## Bug: Exercice non valide (model answer affiché comme prompt)
+- [x] Exercice ex_006 orphelin (chapter_06 inexistant) affichait la correction comme question
+- [x] Suppression de 55 exercices orphelins dans 9 fichiers de cours (chapterId inexistant)
+- [x] Nettoyage du texte 'Reveal model answers' dans les blocs de contenu

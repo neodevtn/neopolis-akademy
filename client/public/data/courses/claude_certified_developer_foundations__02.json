@@ -706,7 +706,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Checkpoint 6 · Complete the agent wiring\n\nThe partial agent implementation below has two gaps. Write the missing content for each gap: (1) the description for update_record, and (2) the HITL checkpoint code.\n\nPartial implementation\n\ntools = [\n{\n\"name\": \"read_record\",\n\"description\": \"Use this to read a customer record by customer_id.\",\n\"input_schema\": {\n\"type\": \"object\",\n\"properties\": {\n\"customer_id\": {\"type\": \"string\"}\n},\n\"required\": [\"customer_id\"]\n}\n},\n{\n\"name\": \"update_record\",\n\"description\": [BLANK, write the description for this tool],\n\"input_schema\": {\n\"type\": \"object\",\n\"properties\": {\n\"customer_id\": {\"type\": \"string\"},\n\"field\": {\"type\": \"string\"},\n\"new_value\": {\"type\": \"string\"}\n},\n\"required\": [\"customer_id\", \"field\", \"new_value\"]\n}\n}\n]\n\ndef run_agent_loop(user_request):\nmessages = [{\"role\": \"user\", \"content\": user_request}]\n\nwhile True:\nresponse = client.messages.create(\nmodel=model, max_tokens=4096,\ntools=tools,\nmessages=messages\n)\n\nif response.stop_reason == \"end_turn\":\nreturn response\n\nif response.stop_reason == \"tool_use\":\nmessages.append({\"role\": \"assistant\", \"content\": response.content})\n\ntool_results = []\nfor block in response.content:\nif block.type == \"tool_use\":\n\n[BLANK, insert HITL checkpoint before executing update_record]\n\nresult = execute_tool(block.name, block.input)\ntool_results.append({\n\"type\": \"tool_result\",\n\"tool_use_id\": block.id,\n\"content\": result\n})\n\nmessages.append({\"role\": \"user\", \"content\": tool_results})\n\nGap 1: Write the description for update_record\n\nGap 2: Write the HITL checkpoint code\n\nReveal model answers",
+                "en": "Checkpoint 6 · Complete the agent wiring\n\nThe partial agent implementation below has two gaps. Write the missing content for each gap: (1) the description for update_record, and (2) the HITL checkpoint code.\n\nPartial implementation\n\ntools = [\n{\n\"name\": \"read_record\",\n\"description\": \"Use this to read a customer record by customer_id.\",\n\"input_schema\": {\n\"type\": \"object\",\n\"properties\": {\n\"customer_id\": {\"type\": \"string\"}\n},\n\"required\": [\"customer_id\"]\n}\n},\n{\n\"name\": \"update_record\",\n\"description\": [BLANK, write the description for this tool],\n\"input_schema\": {\n\"type\": \"object\",\n\"properties\": {\n\"customer_id\": {\"type\": \"string\"},\n\"field\": {\"type\": \"string\"},\n\"new_value\": {\"type\": \"string\"}\n},\n\"required\": [\"customer_id\", \"field\", \"new_value\"]\n}\n}\n]\n\ndef run_agent_loop(user_request):\nmessages = [{\"role\": \"user\", \"content\": user_request}]\n\nwhile True:\nresponse = client.messages.create(\nmodel=model, max_tokens=4096,\ntools=tools,\nmessages=messages\n)\n\nif response.stop_reason == \"end_turn\":\nreturn response\n\nif response.stop_reason == \"tool_use\":\nmessages.append({\"role\": \"assistant\", \"content\": response.content})\n\ntool_results = []\nfor block in response.content:\nif block.type == \"tool_use\":\n\n[BLANK, insert HITL checkpoint before executing update_record]\n\nresult = execute_tool(block.name, block.input)\ntool_results.append({\n\"type\": \"tool_result\",\n\"tool_use_id\": block.id,\n\"content\": result\n})\n\nmessages.append({\"role\": \"user\", \"content\": tool_results})\n\nGap 1: Write the description for update_record\n\nGap 2: Write the HITL checkpoint code",
                 "fr": "Checkpoint 6 · Compléter le câblage de l’agent\n\nL’implémentation partielle de l’agent ci-dessous présente deux lacunes. Écrivez le contenu manquant pour chaque lacune : (1) la description de update_record, et (2) le code du checkpoint HITL.\n\nImplémentation partielle\n\ntools = [\n{\n\"name\": \"read_record\",\n\"description\": \"Use this to read a customer record by customer_id.\",\n\"input_schema\": {\n\"type\": \"object\",\n\"properties\": {\n\"customer_id\": {\"type\": \"string\"}\n},\n\"required\": [\"customer_id\"]\n}\n},\n{\n\"name\": \"update_record\",\n\"description\": [BLANK, write the description for this tool],\n\"input_schema\": {\n\"type\": \"object\",\n\"properties\": {\n\"customer_id\": {\"type\": \"string\"},\n\"field\": {\"type\": \"string\"},\n\"new_value\": {\"type\": \"string\"}\n},\n\"required\": [\"customer_id\", \"field\", \"new_value\"]\n}\n}\n]\n\ndef run_agent_loop(user_request):\nmessages = [{\"role\": \"user\", \"content\": user_request}]\n\nwhile True:\nresponse = client.messages.create(\nmodel=model, max_tokens=4096,\ntools=tools,\nmessages=messages\n)\n\nif response.stop_reason == \"end_turn\":\nreturn response\n\nif response.stop_reason == \"tool_use\":\nmessages.append({\"role\": \"assistant\", \"content\": response.content})\n\ntool_results = []\nfor block in response.content:\nif block.type == \"tool_use\":\n\n[BLANK, insert HITL checkpoint before executing update_record]\n\nresult = execute_tool(block.name, block.input)\ntool_results.append({\n\"type\": \"tool_result\",\n\"tool_use_id\": block.id,\n\"content\": result\n})\n\nmessages.append({\"role\": \"user\", \"content\": tool_results})\n\nGap 1: Write the description for update_record\n\nGap 2: Write the HITL checkpoint code\n\nReveal model answers"
               }
             },
@@ -1216,38 +1216,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_developer_foundations__02_002",
-      "courseId": "claude_certified_developer_foundations__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_02",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "CheckpointPrompting Craft·4 min\nCheckpoint 1 · Fix the broken prompt\nThe prompt shown here extracts a JSON object from a support ticket with three fields: category, urgency, and a one-sentence summary. It contains one defect. Write the corrected system prompt that fixes it.\nBroken prompt\nSystem: \"You are a support ticket processor. Extract the key information from the ticket below.\"",
-        "fr": "CheckpointPrompting Craft·4 min\nCheckpoint 1 · Corriger le prompt cassé\nLe prompt montré ici extrait un objet JSON d'un ticket de support comportant trois champs : category, urgency, et un résumé en une phrase. Il contient un défaut. Écrivez le prompt système corrigé qui corrige ce défaut.\nPrompt cassé\nSystem: \"Vous êtes un processeur de tickets de support. Extrayez les informations clés du ticket ci-dessous.\""
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "System: \"You are a support ticket processor. Read the ticket text and output ONLY a single valid JSON object with exactly three fields:\n- category: one of [\\\"billing\\\", \\\"technical\\\", \\\"account\\\", \\\"shipping\\\", \\\"other\\\"]\n- urgency: one of [\\\"low\\\", \\\"medium\\\", \\\"high\\\", \\\"critical\\\"]\n- summary: a one-sentence summary of the issue (present-tense).\n\nDo not add any extra commentary, explanation, or characters outside the JSON object.\"",
-        "fr": "Vous êtes un processeur de tickets de support. À partir du texte du ticket en entrée, extrayez et renvoyez UNIQUEMENT un objet JSON valide avec exactement ces trois champs : \"category\", \"urgency\", \"summary\".\n\nRègles à respecter :\n- \"category\" : une des valeurs exactes : \"Billing\", \"Technical\", \"Account\", \"Shipping\", \"Other\".\n- \"urgency\" : une des valeurs exactes : \"low\", \"medium\", \"high\", \"critical\".\n- \"summary\" : une phrase unique résumant le problème en une seule phrase claire (max. ~20 mots). Pas de retours à la ligne.\n- Si une information est absente dans le ticket, mettre null pour ce champ. Ne pas inventer ou déduire d'informations non présentes.\n- Ne renvoyez aucun texte explicatif, aucune balise, aucun commentaire — strictement l'objet JSON seul, valide, sans virgule finale ni éléments supplémentaires.\n\nExemple de sortie attendue :\n{\"category\":\"Technical\",\"urgency\":\"high\",\"summary\":\"L'utilisateur ne peut plus se connecter après la mise à jour du mot de passe.\"}"
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Business Value",
-        "Development",
-        "Output Formatting"
-      ],
-      "title": {
-        "en": "Prompting Craft",
-        "fr": "Prompting — Craft · 4 min"
-      }
-    },
-    {
       "id": "ex_claude_certified_developer_foundations__02_003",
       "courseId": "claude_certified_developer_foundations__02",
       "lessonId": "lesson_01",
@@ -1277,38 +1245,6 @@
       "title": {
         "en": "Checkpoint 1 · Fix the broken prompt",
         "fr": "Point de contrôle 1 · Corriger le prompt cassé"
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__02_004",
-      "courseId": "claude_certified_developer_foundations__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_04",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "User: <ticket>My API key stopped working after I rotated it last night. I have a production deployment that is failing. This needs to be fixed immediately.</ticket>",
-        "fr": "Utilisateur : <ticket>Ma clé API a cessé de fonctionner après avoir effectué une rotation hier soir. J'ai un déploiement en production qui échoue. Cela doit être corrigé immédiatement.</ticket>\nAfficher la réponse du modèle\nIgnorer pour le moment"
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "Immediate plan (what I’ll do now and what I need from you)\n\n1) Quick verify (you can run these and paste results)\n- Confirm key validity:\n  - curl -s -H \"Authorization: Bearer $API_KEY\" https://api.your-service.example/v1/health\n  - or: curl -s -H \"x-api-key: $API_KEY\" https://api.your-service.example/v1/health\n  - Expected: 200/OK. If 401/403, key is invalid or scoped incorrectly.\n- Check app environment and rollout:\n  - Kubernetes: kubectl get deploy -o yaml deployment/<name> | grep -i API_KEY ; kubectl set env deployment/<name> API_KEY=<NEW> && kubectl rollout restart deployment/<name>\n  - Systemd/docker: verify SECRET/ENV is updated and restart service/container (systemctl restart myapp.service or docker restart <container>).\n\n2) Common causes to check (concrete items)\n- Using the old/disabled key (env var not updated or cached in image)\n- Key created but not enabled / wrong permission scope\n- Deployment not restarted after secret update (mounted secret not refreshed)\n- Typo or whitespace in key, or wrong header type (Bearer vs x-api-key)\n- Propagation delay or regional config mismatch\n- Rate limiting or IP restrictions on the new key\n\n3) Immediate mitigations\n- If the old key is still active: re-enable it temporarily to restore prod while we fix rotation.\n- If not: create a new key, update secret/ENV, restart pods/services, verify with curl.\n\n4) What I need from you now\n- Deployment name or service ID, exact error message/log lines, time of rotation, and whether old key was deleted or disabled.\nWith that I’ll update the key in prod or roll back within 10–20 minutes and confirm recovery.",
-        "fr": "Réponse attendue — correction modèle (concision, actions concrètes)\n\n1) Réponse immédiate et empathique\n- Accuser réception et indiquer qu’on prend le ticket en priorité («Je comprends l’urgence — je m’en occupe maintenant et je vous tiens informé toutes les 10 min.»).\n\n2) Mesures de remédiation rapides (ordre d’intervention)\n- Vérifier le statut de la clé auprès du fournisseur (console API / logs d’audit).\n- Tester la nouvelle clé localement : curl -H \"Authorization: Bearer NEW_KEY\" https://api.example.com/health\n- Mettre à jour le secret en production via votre gestionnaire de secrets puis redéployer :\n  - Kubernetes (ex.) :\n    kubectl create secret generic api-key --from-literal=API_KEY=NEW_KEY -o yaml --dry-run=client | kubectl apply -f -\n    kubectl rollout restart deployment/my-app\n  - Docker Compose : modifier .env puis docker compose up -d --force-recreate\n  - Systemd/service : remplacer variable d’environnement et systemctl restart my-service\n- Confirmer que les pods/services remontent et que les requêtes réussissent (kubectl get pods, kubectl logs, ou journalctl).\n\n3) Vérifications post-correction\n- Tester les endpoints critiques, surveiller erreurs 401/403, vérifier latence et erreurs.\n- Notifier parties prenantes + créer ticket de suivi.\n\n4) Risques concrets et mitigations\n- Exposition de la clé (logs, commits) — retirer, régénérer et vérifier repos.\n- Clés longues-vie non restreintes — utiliser tokens short-lived, scopes minimaux.\n- Déploiement incomplet — rollback plan, health checks automatisés.\n\nChecklist qu’une bonne réponse couvre : empathie, actions immédiates, commandes concrètes pour l’environnement donné, tests de validation, suivi/notification, et mesures de sécurité préventives."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "API Integration",
-        "Automation",
-        "Claude Platform"
-      ],
-      "title": {
-        "en": "User: <ticket>My API key stopped working after ...",
-        "fr": "Utilisateur : <ticket>Ma clé d'API a cessé de fonctionner après ..."
       }
     },
     {
@@ -1344,38 +1280,6 @@
       }
     },
     {
-      "id": "ex_claude_certified_developer_foundations__02_006",
-      "courseId": "claude_certified_developer_foundations__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_06",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "The problem is that both descriptions look identical to Claude at the point where the selection decision is made. The fix is adding an additional sentence per description:\nsearch_knowledge_base: \"Use this to search the knowledge base when the user asks a question that requires looking up current information. Do not use this if the result of a prior search in this session already covers the question.\"\nget_cached_result: \"Use this to retrieve a result that was already fetched during this session. Only use this if search_knowledge_base was called earlier in this conversation for the same query.\"\nThe exclusion conditions give Claude a decision rule rather than two identical-looking options. These conditions rely on complete conversation history being passed in each request. If prior turns are truncated or dropped, Claude cannot evaluate them and the exclusion logic silently fails.\nEvery additional tool you register increases the surface area Claude has to reason over, so this discipline only pays off when the underlying tools are distinct. The table below shows where exclusion-condition disambiguation helps and where a different approach is warranted.",
-        "fr": "Le problème est que les deux descriptions paraissent identiques pour Claude au moment où la décision de sélection est prise. La solution consiste à ajouter une phrase supplémentaire par description:\nsearch_knowledge_base: \"Utilisez ceci pour rechercher dans la base de connaissances lorsque l'utilisateur pose une question nécessitant de rechercher des informations actuelles. N'utilisez pas ceci si le résultat d'une recherche précédente dans cette session couvre déjà la question.\"\nget_cached_result: \"Utilisez ceci pour récupérer un résultat déjà obtenu au cours de cette session. Utilisez uniquement ceci si search_knowledge_base a été appelé plus tôt dans cette conversation pour la même requête.\"\nLes conditions d’exclusion donnent à Claude une règle de décision plutôt que deux options qui semblent identiques. Ces conditions dépendent du fait que l'historique complet de la conversation soit transmis dans chaque requête. Si les échanges précédents sont tronqués ou omis, Claude ne peut pas les évaluer et la logique d'exclusion échoue silencieusement.\nChaque outil supplémentaire que vous enregistrez augmente la surface sur laquelle Claude doit raisonner, donc cette discipline ne porte ses fruits que lorsque les outils sous-jacents sont distincts. Le tableau ci-dessous montre où la désambiguïsation par conditions d’exclusion aide et où une approche différente est justifiée."
-      },
-      "instructions": {
-        "en": "Write your response in the text area below. Consider the context provided and craft a clear, well-structured answer. Show your reasoning and explain your approach.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Considérez le contexte fourni et formulez une réponse claire et bien structurée. Montrez votre raisonnement et expliquez votre approche."
-      },
-      "correction": {
-        "en": "Revised tool descriptions (use verbatim in the tool registry)\n- search_knowledge_base: \"Use this to search the knowledge base when the user asks a question that requires looking up current information. Do not use this if the result of a prior search in this session already covers the question.\"\n- get_cached_result: \"Use this to retrieve a result that was already fetched during this session. Only use this if search_knowledge_base was called earlier in this conversation for the same query.\"\n\nConcrete risks when prior turns are truncated or dropped\n- Silent incorrect choice: Claude may call get_cached_result even though the cache was never populated, returning nothing or stale/irrelevant content.\n- Missed updates: Relying on cache can return outdated info if a new search was needed.\n- Ambiguous selection: Two tools look similar and the model may flip-flop or oscillate between them.\n- Increased attack surface: More tools increase reasoning complexity and chance of incorrect tool use.\n\nActionable mitigations and best practices\n1. Ensure conversation state is preserved:\n   - Pass full conversation history in every request or maintain explicit session metadata (e.g., last_search_queries[], cache_timestamps). Prefer structured session state over relying on truncated free-text history.\n2. Add guardrails in the tool layer:\n   - Make get_cached_result validate that a matching cache entry exists and return a structured “cache-miss” signal rather than empty content.\n   - If history is incomplete or cache-miss occurs, fall back to search_knowledge_base automatically.\n3. Prefer tool consolidation when logical overlap exists:\n   - If tools are similar, implement one tool with a parameter (e.g., knowledge_lookup(mode=\"cached\"|\"fresh\")) or create a router function that checks session state and calls the correct operation. This reduces decision burden on the model.\n4. Conservative default & clarification:\n   - If Claude cannot determine which tool to use, prefer search_knowledge_base (safer). Or have Claude ask a short clarifying question.\n5. Testing & monitoring:\n   - Add unit tests that simulate truncated history and verify fallback behavior.\n   - Log tool selection decisions and cache hits/misses for auditing.\n\nWhen to use exclusion-condition disambiguation\n- Use it when tools are functionally distinct and rely on conversation history (cache vs search) and you can guarantee full session state. If you cannot guarantee history completeness, use consolidated tools or programmatic routing.",
-        "fr": "Solution proposée (texte définitif)\n- search_knowledge_base: \"Utilisez ceci pour rechercher dans la base de connaissances lorsque l'utilisateur pose une question nécessitant des informations actuelles ou étendues. N'utilisez pas ceci si un résultat de recherche antérieur dans cette session couvre déjà la même question.\"\n- get_cached_result: \"Utilisez ceci pour récupérer un résultat déjà obtenu au cours de cette session. N'utilisez ceci que si search_knowledge_base a été appelé auparavant dans cette conversation pour la même requête et si l'historique de session complet est disponible.\"\n\nRisques concrets\n- Historique tronqué : l'IA peut appeler get_cached_result alors que la recherche n'a pas eu lieu dans le contexte actuel.\n- Cache obsolète : résultat mis en cache peut être périmé.\n- Conditions d'exclusion mal interprétées si noms/confusions d'outils similaires.\n- Explosion de la surface de raisonnement avec trop d'outils, entraînant erreurs de sélection.\n\nÉtapes d'implémentation actionnables\n- Envoyer toujours un indicateur booléen \"full_history_present\" dans chaque requête ; si false, forcer search_knowledge_base.\n- Ajouter métadonnées de cache (timestamp, query_hash, source_version) et invalidation TTL.\n- Tests unitaires : scénarios avec historique complet, partiel et absent.\n- Logging/telemetry : compter appels de chaque outil et erreurs de sélection.\n- Limiter nombre d'outils proches fonctionnellement et utiliser noms explicites.\n\nExemple JSON minimal\n{ \"name\":\"search_knowledge_base\",\"description\":\"... (texte ci‑dessus)\"},\n{ \"name\":\"get_cached_result\",\"description\":\"... (texte ci‑dessus)\"}  \n\nChecklist pour une bonne réponse\n- Définitions différenciées et non ambiguës\n- Gestion du cas historique tronqué\n- Mécanisme de validation/invalidation du cache\n- Tests et métriques opérationnelles\n- Nommage et limitation des outils similaires"
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Automation",
-        "Claude Platform",
-        "Context Design"
-      ],
-      "title": {
-        "en": "The problem is that both descriptions look iden...",
-        "fr": "Le problème, c'est que les deux descriptions semblent iden..."
-      }
-    },
-    {
       "id": "ex_claude_certified_developer_foundations__02_007",
       "courseId": "claude_certified_developer_foundations__02",
       "lessonId": "lesson_01",
@@ -1405,38 +1309,6 @@
       "title": {
         "en": "This is a composite exchange based on common pa...",
         "fr": "Ceci est un échange composite basé sur des pa..."
-      }
-    },
-    {
-      "id": "ex_claude_certified_developer_foundations__02_008",
-      "courseId": "claude_certified_developer_foundations__02",
-      "lessonId": "lesson_01",
-      "chapterId": "chapter_08",
-      "position": "after_content",
-      "interactionType": "free_text",
-      "prompt": {
-        "en": "Developer: \"So, I need to add an exclusion?\"\nSenior Developer: \"Right. Try using search_docs ‘when the user asks a question that requires looking up content not already present in this conversation. Do not call this if the answer is available in the current session context.' Then get_context_summary handles the in-context case. You will want to tighten get_context_summary's description the same way: add 'Only use this if the answer is already present in the current session. Do not use this to look up new information.' Both tools need the boundary, not just one.\"\nDeveloper: \"That's two sentences.\"\nSenior Developer: \"Right. One to say when to use it, one to say when not to. That's the whole fix.\"\nWhat to Watch Out for",
-        "fr": "Developer: \"Alors, j'ai besoin d'ajouter une exclusion ?\"\nSenior Developer: \"D'accord. Essayez d'utiliser search_docs ‘quand l'utilisateur pose une question qui nécessite de rechercher du contenu qui n'est pas déjà présent dans cette conversation. N'appelez pas ceci si la réponse est disponible dans le contexte de la session actuelle.' Puis get_context_summary gère le cas dans le contexte. Vous voudrez resserrer la description de get_context_summary de la même manière : ajouter 'N'utilisez ceci que si la réponse est déjà présente dans la session actuelle. N'utilisez pas ceci pour rechercher de nouvelles informations.' Les deux outils doivent avoir cette limite, pas seulement l'un.\"\nDeveloper: \"Ce sont deux phrases.\"\nSenior Developer: \"D'accord. Une pour dire quand l'utiliser, une pour dire quand ne pas l'utiliser. C'est toute la solution.\"\nCe qu'il faut surveiller"
-      },
-      "instructions": {
-        "en": "Write your answer in the text area below. Be specific and provide concrete examples where possible.",
-        "fr": "Rédigez votre réponse dans la zone de texte ci-dessous. Soyez précis et fournissez des exemples concrets si possible."
-      },
-      "correction": {
-        "en": "- Precise wording: use both a positive and a negative sentence for each tool. Example:\n  - search_docs: “Use search_docs only when the user requests information not already present in this session. Do not call search_docs if the answer is available in the current session context.”\n  - get_context_summary: “Use get_context_summary only when the answer is already present in this session. Do not use get_context_summary to look up new information.”\n- Avoid ambiguity: define “present in this session” (e.g., explicitly provided user messages or previously fetched docs). Decide how to treat partial or inferred info.\n- Resolve overlaps: add a rule to prefer get_context_summary if session contains explicit content; use search_docs only when no explicit content exists. State tie-breakers for partial matches.\n- Prevent instruction conflicts: ensure these tool descriptions don’t contradict higher-priority system prompts or agent planning logic.\n- Test cases: create concrete conversation examples that should and should not call each tool; verify agent behavior with automated tests.\n- Logging & observability: log which tool was chosen and why (match/no-match) to catch misuses.\n- Prompt-injection guardrails: keep the “do not use” clause close to the primary instruction so the model treats it as part of tool usage rules.\n- Versioning & docs: update developer docs and add review steps so future changes keep the boundary intact.",
-        "fr": "Points à surveiller (correction modèle concise)\n\n1. Formulation claire et symétrique\n- Pour chaque outil, fournissez deux phrases séparées : \"Quand l'utiliser\" et \"Quand ne pas l'utiliser\". Par ex. :\n  - search_docs — Quand l'utiliser : \"Utilisez ceci quand l'utilisateur pose une question nécessitant de rechercher du contenu externe qui n'est pas présent dans la session courante.\" — Quand ne pas l'utiliser : \"Ne l'utilisez pas si la réponse est déjà contenue dans la session actuelle.\"\n  - get_context_summary — Quand l'utiliser : \"Utilisez ceci uniquement si la réponse est déjà présente dans la session actuelle.\" — Quand ne pas l'utiliser : \"Ne l'utilisez pas pour rechercher de nouvelles informations externes.\"\n\n2. Logique décisionnelle explicite (exemple)\n- Pseudo-code :\n  - if session_contains_answer(conversation, threshold=0.8): call get_context_summary()\n  - else: call search_docs()\n- Définir le seuil de similarité, et une stratégie de repli (si get_context_summary retourne \"incomplet\", retenter search_docs).\n\n3. Risques concrets et mitigations\n- Fausse détection (FP/FN) → définir seuils, tests sur corpus, journalisation des échecs.\n- Contradictions doc vs implémentation → synchroniser doc + code + tests unitaires d'acceptation.\n- Latence/overhead si on vérifie mal → optimisation : cache des résumés, indexation conversationnelle.\n- Fuite d’informations en recherchant inutilement → appliquer filtres d’accès et audits.\n\n4. Tests et déploiement\n- Ajouter tests unitaires pour cas : réponse déjà présente, réponse partiellement présente, pas présente.\n- Exemples d’intégration et messages système mis à jour.\n- Monitoring : métriques d’appels aux deux outils et taux de fallback.\n\nRéponse attendue par un étudiant : formulations symétriques, implémentation claire de la décision avec seuils et fallback, tests couvrant cas limites, et plan de monitoring/atténuation des risques."
-      },
-      "rubric": "",
-      "required": false,
-      "difficulty": "foundation",
-      "skillTags": [
-        "Agentic Design",
-        "Automation",
-        "Context Design"
-      ],
-      "title": {
-        "en": "Developer: \"So, I need to add an exclusion?\"",
-        "fr": "Développeur : « Donc, je dois ajouter une exclusion ? »"
       }
     },
     {
