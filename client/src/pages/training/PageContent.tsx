@@ -28,6 +28,55 @@ import {
 } from "./contentDetectors";
 import { ChevronDown, ChevronRight, Check } from "lucide-react";
 
+// Interactive Stepper component for clickable numbered steps
+function InteractiveStepper({ steps, stepContents }: { steps: string[]; stepContents: string[] }) {
+  const [activeStep, setActiveStep] = useState(0);
+  const hasContent = stepContents.some(c => c.length > 0);
+
+  return (
+    <div className="my-6">
+      {/* Step circles */}
+      <div className="flex items-center justify-center gap-0 overflow-x-auto py-2">
+        {steps.map((step, idx) => (
+          <div key={idx} className="flex items-center">
+            <div className="flex flex-col items-center">
+              <button
+                onClick={() => setActiveStep(idx)}
+                className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white transition-all duration-200 cursor-pointer hover:scale-110 ${
+                  idx === activeStep ? 'bg-[#c75b3a] ring-2 ring-[#c75b3a]/30 ring-offset-2' : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                }`}
+                title={step}
+              >
+                {idx + 1}
+              </button>
+              <span className={`text-xs mt-1.5 text-center max-w-[100px] transition-colors duration-200 ${
+                idx === activeStep ? 'text-[#c75b3a] font-semibold' : 'text-gray-600 dark:text-muted-foreground'
+              }`}>{step}</span>
+            </div>
+            {idx < steps.length - 1 && (
+              <div className={`w-8 h-0.5 mx-1 mt-[-16px] transition-colors duration-200 ${
+                idx < activeStep ? 'bg-[#c75b3a]' : 'bg-gray-300 dark:bg-gray-600'
+              }`} />
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Step content panel */}
+      {hasContent && stepContents[activeStep] && (
+        <div className="mt-4 p-5 rounded-xl border border-[#e8e5e0] dark:border-slate-700 bg-[#faf9f7] dark:bg-slate-800/40 transition-all duration-200">
+          <h4 className="text-sm font-bold text-[#c75b3a] mb-2">{steps[activeStep]}</h4>
+          <div className="text-sm text-foreground/80 leading-relaxed space-y-2">
+            {stepContents[activeStep].split('\n').filter(l => l.trim()).map((para, pi) => (
+              <p key={pi}>{para}</p>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function PageContent({ content, lang }: { content: string; lang: string }) {
   const lines = content.split("\n");
   const elements: React.ReactNode[] = [];
@@ -476,23 +525,7 @@ export default function PageContent({ content, lang }: { content: string; lang: 
       const stepper = detectStepperSequence(lines, i);
       if (stepper) {
         elements.push(
-          <div key={`stepper-${i}`} className="my-6 flex items-center justify-center gap-0 overflow-x-auto py-2">
-            {stepper.steps.map((step, idx) => (
-              <div key={idx} className="flex items-center">
-                <div className="flex flex-col items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white ${
-                    idx === 0 ? 'bg-[#c75b3a]' : 'bg-gray-300 dark:bg-gray-600'
-                  }`}>
-                    {idx + 1}
-                  </div>
-                  <span className="text-xs text-gray-600 dark:text-muted-foreground mt-1.5 text-center max-w-[100px]">{step}</span>
-                </div>
-                {idx < stepper.steps.length - 1 && (
-                  <div className="w-8 h-0.5 bg-gray-300 dark:bg-gray-600 mx-1 mt-[-16px]" />
-                )}
-              </div>
-            ))}
-          </div>
+          <InteractiveStepper key={`stepper-${i}`} steps={stepper.steps} stepContents={stepper.stepContents} />
         );
         i = stepper.endIdx - 1;
         continue;

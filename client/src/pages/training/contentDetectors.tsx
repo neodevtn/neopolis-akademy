@@ -132,7 +132,14 @@ export function detectCalloutBoxes(lines: string[]): { label: string; text: stri
 }
 
 // Detect numbered step sequences: "1\nLabel\n2\nLabel\n3\nLabel..."
-export function detectStepperSequence(lines: string[], startIdx: number): { steps: string[]; endIdx: number } | null {
+// Also captures per-step content if the step labels appear again as headings after the stepper
+export interface StepperBlock {
+  steps: string[];
+  stepContents: string[]; // paragraph content for each step (may be empty)
+  endIdx: number;
+}
+
+export function detectStepperSequence(lines: string[], startIdx: number): StepperBlock | null {
   const steps: string[] = [];
   let i = startIdx;
   let expectedNum = 1;
@@ -158,10 +165,51 @@ export function detectStepperSequence(lines: string[], startIdx: number): { step
     }
   }
   
-  if (steps.length >= 3) {
-    return { steps, endIdx: i };
+  if (steps.length < 3) return null;
+
+  let endIdx = i;
+  const stepContents: string[] = new Array(steps.length).fill('');
+
+  // Try to find step content: look for the first step label repeated as a heading
+  // after the stepper strip. Only consume content if the first step label matches.
+  if (endIdx < lines.length && lines[endIdx].trim() === steps[0]) {
+    // Found the first step heading — now extract content for each step
+    let cursor = endIdx;
+    for (let s = 0; s < steps.length; s++) {
+      // Current line should be the step heading
+      if (cursor < lines.length && lines[cursor].trim() === steps[s]) {
+        cursor++; // skip the heading line
+        // Skip empty lines after heading
+        while (cursor < lines.length && lines[cursor].trim() === '') cursor++;
+        // Collect paragraphs until we hit the next step heading or a new section
+        const contentLines: string[] = [];
+        while (cursor < lines.length) {
+          const currentTrimmed = lines[cursor].trim();
+          // Stop if we hit the next step heading
+          if (s < steps.length - 1 && currentTrimmed === steps[s + 1]) break;
+          // Stop if we hit a line that looks like a new major section heading
+          // (short line, starts with capital, preceded by empty line, not part of a paragraph)
+          if (contentLines.length > 0 && currentTrimmed.length > 0 && currentTrimmed.length <= 60 &&
+              /^[A-Z]/.test(currentTrimmed) && !currentTrimmed.endsWith('.') &&
+              !currentTrimmed.endsWith(',') && cursor > 0 && lines[cursor - 1].trim() === '' &&
+              s === steps.length - 1) {
+            // For the last step, stop at what looks like a new section
+            break;
+          }
+          contentLines.push(lines[cursor]);
+          cursor++;
+        }
+        // Trim trailing empty lines
+        while (contentLines.length > 0 && contentLines[contentLines.length - 1].trim() === '') {
+          contentLines.pop();
+        }
+        stepContents[s] = contentLines.join('\n').trim();
+      }
+    }
+    endIdx = cursor;
   }
-  return null;
+
+  return { steps, stepContents, endIdx };
 }
 
 // Detect inline tabbed content pattern:

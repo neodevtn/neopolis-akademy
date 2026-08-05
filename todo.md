@@ -1243,3 +1243,8 @@
 - [x] Afficher les erreurs dans un tableau (colonnes: date, type, message, URL, actions)
 - [x] Ajouter un bouton Supprimer par ligne pour permettre à l'admin de marquer comme résolu
 - [x] Persister la suppression côté serveur (endpoint tRPC)
+
+## Bug: Stepper interactif non cliquable
+- [x] Rendre les étapes numérotées (cercles 1-6) cliquables dans les cours
+- [x] Afficher le contenu de l'étape sélectionnée sous le stepper
+- [x] Mettre en surbrillance l'étape active
