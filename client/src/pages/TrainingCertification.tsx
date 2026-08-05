@@ -210,21 +210,26 @@ export default function TrainingCertification() {
               {cert.courseCount} {t({ en: "courses", fr: "cours" })}
             </span>
             <span className="flex items-center gap-1.5">
-              {cert.totalExercises} {t({ en: "exercises", fr: "exercices" })}
+              {cert.totalExercises} {(cert as any).exerciseLabel ? t((cert as any).exerciseLabel) : t({ en: "exercises", fr: "exercices" })}
             </span>
             {cert.totalVideos > 0 && (
               <span className="flex items-center gap-1.5">
                 <PlayCircle className="w-4 h-4" />
-                {cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}
+                {cert.totalVideos} {t({ en: "videos", fr: "vid\u00e9os" })}
               </span>
             )}
             {cert.totalDownloads > 0 && (
               <span className="flex items-center gap-1.5">
                 <Download className="w-4 h-4" />
-                {cert.totalDownloads} {t({ en: "downloads", fr: "téléchargements" })}
+                {cert.totalDownloads} {t({ en: "downloads", fr: "t\u00e9l\u00e9chargements" })}
               </span>
             )}
           </div>
+          {(cert as any).breakdown && (
+            <p className="text-xs text-muted-foreground mt-2">
+              {t((cert as any).breakdown)}
+            </p>
+          )}
         </motion.div>
 
         {/* Certificate Download */}
@@ -378,7 +383,7 @@ export default function TrainingCertification() {
                     <Target className="w-4 h-4 text-orange-600 dark:text-orange-400" />
                   </div>
                   <div className="text-lg font-bold text-foreground">{totalExercises}</div>
-                  <div className="text-[11px] text-muted-foreground mt-0.5">{t({ en: "Exercises", fr: "Exercices" })}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">{(cert as any).exerciseLabel ? t((cert as any).exerciseLabel) : t({ en: "Exercises", fr: "Exercices" })}</div>
                 </div>
                 <div className="bg-card rounded-xl border border-border p-4 text-center">
                   <div className="w-9 h-9 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-2">
@@ -455,7 +460,19 @@ export default function TrainingCertification() {
                           </span>
                           {course.exerciseCount > 0 && (
                             <span className="flex items-center gap-1">
-                              {course.exerciseCount} {t({ en: "exercises", fr: "exercices" })}
+                              {course.exerciseCount} {(course as any).exerciseLabel ? t((course as any).exerciseLabel) : t({ en: "exercises", fr: "exercices" })}
+                            </span>
+                          )}
+                          {((course.videos && course.videos.length > 0) || (course as any).videoCount > 0) && (
+                            <span className="flex items-center gap-1">
+                              <PlayCircle className="w-3 h-3" />
+                              {(course as any).videoCount || course.videos?.length || 0} {t({ en: "videos", fr: "vidéos" })}
+                            </span>
+                          )}
+                          {(course as any).downloadCount > 0 && (
+                            <span className="flex items-center gap-1">
+                              <Download className="w-3 h-3" />
+                              {(course as any).downloadCount} {t({ en: "downloads", fr: "téléchargements" })}
                             </span>
                           )}
                         </div>
@@ -493,13 +510,13 @@ export default function TrainingCertification() {
                         </span>
                         {course.exerciseCount > 0 && (
                           <span className="flex items-center gap-1">
-                            {course.exerciseCount} {t({ en: "exercises", fr: "exercices" })}
+                            {course.exerciseCount} {(course as any).exerciseLabel ? t((course as any).exerciseLabel) : t({ en: "exercises", fr: "exercices" })}
                           </span>
                         )}
-                        {course.videos && course.videos.length > 0 && (
+                        {((course.videos && course.videos.length > 0) || (course as any).videoCount > 0) && (
                           <span className="flex items-center gap-1">
                             <PlayCircle className="w-3 h-3" />
-                            {course.videos.length} {t({ en: "videos", fr: "vidéos" })}
+                            {(course as any).videoCount || course.videos?.length || 0} {t({ en: "videos", fr: "vid\u00e9os" })}
                           </span>
                         )}
                         {(course as any).downloadCount > 0 && (

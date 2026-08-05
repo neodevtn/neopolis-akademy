@@ -1292,8 +1292,14 @@
 - [x] Re-auditer production activité 2/9 → vérifié OK (4 steps détaillés, 2 bullets propres, aucun tag XML visible)
 
 ## Audit médias production — 2 vidéos sans MP4
-- [ ] Upload 2 MP3 (ch03_ex08 + ch03_ex12) via manus-upload-file --webdev
-- [ ] Mettre à jour le JSON avec audioUrl pour ces 2 blocs
-- [ ] Adapter le composant vidéo pour afficher lecteur audio + transcript + slides quand audioUrl existe et mp4Url absent
-- [ ] Audit HTTP de tous les liens /manus-storage (8 MP4 + 2 MP3 + 3 PDF + 1 PNG = 14 liens)
-- [ ] Tableau d'audit dans le rapport final
+- [x] Upload 2 MP3 (ch03_ex08 + ch03_ex12) via manus-upload-file --webdev
+- [x] Mettre à jour le JSON avec audioUrl pour ces 2 blocs
+- [x] Adapter le composant vidéo pour afficher lecteur audio + transcript + slides quand audioUrl existe et mp4Url absent
+- [x] Audit HTTP de tous les liens /manus-storage (8 MP4 + 2 MP3 + 3 PDF + 1 PNG = 14 liens) → 14/14 HTTP 200
+- [x] Tableau d'audit dans le rapport final
+
+## Correction compteurs fiche cours n8n
+- [x] Remplacer "22 exercices" par "32 activités" dans trainingIndex.json
+- [x] Ajouter breakdown visible sur la fiche: 10 vidéos · 17 TP pratiques · 3 tris interactifs · 2 QCM · 3 téléchargements
+- [x] Carte cours: 3 chapitres · 32 activités · 10 vidéos · 3 téléchargements
+- [ ] Vérifier la fiche publique après publication

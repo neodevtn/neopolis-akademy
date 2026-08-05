@@ -150,7 +150,7 @@ export default function TrainingDashboard() {
       const totalLessonsMap: Record<string, number> = {};
       courses.forEach((c) => { totalLessonsMap[c.id] = c.lessonCount || 1; });
       const progressPct = getCertProgress(courseIds, totalLessonsMap);
-      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, courseCount: cert.courseCount, totalExercises: cert.totalExercises, totalVideos: cert.totalVideos, totalDownloads: (cert as any).totalDownloads || 0, progress: progressPct, completed: progressPct >= 100, group: (cert as any).group };
+      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, courseCount: cert.courseCount, totalExercises: cert.totalExercises, totalVideos: cert.totalVideos, totalDownloads: (cert as any).totalDownloads || 0, exerciseLabel: (cert as any).exerciseLabel, breakdown: (cert as any).breakdown, progress: progressPct, completed: progressPct >= 100, group: (cert as any).group };
     });
   }, [getCertProgress]);
 
@@ -677,7 +677,7 @@ function CatalogTab({
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-2 leading-relaxed">{t(cert.description)}</p>
                 <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
                   <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" />{cert.courseCount} {t({ en: "courses", fr: "cours" })}</span>
-                  <span className="flex items-center gap-1"><Dumbbell className="w-3.5 h-3.5" />{cert.totalExercises} {t({ en: "exercises", fr: "exercices" })}</span>
+                  <span className="flex items-center gap-1"><Dumbbell className="w-3.5 h-3.5" />{cert.totalExercises} {(cert as any).exerciseLabel ? t((cert as any).exerciseLabel) : t({ en: "exercises", fr: "exercices" })}</span>
                   {cert.totalVideos > 0 && <span className="flex items-center gap-1"><Play className="w-3.5 h-3.5" />{cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}</span>}
                 </div>
                 <div className="flex items-center gap-3">
