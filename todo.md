@@ -1283,4 +1283,10 @@
 - [x] Construire les 2 QCM interactifs avec corrections masquées
 - [x] Enregistrer le cours dans l'index certifications (catégorie BI)
 - [x] Tester le rendu et déployer
-- [ ] Rapport de vérification avec compteurs
+- [x] Rapport de vérification avec compteurs
+
+## Correction TP n8n — Audit apprenant
+- [x] Étapes TP vides (affichent "1 2 3 4" sans texte) → fix: lecture du champ instructions_text des steps
+- [x] Critères d'évaluation bruts (<exercise_objective>, <grading_rules>, PASS/FAIL) visibles → fix: extractLearnerObjectives() parse required_elements en bullets propres
+- [x] Appliquer à tous les 17 TP/labs → fix global via composant CloudExerciseBlock
+- [x] Re-auditer production activité 2/9 → vérifié OK (4 steps détaillés, 2 bullets propres, aucun tag XML visible)

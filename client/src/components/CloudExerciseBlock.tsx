@@ -2,6 +2,49 @@ import React, { useState } from "react";
 import { Timer, CheckCircle2, ChevronDown } from "lucide-react";
 import PageContent from "@/pages/training/PageContent";
 
+/**
+ * Extract learner-friendly objectives from the raw grading prompt.
+ * Strips XML tags like <exercise_objective>, <required_elements>, <grading_rules>, PASS/FAIL etc.
+ * Returns 3-5 clean bullets for the learner.
+ */
+function extractLearnerObjectives(prompt: string): string[] {
+  const bullets: string[] = [];
+  
+  // Extract required_elements content
+  const reqMatch = prompt.match(/<required_elements>([\s\S]*?)<\/required_elements>/);
+  if (reqMatch) {
+    const lines = reqMatch[1].trim().split('\n').filter(l => l.trim());
+    for (const line of lines) {
+      const cleaned = line.replace(/^\d+[).]\s*/, '').trim();
+      if (cleaned && cleaned.length > 5 && !cleaned.includes('PASS') && !cleaned.includes('FAIL')) {
+        bullets.push(cleaned);
+      }
+    }
+  }
+  
+  // If no required_elements, try exercise_objective
+  if (bullets.length === 0) {
+    const objMatch = prompt.match(/<exercise_objective>([\s\S]*?)<\/exercise_objective>/);
+    if (objMatch) {
+      const text = objMatch[1].trim();
+      // Split into sentences
+      const sentences = text.split(/\.\s+/).filter(s => s.trim().length > 10);
+      for (const s of sentences.slice(0, 4)) {
+        bullets.push(s.trim().replace(/\.$/, '') + '.');
+      }
+    }
+  }
+  
+  // Fallback: if still empty but prompt has content without XML tags
+  if (bullets.length === 0 && !prompt.includes('<exercise_objective>') && !prompt.includes('<grading_rules>')) {
+    // It's a plain text prompt - show it as-is (max 3 lines)
+    const lines = prompt.trim().split('\n').filter(l => l.trim()).slice(0, 3);
+    bullets.push(...lines);
+  }
+  
+  return bullets.slice(0, 5);
+}
+
 interface CloudExerciseBlockProps {
   block: any;
   lang: string;
@@ -58,24 +101,40 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx }: CloudExerciseBl
         {tpSteps.length > 0 && (
           <div className="space-y-2">
             <p className="font-semibold text-sm text-foreground">{t({ en: 'Steps', fr: 'Étapes' })}</p>
-            {tpSteps.map((step: any, i: number) => (
-              <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold">{i + 1}</span>
-                <div className="text-sm text-foreground">
-                  <PageContent content={typeof step === 'string' ? step : (step.text || step.instruction || '')} lang={lang} />
+            {tpSteps.map((step: any, i: number) => {
+              const stepContent = typeof step === 'string' ? step : (step.instructions_text || step.instruction_text || step.text || step.instruction || '');
+              if (!stepContent) return null;
+              return (
+                <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold">{i + 1}</span>
+                  <div className="text-sm text-foreground whitespace-pre-wrap">
+                    <PageContent content={stepContent} lang={lang} />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
-        {/* Evaluation criteria */}
-        {tpPrompt && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-            <p className="font-semibold text-sm text-amber-800 mb-1">{t({ en: 'Evaluation criteria', fr: "Critères d'évaluation" })}</p>
-            <p className="text-sm text-amber-700">{tpPrompt}</p>
-          </div>
-        )}
+        {/* Evaluation criteria - transformed into learner-friendly rubric */}
+        {tpPrompt && (() => {
+          // Parse the raw grading prompt into learner-friendly bullets
+          const bullets = extractLearnerObjectives(tpPrompt);
+          if (bullets.length === 0) return null;
+          return (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <p className="font-semibold text-sm text-amber-800 mb-2">{t({ en: 'What your work should demonstrate', fr: 'Ce que votre travail doit montrer' })}</p>
+              <ul className="space-y-1">
+                {bullets.map((bullet: string, i: number) => (
+                  <li key={i} className="text-sm text-amber-700 flex items-start gap-2">
+                    <span className="text-amber-500 mt-0.5">•</span>
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })()}
 
         {/* Hint (collapsible) */}
         {tpHint && (
