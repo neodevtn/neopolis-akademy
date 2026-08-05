@@ -1248,3 +1248,10 @@
 - [x] Rendre les étapes numérotées (cercles 1-6) cliquables dans les cours
 - [x] Afficher le contenu de l'étape sélectionnée sous le stepper
 - [x] Mettre en surbrillance l'étape active
+
+## Amélioration rendu prompt exercices
+- [ ] Parser le prompt pour détecter les blocs System:/User:/Broken prompt/ticket
+- [ ] Afficher System: et User: dans des blocs code stylisés
+- [ ] Afficher le contenu <ticket>...</ticket> dans un encadré distinct
+- [ ] Séparer visuellement les consignes (texte normal) du contenu technique
+- [ ] Supprimer la duplication du titre dans le prompt quand il est identique au title

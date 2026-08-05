@@ -213,6 +213,127 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
     return field[lang] || field.en || '';
   };
 
+  // --- Smart prompt parser for structured rendering ---
+  const parsePromptParts = (rawPrompt: string, title: string) => {
+    type PromptPart =
+      | { type: 'heading'; text: string }
+      | { type: 'text'; text: string }
+      | { type: 'role'; role: string; content: string }
+      | { type: 'ticket'; content: string }
+      | { type: 'code'; content: string };
+
+    const parts: PromptPart[] = [];
+    if (!rawPrompt) return parts;
+
+    // Remove title duplication at the start of prompt
+    let prompt = rawPrompt;
+    if (title && prompt.startsWith(title)) {
+      prompt = prompt.slice(title.length).replace(/^\n+/, '');
+    }
+
+    // Split by lines for processing
+    const lines = prompt.split('\n');
+    let currentText = '';
+    let i = 0;
+
+    const flushText = () => {
+      if (currentText.trim()) {
+        parts.push({ type: 'text', text: currentText.trim() });
+      }
+      currentText = '';
+    };
+
+    while (i < lines.length) {
+      const line = lines[i];
+
+      // Detect headings like "Broken prompt" / "Prompt cassé" / "Checkpoint N · ..."
+      if (/^(Broken prompt|Prompt cassé|Checkpoint \d+)/i.test(line.trim()) && line.trim().length < 80) {
+        flushText();
+        parts.push({ type: 'heading', text: line.trim() });
+        i++;
+        continue;
+      }
+
+      // Detect System: "..." or Système : "..."
+      const systemMatch = line.match(/^(System|Système|Syst[eè]me)\s*:\s*(.*)$/i);
+      if (systemMatch) {
+        flushText();
+        let content = systemMatch[2];
+        // Collect multi-line content (quoted or until next role)
+        while (i + 1 < lines.length && !lines[i + 1].match(/^(User|Utilisateur|Human|Assistant|System)\s*:/i) && !lines[i + 1].match(/^(Broken prompt|Prompt cassé)/i)) {
+          i++;
+          content += '\n' + lines[i];
+        }
+        parts.push({ type: 'role', role: 'System', content: content.replace(/^"|"$/g, '').trim() });
+        i++;
+        continue;
+      }
+
+      // Detect User: ... or Utilisateur : ...
+      const userMatch = line.match(/^(User|Utilisateur)\s*:\s*(.*)$/i);
+      if (userMatch) {
+        flushText();
+        let content = userMatch[2];
+        // Collect multi-line content
+        while (i + 1 < lines.length && !lines[i + 1].match(/^(User|Utilisateur|Human|Assistant|System|Système)\s*:/i) && !lines[i + 1].match(/^(Broken prompt|Prompt cassé)/i)) {
+          i++;
+          content += '\n' + lines[i];
+        }
+        // Check for ticket tags within the content
+        const ticketMatch = content.match(/<ticket>([\s\S]*?)<\/ticket>/);
+        if (ticketMatch) {
+          const beforeTicket = content.slice(0, content.indexOf('<ticket>')).trim();
+          const afterTicket = content.slice(content.indexOf('</ticket>') + 9).trim();
+          if (beforeTicket) {
+            parts.push({ type: 'role', role: 'User', content: beforeTicket });
+          }
+          parts.push({ type: 'ticket', content: ticketMatch[1].trim() });
+          if (afterTicket) {
+            parts.push({ type: 'text', text: afterTicket });
+          }
+        } else {
+          parts.push({ type: 'role', role: 'User', content: content.trim() });
+        }
+        i++;
+        continue;
+      }
+
+      // Detect standalone <ticket>...</ticket>
+      const standaloneTicket = line.match(/<ticket>([\s\S]*?)<\/ticket>/);
+      if (standaloneTicket) {
+        flushText();
+        parts.push({ type: 'ticket', content: standaloneTicket[1].trim() });
+        i++;
+        continue;
+      }
+
+      // Detect code blocks (```...```)
+      if (line.trim().startsWith('```')) {
+        flushText();
+        let codeContent = '';
+        i++;
+        while (i < lines.length && !lines[i].trim().startsWith('```')) {
+          codeContent += lines[i] + '\n';
+          i++;
+        }
+        parts.push({ type: 'code', content: codeContent.trimEnd() });
+        i++;
+        continue;
+      }
+
+      // Regular text
+      currentText += (currentText ? '\n' : '') + line;
+      i++;
+    }
+    flushText();
+    return parts;
+  };
+
+  const promptParts = useMemo(
+    () => parsePromptParts(getText(exercise.prompt), getText(exercise.title)),
+    [exercise.prompt, exercise.title, lang]
+  );
+
   // --- Auto-save logic (debounced 1.5s) ---
   const performAutoSave = useCallback(() => {
     if (submitted) return;
@@ -423,9 +544,67 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
 
       {/* Body */}
       <div className="p-4 space-y-4">
-        {/* Prompt */}
-        <div className="prose prose-sm dark:prose-invert max-w-none">
-          <p className="whitespace-pre-wrap text-sm leading-relaxed">{getText(exercise.prompt)}</p>
+        {/* Prompt - Smart structured rendering */}
+        <div className="space-y-3">
+          {promptParts.length > 0 ? (
+            promptParts.map((part, pi) => {
+              switch (part.type) {
+                case 'heading':
+                  return (
+                    <h4 key={pi} className="text-sm font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-100 dark:border-gray-700 pb-1">
+                      {part.text}
+                    </h4>
+                  );
+                case 'text':
+                  return (
+                    <p key={pi} className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                      {part.text}
+                    </p>
+                  );
+                case 'role':
+                  return (
+                    <div key={pi} className="rounded-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+                      <div className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                        <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                          {part.role}
+                        </span>
+                      </div>
+                      <div className="px-3 py-2 bg-gray-50 dark:bg-gray-900">
+                        <p className="text-sm font-mono whitespace-pre-wrap text-gray-700 dark:text-gray-300 leading-relaxed">
+                          {part.content}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                case 'ticket':
+                  return (
+                    <div key={pi} className="rounded-md border-l-4 border-l-amber-400 border border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20 px-4 py-3">
+                      <div className="flex items-center gap-1.5 mb-1.5">
+                        <svg className="w-3.5 h-3.5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                        </svg>
+                        <span className="text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Ticket</span>
+                      </div>
+                      <p className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed">
+                        {part.content}
+                      </p>
+                    </div>
+                  );
+                case 'code':
+                  return (
+                    <pre key={pi} className="rounded-md bg-zinc-900 text-zinc-100 p-3 text-xs font-mono overflow-x-auto">
+                      <code>{part.content}</code>
+                    </pre>
+                  );
+                default:
+                  return null;
+              }
+            })
+          ) : (
+            <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              {getText(exercise.prompt)}
+            </p>
+          )}
         </div>
 
         {/* Instructions */}
