@@ -60,7 +60,7 @@ export const systemRouter = router({
       z.object({
         message: z.string().max(500),
         stack: z.string().max(2000).optional().default(""),
-        source: z.enum(["window", "promise", "boundary", "manual"]),
+        source: z.enum(["window", "promise", "boundary", "manual", "react_critical"]),
         url: z.string().max(500),
         timestamp: z.number(),
         componentStack: z.string().max(1000).optional().default(""),
@@ -93,7 +93,7 @@ export const systemRouter = router({
         await db.insert(clientErrors).values({
           message: input.message,
           stack: input.stack || null,
-          source: input.source,
+          source: input.source as "window" | "promise" | "boundary" | "manual" | "react_critical",
           url: input.url,
           componentStack: input.componentStack || null,
           clientTimestamp: new Date(input.timestamp),
@@ -110,11 +110,18 @@ export const systemRouter = router({
       );
 
       // For critical errors (ErrorBoundary crashes), notify owner
-      if (input.source === "boundary") {
+      if (input.source === "boundary" || input.source === "react_critical") {
+        const isCritical = input.source === "react_critical";
+        const title = isCritical
+          ? `🚨 Erreur React critique détectée`
+          : `⚠️ Crash client détecté`;
+        const content = isCritical
+          ? `Type: ${input.message.startsWith('[') ? input.message.split(']')[0].slice(1) : 'React Critical'}\nURL: ${input.url}\nMessage: ${input.message}\n\nConseils:\n- Duplicate key → vérifier les IDs de chapitres dans les JSON de cours (pnpm validate-courses)\n- Hooks order → vérifier les hooks conditionnels (pnpm lint)`
+          : `Source: ErrorBoundary\nURL: ${input.url}\nMessage: ${input.message}\nStack: ${(input.stack || "").slice(0, 500)}`;
         try {
           await notifyOwner({
-            title: `⚠️ Crash client détecté`,
-            content: `Source: ErrorBoundary\nURL: ${input.url}\nMessage: ${input.message}\nStack: ${(input.stack || "").slice(0, 500)}`,
+            title,
+            content,
           });
         } catch {
           // Best effort

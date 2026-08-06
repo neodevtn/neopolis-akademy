@@ -317,7 +317,7 @@ export const clientErrors = mysqlTable("client_errors", {
   id: int("id").autoincrement().primaryKey(),
   message: varchar("message", { length: 500 }).notNull(),
   stack: text("stack"),
-  source: mysqlEnum("source", ["window", "promise", "boundary", "manual"]).notNull(),
+  source: mysqlEnum("source", ["window", "promise", "boundary", "manual", "react_critical"]).notNull(),
   url: varchar("url", { length: 500 }).notNull(),
   componentStack: text("componentStack"),
   clientTimestamp: timestamp("clientTimestamp").notNull(),

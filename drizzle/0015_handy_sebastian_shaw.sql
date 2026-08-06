@@ -1,0 +1,1 @@
+ALTER TABLE `client_errors` MODIFY COLUMN `source` enum('window','promise','boundary','manual','react_critical') NOT NULL;
