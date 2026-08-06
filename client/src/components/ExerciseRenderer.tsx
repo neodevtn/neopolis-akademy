@@ -1,4 +1,101 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import React from 'react';
+// Lightweight Markdown renderer for corrections/sampleAnswer
+function renderMarkdownText(text: string): React.ReactNode[] {
+  const lines = text.split('\n');
+  const elements: React.ReactNode[] = [];
+  let i = 0;
+  let key = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Code block
+    if (line.trim().startsWith('```')) {
+      let code = '';
+      i++;
+      while (i < lines.length && !lines[i].trim().startsWith('```')) {
+        code += lines[i] + '\n';
+        i++;
+      }
+      elements.push(
+        <pre key={key++} className="bg-zinc-900 text-zinc-100 rounded p-2 text-xs font-mono overflow-x-auto my-1.5">
+          <code>{code.trimEnd()}</code>
+        </pre>
+      );
+      i++;
+      continue;
+    }
+
+    // Heading ##
+    if (/^#{1,3}\s/.test(line)) {
+      const text = line.replace(/^#{1,3}\s/, '');
+      elements.push(<p key={key++} className="text-sm font-semibold mt-2 mb-0.5">{text}</p>);
+      i++;
+      continue;
+    }
+
+    // Bullet list
+    if (/^[-*•]\s/.test(line.trim())) {
+      const items: string[] = [];
+      while (i < lines.length && /^[-*•]\s/.test(lines[i].trim())) {
+        items.push(lines[i].trim().replace(/^[-*•]\s/, ''));
+        i++;
+      }
+      elements.push(
+        <ul key={key++} className="list-disc pl-4 space-y-0.5 my-1">
+          {items.map((item, idx) => (
+            <li key={idx} className="text-sm">{renderInlineMd(item)}</li>
+          ))}
+        </ul>
+      );
+      continue;
+    }
+
+    // Numbered list
+    if (/^\d+\.\s/.test(line.trim())) {
+      const items: string[] = [];
+      while (i < lines.length && /^\d+\.\s/.test(lines[i].trim())) {
+        items.push(lines[i].trim().replace(/^\d+\.\s/, ''));
+        i++;
+      }
+      elements.push(
+        <ol key={key++} className="list-decimal pl-4 space-y-0.5 my-1">
+          {items.map((item, idx) => (
+            <li key={idx} className="text-sm">{renderInlineMd(item)}</li>
+          ))}
+        </ol>
+      );
+      continue;
+    }
+
+    // Empty line
+    if (!line.trim()) {
+      i++;
+      continue;
+    }
+
+    // Regular paragraph
+    elements.push(<p key={key++} className="text-sm leading-relaxed">{renderInlineMd(line)}</p>);
+    i++;
+  }
+  return elements;
+}
+
+function renderInlineMd(text: string): React.ReactNode {
+  // Bold **text** and inline code `code`
+  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith('`') && part.endsWith('`')) {
+      return <code key={i} className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded text-xs font-mono">{part.slice(1, -1)}</code>;
+    }
+    return part;
+  });
+}
+
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
@@ -566,26 +663,57 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
     );
   };
 
+
+  const TYPE_BADGE_COLORS: Record<string, string> = {
+    free_text: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800',
+    scenario: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/20 dark:text-purple-300 dark:border-purple-800',
+    single_choice: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800',
+    multi_choice: 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/20 dark:text-orange-300 dark:border-orange-800',
+    code: 'bg-zinc-100 text-zinc-700 border-zinc-300 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700',
+    checklist: 'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-900/20 dark:text-teal-300 dark:border-teal-800',
+  };
+
+  const TYPE_BADGE_LABELS_FR: Record<string, string> = {
+    free_text: 'Réponse libre',
+    scenario: 'Analyse de scénario',
+    single_choice: 'Choix unique',
+    multi_choice: 'Choix multiple',
+    code: 'Code',
+    checklist: 'Liste de vérification',
+  };
+
+  const typeBadgeColor = TYPE_BADGE_COLORS[interactionType] || TYPE_BADGE_COLORS.free_text;
+  const typeBadgeLabel = lang === 'fr'
+    ? (TYPE_BADGE_LABELS_FR[interactionType] || 'Réponse libre')
+    : (TYPE_LABELS[interactionType]?.[lang] || 'Written Response');
+
   return (
-    <div className="my-6 rounded-lg border border-gray-200 overflow-hidden">
-      {/* Header - Skilljar style: Exercise · Title */}
-      <div className="px-5 py-3 bg-[#f8f8f6] border-b border-gray-200 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#c75b3a]">
-            Exercise
+    <div className="my-6 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">
+      {/* Header - Exercise type badge + title */}
+      <div className="px-4 py-2.5 bg-[#f8f8f6] dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 min-w-0 flex-wrap">
+          {/* Type badge with icon */}
+          <span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded border ${typeBadgeColor}`}>
+            <TypeIcon className="w-3 h-3" />
+            {typeBadgeLabel}
           </span>
           {getText(exercise.title) && (
             <>
-              <span className="text-gray-300">·</span>
-              <span className="text-sm font-medium text-gray-700" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+              <span className="text-gray-300 dark:text-gray-600">·</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate" style={{ fontFamily: 'Lora, Georgia, serif' }}>
                 {getText(exercise.title)}
               </span>
             </>
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
+          {exercise.difficulty && (
+            <span className={`text-[10px] px-2 py-0.5 rounded-full border font-medium ${DIFFICULTY_COLORS[exercise.difficulty] || ''}`}>
+              {DIFFICULTY_LABELS[exercise.difficulty]?.[lang] || exercise.difficulty}
+            </span>
+          )}
           {submitted && (
-            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">
+            <span className="text-xs font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded border border-green-200 dark:border-green-800">
               {lang === 'fr' ? '✓ Soumis' : '✓ Submitted'}
             </span>
           )}
@@ -906,7 +1034,9 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
                 <p className="text-xs font-semibold text-green-700 dark:text-green-400 mb-1">
                   {lang === 'fr' ? 'Correction' : 'Correction'}
                 </p>
-                <p className="text-sm whitespace-pre-wrap">{getText(exercise.correction)}</p>
+                <div className="text-sm text-gray-800 dark:text-gray-200 space-y-1">
+                  {renderMarkdownText(getText(exercise.correction))}
+                </div>
               </div>
             )}
 
@@ -916,7 +1046,9 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
                 <p className="text-xs font-semibold text-blue-700 dark:text-blue-400 mb-1">
                   {lang === 'fr' ? 'Réponse modèle' : 'Sample Answer'}
                 </p>
-                <p className="text-sm whitespace-pre-wrap">{getText(exercise.sampleAnswer)}</p>
+                <div className="text-sm text-gray-800 dark:text-gray-200 space-y-1">
+                  {renderMarkdownText(getText(exercise.sampleAnswer))}
+                </div>
               </div>
             )}
 
