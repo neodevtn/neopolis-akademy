@@ -246,6 +246,27 @@ export default function LessonViewer({
           }
         }
         if (!text.trim()) return null;
+        // If this content block precedes a cloud_exercise AND contains setup instructions,
+        // render it as a collapsible <details> to keep the TP zone closer to the top
+        const nextBlock = (chapter?.blocks || [])[blockIdx + 1];
+        const isSetupBeforeTP = nextBlock?.type === 'cloud_exercise' && (
+          text.includes('Option A') || text.includes('Option B') || text.includes('environnement') || text.includes('Préparation')
+        );
+        if (isSetupBeforeTP) {
+          // Extract the first heading as summary label
+          const headingMatch = text.match(/^#{1,3}\s+(.+)/m);
+          const summaryLabel = headingMatch ? headingMatch[1].trim() : (lang === 'fr' ? 'Préparation de l\'environnement' : 'Environment Setup');
+          return (
+            <details key={blockIdx} className="border border-border rounded-lg bg-muted/30 my-2">
+              <summary className="px-4 py-3 cursor-pointer text-sm font-semibold text-foreground hover:bg-muted/50 rounded-lg">
+                📋 {summaryLabel}
+              </summary>
+              <div className="px-4 pb-4 text-sm prose prose-sm max-w-none text-muted-foreground">
+                <PageContent content={text} lang={lang} />
+              </div>
+            </details>
+          );
+        }
         return (
           <div key={blockIdx} className="py-1">
             <PageContent content={text} lang={lang} />
