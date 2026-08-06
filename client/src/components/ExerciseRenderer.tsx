@@ -918,13 +918,44 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
           <div className="space-y-3">
             {/* Show user's answer */}
             {(interactionType === 'free_text' || interactionType === 'scenario' || interactionType === 'code') && (
-              <div className="bg-muted/30 rounded-md p-3 border border-border/50">
-                <p className="text-xs font-medium text-muted-foreground mb-1">
+              <div className="space-y-2">
+                <p className="text-xs font-medium text-muted-foreground">
                   {lang === 'fr' ? 'Votre réponse :' : 'Your answer:'}
                 </p>
-                <p className={`text-sm whitespace-pre-wrap ${interactionType === 'code' ? 'font-mono' : ''}`}>
-                  {userAnswer}
-                </p>
+                {interactionType === 'code' ? (
+                  <Textarea
+                    value={userAnswer}
+                    onChange={(e) => setUserAnswer(e.target.value)}
+                    placeholder={`// ${lang === 'fr' ? 'Écrivez votre code ici...' : 'Write your code here...'}`}
+                    className="min-h-[160px] font-mono text-sm bg-zinc-950 text-zinc-100 dark:bg-zinc-900"
+                  />
+                ) : (
+                  <Textarea
+                    value={userAnswer}
+                    onChange={(e) => setUserAnswer(e.target.value)}
+                    placeholder={lang === 'fr' ? 'Écrivez votre réponse ici...' : 'Write your answer here...'}
+                    className="min-h-[120px] text-sm"
+                  />
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">
+                    {userAnswer.trim().split(/\s+/).filter(Boolean).length} {lang === 'fr' ? 'mots' : 'words'}
+                  </span>
+                  <Button
+                    onClick={() => {
+                      const answer = userAnswer;
+                      saveAttempt(exercise.id, answer, Array.from(selectedOptions));
+                      if (onComplete) onComplete(exercise.id, answer);
+                    }}
+                    disabled={!userAnswer.trim()}
+                    size="sm"
+                    variant="outline"
+                    className="gap-1.5 text-xs"
+                  >
+                    <Send className="h-3 w-3" />
+                    {lang === 'fr' ? 'Mettre à jour' : 'Update answer'}
+                  </Button>
+                </div>
               </div>
             )}
 
