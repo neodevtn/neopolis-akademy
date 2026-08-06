@@ -24,6 +24,7 @@ import {
   Clock, CheckCircle2, AlertTriangle, RefreshCw, Edit2, Send,
   UserCog,
 } from "lucide-react";
+import { FileText, Video, BookMarked, XCircle, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import trainingIndex from "@/data/trainingIndex.json";
@@ -68,6 +69,11 @@ export default function AdminTraining() {
   );
 
   const invitationsQuery = trpc.admin.getInvitations.useQuery(
+    { page: 1, pageSize: 50 },
+    { enabled: isAuthenticated && user?.role === "admin" && activeTab === "invitations" }
+  );
+
+  const directInvitationsQuery = trpc.admin.getDirectInvitations.useQuery(
     { page: 1, pageSize: 50 },
     { enabled: isAuthenticated && user?.role === "admin" && activeTab === "invitations" }
   );
@@ -134,6 +140,14 @@ export default function AdminTraining() {
         toast.error(data.error || "Échec de l'envoi");
       }
       selectedCandidatesQuery.refetch();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const cancelInvitationMutation = trpc.admin.cancelInvitation.useMutation({
+    onSuccess: () => {
+      toast.success("Invitation annulée");
+      directInvitationsQuery.refetch();
     },
     onError: (err) => toast.error(err.message),
   });
@@ -209,10 +223,15 @@ export default function AdminTraining() {
     }
   };
 
-  // Detail view for a specific learner
+  // Detail view for a specific learner — enriched
   if (selectedUserId && detailQuery.data) {
     const detail = detailQuery.data;
     const selectedLearner = learners?.users.find((u: any) => u.id === selectedUserId);
+    const viaCandidature = (detail as any).viaCandidature ?? selectedLearner?.viaCandidature ?? false;
+    const chapterProg = (detail as any).chapterProgress ?? [];
+    const videoProg = (detail as any).videoProgress ?? [];
+    const totalChaptersDone = chapterProg.length;
+    const totalVideosDone = videoProg.filter((v: any) => v.watched).length;
 
     // Group progress by certification
     const progressByCert: Record<string, { courseId: string; lessonIndex: number }[]> = {};
@@ -234,9 +253,20 @@ export default function AdminTraining() {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-bold text-foreground mb-1">
-                    {selectedLearner?.name || "Apprenant"}
+                    {selectedLearner?.name || (detail as any).userInfo?.name || "Apprenant"}
                   </h2>
-                  <p className="text-sm text-muted-foreground">{selectedLearner?.email || "—"}</p>
+                  <p className="text-sm text-muted-foreground">{selectedLearner?.email || (detail as any).userInfo?.email || "—"}</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    {viaCandidature ? (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium flex items-center gap-1">
+                        <FileText className="w-3 h-3" /> Via candidature
+                      </span>
+                    ) : (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-muted-foreground font-medium flex items-center gap-1">
+                        <Mail className="w-3 h-3" /> Via invitation directe
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   {selectedLearner?.blocked ? (
@@ -266,6 +296,26 @@ export default function AdminTraining() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
+              </div>
+            </div>
+
+            {/* Quick stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
+                <div className="text-2xl font-bold text-primary">{detail.progress.length}</div>
+                <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><BookOpen className="w-3 h-3" /> Leçons terminées</div>
+              </div>
+              <div className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
+                <div className="text-2xl font-bold text-primary">{totalChaptersDone}</div>
+                <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><BookMarked className="w-3 h-3" /> Chapitres validés</div>
+              </div>
+              <div className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
+                <div className="text-2xl font-bold text-primary">{totalVideosDone}</div>
+                <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><Video className="w-3 h-3" /> Vidéos vues</div>
+              </div>
+              <div className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
+                <div className="text-2xl font-bold text-primary">{detail.attempts.length}</div>
+                <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><Award className="w-3 h-3" /> Examens passés</div>
               </div>
             </div>
 
@@ -557,6 +607,17 @@ export default function AdminTraining() {
                             <TableCell className="text-sm text-muted-foreground">
                               {learner.lastSignedIn ? new Date(learner.lastSignedIn).toLocaleDateString("fr-FR") : "—"}
                             </TableCell>
+                            <TableCell>
+                              {learner.viaCandidature ? (
+                                <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium flex items-center gap-1 w-fit">
+                                  <FileText className="w-3 h-3" /> Candidature
+                                </span>
+                              ) : (
+                                <span className="text-xs px-2 py-1 rounded-full bg-secondary text-muted-foreground font-medium flex items-center gap-1 w-fit">
+                                  <Mail className="w-3 h-3" /> Invitation
+                                </span>
+                              )}
+                            </TableCell>
                             <TableCell className="text-right">
                               <div className="flex items-center justify-end gap-1" onClick={(e) => e.stopPropagation()}>
                                 <Button
@@ -618,20 +679,23 @@ export default function AdminTraining() {
               </div>
             </TabsContent>
 
-            {/* TAB: Invitations */}
+            {/* TAB: Invitations directes */}
             <TabsContent value="invitations">
+              <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl text-sm text-blue-700 dark:text-blue-300">
+                Cet onglet affiche uniquement les <strong>invitations directes</strong> (envoyées sans passer par une candidature). Les invitations liées à une candidature sont visibles dans l'onglet <strong>Candidats sélectionnés</strong>.
+              </div>
               <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
-                {invitationsQuery.isLoading ? (
+                {directInvitationsQuery.isLoading ? (
                   <div className="p-12 text-center">
                     <Loader2 className="w-6 h-6 animate-spin mx-auto text-primary mb-3" />
                     <p className="text-sm text-muted-foreground">Chargement des invitations...</p>
                   </div>
-                ) : !invitationsQuery.data || invitationsQuery.data.invitations.length === 0 ? (
+                ) : !directInvitationsQuery.data || directInvitationsQuery.data.invitations.length === 0 ? (
                   <div className="p-12 text-center">
                     <Mail className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-                    <p className="text-sm text-muted-foreground mb-4">Aucune invitation envoyée.</p>
+                    <p className="text-sm text-muted-foreground mb-4">Aucune invitation directe envoyée.</p>
                     <Button size="sm" className="gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => setInviteOpen(true)}>
-                      <UserPlus className="w-4 h-4" /> Envoyer la première invitation
+                      <UserPlus className="w-4 h-4" /> Envoyer une invitation
                     </Button>
                   </div>
                 ) : (
@@ -643,15 +707,17 @@ export default function AdminTraining() {
                         <TableHead>Statut</TableHead>
                         <TableHead>Expire le</TableHead>
                         <TableHead>Envoyée le</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {invitationsQuery.data.invitations.map((inv: any) => {
+                      {directInvitationsQuery.data.invitations.map((inv: any) => {
                         const isExpired = new Date(inv.expiresAt) < new Date();
-                        const statusLabel = inv.status === "accepted" ? "Acceptée" : isExpired ? "Expirée" : "En attente";
+                        const isCancellable = inv.status === "pending" && !isExpired;
+                        const statusLabel = inv.status === "accepted" ? "Acceptée" : inv.status === "expired" ? "Annulée" : isExpired ? "Expirée" : "En attente";
                         const statusClass = inv.status === "accepted"
                           ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
-                          : isExpired
+                          : inv.status === "expired" || isExpired
                             ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
                             : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400";
                         return (
@@ -669,6 +735,23 @@ export default function AdminTraining() {
                             <TableCell className="text-sm text-muted-foreground">
                               {new Date(inv.createdAt).toLocaleDateString("fr-FR")}
                             </TableCell>
+                            <TableCell className="text-right">
+                              {isCancellable && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="gap-1.5 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 border-red-200 dark:border-red-800"
+                                  disabled={cancelInvitationMutation.isPending}
+                                  onClick={() => {
+                                    if (confirm(`Annuler l'invitation envoyée à ${inv.email} ?`)) {
+                                      cancelInvitationMutation.mutate({ invitationId: inv.id });
+                                    }
+                                  }}
+                                >
+                                  <XCircle className="w-3.5 h-3.5" /> Annuler
+                                </Button>
+                              )}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -678,7 +761,7 @@ export default function AdminTraining() {
               </div>
             </TabsContent>
 
-            {/* TAB: Selected Candidates */}
+                        {/* TAB: Selected Candidates */}
             <TabsContent value="selected">
               <SelectedCandidatesPanel
                 data={selectedCandidatesQuery.data}

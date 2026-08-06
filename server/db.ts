@@ -1,4 +1,4 @@
-import { eq, desc, sql, and, count, gt } from "drizzle-orm";
+import { eq, desc, sql, and, count, gt, isNull, isNotNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -285,7 +285,22 @@ export async function getAllLearners(page: number = 1, pageSize: number = 20, se
   }
   const [{ total }] = await countQuery;
 
-  return { users: allUsers, total, page, pageSize };
+  // Enrich with viaCandidature: check if user email matches a candidature application
+  const emails = allUsers.map((u: any) => u.email).filter(Boolean);
+  let candidatureEmails = new Set<string>();
+  if (emails.length > 0) {
+    const selectedApps = await db.select({ email: applications.email })
+      .from(applications)
+      .where(sql`${applications.email} IN (${sql.join(emails.map((e: string) => sql`${e}`), sql`, `)})`);
+    candidatureEmails = new Set(selectedApps.map((a: any) => a.email));
+  }
+
+  const enriched = allUsers.map((u: any) => ({
+    ...u,
+    viaCandidature: candidatureEmails.has(u.email),
+  }));
+
+  return { users: enriched, total, page, pageSize };
 }
 
 export async function getLearnerProgress(userId: number) {
@@ -294,8 +309,18 @@ export async function getLearnerProgress(userId: number) {
 
   const progress = await db.select().from(trainingProgress).where(eq(trainingProgress.userId, userId));
   const attempts = await db.select().from(examAttempts).where(eq(examAttempts.userId, userId)).orderBy(desc(examAttempts.finishedAt));
+  const chapterProg = await db.select().from(chapterProgress).where(eq(chapterProgress.userId, userId));
+  const videoProg = await db.select().from(videoProgress).where(eq(videoProgress.userId, userId));
 
-  return { progress, attempts };
+  // Get user info for viaCandidature
+  const [userRow] = await db.select({ email: users.email, name: users.name, createdAt: users.createdAt, lastSignedIn: users.lastSignedIn, role: users.role }).from(users).where(eq(users.id, userId)).limit(1);
+  let viaCandidature = false;
+  if (userRow?.email) {
+    const [app] = await db.select({ id: applications.id }).from(applications).where(eq(applications.email, userRow.email)).limit(1);
+    viaCandidature = !!app;
+  }
+
+  return { progress, attempts, chapterProgress: chapterProg, videoProgress: videoProg, viaCandidature, userInfo: userRow || null };
 }
 
 export async function getAllLearnersStats() {
@@ -440,6 +465,30 @@ export async function getInvitations(page: number = 1, pageSize: number = 20) {
   const [{ total }] = await db.select({ total: count() }).from(userInvitations);
 
   return { invitations, total, page, pageSize };
+}
+export async function getDirectInvitations(page: number = 1, pageSize: number = 20) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const offset = (page - 1) * pageSize;
+  // Only invitations NOT linked to a candidature (applicationId IS NULL)
+  const invitations = await db.select().from(userInvitations)
+    .where(isNull(userInvitations.applicationId))
+    .orderBy(desc(userInvitations.createdAt))
+    .limit(pageSize).offset(offset);
+  const [{ total }] = await db.select({ total: count() }).from(userInvitations)
+    .where(isNull(userInvitations.applicationId));
+
+  return { invitations, total, page, pageSize };
+}
+
+export async function cancelInvitation(invitationId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(userInvitations)
+    .set({ status: "expired" })
+    .where(and(eq(userInvitations.id, invitationId), isNull(userInvitations.applicationId)));
+  return { success: true };
 }
 
 export async function getInvitationByToken(token: string) {
