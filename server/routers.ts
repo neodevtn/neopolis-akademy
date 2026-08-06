@@ -412,7 +412,54 @@ export const appRouter = router({
         totalChapters: z.number(),
       }))
       .mutation(async ({ ctx, input }) => {
-        return await upsertChapterProgress(ctx.user.id, input.courseId, input.lessonIndex, input.chapterIndex, input.totalChapters);
+      return await upsertChapterProgress(ctx.user.id, input.courseId, input.lessonIndex, input.chapterIndex, input.totalChapters);
+      }),
+    evaluateAnswer: protectedProcedure
+      .input(z.object({
+        answer: z.string(),
+        rubric: z.string(),
+        prompt: z.string(),
+        maxScore: z.number().default(10),
+        lang: z.string().default("en"),
+      }))
+      .mutation(async ({ input }) => {
+        const { invokeLLM } = await import("./_core/llm");
+        const systemPrompt = `You are an expert educator evaluating a student's answer. 
+Evaluate the answer based on the rubric provided. Return a JSON object with:
+- score: number (0 to ${input.maxScore})
+- feedback: string (2-3 sentences of overall feedback in ${input.lang === "fr" ? "French" : "English"})
+- strengths: string[] (1-3 bullet points of what was done well, in ${input.lang === "fr" ? "French" : "English"})
+- improvements: string[] (1-3 bullet points of what could be improved, in ${input.lang === "fr" ? "French" : "English"})
+
+Rubric: ${input.rubric}
+
+IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
+        const userMessage = `Question: ${input.prompt}\n\nStudent's answer: ${input.answer}`;
+        try {
+          const result = await invokeLLM({
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: userMessage },
+            ],
+            model: "claude-sonnet-4-20250514",
+            max_tokens: 1000,
+          });
+          const msg = result.choices?.[0]?.message;
+          const text = typeof msg?.content === "string" ? msg.content : Array.isArray(msg?.content) ? (msg.content.find((c: any) => c.type === "text") as any)?.text || "" : "";
+          const jsonMatch = text.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            return {
+              score: Math.min(input.maxScore, Math.max(0, parsed.score || 0)),
+              feedback: parsed.feedback || "",
+              strengths: parsed.strengths || [],
+              improvements: parsed.improvements || [],
+            };
+          }
+          return { score: 0, feedback: text.slice(0, 300), strengths: [] as string[], improvements: [] as string[] };
+        } catch (err: any) {
+          return { score: 0, feedback: `Evaluation error: ${err.message}`, strengths: [] as string[], improvements: [] as string[] };
+        }
       }),
   }),
 

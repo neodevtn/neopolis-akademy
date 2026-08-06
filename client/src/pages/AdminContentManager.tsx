@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import trainingIndex from "@/data/trainingIndex.json";
 import { AdminNavbar } from "@/components/AdminNavbar";
 
+import { BlockLibrary } from "@/components/admin/BlockLibrary";
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
 type ViewMode = "browse" | "course" | "quiz-simulate" | "exam-simulate" | "edit-course" | "edit-quiz" | "edit-exam";
@@ -301,27 +302,26 @@ export default function AdminContentManager() {
                 <h3 className="text-lg font-semibold">{chapter.title?.fr || chapter.title}</h3>
                 <Badge variant="outline">{chapter.type || "content"}</Badge>
               </div>
+              {viewMode === "edit-course" ? (
+                <BlockLibrary
+                  blocks={chapter.blocks || []}
+                  onChange={(newBlocks) => {
+                    updateChapterMut.mutate({
+                      courseId: selectedCourseId,
+                      lessonIndex: selectedLessonIdx,
+                      chapterIndex: selectedChapterIdx,
+                      blocks: newBlocks,
+                    });
+                  }}
+                  lang={lang}
+                  t={t}
+                />
+              ) : (
               <div className="space-y-3">
                 {chapter.blocks?.map((block: any, bi: number) => (
                   <div key={bi} className="border-l-2 border-gray-200 pl-3">
                     <div className="flex items-center gap-2 mb-1">
                       <Badge variant="secondary" className="text-xs">{block.type}</Badge>
-                      {viewMode === "edit-course" && (
-                        <Button size="sm" variant="ghost" className="h-5 px-1 text-blue-600" onClick={() => {
-                          setEditingBlock({
-                            lessonIdx: selectedLessonIdx,
-                            chapterIdx: selectedChapterIdx,
-                            blockIdx: bi,
-                            content: typeof block.body === "string" ? block.body : (typeof block.body === "object" && block.body !== null && (block.body.en || block.body.fr)) ? JSON.stringify(block.body) : JSON.stringify(block, null, 2),
-                            isI18nBody: typeof block.body === "object" && block.body !== null && (block.body.en !== undefined || block.body.fr !== undefined),
-                            bodyEn: typeof block.body === "object" && block.body?.en ? block.body.en : (typeof block.body === "string" ? block.body : ""),
-                            bodyFr: typeof block.body === "object" && block.body?.fr ? block.body.fr : "",
-                          } as any);
-                          setEditDialogOpen(true);
-                        }}>
-                          <Edit3 className="w-3 h-3" />
-                        </Button>
-                      )}
                     </div>
                     {block.type === "content" && (
                       <div className="prose prose-sm max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: resolveBody(block.body).replace(/\n/g, "<br/>") }} />
@@ -378,6 +378,7 @@ export default function AdminContentManager() {
                   </div>
                 ))}
               </div>
+              )}
 
               {/* Exercises for this lesson */}
               {course.exercises && (

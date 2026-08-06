@@ -1337,3 +1337,19 @@
 - [x] Carte catalogue : affiche chapitres + activités + vidéos + téléchargements quand breakdown existe
 - [x] TP collapsible : instructions/préparation dans un details/summary pliable
 - [x] Cohérence progression : bouton Leçon terminée gatéé appelle onComplete -> markLessonComplete -> avance auto
+
+## Bibliothèque de blocs v2 (consolidation LMS)
+- [x] Créer le registre centralisé BlockRegistry (shared/blockRegistry.ts) — 25 types documentés
+- [x] Implémenter CalloutBlock (encadrés info/tip/warning/danger/success)
+- [x] Implémenter MatchingBlock (association par glisser-déposer)
+- [x] Implémenter FillBlankBlock (texte à trous avec validation)
+- [x] Implémenter TerminalSimBlock (simulation de terminal CLI multi-étapes)
+- [x] Implémenter CodeReplBlock (éditeur de code interactif Python/JS/TS/SQL)
+- [x] Implémenter OrderingBlock (remise en ordre par drag-and-drop)
+- [x] Implémenter AiEvaluationBlock (évaluation IA des réponses libres via LLM)
+- [x] Implémenter MultiChoiceBlock (QCM choix multiples avec feedback)
+- [x] Intégrer les 8 nouveaux blocs dans le switch case de LessonViewer
+- [x] Ajouter la procédure evaluateAnswer (backend LLM Claude Sonnet)
+- [x] Créer le composant BlockLibrary (éditeur admin visuel avec palette catégorisée)
+- [x] Intégrer BlockLibrary dans AdminContentManager (mode edit remplace JSON brut)
+- [x] Vérifier la rétrocompatibilité avec les 80+ cours existants

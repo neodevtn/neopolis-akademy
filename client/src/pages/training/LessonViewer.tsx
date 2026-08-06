@@ -18,6 +18,14 @@ import { CourseIllustration } from "@/components/CourseIllustration";
 import PageContent from "./PageContent";
 import { CloudExerciseBlock } from "@/components/CloudExerciseBlock";
 import { ProjectorPlayer } from "@/components/ProjectorPlayer";
+import { CalloutBlock } from "@/components/blocks/CalloutBlock";
+import { MatchingBlock } from "@/components/blocks/MatchingBlock";
+import { FillBlankBlock } from "@/components/blocks/FillBlankBlock";
+import { TerminalSimBlock } from "@/components/blocks/TerminalSimBlock";
+import { CodeReplBlock } from "@/components/blocks/CodeReplBlock";
+import { OrderingBlock } from "@/components/blocks/OrderingBlock";
+import { AiEvaluationBlock } from "@/components/blocks/AiEvaluationBlock";
+import { MultiChoiceBlock } from "@/components/blocks/MultiChoiceBlock";
 import LessonQuiz from "./LessonQuiz";
 import NumericAnswerExercise from "@/components/NumericAnswerExercise";
 
@@ -704,6 +712,30 @@ export default function LessonViewer({
       }
       case "cloud_exercise": {
         return <CloudExerciseBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedCloudExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+      }
+      case "callout": {
+        return <CalloutBlock key={blockIdx} block={block} lang={lang} />;
+      }
+      case "matching": {
+        return <MatchingBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setMatchingCompleted((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+      }
+      case "fill_blank": {
+        return <FillBlankBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+      }
+      case "terminal_sim": {
+        return <TerminalSimBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+      }
+      case "code_repl": {
+        return <CodeReplBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+      }
+      case "ordering": {
+        return <OrderingBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setMatchingCompleted((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+      }
+      case "ai_evaluation": {
+        return <AiEvaluationBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+      }
+      case "multi_choice_exercise": {
+        return <MultiChoiceBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
       }
       default:
         return null;
