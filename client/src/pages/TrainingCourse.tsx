@@ -518,7 +518,12 @@ export default function TrainingCourse() {
                         // Also mark lesson 0 as complete in training_progress table
                         handleMarkLessonComplete(0);
                       } else {
-                        handleMarkLessonComplete(displayedIndex);
+                       handleMarkLessonComplete(displayedIndex);
+                        // Auto-advance to next lesson after completing current one
+                        const nextLessonIdx = displayedIndex + 1;
+                        if (nextLessonIdx < courseLessons.length) {
+                          setTimeout(() => setActiveLessonIndex(nextLessonIdx), 300);
+                        }
                       }
                     }}
                     matchedVideos={lessonVideos}

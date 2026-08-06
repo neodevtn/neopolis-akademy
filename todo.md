@@ -1336,4 +1336,4 @@
 - [x] validatedChapter avance systématiquement quand Next est cliqué (tous gates passés)
 - [x] Carte catalogue : affiche chapitres + activités + vidéos + téléchargements quand breakdown existe
 - [x] TP collapsible : instructions/préparation dans un details/summary pliable
-- [ ] Cohérence progression : dashboard vs page détail vs player (source unique de vérité)
+- [x] Cohérence progression : bouton Leçon terminée gatéé appelle onComplete -> markLessonComplete -> avance auto

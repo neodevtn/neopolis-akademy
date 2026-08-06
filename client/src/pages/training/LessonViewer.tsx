@@ -959,14 +959,40 @@ export default function LessonViewer({
                 );
               }
               if (isLastChapter && !isReviewMode) {
+                // Gate the last chapter same as others
+                const lastChapterVideoKeys = (chapter?.blocks || [])
+                  .filter((b: any) => b.type === 'video')
+                  .map((b: any) => {
+                    let rawId = b.videoId || "";
+                    if (!rawId && b.url) { const m = (b.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/); if (m) rawId = m[1]; }
+                    if (!rawId && b.id && typeof b.id === 'string' && b.id.length >= 8 && b.id.length <= 15) rawId = b.id;
+                    return typeof rawId === 'object' ? (rawId.fr || rawId.en || "") : rawId;
+                  })
+                  .filter(Boolean);
+                const lastAllVideosWatched = lastChapterVideoKeys.length === 0 || lastChapterVideoKeys.every((k: string) => completedVideos.has(k));
+                const lastChapterCloudIds = (chapter?.blocks || []).filter((b: any) => b.type === 'cloud_exercise').map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
+                const lastAllCloudDone = lastChapterCloudIds.length === 0 || lastChapterCloudIds.every((id: string) => completedCloudExercises.has(id));
+                const lastChapterMatchingIds = (chapter?.blocks || []).filter((b: any) => b.type === 'bucket_sort').map((b: any, i: number) => b.id || `bucket_${i}`);
+                const lastAllMatchingDone = lastChapterMatchingIds.length === 0 || lastChapterMatchingIds.every((id: string) => matchingCompleted.has(id));
+                const lastChapterSCIds = (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise').map((b: any, i: number) => b.id || `quiz_${i}`);
+                const lastAllSCDone = lastChapterSCIds.length === 0 || lastChapterSCIds.every((id: string) => completedExercises.has(id));
+                const lastIsGated = !lastAllVideosWatched || !lastAllCloudDone || !lastAllMatchingDone || !lastAllSCDone;
                 return (
                   <Button
                     size="sm"
-                    onClick={() => setShowQuiz(true)}
-                    className="bg-amber-600 hover:bg-amber-700 text-white gap-1.5"
+                    disabled={lastIsGated}
+                    onClick={() => {
+                      setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
+                      onComplete();
+                    }}
+                    className={lastIsGated ? "bg-muted text-muted-foreground cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"}
+                    title={lastIsGated ? (lang === 'fr' ? 'Validez toutes les activités pour terminer' : 'Complete all activities to finish') : undefined}
                   >
-                    {t({ en: "Take Quiz", fr: "Passer le quiz" })}
-                    <ArrowRight className="w-4 h-4" />
+                    {lastIsGated ? (
+                      <>{t({ en: "Complete activities to finish", fr: "Validez les activités pour terminer" })}</>
+                    ) : (
+                      <>{t({ en: "Complete lesson", fr: "Leçon terminée" })} ✓</>
+                    )}
                   </Button>
                 );
               }
