@@ -220,7 +220,8 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
       | { type: 'text'; text: string }
       | { type: 'role'; role: string; content: string }
       | { type: 'ticket'; content: string }
-      | { type: 'code'; content: string };
+      | { type: 'code'; content: string }
+      | { type: 'table'; rows: string[][] };
 
     const parts: PromptPart[] = [];
     if (!rawPrompt) return parts;
@@ -231,6 +232,13 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
       prompt = prompt.slice(title.length).replace(/^\n+/, '');
     }
 
+    // Strip Skilljar navigation artifacts before parsing
+    prompt = prompt
+      .replace(/\nCompare with model answer\n+Skipped\n+Move on if you need to but come back[^\n]*/g, '')
+      .replace(/\nCompare with model answer\n/g, '')
+      .replace(/^Compare with model answer\n/g, '')
+      .trim();
+
     // Split by lines for processing
     const lines = prompt.split('\n');
     let currentText = '';
@@ -238,7 +246,31 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
 
     const flushText = () => {
       if (currentText.trim()) {
-        parts.push({ type: 'text', text: currentText.trim() });
+        // Before flushing text, check if it contains a Markdown table
+        const textLines = currentText.trim().split('\n');
+        const tableStart = textLines.findIndex(l => l.includes('|') && l.trim().startsWith('|'));
+        if (tableStart >= 0) {
+          // Flush text before the table
+          const beforeTable = textLines.slice(0, tableStart).join('\n').trim();
+          if (beforeTable) parts.push({ type: 'text', text: beforeTable });
+          // Parse the table
+          const tableLines = textLines.slice(tableStart).filter(l => l.includes('|'));
+          const rows: string[][] = [];
+          for (const tl of tableLines) {
+            if (/^\|[-\s|]+\|$/.test(tl.trim())) continue; // skip separator row
+            const cells = tl.split('|').map(c => c.trim()).filter((_, ci, arr) => ci > 0 && ci < arr.length - 1);
+            if (cells.length > 0) rows.push(cells);
+          }
+          if (rows.length > 0) parts.push({ type: 'table', rows });
+          // Flush text after the table
+          const afterTableIdx = textLines.slice(tableStart).findIndex((l, li) => li > 0 && !l.includes('|'));
+          if (afterTableIdx > 0) {
+            const afterTable = textLines.slice(tableStart + afterTableIdx).join('\n').trim();
+            if (afterTable) parts.push({ type: 'text', text: afterTable });
+          }
+        } else {
+          parts.push({ type: 'text', text: currentText.trim() });
+        }
       }
       currentText = '';
     };
@@ -251,6 +283,24 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
         flushText();
         parts.push({ type: 'heading', text: line.trim() });
         i++;
+        continue;
+      }
+
+      // Detect Markdown table rows (| col1 | col2 | ...)
+      if (line.trim().startsWith('|') && line.includes('|')) {
+        flushText();
+        const tableLines: string[] = [];
+        while (i < lines.length && lines[i].trim().startsWith('|')) {
+          tableLines.push(lines[i]);
+          i++;
+        }
+        const rows: string[][] = [];
+        for (const tl of tableLines) {
+          if (/^\|[-\s|:]+\|$/.test(tl.trim())) continue; // skip separator row
+          const cells = tl.split('|').map(c => c.trim()).filter((_, ci, arr) => ci > 0 && ci < arr.length - 1);
+          if (cells.length > 0) rows.push(cells);
+        }
+        if (rows.length > 0) parts.push({ type: 'table', rows });
         continue;
       }
 
@@ -595,6 +645,37 @@ export function ExerciseRenderer({ exercise, index, lang, onComplete }: Exercise
                     <pre key={pi} className="rounded-md bg-zinc-900 text-zinc-100 p-3 text-xs font-mono overflow-x-auto">
                       <code>{part.content}</code>
                     </pre>
+                  );
+                case 'table':
+                  return (
+                    <div key={pi} className="overflow-x-auto rounded-md border border-gray-200 dark:border-gray-700">
+                      <table className="w-full text-sm">
+                        {(part as any).rows.length > 0 && (
+                          <>
+                            <thead>
+                              <tr className="bg-gray-100 dark:bg-gray-800">
+                                {(part as any).rows[0].map((cell: string, ci: number) => (
+                                  <th key={ci} className="px-3 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+                                    {cell}
+                                  </th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {(part as any).rows.slice(1).map((row: string[], ri: number) => (
+                                <tr key={ri} className={ri % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800/50'}>
+                                  {row.map((cell: string, ci: number) => (
+                                    <td key={ci} className="px-3 py-2 text-xs text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-gray-700/50 align-top">
+                                      {cell}
+                                    </td>
+                                  ))}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </>
+                        )}
+                      </table>
+                    </div>
                   );
                 default:
                   return null;
