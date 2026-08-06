@@ -60,16 +60,21 @@ export default function TrainingCertification() {
           const pct = Math.round((chapterProg.chapterIndex / chapterProg.totalChapters) * 100);
           map[c.id] = { completed: chapterProg.chapterIndex, total: chapterProg.totalChapters, pct };
         } else {
-          const completed = isLessonComplete(c.id, 0) ? 1 : 0;
-          map[c.id] = { completed, total: 1, pct: completed * 100 };
+          // Use chapterCount from trainingIndex for display (actual number of chapters)
+          const actualTotal = (c as any).chapterCount || 1;
+          const completed = isLessonComplete(c.id, 0) ? actualTotal : 0;
+          map[c.id] = { completed, total: actualTotal, pct: completed > 0 ? 100 : 0 };
         }
       } else {
         let completed = 0;
         for (let i = 0; i < total; i++) {
           if (isLessonComplete(c.id, i)) completed++;
         }
-        const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
-        map[c.id] = { completed, total, pct };
+        // Use chapterCount for display if available
+        const displayTotal = (c as any).chapterCount || total;
+        const completedChapters = total > 0 ? Math.round((completed / total) * displayTotal) : 0;
+        const pct = displayTotal > 0 ? Math.round((completedChapters / displayTotal) * 100) : 0;
+        map[c.id] = { completed: completedChapters, total: displayTotal, pct };
       }
     });
     return map;
@@ -363,7 +368,7 @@ export default function TrainingCertification() {
         {/* Progress Summary Cards */}
         <motion.div variants={fadeInUp} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-8">
           {(() => {
-            const totalChapters = courses.reduce((sum, c) => sum + (c.lessonCount || 0), 0);
+            const totalChapters = courses.reduce((sum, c) => sum + ((c as any).chapterCount || c.lessonCount || 0), 0);
             const completedChapters = Object.values(courseProgressMap).reduce((sum, p) => sum + p.completed, 0);
             const totalExercises = courses.reduce((sum, c) => sum + (c.exerciseCount || 0), 0);
             const totalVideos = courses.reduce((sum, c) => sum + (c.videos?.length || 0), 0);
