@@ -120,8 +120,24 @@ export function ProjectorPlayer({ mp4Url, slides, timings, duration, onEnded }: 
   return (
     <div className="rounded-xl border border-border overflow-hidden bg-card">
       {/* Slide Display Area */}
-      <div className="relative bg-gradient-to-br from-slate-900 to-slate-800 min-h-[320px] flex items-center justify-center p-6">
+      {/* Slide Display Area — clickable overlay to toggle play/pause */}
+      <div
+        className="relative bg-gradient-to-br from-slate-900 to-slate-800 min-h-[320px] flex items-center justify-center p-6 cursor-pointer group"
+        onClick={togglePlay}
+        role="button"
+        aria-label={isPlaying ? "Mettre en pause" : "Lire la vidéo"}
+        tabIndex={0}
+        onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); togglePlay(); } }}
+      >
         <SlideRenderer slide={currentSlide} slideNumber={currentSlideIndex + 1} totalSlides={slides.length} />
+        {/* Center play/pause overlay */}
+        <div className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-200 ${isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>
+          <div className="w-16 h-16 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center">
+            {isPlaying
+              ? <PauseCircle className="w-10 h-10 text-white" />
+              : <PlayCircle className="w-10 h-10 text-white" />}
+          </div>
+        </div>
       </div>
 
       {/* Hidden video element (we use it for audio + the rare visual frames) */}
@@ -159,13 +175,13 @@ export function ProjectorPlayer({ mp4Url, slides, timings, duration, onEnded }: 
         {/* Playback controls */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <button onClick={() => goToSlide(currentSlideIndex - 1)} className="p-1 text-muted-foreground hover:text-foreground transition-colors" disabled={currentSlideIndex === 0}>
+            <button onClick={(e) => { e.stopPropagation(); goToSlide(currentSlideIndex - 1); }} aria-label="Slide précédente" className="p-1 text-muted-foreground hover:text-foreground transition-colors" disabled={currentSlideIndex === 0}>
               <SkipBack className="w-4 h-4" />
             </button>
-            <button onClick={togglePlay} className="p-1 text-foreground hover:text-primary transition-colors">
+            <button onClick={(e) => { e.stopPropagation(); togglePlay(); }} aria-label={isPlaying ? "Pause" : "Lecture"} className="p-1 text-foreground hover:text-primary transition-colors">
               {isPlaying ? <PauseCircle className="w-8 h-8" /> : <PlayCircle className="w-8 h-8" />}
             </button>
-            <button onClick={() => goToSlide(currentSlideIndex + 1)} className="p-1 text-muted-foreground hover:text-foreground transition-colors" disabled={currentSlideIndex >= slides.length - 1}>
+            <button onClick={(e) => { e.stopPropagation(); goToSlide(currentSlideIndex + 1); }} aria-label="Slide suivante" className="p-1 text-muted-foreground hover:text-foreground transition-colors" disabled={currentSlideIndex >= slides.length - 1}>
               <SkipForward className="w-4 h-4" />
             </button>
           </div>

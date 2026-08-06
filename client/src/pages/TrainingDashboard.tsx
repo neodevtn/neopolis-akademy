@@ -548,15 +548,22 @@ function MyPathTab({
                 {t(course.title)}
               </h3>
               <div className="flex items-center gap-3 mt-1.5">
-                <div className="flex-1 max-w-[200px] h-1.5 rounded-full bg-secondary overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-primary transition-all duration-500"
-                    style={{ width: `${Math.round(((lastVisited.chapterIndex + 1) / lastVisited.totalChapters) * 100)}%` }}
-                  />
-                </div>
-                <span className="text-xs text-muted-foreground font-medium">
-                  {t({ en: `Chapter ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}`, fr: `Chapitre ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}` })}
-                </span>
+               <div className="flex-1 max-w-[200px] h-1.5 rounded-full bg-secondary overflow-hidden">
+                 <div
+                   className="h-full rounded-full bg-primary transition-all duration-500"
+                    style={{ width: `${Math.min(100, Math.round(((lastVisited.chapterIndex + 1) / lastVisited.totalChapters) * 100))}%` }}
+                 />
+               </div>
+               <span className="text-xs text-muted-foreground font-medium">
+                  {(() => {
+                    const total = lastVisited.totalChapters;
+                    const current = Math.min(lastVisited.chapterIndex + 1, total);
+                    const isDone = current >= total;
+                    return isDone
+                      ? <span className="text-emerald-600 dark:text-emerald-400 font-semibold">✓ {total}/{total}</span>
+                      : t({ en: `Chapter ${current}/${total}`, fr: `Chapitre ${current}/${total}` });
+                  })()}
+               </span>
               </div>
             </div>
             <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />

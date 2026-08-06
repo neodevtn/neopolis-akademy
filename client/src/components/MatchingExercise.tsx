@@ -78,6 +78,25 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
     return text[lang] || text.en || '';
   };
 
+  // Decode HTML entities and strip basic markdown (bold, emoji codes)
+  const decodeText = (text?: LocalizedText | string): string => {
+    const raw = getText(text);
+    if (!raw) return '';
+    // Decode HTML entities via DOM parser trick (safe, no XSS)
+    const decoded = raw
+      .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(parseInt(code, 10)))
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'");
+    // Strip markdown bold (**text** → text) and clean up narrow spaces
+    return decoded
+      .replace(/\*\*(.+?)\*\*/g, '$1')
+      .replace(/[\u2009\u202f]/g, ' ')
+      .trim();
+  };
+
   const savedAttempt = loadAttempt(exercise.id);
   
   const [placements, setPlacements] = useState<Record<string, string>>(savedAttempt || {});
@@ -222,7 +241,7 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
                     : '0 1px 3px rgba(0,0,0,0.05)',
                 }}
               >
-                {getText(card.text)}
+                {decodeText(card.text)}
               </button>
             );
           })}
@@ -283,7 +302,7 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
                       {result === 'correct' && <CheckCircle2 className="h-3 w-3" />}
                       {result === 'incorrect' && <XCircle className="h-3 w-3" />}
                       {!submitted && <Undo2 className="h-3 w-3 opacity-50" />}
-                      {getText(card.text)}
+                      {decodeText(card.text)}
                     </button>
                   );
                 })}
