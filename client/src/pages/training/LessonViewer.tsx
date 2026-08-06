@@ -67,6 +67,8 @@ export default function LessonViewer({
   const [flipCardsCompleted, setFlipCardsCompleted] = useState<Set<number>>(new Set());
   // Track chapters where matching/bucket exercises have been completed
   const [matchingCompleted, setMatchingCompleted] = useState<Set<string>>(new Set());
+  // Track completed cloud exercises (TP)
+  const [completedCloudExercises, setCompletedCloudExercises] = useState<Set<string>>(new Set());
   // Track whether we're syncing from parent to avoid calling onChapterChange back
   const isSyncingFromParent = useRef(false);
   const prevLessonId = useRef(lesson.id);
@@ -680,7 +682,7 @@ export default function LessonViewer({
         );
       }
       case "cloud_exercise": {
-        return <CloudExerciseBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} />;
+        return <CloudExerciseBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedCloudExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
       }
       default:
         return null;
@@ -1003,12 +1005,18 @@ export default function LessonViewer({
                 .map((b: any, i: number) => b.id || `quiz_${i}`);
               const allSingleChoiceCompleted = chapterSingleChoiceIds.length === 0 || chapterSingleChoiceIds.every((id: string) => completedExercises.has(id));
               const isGatedBySingleChoice = chapterSingleChoiceIds.length > 0 && !allSingleChoiceCompleted && !isReviewMode;
+              // Cloud exercise (TP) gate: block if chapter has cloud_exercise blocks not completed
+              const chapterCloudExerciseIds = (chapter?.blocks || [])
+                .filter((b: any) => b.type === 'cloud_exercise')
+                .map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
+              const allCloudExercisesCompleted = chapterCloudExerciseIds.length === 0 || chapterCloudExerciseIds.every((id: string) => completedCloudExercises.has(id));
+              const isGatedByCloudExercise = chapterCloudExerciseIds.length > 0 && !allCloudExercisesCompleted && !isReviewMode;
               const chapterTitle = resolveI18n(chapter?.title, 'en');
               const isStructuralChapter = /^(Module Introduction|Key Takeaways|Module Complete)$/i.test(chapterTitle);
               const isTeachingChapter = chapter?.type === 'teaching' && !isStructuralChapter;
               const needsQuiz = isTeachingChapter && !isReviewMode && !chapterQuizPassed.has(currentChapter);
 
-              const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice;
+              const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice || isGatedByCloudExercise;
               return (
                 <div className="flex items-center gap-2">
                   <span className="kbd-hint hidden md:inline-flex">→</span>
@@ -1020,11 +1028,8 @@ export default function LessonViewer({
                       if (needsQuiz) {
                         setShowChapterQuiz(true);
                       } else {
-                        if (isQuizOrCheckpointChapter && allExercisesCompleted) {
-                          setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
-                        } else if (isStructuralChapter || (!isTeachingChapter && !isQuizOrCheckpointChapter)) {
-                          setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
-                        }
+                        // Always advance validatedChapter when Next is clicked (it's only clickable when all gates pass)
+                        setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
                         setSlideDirection('right');
                         setCurrentChapter((p) => p + 1);
                         setShowTranscript(false);
@@ -1032,14 +1037,14 @@ export default function LessonViewer({
                       }
                     }}
                     className={`gap-1 font-medium ${isGated ? 'text-muted-foreground cursor-not-allowed' : 'text-[#c75b3a] hover:text-[#a84a2e]'}`}
-                    title={isGatedByVideo ? (lang === 'fr' ? 'Regardez la vidéo pour continuer (ou marquez-la comme vue)' : 'Watch the video to continue (or mark it as watched)') : isGatedByFlipCards ? (lang === 'fr' ? 'Retournez toutes les cartes pour continuer' : 'Flip all cards to continue') : (isGatedByExercises || isGatedBySingleChoice || isGatedByMatching) ? (lang === 'fr' ? 'Complétez tous les exercices pour continuer' : 'Complete all exercises to continue') : undefined}
+                    title={isGatedByVideo ? (lang === 'fr' ? 'Regardez la vidéo pour continuer (ou marquez-la comme vue)' : 'Watch the video to continue (or mark it as watched)') : isGatedByFlipCards ? (lang === 'fr' ? 'Retournez toutes les cartes pour continuer' : 'Flip all cards to continue') : (isGatedByExercises || isGatedBySingleChoice || isGatedByMatching || isGatedByCloudExercise) ? (lang === 'fr' ? 'Validez cette activité pour continuer' : 'Complete this activity to continue') : undefined}
                   >
                     {isGatedByVideo ? (
                       <>{t({ en: "🎥 Watch video to continue", fr: "🎥 Regardez la vidéo pour continuer" })}</>
                     ) : isGatedByFlipCards ? (
                       <>{t({ en: "🃏 Flip all cards to continue", fr: "🃏 Retournez toutes les cartes" })}</>
-                    ) : (isGatedByExercises || isGatedBySingleChoice || isGatedByMatching) ? (
-                      <>{t({ en: "Complete all exercises", fr: "Complétez les exercices" })}</>
+                    ) : (isGatedByExercises || isGatedBySingleChoice || isGatedByMatching || isGatedByCloudExercise) ? (
+                      <>{t({ en: "Complete activity to continue", fr: "Validez l'activité pour continuer" })}</>
                     ) : (
                       <>{t({ en: "Next", fr: "Suivant" })} →</>
                     )}

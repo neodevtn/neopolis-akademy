@@ -1329,3 +1329,11 @@
 - [x] Ajouter loading="lazy" decoding="async" sur toutes les images
 - [x] Vérifier 36/36 images HTTP 200 (avec -L pour redirections)
 - [x] Déployer en production
+
+## Défauts bloquants parcours n8n (audit apprenant)
+- [x] Gate Suivant pour cloud_exercise (TP) : bouton désactivé tant que non validé
+- [x] Gate Suivant pour bucket_sort et single_choice : déjà implémenté
+- [x] validatedChapter avance systématiquement quand Next est cliqué (tous gates passés)
+- [x] Carte catalogue : affiche chapitres + activités + vidéos + téléchargements quand breakdown existe
+- [x] TP collapsible : instructions/préparation dans un details/summary pliable
+- [ ] Cohérence progression : dashboard vs page détail vs player (source unique de vérité)

@@ -50,9 +50,10 @@ interface CloudExerciseBlockProps {
   lang: string;
   t: (obj: { en: string; fr: string }) => string;
   blockIdx: number;
+  onComplete?: (id: string) => void;
 }
 
-export function CloudExerciseBlock({ block, lang, t, blockIdx }: CloudExerciseBlockProps) {
+export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: CloudExerciseBlockProps) {
   const [submitted, setSubmitted] = useState(false);
   const [answer, setAnswer] = useState("");
 
@@ -89,12 +90,15 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx }: CloudExerciseBl
 
         {/* Instructions */}
         {tpInstructions && (
-          <div className="bg-muted/50 rounded-lg p-4">
-            <p className="font-semibold text-sm text-foreground mb-2">{t({ en: 'Instructions', fr: 'Instructions' })}</p>
-            <div className="prose prose-sm max-w-none text-muted-foreground">
+          <details className="border border-border rounded-lg bg-muted/30">
+            <summary className="px-4 py-2.5 cursor-pointer text-sm font-semibold text-foreground hover:bg-muted/50 rounded-lg flex items-center gap-2">
+              <ChevronDown className="w-4 h-4 transition-transform" />
+              {t({ en: 'Setup & Instructions', fr: 'Préparation & Instructions' })}
+            </summary>
+            <div className="px-4 pb-3 text-sm text-muted-foreground prose prose-sm max-w-none">
               <PageContent content={tpInstructions} lang={lang} />
             </div>
-          </div>
+          </details>
         )}
 
         {/* Steps */}
@@ -171,9 +175,13 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx }: CloudExerciseBl
             onChange={(e) => setAnswer(e.target.value)}
             disabled={submitted}
           />
-          {!submitted && (
+        {!submitted && (
             <button
-              onClick={() => setSubmitted(true)}
+              onClick={() => {
+                setSubmitted(true);
+                const id = block.id || `cloud_exercise_${blockIdx}`;
+                onComplete?.(id);
+              }}
               disabled={answer.trim().length === 0}
               className="mt-3 px-5 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
             >

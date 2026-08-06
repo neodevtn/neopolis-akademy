@@ -675,10 +675,21 @@ function CatalogTab({
                 </div>
                 <h3 className={`text-base font-semibold text-foreground ${groupCfg.hoverText} transition-colors mb-2 leading-tight`}>{t(cert.title)}</h3>
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-2 leading-relaxed">{t(cert.description)}</p>
-                <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4">
-                  <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" />{cert.courseCount} {t({ en: "courses", fr: "cours" })}</span>
-                  <span className="flex items-center gap-1"><Dumbbell className="w-3.5 h-3.5" />{cert.totalExercises} {(cert as any).exerciseLabel ? t((cert as any).exerciseLabel) : t({ en: "exercises", fr: "exercices" })}</span>
-                  {cert.totalVideos > 0 && <span className="flex items-center gap-1"><Play className="w-3.5 h-3.5" />{cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}</span>}
+                <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4 flex-wrap">
+                  {(cert as any).breakdown ? (
+                    <>
+                      <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" />{(cert as any).breakdown.chapters || cert.courseCount} {t({ en: "chapters", fr: "chapitres" })}</span>
+                      <span className="flex items-center gap-1"><Dumbbell className="w-3.5 h-3.5" />{cert.totalExercises} {(cert as any).exerciseLabel ? t((cert as any).exerciseLabel) : t({ en: "exercises", fr: "exercices" })}</span>
+                      {cert.totalVideos > 0 && <span className="flex items-center gap-1"><Play className="w-3.5 h-3.5" />{cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}</span>}
+                      {(cert as any).totalDownloads > 0 && <span className="flex items-center gap-1"><Download className="w-3.5 h-3.5" />{(cert as any).totalDownloads} {t({ en: "downloads", fr: "téléchargements" })}</span>}
+                    </>
+                  ) : (
+                    <>
+                      <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" />{cert.courseCount} {t({ en: "courses", fr: "cours" })}</span>
+                      <span className="flex items-center gap-1"><Dumbbell className="w-3.5 h-3.5" />{cert.totalExercises} {(cert as any).exerciseLabel ? t((cert as any).exerciseLabel) : t({ en: "exercises", fr: "exercices" })}</span>
+                      {cert.totalVideos > 0 && <span className="flex items-center gap-1"><Play className="w-3.5 h-3.5" />{cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}</span>}
+                    </>
+                  )}
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden">
