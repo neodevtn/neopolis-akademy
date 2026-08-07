@@ -431,11 +431,11 @@ export default function PageContent({ content, lang }: { content: string; lang: 
     if (concatTable) {
       elements.push(
         <div key={`ctable-${i}`} className="my-5 overflow-x-auto rounded-xl border border-[#e8e5e0] dark:border-slate-700">
-          <table className="w-full text-sm border-collapse table-fixed">
+          <table className="w-full text-sm border-collapse" style={{ tableLayout: 'fixed' }}>
             <thead>
               <tr className="bg-[#f5f3ef] dark:bg-slate-800">
                 {concatTable.headers.map((h, hi) => (
-                  <th key={hi} className={`text-left px-4 py-3 font-semibold text-foreground text-[13px] uppercase tracking-wide border-b border-[#e8e5e0] dark:border-slate-700 ${hi === 0 ? 'w-[140px] min-w-[140px] whitespace-nowrap' : ''}`}>{h}</th>
+                  <th key={hi} className={`text-left px-4 py-3 font-semibold text-foreground text-[13px] uppercase tracking-wide border-b border-[#e8e5e0] dark:border-slate-700 align-top break-words ${hi === 0 ? 'w-[18%]' : ''}`}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -443,7 +443,7 @@ export default function PageContent({ content, lang }: { content: string; lang: 
               {concatTable.rows.map((row, ri) => (
                 <tr key={ri} className={ri % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-[#faf9f7] dark:bg-slate-800/40'}>
                   {row.map((cell, ci) => (
-                    <td key={ci} className={`px-4 py-3 text-foreground/80 text-[13.5px] border-b border-[#e8e5e0]/60 dark:border-slate-700/60 ${ci === 0 ? 'whitespace-nowrap font-medium' : ''}`}>{cell}</td>
+                    <td key={ci} className={`px-4 py-3 text-foreground/80 text-[13.5px] border-b border-[#e8e5e0]/60 dark:border-slate-700/60 align-top break-words ${ci === 0 ? 'font-medium' : ''}`}>{cell}</td>
                   ))}
                 </tr>
               ))}
@@ -493,11 +493,11 @@ export default function PageContent({ content, lang }: { content: string; lang: 
       } else {
         elements.push(
           <div key={`mdtable-${i}`} className="my-5 overflow-x-auto rounded-xl border border-[#e8e5e0] dark:border-slate-700">
-            <table className="w-full text-sm border-collapse">
+            <table className="w-full text-sm border-collapse" style={{ tableLayout: 'fixed' }}>
               <thead>
                 <tr className="bg-[#f5f3ef] dark:bg-slate-800">
                   {mdTable.headers.map((h, hi) => (
-                    <th key={hi} className="text-left px-4 py-3 font-semibold text-foreground text-[13px] uppercase tracking-wide border-b border-[#e8e5e0] dark:border-slate-700">{renderInlineFormatting(h)}</th>
+                    <th key={hi} className="text-left px-4 py-3 font-semibold text-foreground text-[13px] uppercase tracking-wide border-b border-[#e8e5e0] dark:border-slate-700 align-top break-words">{renderInlineFormatting(h)}</th>
                   ))}
                 </tr>
               </thead>
@@ -505,7 +505,7 @@ export default function PageContent({ content, lang }: { content: string; lang: 
                 {mdTable.rows.map((row, ri) => (
                   <tr key={ri} className={ri % 2 === 0 ? 'bg-white dark:bg-slate-900' : 'bg-[#faf9f7] dark:bg-slate-800/40'}>
                     {row.map((cell, ci) => (
-                      <td key={ci} className="px-4 py-3 text-foreground/80 text-[13.5px] border-b border-[#e8e5e0]/60 dark:border-slate-700/60">{renderInlineFormatting(cell)}</td>
+                      <td key={ci} className="px-4 py-3 text-foreground/80 text-[13.5px] border-b border-[#e8e5e0]/60 dark:border-slate-700/60 align-top break-words">{renderInlineFormatting(cell)}</td>
                     ))}
                   </tr>
                 ))}
