@@ -879,6 +879,34 @@ export default function LessonViewer({
           })()}
 
           {/* Render all blocks in the current chapter */}
+          {/* Exercise navigation bar (top) - visible when in checkpoint/exercise chapters */}
+          {chapter && (chapter.type === 'checkpoint' || chapter.type === 'exercise' || chapter.type === 'quiz') && totalChapters > 1 && (
+            <div className="flex items-center justify-between mb-4 px-2 py-2 bg-muted/30 rounded-lg border border-border/50">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => { setSlideDirection('left'); setCurrentChapter((p) => p - 1); }}
+                disabled={currentChapter === 0}
+                className="gap-1 text-xs text-muted-foreground hover:text-foreground"
+              >
+                <ArrowLeft className="w-3 h-3" />
+                {t({ en: "Previous", fr: "Précédent" })}
+              </Button>
+              <span className="text-xs text-muted-foreground font-medium">
+                {currentChapter + 1} / {totalChapters}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => { setSlideDirection('right'); setCurrentChapter((p) => p + 1); }}
+                disabled={currentChapter >= totalChapters - 1}
+                className="gap-1 text-xs text-muted-foreground hover:text-foreground"
+              >
+                {t({ en: "Next", fr: "Suivant" })}
+                <ArrowRight className="w-3 h-3" />
+              </Button>
+            </div>
+          )}
           {chapter && (() => {
             // Detect if this screen is sparse (little content) to show illustration
             const allBlocks = chapter.blocks || [];
