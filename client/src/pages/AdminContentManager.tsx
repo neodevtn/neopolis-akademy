@@ -279,7 +279,7 @@ export default function AdminContentManager() {
                 className={`w-full text-left text-xs px-2 py-1.5 rounded transition-colors ${li === selectedLessonIdx ? "bg-emerald-50 text-emerald-700 font-medium" : "hover:bg-gray-100 text-gray-600"}`}
                 onClick={() => { setSelectedLessonIdx(li); setSelectedChapterIdx(0); }}
               >
-                <span className="truncate block">{li + 1}. {l.title?.fr || l.title || `Leçon ${li + 1}`}</span>
+                <span className="truncate block">{li + 1}. {typeof l.title === 'string' ? l.title : (l.title?.fr || l.title?.en || `Leçon ${li + 1}`)}</span>
               </button>
               {li === selectedLessonIdx && l.chapters?.map((ch: any, ci: number) => (
                 <button
@@ -287,7 +287,7 @@ export default function AdminContentManager() {
                   className={`w-full text-left text-xs px-4 py-1 rounded transition-colors ${ci === selectedChapterIdx ? "bg-emerald-100 text-emerald-800 font-medium" : "hover:bg-gray-50 text-gray-500"}`}
                   onClick={() => setSelectedChapterIdx(ci)}
                 >
-                  {ch.title?.fr || ch.title || `Chapitre ${ci + 1}`}
+                  {typeof ch.title === 'string' ? ch.title : (ch.title?.fr || ch.title?.en || `Chapitre ${ci + 1}`)}
                 </button>
               ))}
             </div>
@@ -299,7 +299,7 @@ export default function AdminContentManager() {
           {chapter ? (
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">{chapter.title?.fr || chapter.title}</h3>
+                <h3 className="text-lg font-semibold">{typeof chapter.title === 'string' ? chapter.title : (chapter.title?.fr || chapter.title?.en || 'Chapitre')}</h3>
                 <Badge variant="outline">{chapter.type || "content"}</Badge>
               </div>
               {viewMode === "edit-course" ? (
@@ -372,7 +372,7 @@ export default function AdminContentManager() {
                     )}
                     {block.type === "download" && (
                       <div className="bg-green-50 rounded p-3 text-sm">
-                        <FileText className="w-4 h-4 inline mr-1 text-green-600" /> Téléchargement : {block.title || block.filename || "fichier"}
+                        <FileText className="w-4 h-4 inline mr-1 text-green-600" /> Téléchargement : {typeof block.title === 'string' ? block.title : (block.title?.fr || block.title?.en || block.filename || "fichier")}
                       </div>
                     )}
                   </div>
