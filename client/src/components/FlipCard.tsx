@@ -45,12 +45,27 @@ export function FlipCard({ front, back, index, isFlipped, onFlip, isLastFlipped 
           }`}
           style={{ backfaceVisibility: 'hidden', backgroundColor: '#fff' }}
         >
-          <div>
-            <div className="text-[11px] font-bold uppercase tracking-wider text-[#c75b3a] mb-3">
-              Property {index + 1}
+        <div>
+            <div className="text-[11px] font-bold uppercase tracking-wider text-[#c75b3a] mb-2">
+              {(() => {
+                // Extract a short label from the front text (e.g. "Property 1: Responses vary" -> "Property 1")
+                const colonIdx = front.indexOf(':');
+                if (colonIdx > 0 && colonIdx < 40) {
+                  return front.substring(0, colonIdx).trim();
+                }
+                // Fallback: just show card number
+                return `Card ${index + 1}`;
+              })()}
             </div>
-            <p className="text-sm text-gray-900 leading-relaxed" style={{ fontFamily: 'Lora, Georgia, serif' }}>
-              {front}
+            <p className="text-sm text-gray-900 leading-relaxed whitespace-pre-wrap" style={{ fontFamily: 'Lora, Georgia, serif' }}>
+              {(() => {
+                // Show only the part after the colon if the label was extracted
+                const colonIdx = front.indexOf(':');
+                if (colonIdx > 0 && colonIdx < 40) {
+                  return front.substring(colonIdx + 1).trim();
+                }
+                return front;
+              })()}
             </p>
           </div>
           <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[#4a90d9] mt-3">
