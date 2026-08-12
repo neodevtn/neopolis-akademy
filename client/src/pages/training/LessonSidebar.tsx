@@ -3,6 +3,7 @@ import React from "react";
 import { CheckCircle2, Lock, PlayCircle, ChevronRight, BookOpen, Video, Brain, Target, Trophy, GraduationCap, Check, Download, Eye } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { resolveI18n } from "./contentDetectors";
+import { normalizeChapterProgress } from "./chapterProgress";
 
 export function LessonSidebarContent({
   lessons,
@@ -37,6 +38,9 @@ export function LessonSidebarContent({
   chaptersData?: any[];
   sections?: any[];
 }) {
+  const safeChapterProgress = normalizeChapterProgress(chapterProgress);
+  const safeChapterTotal = safeChapterProgress.total;
+  const safeChapterCurrent = safeChapterProgress.current;
   // Calculate overall progress percentage
   const completedCount = lessons.filter((_, idx) => isLessonComplete(courseId, idx)).length;
   const progressPct = lessons.length > 0 ? Math.round((completedCount / lessons.length) * 100) : 0;
@@ -192,17 +196,17 @@ export function LessonSidebarContent({
             </button>
 
             {/* Chapter progress indicator for the currently displayed lesson (non-sub-screen mode) */}
-            {idx === displayedLessonIndex && chapterProgress && chapterProgress.total > 1 && !completed && (
+            {idx === displayedLessonIndex && chapterProgress && safeChapterTotal > 1 && !completed && (
               <div className="ml-7 mr-3 mt-0.5 mb-1">
                 <div className="flex items-center gap-1.5">
                   <div className="flex-1 flex gap-0.5">
-                    {Array.from({ length: chapterProgress.total }).map((_, ci) => (
+                    {Array.from({ length: safeChapterTotal }).map((_, ci) => (
                       <div
                         key={ci}
                         className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                          ci < chapterProgress.current
+                          ci < safeChapterCurrent
                             ? "bg-emerald-500"
-                            : ci === chapterProgress.current
+                            : ci === safeChapterCurrent
                             ? "bg-primary"
                             : "bg-border"
                         }`}
@@ -210,11 +214,11 @@ export function LessonSidebarContent({
                     ))}
                   </div>
                   <div className="flex items-center gap-1">
-                    {chapterProgress.current > 0 && (
+                    {safeChapterCurrent > 0 && (
                       <CheckCircle2 className="w-2.5 h-2.5 text-emerald-500" />
                     )}
                     <span className="text-[10px] text-muted-foreground font-medium whitespace-nowrap">
-                      {chapterProgress.current + 1}/{chapterProgress.total}
+                      {safeChapterCurrent + 1}/{safeChapterTotal}
                     </span>
                   </div>
                 </div>
@@ -322,4 +326,3 @@ export default function LessonSidebar({
     </>
   );
 }
-

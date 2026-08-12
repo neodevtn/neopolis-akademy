@@ -1353,3 +1353,7 @@
 - [x] Créer le composant BlockLibrary (éditeur admin visuel avec palette catégorisée)
 - [x] Intégrer BlockLibrary dans AdminContentManager (mode edit remplace JSON brut)
 - [x] Vérifier la rétrocompatibilité avec les 80+ cours existants
+
+## Correction compteur de chapitre dans la progression
+- [x] Corriger le compteur de chapitre courant pour éviter les valeurs hors borne (ex. 7/6 au lieu de 1/6)
+- [x] Vérifier le calcul dans la sidebar et la barre de progression du cours concerné

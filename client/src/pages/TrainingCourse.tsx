@@ -19,6 +19,7 @@ import { trpc } from "@/lib/trpc";
 
 // ─── Decomposed sub-components ───
 import { resolveI18n } from "./training/contentDetectors";
+import { getDisplayedChapterProgress, normalizeChapterProgress } from "./training/chapterProgress";
 import LessonViewer from "./training/LessonViewer";
 import LessonSidebar from "./training/LessonSidebar";
 import { useCourseData, prefetchCourse } from "@/hooks/useCourseData";
@@ -44,8 +45,10 @@ export default function TrainingCourse() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
   const [chapterProgress, setChapterProgress] = useState<{ current: number; total: number } | null>(null);
+  const [chapterProgressLessonIndex, setChapterProgressLessonIndex] = useState<number | null>(null);
 
-  // Initialize chapterProgress from persisted data for single-lesson courses
+  // Initialize persisted chapter progress. For multi-lesson courses it remains isolated
+  // until an explicit LessonViewer callback associates it with the displayed lesson.
   const persistedChapterInit = getPersistedChapterProgress(courseId || "", 0);
   const hasInitializedChapter = useRef(false);
   useEffect(() => {
@@ -59,10 +62,11 @@ export default function TrainingCourse() {
   // Stable callback for chapter changes (prevents infinite re-render in LessonViewer)
   // MUST be declared before any conditional returns (Rules of Hooks)
   const handleChapterChange = useCallback((current: number, total: number) => {
-    setChapterProgress({ current, total });
+    const safeProgress = normalizeChapterProgress({ current, total });
+    setChapterProgress(safeProgress);
     // Persist chapter progress to database - uses refs/closures to avoid stale values
     if (courseId) {
-      persistChapterProgress(courseId, 0, current, total);
+      persistChapterProgress(courseId, 0, safeProgress.current, safeProgress.total);
     }
   }, [courseId, persistChapterProgress]);
 
@@ -214,6 +218,8 @@ export default function TrainingCourse() {
         return persisted ? Math.min(persisted.chapterIndex, totalLessons) : 0;
       })()
     : getNextUnlockedLesson(course.id, totalLessons);
+  const activeMultiLessonIndex = activeLessonIndex ?? nextUnlocked;
+  const activeMultiLessonChapterTotal = Math.max(1, courseLessons[activeMultiLessonIndex]?.chapters?.length || 1);
   const videos = course.videos || [];
 
 
@@ -323,9 +329,18 @@ export default function TrainingCourse() {
                 setChapterProgress({ current: idx, total: courseLessons[0]?.chapters?.length || 1 });
               } else {
                 setActiveLessonIndex(idx);
+                setChapterProgress({ current: 0, total: Math.max(1, courseLessons[idx]?.chapters?.length || 1) });
+                setChapterProgressLessonIndex(idx);
               }
             }}
-            chapterProgress={isSingleLessonCourse ? null : chapterProgress}
+            chapterProgress={isSingleLessonCourse
+              ? null
+              : getDisplayedChapterProgress(
+                  chapterProgress,
+                  chapterProgressLessonIndex,
+                  activeMultiLessonIndex,
+                  activeMultiLessonChapterTotal,
+                )}
             displayedLessonIndex={isSingleLessonCourse
               ? (chapterProgress?.current ?? 0)
               : (activeLessonIndex ?? nextUnlocked)
@@ -522,7 +537,11 @@ export default function TrainingCourse() {
                         // Auto-advance to next lesson after completing current one
                         const nextLessonIdx = displayedIndex + 1;
                         if (nextLessonIdx < courseLessons.length) {
-                          setTimeout(() => setActiveLessonIndex(nextLessonIdx), 300);
+                          setTimeout(() => {
+                            setActiveLessonIndex(nextLessonIdx);
+                            setChapterProgress({ current: 0, total: Math.max(1, courseLessons[nextLessonIdx]?.chapters?.length || 1) });
+                            setChapterProgressLessonIndex(nextLessonIdx);
+                          }, 300);
                         }
                       }
                     }}
@@ -531,7 +550,14 @@ export default function TrainingCourse() {
                     toggleVideoComplete={toggleVideoComplete}
                     isReviewMode={isReviewMode}
                     courseExercises={courseExercises}
-                    onChapterChange={handleChapterChange}
+                    onChapterChange={(current, total) => {
+                      if (isSingleLessonCourse) {
+                        handleChapterChange(current, total);
+                        return;
+                      }
+                      setChapterProgress(normalizeChapterProgress({ current, total }));
+                      setChapterProgressLessonIndex(displayedIndex);
+                    }}
                     initialChapter={isSingleLessonCourse ? Math.min(chapterProgress?.current ?? 0, (displayedLesson?.chapters?.length || 1) - 1) : undefined}
                   />
                 </div>
