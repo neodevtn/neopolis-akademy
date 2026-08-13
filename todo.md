@@ -1357,3 +1357,7 @@
 ## Correction compteur de chapitre dans la progression
 - [x] Corriger le compteur de chapitre courant pour éviter les valeurs hors borne (ex. 7/6 au lieu de 1/6)
 - [x] Vérifier le calcul dans la sidebar et la barre de progression du cours concerné
+
+## Correction e-mail d’invitation
+- [x] Corriger l’affichage du bouton « Accepter l’invitation » avec un HTML compatible clients e-mail
+- [x] Vérifier la visibilité et le lien de secours du CTA dans le modèle HTML et via un test unitaire dédié

@@ -85,6 +85,21 @@ function emailWrapper(content: string): string {
 </html>`;
 }
 
+/**
+ * Email-safe CTA: table-based background colors work in Outlook and Gmail,
+ * unlike CSS gradients which some clients ignore and turn into white text.
+ */
+function emailCtaButton(label: string, href: string): string {
+  return `
+    <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" style="margin: 0 auto; border-collapse: separate;">
+      <tr>
+        <td align="center" bgcolor="#be123c" style="background-color: #be123c; border: 1px solid #9f1239; border-radius: 8px;">
+          <a href="${href}" target="_blank" style="display: inline-block; padding: 14px 32px; font-family: Arial, Helvetica, sans-serif; font-size: 15px; line-height: 20px; font-weight: 700; letter-spacing: 0.2px; color: #ffffff !important; text-decoration: none; border-radius: 8px; background-color: #be123c; mso-line-height-rule: exactly;"><span style="color: #ffffff !important; text-decoration: none;">${label}</span></a>
+        </td>
+      </tr>
+    </table>`;
+}
+
 function scoreColor(score: number): string {
   if (score >= 70) return "#16a34a";
   if (score >= 50) return "#ca8a04";
@@ -444,7 +459,7 @@ The Neopolis Akademy Team`;
 // 3. INVITATION EMAIL
 // ============================================================
 
-function buildInvitationHtml(data: InvitationEmailData): string {
+export function buildInvitationHtml(data: InvitationEmailData): string {
   const lang = data.language || "fr";
   const displayName = data.name || (lang === "fr" ? "Futur(e) apprenant(e)" : "Future Learner");
 
@@ -493,9 +508,13 @@ function buildInvitationHtml(data: InvitationEmailData): string {
       <p style="font-size: 14px; color: #475569; line-height: 1.6; margin: 0 0 16px;">${i18n.body}</p>
       <p style="font-size: 14px; color: #475569; line-height: 1.6; margin: 0 0 24px;">${i18n.about}</p>
       ${messageBlock}
-      <div style="text-align: center; margin: 0 0 32px;">
-        <a href="${data.invitationLink}" style="display: inline-block; background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; letter-spacing: 0.3px;">${i18n.btnText}</a>
+      <div style="text-align: center; margin: 0 0 16px;">
+        ${emailCtaButton(i18n.btnText, data.invitationLink)}
       </div>
+      <p style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #64748b; text-align: center; margin: 0 0 32px;">
+        ${lang === "fr" ? "Si le bouton ne s’affiche pas, ouvrez ce lien :" : "If the button is not displayed, open this link:"}<br />
+        <a href="${data.invitationLink}" target="_blank" style="color: #be123c; text-decoration: underline; word-break: break-all;">${data.invitationLink}</a>
+      </p>
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 24px; margin: 0 0 24px;">
         <h2 style="font-size: 14px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 16px;">${i18n.featuresTitle}</h2>
         <ul style="padding-left: 20px; margin: 0; color: #475569; font-size: 14px; line-height: 2;">
