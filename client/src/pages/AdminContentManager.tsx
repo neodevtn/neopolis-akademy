@@ -177,6 +177,11 @@ export default function AdminContentManager() {
     return certifications.find(c => c.courses.includes(courseId));
   };
 
+  const getCertIdForCourse = (courseId: string) => {
+    const courseMeta = (trainingIndex.courses as any[]).find((course) => course.id === courseId);
+    return courseMeta?.certId || getCertForCourse(courseId)?.id || null;
+  };
+
   // ─── BROWSE VIEW ───
   const renderBrowse = () => (
     <div className="space-y-6">
@@ -304,11 +309,25 @@ export default function AdminContentManager() {
   const renderCourseView = () => {
     const publishedCourse = courseDetailQuery.data;
     const course = courseDraft || publishedCourse;
-    if (!course) return <div className="text-center py-8 text-gray-500">Chargement...</div>;
+    if (courseDetailQuery.isLoading) return <div className="text-center py-8 text-gray-500">Chargement du cours…</div>;
+    if (courseDetailQuery.error) {
+      return (
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="py-6 text-center">
+            <p className="font-medium text-red-800">Impossible de charger ce cours.</p>
+            <p className="mt-1 text-sm text-red-700">{courseDetailQuery.error.message}</p>
+            <Button className="mt-4" variant="outline" onClick={() => courseDetailQuery.refetch()}><RefreshCw className="mr-1 h-3.5 w-3.5" /> Réessayer</Button>
+          </CardContent>
+        </Card>
+      );
+    }
+    if (!course) return <div className="text-center py-8 text-gray-500">Aucun contenu disponible pour ce cours.</div>;
 
     const lesson = course.lessons?.[selectedLessonIdx];
     const chapter = lesson?.chapters?.[selectedChapterIdx];
     const mediaAssets = collectMediaAssets(course);
+    const certId = getCertIdForCourse(selectedCourseId);
+    const learnerPreviewHref = certId ? `/training/${certId}/${selectedCourseId}` : null;
     const makeDraftWithChapter = (nextChapter: any) => {
       const draft = cloneCourseDraft(courseDraft || publishedCourse);
       draft.lessons[selectedLessonIdx].chapters[selectedChapterIdx] = nextChapter;
@@ -366,6 +385,16 @@ export default function AdminContentManager() {
                     <Button size="sm" variant="outline" disabled={!courseDraft || saveCourseDraftMut.isPending} onClick={() => setCourseDraft(null)}>Annuler</Button>
                     <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700" disabled={!courseDraft || saveCourseDraftMut.isPending} onClick={saveDraft}><Save className="mr-1 h-3.5 w-3.5" /> {saveCourseDraftMut.isPending ? "Sauvegarde…" : "Sauvegarder"}</Button>
                   </>}
+                  {viewMode === "course" && learnerPreviewHref && (
+                    <a
+                      href={learnerPreviewHref}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 text-sm font-medium shadow-sm hover:bg-accent"
+                    >
+                      <Eye className="mr-1 h-3.5 w-3.5" /> Aperçu apprenant
+                    </a>
+                  )}
                 </div>
               </div>
               {viewMode === "edit-course" && chapter.type === "checkpoint" && (
@@ -390,8 +419,28 @@ export default function AdminContentManager() {
                       <div className="prose prose-sm max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: resolveBody(block.body).replace(/\n/g, "<br/>") }} />
                     )}
                     {block.type === "video" && (
-                      <div className="bg-gray-100 rounded p-3 text-sm">
-                        <Play className="w-4 h-4 inline mr-1" /> Vidéo : {block.youtubeId || block.url || "ID non spécifié"}
+                      <div className="rounded border bg-gray-50 p-3 text-sm">
+                        {block.youtubeId ? (
+                          <iframe
+                            className="aspect-video w-full rounded"
+                            src={`https://www.youtube-nocookie.com/embed/${block.youtubeId}`}
+                            title={resolveBody(block.title) || "Vidéo du cours"}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        ) : block.mp4Url || block.videoUrl || block.url ? (
+                          <video className="w-full rounded" controls preload="metadata">
+                            <source src={block.mp4Url || block.videoUrl || block.url} />
+                            Votre navigateur ne prend pas en charge la lecture vidéo.
+                          </video>
+                        ) : block.audioUrl ? (
+                          <audio className="w-full" controls preload="metadata">
+                            <source src={block.audioUrl} />
+                            Votre navigateur ne prend pas en charge la lecture audio.
+                          </audio>
+                        ) : (
+                          <p className="text-amber-700">Média non renseigné pour ce bloc vidéo.</p>
+                        )}
                       </div>
                     )}
                     {block.type === "flip_cards" && (

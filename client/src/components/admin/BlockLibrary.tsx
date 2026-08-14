@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ImagePlus, Plus, Search, GripVertical, Trash2, Copy, ChevronUp, ChevronDown, Eye } from "lucide-react";
+import { ImagePlus, Plus, Search, GripVertical, Trash2, Copy, ChevronUp, ChevronDown, Edit3 } from "lucide-react";
 import { toast } from "sonner";
 import { WysiwygMarkdownEditor } from "./WysiwygMarkdownEditor";
 
@@ -105,14 +105,21 @@ export function BlockLibrary({ blocks, onChange, lang, t, onRequestMedia }: Bloc
                 <span className="text-xs text-muted-foreground truncate flex-1">{preview}</span>
               </div>
             </div>
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button onClick={() => setEditingIdx(idx)} className="p-1 text-muted-foreground hover:text-primary" title="Edit">
-                <Eye className="w-3.5 h-3.5" />
-              </button>
-              <button onClick={() => duplicateBlock(idx)} className="p-1 text-muted-foreground hover:text-foreground" title="Duplicate">
+            <div className="flex shrink-0 items-center gap-1">
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="h-7 gap-1 px-2 text-xs"
+                onClick={() => setEditingIdx(idx)}
+                aria-label={`Modifier le bloc ${idx + 1}`}
+              >
+                <Edit3 className="h-3.5 w-3.5" /> Modifier
+              </Button>
+              <button onClick={() => duplicateBlock(idx)} className="p-1 text-muted-foreground hover:text-foreground" title="Dupliquer le bloc" aria-label={`Dupliquer le bloc ${idx + 1}`}>
                 <Copy className="w-3.5 h-3.5" />
               </button>
-              <button onClick={() => removeBlock(idx)} className="p-1 text-muted-foreground hover:text-red-500" title="Delete">
+              <button onClick={() => removeBlock(idx)} className="p-1 text-muted-foreground hover:text-red-500" title="Supprimer le bloc" aria-label={`Supprimer le bloc ${idx + 1}`}>
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
             </div>

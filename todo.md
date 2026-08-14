@@ -1370,3 +1370,9 @@
 - [x] Créer l’interface spécifique aux checkpoints et à la banque de questions pilote
 - [x] Tester l’éditeur et le rendu apprenant sans régression
 - [x] Capturer et comparer les références visuelles après modification sur desktop et mobile
+
+## Régressions bloquantes de l’éditeur de contenu
+- [x] Corriger le changement infini à l’ouverture du cours dans l’éditeur
+- [x] Rétablir les actions visibles d’édition sur les blocs existants
+- [x] Corriger le mode consultation et unifier ses actions avec le mode édition
+- [x] Vérifier de bout en bout l’ouverture, la consultation, l’édition et la sauvegarde d’un cours
