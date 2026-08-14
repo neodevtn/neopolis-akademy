@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { CheckCircle2, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { normalizeQuestionBank, type QuestionSelectionSettings } from "@shared/questionBank";
 
 // Helper to resolve {en, fr} objects or plain strings
 function resolveI18n(val: any, lang: string): string {
@@ -22,14 +23,12 @@ interface ChapterQuizProps {
   onSkip?: () => void;
 }
 
-const QUESTIONS_TO_SHOW = 3;
-const PASS_THRESHOLD = 2;
-
 // Option letters
 const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
 export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPass, onSkip }: ChapterQuizProps) {
   const [allQuestions, setAllQuestions] = useState<any[]>([]);
+  const [selectionSettings, setSelectionSettings] = useState<QuestionSelectionSettings>({ mode: "random", questionCount: 3, passThreshold: 2, shuffleChoices: true });
   const [loading, setLoading] = useState(true);
   const [currentQ, setCurrentQ] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
@@ -52,13 +51,10 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
           return;
         }
         const compoundKey = `${lessonIndex}_${chapterIndex}`;
-        if (courseQuizzes[compoundKey]) {
-          setAllQuestions(courseQuizzes[compoundKey]);
-        } else if (courseQuizzes[String(chapterIndex)]) {
-          setAllQuestions(courseQuizzes[String(chapterIndex)]);
-        } else {
-          setAllQuestions([]);
-        }
+        const rawBank = courseQuizzes[compoundKey] || courseQuizzes[String(chapterIndex)] || [];
+        const bank = normalizeQuestionBank(rawBank);
+        setAllQuestions(bank.questions);
+        setSelectionSettings(bank.selection);
         setLoading(false);
       })
       .catch(() => {
@@ -69,10 +65,11 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
 
   // Randomly select QUESTIONS_TO_SHOW questions from the pool
   const questions = useMemo(() => {
-    if (allQuestions.length <= QUESTIONS_TO_SHOW) return allQuestions;
+    if (selectionSettings.mode === "all" || allQuestions.length <= selectionSettings.questionCount) return allQuestions;
     const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, QUESTIONS_TO_SHOW);
-  }, [allQuestions, attemptCount]);
+    return shuffled.slice(0, selectionSettings.questionCount);
+  }, [allQuestions, attemptCount, selectionSettings.mode, selectionSettings.questionCount]);
+  const shownQuestionCount = questions.length;
 
   // If no questions available, auto-pass
   useEffect(() => {
@@ -86,12 +83,14 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
     const question = questions[currentQ];
     if (!question) return null;
     const shuffledChoices = [...(question.choices || [])];
-    for (let i = shuffledChoices.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledChoices[i], shuffledChoices[j]] = [shuffledChoices[j], shuffledChoices[i]];
+    if (selectionSettings.shuffleChoices) {
+      for (let i = shuffledChoices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledChoices[i], shuffledChoices[j]] = [shuffledChoices[j], shuffledChoices[i]];
+      }
     }
     return { ...question, choices: shuffledChoices };
-  }, [questions, currentQ, attemptCount]);
+  }, [questions, currentQ, attemptCount, selectionSettings.shuffleChoices]);
 
   if (loading) {
     return (
@@ -116,8 +115,8 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
               </h3>
               <p className="text-sm mb-4 text-gray-600">
                 {t({
-                  en: `You got ${correctCount}/${QUESTIONS_TO_SHOW} correct.`,
-                  fr: `Vous avez obtenu ${correctCount}/${QUESTIONS_TO_SHOW} correct.`
+                  en: `You got ${correctCount}/${shownQuestionCount} correct.`,
+                  fr: `Vous avez obtenu ${correctCount}/${shownQuestionCount} correct.`
                 })}
               </p>
               <Button onClick={onPass} className="gap-1.5 bg-[#c75b3a] hover:bg-[#a84a2e] text-white">
@@ -132,8 +131,8 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
               </h3>
               <p className="text-sm mb-4 text-gray-600">
                 {t({
-                  en: `You got ${correctCount}/${QUESTIONS_TO_SHOW}. You need at least ${PASS_THRESHOLD}/${QUESTIONS_TO_SHOW}.`,
-                  fr: `Vous avez obtenu ${correctCount}/${QUESTIONS_TO_SHOW}. Il faut au moins ${PASS_THRESHOLD}/${QUESTIONS_TO_SHOW}.`
+                  en: `You got ${correctCount}/${shownQuestionCount}. You need at least ${selectionSettings.passThreshold}/${shownQuestionCount}.`,
+                  fr: `Vous avez obtenu ${correctCount}/${shownQuestionCount}. Il faut au moins ${selectionSettings.passThreshold}/${shownQuestionCount}.`
                 })}
               </p>
               <Button
@@ -170,7 +169,7 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
           Q{currentQ + 1}
         </span>
         <span className="text-xs text-gray-400">
-          {currentQ + 1}/{QUESTIONS_TO_SHOW}
+          {currentQ + 1}/{shownQuestionCount}
         </span>
       </div>
 
@@ -270,9 +269,9 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
             const correct = selected === q.correctId;
             const newCorrect = correctCount + (correct ? 1 : 0);
             setCorrectCount(newCorrect);
-            if (currentQ >= QUESTIONS_TO_SHOW - 1) {
+            if (currentQ >= shownQuestionCount - 1) {
               setQuizComplete(true);
-              setQuizPassed(newCorrect >= PASS_THRESHOLD);
+              setQuizPassed(newCorrect >= selectionSettings.passThreshold);
             } else {
               setCurrentQ((p) => p + 1);
               setSelected(null);
@@ -282,7 +281,7 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
           className="bg-[#c75b3a] hover:bg-[#a84a2e] text-white w-full"
           size="sm"
         >
-          {currentQ >= QUESTIONS_TO_SHOW - 1
+          {currentQ >= shownQuestionCount - 1
             ? t({ en: "See Results", fr: "Voir les résultats" })
             : t({ en: "Next Question", fr: "Question suivante" })} →
         </Button>

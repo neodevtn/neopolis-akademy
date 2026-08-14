@@ -7,21 +7,23 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Search, GripVertical, Trash2, Copy, ChevronUp, ChevronDown, Eye } from "lucide-react";
+import { ImagePlus, Plus, Search, GripVertical, Trash2, Copy, ChevronUp, ChevronDown, Eye } from "lucide-react";
 import { toast } from "sonner";
+import { WysiwygMarkdownEditor } from "./WysiwygMarkdownEditor";
 
 interface BlockLibraryProps {
   blocks: any[];
   onChange: (blocks: any[]) => void;
   lang: string;
   t: (obj: { en: string; fr: string }) => string;
+  onRequestMedia?: (target: { blockIndex: number; fieldKey: string }) => void;
 }
 
 /**
  * BlockLibrary — Visual block editor for admin content management.
  * Displays a palette of available block types and allows drag-reorder, edit, delete.
  */
-export function BlockLibrary({ blocks, onChange, lang, t }: BlockLibraryProps) {
+export function BlockLibrary({ blocks, onChange, lang, t, onRequestMedia }: BlockLibraryProps) {
   const [showPalette, setShowPalette] = useState(false);
   const [editingIdx, setEditingIdx] = useState<number | null>(null);
   const [editLang, setEditLang] = useState<"en" | "fr">("en");
@@ -187,6 +189,7 @@ export function BlockLibrary({ blocks, onChange, lang, t }: BlockLibraryProps) {
             setEditingIdx(null);
             toast.success(t({ en: "Block updated", fr: "Bloc mis à jour" }));
           }}
+          onRequestMedia={(fieldKey) => onRequestMedia?.({ blockIndex: editingIdx, fieldKey })}
           onClose={() => setEditingIdx(null)}
         />
       )}
@@ -198,13 +201,14 @@ export function BlockLibrary({ blocks, onChange, lang, t }: BlockLibraryProps) {
 // Block Editor Dialog
 // ============================================================
 
-function BlockEditorDialog({ block, blockDef, lang, onLangChange, t, onSave, onClose }: {
+function BlockEditorDialog({ block, blockDef, lang, onLangChange, t, onSave, onRequestMedia, onClose }: {
   block: any;
   blockDef: BlockTypeDefinition | undefined;
   lang: "en" | "fr";
   onLangChange: (l: "en" | "fr") => void;
   t: (obj: { en: string; fr: string }) => string;
   onSave: (data: any) => void;
+  onRequestMedia?: (fieldKey: string) => void;
   onClose: () => void;
 }) {
   const [editData, setEditData] = useState<any>({ ...block });
@@ -277,7 +281,7 @@ function BlockEditorDialog({ block, blockDef, lang, onLangChange, t, onSave, onC
                 {field.helpText && (
                   <p className="text-[10px] text-muted-foreground mb-1">{lang === "fr" ? field.helpText.fr : field.helpText.en}</p>
                 )}
-                {renderFieldEditor(field, editData, lang, updateField, updateI18nField, getI18nValue)}
+                {renderFieldEditor(field, editData, lang, updateField, updateI18nField, getI18nValue, onRequestMedia)}
               </div>
             ))}
           </TabsContent>
@@ -304,10 +308,18 @@ function renderFieldEditor(
   updateField: (key: string, value: any) => void,
   updateI18nField: (key: string, l: string, value: string) => void,
   getI18nValue: (key: string, l: string) => string,
+  onRequestMedia?: (fieldKey: string) => void,
 ) {
+  const isMediaField = /^(url|mp4Url|audioUrl|slidesPdf|download_url|imageUrl)$/i.test(field.key);
+  const renderTextInput = () => (
+    <div className="flex gap-2">
+      <Input value={editData[field.key] || ""} onChange={(e) => updateField(field.key, e.target.value)} placeholder={field.placeholder} />
+      {isMediaField && onRequestMedia && <Button type="button" variant="outline" size="icon" title="Bibliothèque médias" onClick={() => onRequestMedia(field.key)}><ImagePlus className="h-4 w-4" /></Button>}
+    </div>
+  );
   switch (field.type) {
     case "text":
-      return <Input value={editData[field.key] || ""} onChange={(e) => updateField(field.key, e.target.value)} placeholder={field.placeholder} />;
+      return renderTextInput();
     case "textarea":
       return <Textarea value={editData[field.key] || ""} onChange={(e) => updateField(field.key, e.target.value)} rows={4} placeholder={field.placeholder} />;
     case "code":
@@ -335,10 +347,11 @@ function renderFieldEditor(
     case "i18n_text":
       return <Input value={getI18nValue(field.key, lang)} onChange={(e) => updateI18nField(field.key, lang, e.target.value)} placeholder={field.placeholder} />;
     case "i18n_textarea":
-    case "i18n_richtext":
       return <Textarea value={getI18nValue(field.key, lang)} onChange={(e) => updateI18nField(field.key, lang, e.target.value)} rows={field.type === "i18n_richtext" ? 8 : 4} placeholder={field.placeholder} />;
+    case "i18n_richtext":
+      return <WysiwygMarkdownEditor value={getI18nValue(field.key, lang)} onChange={(value) => updateI18nField(field.key, lang, value)} placeholder={field.placeholder} />;
     case "richtext":
-      return <Textarea value={editData[field.key] || ""} onChange={(e) => updateField(field.key, e.target.value)} rows={8} />;
+      return <WysiwygMarkdownEditor value={editData[field.key] || ""} onChange={(value) => updateField(field.key, value)} placeholder={field.placeholder} />;
     case "array":
       return <ArrayFieldEditor field={field} data={editData[field.key] || []} onChange={(val) => updateField(field.key, val)} lang={lang} />;
     case "json":

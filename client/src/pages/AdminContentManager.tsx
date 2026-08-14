@@ -18,7 +18,7 @@ import {
 import {
   ArrowLeft, BookOpen, FileText, HelpCircle, Play, Edit3, Eye,
   ChevronRight, Search, GraduationCap, CheckCircle2, XCircle,
-  Plus, Trash2, Save, RefreshCw, Layers, PenTool, Download, PlayCircle as PlayCircleIcon,
+  Braces, ImagePlus, Plus, Trash2, Save, RefreshCw, Layers, PenTool, Download, PlayCircle as PlayCircleIcon,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -26,6 +26,14 @@ import trainingIndex from "@/data/trainingIndex.json";
 import { AdminNavbar } from "@/components/AdminNavbar";
 
 import { BlockLibrary } from "@/components/admin/BlockLibrary";
+import { MediaLibrary } from "@/components/admin/MediaLibrary";
+import { ChapterSourceEditor } from "@/components/admin/ChapterSourceEditor";
+import { QuestionBankPanel } from "@/components/admin/QuestionBankPanel";
+import { CheckpointSettings } from "@/components/admin/CheckpointSettings";
+import { ExamBankSettings } from "@/components/admin/ExamBankSettings";
+import { cloneCourseDraft, collectMediaAssets } from "@shared/contentStudio";
+import { normalizeQuestionBank, serializeQuestionBank } from "@shared/questionBank";
+import { normalizeExamConfiguration, type ExamConfiguration } from "@shared/examConfiguration";
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
 type ViewMode = "browse" | "course" | "quiz-simulate" | "exam-simulate" | "edit-course" | "edit-quiz" | "edit-exam";
@@ -40,12 +48,21 @@ export default function AdminContentManager() {
     if (typeof body === 'object' && body !== null) return body[lang] || body.en || body.fr || JSON.stringify(body);
     return String(body);
   };
-  const [viewMode, setViewMode] = useState<ViewMode>("browse");
-  const [selectedCourseId, setSelectedCourseId] = useState<string>("");
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    const requested = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("mode") : null;
+    return requested === "edit" ? "edit-course" : requested === "view" ? "course" : requested === "quiz" ? "edit-quiz" : requested === "quiz-simulate" ? "quiz-simulate" : "browse";
+  });
+  const [selectedCourseId, setSelectedCourseId] = useState<string>(() =>
+    typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("courseId") || "" : "",
+  );
   const [selectedCertId, setSelectedCertId] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLessonIdx, setSelectedLessonIdx] = useState(0);
   const [selectedChapterIdx, setSelectedChapterIdx] = useState(0);
+  const [courseDraft, setCourseDraft] = useState<any | null>(null);
+  const [mediaLibraryOpen, setMediaLibraryOpen] = useState(false);
+  const [mediaTarget, setMediaTarget] = useState<{ blockIndex: number; fieldKey: string } | null>(null);
+  const [sourceEditorOpen, setSourceEditorOpen] = useState(false);
   const [quizSimState, setQuizSimState] = useState<{ currentQ: number; answers: Record<number, string>; showResults: boolean }>({ currentQ: 0, answers: {}, showResults: false });
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingBlock, setEditingBlock] = useState<{ lessonIdx: number; chapterIdx: number; blockIdx: number; content: string } | null>(null);
@@ -71,6 +88,7 @@ export default function AdminContentManager() {
   };
   const [selectedQuizKey, setSelectedQuizKey] = useState("");
   const [examQuestions, setExamQuestions] = useState<any[]>([]);
+  const [examConfigDrafts, setExamConfigDrafts] = useState<Record<string, ExamConfiguration>>({});
 
   // Queries
   const coursesQuery = trpc.adminContent.listCourses.useQuery(undefined, {
@@ -84,6 +102,9 @@ export default function AdminContentManager() {
     enabled: isAuthenticated && user?.role === "admin" && (viewMode === "quiz-simulate" || viewMode === "edit-quiz"),
   });
   const examQuestionsQuery = trpc.adminContent.getMockExamQuestions.useQuery(undefined, {
+    enabled: isAuthenticated && user?.role === "admin" && (viewMode === "exam-simulate" || viewMode === "edit-exam"),
+  });
+  const examConfigurationsQuery = trpc.adminContent.getExamConfigurations.useQuery(undefined, {
     enabled: isAuthenticated && user?.role === "admin" && (viewMode === "exam-simulate" || viewMode === "edit-exam"),
   });
 
@@ -108,9 +129,26 @@ export default function AdminContentManager() {
     onSuccess: () => { toast.success("Question ajoutée"); examQuestionsQuery.refetch(); },
     onError: (e) => toast.error(e.message),
   });
+  const updateExamConfigurationMut = trpc.adminContent.updateExamConfiguration.useMutation({
+    onSuccess: () => { toast.success("Règles d’examen sauvegardées"); examConfigurationsQuery.refetch(); setExamQuestions([]); },
+    onError: (e) => toast.error(e.message),
+  });
   const updateExerciseMut = trpc.adminContent.updateExercise.useMutation({
     onSuccess: () => { toast.success("Exercice mis à jour"); courseDetailQuery.refetch(); },
     onError: (e) => toast.error(e.message),
+  });
+  const validateCourseDraftMut = trpc.adminContent.validateCourseDraft.useMutation();
+  const saveCourseDraftMut = trpc.adminContent.saveCourseDraft.useMutation({
+    onSuccess: (result) => {
+      if (!result.success) {
+        toast.error(result.validation.errors[0]?.message || "Le brouillon contient des erreurs.");
+        return;
+      }
+      setCourseDraft(null);
+      toast.success("Cours sauvegardé après validation.");
+      courseDetailQuery.refetch();
+    },
+    onError: (error) => toast.error(error.message),
   });
 
   const certifications = trainingIndex.certifications;
@@ -228,6 +266,7 @@ export default function AdminContentManager() {
                       <div className="flex items-center justify-end gap-1">
                         <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => {
                           setSelectedCourseId(course.courseId);
+                          setCourseDraft(null);
                           setSelectedLessonIdx(0);
                           setSelectedChapterIdx(0);
                           setViewMode("course");
@@ -242,6 +281,7 @@ export default function AdminContentManager() {
                         </Button>
                         <Button size="sm" variant="ghost" className="h-7 px-2 text-blue-600" onClick={() => {
                           setSelectedCourseId(course.courseId);
+                          setCourseDraft(null);
                           setSelectedLessonIdx(0);
                           setSelectedChapterIdx(0);
                           setViewMode("edit-course");
@@ -262,16 +302,31 @@ export default function AdminContentManager() {
 
   // ─── COURSE VIEW (Consultation) ───
   const renderCourseView = () => {
-    const course = courseDetailQuery.data;
+    const publishedCourse = courseDetailQuery.data;
+    const course = courseDraft || publishedCourse;
     if (!course) return <div className="text-center py-8 text-gray-500">Chargement...</div>;
 
     const lesson = course.lessons?.[selectedLessonIdx];
     const chapter = lesson?.chapters?.[selectedChapterIdx];
+    const mediaAssets = collectMediaAssets(course);
+    const makeDraftWithChapter = (nextChapter: any) => {
+      const draft = cloneCourseDraft(courseDraft || publishedCourse);
+      draft.lessons[selectedLessonIdx].chapters[selectedChapterIdx] = nextChapter;
+      return draft;
+    };
+    const updateDraftBlocks = (blocks: any[]) => {
+      if (!chapter) return;
+      setCourseDraft(makeDraftWithChapter({ ...chapter, blocks }));
+    };
+    const saveDraft = () => {
+      const draft = courseDraft || cloneCourseDraft(publishedCourse);
+      saveCourseDraftMut.mutate({ courseId: selectedCourseId, data: draft });
+    };
 
     return (
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4 xl:flex-row">
         {/* Sidebar - Lessons/Chapters */}
-        <div className="w-64 shrink-0 border rounded-lg p-3 max-h-[70vh] overflow-y-auto bg-white">
+        <div className="w-full shrink-0 border rounded-lg p-3 max-h-64 overflow-y-auto bg-white xl:w-64 xl:max-h-[70vh]">
           <h4 className="font-semibold text-sm mb-2 text-gray-700">Leçons</h4>
           {course.lessons?.map((l: any, li: number) => (
             <div key={li} className="mb-1">
@@ -295,26 +350,34 @@ export default function AdminContentManager() {
         </div>
 
         {/* Main content */}
-        <div className="flex-1 border rounded-lg p-6 bg-white max-h-[70vh] overflow-y-auto">
+        <div className="min-w-0 flex-1 border rounded-lg p-4 bg-white max-h-[70vh] overflow-y-auto sm:p-6">
           {chapter ? (
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">{typeof chapter.title === 'string' ? chapter.title : (chapter.title?.fr || chapter.title?.en || 'Chapitre')}</h3>
-                <Badge variant="outline">{chapter.type || "content"}</Badge>
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <div>
+                  <h3 className="text-lg font-semibold">{typeof chapter.title === 'string' ? chapter.title : (chapter.title?.fr || chapter.title?.en || 'Chapitre')}</h3>
+                  {viewMode === "edit-course" && <p className="mt-1 text-xs text-muted-foreground">Brouillon local : les modifications ne sont pas publiées avant la sauvegarde.</p>}
+                </div>
+                <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+                  <Badge variant="outline">{chapter.type || "content"}</Badge>
+                  {viewMode === "edit-course" && <>
+                    <Button size="sm" variant="outline" onClick={() => setMediaLibraryOpen(true)}><ImagePlus className="mr-1 h-3.5 w-3.5" /> Médias</Button>
+                    <Button size="sm" variant="outline" onClick={() => setSourceEditorOpen(true)}><Braces className="mr-1 h-3.5 w-3.5" /> Mode avancé</Button>
+                    <Button size="sm" variant="outline" disabled={!courseDraft || saveCourseDraftMut.isPending} onClick={() => setCourseDraft(null)}>Annuler</Button>
+                    <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700" disabled={!courseDraft || saveCourseDraftMut.isPending} onClick={saveDraft}><Save className="mr-1 h-3.5 w-3.5" /> {saveCourseDraftMut.isPending ? "Sauvegarde…" : "Sauvegarder"}</Button>
+                  </>}
+                </div>
               </div>
+              {viewMode === "edit-course" && chapter.type === "checkpoint" && (
+                <CheckpointSettings chapter={chapter} onChange={(nextChapter) => setCourseDraft(makeDraftWithChapter(nextChapter))} />
+              )}
               {viewMode === "edit-course" ? (
                 <BlockLibrary
                   blocks={chapter.blocks || []}
-                  onChange={(newBlocks) => {
-                    updateChapterMut.mutate({
-                      courseId: selectedCourseId,
-                      lessonIndex: selectedLessonIdx,
-                      chapterIndex: selectedChapterIdx,
-                      blocks: newBlocks,
-                    });
-                  }}
+                  onChange={updateDraftBlocks}
                   lang={lang}
                   t={t}
+                  onRequestMedia={(target) => { setMediaTarget(target); setMediaLibraryOpen(true); }}
                 />
               ) : (
               <div className="space-y-3">
@@ -419,6 +482,32 @@ export default function AdminContentManager() {
             <p className="text-gray-500">Sélectionnez un chapitre dans la barre latérale.</p>
           )}
         </div>
+        {viewMode === "edit-course" && chapter && (
+          <>
+            <MediaLibrary
+              assets={mediaAssets}
+              open={mediaLibraryOpen}
+              onOpenChange={setMediaLibraryOpen}
+              onSelect={(asset) => {
+                if (!mediaTarget) return;
+                const blocks = [...(chapter.blocks || [])];
+                blocks[mediaTarget.blockIndex] = { ...blocks[mediaTarget.blockIndex], [mediaTarget.fieldKey]: asset.url };
+                updateDraftBlocks(blocks);
+                setMediaTarget(null);
+              }}
+            />
+            <ChapterSourceEditor
+              chapter={chapter}
+              open={sourceEditorOpen}
+              onOpenChange={setSourceEditorOpen}
+              validate={async (candidateChapter) => {
+                const candidateCourse = makeDraftWithChapter(candidateChapter);
+                return validateCourseDraftMut.mutateAsync({ data: candidateCourse });
+              }}
+              onApply={(candidateChapter) => setCourseDraft(makeDraftWithChapter(candidateChapter))}
+            />
+          </>
+        )}
       </div>
     );
   };
@@ -532,10 +621,15 @@ export default function AdminContentManager() {
     if (!allQuestions) return <div className="text-center py-8 text-gray-500">Chargement...</div>;
 
     const certQuestions = allQuestions.filter((q: any) => q.certificationId === selectedCertId);
-    // Take 30 random questions for simulation - use useMemo-like approach
+    const storedConfig = normalizeExamConfiguration((examConfigurationsQuery.data as Record<string, Partial<ExamConfiguration>> | undefined)?.[selectedCertId], certQuestions.length);
+    const examConfig = examConfigDrafts[selectedCertId] || storedConfig;
+    // Select the configured subset once per simulation attempt.
     const activeExamQuestions = examQuestions.length > 0 ? examQuestions : (() => {
-      const shuffled = [...certQuestions].sort(() => Math.random() - 0.5);
-      const selected = shuffled.slice(0, Math.min(30, shuffled.length));
+      const source = examConfig.shuffleQuestions ? [...certQuestions].sort(() => Math.random() - 0.5) : [...certQuestions];
+      const selected = source.slice(0, Math.min(examConfig.questionCount, source.length)).map((question: any) => {
+        if (!examConfig.shuffleChoices) return question;
+        return { ...question, choices: [...(question.choices || [])].sort(() => Math.random() - 0.5) };
+      });
       if (selected.length > 0 && examQuestions.length === 0) {
         setTimeout(() => setExamQuestions(selected), 0);
       }
@@ -547,6 +641,7 @@ export default function AdminContentManager() {
         <div className="flex items-center gap-3">
           <Badge variant="outline">{certQuestions.length} questions disponibles</Badge>
           <Badge>{activeExamQuestions.length} questions sélectionnées</Badge>
+          <Badge variant="secondary">Seuil : {examConfig.passingScore}%</Badge>
         </div>
 
         {!quizSimState.showResults && activeExamQuestions.length > 0 && (
@@ -627,6 +722,8 @@ export default function AdminContentManager() {
 
     const certQuestions = allQuestions.filter((q: any) => q.certificationId === selectedCertId);
     const domains = Array.from(new Set(certQuestions.map((q: any) => typeof q.domain === "object" ? (q.domain.fr || q.domain.en || "") : q.domain)));
+    const storedConfig = normalizeExamConfiguration((examConfigurationsQuery.data as Record<string, Partial<ExamConfiguration>> | undefined)?.[selectedCertId], certQuestions.length);
+    const examConfig = examConfigDrafts[selectedCertId] || storedConfig;
 
     return (
       <div className="space-y-4">
@@ -650,6 +747,14 @@ export default function AdminContentManager() {
             <Plus className="w-3 h-3 mr-1" /> Ajouter une question
           </Button>
         </div>
+
+        <ExamBankSettings
+          configuration={examConfig}
+          availableQuestions={certQuestions.length}
+          isSaving={updateExamConfigurationMut.isPending}
+          onChange={(configuration) => setExamConfigDrafts((current) => ({ ...current, [selectedCertId]: configuration }))}
+          onSave={() => updateExamConfigurationMut.mutate({ certificationId: selectedCertId, configuration: normalizeExamConfiguration(examConfig, certQuestions.length) })}
+        />
 
         <div className="border rounded-lg overflow-hidden max-h-[60vh] overflow-y-auto">
           <table className="w-full text-sm">
@@ -704,7 +809,9 @@ export default function AdminContentManager() {
     return (
       <div className="space-y-4">
         {lessonKeys.map(key => {
-          const questions = courseQuizzes[key];
+          const rawBank = courseQuizzes[key];
+          const questionBank = normalizeQuestionBank(rawBank);
+          const questions = questionBank.questions;
           return (
             <Card key={key}>
               <CardHeader className="pb-2">
@@ -714,6 +821,26 @@ export default function AdminContentManager() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
+                <QuestionBankPanel
+                  rawBank={rawBank}
+                  onSave={(bank) => updateQuizMut.mutate({
+                    courseId: selectedCourseId,
+                    lessonKey: key,
+                    questions: serializeQuestionBank(bank),
+                  })}
+                  onAddQuestion={() => {
+                    setEditingQuiz({
+                      isNew: true,
+                      courseId: selectedCourseId,
+                      lessonKey: key,
+                      question: { en: "", fr: "" },
+                      choices: [{ id: "a", text: { en: "", fr: "" } }, { id: "b", text: { en: "", fr: "" } }, { id: "c", text: { en: "", fr: "" } }, { id: "d", text: { en: "", fr: "" } }],
+                      correctId: "a",
+                      explanation: { en: "", fr: "" },
+                    });
+                    setEditDialogOpen(true);
+                  }}
+                />
                 {questions.map((q: any, qi: number) => (
                   <div key={qi} className="border-b last:border-0 py-2 flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
@@ -1011,22 +1138,25 @@ export default function AdminContentManager() {
                 const quizData = quizzesQuery.data;
                 if (!quizData) return;
                 const courseQuizzes = { ...quizData[editingQuiz.courseId] };
-                const questions = [...courseQuizzes[editingQuiz.lessonKey]];
-                questions[editingQuiz.questionIdx] = {
+                const bank = normalizeQuestionBank(courseQuizzes[editingQuiz.lessonKey] || []);
+                const nextQuestion = {
                   question: editingQuiz.question,
                   choices: editingQuiz.choices,
                   correctId: editingQuiz.correctId,
                   explanation: editingQuiz.explanation,
                 };
+                const questions = editingQuiz.isNew
+                  ? [...bank.questions, nextQuestion]
+                  : bank.questions.map((question: any, index: number) => index === editingQuiz.questionIdx ? nextQuestion : question);
                 updateQuizMut.mutate({
                   courseId: editingQuiz.courseId,
                   lessonKey: editingQuiz.lessonKey,
-                  questions,
+                  questions: serializeQuestionBank({ ...bank, questions }),
                 });
                 setEditDialogOpen(false);
                 setEditingQuiz(null);
               }}>
-                <Save className="w-3 h-3 mr-1" /> Sauvegarder
+                <Save className="w-3 h-3 mr-1" /> {editingQuiz.isNew ? "Ajouter" : "Sauvegarder"}
               </Button>
             </DialogFooter>
           </DialogContent>

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { router, adminProcedure } from "./_core/trpc";
 import fs from "fs/promises";
 import path from "path";
+import { validateStructuredCourse } from "../shared/contentStudio";
 
 /**
  * Admin Content Management Router
@@ -86,6 +87,25 @@ export const adminContentRouter = router({
       return { success: true };
     }),
 
+  // Validate a complete structured course draft before publishing it from the visual builder.
+  validateCourseDraft: adminProcedure
+    .input(z.object({ data: z.any() }))
+    .mutation(({ input }) => validateStructuredCourse(input.data)),
+
+  // Explicit save path for the pilot studio. Legacy updateCourse remains unchanged.
+  saveCourseDraft: adminProcedure
+    .input(z.object({ courseId: z.string(), data: z.any() }))
+    .mutation(async ({ input }) => {
+      const validation = validateStructuredCourse(input.data);
+      if (!validation.valid) return { success: false, validation };
+      if (input.data.courseId && input.data.courseId !== input.courseId) {
+        return { success: false, validation: { ...validation, valid: false, errors: [...validation.errors, { severity: "error" as const, path: "courseId", message: "L’identifiant du brouillon ne correspond pas au cours sélectionné." }] } };
+      }
+      const dataDir = getDataDir();
+      await writeJsonFile(path.join(dataDir, "courses", `${input.courseId}.json`), input.data);
+      return { success: true, validation };
+    }),
+
   // Get all lesson quizzes
   getQuizzes: adminProcedure.query(async () => {
     const dataDir = getDataDir();
@@ -102,7 +122,7 @@ export const adminContentRouter = router({
     .input(z.object({
       courseId: z.string(),
       lessonKey: z.string(),
-      questions: z.array(z.object({
+      questions: z.union([z.array(z.object({
         question: z.union([z.string(), z.record(z.string(), z.string())]),
         choices: z.array(z.object({
           id: z.string(),
@@ -110,7 +130,23 @@ export const adminContentRouter = router({
         })),
         correctId: z.string(),
         explanation: z.union([z.string(), z.record(z.string(), z.string())]),
-      })),
+      })), z.object({
+        questions: z.array(z.object({
+          question: z.union([z.string(), z.record(z.string(), z.string())]),
+          choices: z.array(z.object({
+            id: z.string(),
+            text: z.union([z.string(), z.record(z.string(), z.string())]),
+          })),
+          correctId: z.string(),
+          explanation: z.union([z.string(), z.record(z.string(), z.string())]),
+        })),
+        selection: z.object({
+          mode: z.enum(["random", "all"]),
+          questionCount: z.number().int().positive(),
+          passThreshold: z.number().int().positive(),
+          shuffleChoices: z.boolean(),
+        }),
+      })]),
     }))
     .mutation(async ({ input }) => {
       const dataDir = getDataDir();
@@ -132,6 +168,36 @@ export const adminContentRouter = router({
       return [];
     }
   }),
+
+  getExamConfigurations: adminProcedure.query(async () => {
+    const dataDir = getDataDir();
+    const filePath = path.join(dataDir, "examConfigurations.json");
+    try {
+      return await readJsonFile(filePath);
+    } catch {
+      return {};
+    }
+  }),
+
+  updateExamConfiguration: adminProcedure
+    .input(z.object({
+      certificationId: z.string(),
+      configuration: z.object({
+        questionCount: z.number().int().positive(),
+        passingScore: z.number().int().min(1).max(100),
+        shuffleQuestions: z.boolean(),
+        shuffleChoices: z.boolean(),
+      }),
+    }))
+    .mutation(async ({ input }) => {
+      const dataDir = getDataDir();
+      const filePath = path.join(dataDir, "examConfigurations.json");
+      let data: Record<string, unknown> = {};
+      try { data = await readJsonFile(filePath); } catch { /* first configuration */ }
+      data[input.certificationId] = input.configuration;
+      await writeJsonFile(filePath, data);
+      return { success: true };
+    }),
 
   // Update a mock exam question by ID
   updateMockExamQuestion: adminProcedure

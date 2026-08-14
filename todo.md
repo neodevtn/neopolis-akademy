@@ -1361,3 +1361,12 @@
 ## Correction e-mail d’invitation
 - [x] Corriger l’affichage du bouton « Accepter l’invitation » avec un HTML compatible clients e-mail
 - [x] Vérifier la visibilité et le lien de secours du CTA dans le modèle HTML et via un test unitaire dédié
+
+## Pilote éditeur de cours — n8n
+- [x] Capturer les références visuelles avant modification du cours et de son éditeur
+- [x] Cartographier les blocs, médias et checkpoints du cours pilote de manière rétrocompatible
+- [x] Ajouter la bibliothèque médias au mode visuel de l’éditeur
+- [x] Ajouter le mode avancé d’édition structurée avec validation et aperçu
+- [x] Créer l’interface spécifique aux checkpoints et à la banque de questions pilote
+- [x] Tester l’éditeur et le rendu apprenant sans régression
+- [x] Capturer et comparer les références visuelles après modification sur desktop et mobile
