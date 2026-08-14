@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ImagePlus, Plus, Search, GripVertical, Trash2, Copy, ChevronUp, ChevronDown, Edit3 } from "lucide-react";
 import { toast } from "sonner";
 import { WysiwygMarkdownEditor } from "./WysiwygMarkdownEditor";
+import { BucketSortBlockEditor, CheckpointBlockEditor, ChoiceQuestionEditor, FillBlankBlockEditor } from "./SpecializedBlockEditors";
 
 interface BlockLibraryProps {
   blocks: any[];
@@ -25,7 +26,12 @@ interface BlockLibraryProps {
  */
 export function BlockLibrary({ blocks, onChange, lang, t, onRequestMedia }: BlockLibraryProps) {
   const [showPalette, setShowPalette] = useState(false);
-  const [editingIdx, setEditingIdx] = useState<number | null>(null);
+  const [editingIdx, setEditingIdx] = useState<number | null>(() => {
+    if (typeof window === "undefined") return null;
+    const rawIndex = new URLSearchParams(window.location.search).get("block");
+    const index = rawIndex === null ? NaN : Number(rawIndex);
+    return Number.isInteger(index) && index >= 0 ? index : null;
+  });
   const [editLang, setEditLang] = useState<"en" | "fr">("en");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -241,6 +247,19 @@ function BlockEditorDialog({ block, blockDef, lang, onLangChange, t, onSave, onR
         </DialogContent>
       </Dialog>
     );
+  }
+
+  if (block.type === "single_choice_exercise" || block.type === "multi_choice_exercise") {
+    return <ChoiceQuestionEditor block={block} multiple={block.type === "multi_choice_exercise"} onSave={onSave} onClose={onClose} />;
+  }
+  if (block.type === "checkpoint") {
+    return <CheckpointBlockEditor block={block} onSave={onSave} onClose={onClose} />;
+  }
+  if (block.type === "bucket_sort") {
+    return <BucketSortBlockEditor block={block} onSave={onSave} onClose={onClose} />;
+  }
+  if (block.type === "fill_blank") {
+    return <FillBlankBlockEditor block={block} onSave={onSave} onClose={onClose} />;
   }
 
   const updateField = (key: string, value: any) => {

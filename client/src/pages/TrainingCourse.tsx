@@ -10,7 +10,7 @@ import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
   BookOpen, Lock, LogIn, LogOut, ArrowRight, Moon, Sun, Menu, X, Check, Filter, Video, Eye,
-  FileText, ChevronDown, Brain, Target, Trophy, GraduationCap, Download, ArrowUp, Timer
+  FileText, ChevronDown, Brain, Target, Trophy, GraduationCap, Download, ArrowUp, Timer, RefreshCw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -95,7 +95,7 @@ export default function TrainingCourse() {
   const cert = trainingIndex.certifications.find((c: any) => c.id === certId);
 
   // Course data with caching and prefetching
-  const { courseLessons, courseExercises, courseSections, loading: lessonsLoading } = useCourseData(courseId);
+  const { courseLessons, courseExercises, courseSections, loading: lessonsLoading, error: courseLoadError, retry: retryCourseLoad } = useCourseData(courseId);
 
   // Prefetch next course in certification path for instant navigation
   const certCourses = trainingIndex.courses.filter((c: any) => c.certId === certId);
@@ -427,9 +427,18 @@ export default function TrainingCourse() {
 
           {/* Active Lesson Viewer */}
           {lessonsLoading ? (
-            <div className="bg-card rounded-2xl border border-border p-8 text-center shadow-sm">
+            <div className="bg-card rounded-2xl border border-border p-8 text-center shadow-sm" role="status" aria-live="polite">
               <div className="w-6 h-6 border-3 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-3" />
-              <p className="text-sm text-muted-foreground">{t({ en: "Loading lessons...", fr: "Chargement des leçons..." })}</p>
+              <p className="text-sm font-medium text-foreground">{t({ en: "Preparing your course…", fr: "Préparation de votre cours…" })}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{t({ en: "Videos, slides, and interactive activities are loading.", fr: "Vidéos, slides et activités interactives sont en cours de chargement." })}</p>
+              {courseLoadError === "slow" && <p className="mt-3 text-xs text-amber-700">{t({ en: "This is taking longer than expected. You can keep this page open or retry now.", fr: "Le chargement prend plus de temps que prévu. Vous pouvez patienter ou relancer maintenant." })}</p>}
+              {courseLoadError === "slow" && <Button className="mt-3" size="sm" variant="outline" onClick={retryCourseLoad}><RefreshCw className="mr-1.5 h-3.5 w-3.5" />{t({ en: "Retry", fr: "Réessayer" })}</Button>}
+            </div>
+          ) : courseLoadError === "failed" ? (
+            <div className="bg-card rounded-2xl border border-amber-200 p-8 text-center shadow-sm">
+              <p className="font-medium text-foreground">{t({ en: "The course could not be loaded.", fr: "Le cours n’a pas pu être chargé." })}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{t({ en: "Check your connection and retry. Your progress is preserved.", fr: "Vérifiez votre connexion puis réessayez. Votre progression est conservée." })}</p>
+              <Button className="mt-4" size="sm" onClick={retryCourseLoad}><RefreshCw className="mr-1.5 h-3.5 w-3.5" />{t({ en: "Retry loading", fr: "Relancer le chargement" })}</Button>
             </div>
           ) : courseLessons.length > 0 && (() => {
             // Determine which lesson to display: review mode or current

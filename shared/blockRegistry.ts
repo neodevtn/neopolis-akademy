@@ -211,10 +211,13 @@ const checkpointBlock: BlockTypeDefinition = {
   color: "bg-orange-100 text-orange-700",
   isChapterType: true,
   schema: [
-    { key: "exerciseId", label: { en: "Exercise ID", fr: "ID exercice" }, type: "text", required: true },
     { key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text" },
+    { key: "questions", label: { en: "Validation questions", fr: "Questions de validation" }, type: "array", arrayItemSchema: [
+      { key: "question", label: { en: "Question", fr: "Question" }, type: "i18n_textarea", required: true },
+      { key: "explanation", label: { en: "Explanation", fr: "Explication" }, type: "i18n_textarea" },
+    ] },
   ],
-  defaultData: { type: "checkpoint", exerciseId: "", title: { en: "Checkpoint", fr: "Point de validation" } },
+  defaultData: { type: "checkpoint", title: { en: "Checkpoint", fr: "Point de validation" }, questions: [] },
 };
 
 const cloudExerciseBlock: BlockTypeDefinition = {

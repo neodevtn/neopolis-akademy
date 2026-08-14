@@ -1376,3 +1376,20 @@
 - [x] Rétablir les actions visibles d’édition sur les blocs existants
 - [x] Corriger le mode consultation et unifier ses actions avec le mode édition
 - [x] Vérifier de bout en bout l’ouverture, la consultation, l’édition et la sauvegarde d’un cours
+
+## WYSIWYG et qualité typographique des contenus texte
+- [x] Auditer les blocs de contenu texte français et anglais pour identifier les formats bruts
+- [x] Remplacer l’éditeur Markdown minimal par un véritable WYSIWYG structuré et sûr
+- [x] Restaurer la hiérarchie de titres, emphases, listes et retours à la ligne sans modifier le sens
+- [x] Vérifier les rendus apprenant et administrateur sur un échantillon bilingue représentatif
+
+## Correctifs bloquants WYSIWYG et n8n
+- [x] Corriger les commandes de listes numérotées et à puces dans l’éditeur de contenu texte
+- [x] Ajouter un chargement visible, une reprise et une erreur récupérable au cours n8n
+- [x] Vérifier la réactivité du chargement vidéo et des données du cours n8n
+
+## Édition visuelle des checkpoints et modèles de blocs
+- [x] Remplacer l’entrée ID des checkpoints par une interface de questions et critères visuels
+- [x] Auditer les schémas de formulaires de tous les types de blocs
+- [x] Corriger les formulaires qui exposent des champs techniques sans interface métier
+- [x] Vérifier visuellement un échantillon représentatif de chaque famille de blocs

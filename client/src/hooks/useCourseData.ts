@@ -120,6 +120,8 @@ export function useCourseData(courseId: string | undefined) {
   const [courseExercises, setCourseExercises] = useState<any[]>([]);
   const [courseSections, setCourseSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [retryVersion, setRetryVersion] = useState(0);
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -130,6 +132,7 @@ export function useCourseData(courseId: string | undefined) {
   useEffect(() => {
     if (!courseId) {
       setLoading(false);
+      setError(null);
       return;
     }
 
@@ -140,27 +143,42 @@ export function useCourseData(courseId: string | undefined) {
       setCourseExercises(cached.exercises);
       setCourseSections(cached.sections);
       setLoading(false);
+      setError(null);
       return;
     }
 
     // Fetch from network
+    let settled = false;
     setLoading(true);
+    setError(null);
+    const slowLoadTimer = window.setTimeout(() => {
+      if (!settled && mountedRef.current) {
+        setError("slow");
+      }
+    }, 12000);
     fetchCourseData(courseId)
       .then((data) => {
+        settled = true;
+        window.clearTimeout(slowLoadTimer);
         if (!mountedRef.current) return;
         setCourseLessons(data.lessons);
         setCourseExercises(data.exercises);
         setCourseSections(data.sections);
         setLoading(false);
+        setError(null);
       })
       .catch(() => {
+        settled = true;
+        window.clearTimeout(slowLoadTimer);
         if (!mountedRef.current) return;
         setCourseLessons([]);
         setCourseExercises([]);
         setCourseSections([]);
         setLoading(false);
+        setError("failed");
       });
-  }, [courseId]);
+    return () => window.clearTimeout(slowLoadTimer);
+  }, [courseId, retryVersion]);
 
   const invalidateCache = useCallback((id?: string) => {
     if (id) {
@@ -170,11 +188,18 @@ export function useCourseData(courseId: string | undefined) {
     }
   }, []);
 
+  const retry = useCallback(() => {
+    if (courseId) courseCache.delete(courseId);
+    setRetryVersion((version) => version + 1);
+  }, [courseId]);
+
   return {
     courseLessons,
     courseExercises,
     courseSections,
     loading,
+    error,
+    retry,
     invalidateCache,
   };
 }

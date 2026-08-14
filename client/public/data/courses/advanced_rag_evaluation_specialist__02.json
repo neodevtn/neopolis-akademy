@@ -17,7 +17,7 @@
             {
               "type": "content",
               "body": {
-                "en": "In this lesson you will learn: 1) How to rewrite and normalize user queries to reduce ambiguity and improve retriever match quality. 2) How to decompose complex, multi-hop questions into smaller sub-queries and recombine results. 3) How to apply HyDE (Hypothetical Document Embeddings) to synthesize pseudo-passages for higher-recall retrieval and when to avoid it."
+                "en": "**In this lesson you will learn:**\n\n- 1) How to rewrite and normalize user queries to reduce ambiguity and improve retriever match quality.\n- 2) How to decompose complex, multi-hop questions into smaller sub-queries and recombine results.\n- 3) How to apply HyDE (Hypothetical Document Embeddings) to synthesize pseudo-passages for higher-recall retrieval and when to avoid it."
               }
             },
             {
@@ -423,7 +423,7 @@
             {
               "type": "content",
               "body": {
-                "en": "In this lesson you will learn: 1) How reranking with cross-encoders and diversification (e.g., MMR) boosts precision of top results after initial retrieval 2) How contextual compression trims passages to only query-relevant spans while preserving provenance 3) How to evaluate trade-offs between accuracy, latency, and cost using metrics like nDCG@k, Recall@k, and time per query"
+                "en": "**In this lesson you will learn:**\n\n- 1) How reranking with cross-encoders and diversification (e.g., MMR) boosts precision of top results after initial retrieval\n- 2) How contextual compression trims passages to only query-relevant spans while preserving provenance\n- 3) How to evaluate trade-offs between accuracy, latency, and cost using metrics like nDCG@k, Recall@k, and time per query"
               }
             }
           ],
@@ -437,7 +437,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Initial retrieval (BM25, dense embeddings) favors recall, but the top-k often contains off-target or redundant chunks. Reranking uses a more expensive model (e.g., cross-encoder monoT5, MiniLM/MS MARCO cross-encoders) to score each candidate with the query, delivering higher precision in the final context window. Diversification methods like Maximal Marginal Relevance (MMR) balance relevance with novelty to reduce redundancy across selected chunks. Contextual compression further reduces context by extracting or summarizing only the spans needed to answer the query—via extractive filters (similarity thresholds, salience models) or LLM-based answer-focused summarization—while retaining citations and character offsets to support grounding. A common pattern is: high-recall retriever → reranker over top-N (e.g., 100) → compression to produce a compact, provenance-rich context. Tune chunk size/stride to avoid cutting entities mid-span. Evaluate with nDCG@k/MRR (ordering quality), Recall@k (coverage), factuality/faithfulness of answers, and latency/cost; choose N and compression aggressiveness to meet SLA without losing critical evidence."
+                "en": "Initial retrieval (BM25, dense embeddings) favors recall, but the top-k often contains off-target or redundant chunks. Reranking uses a more expensive model (e.g., cross-encoder monoT5, MiniLM/MS MARCO cross-encoders) to score each candidate with the query, delivering higher precision in the final context window.\n\nDiversification methods like Maximal Marginal Relevance (MMR) balance relevance with novelty to reduce redundancy across selected chunks. Contextual compression further reduces context by extracting or summarizing only the spans needed to answer the query—via extractive filters (similarity thresholds, salience models) or LLM-based answer-focused summarization—while retaining citations and character offsets to support grounding.\n\nA common pattern is: high-recall retriever → reranker over top-N (e.g., 100) → compression to produce a compact, provenance-rich context. Tune chunk size/stride to avoid cutting entities mid-span.\n\nEvaluate with nDCG@k/MRR (ordering quality), Recall@k (coverage), factuality/faithfulness of answers, and latency/cost; choose N and compression aggressiveness to meet SLA without losing critical evidence."
               }
             }
           ],
@@ -640,7 +640,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Agentic RAG turns the LLM into a planner that decides what to retrieve, from where, and in which order. A typical loop is Plan → Retrieve → Read → Reason → Verify → Stop. The planner decomposes complex questions into sub-goals, selects tools or sources (vector store, keyword search, web, SQL, code), formulates/reforms queries, and sets budgets (k per hop, maximum hops, token caps). Adaptive strategies route sub-questions to the best source (e.g., code Q&A to a docs index, current events to web) and adjust k based on uncertainty. Stopping criteria include confidence thresholds (e.g., entailment score from evidence), self-consistency across sampled answers, or lack-of-progress signals. Verification adds robustness via evidence checking (citation coverage), cross-checking with alternative queries, or answerability detection that returns “not enough information.” Logging traces of actions, queries, and evidence enables step-level evaluation (sub-answer accuracy, evidence recall/precision) and cost control (per-hop tokens, API calls)."
+                "en": "Agentic RAG turns the LLM into a planner that decides what to retrieve, from where, and in which order. A typical loop is Plan → Retrieve → Read → Reason → Verify → Stop.\n\nThe planner decomposes complex questions into sub-goals, selects tools or sources (vector store, keyword search, web, SQL, code), formulates/reforms queries, and sets budgets (k per hop, maximum hops, token caps). Adaptive strategies route sub-questions to the best source (e.g., code Q&A to a docs index, current events to web) and adjust k based on uncertainty.\n\nStopping criteria include confidence thresholds (e.g., entailment score from evidence), self-consistency across sampled answers, or lack-of-progress signals. Verification adds robustness via evidence checking (citation coverage), cross-checking with alternative queries, or answerability detection that returns “not enough information.” Logging traces of actions, queries, and evidence enables step-level evaluation (sub-answer accuracy, evidence recall/precision) and cost control (per-hop tokens, API calls)."
               }
             }
           ],

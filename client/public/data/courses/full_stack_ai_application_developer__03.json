@@ -17,7 +17,7 @@
             {
               "type": "content",
               "body": {
-                "en": "In this lesson you will learn: 1) How the Next.js App Router, React Server Components (RSC), Route Handlers, and Server Actions work together to build secure, full‑stack AI features. 2) How to stream model responses and tool results from Route Handlers/RSC with proper caching, revalidation, and Edge runtime considerations. 3) How to structure auth, data access, and observability for production deployments (e.g., Vercel) while keeping secrets server‑side."
+                "en": "**In this lesson you will learn:**\n\n- 1) How the Next.js App Router, React Server Components (RSC), Route Handlers, and Server Actions work together to build secure, full‑stack AI features.\n- 2) How to stream model responses and tool results from Route Handlers/RSC with proper caching, revalidation, and Edge runtime considerations.\n- 3) How to structure auth, data access, and observability for production deployments (e.g., Vercel) while keeping secrets server‑side."
               }
             },
             {
@@ -37,7 +37,7 @@
             {
               "type": "content",
               "body": {
-                "en": "The App Router (app/ directory) enables server‑first UI via React Server Components, nested layouts, and streaming. Route Handlers (app/api/*/route.ts) are file‑based endpoints ideal for AI model calls, RAG pipelines, and webhooks; they can run in the Edge or Node runtime and support streamed responses. Server Actions let you mutate data securely from UI events without exposing credentials to the client. Data fetching in RSC supports fine‑grained caching and revalidation (cache: \"no-store\", revalidate, tags), which is crucial for AI outputs that vary per user or time. Streaming with RSC and Route Handlers improves perceived latency by progressively revealing tokens, tool progress, or partial results. Keep provider keys and embeddings pipelines on the server, attach user/session context for authorization, and log requests/latency/tokens for monitoring."
+                "en": "The App Router (app/ directory) enables server‑first UI via React Server Components, nested layouts, and streaming. Route Handlers (app/api/*/route.ts) are file‑based endpoints ideal for AI model calls, RAG pipelines, and webhooks; they can run in the Edge or Node runtime and support streamed responses.\n\nServer Actions let you mutate data securely from UI events without exposing credentials to the client. Data fetching in RSC supports fine‑grained caching and revalidation (cache: \"no-store\", revalidate, tags), which is crucial for AI outputs that vary per user or time.\n\nStreaming with RSC and Route Handlers improves perceived latency by progressively revealing tokens, tool progress, or partial results. Keep provider keys and embeddings pipelines on the server, attach user/session context for authorization, and log requests/latency/tokens for monitoring."
               }
             }
           ],
@@ -234,7 +234,7 @@
             {
               "type": "content",
               "body": {
-                "en": "A robust chat UI models message lifecycle states: idle, composing, sending, loading, streaming, tool-calling, completed, and error. Streaming (e.g., via SSE) should render a single growing assistant bubble with a typing indicator and preserve scroll position; only autoscroll when the user is at the bottom. Tool calls should be transparent: show an in‑progress status (e.g., “Searching…”) and reveal structured results when ready, optionally with collapsible details. Citations increase trust: place inline markers that map to a sidebar or footer list with source titles, snippets, and links, and allow hover/scroll‑to‑highlight. Errors should be actionable: display a concise message, keep user input intact for retry, and offer fallback actions (retry with backoff, switch model, trim context). Add telemetry (latency, token counts) and guardrails (timeouts, token limits) to protect UX under load."
+                "en": "A robust chat UI models message lifecycle states: idle, composing, sending, loading, streaming, tool-calling, completed, and error. Streaming (e.g., via SSE) should render a single growing assistant bubble with a typing indicator and preserve scroll position; only autoscroll when the user is at the bottom.\n\nTool calls should be transparent: show an in‑progress status (e.g., “Searching…”) and reveal structured results when ready, optionally with collapsible details. Citations increase trust: place inline markers that map to a sidebar or footer list with source titles, snippets, and links, and allow hover/scroll‑to‑highlight.\n\nErrors should be actionable: display a concise message, keep user input intact for retry, and offer fallback actions (retry with backoff, switch model, trim context). Add telemetry (latency, token counts) and guardrails (timeouts, token limits) to protect UX under load."
               }
             },
             {
@@ -437,7 +437,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Great AI UX starts with predictable forms that set expectations. Prompt inputs should support multiline text, templating variables, and preview of the effective system/user instructions. File inputs need clear type/size limits, client-side checks, and parsing status before sending to the model. Settings like temperature, max tokens, safety level, and top_p should expose safe defaults, short help text, and reset-to-default actions. Language and model pickers should reflect capabilities (e.g., function calling, vision, context window, supported languages) and handle unavailability with graceful fallbacks. Provide streaming with an accessible Stop/Cancel, error states that preserve user inputs, and persistence of recent selections per conversation."
+                "en": "Great AI UX starts with predictable forms that set expectations.\n\nPrompt inputs should support multiline text, templating variables, and preview of the effective system/user instructions.\n\nFile inputs need clear type/size limits, client-side checks, and parsing status before sending to the model.\n\nSettings like temperature, max tokens, safety level, and top_p should expose safe defaults, short help text, and reset-to-default actions.\n\nLanguage and model pickers should reflect capabilities (e.g., function calling, vision, context window, supported languages) and handle unavailability with graceful fallbacks.\n\nProvide streaming with an accessible Stop/Cancel, error states that preserve user inputs, and persistence of recent selections per conversation."
               }
             }
           ],
@@ -640,7 +640,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Accessible AI UIs honor perceivability, operability, understandability, and robustness. For streaming responses, use an aria-live=polite region to announce updates without stealing focus, and provide a visible, keyboard-focusable Stop/Cancel. Manage focus so that after send, focus remains in the composer; do not jump users to the transcript. Ensure labels and descriptions for controls (prompt, upload, settings) and meet contrast ratios. Provide captions/transcripts for generated media, alt text for images, and reduced motion animations when prefers-reduced-motion is set. Responsiveness means reflow on small screens, large touch targets, sticky composer above the on-screen keyboard with safe-area insets, and efficient rendering to avoid scroll jank. Handle offline/slow networks with resilient retries and accessible status messages."
+                "en": "Accessible AI UIs honor perceivability, operability, understandability, and robustness.\n\nFor streaming responses, use an aria-live=polite region to announce updates without stealing focus, and provide a visible, keyboard-focusable Stop/Cancel.\n\nManage focus so that after send, focus remains in the composer; do not jump users to the transcript.\n\nEnsure labels and descriptions for controls (prompt, upload, settings) and meet contrast ratios.\n\nProvide captions/transcripts for generated media, alt text for images, and reduced motion animations when prefers-reduced-motion is set.\n\nResponsiveness means reflow on small screens, large touch targets, sticky composer above the on-screen keyboard with safe-area insets, and efficient rendering to avoid scroll jank.\n\nHandle offline/slow networks with resilient retries and accessible status messages."
               }
             }
           ],

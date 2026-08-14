@@ -37,7 +37,7 @@
           "block": {
             "type": "content",
             "body": {
-              "en": "A grounded prompt template is the contract between your retrieval pipeline and the language model. It consists of three zones: a system instruction that tells the model to rely only on provided context, a context block populated at runtime with retrieved document chunks, and the user query. The system instruction should explicitly forbid fabrication: 'Answer using only the passages below. If the answer is not present, say you do not know.' The context block should include chunk text, source identifiers, and optionally relevance scores. Separators such as XML-style tags (<context>, <question>) improve model parsing. Chain-of-thought variants ask the model to cite evidence before stating a conclusion, reducing hallucination rates. Template versioning and A/B testing are essential because small wording changes can dramatically shift faithfulness metrics such as RAGAS AnswerFaithfulness and ContextPrecision."
+              "en": "A grounded prompt template is the contract between your retrieval pipeline and the language model.\n\nIt consists of three zones: a system instruction that tells the model to rely only on provided context, a context block populated at runtime with retrieved document chunks, and the user query.\n\nThe system instruction should explicitly forbid fabrication: 'Answer using only the passages below. If the answer is not present, say you do not know.'\n\nThe context block should include chunk text, source identifiers, and optionally relevance scores.\n\nSeparators such as XML-style tags (<context>, <question>) improve model parsing.\n\nChain-of-thought variants ask the model to cite evidence before stating a conclusion, reducing hallucination rates.\n\nTemplate versioning and A/B testing are essential because small wording changes can dramatically shift faithfulness metrics such as RAGAS AnswerFaithfulness and ContextPrecision."
             }
           }
         },
@@ -189,7 +189,7 @@
           "block": {
             "type": "content",
             "body": {
-              "en": "Congratulations on completing Lesson 1: Prompt Templates for Grounded Answers! You now understand how to architect prompts that keep language model outputs anchored to retrieved evidence, how to structure context blocks for traceability, and how to measure grounding quality with RAGAS metrics. In the next lesson you will learn how to surface citations and source attribution in the user interface, transforming raw source IDs into trustworthy, clickable references for end users."
+              "en": "Congratulations on completing Lesson 1: Prompt Templates for Grounded Answers!\n\nYou now understand how to architect prompts that keep language model outputs anchored to retrieved evidence, how to structure context blocks for traceability, and how to measure grounding quality with RAGAS metrics.\n\nIn the next lesson you will learn how to surface citations and source attribution in the user interface, transforming raw source IDs into trustworthy, clickable references for end users."
             }
           }
         }
@@ -222,7 +222,7 @@
           "block": {
             "type": "content",
             "body": {
-              "en": "Citations close the trust loop between an AI answer and its documentary evidence. The pipeline starts in the prompt: each retrieved chunk is labeled with a reference token such as [1] or [DOC:invoice_policy_v2]. The LLM is instructed to embed these tokens inline as it writes. Post-generation, a parser extracts the tokens, deduplicates them, and maps each to a metadata record containing title, URL or file path, page number, and confidence score. On the frontend, tokens render as superscript links or hover cards that display a snippet of the source chunk. Design principles include progressive disclosure (show a compact badge first, expand on click), confidence banding (color or icon indicating retrieval score), and always providing a 'View full document' affordance. When the model cites a source that was not in the retrieved set—a hallucinated citation—server-side validation catches the mismatch and replaces the badge with a warning icon. Accessibility requires that citation links have descriptive aria-labels, not just numeric markers."
+              "en": "Citations close the trust loop between an AI answer and its documentary evidence.\n\nThe pipeline starts in the prompt: each retrieved chunk is labeled with a reference token such as [1] or [DOC:invoice_policy_v2].\n\nThe LLM is instructed to embed these tokens inline as it writes.\n\nPost-generation, a parser extracts the tokens, deduplicates them, and maps each to a metadata record containing title, URL or file path, page number, and confidence score.\n\nOn the frontend, tokens render as superscript links or hover cards that display a snippet of the source chunk.\n\nDesign principles include progressive disclosure (show a compact badge first, expand on click), confidence banding (color or icon indicating retrieval score), and always providing a 'View full document' affordance.\n\nWhen the model cites a source that was not in the retrieved set—a hallucinated citation—server-side validation catches the mismatch and replaces the badge with a warning icon.\n\nAccessibility requires that citation links have descriptive aria-labels, not just numeric markers."
             }
           },
           "blocks": [
@@ -382,7 +382,7 @@
           "block": {
             "type": "content",
             "body": {
-              "en": "Congratulations on completing Lesson 2: Citations and Source Attribution UX! You can now design end-to-end citation pipelines—from token injection in prompts, through server-side validation, to accessible and progressively disclosed frontend components. In the next lesson you will explore access control and document-level permissions, ensuring that users can only retrieve and cite documents they are authorised to access."
+              "en": "Congratulations on completing Lesson 2: Citations and Source Attribution UX!\n\nYou can now design end-to-end citation pipelines—from token injection in prompts, through server-side validation, to accessible and progressively disclosed frontend components.\n\nIn the next lesson you will explore access control and document-level permissions, ensuring that users can only retrieve and cite documents they are authorised to access."
             }
           }
         }
@@ -415,7 +415,7 @@
           "block": {
             "type": "content",
             "body": {
-              "en": "In a production RAG system serving multiple user roles or tenants, every retrieved chunk must be authorised for the requesting identity. The architecture layers access control at ingestion and retrieval. During ingestion, each document chunk's metadata is enriched with an ACL field—a list of user IDs, group IDs, or role names permitted to read it. At query time, the retrieval layer applies a metadata pre-filter so only chunks whose ACL includes the caller's identity are candidates for ANN search. This filter must be applied before—not after—ranking to prevent leaking chunk content through relevance scores. Identity context flows from the API gateway via JWT claims or OAuth 2.0 scopes into the retrieval service. A dedicated ACL resolver normalises group memberships and role expansions before constructing the filter. Row-level security in relational metadata stores (e.g., PostgreSQL RLS) can complement vector-store filters for hybrid architectures. Audit logs must record every retrieval event with the caller identity and the set of document IDs evaluated, supporting compliance reviews and breach investigations."
+              "en": "In a production RAG system serving multiple user roles or tenants, every retrieved chunk must be authorised for the requesting identity. The architecture layers access control at ingestion and retrieval.\n\nDuring ingestion, each document chunk's metadata is enriched with an ACL field—a list of user IDs, group IDs, or role names permitted to read it. At query time, the retrieval layer applies a metadata pre-filter so only chunks whose ACL includes the caller's identity are candidates for ANN search.\n\nThis filter must be applied before—not after—ranking to prevent leaking chunk content through relevance scores. Identity context flows from the API gateway via JWT claims or OAuth 2.0 scopes into the retrieval service.\n\nA dedicated ACL resolver normalises group memberships and role expansions before constructing the filter. Row-level security in relational metadata stores (e.g., PostgreSQL RLS) can complement vector-store filters for hybrid architectures.\n\nAudit logs must record every retrieval event with the caller identity and the set of document IDs evaluated, supporting compliance reviews and breach investigations."
             }
           }
         },
@@ -567,7 +567,7 @@
           "block": {
             "type": "content",
             "body": {
-              "en": "Congratulations on completing Lesson 3: Access Control and Document-Level Permissions! You now know how to architect a multi-tenant RAG system where every retrieved chunk is filtered by the caller's identity, how to propagate JWT and OAuth context into vector-store pre-filters, and how to audit retrieval events for compliance. In the final lesson you will bring everything together by learning how to manage production refresh cycles, scheduling jobs, monitoring pipeline health, and executing rollbacks when things go wrong."
+              "en": "Congratulations on completing Lesson 3: Access Control and Document-Level Permissions! You now know how to architect a multi-tenant RAG system where every retrieved chunk is filtered by the caller's identity, how to propagate JWT and OAuth context into vector-store pre-filters, and how to audit retrieval events for compliance.\n\nIn the final lesson you will bring everything together by learning how to manage production refresh cycles, scheduling jobs, monitoring pipeline health, and executing rollbacks when things go wrong."
             }
           },
           "blocks": [
@@ -608,7 +608,7 @@
           "block": {
             "type": "content",
             "body": {
-              "en": "A production RAG service degrades if its vector index drifts from the underlying knowledge base. Refresh pipelines solve this by re-ingesting changed documents on a schedule or event trigger. Incremental refresh detects document additions, updates, and deletions via change-data-capture (CDC) events or timestamp comparisons, re-embeds only affected chunks, and upserts them into the index—minimising compute cost. Full refresh rebuilds the entire index from scratch and is used for embedding model upgrades or major schema changes. Orchestration tools such as Apache Airflow, Prefect, or Dagster schedule jobs, manage retries, and send alerts on failure. Observability requires three layers: infrastructure metrics (job duration, CPU/memory), retrieval metrics (recall@k, MRR tracked via a golden query set), and answer quality metrics (faithfulness, answer relevancy sampled daily). Index versioning—maintaining a 'blue' live index and a 'green' candidate index—enables zero-downtime refreshes and instant rollback by re-pointing the query router to the previous version if quality metrics degrade. Canary rollouts let a small traffic percentage hit the new index before full promotion."
+              "en": "A production RAG service degrades if its vector index drifts from the underlying knowledge base. Refresh pipelines solve this by re-ingesting changed documents on a schedule or event trigger.\n\nIncremental refresh detects document additions, updates, and deletions via change-data-capture (CDC) events or timestamp comparisons, re-embeds only affected chunks, and upserts them into the index—minimising compute cost. Full refresh rebuilds the entire index from scratch and is used for embedding model upgrades or major schema changes.\n\nOrchestration tools such as Apache Airflow, Prefect, or Dagster schedule jobs, manage retries, and send alerts on failure. Observability requires three layers: infrastructure metrics (job duration, CPU/memory), retrieval metrics (recall@k, MRR tracked via a golden query set), and answer quality metrics (faithfulness, answer relevancy sampled daily).\n\nIndex versioning—maintaining a 'blue' live index and a 'green' candidate index—enables zero-downtime refreshes and instant rollback by re-pointing the query router to the previous version if quality metrics degrade. Canary rollouts let a small traffic percentage hit the new index before full promotion."
             }
           }
         },
@@ -760,7 +760,7 @@
           "block": {
             "type": "content",
             "body": {
-              "en": "Congratulations on completing Lesson 4: Production Refresh, Jobs, Monitoring and Rollback! You have now mastered the full operational lifecycle of a production RAG service—from incremental ingestion pipelines and orchestrated job scheduling, through three-layer observability, to safe deployments with blue/green versioning and canary rollouts. You are ready for the final lab, where you will build a complete RAG service incorporating citations, ACL simulation, and a live refresh pipeline end to end."
+              "en": "Congratulations on completing Lesson 4: Production Refresh, Jobs, Monitoring and Rollback! You have now mastered the full operational lifecycle of a production RAG service—from incremental ingestion pipelines and orchestrated job scheduling, through three-layer observability, to safe deployments with blue/green versioning and canary rollouts.\n\nYou are ready for the final lab, where you will build a complete RAG service incorporating citations, ACL simulation, and a live refresh pipeline end to end."
             }
           }
         }

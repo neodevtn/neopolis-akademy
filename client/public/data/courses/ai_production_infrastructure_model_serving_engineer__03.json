@@ -17,7 +17,7 @@
             {
               "type": "content",
               "body": {
-                "en": "In this lesson you will learn: 1) How online, streaming, and batch/async LLM serving patterns differ and when to use each 2) How to design scalable, low-latency inference stacks using batching, caching, parallelism, and autoscaling 3) How to operate reliable services with routing, rate limiting, safe deployments (canary/A-B), and observability tied to SLOs"
+                "en": "In this lesson you will learn:\n\n- 1) How online, streaming, and batch/async LLM serving patterns differ and when to use each\n- 2) How to design scalable, low-latency inference stacks using batching, caching, parallelism, and autoscaling\n- 3) How to operate reliable services with routing, rate limiting, safe deployments (canary/A-B), and observability tied to SLOs"
               }
             },
             {
@@ -37,7 +37,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Serving patterns: Online (sync) inference optimizes tail latency for interactive workloads, often with streaming tokens; Async/batch optimizes throughput and cost for non-interactive jobs by queueing requests. Single-tenant vs multi-tenant: Dedicated-model pods simplify isolation; multi-model servers improve GPU utilization by loading/evicting models on demand with a loading cache. Stateless vs stateful: Keep application servers stateless and manage state (tokens, KV cache) in the inference tier; persistent KV cache can reduce time-to-first-token (TTFT) for continued chats. Throughput tactics: Micro/continuous batching merges requests at decode time for higher tokens/sec without large latency penalties; request admission and max queue times protect SLOs. Parallelism: Tensor parallelism (TP) shards model weights across GPUs; pipeline parallelism (PP) splits layers into stages—choose the smallest configuration that meets latency targets to limit cross-GPU overhead. Caching and quantization: Tokenization cache, prompt cache, and KV cache reuse speed up repeated prompts; quantization (e.g., 8/4-bit) reduces memory footprint with some quality/speed trade-offs. Platform: Containerize the inference server behind an API gateway and a request router; use K8s with HPA/KEDA to scale on GPU utilization, queue depth, or tokens/sec. Operations: Rate limiting and per-tenant quotas prevent overload; blue/green or canary rollouts limit risk; observability should track TTFT, decode tokens/sec, queue latency, cache hit rate, error codes, and cost per 1k tokens."
+                "en": "Serving patterns: Online (sync) inference optimizes tail latency for interactive workloads, often with streaming tokens; Async/batch optimizes throughput and cost for non-interactive jobs by queueing requests. Single-tenant vs multi-tenant: Dedicated-model pods simplify isolation; multi-model servers improve GPU utilization by loading/evicting models on demand with a loading cache.\n\nStateless vs stateful: Keep application servers stateless and manage state (tokens, KV cache) in the inference tier; persistent KV cache can reduce time-to-first-token (TTFT) for continued chats. Throughput tactics: Micro/continuous batching merges requests at decode time for higher tokens/sec without large latency penalties; request admission and max queue times protect SLOs.\n\nParallelism: Tensor parallelism (TP) shards model weights across GPUs; pipeline parallelism (PP) splits layers into stages—choose the smallest configuration that meets latency targets to limit cross-GPU overhead. Caching and quantization: Tokenization cache, prompt cache, and KV cache reuse speed up repeated prompts; quantization (e.g., 8/4-bit) reduces memory footprint with some quality/speed trade-offs.\n\nPlatform: Containerize the inference server behind an API gateway and a request router; use K8s with HPA/KEDA to scale on GPU utilization, queue depth, or tokens/sec. Operations: Rate limiting and per-tenant quotas prevent overload; blue/green or canary rollouts limit risk; observability should track TTFT, decode tokens/sec, queue latency, cache hit rate, error codes, and cost per 1k tokens."
               }
             }
           ],
@@ -220,7 +220,7 @@
             {
               "type": "content",
               "body": {
-                "en": "In this lesson you will learn: 1) How vLLM achieves high throughput using PagedAttention, KV cache paging, and continuous batching 2) How to start and configure the vLLM server (model selection, tensor parallelism, max context) 3) How to call vLLM’s OpenAI-compatible /v1 endpoints for chat/completions, streaming, and embeddings 4) How to monitor and tune for TTFT, tokens/sec, and memory usage"
+                "en": "In this lesson you will learn:\n\n- 1) How vLLM achieves high throughput using PagedAttention, KV cache paging, and continuous batching\n- 2) How to start and configure the vLLM server (model selection, tensor parallelism, max context)\n- 3) How to call vLLM’s OpenAI-compatible /v1 endpoints for chat/completions, streaming, and embeddings\n- 4) How to monitor and tune for TTFT, tokens/sec, and memory usage"
               }
             }
           ],
@@ -234,7 +234,7 @@
             {
               "type": "content",
               "body": {
-                "en": "Architecture: vLLM’s PagedAttention stores KV cache in fixed-size blocks to avoid fragmentation and to page inactive blocks between GPU and CPU memory. Continuous batching merges compatible requests at the decode step, raising tokens/sec with modest latency impact. Server: Start with a single command (e.g., vllm serve --model <hf-repo-or-path>) which exposes OpenAI-compatible routes on port 8000 by default: /v1/chat/completions, /v1/completions, /v1/embeddings, and /v1/models. Common flags include --tensor-parallel-size for multi-GPU sharding, --max-model-len to cap context length, --gpu-memory-utilization to control allocator aggressiveness, and --dtype for precision. Clients: Use the OpenAI SDK by pointing base_url to http://<host>:8000/v1 and providing any api_key placeholder; enable streaming with stream=true to receive tokens as server-sent events. Operations: Track TTFT, decode tokens/sec, queue latency, and memory paging. Tune concurrency (max requests), batching limits, and context length to meet SLOs while preventing OOM via sensible --max-model-len and adequate CPU swap space for KV paging."
+                "en": "Architecture: vLLM’s PagedAttention stores KV cache in fixed-size blocks to avoid fragmentation and to page inactive blocks between GPU and CPU memory. Continuous batching merges compatible requests at the decode step, raising tokens/sec with modest latency impact.\n\nServer: Start with a single command (e.g., vllm serve --model <hf-repo-or-path>) which exposes OpenAI-compatible routes on port 8000 by default: /v1/chat/completions, /v1/completions, /v1/embeddings, and /v1/models. Common flags include --tensor-parallel-size for multi-GPU sharding, --max-model-len to cap context length, --gpu-memory-utilization to control allocator aggressiveness, and --dtype for precision.\n\nClients: Use the OpenAI SDK by pointing base_url to http://<host>:8000/v1 and providing any api_key placeholder; enable streaming with stream=true to receive tokens as server-sent events. Operations: Track TTFT, decode tokens/sec, queue latency, and memory paging.\n\nTune concurrency (max requests), batching limits, and context length to meet SLOs while preventing OOM via sensible --max-model-len and adequate CPU swap space for KV paging."
               }
             },
             {
@@ -423,7 +423,7 @@
             {
               "type": "content",
               "body": {
-                "en": "In this lesson you will learn: 1) How vLLM’s continuous batching and scheduling work and how to tune them for different traffic patterns. 2) How the KV cache and PagedAttention manage memory and speed, including prompt/prefix caching and prefill vs. decode behavior. 3) Practical techniques to optimize throughput and latency: controlling concurrent sequences and batched tokens, chunked prefill, speculative decoding, and sizing to GPU memory limits."
+                "en": "In this lesson you will learn:\n\n- 1) How vLLM’s continuous batching and scheduling work and how to tune them for different traffic patterns. 2) How the KV cache and PagedAttention manage memory and speed, including prompt/prefix caching and prefill vs. decode behavior. 3) Practical techniques to optimize throughput and latency: controlling concurrent sequences and batched tokens, chunked prefill, speculative decoding, and sizing to GPU memory limits."
               }
             }
           ],
@@ -626,7 +626,7 @@
             {
               "type": "content",
               "body": {
-                "en": "In this lesson you will learn: 1) How to assemble a production-grade vLLM serving stack: networking, storage, observability, and CI/CD. 2) Request routing patterns for multi-model, multi-replica clusters, including session affinity and canarying. 3) Autoscaling strategies using queue depth, tokens/sec, and GPU metrics to meet latency SLOs while controlling cost."
+                "en": "**In this lesson you will learn:**\n\n- 1) How to assemble a production-grade vLLM serving stack: networking, storage, observability, and CI/CD.\n- 2) Request routing patterns for multi-model, multi-replica clusters, including session affinity and canarying.\n- 3) Autoscaling strategies using queue depth, tokens/sec, and GPU metrics to meet latency SLOs while controlling cost."
               }
             }
           ],
