@@ -42,6 +42,12 @@ function classifyUrl(key: string, url: string): MediaKind | null {
   const normalizedKey = key.toLowerCase();
   const normalizedUrl = url.toLowerCase();
   if (normalizedKey.includes("youtube") || /youtube\.com|youtu\.be/.test(normalizedUrl)) return "youtube";
+  if ((normalizedKey === "videoid" || normalizedKey === "video_id") && /^[a-z0-9_-]{6,}$/i.test(url)) return "youtube";
+  // Metadata such as `filename` and prose body text are not playable media references.
+  if (["filename", "file_name", "title", "body", "content", "text", "alt", "caption", "description"].includes(normalizedKey)) return null;
+  const isReferenceKey = /(?:url|uri|path|href|src|download|file|pdf|audio|video|image|slide)/.test(normalizedKey);
+  const hasMediaExtension = /\.(mp4|webm|mov|mp3|wav|m4a|ogg|pdf|png|jpe?g|gif|webp|svg|zip|csv|xlsx?|ipynb)(\?|$)/.test(normalizedUrl);
+  if (!isReferenceKey && !hasMediaExtension) return null;
   if (normalizedKey.includes("audio") || /\.(mp3|wav|m4a|ogg)(\?|$)/.test(normalizedUrl)) return "audio";
   if (normalizedKey.includes("pdf") || /\.pdf(\?|$)/.test(normalizedUrl)) return "pdf";
   if (normalizedKey.includes("image") || /\.(png|jpe?g|gif|webp|svg)(\?|$)/.test(normalizedUrl)) return "image";

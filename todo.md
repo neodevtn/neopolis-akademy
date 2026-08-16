@@ -1401,3 +1401,10 @@
 - [x] Déplacer le sélecteur médias dans les modales de création et d’édition de blocs
 - [x] Mettre à jour les références de cours de manière contrôlée lors du remplacement d’un média
 - [x] Protéger les suppressions de médias utilisés et vérifier les rendus sans régression
+
+## Audit correctif de la gestion de contenu
+- [x] Reproduire et corriger les erreurs 404 des aperçus de PDF et autres médias
+- [x] Vérifier l’insertion effective d’un média existant dans chaque type de bloc média
+- [x] Auditer les flux de création, édition, consultation, sauvegarde et suppression
+- [x] Ajouter des états vides, erreurs et actions de reprise aux flux qui en manquent
+- [x] Vérifier visuellement les parcours admin et apprenant après correction

@@ -2,6 +2,7 @@
 // Uploads via Forge Server presigned URL to S3 (PUT direct).
 // Downloads return /api/assets/{key} paths served via our custom asset proxy.
 
+import crypto from "node:crypto";
 import { ENV } from "./_core/env";
 
 function getForgeConfig() {

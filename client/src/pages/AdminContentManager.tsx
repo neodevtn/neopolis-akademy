@@ -34,6 +34,7 @@ import { ExamBankSettings } from "@/components/admin/ExamBankSettings";
 import { cloneCourseDraft } from "@shared/contentStudio";
 import { normalizeQuestionBank, serializeQuestionBank } from "@shared/questionBank";
 import { normalizeExamConfiguration, type ExamConfiguration } from "@shared/examConfiguration";
+import { toBlockMediaUrl } from "@/lib/mediaUrl";
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
 type ViewMode = "browse" | "course" | "quiz-simulate" | "exam-simulate" | "edit-course" | "edit-quiz" | "edit-exam";
@@ -546,7 +547,7 @@ export default function AdminContentManager() {
               onSelect={(asset) => {
                 if (!mediaTarget) return;
                 const blocks = [...(chapter.blocks || [])];
-                blocks[mediaTarget.blockIndex] = { ...blocks[mediaTarget.blockIndex], [mediaTarget.fieldKey]: asset.url };
+                blocks[mediaTarget.blockIndex] = { ...blocks[mediaTarget.blockIndex], [mediaTarget.fieldKey]: toBlockMediaUrl(asset.url, asset.kind, mediaTarget.fieldKey) };
                 updateDraftBlocks(blocks);
                 setMediaTarget(null);
               }}
