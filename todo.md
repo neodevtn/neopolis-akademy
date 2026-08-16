@@ -1408,3 +1408,9 @@
 - [x] Auditer les flux de création, édition, consultation, sauvegarde et suppression
 - [x] Ajouter des états vides, erreurs et actions de reprise aux flux qui en manquent
 - [x] Vérifier visuellement les parcours admin et apprenant après correction
+
+## Relation bibliothèque médias et visual designer
+- [x] Afficher les usages précis de chaque média avec accès direct au cours et bloc concernés
+- [x] Proposer depuis la bibliothèque l’insertion dans un bloc existant ou la création d’un bloc média
+- [x] Proposer depuis l’éditeur le bon type de bloc à créer selon le média sélectionné
+- [x] Tester les parcours complets de liaison média, création de bloc et remplacement d’usage

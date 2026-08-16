@@ -14,6 +14,8 @@ function kindFor(key, value) {
   const isReferenceKey = /(?:url|uri|path|href|src|download|file|pdf|audio|video|image|slide)/.test(normalizedKey);
   const hasMediaExtension = /\.(mp4|webm|mov|mp3|wav|m4a|ogg|pdf|png|jpe?g|gif|webp|svg|zip|csv|xlsx?|ipynb)(\?|$)/.test(normalizedUrl);
   if (!isReferenceKey && !hasMediaExtension) return null;
+  const hasUsableUrlShape = /^(?:https?:\/\/|\/api\/assets\/|\/manus-storage\/|\/data\/|data:)/.test(value.trim()) || hasMediaExtension;
+  if (!hasUsableUrlShape) return null;
   if (/\.pdf(?:\?|$)/.test(normalizedUrl) || normalizedKey.includes("pdf")) return "pdf";
   if (/\.(png|jpe?g|gif|webp|svg)(?:\?|$)/.test(normalizedUrl) || normalizedKey.includes("image")) return "image";
   if (/\.(mp4|webm|mov)(?:\?|$)/.test(normalizedUrl) || normalizedKey.includes("video")) return "video";

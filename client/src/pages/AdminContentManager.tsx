@@ -58,7 +58,11 @@ export default function AdminContentManager() {
   );
   const [selectedCertId, setSelectedCertId] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedLessonIdx, setSelectedLessonIdx] = useState(0);
+  const [selectedLessonIdx, setSelectedLessonIdx] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    const requested = Number(new URLSearchParams(window.location.search).get("lesson"));
+    return Number.isInteger(requested) && requested >= 0 ? requested : 0;
+  });
   const [selectedChapterIdx, setSelectedChapterIdx] = useState(() => {
     if (typeof window === "undefined") return 0;
     const requested = Number(new URLSearchParams(window.location.search).get("chapter"));
