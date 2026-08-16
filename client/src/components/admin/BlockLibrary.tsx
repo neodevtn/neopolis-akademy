@@ -54,6 +54,8 @@ export function BlockLibrary({ blocks, onChange, lang, t, onRequestMedia }: Bloc
     const newBlock = JSON.parse(JSON.stringify(blockType.defaultData));
     onChange([...blocks, newBlock]);
     setShowPalette(false);
+    // Adding a block opens its visual form immediately, including its contextual media selector.
+    setEditingIdx(blocks.length);
     toast.success(t({ en: `Added: ${blockType.label.en}`, fr: `Ajouté : ${blockType.label.fr}` }));
   };
 
@@ -144,6 +146,7 @@ export function BlockLibrary({ blocks, onChange, lang, t, onRequestMedia }: Bloc
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t({ en: "Block Library", fr: "Bibliothèque de blocs" })}</DialogTitle>
+            <p className="text-sm text-muted-foreground">Choisissez un bloc : son formulaire visuel s’ouvrira ensuite pour ajouter son contenu et son média associé.</p>
           </DialogHeader>
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -340,12 +343,20 @@ function renderFieldEditor(
   const renderTextInput = () => (
     <div className="flex gap-2">
       <Input value={editData[field.key] || ""} onChange={(e) => updateField(field.key, e.target.value)} placeholder={field.placeholder} />
-      {isMediaField && onRequestMedia && <Button type="button" variant="outline" size="icon" title="Bibliothèque médias" onClick={() => onRequestMedia(field.key)}><ImagePlus className="h-4 w-4" /></Button>}
+    </div>
+  );
+  const renderMediaInput = () => (
+    <div className="rounded-lg border border-dashed border-primary/40 bg-primary/5 p-3 space-y-2">
+      <div className="flex gap-2">
+        <Input value={editData[field.key] || ""} onChange={(e) => updateField(field.key, e.target.value)} placeholder={field.placeholder || "/api/assets/..."} />
+      </div>
+      {onRequestMedia && <Button type="button" variant="outline" className="w-full justify-start bg-background" onClick={() => onRequestMedia(field.key)}><ImagePlus className="mr-2 h-4 w-4" />Choisir ou ajouter un média depuis la bibliothèque</Button>}
+      <p className="text-[11px] text-muted-foreground">Sélectionnez un média existant ou ouvrez la gestion globale pour ajouter, remplacer ou retirer une ressource.</p>
     </div>
   );
   switch (field.type) {
     case "text":
-      return renderTextInput();
+      return isMediaField ? renderMediaInput() : renderTextInput();
     case "textarea":
       return <Textarea value={editData[field.key] || ""} onChange={(e) => updateField(field.key, e.target.value)} rows={4} placeholder={field.placeholder} />;
     case "code":

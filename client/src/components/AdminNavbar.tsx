@@ -3,12 +3,13 @@ import { Bell, ArrowLeft } from "lucide-react";
 
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
-type AdminPage = "candidatures" | "training" | "content" | "errors";
+type AdminPage = "candidatures" | "training" | "content" | "media" | "errors";
 
 const NAV_ITEMS: { id: AdminPage; label: string; href: string }[] = [
   { id: "candidatures", label: "Candidatures", href: "/admin" },
   { id: "training", label: "Suivi Apprenants", href: "/admin/training" },
   { id: "content", label: "Contenu", href: "/admin/content" },
+  { id: "media", label: "Médias", href: "/admin/media" },
   { id: "errors", label: "Erreurs", href: "/admin/errors" },
 ];
 

@@ -31,7 +31,7 @@ import { ChapterSourceEditor } from "@/components/admin/ChapterSourceEditor";
 import { QuestionBankPanel } from "@/components/admin/QuestionBankPanel";
 import { CheckpointSettings } from "@/components/admin/CheckpointSettings";
 import { ExamBankSettings } from "@/components/admin/ExamBankSettings";
-import { cloneCourseDraft, collectMediaAssets } from "@shared/contentStudio";
+import { cloneCourseDraft } from "@shared/contentStudio";
 import { normalizeQuestionBank, serializeQuestionBank } from "@shared/questionBank";
 import { normalizeExamConfiguration, type ExamConfiguration } from "@shared/examConfiguration";
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
@@ -102,6 +102,9 @@ export default function AdminContentManager() {
     { courseId: selectedCourseId },
     { enabled: !!selectedCourseId && viewMode !== "browse" }
   );
+  const globalMediaQuery = trpc.adminContent.listMediaAssets.useQuery(undefined, {
+    enabled: isAuthenticated && user?.role === "admin" && viewMode === "edit-course",
+  });
   const quizzesQuery = trpc.adminContent.getQuizzes.useQuery(undefined, {
     enabled: isAuthenticated && user?.role === "admin" && (viewMode === "quiz-simulate" || viewMode === "edit-quiz"),
   });
@@ -329,7 +332,7 @@ export default function AdminContentManager() {
 
     const lesson = course.lessons?.[selectedLessonIdx];
     const chapter = lesson?.chapters?.[selectedChapterIdx];
-    const mediaAssets = collectMediaAssets(course);
+    const mediaAssets = globalMediaQuery.data || [];
     const certId = getCertIdForCourse(selectedCourseId);
     const learnerPreviewHref = certId ? `/training/${certId}/${selectedCourseId}` : null;
     const makeDraftWithChapter = (nextChapter: any) => {
@@ -384,7 +387,6 @@ export default function AdminContentManager() {
                 <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
                   <Badge variant="outline">{chapter.type || "content"}</Badge>
                   {viewMode === "edit-course" && <>
-                    <Button size="sm" variant="outline" onClick={() => setMediaLibraryOpen(true)}><ImagePlus className="mr-1 h-3.5 w-3.5" /> Médias</Button>
                     <Button size="sm" variant="outline" onClick={() => setSourceEditorOpen(true)}><Braces className="mr-1 h-3.5 w-3.5" /> Mode avancé</Button>
                     <Button size="sm" variant="outline" disabled={!courseDraft || saveCourseDraftMut.isPending} onClick={() => setCourseDraft(null)}>Annuler</Button>
                     <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700" disabled={!courseDraft || saveCourseDraftMut.isPending} onClick={saveDraft}><Save className="mr-1 h-3.5 w-3.5" /> {saveCourseDraftMut.isPending ? "Sauvegarde…" : "Sauvegarder"}</Button>

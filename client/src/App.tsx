@@ -16,6 +16,7 @@ const Apply = lazy(() => import("./pages/Apply"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminTraining = lazy(() => import("./pages/AdminTraining"));
 const AdminContentManager = lazy(() => import("./pages/AdminContentManager"));
+const AdminMediaLibrary = lazy(() => import("./pages/AdminMediaLibrary"));
 const AdminErrors = lazy(() => import("./pages/AdminErrors"));
 const MentionsLegales = lazy(() => import("./pages/MentionsLegales"));
 const TrainingDashboard = lazy(() => import("./pages/TrainingDashboard"));
@@ -50,6 +51,7 @@ function Router() {
         <Route path={"/admin"} component={AdminDashboard} />
         <Route path={"/admin/training"} component={AdminTraining} />
         <Route path={"/admin/content"} component={AdminContentManager} />
+        <Route path={"/admin/media"} component={AdminMediaLibrary} />
         <Route path={"/admin/errors"} component={AdminErrors} />
         <Route path={"/mentions-legales"} component={MentionsLegales} />
         <Route path={"/training"} component={TrainingDashboard} />

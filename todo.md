@@ -1393,3 +1393,11 @@
 - [x] Auditer les schémas de formulaires de tous les types de blocs
 - [x] Corriger les formulaires qui exposent des champs techniques sans interface métier
 - [x] Vérifier visuellement un échantillon représentatif de chaque famille de blocs
+
+## Bibliothèque médias et visual designer
+- [x] Inventorier les PDF, images, vidéos YouTube et médias locaux utilisés par les cours
+- [x] Repeupler la bibliothèque médias avec les actifs existants et leurs métadonnées
+- [x] Créer une page indépendante de gestion des médias avec recherche, filtres et usages
+- [x] Déplacer le sélecteur médias dans les modales de création et d’édition de blocs
+- [x] Mettre à jour les références de cours de manière contrôlée lors du remplacement d’un média
+- [x] Protéger les suppressions de médias utilisés et vérifier les rendus sans régression

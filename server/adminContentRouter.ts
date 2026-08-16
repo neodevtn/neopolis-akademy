@@ -3,6 +3,8 @@ import { router, adminProcedure } from "./_core/trpc";
 import fs from "fs/promises";
 import path from "path";
 import { validateStructuredCourse } from "../shared/contentStudio";
+import { listGlobalMediaAssets, removeUnusedMediaMetadata, replaceMediaEverywhere, saveMediaMetadata } from "./mediaCatalog";
+import { storagePut } from "./storage";
 
 /**
  * Admin Content Management Router
@@ -27,6 +29,40 @@ async function writeJsonFile(filePath: string, data: any): Promise<void> {
 }
 
 export const adminContentRouter = router({
+  listMediaAssets: adminProcedure.query(async () => listGlobalMediaAssets(getDataDir())),
+
+  saveMediaAsset: adminProcedure
+    .input(z.object({
+      url: z.string().min(1),
+      title: z.string().max(240),
+      kind: z.enum(["youtube", "video", "audio", "pdf", "image", "download", "slides"]),
+    }))
+    .mutation(async ({ input }) => saveMediaMetadata(getDataDir(), input)),
+
+  uploadMediaAsset: adminProcedure
+    .input(z.object({
+      filename: z.string().min(1).max(180),
+      mimeType: z.string().min(1).max(120),
+      base64: z.string().min(1).max(12_000_000),
+      title: z.string().max(240),
+      kind: z.enum(["video", "audio", "pdf", "image", "download", "slides"]),
+    }))
+    .mutation(async ({ input }) => {
+      const bytes = Buffer.from(input.base64, "base64");
+      if (bytes.byteLength > 8 * 1024 * 1024) throw new Error("Le fichier dépasse 8 Mo. Pour les vidéos plus lourdes, utilisez une URL /api/assets/ déjà importée.");
+      const safeFilename = input.filename.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const uploaded = await storagePut(`media-library/${safeFilename}`, bytes, input.mimeType);
+      return saveMediaMetadata(getDataDir(), { url: uploaded.url, title: input.title || input.filename, kind: input.kind });
+    }),
+
+  replaceMediaAsset: adminProcedure
+    .input(z.object({ fromUrl: z.string().min(1), toUrl: z.string().min(1) }))
+    .mutation(async ({ input }) => replaceMediaEverywhere(getDataDir(), input.fromUrl, input.toUrl)),
+
+  removeUnusedMediaAsset: adminProcedure
+    .input(z.object({ url: z.string().min(1) }))
+    .mutation(async ({ input }) => removeUnusedMediaMetadata(getDataDir(), input.url)),
+
   // List all available courses with their metadata
   listCourses: adminProcedure.query(async () => {
     const dataDir = getDataDir();
