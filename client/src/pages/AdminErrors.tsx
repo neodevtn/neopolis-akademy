@@ -30,6 +30,10 @@ export default function AdminErrors() {
     undefined,
     { enabled: isAuthenticated && user?.role === "admin", refetchInterval: 15_000 }
   );
+  const operationalLogsQuery = trpc.system.getOperationalLogs.useQuery(
+    { limit: 50 },
+    { enabled: isAuthenticated && user?.role === "admin", refetchInterval: 15_000 }
+  );
 
   const deleteMutation = trpc.system.deleteClientErrors.useMutation({
     onSuccess: (data) => {
@@ -189,6 +193,28 @@ export default function AdminErrors() {
             </div>
             <p className="wise-display-xs" style={{ color: "#3b82f6" }}>{stats.promise}</p>
           </div>
+        </div>
+
+        <div className="wise-card p-6 mb-8">
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <div>
+              <h2 className="wise-body-lg font-semibold" style={{ color: "var(--wise-ink)" }}>Journal opérationnel</h2>
+              <p className="text-xs mt-1" style={{ color: "var(--wise-mute)" }}>Progression, temps d’apprentissage, tentatives et incidents récents.</p>
+            </div>
+            <Badge variant="secondary">{operationalLogsQuery.data?.length || 0} événement(s)</Badge>
+          </div>
+          {(operationalLogsQuery.data?.length || 0) === 0 ? (
+            <p className="text-sm py-4" style={{ color: "var(--wise-mute)" }}>En attente d’activité réelle : les nouveaux événements s’afficheront automatiquement.</p>
+          ) : (
+            <div className="max-h-72 overflow-y-auto divide-y divide-border">
+              {operationalLogsQuery.data?.map((log) => (
+                <div key={log.id} className="py-3 flex items-start justify-between gap-4 text-sm">
+                  <div className="min-w-0"><p className="font-medium text-foreground">{log.category === "incident" ? "Incident client" : log.type.replaceAll("_", " ")}</p><p className="text-xs text-muted-foreground truncate">{log.courseId || (log.details as any).message || "Plateforme"}</p></div>
+                  <span className="text-xs text-muted-foreground whitespace-nowrap">{new Date(log.timestamp).toLocaleString()}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Temporal chart */}

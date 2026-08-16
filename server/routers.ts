@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent } from "./db";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
 import { notifyOwner } from "./_core/notification";
@@ -355,7 +355,9 @@ export const appRouter = router({
         lessonIndex: z.number(),
       }))
       .mutation(async ({ ctx, input }) => {
-        return await markLessonComplete(ctx.user.id, input.certificationId, input.courseId, input.lessonIndex);
+        const result = await markLessonComplete(ctx.user.id, input.certificationId, input.courseId, input.lessonIndex);
+        await recordLearningEvent({ userId: ctx.user.id, eventType: "lesson_completed", certificationId: input.certificationId, courseId: input.courseId, lessonIndex: input.lessonIndex, success: 1 });
+        return result;
       }),
 
     checkCertCompletion: protectedProcedure
@@ -412,8 +414,13 @@ export const appRouter = router({
         totalChapters: z.number(),
       }))
       .mutation(async ({ ctx, input }) => {
-      return await upsertChapterProgress(ctx.user.id, input.courseId, input.lessonIndex, input.chapterIndex, input.totalChapters);
+        const result = await upsertChapterProgress(ctx.user.id, input.courseId, input.lessonIndex, input.chapterIndex, input.totalChapters);
+        await recordLearningEvent({ userId: ctx.user.id, eventType: "chapter_progress", courseId: input.courseId, lessonIndex: input.lessonIndex, chapterIndex: input.chapterIndex, metadata: { totalChapters: input.totalChapters } });
+        return result;
       }),
+    recordLearningTime: protectedProcedure
+      .input(z.object({ certificationId: z.string().optional(), courseId: z.string(), lessonIndex: z.number(), chapterIndex: z.number().optional(), durationSeconds: z.number().min(5).max(3600) }))
+      .mutation(async ({ ctx, input }) => recordLearningEvent({ userId: ctx.user.id, eventType: "learning_time", ...input })),
     evaluateAnswer: protectedProcedure
       .input(z.object({
         answer: z.string(),
@@ -786,7 +793,20 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
       .mutation(async ({ ctx, input }) => {
         // Store exercise results in DB
         const { saveExerciseResult } = await import("./db");
-        return await saveExerciseResult(String(ctx.user.id), input.courseId, input.moduleId, input.score, input.totalQuestions, JSON.stringify(input.answers));
+        const priorResults = await (await import("./db")).getExerciseResults(String(ctx.user.id), input.courseId);
+        const attemptNumber = priorResults.filter((r) => r.moduleId === input.moduleId).length + 1;
+        const result = await saveExerciseResult(String(ctx.user.id), input.courseId, input.moduleId, input.score, input.totalQuestions, JSON.stringify(input.answers));
+        await recordLearningEvent({
+          userId: ctx.user.id,
+          eventType: "exercise_submitted",
+          courseId: input.courseId,
+          exerciseId: input.moduleId,
+          score: input.score,
+          success: input.score >= input.totalQuestions ? 1 : 0,
+          attemptNumber,
+          metadata: { totalQuestions: input.totalQuestions },
+        });
+        return { ...result, attemptNumber };
       }),
 
     getMyResults: protectedProcedure

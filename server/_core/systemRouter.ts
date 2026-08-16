@@ -2,7 +2,7 @@ import { z } from "zod";
 import { notifyOwner } from "./notification";
 import { adminProcedure, publicProcedure, router } from "./trpc";
 import { getDb } from "../db";
-import { clientErrors } from "../../drizzle/schema";
+import { clientErrors, learningEvents } from "../../drizzle/schema";
 import { desc, eq, like, and, gte, inArray, notLike } from "drizzle-orm";
 
 // Rate limit: max 10 reports per IP per minute
@@ -219,6 +219,39 @@ export const systemRouter = router({
       }
 
       return { total, boundary, window: window_, promise, hourlyData };
+    }),
+
+  // Real operational timeline: combines learner events with client incidents.
+  getOperationalLogs: adminProcedure
+    .input(z.object({ limit: z.number().min(1).max(200).optional().default(100) }).optional())
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      const limit = input?.limit ?? 100;
+      const [learning, errors] = await Promise.all([
+        db.select().from(learningEvents).orderBy(desc(learningEvents.createdAt)).limit(limit),
+        db.select().from(clientErrors).orderBy(desc(clientErrors.createdAt)).limit(limit),
+      ]);
+      return [
+        ...learning.map((event) => ({
+          id: `learning-${event.id}`,
+          timestamp: event.createdAt.getTime(),
+          type: event.eventType,
+          category: "learning" as const,
+          userId: event.userId,
+          courseId: event.courseId || "",
+          details: { lessonIndex: event.lessonIndex, chapterIndex: event.chapterIndex, durationSeconds: event.durationSeconds, success: event.success, score: event.score, attemptNumber: event.attemptNumber },
+        })),
+        ...errors.map((error) => ({
+          id: `error-${error.id}`,
+          timestamp: error.createdAt.getTime(),
+          type: error.source,
+          category: "incident" as const,
+          userId: null,
+          courseId: "",
+          details: { message: error.message, url: error.url },
+        })),
+      ].sort((a, b) => b.timestamp - a.timestamp).slice(0, limit);
     }),
 
   // Admin endpoint to delete specific errors (mark as resolved)

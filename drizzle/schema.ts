@@ -371,3 +371,26 @@ export const exerciseResults = mysqlTable("exercise_results", {
 });
 export type ExerciseResult = typeof exerciseResults.$inferSelect;
 export type InsertExerciseResult = typeof exerciseResults.$inferInsert;
+
+/**
+ * Learning events - durable timeline for learner engagement and outcomes.
+ * It complements completion tables with time spent and first-attempt analysis.
+ */
+export const learningEvents = mysqlTable("learning_events", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  eventType: varchar("eventType", { length: 64 }).notNull(),
+  certificationId: varchar("certificationId", { length: 200 }),
+  courseId: varchar("courseId", { length: 200 }),
+  lessonIndex: int("lessonIndex"),
+  chapterIndex: int("chapterIndex"),
+  exerciseId: varchar("exerciseId", { length: 255 }),
+  durationSeconds: int("durationSeconds").notNull().default(0),
+  success: int("success"),
+  score: int("score"),
+  attemptNumber: int("attemptNumber"),
+  metadata: json("metadata"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type LearningEvent = typeof learningEvents.$inferSelect;
+export type InsertLearningEvent = typeof learningEvents.$inferInsert;

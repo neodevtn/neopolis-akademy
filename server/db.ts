@@ -1,6 +1,6 @@
 import { eq, desc, sql, and, count, gt, isNull, isNotNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -311,6 +311,8 @@ export async function getLearnerProgress(userId: number) {
   const attempts = await db.select().from(examAttempts).where(eq(examAttempts.userId, userId)).orderBy(desc(examAttempts.finishedAt));
   const chapterProg = await db.select().from(chapterProgress).where(eq(chapterProgress.userId, userId));
   const videoProg = await db.select().from(videoProgress).where(eq(videoProgress.userId, userId));
+  const exercises = await db.select().from(exerciseResults).where(eq(exerciseResults.userId, String(userId))).orderBy(exerciseResults.createdAt);
+  const events = await db.select().from(learningEvents).where(eq(learningEvents.userId, userId)).orderBy(desc(learningEvents.createdAt));
 
   // Get user info for viaCandidature
   const [userRow] = await db.select({ email: users.email, name: users.name, createdAt: users.createdAt, lastSignedIn: users.lastSignedIn, role: users.role }).from(users).where(eq(users.id, userId)).limit(1);
@@ -320,7 +322,7 @@ export async function getLearnerProgress(userId: number) {
     viaCandidature = !!app;
   }
 
-  return { progress, attempts, chapterProgress: chapterProg, videoProgress: videoProg, viaCandidature, userInfo: userRow || null };
+  return { progress, attempts, chapterProgress: chapterProg, videoProgress: videoProg, exerciseResults: exercises, learningEvents: events, viaCandidature, userInfo: userRow || null };
 }
 
 export async function getAllLearnersStats() {
@@ -838,4 +840,34 @@ export async function getExerciseResults(userId: string, courseId?: string) {
     return await db.select().from(exerciseResults).where(and(eq(exerciseResults.userId, userId), eq(exerciseResults.courseId, courseId))).orderBy(desc(exerciseResults.createdAt));
   }
   return await db.select().from(exerciseResults).where(eq(exerciseResults.userId, userId)).orderBy(desc(exerciseResults.createdAt));
+}
+
+// ============ Learning event timeline ============
+export async function recordLearningEvent(data: {
+  userId: number; eventType: string; certificationId?: string; courseId?: string;
+  lessonIndex?: number; chapterIndex?: number; exerciseId?: string;
+  durationSeconds?: number; success?: number; score?: number; attemptNumber?: number; metadata?: unknown;
+}) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(learningEvents).values({
+    ...data,
+    certificationId: data.certificationId || null,
+    courseId: data.courseId || null,
+    lessonIndex: data.lessonIndex ?? null,
+    chapterIndex: data.chapterIndex ?? null,
+    exerciseId: data.exerciseId || null,
+    durationSeconds: Math.max(0, Math.round(data.durationSeconds || 0)),
+    success: data.success ?? null,
+    score: data.score ?? null,
+    attemptNumber: data.attemptNumber ?? null,
+    metadata: data.metadata ?? null,
+  });
+  return { id: result[0].insertId };
+}
+
+export async function getLearnerLearningEvents(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(learningEvents).where(eq(learningEvents.userId, userId)).orderBy(desc(learningEvents.createdAt));
 }

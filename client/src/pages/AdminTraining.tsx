@@ -230,8 +230,13 @@ export default function AdminTraining() {
     const viaCandidature = (detail as any).viaCandidature ?? selectedLearner?.viaCandidature ?? false;
     const chapterProg = (detail as any).chapterProgress ?? [];
     const videoProg = (detail as any).videoProgress ?? [];
+    const learningEvents = (detail as any).learningEvents ?? [];
+    const exerciseResults = (detail as any).exerciseResults ?? [];
     const totalChaptersDone = chapterProg.length;
     const totalVideosDone = videoProg.filter((v: any) => v.watched).length;
+    const totalSeconds = learningEvents.filter((e: any) => e.eventType === "learning_time").reduce((sum: number, e: any) => sum + (e.durationSeconds || 0), 0);
+    const firstAttempts = learningEvents.filter((e: any) => e.eventType === "exercise_submitted" && e.attemptNumber === 1);
+    const firstAttemptRate = firstAttempts.length ? Math.round((firstAttempts.filter((e: any) => e.success === 1).length / firstAttempts.length) * 100) : null;
 
     // Group progress by certification
     const progressByCert: Record<string, { courseId: string; lessonIndex: number }[]> = {};
@@ -300,7 +305,7 @@ export default function AdminTraining() {
             </div>
 
             {/* Quick stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
               <div className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
                 <div className="text-2xl font-bold text-primary">{detail.progress.length}</div>
                 <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><BookOpen className="w-3 h-3" /> Leçons terminées</div>
@@ -316,6 +321,28 @@ export default function AdminTraining() {
               <div className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
                 <div className="text-2xl font-bold text-primary">{detail.attempts.length}</div>
                 <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><Award className="w-3 h-3" /> Examens passés</div>
+              </div>
+              <div className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
+                <div className="text-2xl font-bold text-primary">{totalSeconds >= 3600 ? `${(totalSeconds / 3600).toFixed(1)} h` : `${Math.round(totalSeconds / 60)} min`}</div>
+                <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><Clock className="w-3 h-3" /> Temps actif</div>
+              </div>
+              <div className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
+                <div className="text-2xl font-bold text-primary">{firstAttemptRate === null ? "—" : `${firstAttemptRate}%`}</div>
+                <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><CheckCircle2 className="w-3 h-3" /> Réussite 1re tentative</div>
+              </div>
+            </div>
+
+            <div className="bg-card rounded-2xl border border-border p-6 mb-6 shadow-sm">
+              <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2"><Activity className="w-5 h-5 text-primary" /> Engagement et premières tentatives</h3>
+              <div className="grid md:grid-cols-2 gap-5">
+                <div>
+                  <p className="text-sm font-medium text-foreground mb-2">Premières tentatives d’exercices</p>
+                  {firstAttempts.length === 0 ? <p className="text-sm text-muted-foreground">Aucune tentative enregistrée pour le moment.</p> : <div className="space-y-2">{firstAttempts.slice(0, 6).map((event: any) => <div key={event.id} className="flex justify-between text-sm border-b border-border pb-2"><span className="truncate pr-3">{event.exerciseId || "Exercice"}</span><span className={event.success === 1 ? "text-emerald-600 font-medium" : "text-amber-600 font-medium"}>{event.success === 1 ? "Réussi" : "À revoir"}{event.score != null ? ` · ${event.score}` : ""}</span></div>)}</div>}
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground mb-2">Activité récente</p>
+                  {learningEvents.length === 0 ? <p className="text-sm text-muted-foreground">Le temps et les événements seront enregistrés à partir des nouvelles sessions.</p> : <div className="space-y-2">{learningEvents.slice(0, 6).map((event: any) => <div key={event.id} className="flex justify-between text-sm border-b border-border pb-2"><span>{String(event.eventType).replaceAll("_", " ")}</span><span className="text-muted-foreground">{new Date(event.createdAt).toLocaleDateString()}</span></div>)}</div>}
+                </div>
               </div>
             </div>
 

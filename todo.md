@@ -1414,3 +1414,10 @@
 - [x] Proposer depuis la bibliothèque l’insertion dans un bloc existant ou la création d’un bloc média
 - [x] Proposer depuis l’éditeur le bon type de bloc à créer selon le média sélectionné
 - [x] Tester les parcours complets de liaison média, création de bloc et remplacement d’usage
+
+## Logs et suivi détaillé des apprenants
+- [x] Diagnostiquer pourquoi les journaux de la plateforme restent vides
+- [x] Instrumenter les événements administratifs et pédagogiques essentiels avec persistance
+- [x] Enregistrer les temps de présence et les résultats de première tentative par exercice
+- [x] Enrichir le suivi apprenant par chapitre, exercice, temps et taux de réussite initiale
+- [x] Ajouter des filtres, détails et vues visuelles aux logs et au suivi administrateur

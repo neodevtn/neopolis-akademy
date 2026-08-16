@@ -78,6 +78,21 @@ export default function TrainingCourse() {
   const toggleVideoMutation = trpc.videoProgress.toggle.useMutation({
     onSuccess: () => { videoProgressQuery.refetch(); },
   });
+  const learningTimeMutation = trpc.training.recordLearningTime.useMutation();
+  useEffect(() => {
+    if (!isAuthenticated || !courseId || activeLessonIndex === null) return;
+    const heartbeat = window.setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+      learningTimeMutation.mutate({
+        certificationId: certId,
+        courseId,
+        lessonIndex: activeLessonIndex,
+        chapterIndex: chapterProgress?.current,
+        durationSeconds: 60,
+      });
+    }, 60_000);
+    return () => window.clearInterval(heartbeat);
+  }, [isAuthenticated, certId, courseId, activeLessonIndex, chapterProgress?.current, learningTimeMutation]);
 
   // Derive completed set from server data (fallback to localStorage for non-auth)
   const completedVideos = useMemo(() => {
