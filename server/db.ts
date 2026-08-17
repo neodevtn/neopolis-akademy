@@ -1,6 +1,6 @@
 import { eq, desc, sql, and, count, gt, isNull, isNotNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, InsertLearnerAchievement } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { engagementBucket, firstAttemptRate } from "./reportingMetrics";
 
@@ -246,6 +246,42 @@ export async function getExamAttempts(userId: number, certificationId?: string) 
   return await db.select().from(examAttempts)
     .where(eq(examAttempts.userId, userId))
     .orderBy(desc(examAttempts.finishedAt));
+}
+
+// ============ Learner achievements ============
+
+export async function issueAchievement(data: InsertLearnerAchievement) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const existing = await db.select().from(learnerAchievements).where(and(
+    eq(learnerAchievements.userId, data.userId),
+    eq(learnerAchievements.kind, data.kind),
+    eq(learnerAchievements.achievementKey, data.achievementKey),
+  )).limit(1);
+  if (existing[0]) return { achievement: existing[0], created: false };
+
+  const result = await db.insert(learnerAchievements).values(data);
+  const created = await db.select().from(learnerAchievements).where(eq(learnerAchievements.id, Number(result[0].insertId))).limit(1);
+  return { achievement: created[0], created: true };
+}
+
+export async function getUserAchievements(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(learnerAchievements).where(eq(learnerAchievements.userId, userId)).orderBy(desc(learnerAchievements.issuedAt));
+}
+
+export async function getAchievementById(userId: number, achievementId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const rows = await db.select().from(learnerAchievements).where(and(eq(learnerAchievements.userId, userId), eq(learnerAchievements.id, achievementId))).limit(1);
+  return rows[0] || null;
+}
+
+export async function markAchievementEmailed(achievementId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(learnerAchievements).set({ emailedAt: new Date() }).where(eq(learnerAchievements.id, achievementId));
 }
 
 // ============ Admin: All Learners ============

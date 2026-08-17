@@ -100,6 +100,51 @@ function emailCtaButton(label: string, href: string): string {
     </table>`;
 }
 
+export interface AchievementEmailData {
+  to: string;
+  name: string;
+  achievement: { id: number; kind: "skill_badge" | "certification"; title: string; description?: string | null; credentialCode: string };
+  pdf: Buffer;
+}
+
+/** Send an official credential notification once, with the generated PDF attached. */
+export async function sendAchievementEmail(data: AchievementEmailData): Promise<boolean> {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (!resendApiKey) {
+    console.log(`[Email] RESEND_API_KEY not configured. Achievement email not sent to ${data.to}`);
+    return false;
+  }
+  const resend = new Resend(resendApiKey);
+  const isCertification = data.achievement.kind === "certification";
+  const label = isCertification ? "Certification obtenue" : "Badge de compétence obtenu";
+  const filename = `${isCertification ? "diplome" : "badge"}_${data.achievement.credentialCode}.pdf`;
+  const html = emailWrapper(`
+    ${emailHeader(label)}
+    <div style="padding: 32px; color: #172033;">
+      <h2 style="margin: 0 0 12px; font-size: 24px;">Félicitations ${data.name} !</h2>
+      <p style="margin: 0 0 20px; line-height: 1.6;">Vous venez d’obtenir ${isCertification ? "une certification" : "un badge de compétence"} sur Neopolis Akademy.</p>
+      <div style="border-left: 4px solid #c89a52; background: #f8fafc; padding: 18px; margin: 0 0 22px;">
+        <p style="margin: 0 0 6px; color: #0f6b61; font-weight: 700;">${data.achievement.title}</p>
+        <p style="margin: 0; color: #475569; font-size: 14px;">${data.achievement.description || "Acquis validé sur la plateforme."}</p>
+      </div>
+      <p style="margin: 0; line-height: 1.6;">Votre diplôme officiel Neopolis Development est joint à cet e-mail. Conservez la référence <strong>${data.achievement.credentialCode}</strong> pour toute vérification.</p>
+    </div>
+    ${emailFooter("fr")}`);
+  const { error } = await resend.emails.send({
+    from: FROM_ADDRESS,
+    to: [data.to],
+    subject: `Neopolis Akademy — ${label}`,
+    html,
+    text: `Félicitations ${data.name}. ${data.achievement.title}. Votre diplôme officiel est joint. Référence : ${data.achievement.credentialCode}`,
+    attachments: [{ filename, content: data.pdf }],
+  });
+  if (error) {
+    console.error(`[Email] Achievement email failed for ${data.to}:`, error);
+    return false;
+  }
+  return true;
+}
+
 function scoreColor(score: number): string {
   if (score >= 70) return "#16a34a";
   if (score >= 50) return "#ca8a04";

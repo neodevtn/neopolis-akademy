@@ -2,6 +2,7 @@ import { createContext, useContext, useCallback, ReactNode, useMemo, useRef } fr
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { toast } from "sonner";
+import { announceAchievement } from "@/components/AchievementCelebration";
 import trainingIndex from "@/data/trainingIndex.json";
 
 interface LastVisitedInfo {
@@ -60,7 +61,7 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
   });
 
   const markLessonMutation = trpc.training.markLessonComplete.useMutation({
-    onSuccess: (_data, variables) => {
+    onSuccess: (data, variables) => {
       const { certificationId, courseId, lessonIndex } = variables;
       
       // Check if this lesson completion unlocks the next course or completes the certification
@@ -112,6 +113,7 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
         }
       }
 
+      if (data?.achievement) announceAchievement(data.achievement);
       progressQuery.refetch();
     },
   });

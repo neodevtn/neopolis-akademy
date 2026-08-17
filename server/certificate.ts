@@ -1,7 +1,8 @@
 import { Router, Request, Response } from "express";
 import PDFDocument from "pdfkit";
 import { sdk } from "./_core/sdk";
-import { getExamAttempts } from "./db";
+import { getAchievementById, getExamAttempts } from "./db";
+import { generateAchievementPdf } from "./achievementPdf";
 
 const router = Router();
 
@@ -133,6 +134,26 @@ router.get("/api/certificate/:certificationId", async (req: Request, res: Respon
     if (!res.headersSent) {
       res.status(500).json({ error: "Failed to generate certificate" });
     }
+  }
+});
+
+/** Download the official PDF for an achievement owned by the authenticated learner. */
+router.get("/api/achievement-certificate/:achievementId", async (req: Request, res: Response) => {
+  try {
+    const user = await sdk.authenticateRequest(req);
+    if (!user) return res.status(401).json({ error: "Authentication required" });
+    const achievementId = Number(req.params.achievementId);
+    if (!Number.isInteger(achievementId) || achievementId < 1) return res.status(400).json({ error: "Invalid achievement" });
+    const achievement = await getAchievementById(user.id, achievementId);
+    if (!achievement) return res.status(404).json({ error: "Credential not found" });
+    const pdf = await generateAchievementPdf({ userName: user.name || "Apprenant", achievement });
+    const safeCode = achievement.credentialCode.replace(/[^a-zA-Z0-9_-]/g, "_");
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="${safeCode}.pdf"`);
+    res.send(pdf);
+  } catch (error) {
+    console.error("[Achievement] PDF download failed:", error);
+    if (!res.headersSent) res.status(500).json({ error: "Failed to generate credential" });
   }
 });
 

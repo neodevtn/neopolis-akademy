@@ -3,7 +3,8 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements } from "./db";
+import { awardCertification, awardCourseCompletionBadge } from "./achievementService";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
 import { notifyOwner } from "./_core/notification";
@@ -359,7 +360,8 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         const result = await markLessonComplete(ctx.user.id, input.certificationId, input.courseId, input.lessonIndex);
         await recordLearningEvent({ userId: ctx.user.id, eventType: "lesson_completed", certificationId: input.certificationId, courseId: input.courseId, lessonIndex: input.lessonIndex, success: 1 });
-        return result;
+        const achievement = await awardCourseCompletionBadge(ctx.user, input.certificationId, input.courseId);
+        return { ...result, achievement };
       }),
 
     checkCertCompletion: protectedProcedure
@@ -383,7 +385,7 @@ export const appRouter = router({
         startedAt: z.date(),
       }))
       .mutation(async ({ ctx, input }) => {
-        return await createExamAttempt({
+        const attempt = await createExamAttempt({
           userId: ctx.user.id,
           certificationId: input.certificationId,
           score: input.score,
@@ -393,6 +395,10 @@ export const appRouter = router({
           domainScores: input.domainScores,
           startedAt: input.startedAt,
         });
+        const achievement = input.passed === 1
+          ? await awardCertification(ctx.user, input.certificationId, input.score, Number(attempt.id))
+          : null;
+        return { ...attempt, achievement };
       }),
 
     getExamHistory: protectedProcedure
@@ -400,6 +406,8 @@ export const appRouter = router({
       .query(async ({ ctx, input }) => {
         return await getExamAttempts(ctx.user.id, input?.certificationId);
       }),
+
+    getAchievements: protectedProcedure.query(async ({ ctx }) => getUserAchievements(ctx.user.id)),
 
     // Chapter progress
     getChapterProgress: protectedProcedure

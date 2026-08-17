@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, json } from "drizzle-orm/mysql-core";
+import { index, int, mysqlEnum, mysqlTable, text, timestamp, uniqueIndex, varchar, decimal, json } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -144,6 +144,33 @@ export const examAttempts = mysqlTable("exam_attempts", {
 
 export type ExamAttempt = typeof examAttempts.$inferSelect;
 export type InsertExamAttempt = typeof examAttempts.$inferInsert;
+
+/**
+ * Learner credentials issued from verified course completions or passing exam attempts.
+ * The composite key keeps awards idempotent even if a client retries a completion request.
+ */
+export const learnerAchievements = mysqlTable("learner_achievements", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  kind: mysqlEnum("kind", ["skill_badge", "certification"]).notNull(),
+  achievementKey: varchar("achievementKey", { length: 255 }).notNull(),
+  certificationId: varchar("certificationId", { length: 200 }),
+  courseId: varchar("courseId", { length: 200 }),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  icon: varchar("icon", { length: 80 }).notNull().default("award"),
+  credentialCode: varchar("credentialCode", { length: 120 }).notNull().unique(),
+  evidence: json("evidence"),
+  issuedAt: timestamp("issuedAt").defaultNow().notNull(),
+  emailedAt: timestamp("emailedAt"),
+}, (table) => [
+  uniqueIndex("learner_achievement_once").on(table.userId, table.kind, table.achievementKey),
+  index("learner_achievement_user_idx").on(table.userId),
+  index("learner_achievement_certification_idx").on(table.certificationId),
+]);
+
+export type LearnerAchievement = typeof learnerAchievements.$inferSelect;
+export type InsertLearnerAchievement = typeof learnerAchievements.$inferInsert;
 
 /**
  * Video progress - tracks which videos a user has watched

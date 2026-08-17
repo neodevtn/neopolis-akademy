@@ -1488,3 +1488,10 @@
 - [x] Ajouter le glisser-déposer aux écrans dans chaque leçon
 - [x] Ajouter un aperçu de score et de règles avant la sauvegarde/publication
 - [x] Vérifier les ordres sauvegardés et les parcours apprenants, puis publier
+
+## Badges de compétences et certifications apprenantes
+- [x] Auditer les données de progression, les succès d’évaluation et les flux e-mail existants
+- [x] Définir les critères d’attribution des badges et certificats sans attribuer de réussite fictive
+- [x] Ajouter la persistance, les vues apprenantes et l’écran de félicitations
+- [x] Générer un diplôme PDF officiel Neopolis Development et envoyer l’e-mail de réussite
+- [x] Tester les attributions, les documents et les notifications, puis publier

@@ -6,7 +6,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { useTheme } from "@/contexts/ThemeContext";
 import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
-import { CheckCircle2, PlayCircle, BookOpen, ArrowLeft, Clock, LogIn, Download, Trophy, History, Moon, Sun, ChevronRight, Layers, Lock, Target, Brain } from "lucide-react";
+import { CheckCircle2, PlayCircle, BookOpen, ArrowLeft, Clock, LogIn, Download, Trophy, History, Moon, Sun, ChevronRight, Layers, Lock, Target, Brain, Award } from "lucide-react";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -85,6 +85,10 @@ export default function TrainingCertification() {
     { certificationId: certId },
     { enabled: isAuthenticated && !!certId }
   );
+  const { data: achievements = [] } = trpc.training.getAchievements.useQuery(undefined, { enabled: isAuthenticated });
+  const relevantAchievements = useMemo(() => achievements.filter((achievement: any) =>
+    achievement.certificationId === certId || (achievement.courseId && courseIds.includes(achievement.courseId))
+  ), [achievements, certId, courseIds]);
 
   const bestPassingScore = useMemo(() => {
     if (!examHistory || examHistory.length === 0) return null;
@@ -261,6 +265,19 @@ export default function TrainingCertification() {
               </Button>
             </div>
           </motion.div>
+        )}
+
+        {relevantAchievements.length > 0 && (
+          <motion.section variants={fadeInUp} className="mb-6 rounded-2xl border border-border bg-card p-5 shadow-sm">
+            <div className="mb-4 flex items-center gap-2"><Award className="h-5 w-5 text-amber-600" /><h3 className="font-semibold text-foreground">{t({ en: "Your earned credentials", fr: "Vos compétences et certifications" })}</h3></div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {relevantAchievements.map((achievement: any) => <div key={achievement.id} className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-700 dark:bg-slate-900/30">
+                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${achievement.kind === "certification" ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"}`}>{achievement.kind === "certification" ? <Trophy className="h-5 w-5" /> : <Award className="h-5 w-5" />}</div>
+                <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold text-foreground">{achievement.title}</p><p className="text-xs text-muted-foreground">{new Date(achievement.issuedAt).toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US")}</p></div>
+                <Button size="icon" variant="ghost" onClick={() => window.open(`/api/achievement-certificate/${achievement.id}`, "_blank")} aria-label="Télécharger le diplôme"><Download className="h-4 w-4" /></Button>
+              </div>)}
+            </div>
+          </motion.section>
         )}
 
         {/* Mock Exam CTA */}

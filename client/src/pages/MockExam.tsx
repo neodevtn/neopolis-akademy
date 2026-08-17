@@ -11,6 +11,7 @@ import confetti from "canvas-confetti";
 import { ArrowLeft, Clock, CheckCircle2, XCircle, AlertTriangle, ChevronRight, Lock, LogIn, Shield } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { announceAchievement } from "@/components/AchievementCelebration";
 
 type ExamState = "intro" | "active" | "review" | "locked";
 
@@ -87,7 +88,11 @@ export default function MockExam() {
   const timeLimit = (examConfig?.timeLimit || 90) * 60;
 
   // Submit exam attempt to server
-  const submitAttemptMutation = trpc.training.submitExamAttempt.useMutation();
+  const submitAttemptMutation = trpc.training.submitExamAttempt.useMutation({
+    onSuccess: (result) => {
+      if (result.achievement) announceAchievement(result.achievement);
+    },
+  });
 
   // Timer
   useEffect(() => {
