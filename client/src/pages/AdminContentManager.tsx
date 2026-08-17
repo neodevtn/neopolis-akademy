@@ -36,6 +36,7 @@ import { LegacyExerciseEditor } from "@/components/admin/LegacyExerciseEditor";
 import { LessonManager } from "@/components/admin/LessonManager";
 import { ChapterManager } from "@/components/admin/ChapterManager";
 import { CatalogMetadataEditor } from "@/components/admin/CatalogMetadataEditor";
+import { CompetencyManager } from "@/components/admin/CompetencyManager";
 import { resolveEditableInteractions } from "@/lib/editableInteractions";
 import { cloneCourseDraft } from "@shared/contentStudio";
 import { normalizeQuestionBank, serializeQuestionBank } from "@shared/questionBank";
@@ -340,7 +341,7 @@ export default function AdminContentManager() {
   const renderCatalog = () => {
     if (catalogQuery.isLoading) return <div className="py-10 text-center text-sm text-muted-foreground">Chargement du catalogue…</div>;
     if (!catalogQuery.data) return <div className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">Le catalogue est indisponible. Réessayez dans quelques instants.</div>;
-    return <CatalogMetadataEditor value={catalogQuery.data} onSave={(data) => updateCatalogMut.mutate({ data })} isSaving={updateCatalogMut.isPending} />;
+    return <div className="space-y-8"><CatalogMetadataEditor value={catalogQuery.data} onSave={(data) => updateCatalogMut.mutate({ data })} isSaving={updateCatalogMut.isPending} /><CompetencyManager /></div>;
   };
 
   // ─── COURSE VIEW (Consultation) ───

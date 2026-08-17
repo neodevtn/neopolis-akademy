@@ -173,6 +173,62 @@ export type LearnerAchievement = typeof learnerAchievements.$inferSelect;
 export type InsertLearnerAchievement = typeof learnerAchievements.$inferInsert;
 
 /**
+ * Competency framework. Definitions and contribution rules are administrable;
+ * the ledger below keeps every awarded point independently auditable.
+ */
+export const competencyDefinitions = mysqlTable("competency_definitions", {
+  id: varchar("id", { length: 80 }).primaryKey(),
+  title: json("title").notNull(),
+  description: json("description"),
+  category: varchar("category", { length: 100 }).notNull().default("ai"),
+  icon: varchar("icon", { length: 80 }).notNull().default("sparkles"),
+  color: varchar("color", { length: 40 }).notNull().default("blue"),
+  maxPoints: decimal("maxPoints", { precision: 6, scale: 2 }).notNull().default("100.00"),
+  sortOrder: int("sortOrder").notNull().default(0),
+  active: int("active").notNull().default(1),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CompetencyDefinition = typeof competencyDefinitions.$inferSelect;
+
+export const competencyContributionRules = mysqlTable("competency_contribution_rules", {
+  id: int("id").autoincrement().primaryKey(),
+  competencyId: varchar("competencyId", { length: 80 }).notNull(),
+  sourceType: varchar("sourceType", { length: 80 }).notNull(),
+  sourceKey: varchar("sourceKey", { length: 255 }).notNull().default("*"),
+  label: varchar("label", { length: 255 }).notNull(),
+  points: decimal("points", { precision: 6, scale: 2 }).notNull(),
+  minScore: decimal("minScore", { precision: 5, scale: 2 }),
+  active: int("active").notNull().default(1),
+  sortOrder: int("sortOrder").notNull().default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  index("competency_rule_competency_idx").on(table.competencyId),
+  index("competency_rule_source_idx").on(table.sourceType, table.sourceKey),
+]);
+export type CompetencyContributionRule = typeof competencyContributionRules.$inferSelect;
+
+export const learnerCompetencyContributions = mysqlTable("learner_competency_contributions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  competencyId: varchar("competencyId", { length: 80 }).notNull(),
+  ruleId: int("ruleId").notNull(),
+  sourceType: varchar("sourceType", { length: 80 }).notNull(),
+  sourceKey: varchar("sourceKey", { length: 255 }).notNull(),
+  eventKey: varchar("eventKey", { length: 255 }).notNull(),
+  points: decimal("points", { precision: 6, scale: 2 }).notNull(),
+  score: decimal("score", { precision: 5, scale: 2 }),
+  evidence: json("evidence"),
+  awardedAt: timestamp("awardedAt").defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("learner_competency_once").on(table.userId, table.ruleId, table.eventKey),
+  index("learner_competency_user_idx").on(table.userId),
+  index("learner_competency_skill_idx").on(table.competencyId),
+]);
+export type LearnerCompetencyContribution = typeof learnerCompetencyContributions.$inferSelect;
+
+/**
  * Video progress - tracks which videos a user has watched
  */
 export const videoProgress = mysqlTable("video_progress", {

@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { resolveI18n } from "./contentDetectors";
 import { Link } from "wouter";
 import trainingIndex from "@/data/trainingIndex.json";
+import { trpc } from "@/lib/trpc";
 
 export default function LessonQuiz({
   certId,
@@ -33,6 +34,7 @@ export default function LessonQuiz({
   const [answers, setAnswers] = useState<Array<{ correct: boolean; questionIdx: number; selectedId: string | null }>>([]);
   const [shakeError, setShakeError] = useState(false);
   const [showErrorReview, setShowErrorReview] = useState(false);
+  const recordCompetencyOutcome = trpc.competencies.recordAssessmentOutcome.useMutation();
 
   useEffect(() => {
     // Try lesson-specific quizzes first, fall back to cert-level questions
@@ -570,7 +572,19 @@ export default function LessonQuiz({
             setAnswers((prev) => [...prev, { correct, questionIdx: currentQ, selectedId: selected }]);
             if (currentQ >= 2) {
               setQuizComplete(true);
-              setQuizPassed(newCorrect >= 2);
+              const passed = newCorrect >= 2;
+              setQuizPassed(passed);
+              if (passed) {
+                recordCompetencyOutcome.mutate({
+                  sourceType: "quiz_passed",
+                  sourceKey: courseId,
+                  eventKey: `lesson-quiz:${courseId}:${lessonIndex}`,
+                  score: (newCorrect / 3) * 100,
+                  certificationId: certId,
+                  courseId,
+                  lessonIndex,
+                });
+              }
             } else {
               setCurrentQ((p) => p + 1);
               setSelected(null);

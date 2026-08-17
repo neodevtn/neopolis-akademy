@@ -362,6 +362,8 @@ export async function getLearnerProgress(userId: number) {
   const exercises = await db.select().from(exerciseResults).where(eq(exerciseResults.userId, String(userId))).orderBy(exerciseResults.createdAt);
   const events = await db.select().from(learningEvents).where(eq(learningEvents.userId, userId)).orderBy(desc(learningEvents.createdAt));
   const achievements = await db.select().from(learnerAchievements).where(eq(learnerAchievements.userId, userId)).orderBy(desc(learnerAchievements.issuedAt));
+  const { getUserCompetencies } = await import("./competencyService");
+  const competencies = await getUserCompetencies(userId);
 
   // Get user info for viaCandidature
   const [userRow] = await db.select({ email: users.email, name: users.name, createdAt: users.createdAt, lastSignedIn: users.lastSignedIn, role: users.role }).from(users).where(eq(users.id, userId)).limit(1);
@@ -371,7 +373,7 @@ export async function getLearnerProgress(userId: number) {
     viaCandidature = !!app;
   }
 
-  return { progress, attempts, chapterProgress: chapterProg, videoProgress: videoProg, exerciseResults: exercises, learningEvents: events, achievements, viaCandidature, userInfo: userRow || null };
+  return { progress, attempts, chapterProgress: chapterProg, videoProgress: videoProg, exerciseResults: exercises, learningEvents: events, achievements, competencies, viaCandidature, userInfo: userRow || null };
 }
 
 export async function getAllLearnersStats() {

@@ -64,6 +64,7 @@ export default function LessonViewer({
   initialChapter?: number;
 }) {
   const { user } = useAuth();
+  const recordCompetencyOutcome = trpc.competencies.recordAssessmentOutcome.useMutation();
   const [currentChapter, setCurrentChapter] = useState(initialChapter ?? 0);
   // validatedChapter tracks the highest chapter index that was VALIDATED (quiz passed or exercises completed)
   // This is what gets persisted as progress - NOT the navigation position
@@ -1007,7 +1008,17 @@ export default function LessonViewer({
               lessonIndex={lessonIndex}
               lang={lang}
               t={t}
-              onPass={() => {
+              onPass={(result) => {
+                if (result?.total) recordCompetencyOutcome.mutate({
+                  sourceType: "checkpoint_passed",
+                  sourceKey: courseId,
+                  eventKey: `chapter-quiz:${courseId}:${lessonIndex}:${currentChapter}`,
+                  score: (result.correct / result.total) * 100,
+                  certificationId: certId,
+                  courseId,
+                  lessonIndex,
+                  chapterIndex: currentChapter,
+                });
                 setChapterQuizPassed((prev) => { const next = new Set(Array.from(prev)); next.add(currentChapter); return next; });
                 setShowChapterQuiz(false);
                 // Advance validated progress (quiz passed = chapter validated)

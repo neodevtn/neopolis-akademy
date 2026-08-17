@@ -29,6 +29,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import trainingIndex from "@/data/trainingIndex.json";
 import { AchievementGallery } from "@/components/AchievementGallery";
+import { CompetencyProfile } from "@/components/CompetencyProfile";
 
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
@@ -257,6 +258,7 @@ export default function AdminTraining() {
     const learningEvents = (detail as any).learningEvents ?? [];
     const exerciseResults = (detail as any).exerciseResults ?? [];
     const achievements = (detail as any).achievements ?? [];
+    const competencies = (detail as any).competencies ?? [];
     const totalChaptersDone = chapterProg.length;
     const totalVideosDone = videoProg.filter((v: any) => v.watched).length;
     const totalSeconds = learningEvents.filter((e: any) => e.eventType === "learning_time").reduce((sum: number, e: any) => sum + (e.durationSeconds || 0), 0);
@@ -359,6 +361,9 @@ export default function AdminTraining() {
 
             <div className="mb-6">
               <AchievementGallery achievements={achievements} adminView emptyText="Cet apprenant n’a pas encore obtenu de badge ou de diplôme." />
+            </div>
+            <div className="mb-6">
+              <CompetencyProfile competencies={competencies} adminView />
             </div>
 
             <div className="bg-card rounded-2xl border border-border p-6 mb-6 shadow-sm">

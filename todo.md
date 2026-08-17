@@ -1507,3 +1507,11 @@
 - [x] Ajouter les données d’acquis nécessaires aux vues de profil sécurisées
 - [x] Afficher les badges et diplômes avec leur statut et accès aux documents dans les deux profils
 - [x] Vérifier les droits d’accès et le rendu, puis publier
+
+## Compétences graduées et contributions administrables
+- [x] Auditer les succès pédagogiques pouvant alimenter les compétences
+- [x] Définir le référentiel de compétences et niveaux 1 à 100
+- [x] Ajouter les règles administrables de contribution par contenu, évaluation, badge et diplôme
+- [x] Persister les niveaux et la traçabilité détaillée des points accordés
+- [x] Afficher les compétences dans les profils apprenants et administratifs
+- [x] Vérifier les attributions et publier le référentiel

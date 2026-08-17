@@ -19,7 +19,7 @@ interface ChapterQuizProps {
   lessonIndex: number;
   lang: string;
   t: (obj: { en: string; fr: string }) => string;
-  onPass: () => void;
+  onPass: (result?: { correct: number; total: number }) => void;
   onSkip?: () => void;
 }
 
@@ -119,7 +119,7 @@ export function ChapterQuiz({ courseId, chapterIndex, lessonIndex, lang, t, onPa
                   fr: `Vous avez obtenu ${correctCount}/${shownQuestionCount} correct.`
                 })}
               </p>
-              <Button onClick={onPass} className="gap-1.5 bg-[#c75b3a] hover:bg-[#a84a2e] text-white">
+              <Button onClick={() => onPass({ correct: correctCount, total: shownQuestionCount })} className="gap-1.5 bg-[#c75b3a] hover:bg-[#a84a2e] text-white">
                 {t({ en: "Continue", fr: "Continuer" })} →
               </Button>
             </>

@@ -5,6 +5,7 @@ import { credentialCode, certificationTitle, isCourseCompleted } from "../shared
 import { getUserProgress, issueAchievement, markAchievementEmailed } from "./db";
 import { generateAchievementPdf } from "./achievementPdf";
 import { sendAchievementEmail } from "./email";
+import { applyCompetencyEvent } from "./competencyService";
 
 function getDataDir() {
   const devPath = path.resolve(import.meta.dirname, "..", "client", "public", "data");
@@ -26,12 +27,7 @@ async function notifyNewAchievement(user: User, achievement: any) {
   if (!user.email) return;
   try {
     const pdf = await generateAchievementPdf({ userName: user.name || "Apprenant", achievement });
-    const sent = await sendAchievementEmail({
-      to: user.email,
-      name: user.name || "Apprenant",
-      achievement,
-      pdf,
-    });
+    const sent = await sendAchievementEmail({ to: user.email, name: user.name || "Apprenant", achievement, pdf });
     if (sent) await markAchievementEmailed(achievement.id);
   } catch (error) {
     console.error("[Achievement] Email delivery failed after issuing credential:", error);
@@ -51,6 +47,13 @@ export async function awardCourseCompletionBadge(user: User, certificationId: st
   if (!isCourseCompleted(completedIndexes, totalLessons)) return null;
 
   const title = titleOf(course.sourceCourseTitle || course.title, courseId);
+  await applyCompetencyEvent({
+    userId: user.id,
+    sourceType: "course_completed",
+    sourceKey: courseId,
+    eventKey: `course-completion:${courseId}`,
+    evidence: { certificationId, totalLessons },
+  });
   const issued = await issueAchievement({
     userId: user.id,
     kind: "skill_badge",
@@ -63,7 +66,16 @@ export async function awardCourseCompletionBadge(user: User, certificationId: st
     credentialCode: credentialCode("skill_badge", user.id, `course-${courseId}`),
     evidence: { totalLessons, completedLessons: totalLessons },
   });
-  if (issued.created) await notifyNewAchievement(user, issued.achievement);
+  if (issued.created) {
+    await applyCompetencyEvent({
+      userId: user.id,
+      sourceType: "skill_badge",
+      sourceKey: courseId,
+      eventKey: `badge:${issued.achievement.id}`,
+      evidence: { achievementId: issued.achievement.id, certificationId },
+    });
+    await notifyNewAchievement(user, issued.achievement);
+  }
   return issued.created ? issued.achievement : null;
 }
 
@@ -80,6 +92,16 @@ export async function awardCertification(user: User, certificationId: string, sc
     credentialCode: credentialCode("certification", user.id, certificationId),
     evidence: { score, attemptId },
   });
-  if (issued.created) await notifyNewAchievement(user, issued.achievement);
+  if (issued.created) {
+    await applyCompetencyEvent({
+      userId: user.id,
+      sourceType: "certification",
+      sourceKey: certificationId,
+      eventKey: `certification:${issued.achievement.id}`,
+      score: score / 10,
+      evidence: { achievementId: issued.achievement.id, attemptId },
+    });
+    await notifyNewAchievement(user, issued.achievement);
+  }
   return issued.created ? issued.achievement : null;
 }

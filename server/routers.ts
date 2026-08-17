@@ -17,10 +17,42 @@ import { adminEnhancedRouter } from "./adminRouter";
 import { adminContentRouter } from "./adminContentRouter";
 import { videoRecommendationsRouter } from "./videoRecommendationsRouter";
 import { createAdminNotification } from "./notificationsDb";
+import { applyCompetencyEvent, getCompetencyFramework, getUserCompetencies, replaceCompetencyFramework } from "./competencyService";
+import { COMPETENCY_SOURCE_TYPES } from "../shared/competencyFramework";
+import { backfillCompetencies } from "./competencyBackfill";
 
 export const appRouter = router({
   system: systemRouter,
   videoRecommendations: videoRecommendationsRouter,
+  competencies: router({
+    getMine: protectedProcedure.query(async ({ ctx }) => getUserCompetencies(ctx.user.id)),
+    getFramework: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return getCompetencyFramework();
+    }),
+    saveFramework: protectedProcedure
+      .input(z.object({
+        definitions: z.array(z.object({ id: z.string().min(2).max(80), title: z.any(), description: z.any().nullable().optional(), category: z.string().min(1).max(100), icon: z.string().max(80), color: z.string().max(40), maxPoints: z.union([z.string(), z.number()]).refine((value) => Number.isFinite(Number(value)) && Number(value) >= 1 && Number(value) <= 100, "Le niveau maximal doit être compris entre 1 et 100."), sortOrder: z.number().int(), active: z.number().int().min(0).max(1) })),
+        rules: z.array(z.object({ id: z.number().int().optional(), competencyId: z.string().min(2).max(80), sourceType: z.enum(COMPETENCY_SOURCE_TYPES), sourceKey: z.string().min(1).max(255), label: z.string().min(1).max(255), points: z.union([z.string(), z.number()]).refine((value) => Number.isFinite(Number(value)) && Number(value) > 0 && Number(value) <= 100, "Les points doivent être compris entre 0 et 100."), minScore: z.union([z.string(), z.number()]).nullable().optional().refine((value) => value === null || value === undefined || (Number.isFinite(Number(value)) && Number(value) >= 0 && Number(value) <= 100), "Le score minimal doit être compris entre 0 et 100."), active: z.number().int().min(0).max(1), sortOrder: z.number().int() })),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        return replaceCompetencyFramework({
+          definitions: input.definitions.map((definition) => ({ ...definition, maxPoints: Number(definition.maxPoints).toFixed(2) })),
+          rules: input.rules.map(({ id: _id, ...rule }) => ({ ...rule, points: Number(rule.points).toFixed(2), minScore: rule.minScore === null || rule.minScore === undefined ? null : Number(rule.minScore).toFixed(2) })),
+        });
+      }),
+    recordAssessmentOutcome: protectedProcedure
+      .input(z.object({ sourceType: z.enum(["quiz_passed", "checkpoint_passed"]), sourceKey: z.string().min(1).max(255), eventKey: z.string().min(1).max(255), score: z.number().min(0).max(100), certificationId: z.string().optional(), courseId: z.string().optional(), lessonIndex: z.number().int().optional(), chapterIndex: z.number().int().optional() }))
+      .mutation(async ({ ctx, input }) => {
+        await recordLearningEvent({ userId: ctx.user.id, eventType: input.sourceType, certificationId: input.certificationId, courseId: input.courseId, lessonIndex: input.lessonIndex, chapterIndex: input.chapterIndex, score: Math.round(input.score), success: 1, metadata: { eventKey: input.eventKey } });
+        return { contributions: await applyCompetencyEvent({ userId: ctx.user.id, sourceType: input.sourceType, sourceKey: input.sourceKey, eventKey: input.eventKey, score: input.score, evidence: { certificationId: input.certificationId, courseId: input.courseId, lessonIndex: input.lessonIndex, chapterIndex: input.chapterIndex } }) };
+      }),
+    backfill: protectedProcedure.mutation(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return backfillCompetencies();
+    }),
+  }),
   auth: router({
     me: publicProcedure.query(opts => {
       if (!opts.ctx.user) return null;
@@ -360,6 +392,7 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         const result = await markLessonComplete(ctx.user.id, input.certificationId, input.courseId, input.lessonIndex);
         await recordLearningEvent({ userId: ctx.user.id, eventType: "lesson_completed", certificationId: input.certificationId, courseId: input.courseId, lessonIndex: input.lessonIndex, success: 1 });
+        await applyCompetencyEvent({ userId: ctx.user.id, sourceType: "lesson_completed", sourceKey: input.courseId, eventKey: `lesson:${input.courseId}:${input.lessonIndex}`, evidence: { certificationId: input.certificationId, lessonIndex: input.lessonIndex } });
         const achievement = await awardCourseCompletionBadge(ctx.user, input.certificationId, input.courseId);
         return { ...result, achievement };
       }),
@@ -828,6 +861,8 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
           attemptNumber,
           metadata: { totalQuestions: input.totalQuestions },
         });
+        const percentage = input.totalQuestions > 0 ? (input.score / input.totalQuestions) * 100 : 0;
+        if (percentage >= 70) await applyCompetencyEvent({ userId: ctx.user.id, sourceType: "exercise_passed", sourceKey: input.courseId, eventKey: `exercise:${input.moduleId}`, score: percentage, evidence: { totalQuestions: input.totalQuestions, score: input.score } });
         return { ...result, attemptNumber };
       }),
 
