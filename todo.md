@@ -1435,3 +1435,9 @@
 - [x] Ajouter l’édition, l’ajout, la réorganisation et la suppression des recommandations dans le gestionnaire de contenu
 - [x] Généraliser le rendu des recommandations à tous les modules, avec état vide explicite
 - [x] Vérifier les parcours administrateur et apprenant, puis publier
+
+## Navigation et regroupements de l’administration
+- [x] Auditer les menus administratifs, leurs redondances et leurs dépendances fonctionnelles
+- [x] Définir des groupes de navigation et un ordre adaptés aux parcours administratifs prioritaires
+- [x] Implémenter une navigation administrative persistante, structurée et cohérente sur toutes les pages concernées
+- [x] Vérifier les liens, les états actifs et les parcours administrateur, puis publier

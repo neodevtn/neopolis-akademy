@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { Link } from "wouter";
+import { useEffect, useState, useMemo } from "react";
+import { Link, useLocation } from "wouter";
 import { AdminNavbar } from "@/components/AdminNavbar";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
@@ -39,7 +39,8 @@ const fadeIn = {
 
 export default function AdminTraining() {
   const { user, loading, isAuthenticated } = useAuth();
-  const [activeTab, setActiveTab] = useState("learners");
+  const [location, navigate] = useLocation();
+  const [activeTab, setActiveTab] = useState(() => new URLSearchParams(typeof window === "undefined" ? "" : window.location.search).get("tab") || "learners");
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
@@ -54,6 +55,17 @@ export default function AdminTraining() {
   const [reportingDays, setReportingDays] = useState<7 | 30 | 90>(30);
   const [reportingCertificationId, setReportingCertificationId] = useState("all");
   const pageSize = 15;
+  const activeSection = ({
+    learners: { title: "Suivi des apprenants", description: "Progression, engagement et accompagnement des comptes actifs" },
+    invitations: { title: "Invitations directes", description: "Inviter, suivre ou annuler les invitations hors candidature" },
+    selected: { title: "Candidats sélectionnés", description: "Vérifier l’activation des comptes et relancer les candidats retenus" },
+    analytics: { title: "Reporting d’apprentissage", description: "Analyser la performance, l’implication et l’évolution des apprenants" },
+  } as Record<string, { title: string; description: string }>)[activeTab] || { title: "Gestion des apprenants", description: "Suivi, invitations et analyses de la formation" };
+
+  useEffect(() => {
+    const tab = new URLSearchParams(location.split("?")[1] || "").get("tab");
+    if (["learners", "invitations", "selected", "analytics"].includes(tab || "")) setActiveTab(tab!);
+  }, [location]);
 
   const reportingInput = useMemo(() => ({
     days: reportingDays,
@@ -461,14 +473,14 @@ export default function AdminTraining() {
           {/* Title + Actions */}
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Gestion des apprenants</h1>
-              <p className="text-sm text-muted-foreground mt-1">Suivi, invitations et analyses de la formation</p>
+              <h1 className="text-2xl font-bold text-foreground">{activeSection.title}</h1>
+              <p className="text-sm text-muted-foreground mt-1">{activeSection.description}</p>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="gap-1.5" onClick={handleExportCSV}>
+              {activeTab === "learners" && <Button variant="outline" size="sm" className="gap-1.5" onClick={handleExportCSV}>
                 <Download className="w-4 h-4" /> Export CSV
-              </Button>
-              <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+              </Button>}
+              {activeTab === "invitations" && <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
                 <DialogTrigger asChild>
                   <Button size="sm" className="gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground">
                     <UserPlus className="w-4 h-4" /> Inviter
@@ -534,13 +546,13 @@ export default function AdminTraining() {
                     </Button>
                   </DialogFooter>
                 </DialogContent>
-              </Dialog>
+              </Dialog>}
 
             </div>
           </div>
 
           {/* Stats */}
-          {stats && (
+          {stats && activeTab === "learners" && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               <StatCard icon={<Users className="w-5 h-5" />} value={stats.totalUsers} label="Apprenants" />
               <StatCard icon={<BookOpen className="w-5 h-5" />} value={stats.totalLessonsCompleted} label="Leçons terminées" />
@@ -550,8 +562,8 @@ export default function AdminTraining() {
           )}
 
           {/* Tabs */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="mb-6">
+          <Tabs value={activeTab} onValueChange={(tab) => { setActiveTab(tab); navigate(`/admin/training?tab=${tab}`); }} className="w-full">
+            <TabsList className="hidden">
               <TabsTrigger value="learners" className="gap-1.5">
                 <Users className="w-4 h-4" /> Apprenants
               </TabsTrigger>
