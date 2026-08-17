@@ -33,6 +33,7 @@ import { CheckpointSettings } from "@/components/admin/CheckpointSettings";
 import { ExamBankSettings } from "@/components/admin/ExamBankSettings";
 import { LessonRecommendationEditor, normalizeYouTubeId } from "@/components/admin/LessonRecommendationEditor";
 import { LegacyExerciseEditor } from "@/components/admin/LegacyExerciseEditor";
+import { resolveEditableInteractions } from "@/lib/editableInteractions";
 import { cloneCourseDraft } from "@shared/contentStudio";
 import { normalizeQuestionBank, serializeQuestionBank } from "@shared/questionBank";
 import { normalizeExamConfiguration, type ExamConfiguration } from "@shared/examConfiguration";
@@ -118,7 +119,7 @@ export default function AdminContentManager() {
     enabled: isAuthenticated && user?.role === "admin" && viewMode === "edit-course",
   });
   const quizzesQuery = trpc.adminContent.getQuizzes.useQuery(undefined, {
-    enabled: isAuthenticated && user?.role === "admin" && (viewMode === "quiz-simulate" || viewMode === "edit-quiz"),
+    enabled: isAuthenticated && user?.role === "admin" && (viewMode === "quiz-simulate" || viewMode === "edit-quiz" || viewMode === "edit-course"),
   });
   const examQuestionsQuery = trpc.adminContent.getMockExamQuestions.useQuery(undefined, {
     enabled: isAuthenticated && user?.role === "admin" && (viewMode === "exam-simulate" || viewMode === "edit-exam"),
@@ -361,13 +362,22 @@ export default function AdminContentManager() {
       draft.lessons[selectedLessonIdx] = { ...draft.lessons[selectedLessonIdx], recommendedVideos };
       setCourseDraft(draft);
     };
-    const currentChapterExercises = getExercisesForSelectedChapter({
-      exercises: course.exercises,
-      lesson,
+    const editableInteractions = chapter ? resolveEditableInteractions({
+      course,
       lessonIndex: selectedLessonIdx,
-      chapterId: chapter?.id,
       chapterIndex: selectedChapterIdx,
-    });
+      lessonQuizzes: quizzesQuery.data || {},
+    }) : [];
+    const chapterQuizInteractions = editableInteractions.filter((interaction) => interaction.source === "chapter_quiz");
+    const checkpointExerciseInteractions = editableInteractions.filter((interaction) => interaction.source === "checkpoint_exercise");
+    const chapterQuizSelection = (() => {
+      const sourceKey = chapterQuizInteractions[0]?.sourceKey;
+      if (!sourceKey) return null;
+      const rawBank = (quizzesQuery.data || {})?.[selectedCourseId]?.[sourceKey];
+      const selection = Array.isArray(rawBank) ? { mode: "random", questionCount: 3 } : rawBank?.selection || { mode: "random", questionCount: 3 };
+      const questionCount = Math.min(selection?.questionCount || chapterQuizInteractions.length, chapterQuizInteractions.length);
+      return { questionCount, mode: selection?.mode || "all" };
+    })();
     const saveDraft = () => {
       const draft = courseDraft || cloneCourseDraft(publishedCourse);
       saveCourseDraftMut.mutate({ courseId: selectedCourseId, data: draft });
@@ -543,23 +553,16 @@ export default function AdminContentManager() {
               </div>
               )}
 
-              {/* Exercises linked to the selected chapter */}
-              {course.exercises && (
-                <div className="mt-6 border-t pt-4">
-                  <h4 className="font-semibold text-sm mb-1 flex items-center gap-1">
-                    <PenTool className="w-4 h-4 text-emerald-600" /> Exercices de cet écran
-                  </h4>
-                  <p className="mb-3 text-xs text-muted-foreground">Seuls les exercices rattachés au chapitre ouvert sont affichés. Le contexte, la consigne et la correction restent séparés.</p>
-                  {currentChapterExercises.length === 0 ? <div className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-4 py-3 text-xs text-muted-foreground">Aucun exercice complémentaire n’est rattaché à cet écran.</div> : currentChapterExercises.map((ex: any) => <div key={ex.id || ex._idx} className="mb-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0"><p className="text-[11px] font-bold uppercase tracking-[0.12em] text-emerald-700">{ex.interactionType === "free_text" ? "Réponse libre" : ex.interactionType || "Exercice"}</p><h5 className="mt-1 text-sm font-semibold text-slate-900">{resolveBody(ex.title) || `Exercice ${ex._idx + 1}`}</h5></div>
-                        <div className="flex shrink-0 items-center gap-2">{ex.difficulty && <Badge variant="outline" className="text-xs">{ex.difficulty}</Badge>}{viewMode === "edit-course" && <Button size="sm" variant="outline" className="h-8 gap-1.5 text-blue-700" onClick={() => setEditingLegacyExercise(ex)}><Edit3 className="h-3.5 w-3.5" /> Modifier</Button>}</div>
-                      </div>
-                      <div className="mt-3 grid gap-3 md:grid-cols-2">
-                        <div className="rounded-lg border border-slate-200 bg-white p-3"><p className="mb-1 text-[11px] font-bold uppercase tracking-wide text-slate-500">Contexte pédagogique</p><p className="line-clamp-4 whitespace-pre-line text-xs leading-relaxed text-slate-700">{resolveBody(ex.prompt) || "Aucun contexte renseigné."}</p></div>
-                        <div className="rounded-lg border border-blue-100 bg-blue-50/50 p-3"><p className="mb-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">Consigne pour l’apprenant</p><p className="line-clamp-4 whitespace-pre-line text-xs leading-relaxed text-slate-700">{resolveBody(ex.instructions) || "Aucune consigne renseignée."}</p></div>
-                      </div>
-                    </div>)}
+              {viewMode === "edit-course" && (chapterQuizInteractions.length > 0 || checkpointExerciseInteractions.length > 0) && (
+                <div className="mt-6 space-y-5 border-t pt-5">
+                  {chapterQuizInteractions.length > 0 && <section>
+                    <div className="mb-3 flex items-start justify-between gap-3"><div><h4 className="flex items-center gap-1.5 text-sm font-semibold"><CheckCircle2 className="h-4 w-4 text-indigo-600" /> Quiz de validation après cet écran</h4><p className="mt-1 text-xs text-muted-foreground">Cette banque contient {chapterQuizInteractions.length} QCM. Le lecteur en affiche {chapterQuizSelection?.questionCount || chapterQuizInteractions.length}{chapterQuizSelection?.mode === "random" ? " aléatoirement" : ""} à chaque tentative ; les exercices historiques ne sont pas utilisés.</p></div><Badge className="bg-indigo-100 text-indigo-800">{chapterQuizInteractions.length} dans la banque · {chapterQuizSelection?.questionCount || chapterQuizInteractions.length} par tentative</Badge></div>
+                    <div className="space-y-2">{chapterQuizInteractions.map((interaction) => <div key={interaction.id} className="flex items-center justify-between gap-3 rounded-xl border border-indigo-100 bg-indigo-50/50 p-3"><div className="min-w-0"><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-indigo-700">QCM · Banque {interaction.sourceKey}</p><p className="mt-1 line-clamp-2 text-sm font-medium text-slate-900">{interaction.title}</p><p className="mt-1 text-xs text-muted-foreground">{interaction.item.choices?.length || 0} réponses proposées · réponse correcte définie</p></div><Button size="sm" variant="outline" className="shrink-0 gap-1.5 text-indigo-700" onClick={() => { setEditingQuiz({ ...interaction.item, courseId: selectedCourseId, lessonKey: interaction.sourceKey, questionIdx: interaction.position, isNew: false }); setEditDialogOpen(true); }}><Edit3 className="h-3.5 w-3.5" /> Modifier</Button></div>)}</div>
+                  </section>}
+                  {checkpointExerciseInteractions.length > 0 && <section>
+                    <div className="mb-3"><h4 className="flex items-center gap-1.5 text-sm font-semibold"><PenTool className="h-4 w-4 text-emerald-600" /> Exercices de validation de cet écran</h4><p className="mt-1 text-xs text-muted-foreground">Seuls les exercices explicitement référencés par un checkpoint du chapitre sont proposés ici.</p></div>
+                    <div className="space-y-2">{checkpointExerciseInteractions.map((interaction) => <div key={interaction.id} className="flex items-center justify-between gap-3 rounded-xl border border-emerald-100 bg-emerald-50/50 p-3"><div className="min-w-0"><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-emerald-700">{interaction.type}</p><p className="mt-1 line-clamp-2 text-sm font-medium text-slate-900">{interaction.title}</p></div><Button size="sm" variant="outline" className="shrink-0 gap-1.5 text-emerald-700" onClick={() => setEditingLegacyExercise(interaction.item)}><Edit3 className="h-3.5 w-3.5" /> Modifier</Button></div>)}</div>
+                  </section>}
                 </div>
               )}
             </div>

@@ -1461,3 +1461,10 @@
 - [x] Compléter les éditeurs manquants et remplacer les cartes génériques d’exercice
 - [x] Vérifier les sauvegardes et les aperçus apprenants de tous les types d’exercice couverts
 - [x] Dresser la liste des composants standards mis à jour et des nouveaux composants créés
+
+## Alignement global lecteur apprenant et éditeur
+- [x] Scanner tous les cours afin de cartographier les interactions et leur source canonique
+- [x] Mettre en place un résolveur unique des éléments éditables par leçon et chapitre
+- [x] Présenter dans l’éditeur uniquement les interactions effectivement rendues par le lecteur
+- [x] Adapter les sauvegardes à la source de données réellement consommée par le lecteur
+- [x] Ajouter les contrôles automatisés de cohérence, vérifier un échantillon multi-types et publier
