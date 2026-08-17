@@ -1526,3 +1526,10 @@
 ## Ajustement du seuil de rang Bronze
 - [x] Faire commencer le rang Bronze à 10 points et ajuster les tests
 - [x] Vérifier le rendu des rangs puis publier
+
+## Gamification et objectifs de progression
+- [x] Ajouter le rang Émergent à partir de 5 points et rendre rangs, couleurs et icônes administrables
+- [x] Définir et calculer des objectifs hebdomadaires à partir des contributions vérifiées
+- [x] Ajouter les vues apprenantes de progression, objectifs et récompenses internes
+- [x] Ajouter les contrôles administrateur de gamification et les animations respectueuses des préférences utilisateur
+- [x] Vérifier les calculs, messages et accès, puis publier

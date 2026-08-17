@@ -17,7 +17,7 @@ import { adminEnhancedRouter } from "./adminRouter";
 import { adminContentRouter } from "./adminContentRouter";
 import { videoRecommendationsRouter } from "./videoRecommendationsRouter";
 import { createAdminNotification } from "./notificationsDb";
-import { applyCompetencyEvent, getCompetencyFramework, getCompetencyLeaderboard, getUserCompetencies, replaceCompetencyFramework } from "./competencyService";
+import { applyCompetencyEvent, getCompetencyFramework, getCompetencyLeaderboard, getGamificationConfig, getUserCompetencies, getUserGamification, replaceCompetencyFramework, saveGamificationConfig } from "./competencyService";
 import { COMPETENCY_SOURCE_TYPES } from "../shared/competencyFramework";
 import { backfillCompetencies } from "./competencyBackfill";
 
@@ -26,9 +26,21 @@ export const appRouter = router({
   videoRecommendations: videoRecommendationsRouter,
   competencies: router({
     getMine: protectedProcedure.query(async ({ ctx }) => getUserCompetencies(ctx.user.id)),
+    getGamification: protectedProcedure.query(async ({ ctx }) => getUserGamification(ctx.user.id)),
     getFramework: protectedProcedure.query(async ({ ctx }) => {
       if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
       return getCompetencyFramework();
+    }),
+    getGamificationConfig: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return getGamificationConfig();
+    }),
+    saveGamificationConfig: protectedProcedure.input(z.object({
+      ranks: z.array(z.object({ id: z.string().min(2).max(40), label: z.string().min(1).max(80), minPoints: z.number().min(0).max(100), color: z.string().min(1).max(40), icon: z.string().min(1).max(80), sortOrder: z.number().int(), active: z.number().int().min(0).max(1) })).min(1),
+      settings: z.object({ weeklyGoalPoints: z.number().min(0.5).max(100), pointsLabel: z.string().min(1).max(120), rewardNotice: z.string().min(20).max(2000) }),
+    })).mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return saveGamificationConfig(input);
     }),
     saveFramework: protectedProcedure
       .input(z.object({

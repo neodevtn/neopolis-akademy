@@ -1,5 +1,5 @@
 export type CompetencyRank = {
-  id: "starting" | "bronze" | "silver" | "gold";
+  id: "starting" | "emerging" | "bronze" | "silver" | "gold";
   label: string;
   min: number;
   max: number;
@@ -7,7 +7,8 @@ export type CompetencyRank = {
 };
 
 export const COMPETENCY_RANKS: CompetencyRank[] = [
-  { id: "starting", label: "À démarrer", min: 0, max: 0.9, color: "slate" },
+  { id: "starting", label: "À démarrer", min: 0, max: 9.9, color: "slate" },
+  { id: "emerging", label: "Émergent", min: 5, max: 9.9, color: "sky" },
   { id: "bronze", label: "Bronze", min: 10, max: 34.9, color: "amber" },
   { id: "silver", label: "Argent", min: 35, max: 69.9, color: "slate" },
   { id: "gold", label: "Or", min: 70, max: 100, color: "yellow" },

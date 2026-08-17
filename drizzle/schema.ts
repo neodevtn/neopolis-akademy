@@ -228,6 +228,29 @@ export const learnerCompetencyContributions = mysqlTable("learner_competency_con
 ]);
 export type LearnerCompetencyContribution = typeof learnerCompetencyContributions.$inferSelect;
 
+/** Rangs de gamification configurables selon les niveaux de compétence. */
+export const gamificationRanks = mysqlTable("gamification_ranks", {
+  id: varchar("id", { length: 40 }).primaryKey(),
+  label: varchar("label", { length: 80 }).notNull(),
+  minPoints: decimal("minPoints", { precision: 6, scale: 2 }).notNull(),
+  color: varchar("color", { length: 40 }).notNull().default("slate"),
+  icon: varchar("icon", { length: 80 }).notNull().default("award"),
+  sortOrder: int("sortOrder").notNull().default(0),
+  active: int("active").notNull().default(1),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type GamificationRank = typeof gamificationRanks.$inferSelect;
+
+/** Paramètres globaux de gamification, maintenus sur une ligne par défaut. */
+export const gamificationSettings = mysqlTable("gamification_settings", {
+  id: varchar("id", { length: 40 }).primaryKey().default("default"),
+  weeklyGoalPoints: decimal("weeklyGoalPoints", { precision: 6, scale: 2 }).notNull().default("5.00"),
+  pointsLabel: varchar("pointsLabel", { length: 120 }).notNull().default("Points de progression Neopolis Akademy"),
+  rewardNotice: text("rewardNotice").notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type GamificationSettings = typeof gamificationSettings.$inferSelect;
+
 /**
  * Video progress - tracks which videos a user has watched
  */

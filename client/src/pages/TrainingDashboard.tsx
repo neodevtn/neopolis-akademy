@@ -35,6 +35,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 import { AchievementGallery } from "@/components/AchievementGallery";
 import { CompetencyProfile } from "@/components/CompetencyProfile";
+import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -87,6 +88,7 @@ export default function TrainingDashboard() {
   const [activeTab, setActiveTab] = useState<TabId>("my-path");
   const achievementsQuery = trpc.training.getAchievements.useQuery(undefined, { enabled: isAuthenticated });
   const competenciesQuery = trpc.competencies.getMine.useQuery(undefined, { enabled: isAuthenticated });
+  const gamificationQuery = trpc.competencies.getGamification.useQuery(undefined, { enabled: isAuthenticated });
 
   // Group configuration for the 4 certification tracks
   const GROUP_CONFIG = {
@@ -400,7 +402,7 @@ export default function TrainingDashboard() {
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.3, ease: easeOut }}
             >
-              <CompetencyProfile competencies={competenciesQuery.data || []} />
+              <div className="space-y-5"><WeeklyGoalCard gamification={gamificationQuery.data} /><CompetencyProfile competencies={competenciesQuery.data || []} ranks={gamificationQuery.data?.ranks} /></div>
             </motion.div>
           )}
           {activeTab === "recommended" && (

@@ -2,10 +2,13 @@ import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
 import {
   competencyContributionRules,
   competencyDefinitions,
+  gamificationRanks,
+  gamificationSettings,
   learnerCompetencyContributions,
   users,
 } from "../drizzle/schema";
 import { clampCompetencyLevel, DEFAULT_COMPETENCIES, DEFAULT_COMPETENCY_RULES, type CompetencySourceType } from "../shared/competencyFramework";
+import { DEFAULT_GAMIFICATION_RANKS, DEFAULT_GAMIFICATION_SETTINGS } from "../shared/gamificationFramework";
 import { getDb } from "./db";
 
 export type CompetencyEvent = {
@@ -29,6 +32,77 @@ export async function ensureCompetencyFramework() {
     minScore: item.minScore === null ? null : item.minScore.toFixed(2),
     active: 1,
   })));
+}
+
+export async function ensureGamificationFramework() {
+  const db = await getDb();
+  if (!db) return;
+  const [rank, settings] = await Promise.all([
+    db.select({ id: gamificationRanks.id }).from(gamificationRanks).limit(1),
+    db.select({ id: gamificationSettings.id }).from(gamificationSettings).limit(1),
+  ]);
+  if (!rank.length) {
+    await db.insert(gamificationRanks).values(DEFAULT_GAMIFICATION_RANKS.map((item) => ({ ...item, minPoints: item.minPoints.toFixed(2), active: 1 })));
+  }
+  if (!settings.length) {
+    await db.insert(gamificationSettings).values({
+      id: "default",
+      weeklyGoalPoints: DEFAULT_GAMIFICATION_SETTINGS.weeklyGoalPoints.toFixed(2),
+      pointsLabel: DEFAULT_GAMIFICATION_SETTINGS.pointsLabel,
+      rewardNotice: DEFAULT_GAMIFICATION_SETTINGS.rewardNotice,
+    });
+  }
+}
+
+function getCurrentWeekStart() {
+  const start = new Date();
+  start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+  start.setHours(0, 0, 0, 0);
+  return start;
+}
+
+export async function getGamificationConfig() {
+  await ensureGamificationFramework();
+  const db = await getDb();
+  if (!db) return { ranks: [], settings: null };
+  const [ranks, settings] = await Promise.all([
+    db.select().from(gamificationRanks).orderBy(asc(gamificationRanks.sortOrder)),
+    db.select().from(gamificationSettings).where(eq(gamificationSettings.id, "default")).limit(1),
+  ]);
+  return {
+    ranks: ranks.map((rank) => ({ ...rank, minPoints: Number(rank.minPoints) })),
+    settings: settings[0] ? { ...settings[0], weeklyGoalPoints: Number(settings[0].weeklyGoalPoints) } : null,
+  };
+}
+
+export async function saveGamificationConfig(input: { ranks: Array<{ id: string; label: string; minPoints: number; color: string; icon: string; sortOrder: number; active: number }>; settings: { weeklyGoalPoints: number; pointsLabel: string; rewardNotice: string } }) {
+  const db = await getDb();
+  if (!db) throw new Error("Base de données indisponible");
+  await db.transaction(async (tx) => {
+    await tx.delete(gamificationRanks);
+    await tx.insert(gamificationRanks).values(input.ranks.map((rank) => ({ ...rank, minPoints: rank.minPoints.toFixed(2) })));
+    await tx.insert(gamificationSettings).values({
+      id: "default",
+      weeklyGoalPoints: input.settings.weeklyGoalPoints.toFixed(2),
+      pointsLabel: input.settings.pointsLabel,
+      rewardNotice: input.settings.rewardNotice,
+    }).onDuplicateKeyUpdate({ set: {
+      weeklyGoalPoints: input.settings.weeklyGoalPoints.toFixed(2),
+      pointsLabel: input.settings.pointsLabel,
+      rewardNotice: input.settings.rewardNotice,
+    } });
+  });
+  return getGamificationConfig();
+}
+
+export async function getUserGamification(userId: number) {
+  const [config, db] = await Promise.all([getGamificationConfig(), getDb()]);
+  if (!db) return { ...config, weekly: { points: 0, target: 0, remaining: 0, reached: false, weekStart: getCurrentWeekStart() } };
+  const contributions = await db.select().from(learnerCompetencyContributions).where(eq(learnerCompetencyContributions.userId, userId));
+  const weekStart = getCurrentWeekStart();
+  const points = contributions.filter((item) => new Date(item.awardedAt) >= weekStart).reduce((sum, item) => sum + Number(item.points), 0);
+  const target = config.settings?.weeklyGoalPoints || DEFAULT_GAMIFICATION_SETTINGS.weeklyGoalPoints;
+  return { ...config, weekly: { points, target, remaining: Math.max(0, target - points), reached: points >= target, weekStart } };
 }
 
 export async function applyCompetencyEvent(event: CompetencyEvent) {
