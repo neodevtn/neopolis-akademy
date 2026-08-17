@@ -1495,3 +1495,9 @@
 - [x] Ajouter la persistance, les vues apprenantes et l’écran de félicitations
 - [x] Générer un diplôme PDF officiel Neopolis Development et envoyer l’e-mail de réussite
 - [x] Tester les attributions, les documents et les notifications, puis publier
+
+## Attribution rétroactive des acquis
+- [x] Auditer les progrès et réussites historiques éligibles aux badges et diplômes
+- [x] Ajouter une reprise idempotente fondée sur les critères actuels d’attribution
+- [x] Attribuer les acquis rétrospectifs et envoyer les notifications correspondantes
+- [x] Vérifier les résultats, les absences de doublons et publier le mécanisme

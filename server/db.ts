@@ -284,6 +284,17 @@ export async function markAchievementEmailed(achievementId: number) {
   await db.update(learnerAchievements).set({ emailedAt: new Date() }).where(eq(learnerAchievements.id, achievementId));
 }
 
+export async function getHistoricalAchievementCandidates() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [progress, passedAttempts, learners] = await Promise.all([
+    db.select().from(trainingProgress),
+    db.select().from(examAttempts).where(eq(examAttempts.passed, 1)),
+    db.select().from(users).where(and(eq(users.role, "user"), eq(users.blocked, 0))),
+  ]);
+  return { progress, passedAttempts, learners };
+}
+
 // ============ Admin: All Learners ============
 
 export async function getAllLearners(page: number = 1, pageSize: number = 20, search?: string) {
