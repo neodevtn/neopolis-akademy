@@ -34,12 +34,14 @@ import { ExamBankSettings } from "@/components/admin/ExamBankSettings";
 import { LessonRecommendationEditor, normalizeYouTubeId } from "@/components/admin/LessonRecommendationEditor";
 import { LegacyExerciseEditor } from "@/components/admin/LegacyExerciseEditor";
 import { LessonManager } from "@/components/admin/LessonManager";
+import { ChapterManager } from "@/components/admin/ChapterManager";
 import { CatalogMetadataEditor } from "@/components/admin/CatalogMetadataEditor";
 import { resolveEditableInteractions } from "@/lib/editableInteractions";
 import { cloneCourseDraft } from "@shared/contentStudio";
 import { normalizeQuestionBank, serializeQuestionBank } from "@shared/questionBank";
 import { normalizeExamConfiguration, type ExamConfiguration } from "@shared/examConfiguration";
 import { toBlockMediaUrl } from "@/lib/mediaUrl";
+import { moveItem } from "@shared/lessonManagement";
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
 type ViewMode = "browse" | "catalog" | "course" | "quiz-simulate" | "exam-simulate" | "edit-course" | "edit-quiz" | "edit-exam";
@@ -385,6 +387,12 @@ export default function AdminContentManager() {
       setSelectedLessonIdx(nextActiveLessonIndex);
       setSelectedChapterIdx(0);
     };
+    const updateChapters = (chapters: any[], nextActiveChapterIndex: number) => {
+      const draft = cloneCourseDraft(courseDraft || publishedCourse);
+      draft.lessons[selectedLessonIdx] = { ...draft.lessons[selectedLessonIdx], chapters };
+      setCourseDraft(draft);
+      setSelectedChapterIdx(nextActiveChapterIndex);
+    };
     const editableInteractions = chapter ? resolveEditableInteractions({
       course,
       lessonIndex: selectedLessonIdx,
@@ -393,6 +401,21 @@ export default function AdminContentManager() {
     }) : [];
     const chapterQuizInteractions = editableInteractions.filter((interaction) => interaction.source === "chapter_quiz");
     const checkpointExerciseInteractions = editableInteractions.filter((interaction) => interaction.source === "checkpoint_exercise");
+    const chapterQuizSourceKey = chapterQuizInteractions[0]?.sourceKey || `${selectedLessonIdx}_${selectedChapterIdx}`;
+    const chapterQuizRawBank = (quizzesQuery.data || {})?.[selectedCourseId]?.[chapterQuizSourceKey];
+    const chapterQuestionBank = normalizeQuestionBank(chapterQuizRawBank || { questions: [], selection: { mode: "random", questionCount: 3, passThreshold: 2, shuffleChoices: true } });
+    const openNewChapterQuizQuestion = () => {
+      setEditingQuiz({
+        isNew: true,
+        courseId: selectedCourseId,
+        lessonKey: chapterQuizSourceKey,
+        question: { en: "", fr: "" },
+        choices: [{ id: "a", text: { en: "", fr: "" } }, { id: "b", text: { en: "", fr: "" } }, { id: "c", text: { en: "", fr: "" } }, { id: "d", text: { en: "", fr: "" } }],
+        correctId: "a",
+        explanation: { en: "", fr: "" },
+      });
+      setEditDialogOpen(true);
+    };
     const chapterQuizSelection = (() => {
       const sourceKey = chapterQuizInteractions[0]?.sourceKey;
       if (!sourceKey) return null;
@@ -411,6 +434,7 @@ export default function AdminContentManager() {
         {/* Sidebar - Lessons/Chapters */}
         <div className="w-full shrink-0 border rounded-lg p-3 max-h-64 overflow-y-auto bg-white xl:w-64 xl:max-h-[70vh]">
           {viewMode === "edit-course" ? <details className="mb-3 rounded-md border border-emerald-100 bg-emerald-50/50 p-2"><summary className="cursor-pointer text-xs font-semibold text-emerald-800">Gérer les leçons de ce cours</summary><div className="mt-2"><LessonManager lessons={course.lessons || []} activeLessonIndex={selectedLessonIdx} onSelect={(index) => { setSelectedLessonIdx(index); setSelectedChapterIdx(0); }} onChange={updateLessons} /></div></details> : <h4 className="font-semibold text-sm mb-2 text-gray-700">Leçons</h4>}
+          {viewMode === "edit-course" && lesson && <details className="mb-3 rounded-md border border-sky-100 bg-sky-50/50 p-2"><summary className="cursor-pointer text-xs font-semibold text-sky-800">Gérer les écrans de cette leçon</summary><ChapterManager chapters={lesson.chapters || []} activeChapterIndex={selectedChapterIdx} onSelect={setSelectedChapterIdx} onChange={updateChapters} /></details>}
           {course.lessons?.map((l: any, li: number) => (
             <div key={li} className="mb-1">
               <button
@@ -576,12 +600,9 @@ export default function AdminContentManager() {
               </div>
               )}
 
-              {viewMode === "edit-course" && (chapterQuizInteractions.length > 0 || checkpointExerciseInteractions.length > 0) && (
+              {viewMode === "edit-course" && (
                 <div className="mt-6 space-y-5 border-t pt-5">
-                  {chapterQuizInteractions.length > 0 && <section>
-                    <div className="mb-3 flex items-start justify-between gap-3"><div><h4 className="flex items-center gap-1.5 text-sm font-semibold"><CheckCircle2 className="h-4 w-4 text-indigo-600" /> Quiz de validation après cet écran</h4><p className="mt-1 text-xs text-muted-foreground">Cette banque contient {chapterQuizInteractions.length} QCM. Le lecteur en affiche {chapterQuizSelection?.questionCount || chapterQuizInteractions.length}{chapterQuizSelection?.mode === "random" ? " aléatoirement" : ""} à chaque tentative ; les exercices historiques ne sont pas utilisés.</p></div><Badge className="bg-indigo-100 text-indigo-800">{chapterQuizInteractions.length} dans la banque · {chapterQuizSelection?.questionCount || chapterQuizInteractions.length} par tentative</Badge></div>
-                    <div className="space-y-2">{chapterQuizInteractions.map((interaction) => <div key={interaction.id} className="flex items-center justify-between gap-3 rounded-xl border border-indigo-100 bg-indigo-50/50 p-3"><div className="min-w-0"><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-indigo-700">QCM · Banque {interaction.sourceKey}</p><p className="mt-1 line-clamp-2 text-sm font-medium text-slate-900">{interaction.title}</p><p className="mt-1 text-xs text-muted-foreground">{interaction.item.choices?.length || 0} réponses proposées · réponse correcte définie</p></div><Button size="sm" variant="outline" className="shrink-0 gap-1.5 text-indigo-700" onClick={() => { setEditingQuiz({ ...interaction.item, courseId: selectedCourseId, lessonKey: interaction.sourceKey, questionIdx: interaction.position, isNew: false }); setEditDialogOpen(true); }}><Edit3 className="h-3.5 w-3.5" /> Modifier</Button></div>)}</div>
-                  </section>}
+                  <section><div className="mb-3 flex items-start justify-between gap-3"><div><h4 className="flex items-center gap-1.5 text-sm font-semibold"><CheckCircle2 className="h-4 w-4 text-indigo-600" /> Quiz de validation après cet écran</h4><p className="mt-1 text-xs text-muted-foreground">Gérez ici la banque réellement affichée par le lecteur, le score minimal, le tirage et l’ordre des questions.</p></div><Badge className="bg-indigo-100 text-indigo-800">{chapterQuestionBank.questions.length} dans la banque</Badge></div>{chapterQuestionBank.questions.length === 0 ? <div className="rounded-xl border border-dashed border-indigo-200 bg-indigo-50/40 p-4"><p className="text-sm text-muted-foreground">Aucun QCM n’est encore configuré après cet écran.</p><Button size="sm" className="mt-3" onClick={openNewChapterQuizQuestion}><Plus className="mr-1 h-3.5 w-3.5" /> Créer le premier QCM</Button></div> : <QuestionBankPanel rawBank={chapterQuizRawBank} onSave={(bank) => updateQuizMut.mutate({ courseId: selectedCourseId, lessonKey: chapterQuizSourceKey, questions: serializeQuestionBank(bank) })} onAddQuestion={openNewChapterQuizQuestion} onEditQuestion={(question, questionIdx) => { setEditingQuiz({ ...question, courseId: selectedCourseId, lessonKey: chapterQuizSourceKey, questionIdx, isNew: false }); setEditDialogOpen(true); }} onRemoveQuestion={(questionIdx) => { if (window.confirm("Supprimer ce QCM de validation ?")) updateQuizMut.mutate({ courseId: selectedCourseId, lessonKey: chapterQuizSourceKey, questions: serializeQuestionBank({ ...chapterQuestionBank, questions: chapterQuestionBank.questions.filter((_: any, index: number) => index !== questionIdx) }) }); }} onMoveQuestion={(fromIndex, toIndex) => updateQuizMut.mutate({ courseId: selectedCourseId, lessonKey: chapterQuizSourceKey, questions: serializeQuestionBank({ ...chapterQuestionBank, questions: moveItem(chapterQuestionBank.questions, fromIndex, toIndex) }) })} />}</section>
                   {checkpointExerciseInteractions.length > 0 && <section>
                     <div className="mb-3"><h4 className="flex items-center gap-1.5 text-sm font-semibold"><PenTool className="h-4 w-4 text-emerald-600" /> Exercices de validation de cet écran</h4><p className="mt-1 text-xs text-muted-foreground">Seuls les exercices explicitement référencés par un checkpoint du chapitre sont proposés ici.</p></div>
                     <div className="space-y-2">{checkpointExerciseInteractions.map((interaction) => <div key={interaction.id} className="flex items-center justify-between gap-3 rounded-xl border border-emerald-100 bg-emerald-50/50 p-3"><div className="min-w-0"><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-emerald-700">{interaction.type}</p><p className="mt-1 line-clamp-2 text-sm font-medium text-slate-900">{interaction.title}</p></div><Button size="sm" variant="outline" className="shrink-0 gap-1.5 text-emerald-700" onClick={() => setEditingLegacyExercise(interaction.item)}><Edit3 className="h-3.5 w-3.5" /> Modifier</Button></div>)}</div>
@@ -972,21 +993,13 @@ export default function AdminContentManager() {
                     });
                     setEditDialogOpen(true);
                   }}
+                  onEditQuestion={(question, questionIdx) => { setEditingQuiz({ courseId: selectedCourseId, lessonKey: key, questionIdx, ...question }); setEditDialogOpen(true); }}
+                  onRemoveQuestion={(questionIdx) => {
+                    if (!window.confirm("Supprimer cette question de la banque ?")) return;
+                    updateQuizMut.mutate({ courseId: selectedCourseId, lessonKey: key, questions: serializeQuestionBank({ ...questionBank, questions: questionBank.questions.filter((_: any, index: number) => index !== questionIdx) }) });
+                  }}
+                  onMoveQuestion={(fromIndex, toIndex) => updateQuizMut.mutate({ courseId: selectedCourseId, lessonKey: key, questions: serializeQuestionBank({ ...questionBank, questions: moveItem(questionBank.questions, fromIndex, toIndex) }) })}
                 />
-                {questions.map((q: any, qi: number) => (
-                  <div key={qi} className="border-b last:border-0 py-2 flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm truncate">{typeof q.question === "object" ? t(q.question) : q.question}</p>
-                      <p className="text-xs text-gray-400">Réponse : {typeof q.choices?.find((c: any) => c.id === q.correctId)?.text === "object" ? t(q.choices?.find((c: any) => c.id === q.correctId)?.text) : q.choices?.find((c: any) => c.id === q.correctId)?.text}</p>
-                    </div>
-                    <Button size="sm" variant="ghost" className="h-6 px-1 shrink-0" onClick={() => {
-                      setEditingQuiz({ courseId: selectedCourseId, lessonKey: key, questionIdx: qi, ...q });
-                      setEditDialogOpen(true);
-                    }}>
-                      <Edit3 className="w-3 h-3" />
-                    </Button>
-                  </div>
-                ))}
               </CardContent>
             </Card>
           );

@@ -30,6 +30,7 @@ import LessonQuiz from "./LessonQuiz";
 import NumericAnswerExercise from "@/components/NumericAnswerExercise";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getContextualCourseEditorHref } from "@/lib/courseEditorLink";
+import { isEvaluationGateLocked, requiredCorrectAnswers } from "@shared/evaluationRules";
 
 export default function LessonViewer({
   lesson,
@@ -592,6 +593,8 @@ export default function LessonViewer({
         const explanation = typeof block.explanation === 'string' ? block.explanation : (block.explanation?.[lang] || block.explanation?.en || '');
         const correctAnswer = block.correctAnswer || 'a';
         const exerciseId = block.id || `quiz_${blockIdx}`;
+        const rankOption = (option: any) => `${exerciseId}:${option.id}`.split("").reduce((total, character) => (total * 31 + character.charCodeAt(0)) >>> 0, 7);
+        const displayedOptions = chapter?.shuffleChoices ? [...options].sort((a, b) => rankOption(a) - rankOption(b)) : options;
         // Calculate question number within this chapter
         const chapterBlocks = chapter?.blocks || [];
         const quizBlocksBefore = chapterBlocks.slice(0, blockIdx).filter((b: any) => b.type === 'single_choice_exercise').length;
@@ -600,7 +603,7 @@ export default function LessonViewer({
             key={blockIdx}
             id={exerciseId}
             question={question}
-            options={options}
+            options={displayedOptions}
             correctAnswer={correctAnswer}
             explanation={explanation}
             lang={lang as 'en' | 'fr'}
@@ -923,6 +926,14 @@ export default function LessonViewer({
           {chapter && (() => {
             // Detect if this screen is sparse (little content) to show illustration
             const allBlocks = chapter.blocks || [];
+            const orderedBlocks = chapter.shuffleQuestions ? (() => {
+              const shuffledQuestions = allBlocks
+                .filter((block: any) => block.type === 'single_choice_exercise')
+                .map((block: any) => ({ block, rank: `${currentChapter}:${block.id || block.question || ""}`.split("").reduce((total: number, character: string) => (total * 31 + character.charCodeAt(0)) >>> 0, 7) }))
+                .sort((a: any, b: any) => a.rank - b.rank)
+                .map((entry: any) => entry.block);
+              return allBlocks.map((block: any) => block.type === 'single_choice_exercise' ? shuffledQuestions.shift() : block);
+            })() : allBlocks;
             const contentBlocks = allBlocks.filter((b: any) => b.type === 'content');
             const hasVideo = allBlocks.some((b: any) => b.type === 'video');
             const hasExercise = allBlocks.some((b: any) => b.type === 'exercise' || b.type === 'quiz' || b.type === 'checkpoint');
@@ -983,7 +994,7 @@ export default function LessonViewer({
                     </div>
                   </div>
                 )}
-                {allBlocks.map((block: any, idx: number) => renderBlock(block, idx))}
+                {orderedBlocks.map((block: any, idx: number) => renderBlock(block, allBlocks.indexOf(block) >= 0 ? allBlocks.indexOf(block) : idx))}
               </div>
             );
           })()}
@@ -1095,8 +1106,10 @@ export default function LessonViewer({
               const chapterExerciseIds = isQuizOrCheckpointChapter
                 ? (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'checkpoint').map((b: any, i: number) => b.type === 'checkpoint' ? (b.exerciseId || `checkpoint_${i}`) : (b.id || `quiz_${i}`))
                 : [];
-              const allExercisesCompleted = chapterExerciseIds.length === 0 || chapterExerciseIds.every((id: string) => completedExercises.has(id));
-              const isGatedByExercises = isQuizOrCheckpointChapter && chapterExerciseIds.length > 0 && !allExercisesCompleted && !isReviewMode;
+              const validationRequired = chapter?.requiredBeforeAdvance !== false;
+              const completedChapterExercises = chapterExerciseIds.filter((id: string) => completedExercises.has(id)).length;
+              const requiredChapterSuccesses = requiredCorrectAnswers(chapterExerciseIds.length, chapter?.passThreshold);
+              const isGatedByExercises = isQuizOrCheckpointChapter && isEvaluationGateLocked({ totalQuestions: chapterExerciseIds.length, completedCorrectAnswers: completedChapterExercises, configuredThreshold: chapter?.passThreshold, required: validationRequired, reviewMode: isReviewMode });
               // Video gate: block Next if current chapter has video blocks that haven't been watched
               const chapterVideoKeys = (chapter?.blocks || [])
                 .filter((b: any) => b.type === 'video')
@@ -1123,8 +1136,9 @@ export default function LessonViewer({
               const chapterSingleChoiceIds = (chapter?.blocks || [])
                 .filter((b: any) => b.type === 'single_choice_exercise')
                 .map((b: any, i: number) => b.id || `quiz_${i}`);
-              const allSingleChoiceCompleted = chapterSingleChoiceIds.length === 0 || chapterSingleChoiceIds.every((id: string) => completedExercises.has(id));
-              const isGatedBySingleChoice = chapterSingleChoiceIds.length > 0 && !allSingleChoiceCompleted && !isReviewMode;
+              const completedSingleChoice = chapterSingleChoiceIds.filter((id: string) => completedExercises.has(id)).length;
+              const requiredSingleChoice = isQuizOrCheckpointChapter ? requiredChapterSuccesses : chapterSingleChoiceIds.length;
+              const isGatedBySingleChoice = isEvaluationGateLocked({ totalQuestions: chapterSingleChoiceIds.length, completedCorrectAnswers: completedSingleChoice, configuredThreshold: isQuizOrCheckpointChapter ? requiredSingleChoice : chapterSingleChoiceIds.length, required: validationRequired, reviewMode: isReviewMode });
               // Cloud exercise (TP) gate: block if chapter has cloud_exercise blocks not completed
               const chapterCloudExerciseIds = (chapter?.blocks || [])
                 .filter((b: any) => b.type === 'cloud_exercise')

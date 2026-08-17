@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CheckCircle2, ClipboardCheck, Link2, Plus, Trash2 } from "lucide-react";
+import { requiredCorrectAnswers } from "@shared/evaluationRules";
 
 interface CheckpointSettingsProps {
   chapter: any;
@@ -29,6 +30,12 @@ export function CheckpointSettings({ chapter, onChange }: CheckpointSettingsProp
     ...(chapter.block?.type === "checkpoint" ? { block: { ...chapter.block, questions: nextQuestions } } : {}),
   });
   const updateQuestion = (index: number, patch: Record<string, unknown>) => setQuestions(questions.map((question: any, questionIndex: number) => questionIndex === index ? { ...question, ...patch } : question));
+  const moveQuestion = (fromIndex: number, toIndex: number) => {
+    const next = [...questions];
+    const [item] = next.splice(fromIndex, 1);
+    next.splice(toIndex, 0, item);
+    setQuestions(next);
+  };
   const addQuestion = () => setQuestions([
     ...questions,
     {
@@ -67,6 +74,11 @@ export function CheckpointSettings({ chapter, onChange }: CheckpointSettingsProp
         </div>
         <label className="flex items-center gap-2 rounded-lg border bg-background px-3 py-2 text-sm"><Switch checked={chapter.requiredBeforeAdvance !== false} onCheckedChange={(checked) => set("requiredBeforeAdvance", checked)} /> Validation obligatoire</label>
       </div>
+      <div className="mt-3 grid gap-3 rounded-lg border border-orange-100 bg-background/70 p-3 md:grid-cols-3">
+        <div className="space-y-1"><Label className="text-xs" htmlFor="checkpoint-threshold">Bonnes réponses minimales</Label><Input id="checkpoint-threshold" type="number" min={1} max={Math.max(1, questions.length)} value={String(requiredCorrectAnswers(questions.length, chapter.passThreshold))} onChange={(event) => set("passThreshold", requiredCorrectAnswers(questions.length, Number(event.target.value)))} /></div>
+        <label className="flex items-center gap-2 pt-6 text-xs"><Switch checked={chapter.shuffleQuestions === true} onCheckedChange={(checked) => set("shuffleQuestions", checked)} /> Mélanger les questions</label>
+        <label className="flex items-center gap-2 pt-6 text-xs"><Switch checked={chapter.shuffleChoices === true} onCheckedChange={(checked) => set("shuffleChoices", checked)} /> Mélanger les réponses</label>
+      </div>
 
       <div className="mt-4 space-y-3">
         <div className="flex items-center justify-between">
@@ -80,7 +92,7 @@ export function CheckpointSettings({ chapter, onChange }: CheckpointSettingsProp
           const updateChoices = (nextChoices: any[]) => updateQuestion(questionIndex, { choices: nextChoices, options: undefined });
           return (
             <div key={question.id || questionIndex} className="rounded-lg border bg-background p-3">
-              <div className="mb-3 flex items-center justify-between gap-2"><Badge variant="outline">Question {questionIndex + 1}</Badge><Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeQuestion(questionIndex)} aria-label="Supprimer la question"><Trash2 className="h-3.5 w-3.5" /></Button></div>
+              <div className="mb-3 flex items-center justify-between gap-2"><Badge variant="outline">Question {questionIndex + 1}</Badge><div className="flex items-center gap-1"><Button type="button" variant="ghost" size="sm" className="h-7 px-2 text-xs" disabled={questionIndex === 0} onClick={() => moveQuestion(questionIndex, questionIndex - 1)}>Monter</Button><Button type="button" variant="ghost" size="sm" className="h-7 px-2 text-xs" disabled={questionIndex === questions.length - 1} onClick={() => moveQuestion(questionIndex, questionIndex + 1)}>Descendre</Button><Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeQuestion(questionIndex)} aria-label="Supprimer la question"><Trash2 className="h-3.5 w-3.5" /></Button></div></div>
               <Label className="text-xs">Énoncé</Label>
               <Textarea className="mt-1" rows={2} value={readLocalized(question.question)} onChange={(event) => updateQuestion(questionIndex, { question: writeLocalized(question.question, event.target.value) })} placeholder="Saisissez la question…" />
               <div className="mt-3 space-y-2">

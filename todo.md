@@ -1475,3 +1475,10 @@
 - [x] Ajouter la création, suppression sécurisée et réorganisation des leçons dans l’éditeur de cours
 - [x] Rendre éditables les métadonnées de cours, certifications, catégories, tags et compteurs
 - [x] Ajouter les contrôles de cohérence de catalogue, valider les parcours admin et publier
+
+## Évaluations et écrans administrables
+- [x] Auditer les QCM de validation, checkpoints et règles de passage utilisés par chaque écran
+- [x] Ajouter la création, suppression et réorganisation des QCM et checkpoints au niveau de l’écran
+- [x] Ajouter l’édition des règles de passage : score minimal, tirage, mélange et obligation de validation
+- [x] Ajouter la création, suppression et réorganisation sécurisées des chapitres dans chaque leçon
+- [x] Vérifier les règles dans le lecteur apprenant, tester les sauvegardes et publier
