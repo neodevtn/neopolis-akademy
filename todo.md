@@ -1428,3 +1428,10 @@
 - [x] Ajouter les graphiques de progression, implication, réussite initiale et tendance dans l’administration
 - [x] Ajouter filtres de période, cours et statut, avec état de données insuffisantes
 - [x] Vérifier les calculs et le rendu des reportings graphiques
+
+## Recommandations vidéo de fin de module administrables
+- [x] Auditer les recommandations vidéo actuellement codées en dur et leur couverture par module
+- [x] Définir un modèle éditable dans l’administration, compatible avec les bibliothèques de médias existantes
+- [x] Ajouter l’édition, l’ajout, la réorganisation et la suppression des recommandations dans le gestionnaire de contenu
+- [x] Généraliser le rendu des recommandations à tous les modules, avec état vide explicite
+- [x] Vérifier les parcours administrateur et apprenant, puis publier

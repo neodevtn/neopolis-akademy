@@ -31,6 +31,7 @@ import { ChapterSourceEditor } from "@/components/admin/ChapterSourceEditor";
 import { QuestionBankPanel } from "@/components/admin/QuestionBankPanel";
 import { CheckpointSettings } from "@/components/admin/CheckpointSettings";
 import { ExamBankSettings } from "@/components/admin/ExamBankSettings";
+import { LessonRecommendationEditor, normalizeYouTubeId } from "@/components/admin/LessonRecommendationEditor";
 import { cloneCourseDraft } from "@shared/contentStudio";
 import { normalizeQuestionBank, serializeQuestionBank } from "@shared/questionBank";
 import { normalizeExamConfiguration, type ExamConfiguration } from "@shared/examConfiguration";
@@ -71,6 +72,7 @@ export default function AdminContentManager() {
   const [courseDraft, setCourseDraft] = useState<any | null>(null);
   const [mediaLibraryOpen, setMediaLibraryOpen] = useState(false);
   const [mediaTarget, setMediaTarget] = useState<{ blockIndex: number; fieldKey: string } | null>(null);
+  const [recommendationMediaLessonIdx, setRecommendationMediaLessonIdx] = useState<number | null>(null);
   const [sourceEditorOpen, setSourceEditorOpen] = useState(false);
   const [quizSimState, setQuizSimState] = useState<{ currentQ: number; answers: Record<number, string>; showResults: boolean }>({ currentQ: 0, answers: {}, showResults: false });
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -349,6 +351,11 @@ export default function AdminContentManager() {
       if (!chapter) return;
       setCourseDraft(makeDraftWithChapter({ ...chapter, blocks }));
     };
+    const updateLessonRecommendations = (recommendedVideos: any[]) => {
+      const draft = cloneCourseDraft(courseDraft || publishedCourse);
+      draft.lessons[selectedLessonIdx] = { ...draft.lessons[selectedLessonIdx], recommendedVideos };
+      setCourseDraft(draft);
+    };
     const saveDraft = () => {
       const draft = courseDraft || cloneCourseDraft(publishedCourse);
       saveCourseDraftMut.mutate({ courseId: selectedCourseId, data: draft });
@@ -410,6 +417,13 @@ export default function AdminContentManager() {
               </div>
               {viewMode === "edit-course" && chapter.type === "checkpoint" && (
                 <CheckpointSettings chapter={chapter} onChange={(nextChapter) => setCourseDraft(makeDraftWithChapter(nextChapter))} />
+              )}
+              {viewMode === "edit-course" && lesson && (
+                <LessonRecommendationEditor
+                  videos={Array.isArray(lesson.recommendedVideos) ? lesson.recommendedVideos : []}
+                  onChange={updateLessonRecommendations}
+                  onRequestMedia={() => { setRecommendationMediaLessonIdx(selectedLessonIdx); setMediaLibraryOpen(true); }}
+                />
               )}
               {viewMode === "edit-course" ? (
                 <BlockLibrary
@@ -549,6 +563,27 @@ export default function AdminContentManager() {
               open={mediaLibraryOpen}
               onOpenChange={setMediaLibraryOpen}
               onSelect={(asset) => {
+                if (recommendationMediaLessonIdx !== null) {
+                  if (asset.kind !== "youtube") {
+                    toast.error("Sélectionnez une vidéo YouTube pour une recommandation de fin de module.");
+                    return;
+                  }
+                  const videoId = normalizeYouTubeId(asset.url);
+                  if (!videoId || videoId.length < 6) {
+                    toast.error("Cette ressource ne contient pas un identifiant YouTube utilisable.");
+                    return;
+                  }
+                  const draft = cloneCourseDraft(courseDraft || publishedCourse);
+                  const current = Array.isArray(draft.lessons[recommendationMediaLessonIdx].recommendedVideos) ? draft.lessons[recommendationMediaLessonIdx].recommendedVideos : [];
+                  if (current.some((video: any) => video.videoId === videoId)) {
+                    toast.info("Cette vidéo est déjà recommandée dans ce module.");
+                  } else {
+                    draft.lessons[recommendationMediaLessonIdx].recommendedVideos = [...current, { videoId, title: asset.title, channel: "", type: "complementary", topics: [] }];
+                    setCourseDraft(draft);
+                  }
+                  setRecommendationMediaLessonIdx(null);
+                  return;
+                }
                 if (!mediaTarget) return;
                 const blocks = [...(chapter.blocks || [])];
                 blocks[mediaTarget.blockIndex] = { ...blocks[mediaTarget.blockIndex], [mediaTarget.fieldKey]: toBlockMediaUrl(asset.url, asset.kind, mediaTarget.fieldKey) };

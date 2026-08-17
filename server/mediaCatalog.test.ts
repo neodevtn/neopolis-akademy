@@ -12,7 +12,7 @@ async function createWorkspace() {
   await fs.mkdir(path.join(dataDirectory, "courses"));
   await fs.writeFile(path.join(dataDirectory, "courses", "course.json"), JSON.stringify({
     courseId: "course",
-    lessons: [{ chapters: [{ title: { en: "Media" }, blocks: [{ type: "video", mp4Url: "/api/assets/old.mp4" }, { type: "download", fileUrl: "/api/assets/guide.pdf" }] }] }],
+    lessons: [{ recommendedVideos: [{ videoId: "4cQWJViybAQ", title: "Workflow n8n", channel: "n8n", type: "tutorial", topics: ["n8n"] }], chapters: [{ title: { en: "Media" }, blocks: [{ type: "video", mp4Url: "/api/assets/old.mp4" }, { type: "download", fileUrl: "/api/assets/guide.pdf" }] }] }],
   }));
   return dataDirectory;
 }
@@ -23,8 +23,9 @@ describe("media catalog", () => {
   it("indexes existing course assets and exposes their usages", async () => {
     const directory = await createWorkspace();
     const assets = await listGlobalMediaAssets(directory);
-    expect(assets).toHaveLength(2);
+    expect(assets).toHaveLength(3);
     expect(assets.find((asset) => asset.url === "/api/assets/old.mp4")?.usedBy).toHaveLength(1);
+    expect(assets.find((asset) => asset.url === "https://www.youtube.com/watch?v=4cQWJViybAQ")?.usedBy[0]).toContain("recommendedVideos");
   });
 
   it("updates every course reference when an administrator replaces a media URL", async () => {

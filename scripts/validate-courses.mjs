@@ -302,7 +302,25 @@ for (const fname of files) {
         lessonIds.set(lid, li);
       }
 
-      // ── 3. Duplicate chapter IDs ─────────────────────────────────────────
+      // ── 3. Recommandations vidéo de fin de module ──────────────────────────
+      if (!Array.isArray(lesson.recommendedVideos) || lesson.recommendedVideos.length === 0) {
+        fileIssues.push({ level: 'error', type: 'missing_video_recommendations', msg: `Lesson "${lid}" has no managed end-of-module video recommendations` });
+        totalErrors++;
+      } else {
+        for (const [vi, video] of lesson.recommendedVideos.entries()) {
+          const context = `Lesson "${lid}", recommendation ${vi + 1}`;
+          if (!/^[A-Za-z0-9_-]{6,}$/.test(video?.videoId || '')) {
+            fileIssues.push({ level: 'error', type: 'invalid_recommended_video_id', msg: `${context}: invalid YouTube videoId` });
+            totalErrors++;
+          }
+          if (!video?.title || !video?.channel || !['tutorial', 'deep_dive', 'complementary', 'masterclass'].includes(video?.type) || !Array.isArray(video?.topics) || video.topics.length === 0) {
+            fileIssues.push({ level: 'error', type: 'invalid_video_recommendation', msg: `${context}: title, channel, type and at least one topic are required` });
+            totalErrors++;
+          }
+        }
+      }
+
+      // ── 4. Duplicate chapter IDs ─────────────────────────────────────────
       const chapters = lesson.chapters || [];
       const chapterIds = new Map();
       for (const [ci, ch] of chapters.entries()) {
@@ -319,7 +337,7 @@ for (const fname of files) {
         }
       }
 
-      // ── 4. Empty chapters ─────────────────────────────────────────────────
+      // ── 5. Empty chapters ─────────────────────────────────────────────────
       if (chapters.length === 0) {
         fileIssues.push({ level: 'warn', type: 'empty_lesson', msg: `Lesson "${lid}" has no chapters` });
         totalWarnings++;

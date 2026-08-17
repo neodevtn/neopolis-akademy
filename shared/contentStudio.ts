@@ -92,6 +92,11 @@ export function collectMediaAssets(course: any): MediaAsset[] {
   };
 
   (course?.lessons || []).forEach((lesson: any, lessonIndex: number) => {
+    (lesson?.recommendedVideos || []).forEach((video: any, videoIndex: number) => {
+      if (typeof video?.videoId === "string" && /^[A-Za-z0-9_-]{6,}$/.test(video.videoId)) {
+        register("youtube", `https://www.youtube.com/watch?v=${video.videoId}`, resolveContentLabel(video.title, `Recommandation ${videoIndex + 1}`), `lessons[${lessonIndex}].recommendedVideos[${videoIndex}]`);
+      }
+    });
     (lesson?.chapters || []).forEach((chapter: any, chapterIndex: number) => {
       const title = resolveContentLabel(chapter?.title, `Chapitre ${chapterIndex + 1}`);
       visit(chapter?.blocks || [], `lessons[${lessonIndex}].chapters[${chapterIndex}].blocks`, title);
@@ -120,6 +125,20 @@ export function validateStructuredCourse(course: any): ContentValidationResult {
 
   const ids = new Set<string>();
   course.lessons.forEach((lesson: any, lessonIndex: number) => {
+    if (lesson?.recommendedVideos !== undefined) {
+      if (!Array.isArray(lesson.recommendedVideos)) {
+        errors.push({ severity: "error", path: `lessons[${lessonIndex}].recommendedVideos`, message: "Les recommandations vidéo doivent être une liste." });
+      } else {
+        lesson.recommendedVideos.forEach((video: any, videoIndex: number) => {
+          const path = `lessons[${lessonIndex}].recommendedVideos[${videoIndex}]`;
+          if (!/^[A-Za-z0-9_-]{6,}$/.test(video?.videoId || "")) errors.push({ severity: "error", path: `${path}.videoId`, message: "La recommandation doit contenir un identifiant YouTube valide." });
+          if (!video?.title || typeof video.title !== "string") errors.push({ severity: "error", path: `${path}.title`, message: "La recommandation doit avoir un titre." });
+          if (!video?.channel || typeof video.channel !== "string") errors.push({ severity: "error", path: `${path}.channel`, message: "La recommandation doit indiquer sa chaîne." });
+          if (!["tutorial", "deep_dive", "complementary", "masterclass"].includes(video?.type)) errors.push({ severity: "error", path: `${path}.type`, message: "Le format de recommandation est invalide." });
+          if (!Array.isArray(video?.topics)) errors.push({ severity: "error", path: `${path}.topics`, message: "Les thèmes de recommandation doivent être une liste." });
+        });
+      }
+    }
     if (!Array.isArray(lesson?.chapters)) {
       errors.push({ severity: "error", path: `lessons[${lessonIndex}].chapters`, message: "Chaque leçon doit contenir un tableau de chapitres." });
       return;

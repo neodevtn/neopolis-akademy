@@ -14,10 +14,12 @@ import { generateCandidatePDF } from "./pdf";
 import { uploadRateLimit, submitRateLimit, getClientIp } from "./security";
 import { adminEnhancedRouter } from "./adminRouter";
 import { adminContentRouter } from "./adminContentRouter";
+import { videoRecommendationsRouter } from "./videoRecommendationsRouter";
 import { createAdminNotification } from "./notificationsDb";
 
 export const appRouter = router({
   system: systemRouter,
+  videoRecommendations: videoRecommendationsRouter,
   auth: router({
     me: publicProcedure.query(opts => {
       if (!opts.ctx.user) return null;
