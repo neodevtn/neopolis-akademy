@@ -1533,3 +1533,9 @@
 - [x] Ajouter les vues apprenantes de progression, objectifs et récompenses internes
 - [x] Ajouter les contrôles administrateur de gamification et les animations respectueuses des préférences utilisateur
 - [x] Vérifier les calculs, messages et accès, puis publier
+
+## Compteurs dynamiques des certifications
+- [x] Auditer les compteurs déclaratifs et les sources de contenu de chaque certification
+- [x] Créer un calcul canonique des cours, leçons, exercices, vidéos et téléchargements
+- [x] Afficher les compteurs calculés comme indicateurs non éditables dans Catalogue, certifications et catégories
+- [x] Vérifier les compteurs publics et administratifs puis publier

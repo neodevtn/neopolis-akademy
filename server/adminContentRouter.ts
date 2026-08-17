@@ -7,6 +7,7 @@ import { remapLessonQuizBanks } from "../shared/lessonManagement";
 import { validateCatalogIndex } from "../shared/catalogValidation";
 import { listGlobalMediaAssets, removeUnusedMediaMetadata, replaceMediaEverywhere, saveMediaMetadata } from "./mediaCatalog";
 import { storagePut } from "./storage";
+import { applyCatalogMetrics } from "../shared/catalogMetrics";
 
 /**
  * Admin Content Management Router
@@ -28,6 +29,27 @@ async function readJsonFile(filePath: string): Promise<any> {
 
 async function writeJsonFile(filePath: string, data: any): Promise<void> {
   await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
+}
+
+async function enrichCatalogMetrics(index: any, dataDir: string) {
+  const coursesById: Record<string, any> = {};
+  try {
+    const coursesDir = path.join(dataDir, "courses");
+    const files = await fs.readdir(coursesDir);
+    await Promise.all(files.filter((file) => file.endsWith(".json")).map(async (file) => {
+      const course = await readJsonFile(path.join(coursesDir, file));
+      coursesById[course.courseId || file.replace(/\.json$/, "")] = course;
+    }));
+  } catch { /* Missing course files contribute zero resources. */ }
+  return applyCatalogMetrics(index, coursesById);
+}
+
+async function syncCatalogMetrics(dataDir: string) {
+  const indexPath = path.resolve(import.meta.dirname, "..", "client", "src", "data", "trainingIndex.json");
+  const index = await readJsonFile(indexPath);
+  const enriched = await enrichCatalogMetrics(index, dataDir);
+  await writeJsonFile(indexPath, enriched);
+  return enriched;
 }
 
 export const adminContentRouter = router({
@@ -123,6 +145,7 @@ export const adminContentRouter = router({
       const filePath = path.join(dataDir, "courses", `${input.courseId}.json`);
       const previous = await readJsonFile(filePath);
       await writeJsonFile(filePath, input.data);
+      await syncCatalogMetrics(dataDir);
       const quizzesPath = path.join(dataDir, "lessonQuizzes.json");
       try {
         const quizzes = await readJsonFile(quizzesPath);
@@ -152,6 +175,7 @@ export const adminContentRouter = router({
       const coursePath = path.join(dataDir, "courses", `${input.courseId}.json`);
       const previous = await readJsonFile(coursePath);
       await writeJsonFile(coursePath, input.data);
+      await syncCatalogMetrics(dataDir);
       const quizzesPath = path.join(dataDir, "lessonQuizzes.json");
       try {
         const quizzes = await readJsonFile(quizzesPath);
@@ -334,6 +358,7 @@ export const adminContentRouter = router({
       }
       data.lessons[input.lessonIndex].chapters[input.chapterIndex].blocks = input.blocks;
       await writeJsonFile(filePath, data);
+      await syncCatalogMetrics(dataDir);
       return { success: true };
     }),
 
@@ -367,14 +392,15 @@ export const adminContentRouter = router({
       }
       Object.assign(data.exercises[input.exerciseIndex], input.data);
       await writeJsonFile(filePath, data);
+      await syncCatalogMetrics(dataDir);
       return { success: true };
     }),
 
   // Get training index (certifications overview)
   getTrainingIndex: adminProcedure.query(async () => {
-    const indexPath = path.resolve(import.meta.dirname, "..", "client", "src", "data", "trainingIndex.json");
-    try {
-      return await readJsonFile(indexPath);
+      const indexPath = path.resolve(import.meta.dirname, "..", "client", "src", "data", "trainingIndex.json");
+      try {
+        return await enrichCatalogMetrics(await readJsonFile(indexPath), getDataDir());
     } catch {
       return { certifications: [] };
     }
@@ -394,7 +420,8 @@ export const adminContentRouter = router({
       const validationError = validateCatalogIndex(input.data);
       if (validationError) throw new Error(validationError);
       const indexPath = path.resolve(import.meta.dirname, "..", "client", "src", "data", "trainingIndex.json");
-      await writeJsonFile(indexPath, input.data);
-      return { success: true };
+      const enriched = await enrichCatalogMetrics(input.data, getDataDir());
+      await writeJsonFile(indexPath, enriched);
+      return { success: true, data: enriched };
     }),
 });
