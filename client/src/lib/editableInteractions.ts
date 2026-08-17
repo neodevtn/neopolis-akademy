@@ -28,11 +28,13 @@ function localized(value: any) {
  */
 export function resolveEditableInteractions({
   course,
+  courseId,
   lessonIndex,
   chapterIndex,
   lessonQuizzes,
 }: {
   course: any;
+  courseId?: string;
   lessonIndex: number;
   chapterIndex: number;
   lessonQuizzes: Record<string, any>;
@@ -67,7 +69,7 @@ export function resolveEditableInteractions({
     });
   }
 
-  const courseQuizzes = lessonQuizzes?.[course?.courseId] || {};
+  const courseQuizzes = lessonQuizzes?.[courseId || course?.courseId || course?.id] || {};
   const compoundKey = `${lessonIndex}_${chapterIndex}`;
   const sourceKey = Object.prototype.hasOwnProperty.call(courseQuizzes, compoundKey)
     ? compoundKey

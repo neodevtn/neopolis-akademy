@@ -42,4 +42,16 @@ describe("resolveEditableInteractions", () => {
     });
     expect(result.find((entry) => entry.id === "fallback")?.sourceKey).toBe("0");
   });
+
+  it("uses the course identifier supplied by the editor when a draft has no courseId", () => {
+    const draftWithoutCourseId = { ...course, courseId: undefined };
+    const result = resolveEditableInteractions({
+      course: draftWithoutCourseId,
+      courseId: "course_demo",
+      lessonIndex: 0,
+      chapterIndex: 0,
+      lessonQuizzes: { course_demo: { "0_0": [{ id: "draft_q", question: "Question du brouillon" }] } },
+    });
+    expect(result.find((entry) => entry.id === "draft_q")?.sourceKey).toBe("0_0");
+  });
 });

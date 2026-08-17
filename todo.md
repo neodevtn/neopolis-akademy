@@ -1482,3 +1482,9 @@
 - [x] Ajouter l’édition des règles de passage : score minimal, tirage, mélange et obligation de validation
 - [x] Ajouter la création, suppression et réorganisation sécurisées des chapitres dans chaque leçon
 - [x] Vérifier les règles dans le lecteur apprenant, tester les sauvegardes et publier
+
+## Réorganisation et aperçu des évaluations
+- [x] Ajouter le glisser-déposer aux questions de quiz et checkpoint
+- [x] Ajouter le glisser-déposer aux écrans dans chaque leçon
+- [x] Ajouter un aperçu de score et de règles avant la sauvegarde/publication
+- [x] Vérifier les ordres sauvegardés et les parcours apprenants, puis publier

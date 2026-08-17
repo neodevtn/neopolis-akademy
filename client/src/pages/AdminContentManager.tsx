@@ -395,6 +395,7 @@ export default function AdminContentManager() {
     };
     const editableInteractions = chapter ? resolveEditableInteractions({
       course,
+      courseId: selectedCourseId,
       lessonIndex: selectedLessonIdx,
       chapterIndex: selectedChapterIdx,
       lessonQuizzes: quizzesQuery.data || {},
