@@ -1441,3 +1441,9 @@
 - [x] Définir des groupes de navigation et un ordre adaptés aux parcours administratifs prioritaires
 - [x] Implémenter une navigation administrative persistante, structurée et cohérente sur toutes les pages concernées
 - [x] Vérifier les liens, les états actifs et les parcours administrateur, puis publier
+
+## Édition contextuelle depuis le parcours apprenant
+- [x] Identifier les paramètres de leçon, chapitre et bloc disponibles dans le lecteur de cours
+- [x] Ajouter une action réservée aux administrateurs pour ouvrir l’élément affiché dans l’éditeur
+- [x] Transmettre la destination précise à l’éditeur dans un nouvel onglet
+- [x] Vérifier les droits, le rendu et la navigation directe, puis publier

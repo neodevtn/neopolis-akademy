@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, CheckCircle2, PlayCircle, Video, Download, Timer, Eye, FileText, ChevronDown, ArrowUp } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, CheckCircle2, PlayCircle, Video, Download, Timer, Eye, FileText, ChevronDown, ArrowUp, Pencil } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MatchingExercise } from "@/components/MatchingExercise";
 import { SingleChoiceExercise } from "@/components/SingleChoiceExercise";
@@ -28,6 +28,8 @@ import { AiEvaluationBlock } from "@/components/blocks/AiEvaluationBlock";
 import { MultiChoiceBlock } from "@/components/blocks/MultiChoiceBlock";
 import LessonQuiz from "./LessonQuiz";
 import NumericAnswerExercise from "@/components/NumericAnswerExercise";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getContextualCourseEditorHref } from "@/lib/courseEditorLink";
 
 export default function LessonViewer({
   lesson,
@@ -60,6 +62,7 @@ export default function LessonViewer({
   onChapterChange?: (current: number, total: number) => void;
   initialChapter?: number;
 }) {
+  const { user } = useAuth();
   const [currentChapter, setCurrentChapter] = useState(initialChapter ?? 0);
   // validatedChapter tracks the highest chapter index that was VALIDATED (quiz passed or exercises completed)
   // This is what gets persisted as progress - NOT the navigation position
@@ -199,6 +202,8 @@ export default function LessonViewer({
   }, [validatedChapter, totalChapters]); // onChapterChange is stable (useCallback in parent)
 
   const chapter = chapters[currentChapter];
+  const canEditCurrentChapter = user?.role === "admin";
+  const currentChapterEditHref = getContextualCourseEditorHref({ courseId, lessonIndex, chapterIndex: currentChapter });
 
   if (!chapter && !showQuiz) {
     return (
@@ -854,6 +859,14 @@ export default function LessonViewer({
                       <Timer className="w-3 h-3" />
                       {estimatedReadingTime} min {t({ en: 'read', fr: 'de lecture' })}
                     </span>
+                  )}
+                  {canEditCurrentChapter && (
+                    <Button asChild size="sm" variant="outline" className="ml-auto h-8 gap-1.5 border-primary/30 bg-primary/5 text-xs font-semibold text-primary hover:bg-primary/10 hover:text-primary">
+                      <a href={currentChapterEditHref} target="_blank" rel="noopener noreferrer" title={t({ en: 'Open this chapter in the content editor', fr: 'Ouvrir ce chapitre dans l’éditeur de contenu' })}>
+                        <Pencil className="h-3.5 w-3.5" />
+                        {t({ en: 'Edit this screen', fr: 'Modifier cet écran' })}
+                      </a>
+                    </Button>
                   )}
                 </div>
                 {/* Screen title - large serif */}
