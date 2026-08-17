@@ -1,8 +1,9 @@
-import { and, asc, desc, eq, inArray } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
 import {
   competencyContributionRules,
   competencyDefinitions,
   learnerCompetencyContributions,
+  users,
 } from "../drizzle/schema";
 import { clampCompetencyLevel, DEFAULT_COMPETENCIES, DEFAULT_COMPETENCY_RULES, type CompetencySourceType } from "../shared/competencyFramework";
 import { getDb } from "./db";
@@ -88,6 +89,39 @@ export async function getCompetencyFramework() {
     db.select().from(competencyContributionRules).orderBy(asc(competencyContributionRules.sortOrder)),
   ]);
   return { definitions, rules };
+}
+
+export async function getCompetencyLeaderboard(input: { competencyId?: string; limit?: number } = {}) {
+  await ensureCompetencyFramework();
+  const db = await getDb();
+  if (!db) return [];
+  const conditions = [eq(competencyDefinitions.active, 1)];
+  if (input.competencyId) conditions.push(eq(competencyDefinitions.id, input.competencyId));
+  const total = sql<number>`COALESCE(SUM(${learnerCompetencyContributions.points}), 0)`;
+  const rows = await db.select({
+    userId: users.id,
+    name: users.name,
+    email: users.email,
+    competencyId: competencyDefinitions.id,
+    title: competencyDefinitions.title,
+    color: competencyDefinitions.color,
+    maxPoints: competencyDefinitions.maxPoints,
+    rawPoints: total,
+    contributionCount: sql<number>`COUNT(${learnerCompetencyContributions.id})`,
+  }).from(learnerCompetencyContributions)
+    .innerJoin(competencyDefinitions, eq(learnerCompetencyContributions.competencyId, competencyDefinitions.id))
+    .innerJoin(users, eq(learnerCompetencyContributions.userId, users.id))
+    .where(and(...conditions))
+    .groupBy(users.id, users.name, users.email, competencyDefinitions.id, competencyDefinitions.title, competencyDefinitions.color, competencyDefinitions.maxPoints)
+    .orderBy(desc(total), asc(users.name))
+    .limit(Math.max(1, Math.min(input.limit || 50, 200)));
+  return rows.map((row, index) => ({
+    ...row,
+    rank: index + 1,
+    rawPoints: Number(row.rawPoints),
+    level: clampCompetencyLevel(Number(row.rawPoints), Number(row.maxPoints)),
+    contributionCount: Number(row.contributionCount),
+  }));
 }
 
 export async function replaceCompetencyFramework(input: { definitions: any[]; rules: any[] }) {

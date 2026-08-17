@@ -30,6 +30,7 @@ import { toast } from "sonner";
 import trainingIndex from "@/data/trainingIndex.json";
 import { AchievementGallery } from "@/components/AchievementGallery";
 import { CompetencyProfile } from "@/components/CompetencyProfile";
+import { CompetencyLeaderboard } from "@/components/admin/CompetencyLeaderboard";
 
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
@@ -65,8 +66,11 @@ export default function AdminTraining() {
   } as Record<string, { title: string; description: string }>)[activeTab] || { title: "Gestion des apprenants", description: "Suivi, invitations et analyses de la formation" };
 
   useEffect(() => {
-    const tab = new URLSearchParams(location.split("?")[1] || "").get("tab");
+    const params = new URLSearchParams(location.split("?")[1] || "");
+    const tab = params.get("tab");
     if (["learners", "invitations", "selected", "analytics"].includes(tab || "")) setActiveTab(tab!);
+    const learnerId = Number(params.get("learner"));
+    if (Number.isInteger(learnerId) && learnerId > 0) setSelectedUserId(learnerId);
   }, [location]);
 
   const reportingInput = useMemo(() => ({
@@ -857,6 +861,7 @@ export default function AdminTraining() {
                 <h2 className="text-base font-semibold text-foreground mb-4">Indicateurs administratifs complémentaires</h2>
                 <AnalyticsPanel data={analyticsQuery.data} isLoading={analyticsQuery.isLoading} />
               </div>
+              <CompetencyLeaderboard />
             </TabsContent>
           </Tabs>
         </motion.div>

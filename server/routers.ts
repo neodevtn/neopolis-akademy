@@ -17,7 +17,7 @@ import { adminEnhancedRouter } from "./adminRouter";
 import { adminContentRouter } from "./adminContentRouter";
 import { videoRecommendationsRouter } from "./videoRecommendationsRouter";
 import { createAdminNotification } from "./notificationsDb";
-import { applyCompetencyEvent, getCompetencyFramework, getUserCompetencies, replaceCompetencyFramework } from "./competencyService";
+import { applyCompetencyEvent, getCompetencyFramework, getCompetencyLeaderboard, getUserCompetencies, replaceCompetencyFramework } from "./competencyService";
 import { COMPETENCY_SOURCE_TYPES } from "../shared/competencyFramework";
 import { backfillCompetencies } from "./competencyBackfill";
 
@@ -51,6 +51,10 @@ export const appRouter = router({
     backfill: protectedProcedure.mutation(async ({ ctx }) => {
       if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
       return backfillCompetencies();
+    }),
+    leaderboard: protectedProcedure.input(z.object({ competencyId: z.string().optional(), limit: z.number().int().min(1).max(200).optional() }).optional()).query(async ({ ctx, input }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return getCompetencyLeaderboard(input || {});
     }),
   }),
   auth: router({

@@ -1515,3 +1515,10 @@
 - [x] Persister les niveaux et la traçabilité détaillée des points accordés
 - [x] Afficher les compétences dans les profils apprenants et administratifs
 - [x] Vérifier les attributions et publier le référentiel
+
+## Rangs, parcours et classements de compétences
+- [x] Définir les seuils Bronze, Argent et Or visibles pour chaque niveau
+- [x] Créer des parcours recommandés de montée en compétence à partir du catalogue réel
+- [x] Afficher les rangs et recommandations dans le profil apprenant
+- [x] Ajouter classements, filtres et tris par compétence dans l’administration
+- [x] Vérifier les calculs, les profils et les classements, puis publier
