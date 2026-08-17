@@ -328,6 +328,13 @@ export const adminContentRouter = router({
         rubric: z.any().optional(),
         title: z.union([z.string(), z.record(z.string(), z.string())]).optional(),
         difficulty: z.string().optional(),
+        interactionType: z.string().optional(),
+        inputSchema: z.any().optional(),
+        options: z.array(z.object({
+          id: z.string(),
+          text: z.union([z.string(), z.record(z.string(), z.string())]),
+          correct: z.boolean().optional(),
+        })).optional(),
       }),
     }))
     .mutation(async ({ input }) => {

@@ -1447,3 +1447,17 @@
 - [x] Ajouter une action réservée aux administrateurs pour ouvrir l’élément affiché dans l’éditeur
 - [x] Transmettre la destination précise à l’éditeur dans un nouvel onglet
 - [x] Vérifier les droits, le rendu et la navigation directe, puis publier
+
+## Éditeur de recommandations et d’exercices
+- [x] Afficher les vidéos recommandées une seule fois au niveau de la leçon dans l’éditeur
+- [x] Supprimer leur répétition visuelle dans les chapitres et préserver leur rendu après la dernière étape apprenante
+- [x] Séparer le contenu pédagogique des consignes, réponses et métadonnées d’exercice dans l’éditeur
+- [x] Ajouter des formulaires structurés pour modifier les exercices sans texte agrégé ambigu
+- [x] Vérifier les parcours d’édition et le rendu apprenant, puis publier
+
+## Composants standards pour l’édition des exercices
+- [x] Auditer les composants d’exercice et les schémas de blocs déjà disponibles
+- [x] Associer chaque type d’exercice de cours à un éditeur visuel standard
+- [x] Compléter les éditeurs manquants et remplacer les cartes génériques d’exercice
+- [x] Vérifier les sauvegardes et les aperçus apprenants de tous les types d’exercice couverts
+- [x] Dresser la liste des composants standards mis à jour et des nouveaux composants créés

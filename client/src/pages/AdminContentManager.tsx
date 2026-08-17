@@ -18,7 +18,7 @@ import {
 import {
   ArrowLeft, BookOpen, FileText, HelpCircle, Play, Edit3, Eye,
   ChevronRight, Search, GraduationCap, CheckCircle2, XCircle,
-  Braces, ImagePlus, Plus, Trash2, Save, RefreshCw, Layers, PenTool, Download, PlayCircle as PlayCircleIcon,
+  Braces, ImagePlus, Plus, Trash2, Save, RefreshCw, Layers, PenTool, Download, Video, PlayCircle as PlayCircleIcon,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -32,10 +32,12 @@ import { QuestionBankPanel } from "@/components/admin/QuestionBankPanel";
 import { CheckpointSettings } from "@/components/admin/CheckpointSettings";
 import { ExamBankSettings } from "@/components/admin/ExamBankSettings";
 import { LessonRecommendationEditor, normalizeYouTubeId } from "@/components/admin/LessonRecommendationEditor";
+import { LegacyExerciseEditor } from "@/components/admin/LegacyExerciseEditor";
 import { cloneCourseDraft } from "@shared/contentStudio";
 import { normalizeQuestionBank, serializeQuestionBank } from "@shared/questionBank";
 import { normalizeExamConfiguration, type ExamConfiguration } from "@shared/examConfiguration";
 import { toBlockMediaUrl } from "@/lib/mediaUrl";
+import { getExercisesForSelectedChapter } from "@/lib/exerciseEditor";
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
 type ViewMode = "browse" | "course" | "quiz-simulate" | "exam-simulate" | "edit-course" | "edit-quiz" | "edit-exam";
@@ -66,7 +68,9 @@ export default function AdminContentManager() {
   });
   const [selectedChapterIdx, setSelectedChapterIdx] = useState(() => {
     if (typeof window === "undefined") return 0;
-    const requested = Number(new URLSearchParams(window.location.search).get("chapter"));
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("panel") === "recommendations") return -1;
+    const requested = Number(params.get("chapter"));
     return Number.isInteger(requested) && requested >= 0 ? requested : 0;
   });
   const [courseDraft, setCourseDraft] = useState<any | null>(null);
@@ -79,6 +83,7 @@ export default function AdminContentManager() {
   const [editingBlock, setEditingBlock] = useState<{ lessonIdx: number; chapterIdx: number; blockIdx: number; content: string } | null>(null);
   const [editingQuiz, setEditingQuiz] = useState<any>(null);
   const [editingExamQ, setEditingExamQ] = useState<any>(null);
+  const [editingLegacyExercise, setEditingLegacyExercise] = useState<any>(null);
   const [editLang, setEditLang] = useState<"en" | "fr">("en");
 
   // Helpers for bilingual editing
@@ -356,6 +361,13 @@ export default function AdminContentManager() {
       draft.lessons[selectedLessonIdx] = { ...draft.lessons[selectedLessonIdx], recommendedVideos };
       setCourseDraft(draft);
     };
+    const currentChapterExercises = getExercisesForSelectedChapter({
+      exercises: course.exercises,
+      lesson,
+      lessonIndex: selectedLessonIdx,
+      chapterId: chapter?.id,
+      chapterIndex: selectedChapterIdx,
+    });
     const saveDraft = () => {
       const draft = courseDraft || cloneCourseDraft(publishedCourse);
       saveCourseDraftMut.mutate({ courseId: selectedCourseId, data: draft });
@@ -383,13 +395,34 @@ export default function AdminContentManager() {
                   {typeof ch.title === 'string' ? ch.title : (ch.title?.fr || ch.title?.en || `Chapitre ${ci + 1}`)}
                 </button>
               ))}
+              {li === selectedLessonIdx && viewMode === "edit-course" && (
+                <button
+                  className={`mt-1 flex w-full items-center gap-1.5 rounded px-4 py-1.5 text-left text-xs font-medium transition-colors ${selectedChapterIdx === -1 ? "bg-amber-100 text-amber-900" : "text-amber-700 hover:bg-amber-50"}`}
+                  onClick={() => setSelectedChapterIdx(-1)}
+                >
+                  <Video className="h-3.5 w-3.5" /> Fin de module · recommandations
+                </button>
+              )}
             </div>
           ))}
         </div>
 
         {/* Main content */}
         <div className="min-w-0 flex-1 border rounded-lg p-4 bg-white max-h-[70vh] overflow-y-auto sm:p-6">
-          {chapter ? (
+          {viewMode === "edit-course" && lesson && selectedChapterIdx === -1 ? (
+            <div className="mx-auto max-w-4xl">
+              <div className="mb-6 border-b border-amber-200 pb-4">
+                <div className="flex items-center gap-2 text-amber-700"><Video className="h-5 w-5" /><span className="text-xs font-bold uppercase tracking-[0.12em]">Paramètres de la leçon</span></div>
+                <h3 className="mt-2 text-lg font-semibold text-foreground">Vidéos recommandées de fin de module</h3>
+                <p className="mt-1 text-sm text-muted-foreground">Cette sélection est unique pour la leçon. Elle s’affiche à l’apprenant seulement après le dernier chapitre ou exercice du module.</p>
+              </div>
+              <LessonRecommendationEditor
+                videos={Array.isArray(lesson.recommendedVideos) ? lesson.recommendedVideos : []}
+                onChange={updateLessonRecommendations}
+                onRequestMedia={() => { setRecommendationMediaLessonIdx(selectedLessonIdx); setMediaLibraryOpen(true); }}
+              />
+            </div>
+          ) : chapter ? (
             <div>
               <div className="flex items-center justify-between gap-3 mb-4">
                 <div>
@@ -417,13 +450,6 @@ export default function AdminContentManager() {
               </div>
               {viewMode === "edit-course" && chapter.type === "checkpoint" && (
                 <CheckpointSettings chapter={chapter} onChange={(nextChapter) => setCourseDraft(makeDraftWithChapter(nextChapter))} />
-              )}
-              {viewMode === "edit-course" && lesson && (
-                <LessonRecommendationEditor
-                  videos={Array.isArray(lesson.recommendedVideos) ? lesson.recommendedVideos : []}
-                  onChange={updateLessonRecommendations}
-                  onRequestMedia={() => { setRecommendationMediaLessonIdx(selectedLessonIdx); setMediaLibraryOpen(true); }}
-                />
               )}
               {viewMode === "edit-course" ? (
                 <BlockLibrary
@@ -517,38 +543,23 @@ export default function AdminContentManager() {
               </div>
               )}
 
-              {/* Exercises for this lesson */}
+              {/* Exercises linked to the selected chapter */}
               {course.exercises && (
                 <div className="mt-6 border-t pt-4">
-                  <h4 className="font-semibold text-sm mb-2 flex items-center gap-1">
-                    <PenTool className="w-4 h-4 text-emerald-600" /> Exercices de cette leçon
+                  <h4 className="font-semibold text-sm mb-1 flex items-center gap-1">
+                    <PenTool className="w-4 h-4 text-emerald-600" /> Exercices de cet écran
                   </h4>
-                  {course.exercises
-                    .map((ex: any, idx: number) => ({ ...ex, _idx: idx }))
-                    .filter((ex: any) => {
-                      const lessonId = lesson.id || `lesson_${selectedLessonIdx}`;
-                      return ex.lessonId === lessonId || ex.lessonId === String(selectedLessonIdx);
-                    })
-                    .map((ex: any) => (
-                      <div key={ex.id || ex._idx} className="border rounded p-3 mb-2 bg-gray-50">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-medium text-sm">{resolveBody(ex.title) || `Exercice ${ex._idx + 1}`}</span>
-                          <div className="flex gap-1">
-                            {ex.difficulty && <Badge variant="outline" className="text-xs">{ex.difficulty}</Badge>}
-                            {viewMode === "edit-course" && (
-                              <Button size="sm" variant="ghost" className="h-5 px-1 text-blue-600" onClick={() => {
-                                setEditingExamQ({ type: "exercise", idx: ex._idx, ...ex });
-                                setEditDialogOpen(true);
-                              }}>
-                                <Edit3 className="w-3 h-3" />
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                        <p className="text-xs text-gray-600">{resolveBody(ex.prompt).substring(0, 200)}</p>
-                        {ex.instructions && <p className="text-xs text-blue-600 mt-1">📋 {resolveBody(ex.instructions).substring(0, 150)}</p>}
+                  <p className="mb-3 text-xs text-muted-foreground">Seuls les exercices rattachés au chapitre ouvert sont affichés. Le contexte, la consigne et la correction restent séparés.</p>
+                  {currentChapterExercises.length === 0 ? <div className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-4 py-3 text-xs text-muted-foreground">Aucun exercice complémentaire n’est rattaché à cet écran.</div> : currentChapterExercises.map((ex: any) => <div key={ex.id || ex._idx} className="mb-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0"><p className="text-[11px] font-bold uppercase tracking-[0.12em] text-emerald-700">{ex.interactionType === "free_text" ? "Réponse libre" : ex.interactionType || "Exercice"}</p><h5 className="mt-1 text-sm font-semibold text-slate-900">{resolveBody(ex.title) || `Exercice ${ex._idx + 1}`}</h5></div>
+                        <div className="flex shrink-0 items-center gap-2">{ex.difficulty && <Badge variant="outline" className="text-xs">{ex.difficulty}</Badge>}{viewMode === "edit-course" && <Button size="sm" variant="outline" className="h-8 gap-1.5 text-blue-700" onClick={() => setEditingLegacyExercise(ex)}><Edit3 className="h-3.5 w-3.5" /> Modifier</Button>}</div>
                       </div>
-                    ))}
+                      <div className="mt-3 grid gap-3 md:grid-cols-2">
+                        <div className="rounded-lg border border-slate-200 bg-white p-3"><p className="mb-1 text-[11px] font-bold uppercase tracking-wide text-slate-500">Contexte pédagogique</p><p className="line-clamp-4 whitespace-pre-line text-xs leading-relaxed text-slate-700">{resolveBody(ex.prompt) || "Aucun contexte renseigné."}</p></div>
+                        <div className="rounded-lg border border-blue-100 bg-blue-50/50 p-3"><p className="mb-1 text-[11px] font-bold uppercase tracking-wide text-blue-700">Consigne pour l’apprenant</p><p className="line-clamp-4 whitespace-pre-line text-xs leading-relaxed text-slate-700">{resolveBody(ex.instructions) || "Aucune consigne renseignée."}</p></div>
+                      </div>
+                    </div>)}
                 </div>
               )}
             </div>
@@ -960,6 +971,30 @@ export default function AdminContentManager() {
 
   // ─── EDIT DIALOG ───
   const renderEditDialog = () => {
+    if (editingLegacyExercise) {
+      return <LegacyExerciseEditor
+        exercise={editingLegacyExercise}
+        onClose={() => setEditingLegacyExercise(null)}
+        onSave={(data) => {
+          updateExerciseMut.mutate({
+            courseId: selectedCourseId,
+            exerciseIndex: editingLegacyExercise._idx,
+            data: {
+              title: data.title,
+              prompt: data.prompt,
+              instructions: data.instructions,
+              correction: data.correction,
+              rubric: data.rubric,
+              difficulty: data.difficulty,
+              interactionType: data.interactionType,
+              inputSchema: data.inputSchema,
+              options: data.options,
+            },
+          });
+          setEditingLegacyExercise(null);
+        }}
+      />;
+    }
     if (editingBlock) {
       const eb = editingBlock as any;
       return (
@@ -1054,11 +1089,11 @@ export default function AdminContentManager() {
                     <Input value={getI18n(editingExamQ.title, editLang)} onChange={(e) => setEditingExamQ({ ...editingExamQ, title: setI18n(editingExamQ.title, editLang, e.target.value) })} />
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-gray-600">Prompt ({editLang.toUpperCase()})</label>
+                    <label className="text-xs font-medium text-gray-600">Contexte pédagogique ({editLang.toUpperCase()})</label>
                     <Textarea value={getI18n(editingExamQ.prompt, editLang)} onChange={(e) => setEditingExamQ({ ...editingExamQ, prompt: setI18n(editingExamQ.prompt, editLang, e.target.value) })} rows={4} />
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-gray-600">Instructions ({editLang.toUpperCase()})</label>
+                    <label className="text-xs font-medium text-gray-600">Consigne pour l’apprenant ({editLang.toUpperCase()})</label>
                     <Textarea value={getI18n(editingExamQ.instructions, editLang)} onChange={(e) => setEditingExamQ({ ...editingExamQ, instructions: setI18n(editingExamQ.instructions, editLang, e.target.value) })} rows={3} />
                   </div>
                   <div>
