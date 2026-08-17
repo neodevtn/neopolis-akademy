@@ -1501,3 +1501,9 @@
 - [x] Ajouter une reprise idempotente fondée sur les critères actuels d’attribution
 - [x] Attribuer les acquis rétrospectifs et envoyer les notifications correspondantes
 - [x] Vérifier les résultats, les absences de doublons et publier le mécanisme
+
+## Visibilité des badges et diplômes dans les profils
+- [x] Auditer les écrans de profil apprenant et la fiche détaillée administrateur
+- [x] Ajouter les données d’acquis nécessaires aux vues de profil sécurisées
+- [x] Afficher les badges et diplômes avec leur statut et accès aux documents dans les deux profils
+- [x] Vérifier les droits d’accès et le rendu, puis publier

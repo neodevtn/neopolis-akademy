@@ -28,6 +28,7 @@ import { FileText, Video, BookMarked, XCircle, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import trainingIndex from "@/data/trainingIndex.json";
+import { AchievementGallery } from "@/components/AchievementGallery";
 
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
@@ -255,6 +256,7 @@ export default function AdminTraining() {
     const videoProg = (detail as any).videoProgress ?? [];
     const learningEvents = (detail as any).learningEvents ?? [];
     const exerciseResults = (detail as any).exerciseResults ?? [];
+    const achievements = (detail as any).achievements ?? [];
     const totalChaptersDone = chapterProg.length;
     const totalVideosDone = videoProg.filter((v: any) => v.watched).length;
     const totalSeconds = learningEvents.filter((e: any) => e.eventType === "learning_time").reduce((sum: number, e: any) => sum + (e.durationSeconds || 0), 0);
@@ -353,6 +355,10 @@ export default function AdminTraining() {
                 <div className="text-2xl font-bold text-primary">{firstAttemptRate === null ? "—" : `${firstAttemptRate}%`}</div>
                 <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><CheckCircle2 className="w-3 h-3" /> Réussite 1re tentative</div>
               </div>
+            </div>
+
+            <div className="mb-6">
+              <AchievementGallery achievements={achievements} adminView emptyText="Cet apprenant n’a pas encore obtenu de badge ou de diplôme." />
             </div>
 
             <div className="bg-card rounded-2xl border border-border p-6 mb-6 shadow-sm">

@@ -32,6 +32,8 @@ import { Button } from "@/components/ui/button";
 import { useMemo, useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { trpc } from "@/lib/trpc";
+import { AchievementGallery } from "@/components/AchievementGallery";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -74,7 +76,7 @@ const levelConfig = {
   },
 };
 
-type TabId = "my-path" | "catalog" | "recommended";
+type TabId = "my-path" | "achievements" | "catalog" | "recommended";
 
 export default function TrainingDashboard() {
   const { lang, t } = useLanguage();
@@ -82,6 +84,7 @@ export default function TrainingDashboard() {
   const { isAuthenticated, loading: authLoading, user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [activeTab, setActiveTab] = useState<TabId>("my-path");
+  const achievementsQuery = trpc.training.getAchievements.useQuery(undefined, { enabled: isAuthenticated });
 
   // Group configuration for the 4 certification tracks
   const GROUP_CONFIG = {
@@ -234,6 +237,7 @@ export default function TrainingDashboard() {
 
   const tabs: { id: TabId; label: { en: string; fr: string }; icon: React.ReactNode }[] = [
     { id: "my-path", label: { en: "My Progress", fr: "Mon Parcours" }, icon: <Compass className="w-4 h-4" /> },
+    { id: "achievements", label: { en: "My Achievements", fr: "Mes acquis" }, icon: <Trophy className="w-4 h-4" /> },
     { id: "catalog", label: { en: "Catalog", fr: "Catalogue" }, icon: <Library className="w-4 h-4" /> },
     { id: "recommended", label: { en: "Learning Path", fr: "Parcours recommandé" }, icon: <Route className="w-4 h-4" /> },
   ];
@@ -367,6 +371,21 @@ export default function TrainingDashboard() {
                 certCompletionData={certCompletionData}
                 GROUP_CONFIG={catalogGroupConfig}
                 t={t}
+              />
+            </motion.div>
+          )}
+          {activeTab === "achievements" && (
+            <motion.div
+              key="achievements"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3, ease: easeOut }}
+            >
+              <AchievementGallery
+                achievements={achievementsQuery.data || []}
+                canDownload
+                emptyText="Vos badges et diplômes apparaîtront ici dès la réussite d’un cours ou d’une certification."
               />
             </motion.div>
           )}
