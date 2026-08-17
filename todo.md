@@ -1421,3 +1421,10 @@
 - [x] Enregistrer les temps de présence et les résultats de première tentative par exercice
 - [x] Enrichir le suivi apprenant par chapitre, exercice, temps et taux de réussite initiale
 - [x] Ajouter des filtres, détails et vues visuelles aux logs et au suivi administrateur
+
+## Reporting graphique des apprenants
+- [x] Définir les indicateurs de performance, sérieux, implication et évolution calculables
+- [x] Créer les agrégations réelles de reporting côté serveur
+- [x] Ajouter les graphiques de progression, implication, réussite initiale et tendance dans l’administration
+- [x] Ajouter filtres de période, cours et statut, avec état de données insuffisantes
+- [x] Vérifier les calculs et le rendu des reportings graphiques

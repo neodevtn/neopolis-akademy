@@ -51,7 +51,14 @@ export default function AdminTraining() {
   const [inviteMessage, setInviteMessage] = useState("");
   const [editEmailId, setEditEmailId] = useState<number | null>(null);
   const [editEmailValue, setEditEmailValue] = useState("");
+  const [reportingDays, setReportingDays] = useState<7 | 30 | 90>(30);
+  const [reportingCertificationId, setReportingCertificationId] = useState("all");
   const pageSize = 15;
+
+  const reportingInput = useMemo(() => ({
+    days: reportingDays,
+    certificationId: reportingCertificationId === "all" ? undefined : reportingCertificationId,
+  }), [reportingDays, reportingCertificationId]);
 
   // Queries
   const statsQuery = trpc.admin.getStats.useQuery(undefined, {
@@ -79,6 +86,10 @@ export default function AdminTraining() {
   );
 
   const analyticsQuery = trpc.admin.getAnalytics.useQuery(undefined, {
+    enabled: isAuthenticated && user?.role === "admin" && activeTab === "analytics",
+  });
+
+  const learningReportsQuery = trpc.admin.getLearningReports.useQuery(reportingInput, {
     enabled: isAuthenticated && user?.role === "admin" && activeTab === "analytics",
   });
 
@@ -551,7 +562,7 @@ export default function AdminTraining() {
                 <UserCog className="w-4 h-4" /> Candidats sélectionnés
               </TabsTrigger>
               <TabsTrigger value="analytics" className="gap-1.5">
-                <BarChart3 className="w-4 h-4" /> Analytics
+                <BarChart3 className="w-4 h-4" /> Reporting
               </TabsTrigger>
             </TabsList>
 
@@ -811,13 +822,167 @@ export default function AdminTraining() {
 
             {/* TAB: Analytics */}
             <TabsContent value="analytics">
-              <AnalyticsPanel data={analyticsQuery.data} isLoading={analyticsQuery.isLoading} />
+              <LearningReportPanel
+                data={learningReportsQuery.data}
+                isLoading={learningReportsQuery.isLoading}
+                periodDays={reportingDays}
+                certificationId={reportingCertificationId}
+                onPeriodChange={setReportingDays}
+                onCertificationChange={setReportingCertificationId}
+              />
+              <div className="mt-8 border-t border-border pt-8">
+                <h2 className="text-base font-semibold text-foreground mb-4">Indicateurs administratifs complémentaires</h2>
+                <AnalyticsPanel data={analyticsQuery.data} isLoading={analyticsQuery.isLoading} />
+              </div>
             </TabsContent>
           </Tabs>
         </motion.div>
       </div>
     </div>
   );
+}
+
+/* ─── Learning Reporting Panel ─── */
+function LearningReportPanel({
+  data,
+  isLoading,
+  periodDays,
+  certificationId,
+  onPeriodChange,
+  onCertificationChange,
+}: {
+  data: any;
+  isLoading: boolean;
+  periodDays: 7 | 30 | 90;
+  certificationId: string;
+  onPeriodChange: (days: 7 | 30 | 90) => void;
+  onCertificationChange: (certificationId: string) => void;
+}) {
+  const courseTitle = (courseId: string) => {
+    for (const certification of trainingIndex.certifications) {
+      const course: any = (certification.courses as any[])?.find((item: any) => item.id === courseId);
+      if (course) return course.title?.fr || course.title?.en || courseId;
+    }
+    return courseId;
+  };
+  const maxDailyMinutes = Math.max(...(data?.daily || []).map((day: any) => day.activeMinutes), 1);
+  const maxDailyLearners = Math.max(...(data?.daily || []).map((day: any) => day.activeLearners), 1);
+  const maxBucket = Math.max(...(data?.engagementBuckets || []).map((bucket: any) => bucket.count), 1);
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <div className="flex items-center gap-2 text-primary">
+            <BarChart3 className="h-5 w-5" />
+            <span className="text-xs font-semibold uppercase tracking-[0.14em]">Reporting d’apprentissage</span>
+          </div>
+          <h2 className="mt-2 text-xl font-bold text-foreground">Performance, implication et évolution</h2>
+          <p className="mt-1 max-w-2xl text-sm text-muted-foreground">Les indicateurs sont calculés à partir du temps actif, des validations de leçon et des premières tentatives enregistrés sur la plateforme.</p>
+        </div>
+        <div className="grid grid-cols-2 gap-3 sm:flex sm:items-end">
+          <label className="grid gap-1.5 text-xs font-medium text-muted-foreground">
+            Période
+            <select className="h-9 min-w-[130px] rounded-md border border-input bg-background px-3 text-sm text-foreground" value={periodDays} onChange={(event) => onPeriodChange(Number(event.target.value) as 7 | 30 | 90)}>
+              <option value={7}>7 derniers jours</option>
+              <option value={30}>30 derniers jours</option>
+              <option value={90}>90 derniers jours</option>
+            </select>
+          </label>
+          <label className="grid gap-1.5 text-xs font-medium text-muted-foreground">
+            Certification
+            <select className="h-9 min-w-[185px] rounded-md border border-input bg-background px-3 text-sm text-foreground" value={certificationId} onChange={(event) => onCertificationChange(event.target.value)}>
+              <option value="all">Toutes les certifications</option>
+              {trainingIndex.certifications.map((certification: any) => <option key={certification.id} value={certification.id}>{certification.title?.fr || certification.title?.en || certification.id}</option>)}
+            </select>
+          </label>
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="rounded-2xl border border-border bg-card p-12 text-center shadow-sm">
+          <Loader2 className="mx-auto mb-3 h-6 w-6 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">Calcul des indicateurs réels…</p>
+        </div>
+      ) : !data ? (
+        <div className="rounded-2xl border border-border bg-card p-12 text-center shadow-sm">
+          <AlertTriangle className="mx-auto mb-3 h-8 w-8 text-amber-500" />
+          <p className="text-sm text-muted-foreground">Le reporting est momentanément indisponible.</p>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-2 gap-4 xl:grid-cols-5">
+            <ReportKpi icon={<Users className="h-5 w-5" />} label="Apprenants inscrits" value={data.overview.enrolledLearners} hint="Comptes apprenants actifs" />
+            <ReportKpi icon={<Activity className="h-5 w-5" />} label="Apprenants impliqués" value={data.overview.engagedLearners} hint={`Avec activité sur ${data.periodDays} jours`} accent="text-emerald-600" />
+            <ReportKpi icon={<Clock className="h-5 w-5" />} label="Temps moyen" value={`${data.overview.avgActiveMinutes} min`} hint={`${data.overview.activeMinutes} min cumulées`} accent="text-sky-600" />
+            <ReportKpi icon={<TrendingUp className="h-5 w-5" />} label="Réussite initiale" value={data.overview.firstAttemptRate === null ? "—" : `${data.overview.firstAttemptRate}%`} hint="Premier essai uniquement" accent="text-violet-600" />
+            <ReportKpi icon={<BookOpen className="h-5 w-5" />} label="Leçons validées" value={data.overview.completedLessons} hint={`Sur ${data.periodDays} derniers jours`} accent="text-amber-600" />
+          </div>
+
+          {!data.hasLearningData ? (
+            <div className="rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-10 text-center">
+              <Activity className="mx-auto mb-3 h-9 w-9 text-primary" />
+              <h3 className="font-semibold text-foreground">Les données s’accumuleront au fil des sessions</h3>
+              <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">Dès que les apprenants consulteront des leçons, valideront des exercices ou termineront des cours, les graphiques de performance, de sérieux et d’évolution s’alimenteront automatiquement.</p>
+            </div>
+          ) : (
+            <>
+              <div className="grid gap-6 xl:grid-cols-[1.5fr_0.9fr]">
+                <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                  <div className="mb-5 flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><TrendingUp className="h-5 w-5 text-primary" /> Évolution de l’activité</h3>
+                      <p className="mt-1 text-sm text-muted-foreground">Minutes actives et apprenants impliqués, par jour.</p>
+                    </div>
+                    <div className="flex gap-3 text-xs text-muted-foreground"><span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-sm bg-primary" /> Minutes</span><span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-sm bg-emerald-500" /> Apprenants</span></div>
+                  </div>
+                  <div className="flex h-52 items-end gap-1.5 border-b border-border pb-1">
+                    {data.daily.map((day: any) => (
+                      <div key={day.date} className="group relative flex h-full min-w-0 flex-1 items-end justify-center gap-px">
+                        <div className="w-1/2 rounded-t-sm bg-primary/75 transition-colors group-hover:bg-primary" style={{ height: `${Math.max((day.activeMinutes / maxDailyMinutes) * 100, day.activeMinutes ? 2 : 0)}%` }} />
+                        <div className="w-1/2 rounded-t-sm bg-emerald-500/75 transition-colors group-hover:bg-emerald-500" style={{ height: `${Math.max((day.activeLearners / maxDailyLearners) * 100, day.activeLearners ? 2 : 0)}%` }} />
+                        <div className="pointer-events-none absolute bottom-full z-10 mb-2 hidden min-w-max rounded-md bg-foreground px-2.5 py-1.5 text-xs text-background shadow-lg group-hover:block">{new Date(`${day.date}T12:00:00`).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" })} · {day.activeMinutes} min · {day.activeLearners} actif{day.activeLearners > 1 ? "s" : ""}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-2 flex justify-between text-xs text-muted-foreground"><span>{data.daily[0]?.date ? new Date(`${data.daily[0].date}T12:00:00`).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" }) : ""}</span><span>{data.daily.at(-1)?.date ? new Date(`${data.daily.at(-1).date}T12:00:00`).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" }) : ""}</span></div>
+                </section>
+
+                <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><Activity className="h-5 w-5 text-primary" /> Répartition de l’implication</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">Temps actif cumulé durant la période choisie.</p>
+                  <div className="mt-6 space-y-5">
+                    {data.engagementBuckets.map((bucket: any, index: number) => (
+                      <div key={bucket.label}>
+                        <div className="mb-2 flex items-center justify-between text-sm"><span className="font-medium text-foreground">{bucket.label}</span><span className="text-muted-foreground">{bucket.count} apprenant{bucket.count > 1 ? "s" : ""}</span></div>
+                        <div className="h-3 overflow-hidden rounded-full bg-secondary"><div className={["h-full rounded-full", ["bg-slate-400", "bg-sky-500", "bg-emerald-500", "bg-amber-400"][index]].join(" ")} style={{ width: `${(bucket.count / maxBucket) * 100}%` }} /></div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </div>
+
+              <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+                <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+                  <div className="border-b border-border p-6"><h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><BookMarked className="h-5 w-5 text-primary" /> Performance par cours</h3><p className="mt-1 text-sm text-muted-foreground">Activité, complétion et réussite au premier essai.</p></div>
+                  {data.coursePerformance.length === 0 ? <p className="p-6 text-sm italic text-muted-foreground">Aucune activité attribuable à un cours sur cette période.</p> : <div className="overflow-x-auto"><Table><TableHeader><TableRow><TableHead>Cours</TableHead><TableHead className="text-right">Temps</TableHead><TableHead className="text-right">Apprenants</TableHead><TableHead className="text-right">Leçons</TableHead><TableHead className="text-right">1er essai</TableHead></TableRow></TableHeader><TableBody>{data.coursePerformance.map((course: any) => <TableRow key={course.courseId}><TableCell className="max-w-[260px] font-medium"><span className="line-clamp-2">{courseTitle(course.courseId)}</span></TableCell><TableCell className="text-right text-sm">{course.activeMinutes} min</TableCell><TableCell className="text-right text-sm">{course.learners}</TableCell><TableCell className="text-right text-sm">{course.completedLessons}</TableCell><TableCell className="text-right text-sm font-semibold">{course.firstAttemptRate === null ? "—" : `${course.firstAttemptRate}%`}</TableCell></TableRow>)}</TableBody></Table></div>}
+                </section>
+                <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><Award className="h-5 w-5 text-primary" /> Apprenants les plus impliqués</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">Classement selon le temps actif, puis les leçons validées.</p>
+                  <div className="mt-5 divide-y divide-border">{data.topLearners.length === 0 ? <p className="py-5 text-sm italic text-muted-foreground">Aucun signal d’apprentissage enregistré.</p> : data.topLearners.map((learner: any, index: number) => <div key={learner.userId} className="flex items-center gap-3 py-3"><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">{index + 1}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold text-foreground">{learner.name}</p><p className="text-xs text-muted-foreground">{learner.activeDays} jour{learner.activeDays > 1 ? "s" : ""} actif{learner.activeDays > 1 ? "s" : ""} · {learner.completedLessons} leçon{learner.completedLessons > 1 ? "s" : ""}</p></div><div className="text-right"><p className="text-sm font-bold text-foreground">{learner.activeMinutes} min</p><p className="text-xs text-muted-foreground">{learner.firstAttemptRate === null ? "Pas de quiz" : `${learner.firstAttemptRate}% au 1er essai`}</p></div></div>)}</div>
+                </section>
+              </div>
+            </>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+function ReportKpi({ icon, label, value, hint, accent = "text-primary" }: { icon: React.ReactNode; label: string; value: string | number; hint: string; accent?: string }) {
+  return <div className="rounded-2xl border border-border bg-card p-4 shadow-sm"><div className={`mb-3 flex items-center gap-2 ${accent}`}><span>{icon}</span><span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{label}</span></div><div className="text-2xl font-bold text-foreground">{value}</div><p className="mt-1 text-xs text-muted-foreground">{hint}</p></div>;
 }
 
 /* ─── Analytics Panel ─── */

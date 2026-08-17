@@ -2,6 +2,7 @@ import { eq, desc, sql, and, count, gt, isNull, isNotNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents } from "../drizzle/schema";
 import { ENV } from './_core/env';
+import { engagementBucket, firstAttemptRate } from "./reportingMetrics";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -547,6 +548,156 @@ export async function getAdminAnalytics() {
     recentExams,
     activeUsersLast7Days: activeCount,
     blockedUsers: blockedCount,
+  };
+}
+
+export async function getLearningReporting(input: { days: 7 | 30 | 90; certificationId?: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const since = new Date(Date.now() - input.days * 24 * 60 * 60 * 1000);
+  const eventConditions = [sql`${learningEvents.createdAt} >= ${since}`];
+  const progressConditions = [sql`${trainingProgress.completedAt} >= ${since}`];
+  if (input.certificationId) {
+    eventConditions.push(eq(learningEvents.certificationId, input.certificationId));
+    progressConditions.push(eq(trainingProgress.certificationId, input.certificationId));
+  }
+
+  const [events, progressRows, learnerRows] = await Promise.all([
+    db.select({
+      id: learningEvents.id,
+      userId: learningEvents.userId,
+      eventType: learningEvents.eventType,
+      certificationId: learningEvents.certificationId,
+      courseId: learningEvents.courseId,
+      durationSeconds: learningEvents.durationSeconds,
+      success: learningEvents.success,
+      attemptNumber: learningEvents.attemptNumber,
+      createdAt: learningEvents.createdAt,
+    }).from(learningEvents).where(and(...eventConditions)),
+    db.select({
+      userId: trainingProgress.userId,
+      certificationId: trainingProgress.certificationId,
+      courseId: trainingProgress.courseId,
+      completedAt: trainingProgress.completedAt,
+    }).from(trainingProgress).where(and(...progressConditions)),
+    db.select({ id: users.id, name: users.name, email: users.email }).from(users).where(eq(users.role, "user")),
+  ]);
+
+  const dayKeys = Array.from({ length: input.days }, (_, index) => {
+    const date = new Date(Date.now() - (input.days - index - 1) * 24 * 60 * 60 * 1000);
+    return date.toISOString().slice(0, 10);
+  });
+  const daily = new Map(dayKeys.map((date) => [date, { date, activeLearners: new Set<number>(), minutes: 0, firstAttempts: 0, firstAttemptSuccesses: 0, completedLessons: 0 }]));
+  const learnerStats = new Map<number, { seconds: number; days: Set<string>; firstAttempts: number; firstAttemptSuccesses: number; lessons: number }>();
+  const courseStats = new Map<string, { minutes: number; firstAttempts: number; firstAttemptSuccesses: number; lessons: number; learners: Set<number> }>();
+
+  const ensureLearner = (userId: number) => {
+    if (!learnerStats.has(userId)) learnerStats.set(userId, { seconds: 0, days: new Set(), firstAttempts: 0, firstAttemptSuccesses: 0, lessons: 0 });
+    return learnerStats.get(userId)!;
+  };
+  const ensureCourse = (courseId: string) => {
+    if (!courseStats.has(courseId)) courseStats.set(courseId, { minutes: 0, firstAttempts: 0, firstAttemptSuccesses: 0, lessons: 0, learners: new Set() });
+    return courseStats.get(courseId)!;
+  };
+
+  for (const event of events) {
+    const day = new Date(event.createdAt).toISOString().slice(0, 10);
+    const dailyItem = daily.get(day);
+    const learner = ensureLearner(event.userId);
+    learner.days.add(day);
+    dailyItem?.activeLearners.add(event.userId);
+    if (event.eventType === "learning_time") {
+      const seconds = event.durationSeconds || 0;
+      learner.seconds += seconds;
+      if (dailyItem) dailyItem.minutes += seconds / 60;
+      if (event.courseId) ensureCourse(event.courseId).minutes += seconds / 60;
+    }
+    if (event.eventType === "exercise_submitted" && event.attemptNumber === 1) {
+      learner.firstAttempts += 1;
+      if (event.success === 1) learner.firstAttemptSuccesses += 1;
+      if (dailyItem) {
+        dailyItem.firstAttempts += 1;
+        if (event.success === 1) dailyItem.firstAttemptSuccesses += 1;
+      }
+      if (event.courseId) {
+        const course = ensureCourse(event.courseId);
+        course.firstAttempts += 1;
+        if (event.success === 1) course.firstAttemptSuccesses += 1;
+      }
+    }
+    if (event.courseId) ensureCourse(event.courseId).learners.add(event.userId);
+  }
+
+  for (const row of progressRows) {
+    const day = new Date(row.completedAt).toISOString().slice(0, 10);
+    const learner = ensureLearner(row.userId);
+    learner.lessons += 1;
+    if (daily.get(day)) daily.get(day)!.completedLessons += 1;
+    if (row.courseId) {
+      const course = ensureCourse(row.courseId);
+      course.lessons += 1;
+      course.learners.add(row.userId);
+    }
+  }
+
+  const totalSeconds = Array.from(learnerStats.values()).reduce((sum, item) => sum + item.seconds, 0);
+  const firstAttempts = Array.from(learnerStats.values()).reduce((sum, item) => sum + item.firstAttempts, 0);
+  const firstAttemptSuccesses = Array.from(learnerStats.values()).reduce((sum, item) => sum + item.firstAttemptSuccesses, 0);
+  const engagedLearners = Array.from(learnerStats.values()).filter((item) => item.seconds > 0 || item.lessons > 0).length;
+  const userById = new Map(learnerRows.map((learner) => [learner.id, learner]));
+
+  return {
+    periodDays: input.days,
+    hasLearningData: events.length > 0 || progressRows.length > 0,
+    overview: {
+      enrolledLearners: learnerRows.length,
+      engagedLearners,
+      activeMinutes: Math.round(totalSeconds / 60),
+      avgActiveMinutes: engagedLearners ? Math.round(totalSeconds / 60 / engagedLearners) : 0,
+      firstAttemptRate: firstAttemptRate(firstAttemptSuccesses, firstAttempts),
+      completedLessons: progressRows.length,
+    },
+    daily: Array.from(daily.values()).map((item) => ({
+      date: item.date,
+      activeLearners: item.activeLearners.size,
+      activeMinutes: Math.round(item.minutes),
+      firstAttemptRate: firstAttemptRate(item.firstAttemptSuccesses, item.firstAttempts),
+      completedLessons: item.completedLessons,
+    })),
+    engagementBuckets: [
+      { label: "0–30 min", count: learnerRows.filter((learner) => {
+        const item = learnerStats.get(learner.id);
+        return item && engagementBucket(item.seconds, item.lessons > 0) === "short";
+      }).length },
+      { label: "31–120 min", count: learnerRows.filter((learner) => {
+        const item = learnerStats.get(learner.id);
+        return item && engagementBucket(item.seconds, item.lessons > 0) === "regular";
+      }).length },
+      { label: "> 2 h", count: learnerRows.filter((learner) => {
+        const item = learnerStats.get(learner.id);
+        return item && engagementBucket(item.seconds, item.lessons > 0) === "deep";
+      }).length },
+      { label: "Aucune activité", count: learnerRows.filter((learner) => {
+        const item = learnerStats.get(learner.id);
+        return !item || engagementBucket(item.seconds, item.lessons > 0) === "none";
+      }).length },
+    ],
+    coursePerformance: Array.from(courseStats.entries()).map(([courseId, item]) => ({
+      courseId,
+      activeMinutes: Math.round(item.minutes),
+      learners: item.learners.size,
+      completedLessons: item.lessons,
+      firstAttemptRate: firstAttemptRate(item.firstAttemptSuccesses, item.firstAttempts),
+    })).sort((a, b) => b.activeMinutes - a.activeMinutes || b.completedLessons - a.completedLessons),
+    topLearners: Array.from(learnerStats.entries()).map(([userId, item]) => ({
+      userId,
+      name: userById.get(userId)?.name || userById.get(userId)?.email || `Apprenant #${userId}`,
+      activeMinutes: Math.round(item.seconds / 60),
+      activeDays: item.days.size,
+      completedLessons: item.lessons,
+      firstAttemptRate: firstAttemptRate(item.firstAttemptSuccesses, item.firstAttempts),
+    })).sort((a, b) => b.activeMinutes - a.activeMinutes || b.completedLessons - a.completedLessons).slice(0, 8),
   };
 }
 
