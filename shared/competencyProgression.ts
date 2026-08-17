@@ -8,7 +8,7 @@ export type CompetencyRank = {
 
 export const COMPETENCY_RANKS: CompetencyRank[] = [
   { id: "starting", label: "À démarrer", min: 0, max: 0.9, color: "slate" },
-  { id: "bronze", label: "Bronze", min: 1, max: 34.9, color: "amber" },
+  { id: "bronze", label: "Bronze", min: 10, max: 34.9, color: "amber" },
   { id: "silver", label: "Argent", min: 35, max: 69.9, color: "slate" },
   { id: "gold", label: "Or", min: 70, max: 100, color: "yellow" },
 ];
@@ -28,7 +28,7 @@ export const COMPETENCY_PATHS: Record<string, CompetencyPath> = {
 };
 
 export function getCompetencyRank(level: number): CompetencyRank {
-  return COMPETENCY_RANKS.find((rank) => level >= rank.min && level <= rank.max) || COMPETENCY_RANKS.at(-1)!;
+  return [...COMPETENCY_RANKS].reverse().find((rank) => level >= rank.min) || COMPETENCY_RANKS[0];
 }
 
 export function getNextCompetencyRank(level: number): CompetencyRank | null {

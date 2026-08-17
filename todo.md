@@ -1522,3 +1522,7 @@
 - [x] Afficher les rangs et recommandations dans le profil apprenant
 - [x] Ajouter classements, filtres et tris par compétence dans l’administration
 - [x] Vérifier les calculs, les profils et les classements, puis publier
+
+## Ajustement du seuil de rang Bronze
+- [x] Faire commencer le rang Bronze à 10 points et ajuster les tests
+- [x] Vérifier le rendu des rangs puis publier

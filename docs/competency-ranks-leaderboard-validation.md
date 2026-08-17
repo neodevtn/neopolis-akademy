@@ -2,7 +2,7 @@
 
 ## Rangs visibles
 
-Les niveaux restent calculés sur 100 points, mais portent désormais un rang visible : **À démarrer** de 0 à 0,9, **Bronze** de 1 à 34,9, **Argent** de 35 à 69,9 et **Or** de 70 à 100. Le profil indique aussi le nombre précis de points nécessaires pour le prochain rang ou confirme l’atteinte du niveau maximal.
+Les niveaux restent calculés sur 100 points, mais portent désormais un rang visible : **À démarrer** de 0 à 9,9, **Bronze** de 10 à 34,9, **Argent** de 35 à 69,9 et **Or** de 70 à 100. Le profil indique aussi le nombre précis de points nécessaires pour le prochain rang ou confirme l’atteinte du niveau maximal.
 
 ## Parcours recommandés
 

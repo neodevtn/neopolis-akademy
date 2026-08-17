@@ -4,7 +4,8 @@ import { COMPETENCY_PATHS, getCompetencyRank, getNextCompetencyRank } from "./co
 describe("competency progression", () => {
   it("assigns visible ranks on the 0 to 100 competency scale", () => {
     expect(getCompetencyRank(0).id).toBe("starting");
-    expect(getCompetencyRank(12.5).id).toBe("bronze");
+    expect(getCompetencyRank(9.9).id).toBe("starting");
+    expect(getCompetencyRank(10).id).toBe("bronze");
     expect(getCompetencyRank(50).id).toBe("silver");
     expect(getCompetencyRank(100).id).toBe("gold");
   });
