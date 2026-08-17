@@ -8,67 +8,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 const courseCache = new Map<string, { lessons: any[]; exercises: any[]; sections: any[] }>();
 const pendingFetches = new Map<string, Promise<any>>();
 
-function normalizeLessons(lessons: any[]): any[] {
-  return lessons.map((lesson: any) => ({
-    ...lesson,
-    chapters: (lesson.chapters || []).map((ch: any) => {
-      const existingBlocks = ch.blocks && ch.blocks.length > 0 ? [...ch.blocks] : [];
-      if (ch.block) {
-        const block = ch.block;
-        let extraBlocks: any[];
-        if (block.type === "content" && block.body) {
-          extraBlocks = [{ type: "content", body: block.body }];
-        } else if (block.type === "checkpoint" && block.questions) {
-          extraBlocks = block.questions.map((q: any, qi: number) => ({
-            type: "single_choice_exercise",
-            id: `checkpoint_q${qi}`,
-            question: q.question,
-            options: (q.choices || []).map((c: any) => ({
-              id: c.id,
-              text: c.text,
-            })),
-            correctAnswer: q.correctId || q.answer || "a",
-            explanation: q.explanation,
-          }));
-        } else if (block.type === "video") {
-          extraBlocks = [block];
-        } else {
-          extraBlocks = [block];
-        }
-        const mergedBlocks =
-          existingBlocks.length > 0
-            ? [...existingBlocks, ...extraBlocks]
-            : extraBlocks;
-        return { ...ch, blocks: mergedBlocks };
-      }
-      // Handle chapters with direct body/questions fields
-      if (existingBlocks.length === 0) {
-        let generatedBlocks: any[] = [];
-        if (ch.body) {
-          generatedBlocks.push({ type: "content", body: ch.body });
-        }
-        if (ch.type === "checkpoint" && ch.questions) {
-          const qBlocks = ch.questions.map((q: any, qi: number) => ({
-            type: "single_choice_exercise",
-            id: `checkpoint_q${qi}`,
-            question: q.question,
-            options: (q.choices || []).map((c: any) => ({
-              id: c.id,
-              text: c.text,
-            })),
-            correctAnswer: q.correctId || q.answer || "a",
-            explanation: q.explanation,
-          }));
-          generatedBlocks = [...generatedBlocks, ...qBlocks];
-        }
-        if (generatedBlocks.length > 0) {
-          return { ...ch, blocks: generatedBlocks };
-        }
-      }
-      return ch;
-    }),
-  }));
-}
 
 async function fetchCourseData(courseId: string): Promise<{ lessons: any[]; exercises: any[]; sections: any[] }> {
   // Deduplicate concurrent fetches for the same courseId
@@ -83,7 +22,7 @@ async function fetchCourseData(courseId: string): Promise<{ lessons: any[]; exer
     })
     .then((data) => {
       const result = {
-        lessons: normalizeLessons(data.lessons || []),
+        lessons: normalizeCourseBlocks(data).lessons || [],
         exercises: data.exercises || [],
         sections: data.sections || [],
       };
@@ -214,3 +153,4 @@ export function getCourseDataCacheStats() {
     cachedIds: Array.from(courseCache.keys()),
   };
 }
+import { normalizeCourseBlocks } from "@shared/courseBlockNormalization";

@@ -35,7 +35,15 @@
           "type": "content",
           "body": {
             "en": "Tracing LLM model calls is the foundation of AI observability. Every call to a model provider such as OpenAI, Anthropic, or a self-hosted endpoint should be wrapped in a trace span that captures key metadata.\n\nA well-structured model call span includes the provider name (e.g., openai), the specific model identifier (e.g., gpt-4o), and token counts broken down into prompt tokens, completion tokens, and totals. These attributes allow you to correlate cost, performance, and quality over time.\n\nLatency is measured as the wall-clock time from request initiation to the first byte of the response (time-to-first-token, TTFT) and the total response time. Capturing both gives insight into streaming behavior versus batch responses.\n\nUsing OpenTelemetry, spans are created with start and end timestamps automatically. Custom attributes such as llm.provider, llm.model, llm.usage.prompt_tokens, llm.usage.completion_tokens, and llm.latency_ms are added via the span.set_attribute() API, enabling downstream querying and alerting in your observability backend."
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Tracing LLM model calls is the foundation of AI observability. Every call to a model provider such as OpenAI, Anthropic, or a self-hosted endpoint should be wrapped in a trace span that captures key metadata.\n\nA well-structured model call span includes the provider name (e.g., openai), the specific model identifier (e.g., gpt-4o), and token counts broken down into prompt tokens, completion tokens, and totals. These attributes allow you to correlate cost, performance, and quality over time.\n\nLatency is measured as the wall-clock time from request initiation to the first byte of the response (time-to-first-token, TTFT) and the total response time. Capturing both gives insight into streaming behavior versus batch responses.\n\nUsing OpenTelemetry, spans are created with start and end timestamps automatically. Custom attributes such as llm.provider, llm.model, llm.usage.prompt_tokens, llm.usage.completion_tokens, and llm.latency_ms are added via the span.set_attribute() API, enabling downstream querying and alerting in your observability backend."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_03",
@@ -45,7 +53,15 @@
           "type": "content",
           "body": {
             "en": "• **Trace Span**: A single unit of work within a distributed trace, capturing start time, end time, and structured metadata about an LLM call.\n• **Token Accounting**: Recording prompt_tokens, completion_tokens, and total_tokens per span enables cost attribution and quota monitoring.\n• **Latency Dimensions**: Time-to-first-token (TTFT) measures responsiveness, while total_duration_ms measures throughput; both are critical SLO signals.\n• **Semantic Conventions**: Standardized attribute names (e.g., gen_ai.system, gen_ai.request.model) defined by the OpenTelemetry GenAI working group ensure interoperability across tools."
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **Trace Span**: A single unit of work within a distributed trace, capturing start time, end time, and structured metadata about an LLM call.\n• **Token Accounting**: Recording prompt_tokens, completion_tokens, and total_tokens per span enables cost attribution and quota monitoring.\n• **Latency Dimensions**: Time-to-first-token (TTFT) measures responsiveness, while total_duration_ms measures throughput; both are critical SLO signals.\n• **Semantic Conventions**: Standardized attribute names (e.g., gen_ai.system, gen_ai.request.model) defined by the OpenTelemetry GenAI working group ensure interoperability across tools."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_04",
@@ -159,6 +175,119 @@
                 "en": "The OpenTelemetry GenAI semantic conventions define gen_ai.request.model as the standard attribute for the model identifier. Using standardized names ensures that observability tooling can interpret and visualize traces consistently across providers."
               }
             }
+          ],
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "Which OpenTelemetry API method is used to attach metadata such as model name and token counts to a span?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "span.add_event()"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "span.set_attribute()"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "span.record_exception()"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "span.update_name()"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "span.set_attribute(key, value) is the correct OpenTelemetry API for attaching structured metadata like llm.model or llm.usage.prompt_tokens to a span. add_event() is for timestamped log-like events, not key-value metadata."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "What does TTFT stand for in the context of LLM latency tracing?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Total Token Flow Time"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Time To Final Token"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Time To First Token"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Traced Token Fetch Time"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "TTFT stands for Time To First Token. It measures the elapsed time from when the request is sent until the model begins streaming the first token of its response, which is a key responsiveness metric for streaming LLM applications."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "Which of the following attribute names is aligned with the OpenTelemetry GenAI semantic conventions for identifying the model used?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "openai.model_id"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "llm.model_name"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "gen_ai.request.model"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "ai.provider.model"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "The OpenTelemetry GenAI semantic conventions define gen_ai.request.model as the standard attribute for the model identifier. Using standardized names ensures that observability tooling can interpret and visualize traces consistently across providers."
+              }
+            }
           ]
         },
         {
@@ -169,7 +298,15 @@
           "type": "content",
           "body": {
             "en": "• Every LLM API call should be wrapped in a trace span that records provider, model, token counts, and latency to enable cost and performance observability.\n• Both TTFT (time-to-first-token) and total response duration should be captured as separate latency attributes to distinguish responsiveness from throughput.\n• Adhering to OpenTelemetry GenAI semantic conventions for attribute naming ensures your traces are portable and compatible with standard observability backends."
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Every LLM API call should be wrapped in a trace span that records provider, model, token counts, and latency to enable cost and performance observability.\n• Both TTFT (time-to-first-token) and total response duration should be captured as separate latency attributes to distinguish responsiveness from throughput.\n• Adhering to OpenTelemetry GenAI semantic conventions for attribute naming ensures your traces are portable and compatible with standard observability backends."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_06",
@@ -179,7 +316,15 @@
           "type": "content",
           "body": {
             "en": "Congratulations on completing Lesson 1: Trace Model Calls with Provider, Model, Tokens and Latency!\n\nYou now understand how to instrument LLM API calls with structured trace spans, capture essential metadata including provider identity, model name, token usage, and latency dimensions. These skills form the bedrock of AI cost management and performance monitoring.\n\nIn the next lesson, you will extend this foundation to trace RAG retrieval and reranking pipelines."
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations on completing Lesson 1: Trace Model Calls with Provider, Model, Tokens and Latency!\n\nYou now understand how to instrument LLM API calls with structured trace spans, capture essential metadata including provider identity, model name, token usage, and latency dimensions. These skills form the bedrock of AI cost management and performance monitoring.\n\nIn the next lesson, you will extend this foundation to trace RAG retrieval and reranking pipelines."
+              }
+            }
+          ]
         }
       ],
       "recommendedVideos": [
@@ -240,7 +385,15 @@
           "type": "content",
           "body": {
             "en": "In this lesson, you will learn how to:\n\n• Decompose a RAG pipeline into traceable sub-spans for embedding, retrieval, and reranking\n• Capture retrieval quality signals such as document scores, chunk IDs, and hit counts in spans\n• Instrument reranking steps to record score changes and filtering decisions\n• Build a complete parent-child span hierarchy representing a full RAG request lifecycle"
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson, you will learn how to:\n\n• Decompose a RAG pipeline into traceable sub-spans for embedding, retrieval, and reranking\n• Capture retrieval quality signals such as document scores, chunk IDs, and hit counts in spans\n• Instrument reranking steps to record score changes and filtering decisions\n• Build a complete parent-child span hierarchy representing a full RAG request lifecycle"
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_02",
@@ -268,7 +421,15 @@
           "type": "content",
           "body": {
             "en": "• **Parent-Child Span Hierarchy**: RAG pipelines use nested spans where the root represents the full user request and children represent embedding, retrieval, reranking, and generation steps.\n• **Retrieval Metadata**: Attributes such as rag.retrieval.top_k, rag.retrieval.returned_count, and per-document similarity scores reveal retrieval effectiveness.\n• **Reranking Span**: A dedicated span for the reranker captures model name, input/output document counts, and score thresholds, enabling quality regression detection.\n• **Span Context Propagation**: The W3C TraceContext header propagates trace and span IDs across service boundaries so the full RAG pipeline remains linked in a single distributed trace."
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **Parent-Child Span Hierarchy**: RAG pipelines use nested spans where the root represents the full user request and children represent embedding, retrieval, reranking, and generation steps.\n• **Retrieval Metadata**: Attributes such as rag.retrieval.top_k, rag.retrieval.returned_count, and per-document similarity scores reveal retrieval effectiveness.\n• **Reranking Span**: A dedicated span for the reranker captures model name, input/output document counts, and score thresholds, enabling quality regression detection.\n• **Span Context Propagation**: The W3C TraceContext header propagates trace and span IDs across service boundaries so the full RAG pipeline remains linked in a single distributed trace."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_04",
@@ -382,6 +543,119 @@
                 "en": "The W3C TraceContext specification (RFC 7239 derivative) defines the traceparent and tracestate HTTP headers used by OpenTelemetry to propagate trace and span IDs across service boundaries, ensuring all distributed steps of a RAG pipeline appear in the same trace."
               }
             }
+          ],
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "In a RAG pipeline trace, which attribute is most important to record on the retrieval span to evaluate search quality?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "The user's raw query text"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "The similarity scores of retrieved documents"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "The total number of tokens in the LLM response"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "The embedding model version"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Similarity scores of retrieved documents are the primary signal for evaluating retrieval quality. Low or clustered scores indicate the vector search is not returning semantically relevant results, which directly impacts RAG answer quality."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "What is the purpose of creating a child span for the reranking step rather than merging it into the retrieval span?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Reranking is always performed by a different microservice"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "It reduces the total number of spans in the trace"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "It isolates reranking latency and quality signals for independent analysis"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "OpenTelemetry requires separate spans for every function call"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "Separating the reranking step into its own child span allows you to independently measure its latency contribution and observe how it changes document ordering and scores, enabling targeted optimization without conflating retrieval and reranking performance."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "Which standard is used to propagate trace context (trace ID and span ID) across service boundaries in a distributed RAG pipeline?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "OpenID Connect"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "W3C TraceContext"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "JWT Bearer Token"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "gRPC metadata headers"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "The W3C TraceContext specification (RFC 7239 derivative) defines the traceparent and tracestate HTTP headers used by OpenTelemetry to propagate trace and span IDs across service boundaries, ensuring all distributed steps of a RAG pipeline appear in the same trace."
+              }
+            }
           ]
         },
         {
@@ -392,7 +666,15 @@
           "type": "content",
           "body": {
             "en": "• RAG pipelines should be decomposed into separate child spans for embedding, retrieval, reranking, and generation, each capturing step-specific metadata.\n• Document similarity scores and counts before and after reranking are the most actionable quality signals you can capture in a RAG trace.\n• W3C TraceContext propagation ensures that all distributed steps of a RAG pipeline remain linked under a single trace ID, enabling end-to-end analysis."
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• RAG pipelines should be decomposed into separate child spans for embedding, retrieval, reranking, and generation, each capturing step-specific metadata.\n• Document similarity scores and counts before and after reranking are the most actionable quality signals you can capture in a RAG trace.\n• W3C TraceContext propagation ensures that all distributed steps of a RAG pipeline remain linked under a single trace ID, enabling end-to-end analysis."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_06",
@@ -402,7 +684,15 @@
           "type": "content",
           "body": {
             "en": "Congratulations on completing Lesson 2: Trace RAG Retrieval and Reranking Steps!\n\nYou can now design a complete parent-child span hierarchy for RAG pipelines, capturing critical quality and performance signals at each stage from embedding through reranking. These traces will help your team detect retrieval regressions and tune reranker thresholds with data.\n\nIn the next lesson, you will learn how to trace tool calls and agent loops in agentic AI systems."
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations on completing Lesson 2: Trace RAG Retrieval and Reranking Steps!\n\nYou can now design a complete parent-child span hierarchy for RAG pipelines, capturing critical quality and performance signals at each stage from embedding through reranking. These traces will help your team detect retrieval regressions and tune reranker thresholds with data.\n\nIn the next lesson, you will learn how to trace tool calls and agent loops in agentic AI systems."
+              }
+            }
+          ]
         }
       ],
       "recommendedVideos": [
@@ -463,7 +753,15 @@
           "type": "content",
           "body": {
             "en": "In this lesson, you will learn how to:\n\n• Instrument individual tool calls within an agent as discrete child spans\n• Capture agent loop iterations, decision points, and termination conditions in traces\n• Record tool input arguments and output results as span attributes or events\n• Detect and observe runaway agent loops using span depth and iteration counters"
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson, you will learn how to:\n\n• Instrument individual tool calls within an agent as discrete child spans\n• Capture agent loop iterations, decision points, and termination conditions in traces\n• Record tool input arguments and output results as span attributes or events\n• Detect and observe runaway agent loops using span depth and iteration counters"
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_02",
@@ -473,7 +771,15 @@
           "type": "content",
           "body": {
             "en": "Agentic AI systems execute dynamic, multi-step workflows in which an LLM decides which tools to call, evaluates results, and may loop multiple times before producing a final answer. Tracing these systems requires capturing both the agent's reasoning cycle and each discrete tool invocation.\n\nThe agent loop itself is represented as a root or parent span. Each iteration of the loop adds a child span that records the loop index, the LLM's chosen action, and the stop condition evaluation. Within each iteration, tool calls are modeled as grandchild spans. A tool call span should record the tool name, the serialized input arguments (with PII redacted), the output payload, and whether the call succeeded or raised an error.\n\nSpecial attention is needed for recursive or parallel tool calls. In recursive cases, span depth increases with each nested call; depth limits should be monitored as a safety signal. In parallel execution, spans share the same parent but have overlapping time windows, which observability tools can visualize as concurrent branches.\n\nAttributes such as agent.loop_iteration, agent.tool_name, agent.tool_status, and agent.final_answer_reached provide operators with the data needed to debug stuck loops, measure per-tool latency, and calculate the average number of reasoning steps required to complete a task."
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Agentic AI systems execute dynamic, multi-step workflows in which an LLM decides which tools to call, evaluates results, and may loop multiple times before producing a final answer. Tracing these systems requires capturing both the agent's reasoning cycle and each discrete tool invocation.\n\nThe agent loop itself is represented as a root or parent span. Each iteration of the loop adds a child span that records the loop index, the LLM's chosen action, and the stop condition evaluation. Within each iteration, tool calls are modeled as grandchild spans. A tool call span should record the tool name, the serialized input arguments (with PII redacted), the output payload, and whether the call succeeded or raised an error.\n\nSpecial attention is needed for recursive or parallel tool calls. In recursive cases, span depth increases with each nested call; depth limits should be monitored as a safety signal. In parallel execution, spans share the same parent but have overlapping time windows, which observability tools can visualize as concurrent branches.\n\nAttributes such as agent.loop_iteration, agent.tool_name, agent.tool_status, and agent.final_answer_reached provide operators with the data needed to debug stuck loops, measure per-tool latency, and calculate the average number of reasoning steps required to complete a task."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_03",
@@ -483,7 +789,15 @@
           "type": "content",
           "body": {
             "en": "• **Agent Loop Span**: A parent span that encloses all iterations of an agent's reasoning cycle, recording total iterations, elapsed time, and final termination reason.\n• **Tool Call Span**: A child span for each tool invocation, capturing the tool name, input arguments, output, latency, and success or failure status.\n• **Loop Iteration Counter**: The attribute agent.loop_iteration tracks which cycle produced each tool call, enabling analysis of multi-hop reasoning chains.\n• **Runaway Loop Detection**: Monitoring max span depth and total iteration count via alerting rules protects against unbounded agent execution and cost overruns."
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **Agent Loop Span**: A parent span that encloses all iterations of an agent's reasoning cycle, recording total iterations, elapsed time, and final termination reason.\n• **Tool Call Span**: A child span for each tool invocation, capturing the tool name, input arguments, output, latency, and success or failure status.\n• **Loop Iteration Counter**: The attribute agent.loop_iteration tracks which cycle produced each tool call, enabling analysis of multi-hop reasoning chains.\n• **Runaway Loop Detection**: Monitoring max span depth and total iteration count via alerting rules protects against unbounded agent execution and cost overruns."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_04",
@@ -597,6 +911,119 @@
                 "en": "Parallel tool calls should be represented as sibling child spans sharing the same parent (the iteration span). Their time windows overlap because they execute concurrently. Observability UIs like Jaeger and Tempo visualize these as parallel branches in the trace waterfall."
               }
             }
+          ],
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "In an agent trace, what is the correct span relationship between the agent loop and an individual tool call?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "The tool call is a sibling span of the agent loop"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "The tool call is a child span of the agent loop span"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "The tool call creates a new root trace independent of the agent loop"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "The tool call span replaces the agent loop span"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Tool calls are modeled as child spans nested inside the agent loop span (or inside iteration sub-spans). This parent-child relationship preserves the execution hierarchy and allows tools to trace the full causal chain from the agent decision to the tool result."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "Which span attribute is most useful for detecting a potential runaway agent loop in production?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "gen_ai.request.model"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "agent.tool_name"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "agent.loop_iteration"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "llm.usage.total_tokens"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "agent.loop_iteration tracks the number of reasoning cycles the agent has executed. Setting an alert when this value exceeds a defined threshold (e.g., 20 iterations) is the most direct way to detect and interrupt runaway agent loops before they incur excessive cost."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "When an agent executes two tool calls in parallel within the same loop iteration, how should their spans be structured?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "As sequential child spans where the second starts after the first ends"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "As sibling child spans of the same parent span with overlapping time windows"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "As separate root traces with no parent relationship"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "As a single merged span with a combined duration"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Parallel tool calls should be represented as sibling child spans sharing the same parent (the iteration span). Their time windows overlap because they execute concurrently. Observability UIs like Jaeger and Tempo visualize these as parallel branches in the trace waterfall."
+              }
+            }
           ]
         },
         {
@@ -607,7 +1034,15 @@
           "type": "content",
           "body": {
             "en": "• Agent traces use a parent-child span hierarchy where the loop is the parent and each tool call is a child, preserving the full causal reasoning chain.\n• Recording agent.loop_iteration on each tool call span enables post-hoc analysis of multi-hop reasoning and supports runaway loop detection alerts.\n• Parallel tool calls within a single loop iteration should be modeled as sibling child spans with overlapping timestamps to accurately represent concurrent execution."
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Agent traces use a parent-child span hierarchy where the loop is the parent and each tool call is a child, preserving the full causal reasoning chain.\n• Recording agent.loop_iteration on each tool call span enables post-hoc analysis of multi-hop reasoning and supports runaway loop detection alerts.\n• Parallel tool calls within a single loop iteration should be modeled as sibling child spans with overlapping timestamps to accurately represent concurrent execution."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_06",
@@ -686,7 +1121,15 @@
           "type": "content",
           "body": {
             "en": "In this lesson, you will learn how to:\n\n• Identify categories of sensitive data that must be redacted from AI traces (PII, PHI, credentials)\n• Implement span attribute redaction using OpenTelemetry processors and custom span hooks\n• Apply field-level masking and tokenization strategies for trace payloads\n• Align trace privacy controls with GDPR, HIPAA, and SOC 2 compliance requirements"
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson, you will learn how to:\n\n• Identify categories of sensitive data that must be redacted from AI traces (PII, PHI, credentials)\n• Implement span attribute redaction using OpenTelemetry processors and custom span hooks\n• Apply field-level masking and tokenization strategies for trace payloads\n• Align trace privacy controls with GDPR, HIPAA, and SOC 2 compliance requirements"
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_02",
@@ -696,7 +1139,15 @@
           "type": "content",
           "body": {
             "en": "AI traces capture rich contextual data that is critical for debugging and monitoring, but they can also inadvertently contain sensitive information. User prompts may include names, email addresses, financial data, health records, or authentication tokens. Without redaction, this data flows into observability backends, violating privacy regulations and creating security risks.\n\nRedaction must be applied at the span level before data leaves the application process. OpenTelemetry supports SpanProcessors that intercept every span before export. A custom SpanProcessor can inspect attribute values, apply regex patterns to detect PII (e.g., SSN, credit card numbers, email addresses), and replace matched content with a redaction token such as [REDACTED] or a pseudonymous hash.\n\nFor LLM prompt and response bodies, field-level masking can target specific JSON paths or named entity recognition (NER) can detect and redact entities dynamically. Tokenization replaces sensitive values with non-reversible identifiers that preserve referential consistency without exposing raw data.\n\nCompliance frameworks impose specific requirements: GDPR mandates the right to erasure, meaning traces must not store personal data longer than necessary and must support deletion. HIPAA requires that PHI be de-identified before storage. SOC 2 requires audit trails of who accessed trace data. Implementing a trace data retention policy alongside redaction ensures holistic compliance."
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "AI traces capture rich contextual data that is critical for debugging and monitoring, but they can also inadvertently contain sensitive information. User prompts may include names, email addresses, financial data, health records, or authentication tokens. Without redaction, this data flows into observability backends, violating privacy regulations and creating security risks.\n\nRedaction must be applied at the span level before data leaves the application process. OpenTelemetry supports SpanProcessors that intercept every span before export. A custom SpanProcessor can inspect attribute values, apply regex patterns to detect PII (e.g., SSN, credit card numbers, email addresses), and replace matched content with a redaction token such as [REDACTED] or a pseudonymous hash.\n\nFor LLM prompt and response bodies, field-level masking can target specific JSON paths or named entity recognition (NER) can detect and redact entities dynamically. Tokenization replaces sensitive values with non-reversible identifiers that preserve referential consistency without exposing raw data.\n\nCompliance frameworks impose specific requirements: GDPR mandates the right to erasure, meaning traces must not store personal data longer than necessary and must support deletion. HIPAA requires that PHI be de-identified before storage. SOC 2 requires audit trails of who accessed trace data. Implementing a trace data retention policy alongside redaction ensures holistic compliance."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_03",
@@ -706,7 +1157,15 @@
           "type": "content",
           "body": {
             "en": "• **SpanProcessor Redaction**: A custom OpenTelemetry SpanProcessor intercepts spans in-process and applies redaction rules to attributes before they are exported to the backend.\n• **PII Pattern Matching**: Regular expressions or NER models scan span attribute values for sensitive entities (emails, SSNs, phone numbers) and replace them with redaction tokens.\n• **Tokenization vs. Masking**: Masking irreversibly replaces data with a fixed token ([REDACTED]); tokenization replaces it with a consistent pseudonym, preserving referential integrity across traces.\n• **Data Retention and Compliance**: GDPR, HIPAA, and SOC 2 each impose obligations on how long trace data can be stored, who can access it, and how it must be deleted or de-identified."
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **SpanProcessor Redaction**: A custom OpenTelemetry SpanProcessor intercepts spans in-process and applies redaction rules to attributes before they are exported to the backend.\n• **PII Pattern Matching**: Regular expressions or NER models scan span attribute values for sensitive entities (emails, SSNs, phone numbers) and replace them with redaction tokens.\n• **Tokenization vs. Masking**: Masking irreversibly replaces data with a fixed token ([REDACTED]); tokenization replaces it with a consistent pseudonym, preserving referential integrity across traces.\n• **Data Retention and Compliance**: GDPR, HIPAA, and SOC 2 each impose obligations on how long trace data can be stored, who can access it, and how it must be deleted or de-identified."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_04",
@@ -820,6 +1279,119 @@
                 "en": "GDPR (General Data Protection Regulation) Article 17 grants data subjects the right to erasure, commonly called the 'right to be forgotten'. This requires that systems storing personal data, including observability traces, be capable of deleting or de-identifying that data upon a subject's request."
               }
             }
+          ],
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "At which stage of the OpenTelemetry pipeline should PII redaction be applied to ensure sensitive data never reaches the backend?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "In the observability backend's query layer"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "In a SpanProcessor within the application process before export"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "In the OTEL Collector after it receives the spans"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "In the dashboard visualization layer"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Redaction must be applied in a SpanProcessor within the application process, before spans are exported. This ensures sensitive data is removed at the source and never transmitted over the network or stored in the observability backend, providing the strongest privacy guarantee."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "What is the key difference between masking and tokenization in trace redaction?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Masking encrypts data while tokenization deletes it"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Masking replaces data with a fixed token while tokenization replaces it with a consistent pseudonym"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Tokenization is only used for authentication tokens, not PII"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "They are functionally identical in the context of trace privacy"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Masking replaces sensitive values with a fixed placeholder like [REDACTED], losing all referential information. Tokenization replaces values with a consistent pseudonymous identifier, so the same original value always maps to the same token, preserving the ability to correlate events across traces without exposing raw data."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "Which regulation specifically grants individuals the right to erasure, requiring that personal data in traces be deletable upon request?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "HIPAA"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "SOC 2"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "GDPR"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "PCI DSS"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "GDPR (General Data Protection Regulation) Article 17 grants data subjects the right to erasure, commonly called the 'right to be forgotten'. This requires that systems storing personal data, including observability traces, be capable of deleting or de-identifying that data upon a subject's request."
+              }
+            }
           ]
         },
         {
@@ -830,7 +1402,15 @@
           "type": "content",
           "body": {
             "en": "• PII and other sensitive data must be redacted in a SpanProcessor within the application process before spans are exported, ensuring sensitive data never reaches the observability backend.\n• Tokenization preserves referential consistency across traces while protecting raw sensitive values, making it preferable to simple masking when cross-trace correlation is needed.\n• Compliance with GDPR, HIPAA, and SOC 2 requires not only redaction but also defined data retention policies, access controls, and the technical ability to delete or de-identify trace data on demand."
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• PII and other sensitive data must be redacted in a SpanProcessor within the application process before spans are exported, ensuring sensitive data never reaches the observability backend.\n• Tokenization preserves referential consistency across traces while protecting raw sensitive values, making it preferable to simple masking when cross-trace correlation is needed.\n• Compliance with GDPR, HIPAA, and SOC 2 requires not only redaction but also defined data retention policies, access controls, and the technical ability to delete or de-identify trace data on demand."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_06",
@@ -840,7 +1420,15 @@
           "type": "content",
           "body": {
             "en": "Congratulations on completing Lesson 4: Redaction and Privacy in Traces!\n\nYou have now mastered the final pillar of responsible AI observability: ensuring that the rich operational data captured in traces does not expose sensitive user information. By combining SpanProcessor redaction, PII pattern matching, tokenization strategies, and compliance-aligned retention policies, you can build trace pipelines that are both powerful and privacy-safe.\n\nYou have completed all four lessons of the Tracing AI Workflows course. Proceed to the hands-on lab to instrument a full AI application with OpenTelemetry trace spans covering model calls, RAG pipelines, agent loops, and redaction."
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations on completing Lesson 4: Redaction and Privacy in Traces!\n\nYou have now mastered the final pillar of responsible AI observability: ensuring that the rich operational data captured in traces does not expose sensitive user information. By combining SpanProcessor redaction, PII pattern matching, tokenization strategies, and compliance-aligned retention policies, you can build trace pipelines that are both powerful and privacy-safe.\n\nYou have completed all four lessons of the Tracing AI Workflows course. Proceed to the hands-on lab to instrument a full AI application with OpenTelemetry trace spans covering model calls, RAG pipelines, agent loops, and redaction."
+              }
+            }
+          ]
         }
       ],
       "recommendedVideos": [

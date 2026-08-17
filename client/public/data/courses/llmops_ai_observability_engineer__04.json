@@ -26,6 +26,12 @@
               "url": "https://www.youtube.com/watch?v=F3DqahobXZQ",
               "title": "Deploying and Monitoring LLM Inference Endpoints",
               "label": "Course Video"
+            },
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn:\n• How to detect and diagnose unexpected token cost spikes in LLM-powered applications\n• The primary causes of latency degradation and how to distinguish them from provider issues\n• How to set up alerting thresholds and cost budgets for proactive incident prevention\n• Practical remediation strategies to contain runaway costs and restore acceptable latency"
+              }
             }
           ]
         },
@@ -39,7 +45,15 @@
             "body": {
               "en": "Token cost spikes occur when prompt length, output verbosity, or request volume suddenly increases beyond expected baselines. Common root causes include prompt injection attacks that balloon context windows, misconfigured retrieval pipelines appending oversized document chunks, or viral traffic patterns triggering unbounded parallelism.\n\nLatency incidents are often correlated: large prompts not only cost more but also saturate model inference queues, pushing p95 and p99 response times into unacceptable ranges. Effective triage requires correlating token-usage metrics with request traces.\n\nEngineers should track tokens-per-request distributions, cost-per-session, and time-to-first-token (TTFT) alongside total generation time. Alerting should fire on both absolute thresholds (e.g., daily spend > $X) and relative anomalies (e.g., average tokens up 3× from the rolling 1-hour baseline).\n\nRate limiting, prompt length caps, and circuit breakers are the primary containment tools once an incident is confirmed."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Token cost spikes occur when prompt length, output verbosity, or request volume suddenly increases beyond expected baselines. Common root causes include prompt injection attacks that balloon context windows, misconfigured retrieval pipelines appending oversized document chunks, or viral traffic patterns triggering unbounded parallelism.\n\nLatency incidents are often correlated: large prompts not only cost more but also saturate model inference queues, pushing p95 and p99 response times into unacceptable ranges. Effective triage requires correlating token-usage metrics with request traces.\n\nEngineers should track tokens-per-request distributions, cost-per-session, and time-to-first-token (TTFT) alongside total generation time. Alerting should fire on both absolute thresholds (e.g., daily spend > $X) and relative anomalies (e.g., average tokens up 3× from the rolling 1-hour baseline).\n\nRate limiting, prompt length caps, and circuit breakers are the primary containment tools once an incident is confirmed."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_03",
@@ -51,7 +65,15 @@
             "body": {
               "en": "• **Token Budget**: A pre-defined maximum number of input + output tokens allowed per request or session, enforced to prevent cost overruns.\n• **Time-to-First-Token (TTFT)**: The latency from request submission to the arrival of the first streamed token; a sensitive early indicator of model queue saturation.\n• **Cost Anomaly Detection**: Statistical techniques (z-score, moving averages) applied to spend or token-volume time-series to trigger alerts before budgets are exhausted.\n• **Circuit Breaker Pattern**: An operational safeguard that automatically stops forwarding requests to an LLM endpoint when error rates or latency breach configurable thresholds, protecting downstream services."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **Token Budget**: A pre-defined maximum number of input + output tokens allowed per request or session, enforced to prevent cost overruns.\n• **Time-to-First-Token (TTFT)**: The latency from request submission to the arrival of the first streamed token; a sensitive early indicator of model queue saturation.\n• **Cost Anomaly Detection**: Statistical techniques (z-score, moving averages) applied to spend or token-volume time-series to trigger alerts before budgets are exhausted.\n• **Circuit Breaker Pattern**: An operational safeguard that automatically stops forwarding requests to an LLM endpoint when error rates or latency breach configurable thresholds, protecting downstream services."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_04",
@@ -167,7 +189,120 @@
                 }
               }
             ]
-          }
+          },
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "Which metric is the most sensitive early indicator that an LLM inference queue is becoming saturated?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Total daily token spend"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Time-to-first-token (TTFT)"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Number of active users"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Model parameter count"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "TTFT measures how quickly the model begins streaming a response. It rises sharply when inference queues are saturated, making it a leading indicator before total latency becomes critical."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "A retrieval-augmented generation (RAG) pipeline starts appending entire 20-page PDFs to every prompt, causing cost spikes. What is the most direct remediation?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Switch to a cheaper model tier immediately"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Disable caching for all requests"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Enforce a maximum prompt-length cap and fix the document chunking logic"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Increase the daily spending budget"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "The root cause is oversized document chunks being appended to prompts. Enforcing a prompt-length cap stops the bleeding immediately, while fixing the chunking logic prevents recurrence."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "What is the primary advantage of using relative anomaly detection (e.g., 3× above rolling baseline) over absolute thresholds for cost alerting?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "It eliminates all false positives"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "It adapts to normal traffic growth and catches spikes proportionally regardless of baseline spend level"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "It requires no historical data to function"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "It is cheaper to compute than absolute thresholds"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Relative anomaly detection scales with normal growth patterns, so a product that naturally spends more over time will not continuously trigger stale absolute thresholds. It catches proportional deviations that signal true incidents."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_05",
@@ -179,7 +314,15 @@
             "body": {
               "en": "• Token cost spikes and latency incidents are frequently co-caused by prompt size growth, misconfigured pipelines, or viral traffic — always investigate token-per-request distributions first.\n• Monitoring both absolute spend thresholds and relative anomaly signals gives broader incident coverage across all stages of product growth.\n• Circuit breakers, prompt-length caps, and rate limits form the essential containment toolkit for stopping cost or latency incidents before they cascade into full service degradations."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Token cost spikes and latency incidents are frequently co-caused by prompt size growth, misconfigured pipelines, or viral traffic — always investigate token-per-request distributions first.\n• Monitoring both absolute spend thresholds and relative anomaly signals gives broader incident coverage across all stages of product growth.\n• Circuit breakers, prompt-length caps, and rate limits form the essential containment toolkit for stopping cost or latency incidents before they cascade into full service degradations."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_06",
@@ -191,7 +334,15 @@
             "body": {
               "en": "Congratulations on completing 'Token Cost Spikes and Latency Incidents'! You now understand how to detect cost anomalies, interpret latency signals, and apply containment strategies.\n\nThese skills are foundational to operating reliable and cost-efficient LLM services. In the next lesson, you will learn how to handle provider outages and implement fallback routing to maintain availability even when your primary LLM provider fails."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations on completing 'Token Cost Spikes and Latency Incidents'! You now understand how to detect cost anomalies, interpret latency signals, and apply containment strategies.\n\nThese skills are foundational to operating reliable and cost-efficient LLM services. In the next lesson, you will learn how to handle provider outages and implement fallback routing to maintain availability even when your primary LLM provider fails."
+              }
+            }
+          ]
         }
       ],
       "recommendedVideos": [
@@ -253,7 +404,15 @@
             "body": {
               "en": "In this lesson you will learn:\n• How to detect a provider outage quickly using health checks, status pages, and error-rate monitors\n• The architectural patterns for fallback routing across multiple LLM providers\n• How to evaluate model equivalence and manage prompt compatibility when switching providers\n• How to test fallback paths in production safely using chaos engineering principles"
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn:\n• How to detect a provider outage quickly using health checks, status pages, and error-rate monitors\n• The architectural patterns for fallback routing across multiple LLM providers\n• How to evaluate model equivalence and manage prompt compatibility when switching providers\n• How to test fallback paths in production safely using chaos engineering principles"
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_02",
@@ -272,6 +431,12 @@
               "url": "https://www.youtube.com/watch?v=I3CWFDgqvq8",
               "title": "End To End Multimodal LLMOPS Project Azure Deployment",
               "label": "Recommended Viewing"
+            },
+            {
+              "type": "content",
+              "body": {
+                "en": "LLM providers — whether OpenAI, Anthropic, Google, or self-hosted endpoints — are subject to regional outages, rate-limit storms, and degraded-mode operations. A resilient LLM application must never depend on a single provider.\n\nThe canonical fallback architecture uses a priority-ordered provider list managed by an LLM gateway or proxy layer (e.g., LiteLLM, Portkey, or a custom router). When the primary provider returns HTTP 5xx errors, timeouts, or exceeds a configurable error-rate threshold within a rolling window, the gateway automatically promotes the next candidate.\n\nKey engineering challenges include prompt compatibility (different providers tokenize and interpret system prompts differently), output schema consistency (JSON mode availability varies), and latency normalization across providers with different performance profiles. Fallback routing should be tested regularly using synthetic failure injection — temporarily blocking the primary endpoint — to validate that SLA commitments are met during failover.\n\nRunbook procedures must document which models are considered semantically equivalent and what quality trade-offs are accepted during a degraded fallback state."
+              }
             }
           ]
         },
@@ -285,7 +450,15 @@
             "body": {
               "en": "• **LLM Gateway**: A middleware layer that abstracts provider selection, handles retries, enforces rate limits, and routes requests to fallback providers transparently to the application layer.\n• **Provider Health Check**: Lightweight synthetic requests (often called canary probes) sent on a schedule to detect provider degradation before real user traffic is affected.\n• **Model Equivalence**: The assessment of whether a fallback model produces outputs of sufficient quality and format compatibility to substitute for the primary model in a given use case.\n• **Chaos Injection**: Deliberate introduction of provider failures in a controlled environment to validate that fallback paths, alerting, and runbooks work as intended before a real outage occurs."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **LLM Gateway**: A middleware layer that abstracts provider selection, handles retries, enforces rate limits, and routes requests to fallback providers transparently to the application layer.\n• **Provider Health Check**: Lightweight synthetic requests (often called canary probes) sent on a schedule to detect provider degradation before real user traffic is affected.\n• **Model Equivalence**: The assessment of whether a fallback model produces outputs of sufficient quality and format compatibility to substitute for the primary model in a given use case.\n• **Chaos Injection**: Deliberate introduction of provider failures in a controlled environment to validate that fallback paths, alerting, and runbooks work as intended before a real outage occurs."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_04",
@@ -401,7 +574,120 @@
                 }
               }
             ]
-          }
+          },
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "What is the primary role of an LLM gateway in a multi-provider fallback architecture?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "To fine-tune models from multiple providers simultaneously"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "To abstract provider selection and route requests to fallback providers transparently when the primary fails"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "To store training data across providers"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "To reduce the number of API keys required"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "An LLM gateway sits between the application and providers, handling routing logic, retries, and failover so the application code does not need to manage provider-specific failure handling."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "Which of the following is the most important factor to validate when selecting a fallback model during a provider outage?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "The fallback model must have more parameters than the primary model"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "The fallback model must be hosted in the same region"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "The fallback model must produce outputs of sufficient quality and format compatibility for the use case"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "The fallback model must use the identical tokenizer"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "Model equivalence — quality and output format compatibility — is the critical validation. A fallback model that cannot satisfy the application's output schema or quality bar creates a second incident even after routing succeeds."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "Why should fallback routing paths be tested with chaos injection rather than relying solely on staging environment tests?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Staging environments are always more expensive to operate"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Chaos injection in production validates that real traffic, real configurations, and real alerting all behave correctly under failure conditions"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Staging environments cannot run LLM workloads"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Chaos injection automatically fixes routing bugs"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Production chaos injection verifies the entire system — including load balancers, gateway configs, alert pipelines, and on-call procedures — under realistic conditions that staging may not fully replicate."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_05",
@@ -413,7 +699,15 @@
             "body": {
               "en": "• Resilient LLM applications require a multi-provider fallback architecture managed through an LLM gateway that handles routing, retries, and failover transparently.\n• Model equivalence — verifying that the fallback model meets quality and output format requirements — is as critical as the routing mechanism itself.\n• Fallback paths must be regularly tested with synthetic failure injection to ensure runbooks, alerting, and SLA commitments hold during real outages."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Resilient LLM applications require a multi-provider fallback architecture managed through an LLM gateway that handles routing, retries, and failover transparently.\n• Model equivalence — verifying that the fallback model meets quality and output format requirements — is as critical as the routing mechanism itself.\n• Fallback paths must be regularly tested with synthetic failure injection to ensure runbooks, alerting, and SLA commitments hold during real outages."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_06",
@@ -425,7 +719,15 @@
             "body": {
               "en": "Excellent work completing 'Provider Outage and Fallback Routing'! You now have a solid understanding of how to architect and validate multi-provider resilience for LLM applications.\n\nThese patterns are essential for meeting availability SLAs in production. In the next lesson, you will shift focus to safety incidents — learning how to triage harmful outputs, prompt injections, and policy violations in real time."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Excellent work completing 'Provider Outage and Fallback Routing'! You now have a solid understanding of how to architect and validate multi-provider resilience for LLM applications.\n\nThese patterns are essential for meeting availability SLAs in production. In the next lesson, you will shift focus to safety incidents — learning how to triage harmful outputs, prompt injections, and policy violations in real time."
+              }
+            }
+          ]
         }
       ],
       "recommendedVideos": [
@@ -487,7 +789,15 @@
             "body": {
               "en": "In this lesson you will learn:\n• How to classify and prioritize safety incidents involving LLM outputs, including harmful content, prompt injection, and data leakage\n• The triage workflow for investigating a safety incident from detection to containment\n• How to design and operate a safety monitoring pipeline with real-time classifiers and human escalation paths\n• The roles and responsibilities of different stakeholders during a safety incident response"
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn:\n• How to classify and prioritize safety incidents involving LLM outputs, including harmful content, prompt injection, and data leakage\n• The triage workflow for investigating a safety incident from detection to containment\n• How to design and operate a safety monitoring pipeline with real-time classifiers and human escalation paths\n• The roles and responsibilities of different stakeholders during a safety incident response"
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_02",
@@ -499,7 +809,15 @@
             "body": {
               "en": "Safety incidents in LLM systems span a wide severity spectrum: from a mildly off-tone response to a jailbreak that causes the model to produce harmful instructions, disclose confidential system prompts, or exfiltrate PII from its context window. Effective triage begins with automated safety classifiers running synchronously or asynchronously on every output.\n\nThese classifiers score responses across dimensions such as toxicity, violence, sexual content, self-harm, and policy violations. When a classifier score exceeds a threshold, an alert is routed to the on-call team with the full conversation trace, user metadata, and a severity tag (P1 through P4).\n\nThe first responder must quickly assess: Was the output actually served to the user? Is it an isolated event or a systematic vulnerability?\n\nDoes it involve regulated data? Containment actions include blocking the offending prompt pattern, rolling back a recently deployed prompt version, revoking a user's access token, or activating a killswitch that routes traffic to a safer model configuration.\n\nCross-functional coordination with legal, trust-and-safety, and communications teams is required for P1 incidents involving potential regulatory implications."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Safety incidents in LLM systems span a wide severity spectrum: from a mildly off-tone response to a jailbreak that causes the model to produce harmful instructions, disclose confidential system prompts, or exfiltrate PII from its context window. Effective triage begins with automated safety classifiers running synchronously or asynchronously on every output.\n\nThese classifiers score responses across dimensions such as toxicity, violence, sexual content, self-harm, and policy violations. When a classifier score exceeds a threshold, an alert is routed to the on-call team with the full conversation trace, user metadata, and a severity tag (P1 through P4).\n\nThe first responder must quickly assess: Was the output actually served to the user? Is it an isolated event or a systematic vulnerability?\n\nDoes it involve regulated data? Containment actions include blocking the offending prompt pattern, rolling back a recently deployed prompt version, revoking a user's access token, or activating a killswitch that routes traffic to a safer model configuration.\n\nCross-functional coordination with legal, trust-and-safety, and communications teams is required for P1 incidents involving potential regulatory implications."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_03",
@@ -511,7 +829,15 @@
             "body": {
               "en": "• **Safety Classifier**: An automated model or rule-based system that evaluates LLM outputs for policy violations, toxicity, or harmful content and assigns a severity score in real time.\n• **Prompt Injection**: An attack where adversarial content in user input or retrieved documents overrides the model's system instructions, potentially causing unauthorized behavior or data disclosure.\n• **Severity Taxonomy (P1–P4)**: A structured incident priority system where P1 represents active harm with regulatory or reputational risk, and P4 represents low-impact observations requiring only monitoring.\n• **Killswitch**: A pre-configured operational control that instantly disables a feature, model endpoint, or user segment to halt an active safety incident while investigation proceeds."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **Safety Classifier**: An automated model or rule-based system that evaluates LLM outputs for policy violations, toxicity, or harmful content and assigns a severity score in real time.\n• **Prompt Injection**: An attack where adversarial content in user input or retrieved documents overrides the model's system instructions, potentially causing unauthorized behavior or data disclosure.\n• **Severity Taxonomy (P1–P4)**: A structured incident priority system where P1 represents active harm with regulatory or reputational risk, and P4 represents low-impact observations requiring only monitoring.\n• **Killswitch**: A pre-configured operational control that instantly disables a feature, model endpoint, or user segment to halt an active safety incident while investigation proceeds."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_04",
@@ -627,7 +953,120 @@
                 }
               }
             ]
-          }
+          },
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "During safety incident triage, what is the first question a first responder must answer after receiving a safety alert?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Which model version was deployed at the time of the incident?"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Was the harmful output actually served to the user, or was it caught before delivery?"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "What is the cost of the request that triggered the alert?"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "How many tokens were used in the offending response?"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Determining whether the output was served to the user is the most critical first step because it dictates the urgency of containment, the need for user notification, and potential regulatory obligations."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "What type of attack causes adversarial content in a user's message to override the model's system prompt instructions?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Denial-of-service attack"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Token stuffing"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Prompt injection"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Model inversion"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "Prompt injection embeds instructions within user-supplied or retrieved content that attempt to hijack the model's behavior, overriding the developer's intended system prompt and safety guardrails."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "A safety classifier detects that a deployed LLM is systematically generating policy-violating content for a specific category of user query. Which containment action is most appropriate as an immediate response?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Log the incidents for review in the next weekly sprint"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Activate a killswitch or route traffic to a safer configuration while the vulnerability is investigated"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Increase the safety classifier threshold to reduce alert volume"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Ask affected users to rephrase their queries"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Systematic policy violations represent an active, ongoing incident. The immediate priority is containment — using a killswitch or fallback routing — to stop further harm while the root cause is investigated."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_05",
@@ -639,7 +1078,15 @@
             "body": {
               "en": "• Safety incident triage requires a layered approach: automated classifiers for detection, a clear severity taxonomy for prioritization, and pre-defined containment playbooks for rapid response.\n• The first triage question — whether harmful output was served to the user — determines escalation urgency, notification requirements, and regulatory obligations.\n• Systematic safety vulnerabilities demand immediate containment via killswitches or fallback routing; investigating root cause must not delay stopping active harm."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Safety incident triage requires a layered approach: automated classifiers for detection, a clear severity taxonomy for prioritization, and pre-defined containment playbooks for rapid response.\n• The first triage question — whether harmful output was served to the user — determines escalation urgency, notification requirements, and regulatory obligations.\n• Systematic safety vulnerabilities demand immediate containment via killswitches or fallback routing; investigating root cause must not delay stopping active harm."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_06",
@@ -658,6 +1105,12 @@
               "url": "https://www.youtube.com/watch?v=qtxBsUY3eYQ",
               "title": "Continuously monitor your LLM apps in production",
               "label": "Tutorial"
+            },
+            {
+              "type": "content",
+              "body": {
+                "en": "Outstanding work completing 'Safety Incident Triage'! You now understand how to detect, classify, and contain safety incidents across the full severity spectrum.\n\nThese skills protect both users and your organization during high-stakes situations. In the final lesson, you will learn how to turn incidents into lasting improvements through structured postmortem practices and continuous improvement frameworks."
+              }
             }
           ]
         }
@@ -722,7 +1175,15 @@
             "body": {
               "en": "In this lesson you will learn:\n• How to conduct a blameless postmortem after an LLM operations incident\n• The structure of an effective incident postmortem document and the key questions it must answer\n• How to extract actionable improvements from postmortems and track them to completion\n• How to build a continuous improvement culture in LLMOps teams using feedback loops and reliability metrics"
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn:\n• How to conduct a blameless postmortem after an LLM operations incident\n• The structure of an effective incident postmortem document and the key questions it must answer\n• How to extract actionable improvements from postmortems and track them to completion\n• How to build a continuous improvement culture in LLMOps teams using feedback loops and reliability metrics"
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_02",
@@ -734,7 +1195,15 @@
             "body": {
               "en": "A postmortem transforms an incident from a failure into an organizational learning asset. The blameless postmortem principle — foundational in modern SRE culture — holds that individuals acted rationally given the information and tooling available; systemic improvements, not personal accountability, are the goal.\n\nAn LLMOps postmortem document should capture: a precise incident timeline, the detection mechanism and time-to-detect (TTD), the time-to-mitigate (TTM), the root cause analysis (using 5-Whys or fishbone diagrams), the customer and business impact, and a prioritized list of action items with owners and due dates. For LLM-specific incidents, the postmortem must also address model behavior factors: Did a prompt change introduce the regression?\n\nWas a safety classifier threshold misconfigured? Did retrieval pipeline changes expand the attack surface?\n\nAction items fall into three categories: detection improvements (add monitoring, lower alert thresholds), prevention improvements (add prompt validation, improve chunking logic), and response improvements (update runbooks, add killswitch automation). A reliability review cadence — typically monthly — tracks whether action items are closed and measures trend data on TTD, TTM, and incident frequency.\n\nOver time, this creates a compounding improvement effect that measurably raises system reliability and safety."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "A postmortem transforms an incident from a failure into an organizational learning asset. The blameless postmortem principle — foundational in modern SRE culture — holds that individuals acted rationally given the information and tooling available; systemic improvements, not personal accountability, are the goal.\n\nAn LLMOps postmortem document should capture: a precise incident timeline, the detection mechanism and time-to-detect (TTD), the time-to-mitigate (TTM), the root cause analysis (using 5-Whys or fishbone diagrams), the customer and business impact, and a prioritized list of action items with owners and due dates. For LLM-specific incidents, the postmortem must also address model behavior factors: Did a prompt change introduce the regression?\n\nWas a safety classifier threshold misconfigured? Did retrieval pipeline changes expand the attack surface?\n\nAction items fall into three categories: detection improvements (add monitoring, lower alert thresholds), prevention improvements (add prompt validation, improve chunking logic), and response improvements (update runbooks, add killswitch automation). A reliability review cadence — typically monthly — tracks whether action items are closed and measures trend data on TTD, TTM, and incident frequency.\n\nOver time, this creates a compounding improvement effect that measurably raises system reliability and safety."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_03",
@@ -746,7 +1215,15 @@
             "body": {
               "en": "• **Blameless Postmortem**: An incident review process that focuses on systemic root causes and process improvements rather than assigning individual fault, fostering psychological safety and honest reporting.\n• **Time-to-Detect (TTD) / Time-to-Mitigate (TTM)**: Key reliability KPIs measuring how quickly an incident is identified and resolved; tracking their trends reveals whether monitoring and response capabilities are improving.\n• **5-Whys Analysis**: A root cause technique that iteratively asks 'why' to drill through symptoms to the underlying systemic cause, preventing superficial fixes that allow recurrence.\n• **Action Item Taxonomy**: A structured classification of postmortem follow-ups into detection, prevention, and response categories to ensure improvements address the full incident lifecycle rather than only the immediate trigger."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **Blameless Postmortem**: An incident review process that focuses on systemic root causes and process improvements rather than assigning individual fault, fostering psychological safety and honest reporting.\n• **Time-to-Detect (TTD) / Time-to-Mitigate (TTM)**: Key reliability KPIs measuring how quickly an incident is identified and resolved; tracking their trends reveals whether monitoring and response capabilities are improving.\n• **5-Whys Analysis**: A root cause technique that iteratively asks 'why' to drill through symptoms to the underlying systemic cause, preventing superficial fixes that allow recurrence.\n• **Action Item Taxonomy**: A structured classification of postmortem follow-ups into detection, prevention, and response categories to ensure improvements address the full incident lifecycle rather than only the immediate trigger."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_04",
@@ -862,7 +1339,120 @@
                 }
               }
             ]
-          }
+          },
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "What is the core principle of a blameless postmortem?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Identifying which engineer made the mistake and documenting it for performance reviews"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Focusing on systemic root causes and process improvements rather than individual fault, to foster honest learning"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Ensuring that all incidents are resolved within one hour to avoid postmortems"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Delegating all follow-up action items to the most senior engineer"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Blameless postmortems assume individuals acted rationally given available information. By focusing on systemic improvements rather than blame, teams create psychological safety that enables honest reporting and deeper root cause analysis."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "Which two KPIs are most directly used to measure whether an organization's incident response capabilities are improving over time?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Model perplexity and BLEU score"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Time-to-Detect (TTD) and Time-to-Mitigate (TTM)"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Token throughput and GPU utilization"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Number of postmortem documents and meeting attendance"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "TTD and TTM directly measure the speed and effectiveness of detection and response capabilities. Downward trends in these metrics over time demonstrate that monitoring, alerting, and runbooks are genuinely improving."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "After a prompt injection incident, the postmortem generates an action item to 'add input sanitization to the RAG pipeline.' Which category of the action item taxonomy does this belong to?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Detection improvement"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Response improvement"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Prevention improvement"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Cost optimization"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "Adding input sanitization addresses the systemic vulnerability that allowed the attack to succeed in the first place. This is a prevention improvement — it stops the incident from recurring rather than improving how it is detected or responded to."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_05",
@@ -874,7 +1464,15 @@
             "body": {
               "en": "• Blameless postmortems convert incidents into organizational learning by targeting systemic root causes; this requires psychological safety and honest, detailed documentation of the full incident timeline.\n• Tracking TTD and TTM trends over time is the most direct measure of whether your team's detection and response capabilities are improving as a result of postmortem action items.\n• Categorizing action items into detection, prevention, and response improvements ensures that the full incident lifecycle is addressed, not just the immediate trigger that caused the outage or safety event."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Blameless postmortems convert incidents into organizational learning by targeting systemic root causes; this requires psychological safety and honest, detailed documentation of the full incident timeline.\n• Tracking TTD and TTM trends over time is the most direct measure of whether your team's detection and response capabilities are improving as a result of postmortem action items.\n• Categorizing action items into detection, prevention, and response improvements ensures that the full incident lifecycle is addressed, not just the immediate trigger that caused the outage or safety event."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_06",
@@ -886,7 +1484,15 @@
             "body": {
               "en": "Congratulations on completing 'Postmortem and Continuous Improvement' — and the entire 'Operations and Incidents' course! You have now mastered the complete incident lifecycle for LLM systems: detecting and containing cost and latency spikes, routing around provider outages, triaging safety incidents, and driving lasting improvements through structured postmortems.\n\nThese skills form the operational backbone of a reliable, safe, and cost-efficient LLM production system. Proceed to the lab to put everything together by writing a complete AI incident runbook with triage procedures."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations on completing 'Postmortem and Continuous Improvement' — and the entire 'Operations and Incidents' course! You have now mastered the complete incident lifecycle for LLM systems: detecting and containing cost and latency spikes, routing around provider outages, triaging safety incidents, and driving lasting improvements through structured postmortems.\n\nThese skills form the operational backbone of a reliable, safe, and cost-efficient LLM production system. Proceed to the lab to put everything together by writing a complete AI incident runbook with triage procedures."
+              }
+            }
+          ]
         }
       ],
       "recommendedVideos": [

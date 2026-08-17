@@ -26,6 +26,12 @@
               "url": "https://www.youtube.com/watch?v=D3pXSkGceY0",
               "title": "How to Fine Tune your own LLM using LoRA (on a CUSTOM dataset!)",
               "label": "Course Video"
+            },
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn:\n• The definition and mechanics of full fine-tuning for large language models\n• The core motivation behind Parameter-Efficient Fine-Tuning (PEFT) methods\n• A side-by-side comparison of compute, memory, and storage trade-offs\n• When to choose full fine-tuning versus a PEFT approach for a given task"
+              }
             }
           ]
         },
@@ -39,7 +45,15 @@
             "body": {
               "en": "Full fine-tuning updates every parameter of a pre-trained model on a downstream dataset. While this yields maximum flexibility and often the highest task-specific accuracy, it requires GPU memory proportional to the full model size plus optimizer states, which can exceed hundreds of gigabytes for modern LLMs. Storage also becomes costly because a separate model copy is saved per task.\n\nParameter-Efficient Fine-Tuning (PEFT) addresses these constraints by freezing the majority of pre-trained weights and introducing a small set of trainable parameters. Techniques such as LoRA, prefix tuning, and adapter layers fall under this umbrella. PEFT methods typically train fewer than 1% of total parameters, slashing memory and compute requirements dramatically while retaining most of the performance of full fine-tuning. This makes them the practical default for practitioners working with limited hardware or needing to maintain multiple task-specific adapters on a single base model."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Full fine-tuning updates every parameter of a pre-trained model on a downstream dataset. While this yields maximum flexibility and often the highest task-specific accuracy, it requires GPU memory proportional to the full model size plus optimizer states, which can exceed hundreds of gigabytes for modern LLMs. Storage also becomes costly because a separate model copy is saved per task.\n\nParameter-Efficient Fine-Tuning (PEFT) addresses these constraints by freezing the majority of pre-trained weights and introducing a small set of trainable parameters. Techniques such as LoRA, prefix tuning, and adapter layers fall under this umbrella. PEFT methods typically train fewer than 1% of total parameters, slashing memory and compute requirements dramatically while retaining most of the performance of full fine-tuning. This makes them the practical default for practitioners working with limited hardware or needing to maintain multiple task-specific adapters on a single base model."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_03",
@@ -51,7 +65,15 @@
             "body": {
               "en": "• **Full Fine-Tuning**: All model weights are updated during training; highest accuracy potential but maximum resource cost.\n• **PEFT (Parameter-Efficient Fine-Tuning)**: Only a small subset of new or selected parameters are trained; base model weights remain frozen.\n• **Optimizer State Memory**: Adam-based optimizers store first and second moment tensors for every trainable parameter, multiplying memory cost significantly in full fine-tuning.\n• **Adapter / Plug-in Paradigm**: PEFT produces lightweight adapter files (often a few MB) that are loaded on top of a shared base model, enabling multi-task deployment without duplicating the full model."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **Full Fine-Tuning**: All model weights are updated during training; highest accuracy potential but maximum resource cost.\n• **PEFT (Parameter-Efficient Fine-Tuning)**: Only a small subset of new or selected parameters are trained; base model weights remain frozen.\n• **Optimizer State Memory**: Adam-based optimizers store first and second moment tensors for every trainable parameter, multiplying memory cost significantly in full fine-tuning.\n• **Adapter / Plug-in Paradigm**: PEFT produces lightweight adapter files (often a few MB) that are loaded on top of a shared base model, enabling multi-task deployment without duplicating the full model."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_04",
@@ -167,7 +189,120 @@
                 }
               }
             ]
-          }
+          },
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "What is the primary disadvantage of full fine-tuning compared to PEFT methods?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "It cannot be applied to transformer-based models"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "It requires updating and storing all model parameters, leading to very high memory and storage costs"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "It always produces lower accuracy than PEFT methods"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "It is incompatible with the Adam optimizer"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Full fine-tuning updates every parameter in the model, and the Adam optimizer must store first and second moment estimates for each of them. This multiplies GPU memory requirements and produces a full-size model checkpoint per task, making it very expensive at scale."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "Approximately what fraction of total parameters do PEFT methods typically train?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Around 50% of parameters"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Around 25% of parameters"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Less than 1% of parameters"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Exactly 10% of parameters"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "PEFT methods are designed to train a very small number of parameters, often well under 1% of the total model parameters. This is the key property that makes them memory- and compute-efficient."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "Which scenario best justifies choosing full fine-tuning over a PEFT method?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "You need to deploy 20 task-specific variants of the same base model simultaneously"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "You have a very large, high-quality domain-specific dataset and unlimited GPU resources, and need maximum task accuracy"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Your hardware has only 8 GB of GPU memory"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "You want to keep the base model weights frozen"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Full fine-tuning is most justified when you have abundant compute, large high-quality data, and need peak performance for a single critical task. For multi-task or resource-constrained settings, PEFT is almost always the better trade-off."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_05",
@@ -179,7 +314,15 @@
             "body": {
               "en": "• Full fine-tuning offers maximum model plasticity but demands proportional compute and storage for every trainable parameter and its optimizer states.\n• PEFT dramatically reduces training costs by freezing base model weights and learning only a tiny set of additional parameters, enabling fine-tuning on consumer-grade hardware.\n• The choice between full fine-tuning and PEFT should be driven by available hardware, dataset size, number of target tasks, and acceptable performance trade-offs."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Full fine-tuning offers maximum model plasticity but demands proportional compute and storage for every trainable parameter and its optimizer states.\n• PEFT dramatically reduces training costs by freezing base model weights and learning only a tiny set of additional parameters, enabling fine-tuning on consumer-grade hardware.\n• The choice between full fine-tuning and PEFT should be driven by available hardware, dataset size, number of target tasks, and acceptable performance trade-offs."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_06",
@@ -191,7 +334,15 @@
             "body": {
               "en": "Congratulations on completing Lesson 1! You now understand the fundamental trade-offs between full fine-tuning and Parameter-Efficient Fine-Tuning.\n\nYou can articulate why PEFT methods were developed and identify the conditions under which each approach is appropriate. In the next lesson, you will dive deep into two of the most popular PEFT methods — LoRA and QLoRA — and learn how to implement them in practice."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations on completing Lesson 1! You now understand the fundamental trade-offs between full fine-tuning and Parameter-Efficient Fine-Tuning.\n\nYou can articulate why PEFT methods were developed and identify the conditions under which each approach is appropriate. In the next lesson, you will dive deep into two of the most popular PEFT methods — LoRA and QLoRA — and learn how to implement them in practice."
+              }
+            }
+          ]
         }
       ],
       "recommendedVideos": [
@@ -252,7 +403,15 @@
             "body": {
               "en": "In this lesson you will learn:\n• The mathematical intuition behind Low-Rank Adaptation (LoRA) and why rank decomposition works\n• How QLoRA extends LoRA with quantization to further reduce memory footprint\n• The key hyperparameters controlling LoRA behavior: rank r, alpha, and target modules\n• How to implement LoRA and QLoRA using the Hugging Face PEFT library and bitsandbytes"
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn:\n• The mathematical intuition behind Low-Rank Adaptation (LoRA) and why rank decomposition works\n• How QLoRA extends LoRA with quantization to further reduce memory footprint\n• The key hyperparameters controlling LoRA behavior: rank r, alpha, and target modules\n• How to implement LoRA and QLoRA using the Hugging Face PEFT library and bitsandbytes"
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_02",
@@ -271,6 +430,12 @@
               "url": "https://www.youtube.com/watch?v=6TF_00jiivk",
               "title": "qLoRa in Action: A Fine-Tuning Tutorial",
               "label": "Recommended Viewing"
+            },
+            {
+              "type": "content",
+              "body": {
+                "en": "LoRA (Low-Rank Adaptation) hypothesizes that the weight updates needed during fine-tuning lie in a low-dimensional subspace. Instead of updating a weight matrix W directly, LoRA freezes W and adds two small matrices A and B such that the effective update is ΔW = B × A, where the rank r of these matrices is much smaller than the original dimensions. Only A and B are trained, reducing trainable parameters dramatically.\n\nQLoRA (Quantized LoRA) combines LoRA with 4-bit NormalFloat quantization (NF4) of the frozen base model weights, introduced by Dettmers et al. in 2023. The base model is loaded in 4-bit precision with double quantization to further compress memory, while LoRA adapters are computed in 16-bit. This allows fine-tuning of 65B-parameter models on a single 48 GB GPU — previously impossible. Implementation relies on the bitsandbytes library for quantization and the PEFT library for LoRA configuration. Key parameters include rank r (typically 4–64), lora_alpha (scaling factor), lora_dropout, and target_modules specifying which linear layers receive adapters."
+              }
             }
           ]
         },
@@ -284,7 +449,15 @@
             "body": {
               "en": "• **Low-Rank Decomposition**: LoRA represents weight updates as the product of two low-rank matrices (B × A), drastically reducing the number of trainable parameters while preserving representational capacity.\n• **Rank r**: The inner dimension of the A and B matrices. Lower r means fewer parameters and faster training but potentially limited expressiveness; higher r increases capacity at higher cost.\n• **lora_alpha**: A scaling hyperparameter applied to the LoRA update (ΔW = (alpha/r) × B × A). It controls the magnitude of the adapter's contribution relative to the frozen weights.\n• **NF4 Quantization (QLoRA)**: 4-bit NormalFloat quantization stores base model weights in 4 bits, reducing base model memory by ~75% compared to fp16, enabling very large model fine-tuning on limited hardware."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **Low-Rank Decomposition**: LoRA represents weight updates as the product of two low-rank matrices (B × A), drastically reducing the number of trainable parameters while preserving representational capacity.\n• **Rank r**: The inner dimension of the A and B matrices. Lower r means fewer parameters and faster training but potentially limited expressiveness; higher r increases capacity at higher cost.\n• **lora_alpha**: A scaling hyperparameter applied to the LoRA update (ΔW = (alpha/r) × B × A). It controls the magnitude of the adapter's contribution relative to the frozen weights.\n• **NF4 Quantization (QLoRA)**: 4-bit NormalFloat quantization stores base model weights in 4 bits, reducing base model memory by ~75% compared to fp16, enabling very large model fine-tuning on limited hardware."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_04",
@@ -400,7 +573,120 @@
                 }
               }
             ]
-          }
+          },
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "In LoRA, what is the mathematical form of the weight update ΔW applied to a frozen matrix W?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "ΔW = W + A + B"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "ΔW = B × A, where A and B are low-rank matrices"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "ΔW = A / B, a ratio of two full-rank matrices"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "ΔW = W × r, where r is the rank scalar"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "LoRA freezes the original weight matrix W and learns two low-rank matrices A (shape d×r) and B (shape r×k). The update is ΔW = B × A. During inference, this can be merged into W directly, adding zero latency overhead."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "What key innovation does QLoRA add on top of standard LoRA?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "It increases the rank r dynamically during training"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "It quantizes the frozen base model weights to 4-bit precision, drastically reducing GPU memory usage"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "It replaces the Adam optimizer with SGD to save memory"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "It trains all base model layers instead of only selected modules"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "QLoRA loads the frozen base model in 4-bit NormalFloat (NF4) quantization, which reduces the memory footprint of the base model by approximately 75% compared to fp16. The LoRA adapter weights are still computed in bfloat16, maintaining training stability."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "Which PEFT library class is typically used to configure and apply LoRA to a Hugging Face model?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "AdapterConfig from the adapter-transformers library"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "LoraConfig from the peft library, applied via get_peft_model()"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "TrainingArguments from the transformers library"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "BitsAndBytesConfig applied directly to the tokenizer"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "The PEFT library provides LoraConfig, where you specify parameters like r, lora_alpha, target_modules, and lora_dropout. You then wrap your model with get_peft_model(model, lora_config) to inject the trainable LoRA layers while freezing all other parameters."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_05",
@@ -412,7 +698,15 @@
             "body": {
               "en": "• LoRA achieves parameter efficiency by learning low-rank decomposition matrices (A and B) as additive updates to frozen weight matrices, typically reducing trainable parameters to under 1% of total model parameters.\n• QLoRA extends LoRA by quantizing the frozen base model to 4-bit NF4 format, making fine-tuning of very large models feasible on a single consumer or prosumer GPU.\n• The rank r and lora_alpha are the two most influential LoRA hyperparameters; selecting appropriate target_modules (usually attention projection layers) is critical for adapter effectiveness."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• LoRA achieves parameter efficiency by learning low-rank decomposition matrices (A and B) as additive updates to frozen weight matrices, typically reducing trainable parameters to under 1% of total model parameters.\n• QLoRA extends LoRA by quantizing the frozen base model to 4-bit NF4 format, making fine-tuning of very large models feasible on a single consumer or prosumer GPU.\n• The rank r and lora_alpha are the two most influential LoRA hyperparameters; selecting appropriate target_modules (usually attention projection layers) is critical for adapter effectiveness."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_06",
@@ -424,7 +718,15 @@
             "body": {
               "en": "Excellent work completing Lesson 2! You now have a solid conceptual and practical understanding of LoRA and QLoRA — two of the most widely adopted fine-tuning techniques in the open-source LLM ecosystem.\n\nYou understand the mathematics behind low-rank adaptation and how quantization extends its applicability. In the next lesson, you will put these concepts into practice using the TRL library's SFTTrainer, which provides a high-level workflow for supervised fine-tuning with PEFT integration."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Excellent work completing Lesson 2! You now have a solid conceptual and practical understanding of LoRA and QLoRA — two of the most widely adopted fine-tuning techniques in the open-source LLM ecosystem.\n\nYou understand the mathematics behind low-rank adaptation and how quantization extends its applicability. In the next lesson, you will put these concepts into practice using the TRL library's SFTTrainer, which provides a high-level workflow for supervised fine-tuning with PEFT integration."
+              }
+            }
+          ]
         }
       ],
       "recommendedVideos": [
@@ -485,7 +787,15 @@
             "body": {
               "en": "In this lesson you will learn:\n• The role of the TRL (Transformer Reinforcement Learning) library in the fine-tuning ecosystem\n• How SFTTrainer simplifies supervised fine-tuning with built-in PEFT and dataset handling\n• The key components of an SFTTrainer setup: model, tokenizer, dataset, and SFTConfig\n• Best practices for dataset formatting, packing, and training loop configuration"
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn:\n• The role of the TRL (Transformer Reinforcement Learning) library in the fine-tuning ecosystem\n• How SFTTrainer simplifies supervised fine-tuning with built-in PEFT and dataset handling\n• The key components of an SFTTrainer setup: model, tokenizer, dataset, and SFTConfig\n• Best practices for dataset formatting, packing, and training loop configuration"
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_02",
@@ -497,7 +807,15 @@
             "body": {
               "en": "TRL (developed by Hugging Face) is a library for training language models with reinforcement learning from human feedback (RLHF) and supervised fine-tuning. Its SFTTrainer class is a specialized wrapper around the standard Hugging Face Trainer that streamlines supervised fine-tuning (SFT) of LLMs on instruction or conversational datasets.\n\nSFTTrainer accepts a model (or model name), a tokenizer, a training dataset, an optional PEFT config (e.g., LoraConfig), and an SFTConfig object that replaces TrainingArguments. Key SFTConfig parameters include max_seq_length for context window control and packing, which concatenates short examples into full-length sequences for GPU efficiency. The dataset_text_field or formatting_func argument tells SFTTrainer which column contains the training text or how to format multi-turn conversations using chat templates. SFTTrainer also integrates natively with bitsandbytes for QLoRA workflows. Once configured, training is launched with trainer.train(), and the resulting adapter is saved via trainer.save_model(). This high-level API abstracts away boilerplate, letting practitioners focus on data quality and hyperparameter decisions."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "TRL (developed by Hugging Face) is a library for training language models with reinforcement learning from human feedback (RLHF) and supervised fine-tuning. Its SFTTrainer class is a specialized wrapper around the standard Hugging Face Trainer that streamlines supervised fine-tuning (SFT) of LLMs on instruction or conversational datasets.\n\nSFTTrainer accepts a model (or model name), a tokenizer, a training dataset, an optional PEFT config (e.g., LoraConfig), and an SFTConfig object that replaces TrainingArguments. Key SFTConfig parameters include max_seq_length for context window control and packing, which concatenates short examples into full-length sequences for GPU efficiency. The dataset_text_field or formatting_func argument tells SFTTrainer which column contains the training text or how to format multi-turn conversations using chat templates. SFTTrainer also integrates natively with bitsandbytes for QLoRA workflows. Once configured, training is launched with trainer.train(), and the resulting adapter is saved via trainer.save_model(). This high-level API abstracts away boilerplate, letting practitioners focus on data quality and hyperparameter decisions."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_03",
@@ -509,7 +827,15 @@
             "body": {
               "en": "• **SFTTrainer**: A TRL class that wraps Hugging Face Trainer with LLM-specific defaults and utilities, supporting PEFT, dataset packing, and chat template formatting out of the box.\n• **SFTConfig**: The configuration dataclass for SFTTrainer, extending TrainingArguments with SFT-specific fields such as max_seq_length, packing, and dataset_text_field.\n• **Sequence Packing**: A technique where multiple short training examples are concatenated into a single sequence up to max_seq_length, improving GPU utilization and reducing wasted padding tokens.\n• **Chat Template Formatting**: SFTTrainer can apply a model's built-in chat template (e.g., ChatML, Llama-3 format) to convert multi-turn dialogue datasets into the exact token format the model expects during instruction tuning."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **SFTTrainer**: A TRL class that wraps Hugging Face Trainer with LLM-specific defaults and utilities, supporting PEFT, dataset packing, and chat template formatting out of the box.\n• **SFTConfig**: The configuration dataclass for SFTTrainer, extending TrainingArguments with SFT-specific fields such as max_seq_length, packing, and dataset_text_field.\n• **Sequence Packing**: A technique where multiple short training examples are concatenated into a single sequence up to max_seq_length, improving GPU utilization and reducing wasted padding tokens.\n• **Chat Template Formatting**: SFTTrainer can apply a model's built-in chat template (e.g., ChatML, Llama-3 format) to convert multi-turn dialogue datasets into the exact token format the model expects during instruction tuning."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_04",
@@ -625,7 +951,120 @@
                 }
               }
             ]
-          }
+          },
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "What is the primary purpose of the SFTTrainer class in the TRL library?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "To perform reinforcement learning with a reward model from scratch"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "To simplify supervised fine-tuning of LLMs with built-in PEFT integration, dataset handling, and chat template support"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "To quantize models to 4-bit precision before deployment"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "To evaluate model perplexity on held-out benchmark datasets"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "SFTTrainer is designed specifically for supervised fine-tuning. It extends the standard Trainer with LLM-specific utilities like PEFT config injection, sequence packing, and chat template application, significantly reducing boilerplate code."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "What does the 'packing' feature in SFTConfig do?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "It compresses the model weights into a zip archive for storage efficiency"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "It concatenates multiple short training examples into full-length sequences, improving GPU utilization by reducing padding"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "It splits long sequences into smaller chunks that fit within the context window"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "It packs the LoRA adapter weights together with the base model into a single file"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Packing fills each training sequence up to max_seq_length by concatenating multiple examples with an EOS token separator. This eliminates wasted compute on padding tokens and is especially effective when the dataset contains many short examples."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "How does SFTTrainer integrate LoRA into the training workflow?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "SFTTrainer does not support LoRA; you must use the standard Trainer instead"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "You must manually call get_peft_model() and merge weights before passing the model to SFTTrainer"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "You pass a LoraConfig object to SFTTrainer's peft_config argument, and it automatically wraps the model with the appropriate LoRA layers"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "LoRA is applied automatically without any configuration by setting use_lora=True in SFTConfig"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "SFTTrainer accepts a peft_config argument (e.g., an instance of LoraConfig). It internally calls get_peft_model() to inject LoRA layers and freezes base model parameters, so you do not need to handle this manually."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_05",
@@ -637,7 +1076,15 @@
             "body": {
               "en": "• TRL's SFTTrainer provides a high-level, production-ready interface for supervised fine-tuning that natively supports LoRA/QLoRA, sequence packing, and chat template formatting.\n• SFTConfig extends TrainingArguments with LLM-specific parameters; the most impactful are max_seq_length, packing, and dataset formatting options that directly affect training efficiency and data quality.\n• Adopting SFTTrainer significantly reduces the engineering overhead of setting up an LLM fine-tuning pipeline, allowing practitioners to focus on data curation and hyperparameter tuning rather than boilerplate infrastructure code."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• TRL's SFTTrainer provides a high-level, production-ready interface for supervised fine-tuning that natively supports LoRA/QLoRA, sequence packing, and chat template formatting.\n• SFTConfig extends TrainingArguments with LLM-specific parameters; the most impactful are max_seq_length, packing, and dataset formatting options that directly affect training efficiency and data quality.\n• Adopting SFTTrainer significantly reduces the engineering overhead of setting up an LLM fine-tuning pipeline, allowing practitioners to focus on data curation and hyperparameter tuning rather than boilerplate infrastructure code."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_06",
@@ -656,6 +1103,12 @@
               "url": "https://www.youtube.com/watch?v=6S59Y0ckTm4",
               "title": "Road To Learn Finetuning LLM With Custom Data",
               "label": "Tutorial"
+            },
+            {
+              "type": "content",
+              "body": {
+                "en": "Well done completing Lesson 3! You now understand the TRL SFTTrainer workflow end-to-end — from configuring a LoraConfig and SFTConfig to launching training and saving the resulting adapter.\n\nThis knowledge forms the practical backbone of any supervised fine-tuning project with open-source LLMs. In the final lesson, you will learn how to tune the key hyperparameters governing training quality and how to recognize and debug common failure modes that arise during fine-tuning."
+              }
             }
           ]
         }
@@ -720,7 +1173,15 @@
             "body": {
               "en": "In this lesson you will learn:\n• The most impactful hyperparameters in LLM fine-tuning and guidelines for setting them\n• How learning rate schedule, batch size, and gradient accumulation interact in practice\n• Common failure modes including catastrophic forgetting, overfitting, and training instability\n• Diagnostic signals and mitigation strategies for each failure mode"
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn:\n• The most impactful hyperparameters in LLM fine-tuning and guidelines for setting them\n• How learning rate schedule, batch size, and gradient accumulation interact in practice\n• Common failure modes including catastrophic forgetting, overfitting, and training instability\n• Diagnostic signals and mitigation strategies for each failure mode"
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_02",
@@ -732,7 +1193,15 @@
             "body": {
               "en": "The most critical fine-tuning hyperparameters are learning rate, batch size (via gradient accumulation), number of epochs, LoRA rank, and warmup steps. Learning rates for LLM fine-tuning typically range from 1e-5 to 5e-4; too high causes loss spikes and divergence, too low yields slow or incomplete convergence. A cosine or linear schedule with warmup (5–10% of steps) stabilizes early training. Effective batch size should be at least 16–32 tokens per step aggregated via gradient_accumulation_steps when GPU memory is limited.\n\nCatastrophic forgetting occurs when fine-tuning overwrites general knowledge, producing a model that excels on the target task but loses baseline capabilities. PEFT methods inherently reduce this risk by keeping base weights frozen. Overfitting manifests as decreasing training loss alongside stagnant or rising validation loss, typically caused by too many epochs or insufficient data — mitigated by early stopping and data augmentation. Training instability (NaN loss, spikes) often stems from an excessively high learning rate, fp16 overflow, or corrupted data batches. Using bf16 instead of fp16, gradient clipping (max_grad_norm=1.0), and thorough data cleaning are the primary remedies."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "The most critical fine-tuning hyperparameters are learning rate, batch size (via gradient accumulation), number of epochs, LoRA rank, and warmup steps. Learning rates for LLM fine-tuning typically range from 1e-5 to 5e-4; too high causes loss spikes and divergence, too low yields slow or incomplete convergence. A cosine or linear schedule with warmup (5–10% of steps) stabilizes early training. Effective batch size should be at least 16–32 tokens per step aggregated via gradient_accumulation_steps when GPU memory is limited.\n\nCatastrophic forgetting occurs when fine-tuning overwrites general knowledge, producing a model that excels on the target task but loses baseline capabilities. PEFT methods inherently reduce this risk by keeping base weights frozen. Overfitting manifests as decreasing training loss alongside stagnant or rising validation loss, typically caused by too many epochs or insufficient data — mitigated by early stopping and data augmentation. Training instability (NaN loss, spikes) often stems from an excessively high learning rate, fp16 overflow, or corrupted data batches. Using bf16 instead of fp16, gradient clipping (max_grad_norm=1.0), and thorough data cleaning are the primary remedies."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_03",
@@ -744,7 +1213,15 @@
             "body": {
               "en": "• **Learning Rate Schedule**: A cosine or linear decay with warmup is the standard choice for LLM fine-tuning; warmup prevents large destructive gradient updates in the initial steps when model parameters are far from their optimal values.\n• **Gradient Accumulation**: Simulates a larger effective batch size by accumulating gradients over multiple forward/backward passes before performing an optimizer step, allowing large-batch training on memory-constrained hardware.\n• **Catastrophic Forgetting**: The tendency of a neural network to overwrite previously learned knowledge when trained on new data; PEFT methods and low learning rates are the primary defenses.\n• **Gradient Clipping**: Capping the norm of gradients (typically to 1.0) prevents exploding gradients from destabilizing training, especially important with fp16 or when fine-tuning very deep models."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **Learning Rate Schedule**: A cosine or linear decay with warmup is the standard choice for LLM fine-tuning; warmup prevents large destructive gradient updates in the initial steps when model parameters are far from their optimal values.\n• **Gradient Accumulation**: Simulates a larger effective batch size by accumulating gradients over multiple forward/backward passes before performing an optimizer step, allowing large-batch training on memory-constrained hardware.\n• **Catastrophic Forgetting**: The tendency of a neural network to overwrite previously learned knowledge when trained on new data; PEFT methods and low learning rates are the primary defenses.\n• **Gradient Clipping**: Capping the norm of gradients (typically to 1.0) prevents exploding gradients from destabilizing training, especially important with fp16 or when fine-tuning very deep models."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_04",
@@ -860,7 +1337,120 @@
                 }
               }
             ]
-          }
+          },
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "What is the typical symptom of too high a learning rate during LLM fine-tuning?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Training loss decreases very slowly over many epochs"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "The model produces loss spikes or NaN values, and training becomes unstable or diverges"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Validation loss improves faster than training loss"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "The LoRA adapters fail to load after training"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "A learning rate that is too high causes excessively large gradient updates that overshoot the loss minimum, resulting in loss spikes, NaN values, and training divergence. Reducing the learning rate and adding warmup steps are the standard fixes."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "How does gradient accumulation help when training with limited GPU memory?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "It reduces the model's parameter count by merging layers during training"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "It accumulates gradients over multiple small micro-batches before a single optimizer step, effectively simulating a larger batch size without requiring more GPU memory"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "It stores gradients on CPU RAM instead of GPU VRAM to free up space"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "It quantizes gradients to 4-bit to reduce their memory footprint"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Gradient accumulation processes multiple small batches sequentially and sums their gradients before calling optimizer.step(). If you accumulate over 4 steps with a micro-batch size of 4, the effective batch size is 16 — without needing to fit all 16 samples in GPU memory simultaneously."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "Which of the following is the best strategy to mitigate catastrophic forgetting during fine-tuning?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Use a very high learning rate to converge quickly before forgetting can occur"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Disable the warmup schedule to apply full learning rate from the first step"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Use PEFT methods such as LoRA that keep base model weights frozen, preserving general knowledge while learning task-specific adaptations"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Train for as many epochs as possible to reinforce the new task knowledge"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "Because PEFT methods freeze the pre-trained base weights and only train a small set of adapter parameters, the general knowledge encoded in the base model is preserved. Full fine-tuning with a high learning rate or many epochs is the primary cause of catastrophic forgetting."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_05",
@@ -872,7 +1462,15 @@
             "body": {
               "en": "• Learning rate is the single most impactful hyperparameter; use a cosine schedule with warmup in the range 1e-5 to 5e-4 and always monitor training curves for spikes or plateaus.\n• Gradient accumulation is essential for achieving large effective batch sizes on memory-constrained hardware; always verify that effective batch size = per_device_batch_size × gradient_accumulation_steps × num_gpus.\n• The three most common LLM fine-tuning failure modes — catastrophic forgetting, overfitting, and training instability — each have clear diagnostic signals and well-established mitigations: PEFT, early stopping, bf16 precision, and gradient clipping."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Learning rate is the single most impactful hyperparameter; use a cosine schedule with warmup in the range 1e-5 to 5e-4 and always monitor training curves for spikes or plateaus.\n• Gradient accumulation is essential for achieving large effective batch sizes on memory-constrained hardware; always verify that effective batch size = per_device_batch_size × gradient_accumulation_steps × num_gpus.\n• The three most common LLM fine-tuning failure modes — catastrophic forgetting, overfitting, and training instability — each have clear diagnostic signals and well-established mitigations: PEFT, early stopping, bf16 precision, and gradient clipping."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_06",
@@ -884,7 +1482,15 @@
             "body": {
               "en": "Congratulations on completing Lesson 4 and the entire Fine-Tuning Techniques course! You now possess a comprehensive understanding of the full fine-tuning and PEFT landscape, the mechanics of LoRA and QLoRA, the TRL SFTTrainer workflow, and the hyperparameter decisions and failure modes that determine the success of any fine-tuning project.\n\nYou are ready to apply these skills in the hands-on lab, where you will run a small PEFT experiment and measure before-and-after benchmark performance to validate your fine-tuned adapter."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations on completing Lesson 4 and the entire Fine-Tuning Techniques course! You now possess a comprehensive understanding of the full fine-tuning and PEFT landscape, the mechanics of LoRA and QLoRA, the TRL SFTTrainer workflow, and the hyperparameter decisions and failure modes that determine the success of any fine-tuning project.\n\nYou are ready to apply these skills in the hands-on lab, where you will run a small PEFT experiment and measure before-and-after benchmark performance to validate your fine-tuned adapter."
+              }
+            }
+          ]
         }
       ],
       "recommendedVideos": [

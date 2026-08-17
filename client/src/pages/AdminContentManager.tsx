@@ -33,15 +33,16 @@ import { CheckpointSettings } from "@/components/admin/CheckpointSettings";
 import { ExamBankSettings } from "@/components/admin/ExamBankSettings";
 import { LessonRecommendationEditor, normalizeYouTubeId } from "@/components/admin/LessonRecommendationEditor";
 import { LegacyExerciseEditor } from "@/components/admin/LegacyExerciseEditor";
+import { LessonManager } from "@/components/admin/LessonManager";
+import { CatalogMetadataEditor } from "@/components/admin/CatalogMetadataEditor";
 import { resolveEditableInteractions } from "@/lib/editableInteractions";
 import { cloneCourseDraft } from "@shared/contentStudio";
 import { normalizeQuestionBank, serializeQuestionBank } from "@shared/questionBank";
 import { normalizeExamConfiguration, type ExamConfiguration } from "@shared/examConfiguration";
 import { toBlockMediaUrl } from "@/lib/mediaUrl";
-import { getExercisesForSelectedChapter } from "@/lib/exerciseEditor";
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
-type ViewMode = "browse" | "course" | "quiz-simulate" | "exam-simulate" | "edit-course" | "edit-quiz" | "edit-exam";
+type ViewMode = "browse" | "catalog" | "course" | "quiz-simulate" | "exam-simulate" | "edit-course" | "edit-quiz" | "edit-exam";
 
 export default function AdminContentManager() {
   const { user, isAuthenticated } = useAuth();
@@ -55,7 +56,7 @@ export default function AdminContentManager() {
   };
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
     const requested = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("mode") : null;
-    return requested === "edit" ? "edit-course" : requested === "view" ? "course" : requested === "quiz" ? "edit-quiz" : requested === "quiz-simulate" ? "quiz-simulate" : "browse";
+    return requested === "edit" ? "edit-course" : requested === "view" ? "course" : requested === "catalog" ? "catalog" : requested === "quiz" ? "edit-quiz" : requested === "quiz-simulate" ? "quiz-simulate" : "browse";
   });
   const [selectedCourseId, setSelectedCourseId] = useState<string>(() =>
     typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("courseId") || "" : "",
@@ -127,6 +128,9 @@ export default function AdminContentManager() {
   const examConfigurationsQuery = trpc.adminContent.getExamConfigurations.useQuery(undefined, {
     enabled: isAuthenticated && user?.role === "admin" && (viewMode === "exam-simulate" || viewMode === "edit-exam"),
   });
+  const catalogQuery = trpc.adminContent.getTrainingIndex.useQuery(undefined, {
+    enabled: isAuthenticated && user?.role === "admin" && viewMode === "catalog",
+  });
 
   // Mutations
   const updateChapterMut = trpc.adminContent.updateChapterBlocks.useMutation({
@@ -170,8 +174,13 @@ export default function AdminContentManager() {
     },
     onError: (error) => toast.error(error.message),
   });
+  const updateCatalogMut = trpc.adminContent.updateTrainingIndex.useMutation({
+    onSuccess: () => { toast.success("Catalogue pédagogique sauvegardé."); catalogQuery.refetch(); },
+    onError: (error) => toast.error(error.message),
+  });
 
-  const certifications = trainingIndex.certifications;
+  const activeTrainingIndex: any = catalogQuery.data || trainingIndex;
+  const certifications = activeTrainingIndex.certifications || [];
 
   // Filter courses by search
   const filteredCourses = useMemo(() => {
@@ -194,11 +203,11 @@ export default function AdminContentManager() {
 
   // Get certification info for a courseId
   const getCertForCourse = (courseId: string) => {
-    return certifications.find(c => c.courses.includes(courseId));
+    return certifications.find((c: any) => c.courses.includes(courseId));
   };
 
   const getCertIdForCourse = (courseId: string) => {
-    const courseMeta = (trainingIndex.courses as any[]).find((course) => course.id === courseId);
+    const courseMeta = (activeTrainingIndex.courses as any[]).find((course) => course.id === courseId);
     return courseMeta?.certId || getCertForCourse(courseId)?.id || null;
   };
 
@@ -216,11 +225,12 @@ export default function AdminContentManager() {
             className="pl-10"
           />
         </div>
+        <Button variant="outline" className="shrink-0" onClick={() => setViewMode("catalog")}><GraduationCap className="mr-1.5 h-4 w-4" /> Gérer le catalogue</Button>
       </div>
 
       {/* Certifications overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {certifications.map(cert => (
+        {certifications.map((cert: any) => (
           <Card key={cert.id} className="hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-emerald-500">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
@@ -325,6 +335,12 @@ export default function AdminContentManager() {
     </div>
   );
 
+  const renderCatalog = () => {
+    if (catalogQuery.isLoading) return <div className="py-10 text-center text-sm text-muted-foreground">Chargement du catalogue…</div>;
+    if (!catalogQuery.data) return <div className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">Le catalogue est indisponible. Réessayez dans quelques instants.</div>;
+    return <CatalogMetadataEditor value={catalogQuery.data} onSave={(data) => updateCatalogMut.mutate({ data })} isSaving={updateCatalogMut.isPending} />;
+  };
+
   // ─── COURSE VIEW (Consultation) ───
   const renderCourseView = () => {
     const publishedCourse = courseDetailQuery.data;
@@ -362,6 +378,13 @@ export default function AdminContentManager() {
       draft.lessons[selectedLessonIdx] = { ...draft.lessons[selectedLessonIdx], recommendedVideos };
       setCourseDraft(draft);
     };
+    const updateLessons = (lessons: any[], nextActiveLessonIndex: number) => {
+      const draft = cloneCourseDraft(courseDraft || publishedCourse);
+      draft.lessons = lessons;
+      setCourseDraft(draft);
+      setSelectedLessonIdx(nextActiveLessonIndex);
+      setSelectedChapterIdx(0);
+    };
     const editableInteractions = chapter ? resolveEditableInteractions({
       course,
       lessonIndex: selectedLessonIdx,
@@ -387,7 +410,7 @@ export default function AdminContentManager() {
       <div className="flex flex-col gap-4 xl:flex-row">
         {/* Sidebar - Lessons/Chapters */}
         <div className="w-full shrink-0 border rounded-lg p-3 max-h-64 overflow-y-auto bg-white xl:w-64 xl:max-h-[70vh]">
-          <h4 className="font-semibold text-sm mb-2 text-gray-700">Leçons</h4>
+          {viewMode === "edit-course" ? <details className="mb-3 rounded-md border border-emerald-100 bg-emerald-50/50 p-2"><summary className="cursor-pointer text-xs font-semibold text-emerald-800">Gérer les leçons de ce cours</summary><div className="mt-2"><LessonManager lessons={course.lessons || []} activeLessonIndex={selectedLessonIdx} onSelect={(index) => { setSelectedLessonIdx(index); setSelectedChapterIdx(0); }} onChange={updateLessons} /></div></details> : <h4 className="font-semibold text-sm mb-2 text-gray-700">Leçons</h4>}
           {course.lessons?.map((l: any, li: number) => (
             <div key={li} className="mb-1">
               <button
@@ -1304,6 +1327,7 @@ export default function AdminContentManager() {
   const getViewTitle = () => {
     switch (viewMode) {
       case "browse": return "Gestion du contenu pédagogique";
+      case "catalog": return "Catalogue, certifications et catégories";
       case "course": return `Consultation : ${selectedCourseId}`;
       case "edit-course": return `Édition : ${selectedCourseId}`;
       case "quiz-simulate": return `Simulation Quiz : ${selectedCourseId}`;
@@ -1358,6 +1382,7 @@ export default function AdminContentManager() {
           <h2 className="text-xl font-bold mb-4">{getViewTitle()}</h2>
 
           {viewMode === "browse" && renderBrowse()}
+          {viewMode === "catalog" && renderCatalog()}
           {(viewMode === "course" || viewMode === "edit-course") && renderCourseView()}
           {viewMode === "quiz-simulate" && renderQuizSimulate()}
           {viewMode === "edit-quiz" && renderEditQuiz()}

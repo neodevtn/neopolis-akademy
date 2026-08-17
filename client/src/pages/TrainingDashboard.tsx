@@ -141,7 +141,11 @@ export default function TrainingDashboard() {
       order: 5,
     },
   } as const;
-  type GroupKey = keyof typeof GROUP_CONFIG;
+  const categoryOverrides = (trainingIndex as any).categories || [];
+  const catalogGroupConfig = Object.fromEntries(Object.entries(GROUP_CONFIG).map(([id, config]) => {
+    const override = categoryOverrides.find((category: any) => category.id === id);
+    return [id, { ...config, ...(override?.title ? { label: override.title } : {}), ...(override?.subtitle ? { subtitle: override.subtitle } : {}), ...(typeof override?.order === "number" ? { order: override.order } : {}) }];
+  }));
 
   const certCompletionData = useMemo(() => {
     return trainingIndex.certifications.map((cert) => {
@@ -361,7 +365,7 @@ export default function TrainingDashboard() {
             >
               <CatalogTab
                 certCompletionData={certCompletionData}
-                GROUP_CONFIG={GROUP_CONFIG}
+                GROUP_CONFIG={catalogGroupConfig}
                 t={t}
               />
             </motion.div>

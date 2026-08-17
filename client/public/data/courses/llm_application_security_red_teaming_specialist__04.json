@@ -26,6 +26,12 @@
               "url": "https://www.youtube.com/watch?v=7V1w5gnZ-kw",
               "title": "Guardrails for LLM Applications | Complete Tutorial for AI Developers",
               "label": "Course Video"
+            },
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn:\n• How excessive agency manifests in LLM-powered agents and why it is a critical security risk\n• The definition and application of the least privilege principle in agentic AI systems\n• Common patterns of over-permissioned agents and their attack surfaces\n• Techniques to audit and reduce agent permissions to the minimum necessary scope"
+              }
             }
           ]
         },
@@ -39,7 +45,15 @@
             "body": {
               "en": "Excessive agency occurs when an LLM agent is granted more permissions, capabilities, or autonomy than it needs to fulfill its intended function. This creates a significantly enlarged attack surface: a compromised or manipulated agent can read sensitive files, call destructive APIs, exfiltrate data, or pivot to other systems.\n\nThe least privilege principle—borrowed from classical system security—states that every component should operate with only the minimum permissions required. Applied to LLM agents, this means scoping file-system access, restricting which APIs can be called, limiting database operations to read-only where writes are unnecessary, and ensuring the agent cannot spawn sub-processes or create persistent side-effects without explicit authorization.\n\nReal-world incidents have shown agents deleting production records, sending unauthorized emails, and triggering financial transactions because developers granted broad permissions for convenience. Mapping each agent action to a business justification and enforcing permission boundaries at the infrastructure layer—not just in the prompt—is essential defensive practice."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Excessive agency occurs when an LLM agent is granted more permissions, capabilities, or autonomy than it needs to fulfill its intended function. This creates a significantly enlarged attack surface: a compromised or manipulated agent can read sensitive files, call destructive APIs, exfiltrate data, or pivot to other systems.\n\nThe least privilege principle—borrowed from classical system security—states that every component should operate with only the minimum permissions required. Applied to LLM agents, this means scoping file-system access, restricting which APIs can be called, limiting database operations to read-only where writes are unnecessary, and ensuring the agent cannot spawn sub-processes or create persistent side-effects without explicit authorization.\n\nReal-world incidents have shown agents deleting production records, sending unauthorized emails, and triggering financial transactions because developers granted broad permissions for convenience. Mapping each agent action to a business justification and enforcing permission boundaries at the infrastructure layer—not just in the prompt—is essential defensive practice."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_03",
@@ -51,7 +65,15 @@
             "body": {
               "en": "• **Excessive Agency**: Granting an LLM agent capabilities beyond its operational need, increasing blast radius on compromise or manipulation.\n• **Least Privilege Principle**: Every agent, tool, and integration should possess only the minimum permissions required for its defined task.\n• **Blast Radius**: The maximum potential damage achievable if an agent is compromised; directly correlated with the breadth of its granted permissions.\n• **Permission Audit**: A systematic review mapping each agent capability to a documented business justification, eliminating any capability that lacks one."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **Excessive Agency**: Granting an LLM agent capabilities beyond its operational need, increasing blast radius on compromise or manipulation.\n• **Least Privilege Principle**: Every agent, tool, and integration should possess only the minimum permissions required for its defined task.\n• **Blast Radius**: The maximum potential damage achievable if an agent is compromised; directly correlated with the breadth of its granted permissions.\n• **Permission Audit**: A systematic review mapping each agent capability to a documented business justification, eliminating any capability that lacks one."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_04",
@@ -167,7 +189,120 @@
                 }
               }
             ]
-          }
+          },
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "Which of the following best describes 'excessive agency' in an LLM agent context?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "An agent that produces overly verbose responses"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "An agent granted more permissions or capabilities than its task requires"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "An agent that calls external APIs without caching results"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "An agent that uses a large language model with too many parameters"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Excessive agency specifically refers to an agent having capabilities or permissions beyond what its intended function demands, not to response verbosity or model size."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "When applying the least privilege principle to an LLM agent that only needs to read customer records, what is the correct approach?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Grant full database access so the agent can handle future requirements"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Grant read-only access scoped to the customer records table only"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Grant write access so the agent can correct data errors it finds"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Grant admin access to avoid permission-related errors in production"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "The least privilege principle requires granting only the minimum access necessary. A read-only scope on the relevant table satisfies the requirement without creating unnecessary risk."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "Where should permission boundaries for LLM agents primarily be enforced?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Only in the system prompt, using clear instructions to the model"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Only in the user-facing interface with UI controls"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "At the infrastructure layer, independent of prompt-based instructions"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "In the model's fine-tuning dataset to instill safe behavior"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "Prompts can be bypassed through injection attacks. Infrastructure-layer enforcement—such as IAM policies, network rules, and API gateway restrictions—provides robust, reliable permission boundaries."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_05",
@@ -179,7 +314,15 @@
             "body": {
               "en": "• Excessive agency dramatically increases the blast radius of any successful prompt injection or model manipulation attack.\n• The least privilege principle must be applied at the infrastructure level, not just in system prompts, to be effective.\n• Every agent permission should be traceable to a specific business justification; permissions without justification should be revoked."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Excessive agency dramatically increases the blast radius of any successful prompt injection or model manipulation attack.\n• The least privilege principle must be applied at the infrastructure level, not just in system prompts, to be effective.\n• Every agent permission should be traceable to a specific business justification; permissions without justification should be revoked."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_01_chapter_06",
@@ -191,7 +334,15 @@
             "body": {
               "en": "Congratulations on completing Lesson 1: Excessive Agency and Least Privilege Principle.\n\nYou now understand why over-permissioned agents represent a critical security liability and how to apply the least privilege principle systematically to LLM agent deployments. These foundational concepts underpin all subsequent agent security controls covered in this course.\n\nProceed to Lesson 2 to explore tool allowlists, scopes, approvals, and sandboxes."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations on completing Lesson 1: Excessive Agency and Least Privilege Principle.\n\nYou now understand why over-permissioned agents represent a critical security liability and how to apply the least privilege principle systematically to LLM agent deployments. These foundational concepts underpin all subsequent agent security controls covered in this course.\n\nProceed to Lesson 2 to explore tool allowlists, scopes, approvals, and sandboxes."
+              }
+            }
+          ]
         }
       ],
       "recommendedVideos": [
@@ -254,7 +405,15 @@
             "body": {
               "en": "In this lesson you will learn:\n• How to design and implement tool allowlists that restrict which tools an LLM agent may invoke\n• The role of scopes in limiting what each allowed tool can do within its domain\n• Human-in-the-loop approval workflows for high-risk or irreversible agent actions\n• Sandboxing strategies that isolate agent execution to contain the impact of malicious or erroneous behavior"
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn:\n• How to design and implement tool allowlists that restrict which tools an LLM agent may invoke\n• The role of scopes in limiting what each allowed tool can do within its domain\n• Human-in-the-loop approval workflows for high-risk or irreversible agent actions\n• Sandboxing strategies that isolate agent execution to contain the impact of malicious or erroneous behavior"
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_02",
@@ -273,6 +432,12 @@
               "url": "https://www.youtube.com/watch?v=Rzk-ePpE7_k",
               "title": "Your AI App Has No Security Layer — Fix It in 5 Minutes | Amazon Bedrock Guardrails",
               "label": "Recommended Viewing"
+            },
+            {
+              "type": "content",
+              "body": {
+                "en": "A tool allowlist enumerates every tool or function an agent is permitted to invoke. Any tool not on the list is categorically unavailable, preventing adversaries from tricking the agent into using dangerous capabilities via prompt injection.\n\nScopes refine the allowlist further: even an allowed tool—such as a file-system reader—can be scoped to specific directories, preventing lateral access. OAuth scopes, database roles, and API key restrictions are common implementation vehicles.\n\nApproval workflows introduce a human checkpoint before the agent executes high-risk, irreversible, or high-cost actions such as deleting records, sending communications, or initiating payments. Well-designed approvals present the human with a clear summary of the proposed action and its consequences.\n\nSandboxes isolate agent execution at the OS, container, or VM level. Code execution sandboxes like gVisor, Firecracker, or cloud-based ephemeral environments ensure that even if an agent is fully compromised, its ability to interact with the broader infrastructure is physically constrained by the sandbox boundary."
+              }
             }
           ]
         },
@@ -286,7 +451,15 @@
             "body": {
               "en": "• **Tool Allowlist**: An explicit, enumerated list of tools an agent may call; all tools absent from the list are blocked by default.\n• **Scope Restriction**: Limiting the operational domain of an allowed tool, e.g., read-only access to a specific S3 prefix rather than an entire bucket.\n• **Human-in-the-Loop Approval**: A mandatory human review gate before execution of high-risk, costly, or irreversible agent actions.\n• **Sandboxing**: Technical isolation of agent execution (container, VM, or microVM) to prevent breakout into the broader infrastructure regardless of what the agent does inside."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **Tool Allowlist**: An explicit, enumerated list of tools an agent may call; all tools absent from the list are blocked by default.\n• **Scope Restriction**: Limiting the operational domain of an allowed tool, e.g., read-only access to a specific S3 prefix rather than an entire bucket.\n• **Human-in-the-Loop Approval**: A mandatory human review gate before execution of high-risk, costly, or irreversible agent actions.\n• **Sandboxing**: Technical isolation of agent execution (container, VM, or microVM) to prevent breakout into the broader infrastructure regardless of what the agent does inside."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_04",
@@ -402,7 +575,120 @@
                 }
               }
             ]
-          }
+          },
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "What is the primary security benefit of a tool allowlist for LLM agents?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "It speeds up agent response times by preloading tool schemas"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "It prevents agents from invoking any tool not explicitly permitted, even under adversarial prompting"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "It logs all tool invocations for compliance purposes"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "It automatically updates tool permissions based on usage patterns"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "A tool allowlist enforces a default-deny policy on tool invocations, ensuring that prompt injection or adversarial manipulation cannot trick the agent into calling unauthorized tools."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "An LLM agent is permitted to use a code execution tool. Which additional control best limits the damage if the agent is manipulated into running malicious code?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Adding a warning in the system prompt to avoid running dangerous code"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Running the code execution tool inside an isolated sandbox environment"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Restricting the agent to Python only, disabling other languages"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Requiring the agent to explain the code before executing it"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "A sandbox provides hard technical isolation. Even if the agent executes malicious code, the sandbox boundary prevents that code from reaching the host system or broader infrastructure."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "For which type of agent action is a human-in-the-loop approval workflow most critically needed?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Fetching a webpage to summarize its content"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Looking up a product's current price in a database"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Initiating a wire transfer on behalf of a user"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Converting a temperature from Celsius to Fahrenheit"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "Human-in-the-loop approvals are most critical for irreversible, high-impact actions such as financial transactions. Read-only or trivially reversible operations present much lower risk."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_05",
@@ -414,7 +700,15 @@
             "body": {
               "en": "• Tool allowlists enforce a default-deny posture, ensuring agents can only use explicitly approved capabilities regardless of how they are prompted.\n• Scopes add a second layer of restriction within each allowed tool, limiting the domain of permissible operations.\n• Sandboxing provides hard technical isolation that contains the damage from compromised agents independently of prompt or policy controls."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Tool allowlists enforce a default-deny posture, ensuring agents can only use explicitly approved capabilities regardless of how they are prompted.\n• Scopes add a second layer of restriction within each allowed tool, limiting the domain of permissible operations.\n• Sandboxing provides hard technical isolation that contains the damage from compromised agents independently of prompt or policy controls."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_02_chapter_06",
@@ -426,7 +720,15 @@
             "body": {
               "en": "Congratulations on completing Lesson 2: Tool Allowlists, Scopes, Approvals, and Sandboxes.\n\nYou now have a solid understanding of the layered controls that constrain what LLM agents can do even under adversarial conditions. These mechanisms—allowlists, scopes, approvals, and sandboxes—form a defense-in-depth architecture around agent tool use.\n\nProceed to Lesson 3 to explore unbounded consumption and cost abuse vulnerabilities."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations on completing Lesson 2: Tool Allowlists, Scopes, Approvals, and Sandboxes.\n\nYou now have a solid understanding of the layered controls that constrain what LLM agents can do even under adversarial conditions. These mechanisms—allowlists, scopes, approvals, and sandboxes—form a defense-in-depth architecture around agent tool use.\n\nProceed to Lesson 3 to explore unbounded consumption and cost abuse vulnerabilities."
+              }
+            }
+          ]
         }
       ],
       "recommendedVideos": [
@@ -488,7 +790,15 @@
             "body": {
               "en": "In this lesson you will learn:\n• What unbounded consumption means in the context of LLM and agentic AI systems\n• How attackers exploit token consumption, API loops, and resource exhaustion for cost abuse and denial of service\n• Concrete rate limiting, budget capping, and circuit-breaker patterns that mitigate these risks\n• Monitoring and alerting strategies to detect anomalous consumption before costs become catastrophic"
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn:\n• What unbounded consumption means in the context of LLM and agentic AI systems\n• How attackers exploit token consumption, API loops, and resource exhaustion for cost abuse and denial of service\n• Concrete rate limiting, budget capping, and circuit-breaker patterns that mitigate these risks\n• Monitoring and alerting strategies to detect anomalous consumption before costs become catastrophic"
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_02",
@@ -500,7 +810,15 @@
             "body": {
               "en": "Unbounded consumption refers to scenarios where an LLM application uses computational resources, API calls, or tokens without enforced limits. This can arise from legitimate bugs—such as infinite agentic loops—or from deliberate adversarial exploitation.\n\nAttack vectors include prompt injections that instruct an agent to recursively call itself, crafted inputs that maximize token usage in responses, and abuse of public-facing endpoints to exhaust an organization's API quota or billing credits. In multi-agent architectures, a single malicious instruction can cascade across dozens of sub-agents, each consuming tokens and making downstream API calls.\n\nDefenses operate at multiple layers: per-user and per-session token budgets enforced at the gateway level, maximum iteration limits on agentic loops, circuit breakers that halt execution when cost thresholds are exceeded, and real-time cost monitoring with automated alerts. Input length limits and output truncation policies further reduce the token surface available to attackers. Organizations should also implement billing anomaly detection and maintain hard spending limits at the cloud provider level to provide a final backstop."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Unbounded consumption refers to scenarios where an LLM application uses computational resources, API calls, or tokens without enforced limits. This can arise from legitimate bugs—such as infinite agentic loops—or from deliberate adversarial exploitation.\n\nAttack vectors include prompt injections that instruct an agent to recursively call itself, crafted inputs that maximize token usage in responses, and abuse of public-facing endpoints to exhaust an organization's API quota or billing credits. In multi-agent architectures, a single malicious instruction can cascade across dozens of sub-agents, each consuming tokens and making downstream API calls.\n\nDefenses operate at multiple layers: per-user and per-session token budgets enforced at the gateway level, maximum iteration limits on agentic loops, circuit breakers that halt execution when cost thresholds are exceeded, and real-time cost monitoring with automated alerts. Input length limits and output truncation policies further reduce the token surface available to attackers. Organizations should also implement billing anomaly detection and maintain hard spending limits at the cloud provider level to provide a final backstop."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_03",
@@ -512,7 +830,15 @@
             "body": {
               "en": "• **Unbounded Consumption**: Lack of enforced limits on token usage, API calls, or agent iterations, allowing runaway costs or denial of service.\n• **Cost Abuse**: Adversarial exploitation of an LLM system's resource consumption to exhaust the victim's API credits or trigger excessive billing charges.\n• **Circuit Breaker Pattern**: An automatic mechanism that halts an agent or process when a predefined cost, iteration, or time threshold is exceeded.\n• **Token Budget Enforcement**: A hard per-request, per-session, or per-user cap on total tokens consumed, enforced at the API gateway or orchestration layer."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **Unbounded Consumption**: Lack of enforced limits on token usage, API calls, or agent iterations, allowing runaway costs or denial of service.\n• **Cost Abuse**: Adversarial exploitation of an LLM system's resource consumption to exhaust the victim's API credits or trigger excessive billing charges.\n• **Circuit Breaker Pattern**: An automatic mechanism that halts an agent or process when a predefined cost, iteration, or time threshold is exceeded.\n• **Token Budget Enforcement**: A hard per-request, per-session, or per-user cap on total tokens consumed, enforced at the API gateway or orchestration layer."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_04",
@@ -628,7 +954,120 @@
                 }
               }
             ]
-          }
+          },
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "Which attack pattern most directly exploits the unbounded consumption vulnerability in an agentic LLM system?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Injecting SQL into a database query tool"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "A prompt injection that causes the agent to enter an infinite recursive loop of API calls"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Extracting the system prompt through carefully crafted user messages"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Bypassing authentication by manipulating session tokens"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "A prompt injection triggering an infinite recursive loop directly exploits unbounded consumption by causing the agent to make unlimited API calls, exhausting token budgets and incurring runaway costs."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "What is the role of a circuit breaker in defending against unbounded consumption?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "It encrypts all API calls to prevent eavesdropping"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "It automatically halts agent execution when a predefined cost or iteration limit is reached"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "It routes traffic to a backup LLM provider when the primary is unavailable"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "It validates all tool inputs against a schema before execution"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "A circuit breaker monitors consumption metrics and stops the process automatically when defined thresholds are exceeded, preventing runaway resource usage from completing unchecked."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "Which of the following represents the most comprehensive defense-in-depth approach against cost abuse?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Relying on the LLM provider's built-in abuse detection alone"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Asking users to agree to a terms-of-service clause prohibiting abuse"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Combining per-session token budgets, iteration limits, real-time monitoring, and hard cloud-level spending caps"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Limiting the application to a single agent with no tool access"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "Defense-in-depth requires multiple independent controls. Combining gateway-level budgets, loop iteration limits, real-time alerting, and cloud billing caps ensures that failure of any single control does not result in catastrophic cost abuse."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_05",
@@ -640,7 +1079,15 @@
             "body": {
               "en": "• Unbounded consumption is both a financial risk and a denial-of-service vector that adversaries can intentionally trigger through prompt manipulation.\n• Circuit breakers, token budgets, and iteration limits must be enforced programmatically—not just via model instructions—to be reliable.\n• Real-time cost monitoring and billing anomaly detection provide early warning, while hard cloud-level spending caps act as a final backstop."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Unbounded consumption is both a financial risk and a denial-of-service vector that adversaries can intentionally trigger through prompt manipulation.\n• Circuit breakers, token budgets, and iteration limits must be enforced programmatically—not just via model instructions—to be reliable.\n• Real-time cost monitoring and billing anomaly detection provide early warning, while hard cloud-level spending caps act as a final backstop."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_03_chapter_06",
@@ -659,6 +1106,12 @@
               "url": "https://www.youtube.com/watch?v=h3UuPCjv_us",
               "title": "Microsoft AI Red Teaming Labs Full Course (Part 1)",
               "label": "Tutorial"
+            },
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations on completing Lesson 3: Unbounded Consumption and Cost Abuse.\n\nYou now understand how resource exhaustion and cost abuse attacks work against LLM systems and how to apply layered technical controls to prevent them. These defenses protect both system availability and organizational finances.\n\nProceed to Lesson 4 to learn how to operationalize these learnings through security regression tests and professional red-team report writing."
+              }
             }
           ]
         }
@@ -722,7 +1175,15 @@
             "body": {
               "en": "In this lesson you will learn:\n• How to design and implement security regression test suites for LLM agent applications\n• The structure and content of a professional red-team assessment report for AI systems\n• How to document findings with reproducible evidence, severity ratings, and actionable mitigations\n• Best practices for communicating risk to both technical and non-technical stakeholders through structured reporting"
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "In this lesson you will learn:\n• How to design and implement security regression test suites for LLM agent applications\n• The structure and content of a professional red-team assessment report for AI systems\n• How to document findings with reproducible evidence, severity ratings, and actionable mitigations\n• Best practices for communicating risk to both technical and non-technical stakeholders through structured reporting"
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_02",
@@ -734,7 +1195,15 @@
             "body": {
               "en": "Security regression tests ensure that vulnerabilities discovered during red-team exercises do not silently reappear as the system evolves. For LLM agent applications, a regression suite should include prompt injection payloads that previously succeeded, tool invocation attempts that should be blocked, cost-abuse scenarios with input crafted to maximize token usage, and access-control probes targeting over-permissioned paths. These tests must be automated and integrated into the CI/CD pipeline so that every deployment is validated against the known threat catalog.\n\nA professional red-team report for an AI system follows a structured format: an executive summary for leadership, a technical narrative describing the assessment methodology and scope, individual finding sections with reproducible steps and evidence, a severity rating using a standard scale such as CVSS or a custom AI-risk rubric, and a prioritized remediation roadmap. Each finding must clearly state the attack scenario, the business impact, and a concrete mitigation with implementation guidance.\n\nEffective report writing bridges the gap between security research and engineering action. Ambiguous findings stall remediation; precise, reproducible write-ups accelerate it. Including regression test cases derived from each finding creates a direct feedback loop between reporting and ongoing assurance."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Security regression tests ensure that vulnerabilities discovered during red-team exercises do not silently reappear as the system evolves. For LLM agent applications, a regression suite should include prompt injection payloads that previously succeeded, tool invocation attempts that should be blocked, cost-abuse scenarios with input crafted to maximize token usage, and access-control probes targeting over-permissioned paths. These tests must be automated and integrated into the CI/CD pipeline so that every deployment is validated against the known threat catalog.\n\nA professional red-team report for an AI system follows a structured format: an executive summary for leadership, a technical narrative describing the assessment methodology and scope, individual finding sections with reproducible steps and evidence, a severity rating using a standard scale such as CVSS or a custom AI-risk rubric, and a prioritized remediation roadmap. Each finding must clearly state the attack scenario, the business impact, and a concrete mitigation with implementation guidance.\n\nEffective report writing bridges the gap between security research and engineering action. Ambiguous findings stall remediation; precise, reproducible write-ups accelerate it. Including regression test cases derived from each finding creates a direct feedback loop between reporting and ongoing assurance."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_03",
@@ -746,7 +1215,15 @@
             "body": {
               "en": "• **Security Regression Test**: An automated test derived from a known vulnerability that verifies the issue has been fixed and cannot reappear undetected in future releases.\n• **Red-Team Report Structure**: Executive summary, methodology and scope, individual findings with evidence, severity ratings, and a prioritized remediation roadmap.\n• **Finding Severity Rating**: A standardized risk score (e.g., CVSS) that communicates the exploitability and impact of a vulnerability to enable prioritized remediation.\n• **Remediation Roadmap**: A prioritized, time-bounded plan that assigns ownership and defines acceptance criteria for resolving each identified vulnerability."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• **Security Regression Test**: An automated test derived from a known vulnerability that verifies the issue has been fixed and cannot reappear undetected in future releases.\n• **Red-Team Report Structure**: Executive summary, methodology and scope, individual findings with evidence, severity ratings, and a prioritized remediation roadmap.\n• **Finding Severity Rating**: A standardized risk score (e.g., CVSS) that communicates the exploitability and impact of a vulnerability to enable prioritized remediation.\n• **Remediation Roadmap**: A prioritized, time-bounded plan that assigns ownership and defines acceptance criteria for resolving each identified vulnerability."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_04",
@@ -862,7 +1339,120 @@
                 }
               }
             ]
-          }
+          },
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q0",
+              "question": {
+                "en": "What is the primary purpose of including security regression tests in a CI/CD pipeline for an LLM application?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "To measure the latency of agent tool invocations under load"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "To ensure previously discovered vulnerabilities are automatically detected if they reappear in future deployments"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "To validate that the LLM produces grammatically correct outputs"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "To benchmark the model's accuracy on domain-specific tasks"
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "Security regression tests embedded in CI/CD pipelines catch vulnerability regressions automatically, preventing known issues from silently resurfacing as the codebase evolves."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q1",
+              "question": {
+                "en": "Which section of a red-team report is most important for a non-technical executive audience?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "The detailed technical reproduction steps for each finding"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "The raw network traffic logs captured during testing"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "The executive summary, which communicates overall risk posture and business impact"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "The appendix containing all prompt injection payloads used"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "The executive summary translates technical findings into business risk language. It is the section leadership relies on to understand the overall risk posture and to make prioritization and investment decisions."
+              }
+            },
+            {
+              "type": "single_choice_exercise",
+              "id": "checkpoint_q2",
+              "question": {
+                "en": "What makes a red-team finding 'actionable' in a professional report?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "It includes the exact number of tokens consumed during the attack"
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "It describes the vulnerability in academic theoretical terms without operational detail"
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "It provides reproducible steps, a severity rating, business impact, and a concrete mitigation with implementation guidance"
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "It lists all tools used by the red team regardless of relevance to the finding"
+                  }
+                }
+              ],
+              "correctAnswer": "c",
+              "explanation": {
+                "en": "An actionable finding gives engineering teams everything they need: how to reproduce the issue, how severe it is, why it matters to the business, and exactly how to fix it. Without all four elements, remediation is delayed or incomplete."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_05",
@@ -874,7 +1464,15 @@
             "body": {
               "en": "• Security regression tests transform red-team discoveries into durable, automated defenses that protect against vulnerability reintroduction across the software lifecycle.\n• A professional red-team report must serve both technical and executive audiences, combining reproducible technical evidence with clear business risk communication.\n• Each finding should include severity ratings, business impact, and concrete remediations—converting security research into engineering action items."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "• Security regression tests transform red-team discoveries into durable, automated defenses that protect against vulnerability reintroduction across the software lifecycle.\n• A professional red-team report must serve both technical and executive audiences, combining reproducible technical evidence with clear business risk communication.\n• Each finding should include severity ratings, business impact, and concrete remediations—converting security research into engineering action items."
+              }
+            }
+          ]
         },
         {
           "id": "lesson_04_chapter_06",
@@ -886,7 +1484,15 @@
             "body": {
               "en": "Congratulations on completing Lesson 4: Security Regression Tests and Report Writing.\n\nYou have now completed all four lessons of the Agent and Tool Security course. You are equipped to identify excessive agency risks, design layered tool controls, defend against cost abuse, and produce professional-grade red-team reports that drive real security improvement.\n\nProceed to the Final Lab to apply everything you have learned by producing a complete red-team assessment report with findings and mitigations for a simulated LLM agent application."
             }
-          }
+          },
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "en": "Congratulations on completing Lesson 4: Security Regression Tests and Report Writing.\n\nYou have now completed all four lessons of the Agent and Tool Security course. You are equipped to identify excessive agency risks, design layered tool controls, defend against cost abuse, and produce professional-grade red-team reports that drive real security improvement.\n\nProceed to the Final Lab to apply everything you have learned by producing a complete red-team assessment report with findings and mitigations for a simulated LLM agent application."
+              }
+            }
+          ]
         }
       ],
       "recommendedVideos": [

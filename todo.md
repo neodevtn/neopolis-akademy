@@ -1468,3 +1468,10 @@
 - [x] Présenter dans l’éditeur uniquement les interactions effectivement rendues par le lecteur
 - [x] Adapter les sauvegardes à la source de données réellement consommée par le lecteur
 - [x] Ajouter les contrôles automatisés de cohérence, vérifier un échantillon multi-types et publier
+
+## Catalogue pédagogique totalement administrable
+- [x] Auditer les types de contenu existants et leur couverture par la bibliothèque de blocs
+- [x] Ajouter les adaptateurs ou blocs manquants sans modifier le rendu apprenant existant
+- [x] Ajouter la création, suppression sécurisée et réorganisation des leçons dans l’éditeur de cours
+- [x] Rendre éditables les métadonnées de cours, certifications, catégories, tags et compteurs
+- [x] Ajouter les contrôles de cohérence de catalogue, valider les parcours admin et publier

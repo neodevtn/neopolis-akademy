@@ -3,6 +3,8 @@ import { router, adminProcedure } from "./_core/trpc";
 import fs from "fs/promises";
 import path from "path";
 import { validateStructuredCourse } from "../shared/contentStudio";
+import { remapLessonQuizBanks } from "../shared/lessonManagement";
+import { validateCatalogIndex } from "../shared/catalogValidation";
 import { listGlobalMediaAssets, removeUnusedMediaMetadata, replaceMediaEverywhere, saveMediaMetadata } from "./mediaCatalog";
 import { storagePut } from "./storage";
 
@@ -119,7 +121,16 @@ export const adminContentRouter = router({
     .mutation(async ({ input }) => {
       const dataDir = getDataDir();
       const filePath = path.join(dataDir, "courses", `${input.courseId}.json`);
+      const previous = await readJsonFile(filePath);
       await writeJsonFile(filePath, input.data);
+      const quizzesPath = path.join(dataDir, "lessonQuizzes.json");
+      try {
+        const quizzes = await readJsonFile(quizzesPath);
+        if (quizzes[input.courseId]) {
+          quizzes[input.courseId] = remapLessonQuizBanks(previous, input.data, quizzes[input.courseId]);
+          await writeJsonFile(quizzesPath, quizzes);
+        }
+      } catch { /* The course can exist without a chapter quiz bank. */ }
       return { success: true };
     }),
 
@@ -138,7 +149,17 @@ export const adminContentRouter = router({
         return { success: false, validation: { ...validation, valid: false, errors: [...validation.errors, { severity: "error" as const, path: "courseId", message: "L’identifiant du brouillon ne correspond pas au cours sélectionné." }] } };
       }
       const dataDir = getDataDir();
-      await writeJsonFile(path.join(dataDir, "courses", `${input.courseId}.json`), input.data);
+      const coursePath = path.join(dataDir, "courses", `${input.courseId}.json`);
+      const previous = await readJsonFile(coursePath);
+      await writeJsonFile(coursePath, input.data);
+      const quizzesPath = path.join(dataDir, "lessonQuizzes.json");
+      try {
+        const quizzes = await readJsonFile(quizzesPath);
+        if (quizzes[input.courseId]) {
+          quizzes[input.courseId] = remapLessonQuizBanks(previous, input.data, quizzes[input.courseId]);
+          await writeJsonFile(quizzesPath, quizzes);
+        }
+      } catch { /* The course can exist without a chapter quiz bank. */ }
       return { success: true, validation };
     }),
 
@@ -358,4 +379,22 @@ export const adminContentRouter = router({
       return { certifications: [] };
     }
   }),
+
+  updateTrainingIndex: adminProcedure
+    .input(z.object({
+      data: z.object({
+        certifications: z.array(z.any()),
+        courses: z.array(z.any()),
+        categories: z.array(z.any()).optional(),
+        examConfig: z.any().optional(),
+        _buildVersion: z.any().optional(),
+      }),
+    }))
+    .mutation(async ({ input }) => {
+      const validationError = validateCatalogIndex(input.data);
+      if (validationError) throw new Error(validationError);
+      const indexPath = path.resolve(import.meta.dirname, "..", "client", "src", "data", "trainingIndex.json");
+      await writeJsonFile(indexPath, input.data);
+      return { success: true };
+    }),
 });
