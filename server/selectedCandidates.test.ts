@@ -20,9 +20,12 @@ describe("Selected Candidates Endpoints", () => {
   const userCaller = appRouter.createCaller(userCtx);
 
   describe("admin.getSelectedCandidates", () => {
-    it("should return data for admin", async () => {
+    it("should return a paginated result for admin", async () => {
       const result = await adminCaller.admin.getSelectedCandidates();
-      expect(Array.isArray(result)).toBe(true);
+      expect(Array.isArray(result.candidates)).toBe(true);
+      expect(typeof result.total).toBe("number");
+      expect(result.page).toBe(1);
+      expect(result.pageSize).toBeGreaterThan(0);
     });
 
     it("should reject non-admin access", async () => {

@@ -1574,3 +1574,9 @@
 - [x] Ajouter les segments selon diplôme obtenu, compétence acquise et seuil de niveau
 - [x] Afficher un aperçu vérifiable du nombre de destinataires avant la confirmation d’envoi
 - [x] Tester les combinaisons de filtres sans déclencher de communication non confirmée
+
+## Correctifs de crashs client
+- [x] Diagnostiquer l’erreur MIME JavaScript détectée sur la page de candidature
+- [x] Corriger l’erreur de filtrage détectée sur les candidats sélectionnés
+- [x] Analyser les trois incidents Sentry récents et traiter leurs causes applicatives
+- [x] Tester les pages affectées en navigateur et confirmer l’absence de nouveau crash

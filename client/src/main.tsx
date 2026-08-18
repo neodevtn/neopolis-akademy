@@ -8,6 +8,7 @@ import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
 import { getLoginUrl } from "./const";
+import { clearStaleClientBundleRecovery, retryStaleClientBundle } from "./lib/chunkRecovery";
 import "./index.css";
 
 // Initialize Sentry for error monitoring, performance & user feedback
@@ -74,6 +75,14 @@ Sentry.init({
 
 // Initialize client-side error monitoring
 initErrorReporter();
+
+// A cached HTML document can point to a removed Vite chunk immediately after a
+// deployment. Recover once instead of showing an ErrorBoundary MIME failure.
+window.addEventListener("vite:preloadError", (event) => {
+  const preloadEvent = event as unknown as { payload?: unknown };
+  if (retryStaleClientBundle(preloadEvent.payload || preloadEvent)) event.preventDefault();
+});
+window.setTimeout(clearStaleClientBundleRecovery, 10_000);
 
 const queryClient = new QueryClient();
 

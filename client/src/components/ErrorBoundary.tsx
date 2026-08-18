@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { reportBoundaryError } from "@/lib/errorReporter";
+import { retryStaleClientBundle } from "@/lib/chunkRecovery";
 import { AlertTriangle, RotateCcw } from "lucide-react";
 import { Component, ErrorInfo, ReactNode } from "react";
 
@@ -23,6 +24,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    if (retryStaleClientBundle(error)) return;
     reportBoundaryError(error, errorInfo.componentStack || undefined);
   }
 

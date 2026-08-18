@@ -1392,7 +1392,9 @@ function SelectedCandidatesPanel({
     );
   }
 
-  if (!data || data.candidates.length === 0) {
+  const candidates = Array.isArray(data?.candidates) ? data.candidates : [];
+
+  if (!data || candidates.length === 0) {
     return (
       <div className="p-12 text-center">
         <UserCog className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
@@ -1403,10 +1405,10 @@ function SelectedCandidatesPanel({
 
   // Compute stats
   const totalSelected = data.total;
-  const accountsCreated = data.candidates.filter((c: any) => c.accountStatus === "active").length;
-  const invitationsSent = data.candidates.filter((c: any) => c.latestInvitation).length;
-  const bounced = data.candidates.filter((c: any) => c.latestInvitation?.emailDeliveryStatus === "bounced").length;
-  const pending = data.candidates.filter((c: any) => c.accountStatus === "no_account" && !c.latestInvitation).length;
+  const accountsCreated = candidates.filter((c: any) => c.accountStatus === "active").length;
+  const invitationsSent = candidates.filter((c: any) => c.latestInvitation).length;
+  const bounced = candidates.filter((c: any) => c.latestInvitation?.emailDeliveryStatus === "bounced").length;
+  const pending = candidates.filter((c: any) => c.accountStatus === "no_account" && !c.latestInvitation).length;
   const totalPages = Math.max(1, Math.ceil(data.total / data.pageSize));
   const toggleSort = (sortBy: typeof table.sortBy) => onTableChange({ page: 1, sortBy, sortDirection: table.sortBy === sortBy && table.sortDirection === "desc" ? "asc" : "desc" });
 
@@ -1468,7 +1470,7 @@ function SelectedCandidatesPanel({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.candidates.map((candidate: any) => {
+            {candidates.map((candidate: any) => {
               const accountStatusBadge = candidate.accountStatus === "active"
                 ? { label: "Compte créé", class: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" }
                 : candidate.latestInvitation?.status === "accepted"
