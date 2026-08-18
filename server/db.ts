@@ -2,7 +2,7 @@ import { eq, desc, asc, sql, and, or, like, count, gt, isNull, isNotNull } from 
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, InsertLearnerAchievement } from "../drizzle/schema";
 import { ENV } from './_core/env';
-import { engagementBucket, firstAttemptRate } from "./reportingMetrics";
+import { engagementBucket, firstAttemptRate, isPedagogicalReportingEvent } from "./reportingMetrics";
 import { learnerReportingLabel } from "@shared/learnerReportingLabel";
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -693,7 +693,9 @@ export async function getLearningReporting(input: { days: 7 | 30 | 90; certifica
     return courseStats.get(courseId)!;
   };
 
-  for (const event of events) {
+  const pedagogicalEvents = events.filter((event) => isPedagogicalReportingEvent(event.eventType));
+
+  for (const event of pedagogicalEvents) {
     const userId = Number(event.userId);
     if (!Number.isFinite(userId)) continue;
     const day = new Date(event.createdAt).toISOString().slice(0, 10);
@@ -747,7 +749,7 @@ export async function getLearningReporting(input: { days: 7 | 30 | 90; certifica
 
   return {
     periodDays: input.days,
-    hasLearningData: events.length > 0 || progressRows.length > 0,
+    hasLearningData: pedagogicalEvents.length > 0 || progressRows.length > 0,
     overview: {
       enrolledLearners: learnerRows.length,
       engagedLearners,

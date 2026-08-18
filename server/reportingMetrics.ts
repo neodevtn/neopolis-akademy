@@ -9,3 +9,17 @@ export function engagementBucket(totalSeconds: number, hasCompletedLesson: boole
   if (totalSeconds > 0 || hasCompletedLesson) return "short";
   return "none";
 }
+
+/** Only these learning-path events contribute to learner reporting and rankings. */
+export const PEDAGOGICAL_REPORTING_EVENT_TYPES = new Set([
+  "learning_time",
+  "lesson_completed",
+  "chapter_progress",
+  "exercise_submitted",
+  "quiz_passed",
+  "checkpoint_passed",
+]);
+
+export function isPedagogicalReportingEvent(eventType: string) {
+  return PEDAGOGICAL_REPORTING_EVENT_TYPES.has(eventType);
+}

@@ -1637,3 +1637,9 @@
 - [x] Afficher le nom en priorité, puis l’e-mail uniquement si le nom est absent
 - [x] Remplacer le dernier recours par un libellé neutre et investigable
 - [x] Vérifier les classements mobiles avec des profils complets et incomplets
+
+## Séparation apprentissage et administration dans le reporting
+- [x] Auditer les sources incluses dans les indicateurs d’apprentissage
+- [x] Inclure un administrateur comme apprenant lorsque ses événements sont pédagogiques
+- [x] Exclure explicitement toute activité administrative des compteurs et classements d’apprentissage
+- [x] Tester la cohérence des profils mixtes sur le tableau de bord et mobile
