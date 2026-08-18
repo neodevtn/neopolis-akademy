@@ -1,9 +1,7 @@
 export const COMPETENCY_SOURCE_TYPES = [
-  "lesson_completed",
   "exercise_passed",
   "quiz_passed",
   "checkpoint_passed",
-  "course_completed",
   "skill_badge",
   "certification",
 ] as const;
@@ -22,17 +20,26 @@ export const DEFAULT_COMPETENCIES = [
   { id: "ai_business", title: { fr: "Stratégie et adoption IA", en: "AI strategy & adoption" }, description: { fr: "Identifier la valeur, conduire l’adoption et accompagner les métiers.", en: "Identify value, lead adoption and support business teams." }, category: "Impact métier", icon: "briefcase-business", color: "rose", sortOrder: 90 },
 ] as const;
 
-export const DEFAULT_COMPETENCY_RULES = [
-  { competencyId: "prompt_engineering", sourceType: "lesson_completed", sourceKey: "*", label: "Leçon validée : bases du prompting", points: 0.5, minScore: null, sortOrder: 10 },
-  { competencyId: "ai_solution_design", sourceType: "checkpoint_passed", sourceKey: "*", label: "Checkpoint validé : conception de solution", points: 1.5, minScore: 60, sortOrder: 20 },
-  { competencyId: "ai_development", sourceType: "exercise_passed", sourceKey: "*", label: "Exercice pratique validé", points: 1.0, minScore: 70, sortOrder: 30 },
-  { competencyId: "rag_knowledge", sourceType: "quiz_passed", sourceKey: "*", label: "Quiz de connaissances validé", points: 1.0, minScore: 66.67, sortOrder: 40 },
-  { competencyId: "ai_orchestration", sourceType: "course_completed", sourceKey: "*", label: "Cours complété : orchestration de parcours", points: 2.0, minScore: null, sortOrder: 50 },
-  { competencyId: "ai_devops", sourceType: "skill_badge", sourceKey: "*", label: "Badge de parcours obtenu", points: 1.5, minScore: null, sortOrder: 60 },
-  { competencyId: "bi_ai", sourceType: "exercise_passed", sourceKey: "*", label: "Exercice de données validé", points: 1.0, minScore: 70, sortOrder: 70 },
-  { competencyId: "ai_governance", sourceType: "certification", sourceKey: "*", label: "Certification obtenue", points: 2.0, minScore: null, sortOrder: 80 },
-  { competencyId: "ai_business", sourceType: "certification", sourceKey: "*", label: "Certification obtenue : adoption et impact", points: 2.0, minScore: null, sortOrder: 90 },
-] as const;
+const TAGGED_EVENT_RULES: Array<{ sourceType: CompetencySourceType; label: string; points: number; minScore: number | null }> = [
+  { sourceType: "exercise_passed", label: "Exercice validé", points: 1, minScore: 70 },
+  { sourceType: "quiz_passed", label: "Quiz validé", points: 1, minScore: 66.67 },
+  { sourceType: "checkpoint_passed", label: "Checkpoint validé", points: 1.5, minScore: 60 },
+  { sourceType: "skill_badge", label: "Badge obtenu", points: 1.5, minScore: null },
+  { sourceType: "certification", label: "Certification obtenue", points: 2, minScore: null },
+];
+
+/** Chaque événement ne contribue qu’aux compétences explicitement taguées sur son contenu. */
+export const DEFAULT_COMPETENCY_RULES = DEFAULT_COMPETENCIES.flatMap((competency) =>
+  TAGGED_EVENT_RULES.map((event, index) => ({
+    competencyId: competency.id,
+    sourceType: event.sourceType,
+    sourceKey: "tagged",
+    label: `${event.label} · ${competency.title.fr}`,
+    points: event.points,
+    minScore: event.minScore,
+    sortOrder: competency.sortOrder * 10 + index,
+  })),
+);
 
 export function clampCompetencyLevel(points: number, maxPoints = 100) {
   return Math.max(0, Math.min(maxPoints, Math.round(points * 10) / 10));

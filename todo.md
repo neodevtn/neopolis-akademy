@@ -1539,3 +1539,10 @@
 - [x] Créer un calcul canonique des cours, leçons, exercices, vidéos et téléchargements
 - [x] Afficher les compteurs calculés comme indicateurs non éditables dans Catalogue, certifications et catégories
 - [x] Vérifier les compteurs publics et administratifs puis publier
+
+## Contributions de compétences pilotées par tags
+- [x] Auditer les règles de contribution et supprimer les sources non évaluatives
+- [x] Définir des tags de compétences administrables pour les leçons et les évaluations
+- [x] N’accorder des points que pour exercices, quiz, checkpoints, badges et certifications tagués
+- [x] Recalculer les contributions historiques selon les tags explicites
+- [x] Vérifier les niveaux et publier les règles ciblées

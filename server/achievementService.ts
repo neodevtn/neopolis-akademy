@@ -5,7 +5,7 @@ import { credentialCode, certificationTitle, isCourseCompleted } from "../shared
 import { getUserProgress, issueAchievement, markAchievementEmailed } from "./db";
 import { generateAchievementPdf } from "./achievementPdf";
 import { sendAchievementEmail } from "./email";
-import { applyCompetencyEvent } from "./competencyService";
+import { applyCompetencyEvent, getContentCompetencyTags } from "./competencyService";
 
 function getDataDir() {
   const devPath = path.resolve(import.meta.dirname, "..", "client", "public", "data");
@@ -47,13 +47,6 @@ export async function awardCourseCompletionBadge(user: User, certificationId: st
   if (!isCourseCompleted(completedIndexes, totalLessons)) return null;
 
   const title = titleOf(course.sourceCourseTitle || course.title, courseId);
-  await applyCompetencyEvent({
-    userId: user.id,
-    sourceType: "course_completed",
-    sourceKey: courseId,
-    eventKey: `course-completion:${courseId}`,
-    evidence: { certificationId, totalLessons },
-  });
   const issued = await issueAchievement({
     userId: user.id,
     kind: "skill_badge",
@@ -72,7 +65,8 @@ export async function awardCourseCompletionBadge(user: User, certificationId: st
       sourceType: "skill_badge",
       sourceKey: courseId,
       eventKey: `badge:${issued.achievement.id}`,
-      evidence: { achievementId: issued.achievement.id, certificationId },
+      competencyTags: getContentCompetencyTags({ courseId }),
+      evidence: { achievementId: issued.achievement.id, certificationId, competencyTags: getContentCompetencyTags({ courseId }) },
     });
     await notifyNewAchievement(user, issued.achievement);
   }
@@ -99,7 +93,8 @@ export async function awardCertification(user: User, certificationId: string, sc
       sourceKey: certificationId,
       eventKey: `certification:${issued.achievement.id}`,
       score: score / 10,
-      evidence: { achievementId: issued.achievement.id, attemptId },
+      competencyTags: getContentCompetencyTags({ certificationId }),
+      evidence: { achievementId: issued.achievement.id, attemptId, competencyTags: getContentCompetencyTags({ certificationId }) },
     });
     await notifyNewAchievement(user, issued.achievement);
   }

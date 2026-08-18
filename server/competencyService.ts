@@ -1,4 +1,6 @@
 import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
+import fs from "node:fs";
+import path from "node:path";
 import {
   competencyContributionRules,
   competencyDefinitions,
@@ -17,8 +19,34 @@ export type CompetencyEvent = {
   sourceKey: string;
   eventKey: string;
   score?: number | null;
+  competencyTags?: string[];
   evidence?: Record<string, unknown>;
 };
+
+const courseDataDir = path.resolve(import.meta.dirname, "../client/public/data/courses");
+const trainingIndexPath = path.resolve(import.meta.dirname, "../client/src/data/trainingIndex.json");
+
+export function getContentCompetencyTags(input: { courseId?: string; lessonIndex?: number; moduleId?: string; certificationId?: string }) {
+  const courseId = input.courseId || "";
+  if (/^[a-zA-Z0-9_-]+$/.test(courseId)) {
+    try {
+      const course = JSON.parse(fs.readFileSync(path.join(courseDataDir, `${courseId}.json`), "utf8"));
+      const lessons = Array.isArray(course.lessons) ? course.lessons : [];
+      const indexedLesson = typeof input.lessonIndex === "number" ? lessons[input.lessonIndex] : null;
+      const matchingLesson = indexedLesson || (input.moduleId ? lessons.find((lesson: any) => JSON.stringify(lesson).includes(input.moduleId!)) : null);
+      if (Array.isArray(matchingLesson?.competencyTags)) return matchingLesson.competencyTags;
+      return Array.from(new Set<string>(lessons.flatMap((lesson: any) => Array.isArray(lesson.competencyTags) ? lesson.competencyTags : [])));
+    } catch { /* resolve the certification below when applicable */ }
+  }
+  if (!input.certificationId) return [];
+  try {
+    const index = JSON.parse(fs.readFileSync(trainingIndexPath, "utf8"));
+    const courseIds = (index.courses || []).filter((course: any) => course.certId === input.certificationId).map((course: any) => course.id);
+    const tags: string[] = [];
+    for (const linkedCourseId of courseIds) tags.push(...getContentCompetencyTags({ courseId: linkedCourseId }));
+    return Array.from(new Set<string>(tags));
+  } catch { return []; }
+}
 
 export async function ensureCompetencyFramework() {
   const db = await getDb();
@@ -113,7 +141,8 @@ export async function applyCompetencyEvent(event: CompetencyEvent) {
     eq(competencyContributionRules.sourceType, event.sourceType),
     eq(competencyContributionRules.active, 1),
   ));
-  const eligible = rules.filter((rule) => (rule.sourceKey === "*" || rule.sourceKey === event.sourceKey) && (rule.minScore === null || (event.score ?? 0) >= Number(rule.minScore)));
+  const tags = new Set(event.competencyTags || []);
+  const eligible = rules.filter((rule) => tags.has(rule.competencyId) && (rule.minScore === null || (event.score ?? 0) >= Number(rule.minScore)));
   const created: Array<{ competencyId: string; points: number }> = [];
   for (const rule of eligible) {
     const duplicate = await db.select({ id: learnerCompetencyContributions.id }).from(learnerCompetencyContributions).where(and(

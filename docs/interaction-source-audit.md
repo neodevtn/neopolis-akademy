@@ -1,13 +1,13 @@
 # Audit des sources d’interaction
 
-Généré le 2026-08-17T16:04:02.630Z.
+Généré le 2026-08-18T00:04:27.482Z.
 
 | Indicateur | Nombre |
 |---|---:|
 | courses | 80 |
 | lessons | 551 |
 | chapters | 1707 |
-| interactiveBlocks | 326 |
+| interactiveBlocks | 542 |
 | chapterQuizQuestions | 2166 |
 | legacyExercises | 901 |
 | checkpointReferencedExercises | 124 |
@@ -23,7 +23,7 @@ Généré le 2026-08-17T16:04:02.630Z.
 | checkpoint | 222 |
 | cloud_exercise | 17 |
 | exercise | 7 |
-| single_choice_exercise | 42 |
+| single_choice_exercise | 258 |
 
 ## Exercices historiques orphelins
 
