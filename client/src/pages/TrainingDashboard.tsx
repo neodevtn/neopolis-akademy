@@ -29,13 +29,15 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation, useSearch } from "wouter";
 import { useTheme } from "@/contexts/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 import { AchievementGallery } from "@/components/AchievementGallery";
 import { CompetencyProfile } from "@/components/CompetencyProfile";
 import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
+import { buildNavigationUrl } from "@shared/navigationUrls";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -85,7 +87,15 @@ export default function TrainingDashboard() {
   const { getCertProgress, getLastVisitedCourse } = useTrainingProgress();
   const { isAuthenticated, loading: authLoading, user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const [activeTab, setActiveTab] = useState<TabId>("my-path");
+  const [, navigate] = useLocation();
+  const urlSearch = useSearch();
+  const getTabFromUrl = (): TabId => {
+    const tab = new URLSearchParams(urlSearch).get("tab");
+    return ["my-path", "achievements", "skills", "catalog", "recommended"].includes(tab || "") ? tab as TabId : "my-path";
+  };
+  const [activeTab, setActiveTab] = useState<TabId>(getTabFromUrl);
+  useEffect(() => { setActiveTab(getTabFromUrl()); }, [urlSearch]);
+  const navigateTrainingDashboard = (tab: TabId) => navigate(buildNavigationUrl("/training", { tab: tab === "my-path" ? null : tab }));
   const achievementsQuery = trpc.training.getAchievements.useQuery(undefined, { enabled: isAuthenticated });
   const competenciesQuery = trpc.competencies.getMine.useQuery(undefined, { enabled: isAuthenticated });
   const gamificationQuery = trpc.competencies.getGamification.useQuery(undefined, { enabled: isAuthenticated });
@@ -329,7 +339,7 @@ export default function TrainingDashboard() {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => navigateTrainingDashboard(tab.id)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                   activeTab === tab.id
                     ? "bg-card text-foreground shadow-sm"
@@ -655,10 +665,14 @@ function CatalogTab({
   GROUP_CONFIG: any;
   t: (obj: { en: string; fr: string }) => string;
 }) {
-  const [selectedGroup, setSelectedGroup] = useState<string>("all");
+  const [, navigate] = useLocation();
+  const urlSearch = useSearch();
 
   type GroupKey = keyof typeof GROUP_CONFIG;
   const groups = Object.entries(GROUP_CONFIG) as [GroupKey, any][];
+  const requestedGroup = new URLSearchParams(urlSearch).get("group") || "all";
+  const selectedGroup = requestedGroup === "all" || groups.some(([key]) => key === requestedGroup) ? requestedGroup : "all";
+  const selectGroup = (group: string) => navigate(buildNavigationUrl("/training", { tab: "catalog", group: group === "all" ? null : group }));
 
   const filteredCerts = selectedGroup === "all"
     ? certCompletionData
@@ -669,7 +683,7 @@ function CatalogTab({
       {/* Filter pills */}
       <div className="flex flex-wrap gap-2">
         <button
-          onClick={() => setSelectedGroup("all")}
+          onClick={() => selectGroup("all")}
           className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
             selectedGroup === "all"
               ? "bg-primary text-primary-foreground shadow-sm"
@@ -685,7 +699,7 @@ function CatalogTab({
           return (
             <button
               key={keyStr}
-              onClick={() => setSelectedGroup(keyStr)}
+                  onClick={() => selectGroup(keyStr)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                 selectedGroup === keyStr
                   ? "bg-primary text-primary-foreground shadow-sm"

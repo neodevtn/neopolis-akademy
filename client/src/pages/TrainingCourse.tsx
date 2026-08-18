@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { Link, useParams } from "wouter";
+import { Link, useLocation, useParams, useSearch } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -23,6 +23,7 @@ import { getDisplayedChapterProgress, normalizeChapterProgress } from "./trainin
 import LessonViewer from "./training/LessonViewer";
 import LessonSidebar from "./training/LessonSidebar";
 import { useCourseData, prefetchCourse } from "@/hooks/useCourseData";
+import { buildNavigationUrl } from "@shared/navigationUrls";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -37,6 +38,8 @@ const staggerContainer = {
 
 export default function TrainingCourse() {
   const { certId, courseId } = useParams<{ certId: string; courseId: string }>();
+  const [, navigate] = useLocation();
+  const urlSearch = useSearch();
   const { lang, t } = useLanguage();
   const { isAuthenticated, loading: authLoading, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -47,28 +50,42 @@ export default function TrainingCourse() {
   const [chapterProgress, setChapterProgress] = useState<{ current: number; total: number } | null>(null);
   const [chapterProgressLessonIndex, setChapterProgressLessonIndex] = useState<number | null>(null);
 
+  const navigateCoursePosition = useCallback((lesson: number, chapter = 0) => {
+    navigate(buildNavigationUrl(`/training/${certId}/${courseId}`, { lesson: Math.max(0, lesson), chapter: Math.max(0, chapter) }));
+  }, [certId, courseId, navigate]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(urlSearch);
+    const lesson = Number(params.get("lesson"));
+    const chapter = Number(params.get("chapter"));
+    if (Number.isInteger(lesson) && lesson >= 0) setActiveLessonIndex(lesson);
+    if (Number.isInteger(chapter) && chapter >= 0) setChapterProgress((current) => ({ current: chapter, total: current?.total || 1 }));
+  }, [urlSearch]);
+
   // Initialize persisted chapter progress. For multi-lesson courses it remains isolated
   // until an explicit LessonViewer callback associates it with the displayed lesson.
   const persistedChapterInit = getPersistedChapterProgress(courseId || "", 0);
   const hasInitializedChapter = useRef(false);
   useEffect(() => {
-    if (persistedChapterInit && !hasInitializedChapter.current && !chapterProgress) {
+    const urlPinsChapter = new URLSearchParams(urlSearch).has("chapter");
+    if (persistedChapterInit && !urlPinsChapter && !hasInitializedChapter.current && !chapterProgress) {
       setChapterProgress({ current: persistedChapterInit.chapterIndex, total: persistedChapterInit.totalChapters });
       hasInitializedChapter.current = true;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [persistedChapterInit]); // chapterProgress excluded to run only on init
+  }, [persistedChapterInit, urlSearch]); // chapterProgress excluded to run only on init
 
   // Stable callback for chapter changes (prevents infinite re-render in LessonViewer)
   // MUST be declared before any conditional returns (Rules of Hooks)
   const handleChapterChange = useCallback((current: number, total: number) => {
     const safeProgress = normalizeChapterProgress({ current, total });
     setChapterProgress(safeProgress);
+    navigateCoursePosition(0, safeProgress.current);
     // Persist chapter progress to database - uses refs/closures to avoid stale values
     if (courseId) {
       persistChapterProgress(courseId, 0, safeProgress.current, safeProgress.total);
     }
-  }, [courseId, persistChapterProgress]);
+  }, [courseId, navigateCoursePosition, persistChapterProgress]);
 
   // Server-synced video progress
   const videoProgressQuery = trpc.videoProgress.get.useQuery(
@@ -342,10 +359,12 @@ export default function TrainingCourse() {
                 // Navigate to the chapter within the single lesson
                 setActiveLessonIndex(0);
                 setChapterProgress({ current: idx, total: courseLessons[0]?.chapters?.length || 1 });
+                navigateCoursePosition(0, idx);
               } else {
                 setActiveLessonIndex(idx);
                 setChapterProgress({ current: 0, total: Math.max(1, courseLessons[idx]?.chapters?.length || 1) });
                 setChapterProgressLessonIndex(idx);
+                navigateCoursePosition(idx, 0);
               }
             }}
             chapterProgress={isSingleLessonCourse
@@ -539,6 +558,7 @@ export default function TrainingCourse() {
                 </div>
                 <div className="p-6 sm:p-8">
                   <LessonViewer
+                    key={`${displayedLesson.id || displayedIndex}:${chapterProgress?.current ?? 0}`}
                     lesson={displayedLesson}
                     lessonIndex={displayedIndex}
                     lang={lang}
@@ -565,6 +585,7 @@ export default function TrainingCourse() {
                             setActiveLessonIndex(nextLessonIdx);
                             setChapterProgress({ current: 0, total: Math.max(1, courseLessons[nextLessonIdx]?.chapters?.length || 1) });
                             setChapterProgressLessonIndex(nextLessonIdx);
+                            navigateCoursePosition(nextLessonIdx, 0);
                           }, 300);
                         }
                       }
@@ -581,8 +602,9 @@ export default function TrainingCourse() {
                       }
                       setChapterProgress(normalizeChapterProgress({ current, total }));
                       setChapterProgressLessonIndex(displayedIndex);
+                      navigateCoursePosition(displayedIndex, current);
                     }}
-                    initialChapter={isSingleLessonCourse ? Math.min(chapterProgress?.current ?? 0, (displayedLesson?.chapters?.length || 1) - 1) : undefined}
+                    initialChapter={Math.min(chapterProgress?.current ?? 0, (displayedLesson?.chapters?.length || 1) - 1)}
                   />
                 </div>
               </motion.div>

@@ -1546,3 +1546,12 @@
 - [x] N’accorder des points que pour exercices, quiz, checkpoints, badges et certifications tagués
 - [x] Recalculer les contributions historiques selon les tags explicites
 - [x] Vérifier les niveaux et publier les règles ciblées
+
+## Navigation admin et liens partageables
+- [x] Corriger les clics du menu admin pour ouvrir immédiatement la vue ciblée sans rafraîchissement
+- [x] Ajouter des URLs adressables pour les profils apprenants dans l’administration
+- [x] Ajouter des URLs adressables pour l’ouverture ciblée des leçons et écrans dans l’éditeur
+- [x] Tester les liens directs, le rechargement et la navigation historique navigateur
+- [x] Étendre la synchronisation URL à tous les onglets, détails et vues administratives
+- [x] Étendre la synchronisation URL à la navigation apprenant, aux certifications, cours, leçons et écrans
+- [x] Vérifier les liens partageables, les rechargements et l’historique sur l’ensemble des parcours

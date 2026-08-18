@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { Link, useLocation } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import { AdminNavbar } from "@/components/AdminNavbar";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
@@ -31,6 +31,7 @@ import trainingIndex from "@/data/trainingIndex.json";
 import { AchievementGallery } from "@/components/AchievementGallery";
 import { CompetencyProfile } from "@/components/CompetencyProfile";
 import { CompetencyLeaderboard } from "@/components/admin/CompetencyLeaderboard";
+import { buildNavigationUrl } from "@shared/navigationUrls";
 
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
@@ -42,7 +43,8 @@ const fadeIn = {
 
 export default function AdminTraining() {
   const { user, loading, isAuthenticated } = useAuth();
-  const [location, navigate] = useLocation();
+  const [, navigate] = useLocation();
+  const urlSearch = useSearch();
   const [activeTab, setActiveTab] = useState(() => new URLSearchParams(typeof window === "undefined" ? "" : window.location.search).get("tab") || "learners");
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -65,13 +67,21 @@ export default function AdminTraining() {
     analytics: { title: "Reporting d’apprentissage", description: "Analyser la performance, l’implication et l’évolution des apprenants" },
   } as Record<string, { title: string; description: string }>)[activeTab] || { title: "Gestion des apprenants", description: "Suivi, invitations et analyses de la formation" };
 
+  const navigateTraining = (tab: string, learnerId?: number | null) => {
+    const params = new URLSearchParams({ tab });
+    if (learnerId) params.set("learner", String(learnerId));
+    navigate(buildNavigationUrl("/admin/training", { tab, learner: learnerId }));
+  };
+
   useEffect(() => {
-    const params = new URLSearchParams(location.split("?")[1] || "");
+    const params = new URLSearchParams(urlSearch);
     const tab = params.get("tab");
     if (["learners", "invitations", "selected", "analytics"].includes(tab || "")) setActiveTab(tab!);
+    else setActiveTab("learners");
     const learnerId = Number(params.get("learner"));
     if (Number.isInteger(learnerId) && learnerId > 0) setSelectedUserId(learnerId);
-  }, [location]);
+    else setSelectedUserId(null);
+  }, [urlSearch]);
 
   const reportingInput = useMemo(() => ({
     days: reportingDays,
@@ -280,7 +290,7 @@ export default function AdminTraining() {
       <div className="min-h-screen bg-background">
         <AdminNavbar activePage="training" />
         <div className="max-w-6xl mx-auto px-6 py-8">
-          <Button variant="outline" size="sm" onClick={() => setSelectedUserId(null)} className="mb-6 gap-1.5">
+          <Button variant="outline" size="sm" onClick={() => navigateTraining(activeTab)} className="mb-6 gap-1.5">
             <ChevronLeft className="w-4 h-4" /> Retour à la liste
           </Button>
 
@@ -577,7 +587,7 @@ export default function AdminTraining() {
           )}
 
           {/* Tabs */}
-          <Tabs value={activeTab} onValueChange={(tab) => { setActiveTab(tab); navigate(`/admin/training?tab=${tab}`); }} className="w-full">
+          <Tabs value={activeTab} onValueChange={(tab) => navigateTraining(tab)} className="w-full">
             <TabsList className="hidden">
               <TabsTrigger value="learners" className="gap-1.5">
                 <Users className="w-4 h-4" /> Apprenants
@@ -647,7 +657,7 @@ export default function AdminTraining() {
                           <TableRow
                             key={learner.id}
                             className="cursor-pointer hover:bg-secondary/50 transition-colors"
-                            onClick={() => setSelectedUserId(learner.id)}
+                            onClick={() => navigateTraining("learners", learner.id)}
                           >
                             <TableCell className="font-medium">{learner.name || "Sans nom"}</TableCell>
                             <TableCell className="text-sm text-muted-foreground">{learner.email || "—"}</TableCell>
@@ -689,7 +699,7 @@ export default function AdminTraining() {
                                   variant="outline"
                                   size="sm"
                                   className="gap-1"
-                                  onClick={() => setSelectedUserId(learner.id)}
+                                  onClick={() => navigateTraining("learners", learner.id)}
                                 >
                                   <Eye className="w-3.5 h-3.5" />
                                 </Button>

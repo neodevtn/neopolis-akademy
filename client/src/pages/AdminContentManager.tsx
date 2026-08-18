@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { Link } from "wouter";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useLocation, useSearch } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
@@ -43,6 +43,7 @@ import { normalizeQuestionBank, serializeQuestionBank } from "@shared/questionBa
 import { normalizeExamConfiguration, type ExamConfiguration } from "@shared/examConfiguration";
 import { toBlockMediaUrl } from "@/lib/mediaUrl";
 import { moveItem } from "@shared/lessonManagement";
+import { buildNavigationUrl } from "@shared/navigationUrls";
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
 type ViewMode = "browse" | "catalog" | "course" | "quiz-simulate" | "exam-simulate" | "edit-course" | "edit-quiz" | "edit-exam";
@@ -50,6 +51,8 @@ type ViewMode = "browse" | "catalog" | "course" | "quiz-simulate" | "exam-simula
 export default function AdminContentManager() {
   const { user, isAuthenticated } = useAuth();
   const { t, lang } = useLanguage();
+  const [, navigate] = useLocation();
+  const urlSearch = useSearch();
   // Helper to resolve body which can be string or {en, fr} translation object
   const resolveBody = (body: any): string => {
     if (!body) return '';
@@ -110,6 +113,40 @@ export default function AdminContentManager() {
   const [selectedQuizKey, setSelectedQuizKey] = useState("");
   const [examQuestions, setExamQuestions] = useState<any[]>([]);
   const [examConfigDrafts, setExamConfigDrafts] = useState<Record<string, ExamConfiguration>>({});
+
+  const readViewMode = (params: URLSearchParams): ViewMode => {
+    const mode = params.get("mode");
+    if (mode === "edit") return "edit-course";
+    if (mode === "view") return "course";
+    if (mode === "quiz") return "edit-quiz";
+    if (["browse", "catalog", "course", "quiz-simulate", "exam-simulate", "edit-course", "edit-quiz", "edit-exam"].includes(mode || "")) return mode as ViewMode;
+    return "browse";
+  };
+  const navigateContent = (nextMode: ViewMode, options: { courseId?: string; certificationId?: string; lesson?: number; chapter?: number } = {}) => {
+    const params = new URLSearchParams();
+    if (nextMode !== "browse") params.set("mode", nextMode);
+    const courseId = options.courseId ?? selectedCourseId;
+    const certificationId = options.certificationId ?? selectedCertId;
+    if (courseId) params.set("courseId", courseId);
+    if (certificationId) params.set("certificationId", certificationId);
+    const lesson = options.lesson ?? selectedLessonIdx;
+    const chapter = options.chapter ?? selectedChapterIdx;
+    if (courseId && lesson >= 0) params.set("lesson", String(lesson));
+    if (courseId && chapter >= 0) params.set("chapter", String(chapter));
+    if (courseId && chapter === -1) params.set("panel", "recommendations");
+    navigate(buildNavigationUrl("/admin/content", Object.fromEntries(params.entries())));
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams(urlSearch);
+    setViewMode(readViewMode(params));
+    setSelectedCourseId(params.get("courseId") || "");
+    setSelectedCertId(params.get("certificationId") || "");
+    const lesson = Number(params.get("lesson"));
+    setSelectedLessonIdx(Number.isInteger(lesson) && lesson >= 0 ? lesson : 0);
+    const chapter = Number(params.get("chapter"));
+    setSelectedChapterIdx(params.get("panel") === "recommendations" ? -1 : Number.isInteger(chapter) && chapter >= 0 ? chapter : 0);
+  }, [urlSearch]);
 
   // Queries
   const coursesQuery = trpc.adminContent.listCourses.useQuery(undefined, {
@@ -228,7 +265,7 @@ export default function AdminContentManager() {
             className="pl-10"
           />
         </div>
-        <Button variant="outline" className="shrink-0" onClick={() => setViewMode("catalog")}><GraduationCap className="mr-1.5 h-4 w-4" /> Gérer le catalogue</Button>
+        <Button variant="outline" className="shrink-0" onClick={() => navigateContent("catalog")}><GraduationCap className="mr-1.5 h-4 w-4" /> Gérer le catalogue</Button>
       </div>
 
       {/* Certifications overview */}
@@ -251,14 +288,12 @@ export default function AdminContentManager() {
               </div>
               <div className="flex gap-2">
                 <Button size="sm" variant="outline" className="text-xs" onClick={() => {
-                  setSelectedCertId(cert.id);
-                  setViewMode("exam-simulate");
+                  navigateContent("exam-simulate", { certificationId: cert.id });
                 }}>
                   <Play className="w-3 h-3 mr-1" /> Simuler Examen
                 </Button>
                 <Button size="sm" variant="outline" className="text-xs" onClick={() => {
-                  setSelectedCertId(cert.id);
-                  setViewMode("edit-exam");
+                  navigateContent("edit-exam", { certificationId: cert.id });
                 }}>
                   <Edit3 className="w-3 h-3 mr-1" /> Éditer Examen
                 </Button>
@@ -303,26 +338,19 @@ export default function AdminContentManager() {
                     <td className="text-right px-4 py-2.5">
                       <div className="flex items-center justify-end gap-1">
                         <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => {
-                          setSelectedCourseId(course.courseId);
                           setCourseDraft(null);
-                          setSelectedLessonIdx(0);
-                          setSelectedChapterIdx(0);
-                          setViewMode("course");
+                          navigateContent("course", { courseId: course.courseId, lesson: 0, chapter: 0 });
                         }}>
                           <Eye className="w-3.5 h-3.5 mr-1" /> Consulter
                         </Button>
                         <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => {
-                          setSelectedCourseId(course.courseId);
-                          setViewMode("quiz-simulate");
+                          navigateContent("quiz-simulate", { courseId: course.courseId });
                         }}>
                           <Play className="w-3.5 h-3.5 mr-1" /> Quiz
                         </Button>
                         <Button size="sm" variant="ghost" className="h-7 px-2 text-blue-600" onClick={() => {
-                          setSelectedCourseId(course.courseId);
                           setCourseDraft(null);
-                          setSelectedLessonIdx(0);
-                          setSelectedChapterIdx(0);
-                          setViewMode("edit-course");
+                          navigateContent("edit-course", { courseId: course.courseId, lesson: 0, chapter: 0 });
                         }}>
                           <Edit3 className="w-3.5 h-3.5 mr-1" /> Éditer
                         </Button>
@@ -385,14 +413,13 @@ export default function AdminContentManager() {
       const draft = cloneCourseDraft(courseDraft || publishedCourse);
       draft.lessons = lessons;
       setCourseDraft(draft);
-      setSelectedLessonIdx(nextActiveLessonIndex);
-      setSelectedChapterIdx(0);
+      navigateContent(viewMode, { lesson: nextActiveLessonIndex, chapter: 0 });
     };
     const updateChapters = (chapters: any[], nextActiveChapterIndex: number) => {
       const draft = cloneCourseDraft(courseDraft || publishedCourse);
       draft.lessons[selectedLessonIdx] = { ...draft.lessons[selectedLessonIdx], chapters };
       setCourseDraft(draft);
-      setSelectedChapterIdx(nextActiveChapterIndex);
+      navigateContent(viewMode, { chapter: nextActiveChapterIndex });
     };
     const editableInteractions = chapter ? resolveEditableInteractions({
       course,
@@ -435,13 +462,13 @@ export default function AdminContentManager() {
       <div className="flex flex-col gap-4 xl:flex-row">
         {/* Sidebar - Lessons/Chapters */}
         <div className="w-full shrink-0 border rounded-lg p-3 max-h-64 overflow-y-auto bg-white xl:w-64 xl:max-h-[70vh]">
-          {viewMode === "edit-course" ? <details className="mb-3 rounded-md border border-emerald-100 bg-emerald-50/50 p-2"><summary className="cursor-pointer text-xs font-semibold text-emerald-800">Gérer les leçons de ce cours</summary><div className="mt-2"><LessonManager lessons={course.lessons || []} activeLessonIndex={selectedLessonIdx} onSelect={(index) => { setSelectedLessonIdx(index); setSelectedChapterIdx(0); }} onChange={updateLessons} /></div></details> : <h4 className="font-semibold text-sm mb-2 text-gray-700">Leçons</h4>}
-          {viewMode === "edit-course" && lesson && <details className="mb-3 rounded-md border border-sky-100 bg-sky-50/50 p-2"><summary className="cursor-pointer text-xs font-semibold text-sky-800">Gérer les écrans de cette leçon</summary><ChapterManager chapters={lesson.chapters || []} activeChapterIndex={selectedChapterIdx} onSelect={setSelectedChapterIdx} onChange={updateChapters} /></details>}
+          {viewMode === "edit-course" ? <details className="mb-3 rounded-md border border-emerald-100 bg-emerald-50/50 p-2"><summary className="cursor-pointer text-xs font-semibold text-emerald-800">Gérer les leçons de ce cours</summary><div className="mt-2"><LessonManager lessons={course.lessons || []} activeLessonIndex={selectedLessonIdx} onSelect={(index) => navigateContent(viewMode, { lesson: index, chapter: 0 })} onChange={updateLessons} /></div></details> : <h4 className="font-semibold text-sm mb-2 text-gray-700">Leçons</h4>}
+          {viewMode === "edit-course" && lesson && <details className="mb-3 rounded-md border border-sky-100 bg-sky-50/50 p-2"><summary className="cursor-pointer text-xs font-semibold text-sky-800">Gérer les écrans de cette leçon</summary><ChapterManager chapters={lesson.chapters || []} activeChapterIndex={selectedChapterIdx} onSelect={(index) => navigateContent(viewMode, { chapter: index })} onChange={updateChapters} /></details>}
           {course.lessons?.map((l: any, li: number) => (
             <div key={li} className="mb-1">
               <button
                 className={`w-full text-left text-xs px-2 py-1.5 rounded transition-colors ${li === selectedLessonIdx ? "bg-emerald-50 text-emerald-700 font-medium" : "hover:bg-gray-100 text-gray-600"}`}
-                onClick={() => { setSelectedLessonIdx(li); setSelectedChapterIdx(0); }}
+                onClick={() => navigateContent(viewMode, { lesson: li, chapter: 0 })}
               >
                 <span className="truncate block">{li + 1}. {typeof l.title === 'string' ? l.title : (l.title?.fr || l.title?.en || `Leçon ${li + 1}`)}</span>
               </button>
@@ -449,7 +476,7 @@ export default function AdminContentManager() {
                 <button
                   key={ci}
                   className={`w-full text-left text-xs px-4 py-1 rounded transition-colors ${ci === selectedChapterIdx ? "bg-emerald-100 text-emerald-800 font-medium" : "hover:bg-gray-50 text-gray-500"}`}
-                  onClick={() => setSelectedChapterIdx(ci)}
+                  onClick={() => navigateContent(viewMode, { chapter: ci })}
                 >
                   {typeof ch.title === 'string' ? ch.title : (ch.title?.fr || ch.title?.en || `Chapitre ${ci + 1}`)}
                 </button>
@@ -457,7 +484,7 @@ export default function AdminContentManager() {
               {li === selectedLessonIdx && viewMode === "edit-course" && (
                 <button
                   className={`mt-1 flex w-full items-center gap-1.5 rounded px-4 py-1.5 text-left text-xs font-medium transition-colors ${selectedChapterIdx === -1 ? "bg-amber-100 text-amber-900" : "text-amber-700 hover:bg-amber-50"}`}
-                  onClick={() => setSelectedChapterIdx(-1)}
+                  onClick={() => navigateContent(viewMode, { chapter: -1 })}
                 >
                   <Video className="h-3.5 w-3.5" /> Fin de module · recommandations
                 </button>
@@ -1362,29 +1389,29 @@ export default function AdminContentManager() {
         <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-end gap-2">
           {viewMode !== "browse" && (
             <Button variant="outline" size="sm" onClick={() => {
-              setViewMode("browse");
+              navigateContent("browse");
               setQuizSimState({ currentQ: 0, answers: {}, showResults: false });
             }}>
               <ArrowLeft className="w-3 h-3 mr-1" /> Retour à la liste
             </Button>
           )}
           {(viewMode === "course") && (
-            <Button size="sm" className="bg-blue-600 hover:bg-blue-700" onClick={() => setViewMode("edit-course")}>
+            <Button size="sm" className="bg-blue-600 hover:bg-blue-700" onClick={() => navigateContent("edit-course")}>
               <Edit3 className="w-3 h-3 mr-1" /> Passer en mode édition
             </Button>
           )}
           {(viewMode === "edit-course") && (
-            <Button size="sm" variant="outline" onClick={() => setViewMode("course")}>
+            <Button size="sm" variant="outline" onClick={() => navigateContent("course")}>
               <Eye className="w-3 h-3 mr-1" /> Mode consultation
             </Button>
           )}
           {viewMode === "quiz-simulate" && (
-            <Button size="sm" className="bg-blue-600 hover:bg-blue-700" onClick={() => setViewMode("edit-quiz")}>
+            <Button size="sm" className="bg-blue-600 hover:bg-blue-700" onClick={() => navigateContent("edit-quiz")}>
               <Edit3 className="w-3 h-3 mr-1" /> Éditer les quiz
             </Button>
           )}
           {viewMode === "edit-quiz" && (
-            <Button size="sm" variant="outline" onClick={() => { setViewMode("quiz-simulate"); setQuizSimState({ currentQ: 0, answers: {}, showResults: false }); }}>
+            <Button size="sm" variant="outline" onClick={() => { navigateContent("quiz-simulate"); setQuizSimState({ currentQ: 0, answers: {}, showResults: false }); }}>
               <Play className="w-3 h-3 mr-1" /> Simuler
             </Button>
           )}

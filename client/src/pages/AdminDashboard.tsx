@@ -9,11 +9,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Columns3, Bell, BellRing, UserX, FileCheck } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 import { AdminNavbar } from "@/components/AdminNavbar";
+import { buildNavigationUrl } from "@shared/navigationUrls";
 
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
@@ -29,7 +30,13 @@ const NOTIF_ICONS: Record<string, { icon: any; color: string }> = {
 
 export default function AdminDashboard() {
   const { user, loading, isAuthenticated } = useAuth();
-  const [activeTab, setActiveTab] = useState<TabType>("candidatures");
+  const [, navigate] = useLocation();
+  const urlSearch = useSearch();
+  const getTabFromUrl = (): TabType => {
+    const tab = new URLSearchParams(urlSearch).get("tab");
+    return ["candidatures", "kanban", "communications", "invitations", "analytics", "activity"].includes(tab || "") ? tab as TabType : "candidatures";
+  };
+  const [activeTab, setActiveTab] = useState<TabType>(getTabFromUrl);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
@@ -56,6 +63,16 @@ export default function AdminDashboard() {
   const [invitMessage, setInvitMessage] = useState("");
   const [invitLang, setInvitLang] = useState<"fr" | "en">("fr");
 
+  const navigateAdmin = (tab: TabType, applicationId?: number | null) => {
+    const params = new URLSearchParams({ tab });
+    if (applicationId) params.set("application", String(applicationId));
+    navigate(buildNavigationUrl("/admin", { tab, application: applicationId }));
+  };
+
+  useEffect(() => {
+    setActiveTab(getTabFromUrl());
+  }, [urlSearch]);
+
   // Close notification panel on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -72,6 +89,15 @@ export default function AdminDashboard() {
     statusFilter === "all" ? {} : { status: statusFilter },
     { enabled: isAuthenticated && user?.role === "admin" }
   );
+  useEffect(() => {
+    const requestedId = Number(new URLSearchParams(urlSearch).get("application"));
+    if (!Number.isInteger(requestedId) || requestedId <= 0) {
+      setDetailApp(null);
+      return;
+    }
+    const application = applicationsQuery.data?.find((item: any) => item.id === requestedId);
+    if (application) setDetailApp(application);
+  }, [applicationsQuery.data, urlSearch]);
   const updateStatusMutation = trpc.applications.updateStatus.useMutation({
     onSuccess: () => {
       applicationsQuery.refetch();
@@ -353,12 +379,12 @@ export default function AdminDashboard() {
       {/* Sub-tabs for this page */}
       <div className="border-b" style={{ backgroundColor: "var(--wise-canvas)" }}>
         <div className="container flex items-center gap-1 py-2 overflow-x-auto">
-          <button onClick={() => setActiveTab("candidatures")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "candidatures" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "candidatures" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "candidatures" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Candidatures</button>
-          <button onClick={() => setActiveTab("communications")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "communications" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "communications" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "communications" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Communications</button>
-          <button onClick={() => setActiveTab("invitations")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "invitations" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "invitations" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "invitations" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Invitations</button>
-          <button onClick={() => setActiveTab("kanban")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "kanban" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "kanban" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "kanban" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Kanban</button>
-          <button onClick={() => setActiveTab("analytics")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "analytics" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "analytics" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "analytics" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Évaluation</button>
-          <button onClick={() => setActiveTab("activity")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "activity" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "activity" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "activity" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Activité</button>
+          <button onClick={() => navigateAdmin("candidatures")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "candidatures" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "candidatures" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "candidatures" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Candidatures</button>
+          <button onClick={() => navigateAdmin("communications")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "communications" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "communications" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "communications" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Communications</button>
+          <button onClick={() => navigateAdmin("invitations")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "invitations" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "invitations" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "invitations" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Invitations</button>
+          <button onClick={() => navigateAdmin("kanban")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "kanban" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "kanban" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "kanban" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Kanban</button>
+          <button onClick={() => navigateAdmin("analytics")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "analytics" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "analytics" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "analytics" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Évaluation</button>
+          <button onClick={() => navigateAdmin("activity")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "activity" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "activity" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "activity" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Activité</button>
         </div>
       </div>
 
@@ -437,7 +463,7 @@ export default function AdminDashboard() {
                   <tbody>
                     {applications.map((app: any) => (
                       <React.Fragment key={app.id}>
-                        <tr className="border-t border-border hover:bg-secondary/50 transition-colors cursor-pointer" onClick={() => setDetailApp(app)}>
+                        <tr className="border-t border-border hover:bg-secondary/50 transition-colors cursor-pointer" onClick={() => { setDetailApp(app); navigateAdmin("candidatures", app.id); }}>
                           <td className="p-4" onClick={(e) => e.stopPropagation()}>
                             <input type="checkbox" checked={selectedIds.includes(app.id)} onChange={() => toggleSelect(app.id)} className="rounded border-border" />
                           </td>
@@ -1217,7 +1243,7 @@ export default function AdminDashboard() {
         </DialogContent>
       </Dialog>
       {/* Candidature Detail Dialog */}
-      <Dialog open={!!detailApp} onOpenChange={(open) => { if (!open) setDetailApp(null); }}>
+      <Dialog open={!!detailApp} onOpenChange={(open) => { if (!open) { setDetailApp(null); navigateAdmin("candidatures"); } }}>
         <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
           {detailApp && (
             <>
