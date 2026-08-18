@@ -1631,3 +1631,9 @@
 - [x] Identifier l’enregistrement et le repli qui affichent un identifiant interne au lieu d’un nom
 - [x] Corriger le libellé de secours avec l’adresse e-mail dans le reporting et les classements
 - [x] Vérifier l’affichage mobile et ajouter un test contre la régression
+
+## Lisibilité des noms dans les classements
+- [x] Identifier les événements dont le profil utilisateur ne remonte pas dans le reporting
+- [x] Afficher le nom en priorité, puis l’e-mail uniquement si le nom est absent
+- [x] Remplacer le dernier recours par un libellé neutre et investigable
+- [x] Vérifier les classements mobiles avec des profils complets et incomplets

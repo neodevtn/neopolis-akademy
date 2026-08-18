@@ -654,7 +654,7 @@ export async function getLearningReporting(input: { days: 7 | 30 | 90; certifica
     progressConditions.push(eq(trainingProgress.certificationId, input.certificationId));
   }
 
-  const [events, progressRows, learnerRows] = await Promise.all([
+  const [events, progressRows, learnerRows, identityRows] = await Promise.all([
     db.select({
       id: learningEvents.id,
       userId: learningEvents.userId,
@@ -673,6 +673,7 @@ export async function getLearningReporting(input: { days: 7 | 30 | 90; certifica
       completedAt: trainingProgress.completedAt,
     }).from(trainingProgress).where(and(...progressConditions)),
     db.select({ id: users.id, name: users.name, email: users.email }).from(users).where(eq(users.role, "user")),
+    db.select({ id: users.id, name: users.name, email: users.email }).from(users),
   ]);
 
   const dayKeys = Array.from({ length: input.days }, (_, index) => {
@@ -740,7 +741,9 @@ export async function getLearningReporting(input: { days: 7 | 30 | 90; certifica
   const firstAttempts = Array.from(learnerStats.values()).reduce((sum, item) => sum + item.firstAttempts, 0);
   const firstAttemptSuccesses = Array.from(learnerStats.values()).reduce((sum, item) => sum + item.firstAttemptSuccesses, 0);
   const engagedLearners = Array.from(learnerStats.values()).filter((item) => item.seconds > 0 || item.lessons > 0).length;
-  const userById = new Map(learnerRows.map((learner) => [learner.id, learner]));
+  // Learning events can belong to an administrator completing the training as well.
+  // Keep role filtering for learner KPIs, but resolve display labels against every account.
+  const userById = new Map(identityRows.map((learner) => [learner.id, learner]));
 
   return {
     periodDays: input.days,
