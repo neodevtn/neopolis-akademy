@@ -27,6 +27,8 @@ import {
   CheckCircle2,
   Circle,
   ArrowRight,
+  Bell,
+  MailOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
@@ -80,7 +82,7 @@ const levelConfig = {
   },
 };
 
-type TabId = "my-path" | "achievements" | "skills" | "catalog" | "recommended";
+type TabId = "my-path" | "achievements" | "skills" | "catalog" | "recommended" | "communications";
 
 export default function TrainingDashboard() {
   const { lang, t } = useLanguage();
@@ -91,7 +93,7 @@ export default function TrainingDashboard() {
   const urlSearch = useSearch();
   const getTabFromUrl = (): TabId => {
     const tab = new URLSearchParams(urlSearch).get("tab");
-    return ["my-path", "achievements", "skills", "catalog", "recommended"].includes(tab || "") ? tab as TabId : "my-path";
+    return ["my-path", "achievements", "skills", "catalog", "recommended", "communications"].includes(tab || "") ? tab as TabId : "my-path";
   };
   const [activeTab, setActiveTab] = useState<TabId>(getTabFromUrl);
   useEffect(() => { setActiveTab(getTabFromUrl()); }, [urlSearch]);
@@ -99,6 +101,8 @@ export default function TrainingDashboard() {
   const achievementsQuery = trpc.training.getAchievements.useQuery(undefined, { enabled: isAuthenticated });
   const competenciesQuery = trpc.competencies.getMine.useQuery(undefined, { enabled: isAuthenticated });
   const gamificationQuery = trpc.competencies.getGamification.useQuery(undefined, { enabled: isAuthenticated });
+  const learnerCommunicationsQuery = trpc.training.getCommunications.useQuery(undefined, { enabled: isAuthenticated });
+  const markCommunicationReadMutation = trpc.training.markCommunicationRead.useMutation({ onSuccess: () => learnerCommunicationsQuery.refetch() });
 
   // Group configuration for the 4 certification tracks
   const GROUP_CONFIG = {
@@ -255,6 +259,7 @@ export default function TrainingDashboard() {
     { id: "skills", label: { en: "My Skills", fr: "Mes compétences" }, icon: <Sparkles className="w-4 h-4" /> },
     { id: "catalog", label: { en: "Catalog", fr: "Catalogue" }, icon: <Library className="w-4 h-4" /> },
     { id: "recommended", label: { en: "Learning Path", fr: "Parcours recommandé" }, icon: <Route className="w-4 h-4" /> },
+    { id: "communications", label: { en: "Notifications", fr: "Communiqués" }, icon: <Bell className="w-4 h-4" /> },
   ];
 
   return (
@@ -348,6 +353,7 @@ export default function TrainingDashboard() {
               >
                 {tab.icon}
                 <span className="hidden sm:inline">{t(tab.label)}</span>
+                {tab.id === "communications" && (learnerCommunicationsQuery.data?.unreadCount || 0) > 0 && <span className="min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">{learnerCommunicationsQuery.data?.unreadCount}</span>}
               </button>
             ))}
           </div>
@@ -426,6 +432,15 @@ export default function TrainingDashboard() {
               <RecommendedTab
                 certCompletionData={certCompletionData}
                 t={t}
+              />
+            </motion.div>
+          )}
+          {activeTab === "communications" && (
+            <motion.div key="communications" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3, ease: easeOut }}>
+              <CommunicationsTab
+                items={learnerCommunicationsQuery.data?.items || []}
+                isLoading={learnerCommunicationsQuery.isLoading}
+                onRead={(communicationId) => markCommunicationReadMutation.mutate({ communicationId })}
               />
             </motion.div>
           )}
@@ -653,6 +668,17 @@ function MyPathTab({
 
     </div>
   );
+}
+
+/* ─── Tab: Learner communications ─── */
+function CommunicationsTab({ items, isLoading, onRead }: { items: Array<{ id: number; subject: string; body: string; type: string; isImportant: number; sentAt: Date | string | null; createdAt: Date | string; isRead: boolean; isAcknowledged: boolean }>; isLoading: boolean; onRead: (communicationId: number) => void }) {
+  if (isLoading) return <div className="rounded-2xl border border-border bg-card p-10 text-center text-sm text-muted-foreground">Chargement des communiqués…</div>;
+  if (!items.length) return <div className="rounded-2xl border border-border bg-card p-10 text-center"><MailOpen className="mx-auto h-8 w-8 text-muted-foreground" /><p className="mt-3 font-medium">Aucun communiqué pour le moment.</p><p className="mt-1 text-sm text-muted-foreground">Les annonces et informations importantes apparaîtront ici.</p></div>;
+  return <div className="space-y-3">{items.map((item) => <article key={item.id} className={`rounded-2xl border bg-card p-5 ${!item.isRead ? "border-primary/45 shadow-sm" : "border-border"}`} onClick={() => { if (!item.isRead) onRead(item.id); }}>
+    <div className="flex flex-wrap items-start justify-between gap-3"><div className="flex items-center gap-2"><h2 className="font-semibold text-foreground">{item.subject}</h2>{item.isImportant === 1 && <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:bg-amber-900/35 dark:text-amber-300">Important</span>}{!item.isRead && <span className="h-2 w-2 rounded-full bg-primary" aria-label="Non lu" />}</div><time className="text-xs text-muted-foreground">{new Date(item.sentAt || item.createdAt).toLocaleString("fr-FR")}</time></div>
+    <div className="prose prose-sm mt-3 max-w-none text-foreground dark:prose-invert" dangerouslySetInnerHTML={{ __html: item.body }} />
+    {item.isImportant === 1 && <p className="mt-3 text-xs font-medium text-amber-700 dark:text-amber-300">{item.isAcknowledged ? "Réception confirmée" : "Accusé de réception requis — la fenêtre importante restera visible jusqu’à confirmation."}</p>}
+  </article>)}</div>;
 }
 
 /* ─── Tab: Catalog ─── */

@@ -309,6 +309,21 @@ describe("Admin API - Communications ciblées", () => {
   });
 });
 
+describe("Learner API - Communications", () => {
+  it("expose une boîte de réception structurée au compte apprenant", async () => {
+    const caller = appRouter.createCaller(createUserContext());
+    const result = await caller.training.getCommunications();
+    expect(Array.isArray(result.items)).toBe(true);
+    expect(Array.isArray(result.pendingImportant)).toBe(true);
+    expect(typeof result.unreadCount).toBe("number");
+  });
+
+  it("refuse un accusé de réception pour un communiqué non visible sans créer de réception", async () => {
+    const caller = appRouter.createCaller(createUserContext());
+    await expect(caller.training.acknowledgeCommunication({ communicationId: 999_999_999 })).rejects.toThrow("Communiqué important non disponible");
+  });
+});
+
 // ─── System Router Tests ───
 
 describe("System Router - Error Reporting", () => {

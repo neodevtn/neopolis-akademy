@@ -6,7 +6,7 @@ import {
   adminNotes, InsertAdminNote,
   adminTags, InsertAdminTag,
   userTags, InsertUserTag,
-  communications, InsertCommunication, communicationSegments, InsertCommunicationSegment,
+  communications, InsertCommunication, communicationSegments, InsertCommunicationSegment, communicationReceipts,
   adminActivityLog, InsertAdminActivityLog,
   users, applications, trainingProgress, examAttempts, chapterProgress, userInvitations,
   learnerAchievements, learnerCompetencyContributions, learningEvents,
@@ -202,6 +202,104 @@ export async function deleteCommunicationSegment(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(communicationSegments).where(eq(communicationSegments.id, id));
+}
+
+type LearnerCommunication = {
+  id: number;
+  subject: string;
+  body: string;
+  type: string;
+  isImportant: number;
+  sentAt: Date | null;
+  createdAt: Date;
+  isRead: boolean;
+  isAcknowledged: boolean;
+};
+
+function readCommunicationFilter(value: unknown): Record<string, unknown> {
+  if (typeof value === "string") {
+    try { return JSON.parse(value) as Record<string, unknown>; } catch { return {}; }
+  }
+  return value && typeof value === "object" ? value as Record<string, unknown> : {};
+}
+
+/** Only an unqualified “tout le monde” broadcast is durable for accounts created after its send. */
+export function isUniversalCommunication(filterValue: unknown) {
+  const filter = readCommunicationFilter(filterValue);
+  return filter.audience === "all" && !filter.competencyId && !filter.courseId && !(Array.isArray(filter.tags) && filter.tags.length) && !(Array.isArray(filter.status) && filter.status.length) && !(Array.isArray(filter.manualEmails) && filter.manualEmails.length) && !(Array.isArray(filter.role) && filter.role.length);
+}
+
+export async function createCommunicationReceiptsForRecipients(communicationId: number, recipients: Recipient[]) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const emails = new Set(recipients.map((recipient) => recipient.email.trim().toLowerCase()).filter(Boolean));
+  if (!emails.size) return 0;
+  const learnerRows = await db.select({ id: users.id, email: users.email }).from(users).where(eq(users.role, "user"));
+  const matchingUsers = learnerRows.filter((user) => user.email && emails.has(user.email.trim().toLowerCase()));
+  for (const learner of matchingUsers) {
+    const existing = await db.select({ id: communicationReceipts.id }).from(communicationReceipts)
+      .where(and(eq(communicationReceipts.communicationId, communicationId), eq(communicationReceipts.userId, learner.id))).limit(1);
+    if (!existing.length) await db.insert(communicationReceipts).values({ communicationId, userId: learner.id });
+  }
+  return matchingUsers.length;
+}
+
+export async function getLearnerCommunications(userId: number, limit = 100): Promise<LearnerCommunication[]> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [sentCommunications, receipts] = await Promise.all([
+    db.select().from(communications).where(eq(communications.status, "sent")).orderBy(desc(communications.sentAt)).limit(limit),
+    db.select().from(communicationReceipts).where(eq(communicationReceipts.userId, userId)),
+  ]);
+  const receiptByCommunication = new Map(receipts.map((receipt) => [receipt.communicationId, receipt]));
+  return sentCommunications
+    .filter((communication) => receiptByCommunication.has(communication.id) || isUniversalCommunication(communication.recipientFilter))
+    .map((communication) => {
+      const receipt = receiptByCommunication.get(communication.id);
+      return {
+        id: communication.id,
+        subject: communication.subject,
+        body: communication.body,
+        type: communication.type,
+        isImportant: communication.isImportant,
+        sentAt: communication.sentAt,
+        createdAt: communication.createdAt,
+        isRead: Boolean(receipt?.readAt),
+        isAcknowledged: Boolean(receipt?.acknowledgedAt),
+      };
+    });
+}
+
+async function getVisibleLearnerCommunication(userId: number, communicationId: number) {
+  const messages = await getLearnerCommunications(userId);
+  return messages.find((message) => message.id === communicationId) || null;
+}
+
+async function upsertLearnerReceipt(userId: number, communicationId: number, acknowledged = false) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const now = new Date();
+  const existing = await db.select({ id: communicationReceipts.id, acknowledgedAt: communicationReceipts.acknowledgedAt }).from(communicationReceipts)
+    .where(and(eq(communicationReceipts.userId, userId), eq(communicationReceipts.communicationId, communicationId))).limit(1);
+  if (existing.length) {
+    await db.update(communicationReceipts).set({ readAt: now, ...(acknowledged ? { acknowledgedAt: existing[0].acknowledgedAt || now } : {}) }).where(eq(communicationReceipts.id, existing[0].id));
+    return;
+  }
+  await db.insert(communicationReceipts).values({ communicationId, userId, readAt: now, ...(acknowledged ? { acknowledgedAt: now } : {}) });
+}
+
+export async function markLearnerCommunicationRead(userId: number, communicationId: number) {
+  const message = await getVisibleLearnerCommunication(userId, communicationId);
+  if (!message) return null;
+  await upsertLearnerReceipt(userId, communicationId);
+  return { success: true };
+}
+
+export async function acknowledgeLearnerCommunication(userId: number, communicationId: number) {
+  const message = await getVisibleLearnerCommunication(userId, communicationId);
+  if (!message || !message.isImportant) return null;
+  await upsertLearnerReceipt(userId, communicationId, true);
+  return { success: true };
 }
 
 // ============ Activity Log ============

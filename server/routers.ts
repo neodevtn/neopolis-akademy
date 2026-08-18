@@ -14,6 +14,7 @@ import { sendConfirmationEmail, sendDecisionEmail, sendInvitationEmail, sendRemi
 import { generateCandidatePDF } from "./pdf";
 import { uploadRateLimit, submitRateLimit, getClientIp } from "./security";
 import { adminEnhancedRouter } from "./adminRouter";
+import { acknowledgeLearnerCommunication, getLearnerCommunications, markLearnerCommunicationRead } from "./adminDb";
 import { adminContentRouter } from "./adminContentRouter";
 import { videoRecommendationsRouter } from "./videoRecommendationsRouter";
 import { createAdminNotification } from "./notificationsDb";
@@ -457,6 +458,28 @@ export const appRouter = router({
       }),
 
     getAchievements: protectedProcedure.query(async ({ ctx }) => getUserAchievements(ctx.user.id)),
+
+    getCommunications: protectedProcedure.query(async ({ ctx }) => {
+      const items = await getLearnerCommunications(ctx.user.id);
+      const pendingImportant = items.filter((item) => item.isImportant === 1 && !item.isAcknowledged);
+      return { items, unreadCount: items.filter((item) => !item.isRead).length, pendingImportant };
+    }),
+
+    markCommunicationRead: protectedProcedure
+      .input(z.object({ communicationId: z.number().positive() }))
+      .mutation(async ({ ctx, input }) => {
+        const result = await markLearnerCommunicationRead(ctx.user.id, input.communicationId);
+        if (!result) throw new TRPCError({ code: "NOT_FOUND", message: "Communiqué non disponible" });
+        return result;
+      }),
+
+    acknowledgeCommunication: protectedProcedure
+      .input(z.object({ communicationId: z.number().positive() }))
+      .mutation(async ({ ctx, input }) => {
+        const result = await acknowledgeLearnerCommunication(ctx.user.id, input.communicationId);
+        if (!result) throw new TRPCError({ code: "NOT_FOUND", message: "Communiqué important non disponible" });
+        return result;
+      }),
 
     // Chapter progress
     getChapterProgress: protectedProcedure

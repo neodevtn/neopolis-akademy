@@ -356,6 +356,7 @@ export const communications = mysqlTable("communications", {
   subject: varchar("subject", { length: 500 }).notNull(),
   body: text("body").notNull(), // HTML email body
   type: mysqlEnum("type", ["invitation", "announcement", "reminder", "welcome", "custom"]).notNull(),
+  isImportant: int("isImportant").notNull().default(0),
   recipientFilter: json("recipientFilter"), // JSON: { tags: [], status: [], role: [] }
   recipientCount: int("recipientCount").notNull().default(0),
   sentBy: int("sentBy").notNull(), // admin userId
@@ -371,6 +372,24 @@ export const communications = mysqlTable("communications", {
 
 export type Communication = typeof communications.$inferSelect;
 export type InsertCommunication = typeof communications.$inferInsert;
+
+/** Per-learner notification state. Important messages stay pending until acknowledged. */
+export const communicationReceipts = mysqlTable("communication_receipts", {
+  id: int("id").autoincrement().primaryKey(),
+  communicationId: int("communicationId").notNull(),
+  userId: int("userId").notNull(),
+  readAt: timestamp("readAt"),
+  acknowledgedAt: timestamp("acknowledgedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("communication_receipt_user_unique").on(table.communicationId, table.userId),
+  index("communication_receipts_user_idx").on(table.userId, table.createdAt),
+  index("communication_receipts_pending_idx").on(table.userId, table.acknowledgedAt),
+]);
+
+export type CommunicationReceipt = typeof communicationReceipts.$inferSelect;
+export type InsertCommunicationReceipt = typeof communicationReceipts.$inferInsert;
 
 /** Named, reusable recipient definitions controlled by administrators. */
 export const communicationSegments = mysqlTable("communication_segments", {

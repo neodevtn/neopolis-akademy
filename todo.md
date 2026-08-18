@@ -1602,3 +1602,11 @@
 - [x] Programmer un brouillon validé à une date donnée, avec annulation avant exécution
 - [x] Exécuter l’envoi différé de manière authentifiée, idempotente et traçable
 - [x] Tester les règles logiques, les segments sauvegardés et la programmation sans e-mail non confirmé
+
+## Communiqués importants et historique apprenant
+- [x] Auditer les communications, notifications et l’intégration aux parcours apprenants
+- [x] Ajouter une case Important aux brouillons et diffuser les communications à tous les nouveaux comptes lorsque ciblées « tout le monde »
+- [x] Afficher les communiqués importants en lightbox jusqu’à accusé de réception
+- [x] Créer une boîte de réception de communiqués accessible dans l’interface apprenant
+- [x] Conserver l’état lu/accusé de réception par apprenant sans empêcher l’historique
+- [x] Tester les nouveaux comptes, les accusés de réception et les communications non importantes

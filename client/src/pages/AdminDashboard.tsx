@@ -57,6 +57,7 @@ export default function AdminDashboard() {
   const [commSubject, setCommSubject] = useState("");
   const [commBody, setCommBody] = useState("");
   const [commType, setCommType] = useState<string>("announcement");
+  const [commIsImportant, setCommIsImportant] = useState(false);
   const [commAudience, setCommAudience] = useState<CommunicationAudience>("all");
   const [commCompetencyId, setCommCompetencyId] = useState("");
   const [commMinCompetencyLevel, setCommMinCompetencyLevel] = useState("10");
@@ -192,7 +193,7 @@ export default function AdminDashboard() {
     { enabled: commDialog && (!commUseCompetencyFilter || Boolean(commCompetencyId)), staleTime: 5_000 },
   );
   const createCommMutation = trpc.adminTools.communications.create.useMutation({
-    onSuccess: () => { communicationsQuery.refetch(); setCommDialog(false); setCommSubject(""); setCommBody(""); setCommAudience("all"); setCommCriteriaLogic("all"); setCommCompetencyId(""); setCommMinCompetencyLevel("10"); setCommUseCompetencyFilter(false); setCommCourseId("any"); setCommCourseProgressStatus("started"); setCommActivityWithinDays(""); setCommManualEmails([]); setCommRecipientSearch(""); toast.success("Communication créée"); },
+    onSuccess: () => { communicationsQuery.refetch(); setCommDialog(false); setCommSubject(""); setCommBody(""); setCommIsImportant(false); setCommAudience("all"); setCommCriteriaLogic("all"); setCommCompetencyId(""); setCommMinCompetencyLevel("10"); setCommUseCompetencyFilter(false); setCommCourseId("any"); setCommCourseProgressStatus("started"); setCommActivityWithinDays(""); setCommManualEmails([]); setCommRecipientSearch(""); toast.success("Communication créée"); },
   });
   const sendCommMutation = trpc.adminTools.communications.send.useMutation({
     onSuccess: (data) => { communicationsQuery.refetch(); toast.success(`Communication envoyée à ${data.sentCount} destinataire(s)`); },
@@ -723,7 +724,7 @@ export default function AdminDashboard() {
                 <tbody>
                   {communicationsQuery.data?.items?.map((comm: any) => (
                     <tr key={comm.id} className="border-t border-border">
-                      <td className="p-4 font-medium text-foreground">{comm.subject}</td>
+                      <td className="p-4 font-medium text-foreground"><div className="flex items-center gap-2">{comm.subject}{comm.isImportant === 1 && <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 dark:bg-amber-900/40 dark:text-amber-300">Important</Badge>}</div></td>
                       <td className="p-4"><Badge variant="secondary" className="text-xs">{comm.type}</Badge></td>
                       <td className="p-4 text-muted-foreground">{comm.recipientCount}</td>
                       <td className="p-4">
@@ -1225,6 +1226,10 @@ export default function AdminDashboard() {
                 </Select>
               </div>
             </div>
+            <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-amber-300/70 bg-amber-50/60 p-3 text-sm dark:border-amber-800/60 dark:bg-amber-950/25">
+              <Checkbox checked={commIsImportant} onCheckedChange={(checked) => setCommIsImportant(checked === true)} />
+              <span><strong className="text-amber-900 dark:text-amber-200">Important — accusé de réception obligatoire</strong><br /><span className="text-xs text-amber-800/90 dark:text-amber-300/85">Après l’e-mail, le communiqué s’affichera en fenêtre d’information aux apprenants ciblés jusqu’à confirmation de leur réception. Pour « Tout le monde », il restera visible aux futurs apprenants.</span></span>
+            </label>
             <section className="space-y-3 rounded-lg border border-border bg-muted/20 p-3">
               <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-sm font-semibold">Critères supplémentaires</p><p className="text-xs text-muted-foreground">Ils s’ajoutent à la population de départ.</p></div><div className="min-w-52"><Label className="text-xs">Combiner les critères</Label><Select value={commCriteriaLogic} onValueChange={(value) => setCommCriteriaLogic(value as CommunicationCriteriaLogic)}><SelectTrigger className="mt-1"><SelectValue /></SelectTrigger><SelectContent>{Object.entries(COMMUNICATION_CRITERIA_LOGIC_LABELS).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectContent></Select></div></div>
               <div className="rounded-md border border-border bg-background p-3"><div className="flex flex-wrap items-center justify-between gap-2"><div><p className="text-sm font-medium">Segments enregistrés</p><p className="text-xs text-muted-foreground">Chargez une combinaison déjà utilisée.</p></div><div className="flex items-center gap-2"><Input className="h-8 w-48" value={commSegmentName} onChange={(event) => setCommSegmentName(event.target.value)} placeholder="Nom du segment" /><Button type="button" size="sm" variant="outline" className="gap-1" disabled={!commSegmentName.trim() || createCommunicationSegmentMutation.isPending} onClick={() => createCommunicationSegmentMutation.mutate({ name: commSegmentName.trim(), recipientFilter: communicationRecipientFilter })}><Save className="h-3.5 w-3.5" /> Enregistrer</Button></div></div><div className="mt-3 flex max-h-28 flex-wrap gap-2 overflow-y-auto">{(communicationSegmentsQuery.data || []).map((segment: any) => <div key={segment.id} className="inline-flex items-center gap-1 rounded-full border bg-muted/30 py-1 pl-3 pr-1 text-xs"><button type="button" className="max-w-52 truncate text-left hover:underline" onClick={() => { const filter = segment.recipientFilter as any; setCommAudience(filter.audience || "all"); setCommCriteriaLogic(filter.criteriaLogic || "all"); setCommUseCompetencyFilter(Boolean(filter.competencyId)); setCommCompetencyId(filter.competencyId || ""); setCommMinCompetencyLevel(String(filter.minCompetencyLevel ?? 10)); setCommCourseId(filter.courseId || "any"); setCommCourseProgressStatus(filter.courseProgressStatus || "started"); setCommActivityWithinDays(filter.activityWithinDays ? String(filter.activityWithinDays) : ""); setCommManualEmails(filter.manualEmails || []); toast.success(`Segment « ${segment.name} » appliqué`); }}>{segment.name}</button><Button type="button" variant="ghost" size="icon" className="h-5 w-5" aria-label={`Supprimer ${segment.name}`} onClick={() => { if (window.confirm(`Supprimer le segment « ${segment.name} » ?`)) deleteCommunicationSegmentMutation.mutate({ segmentId: segment.id }); }}><X className="h-3 w-3" /></Button></div>)}{communicationSegmentsQuery.data?.length === 0 && <p className="text-xs text-muted-foreground">Aucun segment enregistré.</p>}</div></div>
@@ -1248,7 +1253,7 @@ export default function AdminDashboard() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCommDialog(false)}>Annuler</Button>
-            <Button disabled={!commSubject.trim() || !commBody.trim() || !recipientPreviewQuery.data?.count || createCommMutation.isPending || (commUseCompetencyFilter && !commCompetencyId)} onClick={() => { createCommMutation.mutate({ subject: commSubject, body: commBody, bodyFormat: "markdown", type: commType as any, recipientFilter: communicationRecipientFilter }); }}>
+            <Button disabled={!commSubject.trim() || !commBody.trim() || !recipientPreviewQuery.data?.count || createCommMutation.isPending || (commUseCompetencyFilter && !commCompetencyId)} onClick={() => { createCommMutation.mutate({ subject: commSubject, body: commBody, bodyFormat: "markdown", type: commType as any, isImportant: commIsImportant, recipientFilter: communicationRecipientFilter }); }}>
               {createCommMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Plus className="w-4 h-4 mr-1" />}
               Créer le brouillon
             </Button>

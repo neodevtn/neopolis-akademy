@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 import type { CommunicationRecipientFilter } from "./adminDb";
-import { getRecipientsByFilter, updateCommunicationStatus } from "./adminDb";
+import { createCommunicationReceiptsForRecipients, getRecipientsByFilter, updateCommunicationStatus } from "./adminDb";
 import { interpolateRecipientName, sanitizeCommunicationHtml } from "./communicationBody";
 
 type DeliverableCommunication = { id: number; subject: string; body: string; recipientFilter: unknown };
@@ -31,6 +31,7 @@ export async function deliverClaimedCommunication(communication: DeliverableComm
       }));
     }
 
+    await createCommunicationReceiptsForRecipients(communication.id, recipients);
     await updateCommunicationStatus(communication.id, "sent", sentCount);
     return { success: true, sentCount, recipients: recipients.length };
   } catch (error) {

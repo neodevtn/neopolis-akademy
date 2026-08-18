@@ -191,6 +191,7 @@ export const adminEnhancedRouter = router({
         body: z.string().min(1).max(50000),
         bodyFormat: z.enum(["markdown", "html"]).optional(),
         type: z.enum(["invitation", "announcement", "reminder", "welcome", "custom"]),
+        isImportant: z.boolean().optional(),
         recipientFilter: communicationRecipientFilterSchema.optional(),
       }))
       .mutation(async ({ ctx, input }) => {
@@ -199,6 +200,7 @@ export const adminEnhancedRouter = router({
           subject: input.subject,
           body: formatCommunicationBody(input.body, input.bodyFormat || "html"),
           type: input.type,
+          isImportant: input.isImportant ? 1 : 0,
           recipientFilter: input.recipientFilter || {},
           sentBy: ctx.user.id,
           status: "draft",
@@ -209,7 +211,7 @@ export const adminEnhancedRouter = router({
           action: "create_communication",
           targetType: "communication",
           targetId: comm.id,
-          details: { subject: input.subject, type: input.type },
+          details: { subject: input.subject, type: input.type, isImportant: Boolean(input.isImportant) },
         });
         return comm;
       }),

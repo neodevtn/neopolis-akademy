@@ -10,6 +10,7 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import { TrainingProgressProvider } from "./contexts/TrainingProgressContext";
 import CookieConsent from "./components/CookieConsent";
 import { AchievementCelebration } from "./components/AchievementCelebration";
+import { ImportantCommunicationLightbox } from "./components/ImportantCommunicationLightbox";
 
 // ─── Code-splitting: lazy-load all heavy pages ───
 const Home = lazy(() => import("./pages/Home"));
@@ -83,6 +84,7 @@ function App() {
               <Toaster />
               <SentryUserSync />
               <AchievementCelebration />
+              <ImportantCommunicationLightbox />
               <Router />
               <CookieConsent />
             </TooltipProvider>
