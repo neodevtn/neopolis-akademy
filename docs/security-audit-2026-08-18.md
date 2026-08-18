@@ -15,7 +15,7 @@ La plateforme dispose déjà de protections importantes : HTTPS/HSTS, CSP, anti-
 | Corrigé | Cookie de session permissif pour les requêtes inter-sites | Cookie `HttpOnly`, `Secure` et `SameSite=Lax` |
 | Corrigé | Contournement potentiel de limite IP par en-tête transmis | Utilisation de l’IP résolue par Express derrière proxy approuvé |
 | Corrigé | Composants directs comportant des avis de sécurité | AWS SDK, tRPC, Axios, Drizzle, Nanoid, Express et Streamdown mis à niveau |
-| À traiter | Une alerte élevée transitive demeure via Recharts v2 et Lodash | Prévoir migration contrôlée vers Recharts v3 ; aucune exécution de `_.template` n’est utilisée par l’application |
+| Corrigé | Alerte élevée transitive via Recharts v2 et Lodash | Migration validée vers Recharts v3.10.1 |
 
 ## Contrôles vérifiés
 
@@ -36,6 +36,6 @@ La compilation TypeScript a réussi. La suite locale compte **162 tests réussis
 
 ## Recommandations restantes
 
-1. Planifier la migration de Recharts v2 vers v3 pour supprimer l’alerte transitive restante et réexécuter l’audit de dépendances.
+1. Traiter les alertes modérées restantes selon leur impact et leur exposition réelle.
 2. Remplacer à moyen terme la limitation IP mémoire par un magasin partagé persistant si l’application est déployée sur plusieurs instances.
 3. Réaliser une revue annuelle des rôles administratifs, des journaux de sécurité et des dépendances.

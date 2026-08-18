@@ -1651,4 +1651,4 @@
 - [x] Réaliser une revue de sécurité défensive : authentification, autorisations, sessions, validation, en-têtes et exposition des données
 - [x] Corriger les protections prioritaires identifiées et les couvrir par tests
 - [x] Tester les parcours de récupération et de navigation sans envoi ou action destructive non confirmée
-- [ ] Migrer Recharts v2 vers v3 afin de supprimer l’alerte de dépendance élevée restante
+- [x] Migrer Recharts v2 vers v3 afin de supprimer l’alerte de dépendance élevée restante
