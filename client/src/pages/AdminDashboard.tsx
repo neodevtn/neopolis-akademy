@@ -18,6 +18,7 @@ import { buildNavigationUrl } from "@shared/navigationUrls";
 import { WysiwygMarkdownEditor } from "@/components/admin/WysiwygMarkdownEditor";
 import { Checkbox } from "@/components/ui/checkbox";
 import { COMMUNICATION_AUDIENCE_LABELS, COMMUNICATION_CRITERIA_LOGIC_LABELS, COURSE_PROGRESS_STATUS_LABELS, type CommunicationAudience, type CommunicationCriteriaLogic, type CourseProgressStatus } from "@shared/communicationRecipients";
+import { toPreviewMediaUrl } from "@/lib/mediaUrl";
 
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
@@ -106,15 +107,22 @@ export default function AdminDashboard() {
     statusFilter === "all" ? {} : { status: statusFilter },
     { enabled: isAuthenticated && user?.role === "admin" }
   );
+  const requestedApplicationId = useMemo(() => {
+    const value = Number(new URLSearchParams(urlSearch).get("application"));
+    return Number.isInteger(value) && value > 0 ? value : null;
+  }, [urlSearch]);
+  const directApplicationQuery = trpc.applications.getById.useQuery(
+    { id: requestedApplicationId || 0 },
+    { enabled: isAuthenticated && user?.role === "admin" && requestedApplicationId !== null, retry: false },
+  );
   useEffect(() => {
-    const requestedId = Number(new URLSearchParams(urlSearch).get("application"));
-    if (!Number.isInteger(requestedId) || requestedId <= 0) {
+    if (requestedApplicationId === null) {
       setDetailApp(null);
       return;
     }
-    const application = applicationsQuery.data?.find((item: any) => item.id === requestedId);
+    const application = directApplicationQuery.data || applicationsQuery.data?.find((item: any) => Number(item.id) === requestedApplicationId);
     if (application) setDetailApp(application);
-  }, [applicationsQuery.data, urlSearch]);
+  }, [applicationsQuery.data, directApplicationQuery.data, requestedApplicationId]);
   const updateStatusMutation = trpc.applications.updateStatus.useMutation({
     onSuccess: () => {
       applicationsQuery.refetch();
@@ -657,9 +665,11 @@ export default function AdminDashboard() {
                                       </a>
                                     )}
                                     {(app as any).videoFileUrl && (
-                                      <a href={(app as any).videoFileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg text-xs text-red-600 hover:bg-red-100 transition-colors">
-                                        <Video className="w-3.5 h-3.5" /> Vidéo pitch
-                                      </a>
+                                      <details className="w-full rounded-lg border border-red-200 bg-red-50/40 p-2 text-xs text-red-700 dark:border-red-900/60 dark:bg-red-950/20 dark:text-red-300">
+                                        <summary className="flex cursor-pointer items-center gap-1.5 font-medium"><Video className="h-3.5 w-3.5" /> Voir la vidéo de présentation</summary>
+                                        <video className="mt-2 max-h-72 w-full rounded-md bg-black" controls preload="metadata" src={toPreviewMediaUrl((app as any).videoFileUrl, "video")}><track kind="captions" /> Votre navigateur ne prend pas en charge la lecture vidéo.</video>
+                                        <a href={toPreviewMediaUrl((app as any).videoFileUrl, "video")} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs underline">Ouvrir dans un nouvel onglet</a>
+                                      </details>
                                     )}
                                   </div>
                                 </DetailSection>
@@ -1454,9 +1464,11 @@ export default function AdminDashboard() {
                         </a>
                       )}
                       {detailApp.videoFileUrl && (
-                        <a href={detailApp.videoFileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg text-xs text-red-600 hover:bg-red-100 transition-colors">
-                          <Video className="w-3.5 h-3.5" /> Vidéo pitch
-                        </a>
+                        <details className="w-full rounded-lg border border-red-200 bg-red-50/40 p-2 text-xs text-red-700 dark:border-red-900/60 dark:bg-red-950/20 dark:text-red-300">
+                          <summary className="flex cursor-pointer items-center gap-1.5 font-medium"><Video className="h-3.5 w-3.5" /> Voir la vidéo de présentation</summary>
+                          <video className="mt-2 max-h-80 w-full rounded-md bg-black" controls preload="metadata" src={toPreviewMediaUrl(detailApp.videoFileUrl, "video")}><track kind="captions" /> Votre navigateur ne prend pas en charge la lecture vidéo.</video>
+                          <a href={toPreviewMediaUrl(detailApp.videoFileUrl, "video")} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs underline">Ouvrir dans un nouvel onglet</a>
+                        </details>
                       )}
                     </div>
                   </DetailSection>

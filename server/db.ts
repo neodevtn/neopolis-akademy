@@ -89,6 +89,16 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+/** Active administrator inboxes used for internal notifications sent from Neopolis. */
+export async function getAdminEmailRecipients(): Promise<string[]> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const admins = await db.select({ email: users.email, blocked: users.blocked }).from(users).where(eq(users.role, "admin"));
+  return Array.from(new Set(admins
+    .filter((admin) => admin.blocked === 0 && typeof admin.email === "string" && admin.email.trim())
+    .map((admin) => admin.email!.trim().toLowerCase())));
+}
+
 // ============ Applications ============
 
 export async function createApplication(data: InsertApplication): Promise<Application> {

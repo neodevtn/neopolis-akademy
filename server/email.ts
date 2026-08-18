@@ -22,6 +22,17 @@ interface ConfirmationEmailData {
   };
 }
 
+export interface AdminNewApplicationEmailData {
+  to: string[];
+  applicationId: number;
+  firstName: string;
+  lastName: string;
+  country: string;
+  sector: string;
+  currentRole: string;
+  scoreTotal: number;
+}
+
 interface DecisionEmailData {
   to: string;
   firstName: string;
@@ -53,6 +64,10 @@ interface InvitationEmailData {
 // ============================================================
 
 const FROM_ADDRESS = "Neopolis Akademy <info@neopolis-dev.com>";
+
+function escapeEmailHtml(value: string): string {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
 
 function emailHeader(subtitle: string): string {
   return `
@@ -98,6 +113,44 @@ function emailCtaButton(label: string, href: string): string {
         </td>
       </tr>
     </table>`;
+}
+
+/** Internal application alert, deliberately sent by Neopolis rather than the platform notification service. */
+export async function sendAdminNewApplicationEmail(data: AdminNewApplicationEmailData): Promise<boolean> {
+  if (!data.to.length) {
+    console.warn("[Email] No active administrator email found for new application notification");
+    return false;
+  }
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (!resendApiKey) {
+    console.warn("[Email] RESEND_API_KEY not configured. Admin application notification not sent.");
+    return false;
+  }
+  const applicationUrl = `https://akademy.neodev.click/admin?tab=candidatures&application=${data.applicationId}`;
+  const fullName = `${data.firstName} ${data.lastName}`.trim();
+  const html = emailWrapper(`
+    <div style="padding: 32px; font-family: Arial, Helvetica, sans-serif; color: #172033;">
+      <p style="margin: 0 0 8px; color: #0f3b67; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">Neopolis Akademy · Administration</p>
+      <h1 style="margin: 0 0 16px; font-size: 24px; color: #172033;">Nouvelle candidature reçue</h1>
+      <p style="line-height: 1.6;">Une nouvelle candidature vient d’être enregistrée pour <strong>${escapeEmailHtml(fullName)}</strong>.</p>
+      <table role="presentation" style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
+        <tr><td style="padding: 8px 0; color: #64748b;">Score</td><td style="padding: 8px 0; font-weight: 700;">${data.scoreTotal.toFixed(1)}%</td></tr>
+        <tr><td style="padding: 8px 0; color: #64748b;">Pays</td><td style="padding: 8px 0;">${escapeEmailHtml(data.country)}</td></tr>
+        <tr><td style="padding: 8px 0; color: #64748b;">Secteur</td><td style="padding: 8px 0;">${escapeEmailHtml(data.sector)}</td></tr>
+        <tr><td style="padding: 8px 0; color: #64748b;">Poste</td><td style="padding: 8px 0;">${escapeEmailHtml(data.currentRole)}</td></tr>
+      </table>
+      ${emailCtaButton("Voir la candidature", applicationUrl)}
+    </div>`);
+  const resend = new Resend(resendApiKey);
+  const { error } = await resend.emails.send({
+    from: FROM_ADDRESS,
+    to: data.to,
+    subject: `Neopolis Akademy — Nouvelle candidature : ${fullName}`,
+    html,
+    text: `Nouvelle candidature : ${fullName}. Score : ${data.scoreTotal.toFixed(1)}%. Consulter : ${applicationUrl}`,
+  });
+  if (error) throw new Error(`Admin application notification failed: ${error.message}`);
+  return true;
 }
 
 export interface AchievementEmailData {

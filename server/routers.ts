@@ -3,14 +3,13 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients } from "./db";
 import { awardCertification, awardCourseCompletionBadge } from "./achievementService";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
-import { notifyOwner } from "./_core/notification";
 import { applicationSchema } from "@shared/validation";
 import { storagePut } from "./storage";
-import { sendConfirmationEmail, sendDecisionEmail, sendInvitationEmail, sendReminderEmail } from "./email";
+import { sendAdminNewApplicationEmail, sendConfirmationEmail, sendDecisionEmail, sendInvitationEmail, sendReminderEmail } from "./email";
 import { generateCandidatePDF } from "./pdf";
 import { uploadRateLimit, submitRateLimit, getClientIp } from "./security";
 import { adminEnhancedRouter } from "./adminRouter";
@@ -228,14 +227,20 @@ export const appRouter = router({
           scoreTotal: scores.scoreTotal.toString(),
         });
 
-        // Send notification to owner
+        // Send the internal notification through Neopolis email, not Manus platform mail.
         try {
-          await notifyOwner({
-            title: `Nouvelle candidature : ${input.firstName} ${input.lastName}`,
-            content: `Score: ${scores.scoreTotal.toFixed(1)}% | Pays: ${input.country} | Secteur: ${input.sector} | Poste: ${input.currentRole} | Scénario IA: ${input.aiAgentSector || "N/A"}`,
+          await sendAdminNewApplicationEmail({
+            to: await getAdminEmailRecipients(),
+            applicationId: Number(application.id),
+            firstName: input.firstName,
+            lastName: input.lastName,
+            country: input.country,
+            sector: input.sector,
+            currentRole: input.currentRole,
+            scoreTotal: scores.scoreTotal,
           });
         } catch (e) {
-          console.error("Failed to send notification:", e);
+          console.error("Failed to send Neopolis application notification:", e);
         }
 
         // Create admin notification for new application

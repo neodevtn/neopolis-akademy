@@ -1610,3 +1610,10 @@
 - [x] Créer une boîte de réception de communiqués accessible dans l’interface apprenant
 - [x] Conserver l’état lu/accusé de réception par apprenant sans empêcher l’historique
 - [x] Tester les nouveaux comptes, les accusés de réception et les communications non importantes
+
+## Expéditeur des notifications et vidéo de candidature
+- [x] Auditer les e-mails applicatifs encore envoyés par Manus et leur mécanisme d’expédition
+- [x] Configurer les notifications applicatives pour utiliser exclusivement l’expéditeur Neopolis validé
+- [x] Vérifier la présence de l’URL vidéo dans le détail de candidature côté API et administration
+- [x] Corriger l’affichage et la lecture de la vidéo de candidature dans la fiche détaillée
+- [x] Tester les parcours e-mail et vidéo sans déclencher d’envoi non confirmé
