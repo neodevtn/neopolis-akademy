@@ -359,13 +359,34 @@ export const communications = mysqlTable("communications", {
   recipientFilter: json("recipientFilter"), // JSON: { tags: [], status: [], role: [] }
   recipientCount: int("recipientCount").notNull().default(0),
   sentBy: int("sentBy").notNull(), // admin userId
-  status: mysqlEnum("status", ["draft", "sending", "sent", "failed"]).default("draft").notNull(),
+  status: mysqlEnum("status", ["draft", "scheduled", "sending", "sent", "failed", "cancelled"]).default("draft").notNull(),
+  scheduledAt: timestamp("scheduledAt"),
+  scheduleCronTaskUid: varchar("schedule_cron_task_uid", { length: 65 }),
   sentAt: timestamp("sentAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
+}, (table) => [
+  index("communications_schedule_task_idx").on(table.scheduleCronTaskUid),
+  index("communications_scheduled_at_idx").on(table.scheduledAt),
+]);
 
 export type Communication = typeof communications.$inferSelect;
 export type InsertCommunication = typeof communications.$inferInsert;
+
+/** Named, reusable recipient definitions controlled by administrators. */
+export const communicationSegments = mysqlTable("communication_segments", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 160 }).notNull(),
+  description: text("description"),
+  recipientFilter: json("recipientFilter").notNull(),
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  index("communication_segments_creator_idx").on(table.createdBy),
+]);
+
+export type CommunicationSegment = typeof communicationSegments.$inferSelect;
+export type InsertCommunicationSegment = typeof communicationSegments.$inferInsert;
 
 /**
  * Admin activity log - audit trail of admin actions

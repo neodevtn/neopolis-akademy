@@ -23,6 +23,14 @@ export const COMMUNICATION_AUDIENCE_LABELS: Record<CommunicationAudience, string
 export const COURSE_PROGRESS_STATUSES = ["started", "completed"] as const;
 export type CourseProgressStatus = (typeof COURSE_PROGRESS_STATUSES)[number];
 
+export const COMMUNICATION_CRITERIA_LOGICS = ["all", "any"] as const;
+export type CommunicationCriteriaLogic = (typeof COMMUNICATION_CRITERIA_LOGICS)[number];
+
+export const COMMUNICATION_CRITERIA_LOGIC_LABELS: Record<CommunicationCriteriaLogic, string> = {
+  all: "ET — tous les critères",
+  any: "OU — au moins un critère",
+};
+
 export const COURSE_PROGRESS_STATUS_LABELS: Record<CourseProgressStatus, string> = {
   started: "Cours entamé",
   completed: "Cours terminé",
@@ -30,6 +38,7 @@ export const COURSE_PROGRESS_STATUS_LABELS: Record<CourseProgressStatus, string>
 
 export type CommunicationRecipientFilterInput = {
   audience?: CommunicationAudience;
+  criteriaLogic?: CommunicationCriteriaLogic;
   tags?: number[];
   status?: string[];
   role?: string[];

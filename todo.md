@@ -1594,3 +1594,11 @@
 - [x] Remplacer la saisie brute par un éditeur riche compatible avec le collage mis en forme
 - [x] Préserver une mise en page e-mail sûre : titres, paragraphes, listes, liens et emphases
 - [x] Tester le collage riche, la prévisualisation et le contenu transmis au brouillon
+
+## Segments logiques et communications programmées
+- [x] Ajouter des opérateurs ET/OU entre les critères de ciblage avancés
+- [x] Sauvegarder, renommer, appliquer et supprimer des segments de destinataires réutilisables
+- [x] Prévisualiser et valider explicitement une communication avant sa programmation
+- [x] Programmer un brouillon validé à une date donnée, avec annulation avant exécution
+- [x] Exécuter l’envoi différé de manière authentifiée, idempotente et traçable
+- [x] Tester les règles logiques, les segments sauvegardés et la programmation sans e-mail non confirmé

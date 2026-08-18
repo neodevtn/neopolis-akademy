@@ -6,6 +6,8 @@ import {
   createAdminTag, getAdminTags, deleteAdminTag,
   assignTagToUser, removeTagFromUser, getUserTags,
   createCommunication, getCommunications, updateCommunicationStatus,
+  getCommunicationById, claimCommunicationForDelivery, markCommunicationScheduled, cancelScheduledCommunication,
+  createCommunicationSegment, getCommunicationSegments, deleteCommunicationSegment,
   logAdminActivity, getAdminActivityLog,
   bulkUpdateApplicationStatus, getApplicationsByIds,
   getLearnerAnalytics, getRecipientsByFilter, getRecipientPreview, getCommunicationSegmentOptions,
@@ -18,7 +20,12 @@ import {
 import { upsertUser, setUserPasswordHash, getUserByEmail } from "./db";
 import { sendDecisionEmail } from "./email";
 import bcrypt from "bcryptjs";
-import { formatCommunicationBody, interpolateRecipientName, sanitizeCommunicationHtml } from "./communicationBody";
+import { parse as parseCookieHeader } from "cookie";
+import { COOKIE_NAME } from "@shared/const";
+import { createHeartbeatJob, deleteHeartbeatJob } from "./_core/heartbeat";
+import { formatCommunicationBody } from "./communicationBody";
+import { deliverClaimedCommunication } from "./communicationDelivery";
+import { isSchedulableCommunicationDate, toOneShotCommunicationCron } from "@shared/communicationScheduling";
 import type { CommunicationRecipientFilter } from "./adminDb";
 
 const SALT_ROUNDS = 10;
@@ -34,7 +41,12 @@ const communicationRecipientFilterSchema = z.object({
   courseProgressStatus: z.enum(["started", "completed"]).optional(),
   activityWithinDays: z.number().int().min(1).max(365).optional(),
   manualEmails: z.array(z.string().email()).max(500).optional(),
+  criteriaLogic: z.enum(["all", "any"]).optional(),
 });
+
+function sessionTokenFromRequest(req: { headers: { cookie?: string } }) {
+  return parseCookieHeader(req.headers.cookie ?? "")[COOKIE_NAME] ?? "";
+}
 
 // Helper to enforce admin role
 function assertAdmin(ctx: { user: { role: string } }) {
@@ -216,56 +228,19 @@ export const adminEnhancedRouter = router({
       .input(z.object({ communicationId: z.number() }))
       .mutation(async ({ ctx, input }) => {
         assertAdmin(ctx);
-        // Get the communication
-        const comms = await getCommunications(1, 1000);
-        const comm = comms.items.find(c => c.id === input.communicationId);
-        if (!comm) throw new TRPCError({ code: "NOT_FOUND", message: "Communication non trouvée" });
-        if (comm.status === "sent") throw new TRPCError({ code: "BAD_REQUEST", message: "Déjà envoyée" });
-
-        await updateCommunicationStatus(input.communicationId, "sending");
-
+        const comm = await claimCommunicationForDelivery(input.communicationId, ["draft"]);
+        if (!comm) throw new TRPCError({ code: "BAD_REQUEST", message: "Ce brouillon ne peut plus être envoyé" });
         try {
-          // Get recipients based on filter
-          const filter = (comm.recipientFilter || {}) as CommunicationRecipientFilter;
-          const recipients = await getRecipientsByFilter(filter);
-
-          // Send emails using Resend
-          const { Resend } = await import("resend");
-          const resendApiKey = process.env.RESEND_API_KEY;
-          if (!resendApiKey) {
-            throw new Error("RESEND_API_KEY not configured");
-          }
-          const resend = new Resend(resendApiKey);
-
-          let sentCount = 0;
-          // Send in batches of 10
-          for (let i = 0; i < recipients.length; i += 10) {
-            const batch = recipients.slice(i, i + 10);
-            const promises = batch.map(r =>
-              resend.emails.send({
-                from: "Neopolis Akademy <info@neopolis-dev.com>",
-                to: [r.email!],
-                subject: comm.subject,
-                html: interpolateRecipientName(sanitizeCommunicationHtml(comm.body), r.name),
-              }).then(() => { sentCount++; }).catch(e => {
-                console.error(`[Comm] Failed to send to ${r.email}:`, e);
-              })
-            );
-            await Promise.all(promises);
-          }
-
-          await updateCommunicationStatus(input.communicationId, "sent", sentCount);
+          const result = await deliverClaimedCommunication(comm);
           await logAdminActivity({
             adminId: ctx.user.id,
             action: "send_communication",
             targetType: "communication",
             targetId: input.communicationId,
-            details: { recipientCount: sentCount, subject: comm.subject },
+            details: { recipientCount: result.sentCount, subject: comm.subject },
           });
-
-          return { success: true, sentCount };
-        } catch (e) {
-          await updateCommunicationStatus(input.communicationId, "failed");
+          return result;
+        } catch {
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Échec de l'envoi" });
         }
       }),
@@ -283,6 +258,82 @@ export const adminEnhancedRouter = router({
       .query(async ({ ctx }) => {
         assertAdmin(ctx);
         return await getCommunicationSegmentOptions();
+      }),
+
+    segments: router({
+      list: protectedProcedure.query(async ({ ctx }) => {
+        assertAdmin(ctx);
+        return await getCommunicationSegments();
+      }),
+
+      create: protectedProcedure
+        .input(z.object({
+          name: z.string().trim().min(2).max(160),
+          description: z.string().trim().max(1000).optional(),
+          recipientFilter: communicationRecipientFilterSchema,
+        }))
+        .mutation(async ({ ctx, input }) => {
+          assertAdmin(ctx);
+          const segment = await createCommunicationSegment({
+            name: input.name,
+            description: input.description || null,
+            recipientFilter: input.recipientFilter,
+            createdBy: ctx.user.id,
+          });
+          await logAdminActivity({ adminId: ctx.user.id, action: "create_communication_segment", targetType: "communication_segment", targetId: segment.id, details: { name: segment.name } });
+          return segment;
+        }),
+
+      delete: protectedProcedure
+        .input(z.object({ segmentId: z.number().positive() }))
+        .mutation(async ({ ctx, input }) => {
+          assertAdmin(ctx);
+          await deleteCommunicationSegment(input.segmentId);
+          await logAdminActivity({ adminId: ctx.user.id, action: "delete_communication_segment", targetType: "communication_segment", targetId: input.segmentId, details: {} });
+          return { success: true };
+        }),
+    }),
+
+    schedule: protectedProcedure
+      .input(z.object({
+        communicationId: z.number().positive(),
+        scheduledAt: z.date(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        assertAdmin(ctx);
+        if (!isSchedulableCommunicationDate(input.scheduledAt)) throw new TRPCError({ code: "BAD_REQUEST", message: "Choisissez une date comprise entre deux minutes et douze mois dans le futur" });
+        const communication = await getCommunicationById(input.communicationId);
+        if (!communication) throw new TRPCError({ code: "NOT_FOUND", message: "Communication non trouvée" });
+        if (communication.status !== "draft") throw new TRPCError({ code: "BAD_REQUEST", message: "Seul un brouillon peut être programmé" });
+        const preview = await getRecipientPreview((communication.recipientFilter || {}) as CommunicationRecipientFilter);
+        if (preview.count === 0) throw new TRPCError({ code: "BAD_REQUEST", message: "Aucun destinataire ne correspond à ce segment" });
+
+        const sessionToken = sessionTokenFromRequest(ctx.req);
+        const job = await createHeartbeatJob({
+          name: `communication-${communication.id}-${input.scheduledAt.getTime()}`,
+          cron: toOneShotCommunicationCron(input.scheduledAt),
+          path: "/api/scheduled/send-communication",
+          payload: { communicationId: communication.id },
+          description: `Envoi différé du communiqué « ${communication.subject.slice(0, 80)} »`,
+        }, sessionToken);
+        const marked = await markCommunicationScheduled(communication.id, input.scheduledAt, job.taskUid, preview.count);
+        if (!marked) {
+          try { await deleteHeartbeatJob(job.taskUid, sessionToken); } catch { /* The orphan performs no delivery without a persisted task UID. */ }
+          throw new TRPCError({ code: "CONFLICT", message: "Le brouillon a été modifié avant sa programmation" });
+        }
+        await logAdminActivity({ adminId: ctx.user.id, action: "schedule_communication", targetType: "communication", targetId: communication.id, details: { scheduledAt: input.scheduledAt.toISOString(), recipientCount: preview.count } });
+        return { success: true, scheduledAt: input.scheduledAt, recipientCount: preview.count, nextExecutionAt: job.nextExecutionAt || null };
+      }),
+
+    cancelSchedule: protectedProcedure
+      .input(z.object({ communicationId: z.number().positive() }))
+      .mutation(async ({ ctx, input }) => {
+        assertAdmin(ctx);
+        const communication = await cancelScheduledCommunication(input.communicationId);
+        if (!communication) throw new TRPCError({ code: "BAD_REQUEST", message: "Cette communication n’est pas programmée" });
+        if (communication.scheduleCronTaskUid) await deleteHeartbeatJob(communication.scheduleCronTaskUid, sessionTokenFromRequest(ctx.req));
+        await logAdminActivity({ adminId: ctx.user.id, action: "cancel_communication_schedule", targetType: "communication", targetId: input.communicationId, details: {} });
+        return { success: true };
       }),
   }),
 

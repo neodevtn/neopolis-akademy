@@ -270,6 +270,28 @@ describe("Admin API - Communications ciblées", () => {
     expect(Array.isArray(result.sample)).toBe(true);
   });
 
+  it("accepte une logique OU pour prévisualiser des critères alternatifs sans envoi", async () => {
+    const caller = appRouter.createCaller(createAdminContext());
+    const result = await caller.adminTools.communications.getRecipientCount({
+      recipientFilter: {
+        audience: "all",
+        criteriaLogic: "any",
+        courseId: "claude_certified_associate_foundations__01",
+        courseProgressStatus: "completed",
+        manualEmails: ["admin@neopolis.test"],
+      },
+    });
+    expect(typeof result.count).toBe("number");
+  });
+
+  it("refuse une programmation trop proche sans créer de tâche ni envoyer d’e-mail", async () => {
+    const caller = appRouter.createCaller(createAdminContext());
+    await expect(caller.adminTools.communications.schedule({
+      communicationId: 1,
+      scheduledAt: new Date(Date.now() + 60_000),
+    })).rejects.toThrow("Choisissez une date comprise entre deux minutes et douze mois dans le futur");
+  });
+
   it("expose les cours et contacts utilisables pour composer un segment manuel", async () => {
     const caller = appRouter.createCaller(createAdminContext());
     const result = await caller.adminTools.communications.getSegmentOptions();

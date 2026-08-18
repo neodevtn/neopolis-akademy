@@ -10,14 +10,14 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
-import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Columns3, Bell, BellRing, UserX, FileCheck } from "lucide-react";
+import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Columns3, Bell, BellRing, UserX, FileCheck, CalendarClock, Save } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 import { AdminNavbar } from "@/components/AdminNavbar";
 import { buildNavigationUrl } from "@shared/navigationUrls";
 import { WysiwygMarkdownEditor } from "@/components/admin/WysiwygMarkdownEditor";
 import { Checkbox } from "@/components/ui/checkbox";
-import { COMMUNICATION_AUDIENCE_LABELS, COURSE_PROGRESS_STATUS_LABELS, type CommunicationAudience, type CourseProgressStatus } from "@shared/communicationRecipients";
+import { COMMUNICATION_AUDIENCE_LABELS, COMMUNICATION_CRITERIA_LOGIC_LABELS, COURSE_PROGRESS_STATUS_LABELS, type CommunicationAudience, type CommunicationCriteriaLogic, type CourseProgressStatus } from "@shared/communicationRecipients";
 
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
@@ -66,6 +66,10 @@ export default function AdminDashboard() {
   const [commActivityWithinDays, setCommActivityWithinDays] = useState("");
   const [commManualEmails, setCommManualEmails] = useState<string[]>([]);
   const [commRecipientSearch, setCommRecipientSearch] = useState("");
+  const [commCriteriaLogic, setCommCriteriaLogic] = useState<CommunicationCriteriaLogic>("all");
+  const [commSegmentName, setCommSegmentName] = useState("");
+  const [commScheduleDialog, setCommScheduleDialog] = useState<{ open: boolean; communication: any | null }>({ open: false, communication: null });
+  const [commScheduledAt, setCommScheduledAt] = useState("");
   const [notifOpen, setNotifOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
 
@@ -173,24 +177,41 @@ export default function AdminDashboard() {
   });
 
   const communicationsQuery = trpc.adminTools.communications.list.useQuery(undefined, { enabled: activeTab === "communications" });
+  const communicationSegmentsQuery = trpc.adminTools.communications.segments.list.useQuery(undefined, { enabled: activeTab === "communications" || commDialog });
   const competencyFrameworkQuery = trpc.competencies.getFramework.useQuery(undefined, { enabled: commDialog && isAuthenticated && user?.role === "admin" });
   const communicationSegmentOptionsQuery = trpc.adminTools.communications.getSegmentOptions.useQuery(undefined, { enabled: commDialog && isAuthenticated && user?.role === "admin", staleTime: 60_000 });
   const communicationRecipientFilter = useMemo(() => ({
     audience: commAudience,
+    criteriaLogic: commCriteriaLogic,
     ...(commUseCompetencyFilter && commCompetencyId ? { competencyId: commCompetencyId, minCompetencyLevel: Math.min(100, Math.max(0, Number(commMinCompetencyLevel) || 0)) } : {}),
     ...(commCourseId !== "any" ? { courseId: commCourseId, courseProgressStatus: commCourseProgressStatus, ...(Number(commActivityWithinDays) > 0 ? { activityWithinDays: Math.min(365, Math.max(1, Number(commActivityWithinDays))) } : {}) } : {}),
     ...(commManualEmails.length ? { manualEmails: commManualEmails } : {}),
-  }), [commAudience, commUseCompetencyFilter, commCompetencyId, commMinCompetencyLevel, commCourseId, commCourseProgressStatus, commActivityWithinDays, commManualEmails]);
+  }), [commAudience, commCriteriaLogic, commUseCompetencyFilter, commCompetencyId, commMinCompetencyLevel, commCourseId, commCourseProgressStatus, commActivityWithinDays, commManualEmails]);
   const recipientPreviewQuery = trpc.adminTools.communications.getRecipientCount.useQuery(
     { recipientFilter: communicationRecipientFilter },
     { enabled: commDialog && (!commUseCompetencyFilter || Boolean(commCompetencyId)), staleTime: 5_000 },
   );
   const createCommMutation = trpc.adminTools.communications.create.useMutation({
-    onSuccess: () => { communicationsQuery.refetch(); setCommDialog(false); setCommSubject(""); setCommBody(""); setCommAudience("all"); setCommCompetencyId(""); setCommMinCompetencyLevel("10"); setCommUseCompetencyFilter(false); setCommCourseId("any"); setCommCourseProgressStatus("started"); setCommActivityWithinDays(""); setCommManualEmails([]); setCommRecipientSearch(""); toast.success("Communication créée"); },
+    onSuccess: () => { communicationsQuery.refetch(); setCommDialog(false); setCommSubject(""); setCommBody(""); setCommAudience("all"); setCommCriteriaLogic("all"); setCommCompetencyId(""); setCommMinCompetencyLevel("10"); setCommUseCompetencyFilter(false); setCommCourseId("any"); setCommCourseProgressStatus("started"); setCommActivityWithinDays(""); setCommManualEmails([]); setCommRecipientSearch(""); toast.success("Communication créée"); },
   });
   const sendCommMutation = trpc.adminTools.communications.send.useMutation({
     onSuccess: (data) => { communicationsQuery.refetch(); toast.success(`Communication envoyée à ${data.sentCount} destinataire(s)`); },
     onError: () => toast.error("Erreur lors de l'envoi"),
+  });
+  const createCommunicationSegmentMutation = trpc.adminTools.communications.segments.create.useMutation({
+    onSuccess: () => { communicationSegmentsQuery.refetch(); setCommSegmentName(""); toast.success("Segment enregistré"); },
+    onError: (error) => toast.error(error.message || "Impossible d’enregistrer le segment"),
+  });
+  const deleteCommunicationSegmentMutation = trpc.adminTools.communications.segments.delete.useMutation({
+    onSuccess: () => { communicationSegmentsQuery.refetch(); toast.success("Segment supprimé"); },
+  });
+  const scheduleCommMutation = trpc.adminTools.communications.schedule.useMutation({
+    onSuccess: (data) => { communicationsQuery.refetch(); setCommScheduleDialog({ open: false, communication: null }); setCommScheduledAt(""); toast.success(`Communication programmée pour ${new Date(data.scheduledAt).toLocaleString("fr-FR")}`); },
+    onError: (error) => toast.error(error.message || "Impossible de programmer la communication"),
+  });
+  const cancelScheduledCommMutation = trpc.adminTools.communications.cancelSchedule.useMutation({
+    onSuccess: () => { communicationsQuery.refetch(); toast.success("Communication programmée annulée"); },
+    onError: (error) => toast.error(error.message || "Impossible d’annuler la programmation"),
   });
   const selectableCommunicationRecipients = useMemo(() => {
     const query = commRecipientSearch.trim().toLocaleLowerCase("fr");
@@ -708,16 +729,17 @@ export default function AdminDashboard() {
                       <td className="p-4">
                         {comm.status === "sent" && <span className="wise-badge-positive">Envoyé</span>}
                         {comm.status === "draft" && <span className="wise-badge-warning">Brouillon</span>}
+                        {comm.status === "scheduled" && <span className="wise-badge-positive">Programmé</span>}
                         {comm.status === "sending" && <span className="wise-badge-warning">En cours...</span>}
                         {comm.status === "failed" && <span className="wise-badge-negative">Échoué</span>}
+                        {comm.status === "cancelled" && <span className="wise-badge-negative">Annulé</span>}
                       </td>
-                      <td className="p-4 text-xs text-muted-foreground">{new Date(comm.createdAt).toLocaleDateString("fr-FR")}</td>
-                      <td className="p-4">
+                      <td className="p-4 text-xs text-muted-foreground">{comm.status === "scheduled" && comm.scheduledAt ? `Prévu : ${new Date(comm.scheduledAt).toLocaleString("fr-FR")}` : new Date(comm.createdAt).toLocaleDateString("fr-FR")}</td>
+                      <td className="p-4 whitespace-nowrap">
                         {comm.status === "draft" && (
-                          <Button size="sm" className="text-xs gap-1" disabled={sendCommMutation.isPending} onClick={() => sendCommMutation.mutate({ communicationId: comm.id })}>
-                            <Send className="w-3 h-3" /> Envoyer
-                          </Button>
+                          <div className="flex flex-wrap gap-2"><Button size="sm" variant="outline" className="text-xs gap-1" disabled={sendCommMutation.isPending} onClick={() => { if (window.confirm(`Envoyer maintenant « ${comm.subject} » ?`)) sendCommMutation.mutate({ communicationId: comm.id }); }}><Send className="w-3 h-3" /> Envoyer maintenant</Button><Button size="sm" className="text-xs gap-1" onClick={() => setCommScheduleDialog({ open: true, communication: comm })}><CalendarClock className="w-3 h-3" /> Programmer</Button></div>
                         )}
+                        {comm.status === "scheduled" && <Button size="sm" variant="outline" className="text-xs gap-1 text-destructive" disabled={cancelScheduledCommMutation.isPending} onClick={() => { if (window.confirm(`Annuler l’envoi programmé de « ${comm.subject} » ?`)) cancelScheduledCommMutation.mutate({ communicationId: comm.id }); }}><X className="w-3 h-3" /> Annuler</Button>}
                       </td>
                     </tr>
                   ))}
@@ -1204,7 +1226,8 @@ export default function AdminDashboard() {
               </div>
             </div>
             <section className="space-y-3 rounded-lg border border-border bg-muted/20 p-3">
-              <div><p className="text-sm font-semibold">Critères supplémentaires</p><p className="text-xs text-muted-foreground">Ils s’ajoutent à la population de départ : les critères actifs sont combinés avec une logique ET.</p></div>
+              <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-sm font-semibold">Critères supplémentaires</p><p className="text-xs text-muted-foreground">Ils s’ajoutent à la population de départ.</p></div><div className="min-w-52"><Label className="text-xs">Combiner les critères</Label><Select value={commCriteriaLogic} onValueChange={(value) => setCommCriteriaLogic(value as CommunicationCriteriaLogic)}><SelectTrigger className="mt-1"><SelectValue /></SelectTrigger><SelectContent>{Object.entries(COMMUNICATION_CRITERIA_LOGIC_LABELS).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectContent></Select></div></div>
+              <div className="rounded-md border border-border bg-background p-3"><div className="flex flex-wrap items-center justify-between gap-2"><div><p className="text-sm font-medium">Segments enregistrés</p><p className="text-xs text-muted-foreground">Chargez une combinaison déjà utilisée.</p></div><div className="flex items-center gap-2"><Input className="h-8 w-48" value={commSegmentName} onChange={(event) => setCommSegmentName(event.target.value)} placeholder="Nom du segment" /><Button type="button" size="sm" variant="outline" className="gap-1" disabled={!commSegmentName.trim() || createCommunicationSegmentMutation.isPending} onClick={() => createCommunicationSegmentMutation.mutate({ name: commSegmentName.trim(), recipientFilter: communicationRecipientFilter })}><Save className="h-3.5 w-3.5" /> Enregistrer</Button></div></div><div className="mt-3 flex max-h-28 flex-wrap gap-2 overflow-y-auto">{(communicationSegmentsQuery.data || []).map((segment: any) => <div key={segment.id} className="inline-flex items-center gap-1 rounded-full border bg-muted/30 py-1 pl-3 pr-1 text-xs"><button type="button" className="max-w-52 truncate text-left hover:underline" onClick={() => { const filter = segment.recipientFilter as any; setCommAudience(filter.audience || "all"); setCommCriteriaLogic(filter.criteriaLogic || "all"); setCommUseCompetencyFilter(Boolean(filter.competencyId)); setCommCompetencyId(filter.competencyId || ""); setCommMinCompetencyLevel(String(filter.minCompetencyLevel ?? 10)); setCommCourseId(filter.courseId || "any"); setCommCourseProgressStatus(filter.courseProgressStatus || "started"); setCommActivityWithinDays(filter.activityWithinDays ? String(filter.activityWithinDays) : ""); setCommManualEmails(filter.manualEmails || []); toast.success(`Segment « ${segment.name} » appliqué`); }}>{segment.name}</button><Button type="button" variant="ghost" size="icon" className="h-5 w-5" aria-label={`Supprimer ${segment.name}`} onClick={() => { if (window.confirm(`Supprimer le segment « ${segment.name} » ?`)) deleteCommunicationSegmentMutation.mutate({ segmentId: segment.id }); }}><X className="h-3 w-3" /></Button></div>)}{communicationSegmentsQuery.data?.length === 0 && <p className="text-xs text-muted-foreground">Aucun segment enregistré.</p>}</div></div>
               <div className="grid gap-3 sm:grid-cols-[1fr_160px_130px]">
                 <div><Label className="text-xs">Cours précis</Label><Select value={commCourseId} onValueChange={setCommCourseId}><SelectTrigger className="mt-1"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="any">Tous les cours</SelectItem>{(communicationSegmentOptionsQuery.data?.courses || []).map((course: any) => <SelectItem key={course.id} value={course.id}>{course.title}</SelectItem>)}</SelectContent></Select></div>
                 <div><Label className="text-xs">Progression</Label><Select value={commCourseProgressStatus} onValueChange={(value) => setCommCourseProgressStatus(value as CourseProgressStatus)} disabled={commCourseId === "any"}><SelectTrigger className="mt-1"><SelectValue /></SelectTrigger><SelectContent>{Object.entries(COURSE_PROGRESS_STATUS_LABELS).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectContent></Select></div>
@@ -1214,9 +1237,9 @@ export default function AdminDashboard() {
                 <div className="flex items-center gap-2"><Checkbox id="communication-competency" checked={commUseCompetencyFilter} onCheckedChange={(checked) => setCommUseCompetencyFilter(Boolean(checked))} /><Label htmlFor="communication-competency" className="cursor-pointer text-sm font-medium">Exiger une performance dans une compétence</Label></div>
                 {commUseCompetencyFilter && <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-[1fr_150px]"><div><Label className="text-xs">Compétence</Label><Select value={commCompetencyId} onValueChange={setCommCompetencyId}><SelectTrigger className="mt-1"><SelectValue placeholder="Choisir une compétence" /></SelectTrigger><SelectContent>{(competencyFrameworkQuery.data?.definitions || []).filter((definition: any) => definition.active).map((definition: any) => { const title = definition.title as { fr?: string; en?: string } | string | null; return <SelectItem key={definition.id} value={definition.id}>{typeof title === "object" && title ? title.fr || title.en : title}</SelectItem>; })}</SelectContent></Select></div><div><Label className="text-xs">Niveau minimum</Label><Input className="mt-1" type="number" min="0" max="100" value={commMinCompetencyLevel} onChange={(event) => setCommMinCompetencyLevel(event.target.value)} /></div></div>}
               </div>
-              <details className="rounded-md border border-border bg-background p-3"><summary className="cursor-pointer text-sm font-medium">Sélection manuelle des destinataires {commManualEmails.length ? `(${commManualEmails.length})` : ""}</summary><p className="mt-2 text-xs text-muted-foreground">Recherchez puis cochez une liste précise. Si d’autres critères sont actifs, seuls les contacts qui les respectent tous seront retenus.</p><div className="mt-3 flex items-center gap-2"><Input value={commRecipientSearch} onChange={(event) => setCommRecipientSearch(event.target.value)} placeholder="Rechercher par nom ou e-mail" /><Button type="button" variant="ghost" size="sm" onClick={() => setCommManualEmails([])} disabled={!commManualEmails.length}>Effacer</Button></div><div className="mt-2 max-h-48 space-y-1 overflow-y-auto rounded border p-2">{selectableCommunicationRecipients.slice(0, 200).map((recipient: any) => { const selected = commManualEmails.includes(recipient.email); return <label key={recipient.email} className="flex cursor-pointer items-center gap-2 rounded px-1 py-1 text-sm hover:bg-muted"><Checkbox checked={selected} onCheckedChange={(checked) => setCommManualEmails((current) => checked ? Array.from(new Set([...current, recipient.email])) : current.filter((email) => email !== recipient.email))} /><span className="min-w-0 truncate">{recipient.name || recipient.email} <span className="text-xs text-muted-foreground">{recipient.name ? `· ${recipient.email}` : ""}</span></span></label>; })}{!selectableCommunicationRecipients.length && <p className="p-2 text-xs text-muted-foreground">Aucun destinataire ne correspond à cette recherche.</p>}</div></details>
+              <details className="rounded-md border border-border bg-background p-3"><summary className="cursor-pointer text-sm font-medium">Sélection manuelle des destinataires {commManualEmails.length ? `(${commManualEmails.length})` : ""}</summary><p className="mt-2 text-xs text-muted-foreground">Recherchez puis cochez une liste précise. Elle est combinée avec les autres critères selon l’opérateur choisi.</p><div className="mt-3 flex items-center gap-2"><Input value={commRecipientSearch} onChange={(event) => setCommRecipientSearch(event.target.value)} placeholder="Rechercher par nom ou e-mail" /><Button type="button" variant="ghost" size="sm" onClick={() => setCommManualEmails([])} disabled={!commManualEmails.length}>Effacer</Button></div><div className="mt-2 max-h-48 space-y-1 overflow-y-auto rounded border p-2">{selectableCommunicationRecipients.slice(0, 200).map((recipient: any) => { const selected = commManualEmails.includes(recipient.email); return <label key={recipient.email} className="flex cursor-pointer items-center gap-2 rounded px-1 py-1 text-sm hover:bg-muted"><Checkbox checked={selected} onCheckedChange={(checked) => setCommManualEmails((current) => checked ? Array.from(new Set([...current, recipient.email])) : current.filter((email) => email !== recipient.email))} /><span className="min-w-0 truncate">{recipient.name || recipient.email} <span className="text-xs text-muted-foreground">{recipient.name ? `· ${recipient.email}` : ""}</span></span></label>; })}{!selectableCommunicationRecipients.length && <p className="p-2 text-xs text-muted-foreground">Aucun destinataire ne correspond à cette recherche.</p>}</div></details>
             </section>
-            <div className="rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-sm"><div className="flex items-center justify-between gap-3"><span className="font-medium">Aperçu des destinataires</span>{recipientPreviewQuery.isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <span className="font-semibold text-primary">{recipientPreviewQuery.data?.count ?? 0} adresse{(recipientPreviewQuery.data?.count ?? 0) > 1 ? "s" : ""}</span>}</div><p className="mt-1 text-xs text-muted-foreground">Critères actifs : {activeCommunicationCriteria.join(" · ")}</p>{recipientPreviewQuery.data?.sample?.length ? <p className="mt-1 truncate text-xs text-muted-foreground">Exemples : {recipientPreviewQuery.data.sample.map((recipient: any) => recipient.email).join(" · ")}</p> : <p className="mt-1 text-xs text-muted-foreground">Aucun destinataire ne correspond actuellement à cette combinaison.</p>}</div>
+            <div className="rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-sm"><div className="flex items-center justify-between gap-3"><span className="font-medium">Aperçu des destinataires</span>{recipientPreviewQuery.isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <span className="font-semibold text-primary">{recipientPreviewQuery.data?.count ?? 0} adresse{(recipientPreviewQuery.data?.count ?? 0) > 1 ? "s" : ""}</span>}</div><p className="mt-1 text-xs text-muted-foreground">Mode : {COMMUNICATION_CRITERIA_LOGIC_LABELS[commCriteriaLogic]} · Critères actifs : {activeCommunicationCriteria.join(" · ")}</p>{recipientPreviewQuery.data?.sample?.length ? <p className="mt-1 truncate text-xs text-muted-foreground">Exemples : {recipientPreviewQuery.data.sample.map((recipient: any) => recipient.email).join(" · ")}</p> : <p className="mt-1 text-xs text-muted-foreground">Aucun destinataire ne correspond actuellement à cette combinaison.</p>}</div>
             <div>
               <Label className="text-xs">Sujet</Label>
               <Input className="mt-1" placeholder="Objet de l'email..." value={commSubject} onChange={(e) => setCommSubject(e.target.value)} />
@@ -1230,6 +1253,17 @@ export default function AdminDashboard() {
               Créer le brouillon
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={commScheduleDialog.open} onOpenChange={(open) => { if (!open) { setCommScheduleDialog({ open: false, communication: null }); setCommScheduledAt(""); } }}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader><DialogTitle className="flex items-center gap-2"><CalendarClock className="h-5 w-5" /> Programmer le communiqué</DialogTitle></DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="rounded-md border border-border bg-muted/30 p-3"><p className="font-medium">{commScheduleDialog.communication?.subject}</p><p className="mt-1 text-xs text-muted-foreground">Le segment sera recalculé au moment de l’envoi ; seuls les destinataires correspondant encore aux critères seront contactés.</p></div>
+            <div><Label htmlFor="communication-scheduled-at">Date et heure d’envoi</Label><Input id="communication-scheduled-at" className="mt-1" type="datetime-local" min={new Date(Date.now() + 120_000).toISOString().slice(0, 16)} value={commScheduledAt} onChange={(event) => setCommScheduledAt(event.target.value)} /><p className="mt-1 text-xs text-muted-foreground">L’heure saisie est celle de votre navigateur. Un délai minimum de deux minutes est requis.</p></div>
+          </div>
+          <DialogFooter><Button variant="outline" onClick={() => { setCommScheduleDialog({ open: false, communication: null }); setCommScheduledAt(""); }}>Retour</Button><Button disabled={!commScheduledAt || scheduleCommMutation.isPending} onClick={() => { const scheduledAt = new Date(commScheduledAt); if (Number.isNaN(scheduledAt.getTime())) return toast.error("Veuillez choisir une date valide"); scheduleCommMutation.mutate({ communicationId: commScheduleDialog.communication.id, scheduledAt }); }}>{scheduleCommMutation.isPending ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <CalendarClock className="mr-1 h-4 w-4" />}Confirmer la programmation</Button></DialogFooter>
         </DialogContent>
       </Dialog>
 

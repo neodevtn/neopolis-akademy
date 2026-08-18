@@ -6,7 +6,7 @@ import {
   adminNotes, InsertAdminNote,
   adminTags, InsertAdminTag,
   userTags, InsertUserTag,
-  communications, InsertCommunication,
+  communications, InsertCommunication, communicationSegments, InsertCommunicationSegment,
   adminActivityLog, InsertAdminActivityLog,
   users, applications, trainingProgress, examAttempts, chapterProgress, userInvitations,
   learnerAchievements, learnerCompetencyContributions, learningEvents,
@@ -124,13 +124,84 @@ export async function getCommunications(page: number = 1, pageSize: number = 20)
   return { items, total, page, pageSize };
 }
 
-export async function updateCommunicationStatus(id: number, status: "draft" | "sending" | "sent" | "failed", recipientCount?: number) {
+export type CommunicationStatus = "draft" | "scheduled" | "sending" | "sent" | "failed" | "cancelled";
+
+export async function getCommunicationById(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return (await db.select().from(communications).where(eq(communications.id, id)).limit(1))[0] || null;
+}
+
+export async function updateCommunicationStatus(id: number, status: CommunicationStatus, recipientCount?: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const updateData: Record<string, unknown> = { status };
   if (status === "sent") updateData.sentAt = new Date();
   if (recipientCount !== undefined) updateData.recipientCount = recipientCount;
   await db.update(communications).set(updateData as any).where(eq(communications.id, id));
+}
+
+export async function markCommunicationScheduled(id: number, scheduledAt: Date, taskUid: string, recipientCount: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.update(communications).set({
+    status: "scheduled",
+    scheduledAt,
+    scheduleCronTaskUid: taskUid,
+    recipientCount,
+  }).where(and(eq(communications.id, id), eq(communications.status, "draft")));
+  return Boolean(result[0]?.affectedRows);
+}
+
+export async function cancelScheduledCommunication(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const communication = await getCommunicationById(id);
+  if (!communication || communication.status !== "scheduled") return null;
+  await db.update(communications).set({ status: "cancelled", scheduleCronTaskUid: null }).where(eq(communications.id, id));
+  return communication;
+}
+
+export async function getCommunicationByScheduleTaskUid(taskUid: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return (await db.select().from(communications).where(eq(communications.scheduleCronTaskUid, taskUid)).limit(1))[0] || null;
+}
+
+export async function clearCommunicationSchedule(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(communications).set({ scheduleCronTaskUid: null }).where(eq(communications.id, id));
+}
+
+export async function claimCommunicationForDelivery(id: number, allowedStatuses: CommunicationStatus[]) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const communication = await getCommunicationById(id);
+  if (!communication || !allowedStatuses.includes(communication.status as CommunicationStatus)) return null;
+  const result = await db.update(communications).set({ status: "sending" })
+    .where(and(eq(communications.id, id), inArray(communications.status, allowedStatuses)));
+  if (!result[0]?.affectedRows) return null;
+  return communication;
+}
+
+export async function createCommunicationSegment(data: Omit<InsertCommunicationSegment, "id">) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(communicationSegments).values(data);
+  return { id: result[0].insertId, ...data, createdAt: new Date(), updatedAt: new Date() };
+}
+
+export async function getCommunicationSegments() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(communicationSegments).orderBy(desc(communicationSegments.updatedAt));
+}
+
+export async function deleteCommunicationSegment(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(communicationSegments).where(eq(communicationSegments.id, id));
 }
 
 // ============ Activity Log ============
@@ -361,6 +432,41 @@ export async function getRecipientsByFilter(filter: CommunicationRecipientFilter
     }
   }
 
+  const competencyUserIds = filter.competencyId
+    ? new Set(Array.from(competencyLevels.entries())
+      .filter(([, level]) => level >= Math.max(0, Math.min(100, filter.minCompetencyLevel ?? 0)))
+      .map(([userId]) => userId))
+    : null;
+  let courseUserIds: Set<number> | null = null;
+  if (filter.courseId) {
+    const course = courseOptions.find((item) => item.id === filter.courseId);
+    const activityByUser = new Map<number, { first: Date; last: Date; lessons: Set<number> }>();
+    const recordActivity = (userId: number, timestamp: Date | null, lessonIndex?: number | null) => {
+      if (!timestamp) return;
+      const current = activityByUser.get(userId) || { first: timestamp, last: timestamp, lessons: new Set<number>() };
+      if (timestamp < current.first) current.first = timestamp;
+      if (timestamp > current.last) current.last = timestamp;
+      if (typeof lessonIndex === "number") current.lessons.add(lessonIndex);
+      activityByUser.set(userId, current);
+    };
+    for (const progress of progressRows) if (progress.courseId === filter.courseId) recordActivity(progress.userId, progress.completedAt, progress.lessonIndex);
+    for (const event of learningEventRows) if (event.courseId === filter.courseId) recordActivity(event.userId, event.createdAt);
+    const since = filter.activityWithinDays ? new Date(Date.now() - Math.min(365, Math.max(1, filter.activityWithinDays)) * 86_400_000) : null;
+    courseUserIds = new Set(Array.from(activityByUser.entries()).filter(([,
+      activity,
+    ]) => {
+      if (!course) return false;
+      const completed = activity.lessons.size >= course.lessonCount;
+      if (filter.courseProgressStatus === "completed" && !completed) return false;
+      if (filter.courseProgressStatus === "started" && completed) return false;
+      const relevantDate = filter.courseProgressStatus === "started" ? activity.first : activity.last;
+      return !since || relevantDate >= since;
+    }).map(([userId]) => userId));
+  }
+  const manualEmails = filter.manualEmails?.length
+    ? new Set(filter.manualEmails.map((email) => email.trim().toLowerCase()).filter(Boolean))
+    : null;
+
   let recipients: Recipient[];
   if (audience === "invited") {
     recipients = invitations
@@ -368,47 +474,28 @@ export async function getRecipientsByFilter(filter: CommunicationRecipientFilter
       .map((invitation) => ({ email: invitation.email, name: invitation.name }));
     // A pending invitation has no learning record. A course criterion therefore
     // yields no result rather than silently ignoring the requested condition.
-    if (filter.courseId) recipients = [];
+    if (filter.courseId && filter.criteriaLogic !== "any") recipients = [];
   } else {
     if (audience === "registered_invitees") matchingUsers = matchingUsers.filter((user) => invitationEmails.has(user.email!.toLowerCase()));
     if (audience === "learners_inactive") matchingUsers = matchingUsers.filter((user) => !progressedUserIds.has(user.id));
     if (audience === "learners_started") matchingUsers = matchingUsers.filter((user) => progressedUserIds.has(user.id));
     if (audience === "diploma_holders") matchingUsers = matchingUsers.filter((user) => diplomaUserIds.has(user.id));
     if (audience === "competency_level") {
-      const threshold = Math.max(0, Math.min(100, filter.minCompetencyLevel ?? 0));
-      matchingUsers = matchingUsers.filter((user) => Boolean(filter.competencyId) && (competencyLevels.get(user.id) || 0) >= threshold);
-    }
-    if (filter.courseId) {
-      const course = courseOptions.find((item) => item.id === filter.courseId);
-      const activityByUser = new Map<number, { first: Date; last: Date; lessons: Set<number> }>();
-      const recordActivity = (userId: number, timestamp: Date | null, lessonIndex?: number | null) => {
-        if (!timestamp) return;
-        const current = activityByUser.get(userId) || { first: timestamp, last: timestamp, lessons: new Set<number>() };
-        if (timestamp < current.first) current.first = timestamp;
-        if (timestamp > current.last) current.last = timestamp;
-        if (typeof lessonIndex === "number") current.lessons.add(lessonIndex);
-        activityByUser.set(userId, current);
-      };
-      for (const progress of progressRows) if (progress.courseId === filter.courseId) recordActivity(progress.userId, progress.completedAt, progress.lessonIndex);
-      for (const event of learningEventRows) if (event.courseId === filter.courseId) recordActivity(event.userId, event.createdAt);
-      const since = filter.activityWithinDays ? new Date(Date.now() - Math.min(365, Math.max(1, filter.activityWithinDays)) * 86_400_000) : null;
-      matchingUsers = matchingUsers.filter((user) => {
-        const activity = activityByUser.get(user.id);
-        if (!activity || !course) return false;
-        const completed = activity.lessons.size >= course.lessonCount;
-        if (filter.courseProgressStatus === "completed" && !completed) return false;
-        if (filter.courseProgressStatus === "started" && completed) return false;
-        const relevantDate = filter.courseProgressStatus === "started" ? activity.first : activity.last;
-        return !since || relevantDate >= since;
-      });
+      matchingUsers = matchingUsers.filter((user) => Boolean(filter.competencyId) && competencyUserIds?.has(user.id));
     }
     recipients = matchingUsers.map((user) => ({ id: user.id, email: user.email!, name: user.name }));
     if (audience === "all") recipients.push(...invitations.filter((invitation) => invitation.status === "pending").map((invitation) => ({ email: invitation.email, name: invitation.name })));
   }
 
-  if (filter.manualEmails?.length) {
-    const manualEmails = new Set(filter.manualEmails.map((email) => email.trim().toLowerCase()).filter(Boolean));
-    recipients = recipients.filter((recipient) => manualEmails.has(recipient.email.trim().toLowerCase()));
+  const criterionPredicates: Array<(recipient: Recipient) => boolean> = [];
+  if (courseUserIds !== null) criterionPredicates.push((recipient) => Boolean(recipient.id && courseUserIds!.has(recipient.id)));
+  if (competencyUserIds !== null && audience !== "competency_level") criterionPredicates.push((recipient) => Boolean(recipient.id && competencyUserIds!.has(recipient.id)));
+  if (manualEmails !== null) criterionPredicates.push((recipient) => manualEmails!.has(recipient.email.trim().toLowerCase()));
+  if (criterionPredicates.length > 0) {
+    const useAny = filter.criteriaLogic === "any";
+    recipients = recipients.filter((recipient) => useAny
+      ? criterionPredicates.some((predicate) => predicate(recipient))
+      : criterionPredicates.every((predicate) => predicate(recipient)));
   }
 
   const unique = new Map<string, Recipient>();

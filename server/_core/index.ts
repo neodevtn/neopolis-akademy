@@ -15,6 +15,7 @@ import { serveStatic, setupVite } from "./vite";
 import { securityHeaders, globalRateLimit, tRPCBatchLimit } from "../security";
 import certificateRouter from "../certificate";
 import { inactiveLearnerCheckHandler } from "../scheduledInactiveCheck";
+import { scheduledCommunicationSendHandler } from "../scheduledCommunicationSend";
 import resendWebhookRouter from "../resendWebhook";
 
 function isPortAvailable(port: number): Promise<boolean> {
@@ -63,6 +64,7 @@ async function startServer() {
 
   // Heartbeat scheduled handlers
   app.post("/api/scheduled/inactive-learner-check", inactiveLearnerCheckHandler);
+  app.post("/api/scheduled/send-communication", scheduledCommunicationSendHandler);
 
   // tRPC API with batch limit (F-011)
   app.use("/api/trpc", tRPCBatchLimit);
