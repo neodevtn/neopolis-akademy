@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, InsertLearnerAchievement } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { engagementBucket, firstAttemptRate } from "./reportingMetrics";
+import { learnerReportingLabel } from "@shared/learnerReportingLabel";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -692,11 +693,13 @@ export async function getLearningReporting(input: { days: 7 | 30 | 90; certifica
   };
 
   for (const event of events) {
+    const userId = Number(event.userId);
+    if (!Number.isFinite(userId)) continue;
     const day = new Date(event.createdAt).toISOString().slice(0, 10);
     const dailyItem = daily.get(day);
-    const learner = ensureLearner(event.userId);
+    const learner = ensureLearner(userId);
     learner.days.add(day);
-    dailyItem?.activeLearners.add(event.userId);
+    dailyItem?.activeLearners.add(userId);
     if (event.eventType === "learning_time") {
       const seconds = event.durationSeconds || 0;
       learner.seconds += seconds;
@@ -716,18 +719,20 @@ export async function getLearningReporting(input: { days: 7 | 30 | 90; certifica
         if (event.success === 1) course.firstAttemptSuccesses += 1;
       }
     }
-    if (event.courseId) ensureCourse(event.courseId).learners.add(event.userId);
+    if (event.courseId) ensureCourse(event.courseId).learners.add(userId);
   }
 
   for (const row of progressRows) {
+    const userId = Number(row.userId);
+    if (!Number.isFinite(userId)) continue;
     const day = new Date(row.completedAt).toISOString().slice(0, 10);
-    const learner = ensureLearner(row.userId);
+    const learner = ensureLearner(userId);
     learner.lessons += 1;
     if (daily.get(day)) daily.get(day)!.completedLessons += 1;
     if (row.courseId) {
       const course = ensureCourse(row.courseId);
       course.lessons += 1;
-      course.learners.add(row.userId);
+      course.learners.add(userId);
     }
   }
 
@@ -782,7 +787,7 @@ export async function getLearningReporting(input: { days: 7 | 30 | 90; certifica
     })).sort((a, b) => b.activeMinutes - a.activeMinutes || b.completedLessons - a.completedLessons),
     topLearners: Array.from(learnerStats.entries()).map(([userId, item]) => ({
       userId,
-      name: userById.get(userId)?.name || userById.get(userId)?.email || `Apprenant #${userId}`,
+      name: learnerReportingLabel(userById.get(userId)),
       activeMinutes: Math.round(item.seconds / 60),
       activeDays: item.days.size,
       completedLessons: item.lessons,

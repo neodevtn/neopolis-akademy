@@ -1626,3 +1626,8 @@
 - [x] Prévoir le blocage uniquement par action explicite d’un administrateur après revue
 - [x] Ajouter des contrôles de compréhension transparents plutôt que des pièges cachés
 - [x] Tester le scoring, la traçabilité et les garde-fous de non-blocage automatique
+
+## Libellés apprenants dans le reporting
+- [x] Identifier l’enregistrement et le repli qui affichent un identifiant interne au lieu d’un nom
+- [x] Corriger le libellé de secours avec l’adresse e-mail dans le reporting et les classements
+- [x] Vérifier l’affichage mobile et ajouter un test contre la régression
