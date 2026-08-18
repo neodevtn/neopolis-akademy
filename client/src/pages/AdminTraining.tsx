@@ -32,6 +32,7 @@ import { AchievementGallery } from "@/components/AchievementGallery";
 import { CompetencyProfile } from "@/components/CompetencyProfile";
 import { CompetencyLeaderboard } from "@/components/admin/CompetencyLeaderboard";
 import { buildNavigationUrl } from "@shared/navigationUrls";
+import { parseInvitationEmails, type InvitationEmailParseResult } from "@/lib/invitationEmails";
 
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
@@ -51,10 +52,11 @@ export default function AdminTraining() {
   const [searchInput, setSearchInput] = useState("");
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [inviteOpen, setInviteOpen] = useState(false);
-  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteEmails, setInviteEmails] = useState("");
   const [inviteName, setInviteName] = useState("");
   const [inviteLang, setInviteLang] = useState<"fr" | "en">("fr");
   const [inviteMessage, setInviteMessage] = useState("");
+  const [inviteResults, setInviteResults] = useState<{ email: string; success: boolean; error?: string }[] | null>(null);
   const [editEmailId, setEditEmailId] = useState<number | null>(null);
   const [editEmailValue, setEditEmailValue] = useState("");
   const [reportingDays, setReportingDays] = useState<7 | 30 | 90>(30);
@@ -150,16 +152,28 @@ export default function AdminTraining() {
     onError: (err) => toast.error(err.message),
   });
 
-  const inviteMutation = trpc.admin.createInvitation.useMutation({
+  const bulkInviteMutation = trpc.admin.bulkCreateInvitations.useMutation({
     onSuccess: (data) => {
-      toast.success(`Invitation envoyée à ${data.email}`);
-      setInviteOpen(false);
-      setInviteEmail("");
-      setInviteName("");
+      setInviteResults(data.results);
+      if (data.sent) toast.success(`${data.sent} invitation${data.sent > 1 ? "s" : ""} créée${data.sent > 1 ? "s" : ""}`);
+      if (data.failed) toast.error(`${data.failed} adresse${data.failed > 1 ? "s" : ""} n’a${data.failed > 1 ? "ont" : ""} pas pu être invitée${data.failed > 1 ? "s" : ""}`);
       invitationsQuery.refetch();
+      directInvitationsQuery.refetch();
     },
     onError: (err) => toast.error(err.message),
   });
+
+  const parsedInviteEmails: InvitationEmailParseResult = useMemo(
+    () => parseInvitationEmails(inviteEmails),
+    [inviteEmails],
+  );
+  const resetInviteDialog = () => {
+    setInviteOpen(false);
+    setInviteEmails("");
+    setInviteName("");
+    setInviteMessage("");
+    setInviteResults(null);
+  };
 
   const updateEmailMutation = trpc.admin.updateCandidateEmail.useMutation({
     onSuccess: () => {
@@ -505,7 +519,7 @@ export default function AdminTraining() {
               {activeTab === "learners" && <Button variant="outline" size="sm" className="gap-1.5" onClick={handleExportCSV}>
                 <Download className="w-4 h-4" /> Export CSV
               </Button>}
-              {activeTab === "invitations" && <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+              {activeTab === "invitations" && <Dialog open={inviteOpen} onOpenChange={(open) => open ? setInviteOpen(true) : resetInviteDialog()}>
                 <DialogTrigger asChild>
                   <Button size="sm" className="gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground">
                     <UserPlus className="w-4 h-4" /> Inviter
@@ -513,27 +527,31 @@ export default function AdminTraining() {
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Inviter un apprenant</DialogTitle>
+                    <DialogTitle>Inviter un ou plusieurs apprenants</DialogTitle>
                     <DialogDescription>
-                      Envoyez une invitation par email pour rejoindre la plateforme.
+                      Saisissez les adresses séparées par un point-virgule ou un retour à la ligne.
                     </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4 py-4">
                     <div>
-                      <label className="text-sm font-medium text-foreground mb-1.5 block">Email *</label>
-                      <Input
-                        type="email"
-                        placeholder="apprenant@entreprise.com"
-                        value={inviteEmail}
-                        onChange={(e) => setInviteEmail(e.target.value)}
+                      <label className="text-sm font-medium text-foreground mb-1.5 block">Adresses e-mail *</label>
+                      <textarea
+                        className="w-full min-h-[112px] resize-y rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        placeholder={"apprenant1@entreprise.com; apprenant2@entreprise.com\nou\napprenant3@entreprise.com"}
+                        value={inviteEmails}
+                        onChange={(e) => { setInviteEmails(e.target.value); setInviteResults(null); }}
                       />
+                      <p className="mt-1.5 text-xs text-muted-foreground">{parsedInviteEmails.emails.length} adresse{parsedInviteEmails.emails.length > 1 ? "s" : ""} valide{parsedInviteEmails.emails.length > 1 ? "s" : ""} · maximum 100 par envoi.</p>
+                      {parsedInviteEmails.duplicates.length > 0 && <p className="mt-1 text-xs text-amber-700">{parsedInviteEmails.duplicates.length} doublon{parsedInviteEmails.duplicates.length > 1 ? "s" : ""} sera{parsedInviteEmails.duplicates.length > 1 ? "ont" : ""} ignoré{parsedInviteEmails.duplicates.length > 1 ? "s" : ""}.</p>}
+                      {parsedInviteEmails.invalid.length > 0 && <p className="mt-1 text-xs text-destructive">Adresse{parsedInviteEmails.invalid.length > 1 ? "s" : ""} invalide{parsedInviteEmails.invalid.length > 1 ? "s" : ""} : {parsedInviteEmails.invalid.join(" · ")}</p>}
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-foreground mb-1.5 block">Nom (optionnel)</label>
+                      <label className="text-sm font-medium text-foreground mb-1.5 block">Nom (optionnel, uniquement pour une adresse)</label>
                       <Input
                         placeholder="Jean Dupont"
                         value={inviteName}
                         onChange={(e) => setInviteName(e.target.value)}
+                        disabled={parsedInviteEmails.emails.length > 1}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -558,16 +576,17 @@ export default function AdminTraining() {
                         onChange={(e) => setInviteMessage(e.target.value)}
                       />
                     </div>
+                    {inviteResults && <div className="rounded-md border bg-muted/30 p-3 text-sm"><p className="font-medium">Résultat de l’envoi</p><ul className="mt-2 max-h-32 space-y-1 overflow-y-auto text-xs">{inviteResults.map((result) => <li key={result.email} className={result.success ? "text-emerald-700" : "text-destructive"}>{result.success ? "✓" : "✕"} {result.email}{result.error ? ` — ${result.error}` : ""}</li>)}</ul></div>}
                   </div>
                   <DialogFooter>
-                    <Button variant="outline" onClick={() => setInviteOpen(false)}>Annuler</Button>
+                    <Button variant="outline" onClick={resetInviteDialog}>{inviteResults ? "Fermer" : "Annuler"}</Button>
                     <Button
                       className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                      disabled={!inviteEmail || inviteMutation.isPending}
-                      onClick={() => inviteMutation.mutate({ email: inviteEmail, name: inviteName || undefined, language: inviteLang, message: inviteMessage || undefined })}
+                      disabled={parsedInviteEmails.emails.length === 0 || parsedInviteEmails.invalid.length > 0 || parsedInviteEmails.emails.length > 100 || bulkInviteMutation.isPending}
+                      onClick={() => bulkInviteMutation.mutate({ invitations: parsedInviteEmails.emails.map((email) => ({ email, name: parsedInviteEmails.emails.length === 1 ? inviteName || undefined : undefined })), language: inviteLang, message: inviteMessage || undefined })}
                     >
-                      {inviteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
-                      <span className="ml-1.5">Envoyer l'invitation</span>
+                      {bulkInviteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
+                      <span className="ml-1.5">Envoyer {parsedInviteEmails.emails.length || "les"} invitation{parsedInviteEmails.emails.length > 1 ? "s" : ""}</span>
                     </Button>
                   </DialogFooter>
                 </DialogContent>

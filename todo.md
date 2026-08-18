@@ -1555,3 +1555,9 @@
 - [x] Étendre la synchronisation URL à tous les onglets, détails et vues administratives
 - [x] Étendre la synchronisation URL à la navigation apprenant, aux certifications, cours, leçons et écrans
 - [x] Vérifier les liens partageables, les rechargements et l’historique sur l’ensemble des parcours
+
+## Invitations groupées
+- [x] Rétablir la saisie de plusieurs e-mails pour les invitations directes séparés par point-virgule ou retour à la ligne
+- [x] Valider et dédupliquer les adresses avant l’envoi groupé
+- [x] Afficher un bilan clair des invitations envoyées ou refusées par adresse
+- [x] Tester le flux groupé sans régression sur l’invitation individuelle
