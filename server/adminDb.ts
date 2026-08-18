@@ -1,4 +1,6 @@
 import { eq, desc, sql, and, count, inArray } from "drizzle-orm";
+import fs from "node:fs/promises";
+import path from "node:path";
 import { getDb } from "./db";
 import {
   adminNotes, InsertAdminNote,
@@ -7,9 +9,9 @@ import {
   communications, InsertCommunication,
   adminActivityLog, InsertAdminActivityLog,
   users, applications, trainingProgress, examAttempts, chapterProgress, userInvitations,
-  learnerAchievements, learnerCompetencyContributions,
+  learnerAchievements, learnerCompetencyContributions, learningEvents,
 } from "../drizzle/schema";
-import type { CommunicationAudience } from "../shared/communicationRecipients";
+import type { CommunicationAudience, CommunicationRecipientFilterInput } from "../shared/communicationRecipients";
 
 // ============ Admin Notes ============
 
@@ -256,14 +258,55 @@ export async function getLearnerAnalytics() {
 
 // ============ Get recipients for communication ============
 
-export type CommunicationRecipientFilter = {
-  audience?: CommunicationAudience;
-  tags?: number[];
-  status?: string[];
-  role?: string[];
-  competencyId?: string;
-  minCompetencyLevel?: number;
-};
+export type CommunicationRecipientFilter = CommunicationRecipientFilterInput;
+export type CommunicationCourseOption = { id: string; title: string; certificationId?: string; lessonCount: number };
+
+let courseOptionsPromise: Promise<CommunicationCourseOption[]> | null = null;
+
+async function getCommunicationCourseOptionsInternal(): Promise<CommunicationCourseOption[]> {
+  const coursesDir = path.resolve(import.meta.dirname, "../client/public/data/courses");
+  const files = (await fs.readdir(coursesDir)).filter((file) => file.endsWith(".json"));
+  const courses = await Promise.all(files.map(async (file) => {
+    const course = JSON.parse(await fs.readFile(path.join(coursesDir, file), "utf8"));
+    const id = String(course.courseId || file.replace(/\.json$/, ""));
+    return {
+      id,
+      title: String(course.sourceCourseTitle || course.title?.fr || course.title?.en || id),
+      certificationId: course.certificationId ? String(course.certificationId) : undefined,
+      lessonCount: Array.isArray(course.lessons) ? course.lessons.length : 0,
+    };
+  }));
+  return courses.filter((course) => course.lessonCount > 0).sort((a, b) => a.title.localeCompare(b.title, "fr"));
+}
+
+async function getCommunicationCourseOptions() {
+  courseOptionsPromise ||= getCommunicationCourseOptionsInternal().catch((error) => {
+    courseOptionsPromise = null;
+    throw error;
+  });
+  return courseOptionsPromise;
+}
+
+export async function getCommunicationSegmentOptions() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [courses, allUsers, invitations] = await Promise.all([
+    getCommunicationCourseOptions(),
+    db.select({ email: users.email, name: users.name, blocked: users.blocked }).from(users).where(eq(users.role, "user")),
+    db.select({ email: userInvitations.email, name: userInvitations.name, status: userInvitations.status }).from(userInvitations),
+  ]);
+  const recipients = new Map<string, { email: string; name: string | null; source: "learner" | "invitation" }>();
+  for (const user of allUsers) {
+    if (user.email?.trim() && !user.blocked) recipients.set(user.email.trim().toLowerCase(), { email: user.email.trim().toLowerCase(), name: user.name, source: "learner" });
+  }
+  for (const invitation of invitations) {
+    if (invitation.status === "pending" && invitation.email.trim()) {
+      const email = invitation.email.trim().toLowerCase();
+      if (!recipients.has(email)) recipients.set(email, { email, name: invitation.name, source: "invitation" });
+    }
+  }
+  return { courses, recipients: Array.from(recipients.values()).sort((a, b) => (a.name || a.email).localeCompare(b.name || b.email, "fr")) };
+}
 
 type Recipient = { id?: number; email: string; name: string | null };
 
@@ -282,7 +325,7 @@ export async function getRecipientsByFilter(filter: CommunicationRecipientFilter
     taggedUserIds = new Set(taggedUsers.map(t => t.userId));
   }
 
-  const [allUsers, invitations, progressRows, certificationRows, contributionRows] = await Promise.all([
+  const [allUsers, invitations, progressRows, learningEventRows, certificationRows, contributionRows, courseOptions] = await Promise.all([
     db.select({
     id: users.id,
     email: users.email,
@@ -291,9 +334,11 @@ export async function getRecipientsByFilter(filter: CommunicationRecipientFilter
     blocked: users.blocked,
     }).from(users),
     db.select({ email: userInvitations.email, name: userInvitations.name, status: userInvitations.status }).from(userInvitations),
-    db.select({ userId: trainingProgress.userId }).from(trainingProgress),
+    db.select({ userId: trainingProgress.userId, courseId: trainingProgress.courseId, lessonIndex: trainingProgress.lessonIndex, completedAt: trainingProgress.completedAt }).from(trainingProgress),
+    db.select({ userId: learningEvents.userId, courseId: learningEvents.courseId, createdAt: learningEvents.createdAt }).from(learningEvents),
     db.select({ userId: learnerAchievements.userId }).from(learnerAchievements).where(eq(learnerAchievements.kind, "certification")),
     db.select({ userId: learnerCompetencyContributions.userId, competencyId: learnerCompetencyContributions.competencyId, points: learnerCompetencyContributions.points }).from(learnerCompetencyContributions),
+    filter.courseId ? getCommunicationCourseOptions() : Promise.resolve([] as CommunicationCourseOption[]),
   ]);
 
   let matchingUsers = allUsers.filter((user) => user.email && user.email.trim() !== "" && !user.blocked);
@@ -321,6 +366,9 @@ export async function getRecipientsByFilter(filter: CommunicationRecipientFilter
     recipients = invitations
       .filter((invitation) => !filter.status?.length || filter.status.includes(invitation.status))
       .map((invitation) => ({ email: invitation.email, name: invitation.name }));
+    // A pending invitation has no learning record. A course criterion therefore
+    // yields no result rather than silently ignoring the requested condition.
+    if (filter.courseId) recipients = [];
   } else {
     if (audience === "registered_invitees") matchingUsers = matchingUsers.filter((user) => invitationEmails.has(user.email!.toLowerCase()));
     if (audience === "learners_inactive") matchingUsers = matchingUsers.filter((user) => !progressedUserIds.has(user.id));
@@ -330,8 +378,37 @@ export async function getRecipientsByFilter(filter: CommunicationRecipientFilter
       const threshold = Math.max(0, Math.min(100, filter.minCompetencyLevel ?? 0));
       matchingUsers = matchingUsers.filter((user) => Boolean(filter.competencyId) && (competencyLevels.get(user.id) || 0) >= threshold);
     }
+    if (filter.courseId) {
+      const course = courseOptions.find((item) => item.id === filter.courseId);
+      const activityByUser = new Map<number, { first: Date; last: Date; lessons: Set<number> }>();
+      const recordActivity = (userId: number, timestamp: Date | null, lessonIndex?: number | null) => {
+        if (!timestamp) return;
+        const current = activityByUser.get(userId) || { first: timestamp, last: timestamp, lessons: new Set<number>() };
+        if (timestamp < current.first) current.first = timestamp;
+        if (timestamp > current.last) current.last = timestamp;
+        if (typeof lessonIndex === "number") current.lessons.add(lessonIndex);
+        activityByUser.set(userId, current);
+      };
+      for (const progress of progressRows) if (progress.courseId === filter.courseId) recordActivity(progress.userId, progress.completedAt, progress.lessonIndex);
+      for (const event of learningEventRows) if (event.courseId === filter.courseId) recordActivity(event.userId, event.createdAt);
+      const since = filter.activityWithinDays ? new Date(Date.now() - Math.min(365, Math.max(1, filter.activityWithinDays)) * 86_400_000) : null;
+      matchingUsers = matchingUsers.filter((user) => {
+        const activity = activityByUser.get(user.id);
+        if (!activity || !course) return false;
+        const completed = activity.lessons.size >= course.lessonCount;
+        if (filter.courseProgressStatus === "completed" && !completed) return false;
+        if (filter.courseProgressStatus === "started" && completed) return false;
+        const relevantDate = filter.courseProgressStatus === "started" ? activity.first : activity.last;
+        return !since || relevantDate >= since;
+      });
+    }
     recipients = matchingUsers.map((user) => ({ id: user.id, email: user.email!, name: user.name }));
     if (audience === "all") recipients.push(...invitations.filter((invitation) => invitation.status === "pending").map((invitation) => ({ email: invitation.email, name: invitation.name })));
+  }
+
+  if (filter.manualEmails?.length) {
+    const manualEmails = new Set(filter.manualEmails.map((email) => email.trim().toLowerCase()).filter(Boolean));
+    recipients = recipients.filter((recipient) => manualEmails.has(recipient.email.trim().toLowerCase()));
   }
 
   const unique = new Map<string, Recipient>();

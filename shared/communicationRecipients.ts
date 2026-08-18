@@ -19,3 +19,24 @@ export const COMMUNICATION_AUDIENCE_LABELS: Record<CommunicationAudience, string
   diploma_holders: "Diplômés certifiés",
   competency_level: "Compétence acquise à un niveau donné",
 };
+
+export const COURSE_PROGRESS_STATUSES = ["started", "completed"] as const;
+export type CourseProgressStatus = (typeof COURSE_PROGRESS_STATUSES)[number];
+
+export const COURSE_PROGRESS_STATUS_LABELS: Record<CourseProgressStatus, string> = {
+  started: "Cours entamé",
+  completed: "Cours terminé",
+};
+
+export type CommunicationRecipientFilterInput = {
+  audience?: CommunicationAudience;
+  tags?: number[];
+  status?: string[];
+  role?: string[];
+  competencyId?: string;
+  minCompetencyLevel?: number;
+  courseId?: string;
+  courseProgressStatus?: CourseProgressStatus;
+  activityWithinDays?: number;
+  manualEmails?: string[];
+};

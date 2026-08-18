@@ -15,7 +15,9 @@ import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 import { AdminNavbar } from "@/components/AdminNavbar";
 import { buildNavigationUrl } from "@shared/navigationUrls";
-import { COMMUNICATION_AUDIENCE_LABELS, type CommunicationAudience } from "@shared/communicationRecipients";
+import { WysiwygMarkdownEditor } from "@/components/admin/WysiwygMarkdownEditor";
+import { Checkbox } from "@/components/ui/checkbox";
+import { COMMUNICATION_AUDIENCE_LABELS, COURSE_PROGRESS_STATUS_LABELS, type CommunicationAudience, type CourseProgressStatus } from "@shared/communicationRecipients";
 
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
@@ -58,6 +60,12 @@ export default function AdminDashboard() {
   const [commAudience, setCommAudience] = useState<CommunicationAudience>("all");
   const [commCompetencyId, setCommCompetencyId] = useState("");
   const [commMinCompetencyLevel, setCommMinCompetencyLevel] = useState("10");
+  const [commUseCompetencyFilter, setCommUseCompetencyFilter] = useState(false);
+  const [commCourseId, setCommCourseId] = useState("any");
+  const [commCourseProgressStatus, setCommCourseProgressStatus] = useState<CourseProgressStatus>("started");
+  const [commActivityWithinDays, setCommActivityWithinDays] = useState("");
+  const [commManualEmails, setCommManualEmails] = useState<string[]>([]);
+  const [commRecipientSearch, setCommRecipientSearch] = useState("");
   const [notifOpen, setNotifOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
 
@@ -166,21 +174,43 @@ export default function AdminDashboard() {
 
   const communicationsQuery = trpc.adminTools.communications.list.useQuery(undefined, { enabled: activeTab === "communications" });
   const competencyFrameworkQuery = trpc.competencies.getFramework.useQuery(undefined, { enabled: commDialog && isAuthenticated && user?.role === "admin" });
+  const communicationSegmentOptionsQuery = trpc.adminTools.communications.getSegmentOptions.useQuery(undefined, { enabled: commDialog && isAuthenticated && user?.role === "admin", staleTime: 60_000 });
   const communicationRecipientFilter = useMemo(() => ({
     audience: commAudience,
-    ...(commAudience === "competency_level" && commCompetencyId ? { competencyId: commCompetencyId, minCompetencyLevel: Math.min(100, Math.max(0, Number(commMinCompetencyLevel) || 0)) } : {}),
-  }), [commAudience, commCompetencyId, commMinCompetencyLevel]);
+    ...(commUseCompetencyFilter && commCompetencyId ? { competencyId: commCompetencyId, minCompetencyLevel: Math.min(100, Math.max(0, Number(commMinCompetencyLevel) || 0)) } : {}),
+    ...(commCourseId !== "any" ? { courseId: commCourseId, courseProgressStatus: commCourseProgressStatus, ...(Number(commActivityWithinDays) > 0 ? { activityWithinDays: Math.min(365, Math.max(1, Number(commActivityWithinDays))) } : {}) } : {}),
+    ...(commManualEmails.length ? { manualEmails: commManualEmails } : {}),
+  }), [commAudience, commUseCompetencyFilter, commCompetencyId, commMinCompetencyLevel, commCourseId, commCourseProgressStatus, commActivityWithinDays, commManualEmails]);
   const recipientPreviewQuery = trpc.adminTools.communications.getRecipientCount.useQuery(
     { recipientFilter: communicationRecipientFilter },
-    { enabled: commDialog && (commAudience !== "competency_level" || Boolean(commCompetencyId)), staleTime: 5_000 },
+    { enabled: commDialog && (!commUseCompetencyFilter || Boolean(commCompetencyId)), staleTime: 5_000 },
   );
   const createCommMutation = trpc.adminTools.communications.create.useMutation({
-    onSuccess: () => { communicationsQuery.refetch(); setCommDialog(false); setCommSubject(""); setCommBody(""); setCommAudience("all"); setCommCompetencyId(""); setCommMinCompetencyLevel("10"); toast.success("Communication créée"); },
+    onSuccess: () => { communicationsQuery.refetch(); setCommDialog(false); setCommSubject(""); setCommBody(""); setCommAudience("all"); setCommCompetencyId(""); setCommMinCompetencyLevel("10"); setCommUseCompetencyFilter(false); setCommCourseId("any"); setCommCourseProgressStatus("started"); setCommActivityWithinDays(""); setCommManualEmails([]); setCommRecipientSearch(""); toast.success("Communication créée"); },
   });
   const sendCommMutation = trpc.adminTools.communications.send.useMutation({
     onSuccess: (data) => { communicationsQuery.refetch(); toast.success(`Communication envoyée à ${data.sentCount} destinataire(s)`); },
     onError: () => toast.error("Erreur lors de l'envoi"),
   });
+  const selectableCommunicationRecipients = useMemo(() => {
+    const query = commRecipientSearch.trim().toLocaleLowerCase("fr");
+    return (communicationSegmentOptionsQuery.data?.recipients || []).filter((recipient: any) => !query || recipient.email.toLocaleLowerCase("fr").includes(query) || recipient.name?.toLocaleLowerCase("fr").includes(query));
+  }, [communicationSegmentOptionsQuery.data?.recipients, commRecipientSearch]);
+  const activeCommunicationCriteria = useMemo(() => {
+    const labels = [COMMUNICATION_AUDIENCE_LABELS[commAudience]];
+    if (commCourseId !== "any") {
+      const course = communicationSegmentOptionsQuery.data?.courses.find((item: any) => item.id === commCourseId);
+      labels.push(`${COURSE_PROGRESS_STATUS_LABELS[commCourseProgressStatus]} : ${course?.title || commCourseId}${Number(commActivityWithinDays) > 0 ? ` · ${commActivityWithinDays} derniers jours` : ""}`);
+    }
+    if (commUseCompetencyFilter && commCompetencyId) {
+      const competency = (competencyFrameworkQuery.data?.definitions || []).find((item: any) => item.id === commCompetencyId);
+      const titleValue = competency?.title as { fr?: string; en?: string } | string | null | undefined;
+      const title = typeof titleValue === "object" && titleValue ? titleValue.fr || titleValue.en : titleValue || commCompetencyId;
+      labels.push(`${title} ≥ ${Math.min(100, Math.max(0, Number(commMinCompetencyLevel) || 0))}`);
+    }
+    if (commManualEmails.length) labels.push(`Sélection manuelle : ${commManualEmails.length}`);
+    return labels;
+  }, [commAudience, commCourseId, commCourseProgressStatus, commActivityWithinDays, commUseCompetencyFilter, commCompetencyId, commMinCompetencyLevel, commManualEmails.length, communicationSegmentOptionsQuery.data?.courses, competencyFrameworkQuery.data?.definitions]);
 
   const analyticsQuery = trpc.adminTools.analytics.getLearnerAnalytics.useQuery(undefined, { enabled: activeTab === "analytics" });
   const activityLogQuery = trpc.adminTools.activityLog.list.useQuery(undefined, { enabled: activeTab === "activity" });
@@ -1142,13 +1172,13 @@ export default function AdminDashboard() {
 
       {/* Communication Dialog */}
       <Dialog open={commDialog} onOpenChange={setCommDialog}>
-        <DialogContent className="sm:max-w-2xl">
+        <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-4xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <MessageSquare className="w-5 h-5" /> Nouveau communiqué
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-2">
+          <div className="space-y-4 overflow-y-auto py-2 pr-1">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label className="text-xs">Type</Label>
@@ -1164,29 +1194,38 @@ export default function AdminDashboard() {
                 </Select>
               </div>
               <div>
-                <Label className="text-xs">Segment de destinataires</Label>
+                <Label className="text-xs">Population de départ</Label>
                 <Select value={commAudience} onValueChange={(value) => setCommAudience(value as CommunicationAudience)}>
                   <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    {(Object.entries(COMMUNICATION_AUDIENCE_LABELS) as [CommunicationAudience, string][]).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}
+                    {(Object.entries(COMMUNICATION_AUDIENCE_LABELS) as [CommunicationAudience, string][]).filter(([value]) => value !== "competency_level").map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
             </div>
-            {commAudience === "competency_level" && <div className="grid grid-cols-1 gap-4 rounded-lg border border-border bg-muted/30 p-3 sm:grid-cols-[1fr_150px]"><div><Label className="text-xs">Compétence</Label><Select value={commCompetencyId} onValueChange={setCommCompetencyId}><SelectTrigger className="mt-1"><SelectValue placeholder="Choisir une compétence" /></SelectTrigger><SelectContent>{(competencyFrameworkQuery.data?.definitions || []).filter((definition: any) => definition.active).map((definition: any) => <SelectItem key={definition.id} value={definition.id}>{typeof definition.title === "object" ? definition.title.fr || definition.title.en : definition.title}</SelectItem>)}</SelectContent></Select></div><div><Label className="text-xs">Niveau minimum</Label><Input className="mt-1" type="number" min="0" max="100" value={commMinCompetencyLevel} onChange={(event) => setCommMinCompetencyLevel(event.target.value)} /></div></div>}
-            <div className="rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-sm"><div className="flex items-center justify-between gap-3"><span className="font-medium">Aperçu des destinataires</span>{recipientPreviewQuery.isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <span className="font-semibold text-primary">{recipientPreviewQuery.data?.count ?? 0} adresse{(recipientPreviewQuery.data?.count ?? 0) > 1 ? "s" : ""}</span>}</div>{recipientPreviewQuery.data?.sample?.length ? <p className="mt-1 truncate text-xs text-muted-foreground">Exemples : {recipientPreviewQuery.data.sample.map((recipient: any) => recipient.email).join(" · ")}</p> : <p className="mt-1 text-xs text-muted-foreground">Sélectionnez une compétence pour estimer ce segment.</p>}</div>
+            <section className="space-y-3 rounded-lg border border-border bg-muted/20 p-3">
+              <div><p className="text-sm font-semibold">Critères supplémentaires</p><p className="text-xs text-muted-foreground">Ils s’ajoutent à la population de départ : les critères actifs sont combinés avec une logique ET.</p></div>
+              <div className="grid gap-3 sm:grid-cols-[1fr_160px_130px]">
+                <div><Label className="text-xs">Cours précis</Label><Select value={commCourseId} onValueChange={setCommCourseId}><SelectTrigger className="mt-1"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="any">Tous les cours</SelectItem>{(communicationSegmentOptionsQuery.data?.courses || []).map((course: any) => <SelectItem key={course.id} value={course.id}>{course.title}</SelectItem>)}</SelectContent></Select></div>
+                <div><Label className="text-xs">Progression</Label><Select value={commCourseProgressStatus} onValueChange={(value) => setCommCourseProgressStatus(value as CourseProgressStatus)} disabled={commCourseId === "any"}><SelectTrigger className="mt-1"><SelectValue /></SelectTrigger><SelectContent>{Object.entries(COURSE_PROGRESS_STATUS_LABELS).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectContent></Select></div>
+                <div><Label className="text-xs">Dans les X jours</Label><Input className="mt-1" type="number" min="1" max="365" disabled={commCourseId === "any"} placeholder="Sans limite" value={commActivityWithinDays} onChange={(event) => setCommActivityWithinDays(event.target.value)} /></div>
+              </div>
+              <div className="rounded-md border border-border bg-background p-3">
+                <div className="flex items-center gap-2"><Checkbox id="communication-competency" checked={commUseCompetencyFilter} onCheckedChange={(checked) => setCommUseCompetencyFilter(Boolean(checked))} /><Label htmlFor="communication-competency" className="cursor-pointer text-sm font-medium">Exiger une performance dans une compétence</Label></div>
+                {commUseCompetencyFilter && <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-[1fr_150px]"><div><Label className="text-xs">Compétence</Label><Select value={commCompetencyId} onValueChange={setCommCompetencyId}><SelectTrigger className="mt-1"><SelectValue placeholder="Choisir une compétence" /></SelectTrigger><SelectContent>{(competencyFrameworkQuery.data?.definitions || []).filter((definition: any) => definition.active).map((definition: any) => { const title = definition.title as { fr?: string; en?: string } | string | null; return <SelectItem key={definition.id} value={definition.id}>{typeof title === "object" && title ? title.fr || title.en : title}</SelectItem>; })}</SelectContent></Select></div><div><Label className="text-xs">Niveau minimum</Label><Input className="mt-1" type="number" min="0" max="100" value={commMinCompetencyLevel} onChange={(event) => setCommMinCompetencyLevel(event.target.value)} /></div></div>}
+              </div>
+              <details className="rounded-md border border-border bg-background p-3"><summary className="cursor-pointer text-sm font-medium">Sélection manuelle des destinataires {commManualEmails.length ? `(${commManualEmails.length})` : ""}</summary><p className="mt-2 text-xs text-muted-foreground">Recherchez puis cochez une liste précise. Si d’autres critères sont actifs, seuls les contacts qui les respectent tous seront retenus.</p><div className="mt-3 flex items-center gap-2"><Input value={commRecipientSearch} onChange={(event) => setCommRecipientSearch(event.target.value)} placeholder="Rechercher par nom ou e-mail" /><Button type="button" variant="ghost" size="sm" onClick={() => setCommManualEmails([])} disabled={!commManualEmails.length}>Effacer</Button></div><div className="mt-2 max-h-48 space-y-1 overflow-y-auto rounded border p-2">{selectableCommunicationRecipients.slice(0, 200).map((recipient: any) => { const selected = commManualEmails.includes(recipient.email); return <label key={recipient.email} className="flex cursor-pointer items-center gap-2 rounded px-1 py-1 text-sm hover:bg-muted"><Checkbox checked={selected} onCheckedChange={(checked) => setCommManualEmails((current) => checked ? Array.from(new Set([...current, recipient.email])) : current.filter((email) => email !== recipient.email))} /><span className="min-w-0 truncate">{recipient.name || recipient.email} <span className="text-xs text-muted-foreground">{recipient.name ? `· ${recipient.email}` : ""}</span></span></label>; })}{!selectableCommunicationRecipients.length && <p className="p-2 text-xs text-muted-foreground">Aucun destinataire ne correspond à cette recherche.</p>}</div></details>
+            </section>
+            <div className="rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-sm"><div className="flex items-center justify-between gap-3"><span className="font-medium">Aperçu des destinataires</span>{recipientPreviewQuery.isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <span className="font-semibold text-primary">{recipientPreviewQuery.data?.count ?? 0} adresse{(recipientPreviewQuery.data?.count ?? 0) > 1 ? "s" : ""}</span>}</div><p className="mt-1 text-xs text-muted-foreground">Critères actifs : {activeCommunicationCriteria.join(" · ")}</p>{recipientPreviewQuery.data?.sample?.length ? <p className="mt-1 truncate text-xs text-muted-foreground">Exemples : {recipientPreviewQuery.data.sample.map((recipient: any) => recipient.email).join(" · ")}</p> : <p className="mt-1 text-xs text-muted-foreground">Aucun destinataire ne correspond actuellement à cette combinaison.</p>}</div>
             <div>
               <Label className="text-xs">Sujet</Label>
               <Input className="mt-1" placeholder="Objet de l'email..." value={commSubject} onChange={(e) => setCommSubject(e.target.value)} />
             </div>
-            <div>
-              <Label className="text-xs">Corps du message (HTML supporté, utilisez {"{{name}}"} pour le nom)</Label>
-              <Textarea className="mt-1 font-mono text-xs" rows={8} placeholder="<p>Bonjour {{name}},</p><p>...</p>" value={commBody} onChange={(e) => setCommBody(e.target.value)} />
-            </div>
+            <div><Label className="text-xs">Corps du message (vous pouvez coller du texte riche ; utilisez {"{{name}}"} pour le nom)</Label><div className="mt-1"><WysiwygMarkdownEditor value={commBody} onChange={setCommBody} minHeight="180px" placeholder="Bonjour {{name}},\n\nRédigez votre communiqué ou collez un texte déjà mis en forme…" /></div><p className="mt-1 text-xs text-muted-foreground">Titres, listes, gras, italique et liens sont préservés dans l’e-mail. Les balises HTML actives sont supprimées.</p></div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCommDialog(false)}>Annuler</Button>
-            <Button disabled={!commSubject.trim() || !commBody.trim() || !recipientPreviewQuery.data?.count || createCommMutation.isPending} onClick={() => { createCommMutation.mutate({ subject: commSubject, body: commBody, type: commType as any, recipientFilter: communicationRecipientFilter }); }}>
+            <Button disabled={!commSubject.trim() || !commBody.trim() || !recipientPreviewQuery.data?.count || createCommMutation.isPending || (commUseCompetencyFilter && !commCompetencyId)} onClick={() => { createCommMutation.mutate({ subject: commSubject, body: commBody, bodyFormat: "markdown", type: commType as any, recipientFilter: communicationRecipientFilter }); }}>
               {createCommMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Plus className="w-4 h-4 mr-1" />}
               Créer le brouillon
             </Button>

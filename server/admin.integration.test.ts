@@ -254,6 +254,30 @@ describe("Admin API - Communications ciblées", () => {
     expect(Array.isArray(result.sample)).toBe(true);
   });
 
+  it("accepte un segment de progression par cours, période et sélection manuelle sans envoi", async () => {
+    const caller = appRouter.createCaller(createAdminContext());
+    const result = await caller.adminTools.communications.getRecipientCount({
+      recipientFilter: {
+        audience: "learners_started",
+        courseId: "claude_certified_associate_foundations__01",
+        courseProgressStatus: "started",
+        activityWithinDays: 30,
+        manualEmails: ["admin@neopolis.test"],
+      },
+    });
+
+    expect(typeof result.count).toBe("number");
+    expect(Array.isArray(result.sample)).toBe(true);
+  });
+
+  it("expose les cours et contacts utilisables pour composer un segment manuel", async () => {
+    const caller = appRouter.createCaller(createAdminContext());
+    const result = await caller.adminTools.communications.getSegmentOptions();
+
+    expect(Array.isArray(result.courses)).toBe(true);
+    expect(Array.isArray(result.recipients)).toBe(true);
+  });
+
   it("refuse un segment inconnu", async () => {
     const caller = appRouter.createCaller(createAdminContext());
     await expect(

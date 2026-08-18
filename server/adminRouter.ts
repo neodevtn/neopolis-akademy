@@ -8,7 +8,7 @@ import {
   createCommunication, getCommunications, updateCommunicationStatus,
   logAdminActivity, getAdminActivityLog,
   bulkUpdateApplicationStatus, getApplicationsByIds,
-  getLearnerAnalytics, getRecipientsByFilter, getRecipientPreview,
+  getLearnerAnalytics, getRecipientsByFilter, getRecipientPreview, getCommunicationSegmentOptions,
 } from "./adminDb";
 import {
   getAdminNotifications, getUnreadNotificationCount,
@@ -18,8 +18,23 @@ import {
 import { upsertUser, setUserPasswordHash, getUserByEmail } from "./db";
 import { sendDecisionEmail } from "./email";
 import bcrypt from "bcryptjs";
+import { formatCommunicationBody, interpolateRecipientName, sanitizeCommunicationHtml } from "./communicationBody";
+import type { CommunicationRecipientFilter } from "./adminDb";
 
 const SALT_ROUNDS = 10;
+
+const communicationRecipientFilterSchema = z.object({
+  audience: z.enum(["all", "invited", "registered_invitees", "learners_inactive", "learners_started", "diploma_holders", "competency_level"]).optional(),
+  tags: z.array(z.number()).optional(),
+  status: z.array(z.string()).optional(),
+  role: z.array(z.string()).optional(),
+  competencyId: z.string().min(2).max(80).optional(),
+  minCompetencyLevel: z.number().min(0).max(100).optional(),
+  courseId: z.string().min(2).max(200).optional(),
+  courseProgressStatus: z.enum(["started", "completed"]).optional(),
+  activityWithinDays: z.number().int().min(1).max(365).optional(),
+  manualEmails: z.array(z.string().email()).max(500).optional(),
+});
 
 // Helper to enforce admin role
 function assertAdmin(ctx: { user: { role: string } }) {
@@ -162,21 +177,15 @@ export const adminEnhancedRouter = router({
       .input(z.object({
         subject: z.string().min(1).max(500),
         body: z.string().min(1).max(50000),
+        bodyFormat: z.enum(["markdown", "html"]).optional(),
         type: z.enum(["invitation", "announcement", "reminder", "welcome", "custom"]),
-        recipientFilter: z.object({
-          audience: z.enum(["all", "invited", "registered_invitees", "learners_inactive", "learners_started", "diploma_holders", "competency_level"]).optional(),
-          tags: z.array(z.number()).optional(),
-          status: z.array(z.string()).optional(),
-          role: z.array(z.string()).optional(),
-          competencyId: z.string().min(2).max(80).optional(),
-          minCompetencyLevel: z.number().min(0).max(100).optional(),
-        }).optional(),
+        recipientFilter: communicationRecipientFilterSchema.optional(),
       }))
       .mutation(async ({ ctx, input }) => {
         assertAdmin(ctx);
         const comm = await createCommunication({
           subject: input.subject,
-          body: input.body,
+          body: formatCommunicationBody(input.body, input.bodyFormat || "html"),
           type: input.type,
           recipientFilter: input.recipientFilter || {},
           sentBy: ctx.user.id,
@@ -217,7 +226,7 @@ export const adminEnhancedRouter = router({
 
         try {
           // Get recipients based on filter
-          const filter = (comm.recipientFilter || {}) as { audience?: "all" | "invited" | "registered_invitees" | "learners_inactive" | "learners_started" | "diploma_holders" | "competency_level"; tags?: number[]; status?: string[]; role?: string[]; competencyId?: string; minCompetencyLevel?: number };
+          const filter = (comm.recipientFilter || {}) as CommunicationRecipientFilter;
           const recipients = await getRecipientsByFilter(filter);
 
           // Send emails using Resend
@@ -237,7 +246,7 @@ export const adminEnhancedRouter = router({
                 from: "Neopolis Akademy <info@neopolis-dev.com>",
                 to: [r.email!],
                 subject: comm.subject,
-                html: comm.body.replace("{{name}}", r.name || ""),
+                html: interpolateRecipientName(sanitizeCommunicationHtml(comm.body), r.name),
               }).then(() => { sentCount++; }).catch(e => {
                 console.error(`[Comm] Failed to send to ${r.email}:`, e);
               })
@@ -263,18 +272,17 @@ export const adminEnhancedRouter = router({
 
     getRecipientCount: protectedProcedure
       .input(z.object({
-        recipientFilter: z.object({
-          audience: z.enum(["all", "invited", "registered_invitees", "learners_inactive", "learners_started", "diploma_holders", "competency_level"]).optional(),
-          tags: z.array(z.number()).optional(),
-          status: z.array(z.string()).optional(),
-          role: z.array(z.string()).optional(),
-          competencyId: z.string().min(2).max(80).optional(),
-          minCompetencyLevel: z.number().min(0).max(100).optional(),
-        }),
+        recipientFilter: communicationRecipientFilterSchema,
       }))
       .query(async ({ ctx, input }) => {
         assertAdmin(ctx);
         return await getRecipientPreview(input.recipientFilter);
+      }),
+
+    getSegmentOptions: protectedProcedure
+      .query(async ({ ctx }) => {
+        assertAdmin(ctx);
+        return await getCommunicationSegmentOptions();
       }),
   }),
 

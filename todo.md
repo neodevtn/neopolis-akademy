@@ -1580,3 +1580,17 @@
 - [x] Corriger l’erreur de filtrage détectée sur les candidats sélectionnés
 - [x] Analyser les trois incidents Sentry récents et traiter leurs causes applicatives
 - [x] Tester les pages affectées en navigateur et confirmer l’absence de nouveau crash
+
+## Constructeur avancé de segments de communication
+- [x] Auditer les données de progression, de cours, de compétences et de destinataires sélectionnables
+- [x] Ajouter des critères combinables par cours, statut entamé/terminé et nombre de jours
+- [x] Ajouter des critères de compétence par niveau et performance
+- [x] Ajouter une sélection manuelle des destinataires avec recherche et dédoublonnage
+- [x] Afficher la logique active, le nombre et un aperçu des destinataires avant l’envoi
+- [x] Tester les intersections de critères sans déclencher de communication non confirmée
+
+## Éditeur riche de communiqué
+- [x] Auditer les composants WYSIWYG existants et le traitement sécurisé du HTML d’e-mail
+- [x] Remplacer la saisie brute par un éditeur riche compatible avec le collage mis en forme
+- [x] Préserver une mise en page e-mail sûre : titres, paragraphes, listes, liens et emphases
+- [x] Tester le collage riche, la prévisualisation et le contenu transmis au brouillon
