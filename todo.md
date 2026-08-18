@@ -1617,3 +1617,12 @@
 - [x] Vérifier la présence de l’URL vidéo dans le détail de candidature côté API et administration
 - [x] Corriger l’affichage et la lecture de la vidéo de candidature dans la fiche détaillée
 - [x] Tester les parcours e-mail et vidéo sans déclencher d’envoi non confirmé
+
+## Intégrité pédagogique et revue de suspicion
+- [x] Auditer les données de progression, de temps, de tentatives et d’évaluations disponibles
+- [x] Définir des signaux explicables de comportement atypique et leurs seuils de revue
+- [x] Ajouter un tag de suspicion d’intégrité, une justification et un statut de revue humaine
+- [x] Afficher un tableau admin d’analyse des signaux et des éléments de preuve
+- [x] Prévoir le blocage uniquement par action explicite d’un administrateur après revue
+- [x] Ajouter des contrôles de compréhension transparents plutôt que des pièges cachés
+- [x] Tester le scoring, la traçabilité et les garde-fous de non-blocage automatique

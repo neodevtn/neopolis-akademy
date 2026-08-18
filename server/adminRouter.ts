@@ -27,6 +27,7 @@ import { formatCommunicationBody } from "./communicationBody";
 import { deliverClaimedCommunication } from "./communicationDelivery";
 import { isSchedulableCommunicationDate, toOneShotCommunicationCron } from "@shared/communicationScheduling";
 import type { CommunicationRecipientFilter } from "./adminDb";
+import { getIntegrityReviewQueue, getLearnerIntegrityReview, reviewLearnerIntegrity } from "./integrityService";
 
 const SALT_ROUNDS = 10;
 
@@ -181,6 +182,34 @@ export const adminEnhancedRouter = router({
         assertAdmin(ctx);
         return await getUserTags(input.userId);
       }),
+  }),
+
+  // ============ Integrity review (human decision only) ============
+  integrity: router({
+    queue: protectedProcedure.query(async ({ ctx }) => {
+      assertAdmin(ctx);
+      return await getIntegrityReviewQueue();
+    }),
+    getForLearner: protectedProcedure.input(z.object({ userId: z.number() })).query(async ({ ctx, input }) => {
+      assertAdmin(ctx);
+      return await getLearnerIntegrityReview(input.userId);
+    }),
+    review: protectedProcedure.input(z.object({
+      userId: z.number(),
+      status: z.enum(["review_required", "confirmed", "dismissed"]),
+      notes: z.string().max(3000).optional(),
+    })).mutation(async ({ ctx, input }) => {
+      assertAdmin(ctx);
+      const result = await reviewLearnerIntegrity({ ...input, reviewerId: ctx.user.id });
+      await logAdminActivity({
+        adminId: ctx.user.id,
+        action: "review_learning_integrity",
+        targetType: "user",
+        targetId: input.userId,
+        details: { status: input.status, riskScore: result.assessment.riskScore, signalIds: result.assessment.signals.map((signal) => signal.id) },
+      });
+      return result;
+    }),
   }),
 
   // ============ Communications ============

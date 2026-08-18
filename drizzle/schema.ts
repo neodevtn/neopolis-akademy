@@ -540,3 +540,25 @@ export const learningEvents = mysqlTable("learning_events", {
 });
 export type LearningEvent = typeof learningEvents.$inferSelect;
 export type InsertLearningEvent = typeof learningEvents.$inferInsert;
+
+/**
+ * Human-review workflow for atypical learning patterns.
+ * A score is only an explainable review signal: it never blocks an account automatically.
+ */
+export const learnerIntegrityReviews = mysqlTable("learner_integrity_reviews", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  status: mysqlEnum("status", ["review_required", "confirmed", "dismissed"]).notNull().default("review_required"),
+  riskScore: int("riskScore").notNull().default(0),
+  signals: json("signals").notNull(),
+  reviewerId: int("reviewerId"),
+  reviewerNotes: text("reviewerNotes"),
+  reviewedAt: timestamp("reviewedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("learner_integrity_user_unique").on(table.userId),
+  index("learner_integrity_status_idx").on(table.status, table.updatedAt),
+]);
+export type LearnerIntegrityReview = typeof learnerIntegrityReviews.$inferSelect;
+export type InsertLearnerIntegrityReview = typeof learnerIntegrityReviews.$inferInsert;

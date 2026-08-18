@@ -319,6 +319,11 @@ export default function TrainingDashboard() {
             </p>
           </div>
 
+          <div className="mb-6 flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/5 p-3 text-sm text-muted-foreground">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+            <p>{t({ en: "Integrity reminder: complete activities yourself and use learning support responsibly. Unusual activity patterns may be reviewed by the academic team; no account is blocked automatically.", fr: "Rappel d’intégrité : réalisez les activités vous-même et utilisez les outils d’aide de manière responsable. Des comportements inhabituels peuvent être revus par l’équipe pédagogique ; aucun compte n’est bloqué automatiquement." })}</p>
+          </div>
+
           {/* Quick stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             {[

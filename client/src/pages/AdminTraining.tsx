@@ -161,6 +161,18 @@ export default function AdminTraining() {
     { enabled: !!selectedUserId && isAuthenticated && user?.role === "admin" }
   );
 
+  const integrityQueueQuery = trpc.adminTools.integrity.queue.useQuery(undefined, {
+    enabled: isAuthenticated && user?.role === "admin" && activeTab === "learners",
+  });
+  const learnerIntegrityQuery = trpc.adminTools.integrity.getForLearner.useQuery(
+    { userId: selectedUserId! },
+    { enabled: !!selectedUserId && isAuthenticated && user?.role === "admin" },
+  );
+  const integrityByUserId = useMemo(
+    () => new Map((integrityQueueQuery.data || []).map((item) => [item.id, item])),
+    [integrityQueueQuery.data],
+  );
+
   const invitationsQuery = trpc.admin.getInvitations.useQuery(
     { page: 1, pageSize: 50 },
     { enabled: isAuthenticated && user?.role === "admin" && activeTab === "invitations" }
@@ -206,6 +218,15 @@ export default function AdminTraining() {
       learnersQuery.refetch();
     },
     onError: (err) => toast.error(err.message),
+  });
+
+  const integrityReviewMutation = trpc.adminTools.integrity.review.useMutation({
+    onSuccess: (data) => {
+      learnerIntegrityQuery.refetch();
+      integrityQueueQuery.refetch();
+      toast.success(data.review.status === "dismissed" ? "Signal écarté après revue" : "Revue d’intégrité enregistrée");
+    },
+    onError: (error) => toast.error(error.message || "Impossible d’enregistrer la revue"),
   });
 
   const bulkInviteMutation = trpc.admin.bulkCreateInvitations.useMutation({
@@ -348,6 +369,8 @@ export default function AdminTraining() {
     const totalSeconds = learningEvents.filter((e: any) => e.eventType === "learning_time").reduce((sum: number, e: any) => sum + (e.durationSeconds || 0), 0);
     const firstAttempts = learningEvents.filter((e: any) => e.eventType === "exercise_submitted" && e.attemptNumber === 1);
     const firstAttemptRate = firstAttempts.length ? Math.round((firstAttempts.filter((e: any) => e.success === 1).length / firstAttempts.length) * 100) : null;
+    const integrity = learnerIntegrityQuery.data;
+    const integrityTone = integrity?.assessment.level === "priority_review" ? "border-red-300 bg-red-50 dark:border-red-900/70 dark:bg-red-950/30" : integrity?.assessment.level === "review" ? "border-amber-300 bg-amber-50 dark:border-amber-900/70 dark:bg-amber-950/30" : "border-border bg-card";
 
     // Group progress by certification
     const progressByCert: Record<string, { courseId: string; lessonIndex: number }[]> = {};
@@ -442,6 +465,39 @@ export default function AdminTraining() {
                 <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><CheckCircle2 className="w-3 h-3" /> Réussite 1re tentative</div>
               </div>
             </div>
+
+            <section className={`mb-6 rounded-xl border p-5 ${integrityTone}`} aria-label="Revue d’intégrité pédagogique">
+              <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-amber-600" />
+                    <h3 className="font-semibold text-foreground">Intégrité pédagogique · revue humaine</h3>
+                    {integrity && <span className="rounded-full bg-background px-2 py-0.5 text-xs font-semibold text-foreground">Score de revue : {integrity.assessment.riskScore}/100</span>}
+                  </div>
+                  <p className="mt-1 max-w-3xl text-xs text-muted-foreground">Les signaux sont des éléments de contexte pédagogiques. Ils ne prouvent pas une utilisation d’IA et ne bloquent jamais un compte automatiquement.</p>
+                </div>
+                {integrity?.review && <span className="rounded-full bg-background px-2.5 py-1 text-xs font-medium text-foreground">Statut : {integrity.review.status === "dismissed" ? "Écarté" : integrity.review.status === "confirmed" ? "Suivi renforcé" : "À vérifier"}</span>}
+              </div>
+              {learnerIntegrityQuery.isLoading ? <div className="mt-4 h-16 animate-pulse rounded-lg bg-muted" /> : integrity && (
+                <>
+                  {integrity.assessment.signals.length ? (
+                    <ul className="mt-4 space-y-2">
+                      {integrity.assessment.signals.map((signal) => (
+                        <li key={signal.id} className="rounded-lg border border-border/70 bg-background/70 p-3 text-sm">
+                          <div className="flex items-center justify-between gap-3"><span className="font-medium text-foreground">{signal.label}</span><span className="text-xs font-semibold text-amber-700 dark:text-amber-300">+{signal.weight} points</span></div>
+                          <p className="mt-1 text-xs text-muted-foreground">{signal.details}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : <p className="mt-4 rounded-lg bg-background/70 p-3 text-sm text-muted-foreground">Aucun comportement atypique détecté par les signaux actuellement disponibles.</p>}
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <Button size="sm" variant="outline" disabled={integrityReviewMutation.isPending} onClick={() => integrityReviewMutation.mutate({ userId: selectedUserId, status: "review_required" })}><AlertTriangle className="mr-1.5 h-3.5 w-3.5" />Ajouter à la revue</Button>
+                    <Button size="sm" variant="outline" disabled={integrityReviewMutation.isPending} onClick={() => integrityReviewMutation.mutate({ userId: selectedUserId, status: "confirmed" })}><Shield className="mr-1.5 h-3.5 w-3.5" />Conserver le tag de suivi</Button>
+                    <Button size="sm" variant="ghost" disabled={integrityReviewMutation.isPending} onClick={() => integrityReviewMutation.mutate({ userId: selectedUserId, status: "dismissed" })}>Écarter après revue</Button>
+                  </div>
+                </>
+              )}
+            </section>
 
             <div className="mb-6">
               <AchievementGallery achievements={achievements} adminView emptyText="Cet apprenant n’a pas encore obtenu de badge ou de diplôme." />
@@ -721,6 +777,7 @@ export default function AdminTraining() {
                         <TableRow>
                           {([ ["name", "Apprenant"], ["email", "Email"] ] as const).map(([column, label]) => <TableHead key={column}><button type="button" className="inline-flex items-center gap-1 font-medium hover:text-foreground" onClick={() => toggleLearnerSort(column)}>{label}{learnerSortBy === column ? <span>{learnerSortDirection === "asc" ? "↑" : "↓"}</span> : <span className="text-muted-foreground/60">↕</span>}</button></TableHead>)}
                           <TableHead>Statut</TableHead>
+                          <TableHead>Revue</TableHead>
                           <TableHead>Rôle</TableHead>
                           <TableHead><button type="button" className="inline-flex items-center gap-1 font-medium hover:text-foreground" onClick={() => toggleLearnerSort("lastSignedIn")}>Dernière connexion{learnerSortBy === "lastSignedIn" ? <span>{learnerSortDirection === "asc" ? "↑" : "↓"}</span> : <span className="text-muted-foreground/60">↕</span>}</button></TableHead>
                           <TableHead className="text-right">Actions</TableHead>
@@ -745,6 +802,15 @@ export default function AdminTraining() {
                                   <CheckCircle2 className="w-3 h-3" /> Actif
                                 </span>
                               )}
+                            </TableCell>
+                            <TableCell>
+                              {(() => {
+                                const integrity = integrityByUserId.get(learner.id);
+                                if (!integrity) return <span className="text-xs text-muted-foreground">Aucun signal</span>;
+                                const label = integrity.review?.status === "dismissed" ? "Écarté" : integrity.review ? "À vérifier" : "Signal détecté";
+                                const tone = integrity.assessment.riskScore >= 60 ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" : "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300";
+                                return <span className={`text-xs px-2 py-1 rounded-full font-medium flex items-center gap-1 w-fit ${tone}`}><AlertTriangle className="w-3 h-3" />{label} · {integrity.assessment.riskScore}</span>;
+                              })()}
                             </TableCell>
                             <TableCell>
                               {learner.role === "admin" ? (
