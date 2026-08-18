@@ -575,12 +575,14 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
         page: z.number().min(1).default(1),
         pageSize: z.number().min(1).max(100).default(20),
         search: z.string().optional(),
+        sortBy: z.enum(["lastSignedIn", "name", "email", "createdAt"]).default("lastSignedIn"),
+        sortDirection: z.enum(["asc", "desc"]).default("desc"),
       }).optional())
       .query(async ({ ctx, input }) => {
         if (ctx.user.role !== "admin") {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
-        return await getAllLearners(input?.page || 1, input?.pageSize || 20, input?.search);
+        return await getAllLearners(input?.page || 1, input?.pageSize || 20, input?.search, input?.sortBy, input?.sortDirection);
       }),
 
     getLearnerDetail: protectedProcedure
@@ -663,10 +665,16 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
       }),
 
     getDirectInvitations: protectedProcedure
-      .input(z.object({ page: z.number().min(1).default(1), pageSize: z.number().min(1).max(100).default(20) }).optional())
+      .input(z.object({
+        page: z.number().min(1).default(1),
+        pageSize: z.number().min(1).max(100).default(20),
+        search: z.string().max(200).optional(),
+        sortBy: z.enum(["createdAt", "email", "name", "status", "expiresAt"]).default("createdAt"),
+        sortDirection: z.enum(["asc", "desc"]).default("desc"),
+      }).optional())
       .query(async ({ ctx, input }) => {
         if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
-        return await getDirectInvitations(input?.page || 1, input?.pageSize || 20);
+        return await getDirectInvitations(input?.page || 1, input?.pageSize || 20, input?.search, input?.sortBy, input?.sortDirection);
       }),
 
     cancelInvitation: protectedProcedure
@@ -766,11 +774,18 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
 
     // ============ Selected Candidates Tracking ============
     getSelectedCandidates: protectedProcedure
-      .query(async ({ ctx }) => {
+      .input(z.object({
+        page: z.number().min(1).default(1),
+        pageSize: z.number().min(1).max(100).default(10),
+        search: z.string().max(200).optional(),
+        sortBy: z.enum(["updatedAt", "email", "firstName", "scoreTotal"]).default("updatedAt"),
+        sortDirection: z.enum(["asc", "desc"]).default("desc"),
+      }).optional())
+      .query(async ({ ctx, input }) => {
         if (ctx.user.role !== "admin") {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
-        return await getSelectedCandidates();
+        return await getSelectedCandidates(input?.page || 1, input?.pageSize || 10, input?.search, input?.sortBy, input?.sortDirection);
       }),
 
     updateCandidateEmail: protectedProcedure

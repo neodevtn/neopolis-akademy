@@ -1561,3 +1561,9 @@
 - [x] Valider et dédupliquer les adresses avant l’envoi groupé
 - [x] Afficher un bilan clair des invitations envoyées ou refusées par adresse
 - [x] Tester le flux groupé sans régression sur l’invitation individuelle
+
+## Tableaux de données administratifs
+- [x] Auditer toutes les listes administratives et leurs possibilités actuelles de recherche, tri et pagination
+- [x] Normaliser en priorité les invitations directes avec pagination, recherche, tri et chargement serveur
+- [x] Étendre les mêmes composants et conventions aux autres listes administratives prioritaires
+- [x] Synchroniser les paramètres de tableau avec l’URL et tester les états de chargement, vides et erreur

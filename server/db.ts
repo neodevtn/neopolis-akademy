@@ -1,4 +1,4 @@
-import { eq, desc, sql, and, count, gt, isNull, isNotNull } from "drizzle-orm";
+import { eq, desc, asc, sql, and, or, like, count, gt, isNull, isNotNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, InsertLearnerAchievement } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -297,7 +297,13 @@ export async function getHistoricalAchievementCandidates() {
 
 // ============ Admin: All Learners ============
 
-export async function getAllLearners(page: number = 1, pageSize: number = 20, search?: string) {
+export async function getAllLearners(
+  page: number = 1,
+  pageSize: number = 20,
+  search?: string,
+  sortBy: "lastSignedIn" | "name" | "email" | "createdAt" = "lastSignedIn",
+  sortDirection: "asc" | "desc" = "desc",
+) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
@@ -310,6 +316,7 @@ export async function getAllLearners(page: number = 1, pageSize: number = 20, se
     name: users.name,
     email: users.email,
     role: users.role,
+    blocked: users.blocked,
     createdAt: users.createdAt,
     lastSignedIn: users.lastSignedIn,
   }).from(users);
@@ -321,7 +328,9 @@ export async function getAllLearners(page: number = 1, pageSize: number = 20, se
     ) as any;
   }
 
-  const allUsers = await (baseQuery as any).orderBy(desc(users.lastSignedIn)).limit(pageSize).offset(offset);
+  const sortableColumns = { lastSignedIn: users.lastSignedIn, name: users.name, email: users.email, createdAt: users.createdAt } as const;
+  const orderBy = sortDirection === "asc" ? asc(sortableColumns[sortBy]) : desc(sortableColumns[sortBy]);
+  const allUsers = await (baseQuery as any).orderBy(orderBy).limit(pageSize).offset(offset);
 
   // Get total count
   let countQuery = db.select({ total: count() }).from(users);
@@ -348,7 +357,7 @@ export async function getAllLearners(page: number = 1, pageSize: number = 20, se
     viaCandidature: candidatureEmails.has(u.email),
   }));
 
-  return { users: enriched, total, page, pageSize };
+  return { users: enriched, total, page, pageSize, search: search?.trim() || "", sortBy, sortDirection };
 }
 
 export async function getLearnerProgress(userId: number) {
@@ -519,20 +528,41 @@ export async function getInvitations(page: number = 1, pageSize: number = 20) {
 
   return { invitations, total, page, pageSize };
 }
-export async function getDirectInvitations(page: number = 1, pageSize: number = 20) {
+export async function getDirectInvitations(
+  page: number = 1,
+  pageSize: number = 20,
+  search?: string,
+  sortBy: "createdAt" | "email" | "name" | "status" | "expiresAt" = "createdAt",
+  sortDirection: "asc" | "desc" = "desc",
+) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
   const offset = (page - 1) * pageSize;
-  // Only invitations NOT linked to a candidature (applicationId IS NULL)
+  const filters = [isNull(userInvitations.applicationId)];
+  const normalizedSearch = search?.trim();
+  if (normalizedSearch) {
+    const searchTerm = `%${normalizedSearch}%`;
+    filters.push(or(like(userInvitations.email, searchTerm), like(userInvitations.name, searchTerm))!);
+  }
+  const where = and(...filters);
+  const sortableColumns = {
+    createdAt: userInvitations.createdAt,
+    email: userInvitations.email,
+    name: userInvitations.name,
+    status: userInvitations.status,
+    expiresAt: userInvitations.expiresAt,
+  } as const;
+  const orderBy = sortDirection === "asc" ? asc(sortableColumns[sortBy]) : desc(sortableColumns[sortBy]);
+
   const invitations = await db.select().from(userInvitations)
-    .where(isNull(userInvitations.applicationId))
-    .orderBy(desc(userInvitations.createdAt))
+    .where(where)
+    .orderBy(orderBy)
     .limit(pageSize).offset(offset);
   const [{ total }] = await db.select({ total: count() }).from(userInvitations)
-    .where(isNull(userInvitations.applicationId));
+    .where(where);
 
-  return { invitations, total, page, pageSize };
+  return { invitations, total, page, pageSize, search: normalizedSearch || "", sortBy, sortDirection };
 }
 
 export async function cancelInvitation(invitationId: number) {
@@ -909,11 +939,32 @@ export async function getUserById(id: number) {
 
 // ============ Selected Candidates Tracking ============
 
-export async function getSelectedCandidates() {
+export async function getSelectedCandidates(
+  page: number = 1,
+  pageSize: number = 10,
+  search?: string,
+  sortBy: "updatedAt" | "email" | "firstName" | "scoreTotal" = "updatedAt",
+  sortDirection: "asc" | "desc" = "desc",
+) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  // Get all applications with status "selectionne"
+  const filters = [eq(applications.status, "selectionne")];
+  const normalizedSearch = search?.trim();
+  if (normalizedSearch) {
+    const searchTerm = `%${normalizedSearch}%`;
+    filters.push(or(like(applications.firstName, searchTerm), like(applications.lastName, searchTerm), like(applications.email, searchTerm))!);
+  }
+  const where = and(...filters);
+  const sortableColumns = {
+    updatedAt: applications.updatedAt,
+    email: applications.email,
+    firstName: applications.firstName,
+    scoreTotal: applications.scoreTotal,
+  } as const;
+  const orderBy = sortDirection === "asc" ? asc(sortableColumns[sortBy]) : desc(sortableColumns[sortBy]);
+  const offset = (page - 1) * pageSize;
+
   const selectedApps = await db.select({
     id: applications.id,
     firstName: applications.firstName,
@@ -924,7 +975,8 @@ export async function getSelectedCandidates() {
     scoreTotal: applications.scoreTotal,
     createdAt: applications.createdAt,
     updatedAt: applications.updatedAt,
-  }).from(applications).where(eq(applications.status, "selectionne")).orderBy(desc(applications.updatedAt));
+  }).from(applications).where(where).orderBy(orderBy).limit(pageSize).offset(offset);
+  const [{ total }] = await db.select({ total: count() }).from(applications).where(where);
 
   // For each selected candidate, check if they have a user account and invitation status
   const results = [];
@@ -951,7 +1003,7 @@ export async function getSelectedCandidates() {
     });
   }
 
-  return results;
+  return { candidates: results, total, page, pageSize, search: normalizedSearch || "", sortBy, sortDirection };
 }
 
 export async function updateApplicationEmail(applicationId: number, newEmail: string) {

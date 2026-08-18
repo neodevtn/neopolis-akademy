@@ -50,6 +50,8 @@ export default function AdminTraining() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const [learnerSortBy, setLearnerSortBy] = useState<"lastSignedIn" | "name" | "email" | "createdAt">("lastSignedIn");
+  const [learnerSortDirection, setLearnerSortDirection] = useState<"asc" | "desc">("desc");
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmails, setInviteEmails] = useState("");
@@ -75,6 +77,60 @@ export default function AdminTraining() {
     navigate(buildNavigationUrl("/admin/training", { tab, learner: learnerId }));
   };
 
+  const directInvitationTable = useMemo(() => {
+    const params = new URLSearchParams(urlSearch);
+    const page = Math.max(1, Number(params.get("invPage")) || 1);
+    const search = params.get("invSearch") || "";
+    const sortBy = ["createdAt", "email", "name", "status", "expiresAt"].includes(params.get("invSort") || "") ? params.get("invSort")! as "createdAt" | "email" | "name" | "status" | "expiresAt" : "createdAt";
+    const sortDirection = params.get("invDirection") === "asc" ? "asc" as const : "desc" as const;
+    return { page, search, sortBy, sortDirection };
+  }, [urlSearch]);
+
+  const selectedCandidateTable = useMemo(() => {
+    const params = new URLSearchParams(urlSearch);
+    const page = Math.max(1, Number(params.get("selectedPage")) || 1);
+    const search = params.get("selectedSearch") || "";
+    const sortBy = ["updatedAt", "email", "firstName", "scoreTotal"].includes(params.get("selectedSort") || "") ? params.get("selectedSort")! as "updatedAt" | "email" | "firstName" | "scoreTotal" : "updatedAt";
+    const sortDirection = params.get("selectedDirection") === "asc" ? "asc" as const : "desc" as const;
+    return { page, search, sortBy, sortDirection };
+  }, [urlSearch]);
+
+  const updateDirectInvitationTable = (next: Partial<typeof directInvitationTable>) => {
+    const state = { ...directInvitationTable, ...next };
+    const params = new URLSearchParams(urlSearch);
+    params.set("tab", "invitations");
+    state.page > 1 ? params.set("invPage", String(state.page)) : params.delete("invPage");
+    state.search ? params.set("invSearch", state.search) : params.delete("invSearch");
+    state.sortBy !== "createdAt" ? params.set("invSort", state.sortBy) : params.delete("invSort");
+    state.sortDirection !== "desc" ? params.set("invDirection", state.sortDirection) : params.delete("invDirection");
+    navigate(`/admin/training?${params.toString()}`);
+  };
+
+  const updateSelectedCandidateTable = (next: Partial<typeof selectedCandidateTable>) => {
+    const state = { ...selectedCandidateTable, ...next };
+    const params = new URLSearchParams(urlSearch);
+    params.set("tab", "selected");
+    state.page > 1 ? params.set("selectedPage", String(state.page)) : params.delete("selectedPage");
+    state.search ? params.set("selectedSearch", state.search) : params.delete("selectedSearch");
+    state.sortBy !== "updatedAt" ? params.set("selectedSort", state.sortBy) : params.delete("selectedSort");
+    state.sortDirection !== "desc" ? params.set("selectedDirection", state.sortDirection) : params.delete("selectedDirection");
+    navigate(`/admin/training?${params.toString()}`);
+  };
+
+  const toggleDirectInvitationSort = (column: typeof directInvitationTable.sortBy) => {
+    updateDirectInvitationTable({
+      page: 1,
+      sortBy: column,
+      sortDirection: directInvitationTable.sortBy === column && directInvitationTable.sortDirection === "desc" ? "asc" : "desc",
+    });
+  };
+
+  const toggleLearnerSort = (column: typeof learnerSortBy) => {
+    setPage(1);
+    setLearnerSortDirection((direction) => learnerSortBy === column && direction === "desc" ? "asc" : "desc");
+    setLearnerSortBy(column);
+  };
+
   useEffect(() => {
     const params = new URLSearchParams(urlSearch);
     const tab = params.get("tab");
@@ -96,7 +152,7 @@ export default function AdminTraining() {
   });
 
   const learnersQuery = trpc.admin.getLearners.useQuery(
-    { page, pageSize, search: search || undefined },
+    { page, pageSize, search: search || undefined, sortBy: learnerSortBy, sortDirection: learnerSortDirection },
     { enabled: isAuthenticated && user?.role === "admin" && activeTab === "learners" }
   );
 
@@ -111,7 +167,7 @@ export default function AdminTraining() {
   );
 
   const directInvitationsQuery = trpc.admin.getDirectInvitations.useQuery(
-    { page: 1, pageSize: 50 },
+    { page: directInvitationTable.page, pageSize: 10, search: directInvitationTable.search || undefined, sortBy: directInvitationTable.sortBy, sortDirection: directInvitationTable.sortDirection },
     { enabled: isAuthenticated && user?.role === "admin" && activeTab === "invitations" }
   );
 
@@ -127,7 +183,7 @@ export default function AdminTraining() {
     enabled: false, // manual trigger
   });
 
-  const selectedCandidatesQuery = trpc.admin.getSelectedCandidates.useQuery(undefined, {
+  const selectedCandidatesQuery = trpc.admin.getSelectedCandidates.useQuery({ page: selectedCandidateTable.page, pageSize: 10, search: selectedCandidateTable.search || undefined, sortBy: selectedCandidateTable.sortBy, sortDirection: selectedCandidateTable.sortDirection }, {
     enabled: isAuthenticated && user?.role === "admin" && activeTab === "selected",
   });
 
@@ -663,11 +719,10 @@ export default function AdminTraining() {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Apprenant</TableHead>
-                          <TableHead>Email</TableHead>
+                          {([ ["name", "Apprenant"], ["email", "Email"] ] as const).map(([column, label]) => <TableHead key={column}><button type="button" className="inline-flex items-center gap-1 font-medium hover:text-foreground" onClick={() => toggleLearnerSort(column)}>{label}{learnerSortBy === column ? <span>{learnerSortDirection === "asc" ? "↑" : "↓"}</span> : <span className="text-muted-foreground/60">↕</span>}</button></TableHead>)}
                           <TableHead>Statut</TableHead>
                           <TableHead>Rôle</TableHead>
-                          <TableHead>Dernière connexion</TableHead>
+                          <TableHead><button type="button" className="inline-flex items-center gap-1 font-medium hover:text-foreground" onClick={() => toggleLearnerSort("lastSignedIn")}>Dernière connexion{learnerSortBy === "lastSignedIn" ? <span>{learnerSortDirection === "asc" ? "↑" : "↓"}</span> : <span className="text-muted-foreground/60">↕</span>}</button></TableHead>
                           <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -778,6 +833,13 @@ export default function AdminTraining() {
               <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl text-sm text-blue-700 dark:text-blue-300">
                 Cet onglet affiche uniquement les <strong>invitations directes</strong> (envoyées sans passer par une candidature). Les invitations liées à une candidature sont visibles dans l'onglet <strong>Candidats sélectionnés</strong>.
               </div>
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="relative w-full sm:max-w-sm">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input value={directInvitationTable.search} onChange={(event) => updateDirectInvitationTable({ search: event.target.value, page: 1 })} placeholder="Rechercher un e-mail ou un nom…" className="pl-9" />
+                </div>
+                <p className="text-xs text-muted-foreground">Recherche, tri et pagination sont appliqués côté serveur.</p>
+              </div>
               <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
                 {directInvitationsQuery.isLoading ? (
                   <div className="p-12 text-center">
@@ -796,11 +858,7 @@ export default function AdminTraining() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Nom</TableHead>
-                        <TableHead>Statut</TableHead>
-                        <TableHead>Expire le</TableHead>
-                        <TableHead>Envoyée le</TableHead>
+                        {([ ["email", "Email"], ["name", "Nom"], ["status", "Statut"], ["expiresAt", "Expire le"], ["createdAt", "Envoyée le"] ] as const).map(([column, label]) => <TableHead key={column}><button type="button" className="inline-flex items-center gap-1 font-medium hover:text-foreground" onClick={() => toggleDirectInvitationSort(column)}>{label}{directInvitationTable.sortBy === column ? <span aria-label={directInvitationTable.sortDirection === "asc" ? "Tri croissant" : "Tri décroissant"}>{directInvitationTable.sortDirection === "asc" ? "↑" : "↓"}</span> : <span className="text-muted-foreground/60">↕</span>}</button></TableHead>)}
                         <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -852,6 +910,10 @@ export default function AdminTraining() {
                     </TableBody>
                   </Table>
                 )}
+                {directInvitationsQuery.data && directInvitationsQuery.data.total > 0 && (() => {
+                  const totalPages = Math.max(1, Math.ceil(directInvitationsQuery.data.total / directInvitationsQuery.data.pageSize));
+                  return <div className="flex flex-col gap-3 border-t border-border px-5 py-4 text-sm sm:flex-row sm:items-center sm:justify-between"><span className="text-muted-foreground">{directInvitationsQuery.data.total} invitation{directInvitationsQuery.data.total > 1 ? "s" : ""} · page {directInvitationTable.page}/{totalPages}</span><div className="flex gap-2"><Button variant="outline" size="sm" disabled={directInvitationTable.page <= 1 || directInvitationsQuery.isFetching} onClick={() => updateDirectInvitationTable({ page: directInvitationTable.page - 1 })}><ChevronLeft className="mr-1 h-4 w-4" /> Précédent</Button><Button variant="outline" size="sm" disabled={directInvitationTable.page >= totalPages || directInvitationsQuery.isFetching} onClick={() => updateDirectInvitationTable({ page: directInvitationTable.page + 1 })}>Suivant <ChevronRight className="ml-1 h-4 w-4" /></Button></div></div>;
+                })()}
               </div>
             </TabsContent>
 
@@ -861,6 +923,8 @@ export default function AdminTraining() {
                 data={selectedCandidatesQuery.data}
                 emailStats={emailStatsQuery.data}
                 isLoading={selectedCandidatesQuery.isLoading}
+                table={selectedCandidateTable}
+                onTableChange={updateSelectedCandidateTable}
                 editEmailId={editEmailId}
                 editEmailValue={editEmailValue}
                 setEditEmailId={setEditEmailId}
@@ -1289,9 +1353,11 @@ function StatCard({ icon, value, label }: { icon: React.ReactNode; value: number
 
 /* ─── Selected Candidates Panel ─── */
 interface SelectedCandidatesPanelProps {
-  data: any[] | undefined;
+  data: { candidates: any[]; total: number; page: number; pageSize: number } | undefined;
   emailStats: any | undefined;
   isLoading: boolean;
+  table: { page: number; search: string; sortBy: "updatedAt" | "email" | "firstName" | "scoreTotal"; sortDirection: "asc" | "desc" };
+  onTableChange: (next: Partial<{ page: number; search: string; sortBy: "updatedAt" | "email" | "firstName" | "scoreTotal"; sortDirection: "asc" | "desc" }>) => void;
   editEmailId: number | null;
   editEmailValue: string;
   setEditEmailId: (id: number | null) => void;
@@ -1306,6 +1372,8 @@ function SelectedCandidatesPanel({
   data,
   emailStats,
   isLoading,
+  table,
+  onTableChange,
   editEmailId,
   editEmailValue,
   setEditEmailId,
@@ -1324,7 +1392,7 @@ function SelectedCandidatesPanel({
     );
   }
 
-  if (!data || data.length === 0) {
+  if (!data || data.candidates.length === 0) {
     return (
       <div className="p-12 text-center">
         <UserCog className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
@@ -1334,11 +1402,13 @@ function SelectedCandidatesPanel({
   }
 
   // Compute stats
-  const totalSelected = data.length;
-  const accountsCreated = data.filter((c: any) => c.accountStatus === "active").length;
-  const invitationsSent = data.filter((c: any) => c.latestInvitation).length;
-  const bounced = data.filter((c: any) => c.latestInvitation?.emailDeliveryStatus === "bounced").length;
-  const pending = data.filter((c: any) => c.accountStatus === "no_account" && !c.latestInvitation).length;
+  const totalSelected = data.total;
+  const accountsCreated = data.candidates.filter((c: any) => c.accountStatus === "active").length;
+  const invitationsSent = data.candidates.filter((c: any) => c.latestInvitation).length;
+  const bounced = data.candidates.filter((c: any) => c.latestInvitation?.emailDeliveryStatus === "bounced").length;
+  const pending = data.candidates.filter((c: any) => c.accountStatus === "no_account" && !c.latestInvitation).length;
+  const totalPages = Math.max(1, Math.ceil(data.total / data.pageSize));
+  const toggleSort = (sortBy: typeof table.sortBy) => onTableChange({ page: 1, sortBy, sortDirection: table.sortBy === sortBy && table.sortDirection === "desc" ? "asc" : "desc" });
 
   return (
     <div className="space-y-6">
@@ -1381,21 +1451,24 @@ function SelectedCandidatesPanel({
         </div>
       </div>
 
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative w-full sm:max-w-sm"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input value={table.search} onChange={(event) => onTableChange({ search: event.target.value, page: 1 })} placeholder="Rechercher un candidat ou un e-mail…" className="pl-9" /></div>
+        <p className="text-xs text-muted-foreground">Indicateurs hors total calculés sur la page affichée.</p>
+      </div>
+
       {/* Table */}
       <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Candidat</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Score</TableHead>
+              {([ ["firstName", "Candidat"], ["email", "Email"], ["scoreTotal", "Score"] ] as const).map(([column, label]) => <TableHead key={column}><button type="button" className="inline-flex items-center gap-1 font-medium hover:text-foreground" onClick={() => toggleSort(column)}>{label}{table.sortBy === column ? <span>{table.sortDirection === "asc" ? "↑" : "↓"}</span> : <span className="text-muted-foreground/60">↕</span>}</button></TableHead>)}
               <TableHead>Statut compte</TableHead>
               <TableHead>Statut email</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((candidate: any) => {
+            {data.candidates.map((candidate: any) => {
               const accountStatusBadge = candidate.accountStatus === "active"
                 ? { label: "Compte créé", class: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" }
                 : candidate.latestInvitation?.status === "accepted"
@@ -1510,6 +1583,7 @@ function SelectedCandidatesPanel({
             })}
           </TableBody>
         </Table>
+        <div className="flex flex-col gap-3 border-t border-border px-5 py-4 text-sm sm:flex-row sm:items-center sm:justify-between"><span className="text-muted-foreground">{data.total} candidat{data.total > 1 ? "s" : ""} · page {table.page}/{totalPages}</span><div className="flex gap-2"><Button variant="outline" size="sm" disabled={table.page <= 1} onClick={() => onTableChange({ page: table.page - 1 })}><ChevronLeft className="mr-1 h-4 w-4" /> Précédent</Button><Button variant="outline" size="sm" disabled={table.page >= totalPages} onClick={() => onTableChange({ page: table.page + 1 })}>Suivant <ChevronRight className="ml-1 h-4 w-4" /></Button></div></div>
       </div>
     </div>
   );
