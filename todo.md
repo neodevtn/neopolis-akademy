@@ -1643,3 +1643,12 @@
 - [x] Inclure un administrateur comme apprenant lorsque ses événements sont pédagogiques
 - [x] Exclure explicitement toute activité administrative des compteurs et classements d’apprentissage
 - [x] Tester la cohérence des profils mixtes sur le tableau de bord et mobile
+
+## Récupération de compte, navigation et sécurité
+- [x] Auditer le flux de mot de passe oublié, ses liens, ses tokens et ses e-mails
+- [x] Vérifier la délivrabilité du lien de récupération vers le bon compte sans révéler l’existence d’un e-mail
+- [x] Revoir l’arborescence des menus et promouvoir les communications à la navigation principale appropriée
+- [x] Réaliser une revue de sécurité défensive : authentification, autorisations, sessions, validation, en-têtes et exposition des données
+- [x] Corriger les protections prioritaires identifiées et les couvrir par tests
+- [x] Tester les parcours de récupération et de navigation sans envoi ou action destructive non confirmée
+- [ ] Migrer Recharts v2 vers v3 afin de supprimer l’alerte de dépendance élevée restante
