@@ -1567,3 +1567,10 @@
 - [x] Normaliser en priorité les invitations directes avec pagination, recherche, tri et chargement serveur
 - [x] Étendre les mêmes composants et conventions aux autres listes administratives prioritaires
 - [x] Synchroniser les paramètres de tableau avec l’URL et tester les états de chargement, vides et erreur
+
+## Communications de masse ciblées
+- [x] Auditer le module de communications et les données de segmentation disponibles
+- [x] Ajouter les segments : tous, invités, invités inscrits et apprenants inactifs ou ayant commencé
+- [x] Ajouter les segments selon diplôme obtenu, compétence acquise et seuil de niveau
+- [x] Afficher un aperçu vérifiable du nombre de destinataires avant la confirmation d’envoi
+- [x] Tester les combinaisons de filtres sans déclencher de communication non confirmée

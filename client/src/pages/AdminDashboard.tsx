@@ -15,6 +15,7 @@ import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 import { AdminNavbar } from "@/components/AdminNavbar";
 import { buildNavigationUrl } from "@shared/navigationUrls";
+import { COMMUNICATION_AUDIENCE_LABELS, type CommunicationAudience } from "@shared/communicationRecipients";
 
 const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
@@ -54,6 +55,9 @@ export default function AdminDashboard() {
   const [commSubject, setCommSubject] = useState("");
   const [commBody, setCommBody] = useState("");
   const [commType, setCommType] = useState<string>("announcement");
+  const [commAudience, setCommAudience] = useState<CommunicationAudience>("all");
+  const [commCompetencyId, setCommCompetencyId] = useState("");
+  const [commMinCompetencyLevel, setCommMinCompetencyLevel] = useState("10");
   const [notifOpen, setNotifOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
 
@@ -161,8 +165,17 @@ export default function AdminDashboard() {
   });
 
   const communicationsQuery = trpc.adminTools.communications.list.useQuery(undefined, { enabled: activeTab === "communications" });
+  const competencyFrameworkQuery = trpc.competencies.getFramework.useQuery(undefined, { enabled: commDialog && isAuthenticated && user?.role === "admin" });
+  const communicationRecipientFilter = useMemo(() => ({
+    audience: commAudience,
+    ...(commAudience === "competency_level" && commCompetencyId ? { competencyId: commCompetencyId, minCompetencyLevel: Math.min(100, Math.max(0, Number(commMinCompetencyLevel) || 0)) } : {}),
+  }), [commAudience, commCompetencyId, commMinCompetencyLevel]);
+  const recipientPreviewQuery = trpc.adminTools.communications.getRecipientCount.useQuery(
+    { recipientFilter: communicationRecipientFilter },
+    { enabled: commDialog && (commAudience !== "competency_level" || Boolean(commCompetencyId)), staleTime: 5_000 },
+  );
   const createCommMutation = trpc.adminTools.communications.create.useMutation({
-    onSuccess: () => { communicationsQuery.refetch(); setCommDialog(false); setCommSubject(""); setCommBody(""); toast.success("Communication créée"); },
+    onSuccess: () => { communicationsQuery.refetch(); setCommDialog(false); setCommSubject(""); setCommBody(""); setCommAudience("all"); setCommCompetencyId(""); setCommMinCompetencyLevel("10"); toast.success("Communication créée"); },
   });
   const sendCommMutation = trpc.adminTools.communications.send.useMutation({
     onSuccess: (data) => { communicationsQuery.refetch(); toast.success(`Communication envoyée à ${data.sentCount} destinataire(s)`); },
@@ -1151,10 +1164,17 @@ export default function AdminDashboard() {
                 </Select>
               </div>
               <div>
-                <Label className="text-xs">Destinataires</Label>
-                <p className="text-xs text-muted-foreground mt-2">Tous les utilisateurs avec email</p>
+                <Label className="text-xs">Segment de destinataires</Label>
+                <Select value={commAudience} onValueChange={(value) => setCommAudience(value as CommunicationAudience)}>
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {(Object.entries(COMMUNICATION_AUDIENCE_LABELS) as [CommunicationAudience, string][]).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
+            {commAudience === "competency_level" && <div className="grid grid-cols-1 gap-4 rounded-lg border border-border bg-muted/30 p-3 sm:grid-cols-[1fr_150px]"><div><Label className="text-xs">Compétence</Label><Select value={commCompetencyId} onValueChange={setCommCompetencyId}><SelectTrigger className="mt-1"><SelectValue placeholder="Choisir une compétence" /></SelectTrigger><SelectContent>{(competencyFrameworkQuery.data?.definitions || []).filter((definition: any) => definition.active).map((definition: any) => <SelectItem key={definition.id} value={definition.id}>{typeof definition.title === "object" ? definition.title.fr || definition.title.en : definition.title}</SelectItem>)}</SelectContent></Select></div><div><Label className="text-xs">Niveau minimum</Label><Input className="mt-1" type="number" min="0" max="100" value={commMinCompetencyLevel} onChange={(event) => setCommMinCompetencyLevel(event.target.value)} /></div></div>}
+            <div className="rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-sm"><div className="flex items-center justify-between gap-3"><span className="font-medium">Aperçu des destinataires</span>{recipientPreviewQuery.isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <span className="font-semibold text-primary">{recipientPreviewQuery.data?.count ?? 0} adresse{(recipientPreviewQuery.data?.count ?? 0) > 1 ? "s" : ""}</span>}</div>{recipientPreviewQuery.data?.sample?.length ? <p className="mt-1 truncate text-xs text-muted-foreground">Exemples : {recipientPreviewQuery.data.sample.map((recipient: any) => recipient.email).join(" · ")}</p> : <p className="mt-1 text-xs text-muted-foreground">Sélectionnez une compétence pour estimer ce segment.</p>}</div>
             <div>
               <Label className="text-xs">Sujet</Label>
               <Input className="mt-1" placeholder="Objet de l'email..." value={commSubject} onChange={(e) => setCommSubject(e.target.value)} />
@@ -1166,7 +1186,7 @@ export default function AdminDashboard() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCommDialog(false)}>Annuler</Button>
-            <Button disabled={!commSubject.trim() || !commBody.trim() || createCommMutation.isPending} onClick={() => { createCommMutation.mutate({ subject: commSubject, body: commBody, type: commType as any }); }}>
+            <Button disabled={!commSubject.trim() || !commBody.trim() || !recipientPreviewQuery.data?.count || createCommMutation.isPending} onClick={() => { createCommMutation.mutate({ subject: commSubject, body: commBody, type: commType as any, recipientFilter: communicationRecipientFilter }); }}>
               {createCommMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Plus className="w-4 h-4 mr-1" />}
               Créer le brouillon
             </Button>

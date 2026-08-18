@@ -241,6 +241,28 @@ describe("Admin API - Application Management", () => {
   });
 });
 
+describe("Admin API - Communications ciblées", () => {
+  it("prévisualise un segment sans déclencher d’envoi", async () => {
+    const caller = appRouter.createCaller(createAdminContext());
+    const result = await caller.adminTools.communications.getRecipientCount({
+      recipientFilter: { audience: "learners_started" },
+    });
+
+    expect(result).toHaveProperty("count");
+    expect(result).toHaveProperty("sample");
+    expect(typeof result.count).toBe("number");
+    expect(Array.isArray(result.sample)).toBe(true);
+  });
+
+  it("refuse un segment inconnu", async () => {
+    const caller = appRouter.createCaller(createAdminContext());
+    await expect(
+      // @ts-expect-error - validation d’un segment arbitraire
+      caller.adminTools.communications.getRecipientCount({ recipientFilter: { audience: "unknown" } }),
+    ).rejects.toThrow();
+  });
+});
+
 // ─── System Router Tests ───
 
 describe("System Router - Error Reporting", () => {

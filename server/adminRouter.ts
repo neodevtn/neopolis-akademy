@@ -8,7 +8,7 @@ import {
   createCommunication, getCommunications, updateCommunicationStatus,
   logAdminActivity, getAdminActivityLog,
   bulkUpdateApplicationStatus, getApplicationsByIds,
-  getLearnerAnalytics, getRecipientsByFilter,
+  getLearnerAnalytics, getRecipientsByFilter, getRecipientPreview,
 } from "./adminDb";
 import {
   getAdminNotifications, getUnreadNotificationCount,
@@ -164,9 +164,12 @@ export const adminEnhancedRouter = router({
         body: z.string().min(1).max(50000),
         type: z.enum(["invitation", "announcement", "reminder", "welcome", "custom"]),
         recipientFilter: z.object({
+          audience: z.enum(["all", "invited", "registered_invitees", "learners_inactive", "learners_started", "diploma_holders", "competency_level"]).optional(),
           tags: z.array(z.number()).optional(),
           status: z.array(z.string()).optional(),
           role: z.array(z.string()).optional(),
+          competencyId: z.string().min(2).max(80).optional(),
+          minCompetencyLevel: z.number().min(0).max(100).optional(),
         }).optional(),
       }))
       .mutation(async ({ ctx, input }) => {
@@ -214,7 +217,7 @@ export const adminEnhancedRouter = router({
 
         try {
           // Get recipients based on filter
-          const filter = (comm.recipientFilter || {}) as { tags?: number[]; status?: string[]; role?: string[] };
+          const filter = (comm.recipientFilter || {}) as { audience?: "all" | "invited" | "registered_invitees" | "learners_inactive" | "learners_started" | "diploma_holders" | "competency_level"; tags?: number[]; status?: string[]; role?: string[]; competencyId?: string; minCompetencyLevel?: number };
           const recipients = await getRecipientsByFilter(filter);
 
           // Send emails using Resend
@@ -261,15 +264,17 @@ export const adminEnhancedRouter = router({
     getRecipientCount: protectedProcedure
       .input(z.object({
         recipientFilter: z.object({
+          audience: z.enum(["all", "invited", "registered_invitees", "learners_inactive", "learners_started", "diploma_holders", "competency_level"]).optional(),
           tags: z.array(z.number()).optional(),
           status: z.array(z.string()).optional(),
           role: z.array(z.string()).optional(),
+          competencyId: z.string().min(2).max(80).optional(),
+          minCompetencyLevel: z.number().min(0).max(100).optional(),
         }),
       }))
       .query(async ({ ctx, input }) => {
         assertAdmin(ctx);
-        const recipients = await getRecipientsByFilter(input.recipientFilter);
-        return { count: recipients.length };
+        return await getRecipientPreview(input.recipientFilter);
       }),
   }),
 

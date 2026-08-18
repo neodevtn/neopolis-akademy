@@ -6,8 +6,10 @@ import {
   userTags, InsertUserTag,
   communications, InsertCommunication,
   adminActivityLog, InsertAdminActivityLog,
-  users, applications, trainingProgress, examAttempts, chapterProgress,
+  users, applications, trainingProgress, examAttempts, chapterProgress, userInvitations,
+  learnerAchievements, learnerCompetencyContributions,
 } from "../drizzle/schema";
+import type { CommunicationAudience } from "../shared/communicationRecipients";
 
 // ============ Admin Notes ============
 
@@ -254,37 +256,93 @@ export async function getLearnerAnalytics() {
 
 // ============ Get recipients for communication ============
 
-export async function getRecipientsByFilter(filter: { tags?: number[]; status?: string[]; role?: string[] }) {
+export type CommunicationRecipientFilter = {
+  audience?: CommunicationAudience;
+  tags?: number[];
+  status?: string[];
+  role?: string[];
+  competencyId?: string;
+  minCompetencyLevel?: number;
+};
+
+type Recipient = { id?: number; email: string; name: string | null };
+
+/** Résout un segment sur des destinataires uniques sans déclencher d’envoi. */
+export async function getRecipientsByFilter(filter: CommunicationRecipientFilter = {}): Promise<Recipient[]> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  let userIds: Set<number> | null = null;
+  const audience = filter.audience || "all";
+  let taggedUserIds: Set<number> | null = null;
 
   // Filter by tags
   if (filter.tags && filter.tags.length > 0) {
     const taggedUsers = await db.select({ userId: userTags.userId }).from(userTags)
       .where(inArray(userTags.tagId, filter.tags));
-    userIds = new Set(taggedUsers.map(t => t.userId));
+    taggedUserIds = new Set(taggedUsers.map(t => t.userId));
   }
 
-  // Get all matching users
-  let allUsers = await db.select({
+  const [allUsers, invitations, progressRows, certificationRows, contributionRows] = await Promise.all([
+    db.select({
     id: users.id,
     email: users.email,
     name: users.name,
     role: users.role,
-  }).from(users);
+    blocked: users.blocked,
+    }).from(users),
+    db.select({ email: userInvitations.email, name: userInvitations.name, status: userInvitations.status }).from(userInvitations),
+    db.select({ userId: trainingProgress.userId }).from(trainingProgress),
+    db.select({ userId: learnerAchievements.userId }).from(learnerAchievements).where(eq(learnerAchievements.kind, "certification")),
+    db.select({ userId: learnerCompetencyContributions.userId, competencyId: learnerCompetencyContributions.competencyId, points: learnerCompetencyContributions.points }).from(learnerCompetencyContributions),
+  ]);
 
-  // Apply role filter
+  let matchingUsers = allUsers.filter((user) => user.email && user.email.trim() !== "" && !user.blocked);
   if (filter.role && filter.role.length > 0) {
-    allUsers = allUsers.filter(u => filter.role!.includes(u.role));
+    matchingUsers = matchingUsers.filter((user) => filter.role!.includes(user.role));
+  }
+  if (taggedUserIds !== null) {
+    matchingUsers = matchingUsers.filter((user) => taggedUserIds!.has(user.id));
   }
 
-  // Apply tag filter
-  if (userIds !== null) {
-    allUsers = allUsers.filter(u => userIds!.has(u.id));
+  const invitationEmails = new Set(invitations.map((invitation) => invitation.email.toLowerCase()));
+  const progressedUserIds = new Set(progressRows.map((row) => row.userId));
+  const diplomaUserIds = new Set(certificationRows.map((row) => row.userId));
+  const competencyLevels = new Map<number, number>();
+  if (filter.competencyId) {
+    for (const contribution of contributionRows) {
+      if (contribution.competencyId === filter.competencyId) {
+        competencyLevels.set(contribution.userId, (competencyLevels.get(contribution.userId) || 0) + Number(contribution.points));
+      }
+    }
   }
 
-  // Filter out users without email
-  return allUsers.filter(u => u.email && u.email.trim() !== "");
+  let recipients: Recipient[];
+  if (audience === "invited") {
+    recipients = invitations
+      .filter((invitation) => !filter.status?.length || filter.status.includes(invitation.status))
+      .map((invitation) => ({ email: invitation.email, name: invitation.name }));
+  } else {
+    if (audience === "registered_invitees") matchingUsers = matchingUsers.filter((user) => invitationEmails.has(user.email!.toLowerCase()));
+    if (audience === "learners_inactive") matchingUsers = matchingUsers.filter((user) => !progressedUserIds.has(user.id));
+    if (audience === "learners_started") matchingUsers = matchingUsers.filter((user) => progressedUserIds.has(user.id));
+    if (audience === "diploma_holders") matchingUsers = matchingUsers.filter((user) => diplomaUserIds.has(user.id));
+    if (audience === "competency_level") {
+      const threshold = Math.max(0, Math.min(100, filter.minCompetencyLevel ?? 0));
+      matchingUsers = matchingUsers.filter((user) => Boolean(filter.competencyId) && (competencyLevels.get(user.id) || 0) >= threshold);
+    }
+    recipients = matchingUsers.map((user) => ({ id: user.id, email: user.email!, name: user.name }));
+    if (audience === "all") recipients.push(...invitations.filter((invitation) => invitation.status === "pending").map((invitation) => ({ email: invitation.email, name: invitation.name })));
+  }
+
+  const unique = new Map<string, Recipient>();
+  for (const recipient of recipients) {
+    const email = recipient.email.trim().toLowerCase();
+    if (email) unique.set(email, { ...recipient, email });
+  }
+  return Array.from(unique.values());
+}
+
+export async function getRecipientPreview(filter: CommunicationRecipientFilter = {}) {
+  const recipients = await getRecipientsByFilter(filter);
+  return { count: recipients.length, sample: recipients.slice(0, 5) };
 }
