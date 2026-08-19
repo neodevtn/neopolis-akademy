@@ -1658,3 +1658,12 @@
 - [x] Ajouter le score global des contributions pédagogiques à chaque apprenant
 - [x] Rendre les en-têtes de colonne triables avec indicateur visuel de sens
 - [x] Synchroniser le tri avec le serveur et vérifier le rendu mobile
+
+## Formule du score global de compétences
+- [x] Auditer l’agrégation des contributions de compétences graduées
+- [x] Sommer les points de compétences graduées pour chaque apprenant
+- [x] Préserver le tri serveur sur le score global corrigé
+- [x] Vérifier les résultats sur les données réelles et les comptes sans contribution
+
+## Formule du score global de performance
+- [x] Piste abandonnée : le score demandé est la somme des compétences graduées, non les performances d’évaluation

@@ -50,7 +50,7 @@ export default function AdminTraining() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
-  const [learnerSortBy, setLearnerSortBy] = useState<"lastSignedIn" | "name" | "email" | "createdAt" | "globalScore" | "role" | "blocked">("lastSignedIn");
+  const [learnerSortBy, setLearnerSortBy] = useState<"lastSignedIn" | "name" | "email" | "createdAt" | "globalScore" | "role" | "blocked">("globalScore");
   const [learnerSortDirection, setLearnerSortDirection] = useState<"asc" | "desc">("desc");
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [inviteOpen, setInviteOpen] = useState(false);

@@ -320,7 +320,7 @@ export async function getAllLearners(
 
   const offset = (page - 1) * pageSize;
 
-  const globalScore = sql<number>`COALESCE((SELECT SUM(${learnerCompetencyContributions.points}) FROM ${learnerCompetencyContributions} WHERE ${learnerCompetencyContributions.userId} = ${users.id}), 0)`;
+  const globalScore = sql<number>`COALESCE(SUM(${learnerCompetencyContributions.points}), 0)`;
 
   // Le score global reflète uniquement les contributions pédagogiques vérifiées.
   let baseQuery = db.select({
@@ -333,7 +333,21 @@ export async function getAllLearners(
     createdAt: users.createdAt,
     lastSignedIn: users.lastSignedIn,
     globalScore,
-  }).from(users);
+  }).from(users)
+    .leftJoin(
+      learnerCompetencyContributions,
+      eq(learnerCompetencyContributions.userId, users.id),
+    )
+    .groupBy(
+      users.id,
+      users.openId,
+      users.name,
+      users.email,
+      users.role,
+      users.blocked,
+      users.createdAt,
+      users.lastSignedIn,
+    );
 
   if (search && search.trim()) {
     const searchTerm = `%${search.trim()}%`;

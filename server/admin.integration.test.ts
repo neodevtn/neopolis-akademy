@@ -138,6 +138,7 @@ describe("Admin API - Input Validation", () => {
 
     expect(result.sortBy).toBe("globalScore");
     expect(result.sortDirection).toBe("desc");
+    expect(result.users.some((learner) => learner.globalScore > 0)).toBe(true);
   });
 
   it("admin.createInvitation validates email format", async () => {
