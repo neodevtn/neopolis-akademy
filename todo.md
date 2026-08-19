@@ -1626,3 +1626,12 @@
 - [x] Prévoir le blocage uniquement par action explicite d’un administrateur après revue
 - [x] Ajouter des contrôles de compréhension transparents plutôt que des pièges cachés
 - [x] Tester le scoring, la traçabilité et les garde-fous de non-blocage automatique
+
+## Parcours d’orientation et recommandations de formation
+- [x] Auditer le référentiel de compétences, le catalogue, les certifications et les données de progression
+- [x] Enregistrer les objectifs de compétences, niveaux cibles et projets de certification des apprenants
+- [x] Créer un diagnostic QCM court aligné sur les compétences sélectionnées
+- [x] Générer un parcours ordonné de cours et certifications adapté aux écarts de niveaux
+- [x] Déclencher l’orientation pour les nouveaux comptes et rappeler les anciens apprenants par communiqué
+- [x] Afficher les objectifs, le diagnostic, les recommandations et la progression aux apprenants et administrateurs
+- [x] Tester les cas débutant, intermédiaire et avancé sans envoi non confirmé

@@ -168,6 +168,10 @@ export default function AdminTraining() {
     { userId: selectedUserId! },
     { enabled: !!selectedUserId && isAuthenticated && user?.role === "admin" },
   );
+  const learnerOrientationQuery = trpc.orientation.getAdminOverview.useQuery(
+    { userId: selectedUserId!, limit: 1 },
+    { enabled: !!selectedUserId && isAuthenticated && user?.role === "admin" },
+  );
   const integrityByUserId = useMemo(
     () => new Map((integrityQueueQuery.data || []).map((item) => [item.id, item])),
     [integrityQueueQuery.data],
@@ -193,6 +197,10 @@ export default function AdminTraining() {
 
   const exportQuery = trpc.admin.exportLearners.useQuery(undefined, {
     enabled: false, // manual trigger
+  });
+  const orientationReminderMutation = trpc.orientation.prepareLegacyReminder.useMutation({
+    onSuccess: (result) => toast.success(result.draft ? `Brouillon créé pour ${result.recipientCount} apprenants : vérifiez-le avant envoi.` : "Tous les apprenants ont déjà terminé leur orientation."),
+    onError: (error) => toast.error(error.message || "Impossible de préparer le rappel d’orientation"),
   });
 
   const selectedCandidatesQuery = trpc.admin.getSelectedCandidates.useQuery({ page: selectedCandidateTable.page, pageSize: 10, search: selectedCandidateTable.search || undefined, sortBy: selectedCandidateTable.sortBy, sortDirection: selectedCandidateTable.sortDirection }, {
@@ -370,6 +378,7 @@ export default function AdminTraining() {
     const firstAttempts = learningEvents.filter((e: any) => e.eventType === "exercise_submitted" && e.attemptNumber === 1);
     const firstAttemptRate = firstAttempts.length ? Math.round((firstAttempts.filter((e: any) => e.success === 1).length / firstAttempts.length) * 100) : null;
     const integrity = learnerIntegrityQuery.data;
+    const orientation = learnerOrientationQuery.data?.[0]?.orientation;
     const integrityTone = integrity?.assessment.level === "priority_review" ? "border-red-300 bg-red-50 dark:border-red-900/70 dark:bg-red-950/30" : integrity?.assessment.level === "review" ? "border-amber-300 bg-amber-50 dark:border-amber-900/70 dark:bg-amber-950/30" : "border-border bg-card";
 
     // Group progress by certification
@@ -502,6 +511,28 @@ export default function AdminTraining() {
             <div className="mb-6">
               <AchievementGallery achievements={achievements} adminView emptyText="Cet apprenant n’a pas encore obtenu de badge ou de diplôme." />
             </div>
+            <section className="mb-6 rounded-2xl border border-border bg-card p-5 shadow-sm">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><BookMarked className="h-5 w-5 text-primary" /> Orientation et objectifs</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">Objectifs déclarés, diagnostic initial et ordre de formation recommandé.</p>
+                </div>
+                <span className={`self-start rounded-full px-2.5 py-1 text-xs font-semibold ${orientation?.profile?.status === "completed" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"}`}>{orientation?.profile?.status === "completed" ? "Diagnostic terminé" : orientation?.profile?.status === "goals_set" ? "Diagnostic à terminer" : "Non commencé"}</span>
+              </div>
+              {learnerOrientationQuery.isLoading ? <div className="mt-4 h-20 animate-pulse rounded-xl bg-muted" /> : orientation?.profile?.goals?.length ? (
+                <div className="mt-4 space-y-4">
+                  <div className="flex flex-wrap gap-2">{orientation.profile.goals.map((goal: any) => {
+                    const competency = orientation.competencies?.find((item: any) => item.id === goal.competencyId);
+                    const competencyTitle = competency?.title as any;
+                    return <span key={goal.competencyId} className="rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">{competencyTitle?.fr || competencyTitle?.en || goal.competencyId} · cible {goal.targetLevel}</span>;
+                  })}</div>
+                  {orientation.recommendations?.length ? <ol className="space-y-2">{orientation.recommendations.map((recommendation: any) => {
+                    const cert = (trainingIndex.certifications as any[]).find((item) => item.id === recommendation.certificationId);
+                    return <li key={`${recommendation.order}-${recommendation.certificationId}`} className="flex gap-3 rounded-lg border border-border/70 bg-muted/30 p-3 text-sm"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">{recommendation.order}</span><span><strong className="text-foreground">{cert?.title?.fr || cert?.title?.en || recommendation.certificationId}</strong><span className="mt-0.5 block text-xs text-muted-foreground">{recommendation.reason}</span></span></li>;
+                  })}</ol> : <p className="text-sm text-muted-foreground">Le diagnostic doit être complété pour générer les recommandations.</p>}
+                </div>
+              ) : <p className="mt-4 text-sm text-muted-foreground">L’apprenant n’a pas encore renseigné ses objectifs. Il peut démarrer l’orientation depuis son espace formation.</p>}
+            </section>
             <div className="mb-6">
               <CompetencyProfile competencies={competencies} adminView />
             </div>
@@ -630,6 +661,9 @@ export default function AdminTraining() {
             <div className="flex items-center gap-2">
               {activeTab === "learners" && <Button variant="outline" size="sm" className="gap-1.5" onClick={handleExportCSV}>
                 <Download className="w-4 h-4" /> Export CSV
+              </Button>}
+              {activeTab === "learners" && <Button variant="outline" size="sm" className="gap-1.5" onClick={() => orientationReminderMutation.mutate()} disabled={orientationReminderMutation.isPending}>
+                <Send className="w-4 h-4" /> {orientationReminderMutation.isPending ? "Préparation…" : "Préparer rappel orientation"}
               </Button>}
               {activeTab === "invitations" && <Dialog open={inviteOpen} onOpenChange={(open) => open ? setInviteOpen(true) : resetInviteDialog()}>
                 <DialogTrigger asChild>

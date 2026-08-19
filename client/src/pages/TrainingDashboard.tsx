@@ -39,6 +39,7 @@ import { trpc } from "@/lib/trpc";
 import { AchievementGallery } from "@/components/AchievementGallery";
 import { CompetencyProfile } from "@/components/CompetencyProfile";
 import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
+import { OrientationPanel } from "@/components/OrientationPanel";
 import { buildNavigationUrl } from "@shared/navigationUrls";
 
 /* ─── Animation Variants ─── */
@@ -82,7 +83,7 @@ const levelConfig = {
   },
 };
 
-type TabId = "my-path" | "achievements" | "skills" | "catalog" | "recommended" | "communications";
+type TabId = "orientation" | "my-path" | "achievements" | "skills" | "catalog" | "recommended" | "communications";
 
 export default function TrainingDashboard() {
   const { lang, t } = useLanguage();
@@ -93,7 +94,7 @@ export default function TrainingDashboard() {
   const urlSearch = useSearch();
   const getTabFromUrl = (): TabId => {
     const tab = new URLSearchParams(urlSearch).get("tab");
-    return ["my-path", "achievements", "skills", "catalog", "recommended", "communications"].includes(tab || "") ? tab as TabId : "my-path";
+    return ["orientation", "my-path", "achievements", "skills", "catalog", "recommended", "communications"].includes(tab || "") ? tab as TabId : "my-path";
   };
   const [activeTab, setActiveTab] = useState<TabId>(getTabFromUrl);
   useEffect(() => { setActiveTab(getTabFromUrl()); }, [urlSearch]);
@@ -103,6 +104,15 @@ export default function TrainingDashboard() {
   const gamificationQuery = trpc.competencies.getGamification.useQuery(undefined, { enabled: isAuthenticated });
   const learnerCommunicationsQuery = trpc.training.getCommunications.useQuery(undefined, { enabled: isAuthenticated });
   const markCommunicationReadMutation = trpc.training.markCommunicationRead.useMutation({ onSuccess: () => learnerCommunicationsQuery.refetch() });
+  const orientationQuery = trpc.orientation.getMine.useQuery(undefined, { enabled: isAuthenticated });
+  const saveOrientationGoalsMutation = trpc.orientation.saveGoals.useMutation({ onSuccess: () => orientationQuery.refetch() });
+  const completeOrientationMutation = trpc.orientation.completeDiagnostic.useMutation({ onSuccess: () => orientationQuery.refetch() });
+  const accountIsNew = Boolean(user?.createdAt && Date.now() - new Date(user.createdAt).getTime() < 1000 * 60 * 60 * 24 * 7);
+  const orientationIsRequired = Boolean(accountIsNew && orientationQuery.data?.needsOrientation);
+
+  useEffect(() => {
+    if (orientationIsRequired && activeTab !== "orientation") navigateTrainingDashboard("orientation");
+  }, [orientationIsRequired, activeTab]);
 
   // Group configuration for the 4 certification tracks
   const GROUP_CONFIG = {
@@ -254,6 +264,7 @@ export default function TrainingDashboard() {
   }
 
   const tabs: { id: TabId; label: { en: string; fr: string }; icon: React.ReactNode }[] = [
+    { id: "orientation", label: { en: "My Orientation", fr: "Mon orientation" }, icon: <Compass className="w-4 h-4" /> },
     { id: "my-path", label: { en: "My Progress", fr: "Mon Parcours" }, icon: <Compass className="w-4 h-4" /> },
     { id: "achievements", label: { en: "My Achievements", fr: "Mes acquis" }, icon: <Trophy className="w-4 h-4" /> },
     { id: "skills", label: { en: "My Skills", fr: "Mes compétences" }, icon: <Sparkles className="w-4 h-4" /> },
@@ -382,6 +393,24 @@ export default function TrainingDashboard() {
                 nextCertToStart={nextCertToStart}
                 t={t}
                 getLastVisitedCourse={getLastVisitedCourse}
+              />
+            </motion.div>
+          )}
+          {activeTab === "orientation" && (
+            <motion.div
+              key="orientation"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3, ease: easeOut }}
+            >
+              <OrientationPanel
+                orientation={orientationQuery.data}
+                certifications={trainingIndex.certifications as any[]}
+                savingGoals={saveOrientationGoalsMutation.isPending}
+                completing={completeOrientationMutation.isPending}
+                onSaveGoals={(input) => saveOrientationGoalsMutation.mutate(input)}
+                onCompleteDiagnostic={(answers) => completeOrientationMutation.mutate({ answers })}
               />
             </motion.div>
           )}

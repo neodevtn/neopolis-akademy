@@ -20,10 +20,41 @@ import { createAdminNotification } from "./notificationsDb";
 import { applyCompetencyEvent, getCompetencyFramework, getCompetencyLeaderboard, getContentCompetencyTags, getGamificationConfig, getUserCompetencies, getUserGamification, replaceCompetencyFramework, saveGamificationConfig } from "./competencyService";
 import { COMPETENCY_SOURCE_TYPES } from "../shared/competencyFramework";
 import { backfillCompetencies } from "./competencyBackfill";
+import { completeLearnerOrientation, createLegacyOrientationReminderDraft, getAdminOrientationOverview, getLearnerOrientation, saveLearnerOrientationGoals } from "./orientationService";
+
+const orientationGoalsSchema = z.array(z.object({
+  competencyId: z.string().min(2).max(80),
+  targetLevel: z.enum(["bronze", "silver", "gold"]),
+})).min(1).max(5);
 
 export const appRouter = router({
   system: systemRouter,
   videoRecommendations: videoRecommendationsRouter,
+  orientation: router({
+    getMine: protectedProcedure.query(async ({ ctx }) => getLearnerOrientation(ctx.user.id)),
+    saveGoals: protectedProcedure.input(z.object({
+      goals: orientationGoalsSchema,
+      wantsOfficialCertification: z.boolean().default(false),
+      officialCertificationIds: z.array(z.string().min(2).max(200)).max(8).default([]),
+    })).mutation(async ({ ctx, input }) => saveLearnerOrientationGoals({
+      userId: ctx.user.id,
+      ...input,
+    })),
+    completeDiagnostic: protectedProcedure.input(z.object({
+      answers: z.array(z.object({ questionId: z.string().min(2).max(120), choiceId: z.string().min(1).max(30) })).min(1).max(10),
+    })).mutation(async ({ ctx, input }) => completeLearnerOrientation({ userId: ctx.user.id, answers: input.answers })),
+    getAdminOverview: protectedProcedure.input(z.object({
+      userId: z.number().int().positive().optional(),
+      limit: z.number().int().min(1).max(200).optional(),
+    }).optional()).query(async ({ ctx, input }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return getAdminOrientationOverview(input || {});
+    }),
+    prepareLegacyReminder: protectedProcedure.mutation(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return createLegacyOrientationReminderDraft(ctx.user.id);
+    }),
+  }),
   competencies: router({
     getMine: protectedProcedure.query(async ({ ctx }) => getUserCompetencies(ctx.user.id)),
     getGamification: protectedProcedure.query(async ({ ctx }) => getUserGamification(ctx.user.id)),
