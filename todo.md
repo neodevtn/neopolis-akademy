@@ -1702,3 +1702,9 @@
 - [x] Conserver l’accès aux onglets apprenants pendant l’orientation incomplète
 - [x] Afficher un rappel clair et une action prioritaire vers le diagnostic d’orientation
 - [x] Tester les clics, le retour navigateur et le premier accès aux cours
+## Corrections de l’audit des certifications Anthropic
+- [x] Restaurer les titres officiels dégradés dans le catalogue et les métadonnées Developer / Architect Professional
+- [x] Remplacer l’exercice AI Fluency erroné par la réflexion officielle, sans HTML libre, avec blocs `callout`, `content`, `checkpoint` et `download`
+- [x] Distinguer visuellement les tutoriels complémentaires Neopolis du contenu officiel Anthropic
+- [x] Migrer les références média locales des trois parcours vers le proxy `/api/assets/` et vérifier leur disponibilité
+- [x] Ajouter un audit reproductible, des tests de non-régression et un rapport de contrôle visuel avant publication
