@@ -1628,11 +1628,11 @@
 - [x] Tester le scoring, la traçabilité et les garde-fous de non-blocage automatique
 
 ## Propositions administratives et trajectoire de progression
-- [ ] Permettre aux administrateurs de proposer des ajustements d’objectifs depuis la fiche apprenant
-- [ ] Enregistrer la proposition, sa justification et sa date de création
-- [ ] Calculer une trajectoire prévue selon les objectifs, échéances et niveaux actuels
-- [ ] Afficher un graphique apprenant comparant avancement réel et prévu
-- [ ] Tester les autorisations administratives, le calcul et le rendu du graphique
+- [x] Permettre aux administrateurs de proposer des ajustements d’objectifs depuis la fiche apprenant
+- [x] Enregistrer la proposition, sa justification et sa date de création
+- [x] Calculer une trajectoire prévue selon les objectifs, échéances et niveaux actuels
+- [x] Afficher un graphique apprenant comparant avancement réel et prévu
+- [x] Tester les autorisations administratives, le calcul et le rendu du graphique
 
 ## Parcours d’orientation et recommandations de formation
 - [x] Auditer le référentiel de compétences, le catalogue, les certifications et les données de progression
@@ -1696,3 +1696,9 @@
 - [x] Calculer une trajectoire prévue selon les objectifs, échéances et niveaux actuels
 - [x] Afficher un graphique apprenant comparant avancement réel et prévu
 - [x] Tester les autorisations administratives, le calcul et le rendu du graphique
+
+## Navigation des nouveaux apprenants et orientation
+- [x] Auditer la redirection automatique qui annule les clics sur les onglets
+- [x] Conserver l’accès aux onglets apprenants pendant l’orientation incomplète
+- [x] Afficher un rappel clair et une action prioritaire vers le diagnostic d’orientation
+- [x] Tester les clics, le retour navigateur et le premier accès aux cours

@@ -92,14 +92,6 @@ export default function TrainingCourse() {
     { courseId: courseId || "" },
     { enabled: isAuthenticated && !!courseId }
   );
-  const orientationQuery = trpc.orientation.getMine.useQuery(undefined, { enabled: isAuthenticated });
-  const accountIsNew = Boolean(user?.createdAt && Date.now() - new Date(user.createdAt).getTime() < 1000 * 60 * 60 * 24 * 7);
-
-  useEffect(() => {
-    if (accountIsNew && orientationQuery.data?.needsOrientation) {
-      navigate("/training?tab=orientation");
-    }
-  }, [accountIsNew, orientationQuery.data?.needsOrientation, navigate]);
   const toggleVideoMutation = trpc.videoProgress.toggle.useMutation({
     onSuccess: () => { videoProgressQuery.refetch(); },
   });

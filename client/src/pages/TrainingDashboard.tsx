@@ -108,12 +108,7 @@ export default function TrainingDashboard() {
   const saveOrientationGoalsMutation = trpc.orientation.saveGoals.useMutation({ onSuccess: () => orientationQuery.refetch() });
   const completeOrientationMutation = trpc.orientation.completeDiagnostic.useMutation({ onSuccess: () => orientationQuery.refetch() });
   const respondToOrientationProposalMutation = trpc.orientation.respondToProposal.useMutation({ onSuccess: () => orientationQuery.refetch() });
-  const accountIsNew = Boolean(user?.createdAt && Date.now() - new Date(user.createdAt).getTime() < 1000 * 60 * 60 * 24 * 7);
-  const orientationIsRequired = Boolean(accountIsNew && orientationQuery.data?.needsOrientation);
-
-  useEffect(() => {
-    if (orientationIsRequired && activeTab !== "orientation") navigateTrainingDashboard("orientation");
-  }, [orientationIsRequired, activeTab]);
+  const orientationIsRequired = Boolean(orientationQuery.data?.needsOrientation);
 
   // Group configuration for the 4 certification tracks
   const GROUP_CONFIG = {
@@ -335,6 +330,13 @@ export default function TrainingDashboard() {
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
             <p>{t({ en: "Integrity reminder: complete activities yourself and use learning support responsibly. Unusual activity patterns may be reviewed by the academic team; no account is blocked automatically.", fr: "Rappel d’intégrité : réalisez les activités vous-même et utilisez les outils d’aide de manière responsable. Des comportements inhabituels peuvent être revus par l’équipe pédagogique ; aucun compte n’est bloqué automatiquement." })}</p>
           </div>
+
+          {orientationIsRequired && (
+            <div className="mb-6 flex flex-col gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm dark:border-amber-800 dark:bg-amber-950/20 md:flex-row md:items-center md:justify-between">
+              <div><p className="font-bold text-foreground">Votre orientation personnalisée est à finaliser</p><p className="mt-1 text-muted-foreground">Définissez vos objectifs et terminez le diagnostic rapide pour obtenir un parcours recommandé. Vous pouvez continuer à consulter les autres espaces pendant cette étape.</p></div>
+              <Button className="shrink-0" onClick={() => navigateTrainingDashboard("orientation")}>Finaliser mon orientation</Button>
+            </div>
+          )}
 
           {/* Quick stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
