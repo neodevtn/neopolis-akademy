@@ -8,7 +8,7 @@
 
 Les **17 cours** du périmètre ont été contrôlés — soit 5 cours Developer Foundations, 7 cours Architect Foundations et 5 cours Architect Professional. Les titres dégradés ont été normalisés, l’exercice AI Fluency a été reconstruit exclusivement avec les blocs standards existants, les ressources complémentaires Neopolis sont clairement séparées du contenu officiel, et les médias locaux sont désormais distribués via le proxy applicatif `/api/assets/`.
 
-Le contrôle local final confirme **0 écart de titre attendu**, **0 bloc vidéo sans source exploitable**, **0 référence `/manus-storage/` restante**, et **285 références média sur 285 disponibles** avec un statut HTTP utilisable. Le verrouillage séquentiel existant est conservé : aucune règle de progression, de complétion ou de déverrouillage global n’a été assouplie.
+Les contrôles local et de production confirment **0 écart de titre attendu**, **0 bloc vidéo sans source exploitable**, **0 référence `/manus-storage/` restante**, et **285 références média sur 285 disponibles** avec un statut HTTP utilisable. Le verrouillage séquentiel existant est conservé : aucune règle de progression, de complétion ou de déverrouillage global n’a été assouplie.
 
 ## Sources de comparaison
 
@@ -74,13 +74,14 @@ Cette vérification a aussi confirmé que le chapitre demeure en position **2/3*
 | Références `/manus-storage/` restantes | 0 |
 | Blocs vidéo sans `videoId`, `mp4Url` ou `audioUrl` | 0 |
 
-Les vidéos YouTube sont contrôlées structurellement par la présence d’un identifiant ou d’une source de lecture valide. Les fichiers locaux — PDF, images, archives et notebooks — sont contrôlés en HTTP via le proxy applicatif.
+Les résultats ci-dessus ont été reproduits sur **https://akademy.neodev.click** après publication. La première requête vers le PDF AI Fluency a dépassé le délai court de l’audit en raison d’un démarrage lent, puis le contrôle individuel a confirmé `HTTP 200` avec `content-type: application/pdf`; la seconde passe complète de l’audit de production a ensuite validé les **285/285** références. Les vidéos YouTube sont contrôlées structurellement par la présence d’un identifiant ou d’une source de lecture valide. Les fichiers locaux — PDF, images, archives et notebooks — sont contrôlés en HTTP via le proxy applicatif.
 
 ## Validation technique
 
 | Contrôle | Résultat |
 | --- | --- |
 | `node scripts/audit-anthropic-certifications.mjs` | 17 cours, 0 écart de titre, 285/285 médias disponibles, 0 référence historique, 0 vidéo sans source |
+| Audit sur `https://akademy.neodev.click` | 17 cours, 285/285 médias disponibles, 0 référence `/manus-storage/`, 0 vidéo sans source |
 | `node scripts/validate-courses.mjs` | 0 erreur ; avertissements existants de similarité de choix de quiz conservés hors du périmètre de cette correction |
 | `pnpm test -- --exclude server/email.test.ts` | 48 fichiers de tests réussis, 176 assertions réussies |
 | `pnpm check` | TypeScript valide, sans erreur |
@@ -94,6 +95,7 @@ Les vidéos YouTube sont contrôlées structurellement par la présence d’un i
 | `scripts/audit-anthropic-certifications.mjs` | Audit reproductible des compteurs, titres, sources vidéo et disponibilités média. |
 | `server/anthropicAuditCorrections.test.ts` | Tests de non-régression des titres, médias et deux chapitres AI Fluency. |
 | `docs/anthropic_audit_media_validation_local_2026-08-19.json` | Résultat exhaustif du contrôle HTTP local des 285 références. |
+| `docs/anthropic_audit_media_validation_production_2026-08-19.json` | Résultat exhaustif du contrôle HTTP de production des 285 références. |
 | `docs/anthropic_audit_findings_2026-08-19.md` | Journal des constats et contrôles visuels. |
 
 ## Références

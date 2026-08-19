@@ -78,12 +78,25 @@ function analyseCourse(course, file) {
 async function checkMedia(item) {
   const url = `${baseUrl}${item.value}`;
   try {
-    let response = await fetch(url, { method: "HEAD", redirect: "follow" });
-    if (response.status === 405 || response.status === 501) response = await fetch(url, { method: "GET", headers: { Range: "bytes=0-0" }, redirect: "follow" });
+    let response = await fetch(url, { method: "HEAD", redirect: "follow", signal: AbortSignal.timeout(10_000) });
+    if (response.status === 405 || response.status === 501) response = await fetch(url, { method: "GET", headers: { Range: "bytes=0-0" }, redirect: "follow", signal: AbortSignal.timeout(10_000) });
     return { ...item, url, status: response.status, contentType: response.headers.get("content-type") || "", ok: response.ok || response.status === 206 };
   } catch (error) {
     return { ...item, url, status: 0, contentType: "", ok: false, error: error instanceof Error ? error.message : String(error) };
   }
+}
+
+async function mapConcurrent(items, limit, worker) {
+  const output = new Array(items.length);
+  let next = 0;
+  async function run() {
+    while (next < items.length) {
+      const index = next++;
+      output[index] = await worker(items[index]);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, run));
+  return output;
 }
 
 const files = readdirSync(coursesDir).filter((file) => file.endsWith(".json") && tracks.some((track) => file.startsWith(`${track}__`))).sort();
@@ -101,8 +114,7 @@ for (const file of files) {
   courses.push({ courseId, file, sourceCourseTitle, title: text(course.lessons?.[0]?.title), localMediaReferences: media.length, ...stats });
 }
 
-const media = [];
-for (const ref of mediaRefs) media.push(await checkMedia(ref));
+const media = await mapConcurrent(mediaRefs, 12, checkMedia);
 const summary = tracks.map((track) => {
   const selected = courses.filter((course) => course.courseId.startsWith(`${track}__`));
   const sum = (field) => selected.reduce((total, course) => total + course[field], 0);
