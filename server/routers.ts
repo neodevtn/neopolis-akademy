@@ -20,7 +20,7 @@ import { createAdminNotification } from "./notificationsDb";
 import { applyCompetencyEvent, getCompetencyFramework, getCompetencyLeaderboard, getContentCompetencyTags, getGamificationConfig, getUserCompetencies, getUserGamification, replaceCompetencyFramework, saveGamificationConfig } from "./competencyService";
 import { COMPETENCY_SOURCE_TYPES } from "../shared/competencyFramework";
 import { backfillCompetencies } from "./competencyBackfill";
-import { completeLearnerOrientation, createLegacyOrientationReminderDraft, getAdminOrientationOverview, getLearnerOrientation, saveLearnerOrientationGoals } from "./orientationService";
+import { completeLearnerOrientation, createLegacyOrientationReminderDraft, createOrientationProposal, getAdminOrientationOverview, getLearnerOrientation, respondToOrientationProposal, saveLearnerOrientationGoals } from "./orientationService";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -44,6 +44,7 @@ export const appRouter = router({
     completeDiagnostic: protectedProcedure.input(z.object({
       answers: z.array(z.object({ questionId: z.string().min(2).max(120), choiceId: z.string().min(1).max(30) })).min(1).max(10),
     })).mutation(async ({ ctx, input }) => completeLearnerOrientation({ userId: ctx.user.id, answers: input.answers })),
+    respondToProposal: protectedProcedure.input(z.object({ proposalId: z.number().int().positive(), accept: z.boolean() })).mutation(async ({ ctx, input }) => respondToOrientationProposal({ userId: ctx.user.id, ...input })),
     getAdminOverview: protectedProcedure.input(z.object({
       userId: z.number().int().positive().optional(),
       limit: z.number().int().min(1).max(200).optional(),
@@ -54,6 +55,17 @@ export const appRouter = router({
     prepareLegacyReminder: protectedProcedure.mutation(async ({ ctx }) => {
       if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
       return createLegacyOrientationReminderDraft(ctx.user.id);
+    }),
+    proposeAdjustment: protectedProcedure.input(z.object({
+      userId: z.number().int().positive(),
+      goals: orientationGoalsSchema,
+      wantsOfficialCertification: z.boolean().default(false),
+      officialCertificationIds: z.array(z.string().min(2).max(200)).max(8).default([]),
+      certificationTargetDates: z.record(z.string(), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)).default({}),
+      justification: z.string().trim().min(8).max(2000),
+    })).mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return createOrientationProposal({ ...input, proposedBy: ctx.user.id });
     }),
   }),
   competencies: router({

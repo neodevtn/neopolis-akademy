@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, ChevronRight, Compass, GraduationCap, Target } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 type Goal = { competencyId: string; targetLevel: "bronze" | "silver" | "gold" };
 
@@ -20,15 +21,19 @@ export function OrientationPanel({
   certifications,
   onSaveGoals,
   onCompleteDiagnostic,
+  onRespondToProposal,
   savingGoals,
   completing,
+  respondingToProposal,
 }: {
   orientation: any;
   certifications: any[];
   onSaveGoals: (input: { goals: Goal[]; wantsOfficialCertification: boolean; officialCertificationIds: string[]; certificationTargetDates: Record<string, string> }) => void;
   onCompleteDiagnostic: (answers: Array<{ questionId: string; choiceId: string }>) => void;
+  onRespondToProposal: (input: { proposalId: number; accept: boolean }) => void;
   savingGoals?: boolean;
   completing?: boolean;
+  respondingToProposal?: boolean;
 }) {
   const profile = orientation?.profile;
   const [goals, setGoals] = useState<Goal[]>(profile?.goals || []);
@@ -96,6 +101,22 @@ export function OrientationPanel({
         </div>
       </div>
 
+      {orientation.pendingProposal && (
+        <div className="rounded-2xl border border-amber-300 bg-amber-50 p-5 dark:border-amber-800 dark:bg-amber-950/20">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-sm font-bold text-foreground">Proposition d’ajustement de votre accompagnement</p>
+              <p className="mt-1 text-sm text-muted-foreground">{orientation.pendingProposal.justification}</p>
+              <p className="mt-2 text-xs font-semibold text-amber-800 dark:text-amber-300">L’acceptation mettra à jour vos objectifs et vous invitera à refaire le diagnostic.</p>
+            </div>
+            <div className="flex shrink-0 gap-2">
+              <Button variant="outline" disabled={respondingToProposal} onClick={() => onRespondToProposal({ proposalId: orientation.pendingProposal.id, accept: false })}>Décliner</Button>
+              <Button disabled={respondingToProposal} onClick={() => onRespondToProposal({ proposalId: orientation.pendingProposal.id, accept: true })}>{respondingToProposal ? "Traitement…" : "Accepter"}</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {stage === "goals" && (
         <div className="space-y-6 rounded-2xl border border-border bg-card p-5 md:p-7">
           <div>
@@ -156,6 +177,7 @@ export function OrientationPanel({
         <div className="space-y-6">
           <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-5 dark:border-emerald-900 dark:bg-emerald-950/20"><div className="flex gap-3"><CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" /><div><h3 className="font-bold text-foreground">Votre parcours est prêt</h3><p className="mt-1 text-sm text-muted-foreground">Vos recommandations sont recalculées à partir de vos objectifs, du diagnostic et de vos compétences graduées actuelles.</p></div></div></div>
           <div className="grid gap-4 lg:grid-cols-3">{competencyRows.map((competency: any) => <div key={competency.id} className="rounded-xl border border-border bg-card p-4"><div className="font-semibold text-foreground">{titleOf(competency.title)}</div><div className="mt-2 flex items-end justify-between"><span className="text-2xl font-bold text-primary">{Number(competency.level || 0).toLocaleString("fr-FR")} pts</span><span className="text-xs text-muted-foreground">Cible : {competency.targetPoints} pts</span></div><div className="mt-3 h-2 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary" style={{ width: `${Math.min(100, (Number(competency.level || 0) / Number(competency.targetPoints || 100)) * 100)}%` }} /></div></div>)}</div>
+          {orientation.trajectory?.available ? <div className="rounded-2xl border border-border bg-card p-5"><div className="mb-4"><h3 className="font-bold text-foreground">Votre trajectoire de progression</h3><p className="mt-1 text-sm text-muted-foreground">Comparaison entre l’avancement réel de vos compétences cibles et la trajectoire attendue jusqu’au {new Date(`${orientation.trajectory.targetDate}T12:00:00`).toLocaleDateString("fr-FR")}.</p></div><div className="h-[260px]"><ResponsiveContainer width="100%" height="100%"><LineChart data={orientation.trajectory.points} margin={{ left: -15, right: 10, top: 8 }}><CartesianGrid strokeDasharray="3 3" vertical={false} /><XAxis dataKey="date" tickFormatter={(date) => new Date(`${date}T12:00:00`).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" })} tick={{ fontSize: 11 }} /><YAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} tick={{ fontSize: 11 }} /><Tooltip labelFormatter={(date) => new Date(`${date}T12:00:00`).toLocaleDateString("fr-FR")} formatter={(value, name) => [value == null ? "À venir" : `${value}%`, name === "planned" ? "Prévu" : "Réel"]} /><Line type="monotone" dataKey="planned" name="planned" stroke="#6b7280" strokeDasharray="6 5" strokeWidth={2} dot={false} /><Line type="monotone" dataKey="actual" name="actual" stroke="#155e75" strokeWidth={3} dot={{ r: 3 }} connectNulls={false} /></LineChart></ResponsiveContainer></div></div> : <div className="rounded-xl border border-dashed border-border bg-muted/20 p-4 text-sm text-muted-foreground">{orientation.trajectory?.reason}</div>}
           <div className="space-y-3">{(orientation.recommendations || []).map((recommendation: any) => { const certification = certifications.find((item) => item.id === recommendation.certificationId); const targetDate = profile?.certificationTargetDates?.[recommendation.certificationId]; return <div key={`${recommendation.order}-${recommendation.certificationId}`} className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-5 md:flex-row md:items-center"><div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">{recommendation.order}</div><div className="min-w-0 flex-1"><p className="font-semibold text-foreground">{titleOf(certification?.title, recommendation.certificationId)}</p><p className="mt-1 text-sm text-muted-foreground">{recommendation.reason}</p>{targetDate && <p className="mt-2 text-xs font-semibold text-primary">Échéance cible : {new Date(`${targetDate}T12:00:00`).toLocaleDateString("fr-FR")}</p>}</div><span className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">{recommendation.type === "foundation" ? "Fondations" : recommendation.type === "advanced" ? "Approfondissement" : "Objectif"}</span></div>})}</div>
           <div className="flex justify-end"><Button variant="outline" onClick={() => setEditingGoals(true)}>Modifier mes objectifs</Button></div>
         </div>

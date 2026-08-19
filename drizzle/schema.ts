@@ -253,6 +253,25 @@ export const learnerOrientationProfiles = mysqlTable("learner_orientation_profil
 ]);
 export type LearnerOrientationProfile = typeof learnerOrientationProfiles.$inferSelect;
 
+/** Proposition d’ajustement d’objectifs préparée par un administrateur pour un apprenant. */
+export const learnerOrientationProposals = mysqlTable("learner_orientation_proposals", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  proposedBy: int("proposedBy").notNull(),
+  goals: json("goals").notNull(),
+  wantsOfficialCertification: int("wantsOfficialCertification").notNull().default(0),
+  officialCertificationIds: json("officialCertificationIds"),
+  certificationTargetDates: json("certificationTargetDates"),
+  justification: text("justification").notNull(),
+  status: mysqlEnum("status", ["pending", "accepted", "declined"]).notNull().default("pending"),
+  respondedAt: timestamp("respondedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => [
+  index("orientation_proposal_user_status_idx").on(table.userId, table.status),
+  index("orientation_proposal_admin_idx").on(table.proposedBy),
+]);
+export type LearnerOrientationProposal = typeof learnerOrientationProposals.$inferSelect;
+
 /** Rangs de gamification configurables selon les niveaux de compétence. */
 export const gamificationRanks = mysqlTable("gamification_ranks", {
   id: varchar("id", { length: 40 }).primaryKey(),

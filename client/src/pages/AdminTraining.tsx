@@ -61,6 +61,9 @@ export default function AdminTraining() {
   const [inviteResults, setInviteResults] = useState<{ email: string; success: boolean; error?: string }[] | null>(null);
   const [editEmailId, setEditEmailId] = useState<number | null>(null);
   const [editEmailValue, setEditEmailValue] = useState("");
+  const [orientationProposalOpen, setOrientationProposalOpen] = useState(false);
+  const [orientationProposalJustification, setOrientationProposalJustification] = useState("");
+  const [orientationProposedGoals, setOrientationProposedGoals] = useState<Array<{ competencyId: string; targetLevel: "bronze" | "silver" | "gold" }>>([]);
   const [reportingDays, setReportingDays] = useState<7 | 30 | 90>(30);
   const [reportingCertificationId, setReportingCertificationId] = useState("all");
   const pageSize = 15;
@@ -201,6 +204,15 @@ export default function AdminTraining() {
   const orientationReminderMutation = trpc.orientation.prepareLegacyReminder.useMutation({
     onSuccess: (result) => toast.success(result.draft ? `Brouillon créé pour ${result.recipientCount} apprenants : vérifiez-le avant envoi.` : "Tous les apprenants ont déjà terminé leur orientation."),
     onError: (error) => toast.error(error.message || "Impossible de préparer le rappel d’orientation"),
+  });
+  const orientationProposalMutation = trpc.orientation.proposeAdjustment.useMutation({
+    onSuccess: () => {
+      toast.success("Proposition d’ajustement envoyée à l’apprenant");
+      setOrientationProposalOpen(false);
+      setOrientationProposalJustification("");
+      learnerOrientationQuery.refetch();
+    },
+    onError: (error) => toast.error(error.message || "Impossible d’envoyer la proposition"),
   });
 
   const selectedCandidatesQuery = trpc.admin.getSelectedCandidates.useQuery({ page: selectedCandidateTable.page, pageSize: 10, search: selectedCandidateTable.search || undefined, sortBy: selectedCandidateTable.sortBy, sortDirection: selectedCandidateTable.sortDirection }, {
@@ -517,8 +529,26 @@ export default function AdminTraining() {
                   <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><BookMarked className="h-5 w-5 text-primary" /> Orientation et objectifs</h3>
                   <p className="mt-1 text-sm text-muted-foreground">Objectifs déclarés, diagnostic initial et ordre de formation recommandé.</p>
                 </div>
-                <span className={`self-start rounded-full px-2.5 py-1 text-xs font-semibold ${orientation?.profile?.status === "completed" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"}`}>{orientation?.profile?.status === "completed" ? "Diagnostic terminé" : orientation?.profile?.status === "goals_set" ? "Diagnostic à terminer" : "Non commencé"}</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  {orientation?.profile?.goals?.length ? <Button size="sm" variant="outline" onClick={() => { setOrientationProposedGoals(orientation.profile.goals); setOrientationProposalJustification(""); setOrientationProposalOpen(true); }}><Edit2 className="mr-1.5 h-3.5 w-3.5" />Suggérer un ajustement</Button> : null}
+                  <span className={`self-start rounded-full px-2.5 py-1 text-xs font-semibold ${orientation?.profile?.status === "completed" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"}`}>{orientation?.profile?.status === "completed" ? "Diagnostic terminé" : orientation?.profile?.status === "goals_set" ? "Diagnostic à terminer" : "Non commencé"}</span>
+                </div>
               </div>
+              <Dialog open={orientationProposalOpen} onOpenChange={setOrientationProposalOpen}>
+                <DialogContent className="max-w-lg">
+                  <DialogHeader><DialogTitle>Proposer un ajustement d’objectifs</DialogTitle><DialogDescription>L’apprenant reçoit la proposition, sa justification et peut l’accepter ou la décliner. Une acceptation relance son diagnostic.</DialogDescription></DialogHeader>
+                  <div className="space-y-4">
+                    {orientationProposedGoals.map((goal) => {
+                      const competency = orientation?.competencies?.find((item: any) => item.id === goal.competencyId);
+                      const titleValue = competency?.title as any;
+                      const title = titleValue?.fr || titleValue?.en || goal.competencyId;
+                      return <label key={goal.competencyId} className="block text-sm font-semibold text-foreground">{title}<select value={goal.targetLevel} onChange={(event) => setOrientationProposedGoals((current) => current.map((item) => item.competencyId === goal.competencyId ? { ...item, targetLevel: event.target.value as "bronze" | "silver" | "gold" } : item))} className="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground"><option value="bronze">Bronze · 10 pts</option><option value="silver">Argent · 35 pts</option><option value="gold">Or · 70 pts</option></select></label>;
+                    })}
+                    <label className="block text-sm font-semibold text-foreground">Justification adressée à l’apprenant<textarea value={orientationProposalJustification} onChange={(event) => setOrientationProposalJustification(event.target.value)} placeholder="Ex. Votre diagnostic montre que vous pouvez viser le niveau Argent sur cette compétence." className="mt-1 min-h-24 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm font-normal text-foreground" /></label>
+                  </div>
+                  <DialogFooter><Button variant="outline" onClick={() => setOrientationProposalOpen(false)}>Annuler</Button><Button disabled={orientationProposalMutation.isPending || orientationProposalJustification.trim().length < 8 || !selectedUserId} onClick={() => orientationProposalMutation.mutate({ userId: selectedUserId!, goals: orientationProposedGoals, wantsOfficialCertification: Boolean(orientation?.profile?.wantsOfficialCertification), officialCertificationIds: orientation?.profile?.officialCertificationIds || [], certificationTargetDates: orientation?.profile?.certificationTargetDates || {}, justification: orientationProposalJustification })}>{orientationProposalMutation.isPending ? "Envoi…" : "Envoyer la proposition"}</Button></DialogFooter>
+                </DialogContent>
+              </Dialog>
               {learnerOrientationQuery.isLoading ? <div className="mt-4 h-20 animate-pulse rounded-xl bg-muted" /> : orientation?.profile?.goals?.length ? (
                 <div className="mt-4 space-y-4">
                   <div className="grid gap-3 md:grid-cols-2">{orientation.profile.goals.map((goal: any) => {

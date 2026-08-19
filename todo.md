@@ -1689,3 +1689,10 @@
 
 ## Formule du score global de performance
 - [x] Piste abandonnée : le score demandé est la somme des compétences graduées, non les performances d’évaluation
+
+## Propositions administratives et trajectoire de progression
+- [x] Permettre aux administrateurs de proposer des ajustements d’objectifs depuis la fiche apprenant
+- [x] Enregistrer la proposition, sa justification et sa date de création
+- [x] Calculer une trajectoire prévue selon les objectifs, échéances et niveaux actuels
+- [x] Afficher un graphique apprenant comparant avancement réel et prévu
+- [x] Tester les autorisations administratives, le calcul et le rendu du graphique

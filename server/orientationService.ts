@@ -1,5 +1,5 @@
-import { and, desc, eq, isNotNull, isNull, ne, or } from "drizzle-orm";
-import { learnerOrientationProfiles, users } from "../drizzle/schema";
+import { and, desc, eq, inArray, isNotNull, isNull, ne, or } from "drizzle-orm";
+import { learnerCompetencyContributions, learnerOrientationProfiles, learnerOrientationProposals, users } from "../drizzle/schema";
 import {
   buildOrientationRecommendations,
   getDiagnosticPoints,
@@ -8,6 +8,7 @@ import {
   type OrientationAssessmentAnswer,
   type OrientationGoal,
 } from "../shared/orientationFramework";
+import { buildOrientationTrajectory } from "../shared/orientationTrajectory";
 import { getDb } from "./db";
 import { getUserCompetencies } from "./competencyService";
 import { createCommunication } from "./adminDb";
@@ -47,6 +48,36 @@ function parseAssessment(value: unknown): StoredAssessment | null {
   };
 }
 
+async function getOrientationTrajectory(userId: number, profile: typeof learnerOrientationProfiles.$inferSelect | null | undefined, goals: OrientationGoal[], certificationTargetDates: Record<string, string>) {
+  const targetDate = Object.values(certificationTargetDates).sort()[0] || null;
+  const targetPoints = goals.reduce((sum, goal) => sum + ORIENTATION_TARGETS[goal.targetLevel].points, 0);
+  if (!profile?.startedAt || !targetDate || !goals.length) return buildOrientationTrajectory({ startedAt: profile?.startedAt || null, targetDate, targetPoints, contributions: [] });
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const contributionRows = await db.select({ awardedAt: learnerCompetencyContributions.awardedAt, points: learnerCompetencyContributions.points })
+    .from(learnerCompetencyContributions)
+    .where(and(eq(learnerCompetencyContributions.userId, userId), inArray(learnerCompetencyContributions.competencyId, goals.map((goal) => goal.competencyId))));
+  return buildOrientationTrajectory({ startedAt: profile.startedAt, targetDate, targetPoints, contributions: contributionRows.map((contribution) => ({ ...contribution, points: Number(contribution.points) || 0 })) });
+}
+
+async function getPendingOrientationProposal(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [proposal] = await db.select().from(learnerOrientationProposals)
+    .where(and(eq(learnerOrientationProposals.userId, userId), eq(learnerOrientationProposals.status, "pending")))
+    .orderBy(desc(learnerOrientationProposals.createdAt)).limit(1);
+  if (!proposal) return null;
+  return {
+    id: proposal.id,
+    goals: parseGoals(proposal.goals),
+    wantsOfficialCertification: proposal.wantsOfficialCertification === 1,
+    officialCertificationIds: parseStringList(proposal.officialCertificationIds),
+    certificationTargetDates: parseCertificationTargetDates(proposal.certificationTargetDates),
+    justification: proposal.justification,
+    createdAt: proposal.createdAt,
+  };
+}
+
 async function buildOrientationView(userId: number, profile?: typeof learnerOrientationProfiles.$inferSelect | null) {
   const goals = parseGoals(profile?.goals);
   const assessment = parseAssessment(profile?.assessment);
@@ -59,6 +90,10 @@ async function buildOrientationView(userId: number, profile?: typeof learnerOrie
   const recommendations = goals.length
     ? buildOrientationRecommendations({ goals, competencyPoints, diagnosticPoints, wantsOfficialCertification, officialCertificationIds })
     : [];
+  const [trajectory, pendingProposal] = await Promise.all([
+    getOrientationTrajectory(userId, profile, goals, certificationTargetDates),
+    getPendingOrientationProposal(userId),
+  ]);
 
   return {
     profile: profile ? {
@@ -97,6 +132,8 @@ async function buildOrientationView(userId: number, profile?: typeof learnerOrie
     })),
     questions: getOrientationQuestions(goals).map(({ correctChoiceId, rationale, ...question }) => question),
     recommendations,
+    trajectory,
+    pendingProposal,
     needsOrientation: !profile || profile.status !== "completed",
   };
 }
@@ -175,6 +212,50 @@ export async function completeLearnerOrientation(input: {
   await db.update(learnerOrientationProfiles)
     .set({ status: "completed", assessment, recommendations, completedAt })
     .where(eq(learnerOrientationProfiles.id, profile.id));
+  return getLearnerOrientation(input.userId);
+}
+
+export async function createOrientationProposal(input: {
+  userId: number;
+  proposedBy: number;
+  goals: OrientationGoal[];
+  wantsOfficialCertification: boolean;
+  officialCertificationIds: string[];
+  certificationTargetDates?: unknown;
+  justification: string;
+}) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const justification = input.justification.trim();
+  if (justification.length < 8) throw new Error("Une justification d’au moins 8 caractères est requise");
+  await db.insert(learnerOrientationProposals).values({
+    userId: input.userId,
+    proposedBy: input.proposedBy,
+    goals: input.goals,
+    wantsOfficialCertification: input.wantsOfficialCertification ? 1 : 0,
+    officialCertificationIds: input.officialCertificationIds,
+    certificationTargetDates: parseCertificationTargetDates(input.certificationTargetDates),
+    justification,
+  });
+  return getLearnerOrientation(input.userId);
+}
+
+export async function respondToOrientationProposal(input: { userId: number; proposalId: number; accept: boolean }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [proposal] = await db.select().from(learnerOrientationProposals)
+    .where(and(eq(learnerOrientationProposals.id, input.proposalId), eq(learnerOrientationProposals.userId, input.userId), eq(learnerOrientationProposals.status, "pending"))).limit(1);
+  if (!proposal) throw new Error("Proposition introuvable ou déjà traitée");
+  if (input.accept) {
+    await saveLearnerOrientationGoals({
+      userId: input.userId,
+      goals: parseGoals(proposal.goals),
+      wantsOfficialCertification: proposal.wantsOfficialCertification === 1,
+      officialCertificationIds: parseStringList(proposal.officialCertificationIds),
+      certificationTargetDates: proposal.certificationTargetDates,
+    });
+  }
+  await db.update(learnerOrientationProposals).set({ status: input.accept ? "accepted" : "declined", respondedAt: new Date() }).where(eq(learnerOrientationProposals.id, proposal.id));
   return getLearnerOrientation(input.userId);
 }
 

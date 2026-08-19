@@ -107,6 +107,7 @@ export default function TrainingDashboard() {
   const orientationQuery = trpc.orientation.getMine.useQuery(undefined, { enabled: isAuthenticated });
   const saveOrientationGoalsMutation = trpc.orientation.saveGoals.useMutation({ onSuccess: () => orientationQuery.refetch() });
   const completeOrientationMutation = trpc.orientation.completeDiagnostic.useMutation({ onSuccess: () => orientationQuery.refetch() });
+  const respondToOrientationProposalMutation = trpc.orientation.respondToProposal.useMutation({ onSuccess: () => orientationQuery.refetch() });
   const accountIsNew = Boolean(user?.createdAt && Date.now() - new Date(user.createdAt).getTime() < 1000 * 60 * 60 * 24 * 7);
   const orientationIsRequired = Boolean(accountIsNew && orientationQuery.data?.needsOrientation);
 
@@ -408,9 +409,11 @@ export default function TrainingDashboard() {
                 orientation={orientationQuery.data}
                 certifications={trainingIndex.certifications as any[]}
                 savingGoals={saveOrientationGoalsMutation.isPending}
+                respondingToProposal={respondToOrientationProposalMutation.isPending}
                 completing={completeOrientationMutation.isPending}
                 onSaveGoals={(input) => saveOrientationGoalsMutation.mutate(input)}
                 onCompleteDiagnostic={(answers) => completeOrientationMutation.mutate({ answers })}
+                onRespondToProposal={(input) => respondToOrientationProposalMutation.mutate(input)}
               />
             </motion.div>
           )}
