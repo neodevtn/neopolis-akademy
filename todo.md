@@ -1713,4 +1713,4 @@
 - [x] Supprimer toute redirection silencieuse qui annule l’intention de navigation de l’apprenant
 - [x] Afficher une priorité d’orientation claire sans empêcher l’accès aux autres espaces apprenants
 - [x] Couvrir l’accès aux onglets avec orientation incomplète par des tests unitaires
-- [ ] Vérifier la navigation authentifiée sur le domaine de production après publication
+- [x] Vérifier la navigation authentifiée sur le domaine de production après publication
