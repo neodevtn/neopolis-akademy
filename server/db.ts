@@ -1,8 +1,9 @@
 import { eq, desc, asc, sql, and, or, like, count, gt, isNull, isNotNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, InsertLearnerAchievement } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement } from "../drizzle/schema";
 import { ENV } from './_core/env';
-import { engagementBucket, firstAttemptRate } from "./reportingMetrics";
+import { engagementBucket, firstAttemptRate, isPedagogicalReportingEvent } from "./reportingMetrics";
+import { learnerReportingLabel } from "@shared/learnerReportingLabel";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -311,7 +312,7 @@ export async function getAllLearners(
   page: number = 1,
   pageSize: number = 20,
   search?: string,
-  sortBy: "lastSignedIn" | "name" | "email" | "createdAt" = "lastSignedIn",
+  sortBy: "lastSignedIn" | "name" | "email" | "createdAt" | "globalScore" | "role" | "blocked" = "lastSignedIn",
   sortDirection: "asc" | "desc" = "desc",
 ) {
   const db = await getDb();
@@ -319,7 +320,9 @@ export async function getAllLearners(
 
   const offset = (page - 1) * pageSize;
 
-  // Get users who have at least one training progress entry OR exam attempt
+  const globalScore = sql<number>`COALESCE(SUM(${learnerCompetencyContributions.points}), 0)`;
+
+  // Le score global reflète uniquement les contributions pédagogiques vérifiées.
   let baseQuery = db.select({
     id: users.id,
     openId: users.openId,
@@ -329,7 +332,22 @@ export async function getAllLearners(
     blocked: users.blocked,
     createdAt: users.createdAt,
     lastSignedIn: users.lastSignedIn,
-  }).from(users);
+    globalScore,
+  }).from(users)
+    .leftJoin(
+      learnerCompetencyContributions,
+      eq(learnerCompetencyContributions.userId, users.id),
+    )
+    .groupBy(
+      users.id,
+      users.openId,
+      users.name,
+      users.email,
+      users.role,
+      users.blocked,
+      users.createdAt,
+      users.lastSignedIn,
+    );
 
   if (search && search.trim()) {
     const searchTerm = `%${search.trim()}%`;
@@ -338,7 +356,15 @@ export async function getAllLearners(
     ) as any;
   }
 
-  const sortableColumns = { lastSignedIn: users.lastSignedIn, name: users.name, email: users.email, createdAt: users.createdAt } as const;
+  const sortableColumns = {
+    lastSignedIn: users.lastSignedIn,
+    name: users.name,
+    email: users.email,
+    createdAt: users.createdAt,
+    globalScore,
+    role: users.role,
+    blocked: users.blocked,
+  } as const;
   const orderBy = sortDirection === "asc" ? asc(sortableColumns[sortBy]) : desc(sortableColumns[sortBy]);
   const allUsers = await (baseQuery as any).orderBy(orderBy).limit(pageSize).offset(offset);
 
@@ -364,6 +390,7 @@ export async function getAllLearners(
 
   const enriched = allUsers.map((u: any) => ({
     ...u,
+    globalScore: Number(u.globalScore || 0),
     viaCandidature: candidatureEmails.has(u.email),
   }));
 
@@ -653,7 +680,7 @@ export async function getLearningReporting(input: { days: 7 | 30 | 90; certifica
     progressConditions.push(eq(trainingProgress.certificationId, input.certificationId));
   }
 
-  const [events, progressRows, learnerRows] = await Promise.all([
+  const [events, progressRows, learnerRows, identityRows] = await Promise.all([
     db.select({
       id: learningEvents.id,
       userId: learningEvents.userId,
@@ -672,6 +699,7 @@ export async function getLearningReporting(input: { days: 7 | 30 | 90; certifica
       completedAt: trainingProgress.completedAt,
     }).from(trainingProgress).where(and(...progressConditions)),
     db.select({ id: users.id, name: users.name, email: users.email }).from(users).where(eq(users.role, "user")),
+    db.select({ id: users.id, name: users.name, email: users.email }).from(users),
   ]);
 
   const dayKeys = Array.from({ length: input.days }, (_, index) => {
@@ -691,12 +719,16 @@ export async function getLearningReporting(input: { days: 7 | 30 | 90; certifica
     return courseStats.get(courseId)!;
   };
 
-  for (const event of events) {
+  const pedagogicalEvents = events.filter((event) => isPedagogicalReportingEvent(event.eventType));
+
+  for (const event of pedagogicalEvents) {
+    const userId = Number(event.userId);
+    if (!Number.isFinite(userId)) continue;
     const day = new Date(event.createdAt).toISOString().slice(0, 10);
     const dailyItem = daily.get(day);
-    const learner = ensureLearner(event.userId);
+    const learner = ensureLearner(userId);
     learner.days.add(day);
-    dailyItem?.activeLearners.add(event.userId);
+    dailyItem?.activeLearners.add(userId);
     if (event.eventType === "learning_time") {
       const seconds = event.durationSeconds || 0;
       learner.seconds += seconds;
@@ -716,18 +748,20 @@ export async function getLearningReporting(input: { days: 7 | 30 | 90; certifica
         if (event.success === 1) course.firstAttemptSuccesses += 1;
       }
     }
-    if (event.courseId) ensureCourse(event.courseId).learners.add(event.userId);
+    if (event.courseId) ensureCourse(event.courseId).learners.add(userId);
   }
 
   for (const row of progressRows) {
+    const userId = Number(row.userId);
+    if (!Number.isFinite(userId)) continue;
     const day = new Date(row.completedAt).toISOString().slice(0, 10);
-    const learner = ensureLearner(row.userId);
+    const learner = ensureLearner(userId);
     learner.lessons += 1;
     if (daily.get(day)) daily.get(day)!.completedLessons += 1;
     if (row.courseId) {
       const course = ensureCourse(row.courseId);
       course.lessons += 1;
-      course.learners.add(row.userId);
+      course.learners.add(userId);
     }
   }
 
@@ -735,11 +769,13 @@ export async function getLearningReporting(input: { days: 7 | 30 | 90; certifica
   const firstAttempts = Array.from(learnerStats.values()).reduce((sum, item) => sum + item.firstAttempts, 0);
   const firstAttemptSuccesses = Array.from(learnerStats.values()).reduce((sum, item) => sum + item.firstAttemptSuccesses, 0);
   const engagedLearners = Array.from(learnerStats.values()).filter((item) => item.seconds > 0 || item.lessons > 0).length;
-  const userById = new Map(learnerRows.map((learner) => [learner.id, learner]));
+  // Learning events can belong to an administrator completing the training as well.
+  // Keep role filtering for learner KPIs, but resolve display labels against every account.
+  const userById = new Map(identityRows.map((learner) => [learner.id, learner]));
 
   return {
     periodDays: input.days,
-    hasLearningData: events.length > 0 || progressRows.length > 0,
+    hasLearningData: pedagogicalEvents.length > 0 || progressRows.length > 0,
     overview: {
       enrolledLearners: learnerRows.length,
       engagedLearners,
@@ -782,7 +818,7 @@ export async function getLearningReporting(input: { days: 7 | 30 | 90; certifica
     })).sort((a, b) => b.activeMinutes - a.activeMinutes || b.completedLessons - a.completedLessons),
     topLearners: Array.from(learnerStats.entries()).map(([userId, item]) => ({
       userId,
-      name: userById.get(userId)?.name || userById.get(userId)?.email || `Apprenant #${userId}`,
+      name: learnerReportingLabel(userById.get(userId)),
       activeMinutes: Math.round(item.seconds / 60),
       activeDays: item.days.size,
       completedLessons: item.lessons,

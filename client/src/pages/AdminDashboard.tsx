@@ -449,18 +449,6 @@ export default function AdminDashboard() {
         }
       />
 
-      {/* Sub-tabs for this page */}
-      <div className="border-b" style={{ backgroundColor: "var(--wise-canvas)" }}>
-        <div className="container flex items-center gap-1 py-2 overflow-x-auto">
-          <button onClick={() => navigateAdmin("candidatures")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "candidatures" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "candidatures" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "candidatures" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Candidatures</button>
-          <button onClick={() => navigateAdmin("communications")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "communications" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "communications" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "communications" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Communications</button>
-          <button onClick={() => navigateAdmin("invitations")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "invitations" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "invitations" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "invitations" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Invitations</button>
-          <button onClick={() => navigateAdmin("kanban")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "kanban" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "kanban" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "kanban" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Kanban</button>
-          <button onClick={() => navigateAdmin("analytics")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "analytics" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "analytics" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "analytics" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Évaluation</button>
-          <button onClick={() => navigateAdmin("activity")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${activeTab === "activity" ? "font-semibold" : "hover:bg-gray-100"}`} style={{ backgroundColor: activeTab === "activity" ? "var(--wise-primary-pale)" : undefined, color: activeTab === "activity" ? "var(--wise-positive-deep)" : "var(--wise-mute)" }}>Activité</button>
-        </div>
-      </div>
-
       <div className="container py-10">
         {/* ==================== CANDIDATURES TAB ==================== */}
         {activeTab === "candidatures" && (

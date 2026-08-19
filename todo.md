@@ -1635,3 +1635,44 @@
 - [x] Déclencher l’orientation pour les nouveaux comptes et rappeler les anciens apprenants par communiqué
 - [x] Afficher les objectifs, le diagnostic, les recommandations et la progression aux apprenants et administrateurs
 - [x] Tester les cas débutant, intermédiaire et avancé sans envoi non confirmé
+
+## Libellés apprenants dans le reporting
+- [x] Identifier l’enregistrement et le repli qui affichent un identifiant interne au lieu d’un nom
+- [x] Corriger le libellé de secours avec l’adresse e-mail dans le reporting et les classements
+- [x] Vérifier l’affichage mobile et ajouter un test contre la régression
+
+## Lisibilité des noms dans les classements
+- [x] Identifier les événements dont le profil utilisateur ne remonte pas dans le reporting
+- [x] Afficher le nom en priorité, puis l’e-mail uniquement si le nom est absent
+- [x] Remplacer le dernier recours par un libellé neutre et investigable
+- [x] Vérifier les classements mobiles avec des profils complets et incomplets
+
+## Séparation apprentissage et administration dans le reporting
+- [x] Auditer les sources incluses dans les indicateurs d’apprentissage
+- [x] Inclure un administrateur comme apprenant lorsque ses événements sont pédagogiques
+- [x] Exclure explicitement toute activité administrative des compteurs et classements d’apprentissage
+- [x] Tester la cohérence des profils mixtes sur le tableau de bord et mobile
+
+## Récupération de compte, navigation et sécurité
+- [x] Auditer le flux de mot de passe oublié, ses liens, ses tokens et ses e-mails
+- [x] Vérifier la délivrabilité du lien de récupération vers le bon compte sans révéler l’existence d’un e-mail
+- [x] Revoir l’arborescence des menus et promouvoir les communications à la navigation principale appropriée
+- [x] Réaliser une revue de sécurité défensive : authentification, autorisations, sessions, validation, en-têtes et exposition des données
+- [x] Corriger les protections prioritaires identifiées et les couvrir par tests
+- [x] Tester les parcours de récupération et de navigation sans envoi ou action destructive non confirmée
+- [x] Migrer Recharts v2 vers v3 afin de supprimer l’alerte de dépendance élevée restante
+
+## Score global et tris du suivi apprenants
+- [x] Auditer le contrat de données et les colonnes du tableau de suivi
+- [x] Ajouter le score global des contributions pédagogiques à chaque apprenant
+- [x] Rendre les en-têtes de colonne triables avec indicateur visuel de sens
+- [x] Synchroniser le tri avec le serveur et vérifier le rendu mobile
+
+## Formule du score global de compétences
+- [x] Auditer l’agrégation des contributions de compétences graduées
+- [x] Sommer les points de compétences graduées pour chaque apprenant
+- [x] Préserver le tri serveur sur le score global corrigé
+- [x] Vérifier les résultats sur les données réelles et les comptes sans contribution
+
+## Formule du score global de performance
+- [x] Piste abandonnée : le score demandé est la somme des compétences graduées, non les performances d’évaluation

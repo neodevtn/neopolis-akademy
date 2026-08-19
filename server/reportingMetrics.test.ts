@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { engagementBucket, firstAttemptRate } from "./reportingMetrics";
+import { engagementBucket, firstAttemptRate, isPedagogicalReportingEvent } from "./reportingMetrics";
 
 describe("reportingMetrics", () => {
   it("calculates the first-attempt success rate without inventing a rate when there is no attempt", () => {
@@ -14,5 +14,12 @@ describe("reportingMetrics", () => {
     expect(engagementBucket(30 * 60 + 1, false)).toBe("regular");
     expect(engagementBucket(120 * 60, false)).toBe("regular");
     expect(engagementBucket(120 * 60 + 1, false)).toBe("deep");
+  });
+
+  it("keeps administration events out of learner reporting", () => {
+    expect(isPedagogicalReportingEvent("learning_time")).toBe(true);
+    expect(isPedagogicalReportingEvent("exercise_submitted")).toBe(true);
+    expect(isPedagogicalReportingEvent("admin_page_view")).toBe(false);
+    expect(isPedagogicalReportingEvent("communication_sent")).toBe(false);
   });
 });
