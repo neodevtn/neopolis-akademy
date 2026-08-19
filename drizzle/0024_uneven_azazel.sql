@@ -1,0 +1,1 @@
+ALTER TABLE `learner_orientation_profiles` DROP INDEX `learner_orientation_profiles_userId_unique`;

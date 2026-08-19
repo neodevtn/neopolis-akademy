@@ -6,8 +6,18 @@ import rateLimit from "express-rate-limit";
 import * as db from "./db";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { sdk } from "./_core/sdk";
+import { ENV } from "./_core/env";
 
 const SALT_ROUNDS = 10;
+const MIN_PASSWORD_LENGTH = 12;
+const PRODUCTION_APP_URL = "https://akademy.neodev.click";
+
+function getPublicAppUrl(req: Request) {
+  if (ENV.isProduction) return PRODUCTION_APP_URL;
+  const host = req.get("host") || "localhost:3000";
+  const isTrustedDevHost = host === "localhost:3000" || host.startsWith("127.0.0.1:") || host.endsWith(".manus.computer");
+  return `${req.protocol}://${isTrustedDevHost ? host : "localhost:3000"}`;
+}
 
 export function registerAuthRoutes(app: Express) {
   // Rate limiter for login: max 5 attempts per IP per 15 minutes
@@ -26,6 +36,22 @@ export function registerAuthRoutes(app: Express) {
     standardHeaders: true,
     legacyHeaders: false,
     message: { error: "Trop de demandes de réinitialisation. Veuillez réessayer dans 15 minutes." },
+  });
+
+  const resetPasswordLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: "Trop de tentatives de réinitialisation. Veuillez réessayer dans 15 minutes." },
+  });
+
+  const validateResetTokenLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { valid: false, error: "Trop de vérifications. Veuillez réessayer dans 15 minutes." },
   });
 
   // POST /api/auth/login - Authenticate with email/password
@@ -121,7 +147,7 @@ export function registerAuthRoutes(app: Express) {
               const { createInvitation } = await import("./db");
               const { sendInvitationEmail } = await import("./email");
               const invitation = await createInvitation(normalizedEmail, `${candidate.firstName} ${candidate.lastName}`.trim(), 1);
-              const baseUrl = `${req.protocol}://${req.get('host')}`;
+              const baseUrl = getPublicAppUrl(req);
               const invitationLink = `${baseUrl}/accept-invitation?token=${invitation.token}`;
               await sendInvitationEmail({
                 to: normalizedEmail,
@@ -148,13 +174,13 @@ export function registerAuthRoutes(app: Express) {
       await db.createPasswordResetToken(user.id, token, expiresAt);
 
       // Build reset link
-      const baseUrl = `${req.protocol}://${req.get('host')}`;
+      const baseUrl = getPublicAppUrl(req);
       const resetLink = `${baseUrl}/reset-password?token=${token}`;
 
       // Send email
       const { sendPasswordResetEmail } = await import("./email");
       await sendPasswordResetEmail({
-        to: normalizedEmail,
+        to: user.email || normalizedEmail,
         name: user.name || normalizedEmail,
         resetLink,
       });
@@ -167,7 +193,7 @@ export function registerAuthRoutes(app: Express) {
   });
 
   // POST /api/auth/reset-password - Reset password with token
-  app.post("/api/auth/reset-password", async (req: Request, res: Response) => {
+  app.post("/api/auth/reset-password", resetPasswordLimiter, async (req: Request, res: Response) => {
     const { token, password } = req.body || {};
 
     if (!token || !password) {
@@ -175,8 +201,8 @@ export function registerAuthRoutes(app: Express) {
       return;
     }
 
-    if (password.length < 6) {
-      res.status(400).json({ error: "Le mot de passe doit contenir au moins 6 caractères" });
+    if (typeof password !== "string" || password.length < MIN_PASSWORD_LENGTH || password.length > 128) {
+      res.status(400).json({ error: `Le mot de passe doit contenir entre ${MIN_PASSWORD_LENGTH} et 128 caractères` });
       return;
     }
 
@@ -218,7 +244,7 @@ export function registerAuthRoutes(app: Express) {
   });
 
   // GET /api/auth/validate-reset-token?token=xxx - Validate a reset token
-  app.get("/api/auth/validate-reset-token", async (req: Request, res: Response) => {
+  app.get("/api/auth/validate-reset-token", validateResetTokenLimiter, async (req: Request, res: Response) => {
     const { token } = req.query;
     if (!token || typeof token !== "string") {
       res.status(400).json({ valid: false, error: "Token manquant" });

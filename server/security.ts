@@ -25,10 +25,8 @@ setInterval(() => {
 }, 5 * 60 * 1000);
 
 function getClientIp(req: Request): string {
-  const forwarded = req.headers["x-forwarded-for"];
-  if (typeof forwarded === "string") {
-    return forwarded.split(",")[0].trim();
-  }
+  // Express resolves the trusted reverse-proxy chain through `req.ip`.
+  // Reading an arbitrary X-Forwarded-For header first would let a client evade rate limits.
   return req.ip || req.socket.remoteAddress || "unknown";
 }
 

@@ -228,6 +228,31 @@ export const learnerCompetencyContributions = mysqlTable("learner_competency_con
 ]);
 export type LearnerCompetencyContribution = typeof learnerCompetencyContributions.$inferSelect;
 
+/**
+ * Learner orientation profile. Stores declared goals, transparent diagnostic
+ * responses and the last generated recommendation snapshot. Current competency
+ * levels are always recalculated from the contribution ledger at read time.
+ */
+export const learnerOrientationProfiles = mysqlTable("learner_orientation_profiles", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  status: mysqlEnum("status", ["not_started", "goals_set", "completed"]).notNull().default("not_started"),
+  goals: json("goals"),
+  wantsOfficialCertification: int("wantsOfficialCertification").notNull().default(0),
+  officialCertificationIds: json("officialCertificationIds"),
+  certificationTargetDates: json("certificationTargetDates"),
+  assessment: json("assessment"),
+  recommendations: json("recommendations"),
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("learner_orientation_profile_user_once").on(table.userId),
+  index("learner_orientation_profile_status_idx").on(table.status),
+]);
+export type LearnerOrientationProfile = typeof learnerOrientationProfiles.$inferSelect;
+
 /** Rangs de gamification configurables selon les niveaux de compétence. */
 export const gamificationRanks = mysqlTable("gamification_ranks", {
   id: varchar("id", { length: 40 }).primaryKey(),

@@ -46,8 +46,8 @@ export default function ResetPassword() {
     e.preventDefault();
     setError("");
 
-    if (password.length < 6) {
-      setError(t({ fr: "Le mot de passe doit contenir au moins 6 caractères", en: "Password must be at least 6 characters", ar: "يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل" }));
+    if (password.length < 12) {
+      setError(t({ fr: "Le mot de passe doit contenir au moins 12 caractères", en: "Password must be at least 12 characters", ar: "يجب أن تحتوي كلمة المرور على 12 حرفًا على الأقل" }));
       return;
     }
 
