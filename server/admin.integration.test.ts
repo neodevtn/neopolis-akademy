@@ -127,6 +127,19 @@ describe("Admin API - Input Validation", () => {
     ).rejects.toThrow();
   });
 
+  it("admin.getLearners accepts global score as a sortable column", async () => {
+    const caller = appRouter.createCaller(createAdminContext());
+    const result = await caller.admin.getLearners({
+      page: 1,
+      pageSize: 10,
+      sortBy: "globalScore",
+      sortDirection: "desc",
+    });
+
+    expect(result.sortBy).toBe("globalScore");
+    expect(result.sortDirection).toBe("desc");
+  });
+
   it("admin.createInvitation validates email format", async () => {
     const caller = appRouter.createCaller(createAdminContext());
     await expect(

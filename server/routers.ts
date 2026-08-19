@@ -603,7 +603,7 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
         page: z.number().min(1).default(1),
         pageSize: z.number().min(1).max(100).default(20),
         search: z.string().optional(),
-        sortBy: z.enum(["lastSignedIn", "name", "email", "createdAt"]).default("lastSignedIn"),
+        sortBy: z.enum(["lastSignedIn", "name", "email", "createdAt", "globalScore", "role", "blocked"]).default("lastSignedIn"),
         sortDirection: z.enum(["asc", "desc"]).default("desc"),
       }).optional())
       .query(async ({ ctx, input }) => {

@@ -1,6 +1,6 @@
 import { eq, desc, asc, sql, and, or, like, count, gt, isNull, isNotNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, InsertLearnerAchievement } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { engagementBucket, firstAttemptRate, isPedagogicalReportingEvent } from "./reportingMetrics";
 import { learnerReportingLabel } from "@shared/learnerReportingLabel";
@@ -312,7 +312,7 @@ export async function getAllLearners(
   page: number = 1,
   pageSize: number = 20,
   search?: string,
-  sortBy: "lastSignedIn" | "name" | "email" | "createdAt" = "lastSignedIn",
+  sortBy: "lastSignedIn" | "name" | "email" | "createdAt" | "globalScore" | "role" | "blocked" = "lastSignedIn",
   sortDirection: "asc" | "desc" = "desc",
 ) {
   const db = await getDb();
@@ -320,7 +320,9 @@ export async function getAllLearners(
 
   const offset = (page - 1) * pageSize;
 
-  // Get users who have at least one training progress entry OR exam attempt
+  const globalScore = sql<number>`COALESCE((SELECT SUM(${learnerCompetencyContributions.points}) FROM ${learnerCompetencyContributions} WHERE ${learnerCompetencyContributions.userId} = ${users.id}), 0)`;
+
+  // Le score global reflète uniquement les contributions pédagogiques vérifiées.
   let baseQuery = db.select({
     id: users.id,
     openId: users.openId,
@@ -330,6 +332,7 @@ export async function getAllLearners(
     blocked: users.blocked,
     createdAt: users.createdAt,
     lastSignedIn: users.lastSignedIn,
+    globalScore,
   }).from(users);
 
   if (search && search.trim()) {
@@ -339,7 +342,15 @@ export async function getAllLearners(
     ) as any;
   }
 
-  const sortableColumns = { lastSignedIn: users.lastSignedIn, name: users.name, email: users.email, createdAt: users.createdAt } as const;
+  const sortableColumns = {
+    lastSignedIn: users.lastSignedIn,
+    name: users.name,
+    email: users.email,
+    createdAt: users.createdAt,
+    globalScore,
+    role: users.role,
+    blocked: users.blocked,
+  } as const;
   const orderBy = sortDirection === "asc" ? asc(sortableColumns[sortBy]) : desc(sortableColumns[sortBy]);
   const allUsers = await (baseQuery as any).orderBy(orderBy).limit(pageSize).offset(offset);
 
@@ -365,6 +376,7 @@ export async function getAllLearners(
 
   const enriched = allUsers.map((u: any) => ({
     ...u,
+    globalScore: Number(u.globalScore || 0),
     viaCandidature: candidatureEmails.has(u.email),
   }));
 

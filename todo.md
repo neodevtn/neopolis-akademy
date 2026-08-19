@@ -1652,3 +1652,9 @@
 - [x] Corriger les protections prioritaires identifiées et les couvrir par tests
 - [x] Tester les parcours de récupération et de navigation sans envoi ou action destructive non confirmée
 - [x] Migrer Recharts v2 vers v3 afin de supprimer l’alerte de dépendance élevée restante
+
+## Score global et tris du suivi apprenants
+- [x] Auditer le contrat de données et les colonnes du tableau de suivi
+- [x] Ajouter le score global des contributions pédagogiques à chaque apprenant
+- [x] Rendre les en-têtes de colonne triables avec indicateur visuel de sens
+- [x] Synchroniser le tri avec le serveur et vérifier le rendu mobile

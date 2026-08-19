@@ -50,7 +50,7 @@ export default function AdminTraining() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
-  const [learnerSortBy, setLearnerSortBy] = useState<"lastSignedIn" | "name" | "email" | "createdAt">("lastSignedIn");
+  const [learnerSortBy, setLearnerSortBy] = useState<"lastSignedIn" | "name" | "email" | "createdAt" | "globalScore" | "role" | "blocked">("lastSignedIn");
   const [learnerSortDirection, setLearnerSortDirection] = useState<"asc" | "desc">("desc");
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [inviteOpen, setInviteOpen] = useState(false);
@@ -775,10 +775,8 @@ export default function AdminTraining() {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          {([ ["name", "Apprenant"], ["email", "Email"] ] as const).map(([column, label]) => <TableHead key={column}><button type="button" className="inline-flex items-center gap-1 font-medium hover:text-foreground" onClick={() => toggleLearnerSort(column)}>{label}{learnerSortBy === column ? <span>{learnerSortDirection === "asc" ? "↑" : "↓"}</span> : <span className="text-muted-foreground/60">↕</span>}</button></TableHead>)}
-                          <TableHead>Statut</TableHead>
+                          {([ ["name", "Apprenant"], ["email", "Email"], ["globalScore", "Score global"], ["blocked", "Statut"], ["role", "Rôle"] ] as const).map(([column, label]) => <TableHead key={column}><button type="button" className="inline-flex items-center gap-1 font-medium hover:text-foreground" onClick={() => toggleLearnerSort(column)}>{label}{learnerSortBy === column ? <span>{learnerSortDirection === "asc" ? "↑" : "↓"}</span> : <span className="text-muted-foreground/60">↕</span>}</button></TableHead>)}
                           <TableHead>Revue</TableHead>
-                          <TableHead>Rôle</TableHead>
                           <TableHead><button type="button" className="inline-flex items-center gap-1 font-medium hover:text-foreground" onClick={() => toggleLearnerSort("lastSignedIn")}>Dernière connexion{learnerSortBy === "lastSignedIn" ? <span>{learnerSortDirection === "asc" ? "↑" : "↓"}</span> : <span className="text-muted-foreground/60">↕</span>}</button></TableHead>
                           <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
@@ -792,6 +790,7 @@ export default function AdminTraining() {
                           >
                             <TableCell className="font-medium">{learner.name || "Sans nom"}</TableCell>
                             <TableCell className="text-sm text-muted-foreground">{learner.email || "—"}</TableCell>
+                            <TableCell className="font-semibold tabular-nums text-primary">{learner.globalScore.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} pts</TableCell>
                             <TableCell>
                               {learner.blocked ? (
                                 <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 font-medium flex items-center gap-1 w-fit">
