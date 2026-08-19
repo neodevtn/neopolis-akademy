@@ -1626,3 +1626,10 @@
 - [x] Prévoir le blocage uniquement par action explicite d’un administrateur après revue
 - [x] Ajouter des contrôles de compréhension transparents plutôt que des pièges cachés
 - [x] Tester le scoring, la traçabilité et les garde-fous de non-blocage automatique
+
+## Propositions administratives et trajectoire de progression
+- [ ] Permettre aux administrateurs de proposer des ajustements d’objectifs depuis la fiche apprenant
+- [ ] Enregistrer la proposition, sa justification et sa date de création
+- [ ] Calculer une trajectoire prévue selon les objectifs, échéances et niveaux actuels
+- [ ] Afficher un graphique apprenant comparant avancement réel et prévu
+- [ ] Tester les autorisations administratives, le calcul et le rendu du graphique
