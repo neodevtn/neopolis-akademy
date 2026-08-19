@@ -1,0 +1,1 @@
+ALTER TABLE `learner_orientation_profiles` ADD `certificationTargetDates` json;

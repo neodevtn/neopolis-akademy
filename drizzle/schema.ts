@@ -240,6 +240,7 @@ export const learnerOrientationProfiles = mysqlTable("learner_orientation_profil
   goals: json("goals"),
   wantsOfficialCertification: int("wantsOfficialCertification").notNull().default(0),
   officialCertificationIds: json("officialCertificationIds"),
+  certificationTargetDates: json("certificationTargetDates"),
   assessment: json("assessment"),
   recommendations: json("recommendations"),
   startedAt: timestamp("startedAt"),

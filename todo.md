@@ -1636,6 +1636,12 @@
 - [x] Afficher les objectifs, le diagnostic, les recommandations et la progression aux apprenants et administrateurs
 - [x] Tester les cas débutant, intermédiaire et avancé sans envoi non confirmé
 
+## Ajustement des objectifs et suivi des écarts
+- [x] Permettre la modification des objectifs de compétences après le diagnostic
+- [x] Enregistrer une échéance cible pour chaque certification visée
+- [x] Afficher le niveau actuel, le niveau cible et l’écart dans le suivi administrateur
+- [x] Tester les modifications, échéances et comparatifs en vue apprenant et admin
+
 ## Libellés apprenants dans le reporting
 - [x] Identifier l’enregistrement et le repli qui affichent un identifiant interne au lieu d’un nom
 - [x] Corriger le libellé de secours avec l’adresse e-mail dans le reporting et les classements

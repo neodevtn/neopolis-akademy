@@ -36,6 +36,7 @@ export const appRouter = router({
       goals: orientationGoalsSchema,
       wantsOfficialCertification: z.boolean().default(false),
       officialCertificationIds: z.array(z.string().min(2).max(200)).max(8).default([]),
+      certificationTargetDates: z.record(z.string(), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)).default({}),
     })).mutation(async ({ ctx, input }) => saveLearnerOrientationGoals({
       userId: ctx.user.id,
       ...input,

@@ -521,14 +521,20 @@ export default function AdminTraining() {
               </div>
               {learnerOrientationQuery.isLoading ? <div className="mt-4 h-20 animate-pulse rounded-xl bg-muted" /> : orientation?.profile?.goals?.length ? (
                 <div className="mt-4 space-y-4">
-                  <div className="flex flex-wrap gap-2">{orientation.profile.goals.map((goal: any) => {
+                  <div className="grid gap-3 md:grid-cols-2">{orientation.profile.goals.map((goal: any) => {
                     const competency = orientation.competencies?.find((item: any) => item.id === goal.competencyId);
                     const competencyTitle = competency?.title as any;
-                    return <span key={goal.competencyId} className="rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">{competencyTitle?.fr || competencyTitle?.en || goal.competencyId} · cible {goal.targetLevel}</span>;
+                    const currentPoints = Number(competency?.level || 0);
+                    const targetPoints = Number(competency?.targetPoints || 0);
+                    const remainingPoints = Math.max(0, targetPoints - currentPoints);
+                    const progress = targetPoints ? Math.min(100, Math.round((currentPoints / targetPoints) * 100)) : 0;
+                    return <div key={goal.competencyId} className="rounded-xl border border-border bg-muted/30 p-3"><div className="flex items-start justify-between gap-3"><span className="text-sm font-semibold text-foreground">{competencyTitle?.fr || competencyTitle?.en || goal.competencyId}</span><span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">{progress}%</span></div><div className="mt-2 flex items-baseline justify-between text-xs"><span className="text-muted-foreground">Actuel <strong className="text-foreground">{currentPoints.toLocaleString("fr-FR")} pts</strong></span><span className="text-muted-foreground">Cible <strong className="text-foreground">{targetPoints.toLocaleString("fr-FR")} pts</strong></span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary" style={{ width: `${progress}%` }} /></div><p className="mt-2 text-xs text-muted-foreground">{remainingPoints > 0 ? `Écart restant : ${remainingPoints.toLocaleString("fr-FR")} pts` : "Objectif atteint"}</p></div>;
                   })}</div>
                   {orientation.recommendations?.length ? <ol className="space-y-2">{orientation.recommendations.map((recommendation: any) => {
                     const cert = (trainingIndex.certifications as any[]).find((item) => item.id === recommendation.certificationId);
-                    return <li key={`${recommendation.order}-${recommendation.certificationId}`} className="flex gap-3 rounded-lg border border-border/70 bg-muted/30 p-3 text-sm"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">{recommendation.order}</span><span><strong className="text-foreground">{cert?.title?.fr || cert?.title?.en || recommendation.certificationId}</strong><span className="mt-0.5 block text-xs text-muted-foreground">{recommendation.reason}</span></span></li>;
+                    const certificationTargetDates = orientation.profile.certificationTargetDates as Record<string, string> | undefined;
+                    const targetDate = certificationTargetDates?.[recommendation.certificationId];
+                    return <li key={`${recommendation.order}-${recommendation.certificationId}`} className="flex gap-3 rounded-lg border border-border/70 bg-muted/30 p-3 text-sm"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">{recommendation.order}</span><span><strong className="text-foreground">{cert?.title?.fr || cert?.title?.en || recommendation.certificationId}</strong><span className="mt-0.5 block text-xs text-muted-foreground">{recommendation.reason}</span>{targetDate && <span className="mt-1 block text-xs font-semibold text-primary">Échéance cible : {new Date(`${targetDate}T12:00:00`).toLocaleDateString("fr-FR")}</span>}</span></li>;
                   })}</ol> : <p className="text-sm text-muted-foreground">Le diagnostic doit être complété pour générer les recommandations.</p>}
                 </div>
               ) : <p className="mt-4 text-sm text-muted-foreground">L’apprenant n’a pas encore renseigné ses objectifs. Il peut démarrer l’orientation depuis son espace formation.</p>}

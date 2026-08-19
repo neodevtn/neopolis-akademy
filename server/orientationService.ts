@@ -27,6 +27,15 @@ function parseStringList(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 }
 
+function parseCertificationTargetDates(value: unknown): Record<string, string> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  const dates: Record<string, string> = {};
+  for (const [certificationId, date] of Object.entries(value as Record<string, unknown>)) {
+    if (typeof certificationId === "string" && typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)) dates[certificationId] = date;
+  }
+  return dates;
+}
+
 function parseAssessment(value: unknown): StoredAssessment | null {
   if (!value || typeof value !== "object") return null;
   const assessment = value as Partial<StoredAssessment>;
@@ -45,6 +54,7 @@ async function buildOrientationView(userId: number, profile?: typeof learnerOrie
   const competencyPoints = Object.fromEntries(competencies.map((competency) => [competency.id, competency.level]));
   const wantsOfficialCertification = profile?.wantsOfficialCertification === 1;
   const officialCertificationIds = parseStringList(profile?.officialCertificationIds);
+  const certificationTargetDates = parseCertificationTargetDates(profile?.certificationTargetDates);
   const diagnosticPoints = assessment?.diagnosticPoints || {};
   const recommendations = goals.length
     ? buildOrientationRecommendations({ goals, competencyPoints, diagnosticPoints, wantsOfficialCertification, officialCertificationIds })
@@ -57,6 +67,7 @@ async function buildOrientationView(userId: number, profile?: typeof learnerOrie
       goals,
       wantsOfficialCertification,
       officialCertificationIds,
+      certificationTargetDates,
       assessment,
       startedAt: profile.startedAt,
       completedAt: profile.completedAt,
@@ -66,6 +77,7 @@ async function buildOrientationView(userId: number, profile?: typeof learnerOrie
       goals: [],
       wantsOfficialCertification: false,
       officialCertificationIds: [],
+      certificationTargetDates: {},
       assessment: null,
       startedAt: null,
       completedAt: null,
@@ -101,16 +113,19 @@ export async function saveLearnerOrientationGoals(input: {
   goals: OrientationGoal[];
   wantsOfficialCertification: boolean;
   officialCertificationIds: string[];
+  certificationTargetDates?: unknown;
 }) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const now = new Date();
+  const certificationTargetDates = parseCertificationTargetDates(input.certificationTargetDates);
   await db.insert(learnerOrientationProfiles).values({
     userId: input.userId,
     status: "goals_set",
     goals: input.goals,
     wantsOfficialCertification: input.wantsOfficialCertification ? 1 : 0,
     officialCertificationIds: input.officialCertificationIds,
+    certificationTargetDates,
     assessment: null,
     recommendations: null,
     startedAt: now,
@@ -121,6 +136,7 @@ export async function saveLearnerOrientationGoals(input: {
       goals: input.goals,
       wantsOfficialCertification: input.wantsOfficialCertification ? 1 : 0,
       officialCertificationIds: input.officialCertificationIds,
+      certificationTargetDates,
       assessment: null,
       recommendations: null,
       startedAt: now,
