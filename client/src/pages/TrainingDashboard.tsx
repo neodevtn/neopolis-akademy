@@ -41,6 +41,7 @@ import { CompetencyProfile } from "@/components/CompetencyProfile";
 import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
 import { OrientationPanel } from "@/components/OrientationPanel";
 import { buildNavigationUrl } from "@shared/navigationUrls";
+import { getLearnerDashboardTab, getLearnerOrientationAccess, type LearnerDashboardTab } from "@/lib/learnerDashboardNavigation";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -83,8 +84,6 @@ const levelConfig = {
   },
 };
 
-type TabId = "orientation" | "my-path" | "achievements" | "skills" | "catalog" | "recommended" | "communications";
-
 export default function TrainingDashboard() {
   const { lang, t } = useLanguage();
   const { getCertProgress, getLastVisitedCourse } = useTrainingProgress();
@@ -92,13 +91,9 @@ export default function TrainingDashboard() {
   const { theme, toggleTheme } = useTheme();
   const [, navigate] = useLocation();
   const urlSearch = useSearch();
-  const getTabFromUrl = (): TabId => {
-    const tab = new URLSearchParams(urlSearch).get("tab");
-    return ["orientation", "my-path", "achievements", "skills", "catalog", "recommended", "communications"].includes(tab || "") ? tab as TabId : "my-path";
-  };
-  const [activeTab, setActiveTab] = useState<TabId>(getTabFromUrl);
-  useEffect(() => { setActiveTab(getTabFromUrl()); }, [urlSearch]);
-  const navigateTrainingDashboard = (tab: TabId) => navigate(buildNavigationUrl("/training", { tab: tab === "my-path" ? null : tab }));
+  const [activeTab, setActiveTab] = useState<LearnerDashboardTab>(() => getLearnerDashboardTab(urlSearch));
+  useEffect(() => { setActiveTab(getLearnerDashboardTab(urlSearch)); }, [urlSearch]);
+  const navigateTrainingDashboard = (tab: LearnerDashboardTab) => navigate(buildNavigationUrl("/training", { tab: tab === "my-path" ? null : tab }));
   const achievementsQuery = trpc.training.getAchievements.useQuery(undefined, { enabled: isAuthenticated });
   const competenciesQuery = trpc.competencies.getMine.useQuery(undefined, { enabled: isAuthenticated });
   const gamificationQuery = trpc.competencies.getGamification.useQuery(undefined, { enabled: isAuthenticated });
@@ -109,6 +104,7 @@ export default function TrainingDashboard() {
   const completeOrientationMutation = trpc.orientation.completeDiagnostic.useMutation({ onSuccess: () => orientationQuery.refetch() });
   const respondToOrientationProposalMutation = trpc.orientation.respondToProposal.useMutation({ onSuccess: () => orientationQuery.refetch() });
   const orientationIsRequired = Boolean(orientationQuery.data?.needsOrientation);
+  const orientationAccess = getLearnerOrientationAccess(orientationIsRequired);
 
   // Group configuration for the 4 certification tracks
   const GROUP_CONFIG = {
@@ -259,7 +255,7 @@ export default function TrainingDashboard() {
     );
   }
 
-  const tabs: { id: TabId; label: { en: string; fr: string }; icon: React.ReactNode }[] = [
+  const tabs: { id: LearnerDashboardTab; label: { en: string; fr: string }; icon: React.ReactNode }[] = [
     { id: "orientation", label: { en: "My Orientation", fr: "Mon orientation" }, icon: <Compass className="w-4 h-4" /> },
     { id: "my-path", label: { en: "My Progress", fr: "Mon Parcours" }, icon: <Compass className="w-4 h-4" /> },
     { id: "achievements", label: { en: "My Achievements", fr: "Mes acquis" }, icon: <Trophy className="w-4 h-4" /> },
@@ -331,9 +327,9 @@ export default function TrainingDashboard() {
             <p>{t({ en: "Integrity reminder: complete activities yourself and use learning support responsibly. Unusual activity patterns may be reviewed by the academic team; no account is blocked automatically.", fr: "Rappel d’intégrité : réalisez les activités vous-même et utilisez les outils d’aide de manière responsable. Des comportements inhabituels peuvent être revus par l’équipe pédagogique ; aucun compte n’est bloqué automatiquement." })}</p>
           </div>
 
-          {orientationIsRequired && (
-            <div className="mb-6 flex flex-col gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm dark:border-amber-800 dark:bg-amber-950/20 md:flex-row md:items-center md:justify-between">
-              <div><p className="font-bold text-foreground">Votre orientation personnalisée est à finaliser</p><p className="mt-1 text-muted-foreground">Définissez vos objectifs et terminez le diagnostic rapide pour obtenir un parcours recommandé. Vous pouvez continuer à consulter les autres espaces pendant cette étape.</p></div>
+          {orientationAccess.showReminder && (
+            <div className="mb-6 flex flex-col gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm dark:border-amber-800 dark:bg-amber-950/20 md:flex-row md:items-center md:justify-between" role="status" aria-live="polite">
+              <div><p className="font-bold text-foreground">Votre orientation personnalisée est à finaliser</p><p className="mt-1 text-muted-foreground">Définissez vos objectifs et terminez le diagnostic rapide pour obtenir un parcours recommandé. Tous les onglets — parcours, acquis, compétences, catalogue et communiqués — restent disponibles pendant cette étape.</p></div>
               <Button className="shrink-0" onClick={() => navigateTrainingDashboard("orientation")}>Finaliser mon orientation</Button>
             </div>
           )}

@@ -1708,3 +1708,9 @@
 - [x] Distinguer visuellement les tutoriels complémentaires Neopolis du contenu officiel Anthropic
 - [x] Migrer les références média locales des trois parcours vers le proxy `/api/assets/` et vérifier leur disponibilité
 - [x] Ajouter un audit reproductible, des tests de non-régression et un rapport de contrôle visuel avant publication
+## Régression de navigation lors de l’orientation incomplète
+- [x] Reproduire le blocage des onglets pour un compte récent avec diagnostic d’orientation non finalisé
+- [x] Supprimer toute redirection silencieuse qui annule l’intention de navigation de l’apprenant
+- [x] Afficher une priorité d’orientation claire sans empêcher l’accès aux autres espaces apprenants
+- [x] Couvrir l’accès aux onglets avec orientation incomplète par des tests unitaires
+- [ ] Vérifier la navigation authentifiée sur le domaine de production après publication
