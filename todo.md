@@ -1795,3 +1795,10 @@
 - [x] Stocker le logo SVG officiel dans les ressources web persistantes et le référencer via son URL de production
 - [x] Remplacer les logos alternatifs dans les pages publiques, apprenantes, administratives et les modèles de document
 - [x] Vérifier visuellement les principaux espaces après remplacement
+
+## Partage social, SEO initial et favicon
+- [x] Auditer les métadonnées HTML initiales et le routage public pour les crawlers
+- [x] Préparer et publier une image Open Graph officielle à partir du logo fourni
+- [x] Configurer les titres, descriptions, canonical, Open Graph et Twitter Cards côté serveur pour les pages publiques
+- [x] Générer et configurer les favicons et icônes mobiles à partir du logo fourni
+- [ ] Ajouter des tests et vérifier les métadonnées ainsi que les assets publics sur le domaine de production
