@@ -1744,3 +1744,7 @@
 - [x] Détecter périodiquement une nouvelle version de la plateforme sans interrompre l’apprentissage
 - [x] Afficher un bandeau clair aux apprenants avec une action de rafraîchissement contrôlé
 - [x] Tester la détection, le report et le rechargement puis valider le mécanisme en production
+## Renforcement des sessions utilisant un bundle obsolète
+- [x] Analyser pourquoi les sessions chargées avant publication atteignent encore le lecteur avant l’alerte
+- [x] Détecter une transition risquée et demander un rafraîchissement avant que le crash React ne se produise
+- [ ] Tester les cas de bundle historique et vérifier la protection en production
