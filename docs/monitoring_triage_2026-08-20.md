@@ -28,3 +28,7 @@ Après propagation du nouveau bundle, le même compte administrateur a ouvert di
 ## Contrôle post-publication
 
 Le filtre Sentry `is:unresolved` sur le projet `neopolis-akademy` et la fenêtre des dernières 24 heures ne retourne aucun incident. Les quatre issues plus anciennes restent historiques : les deux issues Safari sont un unique échec de chargement de chunks antérieurs au mécanisme de reprise global ; les erreurs de module et de syntaxe sont antérieures à l’état TypeScript actuellement valide. Elles sont documentées comme non actionnables dans le code courant, sans être résolues ou archivées automatiquement.
+
+## Triage complémentaire des derniers crashes
+
+Un nouveau contrôle des dernières 24 heures ne retourne toujours aucune issue non résolue. L’élargissement à quatorze jours ne fait apparaître que les quatre issues déjà analysées : deux événements Safari `Load failed` (un même incident de trace), une erreur d’export de module et une erreur de syntaxe de build. Leur dernière occurrence est antérieure de deux jours, ou de deux semaines pour le build ; aucune issue n’est marquée « Regressed » ni « Escalating ». Aucune nouvelle correction de code n’est nécessaire à l’issue de ce triage complémentaire.

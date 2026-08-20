@@ -1723,3 +1723,7 @@
 - [x] Identifier les gardes client et serveur qui bloquent les cours séquentiels
 - [x] Autoriser les administrateurs à ouvrir tout cours tout en préservant le verrouillage des apprenants
 - [x] Ajouter des tests de séparation administrateur / apprenant et valider le parcours réel
+## Triage complémentaire des derniers crashes Sentry
+- [x] Recueillir les nouvelles issues et événements apparus après le dernier contrôle
+- [x] Reproduire et corriger toute cause encore active ou régressée
+- [x] Vérifier l’état Sentry en production et documenter le résultat
