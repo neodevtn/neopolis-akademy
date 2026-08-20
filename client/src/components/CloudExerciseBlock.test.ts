@@ -42,7 +42,7 @@ describe("Cloud exercise learner criteria", () => {
       true,
     );
     expect(adapted).toContain("n8n Cloud ou Docker");
-    expect(adapted).toContain("reconstituez le workflow");
+    expect(adapted).toContain("reconstituez le workflow `currency_exchange.json`");
     expect(adapted).not.toContain("connecté automatiquement");
     expect(adapted).not.toContain("Desktop de la VM");
   });

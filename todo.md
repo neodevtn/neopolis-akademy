@@ -1779,3 +1779,4 @@
 - [x] Vérifier les médias et fichiers locaux, leurs liens et leur disponibilité en production
 - [x] Vérifier que chaque TP est autonome, guidé, accompagné des prérequis et de ses ressources téléchargeables
 - [x] Remplacer dans les TP les consignes restantes dépendantes de la VM DataCamp par des alternatives réalisables dans l’environnement apprenant
+- [x] Préserver les extensions des fichiers VM dans les consignes adaptées aux environnements apprenants

@@ -49,7 +49,7 @@ export function adaptDataCampVmText(text: string, hasUnavailableVmFiles: boolean
   if (!hasUnavailableVmFiles || !text) return text;
   return text
     .replace(/Vous avez été connecté automatiquement à votre propre compte n8n\s*!/gi, "Connectez-vous à votre instance n8n Cloud ou Docker.")
-    .replace(/Sous le Desktop de la VM, allez dans Resources et ouvrez\s+([^\n.]+)/gi, (_match, filename) => `Dans votre environnement n8n, reconstituez le workflow \`${String(filename).trim()}\` à partir des étapes, de l’indice et de la correction de ce TP`)
+    .replace(/Sous le Desktop de la VM, allez dans Resources et ouvrez\s+([A-Za-z0-9_-]+\.[A-Za-z0-9]+)/gi, (_match, filename) => `Dans votre environnement n8n, reconstituez le workflow \`${String(filename).trim()}\` à partir des étapes, de l’indice et de la correction de ce TP`)
     .replace(/depuis\s+Desktop\/Resources/gi, "dans votre environnement après l’avoir reconstitué")
     .replace(/dans le dossier\s+Desktop\/Resources/gi, "dans votre environnement après sa reconstitution");
 }
