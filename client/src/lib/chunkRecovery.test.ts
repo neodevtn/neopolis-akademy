@@ -10,6 +10,10 @@ describe("isStaleClientBundleError", () => {
     expect(isStaleClientBundleError(new TypeError("Load failed"))).toBe(true);
   });
 
+  it("recognizes Vite preload errors raised outside the React error boundary", () => {
+    expect(isStaleClientBundleError(new Error("vite:preloadError: failed to fetch dynamically imported module"))).toBe(true);
+  });
+
   it("does not mistake ordinary application errors for a stale bundle", () => {
     expect(isStaleClientBundleError(new Error("t.filter is not a function"))).toBe(false);
   });

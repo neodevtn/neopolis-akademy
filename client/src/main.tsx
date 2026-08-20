@@ -14,6 +14,14 @@ import "./index.css";
 // Initialize Sentry for error monitoring, performance & user feedback
 const isProduction = import.meta.env.MODE === "production";
 
+// Recover before Sentry and the app-level reporters observe a stale Vite chunk.
+// This handles the Safari `unhandledrejection: Load failed` path that does not
+// reach React's ErrorBoundary after an asset hash changes during a deployment.
+const recoverStaleBundleRejection = (event: PromiseRejectionEvent) => {
+  if (retryStaleClientBundle(event.reason)) event.preventDefault();
+};
+window.addEventListener("unhandledrejection", recoverStaleBundleRejection);
+
 Sentry.init({
   dsn: "https://f1beaf088d01628e72b6cc5b96511906@sentry.neopolis-dev.com//102",
   integrations: [

@@ -24,6 +24,7 @@ import LessonViewer from "./training/LessonViewer";
 import LessonSidebar from "./training/LessonSidebar";
 import { useCourseData, prefetchCourse } from "@/hooks/useCourseData";
 import { buildNavigationUrl } from "@shared/navigationUrls";
+import { isSequentialCourseRouteLocked } from "@shared/learningAccess";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -200,7 +201,7 @@ export default function TrainingCourse() {
     const prevCourse = certCourses[courseIdx - 1];
     const prevTotal = prevCourse.lessonCount || 1;
     const prevComplete = isCourseComplete(prevCourse.id, prevTotal);
-    if (!prevComplete) {
+    if (isSequentialCourseRouteLocked({ previousCourseCompleted: prevComplete, role: user?.role })) {
       return (
         <div className="min-h-screen bg-background flex items-center justify-center">
           <div className="max-w-md text-center p-8">

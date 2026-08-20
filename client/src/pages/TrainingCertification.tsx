@@ -11,6 +11,7 @@ import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { motion } from "framer-motion";
+import { isSequentialCourseCardLocked } from "@shared/learningAccess";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -26,7 +27,7 @@ const staggerContainer = {
 export default function TrainingCertification() {
   const { certId } = useParams<{ certId: string }>();
   const { lang, t } = useLanguage();
-  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { isAuthenticated, loading: authLoading, user } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { isCourseComplete, getCertProgress, isCertComplete, isLoading: progressLoading, isLessonComplete, getChapterProgress } = useTrainingProgress();
 
@@ -461,7 +462,12 @@ export default function TrainingCertification() {
             const started = progress.completed > 0;
             // Sequential locking: course is locked if previous course is not completed (except first course)
             const previousCourseCompleted = idx === 0 || (courseProgressMap[courses[idx - 1].id]?.pct ?? 0) >= 100;
-            const isLocked = !previousCourseCompleted && !completed && !started;
+            const isLocked = isSequentialCourseCardLocked({
+              previousCourseCompleted,
+              courseCompleted: completed,
+              courseStarted: started,
+              role: user?.role,
+            });
 
             return (
               <motion.div key={course.id} variants={fadeInUp}>
