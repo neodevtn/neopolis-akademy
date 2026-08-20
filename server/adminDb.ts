@@ -591,7 +591,9 @@ export async function getRecipientsByFilter(filter: CommunicationRecipientFilter
     : null;
 
   let recipients: Recipient[];
-  if (audience === "invited") {
+  if (audience === "manual") {
+    recipients = Array.from(manualEmails || []).map((email) => ({ email, name: null }));
+  } else if (audience === "invited") {
     recipients = invitations
       .filter((invitation) => !filter.status?.length || filter.status.includes(invitation.status))
       .map((invitation) => ({ email: invitation.email, name: invitation.name }));

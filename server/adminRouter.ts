@@ -32,7 +32,7 @@ import { getIntegrityReviewQueue, getLearnerIntegrityReview, reviewLearnerIntegr
 const SALT_ROUNDS = 10;
 
 const communicationRecipientFilterSchema = z.object({
-  audience: z.enum(["all", "invited", "registered_invitees", "learners_inactive", "learners_started", "diploma_holders", "competency_level"]).optional(),
+        audience: z.enum(["all", "invited", "registered_invitees", "learners_inactive", "learners_started", "diploma_holders", "competency_level", "manual"]).optional(),
   tags: z.array(z.number()).optional(),
   status: z.array(z.string()).optional(),
   role: z.array(z.string()).optional(),

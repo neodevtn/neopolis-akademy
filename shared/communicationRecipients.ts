@@ -6,6 +6,7 @@ export const COMMUNICATION_AUDIENCES = [
   "learners_started",
   "diploma_holders",
   "competency_level",
+  "manual",
 ] as const;
 
 export type CommunicationAudience = (typeof COMMUNICATION_AUDIENCES)[number];
@@ -18,6 +19,7 @@ export const COMMUNICATION_AUDIENCE_LABELS: Record<CommunicationAudience, string
   learners_started: "Apprenants ayant commencé",
   diploma_holders: "Diplômés certifiés",
   competency_level: "Compétence acquise à un niveau donné",
+  manual: "Sélection manuelle uniquement",
 };
 
 export const COURSE_PROGRESS_STATUSES = ["started", "completed"] as const;

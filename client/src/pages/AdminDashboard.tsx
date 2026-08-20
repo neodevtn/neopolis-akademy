@@ -207,13 +207,16 @@ export default function AdminDashboard() {
   const resetCommunicationEditor = () => { setCommDialog(false); setEditingCommunicationId(null); setCommSubject(""); setCommBody(""); setCommType("announcement"); setCommIsImportant(false); setCommAudience("all"); setCommCriteriaLogic("all"); setCommCompetencyId(""); setCommMinCompetencyLevel("10"); setCommUseCompetencyFilter(false); setCommCourseId("any"); setCommCourseProgressStatus("started"); setCommActivityWithinDays(""); setCommManualEmails([]); setCommRecipientSearch(""); };
   const openCommunicationEditor = (communication?: any) => {
     const filter = communication?.recipientFilter || {};
+    const normalizedAudience = filter.audience === "manual" || Object.prototype.hasOwnProperty.call(COMMUNICATION_AUDIENCE_LABELS, filter.audience)
+      ? filter.audience
+      : filter.manualEmails?.length ? "manual" : "all";
     setEditingCommunicationId(communication?.id || null);
     setCommSubject(communication?.subject || "");
     setCommBody(communication?.body || "");
     setCommType(communication?.type || "announcement");
     setCommIsImportant(communication?.isImportant === 1);
-    setCommAudience(filter.audience || "all");
-    setCommCriteriaLogic(filter.criteriaLogic || "all");
+    setCommAudience(normalizedAudience as CommunicationAudience);
+    setCommCriteriaLogic(filter.criteriaLogic === "any" ? "any" : "all");
     setCommUseCompetencyFilter(Boolean(filter.competencyId));
     setCommCompetencyId(filter.competencyId || "");
     setCommMinCompetencyLevel(String(filter.minCompetencyLevel ?? 10));
