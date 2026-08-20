@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, CheckCircle2, PlayCircle, Video, Download, Timer, Eye, FileText, ChevronDown, ArrowUp, Pencil } from "lucide-react";
-import { motion } from "framer-motion";
 import { MatchingExercise } from "@/components/MatchingExercise";
 import { SingleChoiceExercise } from "@/components/SingleChoiceExercise";
 import { ChapterQuiz } from "@/components/ChapterQuiz";
@@ -31,7 +30,6 @@ import NumericAnswerExercise from "@/components/NumericAnswerExercise";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getContextualCourseEditorHref } from "@/lib/courseEditorLink";
 import { isEvaluationGateLocked, requiredCorrectAnswers } from "@shared/evaluationRules";
-import { getChapterTransitionKey } from "./chapterTransition";
 
 export default function LessonViewer({
   lesson,
@@ -86,8 +84,6 @@ export default function LessonViewer({
   // Track whether we're syncing from parent to avoid calling onChapterChange back
   const isSyncingFromParent = useRef(false);
   const prevLessonId = useRef(lesson.id);
-  // Track navigation direction for slide-in animation
-  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
 
   const chapters = useMemo(() => lesson.chapters || [], [lesson.chapters]);
   const totalChapters = chapters.length;
@@ -116,7 +112,6 @@ export default function LessonViewer({
   useEffect(() => {
     if (initialChapter !== undefined && initialChapter !== currentChapter) {
       isSyncingFromParent.current = true;
-      setSlideDirection(initialChapter > currentChapter ? 'right' : 'left');
       setCurrentChapter(initialChapter);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -174,10 +169,8 @@ export default function LessonViewer({
           const scIds = blocks.filter((b: any) => b.type === 'single_choice_exercise').map((b: any, i: number) => b.id || `quiz_${i}`);
           if (scIds.length > 0 && !scIds.every((id: string) => completedExercises.has(id))) return;
         }
-        setSlideDirection('right');
         setCurrentChapter(p => p + 1);
       } else if (e.key === 'ArrowLeft' && currentChapter > 0) {
-        setSlideDirection('left');
         setCurrentChapter(p => p - 1);
       }
     };
@@ -752,20 +745,6 @@ export default function LessonViewer({
     }
   };
 
-  // Slide-in animation variants
-  const slideEase = [0.23, 1, 0.32, 1] as [number, number, number, number];
-  const slideVariants = {
-    enter: (dir: 'left' | 'right') => ({
-      x: dir === 'right' ? 60 : -60,
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      transition: { duration: 0.3, ease: slideEase },
-    },
-  };
-
   return (
     <div className="mt-2">
       {/* Reading progress bar */}
@@ -794,13 +773,7 @@ export default function LessonViewer({
 
       {!showQuiz ? (
         <>
-          <motion.div
-            key={getChapterTransitionKey(lesson.id, currentChapter)}
-            custom={slideDirection}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-          >
+          <div>
           {/* Chapter header - Skilljar style: badge shows type + chapter name, title shows screen title */}
           {chapter && (() => {
             // Extract screen title from first content block's first line
@@ -896,7 +869,7 @@ export default function LessonViewer({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => { setSlideDirection('left'); setCurrentChapter((p) => p - 1); }}
+                onClick={() => { setCurrentChapter((p) => p - 1); }}
                 disabled={currentChapter === 0}
                 className="gap-1 text-xs text-muted-foreground hover:text-foreground"
               >
@@ -909,7 +882,7 @@ export default function LessonViewer({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => { setSlideDirection('right'); setCurrentChapter((p) => p + 1); }}
+                onClick={() => { setCurrentChapter((p) => p + 1); }}
                 disabled={currentChapter >= totalChapters - 1}
                 className="gap-1 text-xs text-muted-foreground hover:text-foreground"
               >
@@ -1017,13 +990,12 @@ export default function LessonViewer({
                 setShowChapterQuiz(false);
                 // Advance validated progress (quiz passed = chapter validated)
                 setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
-                setSlideDirection('right');
                 setCurrentChapter((p) => p + 1);
                 setShowTranscript(false);
               }}
             />
           )}
-          </motion.div>
+          </div>
 
           {/* Video Recommendations - shown on last chapter only */}
           {isLastChapter && !isReviewMode && (
@@ -1050,7 +1022,7 @@ export default function LessonViewer({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => { setSlideDirection('left'); setCurrentChapter((p) => p - 1); setShowTranscript(false); setShowChapterQuiz(false); }}
+                onClick={() => { setCurrentChapter((p) => p - 1); setShowTranscript(false); setShowChapterQuiz(false); }}
                 disabled={currentChapter === 0}
                 className="gap-1.5 text-muted-foreground hover:text-foreground"
               >
@@ -1168,7 +1140,6 @@ export default function LessonViewer({
                       } else {
                         // Always advance validatedChapter when Next is clicked (it's only clickable when all gates pass)
                         setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
-                        setSlideDirection('right');
                         setCurrentChapter((p) => p + 1);
                         setShowTranscript(false);
                         setShowChapterQuiz(false);

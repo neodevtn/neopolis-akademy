@@ -1749,3 +1749,7 @@
 - [x] Détecter une transition risquée et demander un rafraîchissement avant que le crash React ne se produise
 - [x] Empêcher tout cache partagé de servir un document HTML qui référence un ancien bundle
 - [x] Tester les cas de bundle historique et vérifier la protection en production
+## Analyse des issues Sentry 929549 et 929548
+- [x] Examiner les événements, versions et traces des deux issues récentes
+- [x] Reproduire et corriger toute cause encore active
+- [ ] Valider la résolution sur la plateforme et documenter le bilan

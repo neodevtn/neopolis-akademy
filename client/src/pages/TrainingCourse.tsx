@@ -500,9 +500,7 @@ export default function TrainingCourse() {
             });
 
             return (
-              <motion.div
-                key={displayedIndex}
-                variants={fadeInUp}
+              <div
                 className={`border-2 rounded-2xl overflow-hidden shadow-sm ${
                   isReviewMode ? "border-amber-500/50" : "border-primary"
                 }`}
@@ -608,7 +606,7 @@ export default function TrainingCourse() {
                     initialChapter={Math.min(chapterProgress?.current ?? 0, (displayedLesson?.chapters?.length || 1) - 1)}
                   />
                 </div>
-              </motion.div>
+              </div>
             );
           })()}
 
