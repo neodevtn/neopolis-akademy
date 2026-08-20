@@ -1740,3 +1740,7 @@
 - [x] Vérifier et corriger la configuration de remontée client Sentry en production
 - [x] Ajouter une stratégie de récupération ou d’invalidation des bundles obsolètes
 - [x] Reproduire le crash, confirmer sa remontée Sentry et valider le correctif en production
+## Notification de mise à jour disponible
+- [x] Détecter périodiquement une nouvelle version de la plateforme sans interrompre l’apprentissage
+- [x] Afficher un bandeau clair aux apprenants avec une action de rafraîchissement contrôlé
+- [ ] Tester la détection, le report et le rechargement puis valider le mécanisme en production

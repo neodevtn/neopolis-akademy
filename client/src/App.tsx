@@ -11,6 +11,7 @@ import { TrainingProgressProvider } from "./contexts/TrainingProgressContext";
 import CookieConsent from "./components/CookieConsent";
 import { AchievementCelebration } from "./components/AchievementCelebration";
 import { ImportantCommunicationLightbox } from "./components/ImportantCommunicationLightbox";
+import { PlatformUpdateNotice } from "./components/PlatformUpdateNotice";
 
 // ─── Code-splitting: lazy-load all heavy pages ───
 const Home = lazy(() => import("./pages/Home"));
@@ -83,6 +84,7 @@ function App() {
             <TooltipProvider>
               <Toaster />
               <SentryUserSync />
+              <PlatformUpdateNotice />
               <AchievementCelebration />
               <ImportantCommunicationLightbox />
               <Router />
