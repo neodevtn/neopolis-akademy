@@ -1836,11 +1836,11 @@
 - [x] Tester les parcours, compteurs et indicateurs en production puis publier le bilan de cohérence
 
 ## Progression Agentic Browsing vue par Google PageSpeed
-- [ ] Identifier le libellé, l’identifiant, le profil et la source exacte de la progression 2/3 servie au rendu Google
-- [ ] Corriger la donnée ou le calcul sans affaiblir les conditions pédagogiques
-- [ ] Vérifier la valeur corrigée dans les rendus Google mobile et ordinateur, puis publier
+- [x] Identifier que le score 2/3 concerne l’audit llms.txt de Google, non un parcours de formation
+- [x] Corriger le fichier public llms.txt sans modifier les règles pédagogiques
+- [x] Vérifier les critères corrigés sur le domaine publié et relancer les analyses Google mobile et ordinateur
 
 ## Conformité Agentic Browsing de Google PageSpeed
-- [ ] Auditer le llms.txt public et les pages canoniques à référencer
-- [ ] Ajouter un titre H1 Markdown, un résumé et des liens publics pertinents dans llms.txt
-- [ ] Vérifier llms.txt sur le domaine publié et relancer l’audit Google PageSpeed mobile/ordinateur
+- [x] Auditer le llms.txt public et les pages canoniques à référencer
+- [x] Ajouter un titre H1 Markdown, un résumé et des liens publics pertinents dans llms.txt
+- [x] Vérifier llms.txt sur le domaine publié et relancer l’audit Google PageSpeed mobile/ordinateur
