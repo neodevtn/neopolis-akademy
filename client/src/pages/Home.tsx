@@ -329,7 +329,7 @@ export default function Home() {
       )}
 
       {/* ─── Pourquoi maintenant (Gris Band) ─── */}
-      <AnimatedSection id="pourquoi" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+      <AnimatedSection id="pourquoi" className="home-deferred-section" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-8 md:py-12">
           <motion.div variants={fadeInUp} className="text-center mb-10 md:mb-14">
             <span className="wise-eyebrow mb-4 inline-flex">{t({ fr: "Urgence du marché", en: "Market urgency", ar: "إلحاح السوق" })}</span>
@@ -385,7 +385,7 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── La Formule (Green Band) ─── */}
-      <AnimatedSection id="formule" style={{ background: "var(--wise-canvas)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+      <AnimatedSection id="formule" className="home-deferred-section" style={{ background: "var(--wise-canvas)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-8">
           <motion.div variants={fadeInUp} className="text-center mb-8">
             <span className="wise-badge-positive mb-4">{t({ fr: "100% Gratuit", en: "100% Free", ar: "مجاني 100%" })}</span>
@@ -431,7 +431,7 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── Partenariats (Sage Band) ─── */}
-      <AnimatedSection id="partenaires" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3.5rem) clamp(1.25rem, 4vw, 3rem)" }}>
+      <AnimatedSection id="partenaires" className="home-deferred-section" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3.5rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-6">
           <motion.div variants={fadeInUp} className="text-center mb-8">
             <span className="wise-eyebrow mb-3 inline-flex">{t({ fr: "Écosystème", en: "Ecosystem", ar: "النظام البيئي" })}</span>
@@ -499,7 +499,7 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── AI Solutions Partner Section ─── */}
-      <AnimatedSection style={{ background: "var(--wise-canvas)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+      <AnimatedSection className="home-deferred-section" style={{ background: "var(--wise-canvas)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-center">
             <motion.div variants={fadeInLeft}>
@@ -524,7 +524,7 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── Process Commercial & Modèle Économique ─── */}
-      <AnimatedSection id="process" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+      <AnimatedSection id="process" className="home-deferred-section" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-8 md:py-12">
           <motion.div variants={fadeInUp} className="text-center mb-12 md:mb-16">
             <span className="wise-eyebrow mb-4 inline-flex" style={{ color: "var(--neo-ink-secondary)" }}>
@@ -580,7 +580,7 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── CTA Band ─── */}
-      <AnimatedSection style={{ background: "var(--neo-primary)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+      <AnimatedSection className="home-deferred-section" style={{ background: "var(--neo-primary)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-6 md:py-10 text-center">
           <motion.div variants={fadeInUp}>
             <Rocket size={36} style={{ color: "#ffffff" }} className="mx-auto mb-6" />
@@ -598,7 +598,7 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── FAQ Section ─── */}
-      <AnimatedSection id="faq" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+      <AnimatedSection id="faq" className="home-deferred-section" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-8">
           <motion.div variants={fadeInUp} className="text-center mb-8">
             <span className="wise-eyebrow mb-4 inline-flex">{t({ fr: "Support", en: "Support", ar: "الدعم" })}</span>
@@ -621,16 +621,16 @@ export default function Home() {
           <div className="marquee-track">
             {[...Array(2)].map((_, i) => (
               <div key={i} className="marquee-content">
-                <img src="/api/assets/logo_anthropic_e6ab4160.png" alt="Anthropic" loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/logo_anthropic_e6ab4160.png" alt="Anthropic" width={120} height={40} loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
 
-                <img src="/api/assets/claude_ba4537f3.png" alt="Claude" loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/claude_ba4537f3.png" alt="Claude" width={120} height={40} loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
 
 
-                <img src="/api/assets/openai_73a9a1b1.png" alt="OpenAI" loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/api/assets/gemini_c13269e9.png" alt="Gemini" loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/api/assets/langchain_9c5e065b.png" alt="LangChain" loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/api/assets/crewai_7df89ab8.png" alt="CrewAI" loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/api/assets/n8n_7ff20c9e.png" alt="n8n" loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/openai_73a9a1b1.png" alt="OpenAI" width={120} height={40} loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/gemini_c13269e9.png" alt="Gemini" width={120} height={40} loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/langchain_9c5e065b.png" alt="LangChain" width={120} height={40} loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/crewai_7df89ab8.png" alt="CrewAI" width={120} height={40} loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/n8n_7ff20c9e.png" alt="n8n" width={120} height={40} loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
               </div>
             ))}
           </div>
@@ -643,7 +643,7 @@ export default function Home() {
         <div className="container py-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-1">
-              <img src={LOGO_URL} alt="Neopolis Akademy" className="h-12 object-contain mb-3" />
+              <img src={LOGO_URL} alt="Neopolis Akademy" width={137} height={48} decoding="async" className="h-12 object-contain mb-3" />
               <p className="wise-body-sm">
                 {t({ fr: "Transformer la menace de l'IA en opportunité.", en: "Turning the AI threat into opportunity.", ar: "تحويل تهديد الذكاء الاصطناعي إلى فرصة." })}
               </p>
