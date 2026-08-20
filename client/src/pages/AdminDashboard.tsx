@@ -55,6 +55,7 @@ export default function AdminDashboard() {
   const [cvViewerUrl, setCvViewerUrl] = useState<string | null>(null);
   const [detailApp, setDetailApp] = useState<any | null>(null);
   const [commDialog, setCommDialog] = useState(false);
+  const [editingCommunicationId, setEditingCommunicationId] = useState<number | null>(null);
   const [commSubject, setCommSubject] = useState("");
   const [commBody, setCommBody] = useState("");
   const [commType, setCommType] = useState<string>("announcement");
@@ -201,7 +202,31 @@ export default function AdminDashboard() {
     { enabled: commDialog && (!commUseCompetencyFilter || Boolean(commCompetencyId)), staleTime: 5_000 },
   );
   const createCommMutation = trpc.adminTools.communications.create.useMutation({
-    onSuccess: () => { communicationsQuery.refetch(); setCommDialog(false); setCommSubject(""); setCommBody(""); setCommIsImportant(false); setCommAudience("all"); setCommCriteriaLogic("all"); setCommCompetencyId(""); setCommMinCompetencyLevel("10"); setCommUseCompetencyFilter(false); setCommCourseId("any"); setCommCourseProgressStatus("started"); setCommActivityWithinDays(""); setCommManualEmails([]); setCommRecipientSearch(""); toast.success("Communication créée"); },
+    onSuccess: () => { communicationsQuery.refetch(); resetCommunicationEditor(); toast.success("Brouillon créé"); },
+  });
+  const resetCommunicationEditor = () => { setCommDialog(false); setEditingCommunicationId(null); setCommSubject(""); setCommBody(""); setCommType("announcement"); setCommIsImportant(false); setCommAudience("all"); setCommCriteriaLogic("all"); setCommCompetencyId(""); setCommMinCompetencyLevel("10"); setCommUseCompetencyFilter(false); setCommCourseId("any"); setCommCourseProgressStatus("started"); setCommActivityWithinDays(""); setCommManualEmails([]); setCommRecipientSearch(""); };
+  const openCommunicationEditor = (communication?: any) => {
+    const filter = communication?.recipientFilter || {};
+    setEditingCommunicationId(communication?.id || null);
+    setCommSubject(communication?.subject || "");
+    setCommBody(communication?.body || "");
+    setCommType(communication?.type || "announcement");
+    setCommIsImportant(communication?.isImportant === 1);
+    setCommAudience(filter.audience || "all");
+    setCommCriteriaLogic(filter.criteriaLogic || "all");
+    setCommUseCompetencyFilter(Boolean(filter.competencyId));
+    setCommCompetencyId(filter.competencyId || "");
+    setCommMinCompetencyLevel(String(filter.minCompetencyLevel ?? 10));
+    setCommCourseId(filter.courseId || "any");
+    setCommCourseProgressStatus(filter.courseProgressStatus || "started");
+    setCommActivityWithinDays(filter.activityWithinDays ? String(filter.activityWithinDays) : "");
+    setCommManualEmails(filter.manualEmails || []);
+    setCommRecipientSearch("");
+    setCommDialog(true);
+  };
+  const updateCommMutation = trpc.adminTools.communications.updateDraft.useMutation({
+    onSuccess: () => { communicationsQuery.refetch(); resetCommunicationEditor(); toast.success("Brouillon mis à jour"); },
+    onError: (error) => toast.error(error.message || "Impossible de modifier ce brouillon"),
   });
   const sendCommMutation = trpc.adminTools.communications.send.useMutation({
     onSuccess: (data) => { communicationsQuery.refetch(); toast.success(`Communication envoyée à ${data.sentCount} destinataire(s)`); },
@@ -702,7 +727,7 @@ export default function AdminDashboard() {
           <>
             <div className="flex items-center justify-between mb-8">
               <h1 className="wise-display-md">Communications en masse</h1>
-              <Button className="gap-2" onClick={() => setCommDialog(true)}>
+              <Button className="gap-2" onClick={() => openCommunicationEditor()}>
                 <Plus className="w-4 h-4" /> Nouveau communiqué
               </Button>
             </div>
@@ -736,7 +761,7 @@ export default function AdminDashboard() {
                       <td className="p-4 text-xs text-muted-foreground">{comm.status === "scheduled" && comm.scheduledAt ? `Prévu : ${new Date(comm.scheduledAt).toLocaleString("fr-FR")}` : new Date(comm.createdAt).toLocaleDateString("fr-FR")}</td>
                       <td className="p-4 whitespace-nowrap">
                         {comm.status === "draft" && (
-                          <div className="flex flex-wrap gap-2"><Button size="sm" variant="outline" className="text-xs gap-1" disabled={sendCommMutation.isPending} onClick={() => { if (window.confirm(`Envoyer maintenant « ${comm.subject} » ?`)) sendCommMutation.mutate({ communicationId: comm.id }); }}><Send className="w-3 h-3" /> Envoyer maintenant</Button><Button size="sm" className="text-xs gap-1" onClick={() => setCommScheduleDialog({ open: true, communication: comm })}><CalendarClock className="w-3 h-3" /> Programmer</Button></div>
+                          <div className="flex flex-wrap gap-2"><Button size="sm" variant="outline" className="text-xs gap-1" onClick={() => openCommunicationEditor(comm)}><FileText className="w-3 h-3" /> Modifier</Button><Button size="sm" variant="outline" className="text-xs gap-1" disabled={sendCommMutation.isPending} onClick={() => { if (window.confirm(`Envoyer maintenant « ${comm.subject} » ?`)) sendCommMutation.mutate({ communicationId: comm.id }); }}><Send className="w-3 h-3" /> Envoyer maintenant</Button><Button size="sm" className="text-xs gap-1" onClick={() => setCommScheduleDialog({ open: true, communication: comm })}><CalendarClock className="w-3 h-3" /> Programmer</Button></div>
                         )}
                         {comm.status === "scheduled" && <Button size="sm" variant="outline" className="text-xs gap-1 text-destructive" disabled={cancelScheduledCommMutation.isPending} onClick={() => { if (window.confirm(`Annuler l’envoi programmé de « ${comm.subject} » ?`)) cancelScheduledCommMutation.mutate({ communicationId: comm.id }); }}><X className="w-3 h-3" /> Annuler</Button>}
                       </td>
@@ -1192,11 +1217,11 @@ export default function AdminDashboard() {
       </Dialog>
 
       {/* Communication Dialog */}
-      <Dialog open={commDialog} onOpenChange={setCommDialog}>
+      <Dialog open={commDialog} onOpenChange={(open) => { if (!open) resetCommunicationEditor(); else setCommDialog(true); }}>
         <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-4xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <MessageSquare className="w-5 h-5" /> Nouveau communiqué
+              <MessageSquare className="w-5 h-5" /> {editingCommunicationId ? "Modifier le brouillon" : "Nouveau communiqué"}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 overflow-y-auto py-2 pr-1">
@@ -1250,10 +1275,10 @@ export default function AdminDashboard() {
             <div><Label className="text-xs">Corps du message (vous pouvez coller du texte riche ; utilisez {"{{name}}"} pour le nom)</Label><div className="mt-1"><WysiwygMarkdownEditor value={commBody} onChange={setCommBody} minHeight="180px" placeholder="Bonjour {{name}},\n\nRédigez votre communiqué ou collez un texte déjà mis en forme…" /></div><p className="mt-1 text-xs text-muted-foreground">Titres, listes, gras, italique et liens sont préservés dans l’e-mail. Les balises HTML actives sont supprimées.</p></div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCommDialog(false)}>Annuler</Button>
-            <Button disabled={!commSubject.trim() || !commBody.trim() || !recipientPreviewQuery.data?.count || createCommMutation.isPending || (commUseCompetencyFilter && !commCompetencyId)} onClick={() => { createCommMutation.mutate({ subject: commSubject, body: commBody, bodyFormat: "markdown", type: commType as any, isImportant: commIsImportant, recipientFilter: communicationRecipientFilter }); }}>
-              {createCommMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Plus className="w-4 h-4 mr-1" />}
-              Créer le brouillon
+            <Button variant="outline" onClick={resetCommunicationEditor}>Annuler</Button>
+            <Button disabled={!commSubject.trim() || !commBody.trim() || !recipientPreviewQuery.data?.count || createCommMutation.isPending || updateCommMutation.isPending || (commUseCompetencyFilter && !commCompetencyId)} onClick={() => { const payload = { subject: commSubject, body: commBody, bodyFormat: "markdown" as const, type: commType as any, isImportant: commIsImportant, recipientFilter: communicationRecipientFilter }; if (editingCommunicationId) updateCommMutation.mutate({ communicationId: editingCommunicationId, ...payload }); else createCommMutation.mutate(payload); }}>
+              {createCommMutation.isPending || updateCommMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : editingCommunicationId ? <Save className="w-4 h-4 mr-1" /> : <Plus className="w-4 h-4 mr-1" />}
+              {editingCommunicationId ? "Enregistrer le brouillon" : "Créer le brouillon"}
             </Button>
           </DialogFooter>
         </DialogContent>

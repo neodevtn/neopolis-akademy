@@ -1763,3 +1763,8 @@
 - [x] Afficher les recommandations issues du diagnostic terminé dans Parcours d’apprentissage recommandé
 - [x] Afficher un état explicite avec valeur par défaut lorsque le diagnostic n’est pas terminé
 - [x] Tester les parcours avec et sans diagnostic puis valider en production
+## Édition des communications en brouillon
+- [x] Auditer l’éditeur de communication et les contrats de destinataires existants
+- [x] Ajouter une mise à jour serveur limitée aux communications en brouillon
+- [x] Permettre la modification de l’objet, du contenu riche, de l’importance et des destinataires
+- [ ] Prévisualiser et tester l’édition du brouillon sans déclencher d’envoi

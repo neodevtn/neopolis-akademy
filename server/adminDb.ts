@@ -126,10 +126,35 @@ export async function getCommunications(page: number = 1, pageSize: number = 20)
 
 export type CommunicationStatus = "draft" | "scheduled" | "sending" | "sent" | "failed" | "cancelled";
 
+export function isCommunicationDraftEditable(status: string | null | undefined) {
+  return status === "draft";
+}
+
 export async function getCommunicationById(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return (await db.select().from(communications).where(eq(communications.id, id)).limit(1))[0] || null;
+}
+
+export async function updateCommunicationDraft(input: {
+  id: number;
+  subject: string;
+  body: string;
+  type: InsertCommunication["type"];
+  isImportant: number;
+  recipientFilter: InsertCommunication["recipientFilter"];
+}) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.update(communications).set({
+    subject: input.subject,
+    body: input.body,
+    type: input.type,
+    isImportant: input.isImportant,
+    recipientFilter: input.recipientFilter,
+  }).where(and(eq(communications.id, input.id), eq(communications.status, "draft")));
+  if (!result[0]?.affectedRows) return null;
+  return getCommunicationById(input.id);
 }
 
 export async function updateCommunicationStatus(id: number, status: CommunicationStatus, recipientCount?: number) {

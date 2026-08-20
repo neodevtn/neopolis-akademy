@@ -5,7 +5,7 @@ import {
   createAdminNote, getAdminNotes, updateAdminNote, deleteAdminNote,
   createAdminTag, getAdminTags, deleteAdminTag,
   assignTagToUser, removeTagFromUser, getUserTags,
-  createCommunication, getCommunications, updateCommunicationStatus,
+  createCommunication, getCommunications, updateCommunicationStatus, updateCommunicationDraft,
   getCommunicationById, claimCommunicationForDelivery, markCommunicationScheduled, cancelScheduledCommunication,
   createCommunicationSegment, getCommunicationSegments, deleteCommunicationSegment,
   logAdminActivity, getAdminActivityLog,
@@ -243,6 +243,37 @@ export const adminEnhancedRouter = router({
           details: { subject: input.subject, type: input.type, isImportant: Boolean(input.isImportant) },
         });
         return comm;
+      }),
+
+    updateDraft: protectedProcedure
+      .input(z.object({
+        communicationId: z.number().positive(),
+        subject: z.string().min(1).max(500),
+        body: z.string().min(1).max(50000),
+        bodyFormat: z.enum(["markdown", "html"]).optional(),
+        type: z.enum(["invitation", "announcement", "reminder", "welcome", "custom"]),
+        isImportant: z.boolean().optional(),
+        recipientFilter: communicationRecipientFilterSchema.optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        assertAdmin(ctx);
+        const communication = await updateCommunicationDraft({
+          id: input.communicationId,
+          subject: input.subject,
+          body: formatCommunicationBody(input.body, input.bodyFormat || "html"),
+          type: input.type,
+          isImportant: input.isImportant ? 1 : 0,
+          recipientFilter: input.recipientFilter || {},
+        });
+        if (!communication) throw new TRPCError({ code: "BAD_REQUEST", message: "Seul un brouillon non programmé peut être modifié" });
+        await logAdminActivity({
+          adminId: ctx.user.id,
+          action: "update_communication_draft",
+          targetType: "communication",
+          targetId: input.communicationId,
+          details: { subject: input.subject, type: input.type, isImportant: Boolean(input.isImportant) },
+        });
+        return communication;
       }),
 
     list: protectedProcedure
