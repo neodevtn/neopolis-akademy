@@ -1822,3 +1822,8 @@
 - [x] Relever les audits de la mesure mobile publiée à 74 % et identifier les causes restantes
 - [x] Corriger les freins confirmés sans retirer de contenu ni de fonctionnalités
 - [x] Vérifier le parcours complet Agentic Browsing, la mesure mobile et publier les corrections
+
+## Régression Agentic Browsing persistante
+- [x] Identifier le cours et le profil exacts toujours affichés à 2/3 dans les données de production
+- [x] Corriger la progression terminale ou la donnée concernée sans contourner les règles pédagogiques
+- [ ] Vérifier le passage réel à 3/3, ajouter le test de non-régression et publier

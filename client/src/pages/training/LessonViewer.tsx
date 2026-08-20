@@ -9,7 +9,7 @@ import { VideoRecommendations } from "@/components/VideoRecommendations";
 import { YouTubePlayer } from "@/components/YouTubePlayer";
 import { trpc } from "@/lib/trpc";
 import { resolveI18n } from "./contentDetectors";
-import { getPersistedCompletionProgress } from "./chapterProgress";
+import { getPersistedCompletionProgress, hasOptionalSupplementaryVideos } from "./chapterProgress";
 import { ExerciseRenderer } from "@/components/ExerciseRenderer";
 import { FlipCardsGrid } from "@/components/FlipCard";
 import { TabbedContent } from "@/components/TabbedContent";
@@ -159,7 +159,7 @@ export default function LessonViewer({
           const blocks = ch.blocks || [];
           // Video gate
           const videoKeys = blocks.filter((b: any) => b.type === 'video').map((b: any) => { if (b.mp4Url || b.audioUrl) return b.id || ''; let rawId = b.videoId || ''; if (!rawId && b.url) { const m = (b.url as string).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/); if (m) rawId = m[1]; } if (!rawId && b.id && typeof b.id === 'string' && b.id.length >= 8 && b.id.length <= 15) rawId = b.id; return typeof rawId === 'object' ? (rawId.fr || rawId.en || '') : rawId; }).filter(Boolean);
-          if (videoKeys.length > 0 && !videoKeys.every((k: string) => completedVideos.has(k))) return;
+          if (!hasOptionalSupplementaryVideos(ch) && videoKeys.length > 0 && !videoKeys.every((k: string) => completedVideos.has(k))) return;
           // Flip cards gate
           const hasFlips = blocks.some((b: any) => b.type === 'flip_cards' && (b.cards || []).length > 0);
           if (hasFlips && !flipCardsCompleted.has(currentChapter)) return;
@@ -1051,7 +1051,7 @@ export default function LessonViewer({
                     return typeof rawId === 'object' ? (rawId.fr || rawId.en || "") : rawId;
                   })
                   .filter(Boolean);
-                const lastAllVideosWatched = lastChapterVideoKeys.length === 0 || lastChapterVideoKeys.every((k: string) => completedVideos.has(k));
+                const lastAllVideosWatched = hasOptionalSupplementaryVideos(chapter) || lastChapterVideoKeys.length === 0 || lastChapterVideoKeys.every((k: string) => completedVideos.has(k));
                 const lastChapterCloudIds = (chapter?.blocks || []).filter((b: any) => b.type === 'cloud_exercise').map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
                 const lastAllCloudDone = lastChapterCloudIds.length === 0 || lastChapterCloudIds.every((id: string) => completedCloudExercises.has(id));
                 const lastChapterMatchingIds = (chapter?.blocks || []).filter((b: any) => b.type === 'bucket_sort').map((b: any, i: number) => b.id || `bucket_${i}`);
@@ -1103,7 +1103,7 @@ export default function LessonViewer({
                 })
                 .filter(Boolean);
               const allVideosWatched = chapterVideoKeys.length === 0 || chapterVideoKeys.every((k: string) => completedVideos.has(k));
-              const isGatedByVideo = chapterVideoKeys.length > 0 && !allVideosWatched && !isReviewMode;
+              const isGatedByVideo = chapterVideoKeys.length > 0 && !allVideosWatched && !hasOptionalSupplementaryVideos(chapter) && !isReviewMode;
               // Flip cards gate: block if chapter has flip_cards and not all have been flipped
               const chapterHasFlipCards = (chapter?.blocks || []).some((b: any) => b.type === 'flip_cards' && (b.cards || []).length > 0);
               const isGatedByFlipCards = chapterHasFlipCards && !flipCardsCompleted.has(currentChapter) && !isReviewMode;

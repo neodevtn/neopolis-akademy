@@ -24,6 +24,30 @@ export function getPersistedCompletionProgress(total: number): ChapterProgress {
   return { current: safeTotal, total: safeTotal };
 }
 
+type ChapterBlockLike = {
+  type?: string;
+  title?: string | { en?: string; fr?: string };
+};
+
+/**
+ * Neopolis-selected supplementary videos remain available to learners but do
+ * not turn an otherwise completed official lesson into an artificial gate.
+ * Official video blocks keep their explicit "mark as watched" requirement.
+ */
+export function hasOptionalSupplementaryVideos(chapter?: { blocks?: ChapterBlockLike[] } | null): boolean {
+  const blocks = chapter?.blocks ?? [];
+  const hasVideo = blocks.some((block) => block.type === "video");
+  const hasSupplementLabel = blocks.some((block) => {
+    if (block.type !== "callout") return false;
+    const title = typeof block.title === "string"
+      ? block.title
+      : `${block.title?.fr ?? ""} ${block.title?.en ?? ""}`;
+    return /compl[ée]ment\s+neopolis|neopolis\s+supplement/i.test(title);
+  });
+
+  return hasVideo && hasSupplementLabel;
+}
+
 /**
  * Chapter progress belongs to a specific lesson. When the learner enters a
  * different lesson, start its visual chapter counter at chapter 1, not at the
