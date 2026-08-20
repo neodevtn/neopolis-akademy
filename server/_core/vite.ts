@@ -13,6 +13,8 @@ export const SPA_DOCUMENT_NO_CACHE_HEADERS = {
   Expires: "0",
 } as const;
 
+export const VERSIONED_ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable";
+
 export function applySpaDocumentNoCacheHeaders(res: { set: (headers: Record<string, string>) => unknown }) {
   res.set(SPA_DOCUMENT_NO_CACHE_HEADERS);
 }
@@ -72,6 +74,17 @@ export function serveStatic(app: Express) {
   }
 
   app.get("/index.html", (_req, res) => res.redirect(301, "/"));
+  // Les bundles Vite possèdent un hash de contenu. Ils peuvent être conservés un an,
+  // alors que le document HTML reste explicitement non cacheable plus bas afin de
+  // toujours pointer vers le bundle courant après une publication.
+  app.use(
+    "/assets",
+    express.static(path.resolve(distPath, "assets"), {
+      immutable: true,
+      maxAge: "1y",
+      index: false,
+    }),
+  );
   app.use(express.static(distPath, { index: false }));
 
   // A hashed JavaScript asset from a previous deployment must never receive

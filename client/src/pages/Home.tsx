@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ProcessStepper } from "@/components/ProcessStepper";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -25,14 +25,11 @@ import {
   PlayCircle,
   LogOut,
 } from "lucide-react";
-import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
 import { useAuth } from "@/_core/hooks/useAuth";
-import trainingIndex from "@/data/trainingIndex.json";
 import { faqItems as faqItemsData } from "@/data/faqData";
 
-// Chart.js
-import { Chart as ChartJS, registerables } from "chart.js";
-ChartJS.register(...registerables);
+// Chart.js is loaded only when the below-the-fold chart becomes visible.
+import type { Chart as ChartJS } from "chart.js";
 
 /* ─── Animated Counter Hook ─── */
 function useCountUp(end: number, duration = 2000, startOnView = true) {
@@ -79,9 +76,18 @@ function AnimatedStat({ value, suffix = "", prefix = "" }: { value: number; suff
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 const LOGO_ICON = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 // const HERO_IMG = "/api/assets/hero_tunisian_ai_08a6f956.png";
-const CERT_IMG = "/api/assets/step2_certification_navy_v2_d57b236e.jpg";
-const ELEARNING_IMG = "/api/assets/step1_elearning_navy_v2_fde423cb.jpg";
-const AFRICA_IMG = "/api/assets/step3_ambassador_navy_v2_e1ca59ba.jpg";
+const CERT_IMG = {
+  src: "/api/assets/neopolis-home-certification-768_6f11d44f.webp",
+  srcSet: "/api/assets/neopolis-home-certification-384_0d87fca8.webp 384w, /api/assets/neopolis-home-certification-768_6f11d44f.webp 600w",
+};
+const ELEARNING_IMG = {
+  src: "/api/assets/neopolis-home-elearning-768_faf0c9fd.webp",
+  srcSet: "/api/assets/neopolis-home-elearning-384_34e452fc.webp 384w, /api/assets/neopolis-home-elearning-768_faf0c9fd.webp 600w",
+};
+const AFRICA_IMG = {
+  src: "/api/assets/neopolis-home-ambassador-768_c840b19b.webp",
+  srcSet: "/api/assets/neopolis-home-ambassador-384_fd8ba033.webp 384w, /api/assets/neopolis-home-ambassador-768_c840b19b.webp 600w",
+};
 // const PARTNER_IMG = "/api/assets/wise_partnership_illustration_b3c56284.png";
 
 /* ─── Animation Variants ─── */
@@ -166,71 +172,9 @@ function HeaderTrainingButton() {
   );
 }
 
-/* ─── Resume Reading Widget ─── */
-function ResumeReadingWidget() {
-  const { isAuthenticated } = useAuth();
-  const { t } = useLanguage();
-  const { getLastVisitedCourse, isLoading } = useTrainingProgress();
-
-  if (!isAuthenticated || isLoading) return null;
-
-  const lastVisited = getLastVisitedCourse();
-  if (!lastVisited) return null;
-
-  const course = trainingIndex.courses.find((c: any) => c.id === lastVisited.courseId);
-  if (!course) return null;
-  const cert = trainingIndex.certifications.find((c: any) => c.id === (course as any).certId);
-  const progressPct = Math.round(((lastVisited.chapterIndex + 1) / lastVisited.totalChapters) * 100);
-
-  return (
-    <div className="container" style={{ padding: "0 clamp(1.25rem, 4vw, 3rem)" }}>
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
-        className="-mt-4 mb-8"
-      >
-        <Link
-          href={`/training/${(course as any).certId}/${course.id}`}
-          className="group block rounded-2xl border p-4 md:p-5 hover:shadow-lg transition-all duration-200"
-          style={{
-            background: "linear-gradient(135deg, oklch(96% 0.01 255 / 0.5), oklch(97% 0.01 255 / 0.5))",
-            borderColor: "oklch(82% 0.04 255 / 0.4)",
-          }}
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "oklch(90% 0.04 255 / 0.4)" }}>
-              <PlayCircle className="w-5 h-5 md:w-6 md:h-6" style={{ color: "var(--neo-primary)" }} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full" style={{ background: "var(--neo-primary-light)", color: "var(--neo-primary)" }}>
-                  {t({ fr: "Reprendre la lecture", en: "Resume reading", ar: "استئناف القراءة" })}
-                </span>
-                {cert && <span className="text-xs text-muted-foreground">{(cert as any).icon}</span>}
-              </div>
-              <h3 className="text-sm md:text-base font-semibold group-hover:opacity-80 transition-opacity truncate" style={{ color: "oklch(25% 0.02 250)" }}>
-                {typeof (course as any).title === 'object' ? ((course as any).title.fr || (course as any).title.en) : (course as any).title}
-              </h3>
-              <div className="flex items-center gap-3 mt-1.5">
-                <div className="flex-1 max-w-[200px] h-1.5 rounded-full overflow-hidden" style={{ background: "oklch(88% 0.02 255 / 0.6)" }}>
-                  <div
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{ width: `${progressPct}%`, background: "var(--neo-primary)" }}
-                  />
-                </div>
-                <span className="text-xs font-medium" style={{ color: "var(--neo-ink-secondary)" }}>
-                  {t({ fr: `Chapitre ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}`, en: `Chapter ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}`, ar: `الفصل ${lastVisited.chapterIndex + 1}/${lastVisited.totalChapters}` })}
-                </span>
-              </div>
-            </div>
-            <ChevronRight className="w-5 h-5 flex-shrink-0 group-hover:translate-x-0.5 transition-transform" style={{ color: "var(--neo-primary)" }} />
-          </div>
-        </Link>
-      </motion.div>
-    </div>
-  );
-}
+/* ─── Resume Reading Widget (authentifié et différé) ─── */
+const HomeResumeReadingWidget = lazy(() => import("@/components/HomeResumeReadingWidget"));
+const TrainingProgressArea = lazy(() => import("@/components/TrainingProgressArea"));
 
 /* ─── Parallax Image Component ─── */
 function ParallaxImage() {
@@ -248,6 +192,10 @@ function ParallaxImage() {
       <img
         src="/api/assets/partner_section_navy_v2_dc6ef3c5.jpg"
         alt="AI Solutions Partner"
+        width={960}
+        height={720}
+        loading="lazy"
+        decoding="async"
         className="w-full max-w-xs md:max-w-sm mx-auto object-contain rounded-3xl shadow-xl"
       />
     </motion.div>
@@ -256,6 +204,7 @@ function ParallaxImage() {
 
 export default function Home() {
   const { t } = useLanguage();
+  const { isAuthenticated } = useAuth();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -314,15 +263,12 @@ export default function Home() {
         </div>
       </motion.nav>
 
+      <main>
       {/* ─── Hero Band (Bubble cream paper) ─── */}
       <section className="overflow-hidden pt-[66px]" style={{ background: "var(--wise-canvas)" }}>
         <div className="container" style={{ padding: "clamp(1.5rem, 3vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
           <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-6 lg:gap-12 items-center">
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={staggerContainer}
-            >
+            <div>
               {/* Eyebrow */}
               <motion.div variants={fadeInUp} className="wise-eyebrow mb-6">
                 <span className="w-2 h-2 rounded-full" style={{ background: "var(--neo-primary)" }} />
@@ -345,10 +291,8 @@ export default function Home() {
 
               {/* CTA buttons */}
               <motion.div variants={fadeInUp} className="flex flex-wrap gap-3 mb-6">
-                <Link href="/apply">
-                  <button className="wise-btn-primary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">
-                    {t({ fr: "Déposer ma candidature", en: "Submit my application", ar: "تقديم طلبي" })} <ArrowRight size={18} />
-                  </button>
+                <Link href="/apply" className="wise-btn-primary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">
+                  {t({ fr: "Déposer ma candidature", en: "Submit my application", ar: "تقديم طلبي" })} <ArrowRight size={18} />
                 </Link>
                 <a href="#formule">
                   <button className="wise-btn-secondary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">
@@ -363,7 +307,7 @@ export default function Home() {
                 <span className="wise-badge-positive">{t({ fr: "296 places", en: "296 spots", ar: "296 مقعد" })}</span>
                 <span className="wise-badge-negative">{t({ fr: "Avant le 31 août 2026", en: "Before August 31, 2026", ar: "قبل 31 أوت 2026" })}</span>
               </motion.div>
-            </motion.div>
+            </div>
 
             <motion.div
               initial={{ opacity: 0, scale: 0.92, x: 28 }}
@@ -378,7 +322,11 @@ export default function Home() {
       </section>
 
       {/* ─── Resume Reading Widget ─── */}
-      <ResumeReadingWidget />
+      {isAuthenticated && (
+        <Suspense fallback={null}>
+          <TrainingProgressArea><HomeResumeReadingWidget /></TrainingProgressArea>
+        </Suspense>
+      )}
 
       {/* ─── Pourquoi maintenant (Gris Band) ─── */}
       <AnimatedSection id="pourquoi" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
@@ -537,7 +485,7 @@ export default function Home() {
                   <div className="flex flex-col items-center justify-center">
                     <div className="text-center">
                       <div className="inline-flex items-center gap-3 px-5 py-3 rounded-xl mb-2" style={{ background: "rgba(255,255,255,0.08)" }}>
-                        <img src="/api/assets/claude_ai_icon_cf4b47af.png" alt="Claude AI" className="w-10 h-10 object-contain" />
+                        <img src="/api/assets/neopolis-home-claude-icon-64_ca898f2a.webp" alt="Claude AI" width={64} height={64} decoding="async" className="w-10 h-10 object-contain" />
                         <span className="text-2xl font-bold text-white">Claude</span>
                       </div>
                       <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>{t({ fr: "Modèle IA le plus avancé au monde", en: "World's most advanced AI model", ar: "أكثر نماذج الذكاء الاصطناعي تقدمًا" })}</p>
@@ -564,7 +512,7 @@ export default function Home() {
                 {t({ fr: "Après votre certification, vous obtenez le statut d'AI Solutions Partner - Ambassadeur Certifié. Vous devenez un entrepreneur indépendant qui distribue des solutions IA auprès des PME/TPE de votre secteur d'activité.", en: "After your certification, you obtain the status of AI Solutions Partner - Certified Ambassador. You become an independent entrepreneur who distributes AI solutions to SMEs in your industry.", ar: "بعد الحصول على الشهادة، تحصل على مركز شريك حلول ذكاء اصطناعي - سفير معتمد. أنت تصبح رائد أعمال مستقلاً يوزع حلول الذكاء الاصطناعي للشركات الصغيرة والمتوسطة في قطاعك." })}
               </p>
               <div className="wise-card-sage p-6">
-                <h4 className="font-semibold text-lg mb-3" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Votre mission :", en: "Your mission:", ar: "مهمتك:" })}</h4>
+                <h3 className="font-semibold text-lg mb-3" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Votre mission :", en: "Your mission:", ar: "مهمتك:" })}</h3>
                 <p className="wise-body-md">
                   {t({ fr: "Identifier les entreprises de votre secteur dont les processus peuvent être automatisés par des agents IA, leur proposer des solutions concrètes, et les accompagner dans leur transformation digitale - avec tout le soutien de Neopolis Development.", en: "Identify companies in your sector whose processes can be automated by AI agents, propose concrete solutions to them, and support them in their digital transformation - with full support from Neopolis Development.", ar: "تحديد الشركات في قطاعك التي يمكن أتمتة عملياتها بواسطة وكلاء الذكاء الاصطناعي، والعرض عليهم حلولاً عملية، ودعمهم في التحول الرقمي - مع الدعم الكامل من Neopolis Development." })}
                 </p>
@@ -642,10 +590,8 @@ export default function Home() {
             <p className="wise-body-lg mb-10 max-w-[42ch] mx-auto" style={{ color: "rgba(255,255,255,0.85)" }}>
               {t({ fr: "Formation et certification 100% gratuites – 296 places seulement", en: "Training and certification 100% free – only 296 spots", ar: "تدريب وشهادة مجانية 100% – 296 مقعداً فقط" })}
             </p>
-            <Link href="/apply">
-              <button className="text-base md:text-lg px-8 md:px-10 py-4 md:py-5 flex items-center gap-3 mx-auto font-semibold rounded-lg transition-all" style={{ background: "#ffffff", color: "var(--neo-primary)" }}>
-                {t({ fr: "Postuler maintenant", en: "Apply now", ar: "قدّم الآن" })} <ArrowRight size={20} />
-              </button>
+            <Link href="/apply" className="text-base md:text-lg px-8 md:px-10 py-4 md:py-5 flex items-center gap-3 mx-auto font-semibold rounded-lg transition-all" style={{ background: "#ffffff", color: "var(--neo-primary)" }}>
+              {t({ fr: "Postuler maintenant", en: "Apply now", ar: "قدّم الآن" })} <ArrowRight size={20} />
             </Link>
           </motion.div>
         </div>
@@ -675,22 +621,23 @@ export default function Home() {
           <div className="marquee-track">
             {[...Array(2)].map((_, i) => (
               <div key={i} className="marquee-content">
-                <img src="/api/assets/logo_anthropic_e6ab4160.png" alt="Anthropic" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/logo_anthropic_e6ab4160.png" alt="Anthropic" loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
 
-                <img src="/api/assets/claude_ba4537f3.png" alt="Claude" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/claude_ba4537f3.png" alt="Claude" loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
 
 
-                <img src="/api/assets/openai_73a9a1b1.png" alt="OpenAI" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/api/assets/gemini_c13269e9.png" alt="Gemini" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/api/assets/langchain_9c5e065b.png" alt="LangChain" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/api/assets/crewai_7df89ab8.png" alt="CrewAI" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
-                <img src="/api/assets/n8n_7ff20c9e.png" alt="n8n" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/openai_73a9a1b1.png" alt="OpenAI" loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/gemini_c13269e9.png" alt="Gemini" loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/langchain_9c5e065b.png" alt="LangChain" loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/crewai_7df89ab8.png" alt="CrewAI" loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
+                <img src="/api/assets/n8n_7ff20c9e.png" alt="n8n" loading="lazy" decoding="async" className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity" />
               </div>
             ))}
           </div>
         </div>
       </div>
 
+      </main>
       {/* ─── Footer (Dark) ─── */}
       <footer className="wise-footer">
         <div className="container py-10">
@@ -706,7 +653,7 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <h4 className="wise-label mb-3">{t({ fr: "Programme", en: "Program", ar: "البرنامج" })}</h4>
+              <h3 className="wise-label mb-3">{t({ fr: "Programme", en: "Program", ar: "البرنامج" })}</h3>
               <ul className="space-y-1.5">
                 <li><a href="#formule" className="wise-body-sm hover:underline">{t({ fr: "La Formule", en: "The Formula", ar: "الصيغة" })}</a></li>
                 <li><a href="#pourquoi" className="wise-body-sm hover:underline">{t({ fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" })}</a></li>
@@ -716,14 +663,14 @@ export default function Home() {
               </ul>
             </div>
             <div>
-              <h4 className="wise-label mb-3">{t({ fr: "Outils", en: "Tools", ar: "الأدوات" })}</h4>
+              <h3 className="wise-label mb-3">{t({ fr: "Outils", en: "Tools", ar: "الأدوات" })}</h3>
               <ul className="space-y-1.5">
                 <li><Link href="/training" className="wise-body-sm hover:underline">{t({ fr: "Formation", en: "Training", ar: "التدريب" })}</Link></li>
                 <li><Link href="/apply" className="wise-body-sm hover:underline">{t({ fr: "Postuler", en: "Apply", ar: "تقدّم" })}</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="wise-label mb-3">{t({ fr: "Contact", en: "Contact", ar: "الاتصال" })}</h4>
+              <h3 className="wise-label mb-3">{t({ fr: "Contact", en: "Contact", ar: "الاتصال" })}</h3>
               <ul className="space-y-1.5">
                 <li><a href="mailto:info@neopolis-dev.com" className="wise-body-sm hover:underline">info@neopolis-dev.com</a></li>
                 <li><a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="wise-body-sm hover:underline">{t({ fr: "À propos de Neopolis Dev ↗", en: "About Neopolis Dev ↗", ar: "حول Neopolis Dev ↗" })}</a></li>
@@ -759,7 +706,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
 }
 
 
-function FormulaCard({ icon, step, title, description, badge, image }: { icon: React.ReactNode; step: string; title: string; description: string; badge: string; image: string }) {
+function FormulaCard({ icon, step, title, description, badge, image }: { icon: React.ReactNode; step: string; title: string; description: string; badge: string; image: { src: string; srcSet: string } }) {
   const { t } = useLanguage();
   return (
     <motion.div
@@ -770,10 +717,15 @@ function FormulaCard({ icon, step, title, description, badge, image }: { icon: R
       {/* Image en haut avec overlay au hover */}
       <div className="relative w-full h-44 -mx-6 -mt-6 mb-5 overflow-hidden" style={{ width: "calc(100% + 48px)" }}>
         <img
-          src={image}
+          src={image.src}
+          srcSet={image.srcSet}
+          sizes="(max-width: 767px) calc(100vw - 3rem), (max-width: 1023px) calc(50vw - 3rem), 384px"
           alt={title}
           className="w-full h-full object-cover transition-transform duration-400 ease-out group-hover:scale-105"
-          loading="eager"
+          width={600}
+          height={450}
+          loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <span className="absolute top-3 right-3 text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm" style={{ backgroundColor: "rgba(255,255,255,0.9)", color: "var(--wise-ink)" }}>
@@ -850,14 +802,20 @@ function AnimatedChart() {
 
   useEffect(() => {
     if (!isInView || !canvasRef.current) return;
-    hasAnimated.current = true;
+    let cancelled = false;
 
-    if (chartInstanceRef.current) chartInstanceRef.current.destroy();
+    const renderChart = async () => {
+      const { Chart, registerables } = await import("chart.js");
+      if (cancelled || !canvasRef.current) return;
 
-    const ctx = canvasRef.current.getContext("2d");
-    if (!ctx) return;
+      Chart.register(...registerables);
+      hasAnimated.current = true;
+      chartInstanceRef.current?.destroy();
 
-    chartInstanceRef.current = new ChartJS(ctx, {
+      const ctx = canvasRef.current.getContext("2d");
+      if (!ctx) return;
+
+      chartInstanceRef.current = new Chart(ctx, {
       type: "line",
       data: {
         labels: ["2020", "2023", "2025", "2027", "2030"],
@@ -945,9 +903,16 @@ function AnimatedChart() {
         },
         interaction: { intersect: false, mode: "index" as const },
       },
-    });
+      });
+    };
 
-    return () => { chartInstanceRef.current?.destroy(); };
+    void renderChart();
+
+    return () => {
+      cancelled = true;
+      chartInstanceRef.current?.destroy();
+      chartInstanceRef.current = null;
+    };
   }, [isInView, lang]);
 
   return (
@@ -1396,8 +1361,9 @@ function RevenueSimulator() {
         {/* Inputs */}
         <div className="space-y-6">
           <div>
-            <label className="wise-label mb-2 block">{t({ fr: "Nombre de projets apportés / an", en: "Number of projects brought / year", ar: "عدد المشاريع المقدمة / سنة" })}</label>
+            <label htmlFor="revenue-projects" className="wise-label mb-2 block">{t({ fr: "Nombre de projets apportés / an", en: "Number of projects brought / year", ar: "عدد المشاريع المقدمة / سنة" })}</label>
             <input
+              id="revenue-projects"
               type="range"
               min={1}
               max={20}
@@ -1413,8 +1379,9 @@ function RevenueSimulator() {
           </div>
 
           <div>
-            <label className="wise-label mb-2 block">{t({ fr: "Frais de setup moyen par projet (€)", en: "Average setup fee per project (€)", ar: "رسوم الإعداد المتوسطة لكل مشروع (€)" })}</label>
+            <label htmlFor="revenue-setup-fee" className="wise-label mb-2 block">{t({ fr: "Frais de setup moyen par project (€)", en: "Average setup fee per project (€)", ar: "رسوم الإعداد المتوسطة لكل مشروع (€)" })}</label>
             <input
+              id="revenue-setup-fee"
               type="range"
               min={1000}
               max={30000}
@@ -1431,8 +1398,9 @@ function RevenueSimulator() {
           </div>
 
           <div>
-            <label className="wise-label mb-2 block">{t({ fr: "Votre taux d'implication (%)", en: "Your involvement rate (%)", ar: "نسبة مشاركتك (%)" })}</label>
+            <label htmlFor="revenue-involvement" className="wise-label mb-2 block">{t({ fr: "Votre taux d'implication (%)", en: "Your involvement rate (%)", ar: "نسبة مشاركتك (%)" })}</label>
             <input
+              id="revenue-involvement"
               type="range"
               min={20}
               max={60}
@@ -1449,8 +1417,9 @@ function RevenueSimulator() {
           </div>
 
           <div>
-            <label className="wise-label mb-2 block">{t({ fr: "Consommation tokens mensuelle / projet (€)", en: "Monthly token consumption / project (€)", ar: "استهلاك الرموز الشهري / مشروع (€)" })}</label>
+            <label htmlFor="revenue-tokens" className="wise-label mb-2 block">{t({ fr: "Consommation tokens mensuelle / projet (€)", en: "Monthly token consumption / project (€)", ar: "استهلاك الرموز الشهري / مشروع (€)" })}</label>
             <input
+              id="revenue-tokens"
               type="range"
               min={100}
               max={5000}

@@ -1802,3 +1802,10 @@
 - [x] Configurer les titres, descriptions, canonical, Open Graph et Twitter Cards côté serveur pour les pages publiques
 - [x] Générer et configurer les favicons et icônes mobiles à partir du logo fourni
 - [x] Ajouter des tests et vérifier les métadonnées ainsi que les assets publics sur le domaine de production
+
+## Optimisation mesurable PageSpeed / Lighthouse
+- [x] Établir une référence Google PageSpeed Insights et Lighthouse sur mobile et ordinateur, avec les métriques Core Web Vitals et tous les diagnostics
+- [x] Identifier précisément les causes dans le code : LCP, images, bundles JavaScript, CSS, polices, scripts tiers, CLS et défauts d’accessibilité
+- [x] Appliquer les optimisations de ressources, de chargement et de rendu sans supprimer de fonctionnalité, de contenu ni modifier la charte graphique
+- [x] Répéter les mesures mobile et ordinateur, corriger les écarts restants et comparer les résultats à la référence
+- [ ] Vérifier les parcours publics et critiques, l’accessibilité, le responsive, le SEO/social, les erreurs console et publier le bilan mesurable

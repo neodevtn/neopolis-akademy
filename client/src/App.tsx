@@ -1,17 +1,12 @@
 import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
-import { SentryUserSync } from "@/components/SentryUserSync";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
-import { TrainingProgressProvider } from "./contexts/TrainingProgressContext";
 import CookieConsent from "./components/CookieConsent";
-import { AchievementCelebration } from "./components/AchievementCelebration";
-import { ImportantCommunicationLightbox } from "./components/ImportantCommunicationLightbox";
-import { PlatformUpdateNotice } from "./components/PlatformUpdateNotice";
 
 // ─── Code-splitting: lazy-load all heavy pages ───
 const Home = lazy(() => import("./pages/Home"));
@@ -32,6 +27,8 @@ const DiagnosticIA = lazy(() => import("./pages/DiagnosticIA"));
 const AdvancedDiagnosticIA = lazy(() => import("./pages/AdvancedDiagnosticIA"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const TrainingProgressArea = lazy(() => import("./components/TrainingProgressArea"));
+const DeferredAuthenticatedOverlays = lazy(() => import("./components/DeferredAuthenticatedOverlays").then((module) => ({ default: module.DeferredAuthenticatedOverlays })));
 
 // ─── Loading fallback ───
 function PageLoader() {
@@ -45,6 +42,11 @@ function PageLoader() {
   );
 }
 
+function TrainingDashboardRoute() { return <TrainingProgressArea><TrainingDashboard /></TrainingProgressArea>; }
+function TrainingCertificationRoute() { return <TrainingProgressArea><TrainingCertification /></TrainingProgressArea>; }
+function TrainingCourseRoute() { return <TrainingProgressArea><TrainingCourse /></TrainingProgressArea>; }
+function MockExamRoute() { return <TrainingProgressArea><MockExam /></TrainingProgressArea>; }
+
 function Router() {
   return (
     <Suspense fallback={<PageLoader />}>
@@ -57,10 +59,10 @@ function Router() {
         <Route path={"/admin/media"} component={AdminMediaLibrary} />
         <Route path={"/admin/errors"} component={AdminErrors} />
         <Route path={"/mentions-legales"} component={MentionsLegales} />
-        <Route path={"/training"} component={TrainingDashboard} />
-        <Route path={"/training/:certId"} component={TrainingCertification} />
-        <Route path={"/training/:certId/:courseId"} component={TrainingCourse} />
-        <Route path={"/mock-exam/:certId"} component={MockExam} />
+        <Route path={"/training"} component={TrainingDashboardRoute} />
+        <Route path={"/training/:certId"} component={TrainingCertificationRoute} />
+        <Route path={"/training/:certId/:courseId"} component={TrainingCourseRoute} />
+        <Route path={"/mock-exam/:certId"} component={MockExamRoute} />
         <Route path={"/accept-invitation"} component={AcceptInvitation} />
         <Route path={"/login"} component={Login} />
         <Route path={"/demo-login"} component={Login} />
@@ -80,17 +82,12 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light" switchable={true}>
         <LanguageProvider>
-          <TrainingProgressProvider>
-            <TooltipProvider>
-              <Toaster />
-              <SentryUserSync />
-              <PlatformUpdateNotice />
-              <AchievementCelebration />
-              <ImportantCommunicationLightbox />
-              <Router />
-              <CookieConsent />
-            </TooltipProvider>
-          </TrainingProgressProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Suspense fallback={null}><DeferredAuthenticatedOverlays /></Suspense>
+            <Router />
+            <CookieConsent />
+          </TooltipProvider>
         </LanguageProvider>
       </ThemeProvider>
     </ErrorBoundary>

@@ -150,10 +150,23 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
+// Le serveur de développement crée Vite par API et hérite parfois d’un NODE_ENV
+// de session. L’argument Vite `build` est donc le signal déterministe pour ne
+// jamais injecter ce runtime dans un artefact de production.
+const isViteProductionBuild = process.argv.includes("build") || process.env.NODE_ENV === "production";
+const shouldInjectManusRuntime = !isViteProductionBuild;
 
 export default defineConfig({
-  plugins,
+  // Le runtime Manus est utile au serveur de développement et à ses outils de diagnostic,
+  // mais il injecte près de 370 ko de JavaScript inline dans chaque document de production.
+  // L’application ne le consomme pas : on le conserve donc uniquement en développement.
+  plugins: [
+    react(),
+    tailwindcss(),
+    jsxLocPlugin(),
+    ...(shouldInjectManusRuntime ? [vitePluginManusRuntime()] : []),
+    vitePluginManusDebugCollector(),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),

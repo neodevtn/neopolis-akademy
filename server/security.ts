@@ -82,6 +82,9 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: https: blob:",
       "media-src 'self' blob: https:",
+      // Le visualiseur de contenu utilise un Worker Blob local. La directive est limitée
+      // au même site et aux blobs, sans élargir script-src.
+      "worker-src 'self' blob:",
       "connect-src 'self' https: wss:", // needed for tRPC, OAuth, analytics, Vite HMR
       "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://youtube.com",
       "frame-ancestors 'none'",
