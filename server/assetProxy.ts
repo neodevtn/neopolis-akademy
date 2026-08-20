@@ -30,6 +30,16 @@ const MIME_MAP: Record<string, string> = {
   ".svg": "image/svg+xml",
 };
 
+const DEFAULT_PUBLIC_ASSET_CACHE_CONTROL = "public, max-age=3600, must-revalidate";
+export const VERSIONED_PUBLIC_ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable";
+
+/** Les assets téléversés avec un suffixe hashé peuvent être mis en cache durablement. */
+export function getAssetCacheControl(key: string): string {
+  return /_[a-f0-9]{8}\.[a-z0-9]+$/i.test(key)
+    ? VERSIONED_PUBLIC_ASSET_CACHE_CONTROL
+    : DEFAULT_PUBLIC_ASSET_CACHE_CONTROL;
+}
+
 function getMimeFromKey(key: string): string | null {
   const ext = key.substring(key.lastIndexOf(".")).toLowerCase();
   return MIME_MAP[ext] || null;
@@ -42,6 +52,7 @@ export function registerAssetProxy(app: Express) {
       res.status(400).send("Missing asset key");
       return;
     }
+    const cacheControl = getAssetCacheControl(key);
 
     // Protect application files - require admin auth
     if (key.startsWith("applications/")) {
@@ -111,6 +122,7 @@ export function registerAssetProxy(app: Express) {
           res.set("Content-Type", contentType);
           res.set("Accept-Ranges", "bytes");
           res.set("Access-Control-Allow-Origin", "*");
+          res.set("Cache-Control", cacheControl);
           const arrayBuf = await fileResp.arrayBuffer();
           res.send(Buffer.from(arrayBuf));
           return;
@@ -135,7 +147,7 @@ export function registerAssetProxy(app: Express) {
         res.set("Content-Range", `bytes ${start}-${end}/${totalSize}`);
         res.set("Accept-Ranges", "bytes");
         res.set("Access-Control-Allow-Origin", "*");
-        res.set("Cache-Control", "public, max-age=3600, must-revalidate");
+        res.set("Cache-Control", cacheControl);
 
         const arrayBuf = await rangeResp.arrayBuffer();
         res.send(Buffer.from(arrayBuf));
@@ -154,7 +166,7 @@ export function registerAssetProxy(app: Express) {
         if (contentLength) res.set("Content-Length", contentLength);
         res.set("Accept-Ranges", "bytes");
         res.set("Access-Control-Allow-Origin", "*");
-        res.set("Cache-Control", "public, max-age=3600, must-revalidate");
+        res.set("Cache-Control", cacheControl);
 
         const arrayBuf = await fileResp.arrayBuffer();
         res.send(Buffer.from(arrayBuf));

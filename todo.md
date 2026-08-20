@@ -1844,3 +1844,9 @@
 - [x] Auditer le llms.txt public et les pages canoniques à référencer
 - [x] Ajouter un titre H1 Markdown, un résumé et des liens publics pertinents dans llms.txt
 - [x] Vérifier llms.txt sur le domaine publié et relancer l’audit Google PageSpeed mobile/ordinateur
+
+## Amélioration PageSpeed mobile — rapport 85
+- [x] Extraire les métriques et opportunités exactes du rapport PageSpeed mobile fourni
+- [x] Relier chaque diagnostic prioritaire aux ressources et composants concernés
+- [x] Corriger les freins mobiles sans retirer de contenu ni modifier les parcours
+- [ ] Revalider Lighthouse et PageSpeed mobile, puis publier la comparaison mesurable

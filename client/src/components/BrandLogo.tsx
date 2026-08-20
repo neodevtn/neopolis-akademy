@@ -13,6 +13,9 @@ export function BrandLogo({ className, alt = "Neopolis Akademy" }: BrandLogoProp
     <img
       src={OFFICIAL_NEOPOLIS_AKADEMY_LOGO}
       alt={alt}
+      width={180}
+      height={63}
+      decoding="async"
       className={cn("h-9 w-auto object-contain", className)}
     />
   );

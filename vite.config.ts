@@ -163,8 +163,9 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    jsxLocPlugin(),
-    ...(shouldInjectManusRuntime ? [vitePluginManusRuntime()] : []),
+    // Les attributs de localisation JSX servent aux outils de développement,
+    // mais ajoutent du code et des attributs inutiles au bundle livré.
+    ...(shouldInjectManusRuntime ? [jsxLocPlugin(), vitePluginManusRuntime()] : []),
     vitePluginManusDebugCollector(),
   ],
   resolve: {

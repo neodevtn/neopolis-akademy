@@ -237,7 +237,7 @@ export default function Home() {
         >
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0">
-            <img src={LOGO_URL} alt="Neopolis Development" className="h-8 md:h-9 object-contain" />
+            <img src={LOGO_URL} alt="Neopolis Development" width={180} height={63} decoding="async" className="h-8 md:h-9 object-contain" />
           </Link>
 
           {/* Center nav links */}
@@ -453,7 +453,7 @@ export default function Home() {
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "#ffffff" }}>
-                      <img src="/api/assets/logo_anthropic_e6ab4160.png" alt="Anthropic" className="w-8 h-8 object-contain" />
+                      <img src="/api/assets/logo-anthropic-64_459b0a03.webp" alt="Anthropic" width={32} height={32} decoding="async" className="w-8 h-8 object-contain" />
                     </div>
                     <div>
                       <h3 className="text-white font-bold text-lg">Anthropic</h3>
@@ -1041,7 +1041,7 @@ function HeroGraphic() {
           animate={{ scale: 1 }}
           transition={{ duration: 0.6, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
         >
-          <img src={LOGO_ICON} alt="Neopolis" className="w-10 h-10 object-contain" />
+          <img src={LOGO_ICON} alt="Neopolis" width={40} height={40} decoding="async" className="w-10 h-10 object-contain" />
         </motion.div>
 
         {/* Orbital nodes - positioned with absolute pixel offsets from top-left */}
