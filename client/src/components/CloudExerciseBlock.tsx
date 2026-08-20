@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Timer, CheckCircle2, ChevronDown } from "lucide-react";
+import { Timer, CheckCircle2, ChevronDown, Download } from "lucide-react";
 import PageContent, { renderInlineFormatting } from "@/pages/training/PageContent";
 
 /**
@@ -60,12 +60,21 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
   const tpTitle = typeof block.title === 'object' ? (block.title?.[lang] || block.title?.en || '') : (block.title || '');
   const tpAssignment = block.assignment || '';
   const tpInstructions = block.instructions || '';
+  const tpEnvironmentGuide = typeof block.environmentGuide === 'object'
+    ? (block.environmentGuide?.[lang] || block.environmentGuide?.fr || block.environmentGuide?.en || '')
+    : (block.environmentGuide || '');
+  const tpResources = Array.isArray(block.resources) ? block.resources : [];
   const tpSteps = block.steps || [];
   const tpHint = block.hint || '';
   const tpSolution = block.solution || '';
   const tpSuccess = block.successMessage || '';
   const tpPrompt = block.prompt || '';
-  const tpNonDl = block.nonDownloadableFiles || [];
+  const tpNonDl = Array.from(new Set([
+    ...(Array.isArray(block.nonDownloadableFiles) ? block.nonDownloadableFiles : []),
+    ...(Array.isArray(block.referencedFiles)
+      ? block.referencedFiles.filter((file: any) => !file?.local_path && file?.filename).map((file: any) => file.filename)
+      : []),
+  ]));
 
   return (
     <div className="my-6 rounded-xl border-2 border-blue-200 overflow-hidden bg-card">
@@ -99,6 +108,36 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
               <PageContent content={tpInstructions} lang={lang} />
             </div>
           </details>
+        )}
+
+        {tpEnvironmentGuide && (
+          <details className="border border-sky-200 rounded-lg bg-sky-50/60">
+            <summary className="px-4 py-2.5 cursor-pointer text-sm font-semibold text-sky-900 hover:bg-sky-100/60 rounded-lg flex items-center gap-2">
+              <ChevronDown className="w-4 h-4 transition-transform" />
+              {t({ en: 'Environment prerequisites', fr: 'Prérequis et préparation de l’environnement' })}
+            </summary>
+            <div className="px-4 pb-3 text-sm text-sky-950 prose prose-sm max-w-none">
+              <PageContent content={tpEnvironmentGuide} lang={lang} />
+            </div>
+          </details>
+        )}
+
+        {tpResources.length > 0 && (
+          <div className="border border-emerald-200 rounded-lg bg-emerald-50/60 p-4">
+            <p className="font-semibold text-sm text-emerald-900 mb-2">{t({ en: 'Resources for this exercise', fr: 'Ressources pour ce TP' })}</p>
+            <div className="space-y-2">
+              {tpResources.map((resource: any, index: number) => {
+                const title = typeof resource.title === 'object' ? (resource.title?.[lang] || resource.title?.fr || resource.title?.en) : resource.title;
+                const description = typeof resource.description === 'object' ? (resource.description?.[lang] || resource.description?.fr || resource.description?.en) : resource.description;
+                return (
+                  <a key={`${resource.url}-${index}`} href={resource.url} target="_blank" rel="noreferrer" className="flex items-start gap-3 rounded-md bg-background/80 border border-emerald-100 px-3 py-2 text-sm text-emerald-800 hover:bg-background">
+                    <Download className="w-4 h-4 mt-0.5 shrink-0" />
+                    <span><strong>{title || t({ en: 'Download resource', fr: 'Télécharger la ressource' })}</strong>{description && <span className="block text-xs text-emerald-700 mt-0.5">{description}</span>}</span>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
         )}
 
         {/* Steps */}

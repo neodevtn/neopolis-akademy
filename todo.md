@@ -1773,3 +1773,8 @@
 - [x] Vérifier les compteurs, les médias, les TP et les interactions du cours Neopolis
 - [x] Comparer les écarts fonctionnels et visuels reproductibles
 - [x] Corriger les écarts confirmés et valider le parcours en production
+## Conformité d’intégration DataCamp du cours n8n
+- [x] Vérifier l’usage exclusif des blocs standards Neopolis et la rétrocompatibilité des composants
+- [x] Vérifier les tags et contributions de compétences liés aux activités n8n
+- [x] Vérifier les médias et fichiers locaux, leurs liens et leur disponibilité en production
+- [x] Vérifier que chaque TP est autonome, guidé, accompagné des prérequis et de ses ressources téléchargeables

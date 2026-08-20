@@ -230,11 +230,18 @@ const cloudExerciseBlock: BlockTypeDefinition = {
   schema: [
     { key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true },
     { key: "instructions", label: { en: "Instructions", fr: "Instructions" }, type: "i18n_richtext", required: true },
+    { key: "environmentGuide", label: { en: "Environment preparation", fr: "Préparation de l’environnement" }, type: "i18n_richtext", helpText: { en: "Learner prerequisites and setup alternatives", fr: "Prérequis apprenant et alternatives de préparation" } },
+    { key: "resources", label: { en: "Downloadable resources", fr: "Ressources téléchargeables" }, type: "array", arrayItemSchema: [
+      { key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true },
+      { key: "description", label: { en: "Description", fr: "Description" }, type: "i18n_textarea" },
+      { key: "url", label: { en: "Local asset URL", fr: "URL ressource locale" }, type: "text", required: true },
+    ]},
+    { key: "nonDownloadableFiles", label: { en: "Unavailable source files", fr: "Fichiers source indisponibles" }, type: "array", helpText: { en: "Files that must be rebuilt from the exercise instructions", fr: "Fichiers à reconstruire depuis les consignes du TP" } },
     { key: "hint", label: { en: "Hint", fr: "Indice" }, type: "i18n_textarea" },
     { key: "solution", label: { en: "Solution", fr: "Solution" }, type: "i18n_richtext" },
     { key: "successMessage", label: { en: "Success message", fr: "Message de succès" }, type: "i18n_text" },
   ],
-  defaultData: { type: "cloud_exercise", title: { en: "", fr: "" }, instructions: { en: "", fr: "" } },
+  defaultData: { type: "cloud_exercise", title: { en: "", fr: "" }, instructions: { en: "", fr: "" }, environmentGuide: { en: "", fr: "" }, resources: [], nonDownloadableFiles: [] },
 };
 
 const exerciseBlock: BlockTypeDefinition = {
