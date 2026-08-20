@@ -1757,3 +1757,9 @@
 - [x] Contrôler le nombre d’orientations démarrées, complétées et incomplètes
 - [x] Identifier un profil d’exemple avec orientation complétée si les données existent
 - [x] Vérifier le rendu administrateur et corriger un écart d’affichage éventuel
+## Communiqué d’orientation et parcours recommandé
+- [ ] Préparer un brouillon de communiqué important expliquant l’intérêt de compléter Orientation et objectifs
+- [ ] Garantir qu’aucun e-mail, lightbox ou notification n’est diffusé avant validation administrative
+- [x] Afficher les recommandations issues du diagnostic terminé dans Parcours d’apprentissage recommandé
+- [x] Afficher un état explicite avec valeur par défaut lorsque le diagnostic n’est pas terminé
+- [ ] Tester les parcours avec et sans diagnostic puis valider en production

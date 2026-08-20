@@ -292,8 +292,8 @@ export async function createLegacyOrientationReminderDraft(adminId: number) {
   const emails = Array.from(new Set(rows.map((row) => row.email?.trim().toLowerCase()).filter((email): email is string => Boolean(email))));
   if (!emails.length) return { draft: null, recipientCount: 0 };
   const draft = await createCommunication({
-    subject: "Définissez votre parcours de formation personnalisé",
-    body: `<h2>Votre orientation Neopolis Akademy est disponible</h2><p>Définissez vos compétences cibles, répondez à un diagnostic rapide et recevez un ordre de formation adapté à votre niveau.</p><p><strong>Connectez-vous à votre espace Formation puis ouvrez « Mon orientation » pour démarrer.</strong></p>`,
+    subject: "Important — finalisez Orientation et objectifs pour personnaliser votre parcours",
+    body: `<h2>Votre parcours de formation peut être personnalisé</h2><p><strong>Orientation et objectifs</strong> vous permet de choisir les compétences que vous souhaitez développer, d’indiquer les certifications visées et d’évaluer votre niveau grâce à un diagnostic rapide.</p><p>À la fin du diagnostic, Neopolis Akademy vous recommande un <strong>ordre de formation adapté à vos objectifs, à votre niveau actuel et à vos échéances</strong>. Vous pourrez ainsi concentrer vos efforts sur les modules les plus utiles et suivre votre progression vers vos cibles.</p><p><strong>Connectez-vous à votre espace Formation, ouvrez « Mon orientation », puis complétez les objectifs et le diagnostic.</strong></p><p>Cette étape est recommandée pour vous accompagner ; elle ne bloque pas l’accès à vos parcours actuels.</p>`,
     type: "reminder",
     isImportant: 1,
     recipientFilter: { audience: "manual", manualEmails: emails, criteriaLogic: "and" },

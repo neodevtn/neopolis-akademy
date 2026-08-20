@@ -42,6 +42,7 @@ import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
 import { OrientationPanel } from "@/components/OrientationPanel";
 import { buildNavigationUrl } from "@shared/navigationUrls";
 import { getLearnerDashboardTab, getLearnerOrientationAccess, type LearnerDashboardTab } from "@/lib/learnerDashboardNavigation";
+import { buildRecommendedLearningPath } from "@/lib/recommendedLearningPath";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -466,6 +467,7 @@ export default function TrainingDashboard() {
             >
               <RecommendedTab
                 certCompletionData={certCompletionData}
+                orientation={orientationQuery.data}
                 t={t}
               />
             </motion.div>
@@ -831,11 +833,19 @@ function CatalogTab({
 /* ─── Tab: Recommended Path ─── */
 function RecommendedTab({
   certCompletionData,
+  orientation,
   t,
 }: {
   certCompletionData: any[];
+  orientation: any;
   t: (obj: { en: string; fr: string }) => string;
 }) {
+  const recommendedPath = buildRecommendedLearningPath({
+    certifications: trainingIndex.certifications,
+    orientationStatus: orientation?.profile?.status,
+    orientationRecommendations: orientation?.recommendations,
+  });
+
   return (
     <div className="space-y-6">
       <div className="bg-card rounded-2xl border border-border p-6 shadow-sm">
@@ -845,16 +855,23 @@ function RecommendedTab({
             {t({ en: "Recommended Learning Path", fr: "Parcours d'apprentissage recommandé" })}
           </h2>
         </div>
-        <p className="text-sm text-muted-foreground mb-6 ml-8">
-          {t({ en: "Follow this order for the best learning experience. Each certification builds on the previous one.", fr: "Suivez cet ordre pour une expérience d'apprentissage optimale. Chaque certification s'appuie sur la précédente." })}
+        <p className="text-sm text-muted-foreground mb-4 ml-8">
+          {recommendedPath.personalized
+            ? t({ en: "This order is based on your declared goals, diagnostic answers, and current skill levels.", fr: "Cet ordre est calculé à partir de vos objectifs, de vos réponses au diagnostic et de vos niveaux actuels." })
+            : t({ en: "Complete Orientation to receive a path tailored to your goals and current level. Until then, the standard learning order remains visible.", fr: "Terminez Orientation et objectifs pour recevoir un parcours adapté à vos objectifs et à votre niveau. En attendant, l’ordre de formation standard reste affiché." })}
         </p>
+        {!recommendedPath.personalized && (
+          <div className="mb-6 ml-8 flex flex-col gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm dark:border-amber-800 dark:bg-amber-950/20 md:flex-row md:items-center md:justify-between">
+            <span className="text-muted-foreground">{t({ en: "Your personalized recommendation will appear here after the diagnostic is completed.", fr: "Votre recommandation personnalisée apparaîtra ici dès la fin du diagnostic." })}</span>
+            <Link href="/training?tab=orientation"><Button size="sm">{t({ en: "Complete orientation", fr: "Finaliser mon orientation" })}</Button></Link>
+          </div>
+        )}
 
         <div className="space-y-3">
-          {trainingIndex.certifications.map((cert, i) => {
+          {recommendedPath.items.map(({ certification: cert, order, recommendation }) => {
             const data = certCompletionData.find((c) => c.id === cert.id);
             const isCompleted = data?.completed;
             const isInProgress = data && data.progress > 0 && !isCompleted;
-            const isLocked = i > 0 && !certCompletionData.find((c) => c.id === trainingIndex.certifications[i - 1].id)?.completed;
 
             return (
               <Link
@@ -879,9 +896,9 @@ function RecommendedTab({
                   {isCompleted ? (
                     <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                   ) : isInProgress ? (
-                    <span className="text-sm font-bold text-primary">{i + 1}</span>
+                    <span className="text-sm font-bold text-primary">{order}</span>
                   ) : (
-                    <span className="text-sm font-bold text-muted-foreground">{i + 1}</span>
+                    <span className="text-sm font-bold text-muted-foreground">{order}</span>
                   )}
                 </div>
 
@@ -902,6 +919,9 @@ function RecommendedTab({
                       </div>
                       <span className="text-xs text-muted-foreground">{data.progress}%</span>
                     </div>
+                  )}
+                  {recommendation && (
+                    <p className="mt-1.5 text-xs text-muted-foreground">{recommendation.reason}</p>
                   )}
                 </div>
 
