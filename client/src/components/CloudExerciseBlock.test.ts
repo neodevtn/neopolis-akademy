@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { CloudExerciseBlock } from "@/components/CloudExerciseBlock";
+import { adaptDataCampVmText } from "@/components/CloudExerciseBlock";
 import { renderInlineFormatting } from "@/pages/training/PageContent";
 
 describe("Cloud exercise learner criteria", () => {
@@ -33,5 +34,16 @@ describe("Cloud exercise learner criteria", () => {
     expect(html).toContain("Prérequis et préparation de l’environnement");
     expect(html).toContain("/api/assets/chapter_01_slides.pdf");
     expect(html).toContain("currency_exchange.json");
+  });
+
+  it("replaces DataCamp VM-only references with learner-environment instructions", () => {
+    const adapted = adaptDataCampVmText(
+      "Vous avez été connecté automatiquement à votre propre compte n8n ! Sous le Desktop de la VM, allez dans Resources et ouvrez currency_exchange.json.",
+      true,
+    );
+    expect(adapted).toContain("n8n Cloud ou Docker");
+    expect(adapted).toContain("reconstituez le workflow");
+    expect(adapted).not.toContain("connecté automatiquement");
+    expect(adapted).not.toContain("Desktop de la VM");
   });
 });

@@ -45,6 +45,15 @@ function extractLearnerObjectives(prompt: string): string[] {
   return bullets.slice(0, 5);
 }
 
+export function adaptDataCampVmText(text: string, hasUnavailableVmFiles: boolean): string {
+  if (!hasUnavailableVmFiles || !text) return text;
+  return text
+    .replace(/Vous avez été connecté automatiquement à votre propre compte n8n\s*!/gi, "Connectez-vous à votre instance n8n Cloud ou Docker.")
+    .replace(/Sous le Desktop de la VM, allez dans Resources et ouvrez\s+([^\n.]+)/gi, (_match, filename) => `Dans votre environnement n8n, reconstituez le workflow \`${String(filename).trim()}\` à partir des étapes, de l’indice et de la correction de ce TP`)
+    .replace(/depuis\s+Desktop\/Resources/gi, "dans votre environnement après l’avoir reconstitué")
+    .replace(/dans le dossier\s+Desktop\/Resources/gi, "dans votre environnement après sa reconstitution");
+}
+
 interface CloudExerciseBlockProps {
   block: any;
   lang: string;
@@ -75,6 +84,10 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
       ? block.referencedFiles.filter((file: any) => !file?.local_path && file?.filename).map((file: any) => file.filename)
       : []),
   ]));
+  const hasUnavailableVmFiles = tpNonDl.length > 0;
+  const learnerAssignment = adaptDataCampVmText(tpAssignment, hasUnavailableVmFiles);
+  const learnerHint = adaptDataCampVmText(tpHint, hasUnavailableVmFiles);
+  const learnerSolution = adaptDataCampVmText(tpSolution, hasUnavailableVmFiles);
 
   return (
     <div className="my-6 rounded-xl border-2 border-blue-200 overflow-hidden bg-card">
@@ -90,10 +103,10 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
 
       <div className="p-4 space-y-4">
         {/* Assignment / Objectif */}
-        {tpAssignment && (
+        {learnerAssignment && (
           <div className="prose prose-sm max-w-none text-foreground">
             <p className="font-semibold text-sm text-blue-800 mb-1">{t({ en: 'Objective', fr: 'Objectif' })}</p>
-            <PageContent content={tpAssignment} lang={lang} />
+            <PageContent content={learnerAssignment} lang={lang} />
           </div>
         )}
 
@@ -146,12 +159,13 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
             <p className="font-semibold text-sm text-foreground">{t({ en: 'Steps', fr: 'Étapes' })}</p>
             {tpSteps.map((step: any, i: number) => {
               const stepContent = typeof step === 'string' ? step : (step.instructions_text || step.instruction_text || step.text || step.instruction || '');
-              if (!stepContent) return null;
+              const learnerStepContent = adaptDataCampVmText(stepContent, hasUnavailableVmFiles);
+              if (!learnerStepContent) return null;
               return (
                 <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30">
                   <span className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold">{i + 1}</span>
                   <div className="text-sm text-foreground whitespace-pre-wrap">
-                    <PageContent content={stepContent} lang={lang} />
+                    <PageContent content={learnerStepContent} lang={lang} />
                   </div>
                 </div>
               );
@@ -180,14 +194,14 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
         })()}
 
         {/* Hint (collapsible) */}
-        {tpHint && (
+        {learnerHint && (
           <details className="border border-border rounded-lg">
             <summary className="px-4 py-2 cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-2">
               <ChevronDown className="w-4 h-4" />
               {t({ en: '💡 Hint', fr: '💡 Indice' })}
             </summary>
             <div className="px-4 pb-3 text-sm text-muted-foreground">
-              <PageContent content={tpHint} lang={lang} />
+              <PageContent content={learnerHint} lang={lang} />
             </div>
           </details>
         )}
@@ -237,7 +251,7 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
         </div>
 
         {/* Solution (only visible after submission) */}
-        {tpSolution && (
+        {learnerSolution && (
           submitted ? (
             <details className="border border-green-200 rounded-lg bg-green-50/50" open>
               <summary className="px-4 py-2 cursor-pointer text-sm font-medium text-green-700 hover:text-green-800 flex items-center gap-2">
@@ -245,7 +259,7 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
                 {t({ en: 'Solution', fr: 'Correction' })}
               </summary>
               <div className="px-4 pb-3 text-sm text-green-800 whitespace-pre-wrap font-mono bg-green-50 rounded-b-lg">
-                {tpSolution}
+                {learnerSolution}
               </div>
             </details>
           ) : (
