@@ -20,3 +20,11 @@ La diffusion statique renvoie désormais un **404 texte** pour tout asset absent
 ## Validation locale
 
 Les tests ciblés de récupération de bundle et de remontée ErrorBoundary vers Sentry sont réussis. TypeScript est valide. La vérification finale devra confirmer en production que l’ancien hash répond 404 et qu’une exception de boundary crée une issue Sentry.
+
+## Vérification de production
+
+La version fraîche appelée avec un cache-buster référence `index-Cqk3Oep8.js` et charge le cours IA pour les nuls sans ErrorBoundary. Sur cette même version, `index-gE23kOSs.js` renvoie `404 text/plain`, tandis que le bundle actif renvoie `200 text/javascript`.
+
+Sans paramètre de cache-buster, certains nœuds de diffusion servent encore une page HTML historique pointant vers `index-DRA6Srom.js`. Cela explique la capture : le navigateur pouvait conserver une ancienne page ou un ancien bundle en mémoire. La réponse fraîche est correcte ; l’invalidation des caches de bord peut toutefois rester asynchrone après publication.
+
+Sentry confirme qu’il n’existe aucune issue non résolue au cours des dernières 24 heures. Ce constat est cohérent avec la chaîne précédente : les crashes déjà capturés par l’ErrorBoundary étaient uniquement transmis au monitoring interne. Le correctif publié ajoute désormais la capture Sentry explicite ; les prochaines erreurs de boundary doivent donc être visibles dans les deux systèmes sans qu’il soit nécessaire de générer artificiellement un crash de production.

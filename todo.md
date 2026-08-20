@@ -1739,4 +1739,4 @@
 - [x] Identifier pourquoi le bundle historique `index-gE23kOSs.js` reste chargé par certains apprenants
 - [x] Vérifier et corriger la configuration de remontée client Sentry en production
 - [x] Ajouter une stratégie de récupération ou d’invalidation des bundles obsolètes
-- [ ] Reproduire le crash, confirmer sa remontée Sentry et valider le correctif en production
+- [x] Reproduire le crash, confirmer sa remontée Sentry et valider le correctif en production
