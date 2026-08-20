@@ -797,7 +797,9 @@ function AnimatedChart() {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartInstanceRef = useRef<ChartJS | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const isInView = useInView(chartContainerRef, { once: true, margin: "0px" });
+  // The chart is informative rather than critical: wait until a meaningful
+  // portion is visible instead of competing with the hero on small screens.
+  const isInView = useInView(chartContainerRef, { once: true, margin: "0px", amount: 0.5 });
   const hasAnimated = useRef(false);
 
   useEffect(() => {
@@ -805,10 +807,10 @@ function AnimatedChart() {
     let cancelled = false;
 
     const renderChart = async () => {
-      const { Chart, registerables } = await import("chart.js");
+      const { Chart, CategoryScale, LinearScale, PointElement, LineController, LineElement, Filler, Tooltip, Legend } = await import("chart.js");
       if (cancelled || !canvasRef.current) return;
 
-      Chart.register(...registerables);
+      Chart.register(CategoryScale, LinearScale, PointElement, LineController, LineElement, Filler, Tooltip, Legend);
       hasAnimated.current = true;
       chartInstanceRef.current?.destroy();
 

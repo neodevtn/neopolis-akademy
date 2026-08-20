@@ -4,8 +4,6 @@
  * Reports them to the server for admin monitoring
  */
 
-import * as Sentry from "@sentry/react";
-
 interface ErrorReport {
   message: string;
   stack?: string;
@@ -121,16 +119,19 @@ async function sendReport(report: ErrorReport): Promise<void> {
  */
 export function reportBoundaryError(error: Error, componentStack?: string): void {
   // React Error Boundaries consume rendering exceptions before they reach the
-  // browser's global error event. Forward them explicitly to Sentry.
-  Sentry.captureException(error, {
-    tags: {
-      source: "ErrorBoundary",
-      error_kind: "react_boundary",
-    },
-    contexts: componentStack
-      ? { react: { componentStack } }
-      : undefined,
-  });
+  // browser's global error event. Load Sentry only at error time so the
+  // monitoring SDK does not delay the public landing page's first render.
+  void import("@sentry/react")
+    .then((Sentry) => Sentry.captureException(error, {
+      tags: {
+        source: "ErrorBoundary",
+        error_kind: "react_boundary",
+      },
+      contexts: componentStack
+        ? { react: { componentStack } }
+        : undefined,
+    }))
+    .catch(() => undefined);
 
   sendReport({
     message: error.message,

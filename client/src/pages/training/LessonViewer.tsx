@@ -9,6 +9,7 @@ import { VideoRecommendations } from "@/components/VideoRecommendations";
 import { YouTubePlayer } from "@/components/YouTubePlayer";
 import { trpc } from "@/lib/trpc";
 import { resolveI18n } from "./contentDetectors";
+import { getPersistedCompletionProgress } from "./chapterProgress";
 import { ExerciseRenderer } from "@/components/ExerciseRenderer";
 import { FlipCardsGrid } from "@/components/FlipCard";
 import { TabbedContent } from "@/components/TabbedContent";
@@ -1063,6 +1064,11 @@ export default function LessonViewer({
                     size="sm"
                     disabled={lastIsGated}
                     onClick={() => {
+                      // Persist the terminal sentinel before unmounting this
+                      // reader through onComplete. This prevents a completed
+                      // three-chapter lesson from remaining at 2/3.
+                      const completionProgress = getPersistedCompletionProgress(totalChapters);
+                      onChapterChange?.(completionProgress.current, completionProgress.total);
                       setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
                       onComplete();
                     }}

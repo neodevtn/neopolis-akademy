@@ -18,12 +18,12 @@ describe("reportBoundaryError", () => {
     vi.stubGlobal("navigator", { userAgent: "vitest" });
   });
 
-  it("forwards a React ErrorBoundary crash to Sentry with diagnostic context", () => {
+  it("forwards a React ErrorBoundary crash to Sentry with diagnostic context", async () => {
     const error = new Error("Failed to execute insertBefore on Node");
 
     reportBoundaryError(error, "at LessonViewer");
 
-    expect(captureException).toHaveBeenCalledWith(error, expect.objectContaining({
+    await vi.waitFor(() => expect(captureException).toHaveBeenCalledWith(error, expect.objectContaining({
       tags: expect.objectContaining({
         source: "ErrorBoundary",
         error_kind: "react_boundary",
@@ -31,6 +31,6 @@ describe("reportBoundaryError", () => {
       contexts: {
         react: { componentStack: "at LessonViewer" },
       },
-    }));
+    })));
   });
 });

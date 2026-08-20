@@ -1809,3 +1809,16 @@
 - [x] Appliquer les optimisations de ressources, de chargement et de rendu sans supprimer de fonctionnalité, de contenu ni modifier la charte graphique
 - [x] Répéter les mesures mobile et ordinateur, corriger les écarts restants et comparer les résultats à la référence
 - [x] Vérifier les parcours publics et critiques, l’accessibilité, le responsive, le SEO/social, les erreurs console et publier le bilan mesurable
+
+## Recherche intelligente de formation
+- [ ] Auditer le catalogue, les fichiers de cours, les métadonnées et les règles d’accès réutilisables pour la recherche
+- [ ] Définir un index pertinent : certifications, cours, leçons, chapitres, compétences, tags et extraits de contenu
+- [ ] Ajouter une recherche rapide avec tolérance aux accents, correspondances partielles, classement par pertinence et filtres utiles
+- [ ] Intégrer une interface accessible de recherche et de navigation directe vers les contenus autorisés
+- [ ] Ajouter des tests de pertinence, d’accès et de navigation ; vérifier le rendu puis publier
+
+## Correctifs Agentic Browsing et performance mobile
+- [x] Reproduire et corriger la progression Agentic Browsing bloquée à 2/3
+- [x] Relever les audits de la mesure mobile publiée à 74 % et identifier les causes restantes
+- [x] Corriger les freins confirmés sans retirer de contenu ni de fonctionnalités
+- [ ] Vérifier le parcours complet Agentic Browsing, la mesure mobile et publier les corrections

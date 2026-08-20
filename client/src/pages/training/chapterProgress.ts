@@ -15,6 +15,16 @@ export function normalizeChapterProgress(progress?: Partial<ChapterProgress> | n
 }
 
 /**
+ * Produces the persisted sentinel used when a learner completes the last
+ * chapter. Unlike the UI position, persistence deliberately accepts
+ * `current === total` to express that every chapter is complete.
+ */
+export function getPersistedCompletionProgress(total: number): ChapterProgress {
+  const safeTotal = Math.max(1, Number.isFinite(total) ? Math.floor(total) : 1);
+  return { current: safeTotal, total: safeTotal };
+}
+
+/**
  * Chapter progress belongs to a specific lesson. When the learner enters a
  * different lesson, start its visual chapter counter at chapter 1, not at the
  * last chapter visited in the preceding lesson.
