@@ -1833,4 +1833,4 @@
 - [x] Scanner chaque parcours pour détecter les verrouillages incohérents, compteurs de contenus divergents et progressions impossibles
 - [x] Vérifier les sources et calculs des scores, compétences, points XP et rangs sur données réelles
 - [x] Corriger les écarts confirmés et afficher une explication claire des conditions de passage aux apprenants
-- [ ] Tester les parcours, compteurs et indicateurs en production puis publier le bilan de cohérence
+- [x] Tester les parcours, compteurs et indicateurs en production puis publier le bilan de cohérence
