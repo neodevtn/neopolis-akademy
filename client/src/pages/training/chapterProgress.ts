@@ -38,11 +38,14 @@ export function hasOptionalSupplementaryVideos(chapter?: { blocks?: ChapterBlock
   const blocks = chapter?.blocks ?? [];
   const hasVideo = blocks.some((block) => block.type === "video");
   const hasSupplementLabel = blocks.some((block) => {
+    // Content normalization can put the callout title either directly on the
+    // block or in a nested field. Inspect only callouts, but tolerate both
+    // source shapes so a supplemental video is never promoted to a gate.
     if (block.type !== "callout") return false;
-    const title = typeof block.title === "string"
-      ? block.title
-      : `${block.title?.fr ?? ""} ${block.title?.en ?? ""}`;
-    return /compl[ée]ment\s+neopolis|neopolis\s+supplement/i.test(title);
+    const serialized = JSON.stringify(block)
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+    return /complement\s+neopolis|neopolis\s+supplement/i.test(serialized);
   });
 
   return hasVideo && hasSupplementLabel;

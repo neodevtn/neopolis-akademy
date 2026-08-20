@@ -23,6 +23,15 @@ describe("chapter progress display", () => {
     })).toBe(true);
   });
 
+  it("recognizes a normalized nested supplemental callout title", () => {
+    expect(hasOptionalSupplementaryVideos({
+      blocks: [
+        { type: "callout", title: { fr: "" }, data: { title: { fr: "Complément Neopolis" } } } as never,
+        { type: "video", title: "Tutoriel optionnel" },
+      ],
+    })).toBe(true);
+  });
+
   it("keeps official videos subject to their completion gate", () => {
     expect(hasOptionalSupplementaryVideos({
       blocks: [{ type: "video", title: "Official Anthropic video" }],
