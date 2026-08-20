@@ -20,3 +20,11 @@ L’événement provient de Mobile Safari 15.6.8 sous iOS 15.8.8, sur `https://a
 ## Vérification du verrouillage séquentiel
 
 En prévisualisation, un compte apprenant qui ouvre directement le cinquième cours Developer Foundations sans avoir terminé le quatrième reçoit bien l’écran « Cours verrouillé ». La dérogation ajoutée est donc limitée au rôle administrateur et ne modifie pas la progression imposée aux apprenants.
+
+Un premier chargement de production immédiatement après le checkpoint a encore affiché l’ancien écran verrouillé pour le compte administrateur. Ce résultat est conservé comme contrôle de propagation : une seconde passe avec une ressource fraîche doit confirmer si la version publiée a atteint le domaine ou si le rôle effectif n’est pas `admin` dans le contrat d’authentification.
+
+Après propagation du nouveau bundle, le même compte administrateur a ouvert directement le cinquième cours Developer Foundations, sans avoir terminé le quatrième. Le lecteur a affiché son contenu et le lien « Modifier cet écran », ce qui confirme l’accès administrateur. Le contrôle apprenant précédent reste verrouillé : la séparation est donc validée en conditions réelles.
+
+## Contrôle post-publication
+
+Le filtre Sentry `is:unresolved` sur le projet `neopolis-akademy` et la fenêtre des dernières 24 heures ne retourne aucun incident. Les quatre issues plus anciennes restent historiques : les deux issues Safari sont un unique échec de chargement de chunks antérieurs au mécanisme de reprise global ; les erreurs de module et de syntaxe sont antérieures à l’état TypeScript actuellement valide. Elles sont documentées comme non actionnables dans le code courant, sans être résolues ou archivées automatiquement.

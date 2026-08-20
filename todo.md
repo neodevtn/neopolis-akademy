@@ -1718,8 +1718,8 @@
 - [x] Recueillir et classifier les erreurs récentes client, serveur et performance dans le monitoring
 - [x] Reproduire les incidents de priorité élevée et identifier leurs causes racines
 - [x] Corriger les défauts reproductibles avec des tests de non-régression
-- [ ] Vérifier la disparition des erreurs pertinentes après publication et documenter les incidents non actionnables
+- [x] Vérifier la disparition des erreurs pertinentes après publication et documenter les incidents non actionnables
 ## Dérogation administrateur au verrouillage séquentiel
 - [x] Identifier les gardes client et serveur qui bloquent les cours séquentiels
 - [x] Autoriser les administrateurs à ouvrir tout cours tout en préservant le verrouillage des apprenants
-- [ ] Ajouter des tests de séparation administrateur / apprenant et valider le parcours réel
+- [x] Ajouter des tests de séparation administrateur / apprenant et valider le parcours réel
