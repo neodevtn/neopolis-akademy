@@ -1789,4 +1789,4 @@
 - [x] Reproduire et corriger le contenu absent à l’ouverture d’un brouillon de communication
 - [x] Reproduire et corriger le passage bloqué entre les chapitres 2 et 3 du cours n8n
 - [x] Corriger le pourcentage de progression affiché à 100 % avant la fin réelle du cours
-- [ ] Ajouter des tests et vérifier les deux parcours en production
+- [x] Ajouter des tests et vérifier les deux parcours en production
