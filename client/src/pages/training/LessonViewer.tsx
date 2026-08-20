@@ -1056,9 +1056,11 @@ export default function LessonViewer({
                 const lastAllCloudDone = lastChapterCloudIds.length === 0 || lastChapterCloudIds.every((id: string) => completedCloudExercises.has(id));
                 const lastChapterMatchingIds = (chapter?.blocks || []).filter((b: any) => b.type === 'bucket_sort').map((b: any, i: number) => b.id || `bucket_${i}`);
                 const lastAllMatchingDone = lastChapterMatchingIds.length === 0 || lastChapterMatchingIds.every((id: string) => matchingCompleted.has(id));
-                const lastChapterSCIds = (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise').map((b: any, i: number) => b.id || `quiz_${i}`);
-                const lastAllSCDone = lastChapterSCIds.length === 0 || lastChapterSCIds.every((id: string) => completedExercises.has(id));
-                const lastIsGated = !lastAllVideosWatched || !lastAllCloudDone || !lastAllMatchingDone || !lastAllSCDone;
+              const lastChapterSCIds = (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise').map((b: any, i: number) => b.id || `quiz_${i}`);
+              const lastAllSCDone = lastChapterSCIds.length === 0 || lastChapterSCIds.every((id: string) => completedExercises.has(id));
+              const lastChapterCheckpointIds = (chapter?.blocks || []).filter((b: any) => b.type === 'checkpoint').map((b: any, i: number) => b.exerciseId || `checkpoint_${i}`);
+              const lastAllCheckpointsDone = lastChapterCheckpointIds.length === 0 || lastChapterCheckpointIds.every((id: string) => completedExercises.has(id));
+              const lastIsGated = !lastAllVideosWatched || !lastAllCloudDone || !lastAllMatchingDone || !lastAllSCDone || !lastAllCheckpointsDone;
                 return (
                   <Button
                     size="sm"
@@ -1127,6 +1129,13 @@ export default function LessonViewer({
                 .map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
               const allCloudExercisesCompleted = chapterCloudExerciseIds.length === 0 || chapterCloudExerciseIds.every((id: string) => completedCloudExercises.has(id));
               const isGatedByCloudExercise = chapterCloudExerciseIds.length > 0 && !allCloudExercisesCompleted && !isReviewMode;
+              const passageConditions = [
+                isGatedByVideo && t({ en: "Watch or mark the official video as watched.", fr: "Regardez ou marquez comme vue la vidéo officielle." }),
+                isGatedByFlipCards && t({ en: "Turn over every study card.", fr: "Retournez toutes les cartes de révision." }),
+                isGatedByMatching && t({ en: "Complete the interactive sorting activity.", fr: "Terminez l’activité de tri interactive." }),
+                (isGatedByExercises || isGatedBySingleChoice) && t({ en: "Submit the required validation activity.", fr: "Soumettez l’activité de validation requise." }),
+                isGatedByCloudExercise && t({ en: "Submit the practical exercise.", fr: "Soumettez l’exercice pratique." }),
+              ].filter(Boolean);
               const chapterTitle = resolveI18n(chapter?.title, 'en');
               const isStructuralChapter = /^(Module Introduction|Key Takeaways|Module Complete)$/i.test(chapterTitle);
               const isTeachingChapter = chapter?.type === 'teaching' && !isStructuralChapter;
@@ -1134,7 +1143,13 @@ export default function LessonViewer({
 
               const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice || isGatedByCloudExercise;
               return (
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col items-end gap-1.5">
+                  {passageConditions.length > 0 && (
+                    <p className="max-w-xs text-right text-xs text-muted-foreground" role="status">
+                      {t({ en: "To continue: ", fr: "Pour continuer : " })}{passageConditions.join(" ")}
+                    </p>
+                  )}
+                  <div className="flex items-center gap-2">
                   <span className="kbd-hint hidden md:inline-flex">→</span>
                   <Button
                     variant="ghost"
@@ -1164,6 +1179,7 @@ export default function LessonViewer({
                       <>{t({ en: "Next", fr: "Suivant" })} →</>
                     )}
                   </Button>
+                </div>
                 </div>
               );
             })()}

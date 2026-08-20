@@ -1827,3 +1827,10 @@
 - [x] Identifier le cours et le profil exacts toujours affichés à 2/3 dans les données de production
 - [x] Corriger la progression terminale ou la donnée concernée sans contourner les règles pédagogiques
 - [x] Vérifier le passage réel à 3/3, ajouter le test de non-régression et publier
+
+## Audit intégral Anthropic : passages, compteurs et gamification
+- [x] Cartographier tous les parcours Anthropic, leurs cours, leçons, chapitres et conditions de passage
+- [x] Scanner chaque parcours pour détecter les verrouillages incohérents, compteurs de contenus divergents et progressions impossibles
+- [x] Vérifier les sources et calculs des scores, compétences, points XP et rangs sur données réelles
+- [x] Corriger les écarts confirmés et afficher une explication claire des conditions de passage aux apprenants
+- [ ] Tester les parcours, compteurs et indicateurs en production puis publier le bilan de cohérence
