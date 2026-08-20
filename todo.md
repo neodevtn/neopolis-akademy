@@ -1768,3 +1768,8 @@
 - [x] Ajouter une mise à jour serveur limitée aux communications en brouillon
 - [x] Permettre la modification de l’objet, du contenu riche, de l’importance et des destinataires
 - [x] Prévisualiser et tester l’édition du brouillon sans déclencher d’envoi
+## Audit comparatif du cours n8n
+- [x] Relever la structure, les activités et les modalités du cours source DataCamp
+- [x] Vérifier les compteurs, les médias, les TP et les interactions du cours Neopolis
+- [x] Comparer les écarts fonctionnels et visuels reproductibles
+- [x] Corriger les écarts confirmés et valider le parcours en production

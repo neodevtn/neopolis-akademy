@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Timer, CheckCircle2, ChevronDown } from "lucide-react";
-import PageContent from "@/pages/training/PageContent";
+import PageContent, { renderInlineFormatting } from "@/pages/training/PageContent";
 
 /**
  * Extract learner-friendly objectives from the raw grading prompt.
@@ -132,7 +132,7 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
                 {bullets.map((bullet: string, i: number) => (
                   <li key={i} className="text-sm text-amber-700 flex items-start gap-2">
                     <span className="text-amber-500 mt-0.5">•</span>
-                    <span>{bullet}</span>
+                    <span>{renderInlineFormatting(bullet)}</span>
                   </li>
                 ))}
               </ul>
