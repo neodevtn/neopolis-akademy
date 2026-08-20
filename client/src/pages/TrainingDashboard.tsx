@@ -43,6 +43,7 @@ import { OrientationPanel } from "@/components/OrientationPanel";
 import { buildNavigationUrl } from "@shared/navigationUrls";
 import { getLearnerDashboardTab, getLearnerOrientationAccess, type LearnerDashboardTab } from "@/lib/learnerDashboardNavigation";
 import { buildRecommendedLearningPath } from "@/lib/recommendedLearningPath";
+import { BrandLogo } from "@/components/BrandLogo";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -214,7 +215,7 @@ export default function TrainingDashboard() {
         <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border">
           <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2.5">
-              <span className="text-xl font-bold text-foreground">Neopolis</span>
+              <BrandLogo className="h-8 max-w-[160px]" />
               <span className="text-xs bg-primary/15 text-primary px-2.5 py-1 rounded-full font-semibold tracking-wide uppercase">Training</span>
             </Link>
             <div className="flex items-center gap-3">
@@ -276,7 +277,7 @@ export default function TrainingDashboard() {
               <ArrowLeft className="w-4 h-4" />
             </Link>
             <div className="flex items-center gap-2.5">
-              <span className="text-xl font-bold text-foreground">Neopolis</span>
+              <BrandLogo className="h-8 max-w-[160px]" />
               <span className="text-xs bg-primary/15 text-primary px-2.5 py-1 rounded-full font-semibold tracking-wide uppercase">Training</span>
             </div>
           </div>

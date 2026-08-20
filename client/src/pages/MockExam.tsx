@@ -12,6 +12,7 @@ import { ArrowLeft, Clock, CheckCircle2, XCircle, AlertTriangle, ChevronRight, L
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { announceAchievement } from "@/components/AchievementCelebration";
+import { BrandLogo } from "@/components/BrandLogo";
 
 type ExamState = "intro" | "active" | "review" | "locked";
 
@@ -268,7 +269,7 @@ export default function MockExam() {
         <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
             <Link href="/training" className="text-slate-400 hover:text-slate-700"><ArrowLeft className="w-5 h-5" /></Link>
-            <span className="text-xl font-bold text-slate-800">Neopolis</span>
+            <BrandLogo className="h-8 max-w-[160px]" />
             <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">Mock Exam</span>
           </div>
         </header>
@@ -309,7 +310,7 @@ export default function MockExam() {
         <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
             <Link href={`/training/${certId}`} className="text-slate-400 hover:text-slate-700"><ArrowLeft className="w-5 h-5" /></Link>
-            <span className="text-xl font-bold text-slate-800">Neopolis</span>
+            <BrandLogo className="h-8 max-w-[160px]" />
             <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">Mock Exam</span>
           </div>
         </header>
@@ -341,7 +342,7 @@ export default function MockExam() {
               <Link href={`/training/${certId}`} className="text-slate-400 hover:text-slate-700 transition-colors">
                 <ArrowLeft className="w-5 h-5" />
               </Link>
-              <span className="text-xl font-bold text-slate-800">Neopolis</span>
+              <BrandLogo className="h-8 max-w-[160px]" />
               <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">Mock Exam</span>
             </div>
             <LanguageSwitcher />
@@ -569,7 +570,7 @@ export default function MockExam() {
             <Link href={`/training/${certId}`} className="text-slate-400 hover:text-slate-700 transition-colors">
               <ArrowLeft className="w-5 h-5" />
             </Link>
-            <span className="text-xl font-bold text-slate-800">Neopolis</span>
+            <BrandLogo className="h-8 max-w-[160px]" />
             <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
               {t({ en: "Results", fr: "Résultats" })}
             </span>

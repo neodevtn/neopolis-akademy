@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, CheckCircle2, GraduationCap, Loader2, ShieldAlert } from "lucide-react";
+import { AlertCircle, CheckCircle2, Loader2, ShieldAlert } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export default function AcceptInvitation() {
   const [, navigate] = useLocation();
@@ -91,9 +92,8 @@ export default function AcceptInvitation() {
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <GraduationCap className="w-10 h-10 text-emerald-600" />
-            <span className="text-2xl font-bold text-slate-900">Neopolis Akademy</span>
+          <div className="flex items-center justify-center mb-4">
+            <BrandLogo className="h-14 max-w-[280px]" />
           </div>
           <p className="text-slate-500 text-sm">
             Acceptez votre invitation et créez votre compte

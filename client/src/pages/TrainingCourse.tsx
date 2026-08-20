@@ -10,7 +10,7 @@ import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
   BookOpen, Lock, LogIn, LogOut, ArrowRight, Moon, Sun, Menu, X, Check, Filter, Video, Eye,
-  FileText, ChevronDown, Brain, Target, Trophy, GraduationCap, Download, ArrowUp, Timer, RefreshCw
+  FileText, ChevronDown, Brain, Target, Trophy, Download, ArrowUp, Timer, RefreshCw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -25,6 +25,7 @@ import LessonSidebar from "./training/LessonSidebar";
 import { useCourseData, prefetchCourse } from "@/hooks/useCourseData";
 import { buildNavigationUrl } from "@shared/navigationUrls";
 import { isSequentialCourseRouteLocked } from "@shared/learningAccess";
+import { BrandLogo } from "@/components/BrandLogo";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -163,7 +164,7 @@ export default function TrainingCourse() {
               <ArrowLeft className="w-5 h-5" />
             </Link>
             <div className="flex items-center gap-2.5">
-              <span className="text-xl font-bold text-foreground">Neopolis</span>
+              <BrandLogo className="h-8 max-w-[160px]" />
               <span className="text-xs bg-primary/15 text-primary px-2.5 py-1 rounded-full font-semibold tracking-wide uppercase">Training</span>
             </div>
           </div>
@@ -295,7 +296,7 @@ export default function TrainingCourse() {
               <ArrowLeft className="w-5 h-5" />
             </Link>
             <div className="flex items-center gap-2.5">
-              <span className="text-xl font-bold text-foreground">Neopolis</span>
+              <BrandLogo className="h-8 max-w-[160px]" />
               <span className="text-xs bg-primary/15 text-primary px-2.5 py-1 rounded-full font-semibold tracking-wide uppercase">Training</span>
             </div>
           </div>

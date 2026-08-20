@@ -1790,3 +1790,8 @@
 - [x] Reproduire et corriger le passage bloqué entre les chapitres 2 et 3 du cours n8n
 - [x] Corriger le pourcentage de progression affiché à 100 % avant la fin réelle du cours
 - [x] Ajouter des tests et vérifier les deux parcours en production
+## Déploiement du logo officiel Neopolis Akademy
+- [x] Inventorier tous les logos, icônes et références de marque visibles de la plateforme
+- [x] Stocker le logo SVG officiel dans les ressources web persistantes et le référencer via son URL de production
+- [x] Remplacer les logos alternatifs dans les pages publiques, apprenantes, administratives et les modèles de document
+- [x] Vérifier visuellement les principaux espaces après remplacement

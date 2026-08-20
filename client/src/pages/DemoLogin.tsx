@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, BookOpen, GraduationCap, LogIn } from "lucide-react";
+import { AlertCircle, BookOpen, LogIn } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export default function DemoLogin() {
   const [email, setEmail] = useState("");
@@ -46,9 +47,8 @@ export default function DemoLogin() {
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <GraduationCap className="w-10 h-10 text-primary" />
-            <span className="text-2xl font-bold text-foreground">Neopolis Akademy</span>
+          <div className="flex items-center justify-center mb-4">
+            <BrandLogo className="h-14 max-w-[280px]" />
           </div>
           <p className="text-muted-foreground text-sm">
             Accès apprenant — Formation certifiante IA

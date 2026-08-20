@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { motion } from "framer-motion";
 import { isSequentialCourseCardLocked } from "@shared/learningAccess";
+import { BrandLogo } from "@/components/BrandLogo";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -131,7 +132,7 @@ export default function TrainingCertification() {
                 <ArrowLeft className="w-4 h-4" />
               </Link>
               <div className="flex items-center gap-2.5">
-                <span className="text-xl font-bold text-foreground">Neopolis</span>
+                <BrandLogo className="h-8 max-w-[160px]" />
                 <span className="text-xs bg-primary/15 text-primary px-2.5 py-1 rounded-full font-semibold tracking-wide uppercase">Training</span>
               </div>
             </div>
@@ -170,7 +171,7 @@ export default function TrainingCertification() {
               <ArrowLeft className="w-4 h-4" />
             </Link>
             <div className="flex items-center gap-2.5">
-              <span className="text-xl font-bold text-foreground">Neopolis</span>
+              <BrandLogo className="h-8 max-w-[160px]" />
               <span className="text-xs bg-primary/15 text-primary px-2.5 py-1 rounded-full font-semibold tracking-wide uppercase">Training</span>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import PDFDocument from "pdfkit";
 
-const LOGO_URL = "https://akademy.neodev.click/api/assets/neopolis_dev_logo_4x_4011a55b.png";
+const LOGO_URL = "https://akademy.neodev.click/manus-storage/neopolis-akademy-official-logo_5d04f49b.png";
 
 async function getLogo() {
   try {

@@ -6,6 +6,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { jsPDF } from "jspdf";
 import { Progress } from "@/components/ui/progress";
+import { BrandLogo } from "@/components/BrandLogo";
 import {
   ArrowLeft,
   ArrowRight,
@@ -1594,7 +1595,7 @@ export default function DiagnosticIA() {
               <ArrowLeft className="w-4 h-4" />
             </Link>
             <div className="flex items-center gap-2.5">
-              <span className="text-xl font-bold text-foreground">Neopolis</span>
+              <BrandLogo className="h-8 max-w-[160px]" />
               <span className="text-xs bg-blue-500/15 text-blue-600 dark:text-blue-400 px-2.5 py-1 rounded-full font-semibold tracking-wide uppercase">{t({ en: "Diagnostic", fr: "Diagnostic" })}</span>
             </div>
           </div>

@@ -44,7 +44,7 @@ import { normalizeExamConfiguration, type ExamConfiguration } from "@shared/exam
 import { toBlockMediaUrl } from "@/lib/mediaUrl";
 import { moveItem } from "@shared/lessonManagement";
 import { buildNavigationUrl } from "@shared/navigationUrls";
-const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
+const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
 type ViewMode = "browse" | "catalog" | "course" | "quiz-simulate" | "exam-simulate" | "edit-course" | "edit-quiz" | "edit-exam";
 

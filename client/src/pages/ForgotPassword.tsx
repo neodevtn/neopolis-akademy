@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, ArrowLeft, CheckCircle2, GraduationCap, Mail } from "lucide-react";
+import { AlertCircle, ArrowLeft, CheckCircle2, Mail } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export default function ForgotPassword() {
   const [, navigate] = useLocation();
@@ -49,9 +50,8 @@ export default function ForgotPassword() {
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <GraduationCap className="w-10 h-10 text-primary" />
-            <span className="text-2xl font-bold text-foreground">Neopolis Akademy</span>
+          <div className="flex items-center justify-center mb-4">
+            <BrandLogo className="h-14 max-w-[280px]" />
           </div>
         </div>
 

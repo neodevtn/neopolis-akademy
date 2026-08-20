@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, ArrowLeft, CheckCircle2, GraduationCap, KeyRound, Loader2 } from "lucide-react";
+import { AlertCircle, ArrowLeft, CheckCircle2, KeyRound, Loader2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export default function ResetPassword() {
   const [, navigate] = useLocation();
@@ -101,9 +102,8 @@ export default function ResetPassword() {
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="w-full max-w-md space-y-6">
           <div className="text-center space-y-2">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <GraduationCap className="w-10 h-10 text-primary" />
-              <span className="text-2xl font-bold text-foreground">Neopolis Akademy</span>
+            <div className="flex items-center justify-center mb-4">
+              <BrandLogo className="h-14 max-w-[280px]" />
             </div>
           </div>
 
@@ -154,9 +154,8 @@ export default function ResetPassword() {
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <GraduationCap className="w-10 h-10 text-primary" />
-            <span className="text-2xl font-bold text-foreground">Neopolis Akademy</span>
+          <div className="flex items-center justify-center mb-4">
+            <BrandLogo className="h-14 max-w-[280px]" />
           </div>
         </div>
 

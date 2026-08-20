@@ -21,7 +21,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { COMMUNICATION_AUDIENCE_LABELS, COMMUNICATION_CRITERIA_LOGIC_LABELS, COURSE_PROGRESS_STATUS_LABELS, type CommunicationAudience, type CommunicationCriteriaLogic, type CourseProgressStatus } from "@shared/communicationRecipients";
 import { toPreviewMediaUrl } from "@/lib/mediaUrl";
 
-const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
+const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
 type TabType = "candidatures" | "kanban" | "communications" | "invitations" | "analytics" | "activity";
 

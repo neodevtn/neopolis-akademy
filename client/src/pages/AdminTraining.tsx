@@ -34,7 +34,7 @@ import { CompetencyLeaderboard } from "@/components/admin/CompetencyLeaderboard"
 import { buildNavigationUrl } from "@shared/navigationUrls";
 import { parseInvitationEmails, type InvitationEmailParseResult } from "@/lib/invitationEmails";
 
-const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
+const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
 /* ─── Animation ─── */
 const fadeIn = {

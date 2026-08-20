@@ -76,8 +76,8 @@ function AnimatedStat({ value, suffix = "", prefix = "" }: { value: number; suff
 }
 
 /* ─── Asset URLs ─── */
-const LOGO_URL = "/api/assets/neopolis_dev_logo_4x_4011a55b.png";
-const LOGO_ICON = "/api/assets/neopolis_dev_logo_original_60dc435f.png";
+const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
+const LOGO_ICON = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 // const HERO_IMG = "/api/assets/hero_tunisian_ai_08a6f956.png";
 const CERT_IMG = "/api/assets/step2_certification_navy_v2_d57b236e.jpg";
 const ELEARNING_IMG = "/api/assets/step1_elearning_navy_v2_fde423cb.jpg";

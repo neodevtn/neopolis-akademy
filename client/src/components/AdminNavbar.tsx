@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "wouter";
+import { BrandLogo } from "@/components/BrandLogo";
 import { Activity, AlertTriangle, ArrowLeft, BarChart3, BookOpen, ChevronDown, FileImage, KanbanSquare, LayoutDashboard, Menu, MessageSquare, UserCheck, UserPlus, Users } from "lucide-react";
-
-const LOGO_URL = "/api/assets/logo_neopolis_akademy_9c9a0823.png";
 
 type AdminPage = "candidatures" | "training" | "content" | "media" | "errors";
 type NavItem = { label: string; href: string; icon: typeof LayoutDashboard; page: AdminPage; description: string };
@@ -71,7 +70,7 @@ export function AdminNavbar({ activePage, notificationSlot }: AdminNavbarProps) 
   return <>
     <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 flex-col border-r border-slate-200 bg-white lg:flex">
       <div className="flex h-20 items-center gap-3 border-b border-slate-100 px-5">
-        <Link href="/admin" className="flex min-w-0 items-center gap-3"><img src={LOGO_URL} alt="Neopolis Akademy" className="h-8 max-w-[132px] object-contain" /><span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-600">Admin</span></Link>
+        <Link href="/admin" className="flex min-w-0 items-center gap-3"><BrandLogo className="h-8 max-w-[132px]" /><span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-600">Admin</span></Link>
       </div>
       <nav className="flex-1 overflow-y-auto px-3 py-5" aria-label="Navigation administration">
         {NAV_GROUPS.map((group) => <section key={group.label} className="mb-6"><h2 className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">{group.label}</h2><div className="space-y-1">{group.items.map((item) => {
