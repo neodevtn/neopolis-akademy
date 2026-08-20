@@ -21,3 +21,9 @@ Les images du bandeau de partenaires et le logo de pied de page disposent désor
 Après propagation de la version `929d99a2`, le rapport Google mobile `xlttfik5gv` affiche **85/100** en performance, **100/100** en accessibilité, bonnes pratiques et SEO, ainsi que **3/3** pour la navigation agentique.
 
 Les métriques sont FCP **2,9 s**, LCP **3,2 s**, TBT **0 ms**, CLS **0** et Speed Index **4,8 s**. Les diagnostics encore signalés sont le CSS de rendu critique (270 ms estimées), 83 Kio de JavaScript inutilisé et une animation non composée. Ces diagnostics ne remettent pas en cause les scores parfaits d’accessibilité, bonnes pratiques, SEO et navigation agentique.
+
+## Propagation de la réduction finale du bundle
+
+La version `08221f24` est distribuée avec le bundle initial `/assets/index-DaPcxICq.js`, servi en HTTP 200 avec `content-length: 548436` et `cache-control: max-age=7776000`. Le collecteur de développement est absent du HTML de production.
+
+Une nouvelle analyse Google mobile a été déclenchée après cette propagation (rapport `92hy8fmktk`). L’interface Google est restée à l’état de chargement pendant le contrôle automatisé ; son score final doit être relu après la finalisation côté Google. Les contrôles locaux et la disponibilité de la version publiée restent validés.

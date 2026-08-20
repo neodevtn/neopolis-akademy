@@ -23,10 +23,9 @@ import {
   Menu,
   X,
   PlayCircle,
-  LogOut,
 } from "lucide-react";
-import { useAuth } from "@/_core/hooks/useAuth";
 import { faqItems as faqItemsData } from "@/data/faqData";
+import DeferredHomeAuth from "@/components/DeferredHomeAuth";
 
 // Chart.js is loaded only when the below-the-fold chart becomes visible.
 import type { Chart as ChartJS } from "chart.js";
@@ -138,44 +137,6 @@ function AnimatedSection({ children, className, style, id }: { children: React.R
   );
 }
 
-/* ─── Logout Button ─── */
-function LogoutButton() {
-  const { isAuthenticated, logout, user } = useAuth();
-  const { t } = useLanguage();
-  if (!isAuthenticated) return null;
-  return (
-    <button
-      onClick={() => logout()}
-      className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full transition-all hover:bg-red-50 text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300"
-      title={t({ fr: `Déconnexion (${user?.name || ''})`, en: `Logout (${user?.name || ''})`, ar: `تسجيل الخروج (${user?.name || ''})` })}
-    >
-      <LogOut size={13} />
-      <span className="hidden md:inline">{t({ fr: "Déconnexion", en: "Logout", ar: "خروج" })}</span>
-    </button>
-  );
-}
-
-function HeaderTrainingButton() {
-  const { isAuthenticated } = useAuth();
-  const { t } = useLanguage();
-  if (isAuthenticated) {
-    return (
-      <Link href="/training" className="text-[11px] font-semibold px-3.5 py-1.5 ml-1 rounded-full transition-all duration-200 text-white hover:shadow-md" style={{ background: "#1e3a6e" }}>
-        {t({ fr: "Formation", en: "Training", ar: "التدريب" })}
-      </Link>
-    );
-  }
-  return (
-    <Link href="/login" className="text-[11px] font-semibold px-3.5 py-1.5 ml-1 rounded-full transition-all duration-200 text-white hover:shadow-md" style={{ background: "#1e3a6e" }}>
-      {t({ fr: "Se connecter", en: "Sign in", ar: "تسجيل الدخول" })}
-    </Link>
-  );
-}
-
-/* ─── Resume Reading Widget (authentifié et différé) ─── */
-const HomeResumeReadingWidget = lazy(() => import("@/components/HomeResumeReadingWidget"));
-const TrainingProgressArea = lazy(() => import("@/components/TrainingProgressArea"));
-
 /* ─── Parallax Image Component ─── */
 function ParallaxImage() {
   const ref = useRef<HTMLDivElement>(null);
@@ -204,7 +165,6 @@ function ParallaxImage() {
 
 export default function Home() {
   const { t } = useLanguage();
-  const { isAuthenticated } = useAuth();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -246,13 +206,16 @@ export default function Home() {
             <NavLink href="#pourquoi">{t({ fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" })}</NavLink>
             <NavLink href="#partenaires">{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</NavLink>
             <NavLink href="#faq">FAQ</NavLink>
-            <HeaderTrainingButton />
+            <DeferredHomeAuth
+              slot="training"
+              fallback={<Link href="/login" className="text-[11px] font-semibold px-3.5 py-1.5 ml-1 rounded-full transition-all duration-200 text-white hover:shadow-md" style={{ background: "#1e3a6e" }}>{t({ fr: "Se connecter", en: "Sign in", ar: "تسجيل الدخول" })}</Link>}
+            />
           </div>
 
           {/* Right actions */}
           <div className="flex items-center gap-2 ml-auto lg:ml-0 shrink-0">
             <LanguageSwitcher />
-            <LogoutButton />
+            <DeferredHomeAuth slot="logout" />
             <Link href="/apply">
               <button className="flex items-center gap-1.5 text-xs md:text-sm font-semibold px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 hover:shadow-md active:scale-[0.97]">
                 {t({ fr: "Postuler", en: "Apply", ar: "تقدّم" })} <ChevronRight size={14} />
@@ -322,11 +285,7 @@ export default function Home() {
       </section>
 
       {/* ─── Resume Reading Widget ─── */}
-      {isAuthenticated && (
-        <Suspense fallback={null}>
-          <TrainingProgressArea><HomeResumeReadingWidget /></TrainingProgressArea>
-        </Suspense>
-      )}
+      <DeferredHomeAuth slot="resume" />
 
       {/* ─── Pourquoi maintenant (Gris Band) ─── */}
       <AnimatedSection id="pourquoi" className="home-deferred-section" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
@@ -1158,7 +1117,6 @@ function HeroGraphic() {
 
 function MobileMenuButton() {
   const { t } = useLanguage();
-  const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -1186,7 +1144,11 @@ function MobileMenuButton() {
                 <a href="#partenaires" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</a>
                 <a href="#faq" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>FAQ</a>
                 <div className="h-px my-1" style={{ background: "var(--wise-rule)" }} />
-                <a href={isAuthenticated ? "/training" : "/login"} onClick={() => setOpen(false)} className="text-sm font-semibold py-2.5 px-3 rounded-lg transition-colors" style={{ background: "rgba(30,58,110,0.08)", color: "#1e3a6e" }}>{isAuthenticated ? t({ fr: "Formation 🎓", en: "Training 🎓", ar: "التدريب 🎓" }) : t({ fr: "Se connecter 🔒", en: "Sign in 🔒", ar: "تسجيل الدخول 🔒" })}</a>
+                <DeferredHomeAuth
+                  slot="mobile-training"
+                  onNavigate={() => setOpen(false)}
+                  fallback={<a href="/login" onClick={() => setOpen(false)} className="text-sm font-semibold py-2.5 px-3 rounded-lg transition-colors" style={{ background: "rgba(30,58,110,0.08)", color: "#1e3a6e" }}>{t({ fr: "Se connecter 🔒", en: "Sign in 🔒", ar: "تسجيل الدخول 🔒" })}</a>}
+                />
               </nav>
             </div>
           </motion.div>
