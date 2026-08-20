@@ -1734,4 +1734,4 @@
 ## Crash React du cours IA pour les nuls
 - [x] Reproduire l’erreur `insertBefore` sur le lecteur du cours et localiser le bloc en cause
 - [x] Corriger la cause de mutation DOM instable avec un test de non-régression
-- [ ] Vérifier la route en production et l’absence de nouveau crash dans les logs internes
+- [x] Vérifier la route en production et l’absence de nouveau crash dans les logs internes

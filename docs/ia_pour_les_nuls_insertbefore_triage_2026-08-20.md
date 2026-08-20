@@ -15,3 +15,7 @@ Le lecteur entoure le chapitre courant par `AnimatePresence` avec `mode="wait"`.
 La prévisualisation du cours atteint l’écran des cartes de la première leçon sans déclencher l’ErrorBoundary. Le rendu du contenu et des quatre cartes est présent ; les règles de passage restent inchangées et le bouton suivant demeure correctement verrouillé tant que les cartes ne sont pas retournées.
 
 Un chargement direct de l’écran suivant de la même leçon (`chapter=2`) rend ensuite l’historique de l’IA sans erreur. Cette transition monte un nouvel écran de leçon sans conserver un enfant sortant de l’écran précédent, conformément au correctif.
+
+## Validation de production
+
+Après propagation du checkpoint `25a3a945`, la route de production s’ouvre sur l’écran de checkpoint, puis sur l’écran suivant de la même leçon. Les deux vues affichent leur contenu attendu, sans ErrorBoundary ni `NotFoundError`. Les logs internes ne remontent aucune nouvelle erreur pour ce contrôle.
