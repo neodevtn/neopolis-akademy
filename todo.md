@@ -1808,4 +1808,4 @@
 - [x] Identifier précisément les causes dans le code : LCP, images, bundles JavaScript, CSS, polices, scripts tiers, CLS et défauts d’accessibilité
 - [x] Appliquer les optimisations de ressources, de chargement et de rendu sans supprimer de fonctionnalité, de contenu ni modifier la charte graphique
 - [x] Répéter les mesures mobile et ordinateur, corriger les écarts restants et comparer les résultats à la référence
-- [ ] Vérifier les parcours publics et critiques, l’accessibilité, le responsive, le SEO/social, les erreurs console et publier le bilan mesurable
+- [x] Vérifier les parcours publics et critiques, l’accessibilité, le responsive, le SEO/social, les erreurs console et publier le bilan mesurable
