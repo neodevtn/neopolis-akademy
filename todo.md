@@ -1753,3 +1753,7 @@
 - [x] Examiner les événements, versions et traces des deux issues récentes
 - [x] Reproduire et corriger toute cause encore active
 - [x] Valider la résolution sur la plateforme et documenter le bilan
+## Vérification des diagnostics Orientation et objectifs
+- [x] Contrôler le nombre d’orientations démarrées, complétées et incomplètes
+- [x] Identifier un profil d’exemple avec orientation complétée si les données existent
+- [x] Vérifier le rendu administrateur et corriger un écart d’affichage éventuel
