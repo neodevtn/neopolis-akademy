@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, CheckCircle2, PlayCircle, Video, Download, Timer, Eye, FileText, ChevronDown, ArrowUp, Pencil } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { MatchingExercise } from "@/components/MatchingExercise";
 import { SingleChoiceExercise } from "@/components/SingleChoiceExercise";
 import { ChapterQuiz } from "@/components/ChapterQuiz";
@@ -31,6 +31,7 @@ import NumericAnswerExercise from "@/components/NumericAnswerExercise";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getContextualCourseEditorHref } from "@/lib/courseEditorLink";
 import { isEvaluationGateLocked, requiredCorrectAnswers } from "@shared/evaluationRules";
+import { getChapterTransitionKey } from "./chapterTransition";
 
 export default function LessonViewer({
   lesson,
@@ -763,11 +764,6 @@ export default function LessonViewer({
       opacity: 1,
       transition: { duration: 0.3, ease: slideEase },
     },
-    exit: (dir: 'left' | 'right') => ({
-      x: dir === 'right' ? -60 : 60,
-      opacity: 0,
-      transition: { duration: 0.2, ease: slideEase },
-    }),
   };
 
   return (
@@ -798,14 +794,12 @@ export default function LessonViewer({
 
       {!showQuiz ? (
         <>
-          <AnimatePresence mode="wait" custom={slideDirection}>
           <motion.div
-            key={`chapter-${currentChapter}`}
+            key={getChapterTransitionKey(lesson.id, currentChapter)}
             custom={slideDirection}
             variants={slideVariants}
             initial="enter"
             animate="center"
-            exit="exit"
           >
           {/* Chapter header - Skilljar style: badge shows type + chapter name, title shows screen title */}
           {chapter && (() => {
@@ -1030,7 +1024,6 @@ export default function LessonViewer({
             />
           )}
           </motion.div>
-          </AnimatePresence>
 
           {/* Video Recommendations - shown on last chapter only */}
           {isLastChapter && !isReviewMode && (
