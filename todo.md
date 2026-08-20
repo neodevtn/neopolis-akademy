@@ -1743,4 +1743,4 @@
 ## Notification de mise à jour disponible
 - [x] Détecter périodiquement une nouvelle version de la plateforme sans interrompre l’apprentissage
 - [x] Afficher un bandeau clair aux apprenants avec une action de rafraîchissement contrôlé
-- [ ] Tester la détection, le report et le rechargement puis valider le mécanisme en production
+- [x] Tester la détection, le report et le rechargement puis valider le mécanisme en production

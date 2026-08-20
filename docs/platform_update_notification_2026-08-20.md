@@ -10,3 +10,7 @@ Le client compare toutes les soixante secondes le bundle chargé à l’entrée 
 ## Contrôle de prévisualisation
 
 Le cours **IA pour les nuls – Introduction complète** est resté accessible en prévisualisation sans bandeau lorsqu’aucune nouvelle version n’était détectée. Le lecteur, les cartes et le verrouillage pédagogique n’ont pas été affectés.
+
+## Validation de production
+
+Le bundle de production publié contient le texte du bandeau et l’entrée JavaScript fraîche répond correctement. Le cours IA pour les nuls s’ouvre ensuite normalement sur le domaine de production, sans bandeau lorsqu’aucune version plus récente n’est disponible. Les tests unitaires confirment séparément que le bandeau ne s’affiche que si l’entrée chargée diffère de l’entrée fraîche.
