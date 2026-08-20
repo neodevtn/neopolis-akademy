@@ -1752,4 +1752,4 @@
 ## Analyse des issues Sentry 929549 et 929548
 - [x] Examiner les événements, versions et traces des deux issues récentes
 - [x] Reproduire et corriger toute cause encore active
-- [ ] Valider la résolution sur la plateforme et documenter le bilan
+- [x] Valider la résolution sur la plateforme et documenter le bilan
