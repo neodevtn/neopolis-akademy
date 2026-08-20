@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { AdminNavbar } from "@/components/AdminNavbar";
 import { buildNavigationUrl } from "@shared/navigationUrls";
 import { WysiwygMarkdownEditor } from "@/components/admin/WysiwygMarkdownEditor";
+import { normalizeEditableMarkdown } from "@/components/admin/wysiwygMarkdown";
 import { Checkbox } from "@/components/ui/checkbox";
 import { COMMUNICATION_AUDIENCE_LABELS, COMMUNICATION_CRITERIA_LOGIC_LABELS, COURSE_PROGRESS_STATUS_LABELS, type CommunicationAudience, type CommunicationCriteriaLogic, type CourseProgressStatus } from "@shared/communicationRecipients";
 import { toPreviewMediaUrl } from "@/lib/mediaUrl";
@@ -212,7 +213,7 @@ export default function AdminDashboard() {
       : filter.manualEmails?.length ? "manual" : "all";
     setEditingCommunicationId(communication?.id || null);
     setCommSubject(communication?.subject || "");
-    setCommBody(communication?.body || "");
+    setCommBody(normalizeEditableMarkdown(communication?.body || ""));
     setCommType(communication?.type || "announcement");
     setCommIsImportant(communication?.isImportant === 1);
     setCommAudience(normalizedAudience as CommunicationAudience);

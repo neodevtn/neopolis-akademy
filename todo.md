@@ -1780,3 +1780,13 @@
 - [x] Vérifier que chaque TP est autonome, guidé, accompagné des prérequis et de ses ressources téléchargeables
 - [x] Remplacer dans les TP les consignes restantes dépendantes de la VM DataCamp par des alternatives réalisables dans l’environnement apprenant
 - [x] Préserver les extensions des fichiers VM dans les consignes adaptées aux environnements apprenants
+## Inventaire et intégration des catalogues DataCamp
+- [x] Inventorier les cours des catalogues technologies 54, 52, 25 et 53
+- [x] Vérifier pour chaque cours le paquet, les médias ou le droit d’intégration disponible
+- [ ] Proposer un classement Neopolis, les tags de compétences et le lot d’import prioritaire
+- [ ] Importer uniquement les cours autorisés avec blocs standards, médias locaux et TP autonomes
+## Régressions brouillon et progression n8n
+- [x] Reproduire et corriger le contenu absent à l’ouverture d’un brouillon de communication
+- [x] Reproduire et corriger le passage bloqué entre les chapitres 2 et 3 du cours n8n
+- [x] Corriger le pourcentage de progression affiché à 100 % avant la fin réelle du cours
+- [ ] Ajouter des tests et vérifier les deux parcours en production

@@ -4,6 +4,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { toast } from "sonner";
 import { announceAchievement } from "@/components/AchievementCelebration";
 import trainingIndex from "@/data/trainingIndex.json";
+import { canMapChapterProgressToLessons } from "./trainingProgressMapping";
 
 interface LastVisitedInfo {
   courseId: string;
@@ -168,7 +169,7 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
           // The lesson is complete only when all chapters are done
           return chapterEntry.chapterIndex >= chapterEntry.totalChapters;
         }
-        if (chapterEntry.totalChapters === courseLessonCount) {
+        if (canMapChapterProgressToLessons(chapterEntry.totalChapters, courseLessonCount)) {
           // Multi-lesson course where chapters map to lessons
           return lessonIndex < chapterEntry.chapterIndex;
         }
@@ -204,7 +205,7 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
         // Single-lesson course: return 0 (still in the only lesson) or 1 (completed)
         return chapterEntry.chapterIndex >= chapterEntry.totalChapters ? 1 : 0;
       }
-      if (chapterEntry.totalChapters === totalLessons) {
+      if (canMapChapterProgressToLessons(chapterEntry.totalChapters, totalLessons)) {
         return Math.min(chapterEntry.chapterIndex, totalLessons);
       }
     }
