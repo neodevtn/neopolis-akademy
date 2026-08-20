@@ -1727,3 +1727,7 @@
 - [x] Recueillir les nouvelles issues et événements apparus après le dernier contrôle
 - [x] Reproduire et corriger toute cause encore active ou régressée
 - [x] Vérifier l’état Sentry en production et documenter le résultat
+## Analyse du monitoring interne de la plateforme
+- [x] Collecter les erreurs récentes des journaux client, serveur et réseau internes
+- [x] Qualifier les défauts actifs, les reproduire et corriger les causes applicatives
+- [x] Vérifier les journaux après correction et consigner le bilan interne
