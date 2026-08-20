@@ -1747,4 +1747,5 @@
 ## Renforcement des sessions utilisant un bundle obsolète
 - [x] Analyser pourquoi les sessions chargées avant publication atteignent encore le lecteur avant l’alerte
 - [x] Détecter une transition risquée et demander un rafraîchissement avant que le crash React ne se produise
+- [x] Empêcher tout cache partagé de servir un document HTML qui référence un ancien bundle
 - [ ] Tester les cas de bundle historique et vérifier la protection en production

@@ -6,6 +6,16 @@ import path from "path";
 import { createServer as createViteServer } from "vite";
 import viteConfig from "../../vite.config";
 
+export const SPA_DOCUMENT_NO_CACHE_HEADERS = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+  Pragma: "no-cache",
+  Expires: "0",
+} as const;
+
+export function applySpaDocumentNoCacheHeaders(res: { set: (headers: Record<string, string>) => unknown }) {
+  res.set(SPA_DOCUMENT_NO_CACHE_HEADERS);
+}
+
 export async function setupVite(app: Express, server: Server) {
   const serverOptions = {
     middlewareMode: true,
@@ -69,6 +79,7 @@ export function serveStatic(app: Express) {
 
   // fall through to index.html if the file doesn't exist
   app.use("*", (_req, res) => {
+    applySpaDocumentNoCacheHeaders(res);
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 }
