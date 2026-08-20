@@ -1801,4 +1801,4 @@
 - [x] Préparer et publier une image Open Graph officielle à partir du logo fourni
 - [x] Configurer les titres, descriptions, canonical, Open Graph et Twitter Cards côté serveur pour les pages publiques
 - [x] Générer et configurer les favicons et icônes mobiles à partir du logo fourni
-- [ ] Ajouter des tests et vérifier les métadonnées ainsi que les assets publics sur le domaine de production
+- [x] Ajouter des tests et vérifier les métadonnées ainsi que les assets publics sur le domaine de production
