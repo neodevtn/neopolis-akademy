@@ -44,6 +44,7 @@ import { buildNavigationUrl } from "@shared/navigationUrls";
 import { getLearnerDashboardTab, getLearnerOrientationAccess, type LearnerDashboardTab } from "@/lib/learnerDashboardNavigation";
 import { buildRecommendedLearningPath } from "@/lib/recommendedLearningPath";
 import { BrandLogo } from "@/components/BrandLogo";
+import { TrainingSearchPanel } from "@/components/TrainingSearchPanel";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -736,14 +737,18 @@ function CatalogTab({
   const groups = Object.entries(GROUP_CONFIG) as [GroupKey, any][];
   const requestedGroup = new URLSearchParams(urlSearch).get("group") || "all";
   const selectedGroup = requestedGroup === "all" || groups.some(([key]) => key === requestedGroup) ? requestedGroup : "all";
-  const selectGroup = (group: string) => navigate(buildNavigationUrl("/training", { tab: "catalog", group: group === "all" ? null : group }));
+  const requestedQuery = new URLSearchParams(urlSearch).get("search") || "";
+  const navigateCatalog = (group: string, search: string) => navigate(buildNavigationUrl("/training", { tab: "catalog", group: group === "all" ? null : group, search: search || null }));
+  const selectGroup = (group: string) => navigateCatalog(group, requestedQuery);
 
   const filteredCerts = selectedGroup === "all"
     ? certCompletionData
     : certCompletionData.filter((cert) => cert.group === selectedGroup);
+  const certificationTitles = Object.fromEntries(certCompletionData.map((cert) => [cert.id, t(cert.title)]));
 
   return (
     <div className="space-y-6">
+      <TrainingSearchPanel groups={groups as Array<[string, { label: { en: string; fr: string }; order: number }]>} certificationTitles={certificationTitles} initialQuery={requestedQuery} onQueryChange={(value) => navigateCatalog(selectedGroup, value)} />
       {/* Filter pills */}
       <div className="flex flex-wrap gap-2">
         <button

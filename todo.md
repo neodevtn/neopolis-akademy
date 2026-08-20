@@ -1811,10 +1811,10 @@
 - [x] Vérifier les parcours publics et critiques, l’accessibilité, le responsive, le SEO/social, les erreurs console et publier le bilan mesurable
 
 ## Recherche intelligente de formation
-- [ ] Auditer le catalogue, les fichiers de cours, les métadonnées et les règles d’accès réutilisables pour la recherche
-- [ ] Définir un index pertinent : certifications, cours, leçons, chapitres, compétences, tags et extraits de contenu
-- [ ] Ajouter une recherche rapide avec tolérance aux accents, correspondances partielles, classement par pertinence et filtres utiles
-- [ ] Intégrer une interface accessible de recherche et de navigation directe vers les contenus autorisés
+- [x] Auditer le catalogue, les fichiers de cours, les métadonnées et les règles d’accès réutilisables pour la recherche
+- [x] Définir un index pertinent : certifications, cours, leçons, chapitres, compétences, tags et extraits de contenu
+- [x] Ajouter une recherche rapide avec tolérance aux accents, correspondances partielles, classement par pertinence et filtres utiles
+- [x] Intégrer une interface accessible de recherche et de navigation directe vers les contenus autorisés
 - [ ] Ajouter des tests de pertinence, d’accès et de navigation ; vérifier le rendu puis publier
 
 ## Correctifs Agentic Browsing et performance mobile
