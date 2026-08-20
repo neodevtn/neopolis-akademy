@@ -6,7 +6,7 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
-import CookieConsent from "./components/CookieConsent";
+import DeferredCookieConsent from "./components/DeferredCookieConsent";
 
 // ─── Code-splitting: lazy-load all heavy pages ───
 const Home = lazy(() => import("./pages/Home"));
@@ -86,7 +86,7 @@ function App() {
             <Toaster />
             <Suspense fallback={null}><DeferredAuthenticatedOverlays /></Suspense>
             <Router />
-            <CookieConsent />
+            <DeferredCookieConsent />
           </TooltipProvider>
         </LanguageProvider>
       </ThemeProvider>
