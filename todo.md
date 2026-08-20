@@ -1821,4 +1821,4 @@
 - [x] Reproduire et corriger la progression Agentic Browsing bloquée à 2/3
 - [x] Relever les audits de la mesure mobile publiée à 74 % et identifier les causes restantes
 - [x] Corriger les freins confirmés sans retirer de contenu ni de fonctionnalités
-- [ ] Vérifier le parcours complet Agentic Browsing, la mesure mobile et publier les corrections
+- [x] Vérifier le parcours complet Agentic Browsing, la mesure mobile et publier les corrections
