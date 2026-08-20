@@ -1735,3 +1735,8 @@
 - [x] Reproduire l’erreur `insertBefore` sur le lecteur du cours et localiser le bloc en cause
 - [x] Corriger la cause de mutation DOM instable avec un test de non-régression
 - [x] Vérifier la route en production et l’absence de nouveau crash dans les logs internes
+## Régression de bundle et visibilité Sentry
+- [x] Identifier pourquoi le bundle historique `index-gE23kOSs.js` reste chargé par certains apprenants
+- [x] Vérifier et corriger la configuration de remontée client Sentry en production
+- [x] Ajouter une stratégie de récupération ou d’invalidation des bundles obsolètes
+- [ ] Reproduire le crash, confirmer sa remontée Sentry et valider le correctif en production
