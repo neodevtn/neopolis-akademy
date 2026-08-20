@@ -1815,7 +1815,7 @@
 - [x] Définir un index pertinent : certifications, cours, leçons, chapitres, compétences, tags et extraits de contenu
 - [x] Ajouter une recherche rapide avec tolérance aux accents, correspondances partielles, classement par pertinence et filtres utiles
 - [x] Intégrer une interface accessible de recherche et de navigation directe vers les contenus autorisés
-- [ ] Ajouter des tests de pertinence, d’accès et de navigation ; vérifier le rendu puis publier
+- [x] Ajouter des tests de pertinence, d’accès et de navigation ; vérifier le rendu puis publier
 
 ## Correctifs Agentic Browsing et performance mobile
 - [x] Reproduire et corriger la progression Agentic Browsing bloquée à 2/3
