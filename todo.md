@@ -1807,6 +1807,7 @@
 - [ ] Obtenir le PDF local canonique `C-DUETDR-B-m0-l5-file-5.pdf` du paquet Gemini Drive avant d’importer ses deux activités visuelles
 - [ ] Obtenir le PDF local canonique `C-DUETSL-B-m0-l5-file-5.pdf` du paquet Gemini Slides avant d’importer son activité visuelle
 - [ ] Adapter et valider les formats `SingleProcessExercise`, `DragAndDropExercise` et `TabExercise` du paquet « Concevoir des systèmes d’IA avec l’API OpenAI » avant import
+- [ ] Adapter et valider les 20 exercices console et 6 tris interactifs du paquet « Software Development with Claude Code » avant import
 - [x] Utiliser le cours n8n DataCamp existant comme référence fonctionnelle et de structure pour les conversions suivantes
 - [x] Créer une catégorie distincte pour les parcours de préparation aux certifications Anthropic officielles
 - [x] Ajouter un tag visible et une mention explicite de préparation aux certifications Anthropic officielles dans leurs descriptions
@@ -1814,6 +1815,7 @@
 - [x] Vérifier en production les médias locaux téléversés pour chaque cours DataCamp avant publication
 - [x] Vérifier que chaque TP DataCamp est autonome, présente ses prérequis, sa préparation d’environnement et ses ressources téléchargeables
 - [x] Afficher les activités totales DataCamp comme compteur principal sans confondre les exercices interactifs et les écrans du cours
+- [ ] Diagnostiquer les causes du FCP/LCP mobile de la page d’accueil et optimiser le rendu critique sans dégrader l’accessibilité
 ## Régressions brouillon et progression n8n
 - [x] Reproduire et corriger le contenu absent à l’ouverture d’un brouillon de communication
 - [x] Reproduire et corriger le passage bloqué entre les chapitres 2 et 3 du cours n8n
