@@ -131,3 +131,26 @@ Le rapport croisé classe cette formation en **Critical**. Il compare les **55 e
 Les preuves visuelles du PDF montrent la fiche DataCamp avec un cours complet et un premier écran vidéo, alors que la capture Neopolis historique affiche bien le premier écran pédagogique mais conserve une fiche de catalogue incohérente à **0 activité**. La page de contrôle technique indique aussi qu’au moment de l’audit, le premier écran source exposait **9 boutons**, contre **10 boutons** côté Neopolis, avec un média principal détecté en **mp3** et non comme vidéo visible sur le premier écran.
 
 Les exigences de correction sont donc : rétablir les compteurs catalogue à **55 activités**, confirmer que le cours publié expose un écran answerable pour chaque activité non vidéo, vérifier l’intégrité des médias locaux du premier écran (audio, sous-titres, PDF) et conserver la préparation d’environnement ainsi que le verrouillage séquentiel Neopolis sans UI libre.
+
+### Preuves finales de conformité — publications `9a35f82e`, `63eef6fe`, `02c7a31c` et `9c66c1b7`
+
+| Contrôle | Référence source ou règle | Résultat constaté | Statut |
+|---|---|---|---|
+| Rattachement catalogue | 4 chapitres, 55 activités, 15 vidéos, 4 téléchargements | La fiche publique affiche `1 cours`, `55 activités`, `15 vidéos`, `4 téléchargements` et une carte cliquable. | Conforme |
+| Navigation profonde | Identifiant et JSON de cours cohérents | Le cours charge sur `/training/datacamp_prompt_engineering_with_the_openai_api/prompt_engineering_with_the_openai_api__01` après alignement du courseId et du nom de fichier, avec repli temporaire sûr vers le nom historique pendant propagation. | Conforme |
+| Préparation d’environnement | Prompt de correction, TP autonome | Le premier écran affiche les prérequis Python/OpenAI, la protection des clés API et des données, ainsi que la méthode de vérification attendue. | Conforme |
+| Activités answerable | 40 activités interactives attendues | 37 exercices de code et 3 TP autonomes sont rendus par des blocs Neopolis avec consignes, validation et règles de complétion. | Conforme |
+| Média local | 15 médias de cours | Les 15 pistes audio locales répondent HTTP `206`, type `audio/mpeg`; le premier écran affiche audio, sous-titres, transcription et slides PDF. | Conforme |
+| Verrouillage séquentiel | Règle Neopolis | Les 4 leçons sont visibles, avec le premier chapitre en cours et les suivants verrouillés tant que la progression ne les débloque pas. | Conforme |
+| Mobile | Lisibilité et actions visibles | Vérification à 375 × 812 : en-tête, progression, préparation et contrôles de cours sont utilisables ; le bandeau de consentement reste présent sans masquer les contrôles permanents. | Conforme |
+| Tests | Régression catalogue et repli de fichier | Vitest : 14 tests ciblés réussis ; TypeScript et validation des cours sans erreur. | Conforme |
+
+Aucun écart critique résiduel du rapport croisé ne reste ouvert pour cette formation.
+
+## 29. DataCamp — Initiation à l’automatisation de workflows avec n8n
+
+Le rapport croisé classe cette formation en **Critical**. Il compare les **32 exercices** et **10 vidéos** de la source DataCamp à une carte Neopolis auditée à **3 chapitres et 0 activité**, ainsi qu’à une page de formation affichant **1 cours, 0 chapitre, 0 activité, 10 vidéos et 3 téléchargements**.
+
+Les preuves visuelles du PDF montrent la fiche DataCamp complète, puis un premier écran source avec instructions, inputs et blocs d’activité, alors que la capture Neopolis historique montrait déjà un premier écran pédagogique mais avec un comptage de progression incohérent sur la fiche de formation. La page de contrôles techniques du rapport signale que le premier écran Neopolis exposait bien un média local lisible (`mp4` HTTP 200, PDF HTTP 200), mais que les compteurs structurels restaient à zéro sur la fiche de cours.
+
+Les exigences de correction sont donc : réaligner la fiche catalogue et la page formation sur **32 activités**, confirmer les **3 chapitres** et **10 vidéos**, vérifier que chaque TP et activité interactive reste réellement answerable dans le parcours publié, préserver la préparation d’environnement n8n déjà ajoutée, et conserver le verrouillage séquentiel Neopolis sans UI libre.

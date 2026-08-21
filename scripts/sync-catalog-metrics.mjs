@@ -30,6 +30,22 @@ const metric = (course) => {
   const lessons = course?.lessons || [];
   const blocks = lessons.flatMap((lesson) => (lesson.chapters || []).flatMap((chapter) => chapter.blocks || []));
   const chapters = lessons.reduce((sum, lesson) => sum + (lesson.chapters?.length || 0), 0);
+  const downloadableUrls = new Set();
+  let downloadsWithoutUrl = 0;
+  for (const block of blocks) {
+    const urls = [
+      block.url,
+      block.downloadUrl,
+      block.fileUrl,
+      block.slidesPdf,
+      ...(Array.isArray(block.resources) ? block.resources.map((resource) => resource?.url) : []),
+      ...(Array.isArray(block.downloads) ? block.downloads.map((download) => download?.url || download) : []),
+    ].filter((url) => typeof url === "string" && url.trim().length > 0);
+    urls.forEach((url) => downloadableUrls.add(url));
+    if ((block.type === "download" || block.type === "file_download") && urls.length === 0) {
+      downloadsWithoutUrl += 1;
+    }
+  }
   // A checkpoint is a wrapper pointing at one assessment. Count its referenced
   // activity exactly once rather than counting the wrapper and its target twice.
   const referencedAssessments = new Set(blocks
@@ -41,7 +57,7 @@ const metric = (course) => {
     chapterCount: chapters,
     exerciseCount: blocks.filter((block) => interactive.has(block.type)).length + referencedAssessments.size,
     videoCount: blocks.filter((block) => block.type === "video").length,
-    downloadCount: blocks.filter((block) => block.type === "download" || block.type === "file_download").length,
+    downloadCount: downloadableUrls.size + downloadsWithoutUrl,
     totalActivities: chapters,
   };
 };

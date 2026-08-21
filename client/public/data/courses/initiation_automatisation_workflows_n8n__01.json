@@ -1,5 +1,5 @@
 {
-  "courseId": "initiation_automatisation_workflows_n8n",
+  "courseId": "initiation_automatisation_workflows_n8n__01",
   "sourceCourseTitle": "Initiation à l’automatisation de workflows avec n8n",
   "lessons": [
     {
@@ -16,6 +16,14 @@
             "fr": "L’art de l’automatisation et n8n"
           },
           "blocks": [
+            {
+              "type": "content",
+              "id": "neopolis_n8n_environment_preparation",
+              "body": {
+                "en": "## Before you start\n\nPrepare a safe learning environment before the n8n practical activities:\n\n1. Choose either an n8n Cloud trial workspace or a local Docker installation.\n2. Create a separate test workspace; do not connect production credentials, customer data, or business workflows.\n3. Keep any API token or webhook secret in n8n credentials or environment variables, never in your exercise answer.\n4. Download the course resources when they are provided and validate each workflow with synthetic data.\n\n> **Follow the sequence.** Complete each activity and its Neopolis validation before continuing.",
+                "fr": "## Avant de commencer\n\nPréparez un environnement d’apprentissage sûr avant les activités pratiques n8n :\n\n1. Choisissez soit un espace d’essai n8n Cloud, soit une installation Docker locale de n8n.\n2. Créez un espace de test séparé ; ne connectez ni identifiants de production, ni données clients, ni workflows métier réels.\n3. Conservez tout jeton API ou secret de webhook dans les identifiants n8n ou les variables d’environnement, jamais dans votre réponse d’exercice.\n4. Téléchargez les ressources du cours lorsqu’elles sont fournies et validez chaque workflow avec des données synthétiques.\n\n> **Suivez la séquence.** Terminez chaque activité et sa validation Neopolis avant de continuer."
+              }
+            },
             {
               "type": "video",
               "id": "ch01_ex01_video",
@@ -3473,14 +3481,60 @@
                 "en": "On vous demande d’auditer quatre processus chez Acme Corp et de recommander celui qui tirerait le plus profit d’une automatisation par workflow. Chaque équipe décrit son processus actuel :\n\n- Équipe support : « À chaque fois qu’un client nous envoie un e‑mail, nous copions manuellement l’objet et l’expéditeur dans une feuille de calcul de suivi — des centaines de fois par jour. »\n\n- Équipe design : « Chaque client nous envoie un brief créatif unique, et nous réalisons une maquette entièrement personnalisée à partir de zéro à chaque fois. »\n\n- Équipe RH : « Nous envoyons exactement le même kit d’onboarding à chaque nouvelle recrue, mais la façon dont on nous en informe n’est pas uniforme — parfois un manager nous envoie un e‑mail, parfois c’est un message Slack, parfois c’est simplement mentionné en réunion. »\n\n- Équipe analytique : « Les gens nous écrivent sur Slack avec des questions de données ponctuelles, et nous écrivons une requête SQL sur mesure pour chacune — les demandes sont toutes différentes. »\n\nD’après le cadre de décision d’automatisation — répétitif, structuré et prêt pour un déclencheur — quel processus est le meilleur candidat pour une automatisation par workflow ?",
                 "fr": "On vous demande d’auditer quatre processus chez Acme Corp et de recommander celui qui tirerait le plus profit d’une automatisation par workflow. Chaque équipe décrit son processus actuel :\n\n- Équipe support : « À chaque fois qu’un client nous envoie un e‑mail, nous copions manuellement l’objet et l’expéditeur dans une feuille de calcul de suivi — des centaines de fois par jour. »\n\n- Équipe design : « Chaque client nous envoie un brief créatif unique, et nous réalisons une maquette entièrement personnalisée à partir de zéro à chaque fois. »\n\n- Équipe RH : « Nous envoyons exactement le même kit d’onboarding à chaque nouvelle recrue, mais la façon dont on nous en informe n’est pas uniforme — parfois un manager nous envoie un e‑mail, parfois c’est un message Slack, parfois c’est simplement mentionné en réunion. »\n\n- Équipe analytique : « Les gens nous écrivent sur Slack avec des questions de données ponctuelles, et nous écrivons une requête SQL sur mesure pour chacune — les demandes sont toutes différentes. »\n\nD’après le cadre de décision d’automatisation — répétitif, structuré et prêt pour un déclencheur — quel processus est le meilleur candidat pour une automatisation par workflow ?"
               },
-              "options": [],
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "The support team’s email-to-spreadsheet process.",
+                    "fr": "Le processus e-mail-vers-feuille de calcul de l’équipe support."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "The design team’s custom creative briefs.",
+                    "fr": "La création de maquettes sur mesure de l’équipe design."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "The HR team’s onboarding kit distribution.",
+                    "fr": "Le kit d’onboarding des nouvelles recrues de l’équipe RH."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "The analytics team’s ad hoc SQL requests.",
+                    "fr": "Les requêtes SQL ad hoc de l’équipe analytique."
+                  }
+                }
+              ],
               "correctAnswer": "a",
               "explanation": {
-                "en": "",
-                "fr": ""
+                "en": "Correct. Each incoming email triggers the same steps: copy the subject and sender to the spreadsheet. It is repetitive, structured, and ready for a clear trigger.",
+                "fr": "Exact ! Chaque e-mail entrant déclenche les mêmes étapes : copier l’objet et l’expéditeur dans la feuille de calcul. C’est répétitif, structuré et prêt pour un déclencheur clair."
               },
               "image": null,
-              "feedbacks": []
+              "feedbacks": [
+                {
+                  "en": "Correct. Hundreds of incoming emails follow the same fields and can start from a consistent email trigger, so all three automation criteria are met.",
+                  "fr": "Exact ! Des centaines d’e-mails entrants suivent les mêmes champs et peuvent démarrer avec un déclencheur e-mail constant ; les trois critères d’automatisation sont remplis."
+                },
+                {
+                  "en": "Custom briefs produce highly variable work, so the process is not structured enough for a workflow automation.",
+                  "fr": "Chaque brief produit un travail très variable : le processus n’est donc pas suffisamment structuré pour une automatisation par workflow."
+                },
+                {
+                  "en": "The task is repetitive and structured, but the notification arrives through inconsistent channels, so there is no reliable single trigger.",
+                  "fr": "La tâche est répétitive et structurée, mais les notifications arrivent par des canaux variables : il n’existe donc pas de déclencheur unique fiable."
+                },
+                {
+                  "en": "Each request requires a bespoke query, so the expected result is not structured enough for a repeatable workflow.",
+                  "fr": "Chaque demande exige une requête sur mesure : le résultat attendu n’est donc pas assez structuré pour un workflow répétable."
+                }
+              ]
             }
           ]
         },

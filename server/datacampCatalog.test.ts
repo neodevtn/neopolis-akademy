@@ -38,6 +38,12 @@ const promptEngineeringCourse = JSON.parse(
     "utf8",
   ),
 );
+const n8nIntroductionCourse = JSON.parse(
+  readFileSync(
+    new URL("../client/public/data/courses/initiation_automatisation_workflows_n8n__01.json", import.meta.url),
+    "utf8",
+  ),
+);
 
 describe("catalogue DataCamp", () => {
   it("exposes Agent Skills comme un cours navigable avec ses compteurs canoniques", () => {
@@ -279,5 +285,62 @@ describe("catalogue DataCamp", () => {
       },
     });
     expect(firstActivity.blocks.findIndex((block: { id?: string }) => block.id === preparation.id)).toBe(0);
+  });
+
+  it("exposes l’introduction n8n comme un cours navigable avec ses compteurs canoniques", () => {
+    const certification = trainingIndex.certifications.find(
+      (item) => item.id === "initiation_automatisation_workflows_n8n",
+    );
+    const course = trainingIndex.courses.find(
+      (item) => item.id === "initiation_automatisation_workflows_n8n__01",
+    );
+
+    expect(certification).toMatchObject({
+      courseCount: 1,
+      totalLessons: 3,
+      totalActivities: 32,
+      totalVideos: 10,
+      totalExercises: 22,
+      totalDownloads: 3,
+    });
+    expect(course).toMatchObject({
+      certId: "initiation_automatisation_workflows_n8n",
+      lessonCount: 3,
+      totalActivities: 32,
+      videoCount: 10,
+      exerciseCount: 22,
+      downloadCount: 3,
+    });
+  });
+
+  it("prépare l’environnement n8n avant la première vidéo", () => {
+    const firstActivity = n8nIntroductionCourse.lessons[0].chapters[0];
+    const preparation = firstActivity.blocks.find(
+      (block: { id?: string }) => block.id === "neopolis_n8n_environment_preparation",
+    );
+
+    expect(preparation).toMatchObject({
+      type: "content",
+      body: {
+        fr: expect.stringContaining("Avant de commencer"),
+        en: expect.stringContaining("Before you start"),
+      },
+    });
+    expect(firstActivity.blocks.findIndex((block: { id?: string }) => block.id === preparation.id)).toBe(0);
+  });
+
+  it("conserve des options, une réponse correcte et un feedback pour le QCM n8n Acme", () => {
+    const quiz = n8nIntroductionCourse.lessons
+      .flatMap((lesson: { chapters: unknown[] }) => lesson.chapters)
+      .flatMap((chapter: { blocks: unknown[] }) => chapter.blocks)
+      .find((block: { id?: string }) => block.id === "ch03_ex09_mcq");
+
+    expect(quiz).toMatchObject({
+      type: "single_choice_exercise",
+      correctAnswer: "a",
+    });
+    expect(quiz.options).toHaveLength(4);
+    expect(quiz.options.find((option: { id: string }) => option.id === quiz.correctAnswer)).toBeDefined();
+    expect(quiz.feedbacks).toHaveLength(4);
   });
 });
