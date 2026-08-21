@@ -1857,3 +1857,9 @@
 - [x] Ajouter l’évaluation de cours dans l’interface apprenante et enregistrer les actions pédagogiques importantes
 - [x] Ajouter les vues administratives de feedback et le journal détaillé dans les profils apprenants
 - [x] Tester les droits admin, la traçabilité, le rendu des états vides et publier
+
+## Conformité du journal Logs administratif
+- [x] Auditer les rôles administratifs et le journal global existant
+- [x] Réserver le menu Logs et ses données aux rôles autorisés, avec un contrat d’accès explicite
+- [x] Ajouter un tableau paginé, des filtres par utilisateur et période, ainsi qu’une vue détaillée d’événement
+- [ ] Vérifier les droits, la pagination, les filtres, les détails et publier

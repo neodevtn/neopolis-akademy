@@ -10,7 +10,8 @@ export const users = mysqlTable("users", {
   email: varchar("email", { length: 320 }),
   passwordHash: varchar("passwordHash", { length: 255 }), // bcrypt hash, null for OAuth-only users
   loginMethod: varchar("loginMethod", { length: 64 }),
-  role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+  // "admin" représente le Super Admin historique ; "manager" accède uniquement au module Logs.
+  role: mysqlEnum("role", ["user", "manager", "admin"]).default("user").notNull(),
   blocked: int("blocked").default(0).notNull(), // 0=active, 1=blocked
   invitedAt: timestamp("invitedAt"),
   invitedBy: int("invitedBy"), // admin userId who invited

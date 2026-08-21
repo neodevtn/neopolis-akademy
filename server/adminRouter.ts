@@ -8,7 +8,7 @@ import {
   createCommunication, getCommunications, updateCommunicationStatus, updateCommunicationDraft,
   getCommunicationById, claimCommunicationForDelivery, markCommunicationScheduled, cancelScheduledCommunication,
   createCommunicationSegment, getCommunicationSegments, deleteCommunicationSegment,
-  logAdminActivity, getAdminActivityLog,
+  logAdminActivity, getAdminActivityLog, getAdminActivityActors,
   bulkUpdateApplicationStatus, getApplicationsByIds,
   getLearnerAnalytics, getRecipientsByFilter, getRecipientPreview, getCommunicationSegmentOptions,
 } from "./adminDb";
@@ -28,6 +28,7 @@ import { deliverClaimedCommunication } from "./communicationDelivery";
 import { isSchedulableCommunicationDate, toOneShotCommunicationCron } from "@shared/communicationScheduling";
 import type { CommunicationRecipientFilter } from "./adminDb";
 import { getIntegrityReviewQueue, getLearnerIntegrityReview, reviewLearnerIntegrity } from "./integrityService";
+import { canAccessAdminLogs } from "../shared/adminLogAccess";
 
 const SALT_ROUNDS = 10;
 
@@ -53,6 +54,12 @@ function sessionTokenFromRequest(req: { headers: { cookie?: string } }) {
 function assertAdmin(ctx: { user: { role: string } }) {
   if (ctx.user.role !== "admin") {
     throw new TRPCError({ code: "FORBIDDEN", message: "Accès réservé aux administrateurs" });
+  }
+}
+
+function assertLogAccess(ctx: { user: { role: string } }) {
+  if (!canAccessAdminLogs(ctx.user.role)) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Accès réservé aux Super Admins et Managers" });
   }
 }
 
@@ -257,6 +264,7 @@ export const adminEnhancedRouter = router({
       }))
       .mutation(async ({ ctx, input }) => {
         assertAdmin(ctx);
+        const before = await getCommunicationById(input.communicationId);
         const communication = await updateCommunicationDraft({
           id: input.communicationId,
           subject: input.subject,
@@ -271,7 +279,10 @@ export const adminEnhancedRouter = router({
           action: "update_communication_draft",
           targetType: "communication",
           targetId: input.communicationId,
-          details: { subject: input.subject, type: input.type, isImportant: Boolean(input.isImportant) },
+          details: {
+            before: before ? { subject: before.subject, type: before.type, isImportant: Boolean(before.isImportant), recipientFilter: before.recipientFilter } : null,
+            after: { subject: communication.subject, type: communication.type, isImportant: Boolean(communication.isImportant), recipientFilter: communication.recipientFilter },
+          },
         });
         return communication;
       }),
@@ -501,11 +512,19 @@ export const adminEnhancedRouter = router({
       .input(z.object({
         page: z.number().min(1).default(1),
         pageSize: z.number().min(1).max(100).default(50),
+        adminId: z.number().int().positive().optional(),
+        action: z.string().trim().min(1).max(100).optional(),
+        from: z.coerce.date().optional(),
+        to: z.coerce.date().optional(),
       }).optional())
       .query(async ({ ctx, input }) => {
-        assertAdmin(ctx);
-        return await getAdminActivityLog(input?.page || 1, input?.pageSize || 50);
+        assertLogAccess(ctx);
+        return await getAdminActivityLog(input);
       }),
+    actors: protectedProcedure.query(async ({ ctx }) => {
+      assertLogAccess(ctx);
+      return await getAdminActivityActors();
+    }),
   }),
 
   // ============ Notifications ============

@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
-import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Columns3, Bell, BellRing, UserX, FileCheck, CalendarClock, Save } from "lucide-react";
+import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Columns3, Bell, BellRing, UserX, FileCheck, CalendarClock, Save, Filter } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 import { AdminNavbar } from "@/components/AdminNavbar";
@@ -76,6 +76,12 @@ export default function AdminDashboard() {
   const [commScheduledAt, setCommScheduledAt] = useState("");
   const [notifOpen, setNotifOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
+  const [activityPage, setActivityPage] = useState(1);
+  const [activityAdminId, setActivityAdminId] = useState("all");
+  const [activityAction, setActivityAction] = useState("all");
+  const [activityFrom, setActivityFrom] = useState("");
+  const [activityTo, setActivityTo] = useState("");
+  const [selectedActivity, setSelectedActivity] = useState<any | null>(null);
 
   // Invitation mass sending state
   const [invitDialog, setInvitDialog] = useState(false);
@@ -92,6 +98,14 @@ export default function AdminDashboard() {
   useEffect(() => {
     setActiveTab(getTabFromUrl());
   }, [urlSearch]);
+
+  const canAccessLogs = user?.role === "admin" || user?.role === "manager";
+  useEffect(() => {
+    if (user?.role === "manager" && activeTab !== "activity") {
+      setActiveTab("activity");
+      navigate(buildNavigationUrl("/admin", { tab: "activity" }));
+    }
+  }, [activeTab, navigate, user?.role]);
 
   // Close notification panel on outside click
   useEffect(() => {
@@ -272,7 +286,17 @@ export default function AdminDashboard() {
   }, [commAudience, commCourseId, commCourseProgressStatus, commActivityWithinDays, commUseCompetencyFilter, commCompetencyId, commMinCompetencyLevel, commManualEmails.length, communicationSegmentOptionsQuery.data?.courses, competencyFrameworkQuery.data?.definitions]);
 
   const analyticsQuery = trpc.adminTools.analytics.getLearnerAnalytics.useQuery(undefined, { enabled: activeTab === "analytics" });
-  const activityLogQuery = trpc.adminTools.activityLog.list.useQuery(undefined, { enabled: activeTab === "activity" });
+  const activityLogInput = useMemo(() => ({
+    page: activityPage,
+    pageSize: 25,
+    ...(activityAdminId !== "all" ? { adminId: Number(activityAdminId) } : {}),
+    ...(activityAction !== "all" ? { action: activityAction } : {}),
+    ...(activityFrom ? { from: new Date(`${activityFrom}T00:00:00`) } : {}),
+    ...(activityTo ? { to: new Date(`${activityTo}T23:59:59`) } : {}),
+  }), [activityAction, activityAdminId, activityFrom, activityPage, activityTo]);
+  const activityLogQuery = trpc.adminTools.activityLog.list.useQuery(activityLogInput, { enabled: activeTab === "activity" && canAccessLogs });
+  const activityActorsQuery = trpc.adminTools.activityLog.actors.useQuery(undefined, { enabled: activeTab === "activity" && canAccessLogs });
+  const availableActivityActions = useMemo(() => Array.from(new Set((activityLogQuery.data?.items || []).map((item: any) => item.action))).sort(), [activityLogQuery.data?.items]);
 
   // Invitations
   const invitationsQuery = trpc.admin.getInvitations.useQuery(undefined, { enabled: activeTab === "invitations" });
@@ -324,12 +348,12 @@ export default function AdminDashboard() {
     );
   }
 
-  if (user?.role !== "admin") {
+  if (!canAccessLogs) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
         <div className="text-center wise-card p-8">
           <h1 className="wise-display-md mb-4">Accès refusé</h1>
-          <p className="wise-body-md mb-6">Cette page est réservée aux administrateurs.</p>
+          <p className="wise-body-md mb-6">Cette page est réservée aux Super Admins et Managers.</p>
           <Link href="/">
             <button className="wise-btn-tertiary">Retour à l'accueil</button>
           </Link>
@@ -407,7 +431,8 @@ export default function AdminDashboard() {
       {/* Shared Admin Navigation */}
       <AdminNavbar
         activePage="candidatures"
-        notificationSlot={
+        accessRole={user?.role}
+        notificationSlot={user?.role === "admin" ? (
           <div className="relative" ref={notifRef}>
             <button
               onClick={() => setNotifOpen(!notifOpen)}
@@ -475,7 +500,7 @@ export default function AdminDashboard() {
               </div>
             )}
           </div>
-        }
+        ) : null}
       />
 
       <div className="container py-10">
@@ -1010,7 +1035,17 @@ export default function AdminDashboard() {
         {/* ==================== ACTIVITY TAB ==================== */}
         {activeTab === "activity" && (
           <>
-            <h1 className="wise-display-md mb-8">Journal d'activité</h1>
+            <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+              <div><h1 className="wise-display-md">Logs administratifs</h1><p className="mt-1 text-sm text-muted-foreground">Historique filtrable des actions administratives, réservé aux Super Admins et Managers.</p></div>
+              <Badge variant="outline" className="gap-1"><Activity className="h-3.5 w-3.5" /> {activityLogQuery.data?.total || 0} événement(s)</Badge>
+            </div>
+            <div className="mb-5 grid gap-3 rounded-xl border border-border bg-card p-4 sm:grid-cols-2 lg:grid-cols-5">
+              <div className="space-y-1.5"><Label htmlFor="log-admin-filter">Utilisateur</Label><Select value={activityAdminId} onValueChange={(value) => { setActivityAdminId(value); setActivityPage(1); }}><SelectTrigger id="log-admin-filter"><SelectValue placeholder="Tous" /></SelectTrigger><SelectContent><SelectItem value="all">Tous les utilisateurs</SelectItem>{(activityActorsQuery.data || []).map((actor: any) => <SelectItem key={actor.id} value={String(actor.id)}>{actor.name || actor.email || `#${actor.id}`}</SelectItem>)}</SelectContent></Select></div>
+              <div className="space-y-1.5"><Label htmlFor="log-action-filter">Action</Label><Select value={activityAction} onValueChange={(value) => { setActivityAction(value); setActivityPage(1); }}><SelectTrigger id="log-action-filter"><SelectValue placeholder="Toutes" /></SelectTrigger><SelectContent><SelectItem value="all">Toutes les actions</SelectItem>{availableActivityActions.map((action) => <SelectItem key={action} value={action}>{action}</SelectItem>)}</SelectContent></Select></div>
+              <div className="space-y-1.5"><Label htmlFor="log-from-filter">Du</Label><Input id="log-from-filter" type="date" value={activityFrom} onChange={(event) => { setActivityFrom(event.target.value); setActivityPage(1); }} /></div>
+              <div className="space-y-1.5"><Label htmlFor="log-to-filter">Au</Label><Input id="log-to-filter" type="date" value={activityTo} onChange={(event) => { setActivityTo(event.target.value); setActivityPage(1); }} /></div>
+              <Button type="button" variant="outline" className="gap-2" onClick={() => { setActivityAdminId("all"); setActivityAction("all"); setActivityFrom(""); setActivityTo(""); setActivityPage(1); }}><Filter className="h-4 w-4" /> Réinitialiser</Button>
+            </div>
             {activityLogQuery.isLoading ? (
               <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
             ) : activityLogQuery.data?.items?.length ? (
@@ -1029,12 +1064,13 @@ export default function AdminDashboard() {
                   const IconComp = meta.icon;
                   const details = item.details as any;
                   return (
-                    <div key={item.id} className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card hover:bg-accent/30 transition-colors">
+                    <button type="button" key={item.id} className="flex w-full items-start gap-3 rounded-xl border border-border bg-card p-4 text-left transition-colors hover:bg-accent/30" onClick={() => setSelectedActivity(item)}>
                       <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: `${meta.color}15` }}>
                         <IconComp className="w-4 h-4" style={{ color: meta.color }} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium">{meta.label}</p>
+                        <p className="text-xs text-muted-foreground">Par {item.actorName || item.actorEmail || `Utilisateur #${item.adminId}`}</p>
                         {details?.candidateName && <p className="text-xs text-muted-foreground">Candidat : {details.candidateName}</p>}
                         {details?.subject && <p className="text-xs text-muted-foreground">Objet : {details.subject}</p>}
                         {details?.count && <p className="text-xs text-muted-foreground">{details.count} élément(s) concerné(s)</p>}
@@ -1042,7 +1078,7 @@ export default function AdminDashboard() {
                       <span className="text-xs text-muted-foreground whitespace-nowrap">
                         {new Date(item.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
                       </span>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
@@ -1053,11 +1089,18 @@ export default function AdminDashboard() {
                 <p className="text-xs text-muted-foreground mt-1">Les actions admin (acceptations, refus, communications) apparaîtront ici.</p>
               </div>
             )}
+            {(activityLogQuery.data?.total || 0) > 25 && <div className="mt-5 flex items-center justify-between gap-3"><p className="text-sm text-muted-foreground">Page {activityLogQuery.data?.page} sur {Math.max(1, Math.ceil((activityLogQuery.data?.total || 0) / 25))}</p><div className="flex gap-2"><Button type="button" variant="outline" size="sm" disabled={activityPage <= 1} onClick={() => setActivityPage((page) => page - 1)}>Précédent</Button><Button type="button" variant="outline" size="sm" disabled={activityPage >= Math.ceil((activityLogQuery.data?.total || 0) / 25)} onClick={() => setActivityPage((page) => page + 1)}>Suivant</Button></div></div>}
           </>
         )}
       </div>
 
       {/* ==================== DIALOGS ==================== */}
+      <Dialog open={Boolean(selectedActivity)} onOpenChange={(open) => { if (!open) setSelectedActivity(null); }}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader><DialogTitle>Détail de l’événement</DialogTitle></DialogHeader>
+          {selectedActivity && <div className="space-y-4 text-sm"><div className="grid gap-3 sm:grid-cols-2"><div><p className="text-xs text-muted-foreground">Action</p><p className="font-medium">{selectedActivity.action}</p></div><div><p className="text-xs text-muted-foreground">Horodatage</p><p className="font-medium">{new Date(selectedActivity.createdAt).toLocaleString("fr-FR")}</p></div><div><p className="text-xs text-muted-foreground">Utilisateur</p><p className="font-medium">{selectedActivity.actorName || selectedActivity.actorEmail || `Utilisateur #${selectedActivity.adminId}`}</p></div><div><p className="text-xs text-muted-foreground">Cible</p><p className="font-medium">{selectedActivity.targetType || "—"}{selectedActivity.targetId ? ` #${selectedActivity.targetId}` : ""}</p></div></div><div><p className="mb-2 text-xs text-muted-foreground">Données enregistrées</p><pre className="max-h-72 overflow-auto rounded-lg bg-muted p-3 text-xs whitespace-pre-wrap">{JSON.stringify(selectedActivity.details || {}, null, 2)}</pre></div></div>}
+        </DialogContent>
+      </Dialog>
 
       {/* Decision Dialog */}
       <Dialog open={decisionDialog.open} onOpenChange={(open) => { if (!open) setDecisionDialog({ open: false, appId: null, status: null, app: null }); }}>

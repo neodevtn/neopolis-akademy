@@ -697,7 +697,7 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
       }),
 
     updateUserRole: protectedProcedure
-      .input(z.object({ userId: z.number(), role: z.enum(["user", "admin"]) }))
+      .input(z.object({ userId: z.number(), role: z.enum(["user", "manager", "admin"]) }))
       .mutation(async ({ ctx, input }) => {
         if (ctx.user.role !== "admin") {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });

@@ -1,4 +1,4 @@
-import { eq, desc, sql, and, count, inArray } from "drizzle-orm";
+import { eq, desc, sql, and, count, inArray, gte, lte } from "drizzle-orm";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { getDb } from "./db";
@@ -339,14 +339,51 @@ export async function logAdminActivity(data: Omit<InsertAdminActivityLog, "id">)
   }
 }
 
-export async function getAdminActivityLog(page: number = 1, pageSize: number = 50) {
+export type AdminActivityLogFilters = {
+  page?: number;
+  pageSize?: number;
+  adminId?: number;
+  action?: string;
+  from?: Date;
+  to?: Date;
+};
+
+export async function getAdminActivityLog(filters: AdminActivityLogFilters = {}) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
+  const page = Math.max(1, filters.page || 1);
+  const pageSize = Math.min(100, Math.max(1, filters.pageSize || 50));
   const offset = (page - 1) * pageSize;
-  const items = await db.select().from(adminActivityLog)
-    .orderBy(desc(adminActivityLog.createdAt)).limit(pageSize).offset(offset);
-  const [{ total }] = await db.select({ total: count() }).from(adminActivityLog);
+  const conditions = [
+    filters.adminId ? eq(adminActivityLog.adminId, filters.adminId) : undefined,
+    filters.action ? eq(adminActivityLog.action, filters.action) : undefined,
+    filters.from ? gte(adminActivityLog.createdAt, filters.from) : undefined,
+    filters.to ? lte(adminActivityLog.createdAt, filters.to) : undefined,
+  ].filter(Boolean) as Parameters<typeof and>;
+  const where = conditions.length ? and(...conditions) : undefined;
+  const selection = {
+    id: adminActivityLog.id,
+    adminId: adminActivityLog.adminId,
+    action: adminActivityLog.action,
+    targetType: adminActivityLog.targetType,
+    targetId: adminActivityLog.targetId,
+    details: adminActivityLog.details,
+    createdAt: adminActivityLog.createdAt,
+    actorName: users.name,
+    actorEmail: users.email,
+  };
+  const items = await db.select(selection).from(adminActivityLog)
+    .leftJoin(users, eq(adminActivityLog.adminId, users.id))
+    .where(where).orderBy(desc(adminActivityLog.createdAt)).limit(pageSize).offset(offset);
+  const [{ total }] = await db.select({ total: count() }).from(adminActivityLog).where(where);
   return { items, total, page, pageSize };
+}
+
+export async function getAdminActivityActors() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select({ id: users.id, name: users.name, email: users.email, role: users.role })
+    .from(users).where(inArray(users.role, ["admin", "manager"])).orderBy(users.name);
 }
 
 // ============ Bulk Actions ============

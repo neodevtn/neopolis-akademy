@@ -1,4 +1,4 @@
-export type LearningRole = "admin" | "user" | null | undefined;
+export type LearningRole = "admin" | "manager" | "user" | null | undefined;
 
 export function isSequentialCourseCardLocked(input: {
   previousCourseCompleted: boolean;
