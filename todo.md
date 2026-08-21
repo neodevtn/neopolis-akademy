@@ -1783,18 +1783,18 @@
 ## Inventaire et intégration des catalogues DataCamp
 - [x] Inventorier les cours des catalogues technologies 54, 52, 25 et 53
 - [x] Vérifier pour chaque cours le paquet, les médias ou le droit d’intégration disponible
-- [ ] Proposer un classement Neopolis, les tags de compétences et le lot d’import prioritaire
-- [ ] Importer uniquement les cours autorisés avec blocs standards, médias locaux et TP autonomes
+- [x] Proposer un classement Neopolis, les tags de compétences et le lot d’import prioritaire
+- [x] Importer uniquement les cours autorisés avec blocs standards, médias locaux et TP autonomes
 
 ## Import contrôlé des paquets DataCamp depuis Google Drive
 - [x] Inventorier uniquement les ZIP complets présents dans les dossiers claude_anthropic, openai, gemini et n8n
-- [ ] Valider COURSE_MANIFEST.json, COMPLETENESS_REPORT.md, LOCAL_ASSET_INDEX.json et les exclusions SKIPPED_NONCONVENTIONAL_FORMAT.md
+- [x] Valider COURSE_MANIFEST.json, COMPLETENESS_REPORT.md, download_assets_manifest.json et MEDIA_VALIDATION_REPORT.json quand présents, ainsi que l’exclusion autorisée
 - [x] Déterminer pour chaque média Drive la stratégie de lecture fiable : diffusion directe autorisée ou copie versionnée nécessaire
-- [ ] Transformer catalogue, cours, chapitres et activités dans l’ordre canonique avec les blocs interactifs Neopolis
-- [ ] Vérifier les compteurs, médias, PDF, progression séquentielle, réponses masquées et le responsive mobile avant publication
+- [x] Transformer catalogue, cours, chapitres et activités dans l’ordre canonique avec les blocs interactifs Neopolis
+- [x] Vérifier les compteurs, médias, PDF, progression séquentielle, réponses masquées et le responsive mobile avant publication
 - [x] Ajouter un convertisseur réutilisable pour les schémas de manifestes DataCamp autorisés et un rapport d’audit par cours
 - [x] Importer et auditer un lot pilote multi-catalogues avant les paquets DataCamp volumineux
-- [ ] Importer les paquets restants par lots contrôlés, avec validation des médias et compteurs après chaque lot
+- [x] Importer les paquets restants par lots contrôlés, avec validation des médias et compteurs après chaque lot
 - [x] Générer et auditer le cours pilote « Introduction to Claude Models » : 3 chapitres, 29 activités, 10 vidéos, 19 exercices interactifs et 3 supports PDF locaux
 - [x] Générer et auditer le cours « Gemini in Gmail » : 1 chapitre, 7 activités, 4 vidéos, 3 activités interactives et 1 support PDF local
 - [x] Générer et auditer le cours « Gemini in Google Meet » : 1 chapitre, 10 activités, 5 vidéos, 5 activités interactives et 1 support PDF local
@@ -1833,11 +1833,11 @@
 - [x] Vérifier en production les médias locaux téléversés pour chaque cours DataCamp avant publication
 - [x] Vérifier que chaque TP DataCamp est autonome, présente ses prérequis, sa préparation d’environnement et ses ressources téléchargeables
 - [x] Afficher les activités totales DataCamp comme compteur principal sans confondre les exercices interactifs et les écrans du cours
-- [ ] Diagnostiquer les causes du FCP/LCP mobile de la page d’accueil et optimiser le rendu critique sans dégrader l’accessibilité
+- [x] Diagnostiquer les causes du FCP/LCP mobile de la page d’accueil et optimiser le rendu critique sans dégrader l’accessibilité
 - [x] Réviser l’audit DataCamp pour utiliser uniquement COURSE_MANIFEST, COMPLETENESS_REPORT, download_assets_manifest et MEDIA_VALIDATION_REPORT quand présents
-- [ ] Importer les 6 ZIP OpenAI conventionnels, les 8 ZIP Gemini conventionnels, les 3 ZIP n8n et les 8 ZIP Claude Anthropic autorisés
-- [ ] Écarter uniquement Building Claude Cowork Plugins et produire des preuves exactes pour tout autre blocage réel
-- [ ] Produire le tableau final par catalogue avec chapitres, leçons, exercices, vidéos, supports et statut QA
+- [x] Importer les 6 ZIP OpenAI conventionnels, les 8 ZIP Gemini conventionnels, les 3 ZIP n8n et les 8 ZIP Claude Anthropic autorisés
+- [x] Écarter uniquement Building Claude Cowork Plugins et produire des preuves exactes pour tout autre blocage réel
+- [x] Produire le tableau final par catalogue avec chapitres, leçons, exercices, vidéos, supports et statut QA
 ## Régressions brouillon et progression n8n
 - [x] Reproduire et corriger le contenu absent à l’ouverture d’un brouillon de communication
 - [x] Reproduire et corriger le passage bloqué entre les chapitres 2 et 3 du cours n8n
