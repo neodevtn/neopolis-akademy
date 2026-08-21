@@ -1809,11 +1809,13 @@
 - [x] Générer et auditer le cours « Gemini dans Google Slides » : 1 chapitre, 8 activités, 4 vidéos, 4 activités interactives et 1 support téléchargeable local
 - [x] Générer et auditer le cours « Développer des systèmes d’IA avec l’API OpenAI » : 3 chapitres, 36 activités, 11 vidéos, 25 activités interactives et 3 supports téléchargeables locaux
 - [x] Générer et auditer le cours « Utiliser l’API OpenAI Responses » : 3 chapitres, 34 activités, 11 vidéos, 19 activités interactives et 3 supports téléchargeables locaux
+- [x] Générer et auditer le cours « Travailler avec l’API OpenAI » : 3 chapitres, 29 activités, 9 vidéos, 20 activités interactives et 3 supports téléchargeables locaux
 - [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet OpenAI pilote avant toute importation de ses réponses et tris interactifs
-- [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet « Travailler avec l’API OpenAI » avant toute importation de ses réponses et tris interactifs
+- [x] Convertir « Travailler avec l’API OpenAI » depuis les champs canoniques du manifeste alternatif, avec médias locaux et TP autonomes
 - [ ] Obtenir le PDF local canonique `C-DUETDR-B-m0-l5-file-5.pdf` du paquet Gemini Drive avant d’importer ses deux activités visuelles
 - [ ] Obtenir le PDF local canonique `C-DUETSL-B-m0-l5-file-5.pdf` du paquet Gemini Slides avant d’importer son activité visuelle
 - [ ] Adapter et valider les formats `SingleProcessExercise`, `DragAndDropExercise` et `TabExercise` du paquet « Concevoir des systèmes d’IA avec l’API OpenAI » avant import
+- [x] Restaurer le mapping exact des médias locaux et des ressources de TP du cours « Travailler avec l’API OpenAI » avant publication
 - [ ] Adapter et valider les 20 exercices console et 6 tris interactifs du paquet « Software Development with Claude Code » avant import
 - [x] Utiliser le cours n8n DataCamp existant comme référence fonctionnelle et de structure pour les conversions suivantes
 - [x] Créer une catégorie distincte pour les parcours de préparation aux certifications Anthropic officielles

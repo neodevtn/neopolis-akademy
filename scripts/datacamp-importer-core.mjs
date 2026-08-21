@@ -402,7 +402,57 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
   };
 }
 
+function normalizeAlternativeManifest(manifest) {
+  if (manifest?.schema_version === "neopolis.datacamp_course.v1") return manifest;
+  if (!manifest?.course_slug || !Array.isArray(manifest?.chapters) || !Array.isArray(manifest?.exercises)) return manifest;
+  const activitiesByChapter = new Map();
+  for (const exercise of manifest.exercises) {
+    const chapterNumber = Number(exercise.chapter_number);
+    const extracted = exercise.extracted || {};
+    const content = {
+      assignment_text: extracted.assignment || exercise.visible_text || "",
+      instructions_text: extracted.instructions || "",
+      hint_text: extracted.hint || "",
+      solution: extracted.solution || "",
+      sample_code: extracted.sample_code || "",
+      pre_exercise_code: extracted.pre_exercise_code || "",
+    };
+    const normalizedType = ["DragAndDropExercise", "ChatExercise"].includes(exercise.type)
+      ? "NormalExercise"
+      : exercise.type;
+    const activity = {
+      ...exercise,
+      type: normalizedType,
+      chapter_number: chapterNumber,
+      exercise_number: Number(exercise.exercise_number || extracted.number || 0),
+      content,
+      video: {
+        mp4_local: exercise.video_mp4 || "",
+        audio_local: exercise.audio_mp3 || "",
+        subtitles: { fr_local: exercise.subtitle_vtt_fr || "", en_local: exercise.subtitle_vtt_en || "" },
+        transcript_segments: exercise.transcript_text ? [{ heading: exercise.title || "", text: exercise.transcript_text }] : [],
+      },
+    };
+    activitiesByChapter.set(chapterNumber, [...(activitiesByChapter.get(chapterNumber) || []), activity]);
+  }
+  return {
+    schema_version: "neopolis.datacamp_course.v1",
+    course: { slug: manifest.course_slug, title: manifest.course_title || manifest.course_slug },
+    source: manifest.source || { provider: "DataCamp", extraction_language: "fr" },
+    completeness: {
+      chapters_expected: manifest.counts?.chapters || manifest.chapters.length,
+      activities_expected_from_outline: manifest.counts?.exercises || manifest.exercises.length,
+      videos_expected_from_chapter_metadata: manifest.counts?.videos || 0,
+    },
+    chapters: manifest.chapters.map((chapter) => ({
+      number: Number(chapter.number), title: chapter.title, description: chapter.description || "",
+      slides_pdf_local: chapter.local_pdf || "", activities: activitiesByChapter.get(Number(chapter.number)) || [],
+    })),
+  };
+}
+
 export function convertDataCampV1(manifest, assetMap = new Map()) {
+  manifest = normalizeAlternativeManifest(manifest);
   if (manifest?.schema_version !== "neopolis.datacamp_course.v1") {
     throw new Error("Le convertisseur v1 exige un COURSE_MANIFEST.json au schéma neopolis.datacamp_course.v1.");
   }
@@ -434,6 +484,7 @@ export function convertDataCampV1(manifest, assetMap = new Map()) {
 }
 
 export function describeDataCampV1(manifest) {
+  manifest = normalizeAlternativeManifest(manifest);
   if (manifest?.schema_version !== "neopolis.datacamp_course.v1") {
     throw new Error("Schéma de manifest non v1.");
   }
