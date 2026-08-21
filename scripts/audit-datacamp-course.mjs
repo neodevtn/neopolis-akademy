@@ -138,12 +138,50 @@ if (productionBaseUrl && media.length) {
     let lastResult = { url, status: 0, contentType: "", ok: false };
     for (let attempt = 1; attempt <= 3; attempt += 1) {
       try {
-        const response = await fetch(`${productionBaseUrl}${url}`, { method: "HEAD", redirect: "follow" });
+        const response = await fetch(`${productionBaseUrl}${url}`, {
+          method: "HEAD",
+          redirect: "follow",
+          signal: AbortSignal.timeout(8000),
+        });
         lastResult = { url, status: response.status, contentType: response.headers.get("content-type") || "", ok: response.ok, attempt };
-        if (response.ok || response.status < 500 || attempt === 3) return lastResult;
+        if (response.ok) return lastResult;
+
+        const rangeResponse = await fetch(`${productionBaseUrl}${url}`, {
+          method: "GET",
+          headers: { Range: "bytes=0-1023" },
+          redirect: "follow",
+          signal: AbortSignal.timeout(30000),
+        });
+        lastResult = {
+          url,
+          status: rangeResponse.status,
+          contentType: rangeResponse.headers.get("content-type") || "",
+          ok: rangeResponse.ok,
+          attempt,
+          checkedWith: "range_get",
+        };
+        if (rangeResponse.ok || rangeResponse.status < 500 || attempt === 3) return lastResult;
       } catch (error) {
-        lastResult = { url, status: 0, contentType: "", ok: false, error: String(error), attempt };
-        if (attempt === 3) return lastResult;
+        try {
+          const rangeResponse = await fetch(`${productionBaseUrl}${url}`, {
+            method: "GET",
+            headers: { Range: "bytes=0-1023" },
+            redirect: "follow",
+            signal: AbortSignal.timeout(30000),
+          });
+          lastResult = {
+            url,
+            status: rangeResponse.status,
+            contentType: rangeResponse.headers.get("content-type") || "",
+            ok: rangeResponse.ok,
+            attempt,
+            checkedWith: "range_get",
+          };
+          if (rangeResponse.ok || attempt === 3) return lastResult;
+        } catch (rangeError) {
+          lastResult = { url, status: 0, contentType: "", ok: false, error: `${String(error)}; ${String(rangeError)}`, attempt };
+          if (attempt === 3) return lastResult;
+        }
       }
       await new Promise((resolve) => setTimeout(resolve, attempt * 350));
     }
