@@ -257,3 +257,111 @@ Le rapport visuel confirme aussi que la page formation affiche déjà **7 activi
 Le paquet Drive canonique du 21 août confirme strictement **1 chapitre**, **7 activités extraites**, **4 vidéos**, **2 QCM** et **1 activité visuelle**. Les 16 exercices visibles dans l’interface DataCamp ne correspondent donc pas à 16 écrans canoniques à importer ; le JSON Neopolis reproduit déjà l’intégralité du manifeste disponible. La carte contient `totalActivities: 7` et le rendu partenaire utilise cette valeur en priorité sur son sous-total de 3 exercices interactifs.
 
 La règle est couverte par un test de non-régression. Les médias MP4/PDF, QCM et activité visuelle restent inchangés, tout comme les checkpoints supplémentaires et les vidéos recommandées intentionnels.
+
+## 07 — DataCamp - Introduction aux modèles Claude
+
+Le rapport Medium met en évidence un écart de compteur entre la **carte catalogue (19 activités)** et la **page formation (29 activités)**, tandis que la source DataCamp affiche également **29 exercices** et **10 vidéos**. Les preuves visuelles montrent que le premier écran source est un écran média et que le premier écran Neopolis reste cohérent, avec piste audio locale, sous-titres VTT et PDF lisibles. Le premier écran ne révèle donc aucun manque de média ni absence d’activité ; l’écart est bien celui d’une **agrégation catalogue** incomplète.
+
+Le rapport technique confirme que les composants interactifs détectés sur le premier écran source sont déjà couverts côté Neopolis par les blocs standard attendus, et que les médias du premier écran répondent HTTP 200. La correction prioritaire porte donc sur la **carte catalogue**, qui doit refléter les **29 activités canoniques** déjà visibles sur la page formation, sans modifier les enrichissements intentionnels existants.
+
+### Résolution — agrégation catalogue vérifiée
+
+L’index catalogue et le JSON publié sont cohérents : **29 activités canoniques**, **19 exercices interactifs**, **10 vidéos** et **3 téléchargements**. La carte partenaire utilise `totalActivities: 29` comme compteur principal, alors que `exerciseCount: 19` reste le sous-détail interactif. Aucun écran, média, checkpoint supplémentaire ou vidéo recommandée n’a été modifié.
+
+La règle est couverte par un test de non-régression dédié ; TypeScript est valide.
+
+## 08 — DataCamp - Développement logiciel avec Claude Code
+
+Le rapport Medium signale un écart d’agrégation entre la **carte catalogue (28 activités)** et la **page formation (43 activités)**, alors que la source DataCamp affiche elle aussi **43 exercices** et **15 vidéos**. Les preuves visuelles et techniques indiquent toutefois que le premier écran Neopolis est sain : vidéo MP4 locale, PDF de slides valide, et composants source du premier écran couverts par les blocs standards de Neopolis. L’écart ne vient donc pas d’un manque de média ou d’un écran absent au démarrage, mais d’un **compteur de carte catalogue resté sur le sous-total interactif**.
+
+Le rapport montre en outre que la page formation expose déjà **43 activités**, **20 exercices interactifs**, **15 vidéos** et **4 téléchargements**. La correction prioritaire consiste donc à aligner la carte catalogue sur les **43 activités canoniques**, tout en conservant les **20 exercices interactifs** comme sous-détail, sans toucher aux enrichissements intentionnels existants.
+
+### Résolution — agrégation catalogue vérifiée
+
+L’index catalogue et le JSON publié sont cohérents : **43 activités canoniques**, **28 activités interactives** (20 exercices console, 6 tris et 2 QCM), **15 vidéos** et **4 téléchargements**. La valeur de 20 observée dans le rapport correspond au seul sous-ensemble des exercices console ; elle ne remplace pas le total interactif. La carte partenaire utilise `totalActivities: 43` comme compteur principal. Aucun écran, média, checkpoint supplémentaire ou vidéo recommandée n’est modifié.
+
+La règle est couverte par un test de non-régression dédié ; TypeScript est valide.
+
+## 09 — DataCamp - Claude 101
+
+Le rapport Medium met en évidence un écart de compteur entre la **carte catalogue (17 activités)** et la **page formation (20 activités)**, tandis que la source DataCamp affiche elle aussi **20 exercices** et **2 vidéos**. Les preuves visuelles montrent que le premier écran Neopolis est bien un écran pédagogique cohérent avec la source, et que le PDF de slides local répond correctement. Le premier écran ne signale donc pas un manque de média ou de contenu, mais bien une **agrégation catalogue incomplète**.
+
+Le rapport précise aussi que la page formation expose déjà **20 activités**, **3 exercices interactifs**, **2 vidéos** et **2 téléchargements**. La correction prioritaire porte donc sur la **carte catalogue**, qui doit refléter les **20 activités canoniques** déjà visibles sur la page formation, sans toucher aux enrichissements intentionnels existants.
+
+### Résolution — agrégation catalogue vérifiée
+
+L’index catalogue et le JSON publié sont cohérents : **20 activités canoniques**, **17 activités interactives** (3 exercices de prompting, 2 tris et 12 activités visuelles), **2 vidéos** et **2 téléchargements**. La valeur de 3 observée dans le rapport correspond au seul sous-ensemble des exercices de prompting, et non au total des activités interactives. La carte partenaire utilise `totalActivities: 20` comme compteur principal. Aucun écran, média, checkpoint supplémentaire ou vidéo recommandée n’est modifié.
+
+La règle est couverte par un test de non-régression dédié ; TypeScript est valide.
+
+## 10 — DataCamp - Claude Code en action
+
+Le rapport Medium documente deux écarts distincts. D’une part, la **carte catalogue affiche 22 activités** alors que la **page formation en expose 31**, en cohérence avec la source DataCamp (**31 exercices**, **9 vidéos**). D’autre part, un média précis est signalé comme instable côté streaming : `ch01_ex01_video_steering_long_sessions_476f2ecf.mp4`, accessible en HTTP mais historiquement sensible aux vérifications `ffprobe` ou aux lectures Range selon l’audit.
+
+Les preuves visuelles montrent toutefois que le premier écran Neopolis est bien cohérent avec la source et que le média principal répond déjà **HTTP 206** via `/api/assets/`. Le rapport technique confirme en plus un état vidéo `readyState=0`, `duration=none`, `dimensions=0x0` au moment du snapshot audité, ce qui pointe davantage vers une **initialisation/streaming instable** qu’un média absent. La correction devra donc combiner une **vérification d’agrégation catalogue** à **31 activités canoniques** et un **contrôle ciblé de stabilité Range/lecture** pour cette première vidéo, sans supprimer les enrichissements intentionnels.
+
+### Résolution — agrégation et lecture média vérifiées
+
+L’index catalogue et le JSON publié sont cohérents : **31 activités canoniques**, **22 activités interactives** (9 exercices console, 4 tris et 9 activités visuelles), **9 vidéos** et les supports correspondants. La carte partenaire utilise `totalActivities: 31` comme compteur principal ; aucun écran, média, checkpoint supplémentaire ou vidéo recommandée n’est modifié.
+
+La vidéo `ch01_ex01_video_steering_long_sessions_476f2ecf.mp4` a fait l’objet de 20 requêtes Range consécutives en production après le renforcement du proxy : **20/20** ont répondu `206 video/mp4`. L’échec intermédiaire constaté lors du premier contrôle ne s’est pas reproduit ; la reprise des signatures et requêtes du proxy absorbe désormais l’instabilité transitoire du stockage. La règle de métrique est couverte par test et TypeScript est valide.
+
+## 15 — DataCamp - Introduction à Google Workspace avec Gemini
+
+Le rapport Medium met en évidence un écart de compteur entre la **carte catalogue (4 activités)** et la **page formation (7 activités)**, tandis que la source DataCamp affiche elle aussi **7 exercices** et **3 vidéos**. Les preuves visuelles et techniques confirment que le premier écran Neopolis est cohérent avec la source sur le plan média : le MP4 local répond `HTTP 200`, la durée vidéo est détectée et le PDF de slides est lisible. Le premier écran ne révèle donc ni média absent ni activité manquante ; l’écart porte sur une **agrégation catalogue incomplète**.
+
+Le rapport montre aussi que la page formation expose déjà **7 activités**, **3 vidéos** et **1 téléchargement**. La correction prioritaire consistera à aligner la carte catalogue sur les **7 activités canoniques** déjà visibles sur la page formation, sans modifier les enrichissements intentionnels existants.
+
+### Résolution — agrégation catalogue vérifiée
+
+L’index catalogue et le JSON publié sont cohérents : **7 activités canoniques**, **4 activités interactives**, **3 vidéos** et **1 téléchargement**. La carte partenaire utilise `totalActivities: 7` comme compteur principal, alors que le sous-total interactif reste disponible séparément. Aucun écran, média, checkpoint supplémentaire ou vidéo recommandée n’est modifié.
+
+La règle est couverte par un test de non-régression dédié ; TypeScript est valide.
+
+## 16 — DataCamp - Gemini dans Gmail
+
+Le rapport Medium met en évidence un écart de compteur entre la **carte catalogue (3 activités)** et la **page formation (7 activités)**, alors que la source DataCamp affiche également **7 exercices** et **4 vidéos**. Les preuves visuelles et techniques confirment que le premier écran Neopolis est cohérent avec la source sur le plan média : MP4 local lisible, durée détectée et PDF de slides accessible. Il n’y a donc pas de manque de média ni d’écran d’ouverture absent ; l’écart est celui d’une **agrégation catalogue incomplète**.
+
+Le rapport montre aussi que la page formation expose déjà **7 activités**, **4 vidéos** et **1 téléchargement**. La correction prioritaire consiste à aligner la carte catalogue sur les **7 activités canoniques** déjà visibles sur la page formation, sans modifier les enrichissements intentionnels existants.
+
+### Résolution — agrégation catalogue vérifiée
+
+L’index catalogue et le JSON publié sont cohérents : **7 activités canoniques**, **3 activités interactives déclarées**, **4 vidéos** et **1 téléchargement**. La carte partenaire utilise `totalActivities: 7` comme compteur principal, tandis que le sous-total interactif reste distinct. Aucun écran, média, checkpoint supplémentaire ou vidéo recommandée n’est modifié.
+
+La règle est couverte par un test de non-régression dédié ; TypeScript est valide.
+
+## 19 — DataCamp - Gemini dans Google Docs
+
+Le rapport Medium met en évidence un écart de compteur entre la **carte catalogue (4 activités)** et la **page formation (9 activités)**, alors que la source DataCamp affiche également **9 exercices** et **5 vidéos**. Les preuves visuelles et techniques confirment que le premier écran Neopolis est cohérent avec la source sur le plan média : MP4 local lisible, durée détectée et PDF de slides accessible. Il n’y a donc pas de manque de média ni d’écran d’ouverture absent ; l’écart est celui d’une **agrégation catalogue incomplète**.
+
+Le rapport montre aussi que la page formation expose déjà **9 activités**, **5 vidéos** et **1 téléchargement**. La correction prioritaire consiste à aligner la carte catalogue sur les **9 activités canoniques** déjà visibles sur la page formation, sans modifier les enrichissements intentionnels existants.
+
+### Résolution — agrégation catalogue vérifiée
+
+L’index catalogue et le JSON publié sont cohérents : **9 activités canoniques**, **4 activités interactives déclarées**, **5 vidéos** et **1 téléchargement**. La carte partenaire utilise `totalActivities: 9` comme compteur principal, tandis que le sous-total interactif reste distinct. Aucun écran, média, checkpoint supplémentaire ou vidéo recommandée n’est modifié.
+
+La règle est couverte par un test de non-régression dédié ; TypeScript est valide.
+
+## 20 — DataCamp - Gemini dans Google Drive
+
+Le rapport Medium met en évidence un écart de compteur entre la **carte catalogue (7 activités)** et la **page formation (15 activités)**, alors que la source DataCamp affiche également **15 exercices** et **7 vidéos**. Les preuves visuelles et techniques confirment que le premier écran Neopolis est cohérent avec la source sur le plan média : MP4 local lisible, variante HLS disponible, durée détectée et PDF de slides accessible. Il n’y a donc pas de manque de média ni d’écran d’ouverture absent ; l’écart est celui d’une **agrégation catalogue incomplète**.
+
+Le rapport montre aussi que la page formation expose déjà **15 activités**, **7 vidéos** et **1 téléchargement**. La correction prioritaire consiste à aligner la carte catalogue sur les **15 activités canoniques** déjà visibles sur la page formation, sans modifier les enrichissements intentionnels existants.
+
+### Résolution — agrégation catalogue vérifiée
+
+L’index catalogue et le JSON publié sont cohérents : **15 activités canoniques**, **7 activités interactives déclarées**, **7 vidéos** et **1 téléchargement**. La carte partenaire utilise `totalActivities: 15` comme compteur principal, tandis que le sous-total interactif reste distinct. Aucun écran, média, checkpoint supplémentaire ou vidéo recommandée n’est modifié.
+
+La règle est couverte par un test de non-régression dédié ; TypeScript est valide.
+
+## 21 — DataCamp - Gemini dans Google Slides
+
+Le rapport Medium met en évidence un écart de compteur entre la **carte catalogue (4 activités)** et la **page formation (8 activités)**, alors que la source DataCamp affiche également **8 exercices** et **4 vidéos**. Les preuves visuelles et techniques confirment que le premier écran Neopolis est cohérent avec la source sur le plan média : MP4 local lisible, variante HLS disponible, durée détectée et PDF de slides accessible. Il n’y a donc pas de manque de média ni d’écran d’ouverture absent ; l’écart est celui d’une **agrégation catalogue incomplète**.
+
+Le rapport montre aussi que la page formation expose déjà **8 activités**, **4 vidéos** et **1 téléchargement**. La correction prioritaire consiste à aligner la carte catalogue sur les **8 activités canoniques** déjà visibles sur la page formation, sans modifier les enrichissements intentionnels existants.
+
+### Résolution — agrégation catalogue vérifiée
+
+L’index catalogue et le JSON publié sont cohérents : **8 activités canoniques**, **4 activités interactives déclarées**, **4 vidéos** et **1 téléchargement**. La carte partenaire utilise `totalActivities: 8` comme compteur principal, tandis que le sous-total interactif reste distinct. Aucun écran, média, checkpoint supplémentaire ou vidéo recommandée n’est modifié.
+
+La règle est couverte par un test de non-régression dédié ; TypeScript est valide.

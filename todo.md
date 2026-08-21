@@ -1943,3 +1943,13 @@
 - [x] Traiter le cours High « Gemini in Google Meet » : vérifier le manifeste canonique à 10 activités et couvrir l’agrégation de compteur sans modifier les enrichissements intentionnels
 - [x] Vérifier le total d’activités de la carte Gemini Meet afin d’afficher les 10 activités canoniques plutôt que les 5 exercices interactifs
 - [x] Traiter le cours High « Gemini in Google Sheets » : vérifier le manifeste canonique à 7 activités et couvrir l’agrégation de compteur sans modifier les enrichissements intentionnels
+- [x] Traiter le cours Medium « Introduction to Claude Models » : vérifier l’agrégation à 29 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
+- [x] Traiter le cours Medium « Software Development with Claude Code » : vérifier l’agrégation à 43 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
+- [x] Traiter le cours Medium « Claude 101 » : vérifier l’agrégation à 20 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
+- [x] Traiter le cours Medium « Claude Code in Action » : vérifier l’agrégation à 31 activités canoniques et la stabilité Range du média signalé, sans modifier les enrichissements intentionnels
+- [x] Stabiliser le streaming Range de la vidéo Claude Code in Action `ch01_ex01_video_steering_long_sessions_476f2ecf.mp4` après les erreurs 500 intermittentes confirmées
+- [x] Traiter le cours Medium « Introduction to Google Workspace with Gemini » : vérifier l’agrégation à 7 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
+- [x] Traiter le cours Medium « Gemini in Gmail » : vérifier l’agrégation à 7 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
+- [x] Traiter le cours Medium « Gemini in Google Docs » : vérifier l’agrégation à 9 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
+- [x] Traiter le cours Medium « Gemini in Google Drive » : vérifier l’agrégation à 15 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
+- [x] Traiter le cours Medium « Gemini in Google Slides » : vérifier l’agrégation à 8 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
