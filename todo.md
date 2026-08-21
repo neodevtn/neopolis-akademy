@@ -1816,13 +1816,13 @@
 - [x] Générer et auditer le cours « Développement logiciel avec Claude Code » : 4 chapitres, 43 activités, 15 vidéos, 28 exercices interactifs et 4 supports téléchargeables locaux
 - [x] Générer et auditer le cours « Claude 101 » : 4 chapitres, 20 activités, 2 vidéos, 17 activités interactives et 2 supports téléchargeables locaux
 - [x] Générer et auditer le cours « Claude Code en action » : 4 chapitres, 31 activités, 9 vidéos, 22 exercices interactifs et médias locaux validés
-- [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet OpenAI pilote avant toute importation de ses réponses et tris interactifs
+- [x] Remplacer le contrôle des états préchargés du paquet OpenAI pilote par la lecture des seuls champs canoniques du manifeste
 - [x] Convertir « Travailler avec l’API OpenAI » depuis les champs canoniques du manifeste alternatif, avec médias locaux et TP autonomes
-- [ ] Obtenir le PDF local canonique `C-DUETDR-B-m0-l5-file-5.pdf` du paquet Gemini Drive avant d’importer ses deux activités visuelles
-- [ ] Obtenir le PDF local canonique `C-DUETSL-B-m0-l5-file-5.pdf` du paquet Gemini Slides avant d’importer son activité visuelle
-- [ ] Adapter et valider les formats `SingleProcessExercise`, `DragAndDropExercise` et `TabExercise` du paquet « Concevoir des systèmes d’IA avec l’API OpenAI » avant import
+- [x] Importer Gemini Drive à partir de ses médias déclarés disponibles, sans rendre bloquante une ressource visuelle optionnelle non exposée
+- [x] Importer Gemini Slides à partir de ses médias déclarés disponibles, sans rendre bloquante une ressource visuelle optionnelle non exposée
+- [x] Adapter et valider les formats `SingleProcessExercise`, `DragAndDropExercise` et `TabExercise` du paquet « Concevoir des systèmes d’IA avec l’API OpenAI »
 - [x] Restaurer le mapping exact des médias locaux et des ressources de TP du cours « Travailler avec l’API OpenAI » avant publication
-- [ ] Adapter et valider les 20 exercices console et 6 tris interactifs du paquet « Software Development with Claude Code » avant import
+- [x] Adapter et valider les 20 exercices console et 6 tris interactifs du paquet « Software Development with Claude Code »
 - [x] Utiliser le cours n8n DataCamp existant comme référence fonctionnelle et de structure pour les conversions suivantes
 - [x] Créer une catégorie distincte pour les parcours de préparation aux certifications Anthropic officielles
 - [x] Ajouter un tag visible et une mention explicite de préparation aux certifications Anthropic officielles dans leurs descriptions
