@@ -15,7 +15,13 @@ async function fetchCourseData(courseId: string): Promise<{ lessons: any[]; exer
     return pendingFetches.get(courseId)!;
   }
 
-  const promise = fetch(`/data/courses/${courseId}.json`)
+  const promise = fetch(`/data/courses/${courseId}.json`, {
+    // Les JSON de cours sont mis à jour indépendamment du bundle JavaScript.
+    // La revalidation explicite évite qu’un apprenant voie un ancien cours après
+    // une publication tout en conservant le cache mémoire de la session.
+    cache: "no-store",
+    headers: { "Cache-Control": "no-cache" },
+  })
     .then((res) => {
       if (!res.ok) throw new Error(`Course ${courseId} not found`);
       return res.json();
