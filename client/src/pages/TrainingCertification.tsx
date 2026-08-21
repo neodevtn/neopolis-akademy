@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { motion } from "framer-motion";
 import { isSequentialCourseCardLocked } from "@shared/learningAccess";
+import { usesActivityTotals } from "@shared/trainingMetrics";
 import { BrandLogo } from "@/components/BrandLogo";
 
 /* ─── Animation Variants ─── */
@@ -36,6 +37,7 @@ export default function TrainingCertification() {
   const courses = cert ? trainingIndex.courses.filter((c) => c.certId === certId) : [];
   const courseIds = courses.map((c) => c.id);
   const isDataCampPartner = (cert as any)?.group === "datacamp_partner";
+  const usesActivityTotal = usesActivityTotals(cert as any);
   const dataCampActivityTotal = useMemo(() => courses.reduce((sum, course) => sum + Number((course as any).totalActivities || (course as any).chapterCount || 0), 0), [courses]);
 
   const totalLessonsMap = useMemo(() => {
@@ -223,7 +225,7 @@ export default function TrainingCertification() {
               {cert.courseCount} {t({ en: "courses", fr: "cours" })}
             </span>
             <span className="flex items-center gap-1.5">
-              {isDataCampPartner ? dataCampActivityTotal : cert.totalExercises} {isDataCampPartner ? t({ en: "activities", fr: "activités" }) : ((cert as any).exerciseLabel ? t((cert as any).exerciseLabel) : t({ en: "exercises", fr: "exercices" }))}
+              {usesActivityTotal ? dataCampActivityTotal : cert.totalExercises} {usesActivityTotal ? t({ en: "activities", fr: "activités" }) : ((cert as any).exerciseLabel ? t((cert as any).exerciseLabel) : t({ en: "exercises", fr: "exercices" }))}
             </span>
             {cert.totalVideos > 0 && (
               <span className="flex items-center gap-1.5">
@@ -389,7 +391,9 @@ export default function TrainingCertification() {
         {/* Progress Summary Cards */}
         <motion.div variants={fadeInUp} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-8">
           {(() => {
-            const totalChapters = courses.reduce((sum, c) => sum + ((c as any).chapterCount || c.lessonCount || 0), 0);
+            const totalChapters = usesActivityTotal
+              ? courses.reduce((sum, c) => sum + Number((c as any).totalActivities || (c as any).chapterCount || 0), 0)
+              : courses.reduce((sum, c) => sum + ((c as any).chapterCount || c.lessonCount || 0), 0);
             const completedChapters = Object.values(courseProgressMap).reduce((sum, p) => sum + p.completed, 0);
             const totalExercises = courses.reduce((sum, c) => sum + (c.exerciseCount || 0), 0);
             const totalActivities = courses.reduce((sum, c) => sum + Number((c as any).totalActivities || (c as any).chapterCount || 0), 0);
@@ -403,9 +407,9 @@ export default function TrainingCertification() {
                     <BookOpen className="w-4 h-4 text-primary" />
                   </div>
                   <div className="text-lg font-bold text-foreground">{completedChapters}/{totalChapters}</div>
-                  <div className="text-[11px] text-muted-foreground mt-0.5">{isDataCampPartner ? t({ en: "Activities", fr: "Activités" }) : t({ en: "Chapters", fr: "Chapitres" })}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">{usesActivityTotal ? t({ en: "Activities", fr: "Activités" }) : t({ en: "Chapters", fr: "Chapitres" })}</div>
                 </div>
-                {!isDataCampPartner && (
+                {!usesActivityTotal && (
                   <div className="bg-card rounded-xl border border-border p-4 text-center">
                     <div className="w-9 h-9 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mx-auto mb-2">
                       <Target className="w-4 h-4 text-orange-600 dark:text-orange-400" />
@@ -492,9 +496,9 @@ export default function TrainingCertification() {
                         <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <BookOpen className="w-3 h-3" />
-                            {isDataCampPartner ? courseChapterTotal : progress.total} {isDataCampPartner ? t({ en: "chapter", fr: "chapitre" }) : t({ en: "chapters", fr: "chapitres" })}
+                            {usesActivityTotal ? courseChapterTotal : progress.total} {t({ en: "chapters", fr: "chapitres" })}
                           </span>
-                          {isDataCampPartner ? (
+                          {usesActivityTotal ? (
                             <span className="flex items-center gap-1">{courseActivityTotal} {t({ en: "activities", fr: "activités" })}</span>
                           ) : course.exerciseCount > 0 && (
                             <span className="flex items-center gap-1">
@@ -544,9 +548,9 @@ export default function TrainingCertification() {
                       <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <BookOpen className="w-3 h-3" />
-                          {isDataCampPartner ? courseChapterTotal : progress.total} {isDataCampPartner ? t({ en: "chapter", fr: "chapitre" }) : t({ en: "chapters", fr: "chapitres" })}
+                          {usesActivityTotal ? courseChapterTotal : progress.total} {t({ en: "chapters", fr: "chapitres" })}
                         </span>
-                        {isDataCampPartner ? (
+                        {usesActivityTotal ? (
                           <span className="flex items-center gap-1">{courseActivityTotal} {t({ en: "activities", fr: "activités" })}</span>
                         ) : course.exerciseCount > 0 && (
                           <span className="flex items-center gap-1">
