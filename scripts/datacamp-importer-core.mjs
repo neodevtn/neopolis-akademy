@@ -79,7 +79,7 @@ export function assetProxyUrl(storagePath) {
 
 export function parseUploadLog(uploadLog) {
   const map = new Map();
-  const pattern = /Uploading file \(webdev private\):\s*(.+?)\s*\nFile uploaded successfully!\s*\nStorage Path:\s*(\/manus-storage\/[^\s]+)/g;
+  const pattern = /Uploading file \(webdev private\):\s*(.+?)\s*\n(?:File uploaded successfully!\s*\n)?Storage Path:\s*(\/manus-storage\/[^\s]+)/g;
   for (const match of uploadLog.matchAll(pattern)) {
     const sourcePath = match[1].replace(/\s+\(size:\s*\d+\s+bytes\)\s*$/, "");
     map.set(path.normalize(sourcePath), assetProxyUrl(match[2]));

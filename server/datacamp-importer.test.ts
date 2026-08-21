@@ -102,6 +102,8 @@ describe("convertDataCampV1", () => {
   it("transforme les chemins de stockage uploadés en références du proxy applicatif", () => {
     const map = parseUploadLog("Uploading file (webdev private): /tmp/media.mp3\nFile uploaded successfully!\nStorage Path: /manus-storage/media_abc12345.mp3");
     expect(map.get("/tmp/media.mp3")).toBe("/api/assets/media_abc12345.mp3");
+    const compactMap = parseUploadLog("Uploading file (webdev private): /tmp/compact.mp3\nStorage Path: /manus-storage/compact_abc12345.mp3");
+    expect(compactMap.get("/tmp/compact.mp3")).toBe("/api/assets/compact_abc12345.mp3");
   });
 
   it("associe les compétences aux leçons à partir du contenu canonique, avec un repli explicable", () => {
