@@ -1808,6 +1808,7 @@
 - [x] Générer et auditer le cours « Gemini dans Google Drive » : 2 chapitres, 15 activités, 7 vidéos, 8 activités interactives et 1 support téléchargeable local
 - [x] Générer et auditer le cours « Gemini dans Google Slides » : 1 chapitre, 8 activités, 4 vidéos, 4 activités interactives et 1 support téléchargeable local
 - [x] Générer et auditer le cours « Développer des systèmes d’IA avec l’API OpenAI » : 3 chapitres, 36 activités, 11 vidéos, 25 activités interactives et 3 supports téléchargeables locaux
+- [x] Générer et auditer le cours « Utiliser l’API OpenAI Responses » : 3 chapitres, 34 activités, 11 vidéos, 19 activités interactives et 3 supports téléchargeables locaux
 - [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet OpenAI pilote avant toute importation de ses réponses et tris interactifs
 - [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet « Travailler avec l’API OpenAI » avant toute importation de ses réponses et tris interactifs
 - [ ] Obtenir le PDF local canonique `C-DUETDR-B-m0-l5-file-5.pdf` du paquet Gemini Drive avant d’importer ses deux activités visuelles
