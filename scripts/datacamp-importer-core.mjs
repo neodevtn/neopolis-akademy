@@ -285,6 +285,19 @@ function buildBucketSortBlock(activity) {
   };
 }
 
+function buildManifestContentBlock(activity) {
+  const content = activityContent(activity);
+  const body = [
+    htmlToText(content.assignment_text || content.assignment_html || ""),
+    htmlToText(content.instructions_text || content.instructions_markdown || ""),
+  ].filter(Boolean).join("\n\n");
+  return {
+    type: "content",
+    id: `dc_${activity.chapter_number}_act_${String(activity.exercise_number).padStart(2, "0")}_content`,
+    body: toI18n(body || activity.title),
+  };
+}
+
 function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
   const slidesPdf = assetFor(sourceChapter.slides_pdf_local, assetMap);
   let blocks;
@@ -312,6 +325,11 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
     case "DragAndDropExercise":
       type = "exercise";
       blocks = [buildBucketSortBlock(activity)];
+      break;
+    case "BulletExercise":
+    case "TabExercise":
+      type = "teaching";
+      blocks = [buildManifestContentBlock(activity)];
       break;
     case "VisualExercise":
       type = "resource";
