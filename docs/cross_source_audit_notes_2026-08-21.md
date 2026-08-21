@@ -154,3 +154,22 @@ Le rapport croisé classe cette formation en **Critical**. Il compare les **32 e
 Les preuves visuelles du PDF montrent la fiche DataCamp complète, puis un premier écran source avec instructions, inputs et blocs d’activité, alors que la capture Neopolis historique montrait déjà un premier écran pédagogique mais avec un comptage de progression incohérent sur la fiche de formation. La page de contrôles techniques du rapport signale que le premier écran Neopolis exposait bien un média local lisible (`mp4` HTTP 200, PDF HTTP 200), mais que les compteurs structurels restaient à zéro sur la fiche de cours.
 
 Les exigences de correction sont donc : réaligner la fiche catalogue et la page formation sur **32 activités**, confirmer les **3 chapitres** et **10 vidéos**, vérifier que chaque TP et activité interactive reste réellement answerable dans le parcours publié, préserver la préparation d’environnement n8n déjà ajoutée, et conserver le verrouillage séquentiel Neopolis sans UI libre.
+
+Après purge du cache utilisateur, le contrôle public de la fiche n8n confirme la propagation du bundle attendu : **1 cours, 32 activités, 10 vidéos et 3 téléchargements**. La carte de cours affiche désormais **3 chapitres · 32 activités · 10 vidéos · 3 téléchargements**, avec `22` exercices interactifs maintenus dans le détail. Le parcours public charge bien les trois leçons et conserve le mode de révision administrateur, le verrouillage séquentiel apprenant et les TP n8n à consigne, critères, ressources, champ de preuve et bouton de validation.
+
+Le QCM `ch03_ex09_mcq` (« Faut-il automatiser ce processus ? ») a été reconstruit depuis `chapter_03_intelligent_automation_with_llms_canonical.json` : quatre options, la réponse `a`, une correction et quatre feedbacks sont présents et couverts par test. La tentative de lien direct vers ce QCM depuis une leçon verrouillée conserve le lecteur sur le parcours autorisé ; ce comportement est cohérent avec le verrouillage séquentiel Neopolis et ne constitue pas une régression du QCM.
+
+### Preuves finales de conformité — publications `726f1ff5`, `87e45731` et `d6266247`
+
+| Contrôle | Référence source ou règle | Résultat constaté | Statut |
+|---|---|---|---|
+| Compteurs catalogue | 3 chapitres, 32 activités, 10 vidéos, 3 supports | La fiche publique et la carte affichent `3 chapitres · 32 activités · 10 vidéos · 3 téléchargements`. | Conforme |
+| Activités interactives | 17 TP, 3 tris, 2 QCM | Le JSON contient 17 `cloud_exercise`, 3 `bucket_sort` et 2 QCM ; le QCM Acme restauré a quatre options, une réponse correcte et quatre feedbacks. | Conforme |
+| Préparation n8n | TP autonome requis | Le premier écran ajoute les options n8n Cloud/Docker, l’espace de test, la protection des secrets et les ressources locales. | Conforme |
+| Médias locaux | 8 MP4 et 2 MP3 | Audit Range public : 10/10 répondent HTTP `206` avec types `video/mp4` ou `audio/mpeg`. | Conforme |
+| Supports PDF | 3 supports locaux | Les trois liens PDF sont calculés dynamiquement depuis les ressources et visibles comme téléchargements. | Conforme |
+| Progression | Verrouillage séquentiel | La navigation directe ne contourne pas une leçon verrouillée ; les TP affichent consigne, critères, ressources, champ de preuve et validation. | Conforme |
+| Réactivité | UI Neopolis existante | Aucun composant libre n’a été introduit ; la grille de fiche et les blocs d’activité utilisent les contraintes responsives existantes. | Conforme |
+| Tests | Catalogue, proxy, métriques et JSON | Vitest : 17 tests ciblés réussis ; TypeScript et validation des cours sans erreur. | Conforme |
+
+Aucun écart critique du rapport croisé ne reste ouvert pour cette formation.
