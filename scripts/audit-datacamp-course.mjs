@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from "node:fs/promises";
+import path from "node:path";
 
 const ALLOWED_BLOCK_TYPES = new Set([
   "content", "video", "transcript", "download", "flip_cards", "single_choice_exercise",
@@ -31,15 +32,55 @@ function collectMedia(value, entries = []) {
   return entries;
 }
 
+async function existingFile(filePath) {
+  try {
+    await fs.access(filePath);
+    return filePath;
+  } catch {
+    return null;
+  }
+}
+
+function manifestEntries(value) {
+  if (Array.isArray(value)) return value;
+  if (!value || typeof value !== "object") return [];
+  for (const key of ["assets", "downloads", "files", "items", "entries"]) {
+    if (Array.isArray(value[key])) return value[key];
+  }
+  return [];
+}
+
+async function summarizeOptionalJson(filePath) {
+  if (!filePath) return null;
+  const value = JSON.parse(await fs.readFile(filePath, "utf8"));
+  const entries = manifestEntries(value);
+  return {
+    path: filePath,
+    entries: entries.length,
+    successfulEntries: entries.filter((entry) => entry?.ok === true).length,
+    failedEntries: entries.filter((entry) => entry?.ok === false).length,
+  };
+}
+
 const coursePath = valueFor("--course");
 const manifestPath = valueFor("--manifest");
 const productionBaseUrl = valueFor("--production-base-url").replace(/\/$/, "");
-if (!coursePath) {
-  console.error("Usage: node scripts/audit-datacamp-course.mjs --course <course.json> [--manifest <COURSE_MANIFEST.json>] [--production-base-url <https://domain>]");
+if (!coursePath || !manifestPath) {
+  console.error("Usage: node scripts/audit-datacamp-course.mjs --course <course.json> --manifest <COURSE_MANIFEST.json> [--production-base-url <https://domain>]");
   process.exit(1);
 }
 
 const course = JSON.parse(await fs.readFile(coursePath, "utf8"));
+const manifest = JSON.parse(await fs.readFile(manifestPath, "utf8"));
+const packageRoot = path.dirname(manifestPath);
+const completenessReportPath = await existingFile(path.join(packageRoot, "COMPLETENESS_REPORT.md"));
+const downloadAssetsManifestPath = await existingFile(path.join(packageRoot, "download_assets_manifest.json"));
+const mediaValidationReportPath = await existingFile(path.join(packageRoot, "MEDIA_VALIDATION_REPORT.json"));
+const completenessReport = completenessReportPath
+  ? { path: completenessReportPath, characters: (await fs.readFile(completenessReportPath, "utf8")).length }
+  : null;
+const downloadAssetsManifest = await summarizeOptionalJson(downloadAssetsManifestPath);
+const mediaValidationReport = await summarizeOptionalJson(mediaValidationReportPath);
 const lessons = Array.isArray(course.lessons) ? course.lessons : [];
 const chapters = lessons.flatMap((lesson) => lesson.chapters || []);
 const blocks = chapters.flatMap((chapter) => chapter.blocks || []);
@@ -70,6 +111,12 @@ const report = {
   underpreparedLabs,
   unexpectedBlocks,
   invalidMedia,
+  canonicalSources: {
+    courseManifest: manifestPath,
+    completenessReport,
+    downloadAssetsManifest,
+    mediaValidationReport,
+  },
   errors: [],
 };
 
@@ -79,15 +126,12 @@ if (!report.sequentiallyLocked) report.errors.push("Au moins une activité désa
 if (untaggedEvaluationLessons.length) report.errors.push(`Activités évaluées sans tags de compétences : ${untaggedEvaluationLessons.join(", ")}`);
 if (underpreparedLabs.length) report.errors.push(`TP sans préparation d’environnement autonome : ${underpreparedLabs.join(", ")}`);
 
-if (manifestPath) {
-  const manifest = JSON.parse(await fs.readFile(manifestPath, "utf8"));
-  const expected = manifest.completeness || manifest.counts || {};
-  const expectedActivities = expected.activities_extracted ?? expected.exercises;
-  const expectedVideos = expected.videos_extracted ?? expected.videos;
-  report.expected = { activities: expectedActivities, videos: expectedVideos };
-  if (Number.isFinite(expectedActivities) && report.activities !== expectedActivities) report.errors.push(`Activités : ${report.activities} générées, ${expectedActivities} attendues.`);
-  if (Number.isFinite(expectedVideos) && report.videos !== expectedVideos) report.errors.push(`Vidéos : ${report.videos} générées, ${expectedVideos} attendues.`);
-}
+const expected = manifest.completeness || manifest.counts || {};
+const expectedActivities = expected.activities_extracted ?? expected.exercises;
+const expectedVideos = expected.videos_extracted ?? expected.videos;
+report.expected = { activities: expectedActivities, videos: expectedVideos };
+if (Number.isFinite(expectedActivities) && report.activities !== expectedActivities) report.errors.push(`Activités : ${report.activities} générées, ${expectedActivities} attendues.`);
+if (Number.isFinite(expectedVideos) && report.videos !== expectedVideos) report.errors.push(`Vidéos : ${report.videos} générées, ${expectedVideos} attendues.`);
 
 if (productionBaseUrl && media.length) {
   const checkMedia = async ({ url }) => {

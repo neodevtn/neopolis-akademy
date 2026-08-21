@@ -1834,7 +1834,7 @@
 - [x] Vérifier que chaque TP DataCamp est autonome, présente ses prérequis, sa préparation d’environnement et ses ressources téléchargeables
 - [x] Afficher les activités totales DataCamp comme compteur principal sans confondre les exercices interactifs et les écrans du cours
 - [ ] Diagnostiquer les causes du FCP/LCP mobile de la page d’accueil et optimiser le rendu critique sans dégrader l’accessibilité
-- [ ] Réviser l’audit DataCamp pour utiliser uniquement COURSE_MANIFEST, COMPLETENESS_REPORT, download_assets_manifest et MEDIA_VALIDATION_REPORT quand présents
+- [x] Réviser l’audit DataCamp pour utiliser uniquement COURSE_MANIFEST, COMPLETENESS_REPORT, download_assets_manifest et MEDIA_VALIDATION_REPORT quand présents
 - [ ] Importer les 6 ZIP OpenAI conventionnels, les 8 ZIP Gemini conventionnels, les 3 ZIP n8n et les 8 ZIP Claude Anthropic autorisés
 - [ ] Écarter uniquement Building Claude Cowork Plugins et produire des preuves exactes pour tout autre blocage réel
 - [ ] Produire le tableau final par catalogue avec chapitres, leçons, exercices, vidéos, supports et statut QA
