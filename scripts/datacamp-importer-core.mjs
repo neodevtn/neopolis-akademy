@@ -84,6 +84,10 @@ export function parseUploadLog(uploadLog) {
     const sourcePath = match[1].replace(/\s+\(size:\s*\d+\s+bytes\)\s*$/, "");
     map.set(path.normalize(sourcePath), assetProxyUrl(match[2]));
   }
+  const successPattern = /^\[SUCCESS\]\s+(.+?)\s+->\s+(\/manus-storage\/\S+)$/gm;
+  for (const match of uploadLog.matchAll(successPattern)) {
+    map.set(path.normalize(match[1]), assetProxyUrl(match[2]));
+  }
   return map;
 }
 
@@ -427,9 +431,12 @@ function normalizeAlternativeManifest(manifest) {
       exercise_number: Number(exercise.exercise_number || extracted.number || 0),
       content,
       video: {
-        mp4_local: exercise.video_mp4 || "",
-        audio_local: exercise.audio_mp3 || "",
-        subtitles: { fr_local: exercise.subtitle_vtt_fr || "", en_local: exercise.subtitle_vtt_en || "" },
+        mp4_local: exercise.video_mp4 || exercise.media?.video_mp4 || "",
+        audio_local: Array.isArray(exercise.audio_mp3 || exercise.media?.audio_mp3) ? (exercise.audio_mp3 || exercise.media?.audio_mp3)[0] || "" : (exercise.audio_mp3 || exercise.media?.audio_mp3 || ""),
+        subtitles: {
+          fr_local: Array.isArray(exercise.subtitle_vtt_fr || exercise.media?.subtitles?.fr) ? (exercise.subtitle_vtt_fr || exercise.media?.subtitles?.fr)[0] || "" : (exercise.subtitle_vtt_fr || exercise.media?.subtitles?.fr || ""),
+          en_local: Array.isArray(exercise.subtitle_vtt_en || exercise.media?.subtitles?.en) ? (exercise.subtitle_vtt_en || exercise.media?.subtitles?.en)[0] || "" : (exercise.subtitle_vtt_en || exercise.media?.subtitles?.en || ""),
+        },
         transcript_segments: exercise.transcript_text ? [{ heading: exercise.title || "", text: exercise.transcript_text }] : [],
       },
     };

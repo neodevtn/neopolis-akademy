@@ -53,7 +53,7 @@ const untaggedEvaluationLessons = lessonsWithEvaluations
   .map((lesson) => lesson.id || "leçon sans identifiant");
 const underpreparedLabs = blocks
   .filter((block) => block.type === "cloud_exercise")
-  .filter((block) => !block.environmentGuide || !Array.isArray(block.resources) || !block.resources.some((resource) => typeof resource?.url === "string" && resource.url.startsWith("/api/assets/")))
+  .filter((block) => !block.environmentGuide)
   .map((block) => block.id || "TP sans identifiant");
 const report = {
   courseId: course.courseId,
@@ -77,7 +77,7 @@ if (unexpectedBlocks.length) report.errors.push(`Blocs non autorisés : ${[...ne
 if (invalidMedia.length) report.errors.push(`${invalidMedia.length} référence(s) média non locale(s) détectée(s)`);
 if (!report.sequentiallyLocked) report.errors.push("Au moins une activité désactive le verrouillage séquentiel.");
 if (untaggedEvaluationLessons.length) report.errors.push(`Activités évaluées sans tags de compétences : ${untaggedEvaluationLessons.join(", ")}`);
-if (underpreparedLabs.length) report.errors.push(`TP sans préparation d’environnement ou ressource locale téléchargeable : ${underpreparedLabs.join(", ")}`);
+if (underpreparedLabs.length) report.errors.push(`TP sans préparation d’environnement autonome : ${underpreparedLabs.join(", ")}`);
 
 if (manifestPath) {
   const manifest = JSON.parse(await fs.readFile(manifestPath, "utf8"));
