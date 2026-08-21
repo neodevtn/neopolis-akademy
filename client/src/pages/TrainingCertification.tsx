@@ -36,7 +36,7 @@ export default function TrainingCertification() {
   const cert = trainingIndex.certifications.find((c) => c.id === certId);
   const courses = cert ? trainingIndex.courses.filter((c) => c.certId === certId) : [];
   const courseIds = courses.map((c) => c.id);
-  const isDataCampPartner = (cert as any)?.group === "datacamp_partner";
+  const isDataCampPartner = (cert as any)?.provider === "datacamp";
   const usesActivityTotal = usesActivityTotals(cert as any);
   const dataCampActivityTotal = useMemo(() => courses.reduce((sum, course) => sum + Number((course as any).totalActivities || (course as any).chapterCount || 0), 0), [courses]);
 

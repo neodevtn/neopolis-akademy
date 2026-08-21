@@ -1958,3 +1958,9 @@
 - [x] Traiter le cours Medium « Developing AI Systems with the OpenAI API » : vérifier l’agrégation à 36 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
 - [x] Traiter le cours Medium « Working with the OpenAI API » : vérifier l’agrégation à 29 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
 - [x] Traiter le cours Medium « Working with the OpenAI Responses API » : vérifier l’agrégation à 34 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
+
+## Taxonomie des formations
+- [x] Inventorier les catégories, certifications et cours sans catégorie explicite
+- [x] Définir les catégories complémentaires nécessaires avec intitulés bilingues et descriptions administrables
+- [x] Rattacher chaque formation et cours à une catégorie pertinente
+- [x] Ajouter des tests de couverture de catégorie et vérifier le rendu du catalogue

@@ -168,9 +168,14 @@ export default function TrainingDashboard() {
     },
   } as const;
   const categoryOverrides = (trainingIndex as any).categories || [];
-  const catalogGroupConfig = Object.fromEntries(Object.entries(GROUP_CONFIG).map(([id, config]) => {
-    const override = categoryOverrides.find((category: any) => category.id === id);
-    return [id, { ...config, ...(override?.title ? { label: override.title } : {}), ...(override?.subtitle ? { subtitle: override.subtitle } : {}), ...(typeof override?.order === "number" ? { order: override.order } : {}) }];
+  const catalogGroupConfig = Object.fromEntries(categoryOverrides.map((category: any) => {
+    const config = (GROUP_CONFIG as Record<string, any>)[category.id] || GROUP_CONFIG.divers;
+    return [category.id, {
+      ...config,
+      ...(category.title ? { label: category.title } : {}),
+      ...(category.subtitle ? { subtitle: category.subtitle } : {}),
+      ...(typeof category.order === "number" ? { order: category.order } : {}),
+    }];
   }));
 
   const certCompletionData = useMemo(() => {
