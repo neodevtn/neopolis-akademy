@@ -4,10 +4,14 @@ import fs from "node:fs/promises";
 const ALLOWED_BLOCK_TYPES = new Set([
   "content", "video", "transcript", "download", "flip_cards", "single_choice_exercise",
   "multi_choice_exercise", "bucket_sort", "matching", "fill_blank", "ordering", "code_repl",
-  "terminal_sim", "cloud_exercise", "exercise", "checkpoint", "ai_evaluation", "callout",
+  "terminal_sim", "cloud_exercise", "exercise", "checkpoint", "ai_evaluation", "callout", "resource_review",
   "tabbed_content", "comparison",
 ]);
 const MEDIA_KEYS = new Set(["mp4Url", "audioUrl", "hlsUrl", "subtitleUrlFr", "subtitleUrlEn", "slidesPdf", "download_url", "url"]);
+const EVALUATION_BLOCK_TYPES = new Set([
+  "single_choice_exercise", "multi_choice_exercise", "bucket_sort", "matching", "fill_blank", "ordering",
+  "cloud_exercise", "code_repl", "terminal_sim", "ai_evaluation", "exercise", "checkpoint",
+]);
 
 function valueFor(flag) {
   const index = process.argv.indexOf(flag);
@@ -42,16 +46,28 @@ const blocks = chapters.flatMap((chapter) => chapter.blocks || []);
 const media = collectMedia(course);
 const unexpectedBlocks = blocks.filter((block) => !ALLOWED_BLOCK_TYPES.has(block.type)).map((block) => block.type);
 const invalidMedia = media.filter(({ url }) => !url.startsWith("/api/assets/"));
+const lessonsWithEvaluations = lessons.filter((lesson) => (lesson.chapters || [])
+  .some((chapter) => (chapter.blocks || []).some((block) => EVALUATION_BLOCK_TYPES.has(block.type))));
+const untaggedEvaluationLessons = lessonsWithEvaluations
+  .filter((lesson) => !Array.isArray(lesson.competencyTags) || lesson.competencyTags.length === 0)
+  .map((lesson) => lesson.id || "leçon sans identifiant");
+const underpreparedLabs = blocks
+  .filter((block) => block.type === "cloud_exercise")
+  .filter((block) => !block.environmentGuide || !Array.isArray(block.resources) || !block.resources.some((resource) => typeof resource?.url === "string" && resource.url.startsWith("/api/assets/")))
+  .map((block) => block.id || "TP sans identifiant");
 const report = {
   courseId: course.courseId,
   lessons: lessons.length,
   activities: chapters.length,
   blockTypes: Object.fromEntries([...new Set(blocks.map((block) => block.type))].sort().map((type) => [type, blocks.filter((block) => block.type === type).length])),
   videos: blocks.filter((block) => block.type === "video").length,
-  interactiveExercises: blocks.filter((block) => ["single_choice_exercise", "multi_choice_exercise", "bucket_sort", "matching", "fill_blank", "ordering", "cloud_exercise", "code_repl", "terminal_sim", "ai_evaluation"].includes(block.type)).length,
+  interactiveExercises: blocks.filter((block) => ["single_choice_exercise", "multi_choice_exercise", "bucket_sort", "matching", "fill_blank", "ordering", "cloud_exercise", "code_repl", "terminal_sim", "ai_evaluation", "resource_review"].includes(block.type)).length,
   media: media.length,
   localMedia: media.filter(({ url }) => url.startsWith("/api/assets/")).length,
   sequentiallyLocked: chapters.every((chapter) => chapter.requiredBeforeAdvance !== false),
+  competencyTags: Object.fromEntries(lessons.map((lesson) => [lesson.id || "leçon sans identifiant", lesson.competencyTags || []])),
+  untaggedEvaluationLessons,
+  underpreparedLabs,
   unexpectedBlocks,
   invalidMedia,
   errors: [],
@@ -60,6 +76,8 @@ const report = {
 if (unexpectedBlocks.length) report.errors.push(`Blocs non autorisés : ${[...new Set(unexpectedBlocks)].join(", ")}`);
 if (invalidMedia.length) report.errors.push(`${invalidMedia.length} référence(s) média non locale(s) détectée(s)`);
 if (!report.sequentiallyLocked) report.errors.push("Au moins une activité désactive le verrouillage séquentiel.");
+if (untaggedEvaluationLessons.length) report.errors.push(`Activités évaluées sans tags de compétences : ${untaggedEvaluationLessons.join(", ")}`);
+if (underpreparedLabs.length) report.errors.push(`TP sans préparation d’environnement ou ressource locale téléchargeable : ${underpreparedLabs.join(", ")}`);
 
 if (manifestPath) {
   const manifest = JSON.parse(await fs.readFile(manifestPath, "utf8"));

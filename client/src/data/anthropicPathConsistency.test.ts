@@ -35,4 +35,18 @@ describe("cohérence des parcours Anthropic", () => {
       expect(certification.totalDownloads).toBe(courses.reduce((sum: number, course: any) => sum + course.downloadCount, 0));
     }
   });
+
+  it("distingue les préparations aux certifications officielles Anthropic du titre de certification lui-même", () => {
+    const index = JSON.parse(fs.readFileSync(indexPath, "utf8"));
+    const category = index.categories.find((item: any) => item.id === "anthropic_certification_preparation");
+    const certifications = index.certifications.filter((item: any) => String(item.id).startsWith("claude_certified_"));
+
+    expect(category?.title?.fr).toMatch(/Préparations aux certifications officielles Anthropic/);
+    expect(certifications).toHaveLength(4);
+    for (const certification of certifications) {
+      expect(certification.group).toBe("anthropic_certification_preparation");
+      expect(certification.catalogTag?.fr).toMatch(/Préparation à une certification officielle Anthropic/);
+      expect(certification.description?.fr).toMatch(/préparation à l’examen de certification officielle Anthropic/i);
+    }
+  });
 });

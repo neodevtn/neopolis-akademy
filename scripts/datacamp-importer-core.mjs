@@ -10,6 +10,33 @@ const ENTITY_MAP = {
   "&gt;": ">",
 };
 
+const COMPETENCY_TAG_SIGNALS = [
+  ["prompt_engineering", /prompt|instruction|system prompt|few-shot|context window|sampling/i],
+  ["ai_solution_design", /architect|solution design|conception|use case|cas d.?usage/i],
+  ["ai_development", /developer|\bapi\b|sdk|code|python|typescript|integration/i],
+  ["rag_knowledge", /rag|retrieval|embedding|knowledge base|base de connaissances/i],
+  ["ai_orchestration", /workflow|n8n|orchestration|agent|automation|automatisation/i],
+  ["ai_devops", /devops|deploy|deployment|production|observability|monitoring|eval|reliability/i],
+  ["bi_ai", /business intelligence|\bbi\b|analytics|reporting|data analysis|analyse de donn/i],
+  ["ai_governance", /governance|security|safety|compliance|risk|sécurit|gouvernance/i],
+  ["ai_business", /business|strategy|adoption|roi|sales|commercial|métier|workspace|gemini/i],
+];
+
+/**
+ * Reprend les règles de tag administrables déjà appliquées aux leçons Neopolis.
+ * Le fallback conserve une contribution explicable plutôt que d’inventer un tag
+ * d’activité au niveau du bloc.
+ */
+export function inferCompetencyTags(sourceChapter) {
+  const source = [sourceChapter?.title, sourceChapter?.description]
+    .filter((value) => typeof value === "string" && value.trim())
+    .join("\n");
+  const tags = COMPETENCY_TAG_SIGNALS
+    .filter(([, pattern]) => pattern.test(source))
+    .map(([tag]) => tag);
+  return tags.length ? tags : ["ai_solution_design"];
+}
+
 function decodeEntities(value) {
   return String(value || "")
     .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
@@ -171,7 +198,16 @@ function buildVideoBlock(activity, assetMap, slidesPdf) {
   };
 }
 
-function buildPracticalBlock(activity) {
+function extractInstructionSteps(instructions) {
+  return String(instructions || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => /^(?:[-*•]|\d+[.)])\s+/.test(line))
+    .map((line) => line.replace(/^(?:[-*•]|\d+[.)])\s+/, "").trim())
+    .filter(Boolean);
+}
+
+function buildPracticalBlock(activity, slidesPdf) {
   const content = activityContent(activity);
   const assignment = htmlToText(content.assignment_text || content.assignment_html || "");
   const instructions = htmlToText(content.instructions_text || content.instructions_markdown || "");
@@ -191,6 +227,12 @@ function buildPracticalBlock(activity) {
       fr: "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
       en: "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer.",
     },
+    steps: extractInstructionSteps(instructions),
+    resources: slidesPdf ? [{
+      title: toI18n("Chapter slides (PDF)"),
+      description: toI18n("Download the official local chapter slides to reproduce this exercise in your own environment."),
+      url: slidesPdf,
+    }] : [],
     hint: htmlToText(content.hint_text || content.hint_html || ""),
     solution,
     successMessage: content.success_message || "",
@@ -212,7 +254,21 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
       break;
     case "NormalExercise":
       type = "exercise";
-      blocks = [buildPracticalBlock(activity)];
+      blocks = [buildPracticalBlock(activity, slidesPdf)];
+      break;
+    case "VisualExercise":
+      if (!slidesPdf) {
+        throw new Error(`Activité visuelle sans ressource locale mappée : activité ${activity.exercise_id || activity.exercise_number}`);
+      }
+      type = "resource";
+      blocks = [{
+        type: "resource_review",
+        id: `dc_${activity.chapter_number}_act_${String(activity.exercise_number).padStart(2, "0")}_resource`,
+        title: toI18n(activity.title),
+        instructions: toI18n(htmlToText(activityContent(activity).assignment_text || activityContent(activity).assignment_html || "")),
+        resourceUrl: slidesPdf,
+        resourceLabel: toI18n("Open the local PDF resource"),
+      }];
       break;
     default:
       throw new Error(`Type d’activité DataCamp non encore pris en charge sans perte de contenu : ${activity.type}`);
@@ -248,6 +304,7 @@ export function convertDataCampV1(manifest, assetMap = new Map()) {
     id: `datacamp_ch${String(sourceChapter.number).padStart(2, "0")}`,
     title: toI18n(sourceChapter.title),
     description: toI18n(sourceChapter.description || ""),
+    competencyTags: inferCompetencyTags(sourceChapter),
     recommendedVideos: [],
     recommendedVideosManaged: false,
     chapters: (sourceChapter.activities || []).map((activity, activityIndex) => buildChapter(activity, sourceChapter, assetMap, activityIndex)),
@@ -261,6 +318,7 @@ export function convertDataCampV1(manifest, assetMap = new Map()) {
       sourceCourseSlug: manifest.course.slug,
       sourceLanguage: manifest.source?.extraction_language || "",
       expected: manifest.completeness || {},
+      competencyTagging: "lesson_content_signals_v1",
     },
     lessons,
   };
@@ -277,6 +335,6 @@ export function describeDataCampV1(manifest) {
     videos: activities.filter((activity) => activity.type === "VideoExercise").length,
     normalExercises: activities.filter((activity) => activity.type === "NormalExercise").length,
     qcm: activities.filter((activity) => activity.type === "PureMultipleChoiceExercise").length,
-    unsupported: [...new Set(activities.map((activity) => activity.type).filter((type) => !["VideoExercise", "NormalExercise", "PureMultipleChoiceExercise"].includes(type)))],
+    unsupported: [...new Set(activities.map((activity) => activity.type).filter((type) => !["VideoExercise", "NormalExercise", "PureMultipleChoiceExercise", "VisualExercise"].includes(type)))],
   };
 }

@@ -111,10 +111,10 @@ export default function TrainingDashboard() {
 
   // Group configuration for the 4 certification tracks
   const GROUP_CONFIG = {
-    anthropic_official: {
-      label: { en: "Anthropic Official Certifications", fr: "Certifications Officielles Anthropic" },
-      subtitle: { en: "Validated by Anthropic — Claude Associate, Developer, Architect", fr: "Validées par Anthropic — Claude Associate, Developer, Architect" },
-      badge: "Official",
+    anthropic_certification_preparation: {
+      label: { en: "Anthropic Official Certification Preparation", fr: "Préparations aux certifications officielles Anthropic" },
+      subtitle: { en: "Preparation courses for Claude Associate, Developer, and Architect examinations. The official certification is awarded separately by Anthropic.", fr: "Cours de préparation aux examens Claude Associate, Developer et Architect. La certification officielle est délivrée séparément par Anthropic." },
+      badge: "Preparation",
       badgeColor: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400",
       hoverBorder: "hover:border-primary/30",
       hoverText: "group-hover:text-primary",
@@ -180,7 +180,7 @@ export default function TrainingDashboard() {
       const totalLessonsMap: Record<string, number> = {};
       courses.forEach((c) => { totalLessonsMap[c.id] = c.lessonCount || 1; });
       const progressPct = getCertProgress(courseIds, totalLessonsMap);
-      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, courseCount: cert.courseCount, totalExercises: cert.totalExercises, totalVideos: cert.totalVideos, totalDownloads: (cert as any).totalDownloads || 0, exerciseLabel: (cert as any).exerciseLabel, breakdown: (cert as any).breakdown, progress: progressPct, completed: progressPct >= 100, group: (cert as any).group };
+      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, courseCount: cert.courseCount, totalExercises: cert.totalExercises, totalVideos: cert.totalVideos, totalDownloads: (cert as any).totalDownloads || 0, exerciseLabel: (cert as any).exerciseLabel, breakdown: (cert as any).breakdown, catalogTag: (cert as any).catalogTag, progress: progressPct, completed: progressPct >= 100, group: (cert as any).group };
     });
   }, [getCertProgress]);
 
@@ -800,7 +800,10 @@ function CatalogTab({
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className={`w-12 h-12 rounded-xl ${groupCfg.iconBg} flex items-center justify-center text-2xl`}>{cert.icon}</div>
-                  <span className={`text-[11px] px-2.5 py-1 rounded-full font-semibold ${config.color}`}>{t(config.label)}</span>
+                  <div className="flex flex-wrap justify-end gap-1.5">
+                    {cert.catalogTag && <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">{t(cert.catalogTag)}</span>}
+                    <span className={`text-[11px] px-2.5 py-1 rounded-full font-semibold ${config.color}`}>{t(config.label)}</span>
+                  </div>
                 </div>
                 <h3 className={`text-base font-semibold text-foreground ${groupCfg.hoverText} transition-colors mb-2 leading-tight`}>{t(cert.title)}</h3>
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-2 leading-relaxed">{t(cert.description)}</p>

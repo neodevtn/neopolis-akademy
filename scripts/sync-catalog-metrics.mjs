@@ -17,6 +17,7 @@ const interactive = new Set([
   "ai_evaluation",
   "ordering",
   "cloud_exercise",
+  "resource_review",
 ]);
 const index = JSON.parse(await fs.readFile(indexPath, "utf8"));
 const courseFiles = await fs.readdir(coursesDir);

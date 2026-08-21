@@ -1793,9 +1793,18 @@
 - [ ] Transformer catalogue, cours, chapitres et activités dans l’ordre canonique avec les blocs interactifs Neopolis
 - [ ] Vérifier les compteurs, médias, PDF, progression séquentielle, réponses masquées et le responsive mobile avant publication
 - [x] Ajouter un convertisseur réutilisable pour les schémas de manifestes DataCamp autorisés et un rapport d’audit par cours
-- [ ] Importer et auditer un lot pilote multi-catalogues avant les paquets DataCamp volumineux
+- [x] Importer et auditer un lot pilote multi-catalogues avant les paquets DataCamp volumineux
 - [ ] Importer les paquets restants par lots contrôlés, avec validation des médias et compteurs après chaque lot
 - [x] Générer et auditer le cours pilote « Introduction to Claude Models » : 3 chapitres, 29 activités, 10 vidéos, 19 exercices interactifs et 3 supports PDF locaux
+- [x] Décoder les états préchargés DataCamp sans les exécuter afin de convertir exactement les activités OpenAI interactives
+- [x] Générer et auditer le cours pilote « Introduction to Google Workspace with Gemini » : 1 chapitre, 7 activités, 3 vidéos, 4 activités interactives et 1 support PDF local
+- [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet OpenAI pilote avant toute importation de ses réponses et tris interactifs
+- [x] Utiliser le cours n8n DataCamp existant comme référence fonctionnelle et de structure pour les conversions suivantes
+- [x] Créer une catégorie distincte pour les parcours de préparation aux certifications Anthropic officielles
+- [x] Ajouter un tag visible et une mention explicite de préparation aux certifications Anthropic officielles dans leurs descriptions
+- [x] Vérifier que chaque cours DataCamp importé porte des tags de compétences et des règles de contribution administrables cohérentes
+- [ ] Vérifier en production les médias locaux téléversés pour chaque cours DataCamp avant publication
+- [x] Vérifier que chaque TP DataCamp est autonome, présente ses prérequis, sa préparation d’environnement et ses ressources téléchargeables
 ## Régressions brouillon et progression n8n
 - [x] Reproduire et corriger le contenu absent à l’ouverture d’un brouillon de communication
 - [x] Reproduire et corriger le passage bloqué entre les chapitres 2 et 3 du cours n8n

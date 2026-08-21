@@ -169,6 +169,23 @@ const bucketSortBlock: BlockTypeDefinition = {
   defaultData: { type: "bucket_sort", title: { en: "", fr: "" }, buckets: [{ id: "a", label: { en: "Category A", fr: "Catégorie A" } }], cards: [] },
 };
 
+const resourceReviewBlock: BlockTypeDefinition = {
+  type: "resource_review",
+  label: { en: "Required Resource Review", fr: "Consultation de ressource requise" },
+  description: { en: "Open a local resource then explicitly confirm review before continuing", fr: "Ouvrir une ressource locale puis confirmer explicitement sa consultation avant de continuer" },
+  category: "interactive",
+  icon: "FileCheck2",
+  color: "bg-violet-100 text-violet-700",
+  since: "2.1",
+  schema: [
+    { key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true },
+    { key: "instructions", label: { en: "Instructions", fr: "Consignes" }, type: "i18n_richtext", required: true },
+    { key: "resourceUrl", label: { en: "Local resource URL", fr: "URL ressource locale" }, type: "text", required: true },
+    { key: "resourceLabel", label: { en: "Resource action label", fr: "Libellé d’action ressource" }, type: "i18n_text" },
+  ],
+  defaultData: { type: "resource_review", title: { en: "Review the resource", fr: "Consultez la ressource" }, instructions: { en: "", fr: "" }, resourceUrl: "", resourceLabel: { en: "Open resource", fr: "Ouvrir la ressource" } },
+};
+
 const tabbedContentBlock: BlockTypeDefinition = {
   type: "tabbed_content",
   label: { en: "Tabbed Content", fr: "Contenu à onglets" },
@@ -517,6 +534,7 @@ export const BLOCK_REGISTRY: BlockTypeDefinition[] = [
   singleChoiceExerciseBlock,
   multiChoiceBlock,
   bucketSortBlock,
+  resourceReviewBlock,
   matchingBlock,
   fillBlankBlock,
   orderingBlock,

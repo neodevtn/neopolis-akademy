@@ -54,7 +54,7 @@ export function OrientationPanel({
 
   const stage = editingGoals || profile?.status === "not_started" ? "goals" : profile?.status === "completed" ? "recommendations" : "diagnostic";
   const selectedGoalIds = new Set(goals.map((goal) => goal.competencyId));
-  const officialCertifications = certifications.filter((certification) => certification.group === "anthropic_official");
+  const officialCertifications = certifications.filter((certification) => certification.group === "anthropic_certification_preparation");
   const questions = orientation?.questions || [];
   const canSubmitGoals = goals.length > 0;
   const canCompleteDiagnostic = questions.length > 0 && Object.keys(answers).length === questions.length;

@@ -167,8 +167,10 @@ export default function LessonViewer({
           const matchIds = blocks.filter((b: any) => b.type === 'bucket_sort').map((b: any, i: number) => b.id || `bucket_${i}`);
           if (matchIds.length > 0 && !matchIds.every((id: string) => matchingCompleted.has(id))) return;
           // Single choice exercise gate
-          const scIds = blocks.filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise').map((b: any, i: number) => b.id || `quiz_${i}`);
+          const scIds = blocks.filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise' || b.type === 'resource_review').map((b: any, i: number) => b.id || `quiz_${i}`);
           if (scIds.length > 0 && !scIds.every((id: string) => completedExercises.has(id))) return;
+          const cloudIds = blocks.filter((b: any) => b.type === 'cloud_exercise').map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
+          if (cloudIds.length > 0 && !cloudIds.every((id: string) => completedCloudExercises.has(id))) return;
         }
         setCurrentChapter(p => p + 1);
       } else if (e.key === 'ArrowLeft' && currentChapter > 0) {
@@ -177,7 +179,7 @@ export default function LessonViewer({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentChapter, isLastChapter, completedVideos, flipCardsCompleted, matchingCompleted, completedExercises, isReviewMode, chapters]);
+  }, [currentChapter, isLastChapter, completedVideos, flipCardsCompleted, matchingCompleted, completedExercises, completedCloudExercises, isReviewMode, chapters]);
 
   // When chapter changes from internal navigation (Next button, etc.) - only scroll
   useEffect(() => {
@@ -681,6 +683,33 @@ export default function LessonViewer({
           </div>
         );
       }
+      case "resource_review": {
+        const reviewId = block.id || `resource_review_${blockIdx}`;
+        const reviewTitle = typeof block.title === 'object' ? (block.title[lang] || block.title.en || '') : (block.title || '');
+        const reviewInstructions = typeof block.instructions === 'object' ? (block.instructions[lang] || block.instructions.en || '') : (block.instructions || '');
+        const reviewLabel = typeof block.resourceLabel === 'object' ? (block.resourceLabel[lang] || block.resourceLabel.en || '') : (block.resourceLabel || t({ en: 'Open local resource', fr: 'Ouvrir la ressource locale' }));
+        const reviewUrl = block.resourceUrl || block.url || '';
+        const reviewComplete = completedExercises.has(reviewId);
+        return (
+          <div key={blockIdx} className="my-6 rounded-xl border border-violet-200 bg-violet-50/40 p-5">
+            <div className="flex items-start gap-3">
+              <FileText className="mt-0.5 h-5 w-5 shrink-0 text-violet-700" />
+              <div className="min-w-0 flex-1">
+                <p className="font-semibold text-foreground">{reviewTitle}</p>
+                {reviewInstructions && <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{reviewInstructions}</p>}
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <a href={reviewUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-violet-300 bg-white px-3 py-2 text-sm font-medium text-violet-800 hover:bg-violet-100">
+                    <FileText className="h-4 w-4" />{reviewLabel}
+                  </a>
+                  <Button size="sm" variant={reviewComplete ? 'outline' : 'default'} disabled={reviewComplete} onClick={() => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(reviewId); return next; })}>
+                    {reviewComplete ? t({ en: 'Resource reviewed', fr: 'Ressource consultée' }) : t({ en: 'I have reviewed this resource', fr: 'J’ai consulté cette ressource' })}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
       case "exercise": {
         // Numeric answer exercises
         if (block.exercise_type === "numeric_answers" && block.questions?.length > 0) {
@@ -1072,7 +1101,7 @@ export default function LessonViewer({
                 const lastAllCloudDone = lastChapterCloudIds.length === 0 || lastChapterCloudIds.every((id: string) => completedCloudExercises.has(id));
                 const lastChapterMatchingIds = (chapter?.blocks || []).filter((b: any) => b.type === 'bucket_sort').map((b: any, i: number) => b.id || `bucket_${i}`);
                 const lastAllMatchingDone = lastChapterMatchingIds.length === 0 || lastChapterMatchingIds.every((id: string) => matchingCompleted.has(id));
-              const lastChapterSCIds = (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise').map((b: any, i: number) => b.id || `quiz_${i}`);
+              const lastChapterSCIds = (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise' || b.type === 'resource_review').map((b: any, i: number) => b.id || `quiz_${i}`);
               const lastAllSCDone = lastChapterSCIds.length === 0 || lastChapterSCIds.every((id: string) => completedExercises.has(id));
               const lastChapterCheckpointIds = (chapter?.blocks || []).filter((b: any) => b.type === 'checkpoint').map((b: any, i: number) => b.exerciseId || `checkpoint_${i}`);
               const lastAllCheckpointsDone = lastChapterCheckpointIds.length === 0 || lastChapterCheckpointIds.every((id: string) => completedExercises.has(id));
@@ -1139,6 +1168,10 @@ export default function LessonViewer({
               const completedSingleChoice = chapterSingleChoiceIds.filter((id: string) => completedExercises.has(id)).length;
               const requiredSingleChoice = isQuizOrCheckpointChapter ? requiredChapterSuccesses : chapterSingleChoiceIds.length;
               const isGatedBySingleChoice = isEvaluationGateLocked({ totalQuestions: chapterSingleChoiceIds.length, completedCorrectAnswers: completedSingleChoice, configuredThreshold: isQuizOrCheckpointChapter ? requiredSingleChoice : chapterSingleChoiceIds.length, required: validationRequired, reviewMode: isReviewMode });
+              const chapterResourceReviewIds = (chapter?.blocks || [])
+                .filter((b: any) => b.type === 'resource_review')
+                .map((b: any, i: number) => b.id || `resource_review_${i}`);
+              const isGatedByResourceReview = chapterResourceReviewIds.length > 0 && !chapterResourceReviewIds.every((id: string) => completedExercises.has(id)) && !isReviewMode;
               // Cloud exercise (TP) gate: block if chapter has cloud_exercise blocks not completed
               const chapterCloudExerciseIds = (chapter?.blocks || [])
                 .filter((b: any) => b.type === 'cloud_exercise')
@@ -1150,6 +1183,7 @@ export default function LessonViewer({
                 isGatedByFlipCards && t({ en: "Turn over every study card.", fr: "Retournez toutes les cartes de révision." }),
                 isGatedByMatching && t({ en: "Complete the interactive sorting activity.", fr: "Terminez l’activité de tri interactive." }),
                 (isGatedByExercises || isGatedBySingleChoice) && t({ en: "Submit the required validation activity.", fr: "Soumettez l’activité de validation requise." }),
+                isGatedByResourceReview && t({ en: "Open and confirm review of the required local resource.", fr: "Ouvrez puis confirmez la consultation de la ressource locale requise." }),
                 isGatedByCloudExercise && t({ en: "Submit the practical exercise.", fr: "Soumettez l’exercice pratique." }),
               ].filter(Boolean);
               const chapterTitle = resolveI18n(chapter?.title, 'en');
@@ -1157,7 +1191,7 @@ export default function LessonViewer({
               const isTeachingChapter = chapter?.type === 'teaching' && !isStructuralChapter;
               const needsQuiz = isTeachingChapter && !isReviewMode && !chapterQuizPassed.has(currentChapter);
 
-              const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice || isGatedByCloudExercise;
+              const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice || isGatedByResourceReview || isGatedByCloudExercise;
               return (
                 <div className="flex flex-col items-end gap-1.5">
                   {passageConditions.length > 0 && (

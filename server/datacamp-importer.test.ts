@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { convertDataCampV1, htmlToText, parseUploadLog } from "../scripts/datacamp-importer-core.mjs";
+import { convertDataCampV1, htmlToText, inferCompetencyTags, parseUploadLog } from "../scripts/datacamp-importer-core.mjs";
 
 const manifest = {
   schema_version: "neopolis.datacamp_course.v1",
@@ -51,6 +51,14 @@ const manifest = {
         chapter_number: 1,
         exercise_number: 4,
         exercise_id: 4,
+        type: "VisualExercise",
+        title: "Ressource pilote",
+        content: { assignment_html: "<p>Consultez le PDF avant de continuer.</p>" },
+      },
+      {
+        chapter_number: 1,
+        exercise_number: 5,
+        exercise_id: 5,
         type: "NormalExercise",
         title: "TP pilote",
         xp: 100,
@@ -75,12 +83,15 @@ describe("convertDataCampV1", () => {
     ]);
     const course = convertDataCampV1(manifest, assets);
     expect(course.courseId).toBe("pilot_course__01");
-    expect(course.lessons[0].chapters).toHaveLength(4);
+    expect(course.lessons[0].chapters).toHaveLength(5);
     expect(course.lessons[0].chapters[0].blocks[0]).toMatchObject({ type: "video", audioUrl: "/api/assets/video_hash.mp3", subtitleUrlFr: "/api/assets/video_fr_hash.vtt" });
     expect(course.lessons[0].chapters[1].blocks[0]).toMatchObject({ type: "single_choice_exercise", correctAnswer: "b" });
     expect(course.lessons[0].chapters[2].blocks[0]).toMatchObject({ type: "multi_choice_exercise", correctAnswers: "a" });
-    expect(course.lessons[0].chapters[3].blocks[0]).toMatchObject({ type: "cloud_exercise" });
+    expect(course.lessons[0].chapters[3].blocks[0]).toMatchObject({ type: "resource_review", resourceUrl: "/api/assets/chapter_hash.pdf" });
+    expect(course.lessons[0].chapters[4].blocks[0]).toMatchObject({ type: "cloud_exercise", environmentGuide: expect.any(Object), resources: [{ url: "/api/assets/chapter_hash.pdf" }] });
     expect(course.lessons[0].chapters.every((chapter) => chapter.requiredBeforeAdvance)).toBe(true);
+    expect(course.lessons[0].competencyTags).toEqual(["ai_solution_design"]);
+    expect(course.datacampImport.competencyTagging).toBe("lesson_content_signals_v1");
   });
 
   it("nettoie le HTML de source sans injecter de balisage libre", () => {
@@ -91,5 +102,11 @@ describe("convertDataCampV1", () => {
   it("transforme les chemins de stockage uploadés en références du proxy applicatif", () => {
     const map = parseUploadLog("Uploading file (webdev private): /tmp/media.mp3\nFile uploaded successfully!\nStorage Path: /manus-storage/media_abc12345.mp3");
     expect(map.get("/tmp/media.mp3")).toBe("/api/assets/media_abc12345.mp3");
+  });
+
+  it("associe les compétences aux leçons à partir du contenu canonique, avec un repli explicable", () => {
+    expect(inferCompetencyTags({ title: "Créer des prompts avec Claude", activities: [] })).toContain("prompt_engineering");
+    expect(inferCompetencyTags({ title: "Introduction to Google Workspace with Gemini", activities: [] })).toContain("ai_business");
+    expect(inferCompetencyTags({ title: "Lesson neutral", activities: [] })).toEqual(["ai_solution_design"]);
   });
 });
