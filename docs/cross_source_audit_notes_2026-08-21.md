@@ -27,3 +27,25 @@
 La route profonde `https://akademy.neodev.click/training/datacamp_introduction_to_agent_skills/introduction_to_agent_skills__01` charge désormais le cours. Le premier écran présente le chapitre « Creating Your First Skill », l’activité « Video: What are skills », le lecteur vidéo local, la commande manuelle de complétion, la transcription et la navigation séquentielle `Écran 1 sur 6`.
 
 La fiche de certification restait temporairement servie par un bundle de production antérieur au correctif pendant le contrôle navigateur. La prévisualisation courante affiche bien les compteurs corrigés : **1 cours, 18 activités et 6 vidéos**. Une vérification de propagation supplémentaire reste requise avant de déclarer le cours conforme.
+
+### Preuves finales de conformité — publication `930d31a4`
+
+| Contrôle | Référence source ou règle | Résultat constaté | Statut |
+|---|---|---|---|
+| Rattachement catalogue | 3 chapitres, 18 activités, 6 vidéos | La fiche publique affiche désormais `1 cours`, `18 activités`, `6 vidéos` et une carte cliquable. | Conforme |
+| Navigation profonde | Lien écran/chapitre requis | La carte ouvre `/training/datacamp_introduction_to_agent_skills/introduction_to_agent_skills__01`. | Conforme |
+| Préparation d’environnement | Prompt de correction, règle TP autonome | Le premier écran affiche les prérequis Claude Code et le dossier de projet avant la vidéo. | Conforme |
+| Verrouillage séquentiel | Règle Neopolis | Les 3 leçons sont visibles avec la première en cours ; les suivantes restent verrouillées tant que la progression ne les débloque pas. | Conforme |
+| Vidéo locale | Média local requis | Requête Range sur `ch01_ex01_video_what_are_skills_c29a04fe.mp4` : HTTP `206`, type `video/mp4`, `accept-ranges: bytes`. | Conforme |
+| Mobile | Lisibilité et actions visibles | Vérification à 375 × 812 : préparation, lecteur, transcript et navigation sont rendus sans troncature. | Conforme |
+| Tests | Régression catalogue et préparation | Vitest : 4 tests ciblés réussis ; TypeScript et validation des cours sans erreur. | Conforme |
+
+Le cours conserve les enrichissements Neopolis exigés : progression séquentielle, bouton de complétion vidéo, transcript et accès administrateur à l’édition contextuelle. Aucun écart critique résiduel n’est constaté sur cette formation après la propagation du second déploiement.
+
+## 12. DataCamp — Model Context Protocol Advanced Topics
+
+Le rapport croisé classe ce cours en **Critical**. Le prompt de correction signale le même triptyque d’écarts que pour Agent Skills : la source DataCamp expose **32 exercices** et **10 vidéos**, tandis que la carte Neopolis auditée affichait **2 chapitres et 0 activité**, la page de formation **0 cours, 2 chapitres, 0 activités, 10 vidéos et 2 téléchargements**, et aucun lien d’écran profond n’était détecté [rapport PDF pages 1 et 3, prompt de correction].
+
+Les preuves visuelles du PDF montrent la fiche DataCamp et le premier écran pédagogique avec une vidéo et des contrôles utilisateur, alors que la capture Neopolis ne montrait encore qu’une fiche vide sans premier écran pédagogique. La page technique du rapport indique, pour le premier écran, **8 boutons** côté source contre **0 bouton** côté Neopolis, ainsi qu’une **absence de balise vidéo visible** sur le premier écran Neopolis [rapport PDF page 4].
+
+Les exigences de correction pour ce cours sont donc déjà fixées : rétablir le rattachement catalogue et la navigation profonde, reconstruire l’ensemble des écrans depuis le manifeste canonique, vérifier les vidéos et téléchargements locaux, puis ajouter au premier écran un bloc standard de préparation d’environnement conforme aux règles d’intégration Neopolis, sans UI libre ni régression sur le verrouillage séquentiel.

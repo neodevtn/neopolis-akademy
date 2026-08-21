@@ -1925,4 +1925,5 @@
 - [ ] Corriger un seul cours prioritaire à la fois avec les blocs et médias standards Neopolis
 - [ ] Déployer chaque correctif de cours et contrôler le rendu réel sur ordinateur et mobile
 - [ ] Produire les preuves par cours : médias, exercices, compteurs source/Neopolis, corrections et risques restants
-- [ ] Traiter le cours critique « Introduction to Agent Skills » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant tout autre cours
+- [x] Traiter le cours critique « Introduction to Agent Skills » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant tout autre cours
+- [ ] Traiter le cours critique « Model Context Protocol Advanced Topics » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant le cours critique suivant

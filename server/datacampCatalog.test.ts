@@ -8,6 +8,12 @@ const agentSkillsCourse = JSON.parse(
     "utf8",
   ),
 );
+const mcpAdvancedCourse = JSON.parse(
+  readFileSync(
+    new URL("../client/public/data/courses/model_context_protocol_advanced_topics__01.json", import.meta.url),
+    "utf8",
+  ),
+);
 
 describe("catalogue DataCamp", () => {
   it("exposes Agent Skills comme un cours navigable avec ses compteurs canoniques", () => {
@@ -37,6 +43,47 @@ describe("catalogue DataCamp", () => {
     const firstActivity = agentSkillsCourse.lessons[0].chapters[0];
     const preparation = firstActivity.blocks.find(
       (block: { id?: string }) => block.id === "neopolis_agent_skills_environment_preparation",
+    );
+
+    expect(preparation).toMatchObject({
+      type: "content",
+      body: {
+        fr: expect.stringContaining("Avant de commencer"),
+        en: expect.stringContaining("Before you start"),
+      },
+    });
+    expect(firstActivity.blocks.findIndex((block: { id?: string }) => block.id === preparation.id)).toBe(0);
+  });
+
+  it("exposes MCP Advanced Topics comme un cours navigable avec ses compteurs canoniques", () => {
+    const certification = trainingIndex.certifications.find(
+      (item) => item.id === "datacamp_model_context_protocol_advanced_topics",
+    );
+    const course = trainingIndex.courses.find(
+      (item) => item.id === "model_context_protocol_advanced_topics__01",
+    );
+
+    expect(certification).toMatchObject({
+      courseCount: 1,
+      totalLessons: 2,
+      totalActivities: 32,
+      totalVideos: 10,
+      totalDownloads: 2,
+      courses: ["model_context_protocol_advanced_topics__01"],
+    });
+    expect(course).toMatchObject({
+      certId: "datacamp_model_context_protocol_advanced_topics",
+      lessonCount: 2,
+      totalActivities: 32,
+      videoCount: 10,
+      downloadCount: 2,
+    });
+  });
+
+  it("prépare l’environnement avant la première vidéo MCP", () => {
+    const firstActivity = mcpAdvancedCourse.lessons[0].chapters[0];
+    const preparation = firstActivity.blocks.find(
+      (block: { id?: string }) => block.id === "neopolis_mcp_advanced_environment_preparation",
     );
 
     expect(preparation).toMatchObject({
