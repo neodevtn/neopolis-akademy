@@ -115,6 +115,22 @@ describe("usesActivityTotals", () => {
     })).toBe(true);
   });
 
+  it("uses the canonical activity total for Multi-Modal Systems with the OpenAI API", () => {
+    expect(usesActivityTotals({
+      group: "datacamp_partner",
+      totalActivities: 24,
+      totalExercises: 17,
+    })).toBe(true);
+  });
+
+  it("uses the canonical activity total for Introduction to Embeddings with the OpenAI API", () => {
+    expect(usesActivityTotals({
+      group: "datacamp_partner",
+      totalActivities: 37,
+      totalExercises: 24,
+    })).toBe(true);
+  });
+
   it("keeps exercise totals for a certification that does not declare screen-level activities", () => {
     expect(usesActivityTotals({
       group: "anthropic_certifications",

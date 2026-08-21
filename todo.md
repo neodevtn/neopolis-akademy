@@ -1953,3 +1953,5 @@
 - [x] Traiter le cours Medium « Gemini in Google Docs » : vérifier l’agrégation à 9 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
 - [x] Traiter le cours Medium « Gemini in Google Drive » : vérifier l’agrégation à 15 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
 - [x] Traiter le cours Medium « Gemini in Google Slides » : vérifier l’agrégation à 8 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
+- [x] Traiter le cours Medium « Multi-Modal Systems with the OpenAI API » : vérifier l’agrégation à 24 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
+- [x] Traiter le cours Medium « Introduction to Embeddings with the OpenAI API » : vérifier l’agrégation à 37 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
