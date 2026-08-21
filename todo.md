@@ -1817,6 +1817,7 @@
 - [x] Générer et auditer le cours « Claude 101 » : 4 chapitres, 20 activités, 2 vidéos, 17 activités interactives et 2 supports téléchargeables locaux
 - [x] Générer et auditer le cours « Claude Code en action » : 4 chapitres, 31 activités, 9 vidéos, 22 exercices interactifs et médias locaux validés
 - [x] Générer et auditer le cours « Sujets avancés sur le Model Context Protocol » : 2 chapitres, 32 activités, 10 vidéos, 22 activités interactives et 2 supports téléchargeables locaux
+- [x] Générer et auditer le cours « Introduction aux sous-agents » : 2 chapitres, 12 activités, 4 vidéos, 8 activités interactives et 2 supports téléchargeables locaux
 - [x] Remplacer le contrôle des états préchargés du paquet OpenAI pilote par la lecture des seuls champs canoniques du manifeste
 - [x] Convertir « Travailler avec l’API OpenAI » depuis les champs canoniques du manifeste alternatif, avec médias locaux et TP autonomes
 - [x] Importer Gemini Drive à partir de ses médias déclarés disponibles, sans rendre bloquante une ressource visuelle optionnelle non exposée
