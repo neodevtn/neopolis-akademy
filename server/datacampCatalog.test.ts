@@ -26,6 +26,12 @@ const claudeCode101Course = JSON.parse(
     "utf8",
   ),
 );
+const geminiNotebookLmCourse = JSON.parse(
+  readFileSync(
+    new URL("../client/public/data/courses/practical_ai_with_google_gemini_and_notebooklm__01.json", import.meta.url),
+    "utf8",
+  ),
+);
 
 describe("catalogue DataCamp", () => {
   it("exposes Agent Skills comme un cours navigable avec ses compteurs canoniques", () => {
@@ -176,6 +182,46 @@ describe("catalogue DataCamp", () => {
     const firstActivity = claudeCode101Course.lessons[0].chapters[0];
     const preparation = firstActivity.blocks.find(
       (block: { id?: string }) => block.id === "neopolis_claude_code_101_environment_preparation",
+    );
+
+    expect(preparation).toMatchObject({
+      type: "content",
+      body: {
+        fr: expect.stringContaining("Avant de commencer"),
+        en: expect.stringContaining("Before you start"),
+      },
+    });
+    expect(firstActivity.blocks.findIndex((block: { id?: string }) => block.id === preparation.id)).toBe(0);
+  });
+
+  it("conserve le total canonique de 48 activités Gemini et NotebookLM", () => {
+    const certification = trainingIndex.certifications.find(
+      (item) => item.id === "datacamp_practical_ai_with_google_gemini_and_notebooklm",
+    );
+    const course = trainingIndex.courses.find(
+      (item) => item.id === "practical_ai_with_google_gemini_and_notebooklm__01",
+    );
+
+    expect(certification).toMatchObject({
+      courseCount: 1,
+      totalLessons: 4,
+      totalActivities: 48,
+      totalVideos: 15,
+      totalDownloads: 4,
+    });
+    expect(course).toMatchObject({
+      certId: "datacamp_practical_ai_with_google_gemini_and_notebooklm",
+      lessonCount: 4,
+      totalActivities: 48,
+      videoCount: 15,
+      downloadCount: 4,
+    });
+  });
+
+  it("prépare l'environnement avant la première vidéo Gemini et NotebookLM", () => {
+    const firstActivity = geminiNotebookLmCourse.lessons[0].chapters[0];
+    const preparation = firstActivity.blocks.find(
+      (block: { id?: string }) => block.id === "neopolis_gemini_notebooklm_environment_preparation",
     );
 
     expect(preparation).toMatchObject({
