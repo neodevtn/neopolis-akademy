@@ -1799,6 +1799,7 @@
 - [x] Générer et auditer le cours « Gemini in Gmail » : 1 chapitre, 7 activités, 4 vidéos, 3 activités interactives et 1 support PDF local
 - [x] Générer et auditer le cours « Gemini in Google Meet » : 1 chapitre, 10 activités, 5 vidéos, 5 activités interactives et 1 support PDF local
 - [x] Générer et auditer le cours « Gemini in Google Sheets » : 1 chapitre, 7 activités, 4 vidéos, 3 activités interactives et 1 support PDF local
+- [x] Générer et auditer le cours « Gemini in Google Docs » : 1 chapitre, 9 activités, 5 vidéos, 4 activités interactives et 1 support PDF local
 - [x] Décoder les états préchargés DataCamp sans les exécuter afin de convertir exactement les activités OpenAI interactives
 - [x] Générer et auditer le cours pilote « Introduction to Google Workspace with Gemini » : 1 chapitre, 7 activités, 3 vidéos, 4 activités interactives et 1 support PDF local
 - [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet OpenAI pilote avant toute importation de ses réponses et tris interactifs
