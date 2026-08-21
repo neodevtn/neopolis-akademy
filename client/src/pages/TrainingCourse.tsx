@@ -26,6 +26,7 @@ import { useCourseData, prefetchCourse } from "@/hooks/useCourseData";
 import { buildNavigationUrl } from "@shared/navigationUrls";
 import { isSequentialCourseRouteLocked } from "@shared/learningAccess";
 import { BrandLogo } from "@/components/BrandLogo";
+import { CourseFeedbackPanel } from "@/components/CourseFeedbackPanel";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -630,6 +631,7 @@ export default function TrainingCourse() {
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
+                {certId && courseId ? <CourseFeedbackPanel certificationId={certId} courseId={courseId} /> : null}
               </div>
             </motion.div>
           )}

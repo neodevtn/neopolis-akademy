@@ -1850,3 +1850,10 @@
 - [x] Relier chaque diagnostic prioritaire aux ressources et composants concernés
 - [x] Corriger les freins mobiles sans retirer de contenu ni modifier les parcours
 - [x] Revalider Lighthouse et PageSpeed mobile, puis publier la comparaison mesurable
+
+## Évaluation des cours et journal d’activité apprenant
+- [x] Auditer les tables, procédures et traces existantes pour les retours de cours et actions apprenantes
+- [x] Créer les modèles sécurisés de note 1–3 étoiles, feedback texte et événements d’activité horodatés
+- [x] Ajouter l’évaluation de cours dans l’interface apprenante et enregistrer les actions pédagogiques importantes
+- [x] Ajouter les vues administratives de feedback et le journal détaillé dans les profils apprenants
+- [ ] Tester les droits admin, la pagination, les filtres, la traçabilité et publier

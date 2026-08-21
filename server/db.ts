@@ -1,9 +1,10 @@
 import { eq, desc, asc, sql, and, or, like, count, gt, isNull, isNotNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { engagementBucket, firstAttemptRate, isPedagogicalReportingEvent } from "./reportingMetrics";
 import { learnerReportingLabel } from "@shared/learnerReportingLabel";
+import { normalizeCourseFeedbackComment, normalizeCourseRating } from "../shared/courseFeedback";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -407,6 +408,8 @@ export async function getLearnerProgress(userId: number) {
   const videoProg = await db.select().from(videoProgress).where(eq(videoProgress.userId, userId));
   const exercises = await db.select().from(exerciseResults).where(eq(exerciseResults.userId, String(userId))).orderBy(exerciseResults.createdAt);
   const events = await db.select().from(learningEvents).where(eq(learningEvents.userId, userId)).orderBy(desc(learningEvents.createdAt));
+  const feedback = await db.select().from(courseFeedback).where(eq(courseFeedback.userId, userId)).orderBy(desc(courseFeedback.updatedAt));
+  const activityLog = await db.select().from(learnerActivityLog).where(eq(learnerActivityLog.userId, userId)).orderBy(desc(learnerActivityLog.createdAt)).limit(100);
   const achievements = await db.select().from(learnerAchievements).where(eq(learnerAchievements.userId, userId)).orderBy(desc(learnerAchievements.issuedAt));
   const { getUserCompetencies } = await import("./competencyService");
   const competencies = await getUserCompetencies(userId);
@@ -419,7 +422,7 @@ export async function getLearnerProgress(userId: number) {
     viaCandidature = !!app;
   }
 
-  return { progress, attempts, chapterProgress: chapterProg, videoProgress: videoProg, exerciseResults: exercises, learningEvents: events, achievements, competencies, viaCandidature, userInfo: userRow || null };
+  return { progress, attempts, chapterProgress: chapterProg, videoProgress: videoProg, exerciseResults: exercises, learningEvents: events, courseFeedback: feedback, activityLog, achievements, competencies, viaCandidature, userInfo: userRow || null };
 }
 
 export async function getAllLearnersStats() {
@@ -927,6 +930,39 @@ export async function getUserVideoFeedback(userId: number, certId?: string) {
     .where(eq(videoFeedback.userId, userId));
 }
 
+// ============ Private Course Feedback ============
+export async function submitCourseFeedback(data: { userId: number; certificationId: string; courseId: string; rating: number; comment?: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const rating = normalizeCourseRating(data.rating);
+  const comment = normalizeCourseFeedbackComment(data.comment);
+  const [existing] = await db.select({ id: courseFeedback.id }).from(courseFeedback)
+    .where(and(eq(courseFeedback.userId, data.userId), eq(courseFeedback.courseId, data.courseId))).limit(1);
+  if (existing) {
+    await db.update(courseFeedback).set({ rating, comment }).where(eq(courseFeedback.id, existing.id));
+  } else {
+    await db.insert(courseFeedback).values({ ...data, rating, comment });
+  }
+  await db.insert(learnerActivityLog).values({
+    userId: data.userId,
+    actionType: "course_feedback_submitted",
+    certificationId: data.certificationId,
+    courseId: data.courseId,
+    metadata: { rating, hasComment: Boolean(comment) },
+  });
+  const [saved] = await db.select().from(courseFeedback)
+    .where(and(eq(courseFeedback.userId, data.userId), eq(courseFeedback.courseId, data.courseId))).limit(1);
+  return saved || null;
+}
+
+export async function getMyCourseFeedback(userId: number, courseId: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [feedback] = await db.select().from(courseFeedback)
+    .where(and(eq(courseFeedback.userId, userId), eq(courseFeedback.courseId, courseId))).limit(1);
+  return feedback || null;
+}
+
 // ============ Password Reset Tokens ============
 
 export async function createPasswordResetToken(userId: number, token: string, expiresAt: Date) {
@@ -1162,6 +1198,18 @@ export async function recordLearningEvent(data: {
     attemptNumber: data.attemptNumber ?? null,
     metadata: data.metadata ?? null,
   });
+  if (data.eventType !== "learning_time") {
+    await db.insert(learnerActivityLog).values({
+      userId: data.userId,
+      actionType: data.eventType,
+      certificationId: data.certificationId || null,
+      courseId: data.courseId || null,
+      lessonIndex: data.lessonIndex ?? null,
+      chapterIndex: data.chapterIndex ?? null,
+      exerciseId: data.exerciseId || null,
+      metadata: data.metadata ?? null,
+    });
+  }
   return { id: result[0].insertId };
 }
 

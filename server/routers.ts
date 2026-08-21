@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients } from "./db";
 import { awardCertification, awardCourseCompletionBadge } from "./achievementService";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
@@ -507,6 +507,19 @@ export const appRouter = router({
       }),
 
     getAchievements: protectedProcedure.query(async ({ ctx }) => getUserAchievements(ctx.user.id)),
+
+    getMyCourseFeedback: protectedProcedure
+      .input(z.object({ courseId: z.string().min(2).max(200) }))
+      .query(async ({ ctx, input }) => getMyCourseFeedback(ctx.user.id, input.courseId)),
+
+    submitCourseFeedback: protectedProcedure
+      .input(z.object({
+        certificationId: z.string().min(2).max(200),
+        courseId: z.string().min(2).max(200),
+        rating: z.number().int().min(1).max(3),
+        comment: z.string().trim().max(4000).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => submitCourseFeedback({ userId: ctx.user.id, ...input })),
 
     getCommunications: protectedProcedure.query(async ({ ctx }) => {
       const items = await getLearnerCommunications(ctx.user.id);

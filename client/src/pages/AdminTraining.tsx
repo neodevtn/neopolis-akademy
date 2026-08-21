@@ -381,6 +381,8 @@ export default function AdminTraining() {
     const chapterProg = (detail as any).chapterProgress ?? [];
     const videoProg = (detail as any).videoProgress ?? [];
     const learningEvents = (detail as any).learningEvents ?? [];
+    const courseFeedback = (detail as any).courseFeedback ?? [];
+    const activityLog = (detail as any).activityLog ?? [];
     const exerciseResults = (detail as any).exerciseResults ?? [];
     const achievements = (detail as any).achievements ?? [];
     const competencies = (detail as any).competencies ?? [];
@@ -585,6 +587,22 @@ export default function AdminTraining() {
                   {learningEvents.length === 0 ? <p className="text-sm text-muted-foreground">Le temps et les événements seront enregistrés à partir des nouvelles sessions.</p> : <div className="space-y-2">{learningEvents.slice(0, 6).map((event: any) => <div key={event.id} className="flex justify-between text-sm border-b border-border pb-2"><span>{String(event.eventType).replaceAll("_", " ")}</span><span className="text-muted-foreground">{new Date(event.createdAt).toLocaleDateString()}</span></div>)}</div>}
                 </div>
               </div>
+            </div>
+
+            <div className="grid gap-6 mb-6 lg:grid-cols-2">
+              <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><FileText className="h-5 w-5 text-primary" /> Évaluations de cours</h3>
+                <p className="mt-1 text-sm text-muted-foreground">Retours privés déposés par l’apprenant.</p>
+                {courseFeedback.length === 0 ? <p className="mt-4 text-sm italic text-muted-foreground">Aucun avis de cours.</p> : <div className="mt-4 space-y-3">{courseFeedback.map((feedback: any) => {
+                  const feedbackCourse = (trainingIndex.courses as any[]).find((item) => item.id === feedback.courseId);
+                  return <article key={feedback.id} className="rounded-xl border border-border bg-muted/25 p-3"><div className="flex items-start justify-between gap-3"><div><p className="text-sm font-semibold text-foreground">{feedbackCourse?.title?.fr || feedbackCourse?.title?.en || feedback.courseId}</p><p className="mt-1 text-sm text-amber-500" aria-label={`${feedback.rating} étoiles sur 3`}>{"★".repeat(feedback.rating)}{"☆".repeat(3 - feedback.rating)} <span className="ml-1 text-xs text-muted-foreground">{feedback.rating}/3</span></p></div><time className="text-xs text-muted-foreground">{new Date(feedback.updatedAt).toLocaleDateString("fr-FR")}</time></div>{feedback.comment ? <p className="mt-2 whitespace-pre-wrap text-sm text-foreground">{feedback.comment}</p> : <p className="mt-2 text-xs italic text-muted-foreground">Sans commentaire.</p>}</article>;
+                })}</div>}
+              </section>
+              <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+                <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><Clock className="h-5 w-5 text-primary" /> Journal d’activité détaillé</h3>
+                <p className="mt-1 text-sm text-muted-foreground">Actions horodatées complémentaires enregistrées pour ce profil.</p>
+                {activityLog.length === 0 ? <p className="mt-4 text-sm italic text-muted-foreground">Aucune action fine enregistrée.</p> : <div className="mt-4 max-h-80 divide-y divide-border overflow-y-auto">{activityLog.map((event: any) => <div key={event.id} className="py-3"><div className="flex items-start justify-between gap-3"><p className="text-sm font-medium text-foreground">{String(event.actionType).replaceAll("_", " ")}</p><time className="shrink-0 text-xs text-muted-foreground">{new Date(event.createdAt).toLocaleString("fr-FR")}</time></div><p className="mt-1 text-xs text-muted-foreground">{event.courseId || "Plateforme"}</p>{event.metadata?.rating ? <p className="mt-1 text-xs text-amber-600">Note donnée : {event.metadata.rating}/3</p> : null}</div>)}</div>}
+              </section>
             </div>
 
             {/* Progress by certification */}

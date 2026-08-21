@@ -606,3 +606,47 @@ export const learnerIntegrityReviews = mysqlTable("learner_integrity_reviews", {
 ]);
 export type LearnerIntegrityReview = typeof learnerIntegrityReviews.$inferSelect;
 export type InsertLearnerIntegrityReview = typeof learnerIntegrityReviews.$inferInsert;
+
+/**
+ * One private course evaluation per learner and course. Learners can create or
+ * update their own evaluation; raw feedback is exposed only through admin APIs.
+ */
+export const courseFeedback = mysqlTable("course_feedback", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  certificationId: varchar("certificationId", { length: 200 }).notNull(),
+  courseId: varchar("courseId", { length: 200 }).notNull(),
+  rating: int("rating").notNull(), // constrained to 1–3 by the API
+  comment: text("comment"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("course_feedback_user_course_once").on(table.userId, table.courseId),
+  index("course_feedback_course_idx").on(table.courseId, table.updatedAt),
+  index("course_feedback_user_idx").on(table.userId, table.updatedAt),
+]);
+export type CourseFeedback = typeof courseFeedback.$inferSelect;
+export type InsertCourseFeedback = typeof courseFeedback.$inferInsert;
+
+/**
+ * Durable, append-only learner activity timeline. It records pedagogical
+ * actions with their contextual identifiers and is visible only to admins.
+ */
+export const learnerActivityLog = mysqlTable("learner_activity_log", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  actionType: varchar("actionType", { length: 80 }).notNull(),
+  certificationId: varchar("certificationId", { length: 200 }),
+  courseId: varchar("courseId", { length: 200 }),
+  lessonIndex: int("lessonIndex"),
+  chapterIndex: int("chapterIndex"),
+  exerciseId: varchar("exerciseId", { length: 255 }),
+  metadata: json("metadata"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => [
+  index("learner_activity_user_created_idx").on(table.userId, table.createdAt),
+  index("learner_activity_action_created_idx").on(table.actionType, table.createdAt),
+  index("learner_activity_course_idx").on(table.courseId, table.createdAt),
+]);
+export type LearnerActivityLog = typeof learnerActivityLog.$inferSelect;
+export type InsertLearnerActivityLog = typeof learnerActivityLog.$inferInsert;
