@@ -107,45 +107,25 @@ export function registerAssetProxy(app: Express) {
       const rangeHeader = req.headers.range;
 
       if (rangeHeader) {
-        // Handle Range request for streaming media
-        // First, do a HEAD to get content-length
-        const headResp = await fetch(url, { method: "HEAD" });
-        if (!headResp.ok) {
-          res.status(502).send("Storage file HEAD error");
-          return;
-        }
-
-        const totalSize = parseInt(headResp.headers.get("content-length") || "0", 10);
-        if (!totalSize) {
-          // Fallback: fetch entire file
-          const fileResp = await fetch(url);
-          const contentType = mimeFromKey || fileResp.headers.get("content-type") || "application/octet-stream";
-          res.set("Content-Type", contentType);
-          res.set("Accept-Ranges", "bytes");
-          res.set("Access-Control-Allow-Origin", "*");
-          res.set("Cache-Control", cacheControl);
-          const arrayBuf = await fileResp.arrayBuffer();
-          res.send(Buffer.from(arrayBuf));
-          return;
-        }
-
-        // Parse Range header: bytes=start-end
-        const parts = rangeHeader.replace(/bytes=/, "").split("-");
-        const start = parseInt(parts[0], 10);
-        const end = parts[1] ? parseInt(parts[1], 10) : totalSize - 1;
-        const chunkSize = end - start + 1;
-
-        // Fetch the range from upstream
+        // Relay the requested range directly. Some signed storage endpoints do not
+        // reliably support HEAD for newly uploaded large files, even though GET Range
+        // succeeds. The upstream Content-Range is the authoritative source here.
         const rangeResp = await fetch(url, {
-          headers: { Range: `bytes=${start}-${end}` },
+          headers: { Range: rangeHeader },
         });
+        if (!rangeResp.ok) {
+          res.status(502).send("Storage file range fetch error");
+          return;
+        }
 
         const contentType = mimeFromKey || rangeResp.headers.get("content-type") || "application/octet-stream";
+        const contentRange = rangeResp.headers.get("content-range");
+        const contentLength = rangeResp.headers.get("content-length");
 
-        res.status(206);
+        res.status(rangeResp.status === 206 ? 206 : 200);
         res.set("Content-Type", contentType);
-        res.set("Content-Length", String(chunkSize));
-        res.set("Content-Range", `bytes ${start}-${end}/${totalSize}`);
+        if (contentLength) res.set("Content-Length", contentLength);
+        if (contentRange) res.set("Content-Range", contentRange);
         res.set("Accept-Ranges", "bytes");
         res.set("Access-Control-Allow-Origin", "*");
         res.set("Cache-Control", cacheControl);
