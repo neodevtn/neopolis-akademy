@@ -12,6 +12,6 @@ describe("catalog metrics", () => {
 
   it("aggregates certifications only from their actual indexed courses", () => {
     const result = applyCatalogMetrics({ certifications: [{ id: "cert_a" }], courses: [{ id: "course_a", certId: "cert_a" }] }, { course_a: course });
-    expect(result.certifications[0]).toMatchObject({ courseCount: 1, totalLessons: 1, totalExercises: 2, totalVideos: 2, totalDownloads: 1 });
+    expect(result.certifications[0]).toMatchObject({ courseCount: 1, totalLessons: 1, totalExercises: 2, totalActivities: 2, totalVideos: 2, totalDownloads: 1 });
   });
 });

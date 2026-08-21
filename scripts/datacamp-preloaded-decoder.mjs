@@ -34,14 +34,16 @@ function toPlain(value) {
 
 export function decodePreloadedState(source) {
   const raw = String(source);
-  const prefix = 'window.PRELOADED_STATE = "';
-  const start = raw.indexOf(prefix);
-  const end = raw.lastIndexOf('";');
-  if (start < 0 || end <= start + prefix.length) throw new Error("window.PRELOADED_STATE introuvable dans le fichier préchargé.");
-  const serialized = decodeEntities(raw.slice(start + prefix.length, end));
-  if (serialized.includes("[Truncated]")) {
+  if (raw.includes("[Truncated]")) {
     throw new Error("État préchargé DataCamp tronqué : les données de correction ne peuvent pas être reconstruites fidèlement.");
   }
+  const prefix = 'window.PRELOADED_STATE = "';
+  const start = raw.indexOf(prefix);
+  const encodedEnd = raw.lastIndexOf("&quot;;");
+  const rawEnd = raw.lastIndexOf('";');
+  const end = Math.max(encodedEnd, rawEnd);
+  if (start < 0 || end <= start + prefix.length) throw new Error("window.PRELOADED_STATE introuvable dans le fichier préchargé.");
+  const serialized = decodeEntities(raw.slice(start + prefix.length, end));
   return toPlain(transit.reader("json").read(serialized));
 }
 

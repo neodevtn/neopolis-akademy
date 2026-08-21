@@ -59,6 +59,7 @@ export function applyCatalogMetrics(index: any, coursesById: Record<string, any>
       courseCount: certificationCourses.length,
       totalLessons: certificationCourses.reduce((sum: number, course: any) => sum + course.lessonCount, 0),
       totalExercises: certificationCourses.reduce((sum: number, course: any) => sum + course.exerciseCount, 0),
+      totalActivities: certificationCourses.reduce((sum: number, course: any) => sum + course.totalActivities, 0),
       totalVideos: certificationCourses.reduce((sum: number, course: any) => sum + course.videoCount, 0),
       totalDownloads: certificationCourses.reduce((sum: number, course: any) => sum + course.downloadCount, 0),
     };
