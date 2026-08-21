@@ -46,7 +46,7 @@ function getMimeFromKey(key: string): string | null {
   return MIME_MAP[ext] || null;
 }
 
-async function fetchStorageWithRetry(input: RequestInfo | URL, init?: RequestInit, attempts = 3): Promise<globalThis.Response> {
+async function fetchStorageWithRetry(input: RequestInfo | URL, init?: RequestInit, attempts = 5): Promise<globalThis.Response> {
   let lastError: unknown;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {

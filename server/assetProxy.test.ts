@@ -84,4 +84,32 @@ describe("registerAssetProxy", () => {
     expect(res.status).toHaveBeenCalledWith(206);
     expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
   });
+
+  it("continues retrying range reads until a fifth-attempt storage recovery", async () => {
+    let handler: ((req: any, res: any) => Promise<void>) | undefined;
+    const app = {
+      get: (_path: string, callback: (req: any, res: any) => Promise<void>) => {
+        handler = callback;
+      },
+    } as unknown as Express;
+    registerAssetProxy(app);
+
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ url: "https://storage.example/video.mp4" }), { status: 200 }))
+      .mockResolvedValueOnce(new Response("temporary", { status: 500 }))
+      .mockResolvedValueOnce(new Response("temporary", { status: 502 }))
+      .mockResolvedValueOnce(new Response("temporary", { status: 503 }))
+      .mockResolvedValueOnce(new Response("data", {
+        status: 206,
+        headers: { "content-type": "video/mp4", "content-length": "4", "content-range": "bytes 0-3/4" },
+      }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    const res = { status: vi.fn(), set: vi.fn(), send: vi.fn() };
+    await handler!({ params: { 0: "video.mp4" }, headers: { range: "bytes=0-3" } }, res);
+
+    expect(fetchMock).toHaveBeenCalledTimes(5);
+    expect(res.status).toHaveBeenCalledWith(206);
+    expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
+  });
 });
