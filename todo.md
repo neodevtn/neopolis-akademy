@@ -1918,3 +1918,11 @@
 - [x] Vérifier les droits, la pagination, les filtres, les détails et publier
 - [x] Corriger le panneau Journal publié afin que ses filtres et détails soient effectivement visibles et accessibles
 - [x] Rendre explicites les données historiques et les comparaisons avant/après dans le détail d’événement
+
+## Corrections contrôlées cours par cours — audit croisé DataCamp / Skilljar
+- [ ] Télécharger et analyser le paquet neopolis_cross_source_audit_2026-08-21 ainsi que son résumé global
+- [ ] Classer les écarts Critical, High, Medium et Info selon les rapports et prompts de correction associés
+- [ ] Corriger un seul cours prioritaire à la fois avec les blocs et médias standards Neopolis
+- [ ] Déployer chaque correctif de cours et contrôler le rendu réel sur ordinateur et mobile
+- [ ] Produire les preuves par cours : médias, exercices, compteurs source/Neopolis, corrections et risques restants
+- [ ] Traiter le cours critique « Introduction to Agent Skills » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant tout autre cours
