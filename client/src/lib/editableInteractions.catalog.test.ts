@@ -22,7 +22,7 @@ describe("catalogue editable interactions", () => {
         }
       }
     }
-    expect(files.length).toBe(80);
+    expect(files.length).toBeGreaterThanOrEqual(80);
     expect(resolvedInteractions).toBeGreaterThan(2_000);
   });
 

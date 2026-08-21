@@ -167,7 +167,7 @@ export default function LessonViewer({
           const matchIds = blocks.filter((b: any) => b.type === 'bucket_sort').map((b: any, i: number) => b.id || `bucket_${i}`);
           if (matchIds.length > 0 && !matchIds.every((id: string) => matchingCompleted.has(id))) return;
           // Single choice exercise gate
-          const scIds = blocks.filter((b: any) => b.type === 'single_choice_exercise').map((b: any, i: number) => b.id || `quiz_${i}`);
+          const scIds = blocks.filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise').map((b: any, i: number) => b.id || `quiz_${i}`);
           if (scIds.length > 0 && !scIds.every((id: string) => completedExercises.has(id))) return;
         }
         setCurrentChapter(p => p + 1);
@@ -323,6 +323,12 @@ export default function LessonViewer({
                       {t({en:'Slides PDF',fr:'Slides PDF'})}
                     </a>
                   )}
+                  {(block.subtitleUrlFr || block.subtitleUrlEn) && (
+                    <a href={block.subtitleUrlFr || block.subtitleUrlEn} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
+                      <FileText className="w-4 h-4" />
+                      {t({en:'Subtitles',fr:'Sous-titres'})}
+                    </a>
+                  )}
                 </div>
                 {block.transcript && (
                   <details className="border border-t-0 border-border rounded-b-xl mt-[-1px]">
@@ -365,6 +371,9 @@ export default function LessonViewer({
                 onEnded={() => toggleVideoComplete(mp4Key)}
               >
                 <source src={block.mp4Url} type="video/mp4" />
+                {block.hlsUrl && <source src={block.hlsUrl} type="application/x-mpegURL" />}
+                {block.subtitleUrlFr && <track kind="subtitles" srcLang="fr" label="Français" src={block.subtitleUrlFr} default />}
+                {block.subtitleUrlEn && <track kind="subtitles" srcLang="en" label="English" src={block.subtitleUrlEn} />}
               </video>
               <div className="flex items-center justify-between px-4 py-2 border-t border-border">
                 <button
@@ -439,10 +448,16 @@ export default function LessonViewer({
                 {block.slidesPdf && (
                   <a href={block.slidesPdf} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
                     <FileText className="w-4 h-4" />
-                    {t({en:'Slides PDF',fr:'Slides PDF'})}
-                  </a>
-                )}
-              </div>
+                      {t({en:'Slides PDF',fr:'Slides PDF'})}
+                    </a>
+                  )}
+                  {(block.subtitleUrlFr || block.subtitleUrlEn) && (
+                    <a href={block.subtitleUrlFr || block.subtitleUrlEn} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
+                      <FileText className="w-4 h-4" />
+                      {t({en:'Subtitles',fr:'Sous-titres'})}
+                    </a>
+                  )}
+                </div>
               {block.transcript && (
                 <details className="border-t border-border">
                   <summary className="px-4 py-3 cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-2">
@@ -602,6 +617,7 @@ export default function LessonViewer({
             options={displayedOptions}
             correctAnswer={correctAnswer}
             explanation={explanation}
+            hint={typeof block.hint === 'string' ? block.hint : (block.hint?.[lang] || block.hint?.en || '')}
             lang={lang as 'en' | 'fr'}
             questionNumber={quizBlocksBefore + 1}
             onCorrect={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })}
@@ -1056,7 +1072,7 @@ export default function LessonViewer({
                 const lastAllCloudDone = lastChapterCloudIds.length === 0 || lastChapterCloudIds.every((id: string) => completedCloudExercises.has(id));
                 const lastChapterMatchingIds = (chapter?.blocks || []).filter((b: any) => b.type === 'bucket_sort').map((b: any, i: number) => b.id || `bucket_${i}`);
                 const lastAllMatchingDone = lastChapterMatchingIds.length === 0 || lastChapterMatchingIds.every((id: string) => matchingCompleted.has(id));
-              const lastChapterSCIds = (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise').map((b: any, i: number) => b.id || `quiz_${i}`);
+              const lastChapterSCIds = (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise').map((b: any, i: number) => b.id || `quiz_${i}`);
               const lastAllSCDone = lastChapterSCIds.length === 0 || lastChapterSCIds.every((id: string) => completedExercises.has(id));
               const lastChapterCheckpointIds = (chapter?.blocks || []).filter((b: any) => b.type === 'checkpoint').map((b: any, i: number) => b.exerciseId || `checkpoint_${i}`);
               const lastAllCheckpointsDone = lastChapterCheckpointIds.length === 0 || lastChapterCheckpointIds.every((id: string) => completedExercises.has(id));
@@ -1088,7 +1104,7 @@ export default function LessonViewer({
               // Not last chapter - show Next button with possible gate
               const isQuizOrCheckpointChapter = chapter?.type === 'quiz' || chapter?.type === 'checkpoint';
               const chapterExerciseIds = isQuizOrCheckpointChapter
-                ? (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'checkpoint').map((b: any, i: number) => b.type === 'checkpoint' ? (b.exerciseId || `checkpoint_${i}`) : (b.id || `quiz_${i}`))
+                ? (chapter?.blocks || []).filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise' || b.type === 'checkpoint').map((b: any, i: number) => b.type === 'checkpoint' ? (b.exerciseId || `checkpoint_${i}`) : (b.id || `quiz_${i}`))
                 : [];
               const validationRequired = chapter?.requiredBeforeAdvance !== false;
               const completedChapterExercises = chapterExerciseIds.filter((id: string) => completedExercises.has(id)).length;
@@ -1118,7 +1134,7 @@ export default function LessonViewer({
               const isGatedByMatching = chapterMatchingIds.length > 0 && !allMatchingCompleted && !isReviewMode;
               // Single choice exercise gate for ALL chapters (not just quiz/checkpoint)
               const chapterSingleChoiceIds = (chapter?.blocks || [])
-                .filter((b: any) => b.type === 'single_choice_exercise')
+                .filter((b: any) => b.type === 'single_choice_exercise' || b.type === 'multi_choice_exercise')
                 .map((b: any, i: number) => b.id || `quiz_${i}`);
               const completedSingleChoice = chapterSingleChoiceIds.filter((id: string) => completedExercises.has(id)).length;
               const requiredSingleChoice = isQuizOrCheckpointChapter ? requiredChapterSuccesses : chapterSingleChoiceIds.length;

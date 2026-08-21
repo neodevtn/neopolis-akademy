@@ -1785,6 +1785,17 @@
 - [x] Vérifier pour chaque cours le paquet, les médias ou le droit d’intégration disponible
 - [ ] Proposer un classement Neopolis, les tags de compétences et le lot d’import prioritaire
 - [ ] Importer uniquement les cours autorisés avec blocs standards, médias locaux et TP autonomes
+
+## Import contrôlé des paquets DataCamp depuis Google Drive
+- [x] Inventorier uniquement les ZIP complets présents dans les dossiers claude_anthropic, openai, gemini et n8n
+- [ ] Valider COURSE_MANIFEST.json, COMPLETENESS_REPORT.md, LOCAL_ASSET_INDEX.json et les exclusions SKIPPED_NONCONVENTIONAL_FORMAT.md
+- [x] Déterminer pour chaque média Drive la stratégie de lecture fiable : diffusion directe autorisée ou copie versionnée nécessaire
+- [ ] Transformer catalogue, cours, chapitres et activités dans l’ordre canonique avec les blocs interactifs Neopolis
+- [ ] Vérifier les compteurs, médias, PDF, progression séquentielle, réponses masquées et le responsive mobile avant publication
+- [x] Ajouter un convertisseur réutilisable pour les schémas de manifestes DataCamp autorisés et un rapport d’audit par cours
+- [ ] Importer et auditer un lot pilote multi-catalogues avant les paquets DataCamp volumineux
+- [ ] Importer les paquets restants par lots contrôlés, avec validation des médias et compteurs après chaque lot
+- [x] Générer et auditer le cours pilote « Introduction to Claude Models » : 3 chapitres, 29 activités, 10 vidéos, 19 exercices interactifs et 3 supports PDF locaux
 ## Régressions brouillon et progression n8n
 - [x] Reproduire et corriger le contenu absent à l’ouverture d’un brouillon de communication
 - [x] Reproduire et corriger le passage bloqué entre les chapitres 2 et 3 du cours n8n

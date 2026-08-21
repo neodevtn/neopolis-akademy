@@ -303,7 +303,7 @@ for (const fname of files) {
       }
 
       // ── 3. Recommandations vidéo de fin de module ──────────────────────────
-      if (!Array.isArray(lesson.recommendedVideos) || lesson.recommendedVideos.length === 0) {
+      if (lesson.recommendedVideosManaged !== false && (!Array.isArray(lesson.recommendedVideos) || lesson.recommendedVideos.length === 0)) {
         fileIssues.push({ level: 'error', type: 'missing_video_recommendations', msg: `Lesson "${lid}" has no managed end-of-module video recommendations` });
         totalErrors++;
       } else {

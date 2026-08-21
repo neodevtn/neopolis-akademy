@@ -12,6 +12,7 @@ interface SingleChoiceExerciseProps {
   options: Option[];
   correctAnswer: string;
   explanation: string;
+  hint?: string;
   lang?: 'en' | 'fr';
   onCorrect?: (id: string) => void;
   questionNumber?: number;
@@ -23,6 +24,7 @@ export function SingleChoiceExercise({
   options,
   correctAnswer,
   explanation,
+  hint = "",
   lang = 'fr',
   onCorrect,
   questionNumber,
@@ -134,6 +136,13 @@ export function SingleChoiceExercise({
           );
         })}
       </div>
+
+      {hint && !isSubmitted && (
+        <details className="ml-1 rounded-xl border border-amber-200 bg-amber-50/60 px-4 py-3 text-sm text-amber-900">
+          <summary className="cursor-pointer font-medium">{t("Show hint", "Afficher l’indice")}</summary>
+          <p className="mt-2 leading-relaxed">{hint}</p>
+        </details>
+      )}
 
       {/* Submit / Result */}
       <div className="pl-1 pt-1">

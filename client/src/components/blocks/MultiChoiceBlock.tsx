@@ -13,6 +13,7 @@ interface MultiChoiceBlockProps {
 export function MultiChoiceBlock({ block, lang, t, onComplete, blockIdx }: MultiChoiceBlockProps) {
   const question = typeof block.question === "object" ? (block.question[lang] || block.question.en || "") : (block.question || "");
   const explanation = typeof block.explanation === "object" ? (block.explanation[lang] || block.explanation.en || "") : (block.explanation || "");
+  const hint = typeof block.hint === "object" ? (block.hint[lang] || block.hint.en || "") : (block.hint || "");
   const correctAnswers = (block.correctAnswers || "").split(",").map((s: string) => s.trim()).filter(Boolean);
 
   const options: { id: string; text: string }[] = (block.options || []).map((opt: any) => ({
@@ -85,6 +86,12 @@ export function MultiChoiceBlock({ block, lang, t, onComplete, blockIdx }: Multi
             );
           })}
         </div>
+        {hint && !submitted && (
+          <details className="rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2.5 text-sm text-amber-900">
+            <summary className="cursor-pointer font-medium">{t({ en: "Show hint", fr: "Afficher l’indice" })}</summary>
+            <p className="mt-2 leading-relaxed">{hint}</p>
+          </details>
+        )}
         {submitted && explanation && (
           <div className={`rounded-lg p-3 text-sm ${isAllCorrect ? "bg-green-50 dark:bg-green-950/20 text-green-800 dark:text-green-200 border border-green-200" : "bg-blue-50 dark:bg-blue-950/20 text-blue-800 dark:text-blue-200 border border-blue-200"}`}>
             {explanation}
@@ -106,4 +113,3 @@ export function MultiChoiceBlock({ block, lang, t, onComplete, blockIdx }: Multi
     </div>
   );
 }
-

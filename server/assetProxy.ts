@@ -21,6 +21,7 @@ const MIME_MAP: Record<string, string> = {
   ".mp3": "audio/mpeg",
   ".wav": "audio/wav",
   ".ogg": "audio/ogg",
+  ".vtt": "text/vtt; charset=utf-8",
   ".pdf": "application/pdf",
   ".png": "image/png",
   ".jpg": "image/jpeg",
