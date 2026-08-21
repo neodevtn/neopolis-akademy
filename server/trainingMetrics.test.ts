@@ -131,6 +131,30 @@ describe("usesActivityTotals", () => {
     })).toBe(true);
   });
 
+  it("uses the canonical activity total for Developing AI Systems with the OpenAI API", () => {
+    expect(usesActivityTotals({
+      group: "datacamp_partner",
+      totalActivities: 36,
+      totalExercises: 24,
+    })).toBe(true);
+  });
+
+  it("uses the canonical activity total for Working with the OpenAI API", () => {
+    expect(usesActivityTotals({
+      group: "datacamp_partner",
+      totalActivities: 29,
+      totalExercises: 20,
+    })).toBe(true);
+  });
+
+  it("uses the canonical activity total for Working with the OpenAI Responses API", () => {
+    expect(usesActivityTotals({
+      group: "datacamp_partner",
+      totalActivities: 34,
+      totalExercises: 19,
+    })).toBe(true);
+  });
+
   it("keeps exercise totals for a certification that does not declare screen-level activities", () => {
     expect(usesActivityTotals({
       group: "anthropic_certifications",

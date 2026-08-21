@@ -1922,10 +1922,10 @@
 ## Corrections contrôlées cours par cours — audit croisé DataCamp / Skilljar
 - [x] Télécharger et analyser le paquet neopolis_cross_source_audit_2026-08-21 ainsi que son résumé global
 - [x] Classer les écarts Critical, High, Medium et Info selon les rapports et prompts de correction associés
-- [ ] Corriger un seul cours prioritaire à la fois avec les blocs et médias standards Neopolis
-- [ ] Déployer chaque correctif de cours et contrôler le rendu réel sur ordinateur et mobile
-- [ ] Produire les preuves par cours : médias, exercices, compteurs source/Neopolis, corrections et risques restants
-- [ ] Préserver les checkpoints supplémentaires et les vidéos recommandées intentionnels pendant toutes les corrections d’audit
+- [x] Corriger un seul cours prioritaire à la fois avec les blocs et médias standards Neopolis
+- [x] Déployer chaque correctif de cours et contrôler le rendu réel sur ordinateur et mobile
+- [x] Produire les preuves par cours : médias, exercices, compteurs source/Neopolis, corrections et risques restants
+- [x] Préserver les checkpoints supplémentaires et les vidéos recommandées intentionnels pendant toutes les corrections d’audit
 - [x] Traiter le cours critique « Introduction to Agent Skills » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant tout autre cours
 - [x] Traiter le cours critique « Model Context Protocol Advanced Topics » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant le cours critique suivant
 - [x] Traiter le cours critique « Introduction to Subagents » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant le cours critique suivant
@@ -1955,3 +1955,6 @@
 - [x] Traiter le cours Medium « Gemini in Google Slides » : vérifier l’agrégation à 8 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
 - [x] Traiter le cours Medium « Multi-Modal Systems with the OpenAI API » : vérifier l’agrégation à 24 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
 - [x] Traiter le cours Medium « Introduction to Embeddings with the OpenAI API » : vérifier l’agrégation à 37 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
+- [x] Traiter le cours Medium « Developing AI Systems with the OpenAI API » : vérifier l’agrégation à 36 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
+- [x] Traiter le cours Medium « Working with the OpenAI API » : vérifier l’agrégation à 29 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels
+- [x] Traiter le cours Medium « Working with the OpenAI Responses API » : vérifier l’agrégation à 34 activités canoniques et couvrir la métrique sans modifier les enrichissements intentionnels

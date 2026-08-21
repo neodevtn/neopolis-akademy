@@ -378,6 +378,42 @@ L’index catalogue et le JSON publié sont cohérents : **24 activités canoniq
 
 La règle est couverte par un test de non-régression dédié ; TypeScript est valide.
 
+## 25 — DataCamp - Développer des systèmes d’IA avec l’API OpenAI
+
+Le rapport Medium met en évidence un écart de compteur entre la **carte catalogue (24 activités)** et la **page formation (36 activités)**, alors que la source DataCamp affiche également **36 exercices** et **11 vidéos**. Les preuves visuelles et techniques confirment que le premier écran Neopolis est cohérent avec la source sur le plan média : piste audio locale lisible, sous-titres VTT valides et PDF de slides accessible. Il n’y a donc pas de manque de média ni d’écran d’ouverture absent ; l’écart est celui d’une **agrégation catalogue incomplète**.
+
+Le rapport montre aussi que la page formation expose déjà **36 activités**, **11 vidéos** et **3 téléchargements**. La correction prioritaire consiste à aligner la carte catalogue sur les **36 activités canoniques** déjà visibles sur la page formation, sans modifier les enrichissements intentionnels existants.
+
+### Résolution — agrégation catalogue vérifiée
+
+L’index catalogue et le JSON publié sont cohérents : **36 activités canoniques**, **24 activités interactives**, **11 vidéos** et **3 téléchargements**. La carte partenaire utilise `totalActivities: 36` comme compteur principal, tandis que le sous-total interactif reste distinct. Aucun écran, média, checkpoint supplémentaire ou vidéo recommandée n’est modifié.
+
+La règle est couverte par un test de non-régression dédié ; TypeScript est valide.
+
+## 26 — DataCamp - Travailler avec l’API OpenAI
+
+Le rapport Medium met en évidence un écart de compteur entre la **carte catalogue (20 activités)** et la **page formation (29 activités)**, alors que la source DataCamp affiche également **29 exercices** et **9 vidéos**. Les preuves visuelles et techniques confirment que le premier écran Neopolis est cohérent avec la source sur le plan média : MP4 local lisible, durée vidéo détectée et PDF de slides accessible. Il n’y a donc pas de manque de média ni d’écran d’ouverture absent ; l’écart est celui d’une **agrégation catalogue incomplète**.
+
+Le rapport montre aussi que la page formation expose déjà **29 activités**, **9 vidéos** et **3 téléchargements**. La correction prioritaire consiste à aligner la carte catalogue sur les **29 activités canoniques** déjà visibles sur la page formation, sans modifier les enrichissements intentionnels existants.
+
+### Résolution — agrégation catalogue vérifiée
+
+L’index catalogue et le JSON publié sont cohérents : **29 activités canoniques**, **20 activités interactives**, **9 vidéos** et **3 téléchargements**. La carte partenaire utilise `totalActivities: 29` comme compteur principal, tandis que le sous-total interactif reste distinct. Aucun écran, média, checkpoint supplémentaire ou vidéo recommandée n’est modifié.
+
+La règle est couverte par un test de non-régression dédié ; TypeScript est valide.
+
+## 27 — DataCamp - Utiliser l’API OpenAI Responses
+
+Le rapport Medium met en évidence un écart de compteur entre la **carte catalogue (19 activités)** et la **page formation (34 activités)**, alors que la source DataCamp affiche également **34 exercices** et **11 vidéos**. Les preuves visuelles et techniques confirment que le premier écran Neopolis est cohérent avec la source sur le plan média : MP4 local lisible, durée vidéo détectée et PDF de slides accessible. Il n’y a donc pas de manque de média ni d’écran d’ouverture absent ; l’écart est celui d’une **agrégation catalogue incomplète**.
+
+Le rapport montre aussi que la page formation expose déjà **34 activités**, **11 vidéos** et **3 téléchargements**. La correction prioritaire consiste à aligner la carte catalogue sur les **34 activités canoniques** déjà visibles sur la page formation, sans modifier les enrichissements intentionnels existants.
+
+### Résolution — agrégation catalogue vérifiée
+
+L’index catalogue et le JSON publié sont cohérents : **34 activités canoniques**, **19 activités interactives**, **11 vidéos** et **3 téléchargements**. La carte partenaire utilise `totalActivities: 34` comme compteur principal, tandis que le sous-total interactif reste distinct. Aucun écran, média, checkpoint supplémentaire ou vidéo recommandée n’est modifié.
+
+La règle est couverte par un test de non-régression dédié ; TypeScript est valide.
+
 ## 24 — DataCamp - Introduction aux embeddings avec l’API OpenAI
 
 Le rapport Medium met en évidence un écart de compteur entre la **carte catalogue (24 activités)** et la **page formation (37 activités)**, alors que la source DataCamp affiche également **37 exercices** et **11 vidéos**. Les preuves visuelles et techniques confirment que le premier écran Neopolis est cohérent avec la source sur le plan média : piste audio locale lisible, sous-titres VTT valides et PDF de slides accessible. Il n’y a donc pas de manque de média ni d’écran d’ouverture absent ; l’écart est celui d’une **agrégation catalogue incomplète**.
@@ -389,3 +425,9 @@ Le rapport montre aussi que la page formation expose déjà **37 activités**, *
 L’index catalogue et le JSON publié sont cohérents : **37 activités canoniques**, **24 activités interactives**, **11 vidéos** et **3 téléchargements**. La carte partenaire utilise `totalActivities: 37` comme compteur principal, tandis que le sous-total interactif reste distinct. Aucun écran, média, checkpoint supplémentaire ou vidéo recommandée n’est modifié.
 
 La règle est couverte par un test de non-régression dédié ; TypeScript est valide.
+
+## Conclusion de clôture de l’audit croisé
+
+Les rapports **Critical**, **High** et **Medium** ont été contrôlés cours par cours à partir de leurs prompts et rapports PDF. Les écarts réellement attribuables ont été corrigés : rattachements catalogue, compteurs d’activités canoniques, disponibilité des médias locaux et résilience du proxy de streaming. Les divergences qui reposaient sur une sémantique différente entre « activités » et « exercices interactifs » sont désormais tracées et couvertes par des tests de métriques.
+
+Les checkpoints supplémentaires et les vidéos recommandées sont conservés explicitement comme enrichissements Neopolis intentionnels. La validation finale exécute **70 fichiers de test réussis** hors test e-mail externe, **274 tests réussis**, la validation des JSON de cours sans erreur et TypeScript sans erreur. Le test `server/email.test.ts` a été exclu de la validation finale car son contrôle distant Resend a expiré ; cette indisponibilité externe ne concerne pas les cours. La validation des quiz termine avec **0 erreur** et 223 avertissements de similarité lexicale, à traiter comme revue éditoriale distincte plutôt que comme défaut structurel.
