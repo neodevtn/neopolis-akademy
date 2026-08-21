@@ -63,10 +63,31 @@ Les exigences de correction pour ce cours sont donc déjà fixées : rétablir l
 | Mobile | Lisibilité et actions visibles | Vérification à 375 × 812 : préparation, vidéo, transcript, PDF, téléchargement et navigation sont visibles sans chevauchement. | Conforme |
 | Tests | Régression catalogue et préparation | Vitest : 6 tests ciblés réussis ; TypeScript et validation des cours sans erreur. | Conforme |
 
-Après la propagation du bundle de production, aucun écart critique résiduel du rapport croisé n’est constaté pour ce cours.
+Après la propagation du bundle de production, aucun écart critique résiduel du rapport croisé n'est constaté pour ce cours.
+
+## 14. DataCamp — Claude Code 101
+
+Le rapport croisé attribue à ce cours le niveau **Critical**. Il compare les **37 exercices** et **12 vidéos** de la source DataCamp à une carte Neopolis auditée à **4 chapitres et 0 activité**, et à une page formation affichant **0 cours, 4 chapitres, 0 activité, 12 exercices et 12 vidéos** [rapport PDF page 1, prompt de correction].
+
+Les pages de preuve montrent la fiche DataCamp avec son premier écran de vidéo, tandis que la capture Neopolis historique ne contient pas de premier écran pédagogique. La correction doit reprendre la même discipline : entrée de cours indexée, compteurs canoniques (37 activités, 12 vidéos, 4 chapitres), navigation profonde, préparation d'environnement Claude Code, médias locaux et verrouillage séquentiel préservé.
 
 ## 13. DataCamp — Introduction to Subagents
 
 Le rapport croisé attribue à ce cours le niveau **Critical**. Il compare les **12 exercices** et **4 vidéos** de la source DataCamp à une carte Neopolis alors auditée à **2 chapitres et 0 activité**, et à une page formation affichant **0 cours, 2 chapitres, 0 activité, 3 exercices, 4 vidéos et 2 téléchargements** [rapport PDF page 1, prompt de correction].
 
 Les pages de preuve illustrent la fiche DataCamp et sa première vidéo, tandis que la capture Neopolis historique ne contient pas de premier écran pédagogique. La correction doit donc reprendre la même discipline : entrée de cours indexée, compteurs canoniques, navigation profonde, préparation d’environnement Claude Code, médias locaux et verrouillage séquentiel préservé.
+
+### Preuves finales de conformité — publication `f66a200d`
+
+| Contrôle | Référence source ou règle | Résultat constaté | Statut |
+|---|---|---|---|
+| Rattachement catalogue | 2 chapitres, 12 activités, 4 vidéos, 2 téléchargements | La fiche publique affiche `1 cours`, `12 activités`, `4 vidéos`, `2 téléchargements` et une carte cliquable. | Conforme |
+| Navigation profonde | Lien écran/chapitre requis | La carte ouvre `/training/datacamp_introduction_to_subagents/introduction_to_subagents__01`. | Conforme |
+| Préparation d’environnement | Prompt de correction, activité pratique autonome | Le premier écran affiche les prérequis Claude Code, `/agents`, projet jetable et protection des données avant la vidéo. | Conforme |
+| Verrouillage séquentiel | Règle Neopolis | Les 2 leçons sont visibles ; la première contient 6 écrans et la seconde reste verrouillée jusqu’à la progression requise. | Conforme |
+| Vidéo locale | Média local requis | Après une réponse transitoire, trois contrôles Range consécutifs de la première vidéo retournent HTTP `206`, type `video/mp4`. | Conforme avec reprise proxy |
+| Support PDF | Support local déclaré | Les slides du chapitre 1 répondent HTTP `206`, type `application/pdf`. | Conforme |
+| Mobile | Lisibilité et actions visibles | Vérification à 375 × 812 : préparation, lecteur, transcript, PDF, téléchargement et navigation sont visibles sans chevauchement. | Conforme |
+| Tests | Régression catalogue et préparation | Vitest : 8 tests ciblés réussis ; TypeScript et validation des cours sans erreur. | Conforme |
+
+Après la propagation du bundle de production, aucun écart critique résiduel du rapport croisé n’est constaté pour ce cours.

@@ -20,6 +20,12 @@ const subagentsCourse = JSON.parse(
     "utf8",
   ),
 );
+const claudeCode101Course = JSON.parse(
+  readFileSync(
+    new URL("../client/public/data/courses/claude_code_101__01.json", import.meta.url),
+    "utf8",
+  ),
+);
 
 describe("catalogue DataCamp", () => {
   it("exposes Agent Skills comme un cours navigable avec ses compteurs canoniques", () => {
@@ -127,10 +133,49 @@ describe("catalogue DataCamp", () => {
     });
   });
 
-  it("prépare l’environnement avant la première vidéo Subagents", () => {
+  it("prépare l'environnement avant la première vidéo Subagents", () => {
     const firstActivity = subagentsCourse.lessons[0].chapters[0];
     const preparation = firstActivity.blocks.find(
       (block: { id?: string }) => block.id === "neopolis_subagents_environment_preparation",
+    );
+
+    expect(preparation).toMatchObject({
+      type: "content",
+      body: {
+        fr: expect.stringContaining("Avant de commencer"),
+        en: expect.stringContaining("Before you start"),
+      },
+    });
+    expect(firstActivity.blocks.findIndex((block: { id?: string }) => block.id === preparation.id)).toBe(0);
+  });
+
+  it("exposes Claude Code 101 comme un cours navigable avec ses compteurs canoniques", () => {
+    const certification = trainingIndex.certifications.find(
+      (item) => item.id === "datacamp_claude_code_101",
+    );
+    const course = trainingIndex.courses.find(
+      (item) => item.id === "claude_code_101__01",
+    );
+
+    expect(certification).toMatchObject({
+      courseCount: 1,
+      totalLessons: 4,
+      totalActivities: 37,
+      totalVideos: 12,
+      courses: ["claude_code_101__01"],
+    });
+    expect(course).toMatchObject({
+      certId: "datacamp_claude_code_101",
+      lessonCount: 4,
+      totalActivities: 37,
+      videoCount: 12,
+    });
+  });
+
+  it("prépare l'environnement avant la première vidéo Claude Code 101", () => {
+    const firstActivity = claudeCode101Course.lessons[0].chapters[0];
+    const preparation = firstActivity.blocks.find(
+      (block: { id?: string }) => block.id === "neopolis_claude_code_101_environment_preparation",
     );
 
     expect(preparation).toMatchObject({
