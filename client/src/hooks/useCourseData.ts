@@ -29,6 +29,7 @@ async function fetchCourseJson(courseId: string): Promise<any> {
       });
       const contentType = response.headers.get("content-type") || "";
       if (!response.ok || !contentType.includes("application/json")) {
+        console.warn(`[CourseData] Asset ignored for ${courseId}: ${fileId} (${response.status}, ${contentType || "unknown content type"})`);
         lastError = new Error(`Course ${fileId} not found`);
         continue;
       }
