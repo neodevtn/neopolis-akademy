@@ -1804,6 +1804,9 @@
 - [x] Générer et auditer le cours pilote « Introduction to Google Workspace with Gemini » : 1 chapitre, 7 activités, 3 vidéos, 4 activités interactives et 1 support PDF local
 - [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet OpenAI pilote avant toute importation de ses réponses et tris interactifs
 - [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet « Travailler avec l’API OpenAI » avant toute importation de ses réponses et tris interactifs
+- [ ] Obtenir le PDF local canonique `C-DUETDR-B-m0-l5-file-5.pdf` du paquet Gemini Drive avant d’importer ses deux activités visuelles
+- [ ] Obtenir le PDF local canonique `C-DUETSL-B-m0-l5-file-5.pdf` du paquet Gemini Slides avant d’importer son activité visuelle
+- [ ] Adapter et valider les formats `SingleProcessExercise`, `DragAndDropExercise` et `TabExercise` du paquet « Concevoir des systèmes d’IA avec l’API OpenAI » avant import
 - [x] Utiliser le cours n8n DataCamp existant comme référence fonctionnelle et de structure pour les conversions suivantes
 - [x] Créer une catégorie distincte pour les parcours de préparation aux certifications Anthropic officielles
 - [x] Ajouter un tag visible et une mention explicite de préparation aux certifications Anthropic officielles dans leurs descriptions
