@@ -19,6 +19,30 @@ describe("usesActivityTotals", () => {
     })).toBe(true);
   });
 
+  it("uses the canonical activity total for the DataCamp intermediate n8n course", () => {
+    expect(usesActivityTotals({
+      group: "datacamp_partner",
+      totalActivities: 40,
+      totalExercises: 27,
+    })).toBe(true);
+  });
+
+  it("uses the canonical activity total for the DataCamp Gemini Meet course", () => {
+    expect(usesActivityTotals({
+      group: "datacamp_partner",
+      totalActivities: 10,
+      totalExercises: 5,
+    })).toBe(true);
+  });
+
+  it("uses the canonical activity total for the DataCamp Gemini Sheets course", () => {
+    expect(usesActivityTotals({
+      group: "datacamp_partner",
+      totalActivities: 7,
+      totalExercises: 3,
+    })).toBe(true);
+  });
+
   it("keeps exercise totals for a certification that does not declare screen-level activities", () => {
     expect(usesActivityTotals({
       group: "anthropic_certifications",

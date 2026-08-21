@@ -221,3 +221,39 @@ Le rapport technique indique que le premier écran Neopolis possède déjà les 
 La vérification du JSON publié établit que le cours contient déjà **23 chapitres/écrans d’activité** et **15 activités interactives**. Les huit éléments que le rapport identifiait comme absents correspondent en réalité à des écrans pédagogiques non interactifs : le cours n’était pas tronqué. L’écart venait de l’emploi ambigu du libellé « exercices » dans l’audit source, alors que DataCamp emploie ce compteur pour l’ensemble des 23 activités.
 
 La règle de métrique est désormais explicitement couverte par test : pour un cours `datacamp_partner`, le compteur principal utilise les **23 activités canoniques**, tandis que les **15 exercices interactifs** restent un sous-détail. Aucun checkpoint supplémentaire, aucune vidéo recommandée, aucun média ni activité existante n’a été supprimé ou modifié.
+
+## 06 — DataCamp - Automatisation de workflows intermédiaires avec n8n
+
+Le rapport High documente ici un écart du même type que sur le cours n8n Marketing : la source DataCamp expose **40 exercices** et **13 vidéos**, tandis que Neopolis affiche actuellement **27 activités** pour **13 vidéos**. Les preuves visuelles montrent cependant que le premier écran source comme le premier écran Neopolis sont cohérents sur le plan média, et que le MP4 local est valide. Le problème n’est donc pas un défaut de lecture sur l’écran d’ouverture, mais la **sémantique du compteur d’activités** et la couverture des écrans non vidéo.
+
+Le rapport technique confirme que les composants du premier écran sont déjà rendus par la bibliothèque standard Neopolis et que le média principal répond correctement. La prochaine étape consiste à comparer le JSON publié au manifeste canonique pour déterminer si les 27 éléments affichés sont des **exercices interactifs** à l’intérieur d’un parcours plus large de **40 activités**, sans supprimer les enrichissements intentionnels déjà ajoutés.
+
+### Résolution — correction de sémantique de compteur
+
+La vérification du JSON publié confirme **40 chapitres/écrans d’activité**, **13 vidéos** et **27 exercices interactifs**. Aucun écran source n’est absent : l’écart provenait de l’emploi de « 40 exercices » par DataCamp pour désigner le total d’activités du cours, alors que Neopolis affichait seulement le sous-total des activités interactives.
+
+La même règle de métrique partenaire est désormais couverte par test pour ce cours : le compteur principal est **40 activités canoniques**, et les **27 exercices interactifs** demeurent un sous-détail. Aucun checkpoint supplémentaire, aucune vidéo recommandée, aucun média et aucune activité existante n’est supprimé ou modifié.
+
+## 17 — DataCamp - Gemini dans Google Meet
+
+Le rapport High distingue ici deux écarts. Le premier est un écart de contenu apparent : la source DataCamp annonce **13 exercices**, alors que Neopolis n’en expose que **10 activités** sur la page de formation. Le second est un écart d’agrégation : la **carte catalogue n’affiche que 5 activités**, alors que la page formation en affiche 10. Les preuves visuelles confirment en revanche que le premier écran Neopolis est bien cohérent avec la source sur le plan du média local, avec vidéo MP4 et PDF de slides valides ; l’ouverture du parcours ne souffre donc pas d’un défaut de média sur l’écran initial.
+
+Le rapport technique montre que les composants standards du premier écran sont bien rendus et que la page de formation possède déjà **10 activités**. La priorité de correction est donc d’abord de **réconcilier le compteur de carte catalogue avec la page formation**, puis de comparer le JSON publié au manifeste canonique pour déterminer si les 10 activités correspondent déjà à tous les écrans du cours ou si **3 activités supplémentaires** doivent être restaurées depuis la source canonique, sans supprimer les enrichissements intentionnels déjà présents.
+
+### Résolution — manifeste canonique et agrégation catalogue
+
+Le paquet Drive canonique du 21 août confirme strictement **1 chapitre**, **10 activités extraites**, **5 vidéos**, **4 QCM** et **1 activité visuelle**. Les 13 exercices visibles dans l’interface DataCamp n’étaient donc pas une liste de 13 écrans à importer ; aucune activité source ne manque dans le JSON Neopolis. La carte possède déjà `totalActivities: 10` et le rendu partenaire utilise cette valeur plutôt que son sous-total de 5 exercices interactifs.
+
+Cette règle est couverte par un test de non-régression dédié. Les médias MP4/PDF locaux, les QCM et l’activité visuelle restent inchangés, tout comme les checkpoints supplémentaires et les vidéos recommandées intentionnels.
+
+## 18 — DataCamp - Gemini dans Google Sheets
+
+Le rapport High signale ici la même double divergence que pour Gemini Meet : un écart apparent entre la source DataCamp (**16 exercices**) et la page de formation Neopolis (**7 activités**), ainsi qu’un écart d’agrégation entre la **carte catalogue (3 activités)** et la **page formation (7 activités)**. Les preuves techniques montrent néanmoins que le premier écran Neopolis est cohérent sur le plan média, avec MP4 local lisible et PDF de slides valide. Le premier écran n’est donc pas en cause ; la priorité est la **sémantique du compteur** et la comparaison du manifeste canonique au JSON publié.
+
+Le rapport visuel confirme aussi que la page formation affiche déjà **7 activités** et **4 vidéos**. La prochaine étape consiste à vérifier si ces 7 activités correspondent à tous les écrans canoniques du paquet, puis à corriger le **compteur de carte catalogue** s’il continue d’afficher un sous-total d’exercices interactifs au lieu du total d’activités attendues, sans supprimer les enrichissements intentionnels déjà présents.
+
+### Résolution — manifeste canonique et agrégation catalogue
+
+Le paquet Drive canonique du 21 août confirme strictement **1 chapitre**, **7 activités extraites**, **4 vidéos**, **2 QCM** et **1 activité visuelle**. Les 16 exercices visibles dans l’interface DataCamp ne correspondent donc pas à 16 écrans canoniques à importer ; le JSON Neopolis reproduit déjà l’intégralité du manifeste disponible. La carte contient `totalActivities: 7` et le rendu partenaire utilise cette valeur en priorité sur son sous-total de 3 exercices interactifs.
+
+La règle est couverte par un test de non-régression. Les médias MP4/PDF, QCM et activité visuelle restent inchangés, tout comme les checkpoints supplémentaires et les vidéos recommandées intentionnels.

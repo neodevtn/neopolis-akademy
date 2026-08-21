@@ -1939,3 +1939,7 @@
 - [x] Traiter le cours High « Claude Certified Architect – Fondations » : analyser les sources disponibles, préserver les checkpoints et vidéos recommandées intentionnels, et tracer la divergence de métrique sans invention
 - [x] Traiter le cours High « Claude Certified Architect – Professionnel » : analyser les sources disponibles, préserver les checkpoints et vidéos recommandées intentionnels, et tracer la divergence de métrique sans invention
 - [x] Traiter le cours High « Building Marketing Workflows with n8n » : confirmer 23 activités canoniques et 15 exercices interactifs, préserver les enrichissements intentionnels et couvrir la métrique par test
+- [x] Traiter le cours High « Intermediate Workflow Automation with n8n » : confirmer 40 activités canoniques et 27 exercices interactifs, préserver les enrichissements intentionnels et couvrir la métrique par test
+- [x] Traiter le cours High « Gemini in Google Meet » : vérifier le manifeste canonique à 10 activités et couvrir l’agrégation de compteur sans modifier les enrichissements intentionnels
+- [x] Vérifier le total d’activités de la carte Gemini Meet afin d’afficher les 10 activités canoniques plutôt que les 5 exercices interactifs
+- [x] Traiter le cours High « Gemini in Google Sheets » : vérifier le manifeste canonique à 7 activités et couvrir l’agrégation de compteur sans modifier les enrichissements intentionnels
