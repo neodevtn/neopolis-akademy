@@ -160,7 +160,11 @@ function extractChoiceData(activity) {
     id: String.fromCharCode(97 + index),
     text: toI18n(String(raw).replace(/^\[|\]$/g, "")),
   }));
-  const correctIndex = answers.findIndex((raw) => /^\[.*\]$/s.test(String(raw).trim()));
+  const annotatedCorrectIndex = answers.findIndex((raw) => /^\[.*\]$/s.test(String(raw).trim()));
+  const sctCorrectMatch = String(content.sct || "").match(/\bcorrect\s*=\s*(\d+)/i);
+  const correctIndex = annotatedCorrectIndex >= 0
+    ? annotatedCorrectIndex
+    : (sctCorrectMatch ? Number(sctCorrectMatch[1]) - 1 : -1);
   if (correctIndex < 0) {
     throw new Error(`QCM sans réponse correcte explicite : activité ${activity.exercise_id || activity.exercise_number}`);
   }
@@ -179,9 +183,6 @@ function buildVideoBlock(activity, assetMap, slidesPdf) {
   const video = activity.video || {};
   const audioUrl = assetFor(video.audio_local, assetMap);
   const mp4Url = assetFor(video.mp4_local, assetMap);
-  if (!audioUrl && !mp4Url) {
-    throw new Error(`Vidéo sans média local mappé : activité ${activity.exercise_id || activity.exercise_number}`);
-  }
   const segments = video.transcript_segments || [];
   return {
     type: "video",
@@ -193,6 +194,7 @@ function buildVideoBlock(activity, assetMap, slidesPdf) {
     ...(assetFor(video.subtitles?.fr_local, assetMap) ? { subtitleUrlFr: assetFor(video.subtitles?.fr_local, assetMap) } : {}),
     ...(assetFor(video.subtitles?.en_local, assetMap) ? { subtitleUrlEn: assetFor(video.subtitles?.en_local, assetMap) } : {}),
     ...(slidesPdf ? { slidesPdf } : {}),
+    ...(audioUrl || mp4Url ? {} : { mediaUnavailable: true }),
     transcript: transcriptText(segments),
     transcriptSegments: segments.map((segment) => ({ heading: segment.heading || segment.slide_title || "", text: segment.text || "" })),
   };
@@ -240,6 +242,49 @@ function buildPracticalBlock(activity, slidesPdf) {
   };
 }
 
+function buildCodeReplBlock(activity) {
+  const content = activityContent(activity);
+  const instructions = htmlToText(content.instructions_text || content.instructions_markdown || content.assignment_text || content.assignment_html || "");
+  return {
+    type: "code_repl",
+    id: `dc_${activity.chapter_number}_act_${String(activity.exercise_number).padStart(2, "0")}_code`,
+    title: toI18n(activity.title),
+    language: "python",
+    instructions: toI18n(instructions),
+    starterCode: sanitizeAutonomousCode(content.sample_code || content.pre_exercise_code || "# Write your solution here\n"),
+    solutionCode: sanitizeAutonomousCode(content.solution || ""),
+    expectedOutput: "",
+    hint: toI18n(htmlToText(content.hint_text || content.hint_html || "")),
+  };
+}
+
+function buildBucketSortBlock(activity) {
+  const content = activityContent(activity);
+  const question = content.question || {};
+  const solution = Array.isArray(question.solution) ? question.solution : [];
+  const buckets = solution
+    .filter((item) => Array.isArray(item?.draggableItems))
+    .map((item) => ({ id: String(item.id), label: toI18n(item.title || item.id || "") }));
+  const cards = solution.flatMap((bucket) => (bucket.draggableItems || []).map((item) => ({
+    id: String(item.id),
+    text: toI18n(item.content || ""),
+    correctBucket: String(bucket.id),
+  })));
+  if (!buckets.length || !cards.length) {
+    throw new Error(`Tri interactif sans catégories ou cartes canoniques : activité ${activity.exercise_id || activity.exercise_number}`);
+  }
+  return {
+    type: "bucket_sort",
+    id: `dc_${activity.chapter_number}_act_${String(activity.exercise_number).padStart(2, "0")}_bucket_sort`,
+    title: toI18n(activity.title),
+    instructions: toI18n(htmlToText(content.instructions_text || content.instructions_markdown || "")),
+    buckets,
+    cards,
+    feedback: toI18n(question.correctnessConditions?.successMessage || ""),
+    hint: toI18n(htmlToText(content.hint_text || content.hint_html || "")),
+  };
+}
+
 function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
   const slidesPdf = assetFor(sourceChapter.slides_pdf_local, assetMap);
   let blocks;
@@ -256,18 +301,32 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
       type = "exercise";
       blocks = [buildPracticalBlock(activity, slidesPdf)];
       break;
+    case "SingleProcessExercise":
+      type = "exercise";
+      blocks = [buildCodeReplBlock(activity)];
+      break;
+    case "MultipleChoiceExercise":
+      type = "quiz";
+      blocks = [extractChoiceData(activity)];
+      break;
+    case "DragAndDropExercise":
+      type = "exercise";
+      blocks = [buildBucketSortBlock(activity)];
+      break;
     case "VisualExercise":
-      if (!slidesPdf) {
-        throw new Error(`Activité visuelle sans ressource locale mappée : activité ${activity.exercise_id || activity.exercise_number}`);
-      }
       type = "resource";
-      blocks = [{
+      blocks = slidesPdf ? [{
         type: "resource_review",
         id: `dc_${activity.chapter_number}_act_${String(activity.exercise_number).padStart(2, "0")}_resource`,
         title: toI18n(activity.title),
         instructions: toI18n(htmlToText(activityContent(activity).assignment_text || activityContent(activity).assignment_html || "")),
         resourceUrl: slidesPdf,
         resourceLabel: toI18n("Open the local PDF resource"),
+      }] : [{
+        type: "content",
+        id: `dc_${activity.chapter_number}_act_${String(activity.exercise_number).padStart(2, "0")}_visual_content`,
+        body: toI18n(htmlToText(activityContent(activity).assignment_text || activityContent(activity).assignment_html || activity.title)),
+        optionalMediaUnavailable: true,
       }];
       break;
     default:

@@ -1,0 +1,28 @@
+{
+  "title": "Examiner les scores des catégories de modération",
+  "type": "MultipleChoiceExercise",
+  "exercise_id": 1907568,
+  "content": {
+    "assignment_html": "<p>La même requête que vous avez créée dans l’exercice précédent vers l’endpoint Moderation a été relancée, en envoyant la phrase <code>\"My favorite book is To Kill a Mockingbird.\"</code> au modèle. La réponse de l’API a été affichée pour vous et est disponible sous <code>response</code>.</p>\n<hr>\n<p>Extrayez les scores par catégorie afin de déterminer l’interprétation correcte parmi les affirmations suivantes.</p>",
+    "assignment_text": "La même requête que vous avez créée dans l’exercice précédent vers l’endpoint Moderation a été relancée, en envoyant la phrase \"My favorite book is To Kill a Mockingbird.\" au modèle. La réponse de l’API a été affichée pour vous et est disponible sous response.\n\n\nExtrayez les scores par catégorie afin de déterminer l’interprétation correcte parmi les affirmations suivantes.",
+    "instructions_markdown": null,
+    "instructions_text": "",
+    "hint_html": "<ul>\n<li>Des <code>category_scores</code> plus élevés indiquent que le modèle est plus confiant que le texte contient une infraction.</li>\n<li>Vous pouvez extraire les <code>category_scores</code> avec <code>response.results[0].category_scores</code>.</li>\n<li>Appelez <code>.model_dump()</code> sur les scores de catégorie pour obtenir un dictionnaire bien formaté.</li>\n</ul>",
+    "hint_text": "Des category_scores plus élevés indiquent que le modèle est plus confiant que le texte contient une infraction.\n\nVous pouvez extraire les category_scores avec response.results[0].category_scores.\n\nAppelez .model_dump() sur les scores de catégorie pour obtenir un dictionnaire bien formaté.",
+    "sample_code": "",
+    "pre_exercise_code": "from openai import OpenAI\n\nclass OpenAI(OpenAI):\n    def __init__(self, *args, **kwargs):\n        super().__init__(*args, **kwargs)\n        self.base_url = \"http://learn-mux-cluster-proxy.learn-experience-platform.svc.cluster.local/openai-proxy/v1\"\n        self.max_retries=0\n\nclient = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")        \n\nresponse = client.moderations.create(\n    input=\"My favorite book is To Kill a Mockingbird.\"\n)\n\nimport pprint\npprint.pp(response.model_dump())",
+    "solution": "",
+    "sct": "err_msg1 = \"Le score de `violence` est très faible, et des scores faibles indiquent que le modèle est moins sûr que le texte contient une violation.\"\nsuccess_msg = \"Travail fantastique ! Les applications construites sur OpenAI contiennent souvent plusieurs étapes de modération pour s'assurer que les utilisateurs ne peuvent pas envoyer de contenu inapproprié au modèle et pour atténuer le risque de présenter du contenu inapproprié aux utilisateurs.\"\nerr_msg4 = \"Le score de `haine` est très faible, et des scores faibles indiquent que le modèle est moins sûr que le texte contient une violation.\"\n\nEx().has_chosen(\n  correct = 2,\n  msgs = [err_msg1, success_msg, err_msg4]\n)",
+    "success_message": null,
+    "question": "",
+    "possible_answers": [
+      "Le modèle estime que la phrase contient du contenu violent, car la catégorie <code>violence</code> est proche de <code>0</code>.",
+      "Le modèle estime qu’il n’y a pas d’infractions, car toutes les catégories sont proches de <code>0</code>.",
+      "Le modèle estime que la phrase contient un discours de haine, car la catégorie <code>hate</code> est proche de <code>0</code>."
+    ],
+    "feedbacks": [],
+    "scores": [],
+    "prompting_fallbacks": [],
+    "solution_conversations": []
+  }
+}

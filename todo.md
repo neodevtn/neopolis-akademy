@@ -1802,6 +1802,7 @@
 - [x] Générer et auditer le cours « Gemini in Google Docs » : 1 chapitre, 9 activités, 5 vidéos, 4 activités interactives et 1 support PDF local
 - [x] Décoder les états préchargés DataCamp sans les exécuter afin de convertir exactement les activités OpenAI interactives
 - [x] Générer et auditer le cours pilote « Introduction to Google Workspace with Gemini » : 1 chapitre, 7 activités, 3 vidéos, 4 activités interactives et 1 support PDF local
+- [x] Générer et auditer le cours « Systèmes multimodaux avec l’API OpenAI » : 2 chapitres, 24 activités, 7 vidéos, 17 activités interactives et 2 supports PDF locaux
 - [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet OpenAI pilote avant toute importation de ses réponses et tris interactifs
 - [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet « Travailler avec l’API OpenAI » avant toute importation de ses réponses et tris interactifs
 - [ ] Obtenir le PDF local canonique `C-DUETDR-B-m0-l5-file-5.pdf` du paquet Gemini Drive avant d’importer ses deux activités visuelles
@@ -1816,6 +1817,10 @@
 - [x] Vérifier que chaque TP DataCamp est autonome, présente ses prérequis, sa préparation d’environnement et ses ressources téléchargeables
 - [x] Afficher les activités totales DataCamp comme compteur principal sans confondre les exercices interactifs et les écrans du cours
 - [ ] Diagnostiquer les causes du FCP/LCP mobile de la page d’accueil et optimiser le rendu critique sans dégrader l’accessibilité
+- [ ] Réviser l’audit DataCamp pour utiliser uniquement COURSE_MANIFEST, COMPLETENESS_REPORT, download_assets_manifest et MEDIA_VALIDATION_REPORT quand présents
+- [ ] Importer les 6 ZIP OpenAI conventionnels, les 8 ZIP Gemini conventionnels, les 3 ZIP n8n et les 8 ZIP Claude Anthropic autorisés
+- [ ] Écarter uniquement Building Claude Cowork Plugins et produire des preuves exactes pour tout autre blocage réel
+- [ ] Produire le tableau final par catalogue avec chapitres, leçons, exercices, vidéos, supports et statut QA
 ## Régressions brouillon et progression n8n
 - [x] Reproduire et corriger le contenu absent à l’ouverture d’un brouillon de communication
 - [x] Reproduire et corriger le passage bloqué entre les chapitres 2 et 3 du cours n8n

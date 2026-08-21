@@ -1,0 +1,1304 @@
+{
+  "courseId": "multi_modal_systems_with_the_openai_api__01",
+  "sourceCourseTitle": "Systèmes multimodaux avec l’API OpenAI",
+  "datacampImport": {
+    "schemaVersion": "neopolis.datacamp_course.v1",
+    "sourceProvider": "DataCamp",
+    "sourceCourseSlug": "multi-modal-systems-with-the-openai-api",
+    "sourceLanguage": "fr-FR",
+    "expected": {
+      "chapters_expected": 2,
+      "chapters_extracted": 2,
+      "activities_expected_from_outline": 24,
+      "activities_extracted": 24,
+      "videos_expected_from_chapter_metadata": 7,
+      "videos_extracted": 7,
+      "exercise_types": {
+        "VideoExercise": 7,
+        "SingleProcessExercise": 15,
+        "DragAndDropExercise": 1,
+        "MultipleChoiceExercise": 1
+      }
+    },
+    "competencyTagging": "lesson_content_signals_v1"
+  },
+  "lessons": [
+    {
+      "id": "datacamp_ch01",
+      "title": {
+        "en": "Au-delà de la génération de texte",
+        "fr": "Au-delà de la génération de texte"
+      },
+      "description": {
+        "en": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus.",
+        "fr": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus."
+      },
+      "competencyTags": [
+        "ai_solution_design"
+      ],
+      "recommendedVideos": [],
+      "recommendedVideosManaged": false,
+      "chapters": [
+        {
+          "id": "dc_ch01_act01",
+          "title": {
+            "en": "Speech-to-text",
+            "fr": "Speech-to-text"
+          },
+          "description": {
+            "en": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus.",
+            "fr": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus."
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_1_act_01_video",
+              "title": {
+                "en": "Speech-to-text",
+                "fr": "Speech-to-text"
+              },
+              "mp4Url": "/api/assets/ch01_ex01_speech_to_text_ff487b9f.mp4",
+              "audioUrl": "/api/assets/ch01_ex01_speech_to_text_a6ca1933.mp3",
+              "subtitleUrlFr": "/api/assets/ch01_ex01_speech_to_text_fr_589e588d.vtt",
+              "subtitleUrlEn": "/api/assets/ch01_ex01_speech_to_text_en_25caff87.vtt",
+              "slidesPdf": "/api/assets/chapter_01_slides_dd6b9b40.pdf",
+              "transcript": "1. Speech-to-text\nWelcome to the course! I'm James, and together, we'll explore the OpenAI API's capabilities beyond text generation.\n\n2. Coming up...\nIn this course, you'll learn how to use OpenAI's audio models for speech-to-text and text-to-speech, perform text moderation, and even combine them together in a case study to build a customer support chatbot.\n\nLet's start with a quick recap!\n\n3. Recap...\nWe import the OpenAI class to instantiate an OpenAI API client to communicate with the API.\n\nUsing OpenAI's models usually incurs a cost, but we've pre-filled the API key so you don't need to create one or incur any cost in the exercises.\n\nNext, we send a request to the chat completions endpoint, specifying the model and messages as a list of dictionaries with \"role\" and \"content\" keys.\n\n4. Recap...\nWe dig into the API response using the .message and .content attributes, to extract the final answer.\n\nText generation is very cool, but OpenAI provides models that go far beyond this.\n\n5. OpenAI's audio models\nOpenAI provides models for converting audio to text, so-called speech-to-text.\n\nThis includes transcribing audio into text, and for translating non-English audio into an English transcript.\n\nThese models support most common audio formats, including MP3s, but there is a file size limit, so splitting larger audio files may be required.\n\nCommon use cases include automating business meeting transcripts, generating captions, and processing customer calls.\n\n6. Loading audio files\nLet's start with transcribing audio.\n\nWe'll use the OpenAI API to transcribe a meeting recording, which is saved locally as an MP3 file.\n\nTo begin, we'll load it into Python by passing it to the open() function.\n\nThe \"rb\" here stands for read binary - all this means is that we're opening a file that is stored in a binary format, which is typical for non-text files like audio, video, and images.\n\nIf the audio file is found in a different directory, we'll also need to prepend the file name with its path.\n\nThis audio file can now be used like any other Python variable.\n\n7. Creating the transcription\nTranscription requests are sent to OpenAI’s Audio endpoint.\n\nTo create a transcribe request to this endpoint, we call the .create() method on client.audio.transcriptions.\n\nInside, we specify the audio model to use\n\nand the file to transcribe.\n\nLet's print the response.\n\nLike the other endpoints, we receive an object with attributes, and the text transcript is stored under the .text attribute.\n\n8. The transcript\nAccessing it,\n\nwe can see the model performs well in this case.\n\n9. Transcribing non-English audio\nSince these models are also trained on non-English audio, we can transcribe other languages. \n\nThe process remains the same: open the file, send a transcription request, and the model will output text in the same language as the file.\n\n10. Creating translations\nWhat if we want to create an English transcript from some non-English audio?\n\nLet's load an audio file containing a conversation in another language.\n\nOur request to the audio endpoint only requires one change: using audio.translations.create() instead of audio.transcriptions.create(); the model and file arguments remain the same.\n\nWe extract the transcript with the .text attribute, as before, and we can see that it wasn't perfect - making two errors on \"AI\" and \"ChatGPT\". We'll perfect this in the case study!\n\n11. Transcription performance\nTranscription performance can vary wildly depending on audio quality, the audio language, and the model's knowledge of the subject matter. Make sure to robustly test the system before rolling it out.\n\n12. Let's practice!\nTime to get transcribing!",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Speech-to-text",
+                  "text": "Welcome to the course! I'm James, and together, we'll explore the OpenAI API's capabilities beyond text generation."
+                },
+                {
+                  "heading": "2. Coming up...",
+                  "text": "In this course, you'll learn how to use OpenAI's audio models for speech-to-text and text-to-speech, perform text moderation, and even combine them together in a case study to build a customer support chatbot.\n\nLet's start with a quick recap!"
+                },
+                {
+                  "heading": "3. Recap...",
+                  "text": "We import the OpenAI class to instantiate an OpenAI API client to communicate with the API.\n\nUsing OpenAI's models usually incurs a cost, but we've pre-filled the API key so you don't need to create one or incur any cost in the exercises.\n\nNext, we send a request to the chat completions endpoint, specifying the model and messages as a list of dictionaries with \"role\" and \"content\" keys."
+                },
+                {
+                  "heading": "4. Recap...",
+                  "text": "We dig into the API response using the .message and .content attributes, to extract the final answer.\n\nText generation is very cool, but OpenAI provides models that go far beyond this."
+                },
+                {
+                  "heading": "5. OpenAI's audio models",
+                  "text": "OpenAI provides models for converting audio to text, so-called speech-to-text.\n\nThis includes transcribing audio into text, and for translating non-English audio into an English transcript.\n\nThese models support most common audio formats, including MP3s, but there is a file size limit, so splitting larger audio files may be required.\n\nCommon use cases include automating business meeting transcripts, generating captions, and processing customer calls."
+                },
+                {
+                  "heading": "6. Loading audio files",
+                  "text": "Let's start with transcribing audio.\n\nWe'll use the OpenAI API to transcribe a meeting recording, which is saved locally as an MP3 file.\n\nTo begin, we'll load it into Python by passing it to the open() function.\n\nThe \"rb\" here stands for read binary - all this means is that we're opening a file that is stored in a binary format, which is typical for non-text files like audio, video, and images.\n\nIf the audio file is found in a different directory, we'll also need to prepend the file name with its path.\n\nThis audio file can now be used like any other Python variable."
+                },
+                {
+                  "heading": "7. Creating the transcription",
+                  "text": "Transcription requests are sent to OpenAI’s Audio endpoint.\n\nTo create a transcribe request to this endpoint, we call the .create() method on client.audio.transcriptions.\n\nInside, we specify the audio model to use\n\nand the file to transcribe.\n\nLet's print the response.\n\nLike the other endpoints, we receive an object with attributes, and the text transcript is stored under the .text attribute."
+                },
+                {
+                  "heading": "8. The transcript",
+                  "text": "Accessing it,\n\nwe can see the model performs well in this case."
+                },
+                {
+                  "heading": "9. Transcribing non-English audio",
+                  "text": "Since these models are also trained on non-English audio, we can transcribe other languages. \n\nThe process remains the same: open the file, send a transcription request, and the model will output text in the same language as the file."
+                },
+                {
+                  "heading": "10. Creating translations",
+                  "text": "What if we want to create an English transcript from some non-English audio?\n\nLet's load an audio file containing a conversation in another language.\n\nOur request to the audio endpoint only requires one change: using audio.translations.create() instead of audio.transcriptions.create(); the model and file arguments remain the same.\n\nWe extract the transcript with the .text attribute, as before, and we can see that it wasn't perfect - making two errors on \"AI\" and \"ChatGPT\". We'll perfect this in the case study!"
+                },
+                {
+                  "heading": "11. Transcription performance",
+                  "text": "Transcription performance can vary wildly depending on audio quality, the audio language, and the model's knowledge of the subject matter. Make sure to robustly test the system before rolling it out."
+                },
+                {
+                  "heading": "12. Let's practice!",
+                  "text": "Time to get transcribing!"
+                }
+              ]
+            },
+            {
+              "type": "download",
+              "id": "dc_ch01_slides",
+              "title": {
+                "en": "Chapter 1 slides",
+                "fr": "Chapter 1 slides"
+              },
+              "description": {
+                "en": "Official course slides provided in the local DataCamp package.",
+                "fr": "Official course slides provided in the local DataCamp package."
+              },
+              "url": "/api/assets/chapter_01_slides_dd6b9b40.pdf",
+              "filename": "chapter_01_slides.pdf"
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act02",
+          "title": {
+            "en": "Créer la transcription d’un podcast",
+            "fr": "Créer la transcription d’un podcast"
+          },
+          "description": {
+            "en": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus.",
+            "fr": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_1_act_02_code",
+              "title": {
+                "en": "Créer la transcription d’un podcast",
+                "fr": "Créer la transcription d’un podcast"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Ouvrez le fichier openai-audio.mp3.\n\nCréez une requête de transcription vers l’endpoint Audio avec audio_file.\n\nExtrayez puis affichez le texte de la transcription depuis la variable response.",
+                "fr": "Ouvrez le fichier openai-audio.mp3.\n\nCréez une requête de transcription vers l’endpoint Audio avec audio_file.\n\nExtrayez puis affichez le texte de la transcription depuis la variable response."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Open the openai-audio.mp3 file\naudio_file = ____(____, \"rb\")\n\n# Create a transcript from the audio file\nresponse = client.audio.transcriptions.____(model=\"whisper-1\", file=____)\n\n# Extract and print the transcript text\nprint(response.____)",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Open the openai-audio.mp3 file\naudio_file = open(\"openai-audio.mp3\", \"rb\")\n\n# Create a transcript from the audio file\nresponse = client.audio.transcriptions.create(model=\"whisper-1\", file=audio_file)\n\n# Extract and print the transcript text\nprint(response.text)",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Pour ouvrir un fichier audio en Python, appelez la fonction open() sur le nom de fichier ; pensez à préciser que vous lisez en binaire avec \"rb\".\n\nPour créer une requête de transcription vers l’endpoint Audio, appelez client.audio.transcriptions.create().",
+                "fr": "Pour ouvrir un fichier audio en Python, appelez la fonction open() sur le nom de fichier ; pensez à préciser que vous lisez en binaire avec \"rb\".\n\nPour créer une requête de transcription vers l’endpoint Audio, appelez client.audio.transcriptions.create()."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act03",
+          "title": {
+            "en": "Transcrire une langue non anglaise",
+            "fr": "Transcrire une langue non anglaise"
+          },
+          "description": {
+            "en": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus.",
+            "fr": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_1_act_03_code",
+              "title": {
+                "en": "Transcrire une langue non anglaise",
+                "fr": "Transcrire une langue non anglaise"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Ouvrez le fichier audio.m4a en mode read-binary.\n\nCréez une requête de transcription vers l’endpoint Audio.",
+                "fr": "Ouvrez le fichier audio.m4a en mode read-binary.\n\nCréez une requête de transcription vers l’endpoint Audio."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Open the audio.m4a file\naudio_file = ____(\"____\", \"____\")\n\n# Create a transcript from the audio file\nresponse = client.audio.transcriptions.____(model=\"whisper-1\", file=____)\n\nprint(response.text)",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Open the audio.m4a file\naudio_file = open(\"audio.m4a\", \"rb\")\n\n# Create a transcript from the audio file\nresponse = client.audio.transcriptions.create(model=\"whisper-1\", file=audio_file)\n\nprint(response.text)",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Transcrire de l’audio dans une langue autre que l’anglais suit le même processus qu’en anglais : open() le fichier audio en mode rb, puis créez une requête de transcription vers le modèle Whisper via l’endpoint Audio.",
+                "fr": "Transcrire de l’audio dans une langue autre que l’anglais suit le même processus qu’en anglais : open() le fichier audio en mode rb, puis créez une requête de transcription vers le modèle Whisper via l’endpoint Audio."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act04",
+          "title": {
+            "en": "Traduire du portugais",
+            "fr": "Traduire du portugais"
+          },
+          "description": {
+            "en": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus.",
+            "fr": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_1_act_04_code",
+              "title": {
+                "en": "Traduire du portugais",
+                "fr": "Traduire du portugais"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Ouvrez le fichier audio.m4a.\n\nCréez une requête de traduction vers l’endpoint Audio.\n\nExtrayez et affichez le texte traduit depuis la réponse.",
+                "fr": "Ouvrez le fichier audio.m4a.\n\nCréez une requête de traduction vers l’endpoint Audio.\n\nExtrayez et affichez le texte traduit depuis la réponse."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Open the audio.m4a file\naudio_file = ____(____, \"rb\")\n\n# Create a translation from the audio file\nresponse = client.audio.____.____(model=\"whisper-1\", file=____)\n\n# Extract and print the translated text\nprint(response.____)",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Open the audio.m4a file\naudio_file = open(\"audio.m4a\", \"rb\")\n\n# Create a translation from the audio file\nresponse = client.audio.translations.create(model=\"whisper-1\", file=audio_file)\n\n# Extract and print the translated text\nprint(response.text)",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Créez une requête de traduction vers l’endpoint Audio avec client.audio.translations.create().",
+                "fr": "Créez une requête de traduction vers l’endpoint Audio avec client.audio.translations.create()."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act05",
+          "title": {
+            "en": "Synthèse vocale (TTS)",
+            "fr": "Synthèse vocale (TTS)"
+          },
+          "description": {
+            "en": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus.",
+            "fr": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus."
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_1_act_05_video",
+              "title": {
+                "en": "Synthèse vocale (TTS)",
+                "fr": "Synthèse vocale (TTS)"
+              },
+              "mp4Url": "/api/assets/ch01_ex05_synth_se_vocale_tts_fbbf6bdb.mp4",
+              "audioUrl": "/api/assets/ch01_ex05_synth_se_vocale_tts_c1d0c00c.mp3",
+              "subtitleUrlFr": "/api/assets/ch01_ex05_synth_se_vocale_tts_fr_eb1200bc.vtt",
+              "subtitleUrlEn": "/api/assets/ch01_ex05_synth_se_vocale_tts_en_e634f6ef.vtt",
+              "slidesPdf": "/api/assets/chapter_01_slides_dd6b9b40.pdf",
+              "transcript": "1. Text-to-speech (TTS)\nSo we've done speech-to-text, how about we flip the script and go from text to speech!\n\n2. Text-to-speech\nText-to-speech is available in many internet browsers, mobile apps, and accessibility devices.\n\nThese are models trained to take a text input and output realistic human narration.\n\nText-to-speech models are commonly used for making text content more accessible to those with visual impairments or reading difficulties.\n\n3. Text-to-speech with OpenAI\nOpenAI's text-to-speech models are available at the audio endpoint, just like speech-to-text. However, we need to specify speech.create() instead of transcriptions.create().\n\nWe specify our choice of model and the voice we would like to use from OpenAI's supported list. Check out the documentation linked to experiment with these different voices.\n\nFinally, we provide the text input to convert into speech.\n\nThe response from this model is streamed in real-time, so to save it to a file, we use the .stream_to_file() method on the response, specifying the file name.\n\nWe created an MP3 file here, but we could have also specified the response_format argument of the .create() method to change this to another supported format.\n\nLet's give this a listen!\n\n4. Onyx\n\"Creating human-like speech is now possible with just a few lines of code. Pretty neat, right?\"\n\nGone are the days of robotic voices. Did you notice the speech cadence, the pauses for punctuation, and even the voice inflection for the question at the end of the sentence?\n\nTo showcase this a little further, I'll actually pass it back over to the Onyx voice to lead the final part of this video.\n\n5. OpenAI TTS\nAlthough OpenAI's text-to-speech models have been optimized for English, they are also functional for a number of other languages.\n\nFor example, Spanish (\"Me gusta mucho pasear por el parque cuando hace buen tiempo\") and German (\"Ich gehe sehr gern im Park spazieren, wenn das Wetter schön ist.\"), which both mean \"I really enjoy walking in the park when the weather is nice\".\n\nThe accent often isn't perfect, but it's still understandable for native speakers.\n\n6. Let's practice!\nThanks Onyx, time for you to give these models a try!",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Text-to-speech (TTS)",
+                  "text": "So we've done speech-to-text, how about we flip the script and go from text to speech!"
+                },
+                {
+                  "heading": "2. Text-to-speech",
+                  "text": "Text-to-speech is available in many internet browsers, mobile apps, and accessibility devices.\n\nThese are models trained to take a text input and output realistic human narration.\n\nText-to-speech models are commonly used for making text content more accessible to those with visual impairments or reading difficulties."
+                },
+                {
+                  "heading": "3. Text-to-speech with OpenAI",
+                  "text": "OpenAI's text-to-speech models are available at the audio endpoint, just like speech-to-text. However, we need to specify speech.create() instead of transcriptions.create().\n\nWe specify our choice of model and the voice we would like to use from OpenAI's supported list. Check out the documentation linked to experiment with these different voices.\n\nFinally, we provide the text input to convert into speech.\n\nThe response from this model is streamed in real-time, so to save it to a file, we use the .stream_to_file() method on the response, specifying the file name.\n\nWe created an MP3 file here, but we could have also specified the response_format argument of the .create() method to change this to another supported format.\n\nLet's give this a listen!"
+                },
+                {
+                  "heading": "4. Onyx",
+                  "text": "\"Creating human-like speech is now possible with just a few lines of code. Pretty neat, right?\"\n\nGone are the days of robotic voices. Did you notice the speech cadence, the pauses for punctuation, and even the voice inflection for the question at the end of the sentence?\n\nTo showcase this a little further, I'll actually pass it back over to the Onyx voice to lead the final part of this video."
+                },
+                {
+                  "heading": "5. OpenAI TTS",
+                  "text": "Although OpenAI's text-to-speech models have been optimized for English, they are also functional for a number of other languages.\n\nFor example, Spanish (\"Me gusta mucho pasear por el parque cuando hace buen tiempo\") and German (\"Ich gehe sehr gern im Park spazieren, wenn das Wetter schön ist.\"), which both mean \"I really enjoy walking in the park when the weather is nice\".\n\nThe accent often isn't perfect, but it's still understandable for native speakers."
+                },
+                {
+                  "heading": "6. Let's practice!",
+                  "text": "Thanks Onyx, time for you to give these models a try!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act06",
+          "title": {
+            "en": "Text-to-speech (TTS) d’OpenAI",
+            "fr": "Text-to-speech (TTS) d’OpenAI"
+          },
+          "description": {
+            "en": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus.",
+            "fr": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_1_act_06_code",
+              "title": {
+                "en": "Text-to-speech (TTS) d’OpenAI",
+                "fr": "Text-to-speech (TTS) d’OpenAI"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Créez la requête de text-to-speech pour \"Hi! How's your day going?\", en utilisant la voix \"ballad\".\n\nDiffusez la réponse dans un fichier .mp3.",
+                "fr": "Créez la requête de text-to-speech pour \"Hi! How's your day going?\", en utilisant la voix \"ballad\".\n\nDiffusez la réponse dans un fichier .mp3."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Create the text-to-speech request\nresponse = client.audio.speech.create(\n  model=\"gpt-4o-mini-tts\",\n  ____,\n  input=\"Hi! How's your day going?\"\n)\n\n# Stream the response to an MP3 file\nresponse.____(\"output.mp3\")",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Create the text-to-speech request\nresponse = client.audio.speech.create(\n  model=\"gpt-4o-mini-tts\",\n  voice=\"ballad\",\n  input=\"Hi! How's your day going?\"\n)\n\n# Stream the response to an MP3 file\nresponse.stream_to_file(\"output.mp3\")",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Fournissez l’argument voice à .create().\n\nUtilisez la méthode .stream_to_file() pour diffuser la réponse vers un fichier local.",
+                "fr": "Fournissez l’argument voice à .create().\n\nUtilisez la méthode .stream_to_file() pour diffuser la réponse vers un fichier local."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act07",
+          "title": {
+            "en": "TTS dans d’autres langues !",
+            "fr": "TTS dans d’autres langues !"
+          },
+          "description": {
+            "en": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus.",
+            "fr": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_1_act_07_code",
+              "title": {
+                "en": "TTS dans d’autres langues !",
+                "fr": "TTS dans d’autres langues !"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Envoyez le texte tchèque fourni au modèle gpt-4o-mini-tts en utilisant la voix \"coral\".",
+                "fr": "Envoyez le texte tchèque fourni au modèle gpt-4o-mini-tts en utilisant la voix \"coral\"."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Pass the non-English text to the model\nresponse = client.audio.speech.create(\n    model=\"gpt-4o-mini-tts\",\n    voice=\"____\",\n    ____=\"Dnes je krásný slunečný den.\"\n)\n\nresponse.stream_to_file(\"output.mp3\")",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Pass the non-English text to the model\nresponse = client.audio.speech.create(\n    model=\"gpt-4o-mini-tts\",\n    voice=\"coral\",\n    input=\"Dnes je krásný slunečný den.\"\n)\n\nresponse.stream_to_file(\"output.mp3\")",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Utilisez l’argument input pour envoyer le texte non anglais au modèle.",
+                "fr": "Utilisez l’argument input pour envoyer le texte non anglais au modèle."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act08",
+          "title": {
+            "en": "Modération de contenu",
+            "fr": "Modération de contenu"
+          },
+          "description": {
+            "en": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus.",
+            "fr": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus."
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_1_act_08_video",
+              "title": {
+                "en": "Modération de contenu",
+                "fr": "Modération de contenu"
+              },
+              "mp4Url": "/api/assets/ch01_ex08_mod_ration_de_contenu_88687929.mp4",
+              "audioUrl": "/api/assets/ch01_ex08_mod_ration_de_contenu_7f75fc0f.mp3",
+              "subtitleUrlFr": "/api/assets/ch01_ex08_mod_ration_de_contenu_fr_6280424a.vtt",
+              "subtitleUrlEn": "/api/assets/ch01_ex08_mod_ration_de_contenu_en_50800aee.vtt",
+              "slidesPdf": "/api/assets/chapter_01_slides_dd6b9b40.pdf",
+              "transcript": "1. Content moderation\nWelcome back! We've already seen how to work with audio through speech-to-text and text-to-speech models. Now, let's dive into moderation - a powerful feature for keeping our AI apps safe.\n\n2. Moderation\nContent moderation helps identify inappropriate text based on its context.\n\nThis is commonly used to prevent harmful or offensive content in online spaces like social networks or chatbots. Traditionally, this moderation was done by hand, where a team of moderators flagged content that breached usage rules. More recently, this was done by algorithms that detected and flagged content containing particular words.\n\nManual moderation is time-consuming and often inconsistent.\n\nKeyword filters are much faster but can miss harmful content or wrongly flag benign messages because they lack nuance or don't fully understand the context of the discussion.\n\nTo prevent the misuse of their own models, OpenAI have developed moderation models to flag content that breaches their usage policies.\n\n3. Violation categories\nThe OpenAI moderation models can not only detect violations of their terms of use, but also differentiate the type of violation across different categories, including violence and hate speech.\n\n4. Creating a moderations request\nTo create a request to the Moderations endpoint, we call the .create() method on client.moderations.\n\nNext is the input, which is the content that the model will consider. This statement could be easily classed as violent by traditional moderation systems that worked by flagging particular keywords.\n\nLet's see what OpenAI's moderation model makes of it.\n\n5. Interpreting the results\nWe'll dump the response to a dictionary using model_dump function for easier readability.\n\nThe output is similar other endpoints. There are three useful indicators that can be used for moderation: categories, representing whether the model believed that the statement violated a particular category, category_scores, an indicator of the model's confidence of a violation, and finally, flagged, whether it believes the terms of use have been violated in any way.\n\nLet's extract the category_scores from the response for a closer look.\n\n6. Interpreting the category scores\nThe category_scores are float values for each category indicating the model's confidence of a violation. They can be extracted from the results attribute, and through that, the category_scores attribute. The scores can be between 0 and 1, and although higher values represent higher confidence, they should not be interpreted as probabilities.\n\nIn our example, the model recognized\n\n7. Interpreting the category scores\nthe statement wasn't violent, thanks to its understanding of the surrounding context.\n\n8. Considerations for implementing moderation\nThe beauty of having access to these category scores means that we can tune thresholds based on our use case instead of relying only on the final flagged result.\n\nFor some use cases, such as student communications in a school, stricter thresholds may be chosen that flag more content, even if it means accidentally flagging some non-violations. The goal here would be to minimize the number of missed violations, so-called false negatives.\n\nOther use cases, such as communications in law enforcement, may use more lenient thresholds so reports on crimes aren't accidentally flagged. Incorrectly flagging a crime report here would be an example of a false positive.\n\n9. Let's practice!\nTime for some practice!",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Content moderation",
+                  "text": "Welcome back! We've already seen how to work with audio through speech-to-text and text-to-speech models. Now, let's dive into moderation - a powerful feature for keeping our AI apps safe."
+                },
+                {
+                  "heading": "2. Moderation",
+                  "text": "Content moderation helps identify inappropriate text based on its context.\n\nThis is commonly used to prevent harmful or offensive content in online spaces like social networks or chatbots. Traditionally, this moderation was done by hand, where a team of moderators flagged content that breached usage rules. More recently, this was done by algorithms that detected and flagged content containing particular words.\n\nManual moderation is time-consuming and often inconsistent.\n\nKeyword filters are much faster but can miss harmful content or wrongly flag benign messages because they lack nuance or don't fully understand the context of the discussion.\n\nTo prevent the misuse of their own models, OpenAI have developed moderation models to flag content that breaches their usage policies."
+                },
+                {
+                  "heading": "3. Violation categories",
+                  "text": "The OpenAI moderation models can not only detect violations of their terms of use, but also differentiate the type of violation across different categories, including violence and hate speech."
+                },
+                {
+                  "heading": "4. Creating a moderations request",
+                  "text": "To create a request to the Moderations endpoint, we call the .create() method on client.moderations.\n\nNext is the input, which is the content that the model will consider. This statement could be easily classed as violent by traditional moderation systems that worked by flagging particular keywords.\n\nLet's see what OpenAI's moderation model makes of it."
+                },
+                {
+                  "heading": "5. Interpreting the results",
+                  "text": "We'll dump the response to a dictionary using model_dump function for easier readability.\n\nThe output is similar other endpoints. There are three useful indicators that can be used for moderation: categories, representing whether the model believed that the statement violated a particular category, category_scores, an indicator of the model's confidence of a violation, and finally, flagged, whether it believes the terms of use have been violated in any way.\n\nLet's extract the category_scores from the response for a closer look."
+                },
+                {
+                  "heading": "6. Interpreting the category scores",
+                  "text": "The category_scores are float values for each category indicating the model's confidence of a violation. They can be extracted from the results attribute, and through that, the category_scores attribute. The scores can be between 0 and 1, and although higher values represent higher confidence, they should not be interpreted as probabilities.\n\nIn our example, the model recognized"
+                },
+                {
+                  "heading": "7. Interpreting the category scores",
+                  "text": "the statement wasn't violent, thanks to its understanding of the surrounding context."
+                },
+                {
+                  "heading": "8. Considerations for implementing moderation",
+                  "text": "The beauty of having access to these category scores means that we can tune thresholds based on our use case instead of relying only on the final flagged result.\n\nFor some use cases, such as student communications in a school, stricter thresholds may be chosen that flag more content, even if it means accidentally flagging some non-violations. The goal here would be to minimize the number of missed violations, so-called false negatives.\n\nOther use cases, such as communications in law enforcement, may use more lenient thresholds so reports on crimes aren't accidentally flagged. Incorrectly flagging a crime report here would be an example of a false positive."
+                },
+                {
+                  "heading": "9. Let's practice!",
+                  "text": "Time for some practice!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act09",
+          "title": {
+            "en": "Pourquoi utiliser des modèles de modération de texte ?",
+            "fr": "Pourquoi utiliser des modèles de modération de texte ?"
+          },
+          "description": {
+            "en": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus.",
+            "fr": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "bucket_sort",
+              "id": "dc_1_act_09_bucket_sort",
+              "title": {
+                "en": "Pourquoi utiliser des modèles de modération de texte ?",
+                "fr": "Pourquoi utiliser des modèles de modération de texte ?"
+              },
+              "instructions": {
+                "en": "Classez les affirmations selon qu’elles décrivent le modèle de modération d’OpenAI, la détection par mots‑clés, ou la modération manuelle.",
+                "fr": "Classez les affirmations selon qu’elles décrivent le modèle de modération d’OpenAI, la détection par mots‑clés, ou la modération manuelle."
+              },
+              "buckets": [
+                {
+                  "id": "dropzone_r",
+                  "label": {
+                    "en": "Modèle de modération d’OpenAI",
+                    "fr": "Modèle de modération d’OpenAI"
+                  }
+                },
+                {
+                  "id": "dropzone_python",
+                  "label": {
+                    "en": "Détection par mots‑clés",
+                    "fr": "Détection par mots‑clés"
+                  }
+                },
+                {
+                  "id": "solution_8dbc3e3bb3ef40cb8e170324dc9b80e6",
+                  "label": {
+                    "en": "Modération manuelle",
+                    "fr": "Modération manuelle"
+                  }
+                }
+              ],
+              "cards": [
+                {
+                  "id": "stringr",
+                  "text": {
+                    "en": "Conçu pour modérer les invites et réponses échangées avec les modèles d’OpenAI",
+                    "fr": "Conçu pour modérer les invites et réponses échangées avec les modèles d’OpenAI"
+                  },
+                  "correctBucket": "dropzone_r"
+                },
+                {
+                  "id": "dplyr",
+                  "text": {
+                    "en": "Utilise l’ensemble des mots pour éclairer sa décision",
+                    "fr": "Utilise l’ensemble des mots pour éclairer sa décision"
+                  },
+                  "correctBucket": "dropzone_r"
+                },
+                {
+                  "id": "item_9dc81dfaad5243ab920614864d7c8074",
+                  "text": {
+                    "en": "Produit un niveau de confiance concernant une violation de texte",
+                    "fr": "Produit un niveau de confiance concernant une violation de texte"
+                  },
+                  "correctBucket": "dropzone_r"
+                },
+                {
+                  "id": "pandas",
+                  "text": {
+                    "en": "Ne comprend pas le contexte",
+                    "fr": "Ne comprend pas le contexte"
+                  },
+                  "correctBucket": "dropzone_python"
+                },
+                {
+                  "id": "item_abb8e3c8a7d04318aeea2706c59ee2aa",
+                  "text": {
+                    "en": "Nécessite une disponibilité 24 h/24 et coûte cher",
+                    "fr": "Nécessite une disponibilité 24 h/24 et coûte cher"
+                  },
+                  "correctBucket": "solution_8dbc3e3bb3ef40cb8e170324dc9b80e6"
+                },
+                {
+                  "id": "item_f1d9f57f9a4541379f4de170b142d11c",
+                  "text": {
+                    "en": "Classification incohérente",
+                    "fr": "Classification incohérente"
+                  },
+                  "correctBucket": "solution_8dbc3e3bb3ef40cb8e170324dc9b80e6"
+                }
+              ],
+              "feedback": {
+                "en": "Bravo ! Les modèles de modération représentent une avancée majeure dans la façon de modérer les contenus. Passez à l’Exercice suivant pour utiliser vous‑même le modèle de modération d’OpenAI !",
+                "fr": "Bravo ! Les modèles de modération représentent une avancée majeure dans la façon de modérer les contenus. Passez à l’Exercice suivant pour utiliser vous‑même le modèle de modération d’OpenAI !"
+              },
+              "hint": {
+                "en": "Le modèle de modération d’OpenAI est le plus avancé, car il utilise le contexte de l’intégralité de l’entrée pour déterminer si un texte constitue une violation.\n\nSi des personnes interviennent, cela peut signifier que le contenu est évalué de manière incohérente selon les évaluateurs.",
+                "fr": "Le modèle de modération d’OpenAI est le plus avancé, car il utilise le contexte de l’intégralité de l’entrée pour déterminer si un texte constitue une violation.\n\nSi des personnes interviennent, cela peut signifier que le contenu est évalué de manière incohérente selon les évaluateurs."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act10",
+          "title": {
+            "en": "Demander une modération",
+            "fr": "Demander une modération"
+          },
+          "description": {
+            "en": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus.",
+            "fr": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_1_act_10_code",
+              "title": {
+                "en": "Demander une modération",
+                "fr": "Demander une modération"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Vérifiez si \"My favorite book is To Kill a Mockingbird.\" enfreint les règles d’OpenAI en utilisant l’endpoint Moderations.\n\nAffichez les scores par catégorie pour voir les résultats.",
+                "fr": "Vérifiez si \"My favorite book is To Kill a Mockingbird.\" enfreint les règles d’OpenAI en utilisant l’endpoint Moderations.\n\nAffichez les scores par catégorie pour voir les résultats."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Create a request to the Moderation endpoint\nresponse = client.____.____(\n    ____=\"My favorite book is To Kill a Mockingbird.\"\n)\n\n# Print the category scores\nprint(response.results[0].____)",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Create a request to the Moderation endpoint\nresponse = client.moderations.create(\n    input=\"My favorite book is To Kill a Mockingbird.\"\n)\n\n# Print the category scores\nprint(response.results[0].category_scores)",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Créez une requête vers l’endpoint Moderations en utilisant la méthode .create() sur client.moderations.\n\nPassez le texte à vérifier via le paramètre input.\n\nAccédez aux scores par catégorie via .category_scores.",
+                "fr": "Créez une requête vers l’endpoint Moderations en utilisant la méthode .create() sur client.moderations.\n\nPassez le texte à vérifier via le paramètre input.\n\nAccédez aux scores par catégorie via .category_scores."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act11",
+          "title": {
+            "en": "Examiner les scores des catégories de modération",
+            "fr": "Examiner les scores des catégories de modération"
+          },
+          "description": {
+            "en": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus.",
+            "fr": "OpenAI propose des modèles qui vont bien au-delà de la génération de texte. Dans ce chapitre, vous utiliserez les modèles audio de reconnaissance vocale (speech-to-text) et de synthèse vocale (text-to-speech) d’OpenAI. Vous modérerez également le contenu des utilisateurs pour détecter les abus."
+          },
+          "type": "quiz",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "single_choice_exercise",
+              "id": "dc_1_act_11_qcm",
+              "question": {
+                "en": "La même requête que vous avez créée dans l’exercice précédent vers l’endpoint Moderation a été relancée, en envoyant la phrase \"My favorite book is To Kill a Mockingbird.\" au modèle. La réponse de l’API a été affichée pour vous et est disponible sous response.\n\nExtrayez les scores par catégorie afin de déterminer l’interprétation correcte parmi les affirmations suivantes.",
+                "fr": "La même requête que vous avez créée dans l’exercice précédent vers l’endpoint Moderation a été relancée, en envoyant la phrase \"My favorite book is To Kill a Mockingbird.\" au modèle. La réponse de l’API a été affichée pour vous et est disponible sous response.\n\nExtrayez les scores par catégorie afin de déterminer l’interprétation correcte parmi les affirmations suivantes."
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Le modèle estime que la phrase contient du contenu violent, car la catégorie <code>violence</code> est proche de <code>0</code>.",
+                    "fr": "Le modèle estime que la phrase contient du contenu violent, car la catégorie <code>violence</code> est proche de <code>0</code>."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Le modèle estime qu’il n’y a pas d’infractions, car toutes les catégories sont proches de <code>0</code>.",
+                    "fr": "Le modèle estime qu’il n’y a pas d’infractions, car toutes les catégories sont proches de <code>0</code>."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Le modèle estime que la phrase contient un discours de haine, car la catégorie <code>hate</code> est proche de <code>0</code>.",
+                    "fr": "Le modèle estime que la phrase contient un discours de haine, car la catégorie <code>hate</code> est proche de <code>0</code>."
+                  }
+                }
+              ],
+              "correctAnswer": "b",
+              "explanation": {
+                "en": "",
+                "fr": ""
+              },
+              "hint": {
+                "en": "Des category_scores plus élevés indiquent que le modèle est plus confiant que le texte contient une infraction.\n\nVous pouvez extraire les category_scores avec response.results[0].category_scores.\n\nAppelez .model_dump() sur les scores de catégorie pour obtenir un dictionnaire bien formaté.",
+                "fr": "Des category_scores plus élevés indiquent que le modèle est plus confiant que le texte contient une infraction.\n\nVous pouvez extraire les category_scores avec response.results[0].category_scores.\n\nAppelez .model_dump() sur les scores de catégorie pour obtenir un dictionnaire bien formaté."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "datacamp_ch02",
+      "title": {
+        "en": " Étude de cas : créer un chatbot de support client",
+        "fr": " Étude de cas : créer un chatbot de support client"
+      },
+      "description": {
+        "en": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !",
+        "fr": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !"
+      },
+      "competencyTags": [
+        "ai_solution_design"
+      ],
+      "recommendedVideos": [],
+      "recommendedVideosManaged": false,
+      "chapters": [
+        {
+          "id": "dc_ch02_act01",
+          "title": {
+            "en": "Créer des transcriptions d’appels clients",
+            "fr": "Créer des transcriptions d’appels clients"
+          },
+          "description": {
+            "en": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !",
+            "fr": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !"
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_2_act_01_video",
+              "title": {
+                "en": "Créer des transcriptions d’appels clients",
+                "fr": "Créer des transcriptions d’appels clients"
+              },
+              "mp4Url": "/api/assets/ch02_ex01_cr_er_des_transcriptions_d_appels_clients_36c3e534.mp4",
+              "audioUrl": "/api/assets/ch02_ex01_cr_er_des_transcriptions_d_appels_clients_f1d578dc.mp3",
+              "subtitleUrlFr": "/api/assets/ch02_ex01_cr_er_des_transcriptions_d_appels_clients_fr_402b4312.vtt",
+              "subtitleUrlEn": "/api/assets/ch02_ex01_cr_er_des_transcriptions_d_appels_clients_en_b79f968f.vtt",
+              "slidesPdf": "/api/assets/chapter_02_slides_85514478.pdf",
+              "transcript": "1. Creating customer call transcripts\nWelcome to the case study chapter! Let's now apply everything we're learned so far to a real-life application.\n\n2. Case study introduction\nImagine you're an AI engineer at DataCamp. The support team wants to trial allowing users to submit support queries with voice messages. They would like you to build a chatbot that will interpret these voice messages, and provide a spoken response back to the user. Due to DataCamp's international learner base, this system must also support a wide array of languages.\n\nLet's break this down!\n\n3. Case study introduction\nThe chatbot should take these recordings, transcribe\n\n4. Case study introduction\nthem into text, detect\n\n5. Case study introduction\nthe language, translate\n\n6. Case study introduction\nit into English, generate\n\n7. Case study introduction\na response, and then reply\n\n8. Case study introduction\nwith spoken audio in the customer's native language. \n\nIt also needs a moderation\n\n9. Case study introduction\nsystem to filter out irrelevant messages and ensure polite responses before sending them back to the user.\n\nThat sounds like a complex system, so let's break it down into steps.\n\n10. Case study plan\nIn this video, we'll focus on getting an accurate English transcript.\n\nFirst, we'll transcribe the audio into text. \n\nThen, we'll detect the language used and translate it into English. \n\nFinally, we'll refine the translated text to correct any misinterpretations, especially with names and terminology. \n\nLet's get started.\n\n11. Step 1: transcribe audio\nWe've been given an audio recording in mp3 format. To process it, we first open the file in read-binary mode, using the \"rb\" parameter.\n\nNext, we make a request to the OpenAI audio endpoint for a transcription, specifying the model and passing our audio file.\n\n12. Step 1: transcribe audio\nWe extract the transcript using the text attribute and print it. Right away, we see that it's not in English.\n\n13. Step 2: detect language\nTo determine the language, we send a chat completion request, prompting the model to identify the transcript's language and return only the country code. We provide a few examples of country codes, just so there's no misinterpretation in what we're requesting, and pass the transcript variable into the prompt using an f-string.\n\nThe model return 'uk', which is the country code of Ukraine. Now that we know the language, we can move onto translation.\n\n14. Step 3: translate to English\nTo translate the text into English, we send another chat completion request. This time, we ask the model to translate the transcript while specifying the detected language.\n\n15. Step 3: translate to English\nReading the translation, we see that the customer is asking for learning recommendations. However, we also notice that some technical terms have been misinterpreted.\n\n16. Step 3: translate to English\nThe model did not correctly recognize names like DataCamp, or technologies like LangChain and AWS, which could lead to confusion in the response. We need to fix this.\n\n17. Step 4: refining the text\nWe can send another chat completion request; this time, asking the model to refine the transcript by fixing the terminology. We pass the translated text again and let the model adjust it.\n\n18. Step 4: refining the text\nAfter printing the corrected text, we see that the names have been properly recognized. Now, the customer's request is clear and ready for processing.\n\n19. Recap\nLet's recap what we've done. We transcribed the audio to extract the customer's message, detected the language and translated the text into English; finally, we refined the output to correct any misunderstandings related to names and terminology. In total, we made four requests to the OpenAI API to complete these steps.\n\n20. Time for practice!\nNow it's your turn!",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Creating customer call transcripts",
+                  "text": "Welcome to the case study chapter! Let's now apply everything we're learned so far to a real-life application."
+                },
+                {
+                  "heading": "2. Case study introduction",
+                  "text": "Imagine you're an AI engineer at DataCamp. The support team wants to trial allowing users to submit support queries with voice messages. They would like you to build a chatbot that will interpret these voice messages, and provide a spoken response back to the user. Due to DataCamp's international learner base, this system must also support a wide array of languages.\n\nLet's break this down!"
+                },
+                {
+                  "heading": "3. Case study introduction",
+                  "text": "The chatbot should take these recordings, transcribe"
+                },
+                {
+                  "heading": "4. Case study introduction",
+                  "text": "them into text, detect"
+                },
+                {
+                  "heading": "5. Case study introduction",
+                  "text": "the language, translate"
+                },
+                {
+                  "heading": "6. Case study introduction",
+                  "text": "it into English, generate"
+                },
+                {
+                  "heading": "7. Case study introduction",
+                  "text": "a response, and then reply"
+                },
+                {
+                  "heading": "8. Case study introduction",
+                  "text": "with spoken audio in the customer's native language. \n\nIt also needs a moderation"
+                },
+                {
+                  "heading": "9. Case study introduction",
+                  "text": "system to filter out irrelevant messages and ensure polite responses before sending them back to the user.\n\nThat sounds like a complex system, so let's break it down into steps."
+                },
+                {
+                  "heading": "10. Case study plan",
+                  "text": "In this video, we'll focus on getting an accurate English transcript.\n\nFirst, we'll transcribe the audio into text. \n\nThen, we'll detect the language used and translate it into English. \n\nFinally, we'll refine the translated text to correct any misinterpretations, especially with names and terminology. \n\nLet's get started."
+                },
+                {
+                  "heading": "11. Step 1: transcribe audio",
+                  "text": "We've been given an audio recording in mp3 format. To process it, we first open the file in read-binary mode, using the \"rb\" parameter.\n\nNext, we make a request to the OpenAI audio endpoint for a transcription, specifying the model and passing our audio file."
+                },
+                {
+                  "heading": "12. Step 1: transcribe audio",
+                  "text": "We extract the transcript using the text attribute and print it. Right away, we see that it's not in English."
+                },
+                {
+                  "heading": "13. Step 2: detect language",
+                  "text": "To determine the language, we send a chat completion request, prompting the model to identify the transcript's language and return only the country code. We provide a few examples of country codes, just so there's no misinterpretation in what we're requesting, and pass the transcript variable into the prompt using an f-string.\n\nThe model return 'uk', which is the country code of Ukraine. Now that we know the language, we can move onto translation."
+                },
+                {
+                  "heading": "14. Step 3: translate to English",
+                  "text": "To translate the text into English, we send another chat completion request. This time, we ask the model to translate the transcript while specifying the detected language."
+                },
+                {
+                  "heading": "15. Step 3: translate to English",
+                  "text": "Reading the translation, we see that the customer is asking for learning recommendations. However, we also notice that some technical terms have been misinterpreted."
+                },
+                {
+                  "heading": "16. Step 3: translate to English",
+                  "text": "The model did not correctly recognize names like DataCamp, or technologies like LangChain and AWS, which could lead to confusion in the response. We need to fix this."
+                },
+                {
+                  "heading": "17. Step 4: refining the text",
+                  "text": "We can send another chat completion request; this time, asking the model to refine the transcript by fixing the terminology. We pass the translated text again and let the model adjust it."
+                },
+                {
+                  "heading": "18. Step 4: refining the text",
+                  "text": "After printing the corrected text, we see that the names have been properly recognized. Now, the customer's request is clear and ready for processing."
+                },
+                {
+                  "heading": "19. Recap",
+                  "text": "Let's recap what we've done. We transcribed the audio to extract the customer's message, detected the language and translated the text into English; finally, we refined the output to correct any misunderstandings related to names and terminology. In total, we made four requests to the OpenAI API to complete these steps."
+                },
+                {
+                  "heading": "20. Time for practice!",
+                  "text": "Now it's your turn!"
+                }
+              ]
+            },
+            {
+              "type": "download",
+              "id": "dc_ch02_slides",
+              "title": {
+                "en": "Chapter 2 slides",
+                "fr": "Chapter 2 slides"
+              },
+              "description": {
+                "en": "Official course slides provided in the local DataCamp package.",
+                "fr": "Official course slides provided in the local DataCamp package."
+              },
+              "url": "/api/assets/chapter_02_slides_85514478.pdf",
+              "filename": "chapter_02_slides.pdf"
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act02",
+          "title": {
+            "en": "Transcrire les appels des clients",
+            "fr": "Transcrire les appels des clients"
+          },
+          "description": {
+            "en": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !",
+            "fr": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !"
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_2_act_02_code",
+              "title": {
+                "en": "Transcrire les appels des clients",
+                "fr": "Transcrire les appels des clients"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Ouvrez l’enregistrement client stocké dans le fichier customer_call.wav.\n\nCréez une requête de transcription vers l’endpoint Audio et extrayez le texte de la transcription.",
+                "fr": "Ouvrez l’enregistrement client stocké dans le fichier customer_call.wav.\n\nCréez une requête de transcription vers l’endpoint Audio et extrayez le texte de la transcription."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Open the customer_call.wav file\naudio_file = ____\n\n# Create a transcript from the audio file\nresponse = ____\ntranscript = response.____\nprint(transcript)",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Open the customer_call.wav file\naudio_file = open(\"customer_call.wav\", \"rb\")\n\n# Create a transcript from the audio file\nresponse = client.audio.transcriptions.create(model=\"whisper-1\", file=audio_file)\ntranscript = response.text\nprint(transcript)",
+              "expectedOutput": "",
+              "hint": {
+                "en": "La transcription audio comporte deux étapes clés : open() le fichier audio en mode \"rb\" ; puis créer une requête de transcription vers le modèle whisper-1 via l’endpoint Audio avec client.audio.transcriptions.create().",
+                "fr": "La transcription audio comporte deux étapes clés : open() le fichier audio en mode \"rb\" ; puis créer une requête de transcription vers le modèle whisper-1 via l’endpoint Audio avec client.audio.transcriptions.create()."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act03",
+          "title": {
+            "en": "Déterminer la langue du client",
+            "fr": "Déterminer la langue du client"
+          },
+          "description": {
+            "en": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !",
+            "fr": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !"
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_2_act_03_code",
+              "title": {
+                "en": "Déterminer la langue du client",
+                "fr": "Déterminer la langue du client"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Demandez à gpt-4o-mini d’examiner la transcription et de renvoyer le code pays de la langue utilisée, par exemple \"en\" pour l’anglais et \"fr\" pour le français.\n\nExtrayez le code pays depuis response.",
+                "fr": "Demandez à gpt-4o-mini d’examiner la transcription et de renvoyer le code pays de la langue utilisée, par exemple \"en\" pour l’anglais et \"fr\" pour le français.\n\nExtrayez le code pays depuis response."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Complete a request identify the country code from the transcript\nresponse = ____\n\n# Extract the country code from the response\ncountry_code = ____\nprint(country_code)",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Complete a request identify the country code from the transcript\nresponse = client.chat.completions.create(\n    model=\"gpt-4o-mini\",\n    messages=[{\"role\": \"user\", \"content\": f\"Consider the language in this transcript, and output only the country code it is spoken in; for example, 'en' for English and 'fr' for French: {transcript}\"}]\n)\n\n# Extract the country code from the response\ncountry_code = response.choices[0].message.content\nprint(country_code)",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Utilisez une f-string (f\"Prompt instruction...{transcript}\") pour insérer transcript dans une invite afin d’obtenir le code pays.\n\nDans l’invite, donnez au modèle des exemples de codes pays pour qu’il comprenne le format attendu.\n\nExtrayez le code pays en utilisant les attributs de response, en commençant par .choices[0].",
+                "fr": "Utilisez une f-string (f\"Prompt instruction...{transcript}\") pour insérer transcript dans une invite afin d’obtenir le code pays.\n\nDans l’invite, donnez au modèle des exemples de codes pays pour qu’il comprenne le format attendu.\n\nExtrayez le code pays en utilisant les attributs de response, en commençant par .choices[0]."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act04",
+          "title": {
+            "en": "Traduire la transcription en anglais",
+            "fr": "Traduire la transcription en anglais"
+          },
+          "description": {
+            "en": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !",
+            "fr": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !"
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_2_act_04_code",
+              "title": {
+                "en": "Traduire la transcription en anglais",
+                "fr": "Traduire la transcription en anglais"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Traduisez le texte de transcript en anglais.\n\nExtrayez le texte de la transcription depuis response.",
+                "fr": "Traduisez le texte de transcript en anglais.\n\nExtrayez le texte de la transcription depuis response."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Translate the transcript into English\nresponse = ____\n\n# Extract the translated transcript text\nen_transcript = ____\nprint(en_transcript)",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Translate the transcript into English\nresponse = client.chat.completions.create(\n    model=\"gpt-4o-mini\",\n    messages=[{\"role\": \"user\", \"content\": f\"Translate this customer transcript from country code {country_code} to English: {transcript}\"}]\n)\n\n# Extract the translated transcript text\nen_transcript = response.choices[0].message.content\nprint(en_transcript)",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Comme vous travaillez avec une transcription texte et non un fichier audio, utilisez un modèle de complétion de conversation avec une invite adaptée à la traduction.\n\nVous pouvez réutiliser une f-string pour insérer les variables transcript et country_code.",
+                "fr": "Comme vous travaillez avec une transcription texte et non un fichier audio, utilisez un modèle de complétion de conversation avec une invite adaptée à la traduction.\n\nVous pouvez réutiliser une f-string pour insérer les variables transcript et country_code."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act05",
+          "title": {
+            "en": "Corriger les erreurs de traduction",
+            "fr": "Corriger les erreurs de traduction"
+          },
+          "description": {
+            "en": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !",
+            "fr": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !"
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_2_act_05_code",
+              "title": {
+                "en": "Corriger les erreurs de traduction",
+                "fr": "Corriger les erreurs de traduction"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Créez une invite qui corrige les noms techniques et la terminologie dans le transcript anglais, en_transcript, en laissant le reste du transcript inchangé.",
+                "fr": "Créez une invite qui corrige les noms techniques et la terminologie dans le transcript anglais, en_transcript, en laissant le reste du transcript inchangé."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Fix the mistake in the transcript\nresponse = ____\n\ncorrected_text = response.choices[0].message.content\nprint(corrected_text)",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Fix the mistake in the transcript\nresponse = client.chat.completions.create(\n    model=\"gpt-4o-mini\",\n    messages=[{\"role\": \"user\", \"content\": f\"You are an AI assistant that corrects transcripts by fixing names and terminology, leaving the rest of the transcript unchanged. Please refine the following transcript: {en_transcript}\"}]\n)\n\ncorrected_text = response.choices[0].message.content\nprint(corrected_text)",
+              "expectedOutput": "",
+              "hint": {
+                "en": "L’invite doit demander explicitement de corriger les noms techniques et la terminologie erronés.\n\nVous pouvez fournir des exemples dans l’invite pour aider le modèle à repérer et corriger les mots problématiques.",
+                "fr": "L’invite doit demander explicitement de corriger les noms techniques et la terminologie erronés.\n\nVous pouvez fournir des exemples dans l’invite pour aider le modèle à repérer et corriger les mots problématiques."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act06",
+          "title": {
+            "en": "Générer une réponse au client",
+            "fr": "Générer une réponse au client"
+          },
+          "description": {
+            "en": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !",
+            "fr": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !"
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_2_act_06_video",
+              "title": {
+                "en": "Générer une réponse au client",
+                "fr": "Générer une réponse au client"
+              },
+              "mp4Url": "/api/assets/ch02_ex06_g_n_rer_une_r_ponse_au_client_4e136bd6.mp4",
+              "audioUrl": "/api/assets/ch02_ex06_g_n_rer_une_r_ponse_au_client_f1f218cc.mp3",
+              "subtitleUrlFr": "/api/assets/ch02_ex06_g_n_rer_une_r_ponse_au_client_fr_a76b3e41.vtt",
+              "subtitleUrlEn": "/api/assets/ch02_ex06_g_n_rer_une_r_ponse_au_client_en_a7f9e701.vtt",
+              "slidesPdf": "/api/assets/chapter_02_slides_85514478.pdf",
+              "transcript": "1. Generating a customer response\nWelcome back to the case study. Last time, we transcribed and cleaned up a customer's audio message. This means we can now generate a professional customer response.\n\n2. Reminder\nAs a reminder, we stored the refined translated text in a variable called corrected_text.\n\n3. Case study plan\nIn this video we'll tackle the following steps:\n\nFirst, we'll moderate the customer message to catch anything inappropriate.\n\nThen, we'll generate a response powered by internal resources.\n\nAnd finally, we'll run moderation again - this time on the AI's reply - to make sure it meets our standards before sending it out.\n\nLet's dive into moderation.\n\n4. Customer message moderation\nTo moderate the customer question, we make a request to the OpenAI moderation endpoint, passing our text as input. \n\nThe response includes a set of scores, which indicates the model's confidence that the message contains harmful content like hate or violence.\n\nWe access these scores using the .category_scores attribute and then convert them into a dictionary using the .model_dump() method.\n\n5. Customer message moderation\nThis makes it easier to work with specific categories.\n\nTo keep things simple, we'll focus on just one category: violence.\n\n6. Customer message moderation\nWe extract the violence score from the scores dictionary, and check whether it's above 0.7. If it is, we flag the message.\n\nCategories and thresholds should be adjusted depending on the use case.\n\nIn our case, the message passed moderation - so we can move on to generating a response.\n\n7. Generating a response\nTo do that, we'll give our chatbot the context it needs to answer like a real support assistant.\n\nWe have two documents to help the model respond: an FAQ file with common customer questions and answers, and a content overview listing current tracks, courses, and projects - complete with descriptions and links.\n\n8. Generating a response\nWe create a system prompt that defines the assistant's role, includes\n\n9. Generating a response\nboth resources, and sets expectations\n\n10. Generating a response\nfor how to respond. \n\nWe ask for clear, concise replies. And if the model doesn't know the answer, it should politely direct the customer to the support email.\n\nWith our prompt ready,\n\n11. Generating a response\nwe send a request to the chat completions endpoint.\n\nThe system message contains our instructions, and the user message is the customer's request.\n\n12. Generating a response\nThe model returns a helpful response, and it's well-written and even includes course suggestions with direct links to the content.\n\n13. Response moderation\nBefore we send it out, we still have one more check to run.\n\nWe want to make absolutely sure the AI's reply is safe - so we moderate that, too.\n\nWe pass our reply as input to the model, and extract the scores.\n\n14. Response moderation\nThis time, we check every category, not just violence. If any score is above 0.7, we flag it and replace the response with a fallback message asking the customer to contact support for further assistance.\n\nIn this example, the AI response passed moderation - so we're good to go.\n\n15. Recap\nAnd that wraps up this part of the case study.\n\nWe moderated the incoming message, generated a context-aware response, and validated the AI's output before sending it.\n\n16. Let's practice!\nNow it's your turn. Let's practice!",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Generating a customer response",
+                  "text": "Welcome back to the case study. Last time, we transcribed and cleaned up a customer's audio message. This means we can now generate a professional customer response."
+                },
+                {
+                  "heading": "2. Reminder",
+                  "text": "As a reminder, we stored the refined translated text in a variable called corrected_text."
+                },
+                {
+                  "heading": "3. Case study plan",
+                  "text": "In this video we'll tackle the following steps:\n\nFirst, we'll moderate the customer message to catch anything inappropriate.\n\nThen, we'll generate a response powered by internal resources.\n\nAnd finally, we'll run moderation again - this time on the AI's reply - to make sure it meets our standards before sending it out.\n\nLet's dive into moderation."
+                },
+                {
+                  "heading": "4. Customer message moderation",
+                  "text": "To moderate the customer question, we make a request to the OpenAI moderation endpoint, passing our text as input. \n\nThe response includes a set of scores, which indicates the model's confidence that the message contains harmful content like hate or violence.\n\nWe access these scores using the .category_scores attribute and then convert them into a dictionary using the .model_dump() method."
+                },
+                {
+                  "heading": "5. Customer message moderation",
+                  "text": "This makes it easier to work with specific categories.\n\nTo keep things simple, we'll focus on just one category: violence."
+                },
+                {
+                  "heading": "6. Customer message moderation",
+                  "text": "We extract the violence score from the scores dictionary, and check whether it's above 0.7. If it is, we flag the message.\n\nCategories and thresholds should be adjusted depending on the use case.\n\nIn our case, the message passed moderation - so we can move on to generating a response."
+                },
+                {
+                  "heading": "7. Generating a response",
+                  "text": "To do that, we'll give our chatbot the context it needs to answer like a real support assistant.\n\nWe have two documents to help the model respond: an FAQ file with common customer questions and answers, and a content overview listing current tracks, courses, and projects - complete with descriptions and links."
+                },
+                {
+                  "heading": "8. Generating a response",
+                  "text": "We create a system prompt that defines the assistant's role, includes"
+                },
+                {
+                  "heading": "9. Generating a response",
+                  "text": "both resources, and sets expectations"
+                },
+                {
+                  "heading": "10. Generating a response",
+                  "text": "for how to respond. \n\nWe ask for clear, concise replies. And if the model doesn't know the answer, it should politely direct the customer to the support email.\n\nWith our prompt ready,"
+                },
+                {
+                  "heading": "11. Generating a response",
+                  "text": "we send a request to the chat completions endpoint.\n\nThe system message contains our instructions, and the user message is the customer's request."
+                },
+                {
+                  "heading": "12. Generating a response",
+                  "text": "The model returns a helpful response, and it's well-written and even includes course suggestions with direct links to the content."
+                },
+                {
+                  "heading": "13. Response moderation",
+                  "text": "Before we send it out, we still have one more check to run.\n\nWe want to make absolutely sure the AI's reply is safe - so we moderate that, too.\n\nWe pass our reply as input to the model, and extract the scores."
+                },
+                {
+                  "heading": "14. Response moderation",
+                  "text": "This time, we check every category, not just violence. If any score is above 0.7, we flag it and replace the response with a fallback message asking the customer to contact support for further assistance.\n\nIn this example, the AI response passed moderation - so we're good to go."
+                },
+                {
+                  "heading": "15. Recap",
+                  "text": "And that wraps up this part of the case study.\n\nWe moderated the incoming message, generated a context-aware response, and validated the AI's output before sending it."
+                },
+                {
+                  "heading": "16. Let's practice!",
+                  "text": "Now it's your turn. Let's practice!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act07",
+          "title": {
+            "en": "Modérer l’appel client",
+            "fr": "Modérer l’appel client"
+          },
+          "description": {
+            "en": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !",
+            "fr": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !"
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_2_act_07_code",
+              "title": {
+                "en": "Modérer l’appel client",
+                "fr": "Modérer l’appel client"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Créez une requête de modération avec corrected_text comme entrée.\n\nExtrayez les scores par catégorie de la réponse et convertissez-les en dictionnaire avec .model_dump().\n\nRécupérez le score de harcèlement depuis le dictionnaire scores et vérifiez s’il est strictement supérieur à 0.8.",
+                "fr": "Créez une requête de modération avec corrected_text comme entrée.\n\nExtrayez les scores par catégorie de la réponse et convertissez-les en dictionnaire avec .model_dump().\n\nRécupérez le score de harcèlement depuis le dictionnaire scores et vérifiez s’il est strictement supérieur à 0.8."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Send the moderation request\nresponse = ____\n\n# Extract scores and convert to dictionary\nscores = ____\n\n# Extract harassment score\nharassment_score = ____\n\nif ____:\n    print(\"Content flagged for harassment!\")\nelse:\n    print(\"Content is safe from harassment.\")",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Send the moderation request\nresponse = client.moderations.create(\n    input=corrected_text\n)\n\n# Extract scores and convert to dictionary\nscores = response.results[0].category_scores.model_dump()\n\n# Extract harassment score\nharassment_score = scores['harassment']\n\nif harassment_score > 0.8:\n    print(\"Content flagged for harassment!\")\nelse:\n    print(\"Content is safe from harassment.\")",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Appelez client.moderations.create() avec le nom du modèle et le texte d’entrée.\n\nAccédez au premier résultat dans response.results, puis appelez .category_scores.model_dump() pour le convertir en dictionnaire.\n\nRécupérez la valeur \"harassment\" dans le dictionnaire obtenu.",
+                "fr": "Appelez client.moderations.create() avec le nom du modèle et le texte d’entrée.\n\nAccédez au premier résultat dans response.results, puis appelez .category_scores.model_dump() pour le convertir en dictionnaire.\n\nRécupérez la valeur \"harassment\" dans le dictionnaire obtenu."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act08",
+          "title": {
+            "en": "Générer une réponse adaptée",
+            "fr": "Générer une réponse adaptée"
+          },
+          "description": {
+            "en": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !",
+            "fr": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !"
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_2_act_08_code",
+              "title": {
+                "en": "Générer une réponse adaptée",
+                "fr": "Générer une réponse adaptée"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Complétez l’invite qui donne des instructions claires et inclut les documents faqs et content_overview comme contexte.\n\nUtilisez le modèle gpt-4o-mini pour générer une réponse, en envoyant instruction_prompt comme message système et corrected_text comme message utilisateur.",
+                "fr": "Complétez l’invite qui donne des instructions claires et inclut les documents faqs et content_overview comme contexte.\n\nUtilisez le modèle gpt-4o-mini pour générer une réponse, en envoyant instruction_prompt comme message système et corrected_text comme message utilisateur."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Complete the prompt\ninstruction_prompt = f\"\"\"\n#### Role\nYou are a professional AI support assistant for DataCamp. You help with:\n- Sales (pricing, plans, billing)\n- Content (courses, recommendations, feedback)\n- Marketing (partnerships, collaborations)\n\n#### How to Respond\n1. Use the FAQs: ____\n2. Use the content overview: ____\n3. Respond clearly and concisely in up to 3 paragraphs.\n4. If unsure, direct the user to support@datacamp.com.\n\"\"\"\n\n# Generate response\nresponse = ____\n\nchatbot_reply = response.choices[0].message.content\nprint(chatbot_reply)",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Complete the prompt\ninstruction_prompt = f\"\"\"\n#### Role\nYou are a professional AI support assistant for DataCamp. You help with:\n- Sales (pricing, plans, billing)\n- Content (courses, recommendations, feedback)\n- Marketing (partnerships, collaborations)\n\n#### How to Respond\n1. Use the FAQs: {faqs}\n2. Use the content overview: {content_overview}\n3. Respond clearly and concisely in up to 3 paragraphs.\n4. If unsure, direct the user to support@datacamp.com.\n\"\"\"\n\n# Generate response\nresponse = client.chat.completions.create(\n    model=\"gpt-4o-mini\",\n    messages=[\n        {\"role\": \"system\", \"content\": instruction_prompt},\n        {\"role\": \"user\", \"content\": corrected_text}\n    ]\n)\n\nchatbot_reply = response.choices[0].message.content\nprint(chatbot_reply)",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Utilisez une f-string pour construire une invite structurée qui inclut les instructions système, le rôle de l’assistant et les deux documents.\n\nAppelez client.chat.completions.create() avec le nom du modèle et passez instruction_prompt comme message système et corrected_text comme message utilisateur.",
+                "fr": "Utilisez une f-string pour construire une invite structurée qui inclut les instructions système, le rôle de l’assistant et les deux documents.\n\nAppelez client.chat.completions.create() avec le nom du modèle et passez instruction_prompt comme message système et corrected_text comme message utilisateur."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act09",
+          "title": {
+            "en": "Modérer la réponse du modèle",
+            "fr": "Modérer la réponse du modèle"
+          },
+          "description": {
+            "en": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !",
+            "fr": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !"
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_2_act_09_code",
+              "title": {
+                "en": "Modérer la réponse du modèle",
+                "fr": "Modérer la réponse du modèle"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Envoyez une requête de modération avec chatbot_reply comme entrée.\n\nExtrayez les scores par catégorie de la réponse, convertissez-les en dictionnaire avec .model_dump(), puis vérifiez si un score dépasse 0.7.",
+                "fr": "Envoyez une requête de modération avec chatbot_reply comme entrée.\n\nExtrayez les scores par catégorie de la réponse, convertissez-les en dictionnaire avec .model_dump(), puis vérifiez si un score dépasse 0.7."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Send the moderation request\nresponse = ____\n\n# Extract scores and convert to dictionary\nscores = ____\n\nif any(____ for score in scores.values()):\n    print(\"AI Response flagged for moderation!\")\n    chatbot_reply = \"\"\"I'm sorry, but I can't provide a response to that request. Please contact support@datacamp.com for further assistance.\"\"\"\nelse:\n    print(\"AI Response is safe.\")",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Send the moderation request\nresponse = client.moderations.create(\n    input=chatbot_reply\n)\n\n# Extract scores and convert to dictionary\nscores = response.results[0].category_scores.model_dump()\n\nif any(score > 0.7 for score in scores.values()):\n    print(\"AI Response flagged for moderation!\")\n    chatbot_reply = \"\"\"I'm sorry, but I can't provide a response to that request. Please contact support@datacamp.com for further assistance.\"\"\"\nelse:\n    print(\"AI Response is safe.\")",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Appelez client.moderations.create() avec le nom du modèle et le texte en entrée.\n\nAccédez au premier résultat dans response.results, puis appelez .category_scores.model_dump() pour le convertir en dictionnaire.",
+                "fr": "Appelez client.moderations.create() avec le nom du modèle et le texte en entrée.\n\nAccédez au premier résultat dans response.results, puis appelez .category_scores.model_dump() pour le convertir en dictionnaire."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act10",
+          "title": {
+            "en": "Créer une réponse vocale pour les clients",
+            "fr": "Créer une réponse vocale pour les clients"
+          },
+          "description": {
+            "en": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !",
+            "fr": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !"
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_2_act_10_video",
+              "title": {
+                "en": "Créer une réponse vocale pour les clients",
+                "fr": "Créer une réponse vocale pour les clients"
+              },
+              "mp4Url": "/api/assets/ch02_ex10_cr_er_une_r_ponse_vocale_pour_les_clients_6225b8c1.mp4",
+              "audioUrl": "/api/assets/ch02_ex10_cr_er_une_r_ponse_vocale_pour_les_clients_685d7e30.mp3",
+              "subtitleUrlFr": "/api/assets/ch02_ex10_cr_er_une_r_ponse_vocale_pour_les_clients_fr_00062882.vtt",
+              "subtitleUrlEn": "/api/assets/ch02_ex10_cr_er_une_r_ponse_vocale_pour_les_clients_en_9bab8aa3.vtt",
+              "slidesPdf": "/api/assets/chapter_02_slides_85514478.pdf",
+              "transcript": "1. Creating a speech response for customers\nHello and welcome back! Now we have a tailored and safe response for our customers, there are just a few steps remaining to complete our chatbot.\n\n2. Case study plan\nIn this video, we will focus on delivering the response back to the customer.\n\nFirst, translating the response into the customer's language. \n\nThen, converting that text into audio for a spoken reply.\n\n3. Variables to use\nTo do this, we'll use the language variable we created earlier when detecting the customer's language.\n\nAnd, of course, we'll use the generated response stored in the chatbot_reply variable.\n\nLet's start with translation.\n\n4. Response translation\nWe handle translation using the chat completions endpoint.\n\nWe send a request to the model, passing in both system and user messages, along with a token limit.\n\nIn the system message, we describe the task and pass the target language using an f-string.\n\nWe also instruct the model to return only the translated text - so we get a clean output with no extra clarifications or explanations.\n\nThe user message contains the original chatbot reply we want to translate.\n\n5. Response translation\nAfter extracting the content from the response, we now have our reply generated in the customer's language.\n\nNotice that the model didn't touch the content links.\n\n6. Text-to-speech\nNext, we convert that text into audio.\n\nWe send a request to the audio speech endpoint, passing the model name, a voice option, and the translated reply as input.\n\nThen, we save the output using the .stream_to_file() method, creating an audio file that can be sent back to the customer.\n\nHere's the first few seconds:\n\n\"Щоб стати інженером штучного інтелекту, корисно зосередитися як на OpenAI\".\n\n7. Case study recap\nAnd that's it for our case study!\n\nLet's take a moment to recap everything we achieved using just the OpenAI API and a few lines of code.\n\nWe received a voice message from the customer, transcribed and cleaned it up, powered our model with context to generate a relevant response, and finally, returned that response as audio - in the customer's own language. That's pretty amazing!\n\n8. Next steps\nOf course, there's more we could build and improve. \n\nFor example, we could track the conversation by storing all questions and responses - allowing the chatbot to remember previous interactions and responding more naturally over time.\n\n9. Let's practice!\nTime to finish building your chatbot!",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Creating a speech response for customers",
+                  "text": "Hello and welcome back! Now we have a tailored and safe response for our customers, there are just a few steps remaining to complete our chatbot."
+                },
+                {
+                  "heading": "2. Case study plan",
+                  "text": "In this video, we will focus on delivering the response back to the customer.\n\nFirst, translating the response into the customer's language. \n\nThen, converting that text into audio for a spoken reply."
+                },
+                {
+                  "heading": "3. Variables to use",
+                  "text": "To do this, we'll use the language variable we created earlier when detecting the customer's language.\n\nAnd, of course, we'll use the generated response stored in the chatbot_reply variable.\n\nLet's start with translation."
+                },
+                {
+                  "heading": "4. Response translation",
+                  "text": "We handle translation using the chat completions endpoint.\n\nWe send a request to the model, passing in both system and user messages, along with a token limit.\n\nIn the system message, we describe the task and pass the target language using an f-string.\n\nWe also instruct the model to return only the translated text - so we get a clean output with no extra clarifications or explanations.\n\nThe user message contains the original chatbot reply we want to translate."
+                },
+                {
+                  "heading": "5. Response translation",
+                  "text": "After extracting the content from the response, we now have our reply generated in the customer's language.\n\nNotice that the model didn't touch the content links."
+                },
+                {
+                  "heading": "6. Text-to-speech",
+                  "text": "Next, we convert that text into audio.\n\nWe send a request to the audio speech endpoint, passing the model name, a voice option, and the translated reply as input.\n\nThen, we save the output using the .stream_to_file() method, creating an audio file that can be sent back to the customer.\n\nHere's the first few seconds:\n\n\"Щоб стати інженером штучного інтелекту, корисно зосередитися як на OpenAI\"."
+                },
+                {
+                  "heading": "7. Case study recap",
+                  "text": "And that's it for our case study!\n\nLet's take a moment to recap everything we achieved using just the OpenAI API and a few lines of code.\n\nWe received a voice message from the customer, transcribed and cleaned it up, powered our model with context to generate a relevant response, and finally, returned that response as audio - in the customer's own language. That's pretty amazing!"
+                },
+                {
+                  "heading": "8. Next steps",
+                  "text": "Of course, there's more we could build and improve. \n\nFor example, we could track the conversation by storing all questions and responses - allowing the chatbot to remember previous interactions and responding more naturally over time."
+                },
+                {
+                  "heading": "9. Let's practice!",
+                  "text": "Time to finish building your chatbot!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act11",
+          "title": {
+            "en": "Traduction de la réponse",
+            "fr": "Traduction de la réponse"
+          },
+          "description": {
+            "en": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !",
+            "fr": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !"
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_2_act_11_code",
+              "title": {
+                "en": "Traduction de la réponse",
+                "fr": "Traduction de la réponse"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Utilisez le modèle gpt-4o-mini pour traduire chatbot_reply dans la langue indiquée par country_code.\n\nExtrayez le texte traduit de response.",
+                "fr": "Utilisez le modèle gpt-4o-mini pour traduire chatbot_reply dans la langue indiquée par country_code.\n\nExtrayez le texte traduit de response."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Translate chatbot reply\nresponse = ____\n\n# Extract translated text\ntranslated_reply = ____\nprint(translated_reply)",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Translate chatbot reply\nresponse = client.chat.completions.create(\n    model=\"gpt-4o-mini\",\n    messages=[\n        {\"role\": \"system\", \"content\": f\"Translate the following text from English to {country_code}. Only return the translated text.\"},\n        {\"role\": \"user\", \"content\": chatbot_reply}\n    ],\n    max_completion_tokens=500 \n)\n\n# Extract translated text\ntranslated_reply = response.choices[0].message.content\nprint(translated_reply)",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Appelez client.chat.completions.create() avec le nom du modèle ; vous pouvez inclure country_code dans l’invite système pour définir la langue cible et chatbot_reply comme message utilisateur (de nombreuses variantes d’invites fonctionneront ici).\n\nExtrayez le texte traduit en utilisant les attributs de response, en commençant par .choices[0].",
+                "fr": "Appelez client.chat.completions.create() avec le nom du modèle ; vous pouvez inclure country_code dans l’invite système pour définir la langue cible et chatbot_reply comme message utilisateur (de nombreuses variantes d’invites fonctionneront ici).\n\nExtrayez le texte traduit en utilisant les attributs de response, en commençant par .choices[0]."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act12",
+          "title": {
+            "en": "Préparer la réponse vocale",
+            "fr": "Préparer la réponse vocale"
+          },
+          "description": {
+            "en": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !",
+            "fr": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !"
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_2_act_12_code",
+              "title": {
+                "en": "Préparer la réponse vocale",
+                "fr": "Préparer la réponse vocale"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Utilisez le modèle gpt-4o-mini-tts avec la voix \"onyx\" pour créer une requête de synthèse vocale à partir de translated_reply.\n\nDiffusez la réponse vers un fichier .mp3.",
+                "fr": "Utilisez le modèle gpt-4o-mini-tts avec la voix \"onyx\" pour créer une requête de synthèse vocale à partir de translated_reply.\n\nDiffusez la réponse vers un fichier .mp3."
+              },
+              "starterCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Create the text-to-speech request\nresponse = ____\n\n# Stream the response to an MP3 file\nresponse.____(\"output.mp3\")",
+              "solutionCode": "client = OpenAI(api_key=\"<OPENAI_API_TOKEN>\")\n\n# Create the text-to-speech request\nresponse = client.audio.speech.create(\n  model=\"gpt-4o-mini-tts\",\n  voice=\"onyx\",\n  input=translated_reply\n)\n\n# Stream the response to an MP3 file\nresponse.stream_to_file(\"output.mp3\")",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Appelez client.audio.speech avec le nom du modèle, la voix et le texte en entrée.\n\nUtilisez la méthode .stream_to_file() pour diffuser la réponse vers un fichier local.",
+                "fr": "Appelez client.audio.speech avec le nom du modèle, la voix et le texte en entrée.\n\nUtilisez la méthode .stream_to_file() pour diffuser la réponse vers un fichier local."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act13",
+          "title": {
+            "en": "Félicitations !",
+            "fr": "Félicitations !"
+          },
+          "description": {
+            "en": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !",
+            "fr": "Vous allez créer un chatbot d’assistance entièrement fonctionnel, de bout en bout, alimenté par l’IA ! Ce chatbot acceptera et répondra aux questions des clients sous forme de messages vocaux, y compris dans des langues autres que l’anglais !"
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_2_act_13_video",
+              "title": {
+                "en": "Félicitations !",
+                "fr": "Félicitations !"
+              },
+              "mp4Url": "/api/assets/ch02_ex13_f_licitations_becacaa6.mp4",
+              "audioUrl": "/api/assets/ch02_ex13_f_licitations_5b9a5d9b.mp3",
+              "subtitleUrlFr": "/api/assets/ch02_ex13_f_licitations_fr_71cf6ca3.vtt",
+              "subtitleUrlEn": "/api/assets/ch02_ex13_f_licitations_en_72fb9f6f.vtt",
+              "slidesPdf": "/api/assets/chapter_02_slides_85514478.pdf",
+              "transcript": "1. Congratulations!\nCongratulations on completing the course! You've built an end-to-end AI solution using the OpenAI API - and that's quite an achievement.\n\n2. Chapter 1\nIn Chapter 1, we explored OpenAI's audio and moderation models. We learned how to transcribe and translate speech, generate realistic text-to-speech audio, and detect harmful content using moderation scores.\n\n3. Chapter 2\nIn Chapter 2, we brought it all together in a real-world case study - building a customer support chatbot.\n\nOur chatbot took a customer's voice message, generated a tailored reply, and delivered it back in their native spoken language.\n\nAll with just a few lines of Python and the OpenAI API.\n\n4. What's next?\nIf you're excited to go further, DataCamp offers more courses and projects to continue your learning journey. I highly recommend checking them out.\n\n5. Let's practice!\nThanks for learning with us, and congrats again on reaching the finish line.\n\nNow it's your turn to take what you've learned - and build something amazing.",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Congratulations!",
+                  "text": "Congratulations on completing the course! You've built an end-to-end AI solution using the OpenAI API - and that's quite an achievement."
+                },
+                {
+                  "heading": "2. Chapter 1",
+                  "text": "In Chapter 1, we explored OpenAI's audio and moderation models. We learned how to transcribe and translate speech, generate realistic text-to-speech audio, and detect harmful content using moderation scores."
+                },
+                {
+                  "heading": "3. Chapter 2",
+                  "text": "In Chapter 2, we brought it all together in a real-world case study - building a customer support chatbot.\n\nOur chatbot took a customer's voice message, generated a tailored reply, and delivered it back in their native spoken language.\n\nAll with just a few lines of Python and the OpenAI API."
+                },
+                {
+                  "heading": "4. What's next?",
+                  "text": "If you're excited to go further, DataCamp offers more courses and projects to continue your learning journey. I highly recommend checking them out."
+                },
+                {
+                  "heading": "5. Let's practice!",
+                  "text": "Thanks for learning with us, and congrats again on reaching the finish line.\n\nNow it's your turn to take what you've learned - and build something amazing."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

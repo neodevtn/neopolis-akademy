@@ -1,0 +1,136 @@
+{
+  "title": "Pourquoi utiliser des modèles de modération de texte ?",
+  "exercise_id": 1907566,
+  "chapter_number": 1,
+  "exercise_number": 9,
+  "content": {
+    "assignment_html": "<p>La modération de texte est un élément essentiel de la plupart des plateformes de réseaux sociaux, des salons de discussion en ligne et de nombreux autres systèmes destinés aux utilisateurs. Elle vise à empêcher la diffusion et la promotion de contenus inappropriés, comme les discours de haine.</p>\n<p>Dans cet exercice, vous allez comparer le modèle de modération de texte d’OpenAI à des méthodes de modération plus traditionnelles&nbsp;: la modération manuelle et la détection par mots‑clés et motifs.</p>",
+    "assignment_text": "La modération de texte est un élément essentiel de la plupart des plateformes de réseaux sociaux, des salons de discussion en ligne et de nombreux autres systèmes destinés aux utilisateurs. Elle vise à empêcher la diffusion et la promotion de contenus inappropriés, comme les discours de haine.\n\nDans cet exercice, vous allez comparer le modèle de modération de texte d’OpenAI à des méthodes de modération plus traditionnelles : la modération manuelle et la détection par mots‑clés et motifs.",
+    "instructions_markdown": "<ul>\n<li>Classez les affirmations selon qu’elles décrivent le modèle de modération d’OpenAI, la détection par mots‑clés, ou la modération manuelle.</li>\n</ul>",
+    "instructions_text": "Classez les affirmations selon qu’elles décrivent le modèle de modération d’OpenAI, la détection par mots‑clés, ou la modération manuelle.",
+    "hint_html": "<ul>\n<li>Le modèle de modération d’OpenAI est le plus avancé, car il utilise le contexte de l’intégralité de l’entrée pour déterminer si un texte constitue une violation.</li>\n<li>Si des personnes interviennent, cela peut signifier que le contenu est évalué de manière incohérente selon les évaluateurs.</li>\n</ul>",
+    "hint_text": "Le modèle de modération d’OpenAI est le plus avancé, car il utilise le contexte de l’intégralité de l’entrée pour déterminer si un texte constitue une violation.\n\nSi des personnes interviennent, cela peut signifier que le contenu est évalué de manière incohérente selon les évaluateurs.",
+    "sample_code": "",
+    "pre_exercise_code": "",
+    "solution": "",
+    "sct": "",
+    "success_message": null,
+    "question": {
+      "__transit_tag": "iOM",
+      "flavor": "Classify",
+      "solution": [
+        {
+          "__transit_tag": "iOM",
+          "id": "options",
+          "title": "Options"
+        },
+        {
+          "__transit_tag": "iOM",
+          "id": "dropzone_r",
+          "title": "Modèle de modération d’OpenAI",
+          "draggableItems": [
+            {
+              "__transit_tag": "iOM",
+              "id": "stringr",
+              "content": "Conçu pour modérer les invites et réponses échangées avec les modèles d’OpenAI",
+              "incorrectMessage": "Le modèle de modération d’OpenAI a été créé spécifiquement pour s’assurer que leurs modèles ne soient pas détournés de leur usage."
+            },
+            {
+              "__transit_tag": "iOM",
+              "id": "dplyr",
+              "content": "Utilise l’ensemble des mots pour éclairer sa décision",
+              "incorrectMessage": "Le modèle de modération d’OpenAI prend en compte l’intégralité du contenu qui lui est fourni pour déterminer s’il est inapproprié ou non."
+            },
+            {
+              "__transit_tag": "iOM",
+              "id": "item_9dc81dfaad5243ab920614864d7c8074",
+              "content": "Produit un niveau de confiance concernant une violation de texte",
+              "incorrectMessage": "Le modèle de modération d’OpenAI peut produire des `category_scores` indiquant son niveau de confiance quant à une violation."
+            }
+          ]
+        },
+        {
+          "__transit_tag": "iOM",
+          "id": "dropzone_python",
+          "title": "Détection par mots‑clés",
+          "draggableItems": [
+            {
+              "__transit_tag": "iOM",
+              "id": "pandas",
+              "content": "Ne comprend pas le contexte",
+              "incorrectMessage": "La détection par mots‑clés fait exactement cela : repérer des mots ou motifs particuliers et signaler ces occurrences ; cela signifie qu’un contenu approprié peut être signalé parce qu’il contient certains mots dans un contexte pourtant approprié."
+            }
+          ]
+        },
+        {
+          "__transit_tag": "iOM",
+          "id": "solution_8dbc3e3bb3ef40cb8e170324dc9b80e6",
+          "title": "Modération manuelle",
+          "draggableItems": [
+            {
+              "__transit_tag": "iOM",
+              "id": "item_abb8e3c8a7d04318aeea2706c59ee2aa",
+              "content": "Nécessite une disponibilité 24 h/24 et coûte cher",
+              "incorrectMessage": "La modération manuelle exige une disponibilité permanente pour éviter les interruptions et une équipe bien formée, ce qui représente un investissement coûteux."
+            },
+            {
+              "__transit_tag": "iOM",
+              "id": "item_f1d9f57f9a4541379f4de170b142d11c",
+              "content": "Classification incohérente",
+              "incorrectMessage": "Un même contenu modéré par des personnes différentes peut être classé différemment."
+            }
+          ]
+        }
+      ],
+      "correctnessConditions": {
+        "__transit_tag": "iOM",
+        "checks": [
+          {
+            "__transit_tag": "iOM",
+            "message": "Le modèle de modération d’OpenAI a été créé spécifiquement pour s’assurer que leurs modèles ne soient pas détournés de leur usage.",
+            "shouldBe": true,
+            "condition": "check_target(stringr) == dropzone_r"
+          },
+          {
+            "__transit_tag": "iOM",
+            "message": "Le modèle de modération d’OpenAI prend en compte l’intégralité du contenu qui lui est fourni pour déterminer s’il est inapproprié ou non.",
+            "shouldBe": true,
+            "condition": "check_target(dplyr) == dropzone_r"
+          },
+          {
+            "__transit_tag": "iOM",
+            "message": "Le modèle de modération d’OpenAI peut produire des `category_scores` indiquant son niveau de confiance quant à une violation.",
+            "shouldBe": true,
+            "condition": "check_target(item_9dc81dfaad5243ab920614864d7c8074) == dropzone_r"
+          },
+          {
+            "__transit_tag": "iOM",
+            "message": "La détection par mots‑clés fait exactement cela : repérer des mots ou motifs particuliers et signaler ces occurrences ; cela signifie qu’un contenu approprié peut être signalé parce qu’il contient certains mots dans un contexte pourtant approprié.",
+            "shouldBe": true,
+            "condition": "check_target(pandas) == dropzone_python"
+          },
+          {
+            "__transit_tag": "iOM",
+            "message": "La modération manuelle exige une disponibilité permanente pour éviter les interruptions et une équipe bien formée, ce qui représente un investissement coûteux.",
+            "shouldBe": true,
+            "condition": "check_target(item_abb8e3c8a7d04318aeea2706c59ee2aa) == solution_8dbc3e3bb3ef40cb8e170324dc9b80e6"
+          },
+          {
+            "__transit_tag": "iOM",
+            "message": "Un même contenu modéré par des personnes différentes peut être classé différemment.",
+            "shouldBe": true,
+            "condition": "check_target(item_f1d9f57f9a4541379f4de170b142d11c) == solution_8dbc3e3bb3ef40cb8e170324dc9b80e6"
+          }
+        ],
+        "isOrdered": false,
+        "failureMessage": "Réessayez !",
+        "successMessage": "Bravo ! Les modèles de modération représentent une avancée majeure dans la façon de modérer les contenus. Passez à l’Exercice suivant pour utiliser vous‑même le modèle de modération d’OpenAI !"
+      }
+    },
+    "possible_answers": [],
+    "feedbacks": [],
+    "scores": [],
+    "prompting_fallbacks": [],
+    "solution_conversations": []
+  }
+}
