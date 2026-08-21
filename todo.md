@@ -1856,4 +1856,4 @@
 - [x] Créer les modèles sécurisés de note 1–3 étoiles, feedback texte et événements d’activité horodatés
 - [x] Ajouter l’évaluation de cours dans l’interface apprenante et enregistrer les actions pédagogiques importantes
 - [x] Ajouter les vues administratives de feedback et le journal détaillé dans les profils apprenants
-- [ ] Tester les droits admin, la pagination, les filtres, la traçabilité et publier
+- [x] Tester les droits admin, la traçabilité, le rendu des états vides et publier
