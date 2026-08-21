@@ -33,6 +33,8 @@ const MIME_MAP: Record<string, string> = {
 
 const DEFAULT_PUBLIC_ASSET_CACHE_CONTROL = "public, max-age=3600, must-revalidate";
 export const VERSIONED_PUBLIC_ASSET_CACHE_CONTROL = "public, max-age=31536000, immutable";
+const PRESIGNED_URL_CACHE_TTL_MS = 60_000;
+const presignedUrlCache = new Map<string, { url: string; expiresAt: number }>();
 
 /** Les assets téléversés avec un suffixe hashé peuvent être mis en cache durablement. */
 export function getAssetCacheControl(key: string): string {
@@ -60,6 +62,46 @@ async function fetchStorageWithRetry(input: RequestInfo | URL, init?: RequestIni
     await new Promise((resolve) => setTimeout(resolve, attempt * 150));
   }
   throw lastError instanceof Error ? lastError : new Error("Storage request failed");
+}
+
+async function getPresignedStorageUrl(key: string): Promise<string> {
+  const cached = presignedUrlCache.get(key);
+  if (cached && cached.expiresAt > Date.now()) return cached.url;
+
+  const forgeUrl = new URL(
+    "v1/storage/presign/get",
+    ENV.forgeApiUrl.replace(/\/+$/, "") + "/",
+  );
+  forgeUrl.searchParams.set("path", key);
+
+  const forgeResp = await fetchStorageWithRetry(forgeUrl, {
+    headers: { Authorization: `Bearer ${ENV.forgeApiKey}` },
+  });
+  if (!forgeResp.ok) {
+    const body = await forgeResp.text().catch(() => "");
+    console.error(`[AssetProxy] forge error: ${forgeResp.status} ${body}`);
+    throw new Error("Storage backend error");
+  }
+
+  const { url } = (await forgeResp.json()) as { url: string };
+  if (!url) throw new Error("Empty signed URL from backend");
+  presignedUrlCache.set(key, { url, expiresAt: Date.now() + PRESIGNED_URL_CACHE_TTL_MS });
+  return url;
+}
+
+async function fetchAssetWithFreshPresign(key: string, init?: RequestInit): Promise<globalThis.Response> {
+  let response = await fetchStorageWithRetry(await getPresignedStorageUrl(key), init);
+  if (response.ok) return response;
+
+  // An expired or transiently invalid signed URL must not poison the next video segment.
+  presignedUrlCache.delete(key);
+  response = await fetchStorageWithRetry(await getPresignedStorageUrl(key), init);
+  return response;
+}
+
+/** Exposé pour isoler les tests et éviter qu’une URL éphémère soit réutilisée entre scénarios. */
+export function clearAssetProxyPresignCache(): void {
+  presignedUrlCache.clear();
 }
 
 export function registerAssetProxy(app: Express) {
@@ -92,30 +134,6 @@ export function registerAssetProxy(app: Express) {
     }
 
     try {
-      // Get presigned URL from forge
-      const forgeUrl = new URL(
-        "v1/storage/presign/get",
-        ENV.forgeApiUrl.replace(/\/+$/, "") + "/",
-      );
-      forgeUrl.searchParams.set("path", key);
-
-      const forgeResp = await fetchStorageWithRetry(forgeUrl, {
-        headers: { Authorization: `Bearer ${ENV.forgeApiKey}` },
-      });
-
-      if (!forgeResp.ok) {
-        const body = await forgeResp.text().catch(() => "");
-        console.error(`[AssetProxy] forge error: ${forgeResp.status} ${body}`);
-        res.status(502).send("Storage backend error");
-        return;
-      }
-
-      const { url } = (await forgeResp.json()) as { url: string };
-      if (!url) {
-        res.status(502).send("Empty signed URL from backend");
-        return;
-      }
-
       // Determine content type from key extension (more reliable than upstream)
       const mimeFromKey = getMimeFromKey(key);
 
@@ -126,7 +144,7 @@ export function registerAssetProxy(app: Express) {
         // Relay the requested range directly. Some signed storage endpoints do not
         // reliably support HEAD for newly uploaded large files, even though GET Range
         // succeeds. The upstream Content-Range is the authoritative source here.
-        const rangeResp = await fetchStorageWithRetry(url, {
+        const rangeResp = await fetchAssetWithFreshPresign(key, {
           headers: { Range: rangeHeader },
         });
         if (!rangeResp.ok) {
@@ -150,7 +168,7 @@ export function registerAssetProxy(app: Express) {
         res.send(Buffer.from(arrayBuf));
       } else {
         // Full file request
-        const fileResp = await fetchStorageWithRetry(url);
+        const fileResp = await fetchAssetWithFreshPresign(key);
         if (!fileResp.ok) {
           res.status(502).send("Storage file fetch error");
           return;

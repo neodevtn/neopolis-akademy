@@ -1930,3 +1930,4 @@
 - [x] Traiter le cours critique « Introduction to Subagents » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant le cours critique suivant
 - [x] Traiter le cours critique « Claude Code 101 » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant le cours critique suivant
 - [ ] Traiter le cours critique « Practical AI with Google Gemini and NotebookLM » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant le cours critique suivant
+- [ ] Stabiliser les requêtes Range des 7 vidéos Gemini réuploadées et confirmer leur lecture de production sans erreur intermittente
