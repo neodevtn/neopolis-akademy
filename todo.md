@@ -1806,7 +1806,7 @@
 - [x] Créer une catégorie distincte pour les parcours de préparation aux certifications Anthropic officielles
 - [x] Ajouter un tag visible et une mention explicite de préparation aux certifications Anthropic officielles dans leurs descriptions
 - [x] Vérifier que chaque cours DataCamp importé porte des tags de compétences et des règles de contribution administrables cohérentes
-- [ ] Vérifier en production les médias locaux téléversés pour chaque cours DataCamp avant publication
+- [x] Vérifier en production les médias locaux téléversés pour chaque cours DataCamp avant publication
 - [x] Vérifier que chaque TP DataCamp est autonome, présente ses prérequis, sa préparation d’environnement et ses ressources téléchargeables
 - [x] Afficher les activités totales DataCamp comme compteur principal sans confondre les exercices interactifs et les écrans du cours
 ## Régressions brouillon et progression n8n

@@ -90,14 +90,23 @@ if (manifestPath) {
 }
 
 if (productionBaseUrl && media.length) {
-  const checks = await Promise.all(media.map(async ({ url }) => {
-    try {
-      const response = await fetch(`${productionBaseUrl}${url}`, { method: "HEAD", redirect: "follow" });
-      return { url, status: response.status, contentType: response.headers.get("content-type") || "", ok: response.ok };
-    } catch (error) {
-      return { url, status: 0, contentType: "", ok: false, error: String(error) };
+  const checkMedia = async ({ url }) => {
+    let lastResult = { url, status: 0, contentType: "", ok: false };
+    for (let attempt = 1; attempt <= 3; attempt += 1) {
+      try {
+        const response = await fetch(`${productionBaseUrl}${url}`, { method: "HEAD", redirect: "follow" });
+        lastResult = { url, status: response.status, contentType: response.headers.get("content-type") || "", ok: response.ok, attempt };
+        if (response.ok || response.status < 500 || attempt === 3) return lastResult;
+      } catch (error) {
+        lastResult = { url, status: 0, contentType: "", ok: false, error: String(error), attempt };
+        if (attempt === 3) return lastResult;
+      }
+      await new Promise((resolve) => setTimeout(resolve, attempt * 350));
     }
-  }));
+    return lastResult;
+  };
+  const checks = [];
+  for (const mediaEntry of media) checks.push(await checkMedia(mediaEntry));
   report.productionMedia = checks;
   if (checks.some((check) => !check.ok)) report.errors.push("Au moins un média ne répond pas avec un statut HTTP de succès en production.");
 }
