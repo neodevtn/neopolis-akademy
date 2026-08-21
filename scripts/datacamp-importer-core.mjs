@@ -417,7 +417,7 @@ function normalizeAlternativeManifest(manifest) {
       sample_code: extracted.sample_code || "",
       pre_exercise_code: extracted.pre_exercise_code || "",
     };
-    const normalizedType = ["DragAndDropExercise", "ChatExercise"].includes(exercise.type)
+    const normalizedType = ["DragAndDropExercise", "ChatExercise", "CloudExercise"].includes(exercise.type)
       ? "NormalExercise"
       : exercise.type;
     const activity = {
