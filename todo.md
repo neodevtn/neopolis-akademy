@@ -1810,6 +1810,7 @@
 - [x] Générer et auditer le cours « Développer des systèmes d’IA avec l’API OpenAI » : 3 chapitres, 36 activités, 11 vidéos, 25 activités interactives et 3 supports téléchargeables locaux
 - [x] Générer et auditer le cours « Utiliser l’API OpenAI Responses » : 3 chapitres, 34 activités, 11 vidéos, 19 activités interactives et 3 supports téléchargeables locaux
 - [x] Générer et auditer le cours « Travailler avec l’API OpenAI » : 3 chapitres, 29 activités, 9 vidéos, 20 activités interactives et 3 supports téléchargeables locaux
+- [x] Générer et auditer le cours « Prompt Engineering avec l’API OpenAI » : 4 chapitres, 55 activités, 15 vidéos, 40 activités interactives et 4 supports téléchargeables locaux
 - [x] Générer et auditer le cours « Créer des workflows marketing avec n8n » : 3 chapitres, 23 activités, 8 vidéos, 15 TP autonomes et 3 supports téléchargeables locaux
 - [x] Générer et auditer le cours « Automatisation de workflows intermédiaires avec n8n » : 4 chapitres, 40 activités, 13 vidéos, 27 TP autonomes et médias locaux validés
 - [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet OpenAI pilote avant toute importation de ses réponses et tris interactifs
