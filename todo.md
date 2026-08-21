@@ -1804,6 +1804,7 @@
 - [x] Générer et auditer le cours pilote « Introduction to Google Workspace with Gemini » : 1 chapitre, 7 activités, 3 vidéos, 4 activités interactives et 1 support PDF local
 - [x] Générer et auditer le cours « Systèmes multimodaux avec l’API OpenAI » : 2 chapitres, 24 activités, 7 vidéos, 17 activités interactives et 2 supports PDF locaux
 - [x] Générer et auditer le cours « Introduction aux embeddings avec l’API OpenAI » : 3 chapitres, 37 activités, 11 vidéos, 26 activités interactives et 3 supports téléchargeables locaux
+- [x] Générer et auditer le cours « IA pratique avec Google Gemini et NotebookLM » : 4 chapitres, 48 activités, 15 vidéos, 33 activités interactives et 4 supports téléchargeables locaux
 - [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet OpenAI pilote avant toute importation de ses réponses et tris interactifs
 - [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet « Travailler avec l’API OpenAI » avant toute importation de ses réponses et tris interactifs
 - [ ] Obtenir le PDF local canonique `C-DUETDR-B-m0-l5-file-5.pdf` du paquet Gemini Drive avant d’importer ses deux activités visuelles

@@ -298,6 +298,28 @@ function buildManifestContentBlock(activity) {
   };
 }
 
+function buildAiEvaluationBlock(activity) {
+  const content = activityContent(activity);
+  const rubric = (content.scores || []).map((score) => {
+    const criteria = [...(score.taskCriteria || []), ...(score.contextCriteria || [])];
+    return criteria.length ? `${score.type}: ${criteria.join("; ")}` : String(score.type || "");
+  }).filter(Boolean).join("\n");
+  const sample = content.solution_conversations?.[0]?.conversation?.[0]?.userPrompt
+    || content.prompting_fallbacks?.find((entry) => entry.outputValidation)?.prompt
+    || "";
+  return {
+    type: "ai_evaluation",
+    id: `dc_${activity.chapter_number}_act_${String(activity.exercise_number).padStart(2, "0")}_prompting`,
+    title: toI18n(activity.title),
+    prompt: toI18n([htmlToText(content.assignment_text || content.assignment_html || ""), htmlToText(content.instructions_text || content.instructions_markdown || "")].filter(Boolean).join("\n\n")),
+    rubric,
+    maxScore: 10,
+    sampleAnswer: toI18n(sample),
+    minWords: 5,
+    hint: toI18n(htmlToText(content.hint_text || content.hint_html || "")),
+  };
+}
+
 function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
   const slidesPdf = assetFor(sourceChapter.slides_pdf_local, assetMap);
   let blocks;
@@ -332,21 +354,30 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
       type = "teaching";
       blocks = [buildManifestContentBlock(activity)];
       break;
+    case "PromptingExercise":
+      type = "exercise";
+      blocks = [buildAiEvaluationBlock(activity)];
+      break;
     case "VisualExercise":
-      type = "resource";
-      blocks = slidesPdf ? [{
-        type: "resource_review",
-        id: `dc_${activity.chapter_number}_act_${String(activity.exercise_number).padStart(2, "0")}_resource`,
-        title: toI18n(activity.title),
-        instructions: toI18n(htmlToText(activityContent(activity).assignment_text || activityContent(activity).assignment_html || "")),
-        resourceUrl: slidesPdf,
-        resourceLabel: toI18n("Open the local PDF resource"),
-      }] : [{
-        type: "content",
-        id: `dc_${activity.chapter_number}_act_${String(activity.exercise_number).padStart(2, "0")}_visual_content`,
-        body: toI18n(htmlToText(activityContent(activity).assignment_text || activityContent(activity).assignment_html || activity.title)),
-        optionalMediaUnavailable: true,
-      }];
+      if (Array.isArray(activityContent(activity).question?.solutionItems) && activityContent(activity).question.solutionItems.length > 0) {
+        type = "quiz";
+        blocks = [extractChoiceData(activity)];
+      } else {
+        type = "resource";
+        blocks = slidesPdf ? [{
+          type: "resource_review",
+          id: `dc_${activity.chapter_number}_act_${String(activity.exercise_number).padStart(2, "0")}_resource`,
+          title: toI18n(activity.title),
+          instructions: toI18n(htmlToText(activityContent(activity).assignment_text || activityContent(activity).assignment_html || "")),
+          resourceUrl: slidesPdf,
+          resourceLabel: toI18n("Open the local PDF resource"),
+        }] : [{
+          type: "content",
+          id: `dc_${activity.chapter_number}_act_${String(activity.exercise_number).padStart(2, "0")}_visual_content`,
+          body: toI18n(htmlToText(activityContent(activity).assignment_text || activityContent(activity).assignment_html || activity.title)),
+          optionalMediaUnavailable: true,
+        }];
+      }
       break;
     default:
       throw new Error(`Type d’activité DataCamp non encore pris en charge sans perte de contenu : ${activity.type}`);

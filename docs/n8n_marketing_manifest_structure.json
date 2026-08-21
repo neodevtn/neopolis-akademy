@@ -1,0 +1,56 @@
+{
+  "chapters": {
+    "number": 1,
+    "number_of_videos": 2,
+    "slug": "building-an-ai-marketing-department",
+    "last_updated_on": "29/06/2026",
+    "nb_exercises": 5,
+    "slides_link": "https://projector-video-pdf-converter.datacamp.com/44775/chapter1.pdf",
+    "title": "Créer un département marketing IA",
+    "xp": 400,
+    "id": 141845,
+    "description": "Créez un système marketing multi-agents simplifié avec trois agents spécialisés exécutés en branches parallèles à partir d'un brief de campagne commun. Vous apprendrez à concevoir des branches parallèles, à synchroniser les résultats avec des nœuds Merge et à générer une synthèse pour direction sans recourir à des transformations fragiles basées sur du code.",
+    "local_pdf": "media/pdf/chapter1_Cr_er_un_d_partement_marketing_IA.pdf"
+  },
+  "exercise": {
+    "chapter_number": 1,
+    "chapter_slug": "building-an-ai-marketing-department",
+    "exercise_number": 1,
+    "type": "VideoExercise",
+    "title": "Créer un département marketing alimenté par l'IA",
+    "xp": 50,
+    "url": "https://campus.datacamp.com/fr/courses/building-marketing-workflows-with-n8n/building-an-ai-marketing-department?ex=1",
+    "visible_text_file": "raw_pages/ch01_ex01_text.txt",
+    "page_json_file": "raw_pages/ch01_ex01_page.json",
+    "preloaded_files": [
+      "raw_pages/ch01_ex01_preloaded_15.js",
+      "raw_pages/ch01_ex01_preloaded_16.js",
+      "raw_pages/ch01_ex01_preloaded_38.js",
+      "raw_pages/ch01_ex01_preloaded_39.js"
+    ],
+    "visible_text_chars": 143,
+    "visible_text": "Apprendre\n/\nCours\n/\nCréer des workflows marketing avec n8n\nPlan Du Cours\nXP quotidiens\n40\nFR\nTranscription\nMasquer Le Panneau Latéral\nCompris !",
+    "extracted": {
+      "source_file": "ch01_ex01_preloaded_38.js",
+      "externalId": 2366888,
+      "number": 1,
+      "title": "Créer un département marketing alimenté par l'IA",
+      "type": "VideoExercise",
+      "xp": 50,
+      "question_prompt": null,
+      "hint": null,
+      "solution": "",
+      "sample_code": "",
+      "sct": "",
+      "instructions": null
+    },
+    "video_index": 1,
+    "video_mp4": "media/videos/01_Cr_er_un_d_partement_marketing_aliment_par_l_IA.mp4",
+    "audio_mp3": "media/audio/01_Cr_er_un_d_partement_marketing_aliment_par_l_IA.mp3",
+    "subtitle_vtt_en": "media/subtitles/01_course_44775_e9737985903719797d74d5d357c5a279.vtt",
+    "subtitle_vtt_fr": "media/subtitles/01_course_44775_e9737985903719797d74d5d357c5a279__fr.vtt",
+    "transcript_en_text": "Welcome to this course on building marketing automations with n8n!\nI'm Yaron Been — a marketer, automation architect, and\nfounder of several AI-driven tools used by growth teams and agencies.\nMy goal here is practical: I want to give you automations you can\nactually deploy, adapt, and improve inside your own marketing stack.\nHere's the scenario.\nImagine you've just joined FlowPilot, a B2B sales automation startup, as the new Chief Marketing Officer.\nThe product is growing fast, but the marketing team can't keep up!\nYou've inherited three challenges.\nThere's no unified marketing strategy: messaging varies across channels, and content lacks a central narrative.\nLanding pages convert poorly, but nobody has the bandwidth to test and optimize them,\nand your sales team is finding leads manually, searching Google one business at a time.\nSo, here's your mission: solve all three challenges by building an AI-powered marketing stack!\nEach workflow teaches a different automation pattern.\nFirst, you'll build a multi-agent marketing system where AI\nspecialists collaborate to produce a complete marketing plan.\nThis tackles the strategy unification challenge.\nSecond, a conversion rate optimizer that generates suggestions,\nscores them, and loops back to improve, fixing the landing page issues.\nAnd third, a lead scraper that pulls business contacts from Google Maps automatically, replacing the manual search.\nTogether, these three workflows form a complete AI marketing stack for FlowPilot.\nLet's start with the first one: the multi-agent system.\nHere's the architecture.\nA Campaign Brief node holds four fields: business context, objective, target audience, and budget.\nThree specialist AI agents — a Brand Strategist, a Content Strategist, and a Paid Ads\nExpert — each connect to the Campaign Brief through their own branch and work independently.\nWhy separate branches?\nBecause each specialist has a different focus, and we want to keep them isolated.\nThen, a Merge Strategies node waits for all three branches to finish before letting data flow downstream.\nAfter that, a Code node combines the outputs into one object.\nThe CMO Summary Agent reads all three strategies and produces a single executive brief.\nLet's zoom into the merging strategy.\nThe Merge node outputs a list of three separate items, one per agent.\nIf the CMO Summary Agent receives three items, it runs\nthree times and produces three separate briefs — not what we want.\nSo a Code node reshapes that list into a single combined object with three named fields: brand, content, and paid.\nThis is a deliberate design choice.\nCombining outputs is a deterministic task, so a Code node is more predictable than asking another AI agent to do it.\nThe CMO Summary Agent reads those three combined fields and produces one executive brief.\nBut instead of returning plain text, we attach a Structured Output Parser.\nThe parser enforces a JSON schema, which means every run returns the same predictable\nstructure:\nan executive summary, a ranked list of priorities, and day 30, 60, and 90 milestones.\nThis matters beyond just formatting.\nA predictable JSON output means you can chain this workflow into a dashboard, a Slack\nnotification, or another automation without worrying about how the AI phrased things on a given run.\nThe result: a complete, structured marketing plan from a single Campaign Brief.\nBy the end of this chapter, you'll know how to use parallel branches to run independent AI agents\nfrom a single input node,\nenforce JSON schemas with Structured Output Parsers so your outputs are\nalways predictable,\nmerge parallel outputs and reshape them with a Code node so the final agent\nruns exactly once,\nand synthesize independent specialist strategies into one structured executive brief.\nThese patterns apply far beyond marketing — any time you need multiple AI perspectives combined into one deliverable.\nReady to build your AI marketing department?\nLet's get started!",
+    "projector_html": "projector/html/01_course_59475_e9737985903719797d74d5d357c5a279.html",
+    "projector_key": "course_59475_e9737985903719797d74d5d357c5a279"
+  }
+}
