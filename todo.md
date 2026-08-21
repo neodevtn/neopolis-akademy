@@ -1863,3 +1863,5 @@
 - [x] Réserver le menu Logs et ses données aux rôles autorisés, avec un contrat d’accès explicite
 - [x] Ajouter un tableau paginé, des filtres par utilisateur et période, ainsi qu’une vue détaillée d’événement
 - [ ] Vérifier les droits, la pagination, les filtres, les détails et publier
+- [ ] Corriger le panneau Journal publié afin que ses filtres et détails soient effectivement visibles et accessibles
+- [ ] Rendre explicites les données historiques et les comparaisons avant/après dans le détail d’événement
