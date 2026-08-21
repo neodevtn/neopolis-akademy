@@ -173,3 +173,51 @@ Le QCM `ch03_ex09_mcq` (« Faut-il automatiser ce processus ? ») a été recons
 | Tests | Catalogue, proxy, métriques et JSON | Vitest : 17 tests ciblés réussis ; TypeScript et validation des cours sans erreur. | Conforme |
 
 Aucun écart critique du rapport croisé ne reste ouvert pour cette formation.
+
+## 02 — Claude Certified Developer – Fondations
+
+Le rapport High signale un écart structurel entre la référence détaillée et Neopolis : **30 exercices visibles contre 35 attendus**, pour **5 cours** et **37 vidéos**. La fiche et la page formation Neopolis affichent actuellement **51 chapitres**, ce qui semble cohérent côté volume de parcours, mais l’audit demande explicitement de **restaurer tous les exercices, checkpoints et corrections** à partir de la source officielle et des exports locaux, sans se limiter aux compteurs actuellement publiés.
+
+Les preuves visuelles indiquent aussi que le premier écran de certification reste surtout un écran de lecture/navigation, ce qui est acceptable, mais que **les écrans suivants doivent rester answerables** avec composants de réponse, validation, feedback et règles de complétion. Le rapport technique précise qu’aucune balise vidéo n’est présente sur le premier écran Neopolis, ce qui confirme que le premier travail doit porter sur la **couverture des exercices/checkpoints** plus que sur un média manquant au tout début du parcours.
+
+### Décision de contrôle — conservation des enrichissements intentionnels
+
+L’inventaire actuel des cinq JSON Developer confirme **30 blocs answerable** : 5 QCM, 10 checkpoints et 15 autres activités évaluables. La page Skilljar actuellement accessible confirme les cinq cours et leurs objectifs pédagogiques, mais ne révèle pas les cinq exercices nommés dans la référence détaillée historique. Aucun export local ne les contient. Par décision explicite du propriétaire, les **checkpoints supplémentaires** et les **vidéos recommandées** déjà présents sont intentionnels et doivent être conservés. Aucun bloc n’est donc supprimé, fusionné ni remplacé sans une source pédagogique détaillée additionnelle.
+
+Le contrôle public non authentifié confirme que le parcours exige une session apprenant ; la vérification end-to-end des tentatives se fera avec un compte autorisé, sans contourner l’authentification. Le risque restant est tracé comme une **différence de comptage historique non attribuable**, et non comme une raison de modifier le contenu existant de façon spéculative.
+
+## 03 — Claude Certified Architect – Fondations
+
+Le rapport High signale un écart de volume plus important encore que sur Developer : **88 exercices visibles contre 176 attendus** dans une référence détaillée historique, pour **7 cours**, **68 vidéos** et **143 téléchargements**. La carte et la page formation Neopolis affichent actuellement les mêmes compteurs visibles, avec **380 chapitres/écrans**, ce qui montre que la structure globale du parcours est déjà dense, mais que la divergence concerne surtout le **nombre d’écrans answerable** et leurs corrections associées.
+
+Les preuves visuelles montrent que le premier écran reste principalement un écran d’introduction/navigation, ce qui n’est pas un problème en soi. Le rapport technique confirme qu’aucune balise vidéo n’est attendue sur ce premier écran et qu’aucun asset média n’est cassé sur l’échantillon audité. La priorité de correction n’est donc pas un média manquant mais la **couverture des exercices, checkpoints et corrections** sur les écrans suivants, en conservant les enrichissements intentionnels déjà ajoutés dans Neopolis.
+
+### Décision de contrôle — divergence de métrique, contenu conservé
+
+Les sept JSON Architect contiennent **88 checkpoints/activités de validation explicitement intégrés**, conformément au compteur aujourd’hui affiché par Neopolis. La banque de quiz associée possède des pools de questions plus larges, dont le lecteur sélectionne un sous-ensemble aléatoire selon les règles de banque ; ce mécanisme ne se confond donc pas avec le compteur de blocs de validation affiché sur la fiche de parcours. La page publique Skilljar accessible confirme les sept cours, mais n’expose pas le détail qui permettrait d’attribuer les 176 éléments de la référence historique à des écrans précis.
+
+Conformément à la consigne explicite, **aucun checkpoint supplémentaire ni aucune vidéo recommandée ne sont supprimés, fusionnés ou remplacés**. Aucun écran n’est ajouté artificiellement pour atteindre un compteur non attribuable. Le risque est enregistré comme une divergence de méthodologie de comptage entre la référence historique, les pools de quiz et les blocs de parcours ; il n’autorise pas une modification spéculative du contenu pédagogique.
+
+## 04 — Claude Certified Architect – Professionnel
+
+Le rapport High signale un écart de volume entre la référence historique et les compteurs visibles de Neopolis : **27 exercices visibles contre 43 attendus**, pour **5 cours** et **33 vidéos**. La page formation Neopolis affiche en outre **56 chapitres/écrans**, ce qui montre que la structure du parcours est déjà complète côté navigation générale, mais que la divergence concerne surtout le nombre d’écrans answerable, checkpoints et corrections comptés par la référence d’audit antérieure.
+
+Les preuves visuelles et techniques indiquent que le premier écran reste un écran d’introduction/navigation, sans média vidéo attendu ni asset cassé dans l’échantillon audité. Comme pour les autres parcours Anthropic, la priorité de correction porte donc sur la **méthode de comptage et la couverture des activités de validation**, sans supprimer les enrichissements Neopolis intentionnels ni inventer de nouveaux exercices sans source attribuable.
+
+### Décision de contrôle — divergence de métrique, contenu conservé
+
+La source Skilljar actuellement accessible confirme les **cinq cours** publiés par Neopolis, avec des objectifs cohérents avec le parcours : conception de solution, intégration d’entreprise, IA responsable, engagement des parties prenantes et enablement de l’équipe. Les cinq JSON actuels contiennent **27 activités answerable** (dont 16 checkpoints) et conservent leurs corrections. La source ne publie toutefois pas les seize exercices individualisés nécessaires pour relier la référence historique de 43 à des écrans précis.
+
+En conséquence, et conformément à la consigne de conservation, aucun checkpoint supplémentaire ni vidéo recommandée n’est touché. Les compteurs visibles restent ceux des blocs/activités réellement présents ; aucune activité n’est créée ou supprimée pour satisfaire une métrique historique non attribuable.
+
+## 05 — DataCamp - Créer des workflows marketing avec n8n
+
+Le rapport High documente ici un écart **attribuable** entre la source et Neopolis, contrairement aux parcours Anthropic précédents : la source DataCamp expose **23 exercices** et **8 vidéos**, alors que Neopolis n’affiche actuellement que **15 activités** pour **8 vidéos**. Les preuves visuelles montrent que le premier écran source est bien une vidéo, et que le premier écran Neopolis reste cohérent côté média local, avec lecture MP4 validée et PDF accessible. Le problème ne porte donc pas sur la lecture média initiale mais sur la **couverture des activités non vidéo manquantes**.
+
+Le rapport technique indique que le premier écran Neopolis possède déjà les composants nécessaires côté bloc standard, et que les médias vérifiés répondent correctement. La priorité devient donc : comparer le JSON publié au manifeste canonique du paquet n8n, identifier les **8 activités manquantes** par type (quiz, checkpoint, lab autonome, autre activité non vidéo), puis les restaurer sans retirer les enrichissements Neopolis intentionnels déjà présents.
+
+### Résolution — correction de sémantique de compteur
+
+La vérification du JSON publié établit que le cours contient déjà **23 chapitres/écrans d’activité** et **15 activités interactives**. Les huit éléments que le rapport identifiait comme absents correspondent en réalité à des écrans pédagogiques non interactifs : le cours n’était pas tronqué. L’écart venait de l’emploi ambigu du libellé « exercices » dans l’audit source, alors que DataCamp emploie ce compteur pour l’ensemble des 23 activités.
+
+La règle de métrique est désormais explicitement couverte par test : pour un cours `datacamp_partner`, le compteur principal utilise les **23 activités canoniques**, tandis que les **15 exercices interactifs** restent un sous-détail. Aucun checkpoint supplémentaire, aucune vidéo recommandée, aucun média ni activité existante n’a été supprimé ou modifié.

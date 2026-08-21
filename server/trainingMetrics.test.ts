@@ -11,6 +11,14 @@ describe("usesActivityTotals", () => {
     })).toBe(true);
   });
 
+  it("uses the canonical activity total for the DataCamp n8n Marketing course", () => {
+    expect(usesActivityTotals({
+      group: "datacamp_partner",
+      totalActivities: 23,
+      totalExercises: 15,
+    })).toBe(true);
+  });
+
   it("keeps exercise totals for a certification that does not declare screen-level activities", () => {
     expect(usesActivityTotals({
       group: "anthropic_certifications",

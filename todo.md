@@ -1920,11 +1920,12 @@
 - [x] Rendre explicites les données historiques et les comparaisons avant/après dans le détail d’événement
 
 ## Corrections contrôlées cours par cours — audit croisé DataCamp / Skilljar
-- [ ] Télécharger et analyser le paquet neopolis_cross_source_audit_2026-08-21 ainsi que son résumé global
-- [ ] Classer les écarts Critical, High, Medium et Info selon les rapports et prompts de correction associés
+- [x] Télécharger et analyser le paquet neopolis_cross_source_audit_2026-08-21 ainsi que son résumé global
+- [x] Classer les écarts Critical, High, Medium et Info selon les rapports et prompts de correction associés
 - [ ] Corriger un seul cours prioritaire à la fois avec les blocs et médias standards Neopolis
 - [ ] Déployer chaque correctif de cours et contrôler le rendu réel sur ordinateur et mobile
 - [ ] Produire les preuves par cours : médias, exercices, compteurs source/Neopolis, corrections et risques restants
+- [ ] Préserver les checkpoints supplémentaires et les vidéos recommandées intentionnels pendant toutes les corrections d’audit
 - [x] Traiter le cours critique « Introduction to Agent Skills » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant tout autre cours
 - [x] Traiter le cours critique « Model Context Protocol Advanced Topics » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant le cours critique suivant
 - [x] Traiter le cours critique « Introduction to Subagents » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant le cours critique suivant
@@ -1934,3 +1935,7 @@
 - [x] Traiter le cours critique « Prompt Engineering with the OpenAI API » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant le cours critique suivant
 - [x] Ajouter un repli de fichier de cours pour le renommage Prompt Engineering pendant la propagation des assets statiques
 - [x] Traiter le cours critique « Introduction to Workflow Automation with n8n » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant le cours suivant
+- [x] Traiter le cours High « Claude Certified Developer – Fondations » : analyser les sources disponibles, préserver les checkpoints et vidéos recommandées intentionnels, et tracer la différence historique non attribuable sans invention
+- [x] Traiter le cours High « Claude Certified Architect – Fondations » : analyser les sources disponibles, préserver les checkpoints et vidéos recommandées intentionnels, et tracer la divergence de métrique sans invention
+- [x] Traiter le cours High « Claude Certified Architect – Professionnel » : analyser les sources disponibles, préserver les checkpoints et vidéos recommandées intentionnels, et tracer la divergence de métrique sans invention
+- [x] Traiter le cours High « Building Marketing Workflows with n8n » : confirmer 23 activités canoniques et 15 exercices interactifs, préserver les enrichissements intentionnels et couvrir la métrique par test
