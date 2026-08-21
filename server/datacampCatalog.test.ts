@@ -32,6 +32,12 @@ const geminiNotebookLmCourse = JSON.parse(
     "utf8",
   ),
 );
+const promptEngineeringCourse = JSON.parse(
+  readFileSync(
+    new URL("../client/public/data/courses/prompt_engineering_with_openai_api__01.json", import.meta.url),
+    "utf8",
+  ),
+);
 
 describe("catalogue DataCamp", () => {
   it("exposes Agent Skills comme un cours navigable avec ses compteurs canoniques", () => {
@@ -222,6 +228,47 @@ describe("catalogue DataCamp", () => {
     const firstActivity = geminiNotebookLmCourse.lessons[0].chapters[0];
     const preparation = firstActivity.blocks.find(
       (block: { id?: string }) => block.id === "neopolis_gemini_notebooklm_environment_preparation",
+    );
+
+    expect(preparation).toMatchObject({
+      type: "content",
+      body: {
+        fr: expect.stringContaining("Avant de commencer"),
+        en: expect.stringContaining("Before you start"),
+      },
+    });
+    expect(firstActivity.blocks.findIndex((block: { id?: string }) => block.id === preparation.id)).toBe(0);
+  });
+
+  it("exposes Prompt Engineering comme un cours navigable avec ses compteurs canoniques", () => {
+    const certification = trainingIndex.certifications.find(
+      (item) => item.id === "datacamp_prompt_engineering_with_the_openai_api",
+    );
+    const course = trainingIndex.courses.find(
+      (item) => item.id === "prompt_engineering_with_the_openai_api__01",
+    );
+
+    expect(certification).toMatchObject({
+      courseCount: 1,
+      totalLessons: 4,
+      totalActivities: 55,
+      totalVideos: 15,
+      totalDownloads: 4,
+      courses: ["prompt_engineering_with_the_openai_api__01"],
+    });
+    expect(course).toMatchObject({
+      certId: "datacamp_prompt_engineering_with_the_openai_api",
+      lessonCount: 4,
+      totalActivities: 55,
+      videoCount: 15,
+      downloadCount: 4,
+    });
+  });
+
+  it("prépare l'environnement avant la première vidéo Prompt Engineering", () => {
+    const firstActivity = promptEngineeringCourse.lessons[0].chapters[0];
+    const preparation = firstActivity.blocks.find(
+      (block: { id?: string }) => block.id === "neopolis_prompt_engineering_openai_environment_preparation",
     );
 
     expect(preparation).toMatchObject({

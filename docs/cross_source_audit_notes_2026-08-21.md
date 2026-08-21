@@ -105,3 +105,29 @@ Les pages de preuve illustrent la fiche DataCamp et sa première vidéo, tandis 
 | Tests | Régression catalogue et préparation | Vitest : 8 tests ciblés réussis ; TypeScript et validation des cours sans erreur. | Conforme |
 
 Après la propagation du bundle de production, aucun écart critique résiduel du rapport croisé n’est constaté pour ce cours.
+
+## 22. DataCamp — IA pratique avec Google Gemini et NotebookLM
+
+Le rapport croisé classe cette formation en **Critical** : il signalait une carte à 33 activités au lieu de 48, une première vidéo locale instable et l’exigence de vérifier que chaque activité non vidéo reste réellement answerable. Les données canoniques du cours recensent 4 chapitres, 48 activités, 15 vidéos, 15 tris interactifs, 10 QCM, 5 activités de prompting et 4 téléchargements.
+
+### Preuves finales de conformité — publications `baa3f328`, `0876bf13` et `981ce54a`
+
+| Contrôle | Référence source ou règle | Résultat constaté | Statut |
+|---|---|---|---|
+| Compteurs catalogue | 4 chapitres, 48 activités, 15 vidéos, 4 téléchargements | La fiche publique affiche `1 cours`, `48 activités`, `15 vidéos`, `4 téléchargements` et une carte cliquable. | Conforme |
+| Préparation d’environnement | Prompt de correction, TP autonome | Le premier écran affiche les prérequis Google, le dossier de test non sensible, la vérification des sorties et la séquence Neopolis avant la vidéo. | Conforme |
+| Activités interactives | 33 activités non vidéo attendues | 15 tris, 10 QCM et 5 exercices de prompting sont présents ; les 6 QCM simples ont tous des options et une réponse correcte déclarée. | Conforme |
+| Médias corrigés | 7 MP4 instables signalés | Les 7 vidéos ont été restaurées depuis le ZIP Drive canonique sous des clés ASCII sûres ; `ffprobe` confirme une piste vidéo et une piste audio sur chaque fichier. | Conforme |
+| Lecture de production | Tous les médias locaux doivent être lisibles | Les 8 vidéos non modifiées répondent HTTP `206`, type `video/mp4`. Le contrôle de reprise des 7 vidéos réuploadées confirme 7/7 lisibles via `/api/assets/`, au premier essai lors de l’audit de clôture. | Conforme |
+| Reprise streaming | Erreurs de stockage transitoires | Le proxy réessaie cinq fois, renouvelle une signature après échec et réutilise une signature éphémère par média. Tests automatisés : 18 réussis. | Conforme |
+| Mobile | Lisibilité et actions visibles | À 375 × 812, la préparation, le lecteur, les slides PDF, la transcription, le téléchargement et la navigation restent visibles sans troncature. | Conforme |
+
+Le cours conserve la progression séquentielle, les tags de compétences du chapitre, les modalités de validation existantes et les liens de médias locaux `/api/assets/`. Aucun écart critique du rapport croisé ne reste ouvert pour cette formation.
+
+## 28. DataCamp — Prompt Engineering avec l’API OpenAI
+
+Le rapport croisé classe cette formation en **Critical**. Il compare les **55 exercices** et **15 vidéos** de la source DataCamp à une carte Neopolis auditée à **4 chapitres et 0 activité**, ainsi qu’à une page de formation affichant **1 cours, 4 chapitres, 0 activité, 40 exercices, 15 vidéos et 4 téléchargements**.
+
+Les preuves visuelles du PDF montrent la fiche DataCamp avec un cours complet et un premier écran vidéo, alors que la capture Neopolis historique affiche bien le premier écran pédagogique mais conserve une fiche de catalogue incohérente à **0 activité**. La page de contrôle technique indique aussi qu’au moment de l’audit, le premier écran source exposait **9 boutons**, contre **10 boutons** côté Neopolis, avec un média principal détecté en **mp3** et non comme vidéo visible sur le premier écran.
+
+Les exigences de correction sont donc : rétablir les compteurs catalogue à **55 activités**, confirmer que le cours publié expose un écran answerable pour chaque activité non vidéo, vérifier l’intégrité des médias locaux du premier écran (audio, sous-titres, PDF) et conserver la préparation d’environnement ainsi que le verrouillage séquentiel Neopolis sans UI libre.
