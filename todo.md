@@ -1815,6 +1815,7 @@
 - [x] Générer et auditer le cours « Automatisation de workflows intermédiaires avec n8n » : 4 chapitres, 40 activités, 13 vidéos, 27 TP autonomes et médias locaux validés
 - [x] Générer et auditer le cours « Développement logiciel avec Claude Code » : 4 chapitres, 43 activités, 15 vidéos, 28 exercices interactifs et 4 supports téléchargeables locaux
 - [x] Générer et auditer le cours « Claude 101 » : 4 chapitres, 20 activités, 2 vidéos, 17 activités interactives et 2 supports téléchargeables locaux
+- [x] Générer et auditer le cours « Claude Code en action » : 4 chapitres, 31 activités, 9 vidéos, 22 exercices interactifs et médias locaux validés
 - [ ] Obtenir ou régénérer les états préchargés non tronqués du paquet OpenAI pilote avant toute importation de ses réponses et tris interactifs
 - [x] Convertir « Travailler avec l’API OpenAI » depuis les champs canoniques du manifeste alternatif, avec médias locaux et TP autonomes
 - [ ] Obtenir le PDF local canonique `C-DUETDR-B-m0-l5-file-5.pdf` du paquet Gemini Drive avant d’importer ses deux activités visuelles

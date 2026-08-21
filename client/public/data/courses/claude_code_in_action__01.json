@@ -1,0 +1,1715 @@
+{
+  "courseId": "claude_code_in_action__01",
+  "sourceCourseTitle": "Claude Code in Action",
+  "datacampImport": {
+    "schemaVersion": "neopolis.datacamp_course.v1",
+    "sourceProvider": "DataCamp",
+    "sourceCourseSlug": "claude-code-in-action",
+    "sourceLanguage": "fr-FR",
+    "expected": {
+      "chapters_expected": 4,
+      "chapters_extracted": 4,
+      "activities_expected_from_outline": 31,
+      "activities_extracted": 31,
+      "videos_expected_from_chapter_metadata": 9,
+      "videos_extracted": 9,
+      "exercise_types": {
+        "VideoExercise": 9,
+        "VisualExercise": 9,
+        "ConsoleExercise": 9,
+        "DragAndDropExercise": 4
+      },
+      "referenced_downloads_existing": 36,
+      "referenced_downloads_total": 36,
+      "referenced_downloaded_bytes": 1453287790,
+      "mp4_downloaded": 9,
+      "mp4_valid_video_audio": 9,
+      "mp4_invalid": 0,
+      "mp3_downloaded": 9,
+      "mp3_valid": 9,
+      "vtt_downloaded": 9,
+      "vtt_valid": 9,
+      "slides_pdfs_downloaded": 0,
+      "slides_pdfs_valid": 0,
+      "video_transcripts_extracted": 9
+    },
+    "competencyTagging": "lesson_content_signals_v1"
+  },
+  "lessons": [
+    {
+      "id": "datacamp_ch01",
+      "title": {
+        "en": "Steer the Work",
+        "fr": "Steer the Work"
+      },
+      "description": {
+        "en": "A long session drifts unless you shape it. Scope the work with plan mode, direct compaction so the summary keeps what matters, use the rewind menu to course-correct, set a goal when you can describe done better than the steps, and run parallel work in worktrees.",
+        "fr": "A long session drifts unless you shape it. Scope the work with plan mode, direct compaction so the summary keeps what matters, use the rewind menu to course-correct, set a goal when you can describe done better than the steps, and run parallel work in worktrees."
+      },
+      "competencyTags": [
+        "ai_solution_design"
+      ],
+      "recommendedVideos": [],
+      "recommendedVideosManaged": false,
+      "chapters": [
+        {
+          "id": "dc_ch01_act01",
+          "title": {
+            "en": "Video: Steering Long Sessions",
+            "fr": "Video: Steering Long Sessions"
+          },
+          "description": {
+            "en": "A long session drifts unless you shape it. Scope the work with plan mode, direct compaction so the summary keeps what matters, use the rewind menu to course-correct, set a goal when you can describe done better than the steps, and run parallel work in worktrees.",
+            "fr": "A long session drifts unless you shape it. Scope the work with plan mode, direct compaction so the summary keeps what matters, use the rewind menu to course-correct, set a goal when you can describe done better than the steps, and run parallel work in worktrees."
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_1_act_01_video",
+              "title": {
+                "en": "Video: Steering Long Sessions",
+                "fr": "Video: Steering Long Sessions"
+              },
+              "mp4Url": "/api/assets/ch01_ex01_video_steering_long_sessions_476f2ecf.mp4",
+              "audioUrl": "/api/assets/ch01_ex01_video_steering_long_sessions_0d08a7b1.mp3",
+              "subtitleUrlEn": "/api/assets/ch01_ex01_video_steering_long_sessions_en_15d00822.vtt",
+              "transcript": "1. Video: Steering Long Sessions\nYou can prompt Claude and watch it finish a quick task, but running a long one is much harder. Refactoring across a dozen files or implementing a new feature can take hours, and if you aren't steering Claude in the right direction, it can potentially take longer. But there are many ways to help Claude during these long sessions. There are two important habits. The first is to scope the work before Claude starts. So if you use plan mode, Claude will do the research in read-only mode and hand you a plan. If the plan has been provided, actually read through it. The more thorough the plan, the less likely that you're going to have hiccups when Claude executes. And when it comes to revising the plan, just ask Claude to add it where you want. It's much faster to iterate over a plan than it is to simply hope for the best. The second habit is to steer Claude in the right direction. And here are some ways that you can do that. Compact summarizes your conversation and uses that as a new context while deleting the old, freeing up your context window. However, there is a risk that something important will be removed, causing Claude to drift in the wrong direction. So when you do the compact command, add in the changes you want. And adding instructions after the command tells Claude how to summarize. So if you were done debugging a while ago but want to just focus on those API changes, well here you can do that. When Claude goes down the wrong path, you don't have to prompt your way out of it. Rewind brings you to the last checkpoint. To open it, double tap escape on an empty prompt and you'll get the rewind menu. Every user prompt creates a checkpoint that you can revert back to with different options. One, you can restore the code, conversation, or both. Two, summarize from here will summarize everything after the checkpoint. Great if you had a side conversation and just want to free up some space. And summarize up to here will summarize everything before the checkpoint. So this is great if you want to summarize a long setup phase, but keep the implementation parts. When we talk about steering, we assume that you are hands-on. If you want something a little bit more autonomous, there is the goal and loop. Goal sets a completion condition. You describe what done looks like and Claude keeps working across turns until a fast evaluator confirms that those conditions have been met. Instead of just stopping for the first time, it thinks it's finished. So for example, I could do /goal, all tests in source billing, pass, and the type checker report zero errors. Doing /goal clear will cancel it. And one constraint here is that the evaluator only reads the transcript, so the condition has to be checkable from the output that Claude produces, like the test results that it ran. Loop runs a prompt on an interval between turns, fixed or self-paced. Use it to pull something external like a CI run or a deploy and act when the state changes. You can press escape to stop it. So our steering metaphor assumes one steering wheel in one car. But when we're working with multiple agents on the same code base, we don't want to have two steering wheels in one car. Well, that's just unsafe. This is where work trees come in. It prevents two or more Claude sessions from fighting over files in a repository. This prevents conflicts by having three independent file trees. On exit, a clean work tree is auto removed. A dot work tree include file at the repo root lists gitignored files to copy into each work tree, which is useful for a environment variable file or a local configuration that you need, but don't want to commit into the version control. When it comes to handling long Claude Code sessions, scope your work first and then steer. Direct your compaction so the summary keeps what matters. Use the rewind menu to course correct. Set a goal when you can describe done better than you can describe the steps and run parallel work and work trees. Do that and you can trust a long run without babysitting it.",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Video: Steering Long Sessions",
+                  "text": "You can prompt Claude and watch it finish a quick task, but running a long one is much harder. Refactoring across a dozen files or implementing a new feature can take hours, and if you aren't steering Claude in the right direction, it can potentially take longer. But there are many ways to help Claude during these long sessions. There are two important habits. The first is to scope the work before Claude starts. So if you use plan mode, Claude will do the research in read-only mode and hand you a plan. If the plan has been provided, actually read through it. The more thorough the plan, the less likely that you're going to have hiccups when Claude executes. And when it comes to revising the plan, just ask Claude to add it where you want. It's much faster to iterate over a plan than it is to simply hope for the best. The second habit is to steer Claude in the right direction. And here are some ways that you can do that. Compact summarizes your conversation and uses that as a new context while deleting the old, freeing up your context window. However, there is a risk that something important will be removed, causing Claude to drift in the wrong direction. So when you do the compact command, add in the changes you want. And adding instructions after the command tells Claude how to summarize. So if you were done debugging a while ago but want to just focus on those API changes, well here you can do that. When Claude goes down the wrong path, you don't have to prompt your way out of it. Rewind brings you to the last checkpoint. To open it, double tap escape on an empty prompt and you'll get the rewind menu. Every user prompt creates a checkpoint that you can revert back to with different options. One, you can restore the code, conversation, or both. Two, summarize from here will summarize everything after the checkpoint. Great if you had a side conversation and just want to free up some space. And summarize up to here will summarize everything before the checkpoint. So this is great if you want to summarize a long setup phase, but keep the implementation parts. When we talk about steering, we assume that you are hands-on. If you want something a little bit more autonomous, there is the goal and loop. Goal sets a completion condition. You describe what done looks like and Claude keeps working across turns until a fast evaluator confirms that those conditions have been met. Instead of just stopping for the first time, it thinks it's finished. So for example, I could do /goal, all tests in source billing, pass, and the type checker report zero errors. Doing /goal clear will cancel it. And one constraint here is that the evaluator only reads the transcript, so the condition has to be checkable from the output that Claude produces, like the test results that it ran. Loop runs a prompt on an interval between turns, fixed or self-paced. Use it to pull something external like a CI run or a deploy and act when the state changes. You can press escape to stop it. So our steering metaphor assumes one steering wheel in one car. But when we're working with multiple agents on the same code base, we don't want to have two steering wheels in one car. Well, that's just unsafe. This is where work trees come in. It prevents two or more Claude sessions from fighting over files in a repository. This prevents conflicts by having three independent file trees. On exit, a clean work tree is auto removed. A dot work tree include file at the repo root lists gitignored files to copy into each work tree, which is useful for a environment variable file or a local configuration that you need, but don't want to commit into the version control. When it comes to handling long Claude Code sessions, scope your work first and then steer. Direct your compaction so the summary keeps what matters. Use the rewind menu to course correct. Set a goal when you can describe done better than you can describe the steps and run parallel work and work trees. Do that and you can trust a long run without babysitting it."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act02",
+          "title": {
+            "en": "Steering Long Sessions",
+            "fr": "Steering Long Sessions"
+          },
+          "description": {
+            "en": "A long session drifts unless you shape it. Scope the work with plan mode, direct compaction so the summary keeps what matters, use the rewind menu to course-correct, set a goal when you can describe done better than the steps, and run parallel work in worktrees.",
+            "fr": "A long session drifts unless you shape it. Scope the work with plan mode, direct compaction so the summary keeps what matters, use the rewind menu to course-correct, set a goal when you can describe done better than the steps, and run parallel work in worktrees."
+          },
+          "type": "quiz",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "multi_choice_exercise",
+              "id": "dc_1_act_02_qcm_multiple",
+              "question": {
+                "en": "Read the article, then answer the question below.\n\nFor the rest of this course you'll be working on queries, a small project your team uses to pull reports out of an online store's database: which orders are still pending, what stock is running low, who your best customers are.\n\nRight now you are three hours into a Claude Code session on it. The first hour went on a database connection bug, which you fixed and moved past. Since then you have been building an alert for orders left pending too long, and the context window is filling up. Your next task builds directly on that alert.\n\nWhich move frees up the context window while keeping the work that matters?",
+                "fr": "Read the article, then answer the question below.\n\nFor the rest of this course you'll be working on queries, a small project your team uses to pull reports out of an online store's database: which orders are still pending, what stock is running low, who your best customers are.\n\nRight now you are three hours into a Claude Code session on it. The first hour went on a database connection bug, which you fixed and moved past. Since then you have been building an alert for orders left pending too long, and the context window is filling up. Your next task builds directly on that alert.\n\nWhich move frees up the context window while keeping the work that matters?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Run /compact on its own and let Claude decide what the summary keeps.",
+                    "fr": "Run /compact on its own and let Claude decide what the summary keeps."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Double tap escape and restore the code and conversation to the last checkpoint.",
+                    "fr": "Double tap escape and restore the code and conversation to the last checkpoint."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Run /compact Focus on the pending-orders alert implementation, so the summary keeps that thread.",
+                    "fr": "Run /compact Focus on the pending-orders alert implementation, so the summary keeps that thread."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Run /clear and re-explain the task from scratch.",
+                    "fr": "Run /clear and re-explain the task from scratch."
+                  }
+                }
+              ],
+              "correctAnswers": "c",
+              "explanation": {
+                "en": "Great choice! Anything you type after /compact shapes the summary. Naming the thread you are still working on carries it through compaction while the finished debugging detour falls away.",
+                "fr": "Great choice! Anything you type after /compact shapes the summary. Naming the thread you are still working on carries it through compaction while the finished debugging detour falls away."
+              },
+              "hint": {
+                "en": "Anything you type after /compact tells Claude how to summarize, so the summary keeps the thread you name.\n\nRewind and /clear both throw work away, while compaction is the move that frees space and carries the session forward.",
+                "fr": "Anything you type after /compact tells Claude how to summarize, so the summary keeps the thread you name.\n\nRewind and /clear both throw work away, while compaction is the move that frees space and carries the session forward."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act03",
+          "title": {
+            "en": "Scope it before you run it",
+            "fr": "Scope it before you run it"
+          },
+          "description": {
+            "en": "A long session drifts unless you shape it. Scope the work with plan mode, direct compaction so the summary keeps what matters, use the rewind menu to course-correct, set a goal when you can describe done better than the steps, and run parallel work in worktrees.",
+            "fr": "A long session drifts unless you shape it. Scope the work with plan mode, direct compaction so the summary keeps what matters, use the rewind menu to course-correct, set a goal when you can describe done better than the steps, and run parallel work in worktrees."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_1_act_03_code",
+              "title": {
+                "en": "Scope it before you run it",
+                "fr": "Scope it before you run it"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Start Claude Code with claude.\n\nEnter plan mode with /plan, then ask Claude to plan the work described in task.md. If there are initial follow-up questions from Claude, answer them any way you wish.\n\nRead the plan, then ask Claude to revise it so it reuses the existing getPendingOrders() query instead of writing a new one.\n\nType /exit to exit Claude Code.",
+                "fr": "Start Claude Code with claude.\n\nEnter plan mode with /plan, then ask Claude to plan the work described in task.md. If there are initial follow-up questions from Claude, answer them any way you wish.\n\nRead the plan, then ask Claude to revise it so it reuses the existing getPendingOrders() query instead of writing a new one.\n\nType /exit to exit Claude Code."
+              },
+              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\n# The shipped hooks launch a nested Claude session on every edit, which would\n# slow this exercise down. Chapter 2 wires hooks up deliberately instead.\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
+              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Type `/plan` to enter plan mode.\n# 3. Ask Claude: \"Plan the work in @task.md. Don't write any code yet.\"\n# 4. Ask Claude: \"Reuse the existing getPendingOrders query in src/queries/order_queries.ts instead of adding a new one.\"\n# 5. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/1_1/history.jsonl ~/.claude/.",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Run claude, then type /plan. You can also cycle to plan mode with Shift+Tab, and the status bar shows the mode you are in.\n\nA prompt like Plan the work in @task.md. Don't write any code yet. keeps Claude researching instead of editing.\n\nRevising is just another message, for example Reuse the existing getPendingOrders query in src/queries/order_queries.ts instead of adding a new one.",
+                "fr": "Run claude, then type /plan. You can also cycle to plan mode with Shift+Tab, and the status bar shows the mode you are in.\n\nA prompt like Plan the work in @task.md. Don't write any code yet. keeps Claude researching instead of editing.\n\nRevising is just another message, for example Reuse the existing getPendingOrders query in src/queries/order_queries.ts instead of adding a new one."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act04",
+          "title": {
+            "en": "Rewind, goal, or worktree?",
+            "fr": "Rewind, goal, or worktree?"
+          },
+          "description": {
+            "en": "A long session drifts unless you shape it. Scope the work with plan mode, direct compaction so the summary keeps what matters, use the rewind menu to course-correct, set a goal when you can describe done better than the steps, and run parallel work in worktrees.",
+            "fr": "A long session drifts unless you shape it. Scope the work with plan mode, direct compaction so the summary keeps what matters, use the rewind menu to course-correct, set a goal when you can describe done better than the steps, and run parallel work in worktrees."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "bucket_sort",
+              "id": "dc_1_act_04_bucket_sort",
+              "title": {
+                "en": "Rewind, goal, or worktree?",
+                "fr": "Rewind, goal, or worktree?"
+              },
+              "instructions": {
+                "en": "Classify each situation as a job for the rewind menu, a goal, or a worktree.",
+                "fr": "Classify each situation as a job for the rewind menu, a goal, or a worktree."
+              },
+              "buckets": [
+                {
+                  "id": "rewind",
+                  "label": {
+                    "en": "Rewind menu",
+                    "fr": "Rewind menu"
+                  }
+                },
+                {
+                  "id": "goal",
+                  "label": {
+                    "en": "Goal",
+                    "fr": "Goal"
+                  }
+                },
+                {
+                  "id": "worktrees",
+                  "label": {
+                    "en": "Worktrees",
+                    "fr": "Worktrees"
+                  }
+                }
+              ],
+              "cards": [
+                {
+                  "id": "wrong_turn",
+                  "text": {
+                    "en": "Claude drifted three prompts ago, and the files are now in a worse state than when it started.",
+                    "fr": "Claude drifted three prompts ago, and the files are now in a worse state than when it started."
+                  },
+                  "correctBucket": "rewind"
+                },
+                {
+                  "id": "long_setup",
+                  "text": {
+                    "en": "A long setup phase is eating context, but the implementation turns after it need to stay intact.",
+                    "fr": "A long setup phase is eating context, but the implementation turns after it need to stay intact."
+                  },
+                  "correctBucket": "rewind"
+                },
+                {
+                  "id": "done_condition",
+                  "text": {
+                    "en": "You can describe what finished looks like, tests passing and a clean type check, more precisely than you can list the steps.",
+                    "fr": "You can describe what finished looks like, tests passing and a clean type check, more precisely than you can list the steps."
+                  },
+                  "correctBucket": "goal"
+                },
+                {
+                  "id": "premature_done",
+                  "text": {
+                    "en": "Claude keeps calling the task finished while the checks it ran are still failing.",
+                    "fr": "Claude keeps calling the task finished while the checks it ran are still failing."
+                  },
+                  "correctBucket": "goal"
+                },
+                {
+                  "id": "parallel_sessions",
+                  "text": {
+                    "en": "Two Claude sessions need to work on the same repository at once without overwriting each other's files.",
+                    "fr": "Two Claude sessions need to work on the same repository at once without overwriting each other's files."
+                  },
+                  "correctBucket": "worktrees"
+                },
+                {
+                  "id": "ignored_config",
+                  "text": {
+                    "en": "Every parallel session needs its own copy of a git-ignored environment file to run.",
+                    "fr": "Every parallel session needs its own copy of a git-ignored environment file to run."
+                  },
+                  "correctBucket": "worktrees"
+                }
+              ],
+              "feedback": {
+                "en": "Nice work! Rewind is how you undo a wrong turn or reshape the conversation around a checkpoint. A goal is how you hand Claude a finish line instead of a step list. Worktrees are how you run more than one session on a repository without a collision.",
+                "fr": "Nice work! Rewind is how you undo a wrong turn or reshape the conversation around a checkpoint. A goal is how you hand Claude a finish line instead of a step list. Worktrees are how you run more than one session on a repository without a collision."
+              },
+              "hint": {
+                "en": "The rewind menu works backwards over what already happened, restoring code or conversation to a checkpoint, or summarizing either side of it.\n\nA goal sets a completion condition, and Claude keeps working across turns until a fast evaluator confirms the condition is met.\n\nWorktrees give each session its own independent file tree, so parallel agents cannot clobber each other's changes.",
+                "fr": "The rewind menu works backwards over what already happened, restoring code or conversation to a checkpoint, or summarizing either side of it.\n\nA goal sets a completion condition, and Claude keeps working across turns until a fast evaluator confirms the condition is met.\n\nWorktrees give each session its own independent file tree, so parallel agents cannot clobber each other's changes."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "datacamp_ch02",
+      "title": {
+        "en": "Configure Claude",
+        "fr": "Configure Claude"
+      },
+      "description": {
+        "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+        "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+      },
+      "competencyTags": [
+        "prompt_engineering"
+      ],
+      "recommendedVideos": [],
+      "recommendedVideosManaged": false,
+      "chapters": [
+        {
+          "id": "dc_ch02_act01",
+          "title": {
+            "en": "Video: A CLAUDE.md That Follows",
+            "fr": "Video: A CLAUDE.md That Follows"
+          },
+          "description": {
+            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+            "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_2_act_01_video",
+              "title": {
+                "en": "Video: A CLAUDE.md That Follows",
+                "fr": "Video: A CLAUDE.md That Follows"
+              },
+              "mp4Url": "/api/assets/ch02_ex01_video_a_claude_md_that_follows_b8e8bed6.mp4",
+              "audioUrl": "/api/assets/ch02_ex01_video_a_claude_md_that_follows_7d7d1375.mp3",
+              "subtitleUrlEn": "/api/assets/ch02_ex01_video_a_claude_md_that_follows_en_d6387cf6.vtt",
+              "transcript": "1. Video: A CLAUDE.md That Follows\nThe CLAUDE.md file is not an enforced configuration, meaning if you keep adding to one gigantic file, the less Claude is able to follow it correctly. Here's how you can keep your CLAUDE.md file tight and to follow your instructions much more reliably. Simply put, the longer the file gets, the more it has to compete with itself. First, is CLAUDE.md even the right tool for the job? A hard rule like never push to main belongs in a PreToolUse hook instead. The hook is designed to stop the push even when Claude does try to do it. The CLAUDE.md file doesn't just exist in your project file, there's three other places. One's your managed policy, then your user file, then your project file, and finally local. Claude loads every memory file together. Nothing gets dropped, and org-policy is always in play. Local is for what's just yours in this project. Say you're refactoring off the sprint and want Claude to hold your architectural decisions in mind. That goes in local, not the shared project file. To make your CLAUDE.md files easier to maintain, use the path-to-file syntax to split up your instructions. Just know what they buy you, though. Claude expands imported files inline at launch right alongside the file that references them. Imports help you organize a large CLAUDE.md file, but everything still loads up front and they don't reduce context. So we can make our CLAUDE.md file much shorter. Whether Claude obeys it comes down to phrasing, and most rules fail because they're pretty vague. First, be specific and checkable. Don't put things like, follow best practices. Do you even know what that means? Well, don't expect Claude to magically. Put new API routes in source API handlers, one per file. Well, that's explicit, so put that instead. Name the replacement. Don't use default exports. Leave the alternative open. Use name exports, not default exports. Close that potential misinterpretation. And then realize that emphasis is a budget. Important and you must raises a rule priority, but only relative to everything quieter around it. Spend them on the two or three rules that hurt when broken. The file also stays under revision. When Claude does the wrong thing, well, treat that as a bug report against your CLAUDE.md file. Tell it, add that to the CLAUDE.md file, and it'll write that rule for you. Treat your CLAUDE.md file like production code. If you can't justify a line, well, delete it. Move enforcement to hooks, organize with imports, and scope past specific conventions into your rules so that they load only when they apply. The leaner the file, the more of it Claude follows.",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Video: A CLAUDE.md That Follows",
+                  "text": "The CLAUDE.md file is not an enforced configuration, meaning if you keep adding to one gigantic file, the less Claude is able to follow it correctly. Here's how you can keep your CLAUDE.md file tight and to follow your instructions much more reliably. Simply put, the longer the file gets, the more it has to compete with itself. First, is CLAUDE.md even the right tool for the job? A hard rule like never push to main belongs in a PreToolUse hook instead. The hook is designed to stop the push even when Claude does try to do it. The CLAUDE.md file doesn't just exist in your project file, there's three other places. One's your managed policy, then your user file, then your project file, and finally local. Claude loads every memory file together. Nothing gets dropped, and org-policy is always in play. Local is for what's just yours in this project. Say you're refactoring off the sprint and want Claude to hold your architectural decisions in mind. That goes in local, not the shared project file. To make your CLAUDE.md files easier to maintain, use the path-to-file syntax to split up your instructions. Just know what they buy you, though. Claude expands imported files inline at launch right alongside the file that references them. Imports help you organize a large CLAUDE.md file, but everything still loads up front and they don't reduce context. So we can make our CLAUDE.md file much shorter. Whether Claude obeys it comes down to phrasing, and most rules fail because they're pretty vague. First, be specific and checkable. Don't put things like, follow best practices. Do you even know what that means? Well, don't expect Claude to magically. Put new API routes in source API handlers, one per file. Well, that's explicit, so put that instead. Name the replacement. Don't use default exports. Leave the alternative open. Use name exports, not default exports. Close that potential misinterpretation. And then realize that emphasis is a budget. Important and you must raises a rule priority, but only relative to everything quieter around it. Spend them on the two or three rules that hurt when broken. The file also stays under revision. When Claude does the wrong thing, well, treat that as a bug report against your CLAUDE.md file. Tell it, add that to the CLAUDE.md file, and it'll write that rule for you. Treat your CLAUDE.md file like production code. If you can't justify a line, well, delete it. Move enforcement to hooks, organize with imports, and scope past specific conventions into your rules so that they load only when they apply. The leaner the file, the more of it Claude follows."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act02",
+          "title": {
+            "en": "A CLAUDE.md That Follows",
+            "fr": "A CLAUDE.md That Follows"
+          },
+          "description": {
+            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+            "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+          },
+          "type": "quiz",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "multi_choice_exercise",
+              "id": "dc_2_act_02_qcm_multiple",
+              "question": {
+                "en": "Read the article, then answer the question below.\n\nThe CLAUDE.md in your queries project has grown to 200 lines. You just tidied it by splitting the rules into three files and importing them with the path-to-file syntax. The file reads beautifully now. Claude still skips the same rules it skipped before.\n\nWhat actually changed, and what should you do next?",
+                "fr": "Read the article, then answer the question below.\n\nThe CLAUDE.md in your queries project has grown to 200 lines. You just tidied it by splitting the rules into three files and importing them with the path-to-file syntax. The file reads beautifully now. Claude still skips the same rules it skipped before.\n\nWhat actually changed, and what should you do next?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Imported files load only when Claude needs them, so move the remaining rules into imports as well.",
+                    "fr": "Imported files load only when Claude needs them, so move the remaining rules into imports as well."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "The four memory locations are conflicting, so delete the user-level file and let the project file win.",
+                    "fr": "The four memory locations are conflicting, so delete the user-level file and let the project file win."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Add IMPORTANT to every rule so that Claude stops skipping them.",
+                    "fr": "Add IMPORTANT to every rule so that Claude stops skipping them."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Nothing about the context load changed, because imports expand inline at launch. Delete the rules you cannot justify and make the ones that remain specific and checkable.",
+                    "fr": "Nothing about the context load changed, because imports expand inline at launch. Delete the rules you cannot justify and make the ones that remain specific and checkable."
+                  }
+                }
+              ],
+              "correctAnswers": "d",
+              "explanation": {
+                "en": "Spot on. Imports are an organizing tool, not a way to shrink what Claude reads. The file competes with itself until you cut it down, so the fix is fewer rules, each one specific enough that you could check whether it was followed.",
+                "fr": "Spot on. Imports are an organizing tool, not a way to shrink what Claude reads. The file competes with itself until you cut it down, so the fix is fewer rules, each one specific enough that you could check whether it was followed."
+              },
+              "hint": {
+                "en": "Imports organize a long file, but Claude expands them inline at launch, so the same amount of text still loads.\n\nAll four memory locations load together and stack, and emphasis only raises a rule relative to the quieter rules around it.",
+                "fr": "Imports organize a long file, but Claude expands them inline at launch, so the same amount of text still loads.\n\nAll four memory locations load together and stack, and emphasis only raises a rule relative to the quieter rules around it."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act03",
+          "title": {
+            "en": "Put the file on a diet",
+            "fr": "Put the file on a diet"
+          },
+          "description": {
+            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+            "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_2_act_03_code",
+              "title": {
+                "en": "Put the file on a diet",
+                "fr": "Put the file on a diet"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Start Claude Code with claude.\n\nAsk Claude to rewrite CLAUDE.md so every rule is specific and checkable, and every ban names its replacement.\n\nIn the same request, tell Claude to keep emphasis on at most two rules and to delete the \"never push to main\" rule, which a hook will enforce in a later lesson.\n\nType /exit to exit Claude Code.",
+                "fr": "Start Claude Code with claude.\n\nAsk Claude to rewrite CLAUDE.md so every rule is specific and checkable, and every ban names its replacement.\n\nIn the same request, tell Claude to keep emphasis on at most two rules and to delete the \"never push to main\" rule, which a hook will enforce in a later lesson.\n\nType /exit to exit Claude Code."
+              },
+              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json')\nrepl.run_command(r'''cat > /home/repl/queries/CLAUDE.md <<'EOF'\n# CLAUDE.md\n\n# Overview\n\nThis is an e-commerce data utilities project that provides query functions for\na SQLite database. The project uses TypeScript.\n\n# Rules\n\n- IMPORTANT: Follow best practices at all times.\n- IMPORTANT: Write clean, readable, maintainable code.\n- YOU MUST never push to main.\n- IMPORTANT: Don't use default exports.\n- IMPORTANT: Don't write bad SQL.\n- YOU MUST handle errors properly.\n- IMPORTANT: All database queries must be written in the ./src/queries dir.\n- YOU MUST use good variable names.\n- IMPORTANT: Be careful when editing the schema.\n- Tests are important.\nEOF''')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
+              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Rewrite CLAUDE.md so every rule is specific and checkable, name\n#    the replacement for every ban, keep emphasis on at most two rules, and delete\n#    the never push to main rule.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/2_1/history.jsonl ~/.claude/.\n\n# Seeds the rewritten CLAUDE.md that Claude produces.\ncp ~/solutions/2_1/CLAUDE.md /home/repl/queries/CLAUDE.md",
+              "expectedOutput": "",
+              "hint": {
+                "en": "One prompt can carry the whole rewrite, for example: Rewrite CLAUDE.md so every rule is specific and checkable, name the replacement for every ban, keep emphasis on at most two rules, and delete the never push to main rule.\n\n\"Follow best practices\" is the clearest example of a rule nobody can check. A specific replacement names a path or a concrete convention.\n\nThe push rule is not being thrown away, it is moving somewhere it can actually be enforced.",
+                "fr": "One prompt can carry the whole rewrite, for example: Rewrite CLAUDE.md so every rule is specific and checkable, name the replacement for every ban, keep emphasis on at most two rules, and delete the never push to main rule.\n\n\"Follow best practices\" is the clearest example of a rule nobody can check. A specific replacement names a path or a concrete convention.\n\nThe push rule is not being thrown away, it is moving somewhere it can actually be enforced."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act04",
+          "title": {
+            "en": "Video: Verification Skills",
+            "fr": "Video: Verification Skills"
+          },
+          "description": {
+            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+            "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_2_act_04_video",
+              "title": {
+                "en": "Video: Verification Skills",
+                "fr": "Video: Verification Skills"
+              },
+              "mp4Url": "/api/assets/ch02_ex04_video_verification_skills_2184a444.mp4",
+              "audioUrl": "/api/assets/ch02_ex04_video_verification_skills_563a1d08.mp3",
+              "subtitleUrlEn": "/api/assets/ch02_ex04_video_verification_skills_en_3cc51de1.vtt",
+              "transcript": "1. Video: Verification Skills\nAs your project continues to grow and grow, you want to automate the work that's constantly repeated. You already know that SKILLs are great for this, but here are some tips on how you can use SKILLs to help you verify your work. So this example is the skill that's worth building first. Ask Claude to refactor something, and when it finishes, the description matches, task that edited code, and the skill fires. It runs the suite, reads the diff, checks that no test has weakened to pass, and reports pass or fail with the evidence attached. Checking the work no longer depends on you remembering to ask for it. The same shape carries any procedure your team repeats. A release checklist or a migration recipe. If you've typed the same multi-step instruction twice, well, that's a skill. Now a skill folder can hold more than just a SKILL.md file. Drop a reference.md beside it for detailed material and link it from that skill. Claude reads it only when it needs the depth. Claude executes scripts in the folder rather than loading them, so a skill can carry its own tooling. So keep your SKILL.md file itself lean and push the heavy material into those side files. So a quick way to keep the three instruction surfaces straight, conventions that apply all the time go into your CLAUDE.md file, and procedures or reference materials tied to a kind of task go into a skill. A rule Claude must not be able to skip belongs in a hook because CLAUDE.md and skills are both instructions that Claude follows rather than code that runs. A skill is a folder with a SKILL.md, a name, a description that triggers it, and the procedure itself. Only descriptions load until a skill is needed, so package every procedure you repeat. Start with verification and check it into the Claude skills, and your team inherits the same move.",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Video: Verification Skills",
+                  "text": "As your project continues to grow and grow, you want to automate the work that's constantly repeated. You already know that SKILLs are great for this, but here are some tips on how you can use SKILLs to help you verify your work. So this example is the skill that's worth building first. Ask Claude to refactor something, and when it finishes, the description matches, task that edited code, and the skill fires. It runs the suite, reads the diff, checks that no test has weakened to pass, and reports pass or fail with the evidence attached. Checking the work no longer depends on you remembering to ask for it. The same shape carries any procedure your team repeats. A release checklist or a migration recipe. If you've typed the same multi-step instruction twice, well, that's a skill. Now a skill folder can hold more than just a SKILL.md file. Drop a reference.md beside it for detailed material and link it from that skill. Claude reads it only when it needs the depth. Claude executes scripts in the folder rather than loading them, so a skill can carry its own tooling. So keep your SKILL.md file itself lean and push the heavy material into those side files. So a quick way to keep the three instruction surfaces straight, conventions that apply all the time go into your CLAUDE.md file, and procedures or reference materials tied to a kind of task go into a skill. A rule Claude must not be able to skip belongs in a hook because CLAUDE.md and skills are both instructions that Claude follows rather than code that runs. A skill is a folder with a SKILL.md, a name, a description that triggers it, and the procedure itself. Only descriptions load until a skill is needed, so package every procedure you repeat. Start with verification and check it into the Claude skills, and your team inherits the same move."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act05",
+          "title": {
+            "en": "Verification Skills",
+            "fr": "Verification Skills"
+          },
+          "description": {
+            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+            "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+          },
+          "type": "quiz",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "multi_choice_exercise",
+              "id": "dc_2_act_05_qcm_multiple",
+              "question": {
+                "en": "Read the article, then answer the question below.\n\nYou packaged your team's post-refactor checks into a skill at .claude/skills/verify-changes/. Its frontmatter is two lines: the name is verify-changes, and the description reads, in full, Verification skill.\n\nThe steps in the body are solid, and whenever you ask for the skill by name it runs perfectly. What it never does is fire on its own. Every time Claude finishes a refactor you end up asking for the check by name, which is the exact habit the skill was meant to replace.\n\nWhy isn't the skill firing by itself?",
+                "fr": "Read the article, then answer the question below.\n\nYou packaged your team's post-refactor checks into a skill at .claude/skills/verify-changes/. Its frontmatter is two lines: the name is verify-changes, and the description reads, in full, Verification skill.\n\nThe steps in the body are solid, and whenever you ask for the skill by name it runs perfectly. What it never does is fire on its own. Every time Claude finishes a refactor you end up asking for the check by name, which is the exact habit the skill was meant to replace.\n\nWhy isn't the skill firing by itself?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Skills only ever run when you invoke them by name, so firing on their own is not something they do.",
+                    "fr": "Skills only ever run when you invoke them by name, so firing on their own is not something they do."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "The description is what triggers a skill, and \"Verification skill\" describes nothing, so it never matches the task Claude just finished.",
+                    "fr": "The description is what triggers a skill, and \"Verification skill\" describes nothing, so it never matches the task Claude just finished."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "The procedure in SKILL.md is too long, and Claude skips skills over a certain size.",
+                    "fr": "The procedure in SKILL.md is too long, and Claude skips skills over a certain size."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Verification is a standing convention, so the steps belong in CLAUDE.md instead.",
+                    "fr": "Verification is a standing convention, so the steps belong in CLAUDE.md instead."
+                  }
+                }
+              ],
+              "correctAnswers": "b",
+              "explanation": {
+                "en": "That's it exactly. The description is the trigger. Something like \"Run after refactors or edits to source files: runs the test suite, reads the diff, and confirms no test was weakened\" gives Claude something to match against, so the skill fires without you asking.",
+                "fr": "That's it exactly. The description is the trigger. Something like \"Run after refactors or edits to source files: runs the test suite, reads the diff, and confirms no test was weakened\" gives Claude something to match against, so the skill fires without you asking."
+              },
+              "hint": {
+                "en": "Only skill descriptions load into context until a skill is actually needed, so the description is what has to carry the trigger.\n\nA skill folder can also hold reference files and scripts, which Claude reaches for only once the skill is running.",
+                "fr": "Only skill descriptions load into context until a skill is actually needed, so the description is what has to carry the trigger.\n\nA skill folder can also hold reference files and scripts, which Claude reaches for only once the skill is running."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act06",
+          "title": {
+            "en": "The skill worth building first",
+            "fr": "The skill worth building first"
+          },
+          "description": {
+            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+            "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_2_act_06_code",
+              "title": {
+                "en": "The skill worth building first",
+                "fr": "The skill worth building first"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Start Claude Code with claude.\n\nAsk Claude to create a skill at .claude/skills/verify-changes/SKILL.md, with a description saying it runs after edits to source files.\n\nHave the procedure run npx tsc --noEmit, read the diff, confirm no check was weakened just to pass, and report pass or fail with the evidence.\n\nType /exit to exit Claude Code.",
+                "fr": "Start Claude Code with claude.\n\nAsk Claude to create a skill at .claude/skills/verify-changes/SKILL.md, with a description saying it runs after edits to source files.\n\nHave the procedure run npx tsc --noEmit, read the diff, confirm no check was weakened just to pass, and report pass or fail with the evidence.\n\nType /exit to exit Claude Code."
+              },
+              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json')\nrepl.run_command('rm -rf /home/repl/queries/.claude/skills')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
+              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Create a skill at .claude/skills/verify-changes/SKILL.md that runs\n#    after source edits: run npx tsc --noEmit, read git diff, confirm no check was\n#    weakened, and report pass or fail with evidence.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/2_2/history.jsonl ~/.claude/.\n\n# Seeds the skill file that Claude writes.\nmkdir -p /home/repl/queries/.claude/skills/verify-changes\ncp ~/solutions/2_2/SKILL.md /home/repl/queries/.claude/skills/verify-changes/SKILL.md",
+              "expectedOutput": "",
+              "hint": {
+                "en": "One prompt can carry it, for example: Create a skill at .claude/skills/verify-changes/SKILL.md that runs after source edits: run npx tsc --noEmit, read git diff, confirm no check was weakened, and report pass or fail with evidence.\n\nThe frontmatter holds name and description, and the description is what makes the skill fire without being asked.\n\nKeep SKILL.md lean. Long explanations belong in a reference.md beside it, which Claude reads only when it needs the depth.",
+                "fr": "One prompt can carry it, for example: Create a skill at .claude/skills/verify-changes/SKILL.md that runs after source edits: run npx tsc --noEmit, read git diff, confirm no check was weakened, and report pass or fail with evidence.\n\nThe frontmatter holds name and description, and the description is what makes the skill fire without being asked.\n\nKeep SKILL.md lean. Long explanations belong in a reference.md beside it, which Claude reads only when it needs the depth."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act07",
+          "title": {
+            "en": "Which surface owns the rule?",
+            "fr": "Which surface owns the rule?"
+          },
+          "description": {
+            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+            "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "bucket_sort",
+              "id": "dc_2_act_07_bucket_sort",
+              "title": {
+                "en": "Which surface owns the rule?",
+                "fr": "Which surface owns the rule?"
+              },
+              "instructions": {
+                "en": "Classify each rule by the surface that should own it: CLAUDE.md, a skill, or a hook.",
+                "fr": "Classify each rule by the surface that should own it: CLAUDE.md, a skill, or a hook."
+              },
+              "buckets": [
+                {
+                  "id": "claudemd",
+                  "label": {
+                    "en": "CLAUDE.md",
+                    "fr": "CLAUDE.md"
+                  }
+                },
+                {
+                  "id": "skill",
+                  "label": {
+                    "en": "Skill",
+                    "fr": "Skill"
+                  }
+                },
+                {
+                  "id": "hook",
+                  "label": {
+                    "en": "Hook",
+                    "fr": "Hook"
+                  }
+                }
+              ],
+              "cards": [
+                {
+                  "id": "queries_dir",
+                  "text": {
+                    "en": "All database queries live in src/queries, one module per domain.",
+                    "fr": "All database queries live in src/queries, one module per domain."
+                  },
+                  "correctBucket": "claudemd"
+                },
+                {
+                  "id": "named_exports",
+                  "text": {
+                    "en": "Use named exports, not default exports.",
+                    "fr": "Use named exports, not default exports."
+                  },
+                  "correctBucket": "claudemd"
+                },
+                {
+                  "id": "pre_pr_checklist",
+                  "text": {
+                    "en": "The five checks the team runs before opening a pull request.",
+                    "fr": "The five checks the team runs before opening a pull request."
+                  },
+                  "correctBucket": "skill"
+                },
+                {
+                  "id": "migration_recipe",
+                  "text": {
+                    "en": "The migration recipe someone re-explains every time a schema change comes up.",
+                    "fr": "The migration recipe someone re-explains every time a schema change comes up."
+                  },
+                  "correctBucket": "skill"
+                },
+                {
+                  "id": "no_push_main",
+                  "text": {
+                    "en": "Nothing gets pushed to main, whatever the session is doing.",
+                    "fr": "Nothing gets pushed to main, whatever the session is doing."
+                  },
+                  "correctBucket": "hook"
+                },
+                {
+                  "id": "typecheck_after_edit",
+                  "text": {
+                    "en": "Every edit to a source file is type checked, including on runs nobody is watching.",
+                    "fr": "Every edit to a source file is type checked, including on runs nobody is watching."
+                  },
+                  "correctBucket": "hook"
+                }
+              ],
+              "feedback": {
+                "en": "Exactly right. Conventions go in CLAUDE.md, repeated procedures become skills, and anything that must not be skippable becomes a hook. Put a rule on the wrong surface and you either bury a convention or leave a hard line up to a polite request.",
+                "fr": "Exactly right. Conventions go in CLAUDE.md, repeated procedures become skills, and anything that must not be skippable becomes a hook. Put a rule on the wrong surface and you either bury a convention or leave a hard line up to a polite request."
+              },
+              "hint": {
+                "en": "Conventions that apply all the time, regardless of the task, belong in CLAUDE.md.\n\nA multi-step procedure tied to a kind of task belongs in a skill, especially one you have typed out more than once.\n\nCLAUDE.md and skills are instructions Claude follows, while a hook is code that runs, so anything that must never be skipped belongs in a hook.",
+                "fr": "Conventions that apply all the time, regardless of the task, belong in CLAUDE.md.\n\nA multi-step procedure tied to a kind of task belongs in a skill, especially one you have typed out more than once.\n\nCLAUDE.md and skills are instructions Claude follows, while a hook is code that runs, so anything that must never be skipped belongs in a hook."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act08",
+          "title": {
+            "en": "Video: Permission Modes",
+            "fr": "Video: Permission Modes"
+          },
+          "description": {
+            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+            "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_2_act_08_video",
+              "title": {
+                "en": "Video: Permission Modes",
+                "fr": "Video: Permission Modes"
+              },
+              "mp4Url": "/api/assets/ch02_ex08_video_permission_modes_48c4ea17.mp4",
+              "audioUrl": "/api/assets/ch02_ex08_video_permission_modes_af81fb98.mp3",
+              "subtitleUrlEn": "/api/assets/ch02_ex08_video_permission_modes_en_632a192f.vtt",
+              "transcript": "1. Video: Permission Modes\nPermission modes lets you decide once what's safe to run without you. You already cycled through several of them with shift-tab, manual, acceptEdits, and plan. The rest are where hands-off Claude Code lives, and the one to lead with is auto. Claude runs without prompts while a separate classifier reviews each action before it executes, stepping in on ones it identifies as dangerous. So here are the permission modes. First we have manual, which reads only without prompting. Everything else asks. AcceptEdits reads file edits in common file system bash commands. This is for iterating on code that you review after the fact. Plan reads only, it researches and proposes without editing. Auto mode accepts everything with a classifier model reviewing each action before it runs. Don't ask, only pre-approved tools allowed, everything else auto-denied with no prompt. This is great for your CI pipelines. And then bypass permission skips all check. This is equivalent to the dangerously skip Only run it inside of an isolated container or virtual machine. Press shift-tab to cycle through manual, acceptEdits, plan, and auto. The status bar shows which one that you're in. Auto mode is where Claude runs, but before each action executes, a separate classifier model reviews it. The classifier guards intent. It blocks the moves that escalate beyond your request, production deploys and migrations, force pushing or piping download code into a shell, sending sensitive data to external endpoints and destroying files that exist for the session. It allows the everyday work, local edits in your project, installing dependencies from your log file, read only requests and pushing to your own branch. Now the classifier won't catch whether the code works or not. So if you ask Claude to refactor authentication and it writes broken authentication, the classifier waves it through because broken isn't dangerous. Use auto mode together with a stop hook that runs your tests. Auto mode watches what Claude is trying to do while the hook confirms that the code actually runs. Auto mode's guardrails are still evolving, so check the docs for the current block and allow lists. Don't ask is the right move whenever no human is there to approve prompts. CI, scheduled jobs, overnight batches. Anything off that list gets auto denied, so your pipeline keeps moving instead of hanging on an approval no one will give. There are several permission modes and you can reach the everyday ones by cycling shift tab. Auto is the hands-off default. The classifier checks intent before each action runs and a stop hook checks correctness after. Don't ask covers unattended pipelines and bypass permission belong only inside isolated containers and VMs. Match the mode to the job.",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Video: Permission Modes",
+                  "text": "Permission modes lets you decide once what's safe to run without you. You already cycled through several of them with shift-tab, manual, acceptEdits, and plan. The rest are where hands-off Claude Code lives, and the one to lead with is auto. Claude runs without prompts while a separate classifier reviews each action before it executes, stepping in on ones it identifies as dangerous. So here are the permission modes. First we have manual, which reads only without prompting. Everything else asks. AcceptEdits reads file edits in common file system bash commands. This is for iterating on code that you review after the fact. Plan reads only, it researches and proposes without editing. Auto mode accepts everything with a classifier model reviewing each action before it runs. Don't ask, only pre-approved tools allowed, everything else auto-denied with no prompt. This is great for your CI pipelines. And then bypass permission skips all check. This is equivalent to the dangerously skip Only run it inside of an isolated container or virtual machine. Press shift-tab to cycle through manual, acceptEdits, plan, and auto. The status bar shows which one that you're in. Auto mode is where Claude runs, but before each action executes, a separate classifier model reviews it. The classifier guards intent. It blocks the moves that escalate beyond your request, production deploys and migrations, force pushing or piping download code into a shell, sending sensitive data to external endpoints and destroying files that exist for the session. It allows the everyday work, local edits in your project, installing dependencies from your log file, read only requests and pushing to your own branch. Now the classifier won't catch whether the code works or not. So if you ask Claude to refactor authentication and it writes broken authentication, the classifier waves it through because broken isn't dangerous. Use auto mode together with a stop hook that runs your tests. Auto mode watches what Claude is trying to do while the hook confirms that the code actually runs. Auto mode's guardrails are still evolving, so check the docs for the current block and allow lists. Don't ask is the right move whenever no human is there to approve prompts. CI, scheduled jobs, overnight batches. Anything off that list gets auto denied, so your pipeline keeps moving instead of hanging on an approval no one will give. There are several permission modes and you can reach the everyday ones by cycling shift tab. Auto is the hands-off default. The classifier checks intent before each action runs and a stop hook checks correctness after. Don't ask covers unattended pipelines and bypass permission belong only inside isolated containers and VMs. Match the mode to the job."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act09",
+          "title": {
+            "en": "Permission Modes",
+            "fr": "Permission Modes"
+          },
+          "description": {
+            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+            "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+          },
+          "type": "quiz",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "multi_choice_exercise",
+              "id": "dc_2_act_09_qcm_multiple",
+              "question": {
+                "en": "Read the article, then answer the question below.\n\nYou left Claude refactoring the queries project's authentication module overnight in auto mode, working on a branch on your own machine. Nothing was pushed and nothing was deployed. The classifier stopped nothing, the run finished clean, and the summary reads well: every caller migrated, every check green.\n\nThis morning you pull the branch up, start the app, and nobody can log in.\n\nWhy didn't auto mode catch this, and what should you add?",
+                "fr": "Read the article, then answer the question below.\n\nYou left Claude refactoring the queries project's authentication module overnight in auto mode, working on a branch on your own machine. Nothing was pushed and nothing was deployed. The classifier stopped nothing, the run finished clean, and the summary reads well: every caller migrated, every check green.\n\nThis morning you pull the branch up, start the app, and nobody can log in.\n\nWhy didn't auto mode catch this, and what should you add?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Auto mode only reviews file edits, so the bash commands in the run slipped past unreviewed.",
+                    "fr": "Auto mode only reviews file edits, so the bash commands in the run slipped past unreviewed."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "The classifier failed open because the run was unattended, since it only reviews actions while someone is watching.",
+                    "fr": "The classifier failed open because the run was unattended, since it only reviews actions while someone is watching."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "The classifier reviews intent, not correctness. Broken code isn't dangerous, so it was waved through. Pair auto mode with a stop hook that runs your checks.",
+                    "fr": "The classifier reviews intent, not correctness. Broken code isn't dangerous, so it was waved through. Pair auto mode with a stop hook that runs your checks."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Auto mode was the wrong choice, and bypass permissions would have reviewed each action more strictly.",
+                    "fr": "Auto mode was the wrong choice, and bypass permissions would have reviewed each action more strictly."
+                  }
+                }
+              ],
+              "correctAnswers": "c",
+              "explanation": {
+                "en": "You've got it. Auto mode guards what Claude is trying to do, while the stop hook guards whether the result works. One runs before each action, the other after the turn, and you need both on an unattended run.",
+                "fr": "You've got it. Auto mode guards what Claude is trying to do, while the stop hook guards whether the result works. One runs before each action, the other after the turn, and you need both on an unattended run."
+              },
+              "hint": {
+                "en": "The classifier is watching for actions that escalate beyond what you asked for, such as production deploys, force pushes, or sending data to external endpoints.\n\nSomething still has to confirm the code actually runs, and that something has to be code rather than a request.",
+                "fr": "The classifier is watching for actions that escalate beyond what you asked for, such as production deploys, force pushes, or sending data to external endpoints.\n\nSomething still has to confirm the code actually runs, and that something has to be code rather than a request."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act10",
+          "title": {
+            "en": "Match the mode to the job",
+            "fr": "Match the mode to the job"
+          },
+          "description": {
+            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+            "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "bucket_sort",
+              "id": "dc_2_act_10_bucket_sort",
+              "title": {
+                "en": "Match the mode to the job",
+                "fr": "Match the mode to the job"
+              },
+              "instructions": {
+                "en": "Classify each job by the permission mode that fits it: auto, don't ask, or bypass permissions.",
+                "fr": "Classify each job by the permission mode that fits it: auto, don't ask, or bypass permissions."
+              },
+              "buckets": [
+                {
+                  "id": "auto",
+                  "label": {
+                    "en": "Auto",
+                    "fr": "Auto"
+                  }
+                },
+                {
+                  "id": "dontask",
+                  "label": {
+                    "en": "Don't ask",
+                    "fr": "Don't ask"
+                  }
+                },
+                {
+                  "id": "bypass",
+                  "label": {
+                    "en": "Bypass permissions",
+                    "fr": "Bypass permissions"
+                  }
+                }
+              ],
+              "cards": [
+                {
+                  "id": "long_refactor",
+                  "text": {
+                    "en": "An hours-long local refactor you will review afterwards, with each action vetted as it goes.",
+                    "fr": "An hours-long local refactor you will review afterwards, with each action vetted as it goes."
+                  },
+                  "correctBucket": "auto"
+                },
+                {
+                  "id": "no_prompts_checked",
+                  "text": {
+                    "en": "You want Claude working without prompting you, but every action checked for danger before it runs.",
+                    "fr": "You want Claude working without prompting you, but every action checked for danger before it runs."
+                  },
+                  "correctBucket": "auto"
+                },
+                {
+                  "id": "ci_pipeline",
+                  "text": {
+                    "en": "A CI pipeline that should deny anything outside its pre-approved tool list rather than stall on a prompt.",
+                    "fr": "A CI pipeline that should deny anything outside its pre-approved tool list rather than stall on a prompt."
+                  },
+                  "correctBucket": "dontask"
+                },
+                {
+                  "id": "overnight_job",
+                  "text": {
+                    "en": "A scheduled overnight job with no human present, where unapproved actions should be refused silently.",
+                    "fr": "A scheduled overnight job with no human present, where unapproved actions should be refused silently."
+                  },
+                  "correctBucket": "dontask"
+                },
+                {
+                  "id": "throwaway_container",
+                  "text": {
+                    "en": "A throwaway container where Claude can try something risky end to end and nothing outside it is reachable.",
+                    "fr": "A throwaway container where Claude can try something risky end to end and nothing outside it is reachable."
+                  },
+                  "correctBucket": "bypass"
+                },
+                {
+                  "id": "disposable_vm",
+                  "text": {
+                    "en": "A disposable virtual machine for reproducing a bug, with no access to anything you care about.",
+                    "fr": "A disposable virtual machine for reproducing a bug, with no access to anything you care about."
+                  },
+                  "correctBucket": "bypass"
+                }
+              ],
+              "feedback": {
+                "en": "Nicely matched. Auto is the hands-off default with a classifier checking intent before each action. Don't ask keeps unattended pipelines moving by denying anything off the approved list. Bypass permissions belongs only inside isolated containers and VMs.",
+                "fr": "Nicely matched. Auto is the hands-off default with a classifier checking intent before each action. Don't ask keeps unattended pipelines moving by denying anything off the approved list. Bypass permissions belongs only inside isolated containers and VMs."
+              },
+              "hint": {
+                "en": "Auto is the hands-off default: Claude runs without prompting while a classifier reviews each action for danger before it executes.\n\nDon't ask allows only pre-approved tools and auto-denies everything else with no prompt, which is what keeps an unattended pipeline moving.\n\nBypass permissions skips every check, so it is only safe where there is nothing outside the sandbox left to damage.",
+                "fr": "Auto is the hands-off default: Claude runs without prompting while a classifier reviews each action for danger before it executes.\n\nDon't ask allows only pre-approved tools and auto-denies everything else with no prompt, which is what keeps an unattended pipeline moving.\n\nBypass permissions skips every check, so it is only safe where there is nothing outside the sandbox left to damage."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act11",
+          "title": {
+            "en": "Video: Hooks",
+            "fr": "Video: Hooks"
+          },
+          "description": {
+            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+            "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_2_act_11_video",
+              "title": {
+                "en": "Video: Hooks",
+                "fr": "Video: Hooks"
+              },
+              "mp4Url": "/api/assets/ch02_ex11_video_hooks_ea2ead55.mp4",
+              "audioUrl": "/api/assets/ch02_ex11_video_hooks_bad4b81b.mp3",
+              "subtitleUrlEn": "/api/assets/ch02_ex11_video_hooks_en_35ffff45.vtt",
+              "transcript": "1. Video: Hooks\nA hook is a deterministic code at a fixed point in the loop, which means it can guarantee far more than formatting on a run you're not watching. It turns a rule from \"Claude usually listens\" into \"Claude can't skip it\". Claude Code fires around 30 hook events. The handful you'll reach for is PreToolUse, which fires before a tool call, the enforcement primitive, PostToolUse, which fires after a successful tool call. This is usually where auto-formatting or an auto-lint would go. Stop, which fires when Claude wants to end its turn. Refuse, if conditions aren't met. SubAgentStop is the same signal, but for subagent finishing. Precompact and Postcompact fire before and after compaction. To re-inject context after compaction, use SessionStart with the compact matcher, not postcompact. InstructionsLoaded fires when a CLAUDE.md or rule file loads. Audit what made it into context. SessionStart primes the environment. Check SourceStartup to run only on fresh starts. For PreToolUse, return JSON and exit 0 with a permission, decision field, allow, deny, or ask. There's a fourth value, defer, but it only applies to non-interactive, dash p runs, where a calling process pauses the tool and resumes it later, so you'll rarely reach for it. You can also return updatedInput to modify the tool call without blocking, which can be useful for redacting secrets out of a bash command. One catch is that updatedInput replaces the whole input object, so echo back the fields that you aren't changing. For hooks that don't return JSON, exit codes work too. So, here's the three numbers that matter. 0 is a success, so if the standard out is JSON, Claude parses it. Plain text is ignored on most events, but on SessionStart, userPromPsubmit, and userPromPromPexp, it gets added to context, which is exactly what makes the state preserver work. 2 is a blocking error, so standard error gets fed back to Claude as a context. This is the blocking exit code almost everywhere, where the lone exception, worktree create, aborts any non-zero code. Watch out, because exit1 feels like an error, but it actually does not block, so Claude runs the command anyway. And then anything else is non-blocking and is locked. Exit2 can block stop, which is how you say, no, you're not done. PostToolUse fires after the tool already ran, so it's too late to stop the call, though it can still feed text back to Claude. A few events ignore blocking, like notification, SessionStart, and FileChange, show your standard error, and carry on. A pretool use guardrail that redacts instead of blocking. The matcher picks the tool to watch, say, bash, and an optional if clause narrows it to a specific command. So returning deny stops a dangerous call. The lesser known move is return updated input to rewrite the call, which is how you strip a secret out of a command and still let it run. When Claude compacts a long conversation, it drops a lot of details, but a SessionStart hook with the compact matcher runs right after a print short summary of the files you've been working on. That summary goes back into context, so Claude picks up where it was instead of starting cold. Hooks turns a rule Claude usually follows into one that it always follows. Reach past auto formatting, guard tools with pretool use, gate the turn with stop, and preserve stay across compact. The setup pays back the first time it catches something on a run you weren't watching.",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Video: Hooks",
+                  "text": "A hook is a deterministic code at a fixed point in the loop, which means it can guarantee far more than formatting on a run you're not watching. It turns a rule from \"Claude usually listens\" into \"Claude can't skip it\". Claude Code fires around 30 hook events. The handful you'll reach for is PreToolUse, which fires before a tool call, the enforcement primitive, PostToolUse, which fires after a successful tool call. This is usually where auto-formatting or an auto-lint would go. Stop, which fires when Claude wants to end its turn. Refuse, if conditions aren't met. SubAgentStop is the same signal, but for subagent finishing. Precompact and Postcompact fire before and after compaction. To re-inject context after compaction, use SessionStart with the compact matcher, not postcompact. InstructionsLoaded fires when a CLAUDE.md or rule file loads. Audit what made it into context. SessionStart primes the environment. Check SourceStartup to run only on fresh starts. For PreToolUse, return JSON and exit 0 with a permission, decision field, allow, deny, or ask. There's a fourth value, defer, but it only applies to non-interactive, dash p runs, where a calling process pauses the tool and resumes it later, so you'll rarely reach for it. You can also return updatedInput to modify the tool call without blocking, which can be useful for redacting secrets out of a bash command. One catch is that updatedInput replaces the whole input object, so echo back the fields that you aren't changing. For hooks that don't return JSON, exit codes work too. So, here's the three numbers that matter. 0 is a success, so if the standard out is JSON, Claude parses it. Plain text is ignored on most events, but on SessionStart, userPromPsubmit, and userPromPromPexp, it gets added to context, which is exactly what makes the state preserver work. 2 is a blocking error, so standard error gets fed back to Claude as a context. This is the blocking exit code almost everywhere, where the lone exception, worktree create, aborts any non-zero code. Watch out, because exit1 feels like an error, but it actually does not block, so Claude runs the command anyway. And then anything else is non-blocking and is locked. Exit2 can block stop, which is how you say, no, you're not done. PostToolUse fires after the tool already ran, so it's too late to stop the call, though it can still feed text back to Claude. A few events ignore blocking, like notification, SessionStart, and FileChange, show your standard error, and carry on. A pretool use guardrail that redacts instead of blocking. The matcher picks the tool to watch, say, bash, and an optional if clause narrows it to a specific command. So returning deny stops a dangerous call. The lesser known move is return updated input to rewrite the call, which is how you strip a secret out of a command and still let it run. When Claude compacts a long conversation, it drops a lot of details, but a SessionStart hook with the compact matcher runs right after a print short summary of the files you've been working on. That summary goes back into context, so Claude picks up where it was instead of starting cold. Hooks turns a rule Claude usually follows into one that it always follows. Reach past auto formatting, guard tools with pretool use, gate the turn with stop, and preserve stay across compact. The setup pays back the first time it catches something on a run you weren't watching."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act12",
+          "title": {
+            "en": "Hooks",
+            "fr": "Hooks"
+          },
+          "description": {
+            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+            "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+          },
+          "type": "quiz",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "multi_choice_exercise",
+              "id": "dc_2_act_12_qcm_multiple",
+              "question": {
+                "en": "Read the article, then answer the question below.\n\nYou wrote a PreToolUse hook to stop a dangerous command. It spots the command correctly, writes a clear reason to standard error, and exits with code 1. You test it, and Claude runs the command anyway. The hook fired, the reason was printed, and nothing was blocked.\n\nWhat went wrong?",
+                "fr": "Read the article, then answer the question below.\n\nYou wrote a PreToolUse hook to stop a dangerous command. It spots the command correctly, writes a clear reason to standard error, and exits with code 1. You test it, and Claude runs the command anyway. The hook fired, the reason was printed, and nothing was blocked.\n\nWhat went wrong?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Exit code 1 does not block. Exit 2 is the blocking code, and it feeds standard error back to Claude as context.",
+                    "fr": "Exit code 1 does not block. Exit 2 is the blocking code, and it feeds standard error back to Claude as context."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "A PreToolUse hook cannot stop a call. Only a stop hook can refuse something.",
+                    "fr": "A PreToolUse hook cannot stop a call. Only a stop hook can refuse something."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "The reason has to go to standard out as plain text before Claude will act on it.",
+                    "fr": "The reason has to go to standard out as plain text before Claude will act on it."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Exit codes are ignored on PreToolUse, so the hook has to return JSON instead.",
+                    "fr": "Exit codes are ignored on PreToolUse, so the hook has to return JSON instead."
+                  }
+                }
+              ],
+              "correctAnswers": "a",
+              "explanation": {
+                "en": "Yes, and this is the one that catches almost everyone. Exit 1 feels like an error but it is non-blocking, so the call goes ahead. Exit 2 blocks and hands your message to Claude to act on.",
+                "fr": "Yes, and this is the one that catches almost everyone. Exit 1 feels like an error but it is non-blocking, so the call goes ahead. Exit 2 blocks and hands your message to Claude to act on."
+              },
+              "hint": {
+                "en": "Exit code 0 means success, and if standard out is JSON, Claude parses it.\n\nOnly one non-zero exit code blocks a call. Every other code is logged, and Claude carries on regardless.",
+                "fr": "Exit code 0 means success, and if standard out is JSON, Claude parses it.\n\nOnly one non-zero exit code blocks a call. Every other code is logged, and Claude carries on regardless."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act13",
+          "title": {
+            "en": "Make the rule unskippable",
+            "fr": "Make the rule unskippable"
+          },
+          "description": {
+            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+            "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_2_act_13_code",
+              "title": {
+                "en": "Make the rule unskippable",
+                "fr": "Make the rule unskippable"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Start Claude Code with claude.\n\nAsk Claude to write a PreToolUse hook script at hooks/block-main-push.js that refuses any Bash command pushing to main, and explains why.\n\nAsk Claude to wire that script into .claude/settings.json as a PreToolUse hook with the matcher set to Bash.\n\nType /exit to exit Claude Code.",
+                "fr": "Start Claude Code with claude.\n\nAsk Claude to write a PreToolUse hook script at hooks/block-main-push.js that refuses any Bash command pushing to main, and explains why.\n\nAsk Claude to wire that script into .claude/settings.json as a PreToolUse hook with the matcher set to Bash.\n\nType /exit to exit Claude Code."
+              },
+              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json /home/repl/queries/.claude/settings.json')\nrepl.run_command('rm -f /home/repl/queries/hooks/block-main-push.js')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
+              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Write a PreToolUse hook at hooks/block-main-push.js that denies any\n#    Bash command pushing to main, with a reason, and wire it into .claude/settings.json\n#    with the matcher set to Bash.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/2_3/history.jsonl ~/.claude/.\n\n# Seeds the hook script and the settings wiring that Claude writes.\nmkdir -p /home/repl/queries/hooks /home/repl/queries/.claude\ncp ~/solutions/2_3/block-main-push.js /home/repl/queries/hooks/block-main-push.js\ncp ~/solutions/2_3/settings.json /home/repl/queries/.claude/settings.json",
+              "expectedOutput": "",
+              "hint": {
+                "en": "The hook reads the tool call from standard in, so it needs to spot a git push aimed at main.\n\nPrinting JSON with permissionDecision set to deny, plus a permissionDecisionReason, stops the call. Exiting 2 with the reason on standard error does the same job.\n\nThe wiring goes under hooks.PreToolUse in .claude/settings.json, where matcher names the tool to watch.",
+                "fr": "The hook reads the tool call from standard in, so it needs to spot a git push aimed at main.\n\nPrinting JSON with permissionDecision set to deny, plus a permissionDecisionReason, stops the call. Exiting 2 with the reason on standard error does the same job.\n\nThe wiring goes under hooks.PreToolUse in .claude/settings.json, where matcher names the tool to watch."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act14",
+          "title": {
+            "en": "Redact instead of block",
+            "fr": "Redact instead of block"
+          },
+          "description": {
+            "en": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks.",
+            "fr": "Claude follows a lean set of instructions far more reliably than a long one. Write a CLAUDE.md that survives contact with a real project, package repeated procedures as skills, match the permission mode to the job, and move the rules Claude must never skip into hooks."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_2_act_14_code",
+              "title": {
+                "en": "Redact instead of block",
+                "fr": "Redact instead of block"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Start Claude Code with claude.\n\nAsk Claude to finish the skeleton at hooks/redact-secrets.js so it masks the key with updatedInput and lets the command run, echoing back the fields it isn't changing.\n\nAsk Claude to wire that script into .claude/settings.json as a PreToolUse hook matching Bash.\n\nType /exit to exit Claude Code.",
+                "fr": "Start Claude Code with claude.\n\nAsk Claude to finish the skeleton at hooks/redact-secrets.js so it masks the key with updatedInput and lets the command run, echoing back the fields it isn't changing.\n\nAsk Claude to wire that script into .claude/settings.json as a PreToolUse hook matching Bash.\n\nType /exit to exit Claude Code."
+              },
+              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json /home/repl/queries/.claude/settings.json')\nrepl.run_command('mkdir -p /home/repl/queries/hooks')\nrepl.run_command(r'''cat > /home/repl/queries/hooks/redact-secrets.js <<'EOF'\n// PreToolUse hook: keep live API keys out of Bash commands.\n// Claude Code sends the tool call to this script as JSON on standard in.\nlet raw = \"\";\nprocess.stdin.on(\"data\", (chunk) => (raw += chunk));\nprocess.stdin.on(\"end\", () => {\n  const payload = JSON.parse(raw || \"{}\");\n  const input = payload.tool_input || {};\n  const command = input.command || \"\";\n\n  const SECRET = /sk_live_[A-Za-z0-9]+/g;\n  if (!command.match(SECRET)) {\n    process.exit(0);\n  }\n\n  // TODO: rewrite the call so the key is masked and the command still runs.\n  process.exit(0);\n});\nEOF''')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
+              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Finish hooks/redact-secrets.js so it returns updatedInput with the\n#    sk_live key masked and the other input fields echoed back, then wire it into\n#    .claude/settings.json as a PreToolUse hook matching Bash.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/2_4/history.jsonl ~/.claude/.\n\n# Seeds the finished hook and the settings wiring that Claude writes.\nmkdir -p /home/repl/queries/hooks /home/repl/queries/.claude\ncp ~/solutions/2_4/redact-secrets.js /home/repl/queries/hooks/redact-secrets.js\ncp ~/solutions/2_4/settings.json /home/repl/queries/.claude/settings.json",
+              "expectedOutput": "",
+              "hint": {
+                "en": "The response goes to standard out as JSON under hookSpecificOutput, with hookEventName set to PreToolUse.\n\nupdatedInput replaces the whole input object, so any field you don't copy through is lost. Pass description along with the rewritten command.\n\nBlocking isn't the goal. The command should still run, just without the live key in it.",
+                "fr": "The response goes to standard out as JSON under hookSpecificOutput, with hookEventName set to PreToolUse.\n\nupdatedInput replaces the whole input object, so any field you don't copy through is lost. Pass description along with the rewritten command.\n\nBlocking isn't the goal. The command should still run, just without the live key in it."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "datacamp_ch03",
+      "title": {
+        "en": "Automate Repeat Work",
+        "fr": "Automate Repeat Work"
+      },
+      "description": {
+        "en": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action.",
+        "fr": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action."
+      },
+      "competencyTags": [
+        "prompt_engineering",
+        "ai_development"
+      ],
+      "recommendedVideos": [],
+      "recommendedVideosManaged": false,
+      "chapters": [
+        {
+          "id": "dc_ch03_act01",
+          "title": {
+            "en": "Video: Routines and Headless",
+            "fr": "Video: Routines and Headless"
+          },
+          "description": {
+            "en": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action.",
+            "fr": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action."
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_3_act_01_video",
+              "title": {
+                "en": "Video: Routines and Headless",
+                "fr": "Video: Routines and Headless"
+              },
+              "mp4Url": "/api/assets/ch03_ex01_video_routines_and_headless_31ee4535.mp4",
+              "audioUrl": "/api/assets/ch03_ex01_video_routines_and_headless_90f9fba0.mp3",
+              "subtitleUrlEn": "/api/assets/ch03_ex01_video_routines_and_headless_en_8fe057b6.vtt",
+              "transcript": "1. Video: Routines and Headless\nOnce you trust Claude to do a task, the next move is to stop doing it by hand. The most direct way needs no script or a server. A routine. Which is a saved prompt plus repositories and connectors that runs on Anthrobic's managed infrastructure whenever it's triggered. When you need full control instead, headless mode and the Agent SDK run Claude Code from your own scripts and applications. Start with a path where you build nothing. A routine bundles a prompt, the repository it works on and any connectors it needs, then runs that bundle in the cloud on a trigger. A cron schedule, an HTTP post to its API endpoint, or a GitHub event like a new pull request. The infrastructure is Anthrobic, so there's no machine of yours staying on overnight and no workflow file to maintain. You create one from the web at claude.ai, slash code, slash routines, or from inside You can run. Slash schedule, daily dependency audit at 9am. A morning dependency audit or a PR triager that fires when a new pull request lands. Anything that's the same prompt on a recurring trigger fits. Three things to know before you rely on it though. Routines are a research preview, so behavior and limits will just keep on moving. A recurring schedule runs at most hourly, and each run starts from a fresh clone of your default branch and can only push to Claude slash prefix branches unless you loosen that which is the guardrail that keeps an autonomous run from rewriting main. When the job needs your environment or logic around that run, drop to headless mode. The -p flag, alias print, runs Claude Code as a one-shot command with no interactive tui. It reads standard in and writes standard out, so it pipes like any other shell tool. Bayer skips auto discovery of hooks, skills, plugins, mcp servers, and the CLAUDE.md file. You get Claude, plus the tools that you allow explicitly, and nothing the local environment happens to load. Startup is much faster this way. Now you can pair the JSON schema with output format JSON and Claude constrains the structure output to match your schema. The schema matching object lands in the structured output field of the JSON response. So you can pull it with a jq command and pipe it into a database or another script. For multi-step automation, capture the session's id from a JSON output and resume. One script kicks off the work, another resumes it later with full context. The agent SDK gets you a library that embeds Claude Code inside of your own TypeScript or Python applications. Both expose a query function and the same primitives as the CLI. You pass a prompt, plus options like allow tools, a system prompt, and a permission mode, and iterate the messages that Claude streams back. Routines are the default for repeat work. It runs on Anthropic's infrastructure and nothing for you to host. Drop to headless when the job needs your pipeline. Dash p to pipe data through a script. Bare when CI needs the same results every single run and the agent SDK when the work belongs inside of your own product.",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Video: Routines and Headless",
+                  "text": "Once you trust Claude to do a task, the next move is to stop doing it by hand. The most direct way needs no script or a server. A routine. Which is a saved prompt plus repositories and connectors that runs on Anthrobic's managed infrastructure whenever it's triggered. When you need full control instead, headless mode and the Agent SDK run Claude Code from your own scripts and applications. Start with a path where you build nothing. A routine bundles a prompt, the repository it works on and any connectors it needs, then runs that bundle in the cloud on a trigger. A cron schedule, an HTTP post to its API endpoint, or a GitHub event like a new pull request. The infrastructure is Anthrobic, so there's no machine of yours staying on overnight and no workflow file to maintain. You create one from the web at claude.ai, slash code, slash routines, or from inside You can run. Slash schedule, daily dependency audit at 9am. A morning dependency audit or a PR triager that fires when a new pull request lands. Anything that's the same prompt on a recurring trigger fits. Three things to know before you rely on it though. Routines are a research preview, so behavior and limits will just keep on moving. A recurring schedule runs at most hourly, and each run starts from a fresh clone of your default branch and can only push to Claude slash prefix branches unless you loosen that which is the guardrail that keeps an autonomous run from rewriting main. When the job needs your environment or logic around that run, drop to headless mode. The -p flag, alias print, runs Claude Code as a one-shot command with no interactive tui. It reads standard in and writes standard out, so it pipes like any other shell tool. Bayer skips auto discovery of hooks, skills, plugins, mcp servers, and the CLAUDE.md file. You get Claude, plus the tools that you allow explicitly, and nothing the local environment happens to load. Startup is much faster this way. Now you can pair the JSON schema with output format JSON and Claude constrains the structure output to match your schema. The schema matching object lands in the structured output field of the JSON response. So you can pull it with a jq command and pipe it into a database or another script. For multi-step automation, capture the session's id from a JSON output and resume. One script kicks off the work, another resumes it later with full context. The agent SDK gets you a library that embeds Claude Code inside of your own TypeScript or Python applications. Both expose a query function and the same primitives as the CLI. You pass a prompt, plus options like allow tools, a system prompt, and a permission mode, and iterate the messages that Claude streams back. Routines are the default for repeat work. It runs on Anthropic's infrastructure and nothing for you to host. Drop to headless when the job needs your pipeline. Dash p to pipe data through a script. Bare when CI needs the same results every single run and the agent SDK when the work belongs inside of your own product."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dc_ch03_act02",
+          "title": {
+            "en": "Routines and Headless",
+            "fr": "Routines and Headless"
+          },
+          "description": {
+            "en": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action.",
+            "fr": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action."
+          },
+          "type": "quiz",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "multi_choice_exercise",
+              "id": "dc_3_act_02_qcm_multiple",
+              "question": {
+                "en": "Read the article, then answer the question below.\n\nYou want a dependency audit that runs against the queries repository every fifteen minutes and commits any fix straight to your default branch. A routine looks like the obvious fit, since there is nothing to host and the prompt never changes.\n\nWhat do the routine guardrails mean for this plan?",
+                "fr": "Read the article, then answer the question below.\n\nYou want a dependency audit that runs against the queries repository every fifteen minutes and commits any fix straight to your default branch. A routine looks like the obvious fit, since there is nothing to host and the prompt never changes.\n\nWhat do the routine guardrails mean for this plan?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Any interval is available, so fifteen minutes is fine, and the branch a run pushes to is set per trigger.",
+                    "fr": "Any interval is available, so fifteen minutes is fine, and the branch a run pushes to is set per trigger."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "A schedule runs at most hourly, and each run starts from a fresh clone of the default branch and can push only to claude/ prefixed branches unless you loosen it per repo.",
+                    "fr": "A schedule runs at most hourly, and each run starts from a fresh clone of the default branch and can push only to claude/ prefixed branches unless you loosen it per repo."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Runs push to the default branch by default, so you would need to add a restriction yourself.",
+                    "fr": "Runs push to the default branch by default, so you would need to add a restriction yourself."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Routines cannot touch a repository at all, so this job needs the GitHub action instead.",
+                    "fr": "Routines cannot touch a repository at all, so this job needs the GitHub action instead."
+                  }
+                }
+              ],
+              "correctAnswers": "b",
+              "explanation": {
+                "en": "Right on the money. The plan needs two changes: an hourly schedule at the fastest, and a pull request from the claude/ branch instead of a commit to your default branch. That guardrail is what makes an unattended run safe to leave running.",
+                "fr": "Right on the money. The plan needs two changes: an hourly schedule at the fastest, and a pull request from the claude/ branch instead of a commit to your default branch. That guardrail is what makes an unattended run safe to leave running."
+              },
+              "hint": {
+                "en": "A routine bundles a prompt, a repository, and any connectors it needs, then runs on a cron schedule, an HTTP POST, or a GitHub event.\n\nOne of the guardrails exists specifically to stop an autonomous run from rewriting your default branch.",
+                "fr": "A routine bundles a prompt, a repository, and any connectors it needs, then runs on a cron schedule, an HTTP POST, or a GitHub event.\n\nOne of the guardrails exists specifically to stop an autonomous run from rewriting your default branch."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch03_act03",
+          "title": {
+            "en": "Routine, headless, or SDK?",
+            "fr": "Routine, headless, or SDK?"
+          },
+          "description": {
+            "en": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action.",
+            "fr": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "bucket_sort",
+              "id": "dc_3_act_03_bucket_sort",
+              "title": {
+                "en": "Routine, headless, or SDK?",
+                "fr": "Routine, headless, or SDK?"
+              },
+              "instructions": {
+                "en": "Classify each job as a fit for a routine, headless mode, or the Agent SDK.",
+                "fr": "Classify each job as a fit for a routine, headless mode, or the Agent SDK."
+              },
+              "buckets": [
+                {
+                  "id": "routine",
+                  "label": {
+                    "en": "Routine",
+                    "fr": "Routine"
+                  }
+                },
+                {
+                  "id": "headless",
+                  "label": {
+                    "en": "Headless mode",
+                    "fr": "Headless mode"
+                  }
+                },
+                {
+                  "id": "sdk",
+                  "label": {
+                    "en": "Agent SDK",
+                    "fr": "Agent SDK"
+                  }
+                }
+              ],
+              "cards": [
+                {
+                  "id": "morning_audit",
+                  "text": {
+                    "en": "A dependency audit every morning, with no machine of yours left on overnight.",
+                    "fr": "A dependency audit every morning, with no machine of yours left on overnight."
+                  },
+                  "correctBucket": "routine"
+                },
+                {
+                  "id": "pr_triager",
+                  "text": {
+                    "en": "A triager that fires whenever a new pull request lands, using a prompt that never changes.",
+                    "fr": "A triager that fires whenever a new pull request lands, using a prompt that never changes."
+                  },
+                  "correctBucket": "routine"
+                },
+                {
+                  "id": "pipe_diff",
+                  "text": {
+                    "en": "A build step that pipes a diff into Claude and reads the answer back as JSON for the next script.",
+                    "fr": "A build step that pipes a diff into Claude and reads the answer back as JSON for the next script."
+                  },
+                  "correctBucket": "headless"
+                },
+                {
+                  "id": "local_credentials",
+                  "text": {
+                    "en": "A job that needs a database and credentials which only exist on your build machine.",
+                    "fr": "A job that needs a database and credentials which only exist on your build machine."
+                  },
+                  "correctBucket": "headless"
+                },
+                {
+                  "id": "product_feature",
+                  "text": {
+                    "en": "A feature inside your own application that streams Claude's messages to your users.",
+                    "fr": "A feature inside your own application that streams Claude's messages to your users."
+                  },
+                  "correctBucket": "sdk"
+                },
+                {
+                  "id": "typescript_service",
+                  "text": {
+                    "en": "A TypeScript service that calls Claude with its own system prompt and allowed tools on every request.",
+                    "fr": "A TypeScript service that calls Claude with its own system prompt and allowed tools on every request."
+                  },
+                  "correctBucket": "sdk"
+                }
+              ],
+              "feedback": {
+                "en": "Well sorted. Start at the managed end and move down the spectrum only when the job demands it: a routine when nothing needs hosting, headless mode when the job needs your pipeline, and the Agent SDK when the work belongs inside your own product.",
+                "fr": "Well sorted. Start at the managed end and move down the spectrum only when the job demands it: a routine when nothing needs hosting, headless mode when the job needs your pipeline, and the Agent SDK when the work belongs inside your own product."
+              },
+              "hint": {
+                "en": "Routines run on Anthropic's infrastructure with nothing for you to host, fired by a cron schedule, an HTTP POST, or a GitHub event.\n\nHeadless mode with -p is a one-shot command that reads standard in and writes standard out, so it pipes like any other shell tool.\n\nThe Agent SDK is a library that embeds Claude Code inside your own TypeScript or Python application.",
+                "fr": "Routines run on Anthropic's infrastructure with nothing for you to host, fired by a cron schedule, an HTTP POST, or a GitHub event.\n\nHeadless mode with -p is a one-shot command that reads standard in and writes standard out, so it pipes like any other shell tool.\n\nThe Agent SDK is a library that embeds Claude Code inside your own TypeScript or Python application."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch03_act04",
+          "title": {
+            "en": "Video: GitHub Actions and Code Review",
+            "fr": "Video: GitHub Actions and Code Review"
+          },
+          "description": {
+            "en": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action.",
+            "fr": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action."
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_3_act_04_video",
+              "title": {
+                "en": "Video: GitHub Actions and Code Review",
+                "fr": "Video: GitHub Actions and Code Review"
+              },
+              "mp4Url": "/api/assets/ch03_ex04_video_github_actions_and_code_review_78ce2859.mp4",
+              "audioUrl": "/api/assets/ch03_ex04_video_github_actions_and_code_review_27547dba.mp3",
+              "subtitleUrlEn": "/api/assets/ch03_ex04_video_github_actions_and_code_review_en_74dd9890.vtt",
+              "transcript": "1. Video: GitHub Actions and Code Review\nThe best place to hand off repetitive work is the pull request. There are two ways to get that. The managed one is code review, an anthropic hosted service that reviews PRs through the Claude GitHub app and posts findings as inline comments with nothing for you to build or host. The do-it-yourself one is the Claude Code GitHub action for when the job goes beyond review and into custom CI. An organization admin turns it on from the Claude Code admin settings, then installs the Claude GitHub app, and picks which repos it watches and when it runs. Once when a PR opens on every push, or only when someone comments at Claude, review. And from there, it runs on Anthropic's infrastructure. A set of review agents analyzes the diff against the full codebase and posts findings as inline comments on the specific lines, tagged by severity with a summary table and the check run. It deduplicates and ranks so you read a handful of real findings instead of a wall of nits. It never approves or blocks the PR, the judgment call stays with a human. Code review is a research preview, currently for team and enterprise plans, so expect the behavior to keep on moving. And there's no managed autofix, the service posts findings only. Applying them is a local move from your own terminal where the /code-review command reviews a diff and its --fix flag applies the findings to your working tree. The action covers the jobs beyond review, implementing changes from a comment, schedule reports, anything you'd write a workflow for. It runs the agent on PR comments, schedule jobs and any GitHub event. So from inside Claude Code, you can run the /install-github-app command. And you need repo admin to do this. The slash command walks you through installing the GitHub app and setting the Anthropic API key secret on the repo. The action itself is Anthropic's slash Claude Code action at V1. And the inputs you'll use is the Anthropic API key, which is required. The GitHub token, which defaults to secret.github token, the trigger phrase, which is what the action listens for in comments, which just defaults to at Claude. If you use bedrock or vertex, you can switch to those providers, the prompt, which is the instruction for the run, and then the Claude arguments, which is a string of CLI arguments passed through to Claude Code. So if you drop this into dot GitHub slash workflows slash Claude dot YAML, it listens for at Claude on PR comments and issue comments. So someone writes at Claude, implement the spec and the linked linear issue on a pull request. And the action picks it up. Claude pushes commits and post comments with what it did. This one's the daily roll up. Cron fires at nine UTC. The action runs Claude post the results. The workflow dispatch trigger also lets you run it manually from the actions tab. So the Claude args line is where all this fine tuning happens. I set the max turns to five. This just puts a hard cap on the agent loop permission mode. I put don't ask. This is the unattended mode. Allow tools is exactly what this job needs. So read only for a report for PR reviews. Take the managed path, enable code review, let the GitHub app post inline findings and apply fixes locally with /code-review --fix reach for the action when the job is more than review, install GitHub app for setup one workflow for at Claude mentions one for Cron all the tuning and Claude arcs.",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Video: GitHub Actions and Code Review",
+                  "text": "The best place to hand off repetitive work is the pull request. There are two ways to get that. The managed one is code review, an anthropic hosted service that reviews PRs through the Claude GitHub app and posts findings as inline comments with nothing for you to build or host. The do-it-yourself one is the Claude Code GitHub action for when the job goes beyond review and into custom CI. An organization admin turns it on from the Claude Code admin settings, then installs the Claude GitHub app, and picks which repos it watches and when it runs. Once when a PR opens on every push, or only when someone comments at Claude, review. And from there, it runs on Anthropic's infrastructure. A set of review agents analyzes the diff against the full codebase and posts findings as inline comments on the specific lines, tagged by severity with a summary table and the check run. It deduplicates and ranks so you read a handful of real findings instead of a wall of nits. It never approves or blocks the PR, the judgment call stays with a human. Code review is a research preview, currently for team and enterprise plans, so expect the behavior to keep on moving. And there's no managed autofix, the service posts findings only. Applying them is a local move from your own terminal where the /code-review command reviews a diff and its --fix flag applies the findings to your working tree. The action covers the jobs beyond review, implementing changes from a comment, schedule reports, anything you'd write a workflow for. It runs the agent on PR comments, schedule jobs and any GitHub event. So from inside Claude Code, you can run the /install-github-app command. And you need repo admin to do this. The slash command walks you through installing the GitHub app and setting the Anthropic API key secret on the repo. The action itself is Anthropic's slash Claude Code action at V1. And the inputs you'll use is the Anthropic API key, which is required. The GitHub token, which defaults to secret.github token, the trigger phrase, which is what the action listens for in comments, which just defaults to at Claude. If you use bedrock or vertex, you can switch to those providers, the prompt, which is the instruction for the run, and then the Claude arguments, which is a string of CLI arguments passed through to Claude Code. So if you drop this into dot GitHub slash workflows slash Claude dot YAML, it listens for at Claude on PR comments and issue comments. So someone writes at Claude, implement the spec and the linked linear issue on a pull request. And the action picks it up. Claude pushes commits and post comments with what it did. This one's the daily roll up. Cron fires at nine UTC. The action runs Claude post the results. The workflow dispatch trigger also lets you run it manually from the actions tab. So the Claude args line is where all this fine tuning happens. I set the max turns to five. This just puts a hard cap on the agent loop permission mode. I put don't ask. This is the unattended mode. Allow tools is exactly what this job needs. So read only for a report for PR reviews. Take the managed path, enable code review, let the GitHub app post inline findings and apply fixes locally with /code-review --fix reach for the action when the job is more than review, install GitHub app for setup one workflow for at Claude mentions one for Cron all the tuning and Claude arcs."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dc_ch03_act05",
+          "title": {
+            "en": "GitHub Actions and Code Review",
+            "fr": "GitHub Actions and Code Review"
+          },
+          "description": {
+            "en": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action.",
+            "fr": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action."
+          },
+          "type": "quiz",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "multi_choice_exercise",
+              "id": "dc_3_act_05_qcm_multiple",
+              "question": {
+                "en": "Read the article, then answer the question below.\n\nCode Review is enabled on the queries repository. It reviews a pull request and posts three inline findings, one of them a real bug. Your teammate is now waiting for Claude to approve the pull request and push the fix. An hour later, nothing has happened.\n\nWhat did they misunderstand, and how does the fix actually get applied?",
+                "fr": "Read the article, then answer the question below.\n\nCode Review is enabled on the queries repository. It reviews a pull request and posts three inline findings, one of them a real bug. Your teammate is now waiting for Claude to approve the pull request and push the fix. An hour later, nothing has happened.\n\nWhat did they misunderstand, and how does the fix actually get applied?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "The findings need an @claude review comment before Claude will act on them.",
+                    "fr": "The findings need an @claude review comment before Claude will act on them."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Code Review applies a fix automatically once a finding is tagged at a high enough severity.",
+                    "fr": "Code Review applies a fix automatically once a finding is tagged at a high enough severity."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Approval is automatic once no findings remain, so the outstanding bug is what is holding it up.",
+                    "fr": "Approval is automatic once no findings remain, so the outstanding bug is what is holding it up."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Code Review never approves or blocks a pull request and has no managed autofix. It posts findings, and you apply them locally with /code-review --fix.",
+                    "fr": "Code Review never approves or blocks a pull request and has no managed autofix. It posts findings, and you apply them locally with /code-review --fix."
+                  }
+                }
+              ],
+              "correctAnswers": "d",
+              "explanation": {
+                "en": "Nicely reasoned. The service finds and ranks, you decide and apply. Pull the branch down, run /code-review with the --fix flag to apply findings to your working tree, and the human judgment stays where it belongs.",
+                "fr": "Nicely reasoned. The service finds and ranks, you decide and apply. Pull the branch down, run /code-review with the --fix flag to apply findings to your working tree, and the human judgment stays where it belongs."
+              },
+              "hint": {
+                "en": "The service posts findings as inline comments and leaves the judgment call with a human.\n\nApplying a finding is a local move, made from your own terminal rather than by the hosted service.",
+                "fr": "The service posts findings as inline comments and leaves the judgment call with a human.\n\nApplying a finding is a local move, made from your own terminal rather than by the hosted service."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch03_act06",
+          "title": {
+            "en": "Wire up the action",
+            "fr": "Wire up the action"
+          },
+          "description": {
+            "en": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action.",
+            "fr": "Once you trust Claude with a task, stop doing it by hand. Schedule prompts as routines on Anthropic's infrastructure, drop to headless mode when the job needs your own pipeline, and put Claude to work on pull requests with managed code review and the GitHub action."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_3_act_06_code",
+              "title": {
+                "en": "Wire up the action",
+                "fr": "Wire up the action"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Start Claude Code with claude.\n\nAsk Claude to create .github/workflows/claude.yaml that runs anthropics/claude-code-action@v1 when someone comments on a pull request.\n\nHave it pass the API key from repository secrets, listen for the @claude trigger phrase, and tune the run in claude_args with a five-turn cap and a permission mode that never stops to ask.\n\nType /exit to exit Claude Code.",
+                "fr": "Start Claude Code with claude.\n\nAsk Claude to create .github/workflows/claude.yaml that runs anthropics/claude-code-action@v1 when someone comments on a pull request.\n\nHave it pass the API key from repository secrets, listen for the @claude trigger phrase, and tune the run in claude_args with a five-turn cap and a permission mode that never stops to ask.\n\nType /exit to exit Claude Code."
+              },
+              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json')\nrepl.run_command('rm -rf /home/repl/queries/.github')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
+              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Create .github/workflows/claude.yaml that runs\n#    anthropics/claude-code-action@v1 on pull request comments, passes the API key\n#    from secrets, listens for @claude, and sets claude_args to\n#    --max-turns 5 --permission-mode dontAsk.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/3_1/history.jsonl ~/.claude/.\n\n# Seeds the workflow file that Claude writes.\nmkdir -p /home/repl/queries/.github/workflows\ncp ~/solutions/3_1/claude.yaml /home/repl/queries/.github/workflows/claude.yaml",
+              "expectedOutput": "",
+              "hint": {
+                "en": "The trigger_phrase input is what the action listens for in comments, and it defaults to @claude.\n\nclaude_args is a plain string of CLI arguments handed straight to Claude Code, so --max-turns 5 and the permission mode both go in there.\n\nAn unattended run has nobody to answer a prompt, so the mode you want allows only pre-approved tools and denies the rest.",
+                "fr": "The trigger_phrase input is what the action listens for in comments, and it defaults to @claude.\n\nclaude_args is a plain string of CLI arguments handed straight to Claude Code, so --max-turns 5 and the permission mode both go in there.\n\nAn unattended run has nobody to answer a prompt, so the mode you want allows only pre-approved tools and denies the rest."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "datacamp_ch04",
+      "title": {
+        "en": "Verify and Share",
+        "fr": "Verify and Share"
+      },
+      "description": {
+        "en": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install.",
+        "fr": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install."
+      },
+      "competencyTags": [
+        "ai_solution_design"
+      ],
+      "recommendedVideos": [],
+      "recommendedVideosManaged": false,
+      "chapters": [
+        {
+          "id": "dc_ch04_act01",
+          "title": {
+            "en": "Video: Trust It: Verifying Unsupervised Runs",
+            "fr": "Video: Trust It: Verifying Unsupervised Runs"
+          },
+          "description": {
+            "en": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install.",
+            "fr": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install."
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_4_act_01_video",
+              "title": {
+                "en": "Video: Trust It: Verifying Unsupervised Runs",
+                "fr": "Video: Trust It: Verifying Unsupervised Runs"
+              },
+              "mp4Url": "/api/assets/ch04_ex01_video_trust_it_verifying_unsupervised_runs_a0fcce5e.mp4",
+              "audioUrl": "/api/assets/ch04_ex01_video_trust_it_verifying_unsupervised_runs_dedc2ef8.mp3",
+              "subtitleUrlEn": "/api/assets/ch04_ex01_video_trust_it_verifying_unsupervised_runs_en_9b366a92.vtt",
+              "transcript": "1. Video: Trust It: Verifying Unsupervised Runs\nYou handed Claude a task and let it run without watching every step. Now it says it's done, but before you ship that, you need a way to check work that you didn't even supervise. A check is what makes hands-off Claude Code safe to rely on. Verify in proportion to the rope that you gave the run. A short session where you watched the messages scroll by needs a glance. An unattended run or a job that fired in continuous integration with nobody in the loop actually needs a real check, because no one saw it happen. And when a run does go unattended at work, keep it in auto mode rather than bypass permissions. The classifier still reviews each action for danger. It never judges whether the code is right, though, so the verification bar stays where it was. Set that bar from how unsupervised this run was. So start with the diff itself, rather than Claude's summary of it. Run /code-review to walk the changes and flag issues. Then put your eyes on git diff. The trap is a tidy summary that reads fine while the diff touched a file that you honestly didn't even expect it to. Read what changed and read the files that were in the plan first. The real gate on an unsupervised run is whether the test passed and whether Claude ran them or only claimed that it did. Don't leave that to trust. Wire it as a hook so Claude can't skip it. A stop hook that runs your tests and refuses to end the turn on a failure, or a PostToolUse hook that lints and type checks after every edit. A hook that exists with code 2 feeds the failure straight back to Claude, which reads it and fixes it without you asking. The check fires on every run, whether or not you remember to ask. The subagent code review you'd run before a PR works here, too. Point it at an unsupervised run. Open a fresh session or subagent and have it review the change cold, with no memory of how the code was built. It has no stake in the approach and catches what the original run talked itself past. Make the check as serious as the run was unsupervised. Read the diff, turn the test into a hook that gates the turn, verify headless runs by their JSON result and exit code, and get a cold second opinion on anything that matters. Do that and Claude did it while I wasn't looking. No longer takes faith.",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Video: Trust It: Verifying Unsupervised Runs",
+                  "text": "You handed Claude a task and let it run without watching every step. Now it says it's done, but before you ship that, you need a way to check work that you didn't even supervise. A check is what makes hands-off Claude Code safe to rely on. Verify in proportion to the rope that you gave the run. A short session where you watched the messages scroll by needs a glance. An unattended run or a job that fired in continuous integration with nobody in the loop actually needs a real check, because no one saw it happen. And when a run does go unattended at work, keep it in auto mode rather than bypass permissions. The classifier still reviews each action for danger. It never judges whether the code is right, though, so the verification bar stays where it was. Set that bar from how unsupervised this run was. So start with the diff itself, rather than Claude's summary of it. Run /code-review to walk the changes and flag issues. Then put your eyes on git diff. The trap is a tidy summary that reads fine while the diff touched a file that you honestly didn't even expect it to. Read what changed and read the files that were in the plan first. The real gate on an unsupervised run is whether the test passed and whether Claude ran them or only claimed that it did. Don't leave that to trust. Wire it as a hook so Claude can't skip it. A stop hook that runs your tests and refuses to end the turn on a failure, or a PostToolUse hook that lints and type checks after every edit. A hook that exists with code 2 feeds the failure straight back to Claude, which reads it and fixes it without you asking. The check fires on every run, whether or not you remember to ask. The subagent code review you'd run before a PR works here, too. Point it at an unsupervised run. Open a fresh session or subagent and have it review the change cold, with no memory of how the code was built. It has no stake in the approach and catches what the original run talked itself past. Make the check as serious as the run was unsupervised. Read the diff, turn the test into a hook that gates the turn, verify headless runs by their JSON result and exit code, and get a cold second opinion on anything that matters. Do that and Claude did it while I wasn't looking. No longer takes faith."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dc_ch04_act02",
+          "title": {
+            "en": "Trust It: Verifying Unsupervised Runs",
+            "fr": "Trust It: Verifying Unsupervised Runs"
+          },
+          "description": {
+            "en": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install.",
+            "fr": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install."
+          },
+          "type": "quiz",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "multi_choice_exercise",
+              "id": "dc_4_act_02_qcm_multiple",
+              "question": {
+                "en": "Read the article, then answer the question below.\n\nAn overnight run on the queries project has finished. Nobody watched it. The summary is three tidy lines: the pending-orders query was refactored, its callers were updated, and all checks pass. You have to decide whether to ship it.\n\nWhat is the first move?",
+                "fr": "Read the article, then answer the question below.\n\nAn overnight run on the queries project has finished. Nobody watched it. The summary is three tidy lines: the pending-orders query was refactored, its callers were updated, and all checks pass. You have to decide whether to ship it.\n\nWhat is the first move?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Read the summary closely and spot-check the files it names.",
+                    "fr": "Read the summary closely and spot-check the files it names."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "Ask Claude in the same session how confident it is in the change.",
+                    "fr": "Ask Claude in the same session how confident it is in the change."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Run /code-review over the changes, then read git diff yourself, starting with anything that was not in the plan.",
+                    "fr": "Run /code-review over the changes, then read git diff yourself, starting with anything that was not in the plan."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Trust it, since the run was in auto mode and the classifier reviewed every action.",
+                    "fr": "Trust it, since the run was in auto mode and the classifier reviewed every action."
+                  }
+                }
+              ],
+              "correctAnswers": "c",
+              "explanation": {
+                "en": "Nailed it. The trap on an unsupervised run is a tidy summary sitting on top of a diff that touched something unexpected. Reading the diff is the only thing that surfaces it.",
+                "fr": "Nailed it. The trap on an unsupervised run is a tidy summary sitting on top of a diff that touched something unexpected. Reading the diff is the only thing that surfaces it."
+              },
+              "hint": {
+                "en": "A clean write-up is not proof of clean code, and a summary will not mention the file you never expected it to touch.\n\nA second opinion is only worth something when it has no memory of how the code was built.",
+                "fr": "A clean write-up is not proof of clean code, and a summary will not mention the file you never expected it to touch.\n\nA second opinion is only worth something when it has no memory of how the code was built."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch04_act03",
+          "title": {
+            "en": "Gate the turn, don't take its word",
+            "fr": "Gate the turn, don't take its word"
+          },
+          "description": {
+            "en": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install.",
+            "fr": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_4_act_03_code",
+              "title": {
+                "en": "Gate the turn, don't take its word",
+                "fr": "Gate the turn, don't take its word"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Start Claude Code with claude.\n\nAsk Claude to add a Stop hook to .claude/settings.json that runs npx tsc --noEmit.\n\nHave the hook refuse to end the turn when the check fails, so the failure is fed back to Claude rather than to you.\n\nType /exit to exit Claude Code.",
+                "fr": "Start Claude Code with claude.\n\nAsk Claude to add a Stop hook to .claude/settings.json that runs npx tsc --noEmit.\n\nHave the hook refuse to end the turn when the check fails, so the failure is fed back to Claude rather than to you.\n\nType /exit to exit Claude Code."
+              },
+              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json /home/repl/queries/.claude/settings.json')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
+              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Add a Stop hook to .claude/settings.json that runs npx tsc --noEmit\n#    and exits 2 when the type check fails, so the turn cannot end on a broken build.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/4_1/history.jsonl ~/.claude/.\n\n# Seeds the settings wiring that Claude writes.\nmkdir -p /home/repl/queries/.claude\ncp ~/solutions/4_1/settings.json /home/repl/queries/.claude/settings.json",
+              "expectedOutput": "",
+              "hint": {
+                "en": "The blocking exit code is 2, and it hands standard error back to Claude as context to act on.\n\ntsc exits 1 when it finds type errors, and exit 1 does not block, so the hook has to translate the failure. Something like npx tsc --noEmit || exit 2 covers it.\n\nThe wiring goes under hooks.Stop in .claude/settings.json, which needs no matcher because it is not watching a tool.",
+                "fr": "The blocking exit code is 2, and it hands standard error back to Claude as context to act on.\n\ntsc exits 1 when it finds type errors, and exit 1 does not block, so the hook has to translate the failure. Something like npx tsc --noEmit || exit 2 covers it.\n\nThe wiring goes under hooks.Stop in .claude/settings.json, which needs no matcher because it is not watching a tool."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch04_act04",
+          "title": {
+            "en": "A cold second opinion",
+            "fr": "A cold second opinion"
+          },
+          "description": {
+            "en": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install.",
+            "fr": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_4_act_04_code",
+              "title": {
+                "en": "A cold second opinion",
+                "fr": "A cold second opinion"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Start Claude Code with claude.\n\nAsk Claude to review the uncommitted changes by reading git diff, rather than any description of them.\n\nTell it the run was only meant to add a stale pending-orders query, and have it write its findings to review.md, calling out anything that falls outside that.\n\nType /exit to exit Claude Code.",
+                "fr": "Start Claude Code with claude.\n\nAsk Claude to review the uncommitted changes by reading git diff, rather than any description of them.\n\nTell it the run was only meant to add a stale pending-orders query, and have it write its findings to review.md, calling out anything that falls outside that.\n\nType /exit to exit Claude Code."
+              },
+              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -f /home/repl/queries/.claude/settings.local.json /home/repl/queries/.claude/settings.json')\nrepl.run_command('cd /home/repl/queries && git checkout -- . 2>/dev/null; rm -f review.md')\n# The change the run was asked to make.\nrepl.run_command(r'''cat >> /home/repl/queries/src/queries/order_queries.ts <<'EOF'\n\nexport async function getStalePendingOrders(\n  db: Database,\n  days: number\n): Promise<any[]> {\n  const query = `\n    SELECT o.order_id, c.first_name, c.last_name, c.phone\n    FROM orders o\n    JOIN customers c ON c.id = o.customer_id\n    WHERE o.status = 'pending'\n      AND o.order_date < datetime('now', '-' || ? || ' days')\n  `;\n  return new Promise((resolve, reject) => {\n    db.all(query, [days], (err, rows) => {\n      if (err) reject(err);\n      else resolve(rows);\n    });\n  });\n}\nEOF''')\n# The change nobody asked for.\nrepl.run_command('cd /home/repl/queries && sed -i \"s/email TEXT UNIQUE NOT NULL/email TEXT NOT NULL/\" src/schema.ts')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
+              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Review the output of git diff. The run was only meant to add a stale\n#    pending-orders query. Write your findings to review.md and call out anything\n#    outside that scope.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/4_2/history.jsonl ~/.claude/.\n\n# Seeds the review Claude writes.\ncp ~/solutions/4_2/review.md /home/repl/queries/review.md",
+              "expectedOutput": "",
+              "hint": {
+                "en": "Point Claude at the evidence, for example: Review the output of git diff.\n\nNaming the intended scope is what lets a reviewer recognize the change that falls outside it.\n\nRead review.md yourself afterwards. A file the brief never mentioned is exactly the kind of thing a tidy summary leaves out.",
+                "fr": "Point Claude at the evidence, for example: Review the output of git diff.\n\nNaming the intended scope is what lets a reviewer recognize the change that falls outside it.\n\nRead review.md yourself afterwards. A file the brief never mentioned is exactly the kind of thing a tidy summary leaves out."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch04_act05",
+          "title": {
+            "en": "Video: Plugins",
+            "fr": "Video: Plugins"
+          },
+          "description": {
+            "en": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install.",
+            "fr": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install."
+          },
+          "type": "teaching",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_4_act_05_video",
+              "title": {
+                "en": "Video: Plugins",
+                "fr": "Video: Plugins"
+              },
+              "mp4Url": "/api/assets/ch04_ex05_video_plugins_9cb12158.mp4",
+              "audioUrl": "/api/assets/ch04_ex05_video_plugins_f403ef8c.mp3",
+              "subtitleUrlEn": "/api/assets/ch04_ex05_video_plugins_en_9d93acd8.vtt",
+              "transcript": "1. Video: Plugins\nA setup you trust is worth more when your whole team runs it. Plugins are how Claude Code packages a setup and moves it between people. And there are two sides to that, using the plugins other people publish and packaging your own once you've built something worth sharing. A plugin is one installable unit. Where it lives sets how you install it. Inside a session, /plugin install the organization name at the plugin name does the same thing. For a team, add a private marketplace once with the /plugin marketplace add your organization slash Claude plugins or whatever you want to call it. And every install after that results through it with centralized discovery, version tracking, and updates. Now a plugin runs code on your machine with your privileges and its hooks fire on every matching tool call. Install it for the skills and you also get its PreToolUse and stop hooks whether you read them or not. A community plugin can ship a stop hook that calls out to a network endpoint and nothing in your configuration will warn you. See every hook, agent, and MCP server that it adds. Install plugins and add marketplaces only from sources that you truly trust. The in-app submission form posts to the community marketplace after Anthropic's automated review. And the official marketplace is curated on its own track. Reviewed isn't the same as trusted though, so check what it does. A plugin doesn't overwrite your configuration. Its components run alongside yours. So first, hooks stack together. A plugin's PreToolUse and your own both fire on every tool call, which is the reason you read the details first. Skills, agents, and commands are namespaced under the plugin name so they never clash. A plugin can also ship a settings.json file but a narrow one. So Claude Code honors only the agent and subagent status line keys. Setting agent promotes one of the plugins subagents to the main thread with a system prompt, tool, restrictions, and model. And enabling that plugin changes how Claude Code behaves by default, which is one of the main reasons to look before you even turn it on. So once you've built a .claude directory, instead of your team copying and pasting between machines, package it instead. A plugin bundles all of it as one version installable unit. Skills, subagents, hooks, and MCP server configs, plus the longer tail of the language server protocol servers, background monitors, themes, and a settings.json slice. The manifest lives at .claude-plugin/plugin.json and holds the name, version, description, and author. It's optional but leave it out and Claude Code discovers components by directory convention. The directory structure does the rest. The same .claude shape that you already use with skills with one folder per skill, agents with one markdown file per subagent, hooks slash hooksjson and .mcpjson all at the plugin root. Name is the only required field and it namespaces your skills as the company name, skill name. Version it like any other dependency. When you use plugins, read before you install. When you build one, package your .claude the moment it works. One manifest, one install, and the setup you trust reaches your entire team.",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Video: Plugins",
+                  "text": "A setup you trust is worth more when your whole team runs it. Plugins are how Claude Code packages a setup and moves it between people. And there are two sides to that, using the plugins other people publish and packaging your own once you've built something worth sharing. A plugin is one installable unit. Where it lives sets how you install it. Inside a session, /plugin install the organization name at the plugin name does the same thing. For a team, add a private marketplace once with the /plugin marketplace add your organization slash Claude plugins or whatever you want to call it. And every install after that results through it with centralized discovery, version tracking, and updates. Now a plugin runs code on your machine with your privileges and its hooks fire on every matching tool call. Install it for the skills and you also get its PreToolUse and stop hooks whether you read them or not. A community plugin can ship a stop hook that calls out to a network endpoint and nothing in your configuration will warn you. See every hook, agent, and MCP server that it adds. Install plugins and add marketplaces only from sources that you truly trust. The in-app submission form posts to the community marketplace after Anthropic's automated review. And the official marketplace is curated on its own track. Reviewed isn't the same as trusted though, so check what it does. A plugin doesn't overwrite your configuration. Its components run alongside yours. So first, hooks stack together. A plugin's PreToolUse and your own both fire on every tool call, which is the reason you read the details first. Skills, agents, and commands are namespaced under the plugin name so they never clash. A plugin can also ship a settings.json file but a narrow one. So Claude Code honors only the agent and subagent status line keys. Setting agent promotes one of the plugins subagents to the main thread with a system prompt, tool, restrictions, and model. And enabling that plugin changes how Claude Code behaves by default, which is one of the main reasons to look before you even turn it on. So once you've built a .claude directory, instead of your team copying and pasting between machines, package it instead. A plugin bundles all of it as one version installable unit. Skills, subagents, hooks, and MCP server configs, plus the longer tail of the language server protocol servers, background monitors, themes, and a settings.json slice. The manifest lives at .claude-plugin/plugin.json and holds the name, version, description, and author. It's optional but leave it out and Claude Code discovers components by directory convention. The directory structure does the rest. The same .claude shape that you already use with skills with one folder per skill, agents with one markdown file per subagent, hooks slash hooksjson and .mcpjson all at the plugin root. Name is the only required field and it namespaces your skills as the company name, skill name. Version it like any other dependency. When you use plugins, read before you install. When you build one, package your .claude the moment it works. One manifest, one install, and the setup you trust reaches your entire team."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dc_ch04_act06",
+          "title": {
+            "en": "Plugins",
+            "fr": "Plugins"
+          },
+          "description": {
+            "en": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install.",
+            "fr": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install."
+          },
+          "type": "quiz",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "multi_choice_exercise",
+              "id": "dc_4_act_06_qcm_multiple",
+              "question": {
+                "en": "Read the article, then answer the question below.\n\nA teammate found a community plugin with an excellent test-writing skill and installed it across the team. It came from the community marketplace, so it had been through automated review, and the skill is genuinely good. They read the skill's description and nothing else.\n\nWhat did they take on besides the skill?",
+                "fr": "Read the article, then answer the question below.\n\nA teammate found a community plugin with an excellent test-writing skill and installed it across the team. It came from the community marketplace, so it had been through automated review, and the skill is genuinely good. They read the skill's description and nothing else.\n\nWhat did they take on besides the skill?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "en": "Nothing beyond the skill, since a plugin's other components stay inert until you invoke them.",
+                    "fr": "Nothing beyond the skill, since a plugin's other components stay inert until you invoke them."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "en": "A silent downgrade, because the plugin's hooks replace the ones they had already configured.",
+                    "fr": "A silent downgrade, because the plugin's hooks replace the ones they had already configured."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "en": "Overwritten skills, wherever a plugin skill shares a name with one of their own.",
+                    "fr": "Overwritten skills, wherever a plugin skill shares a name with one of their own."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "en": "Its hooks. A plugin's PreToolUse and Stop hooks fire on every matching tool call with your privileges, and nothing in your configuration warns you.",
+                    "fr": "Its hooks. A plugin's PreToolUse and Stop hooks fire on every matching tool call with your privileges, and nothing in your configuration warns you."
+                  }
+                }
+              ],
+              "correctAnswers": "d",
+              "explanation": {
+                "en": "Precisely. A plugin runs code on your machine, and installing it for the skills means taking its hooks too. A stop hook that calls out to a network endpoint would look no different from the outside, which is why you check what a plugin adds before turning it on.",
+                "fr": "Precisely. A plugin runs code on your machine, and installing it for the skills means taking its hooks too. A stop hook that calls out to a network endpoint would look no different from the outside, which is why you check what a plugin adds before turning it on."
+              },
+              "hint": {
+                "en": "A plugin's components run alongside your own configuration rather than replacing any of it.\n\nReviewed is not the same as trusted, and automated review catches some things rather than everything.",
+                "fr": "A plugin's components run alongside your own configuration rather than replacing any of it.\n\nReviewed is not the same as trusted, and automated review catches some things rather than everything."
+              }
+            }
+          ]
+        },
+        {
+          "id": "dc_ch04_act07",
+          "title": {
+            "en": "Package what you built",
+            "fr": "Package what you built"
+          },
+          "description": {
+            "en": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install.",
+            "fr": "A run nobody watched needs a real check, not a tidy summary. Read the diff yourself, gate the turn on tests with a hook, get a cold second opinion on anything that matters, then package the setup you trust as a plugin your whole team can install."
+          },
+          "type": "exercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "code_repl",
+              "id": "dc_4_act_07_code",
+              "title": {
+                "en": "Package what you built",
+                "fr": "Package what you built"
+              },
+              "language": "python",
+              "instructions": {
+                "en": "Start Claude Code with claude.\n\nAsk Claude to package the project's .claude setup as a plugin in a new queries-verify/ directory, putting the skill under skills/ and the hook wiring in hooks/hooks.json.\n\nHave it write the manifest to queries-verify/.claude-plugin/plugin.json with a hyphenated name, a version, a description, and an author.\n\nType /exit to exit Claude Code.",
+                "fr": "Start Claude Code with claude.\n\nAsk Claude to package the project's .claude setup as a plugin in a new queries-verify/ directory, putting the skill under skills/ and the hook wiring in hooks/hooks.json.\n\nHave it write the manifest to queries-verify/.claude-plugin/plugin.json with a hyphenated name, a version, a description, and an author.\n\nType /exit to exit Claude Code."
+              },
+              "starterCode": "repl = connect('bash')\n# Strip the redundant Write() allow rule the image seeds into\n# ~/.claude/settings.json. Newer Claude Code versions warn about it on every\n# launch, since file permission checks only match Edit() rules and\n# Edit(/home/repl/**) already covers every file-editing tool.\nrepl.run_command('''python3 - <<'PY'\nimport json\np = '/home/repl/.claude/settings.json'\ntry:\n    settings = json.load(open(p))\n    perms = settings.get('permissions', {})\n    perms['allow'] = [r for r in perms.get('allow', []) if not r.startswith('Write(')]\n    json.dump(settings, open(p, 'w'), indent=2)\nexcept Exception:\n    pass\nPY''')\nrepl.run_command('rm -rf /home/repl/queries/queries-verify')\nrepl.run_command('mkdir -p /home/repl/queries/.claude/skills/verify-changes')\n# Written with printf rather than a heredoc: the skill's YAML frontmatter\n# delimiters would otherwise sit at the start of a line and split this exercise.\nrepl.run_command(\n    \"printf '%s\\\\n' '---' 'name: verify-changes'\"\n    \" 'description: Run after edits to source files. Runs the type check, reads the diff, confirms no check was weakened, and reports pass or fail with evidence.'\"\n    \" '---' '' '# Verify changes' ''\"\n    \" '1. Run `npx tsc --noEmit` and capture the output.'\"\n    \" '2. Read `git diff` for the changes made in this turn.'\"\n    \" '3. Confirm no check was loosened or skipped to make the run pass.'\"\n    \" '4. Report pass or fail, quoting the output you relied on.'\"\n    \" > /home/repl/queries/.claude/skills/verify-changes/SKILL.md\"\n)\nrepl.run_command(r'''cat > /home/repl/queries/.claude/settings.json <<'EOF'\n{\n  \"hooks\": {\n    \"Stop\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"npx tsc --noEmit || exit 2\"\n          }\n        ]\n      }\n    ]\n  }\n}\nEOF''')\nrepl.run_command('cd /home/repl/queries && rm -f ~/.claude/history.jsonl'\n                 # Transcripts outlive history.jsonl, so a previous exercise's\n                 # answers would otherwise be graded as this one's.\n                 ' && rm -rf ~/.claude/projects/-home-repl-queries && clear')",
+              "solutionCode": "# 1. Start Claude Code by running `claude`.\n# 2. Ask Claude: \"Package the .claude setup as a plugin in queries-verify/: move the\n#    skill under skills/, put the hook wiring in hooks/hooks.json, and write a manifest\n#    at queries-verify/.claude-plugin/plugin.json with a name, version, description\n#    and author.\"\n# 3. Type `/exit` to exit Claude Code.\n\n# Seeds session history for automated validation.\nmkdir -p ~/.claude && cp ~/solutions/4_3/history.jsonl ~/.claude/.\n\n# Seeds the packaged plugin that Claude produces.\ncp -r ~/solutions/4_3/queries-verify /home/repl/queries/queries-verify",
+              "expectedOutput": "",
+              "hint": {
+                "en": "The plugin uses the same layout as your .claude directory, one folder per skill, so most of this is moving files rather than rewriting them.\n\nname is the only required field, and it namespaces the skills as name:skill-name, so it needs to be a slug rather than a sentence.\n\nVersion it like any other dependency. That is what makes updates and version tracking work for everyone who installs it.",
+                "fr": "The plugin uses the same layout as your .claude directory, one folder per skill, so most of this is moving files rather than rewriting them.\n\nname is the only required field, and it namespaces the skills as name:skill-name, so it needs to be a slug rather than a sentence.\n\nVersion it like any other dependency. That is what makes updates and version tracking work for everyone who installs it."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
