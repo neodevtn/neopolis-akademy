@@ -319,6 +319,7 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
       blocks = [buildCodeReplBlock(activity)];
       break;
     case "MultipleChoiceExercise":
+    case "PureMultipleChoiceExercise":
       type = "quiz";
       blocks = [extractChoiceData(activity)];
       break;
