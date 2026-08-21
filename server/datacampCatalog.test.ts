@@ -14,6 +14,12 @@ const mcpAdvancedCourse = JSON.parse(
     "utf8",
   ),
 );
+const subagentsCourse = JSON.parse(
+  readFileSync(
+    new URL("../client/public/data/courses/introduction_to_subagents__01.json", import.meta.url),
+    "utf8",
+  ),
+);
 
 describe("catalogue DataCamp", () => {
   it("exposes Agent Skills comme un cours navigable avec ses compteurs canoniques", () => {
@@ -84,6 +90,47 @@ describe("catalogue DataCamp", () => {
     const firstActivity = mcpAdvancedCourse.lessons[0].chapters[0];
     const preparation = firstActivity.blocks.find(
       (block: { id?: string }) => block.id === "neopolis_mcp_advanced_environment_preparation",
+    );
+
+    expect(preparation).toMatchObject({
+      type: "content",
+      body: {
+        fr: expect.stringContaining("Avant de commencer"),
+        en: expect.stringContaining("Before you start"),
+      },
+    });
+    expect(firstActivity.blocks.findIndex((block: { id?: string }) => block.id === preparation.id)).toBe(0);
+  });
+
+  it("exposes Introduction to Subagents comme un cours navigable avec ses compteurs canoniques", () => {
+    const certification = trainingIndex.certifications.find(
+      (item) => item.id === "datacamp_introduction_to_subagents",
+    );
+    const course = trainingIndex.courses.find(
+      (item) => item.id === "introduction_to_subagents__01",
+    );
+
+    expect(certification).toMatchObject({
+      courseCount: 1,
+      totalLessons: 2,
+      totalActivities: 12,
+      totalVideos: 4,
+      totalDownloads: 2,
+      courses: ["introduction_to_subagents__01"],
+    });
+    expect(course).toMatchObject({
+      certId: "datacamp_introduction_to_subagents",
+      lessonCount: 2,
+      totalActivities: 12,
+      videoCount: 4,
+      downloadCount: 2,
+    });
+  });
+
+  it("prépare l’environnement avant la première vidéo Subagents", () => {
+    const firstActivity = subagentsCourse.lessons[0].chapters[0];
+    const preparation = firstActivity.blocks.find(
+      (block: { id?: string }) => block.id === "neopolis_subagents_environment_preparation",
     );
 
     expect(preparation).toMatchObject({

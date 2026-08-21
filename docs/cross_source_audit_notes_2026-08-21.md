@@ -49,3 +49,24 @@ Le rapport croisé classe ce cours en **Critical**. Le prompt de correction sign
 Les preuves visuelles du PDF montrent la fiche DataCamp et le premier écran pédagogique avec une vidéo et des contrôles utilisateur, alors que la capture Neopolis ne montrait encore qu’une fiche vide sans premier écran pédagogique. La page technique du rapport indique, pour le premier écran, **8 boutons** côté source contre **0 bouton** côté Neopolis, ainsi qu’une **absence de balise vidéo visible** sur le premier écran Neopolis [rapport PDF page 4].
 
 Les exigences de correction pour ce cours sont donc déjà fixées : rétablir le rattachement catalogue et la navigation profonde, reconstruire l’ensemble des écrans depuis le manifeste canonique, vérifier les vidéos et téléchargements locaux, puis ajouter au premier écran un bloc standard de préparation d’environnement conforme aux règles d’intégration Neopolis, sans UI libre ni régression sur le verrouillage séquentiel.
+
+### Preuves finales de conformité — publication `73259849`
+
+| Contrôle | Référence source ou règle | Résultat constaté | Statut |
+|---|---|---|---|
+| Rattachement catalogue | 2 chapitres, 32 activités, 10 vidéos, 2 téléchargements | La fiche publique affiche `1 cours`, `32 activités`, `10 vidéos`, `2 téléchargements` et une carte cliquable. | Conforme |
+| Navigation profonde | Lien écran/chapitre requis | La carte ouvre `/training/datacamp_model_context_protocol_advanced_topics/model_context_protocol_advanced_topics__01`. | Conforme |
+| Préparation d’environnement | Prompt de correction, activité pratique autonome | Le premier écran affiche les prérequis Python, MCP, environnement virtuel et sécurité des fichiers avant la vidéo. | Conforme |
+| Verrouillage séquentiel | Règle Neopolis | Les 2 leçons sont visibles ; la première contient 14 écrans et la seconde reste verrouillée jusqu’à la progression requise. | Conforme |
+| Vidéo locale | Média local requis | La première vidéo répond HTTP `206`, type `video/mp4`, avec lecture partielle. | Conforme |
+| Support PDF | Support local déclaré | Les slides du chapitre 1 répondent HTTP `206`, type `application/pdf`. | Conforme |
+| Mobile | Lisibilité et actions visibles | Vérification à 375 × 812 : préparation, vidéo, transcript, PDF, téléchargement et navigation sont visibles sans chevauchement. | Conforme |
+| Tests | Régression catalogue et préparation | Vitest : 6 tests ciblés réussis ; TypeScript et validation des cours sans erreur. | Conforme |
+
+Après la propagation du bundle de production, aucun écart critique résiduel du rapport croisé n’est constaté pour ce cours.
+
+## 13. DataCamp — Introduction to Subagents
+
+Le rapport croisé attribue à ce cours le niveau **Critical**. Il compare les **12 exercices** et **4 vidéos** de la source DataCamp à une carte Neopolis alors auditée à **2 chapitres et 0 activité**, et à une page formation affichant **0 cours, 2 chapitres, 0 activité, 3 exercices, 4 vidéos et 2 téléchargements** [rapport PDF page 1, prompt de correction].
+
+Les pages de preuve illustrent la fiche DataCamp et sa première vidéo, tandis que la capture Neopolis historique ne contient pas de premier écran pédagogique. La correction doit donc reprendre la même discipline : entrée de cours indexée, compteurs canoniques, navigation profonde, préparation d’environnement Claude Code, médias locaux et verrouillage séquentiel préservé.
