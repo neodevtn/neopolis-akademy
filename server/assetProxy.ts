@@ -46,6 +46,22 @@ function getMimeFromKey(key: string): string | null {
   return MIME_MAP[ext] || null;
 }
 
+async function fetchStorageWithRetry(input: RequestInfo | URL, init?: RequestInit, attempts = 3): Promise<globalThis.Response> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      const response = await fetch(input, init);
+      if (response.ok || response.status < 500 || attempt === attempts) return response;
+      lastError = new Error(`Storage responded ${response.status}`);
+    } catch (error) {
+      lastError = error;
+      if (attempt === attempts) throw error;
+    }
+    await new Promise((resolve) => setTimeout(resolve, attempt * 150));
+  }
+  throw lastError instanceof Error ? lastError : new Error("Storage request failed");
+}
+
 export function registerAssetProxy(app: Express) {
   app.get("/api/assets/*", async (req: Request, res: Response) => {
     const key = (req.params as Record<string, string>)[0];
@@ -83,7 +99,7 @@ export function registerAssetProxy(app: Express) {
       );
       forgeUrl.searchParams.set("path", key);
 
-      const forgeResp = await fetch(forgeUrl, {
+      const forgeResp = await fetchStorageWithRetry(forgeUrl, {
         headers: { Authorization: `Bearer ${ENV.forgeApiKey}` },
       });
 
@@ -110,7 +126,7 @@ export function registerAssetProxy(app: Express) {
         // Relay the requested range directly. Some signed storage endpoints do not
         // reliably support HEAD for newly uploaded large files, even though GET Range
         // succeeds. The upstream Content-Range is the authoritative source here.
-        const rangeResp = await fetch(url, {
+        const rangeResp = await fetchStorageWithRetry(url, {
           headers: { Range: rangeHeader },
         });
         if (!rangeResp.ok) {
@@ -134,7 +150,7 @@ export function registerAssetProxy(app: Express) {
         res.send(Buffer.from(arrayBuf));
       } else {
         // Full file request
-        const fileResp = await fetch(url);
+        const fileResp = await fetchStorageWithRetry(url);
         if (!fileResp.ok) {
           res.status(502).send("Storage file fetch error");
           return;
