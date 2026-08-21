@@ -34,7 +34,7 @@ const geminiNotebookLmCourse = JSON.parse(
 );
 const promptEngineeringCourse = JSON.parse(
   readFileSync(
-    new URL("../client/public/data/courses/prompt_engineering_with_openai_api__01.json", import.meta.url),
+    new URL("../client/public/data/courses/prompt_engineering_with_the_openai_api__01.json", import.meta.url),
     "utf8",
   ),
 );
