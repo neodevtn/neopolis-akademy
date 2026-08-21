@@ -341,6 +341,7 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
       blocks = [buildPracticalBlock(activity, slidesPdf)];
       break;
     case "SingleProcessExercise":
+    case "ConsoleExercise":
       type = "exercise";
       blocks = [buildCodeReplBlock(activity)];
       break;
