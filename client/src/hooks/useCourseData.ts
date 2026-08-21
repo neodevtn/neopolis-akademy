@@ -7,6 +7,38 @@ import { useState, useEffect, useCallback, useRef } from "react";
  */
 const courseCache = new Map<string, { lessons: any[]; exercises: any[]; sections: any[] }>();
 const pendingFetches = new Map<string, Promise<any>>();
+const legacyCourseFileAliases: Record<string, string> = {
+  prompt_engineering_with_the_openai_api__01: "prompt_engineering_with_openai_api__01",
+};
+
+export function getCourseFileCandidates(courseId: string): string[] {
+  const legacyFile = legacyCourseFileAliases[courseId];
+  return legacyFile ? [courseId, legacyFile] : [courseId];
+}
+
+async function fetchCourseJson(courseId: string): Promise<any> {
+  let lastError: Error | undefined;
+  for (const fileId of getCourseFileCandidates(courseId)) {
+    try {
+      const response = await fetch(`/data/courses/${fileId}.json`, {
+        // Les JSON de cours sont mis à jour indépendamment du bundle JavaScript.
+        // La revalidation explicite évite qu’un apprenant voie un ancien cours après
+        // une publication tout en conservant le cache mémoire de la session.
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache" },
+      });
+      const contentType = response.headers.get("content-type") || "";
+      if (!response.ok || !contentType.includes("application/json")) {
+        lastError = new Error(`Course ${fileId} not found`);
+        continue;
+      }
+      return await response.json();
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(`Course ${fileId} not found`);
+    }
+  }
+  throw lastError || new Error(`Course ${courseId} not found`);
+}
 
 
 async function fetchCourseData(courseId: string): Promise<{ lessons: any[]; exercises: any[]; sections: any[] }> {
@@ -15,17 +47,7 @@ async function fetchCourseData(courseId: string): Promise<{ lessons: any[]; exer
     return pendingFetches.get(courseId)!;
   }
 
-  const promise = fetch(`/data/courses/${courseId}.json`, {
-    // Les JSON de cours sont mis à jour indépendamment du bundle JavaScript.
-    // La revalidation explicite évite qu’un apprenant voie un ancien cours après
-    // une publication tout en conservant le cache mémoire de la session.
-    cache: "no-store",
-    headers: { "Cache-Control": "no-cache" },
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error(`Course ${courseId} not found`);
-      return res.json();
-    })
+  const promise = fetchCourseJson(courseId)
     .then((data) => {
       const result = {
         lessons: normalizeCourseBlocks(data).lessons || [],

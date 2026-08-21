@@ -1932,3 +1932,4 @@
 - [x] Traiter le cours critique « Practical AI with Google Gemini and NotebookLM » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant le cours critique suivant
 - [x] Stabiliser les requêtes Range des 7 vidéos Gemini réuploadées et confirmer leur lecture de production sans erreur intermittente
 - [ ] Traiter le cours critique « Prompt Engineering with the OpenAI API » : analyser son PDF et son prompt, corriger, publier et produire les preuves avant le cours critique suivant
+- [ ] Ajouter un repli de fichier de cours pour le renommage Prompt Engineering pendant la propagation des assets statiques
