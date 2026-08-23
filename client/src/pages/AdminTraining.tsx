@@ -22,7 +22,7 @@ import {
   UserPlus, Ban, ShieldCheck, Download, BarChart3, Mail,
   MoreVertical, UserX, UserCheck, TrendingUp, Activity,
   Clock, CheckCircle2, AlertTriangle, RefreshCw, Edit2, Send,
-  UserCog,
+  UserCog, MessageSquareText,
 } from "lucide-react";
 import { FileText, Video, BookMarked, XCircle, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -31,6 +31,7 @@ import trainingIndex from "@/data/trainingIndex.json";
 import { AchievementGallery } from "@/components/AchievementGallery";
 import { CompetencyProfile } from "@/components/CompetencyProfile";
 import { CompetencyLeaderboard } from "@/components/admin/CompetencyLeaderboard";
+import { AdminFeedbackDashboard } from "@/components/AdminFeedbackDashboard";
 import { buildNavigationUrl } from "@shared/navigationUrls";
 import { parseInvitationEmails, type InvitationEmailParseResult } from "@/lib/invitationEmails";
 
@@ -72,6 +73,7 @@ export default function AdminTraining() {
     invitations: { title: "Invitations directes", description: "Inviter, suivre ou annuler les invitations hors candidature" },
     selected: { title: "Candidats sélectionnés", description: "Vérifier l’activation des comptes et relancer les candidats retenus" },
     analytics: { title: "Reporting d’apprentissage", description: "Analyser la performance, l’implication et l’évolution des apprenants" },
+    feedback: { title: "Feedback formations", description: "Piloter les notations, suggestions et réponses pédagogiques" },
   } as Record<string, { title: string; description: string }>)[activeTab] || { title: "Gestion des apprenants", description: "Suivi, invitations et analyses de la formation" };
 
   const navigateTraining = (tab: string, learnerId?: number | null) => {
@@ -713,6 +715,9 @@ export default function AdminTraining() {
               <p className="text-sm text-muted-foreground mt-1">{activeSection.description}</p>
             </div>
             <div className="flex items-center gap-2">
+              {activeTab !== "feedback" && <Button variant="outline" size="sm" className="gap-1.5" onClick={() => navigateTraining("feedback")}>
+                <MessageSquareText className="w-4 h-4" /> Feedback formations
+              </Button>}
               {activeTab === "learners" && <Button variant="outline" size="sm" className="gap-1.5" onClick={handleExportCSV}>
                 <Download className="w-4 h-4" /> Export CSV
               </Button>}
@@ -819,6 +824,9 @@ export default function AdminTraining() {
               </TabsTrigger>
               <TabsTrigger value="analytics" className="gap-1.5">
                 <BarChart3 className="w-4 h-4" /> Reporting
+              </TabsTrigger>
+              <TabsTrigger value="feedback" className="gap-1.5">
+                <MessageSquareText className="w-4 h-4" /> Feedback
               </TabsTrigger>
             </TabsList>
 
@@ -1109,6 +1117,7 @@ export default function AdminTraining() {
               </div>
               <CompetencyLeaderboard />
             </TabsContent>
+            <TabsContent value="feedback"><AdminFeedbackDashboard /></TabsContent>
           </Tabs>
         </motion.div>
       </div>

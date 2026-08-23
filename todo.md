@@ -1964,3 +1964,10 @@
 - [x] Définir les catégories complémentaires nécessaires avec intitulés bilingues et descriptions administrables
 - [x] Rattacher chaque formation et cours à une catégorie pertinente
 - [x] Ajouter des tests de couverture de catégorie et vérifier le rendu du catalogue
+
+## Feedback sur les formations
+- [x] Auditer les modèles, écrans et données existantes liés aux avis et retours apprenants
+- [x] Créer les tables et procédures sécurisées pour les notations, suggestions et statuts de traitement
+- [x] Ajouter le formulaire apprenant de notation et suggestion par formation
+- [x] Créer le tableau de bord admin de suivi, filtrage, réponse et résolution des feedbacks
+- [x] Tester les droits, les parcours et publier le système de feedback

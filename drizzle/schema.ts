@@ -617,14 +617,28 @@ export const courseFeedback = mysqlTable("course_feedback", {
   userId: int("userId").notNull(),
   certificationId: varchar("certificationId", { length: 200 }).notNull(),
   courseId: varchar("courseId", { length: 200 }).notNull(),
-  rating: int("rating").notNull(), // constrained to 1–3 by the API
+  // Historical ratings (1–3) remain valid; new submissions use the 1–5 scale.
+  rating: int("rating").notNull(),
+  contentRating: int("contentRating"),
+  experienceRating: int("experienceRating"),
+  difficultyRating: int("difficultyRating"),
+  recommendScore: int("recommendScore"),
+  category: mysqlEnum("category", ["content", "exercise", "media", "technical", "suggestion", "other"]),
   comment: text("comment"),
+  suggestion: text("suggestion"),
+  status: mysqlEnum("status", ["new", "in_review", "responded", "resolved", "dismissed"]).notNull().default("new"),
+  adminResponse: text("adminResponse"),
+  adminResponderId: int("adminResponderId"),
+  respondedAt: timestamp("respondedAt"),
+  resolvedAt: timestamp("resolvedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 }, (table) => [
   uniqueIndex("course_feedback_user_course_once").on(table.userId, table.courseId),
   index("course_feedback_course_idx").on(table.courseId, table.updatedAt),
   index("course_feedback_user_idx").on(table.userId, table.updatedAt),
+  index("course_feedback_status_idx").on(table.status, table.updatedAt),
+  index("course_feedback_category_idx").on(table.category, table.updatedAt),
 ]);
 export type CourseFeedback = typeof courseFeedback.$inferSelect;
 export type InsertCourseFeedback = typeof courseFeedback.$inferInsert;

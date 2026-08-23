@@ -931,24 +931,41 @@ export async function getUserVideoFeedback(userId: number, certId?: string) {
 }
 
 // ============ Private Course Feedback ============
-export async function submitCourseFeedback(data: { userId: number; certificationId: string; courseId: string; rating: number; comment?: string }) {
+export async function submitCourseFeedback(data: { userId: number; certificationId: string; courseId: string; rating: number; contentRating?: number; experienceRating?: number; difficultyRating?: number; recommendScore?: number; category?: "content" | "exercise" | "media" | "technical" | "suggestion" | "other"; comment?: string; suggestion?: string }) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const rating = normalizeCourseRating(data.rating);
   const comment = normalizeCourseFeedbackComment(data.comment);
+  const suggestion = normalizeCourseFeedbackComment(data.suggestion);
+  const ratingField = (value?: number) => value === undefined ? null : normalizeCourseRating(value);
+  const details = {
+    rating,
+    contentRating: ratingField(data.contentRating),
+    experienceRating: ratingField(data.experienceRating),
+    difficultyRating: ratingField(data.difficultyRating),
+    recommendScore: data.recommendScore === undefined ? null : Math.max(0, Math.min(10, Math.round(data.recommendScore))),
+    category: data.category || null,
+    comment,
+    suggestion,
+    status: "new" as const,
+    adminResponse: null,
+    adminResponderId: null,
+    respondedAt: null,
+    resolvedAt: null,
+  };
   const [existing] = await db.select({ id: courseFeedback.id }).from(courseFeedback)
     .where(and(eq(courseFeedback.userId, data.userId), eq(courseFeedback.courseId, data.courseId))).limit(1);
   if (existing) {
-    await db.update(courseFeedback).set({ rating, comment }).where(eq(courseFeedback.id, existing.id));
+    await db.update(courseFeedback).set(details).where(eq(courseFeedback.id, existing.id));
   } else {
-    await db.insert(courseFeedback).values({ ...data, rating, comment });
+    await db.insert(courseFeedback).values({ ...data, ...details });
   }
   await db.insert(learnerActivityLog).values({
     userId: data.userId,
     actionType: "course_feedback_submitted",
     certificationId: data.certificationId,
     courseId: data.courseId,
-    metadata: { rating, hasComment: Boolean(comment) },
+    metadata: { rating, hasComment: Boolean(comment), hasSuggestion: Boolean(suggestion), category: data.category || null },
   });
   const [saved] = await db.select().from(courseFeedback)
     .where(and(eq(courseFeedback.userId, data.userId), eq(courseFeedback.courseId, data.courseId))).limit(1);
@@ -961,6 +978,38 @@ export async function getMyCourseFeedback(userId: number, courseId: string) {
   const [feedback] = await db.select().from(courseFeedback)
     .where(and(eq(courseFeedback.userId, userId), eq(courseFeedback.courseId, courseId))).limit(1);
   return feedback || null;
+}
+
+export async function getCourseFeedbackDashboard() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const items = await db.select({
+    id: courseFeedback.id, userId: courseFeedback.userId, userName: users.name, userEmail: users.email,
+    certificationId: courseFeedback.certificationId, courseId: courseFeedback.courseId, rating: courseFeedback.rating,
+    contentRating: courseFeedback.contentRating, experienceRating: courseFeedback.experienceRating, difficultyRating: courseFeedback.difficultyRating,
+    recommendScore: courseFeedback.recommendScore, category: courseFeedback.category, comment: courseFeedback.comment, suggestion: courseFeedback.suggestion,
+    status: courseFeedback.status, adminResponse: courseFeedback.adminResponse, createdAt: courseFeedback.createdAt, updatedAt: courseFeedback.updatedAt,
+  }).from(courseFeedback).leftJoin(users, eq(courseFeedback.userId, users.id)).orderBy(desc(courseFeedback.updatedAt)).limit(250);
+  const countValue = items.length;
+  return {
+    items,
+    summary: {
+      count: countValue,
+      averageRating: countValue ? Math.round((items.reduce((sum, item) => sum + item.rating, 0) / countValue) * 10) / 10 : 0,
+      pendingCount: items.filter((item) => item.status === "new" || item.status === "in_review").length,
+      suggestionsCount: items.filter((item) => Boolean(item.suggestion)).length,
+    },
+  };
+}
+
+export async function moderateCourseFeedback(data: { feedbackId: number; adminId: number; status: "new" | "in_review" | "responded" | "resolved" | "dismissed"; adminResponse?: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const response = normalizeCourseFeedbackComment(data.adminResponse);
+  const now = new Date();
+  await db.update(courseFeedback).set({ status: data.status, adminResponse: response, adminResponderId: response ? data.adminId : null, respondedAt: response ? now : null, resolvedAt: data.status === "resolved" ? now : null }).where(eq(courseFeedback.id, data.feedbackId));
+  const [updated] = await db.select().from(courseFeedback).where(eq(courseFeedback.id, data.feedbackId)).limit(1);
+  return updated || null;
 }
 
 // ============ Password Reset Tokens ============

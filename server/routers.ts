@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients } from "./db";
 import { awardCertification, awardCourseCompletionBadge } from "./achievementService";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
@@ -516,10 +516,30 @@ export const appRouter = router({
       .input(z.object({
         certificationId: z.string().min(2).max(200),
         courseId: z.string().min(2).max(200),
-        rating: z.number().int().min(1).max(3),
+        rating: z.number().int().min(1).max(5),
+        contentRating: z.number().int().min(1).max(5).optional(),
+        experienceRating: z.number().int().min(1).max(5).optional(),
+        difficultyRating: z.number().int().min(1).max(5).optional(),
+        recommendScore: z.number().int().min(0).max(10).optional(),
+        category: z.enum(["content", "exercise", "media", "technical", "suggestion", "other"]).optional(),
         comment: z.string().trim().max(4000).optional(),
+        suggestion: z.string().trim().max(4000).optional(),
       }))
       .mutation(async ({ ctx, input }) => submitCourseFeedback({ userId: ctx.user.id, ...input })),
+
+    getFeedbackDashboard: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return getCourseFeedbackDashboard();
+    }),
+
+    moderateCourseFeedback: protectedProcedure.input(z.object({
+      feedbackId: z.number().int().positive(),
+      status: z.enum(["new", "in_review", "responded", "resolved", "dismissed"]),
+      adminResponse: z.string().trim().max(4000).optional(),
+    })).mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return moderateCourseFeedback({ feedbackId: input.feedbackId, adminId: ctx.user.id, status: input.status, adminResponse: input.adminResponse });
+    }),
 
     getCommunications: protectedProcedure.query(async ({ ctx }) => {
       const items = await getLearnerCommunications(ctx.user.id);
