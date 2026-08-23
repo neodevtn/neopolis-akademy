@@ -1971,3 +1971,4 @@
 - [x] Ajouter le formulaire apprenant de notation et suggestion par formation
 - [x] Créer le tableau de bord admin de suivi, filtrage, réponse et résolution des feedbacks
 - [x] Tester les droits, les parcours et publier le système de feedback
+- [x] Envoyer une alerte e-mail aux administrateurs lors de la soumission d’un feedback critique

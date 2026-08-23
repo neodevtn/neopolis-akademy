@@ -9,7 +9,7 @@ import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
 import { applicationSchema } from "@shared/validation";
 import { storagePut } from "./storage";
-import { sendAdminNewApplicationEmail, sendConfirmationEmail, sendDecisionEmail, sendInvitationEmail, sendReminderEmail } from "./email";
+import { sendAdminNewApplicationEmail, sendAdminCriticalCourseFeedbackEmail, sendConfirmationEmail, sendDecisionEmail, sendInvitationEmail, sendReminderEmail } from "./email";
 import { generateCandidatePDF } from "./pdf";
 import { uploadRateLimit, submitRateLimit, getClientIp } from "./security";
 import { adminEnhancedRouter } from "./adminRouter";
@@ -21,6 +21,7 @@ import { applyCompetencyEvent, getCompetencyFramework, getCompetencyLeaderboard,
 import { COMPETENCY_SOURCE_TYPES } from "../shared/competencyFramework";
 import { backfillCompetencies } from "./competencyBackfill";
 import { completeLearnerOrientation, createLegacyOrientationReminderDraft, createOrientationProposal, getAdminOrientationOverview, getLearnerOrientation, respondToOrientationProposal, saveLearnerOrientationGoals } from "./orientationService";
+import { isCriticalCourseFeedback } from "../shared/courseFeedback";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -525,7 +526,31 @@ export const appRouter = router({
         comment: z.string().trim().max(4000).optional(),
         suggestion: z.string().trim().max(4000).optional(),
       }))
-      .mutation(async ({ ctx, input }) => submitCourseFeedback({ userId: ctx.user.id, ...input })),
+      .mutation(async ({ ctx, input }) => {
+        const feedback = await submitCourseFeedback({ userId: ctx.user.id, ...input });
+        if (feedback && isCriticalCourseFeedback(feedback)) {
+          try {
+            await sendAdminCriticalCourseFeedbackEmail({
+              to: await getAdminEmailRecipients(),
+              feedbackId: Number(feedback.id),
+              learnerName: ctx.user.name || "Apprenant",
+              certificationId: feedback.certificationId,
+              courseId: feedback.courseId,
+              rating: feedback.rating,
+              contentRating: feedback.contentRating,
+              experienceRating: feedback.experienceRating,
+              difficultyRating: feedback.difficultyRating,
+              recommendScore: feedback.recommendScore,
+              category: feedback.category,
+              comment: feedback.comment,
+              suggestion: feedback.suggestion,
+            });
+          } catch (error) {
+            console.error("[Feedback] Critical feedback alert email failed:", error);
+          }
+        }
+        return feedback;
+      }),
 
     getFeedbackDashboard: protectedProcedure.query(async ({ ctx }) => {
       if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });

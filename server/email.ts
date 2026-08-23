@@ -33,6 +33,22 @@ export interface AdminNewApplicationEmailData {
   scoreTotal: number;
 }
 
+export interface AdminCriticalCourseFeedbackEmailData {
+  to: string[];
+  feedbackId: number;
+  learnerName: string;
+  certificationId: string;
+  courseId: string;
+  rating: number;
+  contentRating?: number | null;
+  experienceRating?: number | null;
+  difficultyRating?: number | null;
+  recommendScore?: number | null;
+  category?: string | null;
+  comment?: string | null;
+  suggestion?: string | null;
+}
+
 interface DecisionEmailData {
   to: string;
   firstName: string;
@@ -150,6 +166,52 @@ export async function sendAdminNewApplicationEmail(data: AdminNewApplicationEmai
     text: `Nouvelle candidature : ${fullName}. Score : ${data.scoreTotal.toFixed(1)}%. Consulter : ${applicationUrl}`,
   });
   if (error) throw new Error(`Admin application notification failed: ${error.message}`);
+  return true;
+}
+
+/** Alert administrators when a learner submits a critically negative course feedback. */
+export async function sendAdminCriticalCourseFeedbackEmail(data: AdminCriticalCourseFeedbackEmailData): Promise<boolean> {
+  if (!data.to.length) {
+    console.warn("[Email] No active administrator email found for critical feedback notification");
+    return false;
+  }
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (!resendApiKey) {
+    console.warn("[Email] RESEND_API_KEY not configured. Critical feedback notification not sent.");
+    return false;
+  }
+  const feedbackUrl = `https://akademy.neodev.click/admin/training?tab=feedback&feedback=${data.feedbackId}`;
+  const ratingRows = [
+    ["Note générale", `${data.rating}/5`],
+    ["Qualité du contenu", data.contentRating ? `${data.contentRating}/5` : "Non évaluée"],
+    ["Expérience", data.experienceRating ? `${data.experienceRating}/5` : "Non évaluée"],
+    ["Difficulté", data.difficultyRating ? `${data.difficultyRating}/5` : "Non évaluée"],
+    ["Recommandation", data.recommendScore !== null && data.recommendScore !== undefined ? `${data.recommendScore}/10` : "Non évaluée"],
+  ];
+  const html = emailWrapper(`
+    <div style="padding: 32px; font-family: Arial, Helvetica, sans-serif; color: #172033;">
+      <p style="margin: 0 0 8px; color: #b91c1c; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">Neopolis Akademy · Alerte pédagogique</p>
+      <h1 style="margin: 0 0 16px; font-size: 24px; color: #172033;">Nouveau feedback critique</h1>
+      <p style="line-height: 1.6;">Un avis nécessitant une revue a été soumis par <strong>${escapeEmailHtml(data.learnerName || "Apprenant")}</strong>.</p>
+      <table role="presentation" style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
+        <tr><td style="padding: 8px 0; color: #64748b;">Formation</td><td style="padding: 8px 0; font-weight: 700;">${escapeEmailHtml(data.certificationId)}</td></tr>
+        <tr><td style="padding: 8px 0; color: #64748b;">Cours</td><td style="padding: 8px 0; font-weight: 700;">${escapeEmailHtml(data.courseId)}</td></tr>
+        ${ratingRows.map(([label, value]) => `<tr><td style="padding: 8px 0; color: #64748b;">${label}</td><td style="padding: 8px 0;">${value}</td></tr>`).join("")}
+        <tr><td style="padding: 8px 0; color: #64748b;">Sujet</td><td style="padding: 8px 0;">${escapeEmailHtml(data.category || "Non précisé")}</td></tr>
+      </table>
+      ${data.comment ? `<div style="background:#fff7ed;border-left:4px solid #ea580c;padding:14px 16px;margin:0 0 14px;"><strong>Commentaire</strong><br />${escapeEmailHtml(data.comment)}</div>` : ""}
+      ${data.suggestion ? `<div style="background:#eff6ff;border-left:4px solid #2563eb;padding:14px 16px;margin:0 0 20px;"><strong>Suggestion</strong><br />${escapeEmailHtml(data.suggestion)}</div>` : ""}
+      ${emailCtaButton("Traiter le feedback", feedbackUrl)}
+    </div>`);
+  const resend = new Resend(resendApiKey);
+  const { error } = await resend.emails.send({
+    from: FROM_ADDRESS,
+    to: data.to,
+    subject: `Neopolis Akademy — Alerte feedback critique (${data.rating}/5)`,
+    html,
+    text: `Feedback critique (${data.rating}/5) pour ${data.courseId} dans ${data.certificationId}. Consulter : ${feedbackUrl}`,
+  });
+  if (error) throw new Error(`Critical feedback notification failed: ${error.message}`);
   return true;
 }
 
