@@ -2010,3 +2010,9 @@
 - [x] Conserver le comptage pendant une lecture vidéo active et visible
 - [x] Tester les scénarios actif, inactif et lecture vidéo puis publier
 - [x] Relier les événements play, pause et fin des lecteurs YouTube, vidéo locale et audio au suivi du temps actif
+
+## Audit de l’activité apprenant dans le profil administrateur
+- [x] Auditer les données de progression, temps, tentatives, compétences et journaux déjà disponibles par apprenant
+- [x] Concevoir une vue d’audit compréhensible depuis le profil apprenant administrateur
+- [x] Exposer les indicateurs pertinents, les détails temporels et les résultats pédagogiques dans le profil
+- [x] Ajouter des tests de données et d’interface, puis publier la vue d’audit

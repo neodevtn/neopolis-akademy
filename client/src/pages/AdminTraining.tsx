@@ -34,14 +34,25 @@ import { CompetencyLeaderboard } from "@/components/admin/CompetencyLeaderboard"
 import { AdminFeedbackDashboard } from "@/components/AdminFeedbackDashboard";
 import { buildNavigationUrl } from "@shared/navigationUrls";
 import { parseInvitationEmails, type InvitationEmailParseResult } from "@/lib/invitationEmails";
+import { buildRecentDailyActivity, summarizeLearningActivity } from "./admin/learningActivityAudit";
 
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
 /* ─── Animation ─── */
 const fadeIn = {
   hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] as const } },
+  visible: { opacity: 1, transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] as const } },
 };
+
+function AuditStat({ label, value, detail }: { label: string; value: number; detail: string }) {
+  return (
+    <div className="rounded-xl border border-border bg-muted/25 p-3">
+      <p className="text-xs font-medium text-muted-foreground">{label}</p>
+      <p className="mt-1 text-2xl font-bold text-foreground">{value}</p>
+      <p className="mt-1 text-xs text-muted-foreground">{detail}</p>
+    </div>
+  );
+}
 
 export default function AdminTraining() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -396,6 +407,16 @@ export default function AdminTraining() {
     const integrity = learnerIntegrityQuery.data;
     const orientation = learnerOrientationQuery.data?.[0]?.orientation;
     const integrityTone = integrity?.assessment.level === "priority_review" ? "border-red-300 bg-red-50 dark:border-red-900/70 dark:bg-red-950/30" : integrity?.assessment.level === "review" ? "border-amber-300 bg-amber-50 dark:border-amber-900/70 dark:bg-amber-950/30" : "border-border bg-card";
+    const activityAudit = summarizeLearningActivity(learningEvents);
+    const courseActivity = activityAudit.courseActivity;
+    const activeDays = activityAudit.activeDays;
+    const latestLearningAt = activityAudit.latestAt || activityLog[0]?.createdAt || null;
+    const activityByDay = buildRecentDailyActivity(learningEvents);
+    const maxDailySeconds = Math.max(1, ...activityByDay.map((day) => day.durationSeconds));
+    const courseTitle = (courseId: string) => {
+      const course = (trainingIndex.courses as any[]).find((item) => item.id === courseId);
+      return course?.title?.fr || course?.title?.en || courseId;
+    };
 
     // Group progress by certification
     const progressByCert: Record<string, { courseId: string; lessonIndex: number }[]> = {};
@@ -490,6 +511,40 @@ export default function AdminTraining() {
                 <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><CheckCircle2 className="w-3 h-3" /> Réussite 1re tentative</div>
               </div>
             </div>
+
+            <section className="mb-6 rounded-2xl border border-border bg-card p-5 shadow-sm" aria-label="Audit de l’activité d’apprentissage">
+              <div className="flex flex-col gap-2 border-b border-border pb-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><BarChart3 className="h-5 w-5 text-primary" /> Audit de l’activité d’apprentissage</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">Temps actif, progression et réponses issus des événements pédagogiques horodatés.</p>
+                </div>
+                <span className="self-start rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                  {latestLearningAt ? `Dernière activité : ${new Date(latestLearningAt).toLocaleString("fr-FR")}` : "Aucune activité enregistrée"}
+                </span>
+              </div>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                <AuditStat label="Jours actifs" value={activeDays} detail="Depuis le début du suivi" />
+                <AuditStat label="Événements pédagogiques" value={learningEvents.length} detail="Temps, progression et réponses" />
+                <AuditStat label="Cours avec activité" value={courseActivity.length} detail="Événements associés à un cours" />
+              </div>
+
+              <div className="mt-5 grid gap-6 lg:grid-cols-[1.1fr_1fr]">
+                <div>
+                  <div className="flex items-center justify-between"><h4 className="text-sm font-semibold text-foreground">Activité des 7 derniers jours</h4><span className="text-xs text-muted-foreground">Temps actif par jour</span></div>
+                  <div className="mt-4 grid h-36 grid-cols-7 items-end gap-2" aria-label="Histogramme de l’activité sur sept jours">
+                    {activityByDay.map((day) => {
+                      const height = day.durationSeconds ? Math.max(8, Math.round((day.durationSeconds / maxDailySeconds) * 100)) : 2;
+                      return <div key={day.key} className="flex h-full min-w-0 flex-col items-center justify-end gap-1"><span className="max-w-full truncate text-[10px] text-muted-foreground">{day.durationSeconds ? `${Math.round(day.durationSeconds / 60)} min` : "—"}</span><div className="w-full rounded-t bg-primary/80" style={{ height: `${height}%` }} title={`${day.label} : ${Math.round(day.durationSeconds / 60)} min, ${day.eventCount} événement${day.eventCount > 1 ? "s" : ""}`} /><span className="text-[11px] font-medium capitalize text-muted-foreground">{day.label}</span></div>;
+                    })}
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between"><h4 className="text-sm font-semibold text-foreground">Activité par cours</h4><span className="text-xs text-muted-foreground">Cinq cours les plus récents</span></div>
+                  {courseActivity.length === 0 ? <p className="mt-4 rounded-lg bg-muted/30 p-3 text-sm text-muted-foreground">Aucune activité de cours horodatée n’est encore disponible pour cet apprenant.</p> : <div className="mt-3 space-y-2">{courseActivity.slice(0, 5).map((course) => <div key={course.courseId} className="rounded-lg border border-border/70 bg-muted/20 p-3"><div className="flex items-start justify-between gap-3"><p className="line-clamp-2 text-sm font-medium text-foreground">{courseTitle(course.courseId)}</p><span className="shrink-0 text-xs font-semibold text-primary">{course.activeSeconds >= 3600 ? `${(course.activeSeconds / 3600).toFixed(1)} h` : `${Math.round(course.activeSeconds / 60)} min`}</span></div><p className="mt-1 text-xs text-muted-foreground">{course.eventCount} événement{course.eventCount > 1 ? "s" : ""} · dernière activité le {course.latestAt.toLocaleDateString("fr-FR")}</p></div>)}</div>}
+                </div>
+              </div>
+            </section>
 
             <section className={`mb-6 rounded-xl border p-5 ${integrityTone}`} aria-label="Revue d’intégrité pédagogique">
               <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
