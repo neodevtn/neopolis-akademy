@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const projectRoot = process.cwd();
 const coursePath = path.join(projectRoot, "client/public/data/courses/claude_certified_architect_foundations__01.json");
+const developerCoursePath = path.join(projectRoot, "client/public/data/courses/claude_certified_developer_foundations__02.json");
 const indexPath = path.join(projectRoot, "client/src/data/trainingIndex.json");
 
 describe("cohérence des parcours Anthropic", () => {
@@ -48,5 +49,18 @@ describe("cohérence des parcours Anthropic", () => {
       expect(certification.catalogTag?.fr).toMatch(/Préparation à une certification officielle Anthropic/);
       expect(certification.description?.fr).toMatch(/préparation à l’examen de certification officielle Anthropic/i);
     }
+  });
+
+  it("emploie des consignes indépendantes de la position pour les interactions responsives Developer", () => {
+    const course = JSON.parse(fs.readFileSync(developerCoursePath, "utf8"));
+    const lesson = course.lessons.find((item: any) => item.id === "lesson_01");
+    const memoryChapter = lesson.chapters.find((item: any) => item.id === "chapter_13");
+    const memoryCheckpoint = memoryChapter.blocks.find((block: any) => block.id === "checkpoint_7_memory_patterns");
+    const extendedThinking = course.exercises.find((item: any) => item.id === "ex_claude_certified_developer_foundations__02_005");
+
+    expect(memoryCheckpoint.instructions.en).not.toMatch(/on the left|on the right/i);
+    expect(memoryCheckpoint.instructions.fr).not.toMatch(/à gauche|à droite/i);
+    expect(extendedThinking.prompt.en).not.toMatch(/CheckpointExtended|this\.Leave/i);
+    expect(extendedThinking.prompt.fr).not.toMatch(/à gauche|à droite/i);
   });
 });

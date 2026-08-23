@@ -78,7 +78,21 @@ function InteractiveStepper({ steps, stepContents }: { steps: string[]; stepCont
 }
 
 export default function PageContent({ content, lang }: { content: string; lang: string }) {
-  const lines = content.split("\n");
+  // A few legacy course exports joined table headers without separators. Normalizing
+  // these artifacts before the structural detectors run prevents a language switch
+  // from changing the perceived structure of the same learning screen.
+  let normalizedContent = content.replace(
+    /StrategyWhat it doesWhen to applyWhat continuity you lose/g,
+    lang === "fr" ? "Comparaison des stratégies de gestion du contexte" : "Context-management strategy comparison",
+  );
+  if (lang === "fr") {
+    normalizedContent = normalizedContent
+      .replace(/^Pruning$/gm, "Élagage du contexte")
+      .replace(/^Clearing \(/gm, "Réinitialisation de session (")
+      .replace(/^Subagent Handoffs$/gm, "Relais vers des sous-agents")
+      .replace(/^Subagent handoffs :/gmi, "Relais vers des sous-agents :");
+  }
+  const lines = normalizedContent.split("\n");
   const elements: React.ReactNode[] = [];
   let inCodeBlock = false;
   let codeLines: string[] = [];

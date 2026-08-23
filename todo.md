@@ -1972,3 +1972,12 @@
 - [x] Créer le tableau de bord admin de suivi, filtrage, réponse et résolution des feedbacks
 - [x] Tester les droits, les parcours et publier le système de feedback
 - [x] Envoyer une alerte e-mail aux administrateurs lors de la soumission d’un feedback critique
+
+## Analyse des retours Sentry
+- [x] Lire le feedback Sentry 929617 et qualifier les problèmes signalés
+- [x] Reproduire les problèmes confirmés et prioriser les optimisations exploitables
+- [x] Implémenter, tester et publier les correctifs retenus
+- [x] Corriger le mélange de langues et de formats lors d’un changement de langue dans un cours
+- [x] Éliminer les répétitions pédagogiques sourcées et améliorer la lisibilité des contenus concernés
+- [x] Remplacer les consignes spatiales ambiguës (« à gauche ») par des repères adaptés au rendu réel
+- [x] Corriger la table concaténée et les lignes dupliquées du chapitre « Ingénierie du contexte » Developer
