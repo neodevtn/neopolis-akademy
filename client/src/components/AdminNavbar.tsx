@@ -23,6 +23,7 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
       { label: "Suivi des apprenants", href: "/admin/training?tab=learners", icon: Users, page: "training", description: "Progression et engagement" },
       { label: "Invitations directes", href: "/admin/training?tab=invitations", icon: UserPlus, page: "training", description: "Inviter et annuler" },
       { label: "Reporting", href: "/admin/training?tab=analytics", icon: BarChart3, page: "training", description: "Performance et tendances" },
+      { label: "Feedback formations", href: "/admin/training?tab=feedback", icon: MessageSquare, page: "training", description: "Avis et suggestions" },
       { label: "Communications", href: "/admin?tab=communications", icon: MessageSquare, page: "candidatures", description: "Informer les publics" },
       { label: "Journal d’activité", href: "/admin?tab=activity", icon: Activity, page: "candidatures", description: "Tracer les actions" },
     ],

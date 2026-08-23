@@ -139,7 +139,7 @@ export default function AdminTraining() {
   useEffect(() => {
     const params = new URLSearchParams(urlSearch);
     const tab = params.get("tab");
-    if (["learners", "invitations", "selected", "analytics"].includes(tab || "")) setActiveTab(tab!);
+    if (["learners", "invitations", "selected", "analytics", "feedback"].includes(tab || "")) setActiveTab(tab!);
     else setActiveTab("learners");
     const learnerId = Number(params.get("learner"));
     if (Number.isInteger(learnerId) && learnerId > 0) setSelectedUserId(learnerId);

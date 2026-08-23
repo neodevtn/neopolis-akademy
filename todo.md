@@ -1995,3 +1995,11 @@
 - [x] Ajouter des tests de parité édition-rendu pour les blocs standards
 - [x] Vérifier les blocs dans l’éditeur visuel et publier les corrections
 - [x] Hydrater automatiquement les clés runtime non déclarées par le registre afin que les paramètres rendus restent éditables
+
+## Découvrabilité des fonctionnalités
+- [x] Inventorier les pages, routes, procédures et fonctionnalités sans point d’entrée visible
+- [x] Cartographier les menus apprenant et administrateur par rapport aux fonctionnalités disponibles
+- [x] Ajouter les entrées de navigation et accès contextuels manquants
+- [x] Vérifier la découvrabilité sur ordinateur et mobile, puis publier
+- [x] Exposer le feedback formations dans la navigation administrateur et rendre l’onglet accessible par URL
+- [x] Ajouter un accès apprenant contextuel aux suggestions de formation avant la fin complète du cours

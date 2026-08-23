@@ -10,10 +10,11 @@ import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
   BookOpen, Lock, LogIn, LogOut, ArrowRight, Moon, Sun, Menu, X, Check, Filter, Video, Eye,
-  FileText, ChevronDown, Brain, Target, Trophy, Download, ArrowUp, Timer, RefreshCw
+  FileText, ChevronDown, Brain, Target, Trophy, Download, ArrowUp, Timer, RefreshCw, MessageSquareText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { motion, AnimatePresence } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 
@@ -49,6 +50,7 @@ export default function TrainingCourse() {
   const { isLessonComplete, markLessonComplete, getNextUnlockedLesson, isCourseComplete, getChapterProgress: getPersistedChapterProgress, saveChapterProgress: persistChapterProgress } = useTrainingProgress();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
   const [chapterProgress, setChapterProgress] = useState<{ current: number; total: number } | null>(null);
   const [chapterProgressLessonIndex, setChapterProgressLessonIndex] = useState<number | null>(null);
@@ -302,6 +304,10 @@ export default function TrainingCourse() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            {certId && courseId ? <Button variant="ghost" size="sm" onClick={() => setFeedbackOpen(true)} className="gap-1.5 text-muted-foreground hover:text-foreground" title="Donner un avis ou une suggestion">
+              <MessageSquareText className="h-4 w-4" />
+              <span className="hidden lg:inline">Avis</span>
+            </Button> : null}
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground"
@@ -320,6 +326,16 @@ export default function TrainingCourse() {
           </div>
         </div>
       </header>
+
+      {certId && courseId ? <Dialog open={feedbackOpen} onOpenChange={setFeedbackOpen}>
+        <DialogContent className="max-h-[88vh] max-w-2xl overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Votre avis et vos suggestions</DialogTitle>
+            <DialogDescription>Votre retour est privé et aide l’équipe pédagogique à améliorer cette formation.</DialogDescription>
+          </DialogHeader>
+          <CourseFeedbackPanel certificationId={certId} courseId={courseId} />
+        </DialogContent>
+      </Dialog> : null}
 
       <div className="flex overflow-x-hidden">
         {/* Sidebar */}
