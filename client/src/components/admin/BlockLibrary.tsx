@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BLOCK_REGISTRY, getEditableBlockTypes, getBlockTypesByCategory, CATEGORY_LABELS, type BlockTypeDefinition, type BlockCategory } from "@shared/blockRegistry";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import { ImagePlus, Plus, Search, GripVertical, Trash2, Copy, ChevronUp, Chevron
 import { toast } from "sonner";
 import { WysiwygMarkdownEditor } from "./WysiwygMarkdownEditor";
 import { BucketSortBlockEditor, CheckpointBlockEditor, ChoiceQuestionEditor, FillBlankBlockEditor } from "./SpecializedBlockEditors";
+import { getEditorFields, hydrateBlockForEditor, isMediaEditorField } from "./blockEditorParity";
 
 interface BlockLibraryProps {
   blocks: any[];
@@ -227,7 +228,8 @@ function BlockEditorDialog({ block, blockDef, lang, onLangChange, t, onSave, onR
   onRequestMedia?: (fieldKey: string) => void;
   onClose: () => void;
 }) {
-  const [editData, setEditData] = useState<any>({ ...block });
+  const [editData, setEditData] = useState<any>(() => hydrateBlockForEditor(block));
+  useEffect(() => setEditData(hydrateBlockForEditor(block)), [block]);
 
   if (!blockDef) {
     // Fallback: raw JSON editor for unknown block types
@@ -301,7 +303,7 @@ function BlockEditorDialog({ block, blockDef, lang, onLangChange, t, onSave, onR
             <TabsTrigger value="fr">🇫🇷 Français</TabsTrigger>
           </TabsList>
           <TabsContent value={lang} className="space-y-4">
-            {blockDef.schema.map((field) => (
+            {getEditorFields(editData, blockDef.schema).map((field) => (
               <div key={field.key}>
                 <label className="text-xs font-medium text-muted-foreground mb-1 block">
                   {lang === "fr" ? field.label.fr : field.label.en}
@@ -339,7 +341,7 @@ function renderFieldEditor(
   getI18nValue: (key: string, l: string) => string,
   onRequestMedia?: (fieldKey: string) => void,
 ) {
-  const isMediaField = /^(url|mp4Url|audioUrl|slidesPdf|download_url|imageUrl)$/i.test(field.key);
+  const isMediaField = isMediaEditorField(field.key);
   const renderTextInput = () => (
     <div className="flex gap-2">
       <Input value={editData[field.key] || ""} onChange={(e) => updateField(field.key, e.target.value)} placeholder={field.placeholder} />

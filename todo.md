@@ -1987,3 +1987,11 @@
 - [x] Corriger les contenus Anthropic non conformes sans modifier la structure pédagogique ni les enrichissements intentionnels
 - [x] Ajouter une validation automatique de ces règles pour tout parcours Anthropic
 - [x] Vérifier les parcours publiés et documenter la couverture finale
+
+## Parité édition et rendu des blocs
+- [x] Auditer la conversion entre les données JSON de cours, le rendu apprenant et les formulaires de l’éditeur
+- [x] Normaliser les champs de configuration de tous les blocs dans le modèle d’édition
+- [x] Corriger l’hydratation des médias, transcriptions, supports et variantes linguistiques dans les modales de bloc
+- [x] Ajouter des tests de parité édition-rendu pour les blocs standards
+- [x] Vérifier les blocs dans l’éditeur visuel et publier les corrections
+- [x] Hydrater automatiquement les clés runtime non déclarées par le registre afin que les paramètres rendus restent éditables
