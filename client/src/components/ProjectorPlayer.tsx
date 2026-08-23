@@ -26,10 +26,12 @@ interface ProjectorPlayerProps {
   slides: ProjectorSlide[];
   timings: ProjectorTiming[];
   duration: number;
+  onPlay?: () => void;
+  onPause?: () => void;
   onEnded?: () => void;
 }
 
-export function ProjectorPlayer({ mp4Url, slides, timings, duration, onEnded }: ProjectorPlayerProps) {
+export function ProjectorPlayer({ mp4Url, slides, timings, duration, onPlay, onPause, onEnded }: ProjectorPlayerProps) {
   const audioRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -72,9 +74,11 @@ export function ProjectorPlayer({ mp4Url, slides, timings, duration, onEnded }: 
     if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(false);
+      onPause?.();
     } else {
       audioRef.current.play();
       setIsPlaying(true);
+      onPlay?.();
     }
   };
 
@@ -91,6 +95,7 @@ export function ProjectorPlayer({ mp4Url, slides, timings, duration, onEnded }: 
 
   const handleEnded = () => {
     setIsPlaying(false);
+    onPause?.();
     onEnded?.();
   };
 
@@ -148,8 +153,8 @@ export function ProjectorPlayer({ mp4Url, slides, timings, duration, onEnded }: 
         playsInline
         onEnded={handleEnded}
         onLoadedMetadata={handleLoadedMetadata}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
+        onPlay={() => { setIsPlaying(true); onPlay?.(); }}
+        onPause={() => { setIsPlaying(false); onPause?.(); }}
         className="hidden"
       >
         <source src={mp4Url} type="video/mp4" />

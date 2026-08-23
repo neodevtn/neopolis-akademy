@@ -21,6 +21,7 @@ import { trpc } from "@/lib/trpc";
 // ─── Decomposed sub-components ───
 import { resolveI18n } from "./training/contentDetectors";
 import { getDisplayedChapterProgress, normalizeChapterProgress } from "./training/chapterProgress";
+import { shouldRecordLearningTime } from "./training/learningTimeActivity";
 import LessonViewer from "./training/LessonViewer";
 import LessonSidebar from "./training/LessonSidebar";
 import { useCourseData, prefetchCourse } from "@/hooks/useCourseData";
@@ -54,6 +55,9 @@ export default function TrainingCourse() {
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
   const [chapterProgress, setChapterProgress] = useState<{ current: number; total: number } | null>(null);
   const [chapterProgressLessonIndex, setChapterProgressLessonIndex] = useState<number | null>(null);
+  const lastInteractionAtRef = useRef(Date.now());
+  const mediaPlayingRef = useRef(false);
+  const learningPositionRef = useRef<{ lessonIndex: number | null; chapterIndex?: number }>({ lessonIndex: null });
 
   const navigateCoursePosition = useCallback((lesson: number, chapter = 0) => {
     navigate(buildNavigationUrl(`/training/${certId}/${courseId}`, { lesson: Math.max(0, lesson), chapter: Math.max(0, chapter) }));
@@ -92,6 +96,37 @@ export default function TrainingCourse() {
     }
   }, [courseId, navigateCoursePosition, persistChapterProgress]);
 
+  const handleMediaPlaybackChange = useCallback((isPlaying: boolean) => {
+    mediaPlayingRef.current = isPlaying;
+    if (isPlaying) lastInteractionAtRef.current = Date.now();
+  }, []);
+
+  useEffect(() => {
+    const recordInteraction = () => {
+      lastInteractionAtRef.current = Date.now();
+    };
+    const activityEvents: Array<keyof WindowEventMap> = ["pointerdown", "mousemove", "keydown", "touchstart", "scroll", "focus"];
+    activityEvents.forEach((eventName) => {
+      window.addEventListener(eventName, recordInteraction, eventName === "scroll" || eventName === "touchstart" ? { passive: true } : undefined);
+    });
+    return () => {
+      activityEvents.forEach((eventName) => window.removeEventListener(eventName, recordInteraction));
+    };
+  }, []);
+
+  useEffect(() => {
+    // A lesson change must not inherit the playing state of a previous media block.
+    mediaPlayingRef.current = false;
+    lastInteractionAtRef.current = Date.now();
+  }, [courseId, activeLessonIndex]);
+
+  useEffect(() => {
+    learningPositionRef.current = {
+      lessonIndex: activeLessonIndex,
+      chapterIndex: chapterProgress?.current,
+    };
+  }, [activeLessonIndex, chapterProgress?.current]);
+
   // Server-synced video progress
   const videoProgressQuery = trpc.videoProgress.get.useQuery(
     { courseId: courseId || "" },
@@ -101,20 +136,31 @@ export default function TrainingCourse() {
     onSuccess: () => { videoProgressQuery.refetch(); },
   });
   const learningTimeMutation = trpc.training.recordLearningTime.useMutation();
+  const recordLearningTimeRef = useRef(learningTimeMutation.mutate);
   useEffect(() => {
-    if (!isAuthenticated || !courseId || activeLessonIndex === null) return;
+    recordLearningTimeRef.current = learningTimeMutation.mutate;
+  }, [learningTimeMutation.mutate]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !courseId) return;
     const heartbeat = window.setInterval(() => {
-      if (document.visibilityState !== "visible") return;
-      learningTimeMutation.mutate({
+      const position = learningPositionRef.current;
+      if (position.lessonIndex === null || !shouldRecordLearningTime({
+        now: Date.now(),
+        lastInteractionAt: lastInteractionAtRef.current,
+        mediaPlaying: mediaPlayingRef.current,
+        isVisible: document.visibilityState === "visible",
+      })) return;
+      recordLearningTimeRef.current({
         certificationId: certId,
         courseId,
-        lessonIndex: activeLessonIndex,
-        chapterIndex: chapterProgress?.current,
+        lessonIndex: position.lessonIndex,
+        chapterIndex: position.chapterIndex,
         durationSeconds: 60,
       });
     }, 60_000);
     return () => window.clearInterval(heartbeat);
-  }, [isAuthenticated, certId, courseId, activeLessonIndex, chapterProgress?.current, learningTimeMutation]);
+  }, [isAuthenticated, certId, courseId]);
 
   // Derive completed set from server data (fallback to localStorage for non-auth)
   const completedVideos = useMemo(() => {
@@ -612,6 +658,7 @@ export default function TrainingCourse() {
                     toggleVideoComplete={toggleVideoComplete}
                     isReviewMode={isReviewMode}
                     courseExercises={courseExercises}
+                    onMediaPlaybackChange={handleMediaPlaybackChange}
                     onChapterChange={(current, total) => {
                       if (isSingleLessonCourse) {
                         handleChapterChange(current, total);

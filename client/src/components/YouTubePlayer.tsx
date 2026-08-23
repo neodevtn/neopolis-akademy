@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { CheckCircle2, PlayCircle, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -11,6 +11,7 @@ interface YouTubePlayerProps {
   watchUrl?: string;
   lang: string;
   t: (obj: { en: string; fr: string }) => string;
+  onPlaybackChange?: (isPlaying: boolean) => void;
 }
 
 export function YouTubePlayer({
@@ -22,6 +23,7 @@ export function YouTubePlayer({
   watchUrl,
   lang,
   t,
+  onPlaybackChange,
 }: YouTubePlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [autoCompleted, setAutoCompleted] = useState(false);
@@ -38,8 +40,26 @@ export function YouTubePlayer({
     }
   }, [isCompleted, autoCompleted, onMarkComplete, videoKey]);
 
+  useEffect(() => {
+    const onYouTubeMessage = (event: MessageEvent) => {
+      if (event.origin !== "https://www.youtube-nocookie.com" && event.origin !== "https://www.youtube.com") return;
+      try {
+        const payload = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+        if (payload?.event !== "onStateChange") return;
+        onPlaybackChange?.(payload.info === 1);
+      } catch {
+        // Ignore non-JSON messages from the embedded player.
+      }
+    };
+    window.addEventListener("message", onYouTubeMessage);
+    return () => {
+      window.removeEventListener("message", onYouTubeMessage);
+      onPlaybackChange?.(false);
+    };
+  }, [onPlaybackChange]);
+
   // Build the embed URL with appropriate parameters
-  const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1&origin=${encodeURIComponent(window.location.origin)}`;
+  const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`;
 
   return (
     <div
@@ -97,6 +117,7 @@ export function YouTubePlayer({
             <iframe
               ref={iframeRef}
               src={embedUrl}
+              onLoad={() => iframeRef.current?.contentWindow?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }), "https://www.youtube-nocookie.com")}
               title={title}
               className="w-full h-full"
               frameBorder="0"

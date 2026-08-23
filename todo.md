@@ -2003,3 +2003,10 @@
 - [x] Vérifier la découvrabilité sur ordinateur et mobile, puis publier
 - [x] Exposer le feedback formations dans la navigation administrateur et rendre l’onglet accessible par URL
 - [x] Ajouter un accès apprenant contextuel aux suggestions de formation avant la fin complète du cours
+
+## Temps de formation actif
+- [x] Auditer le suivi actuel du temps de formation et les événements utilisateur disponibles
+- [x] Suspendre le comptage après cinq minutes d’inactivité hors lecture vidéo active
+- [x] Conserver le comptage pendant une lecture vidéo active et visible
+- [x] Tester les scénarios actif, inactif et lecture vidéo puis publier
+- [x] Relier les événements play, pause et fin des lecteurs YouTube, vidéo locale et audio au suivi du temps actif

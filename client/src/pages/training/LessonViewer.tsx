@@ -46,6 +46,7 @@ export default function LessonViewer({
   isReviewMode = false,
   courseExercises = [],
   onChapterChange,
+  onMediaPlaybackChange,
   initialChapter,
 }: {
   lesson: any;
@@ -61,6 +62,7 @@ export default function LessonViewer({
   isReviewMode?: boolean;
   courseExercises?: any[];
   onChapterChange?: (current: number, total: number) => void;
+  onMediaPlaybackChange?: (isPlaying: boolean) => void;
   initialChapter?: number;
 }) {
   const { user } = useAuth();
@@ -309,7 +311,9 @@ export default function LessonViewer({
                   slides={block.projectorSlides}
                   timings={block.projectorTimings}
                   duration={block.projectorDuration || 300}
-                  onEnded={() => toggleVideoComplete(mp4Key)}
+                  onPlay={() => onMediaPlaybackChange?.(true)}
+                  onPause={() => onMediaPlaybackChange?.(false)}
+                  onEnded={() => { onMediaPlaybackChange?.(false); toggleVideoComplete(mp4Key); }}
                 />
                 <div className="flex items-center justify-between px-4 py-2 border border-t-0 border-border rounded-b-xl bg-card">
                   <button
@@ -370,7 +374,9 @@ export default function LessonViewer({
                 preload="metadata"
                 playsInline
                 className="w-full max-h-[480px] bg-black"
-                onEnded={() => toggleVideoComplete(mp4Key)}
+                onPlay={() => onMediaPlaybackChange?.(true)}
+                onPause={() => onMediaPlaybackChange?.(false)}
+                onEnded={() => { onMediaPlaybackChange?.(false); toggleVideoComplete(mp4Key); }}
               >
                 <source src={block.mp4Url} type="video/mp4" />
                 {block.hlsUrl && <source src={block.hlsUrl} type="application/x-mpegURL" />}
@@ -434,7 +440,9 @@ export default function LessonViewer({
                   controls
                   preload="metadata"
                   className="w-full"
-                  onEnded={() => toggleVideoComplete(audioKey)}
+                  onPlay={() => onMediaPlaybackChange?.(true)}
+                  onPause={() => onMediaPlaybackChange?.(false)}
+                  onEnded={() => { onMediaPlaybackChange?.(false); toggleVideoComplete(audioKey); }}
                 >
                   <source src={block.audioUrl} type="audio/mpeg" />
                 </audio>
@@ -503,6 +511,7 @@ export default function LessonViewer({
             title={videoTitle}
             isCompleted={isVideoComplete}
             onMarkComplete={toggleVideoComplete}
+            onPlaybackChange={onMediaPlaybackChange}
             watchUrl={videoWatchUrl}
             lang={lang}
             t={t}
