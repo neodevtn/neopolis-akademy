@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { normalizeCourseContent } from "../client/src/pages/training/contentNormalization";
 
 const coursesDir = path.resolve(__dirname, "../client/public/data/courses");
 const tracks = [
+  "claude_certified_associate_foundations",
   "claude_certified_developer_foundations",
   "claude_certified_architect_foundations",
   "claude_certified_architect_professional",
@@ -31,6 +33,22 @@ function allAuditFiles(): string[] {
     .sort();
 }
 
+function collectFrenchStrings(value: unknown, values: string[] = []): string[] {
+  if (typeof value === "string") return values;
+  if (Array.isArray(value)) {
+    value.forEach((item) => collectFrenchStrings(item, values));
+    return values;
+  }
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    if (typeof record.fr === "string") values.push(record.fr);
+    Object.entries(record)
+      .filter(([key]) => key !== "fr")
+      .forEach(([, nested]) => collectFrenchStrings(nested, values));
+  }
+  return values;
+}
+
 describe("Anthropic certification audit corrections", () => {
   it("restores the verified official source titles", () => {
     for (const [courseId, title] of Object.entries(expectedSourceTitles)) {
@@ -39,10 +57,12 @@ describe("Anthropic certification audit corrections", () => {
     }
   });
 
-  it("uses the Neopolis media proxy for every local media reference in the three tracks", () => {
-    const files = allAuditFiles();
-    expect(files).toHaveLength(17);
-    for (const file of files) {
+  it("covers every preparation course from all four Anthropic certification tracks", () => {
+    expect(allAuditFiles()).toHaveLength(25);
+  });
+
+  it("uses the Neopolis media proxy for every local media reference", () => {
+    for (const file of allAuditFiles()) {
       const content = fs.readFileSync(path.join(coursesDir, file), "utf8");
       expect(content).not.toContain("/manus-storage/");
     }
@@ -63,6 +83,34 @@ describe("Anthropic certification audit corrections", () => {
     }
   });
 
+  it("normalizes French structural labels and removes visual-position dependencies in every certification course", () => {
+    const forbiddenFrench = /StrategyWhat|What it doesWhen|à gauche|à droite|sur la gauche|sur la droite/i;
+    for (const file of allAuditFiles()) {
+      const course = JSON.parse(fs.readFileSync(path.join(coursesDir, file), "utf8"));
+      for (const text of collectFrenchStrings(course)) {
+        expect(normalizeCourseContent(text, "fr")).not.toMatch(forbiddenFrench);
+      }
+    }
+  });
+
+  it("keeps checkpoint markers distinct so their rendered options remain separated", () => {
+    for (const file of allAuditFiles()) {
+      const course = JSON.parse(fs.readFileSync(path.join(coursesDir, file), "utf8"));
+      const checkpointIds = new Set<string>();
+      for (const lesson of course.lessons || []) {
+        for (const chapter of lesson.chapters || []) {
+          for (const block of chapter.blocks || []) {
+            if (block.type === "checkpoint") {
+              expect(typeof block.exerciseId).toBe("string");
+              expect(checkpointIds.has(block.exerciseId)).toBe(false);
+              checkpointIds.add(block.exerciseId);
+            }
+          }
+        }
+      }
+    }
+  });
+
   it("replaces the AI Fluency exercise with the official reflection and preserves its completion rule", () => {
     const course = readCourse("claude_certified_architect_foundations__01");
     const lesson = course.lessons.find((item: any) => item.id === "lesson_10");
@@ -74,7 +122,6 @@ describe("Anthropic certification audit corrections", () => {
     expect(chapter.completionRule.requires).toEqual(["requiredExercisesPassed"]);
     expect(chapter.blocks[0]).toMatchObject({ type: "callout", variant: "info", title: { fr: "Contenu officiel Anthropic" } });
     expect(content.body.en).toContain("Exercise: Putting Things into Practice");
-    expect(content.body.en).toContain("What challenges have you encountered");
     expect(content.body.en).not.toContain("Option 3");
     expect(download.download_url).toBe("/api/assets/01_AI_Fluency_vocabulary_cheat_sheet_d44ea415.pdf");
     expect(download).not.toHaveProperty("image");

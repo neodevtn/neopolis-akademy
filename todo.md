@@ -1981,3 +1981,9 @@
 - [x] Éliminer les répétitions pédagogiques sourcées et améliorer la lisibilité des contenus concernés
 - [x] Remplacer les consignes spatiales ambiguës (« à gauche ») par des repères adaptés au rendu réel
 - [x] Corriger la table concaténée et les lignes dupliquées du chapitre « Ingénierie du contexte » Developer
+
+## Normalisation des parcours Anthropic
+- [x] Auditer tous les JSON de préparation Anthropic pour les libellés non français, consignes spatiales et checkpoints concaténés
+- [x] Corriger les contenus Anthropic non conformes sans modifier la structure pédagogique ni les enrichissements intentionnels
+- [x] Ajouter une validation automatique de ces règles pour tout parcours Anthropic
+- [x] Vérifier les parcours publiés et documenter la couverture finale
