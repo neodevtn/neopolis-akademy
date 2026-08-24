@@ -105,6 +105,12 @@ function extractSlideImages(value, localImages, label) {
       console.warn(`Animation Projector intégrée à la vidéo locale, omise comme image de slide : ${match[2]}`);
       continue;
     }
+    // Les URL externes restantes ne sont pas des médias publiables : si aucune copie
+    // locale n’est déclarée dans le paquet canonique, conserver la slide sans image.
+    if (!url && /^https?:\/\//i.test(match[2])) {
+      console.warn(`Illustration Projector externe non fournie, omise : ${match[2]}`);
+      continue;
+    }
     if (!url) throw new Error(`Image Projector locale introuvable pour ${label}: ${match[2]}`);
     images.push({ alt: match[1] || "Illustration de slide", url });
   }
