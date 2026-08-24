@@ -2104,3 +2104,6 @@
 
 ### Cours 20 — Introduction à l’IA générative dans Snowflake
 - [x] Importer le paquet vérifié, ses médias locaux et 20 activités standardisées, puis contrôler et publier après audit de production
+
+### Cours 21 — Agents IA avec Hugging Face smolagents
+- [ ] Importer le paquet vérifié, ses médias locaux et 30 activités standardisées, puis contrôler et publier après audit de production
