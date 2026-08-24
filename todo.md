@@ -2130,4 +2130,4 @@
 - [x] Importer le paquet vérifié, ses médias locaux et 30 activités standardisées, puis contrôler et publier après audit de production
 
 ### Cours 32 — RAG de bout en bout avec Weaviate
-- [ ] Importer le paquet vérifié, ses médias locaux et 14 activités standardisées, puis contrôler et publier après audit de production
+- [x] Importer le paquet vérifié, ses médias locaux et 14 activités standardisées, puis contrôler et publier après audit de production
