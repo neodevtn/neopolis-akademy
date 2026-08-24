@@ -54,4 +54,20 @@ Quatre leçons Projector ne fournissent qu’un sous-titre anglais local (`ch02_
 
 Les captures de QA ont été faites avec le bypass administrateur, qui permet de vérifier les écrans futurs sans assouplir le verrouillage apprenant. Les premières tentatives groupées de capture ont temporairement rencontré une limite de requêtes de prévisualisation ; les contrôles individuels stabilisés consignés ci-dessus ont ensuite été effectués sans erreur de rendu ni erreur client.
 
-Restent l’archivage final du diff, le checkpoint de publication et l’audit média sur le domaine de production.
+## Vérification de production
+
+Après la propagation complète, le JSON public normalisé est sémantiquement identique au JSON local validé. Il expose 3 chapitres, 32 activités, 10 vidéos Projector et 97 références `/api/assets/`. L’audit de production confirme **97 / 97 médias locaux valides**, sans média invalide, URL DataCamp externe ou chemin `/manus-storage/`.
+
+La vérification navigateur sur `https://akademy.neodev.click/training/datacamp_advanced_ai_assisted_coding_for_developers/advanced_ai_assisted_coding_for_developers__01` confirme le rendu public du titre, des trois chapitres, de la préparation environnement, du Projector du chapitre 1, de ses 18 slides, du transcript, du VTT français et du PDF local. Le communiqué important et le bandeau de consentement de la plateforme peuvent couvrir une partie de l’écran, mais non empêcher le chargement du cours.
+
+| Contrôle de production | Résultat |
+|---|---:|
+| JSON de cours public | HTTP 200, JSON sémantiquement identique |
+| Activités / vidéos | 32 / 10 |
+| Médias locaux consommés | 97 / 97 valides |
+| Références média invalides | 0 |
+| URLs DataCamp externes / stockage direct | 0 / 0 |
+| Verrouillage séquentiel apprenant | Actif |
+| Bypass administrateur | Contrôlé pendant la QA locale |
+
+Le cours est publié et son contrôle de production est clôturé.
