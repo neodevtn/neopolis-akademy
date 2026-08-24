@@ -7,3 +7,7 @@ La conversion Neopolis conserve les 13 activités dans leur ordre canonique, les
 Les contrôles desktop et mobile affichent le titre, les trois chapitres, la progression, la préparation, le premier Projector et le contenu introductif. Le bandeau de consentement de prévisualisation peut recouvrir la zone basse mais ne masque ni le titre, ni la structure, ni la consultation du cours.
 
 `pnpm check`, `pnpm validate-courses`, le test de parité MongoDB LangGraph et le contrôle de catégories sont réussis. Le validateur ne remonte aucune erreur ; les 223 avertissements historiques de similarité de quiz concernent d’autres contenus et restent non bloquants.
+
+## Vérification de production
+
+L’audit sur `https://akademy.neodev.click` confirme 52 / 52 médias consommés et locaux valides, sans URL DataCamp externe, chemin `/manus-storage/`, média invalide ni erreur structurelle. Il confirme aussi les 3 chapitres, 13 activités, 5 Projector, 8 TP guidés, les tags de compétence de chaque chapitre et le verrouillage séquentiel.

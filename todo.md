@@ -2136,4 +2136,4 @@
 - [x] Importer le paquet vérifié, ses médias locaux et 11 activités standardisées, puis contrôler et publier après audit de production
 
 ### Cours 34 — Agents de text-to-query avec MongoDB et LangGraph
-- [ ] Importer le paquet vérifié, ses médias locaux et 13 activités standardisées, puis contrôler et publier après audit de production
+- [x] Importer le paquet vérifié, ses médias locaux et 13 activités standardisées, puis contrôler et publier après audit de production
