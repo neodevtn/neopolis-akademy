@@ -2079,3 +2079,6 @@
 
 ### Cours 12 — L’IA pour le conseil
 - [x] Publier le paquet prêt, ses médias locaux et activités standardisées, puis contrôler les 54 médias uniques en production
+
+### Cours 13 — Microsoft Copilot dans Word
+- [ ] Publier le paquet prêt, ses médias locaux et activités standardisées, puis contrôler les 94 médias locaux en production

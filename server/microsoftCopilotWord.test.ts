@@ -1,0 +1,33 @@
+import { describe, expect, it } from "vitest";
+import course from "../client/public/data/courses/microsoft_copilot_in_word__01.json";
+import catalog from "../client/src/data/trainingIndex.json";
+
+describe("cours DataCamp Microsoft Copilot dans Word", () => {
+  const activities = course.lessons.flatMap((lesson: any) => lesson.chapters);
+  const blocks = activities.flatMap((activity: any) => activity.blocks || []);
+
+  it("conserve les compteurs canoniques et le rattachement catalogue", () => {
+    const certification = catalog.certifications.find((entry: any) => entry.id === "datacamp_microsoft_copilot_in_word");
+    const courseIndex = catalog.courses.find((entry: any) => entry.id === "microsoft_copilot_in_word__01");
+    expect(certification).toMatchObject({ totalLessons: 3, totalActivities: 29, totalVideos: 10, totalExercises: 19, totalDownloads: 3 });
+    expect(courseIndex).toMatchObject({ certId: certification?.id, totalActivities: 29, videoCount: 10, exerciseCount: 19 });
+    expect(activities).toHaveLength(29);
+  });
+
+  it("préserve les Projector et chaque grand type d’activité source", () => {
+    const projector = blocks.filter((block: any) => block.type === "video" && block.projectorSlides?.length);
+    expect(projector).toHaveLength(10);
+    expect(projector.every((block: any) => (block.mp4Url || block.audioUrl) && block.projectorTimings?.length && block.transcriptSegments?.length && block.slidesPdf)).toBe(true);
+    expect(activities.filter((activity: any) => activity.sourceActivityType === "CloudExercise")).toHaveLength(14);
+    expect(activities.filter((activity: any) => activity.sourceActivityType === "DragAndDropExercise")).toHaveLength(2);
+    expect(activities.filter((activity: any) => activity.sourceActivityType === "VisualExercise")).toHaveLength(2);
+    expect(activities.filter((activity: any) => activity.sourceActivityType === "PureMultipleChoiceExercise")).toHaveLength(1);
+    expect(activities.every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);
+  });
+
+  it("utilise uniquement les médias locaux routés par le proxy", () => {
+    const serialized = JSON.stringify(course);
+    expect(serialized).not.toMatch(/https?:\/\/(?:assets|videos|projector|campus)\.datacamp\.com/i);
+    expect(serialized).not.toContain("/manus-storage/");
+  });
+});
