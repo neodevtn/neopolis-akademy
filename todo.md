@@ -2070,3 +2070,9 @@
 
 ### Cours 09 — Microsoft Copilot dans PowerPoint
 - [x] Importer le paquet prêt, ses médias locaux et activités standardisées, puis contrôler et publier après audit de production
+
+### Cours 10 — Développement logiciel avec Cursor
+- [x] Reporter l’import à la demande de l’utilisateur : le paquet Drive est actuellement indisponible et devra être repris lorsqu’il sera déposé ou partagé
+
+### Cours 11 — L’IA pour les data analysts
+- [ ] Publier le paquet prêt, ses médias locaux et activités standardisées, puis contrôler les 52 médias uniques en production
