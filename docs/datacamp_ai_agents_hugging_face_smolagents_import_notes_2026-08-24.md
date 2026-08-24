@@ -7,3 +7,7 @@ La conversion Neopolis conserve 30 activités ordonnées, 10 leçons Projector, 
 Les captures desktop et mobile confirment le titre, les trois chapitres, la progression, la préparation et le lecteur Projector du premier écran. Le bandeau de consentement de prévisualisation peut recouvrir une partie basse de l’écran, sans bloquer le cours.
 
 `pnpm check`, `pnpm validate-courses` et la suite Vitest complète sont réussis : 100 fichiers et 356 tests. Le validateur ne remonte aucune erreur ; les avertissements historiques de similarité de quiz d’autres cours restent non bloquants.
+
+## Vérification de production
+
+L’audit sur `https://akademy.neodev.click` confirme 70 / 70 médias consommés et locaux valides, sans URL DataCamp externe, chemin `/manus-storage/`, média invalide ni erreur structurelle. Il confirme aussi les 3 chapitres, 30 activités, 10 Projector, 20 exercices interactifs, les tags de compétence de chaque chapitre et le verrouillage séquentiel.
