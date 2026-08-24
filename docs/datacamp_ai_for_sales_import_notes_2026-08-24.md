@@ -7,3 +7,7 @@ La conversion locale fournit les 26 activités dans l’ordre, 9 Projector, 13 `
 Le test ciblé de parité, le contrôle TypeScript et `pnpm validate-courses` sont réussis. Le validateur ne remonte aucune erreur ; les avertissements de similarité de quiz existants dans d’autres cours restent non bloquants.
 
 Les contrôles par lien profond administrateur affichent le QCM « Trouver un événement déclencheur pour un compte cible » ainsi que le tri « Adapter le langage selon les acheteurs ». Les deux écrans portent leur type d’activité et le tri expose les consignes d’interaction ; le bandeau de consentement de preview peut couvrir la zone basse mais ne masque ni titre ni activité.
+
+## Vérification de production
+
+L’audit sur `https://akademy.neodev.click` confirme 44 / 44 médias consommés et locaux valides, sans URL DataCamp externe, chemin `/manus-storage/`, média invalide ou erreur structurelle. Il confirme également les 3 chapitres, 26 activités, 9 Projector, 17 exercices interactifs, les tags sur les trois chapitres et le verrouillage séquentiel.
