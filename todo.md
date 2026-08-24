@@ -2056,4 +2056,4 @@
 - [x] Publier le cours, vérifier les médias en production et archiver son rapport de contrôle
 
 ### Cours 05 — Coder en mode Vibe avec Replit
-- [ ] Enregistrer le cours, tester les médias et activités, puis publier avec un rapport de contrôle de production
+- [x] Enregistrer le cours, tester les médias et activités, puis publier avec un rapport de contrôle de production
