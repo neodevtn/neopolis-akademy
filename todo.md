@@ -2103,4 +2103,4 @@
 - [x] Importer le paquet vérifié, ses médias locaux et 29 activités standardisées, puis contrôler et publier après audit de production
 
 ### Cours 20 — Introduction à l’IA générative dans Snowflake
-- [ ] Importer le paquet vérifié, ses médias locaux et 20 activités standardisées, puis contrôler et publier après audit de production
+- [x] Importer le paquet vérifié, ses médias locaux et 20 activités standardisées, puis contrôler et publier après audit de production
