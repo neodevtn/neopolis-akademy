@@ -104,7 +104,10 @@ function getSubtitleLocal(video, language) {
   const target = language.toLowerCase();
   if (video.subtitles && !Array.isArray(video.subtitles) && typeof video.subtitles === "object") {
     const code = target === "french" ? "fr" : target === "english" ? "en" : target;
-    return video.subtitles[`${code}_local`] || "";
+    const direct = video.subtitles[`${code}_local`];
+    if (direct) return direct;
+    const fallback = (video.subtitles.all_language_locals || []).find((item) => String(item.language || "").toLowerCase().startsWith(target));
+    return fallback?.local || "";
   }
   const entry = Array.isArray(video.subtitles)
     ? video.subtitles.find((item) => String(item.language || "").toLowerCase().startsWith(target))
@@ -177,15 +180,20 @@ if (firstActivity) {
     : `${course.sourceCourseTitle?.fr || ""} ${course.sourceCourseTitle?.en || ""}`;
   const isReplitCourse = /replit/i.test(courseTitle);
   const isWindsurfCourse = /windsurf/i.test(courseTitle);
+  const isFastApiCourse = /fastapi/i.test(courseTitle);
   const preparationFr = isReplitCourse
     ? "## Avant de commencer\n\nCréez ou ouvrez un compte Replit pour reproduire les mises en situation du cours dans votre propre environnement. Utilisez uniquement des données de démonstration, n’ajoutez jamais de mot de passe, clé API ou donnée sensible dans un projet ou un prompt."
     : isWindsurfCourse
       ? "## Avant de commencer\n\nInstallez Windsurf sur votre ordinateur depuis le site officiel, puis ouvrez un dossier de projet de démonstration ou créez-en un nouveau. Vous pouvez importer vos préférences depuis VS Code si nécessaire. Utilisez uniquement des données de test : ne placez jamais de mots de passe, clés API, jetons ou données confidentielles dans un projet, un prompt ou une règle Cascade."
+      : isFastApiCourse
+        ? "## Préparer votre environnement FastAPI\n\nInstallez Python 3.11 ou une version compatible, créez un dossier de démonstration puis un environnement virtuel (`python -m venv .venv`). Activez-le et installez les dépendances indiquées par les exercices, notamment `fastapi`, `uvicorn`, `pydantic` et `joblib`. Exécutez vos API uniquement en local (par exemple avec `uvicorn main:app --reload`) et testez-les depuis un second terminal avec les commandes fournies. Utilisez des fichiers et données de démonstration ; ne placez jamais de secrets, clés API, identifiants ou données personnelles dans votre code, vos requêtes ou vos journaux."
       : "## Avant de commencer\n\nCe cours se réalise directement dans Neopolis avec des activités interactives. Pour les mises en situation, préparez un chatbot IA autorisé par votre organisation ; ne partagez jamais de données sensibles, de mots de passe ou de clés API.";
   const preparationEn = isReplitCourse
     ? "## Before you start\n\nCreate or open a Replit account to reproduce the course scenarios in your own environment. Use demonstration data only; never add passwords, API keys, or sensitive data to a project or prompt."
     : isWindsurfCourse
       ? "## Before you start\n\nInstall Windsurf from its official website, then open a demonstration project folder or create a new one. You may import VS Code preferences if needed. Use test data only: never place passwords, API keys, tokens, or confidential data in a project, prompt, or Cascade rule."
+      : isFastApiCourse
+        ? "## Prepare your FastAPI environment\n\nInstall Python 3.11 or a compatible version, create a demonstration folder, then create a virtual environment (`python -m venv .venv`). Activate it and install the dependencies required by each exercise, including `fastapi`, `uvicorn`, `pydantic`, and `joblib`. Run APIs locally only (for example with `uvicorn main:app --reload`) and test them from a second terminal using the provided commands. Use demonstration files and data; never place secrets, API keys, credentials, or personal data in code, requests, or logs."
       : "## Before you start\n\nThis course is completed in Neopolis through interactive activities. For the scenarios, prepare an AI chatbot approved by your organization; never share sensitive data, passwords, or API keys.";
   firstActivity.blocks.unshift({
     type: "content",

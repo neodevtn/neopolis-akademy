@@ -2092,3 +2092,6 @@
 
 ### Cours 16 — Programmation assistée par IA avancée pour les développeurs
 - [x] Importer le paquet prêt, ses médias locaux et 32 activités standardisées, puis contrôler et publier après audit de production
+
+### Cours 17 — Déployer l’IA en production avec FastAPI
+- [x] Importer le paquet vérifié, ses médias locaux et 46 activités standardisées, puis contrôler et publier après audit de production

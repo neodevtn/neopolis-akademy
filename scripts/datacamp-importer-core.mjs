@@ -377,6 +377,7 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
       break;
     case "SingleProcessExercise":
     case "ConsoleExercise":
+    case "IDEExercise":
       type = "exercise";
       blocks = [buildCodeReplBlock(activity)];
       break;
