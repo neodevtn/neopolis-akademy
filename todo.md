@@ -2050,4 +2050,4 @@
 - [ ] Conserver les cours `media_pending` hors statut complet et documenter leurs blocages de médias durables
 
 ### Cours 03 — Coder avec l’aide de l’IA pour les développeurs
-- [ ] Publier le cours, vérifier les médias en production et archiver son rapport de contrôle
+- [x] Publier le cours, vérifier les médias en production et archiver son rapport de contrôle

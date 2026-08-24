@@ -23,4 +23,8 @@ La capture mobile à 375 px conserve le titre, le compteur `0/3 leçons`, la car
 
 L’audit HTTP local à débit contrôlé confirme que les **118 références média réellement consommées** par le JSON du cours répondent toutes `HTTP 200` via `/api/assets/`. Aucune URL DataCamp externe et aucun chemin `/manus-storage/` ne figurent dans les données publiées.
 
+## Contrôle de production
+
+Après publication, le même audit a interrogé `https://akademy.neodev.click/api/assets/` pour les **118 références** utilisées par le cours. Le résultat est de **118/118 réponses HTTP 200**, sans 404 et sans redirection vers un média DataCamp externe. Les tests dédiés du cours, du convertisseur et du catalogue ont été complétés par la suite complète : **83 fichiers de test et 312 tests réussis**.
+
 Les contrôles mobile, médias HTTP, activités représentatives, recherche et production restent à exécuter avant publication.
