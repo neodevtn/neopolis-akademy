@@ -44,4 +44,17 @@ Quatre leçons contiennent un VTT local publié ; les dix autres ne déclarent a
 
 `pnpm check`, `pnpm validate-courses` et la suite complète Vitest sont réussis : **96 fichiers de test et 352 tests**. Le validateur de cours ne relève aucune erreur ; ses avertissements historiques de similarité d’options hors de ce cours restent non bloquants. L’audit structurel FastAPI confirme 46 activités, 14 vidéos, 32 exercices interactifs, 90 références média locales et aucune référence invalide.
 
-Restent le checkpoint de publication et l’audit média sur le domaine public.
+## Vérification de production
+
+L’audit automatisé sur `https://akademy.neodev.click` confirme que les **90 / 90** références média effectivement consommées répondent correctement. Il ne détecte aucune erreur de média, aucune URL DataCamp externe, aucun chemin `/manus-storage/` public, aucun bloc inattendu, aucune activité non préparée et aucun écart de progression séquentielle.
+
+| Contrôle public | Résultat |
+|---|---:|
+| Activités / vidéos | 46 / 14 |
+| Exercices interactifs | 32 |
+| Médias consommés | 90 / 90 locaux valides |
+| Références média invalides | 0 |
+| Erreurs structurelles | 0 |
+| Tags de compétence par chapitre | 4 / 4 |
+
+Le cours est publié et l’audit de production est clôturé.
