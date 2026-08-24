@@ -2098,3 +2098,6 @@
 
 ### Cours 18 — L’IA pour les ventes
 - [x] Importer le paquet vérifié, ses médias locaux et 26 activités standardisées, puis contrôler et publier après audit de production
+
+### Cours 19 — IA pour le marketing
+- [ ] Importer le paquet vérifié, ses médias locaux et 29 activités standardisées, puis contrôler et publier après audit de production
