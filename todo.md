@@ -2131,3 +2131,6 @@
 
 ### Cours 32 — RAG de bout en bout avec Weaviate
 - [x] Importer le paquet vérifié, ses médias locaux et 14 activités standardisées, puis contrôler et publier après audit de production
+
+### Cours 33 — Créer des agents d’IA avec Haystack
+- [ ] Importer le paquet vérifié, ses médias locaux et 11 activités standardisées, puis contrôler et publier après audit de production
