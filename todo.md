@@ -2053,4 +2053,4 @@
 - [x] Publier le cours, vérifier les médias en production et archiver son rapport de contrôle
 
 ### Cours 04 — Développement logiciel avec GitHub Copilot
-- [ ] Publier le cours, vérifier les médias en production et archiver son rapport de contrôle
+- [x] Publier le cours, vérifier les médias en production et archiver son rapport de contrôle

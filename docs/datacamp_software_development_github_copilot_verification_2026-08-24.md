@@ -35,4 +35,6 @@ La capture mobile à 375 px confirme que l’en-tête, le compteur de leçons, l
 
 ## Validation technique en cours
 
-Le typage TypeScript est valide. Les tests ciblés du convertisseur, des timings Projector et du cours sont exécutés pendant la préparation de la publication. L’index de recherche contient l’entrée de la certification GitHub Copilot ; l’audit HTTP de production sera consigné avant de passer au cours suivant.
+Le typage TypeScript est valide. La suite complète exécute **84 fichiers de test et 315 tests réussis**. L’index de recherche contient l’entrée de la certification GitHub Copilot.
+
+Après publication, l’audit HTTP de production a contrôlé les **195 références média uniques** en sept lots à débit maîtrisé. Les 195 références répondent **HTTP 200**, sans 404, 429 ni URL DataCamp externe publiée.

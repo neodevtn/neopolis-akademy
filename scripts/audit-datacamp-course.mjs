@@ -65,6 +65,8 @@ async function summarizeOptionalJson(filePath) {
 const coursePath = valueFor("--course");
 const manifestPath = valueFor("--manifest");
 const productionBaseUrl = valueFor("--production-base-url").replace(/\/$/, "");
+const mediaOffset = Math.max(0, Number(valueFor("--media-offset")) || 0);
+const mediaLimit = Math.max(0, Number(valueFor("--media-limit")) || 0);
 if (!coursePath || !manifestPath) {
   console.error("Usage: node scripts/audit-datacamp-course.mjs --course <course.json> --manifest <COURSE_MANIFEST.json> [--production-base-url <https://domain>]");
   process.exit(1);
@@ -134,6 +136,8 @@ if (Number.isFinite(expectedActivities) && report.activities !== expectedActivit
 if (Number.isFinite(expectedVideos) && report.videos !== expectedVideos) report.errors.push(`Vidéos : ${report.videos} générées, ${expectedVideos} attendues.`);
 
 if (productionBaseUrl && media.length) {
+  const uniqueMedia = [...new Map(media.map((entry) => [entry.url, entry])).values()];
+  const mediaBatch = mediaLimit > 0 ? uniqueMedia.slice(mediaOffset, mediaOffset + mediaLimit) : uniqueMedia.slice(mediaOffset);
   const checkMedia = async ({ url }) => {
     let lastResult = { url, status: 0, contentType: "", ok: false };
     for (let attempt = 1; attempt <= 3; attempt += 1) {
@@ -143,14 +147,27 @@ if (productionBaseUrl && media.length) {
           redirect: "follow",
           signal: AbortSignal.timeout(8000),
         });
-        lastResult = { url, status: response.status, contentType: response.headers.get("content-type") || "", ok: response.ok, attempt };
+        lastResult = {
+          url,
+          status: response.status,
+          contentType: response.headers.get("content-type") || "",
+          ok: response.ok,
+          attempt,
+          retryAfter: response.headers.get("retry-after") || "",
+        };
         if (response.ok) return lastResult;
+        if (response.status === 429) {
+          if (attempt === 3) return lastResult;
+          const retryAfterSeconds = Number(lastResult.retryAfter || 0);
+          await new Promise((resolve) => setTimeout(resolve, Math.max(3000, retryAfterSeconds * 1000)));
+          continue;
+        }
 
         const rangeResponse = await fetch(`${productionBaseUrl}${url}`, {
           method: "GET",
           headers: { Range: "bytes=0-1023" },
           redirect: "follow",
-          signal: AbortSignal.timeout(30000),
+          signal: AbortSignal.timeout(10000),
         });
         lastResult = {
           url,
@@ -165,9 +182,9 @@ if (productionBaseUrl && media.length) {
         try {
           const rangeResponse = await fetch(`${productionBaseUrl}${url}`, {
             method: "GET",
-            headers: { Range: "bytes=0-1023" },
-            redirect: "follow",
-            signal: AbortSignal.timeout(30000),
+          headers: { Range: "bytes=0-1023" },
+          redirect: "follow",
+          signal: AbortSignal.timeout(10000),
           });
           lastResult = {
             url,
@@ -189,11 +206,13 @@ if (productionBaseUrl && media.length) {
     return lastResult;
   };
   const checks = [];
-  for (const [index, mediaEntry] of media.entries()) {
+  for (const [index, mediaEntry] of mediaBatch.entries()) {
     checks.push(await checkMedia(mediaEntry));
-    if (index < media.length - 1) await new Promise((resolve) => setTimeout(resolve, 600));
+    if (index < mediaBatch.length - 1) await new Promise((resolve) => setTimeout(resolve, 1500));
   }
   report.productionMedia = checks;
+  report.productionMediaUnique = uniqueMedia.length;
+  report.productionMediaBatch = { offset: mediaOffset, checked: mediaBatch.length, remaining: Math.max(0, uniqueMedia.length - mediaOffset - mediaBatch.length) };
   if (checks.some((check) => !check.ok)) report.errors.push("Au moins un média ne répond pas avec un statut HTTP de succès en production.");
 }
 
