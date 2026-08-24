@@ -17,3 +17,7 @@ Les activités représentatives identifiées sont : une expérience visuelle sur
 L’audit canonique confirme **4 leçons**, **39 activités** et **11 leçons Projector**. Il identifie 64 références média locales et aucun bloc non autorisé, média invalide, TP sous-préparé ou défaut de verrouillage séquentiel. Le contrôle HTTP local a vérifié les **52 références média uniques réellement consommées** : 52/52 sont accessibles via `/api/assets/` avec succès.
 
 Le typage TypeScript, la validation de tous les JSON de cours et la suite complète sont réussis : **90 fichiers de test et 333 tests**. Le test dédié couvre la catégorie BI, les 21 expériences visuelles, les 4 tris, les 3 QCM, les 11 Projector (MP4 ou audio-only), les tags et l’absence d’URL DataCamp externe. Le contrôle final de production reste à exécuter après publication.
+
+## Contrôle média de production
+
+L’audit sur le domaine public a contrôlé les **52 références média uniques** réellement consommées par le cours. Les 52 répondent **HTTP 200**, sans 404, 429, URL DataCamp externe ni chemin de stockage direct. La couverture inclut les onze leçons Projector, leurs audios/MP4, sous-titres, PDF de slides et images locales.
