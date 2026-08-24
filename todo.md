@@ -2118,4 +2118,4 @@
 - [x] Importer le paquet vérifié, ses médias locaux et 45 activités standardisées, puis contrôler et publier après audit de production
 
 ### Cours 26 — Créer des agents d’IA avec CrewAI
-- [ ] Importer le paquet vérifié, ses médias locaux et 7 activités standardisées, puis contrôler et publier après audit de production
+- [x] Importer le paquet vérifié, ses médias locaux et 7 activités standardisées, puis contrôler et publier après audit de production
