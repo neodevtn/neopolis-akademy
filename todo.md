@@ -2032,4 +2032,4 @@
 - [x] Vérifier l’intégrité SHA-256, les 4 chapitres, 33 activités, 11 leçons Projector et les 497 ressources locales attendues
 - [x] Convertir le cours avec les blocs standards, les médias Projector audio/diapositives/transcripts, la progression séquentielle et les tags de compétences
 - [x] Intégrer le catalogue, l’indexation de recherche, les règles XP et les ressources de la bibliothèque média
-- [ ] Tester les médias, un QCM, un tri, un exercice visuel, le rendu desktop/mobile, puis publier avec rapport et captures
+- [x] Tester les médias, un QCM, un tri, un exercice visuel, le rendu desktop/mobile, puis publier avec rapport et captures
