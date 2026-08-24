@@ -1,0 +1,2267 @@
+{
+  "courseId": "text_to_query_agents_with_mongodb_and_langgraph__01",
+  "sourceCourseTitle": "Agents de text-to-query avec MongoDB et LangGraph",
+  "datacampImport": {
+    "schemaVersion": "neopolis.datacamp_course.v1",
+    "sourceProvider": "DataCamp",
+    "sourceCourseSlug": "text-to-query-agents-with-mongodb-and-langgraph",
+    "sourceLanguage": "fr-FR",
+    "expected": {
+      "chapters_expected": 3,
+      "chapters_extracted": 3,
+      "activities_expected_from_outline": 13,
+      "activities_extracted": 13,
+      "videos_expected_from_chapter_metadata": 5,
+      "videos_extracted": 5,
+      "exercise_types": {
+        "VideoExercise": 5,
+        "DatalabExercise": 8
+      },
+      "failed_pages": []
+    },
+    "competencyTagging": "lesson_content_signals_v1"
+  },
+  "lessons": [
+    {
+      "id": "datacamp_ch01",
+      "title": {
+        "en": "Agents de text-to-query : applications et architecture",
+        "fr": "Agents de text-to-query : applications et architecture"
+      },
+      "description": {
+        "en": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !",
+        "fr": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !"
+      },
+      "competencyTags": [
+        "ai_solution_design",
+        "ai_orchestration"
+      ],
+      "recommendedVideos": [],
+      "recommendedVideosManaged": false,
+      "chapters": [
+        {
+          "id": "dc_ch01_act01",
+          "title": {
+            "en": "Agents texte-vers-requête",
+            "fr": "Agents texte-vers-requête"
+          },
+          "description": {
+            "en": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !",
+            "fr": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !"
+          },
+          "type": "teaching",
+          "sourceActivityType": "VideoExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "content",
+              "id": "neopolis_text_to_query_agents_with_mongodb_and_langgraph__01_environment_preparation",
+              "body": {
+                "fr": "## Avant de commencer\n\nCe cours se réalise directement dans Neopolis avec des activités interactives. Pour les mises en situation, préparez un chatbot IA autorisé par votre organisation ; ne partagez jamais de données sensibles, de mots de passe ou de clés API.",
+                "en": "## Before you start\n\nThis course is completed in Neopolis through interactive activities. For the scenarios, prepare an AI chatbot approved by your organization; never share sensitive data, passwords, or API keys."
+              }
+            },
+            {
+              "type": "video",
+              "id": "dc_1_act_01_video",
+              "title": {
+                "en": "Agents texte-vers-requête",
+                "fr": "Agents texte-vers-requête"
+              },
+              "mp4Url": "/api/assets/ch01_ex01_agents_texte_vers_requ_te_4fff8f43.mp4",
+              "audioUrl": "/api/assets/ch01_ex01_agents_texte_vers_requ_te_aeb02ce8.mp3",
+              "subtitleUrlEn": "/api/assets/ch01_ex01_agents_texte_vers_requ_te_en_cb4c7f9c.vtt",
+              "slidesPdf": "/api/assets/chapter_01_slides_e6f6b41b.pdf",
+              "projectorSlides": [
+                {
+                  "number": 1,
+                  "title": "Agents texte-vers-requête",
+                  "type": "TitleSlide",
+                  "script": "Hi, and welcome to the course!\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": "",
+                  "instructorName": "Apoorva Joshi",
+                  "instructorTitle": "Senior AI/ML Developer Advocate, MongoDB",
+                  "technology": "python"
+                },
+                {
+                  "number": 2,
+                  "title": "Rencontrez votre formatrice…",
+                  "type": "TwoColumns",
+                  "script": "I'm Apoorva Joshi, a Senior AI Developer Advocate at MongoDB, and I'll be your instructor for this course.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n&nbsp;\n\n* _Senior AI Developer Advocate_, **MongoDB**\n* Plus de 6 ans en ML appliqué chez MongoDB et Elastic",
+                  "contentLeft": "&nbsp;\n\n&nbsp;\n\n* _Senior AI Developer Advocate_, **MongoDB**\n* Plus de 6 ans en ML appliqué chez MongoDB et Elastic",
+                  "contentRight": ""
+                },
+                {
+                  "number": 3,
+                  "title": "À venir…",
+                  "type": "TwoColumns",
+                  "script": "Together, we'll learn how to create an AI agent that can query a database to answer questions from your data. These are often called text-to-query agents.\n\nWe'll be using MongoDB, a world-class document database designed with applications, including AI applications, in mind. However, the concepts and approaches discussed in this course can apply to any other database provider and querying language.\n\n",
+                  "images": [
+                    {
+                      "alt": "Agent interrogeant la base",
+                      "url": "/api/assets/ch01_ex01_agents_texte-vers-requ_te_002_agent_querying_v2_c83145e2.png"
+                    },
+                    {
+                      "alt": "Logo MongoDB",
+                      "url": "/api/assets/ch01_ex01_agents_texte-vers-requ_te_003_mongodb_logo_4c45c0a9.png"
+                    }
+                  ],
+                  "content": "&nbsp;\n\n- Base de données de documents leader mondial",
+                  "contentLeft": "",
+                  "contentRight": "&nbsp;\n\n- Base de données de documents leader mondial"
+                },
+                {
+                  "number": 4,
+                  "title": "RAG et agents",
+                  "type": "FullSlide",
+                  "script": "To achieve our goal of a text-to-query agent, we'll be combining two important concepts in AI engineering: Retrieval Augmented Generation, or RAG, and AI agents.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 5,
+                  "title": "RAG et agents",
+                  "type": "TwoColumns",
+                  "script": "RAG is the process of retrieving information from external data sources, augmenting a prompt with the retrieved information, and passing it to an LLM so it can generate more accurate answers to questions on topics it  wasn't trained on.\n\nAI agents use LLMs to make decisions and trigger actions through the use of tools. RAG can be used as a tool for an AI agent, meaning an agent can decide whether it needs to access an external data source to answer a question, and if it does, trigger one or a series of tool calls to retrieve information. In our case, this will involve querying a database using MongoDB's Query API.\n\n",
+                  "images": [
+                    {
+                      "alt": "Flux de travail RAG",
+                      "url": "/api/assets/ch01_ex01_agents_texte-vers-requ_te_005_rag_workflow_fe163f71.jpg"
+                    }
+                  ],
+                  "content": "&nbsp;\n\n&nbsp;",
+                  "contentLeft": "&nbsp;",
+                  "contentRight": "&nbsp;"
+                },
+                {
+                  "number": 6,
+                  "title": "MongoDB Atlas",
+                  "type": "FullSlide",
+                  "script": "Our first step on this journey is getting setup with a free MongoDB Atlas account and creating our own cluster.\n\nMongoDB Atlas is a fully-managed cloud database service designed to simplify deploying, scaling, and managing MongoDB databases.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 7,
+                  "title": "MongoDB Atlas",
+                  "type": "TwoColumns",
+                  "script": "A cluster, in this case, can be thought of as the machinery that supports and runs the database that houses the data.\n\nThis cluster comes with a pre-built movies database, and we'll build a text-to-query agent that uses an LLM and a set of tools to query the database and answer questions about it.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n* **Cluster** : infrastructure qui héberge et exécute la base de données\n\n&nbsp;\n\n**Objectif** → créer un agent ***texte-vers-requête*** pour répondre sur une base de données\n\n&nbsp;",
+                  "contentLeft": "&nbsp;\n\n* **Cluster** : infrastructure qui héberge et exécute la base de données\n\n&nbsp;\n\n**Objectif** → créer un agent ***texte-vers-requête*** pour répondre sur une base de données",
+                  "contentRight": "&nbsp;"
+                },
+                {
+                  "number": 8,
+                  "title": "Format du cours",
+                  "type": "FullSlide",
+                  "script": "Throughout the course, we'll be working side-by-side to tackle exercises, which will be completed in DataLab Notebooks with accompanying videos. DataLab is DataCamp's proprietary cloud-based notebook IDE. If you've used other notebook IDEs, you should find DataLab pretty intuitive; if you're not familiar with notebooks, you can think of a notebook as a series of cells to execute your code in.\n\nIf you run one cell, any variables or libraries defined in that cell will be available in subsequent cells, and so on.\n\nWorking in these notebooks will give you greater insight into how to build text-to-query agents for your own projects.\n\nIn the exercise, you can either start the video and code-along with us, or you can watch the video first and code afterwards - the choice is yours!\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 9,
+                  "title": "Format du cours",
+                  "type": "FullSlide",
+                  "script": "You can find detailed information to help you complete the tasks in the instructions section, and in the notebook.\n\n",
+                  "images": [
+                    {
+                      "alt": "Instructions MongoDB",
+                      "url": "/api/assets/ch01_ex01_agents_texte-vers-requ_te_010_mongodb_instructions_da283d64.png"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 10,
+                  "title": "Passons à la pratique !",
+                  "type": "FinalSlide",
+                  "script": "We'll discuss the text-to-query workflow in more detail in the next video, but for now, let's get set up with our MongoDB cluster and begin connecting to it.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                }
+              ],
+              "projectorTimings": [
+                {
+                  "time": 0,
+                  "slideIndex": 0,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.003285541032504362,
+                  "slideIndex": 0,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.011919568376385027,
+                  "slideIndex": 1,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.04884038192354277,
+                  "slideIndex": 2,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.05622218611804897,
+                  "slideIndex": 2,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.11235829339175951,
+                  "slideIndex": 2,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.11974198347148106,
+                  "slideIndex": 2,
+                  "fragment": 2
+                },
+                {
+                  "time": 0.18990398439402645,
+                  "slideIndex": 3,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.2514368927828985,
+                  "slideIndex": 4,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.328928282338387,
+                  "slideIndex": 4,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.4569281540425889,
+                  "slideIndex": 5,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.5387704105314021,
+                  "slideIndex": 6,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.5422889441100587,
+                  "slideIndex": 6,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.573051573247381,
+                  "slideIndex": 6,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.5976665594708505,
+                  "slideIndex": 6,
+                  "fragment": 2
+                },
+                {
+                  "time": 0.6395912566673051,
+                  "slideIndex": 7,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.9041710317920352,
+                  "slideIndex": 8,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.9411969405789217,
+                  "slideIndex": 9,
+                  "fragment": -1
+                }
+              ],
+              "projectorTimingUnit": "fraction",
+              "projectorDuration": 300,
+              "transcript": "1. Agents texte-vers-requête\nHi, and welcome to the course!\n\n2. Rencontrez votre formatrice…\nI'm Apoorva Joshi, a Senior AI Developer Advocate at MongoDB, and I'll be your instructor for this course.\n\n3. À venir…\nTogether, we'll learn how to create an AI agent that can query a database to answer questions from your data. These are often called text-to-query agents.\n\nWe'll be using MongoDB, a world-class document database designed with applications, including AI applications, in mind. However, the concepts and approaches discussed in this course can apply to any other database provider and querying language.\n\n4. RAG et agents\nTo achieve our goal of a text-to-query agent, we'll be combining two important concepts in AI engineering: Retrieval Augmented Generation, or RAG, and AI agents.\n\n5. RAG et agents\nRAG is the process of retrieving information from external data sources, augmenting a prompt with the retrieved information, and passing it to an LLM so it can generate more accurate answers to questions on topics it  wasn't trained on.\n\nAI agents use LLMs to make decisions and trigger actions through the use of tools. RAG can be used as a tool for an AI agent, meaning an agent can decide whether it needs to access an external data source to answer a question, and if it does, trigger one or a series of tool calls to retrieve information. In our case, this will involve querying a database using MongoDB's Query API.\n\n6. MongoDB Atlas\nOur first step on this journey is getting setup with a free MongoDB Atlas account and creating our own cluster.\n\nMongoDB Atlas is a fully-managed cloud database service designed to simplify deploying, scaling, and managing MongoDB databases.\n\n7. MongoDB Atlas\nA cluster, in this case, can be thought of as the machinery that supports and runs the database that houses the data.\n\nThis cluster comes with a pre-built movies database, and we'll build a text-to-query agent that uses an LLM and a set of tools to query the database and answer questions about it.\n\n8. Format du cours\nThroughout the course, we'll be working side-by-side to tackle exercises, which will be completed in DataLab Notebooks with accompanying videos. DataLab is DataCamp's proprietary cloud-based notebook IDE. If you've used other notebook IDEs, you should find DataLab pretty intuitive; if you're not familiar with notebooks, you can think of a notebook as a series of cells to execute your code in.\n\nIf you run one cell, any variables or libraries defined in that cell will be available in subsequent cells, and so on.\n\nWorking in these notebooks will give you greater insight into how to build text-to-query agents for your own projects.\n\nIn the exercise, you can either start the video and code-along with us, or you can watch the video first and code afterwards - the choice is yours!\n\n9. Format du cours\nYou can find detailed information to help you complete the tasks in the instructions section, and in the notebook.\n\n10. Passons à la pratique !\nWe'll discuss the text-to-query workflow in more detail in the next video, but for now, let's get set up with our MongoDB cluster and begin connecting to it.",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Agents texte-vers-requête",
+                  "text": "Hi, and welcome to the course!"
+                },
+                {
+                  "heading": "2. Rencontrez votre formatrice…",
+                  "text": "I'm Apoorva Joshi, a Senior AI Developer Advocate at MongoDB, and I'll be your instructor for this course."
+                },
+                {
+                  "heading": "3. À venir…",
+                  "text": "Together, we'll learn how to create an AI agent that can query a database to answer questions from your data. These are often called text-to-query agents.\n\nWe'll be using MongoDB, a world-class document database designed with applications, including AI applications, in mind. However, the concepts and approaches discussed in this course can apply to any other database provider and querying language."
+                },
+                {
+                  "heading": "4. RAG et agents",
+                  "text": "To achieve our goal of a text-to-query agent, we'll be combining two important concepts in AI engineering: Retrieval Augmented Generation, or RAG, and AI agents."
+                },
+                {
+                  "heading": "5. RAG et agents",
+                  "text": "RAG is the process of retrieving information from external data sources, augmenting a prompt with the retrieved information, and passing it to an LLM so it can generate more accurate answers to questions on topics it  wasn't trained on.\n\nAI agents use LLMs to make decisions and trigger actions through the use of tools. RAG can be used as a tool for an AI agent, meaning an agent can decide whether it needs to access an external data source to answer a question, and if it does, trigger one or a series of tool calls to retrieve information. In our case, this will involve querying a database using MongoDB's Query API."
+                },
+                {
+                  "heading": "6. MongoDB Atlas",
+                  "text": "Our first step on this journey is getting setup with a free MongoDB Atlas account and creating our own cluster.\n\nMongoDB Atlas is a fully-managed cloud database service designed to simplify deploying, scaling, and managing MongoDB databases."
+                },
+                {
+                  "heading": "7. MongoDB Atlas",
+                  "text": "A cluster, in this case, can be thought of as the machinery that supports and runs the database that houses the data.\n\nThis cluster comes with a pre-built movies database, and we'll build a text-to-query agent that uses an LLM and a set of tools to query the database and answer questions about it."
+                },
+                {
+                  "heading": "8. Format du cours",
+                  "text": "Throughout the course, we'll be working side-by-side to tackle exercises, which will be completed in DataLab Notebooks with accompanying videos. DataLab is DataCamp's proprietary cloud-based notebook IDE. If you've used other notebook IDEs, you should find DataLab pretty intuitive; if you're not familiar with notebooks, you can think of a notebook as a series of cells to execute your code in.\n\nIf you run one cell, any variables or libraries defined in that cell will be available in subsequent cells, and so on.\n\nWorking in these notebooks will give you greater insight into how to build text-to-query agents for your own projects.\n\nIn the exercise, you can either start the video and code-along with us, or you can watch the video first and code afterwards - the choice is yours!"
+                },
+                {
+                  "heading": "9. Format du cours",
+                  "text": "You can find detailed information to help you complete the tasks in the instructions section, and in the notebook."
+                },
+                {
+                  "heading": "10. Passons à la pratique !",
+                  "text": "We'll discuss the text-to-query workflow in more detail in the next video, but for now, let's get set up with our MongoDB cluster and begin connecting to it."
+                }
+              ]
+            },
+            {
+              "type": "download",
+              "id": "dc_ch01_slides",
+              "title": {
+                "en": "Chapter 1 slides",
+                "fr": "Chapter 1 slides"
+              },
+              "description": {
+                "en": "Official course slides provided in the local DataCamp package.",
+                "fr": "Official course slides provided in the local DataCamp package."
+              },
+              "url": "/api/assets/chapter_01_slides_e6f6b41b.pdf",
+              "filename": "chapter_01_slides.pdf"
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act02",
+          "title": {
+            "en": "Préparez-vous pour les exercices pratiques",
+            "fr": "Préparez-vous pour les exercices pratiques"
+          },
+          "description": {
+            "en": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !",
+            "fr": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !"
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_1_act_02_tp",
+              "title": {
+                "en": "Préparez-vous pour les exercices pratiques",
+                "fr": "Préparez-vous pour les exercices pratiques"
+              },
+              "assignment": "",
+              "instructions": "Suivez les instructions pour créer votre cluster MongoDB et ajouter la chaîne de connexion dans la variable d’environnement MONGODB_URI.\n\nInitialisez un client Python MongoDB en utilisant votre variable d’environnement MONGODB_URI.\n\nVérifiez la connexion à votre cluster avec une commande \"ping\".\n\nRemarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Suivez les instructions pour créer votre cluster MongoDB et ajouter la chaîne de connexion dans la variable d’environnement MONGODB_URI.",
+                "Initialisez un client Python MongoDB en utilisant votre variable d’environnement MONGODB_URI.",
+                "Vérifiez la connexion à votre cluster avec une commande \"ping\".",
+                "Remarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_01_slides_e6f6b41b.pdf"
+                }
+              ],
+              "hint": "Passez la variable MONGODB_URL à la classe MongoClient de pymongo.\n\nPour vérifier la connexion, appelez la méthode .command() sur mongodb_client.admin en lui passant \"ping\".",
+              "solution": "# Install libraries...\n\n## TASK 1\nimport os\nfrom pymongo import MongoClient\n\nMONGODB_URI = os.environ[\"MONGODB_URI\"]\n\n## TASK 2\n# Initialize a MongoDB Python client\nmongodb_client = MongoClient(MONGODB_URI, appname=\"datacamp_text_to_query_course\")\n\n# Check the connection to your cluster\nping_result = mongodb_client.admin.command(\"ping\")\nprint(ping_result)",
+              "successMessage": "Ping reçu et connexion confirmée ! Maintenant que tout est en place, voyons comment transformer des saisies utilisateur en requêtes MongoDB et dialoguer avec nos bases de données.",
+              "xp": 100
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act03",
+          "title": {
+            "en": "Le workflow text-to-query",
+            "fr": "Le workflow text-to-query"
+          },
+          "description": {
+            "en": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !",
+            "fr": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !"
+          },
+          "type": "teaching",
+          "sourceActivityType": "VideoExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_1_act_03_video",
+              "title": {
+                "en": "Le workflow text-to-query",
+                "fr": "Le workflow text-to-query"
+              },
+              "mp4Url": "/api/assets/ch01_ex03_le_workflow_text_to_query_02b1e068.mp4",
+              "audioUrl": "/api/assets/ch01_ex03_le_workflow_text_to_query_b7768903.mp3",
+              "subtitleUrlFr": "/api/assets/ch01_ex03_le_workflow_text_to_query_fr_a3f3333a.vtt",
+              "subtitleUrlEn": "/api/assets/ch01_ex03_le_workflow_text_to_query_en_abbf74a8.vtt",
+              "slidesPdf": "/api/assets/chapter_01_slides_e6f6b41b.pdf",
+              "projectorSlides": [
+                {
+                  "number": 1,
+                  "title": "Le flux texte-vers-requête",
+                  "type": "TitleSlide",
+                  "script": "Welcome back! With your cluster set up, let's look at the text-to-query workflow in a bit more detail.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": "",
+                  "instructorName": "Apoorva Joshi",
+                  "instructorTitle": "Senior AI/ML Developer Advocate, MongoDB",
+                  "technology": "python"
+                },
+                {
+                  "number": 2,
+                  "title": "Texte en requête",
+                  "type": "FullSlide",
+                  "script": "Given a natural language user input, a text-to-query application first needs to identify which collection has the most relevant information to answer the question, since typically, your database will have multiple collections.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 3,
+                  "title": "Texte en requête",
+                  "type": "FullSlide",
+                  "script": "Then, it needs to determine the schema of the documents in the identified collection.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 4,
+                  "title": "Texte en requête",
+                  "type": "FullSlide",
+                  "script": "Using this information, the application can translate the natural language user input into a valid MongoDB query.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 5,
+                  "title": "Texte en requête",
+                  "type": "FullSlide",
+                  "script": "It's good practice to also validate the generated query before executing it.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 6,
+                  "title": "Texte en requête",
+                  "type": "FullSlide",
+                  "script": "And finally, the query is executed against the identified collection to return a result.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 7,
+                  "title": "Texte en requête",
+                  "type": "FullSlide",
+                  "script": "The result is then passed to an LLM along with the user input to generate a context-aware response.\n\nIn this chapter, we'll write the MongoDB query ourselves to get a feel for the syntax, use it to query the database, and insert the query results into an LLM prompt to answer a question.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 8,
+                  "title": "Texte en requête : approche agentique",
+                  "type": "FullSlide",
+                  "script": "In the next chapter, we'll use an AI agent to dynamically perform these tasks by using a set of tools to read and query information from the database.\n\n",
+                  "images": [],
+                  "content": "&nbsp;",
+                  "contentLeft": "&nbsp;",
+                  "contentRight": ""
+                },
+                {
+                  "number": 9,
+                  "title": "Données : l’approche MongoDB",
+                  "type": "FullSlide",
+                  "script": "In MongoDB, data within a database is organized in collections. Collections are to MongoDB what tables are to relational databases. Collections consist of flexible JSON-like documents that can support varying key-value pairs or even nested structures, instead of rows with fixed columns like you'd have in a relational database.\n\n",
+                  "images": [],
+                  "content": "&nbsp;",
+                  "contentLeft": "&nbsp;",
+                  "contentRight": ""
+                },
+                {
+                  "number": 10,
+                  "title": "Requêtes MongoDB",
+                  "type": "TwoColumns",
+                  "script": "In MongoDB, queries are expressed using your programming language of choice. Instead of writing SQL statements, you pass JSON-like objects as parameters to methods such as .find(), .insert(), .update(), and .delete(). This method-based approach is why it's called a Query API, rather than a query language.\n\n",
+                  "images": [],
+                  "content": "## Structured Query Language (SQL)\n\n**Exemple de requête SQL**\n```sql\nSELECT *\nFROM table\nWHERE year>=1950\nLIMIT 5\n```\n\n## API de requêtes MongoDB\n\n**Exemple d’entrée type JSON**\n\n```py\n{ \"$and\": [\n              {\"year\": {\"$gte\": 1990}},\n              {\"year\": {\"$lt\": 2000}}\n          ]\n}\n```\n\n**Méthodes de requête MongoDB**\n\n* `.find()`, `.insert()`, `.update()`, `.delete()`",
+                  "contentLeft": "## Structured Query Language (SQL)\n\n**Exemple de requête SQL**\n```sql\nSELECT *\nFROM table\nWHERE year>=1950\nLIMIT 5\n```",
+                  "contentRight": "## API de requêtes MongoDB\n\n**Exemple d’entrée type JSON**\n\n```py\n{ \"$and\": [\n              {\"year\": {\"$gte\": 1990}},\n              {\"year\": {\"$lt\": 2000}}\n          ]\n}\n```\n\n**Méthodes de requête MongoDB**\n\n* `.find()`, `.insert()`, `.update()`, `.delete()`"
+                },
+                {
+                  "number": 11,
+                  "title": "Exemple : collection movies",
+                  "type": "FullSlide",
+                  "script": "Let's look at some common query operations using the MongoDB Query API on the pre-built movies database that was loaded into our MongoDB cluster at creation time.\n\nThe database consists of several collections, but let's pick the movies collection and run some queries against it. This collection consists of movie information, such as release year, cast, genres, etc.\n\nLet's start with filtering the data for romance movies.\n\n",
+                  "images": [],
+                  "content": "| _id                         | Titre                                                 | Année de sortie | Distribution                                                                              | Genres                 |\n|----------------------------|--------------------------------------------------------|-----------------|------------------------------------------------------------------------------------------|------------------------|\n| 573a1396f29313caabce3d17   | Larks on a String                                      | 1990            | [Rudolf Hrusènskè, Vlastimil Brodskè]                  | [Comédie, Drame, Romance] |\n| 573a1398f29313caabceab72   | The Witching of Ben Wagner                             | 1990            | [Sam Bottoms, Harriet Hall, Bettina Rae, Justin Gocke]                                     | [Famille]\n| ...   | ...                             | ...          | [...]                                     | [...]",
+                  "contentLeft": "| _id                         | Titre                                                 | Année de sortie | Distribution                                                                              | Genres                 |\n|----------------------------|--------------------------------------------------------|-----------------|------------------------------------------------------------------------------------------|------------------------|\n| 573a1396f29313caabce3d17   | Larks on a String                                      | 1990            | [Rudolf Hrusènskè, Vlastimil Brodskè]                  | [Comédie, Drame, Romance] |\n| 573a1398f29313caabceab72   | The Witching of Ben Wagner                             | 1990            | [Sam Bottoms, Harriet Hall, Bettina Rae, Justin Gocke]                                     | [Famille]\n| ...   | ...                             | ...          | [...]                                     | [...]",
+                  "contentRight": ""
+                },
+                {
+                  "number": 12,
+                  "title": "Filtres simples",
+                  "type": "FullSlide",
+                  "script": "To write this MongoDB query, we create a Python dictionary where the field name 'genres' is the key, and we map it directly to the value 'Romance' to find movies that have Romance as one of their genres.\n\n",
+                  "images": [],
+                  "content": "```py\nquery = {\"genre\": \"Romance\"}\n```",
+                  "contentLeft": "```py\nquery = {\"genre\": \"Romance\"}\n```",
+                  "contentRight": ""
+                },
+                {
+                  "number": 13,
+                  "title": "Filtres simples",
+                  "type": "FullSlide",
+                  "script": "Let's level this up with multiple filters!\n\nSay we want to find romance movies from the 90s.\n\n",
+                  "images": [],
+                  "content": "```py\nquery = {\"genre\": \"Romance\"}\n```\n\n| _id                          | Titre                              | Année de sortie | Distribution                                                         | Genres                    |\n|-----------------------------|------------------------------------|-----------------|----------------------------------------------------------------------|---------------------------|\n| 573a1390f29313caabcd6377    | Wild and Woolly                    | 1917            | [Douglas Fairbanks, Eileen Percy, Calvert Carter, Charles Stevens]     | [Comédie, Western, Romance] |\n| 573a1391f29313caabcd70b4    | The Four Horsemen of the Apocalypse | 1921            | [Pomeroy Cannon, Josef Swickard, Bridgetta Clark, Rudolph Valentino]   | [Drame, Romance, Guerre]     |",
+                  "contentLeft": "```py\nquery = {\"genre\": \"Romance\"}\n```\n\n| _id                          | Titre                              | Année de sortie | Distribution                                                         | Genres                    |\n|-----------------------------|------------------------------------|-----------------|----------------------------------------------------------------------|---------------------------|\n| 573a1390f29313caabcd6377    | Wild and Woolly                    | 1917            | [Douglas Fairbanks, Eileen Percy, Calvert Carter, Charles Stevens]     | [Comédie, Western, Romance] |\n| 573a1391f29313caabcd70b4    | The Four Horsemen of the Apocalypse | 1921            | [Pomeroy Cannon, Josef Swickard, Bridgetta Clark, Rudolph Valentino]   | [Drame, Romance, Guerre]     |",
+                  "contentRight": ""
+                },
+                {
+                  "number": 14,
+                  "title": "Filtres multiples",
+                  "type": "FullSlide",
+                  "script": "To filter on multiple conditions, we use the $and operator, which houses a list of conditions expressed as dictionaries, as before. Here we use the $gte and $lt operators to check that the year is greater-than-or-equal to 1990 and less-than 2000.\n\n",
+                  "images": [],
+                  "content": "```py\nquery = { \"$and\": [\n                    {\"year\": {\"$gte\": 1990}},\n                    {\"year\": {\"$lt\": 2000}}\n                  ]\n        }\n```",
+                  "contentLeft": "```py\nquery = { \"$and\": [\n                    {\"year\": {\"$gte\": 1990}},\n                    {\"year\": {\"$lt\": 2000}}\n                  ]\n        }\n```",
+                  "contentRight": ""
+                },
+                {
+                  "number": 15,
+                  "title": "Filtres multiples",
+                  "type": "FullSlide",
+                  "script": "We can extend this list to add more conditions, or use $or instead of $and to indicate that only one condition needs to be met in the filtering.\n\n",
+                  "images": [],
+                  "content": "```py\nquery = { \"$and\": [\n                    {\"year\": {\"$gte\": 1990}},\n                    {\"year\": {\"$lt\": 2000}}\n                  ]\n        }\n```\n\n| _id                         | Titre                                                 | Année de sortie | Distribution                                                                              | Genres                 |\n|----------------------------|--------------------------------------------------------|-----------------|------------------------------------------------------------------------------------------|------------------------|\n| 573a1396f29313caabce3d17   | Larks on a String                                      | 1990            | [Rudolf Hrusènskè, Vlastimil Brodskè]                  | [Comédie, Drame, Romance] |\n| 573a1398f29313caabceab72   | The Witching of Ben Wagner                             | 1990            | [Sam Bottoms, Harriet Hall, Bettina Rae, Justin Gocke]                                     | [Famille]",
+                  "contentLeft": "```py\nquery = { \"$and\": [\n                    {\"year\": {\"$gte\": 1990}},\n                    {\"year\": {\"$lt\": 2000}}\n                  ]\n        }\n```\n\n| _id                         | Titre                                                 | Année de sortie | Distribution                                                                              | Genres                 |\n|----------------------------|--------------------------------------------------------|-----------------|------------------------------------------------------------------------------------------|------------------------|\n| 573a1396f29313caabce3d17   | Larks on a String                                      | 1990            | [Rudolf Hrusènskè, Vlastimil Brodskè]                  | [Comédie, Drame, Romance] |\n| 573a1398f29313caabceab72   | The Witching of Ben Wagner                             | 1990            | [Sam Bottoms, Harriet Hall, Bettina Rae, Justin Gocke]                                     | [Famille]",
+                  "contentRight": ""
+                },
+                {
+                  "number": 16,
+                  "title": "Pipelines d’agrégation",
+                  "type": "TwoColumns",
+                  "script": "You can also perform complex data manipulations, such as grouping, sorting, transforming, and joining data across collections using the MongoDB Query API. This is done using aggregation pipelines.\n\nAggregation pipelines in MongoDB consist of a series of stages, each transforming the data in some way and passing the results on to the next stage.\n\n",
+                  "images": [],
+                  "content": "```py\ndb.<collection>.aggregate([\n    {stage-1},\n    {stage-2},\n    {stage-3},\n    {stage-4},\n])\n```",
+                  "contentLeft": "",
+                  "contentRight": "```py\ndb.<collection>.aggregate([\n    {stage-1},\n    {stage-2},\n    {stage-3},\n    {stage-4},\n])\n```"
+                },
+                {
+                  "number": 17,
+                  "title": "Opérations multiples",
+                  "type": "TwoColumns",
+                  "script": "Let's say we want to retrieve the top 5 latest movie releases from the dataset.\n\nTo do this, we need to first sort by the released field in descending order, then limit the results to the top five, and finally, project only the title field.\n\nWe start by opening a list containing the three operations,\n\n",
+                  "images": [],
+                  "content": "```py\nquery = [\n```\n```py\n\n```\n```py\n\n```\n```py\n\n```\n```py\n]\n```",
+                  "contentLeft": "```py\nquery = [\n```\n```py\n\n```\n```py\n\n```\n```py\n\n```\n```py\n]\n```",
+                  "contentRight": ""
+                },
+                {
+                  "number": 18,
+                  "title": "Opérations multiples",
+                  "type": "TwoColumns",
+                  "script": "then use the $sort key to indicate we want to start with a sort operation. We specify the column to sort on, and the value -1 indicates it should be sorted in descending order.\n\n",
+                  "images": [],
+                  "content": "```py\nquery = [\n```\n```py\n    { \"$sort\": { \"released\": -1 } },\n```\n```py\n\n```\n```py\n\n```\n```py\n]\n```\n\n* ### Trier par `released`",
+                  "contentLeft": "```py\nquery = [\n```\n```py\n    { \"$sort\": { \"released\": -1 } },\n```\n```py\n\n```\n```py\n\n```\n```py\n]\n```\n\n* ### Trier par `released`",
+                  "contentRight": ""
+                },
+                {
+                  "number": 19,
+                  "title": "Opérations multiples",
+                  "type": "TwoColumns",
+                  "script": "We use $limit to limit only to the top five results.\n\n",
+                  "images": [],
+                  "content": "```py\nquery = [\n```\n```py\n    { \"$sort\": { \"released\": -1 } },\n```\n```py\n    { \"$limit\": 5 },\n```\n```py\n\n```\n```py\n]\n```\n\n* ### Trier par `released`\n* ### Limiter à `5` résultats",
+                  "contentLeft": "```py\nquery = [\n```\n```py\n    { \"$sort\": { \"released\": -1 } },\n```\n```py\n    { \"$limit\": 5 },\n```\n```py\n\n```\n```py\n]\n```\n\n* ### Trier par `released`\n* ### Limiter à `5` résultats",
+                  "contentRight": ""
+                },
+                {
+                  "number": 20,
+                  "title": "Opérations multiples",
+                  "type": "TwoColumns",
+                  "script": "Finally, we use $project to keep only the title field. The 1's and 0's indicate what will be kept in the final result. Here, we remove the default \"_id\" column by setting it to zero.\n\n",
+                  "images": [],
+                  "content": "```py\nquery = [\n```\n```py\n    { \"$sort\": { \"released\": -1 } },\n```\n```py\n    { \"$limit\": 5 },\n```\n```py\n    { \"$project\": { \"title\": 1,\n                    \"_id\": 0 } }\n```\n```py\n]\n```\n\n* ### Trier par `released`\n* ### Limiter à `5` résultats\n* ### Projeter la colonne `\"title\"`",
+                  "contentLeft": "```py\nquery = [\n```\n```py\n    { \"$sort\": { \"released\": -1 } },\n```\n```py\n    { \"$limit\": 5 },\n```\n```py\n    { \"$project\": { \"title\": 1,\n                    \"_id\": 0 } }\n```\n```py\n]\n```\n\n* ### Trier par `released`\n* ### Limiter à `5` résultats\n* ### Projeter la colonne `\"title\"`",
+                  "contentRight": ""
+                },
+                {
+                  "number": 21,
+                  "title": "Opérations multiples",
+                  "type": "TwoColumns",
+                  "script": "Let's tackle one last query: a grouped aggregation.\n\n",
+                  "images": [],
+                  "content": "```py\nquery = [\n```\n```py\n    { \"$sort\": { \"released\": -1 } },\n```\n```py\n    { \"$limit\": 5 },\n```\n```py\n    { \"$project\": { \"title\": 1,\n                    \"_id\": 0 } }\n```\n```py\n]\n```\n\n* ### Trier par `released`\n* ### Limiter à `5` résultats\n* ### Projeter la colonne `\"title\"`\n\n| Titre           |\n|-----------------|\n| The Treasure    |\n| Knight of Cups  |\n| Sand Castles    |\n| Shut In         |\n| Dègradè         |",
+                  "contentLeft": "```py\nquery = [\n```\n```py\n    { \"$sort\": { \"released\": -1 } },\n```\n```py\n    { \"$limit\": 5 },\n```\n```py\n    { \"$project\": { \"title\": 1,\n                    \"_id\": 0 } }\n```\n```py\n]\n```\n\n* ### Trier par `released`\n* ### Limiter à `5` résultats\n* ### Projeter la colonne `\"title\"`",
+                  "contentRight": "| Titre           |\n|-----------------|\n| The Treasure    |\n| Knight of Cups  |\n| Sand Castles    |\n| Shut In         |\n| Dègradè         |"
+                },
+                {
+                  "number": 22,
+                  "title": "Agrégations groupées",
+                  "type": "FullSlide",
+                  "script": "Let's say we wanted to find how many movies of each genre are present in our dataset. Since genres is an array, we first need to unwind it.\n\n",
+                  "images": [],
+                  "content": "| _id                         | Titre                                                 | Année de sortie | Distribution                                                                              | Genres                 |\n|----------------------------|--------------------------------------------------------|-----------------|------------------------------------------------------------------------------------------|------------------------|\n| 573a1396f29313caabce3d17   | Larks on a String                                      | 1990            | [Rudolf Hrusènskè, Vlastimil Brodskè]                  | [Comédie, Drame, Romance] |\n| 573a1398f29313caabceab72   | The Witching of Ben Wagner                             | 1990            | [Sam Bottoms, Harriet Hall, Bettina Rae, Justin Gocke]                                     | [Famille]\n| ...   | ...                             | ...          | [...]                                     | [...]",
+                  "contentLeft": "| _id                         | Titre                                                 | Année de sortie | Distribution                                                                              | Genres                 |\n|----------------------------|--------------------------------------------------------|-----------------|------------------------------------------------------------------------------------------|------------------------|\n| 573a1396f29313caabce3d17   | Larks on a String                                      | 1990            | [Rudolf Hrusènskè, Vlastimil Brodskè]                  | [Comédie, Drame, Romance] |\n| 573a1398f29313caabceab72   | The Witching of Ben Wagner                             | 1990            | [Sam Bottoms, Harriet Hall, Bettina Rae, Justin Gocke]                                     | [Famille]\n| ...   | ...                             | ...          | [...]                                     | [...]",
+                  "contentRight": ""
+                },
+                {
+                  "number": 23,
+                  "title": "Agrégations groupées",
+                  "type": "FullSlide",
+                  "script": "And we do that using the $unwind operator. This will create a separate document for each element in the genres array.\n\nNext, we use $group to indicate we want to group on the genres field, and use the $sum accumulation operator to aggregate the total number per genre. This aggregation will be captured in a numMovies field.\n\nWe can also apply a filter to the aggregated field using the $match keyword. We use $gte to indicate a greater-than-or-equal-to 50 filter.\n\n",
+                  "images": [],
+                  "content": "```py\nquery = [\n```\n```py\n          { \"$unwind\": \"$genres\" },\n```\n```py\n          { \"$group\": {\n                \"_id\": \"$genres\",\n                \"numMovies\": { \"$sum\": 1 }\n          }},\n```\n```py\n          { \"$match\": { \"numMovies\": { \"$gte\": 50 } } }\n```\n```py\n]\n```",
+                  "contentLeft": "```py\nquery = [\n```\n```py\n          { \"$unwind\": \"$genres\" },\n```\n```py\n          { \"$group\": {\n                \"_id\": \"$genres\",\n                \"numMovies\": { \"$sum\": 1 }\n          }},\n```\n```py\n          { \"$match\": { \"numMovies\": { \"$gte\": 50 } } }\n```\n```py\n]\n```",
+                  "contentRight": ""
+                },
+                {
+                  "number": 24,
+                  "title": "Agrégations groupées",
+                  "type": "TwoColumns",
+                  "script": "This is what the result of this aggregation would be. We have genres and their movie counts, and we've only retained genres that have more than 50 movies.\n\nThe MongoDB query API supports lots of different transformations, but as we'll eventually be letting the LLM build the queries for us, we'll leave the rest to another day.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n| Genre    | Compte |\n|----------|--------|\n| Drame    | 12385  |\n| Comédie  | 6532   |\n| Romance  | 3318   |\n| Crime    | 2457   |\n| Thriller | 2454   |\n| ... | ...  |\n\n**Étapes de pipeline**\n* `$match`, `$group`, `$facet`, `$geoNear`, `$lookup`, `$merge`, `$search`, `$sort`...\n\n**Opérateurs**\n* _Comparaison_ : `$eq`, `$gt`, `$gte`, ...\n* _Maths_ : `$add`, `$multiply`, `$divide`...\n* _Tableau_ : `$push`, `$reduce`, ...\n* _Chaîne_ : `$toUpper`, `$toLower`, ...\n* _Temporel_ : `$dateAdd`, `$dateDiff`, ...",
+                  "contentLeft": "&nbsp;\n\n| Genre    | Compte |\n|----------|--------|\n| Drame    | 12385  |\n| Comédie  | 6532   |\n| Romance  | 3318   |\n| Crime    | 2457   |\n| Thriller | 2454   |\n| ... | ...  |",
+                  "contentRight": "**Étapes de pipeline**\n* `$match`, `$group`, `$facet`, `$geoNear`, `$lookup`, `$merge`, `$search`, `$sort`...\n\n**Opérateurs**\n* _Comparaison_ : `$eq`, `$gt`, `$gte`, ...\n* _Maths_ : `$add`, `$multiply`, `$divide`...\n* _Tableau_ : `$push`, `$reduce`, ...\n* _Chaîne_ : `$toUpper`, `$toLower`, ...\n* _Temporel_ : `$dateAdd`, `$dateDiff`, ..."
+                },
+                {
+                  "number": 25,
+                  "title": "Passons à la pratique !",
+                  "type": "FinalSlide",
+                  "script": "Time to get querying!\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                }
+              ],
+              "projectorTimings": [
+                {
+                  "time": 0,
+                  "slideIndex": 0,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.0018395541245477187,
+                  "slideIndex": 0,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.020978940464704384,
+                  "slideIndex": 1,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.06068767275860118,
+                  "slideIndex": 2,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.07703577534896833,
+                  "slideIndex": 3,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.09976636602026466,
+                  "slideIndex": 4,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.11536580507105847,
+                  "slideIndex": 5,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.133093880914545,
+                  "slideIndex": 6,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.18984007375845868,
+                  "slideIndex": 7,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.21890938074285887,
+                  "slideIndex": 8,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.22947559772395137,
+                  "slideIndex": 8,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.2877006740814872,
+                  "slideIndex": 9,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.3025532301482446,
+                  "slideIndex": 9,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.3117992252624002,
+                  "slideIndex": 9,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.3201634903424536,
+                  "slideIndex": 9,
+                  "fragment": 2
+                },
+                {
+                  "time": 0.3501008088078759,
+                  "slideIndex": 10,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.4328355498019675,
+                  "slideIndex": 11,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.43848516175778446,
+                  "slideIndex": 11,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.4682687731658417,
+                  "slideIndex": 12,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.4888932496037636,
+                  "slideIndex": 13,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.4945455604226209,
+                  "slideIndex": 13,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.5474189034902274,
+                  "slideIndex": 14,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.5757969918744842,
+                  "slideIndex": 15,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.5807591999435945,
+                  "slideIndex": 15,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.612652174364769,
+                  "slideIndex": 15,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.6438948642766603,
+                  "slideIndex": 16,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.6949881269780517,
+                  "slideIndex": 16,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.7034988727828787,
+                  "slideIndex": 17,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.7396597614106835,
+                  "slideIndex": 18,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.7539006018832971,
+                  "slideIndex": 19,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.7898548371201262,
+                  "slideIndex": 20,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.8087978172727598,
+                  "slideIndex": 21,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.8357372995376098,
+                  "slideIndex": 22,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.838590275399032,
+                  "slideIndex": 22,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.8620569616106994,
+                  "slideIndex": 22,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.9038938688740387,
+                  "slideIndex": 22,
+                  "fragment": 2
+                },
+                {
+                  "time": 0.935809315134059,
+                  "slideIndex": 23,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.9662165694558089,
+                  "slideIndex": 23,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.9931594900347992,
+                  "slideIndex": 24,
+                  "fragment": -1
+                }
+              ],
+              "projectorTimingUnit": "fraction",
+              "projectorDuration": 300,
+              "transcript": "1. Le flux texte-vers-requête\nWelcome back! With your cluster set up, let's look at the text-to-query workflow in a bit more detail.\n\n2. Texte en requête\nGiven a natural language user input, a text-to-query application first needs to identify which collection has the most relevant information to answer the question, since typically, your database will have multiple collections.\n\n3. Texte en requête\nThen, it needs to determine the schema of the documents in the identified collection.\n\n4. Texte en requête\nUsing this information, the application can translate the natural language user input into a valid MongoDB query.\n\n5. Texte en requête\nIt's good practice to also validate the generated query before executing it.\n\n6. Texte en requête\nAnd finally, the query is executed against the identified collection to return a result.\n\n7. Texte en requête\nThe result is then passed to an LLM along with the user input to generate a context-aware response.\n\nIn this chapter, we'll write the MongoDB query ourselves to get a feel for the syntax, use it to query the database, and insert the query results into an LLM prompt to answer a question.\n\n8. Texte en requête : approche agentique\nIn the next chapter, we'll use an AI agent to dynamically perform these tasks by using a set of tools to read and query information from the database.\n\n9. Données : l’approche MongoDB\nIn MongoDB, data within a database is organized in collections. Collections are to MongoDB what tables are to relational databases. Collections consist of flexible JSON-like documents that can support varying key-value pairs or even nested structures, instead of rows with fixed columns like you'd have in a relational database.\n\n10. Requêtes MongoDB\nIn MongoDB, queries are expressed using your programming language of choice. Instead of writing SQL statements, you pass JSON-like objects as parameters to methods such as .find(), .insert(), .update(), and .delete(). This method-based approach is why it's called a Query API, rather than a query language.\n\n11. Exemple : collection movies\nLet's look at some common query operations using the MongoDB Query API on the pre-built movies database that was loaded into our MongoDB cluster at creation time.\n\nThe database consists of several collections, but let's pick the movies collection and run some queries against it. This collection consists of movie information, such as release year, cast, genres, etc.\n\nLet's start with filtering the data for romance movies.\n\n12. Filtres simples\nTo write this MongoDB query, we create a Python dictionary where the field name 'genres' is the key, and we map it directly to the value 'Romance' to find movies that have Romance as one of their genres.\n\n13. Filtres simples\nLet's level this up with multiple filters!\n\nSay we want to find romance movies from the 90s.\n\n14. Filtres multiples\nTo filter on multiple conditions, we use the $and operator, which houses a list of conditions expressed as dictionaries, as before. Here we use the $gte and $lt operators to check that the year is greater-than-or-equal to 1990 and less-than 2000.\n\n15. Filtres multiples\nWe can extend this list to add more conditions, or use $or instead of $and to indicate that only one condition needs to be met in the filtering.\n\n16. Pipelines d’agrégation\nYou can also perform complex data manipulations, such as grouping, sorting, transforming, and joining data across collections using the MongoDB Query API. This is done using aggregation pipelines.\n\nAggregation pipelines in MongoDB consist of a series of stages, each transforming the data in some way and passing the results on to the next stage.\n\n17. Opérations multiples\nLet's say we want to retrieve the top 5 latest movie releases from the dataset.\n\nTo do this, we need to first sort by the released field in descending order, then limit the results to the top five, and finally, project only the title field.\n\nWe start by opening a list containing the three operations,\n\n18. Opérations multiples\nthen use the $sort key to indicate we want to start with a sort operation. We specify the column to sort on, and the value -1 indicates it should be sorted in descending order.\n\n19. Opérations multiples\nWe use $limit to limit only to the top five results.\n\n20. Opérations multiples\nFinally, we use $project to keep only the title field. The 1's and 0's indicate what will be kept in the final result. Here, we remove the default \"_id\" column by setting it to zero.\n\n21. Opérations multiples\nLet's tackle one last query: a grouped aggregation.\n\n22. Agrégations groupées\nLet's say we wanted to find how many movies of each genre are present in our dataset. Since genres is an array, we first need to unwind it.\n\n23. Agrégations groupées\nAnd we do that using the $unwind operator. This will create a separate document for each element in the genres array.\n\nNext, we use $group to indicate we want to group on the genres field, and use the $sum accumulation operator to aggregate the total number per genre. This aggregation will be captured in a numMovies field.\n\nWe can also apply a filter to the aggregated field using the $match keyword. We use $gte to indicate a greater-than-or-equal-to 50 filter.\n\n24. Agrégations groupées\nThis is what the result of this aggregation would be. We have genres and their movie counts, and we've only retained genres that have more than 50 movies.\n\nThe MongoDB query API supports lots of different transformations, but as we'll eventually be letting the LLM build the queries for us, we'll leave the rest to another day.\n\n25. Passons à la pratique !\nTime to get querying!",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Le flux texte-vers-requête",
+                  "text": "Welcome back! With your cluster set up, let's look at the text-to-query workflow in a bit more detail."
+                },
+                {
+                  "heading": "2. Texte en requête",
+                  "text": "Given a natural language user input, a text-to-query application first needs to identify which collection has the most relevant information to answer the question, since typically, your database will have multiple collections."
+                },
+                {
+                  "heading": "3. Texte en requête",
+                  "text": "Then, it needs to determine the schema of the documents in the identified collection."
+                },
+                {
+                  "heading": "4. Texte en requête",
+                  "text": "Using this information, the application can translate the natural language user input into a valid MongoDB query."
+                },
+                {
+                  "heading": "5. Texte en requête",
+                  "text": "It's good practice to also validate the generated query before executing it."
+                },
+                {
+                  "heading": "6. Texte en requête",
+                  "text": "And finally, the query is executed against the identified collection to return a result."
+                },
+                {
+                  "heading": "7. Texte en requête",
+                  "text": "The result is then passed to an LLM along with the user input to generate a context-aware response.\n\nIn this chapter, we'll write the MongoDB query ourselves to get a feel for the syntax, use it to query the database, and insert the query results into an LLM prompt to answer a question."
+                },
+                {
+                  "heading": "8. Texte en requête : approche agentique",
+                  "text": "In the next chapter, we'll use an AI agent to dynamically perform these tasks by using a set of tools to read and query information from the database."
+                },
+                {
+                  "heading": "9. Données : l’approche MongoDB",
+                  "text": "In MongoDB, data within a database is organized in collections. Collections are to MongoDB what tables are to relational databases. Collections consist of flexible JSON-like documents that can support varying key-value pairs or even nested structures, instead of rows with fixed columns like you'd have in a relational database."
+                },
+                {
+                  "heading": "10. Requêtes MongoDB",
+                  "text": "In MongoDB, queries are expressed using your programming language of choice. Instead of writing SQL statements, you pass JSON-like objects as parameters to methods such as .find(), .insert(), .update(), and .delete(). This method-based approach is why it's called a Query API, rather than a query language."
+                },
+                {
+                  "heading": "11. Exemple : collection movies",
+                  "text": "Let's look at some common query operations using the MongoDB Query API on the pre-built movies database that was loaded into our MongoDB cluster at creation time.\n\nThe database consists of several collections, but let's pick the movies collection and run some queries against it. This collection consists of movie information, such as release year, cast, genres, etc.\n\nLet's start with filtering the data for romance movies."
+                },
+                {
+                  "heading": "12. Filtres simples",
+                  "text": "To write this MongoDB query, we create a Python dictionary where the field name 'genres' is the key, and we map it directly to the value 'Romance' to find movies that have Romance as one of their genres."
+                },
+                {
+                  "heading": "13. Filtres simples",
+                  "text": "Let's level this up with multiple filters!\n\nSay we want to find romance movies from the 90s."
+                },
+                {
+                  "heading": "14. Filtres multiples",
+                  "text": "To filter on multiple conditions, we use the $and operator, which houses a list of conditions expressed as dictionaries, as before. Here we use the $gte and $lt operators to check that the year is greater-than-or-equal to 1990 and less-than 2000."
+                },
+                {
+                  "heading": "15. Filtres multiples",
+                  "text": "We can extend this list to add more conditions, or use $or instead of $and to indicate that only one condition needs to be met in the filtering."
+                },
+                {
+                  "heading": "16. Pipelines d’agrégation",
+                  "text": "You can also perform complex data manipulations, such as grouping, sorting, transforming, and joining data across collections using the MongoDB Query API. This is done using aggregation pipelines.\n\nAggregation pipelines in MongoDB consist of a series of stages, each transforming the data in some way and passing the results on to the next stage."
+                },
+                {
+                  "heading": "17. Opérations multiples",
+                  "text": "Let's say we want to retrieve the top 5 latest movie releases from the dataset.\n\nTo do this, we need to first sort by the released field in descending order, then limit the results to the top five, and finally, project only the title field.\n\nWe start by opening a list containing the three operations,"
+                },
+                {
+                  "heading": "18. Opérations multiples",
+                  "text": "then use the $sort key to indicate we want to start with a sort operation. We specify the column to sort on, and the value -1 indicates it should be sorted in descending order."
+                },
+                {
+                  "heading": "19. Opérations multiples",
+                  "text": "We use $limit to limit only to the top five results."
+                },
+                {
+                  "heading": "20. Opérations multiples",
+                  "text": "Finally, we use $project to keep only the title field. The 1's and 0's indicate what will be kept in the final result. Here, we remove the default \"_id\" column by setting it to zero."
+                },
+                {
+                  "heading": "21. Opérations multiples",
+                  "text": "Let's tackle one last query: a grouped aggregation."
+                },
+                {
+                  "heading": "22. Agrégations groupées",
+                  "text": "Let's say we wanted to find how many movies of each genre are present in our dataset. Since genres is an array, we first need to unwind it."
+                },
+                {
+                  "heading": "23. Agrégations groupées",
+                  "text": "And we do that using the $unwind operator. This will create a separate document for each element in the genres array.\n\nNext, we use $group to indicate we want to group on the genres field, and use the $sum accumulation operator to aggregate the total number per genre. This aggregation will be captured in a numMovies field.\n\nWe can also apply a filter to the aggregated field using the $match keyword. We use $gte to indicate a greater-than-or-equal-to 50 filter."
+                },
+                {
+                  "heading": "24. Agrégations groupées",
+                  "text": "This is what the result of this aggregation would be. We have genres and their movie counts, and we've only retained genres that have more than 50 movies.\n\nThe MongoDB query API supports lots of different transformations, but as we'll eventually be letting the LLM build the queries for us, we'll leave the rest to another day."
+                },
+                {
+                  "heading": "25. Passons à la pratique !",
+                  "text": "Time to get querying!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act04",
+          "title": {
+            "en": "Écrire des requêtes MongoDB",
+            "fr": "Écrire des requêtes MongoDB"
+          },
+          "description": {
+            "en": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !",
+            "fr": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !"
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_1_act_04_tp",
+              "title": {
+                "en": "Écrire des requêtes MongoDB",
+                "fr": "Écrire des requêtes MongoDB"
+              },
+              "assignment": "",
+              "instructions": "Accédez à la base sample_mflix à partir de votre mongodb_client, et listez les collections qu’elle contient.\n\nSélectionnez la collection \"movies\" et prévisualisez un document d’exemple.\n\nFiltrez la collection pour les films sortis avant 1905.\n\nFiltrez la collection pour les films sortis avant 1930 ET avec des notes IMDB supérieures ou égales à 8.\n\nRemarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Accédez à la base sample_mflix à partir de votre mongodb_client, et listez les collections qu’elle contient.",
+                "Sélectionnez la collection \"movies\" et prévisualisez un document d’exemple.",
+                "Filtrez la collection pour les films sortis avant 1905.",
+                "Filtrez la collection pour les films sortis avant 1930 ET avec des notes IMDB supérieures ou égales à 8.",
+                "Remarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_01_slides_e6f6b41b.pdf"
+                }
+              ],
+              "hint": "Appelez la méthode .list_collection_names() sur votre base de données pour voir les collections disponibles.\n\nLa méthode .find_one({}) peut être utilisée pour prévisualiser un document d’exemple.\n\nPour filtrer sur une seule condition, passez un dictionnaire dont la clé est la colonne à filtrer, et la valeur est un autre dictionnaire indiquant l’opération de comparaison à effectuer ainsi que la valeur de comparaison : $: .\n\nPour filtrer sur plusieurs conditions, créez un dictionnaire avec une clé $and associée à une liste de dictionnaires, chacun suivant le même schéma de mappage nom de colonne → opération que dans le cas à condition unique.",
+              "solution": "## Install libraries and create the client...\n\n## TASK 1\n# Access the sample_mflix database\ndb = mongodb_client[\"sample_mflix\"]\ndb.list_collection_names()\n\n## TASK 2\ncollection = db[\"movies\"]\ncollection.find_one({})\n\n## TASK 3\nold_movies_query = {\"year\": {\"$lt\": 1905}}\n\nimport pprint\n\n# Execute the query and iterate through the resulting cursor\nfor doc in collection.find(old_movies_query):\n    pprint.pprint(doc)\n\n## TASK 4\nbest_old_movies_query = { \"$and\":[\n                    {\"year\": {\"$lt\": 1930}},\n                    {\"imdb.rating\": {\"$gte\": 8}}\n                  ]\n        }\n\n# Execute the query and iterate through the resulting cursor\nfor doc in collection.find(best_old_movies_query):\n    pprint.pprint(doc)",
+              "successMessage": "Bravo ! Vous savez maintenant charger des collections de base de données et écrire des requêtes de filtrage. Passons à la vitesse supérieure avec du tri et des agrégations groupées !",
+              "xp": 100
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act05",
+          "title": {
+            "en": "Des agrégations plus complexes",
+            "fr": "Des agrégations plus complexes"
+          },
+          "description": {
+            "en": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !",
+            "fr": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !"
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_1_act_05_tp",
+              "title": {
+                "en": "Des agrégations plus complexes",
+                "fr": "Des agrégations plus complexes"
+              },
+              "assignment": "",
+              "instructions": "Créez le pipeline d’agrégation pour lister les 5 meilleurs films avec les meilleures notes IMDB, composé des étapes $sort, $limit et $project.\n\nCréez le pipeline d’agrégation pour trouver les 5 meilleurs réalisateurs par note IMDB moyenne, ayant réalisé au moins 20 films, composé des étapes $unwind, $group, $match, $sort et $limit.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Créez le pipeline d’agrégation pour lister les 5 meilleurs films avec les meilleures notes IMDB, composé des étapes $sort, $limit et $project.",
+                "Créez le pipeline d’agrégation pour trouver les 5 meilleurs réalisateurs par note IMDB moyenne, ayant réalisé au moins 20 films, composé des étapes $unwind, $group, $match, $sort et $limit.",
+                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_01_slides_e6f6b41b.pdf"
+                }
+              ],
+              "hint": "Chaque opération dans un pipeline d’agrégation doit être un dictionnaire, où la clé indique l’opération effectuée et la valeur correspond aux paramètres de l’opération.\n\nL’opération $sort doit être associée à un dictionnaire contenant le nom de la colonne à trier et soit 1 (ordre croissant) soit -1 (ordre décroissant).\n\nL’opération $project requiert un dictionnaire de noms de colonnes associés à 1 ou 0 selon qu’elles doivent être projetées ou non.\n\n$group prend un dictionnaire contenant la colonne de groupement associée à _id, ainsi que les colonnes agrégées à créer ; ces noms de colonnes agrégées nécessitent leurs propres dictionnaires indiquant l’opération d’agrégation ($sum, $avg) et la cible sur laquelle l’appliquer.",
+              "solution": "## Install libraries and create the client...\n# Access the sample_mflix database\ndb = mongodb_client[\"sample_mflix\"]\n\n# Access the movies collection\ncollection = db[\"movies\"]\n\n\n## TASK 1\nsort_query = [\n          { \"$sort\": { \"imdb.rating\": -1 } },\n          { \"$limit\": 5 },\n          { \"$project\": { \"title\": 1, \"_id\": 0} } ]\n\nfor doc in collection.aggregate(sort_query):\n    print(doc)\n    \n## TASK 2\ngroup_query = [ { \"$unwind\": \"$directors\" },\n          { \"$group\": { \"_id\": \"$directors\", \"filmCount\": { \"$sum\": 1 }, \"avgRating\": { \"$avg\": \"$imdb.rating\" } } },\n          { \"$match\": { \"filmCount\": { \"$gte\": 20 } } },\n          { \"$sort\": { \"avgRating\": -1 } },\n          { \"$limit\": 5 } ]\n\n# Execute the aggregation pipeline and iterate through the resulting cursor\nfor doc in collection.aggregate(group_query):\n    print(doc)",
+              "successMessage": "Vous avez manipulé ces données avec brio ! Dans votre workflow text-to-query, un LLM générera ces requêtes, mais comprendre les bases du langage de requête vous aidera à déboguer les erreurs et les problèmes lors du développement.",
+              "xp": 100
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act06",
+          "title": {
+            "en": "Un workflow text-to-query en pratique",
+            "fr": "Un workflow text-to-query en pratique"
+          },
+          "description": {
+            "en": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !",
+            "fr": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !"
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_1_act_06_tp",
+              "title": {
+                "en": "Un workflow text-to-query en pratique",
+                "fr": "Un workflow text-to-query en pratique"
+              },
+              "assignment": "",
+              "instructions": "Initialisez un LLM OpenAI avec une valeur temperature appropriée en utilisant la classe ChatOpenAI de LangChain.\n\nConvertissez la requête en langage naturel fournie en une requête MongoDB, exécutez-la et obtenez les résultats sous forme de liste Python.\n\nCréez un modèle d’invite pour le LLM, composé d’un prompt système et d’un espace réservé pour les messages, à l’aide de la méthode .from_messages().\n\nChaînez le prompt avec le LLM à l’aide de l’opérateur |, puis invoquez-le sur les résultats de la requête (docs) et la requête utilisateur (user_query).\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Initialisez un LLM OpenAI avec une valeur temperature appropriée en utilisant la classe ChatOpenAI de LangChain.",
+                "Convertissez la requête en langage naturel fournie en une requête MongoDB, exécutez-la et obtenez les résultats sous forme de liste Python.",
+                "Créez un modèle d’invite pour le LLM, composé d’un prompt système et d’un espace réservé pour les messages, à l’aide de la méthode .from_messages().",
+                "Chaînez le prompt avec le LLM à l’aide de l’opérateur |, puis invoquez-le sur les résultats de la requête (docs) et la requête utilisateur (user_query).",
+                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_01_slides_e6f6b41b.pdf"
+                }
+              ],
+              "hint": "Pour améliorer la cohérence des résultats du RAG, définissez temperature à 0 dans ChatOpenAI.\n\nLa requête MongoDB associée à la saisie utilisateur est la même que celle que vous avez écrite dans le dernier exercice : vous devez $unwind le champ $directors, $match le filmCount pour être supérieur ou égal à 20 avec l’opérateur $gte, et $limit à 5.\n\nLe premier message dans .from_messages() doit être un tuple contenant le rôle \"system\" et la variable system_prompt fournie.\n\nAssurez-vous de chaîner (|) depuis prompt vers llm.",
+              "solution": "## Install libraries and create the client...\n# Access the sample_mflix database\ndb = mongodb_client[\"sample_mflix\"]\n\n# Access the movies collection\ncollection = db[\"movies\"]\n\n## TASK 1\nfrom langchain_openai import ChatOpenAI\n\nllm = ChatOpenAI(\n    model=\"gpt-4o-mini\",\n    temperature=0\n)\n\n## TASK 2\n# Natural language user query\nuser_query = \"Give me the top 5 directors by average IMDB rating, who have made at least 20 movies\"\n\n# Convert natural language query to MongoDB query\nmongodb_query = [{\"$unwind\": \"$directors\"},\n          {\"$group\": {\"_id\": \"$directors\", \"filmCount\": {\"$sum\": 1}, \"avgRating\": {\"$avg\": \"$imdb.rating\"}}},\n          {\"$match\": {\"filmCount\": {\"$gte\": 20}}},\n          {\"$sort\": {\"avgRating\": -1}},\n          {\"$limit\": 5}]\n\n# Execute the query and obtain results\ndocs = [doc for doc in collection.aggregate(mongodb_query)]\ndocs\n\n## TASK 3\nfrom langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder\n\n# Create a system prompt for the LLM\nsystem_prompt = \"\"\"You are an assistant for question-answering tasks.\nUse the following pieces of retrieved context to answer the question.\nIf you don't know the answer, just say that you don't know.\nContext: {context}\"\"\"\n\n# Create a templated prompt for the LLM\nprompt = ChatPromptTemplate.from_messages(\n    [\n        (\"system\", system_prompt),\n        MessagesPlaceholder(variable_name=\"messages\"),\n    ]\n)\n\n## TASK 4\n# Chain the prompt with the LLM\nllm_with_prompt = prompt | llm\n\nimport json\n\nresponse = llm_with_prompt.invoke({\"context\": json.dumps(docs),\n                                   \"messages\": [(\"user\", user_query)]})\n# Print the LLM's response\nprint(response.content, end=\"\")",
+              "successMessage": "Bravo ! Vous avez transformé une requête utilisateur en requête MongoDB, l’avez exécutée sur la base de données et avez fourni les résultats à un LLM pour répondre à la question. C’est encore un peu manuel pour le moment, donc dans le chapitre 2, nous utiliserons un agent d’IA pour automatiser ces étapes !",
+              "xp": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "datacamp_ch02",
+      "title": {
+        "en": "Automatiser les workflows text-to-query avec des agents",
+        "fr": "Automatiser les workflows text-to-query avec des agents"
+      },
+      "description": {
+        "en": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques.",
+        "fr": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques."
+      },
+      "competencyTags": [
+        "ai_orchestration",
+        "ai_business"
+      ],
+      "recommendedVideos": [],
+      "recommendedVideosManaged": false,
+      "chapters": [
+        {
+          "id": "dc_ch02_act01",
+          "title": {
+            "en": "L’architecture d’un agent text-to-query",
+            "fr": "L’architecture d’un agent text-to-query"
+          },
+          "description": {
+            "en": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques.",
+            "fr": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques."
+          },
+          "type": "teaching",
+          "sourceActivityType": "VideoExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_2_act_01_video",
+              "title": {
+                "en": "L’architecture d’un agent text-to-query",
+                "fr": "L’architecture d’un agent text-to-query"
+              },
+              "mp4Url": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text_to_query_48547c17.mp4",
+              "audioUrl": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text_to_query_42db83f4.mp3",
+              "subtitleUrlEn": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text_to_query_en_3314b370.vtt",
+              "slidesPdf": "/api/assets/chapter_02_slides_b7db1e19.pdf",
+              "projectorSlides": [
+                {
+                  "number": 1,
+                  "title": "Architecture de l’agent texte‑vers‑requête",
+                  "type": "TitleSlide",
+                  "script": "Great work so far! It's time to take our manual text-to-query workflow and begin making it agentic.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": "",
+                  "instructorName": "Apoorva Joshi",
+                  "instructorTitle": "Senior AI/ML Developer Advocate, MongoDB",
+                  "technology": "python"
+                },
+                {
+                  "number": 2,
+                  "title": "Approche agentique",
+                  "type": "FullSlide",
+                  "script": "At its core, an agent consists of an LLM and a set of tools that the LLM can use to perform actions.\n\nOur text-to-query agent will have access to a set of database tools that it can use to read the database schema, understand its content, perform queries, and more.\n\nFor example,\n\n",
+                  "images": [
+                    {
+                      "alt": "agentic1.jpg",
+                      "url": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text-to-query_019_agentic1_25075337.jpg"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 3,
+                  "title": "Approche agentique",
+                  "type": "FullSlide",
+                  "script": "if a user asks the agent a question, such as \"Give the top 5 latest movie releases.\"\n\nThe agent will take this input and forward this to the LLM, which is the brain of the agent. The LLM will likely realize that it requires tools to respond, and\n\n",
+                  "images": [
+                    {
+                      "alt": "agentic2.jpg",
+                      "url": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text-to-query_020_agentic2_13f66c4e.jpg"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 4,
+                  "title": "Approche agentique",
+                  "type": "FullSlide",
+                  "script": "begins by identifying which tool to call, in this case, a tool to list the collections in the database to find the ones required to answer the question. The LLM also identifies the arguments for the tool call.\n\n",
+                  "images": [
+                    {
+                      "alt": "agentic3.jpg",
+                      "url": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text-to-query_021_agentic3_6f977fb0.jpg"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 5,
+                  "title": "Approche agentique",
+                  "type": "FullSlide",
+                  "script": "The agent also has logic to actually execute the tool call. The tool call is executed using the arguments generated by the LLM.\n\n",
+                  "images": [
+                    {
+                      "alt": "agentic4.jpg",
+                      "url": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text-to-query_022_agentic4_d9eede2c.jpg"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 6,
+                  "title": "Approche agentique",
+                  "type": "FullSlide",
+                  "script": "The outcome of the tool execution is returned to the LLM, and next,\n\n",
+                  "images": [
+                    {
+                      "alt": "agentic5.jpg",
+                      "url": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text-to-query_023_agentic5_f65f41a8.jpg"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 7,
+                  "title": "Approche agentique",
+                  "type": "FullSlide",
+                  "script": "it may call another tool to load the schema of the collection it decides to query, so it knows the fields to use and their types.\n\nNow for the querying!\n\n",
+                  "images": [
+                    {
+                      "alt": "agentic6.jpg",
+                      "url": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text-to-query_024_agentic6_ecc6e374.jpg"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 8,
+                  "title": "Approche agentique",
+                  "type": "FullSlide",
+                  "script": "The agent will write a query given the task and schemas and use another tool to validate it for correctness.\n\n",
+                  "images": [
+                    {
+                      "alt": "agentic7.jpg",
+                      "url": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text-to-query_025_agentic7_48be771d.jpg"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 9,
+                  "title": "Approche agentique",
+                  "type": "FullSlide",
+                  "script": "Finally, the agent can call one final tool to execute the query on the database and retrieve the results.\n\nIn the final step, the LLM, now aware of the query result, can respond to the user.\n\n",
+                  "images": [
+                    {
+                      "alt": "agentic8.jpg",
+                      "url": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text-to-query_026_agentic8_10421cc8.jpg"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 10,
+                  "title": "Approche agentique",
+                  "type": "FullSlide",
+                  "script": "One important mechanism for orchestrating this is the storing of messages produced by the user, agent, and tools.\n\nFor example, the agent needs to know what collections were listed to load their schemas.\n\n",
+                  "images": [
+                    {
+                      "alt": "agentic9.jpg",
+                      "url": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text-to-query_027_agentic9_51b16947.jpg"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 11,
+                  "title": "Approche agentique",
+                  "type": "FullSlide",
+                  "script": "This is managed by a state, which essentially logs the messages and actions in the workflow.\n\n",
+                  "images": [
+                    {
+                      "alt": "agentic10.jpg",
+                      "url": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text-to-query_028_agentic10_0c4bde5c.jpg"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 12,
+                  "title": "Créer des agents IA",
+                  "type": "TwoColumns",
+                  "script": "There are lots of frameworks and libraries out there for building and orchestrating AI agents, but we'll be using LangGraph.\n\nIn LangGraph, agentic workflows are defined as graphs, consisting of nodes with a shared state, and edges. Nodes are components like an agent or a set of tools, and edges indicate where information flows under different conditions.\n\nThe workflow starts and reaches the agent node, which reasons about whether a tool call is required to complete the task. If it is, it directs to the tools node which can trigger actions; if not, it can provide a \"standard LLM response\" and end the workflow. The agent can choose to call the same or different tools repeatedly until the task is completed.\n\n",
+                  "images": [
+                    {
+                      "alt": "langgraph_logo.jpg",
+                      "url": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text-to-query_029_langgraph_logo_aeeff339.jpg"
+                    }
+                  ],
+                  "content": "&nbsp;\n\n&nbsp;\n\n&nbsp;",
+                  "contentLeft": "&nbsp;\n\n&nbsp;\n\n&nbsp;",
+                  "contentRight": ""
+                },
+                {
+                  "number": 13,
+                  "title": "Passons à la pratique !",
+                  "type": "FinalSlide",
+                  "script": "Time to explore and build an agentic text-to-query agent!\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                }
+              ],
+              "projectorTimings": [
+                {
+                  "time": 0,
+                  "slideIndex": 0,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.00536159528573535,
+                  "slideIndex": 0,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.04524395319959337,
+                  "slideIndex": 1,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.15489353806963485,
+                  "slideIndex": 2,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.24340412052577828,
+                  "slideIndex": 3,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.31747666090826754,
+                  "slideIndex": 4,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.37878039648176853,
+                  "slideIndex": 5,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.40152836392839175,
+                  "slideIndex": 6,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.45679417661901744,
+                  "slideIndex": 7,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.4966801440018287,
+                  "slideIndex": 8,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.5763676807133838,
+                  "slideIndex": 9,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.656836727591946,
+                  "slideIndex": 10,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.6939532186329196,
+                  "slideIndex": 11,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.7238748956773637,
+                  "slideIndex": 11,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.7423901520471902,
+                  "slideIndex": 11,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.9703611648042709,
+                  "slideIndex": 12,
+                  "fragment": -1
+                }
+              ],
+              "projectorTimingUnit": "fraction",
+              "projectorDuration": 300,
+              "transcript": "1. Architecture de l’agent texte‑vers‑requête\nGreat work so far! It's time to take our manual text-to-query workflow and begin making it agentic.\n\n2. Approche agentique\nAt its core, an agent consists of an LLM and a set of tools that the LLM can use to perform actions.\n\nOur text-to-query agent will have access to a set of database tools that it can use to read the database schema, understand its content, perform queries, and more.\n\nFor example,\n\n3. Approche agentique\nif a user asks the agent a question, such as \"Give the top 5 latest movie releases.\"\n\nThe agent will take this input and forward this to the LLM, which is the brain of the agent. The LLM will likely realize that it requires tools to respond, and\n\n4. Approche agentique\nbegins by identifying which tool to call, in this case, a tool to list the collections in the database to find the ones required to answer the question. The LLM also identifies the arguments for the tool call.\n\n5. Approche agentique\nThe agent also has logic to actually execute the tool call. The tool call is executed using the arguments generated by the LLM.\n\n6. Approche agentique\nThe outcome of the tool execution is returned to the LLM, and next,\n\n7. Approche agentique\nit may call another tool to load the schema of the collection it decides to query, so it knows the fields to use and their types.\n\nNow for the querying!\n\n8. Approche agentique\nThe agent will write a query given the task and schemas and use another tool to validate it for correctness.\n\n9. Approche agentique\nFinally, the agent can call one final tool to execute the query on the database and retrieve the results.\n\nIn the final step, the LLM, now aware of the query result, can respond to the user.\n\n10. Approche agentique\nOne important mechanism for orchestrating this is the storing of messages produced by the user, agent, and tools.\n\nFor example, the agent needs to know what collections were listed to load their schemas.\n\n11. Approche agentique\nThis is managed by a state, which essentially logs the messages and actions in the workflow.\n\n12. Créer des agents IA\nThere are lots of frameworks and libraries out there for building and orchestrating AI agents, but we'll be using LangGraph.\n\nIn LangGraph, agentic workflows are defined as graphs, consisting of nodes with a shared state, and edges. Nodes are components like an agent or a set of tools, and edges indicate where information flows under different conditions.\n\nThe workflow starts and reaches the agent node, which reasons about whether a tool call is required to complete the task. If it is, it directs to the tools node which can trigger actions; if not, it can provide a \"standard LLM response\" and end the workflow. The agent can choose to call the same or different tools repeatedly until the task is completed.\n\n13. Passons à la pratique !\nTime to explore and build an agentic text-to-query agent!",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Architecture de l’agent texte‑vers‑requête",
+                  "text": "Great work so far! It's time to take our manual text-to-query workflow and begin making it agentic."
+                },
+                {
+                  "heading": "2. Approche agentique",
+                  "text": "At its core, an agent consists of an LLM and a set of tools that the LLM can use to perform actions.\n\nOur text-to-query agent will have access to a set of database tools that it can use to read the database schema, understand its content, perform queries, and more.\n\nFor example,"
+                },
+                {
+                  "heading": "3. Approche agentique",
+                  "text": "if a user asks the agent a question, such as \"Give the top 5 latest movie releases.\"\n\nThe agent will take this input and forward this to the LLM, which is the brain of the agent. The LLM will likely realize that it requires tools to respond, and"
+                },
+                {
+                  "heading": "4. Approche agentique",
+                  "text": "begins by identifying which tool to call, in this case, a tool to list the collections in the database to find the ones required to answer the question. The LLM also identifies the arguments for the tool call."
+                },
+                {
+                  "heading": "5. Approche agentique",
+                  "text": "The agent also has logic to actually execute the tool call. The tool call is executed using the arguments generated by the LLM."
+                },
+                {
+                  "heading": "6. Approche agentique",
+                  "text": "The outcome of the tool execution is returned to the LLM, and next,"
+                },
+                {
+                  "heading": "7. Approche agentique",
+                  "text": "it may call another tool to load the schema of the collection it decides to query, so it knows the fields to use and their types.\n\nNow for the querying!"
+                },
+                {
+                  "heading": "8. Approche agentique",
+                  "text": "The agent will write a query given the task and schemas and use another tool to validate it for correctness."
+                },
+                {
+                  "heading": "9. Approche agentique",
+                  "text": "Finally, the agent can call one final tool to execute the query on the database and retrieve the results.\n\nIn the final step, the LLM, now aware of the query result, can respond to the user."
+                },
+                {
+                  "heading": "10. Approche agentique",
+                  "text": "One important mechanism for orchestrating this is the storing of messages produced by the user, agent, and tools.\n\nFor example, the agent needs to know what collections were listed to load their schemas."
+                },
+                {
+                  "heading": "11. Approche agentique",
+                  "text": "This is managed by a state, which essentially logs the messages and actions in the workflow."
+                },
+                {
+                  "heading": "12. Créer des agents IA",
+                  "text": "There are lots of frameworks and libraries out there for building and orchestrating AI agents, but we'll be using LangGraph.\n\nIn LangGraph, agentic workflows are defined as graphs, consisting of nodes with a shared state, and edges. Nodes are components like an agent or a set of tools, and edges indicate where information flows under different conditions.\n\nThe workflow starts and reaches the agent node, which reasons about whether a tool call is required to complete the task. If it is, it directs to the tools node which can trigger actions; if not, it can provide a \"standard LLM response\" and end the workflow. The agent can choose to call the same or different tools repeatedly until the task is completed."
+                },
+                {
+                  "heading": "13. Passons à la pratique !",
+                  "text": "Time to explore and build an agentic text-to-query agent!"
+                }
+              ]
+            },
+            {
+              "type": "download",
+              "id": "dc_ch02_slides",
+              "title": {
+                "en": "Chapter 2 slides",
+                "fr": "Chapter 2 slides"
+              },
+              "description": {
+                "en": "Official course slides provided in the local DataCamp package.",
+                "fr": "Official course slides provided in the local DataCamp package."
+              },
+              "url": "/api/assets/chapter_02_slides_b7db1e19.pdf",
+              "filename": "chapter_02_slides.pdf"
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act02",
+          "title": {
+            "en": "Constituer la boîte à outils de l’agent",
+            "fr": "Constituer la boîte à outils de l’agent"
+          },
+          "description": {
+            "en": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques.",
+            "fr": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques."
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_2_act_02_tp",
+              "title": {
+                "en": "Constituer la boîte à outils de l’agent",
+                "fr": "Constituer la boîte à outils de l’agent"
+              },
+              "assignment": "",
+              "instructions": "Créez une instance MongoDB compatible avec LangChain en utilisant votre MONGODB_URI et en spécifiant la base de données \"sample_mflix\".\n\nInitialisez le toolkit de base de données MongoDB et affichez les outils présents dans le toolkit en utilisant db et llm définis précédemment.\n\nTestez les quatre outils du toolkit avec les entrées fournies.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Créez une instance MongoDB compatible avec LangChain en utilisant votre MONGODB_URI et en spécifiant la base de données \"sample_mflix\".",
+                "Initialisez le toolkit de base de données MongoDB et affichez les outils présents dans le toolkit en utilisant db et llm définis précédemment.",
+                "Testez les quatre outils du toolkit avec les entrées fournies.",
+                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_02_slides_b7db1e19.pdf"
+                }
+              ],
+              "hint": "Pour créer une instance MongoDB compatible avec LangChain, appelez la méthode .from_connection_string() sur MongoDBDatabase, en lui passant votre MONGODB_URI et le nom de la base de données.\n\nInitialisez le toolkit de base de données MongoDB à l’aide de la classe MongoDBDatabaseToolkit, en lui passant la base compatible LangChain, db, et llm ; appelez .get_tools() sur cette classe pour extraire les outils du toolkit.\n\nPour tester les outils, récupérez l’outil depuis toolmap en utilisant son nom comme clé ; invoquez-le avec les entrées fournies.",
+              "solution": "## Library installs and setup...\nimport os\nMONGODB_URI = os.environ[\"MONGODB_URI\"]\n\n## TASK 1\nfrom langchain_mongodb.agent_toolkit.database import MongoDBDatabase\n\n# Access the sample_mflix database using the MongoDBDatabase class\ndb = MongoDBDatabase.from_connection_string(connection_string=MONGODB_URI, database=\"sample_mflix\")\n\n## TASK 2\nfrom langchain_mongodb.agent_toolkit.toolkit import MongoDBDatabaseToolkit\nfrom langchain_openai import ChatOpenAI\n\nllm = ChatOpenAI(\n    model=\"gpt-4o-mini\",\n    temperature=0\n)\n\n# Initialize the MongoDB database toolkit\ntoolkit = MongoDBDatabaseToolkit(db=db, llm=llm)\n\n# Extract the tools from the toolkit\ntools = toolkit.get_tools()\n\n# Map tool names to tool objects\ntool_map = {tool.name:tool for tool in tools}\n\n# See what each tool does\n{tool.name:tool.description for tool in tools}\n\n## TASK 3\n# Test the mongodb_list_collections tool\ntool_map[\"mongodb_list_collections\"].invoke({})\n\n# Test the mongodb_schema tool\nprint(tool_map[\"mongodb_schema\"].invoke(\"theaters\"))\n\nimport json\n\n# Test the mongodb_query_checker tool\nquery = [{\"$unwind\": \"$directors\"},\n          {\"$group\": {\"_id\": \"$directors\", \"filmCount\": {\"$sum\": 1}, \"avgRating\": {\"$avg\": \"$imdb.rating\"}}},\n          {\"$match\": {\"filmCount\": {\"$gte\": 20}}},\n          {\"$sort\": {\"avgRating\": -1}},\n          {\"$limit\": 5}]\ntool_map[\"mongodb_query_checker\"].invoke(json.dumps(query))\n\n# Test the mongodb_query tool\nprint(tool_map[\"mongodb_query\"].invoke(f\"db.movies.aggregate({json.dumps(query)}\"), end=\"\")",
+              "successMessage": "Superbe ! Avec ces outils, votre agent IA pourra effectuer toutes les actions que vous avez réalisées à la fin du chapitre 1. Plutôt pratique, non ? Construisons maintenant une autre pièce clé du workflow text-to-query : le prompt.",
+              "xp": 100
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act03",
+          "title": {
+            "en": "Créer l’invite text-to-query",
+            "fr": "Créer l’invite text-to-query"
+          },
+          "description": {
+            "en": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques.",
+            "fr": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques."
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_2_act_03_tp",
+              "title": {
+                "en": "Créer l’invite text-to-query",
+                "fr": "Créer l’invite text-to-query"
+              },
+              "assignment": "",
+              "instructions": "Importez et prévisualisez l’élément préconstruit MONGODB_AGENT_SYSTEM_PROMPT pour vous familiariser avec les instructions.\n\nDéfinissez un modèle d’invite contenant MONGODB_AGENT_SYSTEM_PROMPT pour indiquer à l’agent text-to-query comment utiliser les outils fournis ; préremplissez les paramètres top_k et tool_names.\n\nLiez les outils avec le LLM OpenAI, llm.\n\nChaînez prompt avec tool_augmented_llm à l’aide de l’opérateur |, puis invoquez-le sur l’entrée fournie.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Importez et prévisualisez l’élément préconstruit MONGODB_AGENT_SYSTEM_PROMPT pour vous familiariser avec les instructions.",
+                "Définissez un modèle d’invite contenant MONGODB_AGENT_SYSTEM_PROMPT pour indiquer à l’agent text-to-query comment utiliser les outils fournis ; préremplissez les paramètres top_k et tool_names.",
+                "Liez les outils avec le LLM OpenAI, llm.",
+                "Chaînez prompt avec tool_augmented_llm à l’aide de l’opérateur |, puis invoquez-le sur l’entrée fournie.",
+                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_02_slides_b7db1e19.pdf"
+                }
+              ],
+              "hint": "Vous pouvez préremplir partiellement une invite LangChain avec la méthode .partial(), en indiquant les paramètres à renseigner et leurs valeurs en arguments.\n\nAppelez la méthode .bind_tools() sur la variable llm, en lui passant les outils à rendre disponibles.\n\nLors de l’enchaînement de l’invite et du LLM conscient des outils, faites un pipe (|) de l’invite vers le LLM conscient des outils.",
+              "solution": "## Library installs, re-define the MongoDB database toolkit, and LLM...\n\n## TASK 1\nfrom langchain_mongodb.agent_toolkit import MONGODB_AGENT_SYSTEM_PROMPT\n\n# Preview the system prompt\nMONGODB_AGENT_SYSTEM_PROMPT\n\n## TASK 2\nfrom langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder\n\n# Create a templated prompt for the LLM\nprompt = ChatPromptTemplate.from_messages(\n    [\n        (\"system\", MONGODB_AGENT_SYSTEM_PROMPT),\n        (\"system\", \"Do not re-run tools unless absolutely necessary. If you are not able to get enough information using the tools, reply with I DON'T KNOW. You have access to the following tools: {tool_names}.\"),\n        MessagesPlaceholder(variable_name=\"messages\"),\n    ]\n)\n\n# Pre-fill top_k and tool_names in the prompt template\nprompt = prompt.partial(top_k=5, tool_names=\", \".join([tool.name for tool in tools]))\n\n## TASK 3\n# Bind tools to the LLM\ntool_augmented_llm = llm.bind_tools(tools)\n\n## TASK 4\n# Chain the prompt and tool-augmented LLM\nllm_with_tools = prompt | tool_augmented_llm\n\n# Test the llm_with_tools chain\nllm_with_tools.invoke({\"messages\": [(\"user\", \"Give me the top 5 directors by IMDB rating, who have made at least 20 movies\")]}).tool_calls",
+              "successMessage": "Excellent travail ! Vous avez désormais toutes les pièces principales ; il ne reste plus qu’à commencer à les orchestrer avec LangGraph. Il est temps de créer et d’orchestrer votre agent text-to-query !",
+              "xp": 100
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act04",
+          "title": {
+            "en": "Orchestrer l’agent text-to-query",
+            "fr": "Orchestrer l’agent text-to-query"
+          },
+          "description": {
+            "en": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques.",
+            "fr": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques."
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_2_act_04_tp",
+              "title": {
+                "en": "Orchestrer l’agent text-to-query",
+                "fr": "Orchestrer l’agent text-to-query"
+              },
+              "assignment": "",
+              "instructions": "Définissez l’état du graphe à l’aide de la classe GraphState, avec un seul attribut appelé messages.\n\nDéfinissez le nœud d’agent qui lit l’attribut messages de l’état du graphe, appelle llm_with_tools avec ces messages, puis ajoute le résultat à l’attribut messages de l’état du graphe.\n\nDéfinissez le nœud d’outil qui lit l’attribut tool_calls du message le plus récent dans l’état du graphe, extrait le nom de l’outil à exécuter (name), l’invoque avec les arguments (args) de l’appel d’outil, puis ajoute le résultat à l’attribut messages de l’état du graphe.\n\nInitialisez le graphe à l’aide de la classe StateGraph de LangGraph, avec l’état du graphe (GraphState) défini précédemment.\n\nAjoutez les nœuds et les arêtes au graphe, puis compilez-le.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Définissez l’état du graphe à l’aide de la classe GraphState, avec un seul attribut appelé messages.",
+                "Définissez le nœud d’agent qui lit l’attribut messages de l’état du graphe, appelle llm_with_tools avec ces messages, puis ajoute le résultat à l’attribut messages de l’état du graphe.",
+                "Définissez le nœud d’outil qui lit l’attribut tool_calls du message le plus récent dans l’état du graphe, extrait le nom de l’outil à exécuter (name), l’invoque avec les arguments (args) de l’appel d’outil, puis ajoute le résultat à l’attribut messages de l’état du graphe.",
+                "Initialisez le graphe à l’aide de la classe StateGraph de LangGraph, avec l’état du graphe (GraphState) défini précédemment.",
+                "Ajoutez les nœuds et les arêtes au graphe, puis compilez-le."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_02_slides_b7db1e19.pdf"
+                }
+              ],
+              "hint": "La classe GraphState doit être définie comme un TypedDict avec un unique attribut messages de type liste.\n\nLe graphe peut être initialisé en passant la classe GraphState que vous avez définie à la classe StateGraph.\n\nVous pouvez ajouter des arêtes fixes au graphe avec .add_edge() et des arêtes conditionnelles avec .add_conditional_edges().\n\n.add_conditional_edges() nécessite un nœud source, une fonction qui décide quel chemin prendre, et un dictionnaire indiquant la destination selon le résultat de la fonction.\n\nN’oubliez pas de compiler le graphe avec .compile() avant de le visualiser.",
+              "solution": "## Install the libraries, re-define the MongoDB client, and recreate the LLM, toolkit, prompt, and binded LLM...\n\n## TASK 1\nfrom typing import Annotated\nfrom langgraph.graph.message import add_messages\nfrom typing_extensions import TypedDict\n\nclass GraphState(TypedDict):\n    messages: Annotated[list, add_messages]\n    \n## TASK 2\n# Define the agent node\ndef agent_node(state):\n    # Read \"messages\" from the graph state\n    messages = state[\"messages\"]\n    # Invoke the tool-augmented LLM to determine next action\n    result = llm_with_tools.invoke(messages)\n    # Append the result to the graph state\n    return {\"messages\": [result]}\n  \n## TASK 3\nfrom langchain_core.messages import ToolMessage\n\n# Define the tool node\ndef tool_node(state: GraphState):\n    result = []\n    # Read the tool invocation payload from the graph state\n    tool_calls = state[\"messages\"][-1].tool_calls\n    for tool_call in tool_calls:\n        # Extract the name of the tool to execute\n        tool = tool_map[tool_call[\"name\"]]\n        # Invoke the tool with the arguments extracted from the payload\n        observation = tool.invoke(tool_call[\"args\"])\n        # Create a ToolMessage to log the result of the tool execution\n        result.append(ToolMessage(content=observation, tool_call_id=tool_call[\"id\"]))\n    # Append the result to the graph state\n    return {\"messages\": result}\n  \n## TASK 4\nfrom langgraph.graph import StateGraph\n\n# Initialize the graph with graph state\ngraph = StateGraph(GraphState)\n\n## TASK 5\nfrom langgraph.graph import START, END\nfrom langgraph.prebuilt import tools_condition\n\n# Add a node called \"agent\" that calls the agent_node() function\ngraph.add_node(\"agent\", agent_node)\n# Add a node called \"tools\" that calls the tool_node() function\ngraph.add_node(\"tools\", tool_node)\n\n# Add a fixed edge from the START node to the \"agent\" node\ngraph.add_edge(START, \"agent\")\n# Add a fixed edge from the \"tool\" node to the \"agent\" node\ngraph.add_edge(\"tools\", \"agent\")\n# Add conditional edges from the \"agent\" node to the \"tool\" and \"END\" nodes\ngraph.add_conditional_edges(\n    \"agent\",\n    tools_condition,\n    {\"tools\": \"tools\", END: END},\n)\n\n# Compile and visualize the graph\napp = graph.compile()\napp",
+              "successMessage": "Superbe orchestration ! LangGraph offre un niveau de personnalisation et de contrôle très élevé pour tous types de workflows agentiques. Il ne manque qu’une chose à cet agent pour être réellement utilisable dans un contexte personnel ou professionnel : une mémoire. Ajoutons cela maintenant !",
+              "xp": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "datacamp_ch03",
+      "title": {
+        "en": "Ajouter de la mémoire à l’agent",
+        "fr": "Ajouter de la mémoire à l’agent"
+      },
+      "description": {
+        "en": "Intégrez une mémoire à court terme dans votre agent de text-to-query afin d’éviter de relancer des requêtes pour combiner les insights.",
+        "fr": "Intégrez une mémoire à court terme dans votre agent de text-to-query afin d’éviter de relancer des requêtes pour combiner les insights."
+      },
+      "competencyTags": [
+        "ai_orchestration"
+      ],
+      "recommendedVideos": [],
+      "recommendedVideosManaged": false,
+      "chapters": [
+        {
+          "id": "dc_ch03_act01",
+          "title": {
+            "en": "Mémoire et checkpointing dans LangGraph",
+            "fr": "Mémoire et checkpointing dans LangGraph"
+          },
+          "description": {
+            "en": "Intégrez une mémoire à court terme dans votre agent de text-to-query afin d’éviter de relancer des requêtes pour combiner les insights.",
+            "fr": "Intégrez une mémoire à court terme dans votre agent de text-to-query afin d’éviter de relancer des requêtes pour combiner les insights."
+          },
+          "type": "teaching",
+          "sourceActivityType": "VideoExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_3_act_01_video",
+              "title": {
+                "en": "Mémoire et checkpointing dans LangGraph",
+                "fr": "Mémoire et checkpointing dans LangGraph"
+              },
+              "mp4Url": "/api/assets/ch03_ex01_m_moire_et_checkpointing_dans_langgraph_663de77e.mp4",
+              "audioUrl": "/api/assets/ch03_ex01_m_moire_et_checkpointing_dans_langgraph_4be2ed0a.mp3",
+              "subtitleUrlFr": "/api/assets/ch03_ex01_m_moire_et_checkpointing_dans_langgraph_fr_7e6deaf5.vtt",
+              "subtitleUrlEn": "/api/assets/ch03_ex01_m_moire_et_checkpointing_dans_langgraph_en_e8edaf33.vtt",
+              "slidesPdf": "/api/assets/chapter_03_slides_226834bb.pdf",
+              "projectorSlides": [
+                {
+                  "number": 1,
+                  "title": "Mémoire et checkpointing dans LangGraph",
+                  "type": "TitleSlide",
+                  "script": "Time to put the finishing touches on your agent: let's talk about memory!\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": "",
+                  "instructorName": "Apoorva Joshi",
+                  "instructorTitle": "Senior AI/ML Developer Advocate, MongoDB",
+                  "technology": "python"
+                },
+                {
+                  "number": 2,
+                  "title": "Ne jamais oublier la mémoire !",
+                  "type": "FullSlide",
+                  "script": "For AI agents to have effective, coherent conversations with their users , they need memory. Without it, every conversation or task starts from scratch — like talking to someone with no recall of your last meeting.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 3,
+                  "title": "Mémoire : long terme vs court terme",
+                  "type": "TwoColumns",
+                  "script": "In AI agents, memory generally falls into two categories: short-term and long-term. Short-term memory is like a scratchpad—it holds context only while a task or conversation is happening.\n\nLong-term memory is stored knowledge, such as user preferences or specific insights, that can be recalled later—even across different sessions.\n\nHere's the challenge: short-term memory disappears after every agent invocation.\n\nThat means agents can't resume their conversations where they left off unless we deliberately save that state.\n\n",
+                  "images": [],
+                  "content": "### Mémoire court terme\n* Garde le contexte pendant la conversation\n* Ne persiste généralement pas après la session\n\n### Mémoire long terme\n* Connaissances stockées\n* Rappelables",
+                  "contentLeft": "### Mémoire court terme\n* Garde le contexte pendant la conversation\n* Ne persiste généralement pas après la session",
+                  "contentRight": "### Mémoire long terme\n* Connaissances stockées\n* Rappelables"
+                },
+                {
+                  "number": 4,
+                  "title": "Mémoire dans LangChain",
+                  "type": "FullSlide",
+                  "script": "LangChain solves this with checkpoints and threads.\n\nA checkpoint is like a save state in a video game—it captures the agent's state at a single moment in time.\n\nA thread is like the storyline in the video game—each thread can have many checkpoints, so we can pause, resume, or even branch off into new directions.\n\nBy default, checkpoints live only in-memory, like in your previous implementation, but we can store them for later use.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n* Checkpoints : capturent l’état de l’agent à un instant donné\n  * Généralement en mémoire\n* Thread : messages de conversation/de workflow de l’agent",
+                  "contentLeft": "&nbsp;\n\n* Checkpoints : capturent l’état de l’agent à un instant donné\n  * Généralement en mémoire\n* Thread : messages de conversation/de workflow de l’agent",
+                  "contentRight": ""
+                },
+                {
+                  "number": 5,
+                  "title": "Rappeler la mémoire",
+                  "type": "TwoColumns",
+                  "script": "We'll be persisting this short-term memory across runs by saving the checkpoints in a MongoDB database with the MongoDBSaver class.\n\nThis means short-term memory won't vanish when the process ends — it survives and can be resumed anytime.\n\nIt's important to note that MongoDBSaver isn't a long-term memory strategy. It doesn't extract specific insights from conversations for long-term use — it only makes the short-term state durable across runs.\n\n",
+                  "images": [
+                    {
+                      "alt": "mongosaver.png",
+                      "url": "/api/assets/ch03_ex01_m_moire_et_checkpointing_dans_langgraph_035_mongosaver_5a962c72.png"
+                    }
+                  ],
+                  "content": "&nbsp;\n\n* `MongoDBSaver` → stocke des checkpoints entre exécutions\n* Reprise possible depuis des checkpoints\n* Ce n’est PAS une mémoire long terme !",
+                  "contentLeft": "",
+                  "contentRight": "&nbsp;\n\n* `MongoDBSaver` → stocke des checkpoints entre exécutions\n* Reprise possible depuis des checkpoints\n* Ce n’est PAS une mémoire long terme !"
+                },
+                {
+                  "number": 6,
+                  "title": "Rappeler la mémoire",
+                  "type": "TwoColumns",
+                  "script": "While we won't be implementing this in the course, you can check out the MongoDBStore class in LangGraph instead, to persist long-term memory for the agent in MongoDB.\n\n",
+                  "images": [
+                    {
+                      "alt": "mongosaver.png",
+                      "url": "/api/assets/ch03_ex01_m_moire_et_checkpointing_dans_langgraph_035_mongosaver_5a962c72.png"
+                    }
+                  ],
+                  "content": "&nbsp;\n\n* `MongoDBSaver` → stocke des checkpoints entre exécutions\n* Reprise possible depuis des checkpoints\n* Ce n'est PAS une mémoire long terme !\n* `MongoDBStore` → mémoire long terme",
+                  "contentLeft": "",
+                  "contentRight": "&nbsp;\n\n* `MongoDBSaver` → stocke des checkpoints entre exécutions\n* Reprise possible depuis des checkpoints\n* Ce n'est PAS une mémoire long terme !\n* `MongoDBStore` → mémoire long terme"
+                },
+                {
+                  "number": 7,
+                  "title": "Résumé",
+                  "type": "FullSlide",
+                  "script": "To wrap up: short-term memory keeps agents coherent in the moment, but usually disappears. LangGraph saves it with checkpoints and threads, and MongoDB makes those saves durable. That way, your agent can pick up right where it left off.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n* Mémoire court terme : ne persiste généralement pas\n* Approche LangChain → checkpoints et threads\n* `MongoDBSaver` rend les checkpoints persistants",
+                  "contentLeft": "&nbsp;\n\n* Mémoire court terme : ne persiste généralement pas\n* Approche LangChain → checkpoints et threads\n* `MongoDBSaver` rend les checkpoints persistants",
+                  "contentRight": ""
+                },
+                {
+                  "number": 8,
+                  "title": "Passons à la pratique !",
+                  "type": "FinalSlide",
+                  "script": "Time to give this a go!\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                }
+              ],
+              "projectorTimings": [
+                {
+                  "time": 0,
+                  "slideIndex": 0,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.004764429861657881,
+                  "slideIndex": 0,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.04250579919868977,
+                  "slideIndex": 1,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.14204941664350662,
+                  "slideIndex": 2,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.20581230752631852,
+                  "slideIndex": 2,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.24305311182527078,
+                  "slideIndex": 2,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.2737446799410874,
+                  "slideIndex": 2,
+                  "fragment": 2
+                },
+                {
+                  "time": 0.3115282110596566,
+                  "slideIndex": 2,
+                  "fragment": 3
+                },
+                {
+                  "time": 0.38811206459443276,
+                  "slideIndex": 3,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.40868738212518846,
+                  "slideIndex": 3,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.4635921746157567,
+                  "slideIndex": 3,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.5389372158047753,
+                  "slideIndex": 3,
+                  "fragment": 2
+                },
+                {
+                  "time": 0.5852556271462636,
+                  "slideIndex": 4,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.6247338061218248,
+                  "slideIndex": 4,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.6728469220481814,
+                  "slideIndex": 4,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.7088766703110214,
+                  "slideIndex": 4,
+                  "fragment": 2
+                },
+                {
+                  "time": 0.794655854684253,
+                  "slideIndex": 5,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.8739251127319042,
+                  "slideIndex": 6,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.8876339436623658,
+                  "slideIndex": 6,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.9168040772819513,
+                  "slideIndex": 6,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.9374000881871014,
+                  "slideIndex": 6,
+                  "fragment": 2
+                },
+                {
+                  "time": 0.9854465577556633,
+                  "slideIndex": 7,
+                  "fragment": -1
+                }
+              ],
+              "projectorTimingUnit": "fraction",
+              "projectorDuration": 300,
+              "transcript": "1. Mémoire et checkpointing dans LangGraph\nTime to put the finishing touches on your agent: let's talk about memory!\n\n2. Ne jamais oublier la mémoire !\nFor AI agents to have effective, coherent conversations with their users , they need memory. Without it, every conversation or task starts from scratch — like talking to someone with no recall of your last meeting.\n\n3. Mémoire : long terme vs court terme\nIn AI agents, memory generally falls into two categories: short-term and long-term. Short-term memory is like a scratchpad—it holds context only while a task or conversation is happening.\n\nLong-term memory is stored knowledge, such as user preferences or specific insights, that can be recalled later—even across different sessions.\n\nHere's the challenge: short-term memory disappears after every agent invocation.\n\nThat means agents can't resume their conversations where they left off unless we deliberately save that state.\n\n4. Mémoire dans LangChain\nLangChain solves this with checkpoints and threads.\n\nA checkpoint is like a save state in a video game—it captures the agent's state at a single moment in time.\n\nA thread is like the storyline in the video game—each thread can have many checkpoints, so we can pause, resume, or even branch off into new directions.\n\nBy default, checkpoints live only in-memory, like in your previous implementation, but we can store them for later use.\n\n5. Rappeler la mémoire\nWe'll be persisting this short-term memory across runs by saving the checkpoints in a MongoDB database with the MongoDBSaver class.\n\nThis means short-term memory won't vanish when the process ends — it survives and can be resumed anytime.\n\nIt's important to note that MongoDBSaver isn't a long-term memory strategy. It doesn't extract specific insights from conversations for long-term use — it only makes the short-term state durable across runs.\n\n6. Rappeler la mémoire\nWhile we won't be implementing this in the course, you can check out the MongoDBStore class in LangGraph instead, to persist long-term memory for the agent in MongoDB.\n\n7. Résumé\nTo wrap up: short-term memory keeps agents coherent in the moment, but usually disappears. LangGraph saves it with checkpoints and threads, and MongoDB makes those saves durable. That way, your agent can pick up right where it left off.\n\n8. Passons à la pratique !\nTime to give this a go!",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Mémoire et checkpointing dans LangGraph",
+                  "text": "Time to put the finishing touches on your agent: let's talk about memory!"
+                },
+                {
+                  "heading": "2. Ne jamais oublier la mémoire !",
+                  "text": "For AI agents to have effective, coherent conversations with their users , they need memory. Without it, every conversation or task starts from scratch — like talking to someone with no recall of your last meeting."
+                },
+                {
+                  "heading": "3. Mémoire : long terme vs court terme",
+                  "text": "In AI agents, memory generally falls into two categories: short-term and long-term. Short-term memory is like a scratchpad—it holds context only while a task or conversation is happening.\n\nLong-term memory is stored knowledge, such as user preferences or specific insights, that can be recalled later—even across different sessions.\n\nHere's the challenge: short-term memory disappears after every agent invocation.\n\nThat means agents can't resume their conversations where they left off unless we deliberately save that state."
+                },
+                {
+                  "heading": "4. Mémoire dans LangChain",
+                  "text": "LangChain solves this with checkpoints and threads.\n\nA checkpoint is like a save state in a video game—it captures the agent's state at a single moment in time.\n\nA thread is like the storyline in the video game—each thread can have many checkpoints, so we can pause, resume, or even branch off into new directions.\n\nBy default, checkpoints live only in-memory, like in your previous implementation, but we can store them for later use."
+                },
+                {
+                  "heading": "5. Rappeler la mémoire",
+                  "text": "We'll be persisting this short-term memory across runs by saving the checkpoints in a MongoDB database with the MongoDBSaver class.\n\nThis means short-term memory won't vanish when the process ends — it survives and can be resumed anytime.\n\nIt's important to note that MongoDBSaver isn't a long-term memory strategy. It doesn't extract specific insights from conversations for long-term use — it only makes the short-term state durable across runs."
+                },
+                {
+                  "heading": "6. Rappeler la mémoire",
+                  "text": "While we won't be implementing this in the course, you can check out the MongoDBStore class in LangGraph instead, to persist long-term memory for the agent in MongoDB."
+                },
+                {
+                  "heading": "7. Résumé",
+                  "text": "To wrap up: short-term memory keeps agents coherent in the moment, but usually disappears. LangGraph saves it with checkpoints and threads, and MongoDB makes those saves durable. That way, your agent can pick up right where it left off."
+                },
+                {
+                  "heading": "8. Passons à la pratique !",
+                  "text": "Time to give this a go!"
+                }
+              ]
+            },
+            {
+              "type": "download",
+              "id": "dc_ch03_slides",
+              "title": {
+                "en": "Chapter 3 slides",
+                "fr": "Chapter 3 slides"
+              },
+              "description": {
+                "en": "Official course slides provided in the local DataCamp package.",
+                "fr": "Official course slides provided in the local DataCamp package."
+              },
+              "url": "/api/assets/chapter_03_slides_226834bb.pdf",
+              "filename": "chapter_03_slides.pdf"
+            }
+          ]
+        },
+        {
+          "id": "dc_ch03_act02",
+          "title": {
+            "en": "Ajouter de la mémoire à l’agent",
+            "fr": "Ajouter de la mémoire à l’agent"
+          },
+          "description": {
+            "en": "Intégrez une mémoire à court terme dans votre agent de text-to-query afin d’éviter de relancer des requêtes pour combiner les insights.",
+            "fr": "Intégrez une mémoire à court terme dans votre agent de text-to-query afin d’éviter de relancer des requêtes pour combiner les insights."
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_3_act_02_tp",
+              "title": {
+                "en": "Ajouter de la mémoire à l’agent",
+                "fr": "Ajouter de la mémoire à l’agent"
+              },
+              "assignment": "",
+              "instructions": "Initialisez un objet MongoDBSaver avec mongodb_client et compilez le graphe en l’utilisant.\n\nUtilisez la fonction utilitaire execute_graph_with_memory() fournie, ainsi qu’un identifiant de thread créé avec uuid4(), pour répondre à la question : \"Which states have the most theaters?\".\n\nRépondez à la question : \"How many theaters does California have?\" sans fournir de contexte supplémentaire ; cela obligera l’agent à s’appuyer sur sa mémoire.\n\nRemarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Initialisez un objet MongoDBSaver avec mongodb_client et compilez le graphe en l’utilisant.",
+                "Utilisez la fonction utilitaire execute_graph_with_memory() fournie, ainsi qu’un identifiant de thread créé avec uuid4(), pour répondre à la question : \"Which states have the most theaters?\".",
+                "Répondez à la question : \"How many theaters does California have?\" sans fournir de contexte supplémentaire ; cela obligera l’agent à s’appuyer sur sa mémoire.",
+                "Remarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_03_slides_226834bb.pdf"
+                }
+              ],
+              "hint": "Instanciez un objet MongoDBSaver en appelant MongoDBSaver sur un client MongoDB.\n\nLors de la compilation du graphe, vous devez transmettre les éventuels checkpointers à l’argument checkpointer de .compile().\n\nVous pouvez revenir à un point de contrôle donné avec checkpointer.get(config), où config est un dictionnaire de la forme : {\"configurable\": {\"thread_id\": thread_id}}.",
+              "solution": "## Installs, recreate the agent from Chapter 2, MongoDB client setup...\nimport os\nfrom pymongo import MongoClient\n\nMONGODB_URI = os.environ[\"MONGODB_URI\"]\nmongodb_client = MongoClient(MONGODB_URI)\n\n## TASK 1\nfrom langgraph.checkpoint.mongodb import MongoDBSaver\n\ncheckpointer = MongoDBSaver(mongodb_client)\n\napp = graph.compile(checkpointer=checkpointer)\n\n## TASK 2\ndef execute_graph_with_memory(thread_id: str, user_input: str) -> None:\n  \"\"\"\n    Execute the memory-augmented agent\n\n    Args:\n        thread_id (str): Thread ID for which to retrieve memory\n        user_input (str): User query\n    \"\"\"\n  # Configure the thread ID\n  config = {\"configurable\": {\"thread_id\": thread_id}}\n  # Stream outputs from each step in the graph\n  for step in app.stream(\n      {\"messages\": [{\"role\": \"user\", \"content\": user_input}]},\n      config,\n      stream_mode=\"values\",\n  ):\n      # Print the latest message from the step\n      step[\"messages\"][-1].pretty_print()\n\nfrom uuid import uuid4\n\nthread_id = str(uuid4())\nexecute_graph_with_memory(thread_id, \"Which states have the most theaters?\")\n\n## TASK 3\n# Reset agent to a specific checkpoint\nconfig = {\"configurable\": {\"thread_id\": thread_id}}\ncheckpointer.get(config)\napp = graph.compile(checkpointer=checkpointer)\n\nexecute_graph_with_memory(thread_id, \"How many theaters does California have?\")\n\nimport pprint\n\n# List and analyze checkpoints\npprint.pprint(list(checkpointer.list(config, limit=5)))",
+              "successMessage": "Bravo ! Vous disposez désormais d’un agent text-to-query capable de répondre aux questions en interrogeant des sources de données, et d’enregistrer les conversations pour conserver une mémoire à court terme. Récapitulons ce que vous avez appris et voyons quelle est la suite !",
+              "xp": 100
+            }
+          ]
+        },
+        {
+          "id": "dc_ch03_act03",
+          "title": {
+            "en": "Félicitations !",
+            "fr": "Félicitations !"
+          },
+          "description": {
+            "en": "Intégrez une mémoire à court terme dans votre agent de text-to-query afin d’éviter de relancer des requêtes pour combiner les insights.",
+            "fr": "Intégrez une mémoire à court terme dans votre agent de text-to-query afin d’éviter de relancer des requêtes pour combiner les insights."
+          },
+          "type": "teaching",
+          "sourceActivityType": "VideoExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_3_act_03_video",
+              "title": {
+                "en": "Félicitations !",
+                "fr": "Félicitations !"
+              },
+              "mp4Url": "/api/assets/ch03_ex03_f_licitations_3ccb2cbc.mp4",
+              "audioUrl": "/api/assets/ch03_ex03_f_licitations_97661a47.mp3",
+              "subtitleUrlFr": "/api/assets/ch03_ex03_f_licitations_fr_38b96e52.vtt",
+              "subtitleUrlEn": "/api/assets/ch03_ex03_f_licitations_en_57edba1a.vtt",
+              "slidesPdf": "/api/assets/chapter_03_slides_226834bb.pdf",
+              "projectorSlides": [
+                {
+                  "number": 1,
+                  "title": "Félicitations !",
+                  "type": "TitleSlide",
+                  "script": "Congratulations on making it to the end of the course! Let's recap everything you've learned.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": "",
+                  "instructorName": "Apoorva Joshi",
+                  "instructorTitle": "Senior AI/ML Developer Advocate, MongoDB",
+                  "technology": "python"
+                },
+                {
+                  "number": 2,
+                  "title": "Produit final",
+                  "type": "FullSlide",
+                  "script": "You built a fully-functional text-to-query agent to essentially speak to your database.\n\nThis agent converts user inputs into valid MongoDB queries, then executes them on the database to retrieve a result, and respond to the user's question.\n\n",
+                  "images": [
+                    {
+                      "alt": "agentic10.jpg",
+                      "url": "/api/assets/ch02_ex01_l_architecture_d_un_agent_text-to-query_028_agentic10_0c4bde5c.jpg"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 3,
+                  "title": "Boîte à outils de votre agent",
+                  "type": "FullSlide",
+                  "script": "This involved creating a toolset for the agent to execute to interact with the database,\n\n",
+                  "images": [],
+                  "content": "```py\nfrom langchain_mongodb.agent_toolkit.toolkit import MongoDBDatabaseToolkit\n\n# Initialize the MongoDB database toolkit\ntoolkit = MongoDBDatabaseToolkit(db=db, llm=llm)\n\n# Extract the tools from the toolkit\ntools = toolkit.get_tools()\n```",
+                  "contentLeft": "```py\nfrom langchain_mongodb.agent_toolkit.toolkit import MongoDBDatabaseToolkit\n\n# Initialize the MongoDB database toolkit\ntoolkit = MongoDBDatabaseToolkit(db=db, llm=llm)\n\n# Extract the tools from the toolkit\ntools = toolkit.get_tools()\n```",
+                  "contentRight": ""
+                },
+                {
+                  "number": 4,
+                  "title": "Conception d’invite (prompt)",
+                  "type": "FullSlide",
+                  "script": "designing a prompt to help the agent's LLM figure out what tools to use and when,\n\n",
+                  "images": [],
+                  "content": "```py\nfrom langchain_mongodb.agent_toolkit import MONGODB_AGENT_SYSTEM_PROMPT\n\n# Create a templated prompt for the LLM\nprompt = ChatPromptTemplate.from_messages(\n    [\n        (\"system\", MONGODB_AGENT_SYSTEM_PROMPT),\n        (\"system\", \"Do not re-run tools unless absolutely necessary. If you are not\n                    able to get enough information using the tools, reply with\n                    I DON'T KNOW. You have access to the following tools: {tool_names}.\"),\n        MessagesPlaceholder(variable_name=\"messages\"),\n    ]\n)\n```",
+                  "contentLeft": "```py\nfrom langchain_mongodb.agent_toolkit import MONGODB_AGENT_SYSTEM_PROMPT\n\n# Create a templated prompt for the LLM\nprompt = ChatPromptTemplate.from_messages(\n    [\n        (\"system\", MONGODB_AGENT_SYSTEM_PROMPT),\n        (\"system\", \"Do not re-run tools unless absolutely necessary. If you are not\n                    able to get enough information using the tools, reply with\n                    I DON'T KNOW. You have access to the following tools: {tool_names}.\"),\n        MessagesPlaceholder(variable_name=\"messages\"),\n    ]\n)\n```",
+                  "contentRight": ""
+                },
+                {
+                  "number": 5,
+                  "title": "Orchestration d’agents",
+                  "type": "FullSlide",
+                  "script": "and connecting it all together with LangGraph.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 6,
+                  "title": "Mémoire",
+                  "type": "FullSlide",
+                  "script": "You even implemented a short-term memory store for your agent using MongoDB , so your agent can return to and pick up where previous conversation left off.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 7,
+                  "title": "Et ensuite ?",
+                  "type": "FullSlide",
+                  "script": "To continue your AI journey with MongoDB, consider checking-out the resources listed here.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n**Pour aller plus loin avec MongoDB et les agents Text-to-Query**\n- Blog : [Agents Text-to-Query avec MongoDB](https://www.mongodb.com/company/blog/technical/natural-language-agents-mongodb-text-mql-langchain)\n- Blog : [Mémoire long terme pour agents avec LangGraph et MongoDB](https://www.mongodb.com/company/blog/product-release-announcements/powering-long-term-memory-for-agents-langgraph)\n- [Repo GitHub d’exemples Gen AI de MongoDB](https://github.com/mongodb-developer/GenAI-Showcase)\n- [AI Learning Hub de MongoDB](https://www.mongodb.com/resources/use-cases/artificial-intelligence)\n\n**Pour aller plus loin avec LangChain et LangGraph**\n* Cours DataCamp : [Développer des applications LLM avec LangChain](www.datacamp.com/courses/developing-llm-applications-with-langchain)\n* Cours DataCamp : [Concevoir des systèmes agents avec LangGraph](www.datacamp.com/courses/designing-agentic-systems-with-langchain)",
+                  "contentLeft": "&nbsp;\n\n**Pour aller plus loin avec MongoDB et les agents Text-to-Query**\n- Blog : [Agents Text-to-Query avec MongoDB](https://www.mongodb.com/company/blog/technical/natural-language-agents-mongodb-text-mql-langchain)\n- Blog : [Mémoire long terme pour agents avec LangGraph et MongoDB](https://www.mongodb.com/company/blog/product-release-announcements/powering-long-term-memory-for-agents-langgraph)\n- [Repo GitHub d’exemples Gen AI de MongoDB](https://github.com/mongodb-developer/GenAI-Showcase)\n- [AI Learning Hub de MongoDB](https://www.mongodb.com/resources/use-cases/artificial-intelligence)\n\n**Pour aller plus loin avec LangChain et LangGraph**\n* Cours DataCamp : [Développer des applications LLM avec LangChain](www.datacamp.com/courses/developing-llm-applications-with-langchain)\n* Cours DataCamp : [Concevoir des systèmes agents avec LangGraph](www.datacamp.com/courses/designing-agentic-systems-with-langchain)",
+                  "contentRight": ""
+                },
+                {
+                  "number": 8,
+                  "title": "Félicitations !",
+                  "type": "FinalSlide",
+                  "script": "Congratulations again! Have fun exploring and experimenting with text-to-query agents.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                }
+              ],
+              "projectorTimings": [
+                {
+                  "time": 0,
+                  "slideIndex": 0,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.011312864426770004,
+                  "slideIndex": 0,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.1075340521831973,
+                  "slideIndex": 1,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.37129854867089074,
+                  "slideIndex": 2,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.4800285741545483,
+                  "slideIndex": 3,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.5696822858852706,
+                  "slideIndex": 4,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.6258025122729712,
+                  "slideIndex": 5,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.7901928800714019,
+                  "slideIndex": 6,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.8944442583689338,
+                  "slideIndex": 7,
+                  "fragment": -1
+                }
+              ],
+              "projectorTimingUnit": "fraction",
+              "projectorDuration": 300,
+              "transcript": "1. Félicitations !\nCongratulations on making it to the end of the course! Let's recap everything you've learned.\n\n2. Produit final\nYou built a fully-functional text-to-query agent to essentially speak to your database.\n\nThis agent converts user inputs into valid MongoDB queries, then executes them on the database to retrieve a result, and respond to the user's question.\n\n3. Boîte à outils de votre agent\nThis involved creating a toolset for the agent to execute to interact with the database,\n\n4. Conception d’invite (prompt)\ndesigning a prompt to help the agent's LLM figure out what tools to use and when,\n\n5. Orchestration d’agents\nand connecting it all together with LangGraph.\n\n6. Mémoire\nYou even implemented a short-term memory store for your agent using MongoDB , so your agent can return to and pick up where previous conversation left off.\n\n7. Et ensuite ?\nTo continue your AI journey with MongoDB, consider checking-out the resources listed here.\n\n8. Félicitations !\nCongratulations again! Have fun exploring and experimenting with text-to-query agents.",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Félicitations !",
+                  "text": "Congratulations on making it to the end of the course! Let's recap everything you've learned."
+                },
+                {
+                  "heading": "2. Produit final",
+                  "text": "You built a fully-functional text-to-query agent to essentially speak to your database.\n\nThis agent converts user inputs into valid MongoDB queries, then executes them on the database to retrieve a result, and respond to the user's question."
+                },
+                {
+                  "heading": "3. Boîte à outils de votre agent",
+                  "text": "This involved creating a toolset for the agent to execute to interact with the database,"
+                },
+                {
+                  "heading": "4. Conception d’invite (prompt)",
+                  "text": "designing a prompt to help the agent's LLM figure out what tools to use and when,"
+                },
+                {
+                  "heading": "5. Orchestration d’agents",
+                  "text": "and connecting it all together with LangGraph."
+                },
+                {
+                  "heading": "6. Mémoire",
+                  "text": "You even implemented a short-term memory store for your agent using MongoDB , so your agent can return to and pick up where previous conversation left off."
+                },
+                {
+                  "heading": "7. Et ensuite ?",
+                  "text": "To continue your AI journey with MongoDB, consider checking-out the resources listed here."
+                },
+                {
+                  "heading": "8. Félicitations !",
+                  "text": "Congratulations again! Have fun exploring and experimenting with text-to-query agents."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
