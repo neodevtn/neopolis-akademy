@@ -2107,3 +2107,6 @@
 
 ### Cours 21 — Agents IA avec Hugging Face smolagents
 - [x] Importer le paquet vérifié, ses médias locaux et 30 activités standardisées, puis contrôler et publier après audit de production
+
+### Cours 23 — Graph RAG avec LangChain et Neo4j
+- [ ] Importer le paquet vérifié, ses médias locaux et 37 activités standardisées, puis contrôler et publier après audit de production
