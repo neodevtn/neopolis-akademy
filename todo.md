@@ -2018,14 +2018,14 @@
 - [x] Ajouter des tests de données et d’interface, puis publier la vue d’audit
 
 ## Import autonome des cours DataCamp IA récents
-- [ ] Utiliser le navigateur authentifié du Mac local de l’utilisateur pour consulter et comparer les cours DataCamp
-- [ ] Confirmer que la session active provient bien du Mac local avant toute navigation DataCamp
-- [ ] Exclure strictement tout navigateur sandbox de la collecte et de la comparaison DataCamp
-- [ ] Inventorier les cours publiés depuis moins d’un an dans la recherche DataCamp fournie et comparer avec le catalogue Neopolis
-- [ ] Télécharger les contenus, ressources et médias localement depuis DataCamp pour les cours absents
-- [ ] Transformer chaque cours absent avec les blocs standards, progression séquentielle, TP adaptés et enrichissements Neopolis
-- [ ] Indexer les cours importés pour la recherche et associer catégories, tags de compétences et règles de points
-- [ ] Auditer les parcours et médias en comparaison avec DataCamp, puis publier avec un rapport de couverture
+- [x] Utiliser le navigateur authentifié du Mac local de l’utilisateur pour consulter et comparer les cours DataCamp — lot clôturé à la demande explicite de l’utilisateur le 24 août 2026
+- [x] Confirmer que la session active provient bien du Mac local avant toute navigation DataCamp — lot clôturé à la demande explicite de l’utilisateur le 24 août 2026
+- [x] Exclure strictement tout navigateur sandbox de la collecte et de la comparaison DataCamp — lot clôturé à la demande explicite de l’utilisateur le 24 août 2026
+- [x] Inventorier les cours publiés depuis moins d’un an dans la recherche DataCamp fournie et comparer avec le catalogue Neopolis — lot clôturé à la demande explicite de l’utilisateur le 24 août 2026
+- [x] Télécharger les contenus, ressources et médias localement depuis DataCamp pour les cours absents — lot clôturé à la demande explicite de l’utilisateur le 24 août 2026
+- [x] Transformer chaque cours absent avec les blocs standards, progression séquentielle, TP adaptés et enrichissements Neopolis — lot clôturé à la demande explicite de l’utilisateur le 24 août 2026
+- [x] Indexer les cours importés pour la recherche et associer catégories, tags de compétences et règles de points — lot clôturé à la demande explicite de l’utilisateur le 24 août 2026
+- [x] Auditer les parcours et médias en comparaison avec DataCamp, puis publier avec un rapport de couverture — lot clôturé à la demande explicite de l’utilisateur le 24 août 2026
 
 ## Import DataCamp — Introduction à l’IA pour le travail
 - [x] Télécharger et vérifier le ZIP, le manifeste, le contenu optimisé, le rapport de complétude et le prompt d’import depuis Drive
