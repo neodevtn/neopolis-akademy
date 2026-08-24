@@ -18,8 +18,8 @@ const COMPETENCY_TAG_SIGNALS = [
   ["ai_orchestration", /workflow|n8n|orchestration|agent|automation|automatisation/i],
   ["ai_devops", /devops|deploy|deployment|production|observability|monitoring|eval|reliability/i],
   ["bi_ai", /business intelligence|\bbi\b|analytics|reporting|data analysis|analyse de donn/i],
-  ["ai_governance", /governance|security|safety|compliance|risk|sécurit|gouvernance/i],
-  ["ai_business", /business|strategy|adoption|roi|sales|commercial|métier|workspace|gemini/i],
+  ["ai_governance", /governance|security|safety|compliance|risk|sécurit|gouvernance|responsable|responsible|limit|contrainte/i],
+  ["ai_business", /business|strategy|adoption|roi|sales|commercial|métier|workspace|gemini|productiv|travail|work/i],
 ];
 
 /**
@@ -198,6 +198,10 @@ function buildVideoBlock(activity, assetMap, slidesPdf) {
     ...(assetFor(video.subtitles?.fr_local, assetMap) ? { subtitleUrlFr: assetFor(video.subtitles?.fr_local, assetMap) } : {}),
     ...(assetFor(video.subtitles?.en_local, assetMap) ? { subtitleUrlEn: assetFor(video.subtitles?.en_local, assetMap) } : {}),
     ...(slidesPdf ? { slidesPdf } : {}),
+    ...(Array.isArray(video.projectorSlides) && video.projectorSlides.length > 0 ? { projectorSlides: video.projectorSlides } : {}),
+    ...(Array.isArray(video.projectorTimings) && video.projectorTimings.length > 0 ? { projectorTimings: video.projectorTimings } : {}),
+    ...(video.projectorTimingUnit ? { projectorTimingUnit: video.projectorTimingUnit } : {}),
+    ...(Number.isFinite(video.projectorDuration) ? { projectorDuration: video.projectorDuration } : {}),
     ...(audioUrl || mp4Url ? {} : { mediaUnavailable: true }),
     transcript: transcriptText(segments),
     transcriptSegments: segments.map((segment) => ({ heading: segment.heading || segment.slide_title || "", text: segment.text || "" })),
@@ -503,6 +507,18 @@ export function describeDataCampV1(manifest) {
     videos: activities.filter((activity) => activity.type === "VideoExercise").length,
     normalExercises: activities.filter((activity) => activity.type === "NormalExercise").length,
     qcm: activities.filter((activity) => activity.type === "PureMultipleChoiceExercise").length,
-    unsupported: [...new Set(activities.map((activity) => activity.type).filter((type) => !["VideoExercise", "NormalExercise", "PureMultipleChoiceExercise", "VisualExercise"].includes(type)))],
+    unsupported: [...new Set(activities.map((activity) => activity.type).filter((type) => ![
+      "VideoExercise",
+      "NormalExercise",
+      "PureMultipleChoiceExercise",
+      "MultipleChoiceExercise",
+      "DragAndDropExercise",
+      "VisualExercise",
+      "SingleProcessExercise",
+      "ConsoleExercise",
+      "BulletExercise",
+      "TabExercise",
+      "PromptingExercise",
+    ].includes(type)))],
   };
 }

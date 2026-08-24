@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { PlayCircle, PauseCircle, SkipForward, SkipBack, Volume2 } from "lucide-react";
+import { findProjectorSlideIndex, timingToMediaTime, type ProjectorTiming, type ProjectorTimingUnit } from "./projectorTiming";
 
 interface ProjectorSlide {
   number: number;
@@ -15,23 +16,20 @@ interface ProjectorSlide {
   technology?: string;
 }
 
-interface ProjectorTiming {
-  time: number;
-  slideIndex: number;
-  fragment: number;
-}
-
 interface ProjectorPlayerProps {
-  mp4Url: string;
+  mp4Url?: string;
+  audioUrl?: string;
   slides: ProjectorSlide[];
   timings: ProjectorTiming[];
+  timingUnit?: ProjectorTimingUnit;
   duration: number;
   onPlay?: () => void;
   onPause?: () => void;
   onEnded?: () => void;
 }
 
-export function ProjectorPlayer({ mp4Url, slides, timings, duration, onPlay, onPause, onEnded }: ProjectorPlayerProps) {
+export function ProjectorPlayer({ mp4Url, audioUrl, slides, timings, timingUnit = "seconds", duration, onPlay, onPause, onEnded }: ProjectorPlayerProps) {
+  const mediaUrl = mp4Url || audioUrl || "";
   const audioRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -40,16 +38,11 @@ export function ProjectorPlayer({ mp4Url, slides, timings, duration, onPlay, onP
   const animRef = useRef<number>(0);
 
   // Compute current slide based on time
+  const toMediaTime = useCallback((timing: number) => timingToMediaTime(timing, audioDuration, timingUnit), [audioDuration, timingUnit]);
+
   const computeSlideIndex = useCallback((time: number) => {
-    let slideIdx = 0;
-    for (let i = timings.length - 1; i >= 0; i--) {
-      if (time >= timings[i].time) {
-        slideIdx = timings[i].slideIndex;
-        break;
-      }
-    }
-    return Math.min(slideIdx, slides.length - 1);
-  }, [timings, slides.length]);
+    return findProjectorSlideIndex(time, timings, audioDuration, slides.length, timingUnit);
+  }, [timings, slides.length, audioDuration, timingUnit]);
 
   // Update current time and slide during playback
   useEffect(() => {
@@ -87,8 +80,9 @@ export function ProjectorPlayer({ mp4Url, slides, timings, duration, onPlay, onP
     // Find the timing for this slide
     const timing = timings.find(t => t.slideIndex === idx && t.fragment === -1);
     if (timing) {
-      audioRef.current.currentTime = timing.time;
-      setCurrentTime(timing.time);
+      const mediaTime = toMediaTime(timing.time);
+      audioRef.current.currentTime = mediaTime;
+      setCurrentTime(mediaTime);
       setCurrentSlideIndex(idx);
     }
   };
@@ -115,6 +109,7 @@ export function ProjectorPlayer({ mp4Url, slides, timings, duration, onPlay, onP
   };
 
   const formatTime = (s: number) => {
+    if (!Number.isFinite(s)) return "0:00";
     const m = Math.floor(s / 60);
     const sec = Math.floor(s % 60);
     return `${m}:${sec.toString().padStart(2, '0')}`;
@@ -130,7 +125,7 @@ export function ProjectorPlayer({ mp4Url, slides, timings, duration, onPlay, onP
         className="relative bg-gradient-to-br from-slate-900 to-slate-800 min-h-[320px] flex items-center justify-center p-6 cursor-pointer group"
         onClick={togglePlay}
         role="button"
-        aria-label={isPlaying ? "Mettre en pause" : "Lire la vidéo"}
+        aria-label={isPlaying ? "Mettre en pause" : "Lire la leçon"}
         tabIndex={0}
         onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); togglePlay(); } }}
       >
@@ -145,10 +140,10 @@ export function ProjectorPlayer({ mp4Url, slides, timings, duration, onPlay, onP
         </div>
       </div>
 
-      {/* Hidden video element (we use it for audio + the rare visual frames) */}
+      {/* The media element drives the timeline for both MP4 and Projector audio-only lessons. */}
       <video
         ref={audioRef}
-        src={mp4Url}
+        src={mediaUrl}
         preload="metadata"
         playsInline
         onEnded={handleEnded}
@@ -157,7 +152,7 @@ export function ProjectorPlayer({ mp4Url, slides, timings, duration, onPlay, onP
         onPause={() => { setIsPlaying(false); onPause?.(); }}
         className="hidden"
       >
-        <source src={mp4Url} type="video/mp4" />
+        <source src={mediaUrl} type={mp4Url ? "video/mp4" : "audio/mpeg"} />
       </video>
 
       {/* Controls */}

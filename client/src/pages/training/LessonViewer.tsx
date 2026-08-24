@@ -310,6 +310,7 @@ export default function LessonViewer({
                   mp4Url={block.mp4Url}
                   slides={block.projectorSlides}
                   timings={block.projectorTimings}
+                  timingUnit={block.projectorTimingUnit}
                   duration={block.projectorDuration || 300}
                   onPlay={() => onMediaPlaybackChange?.(true)}
                   onPause={() => onMediaPlaybackChange?.(false)}
@@ -424,6 +425,74 @@ export default function LessonViewer({
           const audioTitle = typeof block.title === 'object' ? (block.title?.[lang] || block.title?.en || block.title?.fr || 'Audio') : (block.title || 'Audio');
           const audioKey = block.id || `audio_${blockIdx}`;
           const isAudioComplete = completedVideos.has(audioKey);
+          const hasProjectorSlides = Array.isArray(block.projectorSlides) && block.projectorSlides.length > 0 && Array.isArray(block.projectorTimings);
+
+          if (hasProjectorSlides) {
+            return (
+              <div key={blockIdx} className="my-6">
+                <div className="flex items-center gap-3 px-4 py-3 border border-border rounded-t-xl bg-card">
+                  <span className={`flex items-center justify-center w-7 h-7 rounded-full ${isAudioComplete ? 'bg-green-100 text-green-600' : 'bg-purple-100 text-purple-600'}`}>
+                    {isAudioComplete ? <CheckCircle2 className="w-4 h-4" /> : <PlayCircle className="w-4 h-4" />}
+                  </span>
+                  <span className="font-semibold text-foreground">{audioTitle}</span>
+                  <span className="ml-2 px-2 py-0.5 text-xs font-bold rounded bg-purple-100 text-purple-700">PROJECTOR AUDIO</span>
+                  {isAudioComplete && <span className="ml-auto text-xs text-green-600 font-medium">{t({en:'\u2713 Listened',fr:'\u2713 Écoutée'})}</span>}
+                </div>
+                <ProjectorPlayer
+                  audioUrl={block.audioUrl}
+                  slides={block.projectorSlides}
+                  timings={block.projectorTimings}
+                  timingUnit={block.projectorTimingUnit}
+                  duration={block.projectorDuration || 300}
+                  onPlay={() => onMediaPlaybackChange?.(true)}
+                  onPause={() => onMediaPlaybackChange?.(false)}
+                  onEnded={() => { onMediaPlaybackChange?.(false); toggleVideoComplete(audioKey); }}
+                />
+                <div className="flex items-center justify-between px-4 py-2 border border-t-0 border-border rounded-b-xl bg-card">
+                  <button
+                    onClick={() => toggleVideoComplete(audioKey)}
+                    className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    {t({en:'Mark as listened (manual)',fr:'Marquer comme écoutée (manuel)'})}
+                  </button>
+                  <div className="flex items-center gap-4">
+                    {block.slidesPdf && (
+                      <a href={block.slidesPdf} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
+                        <FileText className="w-4 h-4" />
+                        {t({en:'Slides PDF',fr:'Slides PDF'})}
+                      </a>
+                    )}
+                    {(block.subtitleUrlFr || block.subtitleUrlEn) && (
+                      <a href={block.subtitleUrlFr || block.subtitleUrlEn} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
+                        <FileText className="w-4 h-4" />
+                        {t({en:'Subtitles',fr:'Sous-titres'})}
+                      </a>
+                    )}
+                  </div>
+                </div>
+                {block.transcript && (
+                  <details className="border border-t-0 border-border rounded-b-xl mt-[-1px]">
+                    <summary className="px-4 py-3 cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-2">
+                      <FileText className="w-4 h-4" />
+                      {t({en:'Transcript',fr:'Transcription'})}
+                    </summary>
+                    <div className="px-4 pb-4 text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                      {block.transcriptSegments?.length > 0 ? (
+                        block.transcriptSegments.map((seg: any, i: number) => (
+                          <div key={i} className="mb-3">
+                            <p className="font-semibold text-foreground mb-1">{seg.heading}</p>
+                            <p>{seg.text}</p>
+                          </div>
+                        ))
+                      ) : block.transcript}
+                    </div>
+                  </details>
+                )}
+              </div>
+            );
+          }
+
           return (
             <div key={blockIdx} className="my-6 rounded-xl border border-border overflow-hidden bg-card">
               <div className="flex items-center gap-3 px-4 py-3 border-b border-border">

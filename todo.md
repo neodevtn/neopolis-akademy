@@ -2016,3 +2016,20 @@
 - [x] Concevoir une vue d’audit compréhensible depuis le profil apprenant administrateur
 - [x] Exposer les indicateurs pertinents, les détails temporels et les résultats pédagogiques dans le profil
 - [x] Ajouter des tests de données et d’interface, puis publier la vue d’audit
+
+## Import autonome des cours DataCamp IA récents
+- [ ] Utiliser le navigateur authentifié du Mac local de l’utilisateur pour consulter et comparer les cours DataCamp
+- [ ] Confirmer que la session active provient bien du Mac local avant toute navigation DataCamp
+- [ ] Exclure strictement tout navigateur sandbox de la collecte et de la comparaison DataCamp
+- [ ] Inventorier les cours publiés depuis moins d’un an dans la recherche DataCamp fournie et comparer avec le catalogue Neopolis
+- [ ] Télécharger les contenus, ressources et médias localement depuis DataCamp pour les cours absents
+- [ ] Transformer chaque cours absent avec les blocs standards, progression séquentielle, TP adaptés et enrichissements Neopolis
+- [ ] Indexer les cours importés pour la recherche et associer catégories, tags de compétences et règles de points
+- [ ] Auditer les parcours et médias en comparaison avec DataCamp, puis publier avec un rapport de couverture
+
+## Import DataCamp — Introduction à l’IA pour le travail
+- [x] Télécharger et vérifier le ZIP, le manifeste, le contenu optimisé, le rapport de complétude et le prompt d’import depuis Drive
+- [x] Vérifier l’intégrité SHA-256, les 4 chapitres, 33 activités, 11 leçons Projector et les 497 ressources locales attendues
+- [x] Convertir le cours avec les blocs standards, les médias Projector audio/diapositives/transcripts, la progression séquentielle et les tags de compétences
+- [x] Intégrer le catalogue, l’indexation de recherche, les règles XP et les ressources de la bibliothèque média
+- [ ] Tester les médias, un QCM, un tri, un exercice visuel, le rendu desktop/mobile, puis publier avec rapport et captures

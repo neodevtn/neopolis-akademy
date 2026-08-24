@@ -22,6 +22,10 @@ const manifest = {
           audio_local: "downloads/projector_assets/video.mp3",
           subtitles: { fr_local: "downloads/projector_assets/video_fr.vtt" },
           transcript_segments: [{ heading: "Introduction", text: "Texte transcrit" }],
+          projectorSlides: [{ number: 1, title: "Slide pilote", type: "TitleSlide", script: "Bonjour", images: [], content: "", contentLeft: "", contentRight: "" }],
+          projectorTimings: [{ time: 0, slideIndex: 0, fragment: -1 }],
+          projectorTimingUnit: "fraction",
+          projectorDuration: 300,
         },
       },
       {
@@ -84,7 +88,14 @@ describe("convertDataCampV1", () => {
     const course = convertDataCampV1(manifest, assets);
     expect(course.courseId).toBe("pilot_course__01");
     expect(course.lessons[0].chapters).toHaveLength(5);
-    expect(course.lessons[0].chapters[0].blocks[0]).toMatchObject({ type: "video", audioUrl: "/api/assets/video_hash.mp3", subtitleUrlFr: "/api/assets/video_fr_hash.vtt" });
+    expect(course.lessons[0].chapters[0].blocks[0]).toMatchObject({
+      type: "video",
+      audioUrl: "/api/assets/video_hash.mp3",
+      subtitleUrlFr: "/api/assets/video_fr_hash.vtt",
+      projectorSlides: [{ title: "Slide pilote" }],
+      projectorTimings: [{ time: 0, slideIndex: 0 }],
+      projectorTimingUnit: "fraction",
+    });
     expect(course.lessons[0].chapters[1].blocks[0]).toMatchObject({ type: "single_choice_exercise", correctAnswer: "b" });
     expect(course.lessons[0].chapters[2].blocks[0]).toMatchObject({ type: "multi_choice_exercise", correctAnswers: "a" });
     expect(course.lessons[0].chapters[3].blocks[0]).toMatchObject({ type: "resource_review", resourceUrl: "/api/assets/chapter_hash.pdf" });
