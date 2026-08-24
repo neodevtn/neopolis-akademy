@@ -2095,3 +2095,6 @@
 
 ### Cours 17 — Déployer l’IA en production avec FastAPI
 - [x] Importer le paquet vérifié, ses médias locaux et 46 activités standardisées, puis contrôler et publier après audit de production
+
+### Cours 18 — L’IA pour les ventes
+- [ ] Importer le paquet vérifié, ses médias locaux et 26 activités standardisées, puis contrôler et publier après audit de production

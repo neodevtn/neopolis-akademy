@@ -80,11 +80,22 @@ const optionalMissingProjectorImages = new Set([
   "downloads/projector_images/ch01_ex01_comment_l_ia_transforme_la_finance_006_Perplexity_AI_logo.svg",
 ]);
 
+const projectorLocalAliases = new Map([
+  [
+    "https://s3.us-east-1.amazonaws.com/assets.datacamp.com/production/repositories/7203/datasets/AI+shines.gif",
+    "downloads/projector_images/ch01_ex01_le_changement_de_paradigme_de_l_ia_dans_la_vente_004_AI_saves_time.gif",
+  ],
+  [
+    "https://s3.us-east-1.amazonaws.com/assets.datacamp.com/production/repositories/7203/datasets/email+generate+2.gif",
+    "downloads/projector_images/ch01_ex08_r_diger_des_messages_d_approche_personnalis_s_016_Email_examples.png",
+  ],
+]);
+
 function extractSlideImages(value, localImages, label) {
   const images = [];
   const pattern = /!\[([^\]]*)\]\((https?:\/\/[^\s)]+)(?:\s +=\d+)?\)/g;
   for (const match of String(value || "").matchAll(pattern)) {
-    const localPath = localImages.get(match[2]);
+    const localPath = localImages.get(match[2]) || projectorLocalAliases.get(match[2]);
     const url = localAsset(localPath);
     if (!url && optionalMissingProjectorImages.has(localPath)) continue;
     // Some Projector slides reference a short animation that is already embedded in
