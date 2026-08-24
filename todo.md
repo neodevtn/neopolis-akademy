@@ -2040,3 +2040,14 @@
 - [x] Convertir le cours avec les blocs standards, les médias Projector audio/diapositives/transcripts, la progression séquentielle et les tags de compétences
 - [x] Intégrer le catalogue, l’indexation de recherche, les règles XP, les préparations d’environnement et les ressources de la bibliothèque média
 - [x] Tester chaque type d’activité, les médias, le parcours desktop/mobile et la recherche, puis publier avec le rapport de contrôle
+
+## Lot DataCamp AI Search — import par paquets prêts
+- [ ] Inventorier les paquets du dossier parent, éliminer les doublons déjà publiés et classer les cours `ready` et `media_pending`
+- [ ] Importer les cours `ready` dans l’ordre prescrit avec manifeste, prompt individuel, médias locaux, blocs standards et progression séquentielle
+- [ ] Adapter les DataLabExercise et les expériences visuelles avec les composants interactifs Neopolis et les corrections masquées
+- [ ] Appliquer les catégories, tags de compétences, XP, préparation d’environnement, indexation recherche et contrôles anti-triche raisonnables
+- [ ] Auditer chaque cours validé sur desktop/mobile, médias, activités principales, progression et recherche, puis publier les lots vérifiés
+- [ ] Conserver les cours `media_pending` hors statut complet et documenter leurs blocages de médias durables
+
+### Cours 03 — Coder avec l’aide de l’IA pour les développeurs
+- [ ] Publier le cours, vérifier les médias en production et archiver son rapport de contrôle
