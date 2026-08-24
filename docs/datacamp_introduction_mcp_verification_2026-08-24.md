@@ -22,3 +22,7 @@ Le bandeau de consentement aux cookies du preview recouvre le bas de la zone de 
 La suite complète a validé **87 fichiers et 324 tests**. Le typage TypeScript et la validation de tous les JSON pédagogiques sont réussis. Les 223 alertes de similarité de choix concernent des cours historiques et ne constituent pas des erreurs pour le cours MCP. Le cours est présent dans l’index de recherche généré et sa catégorie est `fullstack_ai_engineering`.
 
 Le contrôle média de production sera réalisé après la publication, sur les 88 références uniques réellement consommées par le cours.
+
+## Contrôle média de production
+
+L’audit de production a contrôlé les **55 références média uniques** réellement consommées par le cours, en deux lots à débit maîtrisé. Les 55 répondent **HTTP 200**, sans 404, 429, URL DataCamp externe ou chemin de stockage direct. Les pistes audio Projector, sous-titres, PDF de slides et images locales ont ainsi été vérifiés sur le domaine public.
