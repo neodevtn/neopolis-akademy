@@ -1,0 +1,1820 @@
+{
+  "courseId": "end_to_end_rag_with_weaviate__01",
+  "sourceCourseTitle": "RAG de bout en bout avec Weaviate",
+  "datacampImport": {
+    "schemaVersion": "neopolis.datacamp_course.v1",
+    "sourceProvider": "DataCamp",
+    "sourceCourseSlug": "end-to-end-rag-with-weaviate",
+    "sourceLanguage": "fr-FR",
+    "expected": {
+      "chapters_expected": 3,
+      "chapters_extracted": 3,
+      "activities_expected_from_outline": 14,
+      "activities_extracted": 14,
+      "videos_expected_from_chapter_metadata": 4,
+      "videos_extracted": 4,
+      "exercise_types": {
+        "VideoExercise": 4,
+        "DatalabExercise": 10
+      },
+      "failed_pages": []
+    },
+    "competencyTagging": "lesson_content_signals_v1"
+  },
+  "lessons": [
+    {
+      "id": "datacamp_ch01",
+      "title": {
+        "en": "Fondamentaux de RAG avec Weaviate",
+        "fr": "Fondamentaux de RAG avec Weaviate"
+      },
+      "description": {
+        "en": "Découvrez comment Weaviate rend possibles les applications RAG ! Vous construirez manuellement un workflow RAG de bout en bout pour vous familiariser avec les étapes Retrieval–Augmentation–Generation. Cette compréhension vous permettra, au chapitre 2, de mettre en place des workflows RAG plus robustes et optimisés avec Weaviate.",
+        "fr": "Découvrez comment Weaviate rend possibles les applications RAG ! Vous construirez manuellement un workflow RAG de bout en bout pour vous familiariser avec les étapes Retrieval–Augmentation–Generation. Cette compréhension vous permettra, au chapitre 2, de mettre en place des workflows RAG plus robustes et optimisés avec Weaviate."
+      },
+      "competencyTags": [
+        "rag_knowledge",
+        "ai_orchestration",
+        "ai_devops",
+        "ai_business"
+      ],
+      "recommendedVideos": [],
+      "recommendedVideosManaged": false,
+      "chapters": [
+        {
+          "id": "dc_ch01_act01",
+          "title": {
+            "en": "De RAG à réussite !",
+            "fr": "De RAG à réussite !"
+          },
+          "description": {
+            "en": "Découvrez comment Weaviate rend possibles les applications RAG ! Vous construirez manuellement un workflow RAG de bout en bout pour vous familiariser avec les étapes Retrieval–Augmentation–Generation. Cette compréhension vous permettra, au chapitre 2, de mettre en place des workflows RAG plus robustes et optimisés avec Weaviate.",
+            "fr": "Découvrez comment Weaviate rend possibles les applications RAG ! Vous construirez manuellement un workflow RAG de bout en bout pour vous familiariser avec les étapes Retrieval–Augmentation–Generation. Cette compréhension vous permettra, au chapitre 2, de mettre en place des workflows RAG plus robustes et optimisés avec Weaviate."
+          },
+          "type": "teaching",
+          "sourceActivityType": "VideoExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "content",
+              "id": "neopolis_end_to_end_rag_with_weaviate__01_environment_preparation",
+              "body": {
+                "fr": "## Avant de commencer\n\nCe cours se réalise directement dans Neopolis avec des activités interactives. Pour les mises en situation, préparez un chatbot IA autorisé par votre organisation ; ne partagez jamais de données sensibles, de mots de passe ou de clés API.",
+                "en": "## Before you start\n\nThis course is completed in Neopolis through interactive activities. For the scenarios, prepare an AI chatbot approved by your organization; never share sensitive data, passwords, or API keys."
+              }
+            },
+            {
+              "type": "video",
+              "id": "dc_1_act_01_video",
+              "title": {
+                "en": "De RAG à réussite !",
+                "fr": "De RAG à réussite !"
+              },
+              "mp4Url": "/api/assets/ch01_ex01_de_rag_r_ussite_0c96292d.mp4",
+              "audioUrl": "/api/assets/ch01_ex01_de_rag_r_ussite_34125291.mp3",
+              "subtitleUrlFr": "/api/assets/ch01_ex01_de_rag_r_ussite_fr_f8207f8b.vtt",
+              "subtitleUrlEn": "/api/assets/ch01_ex01_de_rag_r_ussite_en_402d52ea.vtt",
+              "slidesPdf": "/api/assets/chapter_01_slides_945e9970.pdf",
+              "projectorSlides": [
+                {
+                  "number": 1,
+                  "title": "Du RAG à la réussite !",
+                  "type": "TitleSlide",
+                  "script": "Hi, and welcome to the course!\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": "",
+                  "instructorName": "JP Hwang",
+                  "instructorTitle": "Senior Developer Educator, Weaviate",
+                  "technology": "python"
+                },
+                {
+                  "number": 2,
+                  "title": "Rencontrez votre formateur !",
+                  "type": "TwoColumns",
+                  "script": "I'm JP, Senior Developer Educator at Weaviate, and I'll be your instructor for the course.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n## Senior Developer Educator,\n\n## Weaviate",
+                  "contentLeft": "&nbsp;",
+                  "contentRight": "&nbsp;\n\n&nbsp;\n\n## Senior Developer Educator,\n\n## Weaviate"
+                },
+                {
+                  "number": 3,
+                  "title": "Le parcours à venir",
+                  "type": "FullSlide",
+                  "script": "In this course, you'll learn to create a robust AI assistant that can retrieve information from documents in the form of text and even images, and answer questions about them.\n\nTo do all this,\n\n",
+                  "images": [
+                    {
+                      "alt": "RAG, vue de base",
+                      "url": "/api/assets/ch01_ex01_de_rag_r_ussite_002_rag_basic_049a031a.png"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 4,
+                  "title": "Weaviate",
+                  "type": "TwoColumns",
+                  "script": "we'll be using Weaviate, which is an open-source, cloud-native vector database. One of its major use cases is for enabling powerful RAG applications. Before we dive into Weaviate, let's briefly recap Retrieval Augmented Generation, or RAG.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n&nbsp;\n\n&nbsp;\n\n→ **Open-source**\n\n&nbsp;\n\n→ **Cloud-native**\n\n&nbsp;\n\n→ **Base de données vectorielle**",
+                  "contentLeft": "&nbsp;",
+                  "contentRight": "&nbsp;\n\n&nbsp;\n\n→ **Open-source**\n\n&nbsp;\n\n→ **Cloud-native**\n\n&nbsp;\n\n→ **Base de données vectorielle**"
+                },
+                {
+                  "number": 5,
+                  "title": "RAG en bref",
+                  "type": "FullSlide",
+                  "script": "Put simply, RAG is the process or retrieving relevant context - the \"R\" in RAG - inserting it into a prompt to create an enriched or augmented prompt for an LLM - the \"A\" in RAG - and using it to generate new text using this context - the \"G\" in RAG.\n\nLet's zoom into the document retrieval part, as this is the most nuanced part of the process.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 6,
+                  "title": "Embeddings de texte",
+                  "type": "TwoColumns",
+                  "script": "To store and retrieve documents, we'll utilize the concept of embeddings.\n\nFor now, we'll consider only text embeddings, but stay tuned for Chapter 3 to discuss image embeddings.\n\nText embeddings can be thought of as numerical representations of text, and they encode the semantic meaning of the text. That is, the text \"peach\" and \"banana\" will have more similar embeddings than \"peach\" and \"laptop\".\n\nWhen we embed a piece of text, we convert it into a vector, which just means a series of numbers, that represents the text.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n* **Chapitre 3** → embeddings d’images\n* **Embeddings de texte** : encodent numériquement le sens\n\n&nbsp;\n\n* Permettent de comparer la _similarité sémantique_ entre textes\n\n&nbsp;",
+                  "contentLeft": "&nbsp;\n\n* **Chapitre 3** → embeddings d’images\n* **Embeddings de texte** : encodent numériquement le sens\n\n&nbsp;\n\n* Permettent de comparer la _similarité sémantique_ entre textes",
+                  "contentRight": "&nbsp;"
+                },
+                {
+                  "number": 7,
+                  "title": "Visualiser les embeddings texte",
+                  "type": "TwoColumns",
+                  "script": "Embeddings essentially map text into a high dimensional space equal to the length of the vector. So an embedding model that generates 100 numbers maps the text into 100-dimensional space!\n\nAs humans, we can't visualize this number of dimensions, but this is a 2D representation of how the vectors we've discussed might be mapped.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 8,
+                  "title": "Longueur de vecteur constante",
+                  "type": "FullSlide",
+                  "script": "Regardless of the length of an input document, whether a single word or a paragraph, the embedding model will generate the same length vector.\n\n",
+                  "images": [
+                    {
+                      "alt": "Longueur de l’embedding",
+                      "url": "/api/assets/ch01_ex01_de_rag_r_ussite_008_embedding_length_v2_56fd8622.png"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 9,
+                  "title": "Embeddings et recherche",
+                  "type": "FullSlide",
+                  "script": "These vectors are crucial for the retrieval mechanism in a vector RAG application.\n\nWhen a user queries a RAG application, this query is also embedded to create a query vector.\n\nThis vector is then sent to the vector database, like Weaviate, that is specifically optimized for storing and querying high-dimensional data.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 10,
+                  "title": "Embeddings et recherche",
+                  "type": "FullSlide",
+                  "script": "A similarity calculation is performed between the query vector and the embedded documents in the database to identify the most similar vectors, and the documents represented by those vectors are selected for retrieval.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 11,
+                  "title": "« R » pour Retrieval",
+                  "type": "FullSlide",
+                  "script": "Putting this within the larger picture we started with, these documents are inserted into a prompt designed to encourage the model to use the retrieved context to generate an informed output.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 12,
+                  "title": "À suivre !",
+                  "type": "FullSlide",
+                  "script": "To kick things off, we'll perform RAG by-hand to get familiar with each component and process in the workflow. In Chapter 2, we'll orchestrate this using Weaviate.\n\n",
+                  "images": [
+                    {
+                      "alt": "À venir",
+                      "url": "/api/assets/ch01_ex01_de_rag_r_ussite_011_chapter1_recap_30193659.png"
+                    }
+                  ],
+                  "content": "&nbsp;",
+                  "contentLeft": "&nbsp;",
+                  "contentRight": ""
+                },
+                {
+                  "number": 13,
+                  "title": "Format du cours",
+                  "type": "FullSlide",
+                  "script": "Throughout the course, we'll be working side-by-side to tackle exercises, which will be completed in DataLab Notebooks with accompanying videos. DataLab is DataCamp's proprietary cloud-based notebook IDE. If you've used other notebook IDEs, you should find DataLab pretty intuitive; if you're not familiar with notebooks, you can think of a notebook as a series of cells to execute code in.\n\nIf you run one cell, any variables or libraries defined in that cell will be available in the other cells, and so on.\n\nIn the exercise, you can either start the video and code-along with us, or you can watch the video first and code afterwards - the choice is yours!\n\n",
+                  "images": [
+                    {
+                      "alt": "Exercice exemple",
+                      "url": "/api/assets/ch01_ex01_de_rag_r_ussite_012_example_exercise_a97a611a.gif"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 14,
+                  "title": "Format du cours",
+                  "type": "FullSlide",
+                  "script": "You can find detailed information to help you complete the tasks in the instructions section, and in the notebook.\n\n",
+                  "images": [
+                    {
+                      "alt": "Consignes d’exercice",
+                      "url": "/api/assets/ch01_ex01_de_rag_r_ussite_013_exercise_instructions_9be5f71c.png"
+                    }
+                  ],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 15,
+                  "title": "Passons à la pratique !",
+                  "type": "FinalSlide",
+                  "script": "Alright, it's time to get stuck into RAG!\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                }
+              ],
+              "projectorTimings": [
+                {
+                  "time": 0,
+                  "slideIndex": 0,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.0021683239047747766,
+                  "slideIndex": 0,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.012429329252987856,
+                  "slideIndex": 1,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.035107157337864195,
+                  "slideIndex": 2,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.08896523178807947,
+                  "slideIndex": 3,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.09536465352460759,
+                  "slideIndex": 3,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.09925408356341592,
+                  "slideIndex": 3,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.10306089626011238,
+                  "slideIndex": 3,
+                  "fragment": 2
+                },
+                {
+                  "time": 0.15832941227579014,
+                  "slideIndex": 4,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.25961346610545827,
+                  "slideIndex": 5,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.29422966424034136,
+                  "slideIndex": 5,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.3109004788291854,
+                  "slideIndex": 5,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.3423990548915877,
+                  "slideIndex": 5,
+                  "fragment": 2
+                },
+                {
+                  "time": 0.4026408877647559,
+                  "slideIndex": 6,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.46803400556059704,
+                  "slideIndex": 6,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.4949574846021663,
+                  "slideIndex": 7,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.5308574662599193,
+                  "slideIndex": 8,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.6156373737763791,
+                  "slideIndex": 9,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.6720408452879734,
+                  "slideIndex": 10,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.7207678402486822,
+                  "slideIndex": 11,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.7696304568184891,
+                  "slideIndex": 12,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.9603511864537679,
+                  "slideIndex": 13,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.9885563348328925,
+                  "slideIndex": 14,
+                  "fragment": -1
+                }
+              ],
+              "projectorTimingUnit": "fraction",
+              "projectorDuration": 300,
+              "transcript": "1. Du RAG à la réussite !\nHi, and welcome to the course!\n\n2. Rencontrez votre formateur !\nI'm JP, Senior Developer Educator at Weaviate, and I'll be your instructor for the course.\n\n3. Le parcours à venir\nIn this course, you'll learn to create a robust AI assistant that can retrieve information from documents in the form of text and even images, and answer questions about them.\n\nTo do all this,\n\n4. Weaviate\nwe'll be using Weaviate, which is an open-source, cloud-native vector database. One of its major use cases is for enabling powerful RAG applications. Before we dive into Weaviate, let's briefly recap Retrieval Augmented Generation, or RAG.\n\n5. RAG en bref\nPut simply, RAG is the process or retrieving relevant context - the \"R\" in RAG - inserting it into a prompt to create an enriched or augmented prompt for an LLM - the \"A\" in RAG - and using it to generate new text using this context - the \"G\" in RAG.\n\nLet's zoom into the document retrieval part, as this is the most nuanced part of the process.\n\n6. Embeddings de texte\nTo store and retrieve documents, we'll utilize the concept of embeddings.\n\nFor now, we'll consider only text embeddings, but stay tuned for Chapter 3 to discuss image embeddings.\n\nText embeddings can be thought of as numerical representations of text, and they encode the semantic meaning of the text. That is, the text \"peach\" and \"banana\" will have more similar embeddings than \"peach\" and \"laptop\".\n\nWhen we embed a piece of text, we convert it into a vector, which just means a series of numbers, that represents the text.\n\n7. Visualiser les embeddings texte\nEmbeddings essentially map text into a high dimensional space equal to the length of the vector. So an embedding model that generates 100 numbers maps the text into 100-dimensional space!\n\nAs humans, we can't visualize this number of dimensions, but this is a 2D representation of how the vectors we've discussed might be mapped.\n\n8. Longueur de vecteur constante\nRegardless of the length of an input document, whether a single word or a paragraph, the embedding model will generate the same length vector.\n\n9. Embeddings et recherche\nThese vectors are crucial for the retrieval mechanism in a vector RAG application.\n\nWhen a user queries a RAG application, this query is also embedded to create a query vector.\n\nThis vector is then sent to the vector database, like Weaviate, that is specifically optimized for storing and querying high-dimensional data.\n\n10. Embeddings et recherche\nA similarity calculation is performed between the query vector and the embedded documents in the database to identify the most similar vectors, and the documents represented by those vectors are selected for retrieval.\n\n11. « R » pour Retrieval\nPutting this within the larger picture we started with, these documents are inserted into a prompt designed to encourage the model to use the retrieved context to generate an informed output.\n\n12. À suivre !\nTo kick things off, we'll perform RAG by-hand to get familiar with each component and process in the workflow. In Chapter 2, we'll orchestrate this using Weaviate.\n\n13. Format du cours\nThroughout the course, we'll be working side-by-side to tackle exercises, which will be completed in DataLab Notebooks with accompanying videos. DataLab is DataCamp's proprietary cloud-based notebook IDE. If you've used other notebook IDEs, you should find DataLab pretty intuitive; if you're not familiar with notebooks, you can think of a notebook as a series of cells to execute code in.\n\nIf you run one cell, any variables or libraries defined in that cell will be available in the other cells, and so on.\n\nIn the exercise, you can either start the video and code-along with us, or you can watch the video first and code afterwards - the choice is yours!\n\n14. Format du cours\nYou can find detailed information to help you complete the tasks in the instructions section, and in the notebook.\n\n15. Passons à la pratique !\nAlright, it's time to get stuck into RAG!",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Du RAG à la réussite !",
+                  "text": "Hi, and welcome to the course!"
+                },
+                {
+                  "heading": "2. Rencontrez votre formateur !",
+                  "text": "I'm JP, Senior Developer Educator at Weaviate, and I'll be your instructor for the course."
+                },
+                {
+                  "heading": "3. Le parcours à venir",
+                  "text": "In this course, you'll learn to create a robust AI assistant that can retrieve information from documents in the form of text and even images, and answer questions about them.\n\nTo do all this,"
+                },
+                {
+                  "heading": "4. Weaviate",
+                  "text": "we'll be using Weaviate, which is an open-source, cloud-native vector database. One of its major use cases is for enabling powerful RAG applications. Before we dive into Weaviate, let's briefly recap Retrieval Augmented Generation, or RAG."
+                },
+                {
+                  "heading": "5. RAG en bref",
+                  "text": "Put simply, RAG is the process or retrieving relevant context - the \"R\" in RAG - inserting it into a prompt to create an enriched or augmented prompt for an LLM - the \"A\" in RAG - and using it to generate new text using this context - the \"G\" in RAG.\n\nLet's zoom into the document retrieval part, as this is the most nuanced part of the process."
+                },
+                {
+                  "heading": "6. Embeddings de texte",
+                  "text": "To store and retrieve documents, we'll utilize the concept of embeddings.\n\nFor now, we'll consider only text embeddings, but stay tuned for Chapter 3 to discuss image embeddings.\n\nText embeddings can be thought of as numerical representations of text, and they encode the semantic meaning of the text. That is, the text \"peach\" and \"banana\" will have more similar embeddings than \"peach\" and \"laptop\".\n\nWhen we embed a piece of text, we convert it into a vector, which just means a series of numbers, that represents the text."
+                },
+                {
+                  "heading": "7. Visualiser les embeddings texte",
+                  "text": "Embeddings essentially map text into a high dimensional space equal to the length of the vector. So an embedding model that generates 100 numbers maps the text into 100-dimensional space!\n\nAs humans, we can't visualize this number of dimensions, but this is a 2D representation of how the vectors we've discussed might be mapped."
+                },
+                {
+                  "heading": "8. Longueur de vecteur constante",
+                  "text": "Regardless of the length of an input document, whether a single word or a paragraph, the embedding model will generate the same length vector."
+                },
+                {
+                  "heading": "9. Embeddings et recherche",
+                  "text": "These vectors are crucial for the retrieval mechanism in a vector RAG application.\n\nWhen a user queries a RAG application, this query is also embedded to create a query vector.\n\nThis vector is then sent to the vector database, like Weaviate, that is specifically optimized for storing and querying high-dimensional data."
+                },
+                {
+                  "heading": "10. Embeddings et recherche",
+                  "text": "A similarity calculation is performed between the query vector and the embedded documents in the database to identify the most similar vectors, and the documents represented by those vectors are selected for retrieval."
+                },
+                {
+                  "heading": "11. « R » pour Retrieval",
+                  "text": "Putting this within the larger picture we started with, these documents are inserted into a prompt designed to encourage the model to use the retrieved context to generate an informed output."
+                },
+                {
+                  "heading": "12. À suivre !",
+                  "text": "To kick things off, we'll perform RAG by-hand to get familiar with each component and process in the workflow. In Chapter 2, we'll orchestrate this using Weaviate."
+                },
+                {
+                  "heading": "13. Format du cours",
+                  "text": "Throughout the course, we'll be working side-by-side to tackle exercises, which will be completed in DataLab Notebooks with accompanying videos. DataLab is DataCamp's proprietary cloud-based notebook IDE. If you've used other notebook IDEs, you should find DataLab pretty intuitive; if you're not familiar with notebooks, you can think of a notebook as a series of cells to execute code in.\n\nIf you run one cell, any variables or libraries defined in that cell will be available in the other cells, and so on.\n\nIn the exercise, you can either start the video and code-along with us, or you can watch the video first and code afterwards - the choice is yours!"
+                },
+                {
+                  "heading": "14. Format du cours",
+                  "text": "You can find detailed information to help you complete the tasks in the instructions section, and in the notebook."
+                },
+                {
+                  "heading": "15. Passons à la pratique !",
+                  "text": "Alright, it's time to get stuck into RAG!"
+                }
+              ]
+            },
+            {
+              "type": "download",
+              "id": "dc_ch01_slides",
+              "title": {
+                "en": "Chapter 1 slides",
+                "fr": "Chapter 1 slides"
+              },
+              "description": {
+                "en": "Official course slides provided in the local DataCamp package.",
+                "fr": "Official course slides provided in the local DataCamp package."
+              },
+              "url": "/api/assets/chapter_01_slides_945e9970.pdf",
+              "filename": "chapter_01_slides.pdf"
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act02",
+          "title": {
+            "en": "Génération de texte avec des LLM",
+            "fr": "Génération de texte avec des LLM"
+          },
+          "description": {
+            "en": "Découvrez comment Weaviate rend possibles les applications RAG ! Vous construirez manuellement un workflow RAG de bout en bout pour vous familiariser avec les étapes Retrieval–Augmentation–Generation. Cette compréhension vous permettra, au chapitre 2, de mettre en place des workflows RAG plus robustes et optimisés avec Weaviate.",
+            "fr": "Découvrez comment Weaviate rend possibles les applications RAG ! Vous construirez manuellement un workflow RAG de bout en bout pour vous familiariser avec les étapes Retrieval–Augmentation–Generation. Cette compréhension vous permettra, au chapitre 2, de mettre en place des workflows RAG plus robustes et optimisés avec Weaviate."
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_1_act_02_tp",
+              "title": {
+                "en": "Génération de texte avec des LLM",
+                "fr": "Génération de texte avec des LLM"
+              },
+              "assignment": "",
+              "instructions": "Posez la question de culture générale au LLM.\n\nDemandez au LLM des informations sur la politique de télétravail de Weaviate.\n\nPosez la même question à nouveau, mais cette fois en intégrant le contexte supplémentaire dans l’invite, stocké dans weaviate_wfh_facts.\n\nRemarque : Si vous exécutez DataLab en mode Restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Posez la question de culture générale au LLM.",
+                "Demandez au LLM des informations sur la politique de télétravail de Weaviate.",
+                "Posez la même question à nouveau, mais cette fois en intégrant le contexte supplémentaire dans l’invite, stocké dans weaviate_wfh_facts.",
+                "Remarque : Si vous exécutez DataLab en mode Restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_01_slides_945e9970.pdf"
+                }
+              ],
+              "hint": "Appelez client.chat.completions.create() pour envoyer des messages de chat à un LLM d’OpenAI.\n\nLes messages de chat pour les complétions doivent être envoyés sous forme de liste de dictionnaires, où chaque dictionnaire contient une clé \"role\" et une clé \"content\".\n\nVous pouvez utiliser une f-string Python avec f\"{var}\" pour intégrer le contexte supplémentaire stocké dans weaviate_wfh_facts dans la chaîne d’invite.",
+              "solution": "## TASK 1\nfrom openai import OpenAI\n\nclient = OpenAI()\n\nresponse = client.chat.completions.create(\n    model=\"gpt-4o-mini\",\n    messages=[\n        {\n            \"role\": \"user\",\n            \"content\": \"\"\"\n                What is the capital of France?\n            \"\"\",\n        }\n    ],\n)\n\nprint(response.choices[0].message.content)\n\n## TASK 2\nno_context_response = client.chat.completions.create(\n    model=\"gpt-4o-mini\",\n    messages=[\n        {\n            \"role\": \"user\",\n            \"content\": \"\"\"\n                Answer only. What is Weaviate's flexible work policy as of September, 2025?\n            \"\"\",\n        }\n    ],\n)\n\nprint(no_context_response.choices[0].message.content)\n\n## TASK 3\nweaviate_wfh_facts = \"\"\"\nWeaviate is a fully remote company with people living and working across the world.\nIt provides a home office budget, flexible time off, and local benefits.\nIt also allows employees to connect with colleagues worldwide and enjoy our annual company trip.\n\"\"\"\n\ncontext_response = client.chat.completions.create(\n    model=\"gpt-4o-mini\",\n    messages=[\n        {\n            \"role\": \"user\",\n            \"content\": f\"\"\"\n                ====================\n                {weaviate_wfh_facts}\n                ====================\n                Answer only. What is Weaviate's flexible work policy as of September, 2025?\n            \"\"\",\n        }\n    ],\n)\n\nprint(context_response.choices[0].message.content)",
+              "successMessage": "Et vous voilà lancé·e ! Pour les LLM, le contexte fait toute la différence : ils ne peuvent pas répondre avec confiance ni précision à des sujets qui ne figurent pas dans leurs données d’entraînement ou dans l’invite.",
+              "xp": 100
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act03",
+          "title": {
+            "en": "Créer des embeddings de texte",
+            "fr": "Créer des embeddings de texte"
+          },
+          "description": {
+            "en": "Découvrez comment Weaviate rend possibles les applications RAG ! Vous construirez manuellement un workflow RAG de bout en bout pour vous familiariser avec les étapes Retrieval–Augmentation–Generation. Cette compréhension vous permettra, au chapitre 2, de mettre en place des workflows RAG plus robustes et optimisés avec Weaviate.",
+            "fr": "Découvrez comment Weaviate rend possibles les applications RAG ! Vous construirez manuellement un workflow RAG de bout en bout pour vous familiariser avec les étapes Retrieval–Augmentation–Generation. Cette compréhension vous permettra, au chapitre 2, de mettre en place des workflows RAG plus robustes et optimisés avec Weaviate."
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_1_act_03_tp",
+              "title": {
+                "en": "Créer des embeddings de texte",
+                "fr": "Créer des embeddings de texte"
+              },
+              "assignment": "",
+              "instructions": "Générez l’embedding de la chaîne de texte fournie et affichez sa longueur ainsi que les cinq premiers nombres du vecteur d’embedding.\n\nGénérez les embeddings des chaînes de la liste texts en une seule requête à l’API d’embedding, puis comparez la longueur et les valeurs de chaque vecteur d’embedding.\n\nGénérez à nouveau l’embedding de la liste texts, mais cette fois, changez les dimensions de sortie du modèle à 512.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Générez l’embedding de la chaîne de texte fournie et affichez sa longueur ainsi que les cinq premiers nombres du vecteur d’embedding.",
+                "Générez les embeddings des chaînes de la liste texts en une seule requête à l’API d’embedding, puis comparez la longueur et les valeurs de chaque vecteur d’embedding.",
+                "Générez à nouveau l’embedding de la liste texts, mais cette fois, changez les dimensions de sortie du modèle à 512.",
+                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_01_slides_945e9970.pdf"
+                }
+              ],
+              "hint": "Pour créer une requête vers un modèle d’embeddding OpenAI, appelez client.embeddings.create().\n\nLa méthode .create() prend en argument un input (chaîne ou liste de chaînes), un model (\"text-embedding-3-small\"), et un paramètre optionnel dimensions pour modifier la longueur d’embedding par défaut du modèle.",
+              "solution": "## TASK 1\nfrom openai import OpenAI\n\nclient = OpenAI()\n\n# Single embedding\nresponse = client.embeddings.create(\n    input=\"Weaviate is a fully remote company with people living and working across the world.\",\n    model=\"text-embedding-3-small\",\n)\n\nprint(f\"Embedding length: {len(response.data[0].embedding)}\")\nprint(f\"Embedding: {response.data[0].embedding[:5]}...\")\n\n## TASK 2\n# Multiple embeddings\ntexts = [\n    \"Weaviate is a fully remote company with people living and working across the world.\",\n    \"Weaviate provides a home office budget, flexible time off, and local benefits.\",\n    \"Weaviate also allows its employees to connect with colleagues worldwide and enjoy our annual company trip.\"\n]\n\nbatch_response = client.embeddings.create(\n    input=texts,\n    model=\"text-embedding-3-small\"\n)\n\n# Inspect the embeddings\nfor i, embedding in enumerate(batch_response.data):\n    print(f\"Source text: {texts[i]}\")\n    print(f\"Embedding {i+1}: {embedding.embedding[:5]}...\")\n    # Print first 10 elements of each embedding\n    print(f\"Length: {len(embedding.embedding)}\\n\")\n    \n## TASK 3\n# Multiple embeddings\ntexts = [\n    \"Weaviate is a fully remote company with people living and working across the world.\",\n    \"Weaviate provides a home office budget, flexible time off, and local benefits.\",\n    \"Weaviate also allows its employees to connect with colleagues worldwide and enjoy our annual company trip.\"\n]\n\nbatch_dim_response = client.embeddings.create(\n    input=texts,\n    model=\"text-embedding-3-small\",\n    dimensions=512\n)\n\n# Inspect the embeddings\nfor i, embedding in enumerate(batch_dim_response.data):\n    print(f\"Source text: {texts[i]}\")\n    print(f\"Embedding {i+1}: {embedding.embedding[:5]}...\")  # Print first few elements of each embedding\n    print(f\"Length: {len(embedding.embedding)}\\n\")",
+              "successMessage": "Bravo ! Maintenant que vous savez encoder le sens sémantique de ces textes, vous êtes prêt à comparer les embeddings pour trouver ceux qui se ressemblent le plus. C’est ce qui alimente la partie « retrieval » du workflow RAG !",
+              "xp": 100
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act04",
+          "title": {
+            "en": "Comparer des embeddings de texte",
+            "fr": "Comparer des embeddings de texte"
+          },
+          "description": {
+            "en": "Découvrez comment Weaviate rend possibles les applications RAG ! Vous construirez manuellement un workflow RAG de bout en bout pour vous familiariser avec les étapes Retrieval–Augmentation–Generation. Cette compréhension vous permettra, au chapitre 2, de mettre en place des workflows RAG plus robustes et optimisés avec Weaviate.",
+            "fr": "Découvrez comment Weaviate rend possibles les applications RAG ! Vous construirez manuellement un workflow RAG de bout en bout pour vous familiariser avec les étapes Retrieval–Augmentation–Generation. Cette compréhension vous permettra, au chapitre 2, de mettre en place des workflows RAG plus robustes et optimisés avec Weaviate."
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_1_act_04_tp",
+              "title": {
+                "en": "Comparer des embeddings de texte",
+                "fr": "Comparer des embeddings de texte"
+              },
+              "assignment": "",
+              "instructions": "Générez les embeddings des deux textes fournis sur Weaviate et calculez la distance cosinus entre les deux vecteurs.\n\nGénérez un troisième embedding pour un texte sur un autre sujet, calculez la distance cosinus avec e1, puis comparez cette distance à la précédente.\n\nGénérez les embeddings des chaînes de texts ainsi que de la variable query_text, bouclez sur embeddings, calculez la distance entre chaque embedding et query_embedding, puis triez les distances pour trouver les 2 textes les plus similaires.\n\nRenvoyez tous les textes dont la distance cosinus est inférieure à max_distance.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Générez les embeddings des deux textes fournis sur Weaviate et calculez la distance cosinus entre les deux vecteurs.",
+                "Générez un troisième embedding pour un texte sur un autre sujet, calculez la distance cosinus avec e1, puis comparez cette distance à la précédente.",
+                "Générez les embeddings des chaînes de texts ainsi que de la variable query_text, bouclez sur embeddings, calculez la distance entre chaque embedding et query_embedding, puis triez les distances pour trouver les 2 textes les plus similaires.",
+                "Renvoyez tous les textes dont la distance cosinus est inférieure à max_distance.",
+                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_01_slides_945e9970.pdf"
+                }
+              ],
+              "hint": "Vous pouvez calculer la distance cosinus entre deux listes de nombres avec la fonction cosine() de scipy.spatial.distance.\n\nÀ l’intérieur de la boucle, ajoutez à distances un tuple de la forme : (, ).\n\nPour trier la liste de tuples distances par distance, créez une fonction lambda qui prend le second élément : lambda x: x[1].",
+              "solution": "## TASK 1\nfrom openai import OpenAI\n\nclient = OpenAI()\n\nresponse = client.embeddings.create(\n    input=[\n        \"Weaviate is a fully remote company with people living and working across the world.\",\n        \"Weaviate provides a home office budget, flexible time off, and local benefits.\",\n    ],\n    model=\"text-embedding-3-small\",\n)\n\ne1 = response.data[0].embedding\ne2 = response.data[1].embedding\n\nfrom scipy.spatial.distance import cosine\n\ne1_e2_distance = cosine(e1, e2)\nprint(f\"Cosine distance: {e1_e2_distance:.3f}\")\n\n## TASK 2\nresponse = client.embeddings.create(input=\"AcmeCo is a producer of high-quality widgets\", model=\"text-embedding-3-small\")\ne3 = response.data[0].embedding\n\ne1_e3_distance = cosine(e1, e3)\nprint(f\"Cosine distance: {e1_e3_distance:.3f}\")\n\n## TASK 3\ntexts = [\n    \"AcmeCo is a producer of high-quality widgets\",\n    \"AcmeCo is a hybrid workplace, requiring employees to be in the office at least 3 days a week\",\n    \"Weaviate is a fully remote company with people living and working across the world.\",\n    \"Weaviate provides a home office budget, flexible time off, and local benefits.\",\n    \"Weaviate also allows its employees to connect with colleagues worldwide and enjoy our annual company trip.\",\n]\n\nresponse = client.embeddings.create(input=texts, model=\"text-embedding-3-small\")\nembeddings = [item.embedding for item in response.data]\n\nquery_text = \"Weaviate work from home policy\"\nquery_response = client.embeddings.create(input=query_text, model=\"text-embedding-3-small\")\nquery_embedding = query_response.data[0].embedding\n\n# Calculate cosine distances between the last embedding (query) and the others\ndistances = []\nfor i, embedding in enumerate(embeddings):\n    distance = cosine(query_embedding, embedding)  # Cosine distance\n    distances.append((texts[i], distance))\n\ndistances\n\n# Sort by distance value\ndistances.sort(key=lambda x: x[1])\n\n# Get the top 2 most similar texts\nretrieved_texts = [text for text, _ in distances[:2]]\n\nprint(\"Top 2 retrieved texts:\\n\" + \"-\" * 30)\nfor text in retrieved_texts:\n    print(f\"- {text}\")\n    \n## TASK 4\n# Get text\nmax_distance = 0.6  # Adjust this threshold as needed\nretrieved_texts = [text for text, d in distances if d < max_distance]\n\nprint(f\"Retrieved texts below distance threshold ({max_distance}) :\\n\" + \"-\" * 30)\nfor text in retrieved_texts:\n    print(f\"- {text}\")",
+              "successMessage": "Bravo ! Vous venez d’effectuer manuellement l’étape de récupération du processus RAG (le « R »). Mettons tout cela ensemble pour compléter le flux avec le « A » et le « G ».",
+              "xp": 100
+            }
+          ]
+        },
+        {
+          "id": "dc_ch01_act05",
+          "title": {
+            "en": "Assembler le \"R\", le \"A\" et le \"G\"",
+            "fr": "Assembler le \"R\", le \"A\" et le \"G\""
+          },
+          "description": {
+            "en": "Découvrez comment Weaviate rend possibles les applications RAG ! Vous construirez manuellement un workflow RAG de bout en bout pour vous familiariser avec les étapes Retrieval–Augmentation–Generation. Cette compréhension vous permettra, au chapitre 2, de mettre en place des workflows RAG plus robustes et optimisés avec Weaviate.",
+            "fr": "Découvrez comment Weaviate rend possibles les applications RAG ! Vous construirez manuellement un workflow RAG de bout en bout pour vous familiariser avec les étapes Retrieval–Augmentation–Generation. Cette compréhension vous permettra, au chapitre 2, de mettre en place des workflows RAG plus robustes et optimisés avec Weaviate."
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_1_act_05_tp",
+              "title": {
+                "en": "Assembler le \"R\", le \"A\" et le \"G\"",
+                "fr": "Assembler le \"R\", le \"A\" et le \"G\""
+              },
+              "assignment": "",
+              "instructions": "Relancez le code de récupération de l’exercice précédent et récupérez les deux documents les plus similaires sémantiquement.\n\nCréez une invite structurée qui combine query_text avec les textes récupérés (retrieved_texts).\n\nEnvoyez combined_context en requête au modèle de complétion de chat OpenAI fourni.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Relancez le code de récupération de l’exercice précédent et récupérez les deux documents les plus similaires sémantiquement.",
+                "Créez une invite structurée qui combine query_text avec les textes récupérés (retrieved_texts).",
+                "Envoyez combined_context en requête au modèle de complétion de chat OpenAI fourni.",
+                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_01_slides_945e9970.pdf"
+                }
+              ],
+              "hint": "Pour créer la variable combined_context, utilisez une f-string pour insérer query_text et ajoutez retrieved_texts à la fin.\n\nEnvoyez combined_context sous le rôle \"user\" dans la liste de dictionnaires messages.",
+              "solution": "## TASK 1\nfrom openai import OpenAI\n\nclient = OpenAI()\n\ntexts = [\n    \"AcmeCo is a producer of high-quality widgets\",\n    \"AcmeCo is a hybrid workplace, requiring employees to be in the office at least 3 days a week\",\n    \"Weaviate is a fully remote company with people living and working across the world.\",\n    \"Weaviate provides a home office budget, flexible time off, and local benefits.\",\n    \"Weaviate also allows its employees to connect with colleagues worldwide and enjoy our annual company trip.\",\n]\n\nresponse = client.embeddings.create(input=texts, model=\"text-embedding-3-small\")\nembeddings = [item.embedding for item in response.data]\n\nquery_text = \"Weaviate work from home policy\"\nquery_response = client.embeddings.create(input=query_text, model=\"text-embedding-3-small\")\nquery_embedding = query_response.data[0].embedding\n\n# Calculate cosine distances between the last embedding (query) and the others\nfrom scipy.spatial.distance import cosine\n\ndistances = []\nfor i, embedding in enumerate(embeddings):\n    distance = cosine(query_embedding, embedding)  # Cosine distance\n    distances.append((texts[i], distance))\n\n# Sort by distance value\ndistances.sort(key=lambda x: x[1])\n\n# Get the top 2 most similar texts\nretrieved_texts = [text for text, _ in distances[:2]]\n\n## TASK 2\ncombined_context = query_text + \"\\n\\n\" + \"\\n\\n\".join(retrieved_texts)\nprint(combined_context)\n\nseparator = \"\\n\" + \"=\" * 60 + \"\\n\"\n\ncombined_context = f\"\"\"\nPlease answer this question '{query_text}', ONLY using the included information:\n\nRetrieved data:\"\"\" + separator + separator.join(retrieved_texts)\n\nprint(combined_context)\n\n## TASK 3\nresponse = client.chat.completions.create(\n    model=\"gpt-4o-mini\",\n    messages=[\n        {\n            \"role\": \"user\",\n            \"content\": combined_context,\n        }\n    ],\n)\n\nprint(response.choices[0].message.content)",
+              "successMessage": "Bravo ! Dans le prochain chapitre, nous utiliserons Weaviate pour orchestrer le processus RAG, mais le \"R\", le \"A\" et le \"G\" continueront de fonctionner en arrière-plan.",
+              "xp": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "datacamp_ch02",
+      "title": {
+        "en": "RAG de bout en bout avec Weaviate",
+        "fr": "RAG de bout en bout avec Weaviate"
+      },
+      "description": {
+        "en": "Même s’il est amusant de coder des workflows RAG à la main, vous pourriez passer à côté d’optimisations offertes par des outils comme Weaviate. Dans ce chapitre, vous allez générer des embeddings, stocker, récupérer et générer des réponses, le tout avec Weaviate !",
+        "fr": "Même s’il est amusant de coder des workflows RAG à la main, vous pourriez passer à côté d’optimisations offertes par des outils comme Weaviate. Dans ce chapitre, vous allez générer des embeddings, stocker, récupérer et générer des réponses, le tout avec Weaviate !"
+      },
+      "competencyTags": [
+        "ai_development",
+        "rag_knowledge",
+        "ai_orchestration",
+        "ai_business"
+      ],
+      "recommendedVideos": [],
+      "recommendedVideosManaged": false,
+      "chapters": [
+        {
+          "id": "dc_ch02_act01",
+          "title": {
+            "en": "Workflows RAG avec Weaviate",
+            "fr": "Workflows RAG avec Weaviate"
+          },
+          "description": {
+            "en": "Même s’il est amusant de coder des workflows RAG à la main, vous pourriez passer à côté d’optimisations offertes par des outils comme Weaviate. Dans ce chapitre, vous allez générer des embeddings, stocker, récupérer et générer des réponses, le tout avec Weaviate !",
+            "fr": "Même s’il est amusant de coder des workflows RAG à la main, vous pourriez passer à côté d’optimisations offertes par des outils comme Weaviate. Dans ce chapitre, vous allez générer des embeddings, stocker, récupérer et générer des réponses, le tout avec Weaviate !"
+          },
+          "type": "teaching",
+          "sourceActivityType": "VideoExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_2_act_01_video",
+              "title": {
+                "en": "Workflows RAG avec Weaviate",
+                "fr": "Workflows RAG avec Weaviate"
+              },
+              "mp4Url": "/api/assets/ch02_ex01_workflows_rag_avec_weaviate_87050222.mp4",
+              "audioUrl": "/api/assets/ch02_ex01_workflows_rag_avec_weaviate_3d4c55d1.mp3",
+              "subtitleUrlFr": "/api/assets/ch02_ex01_workflows_rag_avec_weaviate_fr_5a4958ed.vtt",
+              "subtitleUrlEn": "/api/assets/ch02_ex01_workflows_rag_avec_weaviate_en_4ad05bbf.vtt",
+              "slidesPdf": "/api/assets/chapter_02_slides_5508eaa5.pdf",
+              "projectorSlides": [
+                {
+                  "number": 1,
+                  "title": "Flux RAG avec Weaviate",
+                  "type": "TitleSlide",
+                  "script": "Welcome back!\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": "",
+                  "instructorName": "JP Hwang",
+                  "instructorTitle": "Senior Developer Educator, Weaviate",
+                  "technology": "python"
+                },
+                {
+                  "number": 2,
+                  "title": "Retour en arrière…",
+                  "type": "FullSlide",
+                  "script": "In the last chapter, you successfully perform RAG by-hand: embedding a series of texts and a search query, performing a cosine distance calculation to determine their similarity, retrieving the most similar texts, and inserting them into a prompt for a generative model.\n\n",
+                  "images": [
+                    {
+                      "alt": "chapter1_recap.png",
+                      "url": "/api/assets/ch01_ex01_de_rag_r_ussite_011_chapter1_recap_30193659.png"
+                    }
+                  ],
+                  "content": "&nbsp;",
+                  "contentLeft": "&nbsp;",
+                  "contentRight": ""
+                },
+                {
+                  "number": 3,
+                  "title": "À suivre !",
+                  "type": "FullSlide",
+                  "script": "In this chapter, we'll use Weaviate to embed and store our embeddings for a more scalable and efficient solution.\n\nAdditionally, we'll use Weaviate to orchestrate the RAG workflow using a higher-level syntax than that we've used up to this point.\n\nNow we have better tools at our disposal, we may as well upgrade the data, too!\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 4,
+                  "title": "Des chaînes aux PDF",
+                  "type": "TwoColumns",
+                  "script": "Now, we'll embed and store PDF documents rather than simple strings.\n\nPDFs contain more diverse data structures, including headings, tables, and images. In this chapter, we'll focus on just the text content, but we'll include images in Chapter 3.\n\nWe'll use the docling library to convert the PDF files into markdown files, which contain raw text with additional character formatting for headers and tables.\n\nThis system will allow us to ask questions requiring a document or series of documents, and receive smart, informed responses from the generative model.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n* **PDF**\n  * Titres\n  * Tableaux\n  * Images → chapitre 3\n  \n&nbsp;\n\n* `docling` → convertir des PDF en Markdown\n* **Objectif** : pouvoir interroger les documents",
+                  "contentLeft": "&nbsp;\n\n* **PDF**\n  * Titres\n  * Tableaux\n  * Images → chapitre 3\n  \n&nbsp;\n\n* `docling` → convertir des PDF en Markdown\n* **Objectif** : pouvoir interroger les documents",
+                  "contentRight": ""
+                },
+                {
+                  "number": 5,
+                  "title": "Retour au « R » de RAG",
+                  "type": "FullSlide",
+                  "script": "The retrieval piece of the RAG workflow is the most nuanced, so we'll take a bit of time to discuss different strategies to search for and retrieve relevant documents.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 6,
+                  "title": "Recherche par vecteurs",
+                  "type": "TwoColumns",
+                  "script": "Previously, we searched using vectors, embedding a search query like \"retrieval augmented generation\", and comparing its cosine distance to a series of embedded strings or documents to return the closest.\n\nVector search is \"smart\" in the sense that synonyms, typos, and alternative wordings should produce the same or similar documents. This makes it a great choice for messy user inputs.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n&nbsp;\n\n1. Créer des embeddings de texte\n2. Comparer les distances cosinus\n3. Récupérer le(s) document(s) le(s) plus similaire(s)\n\n&nbsp;\n\n* Robuste aux synonymes, fautes, reformulations\n* Bon choix pour des entrées « brouillonnes »",
+                  "contentLeft": "&nbsp;",
+                  "contentRight": "&nbsp;\n\n1. Créer des embeddings de texte\n2. Comparer les distances cosinus\n3. Récupérer le(s) document(s) le(s) plus similaire(s)\n\n&nbsp;\n\n* Robuste aux synonymes, fautes, reformulations\n* Bon choix pour des entrées « brouillonnes »"
+                },
+                {
+                  "number": 7,
+                  "title": "Recherche par mots-clés",
+                  "type": "TwoColumns",
+                  "script": "There are also keyword searches, which use the frequency that search terms are used across documents to determine which are the most relevant.\n\nKeyword searches are often simpler and reward exact matches, but are much less flexible to messy user inputs as we saw before.\n\n",
+                  "images": [
+                    {
+                      "alt": "search_strategy2.png",
+                      "url": "/api/assets/ch02_ex01_workflows_rag_avec_weaviate_018_search_strategy2_2132dcc4.png"
+                    }
+                  ],
+                  "content": "&nbsp;\n\n&nbsp;\n\n1. Examiner la fréquence d’un terme dans les documents\n2. Récupérer le(s) document(s) où il apparaît le plus\n\n&nbsp;\n\n* Plus simple et plus rapide\n* Moins flexible pour des entrées « brouillonnes »",
+                  "contentLeft": "&nbsp;",
+                  "contentRight": "&nbsp;\n\n1. Examiner la fréquence d’un terme dans les documents\n2. Récupérer le(s) document(s) où il apparaît le plus\n\n&nbsp;\n\n* Plus simple et plus rapide\n* Moins flexible pour des entrées « brouillonnes »"
+                },
+                {
+                  "number": 8,
+                  "title": "Le meilleur des deux mondes : recherche hybride",
+                  "type": "TwoColumns",
+                  "script": "However, you can have the best of both worlds. A hybrid approach performs both searches simultaneously, and then weights the rankings based on a value, alpha.\n\nThis alpha value is essentially used to assign greater value to vector or keyword results.\n\nUltimately, the best approach is the one that gives the best results for your use case.\n\n",
+                  "images": [
+                    {
+                      "alt": "search_strategy3.png",
+                      "url": "/api/assets/ch02_ex01_workflows_rag_avec_weaviate_019_search_strategy3_0a6186b3.png"
+                    }
+                  ],
+                  "content": "&nbsp;\n\n&nbsp;\n\n1. Effectue les deux recherches en parallèle\n2. Pondère les deux classements par la valeur $\\alpha$",
+                  "contentLeft": "&nbsp;",
+                  "contentRight": "&nbsp;\n\n1. Effectue les deux recherches en parallèle\n2. Pondère les deux classements par la valeur $\\alpha$"
+                },
+                {
+                  "number": 9,
+                  "title": "Passons à la pratique !",
+                  "type": "FinalSlide",
+                  "script": "In the exercises, you'll have the chance to experiment with all three. See you there!\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                }
+              ],
+              "projectorTimings": [
+                {
+                  "time": 0,
+                  "slideIndex": 0,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.004800187484021248,
+                  "slideIndex": 0,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.012408409794619775,
+                  "slideIndex": 1,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.11798346731812628,
+                  "slideIndex": 2,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.2501862483311081,
+                  "slideIndex": 3,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.265231414936227,
+                  "slideIndex": 3,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.30878454961224894,
+                  "slideIndex": 3,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.31439289975286194,
+                  "slideIndex": 3,
+                  "fragment": 2
+                },
+                {
+                  "time": 0.3181640627219271,
+                  "slideIndex": 3,
+                  "fragment": 3
+                },
+                {
+                  "time": 0.3690899071101894,
+                  "slideIndex": 3,
+                  "fragment": 4
+                },
+                {
+                  "time": 0.433677541686788,
+                  "slideIndex": 3,
+                  "fragment": 5
+                },
+                {
+                  "time": 0.4902728247592535,
+                  "slideIndex": 4,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.5638316691759225,
+                  "slideIndex": 5,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.5864685751214385,
+                  "slideIndex": 5,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.6053795699230179,
+                  "slideIndex": 5,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.6306120214370579,
+                  "slideIndex": 5,
+                  "fragment": 2
+                },
+                {
+                  "time": 0.6520076626992017,
+                  "slideIndex": 5,
+                  "fragment": 3
+                },
+                {
+                  "time": 0.6973969477033207,
+                  "slideIndex": 5,
+                  "fragment": 4
+                },
+                {
+                  "time": 0.7181689699741498,
+                  "slideIndex": 6,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.7352329346930658,
+                  "slideIndex": 6,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.752252094991904,
+                  "slideIndex": 6,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.7805014842485015,
+                  "slideIndex": 6,
+                  "fragment": 2
+                },
+                {
+                  "time": 0.7974805201261256,
+                  "slideIndex": 6,
+                  "fragment": 3
+                },
+                {
+                  "time": 0.8257789890066186,
+                  "slideIndex": 7,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.8521820796523023,
+                  "slideIndex": 7,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.869215812572792,
+                  "slideIndex": 7,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.9664825583046899,
+                  "slideIndex": 8,
+                  "fragment": -1
+                }
+              ],
+              "projectorTimingUnit": "fraction",
+              "projectorDuration": 300,
+              "transcript": "1. Flux RAG avec Weaviate\nWelcome back!\n\n2. Retour en arrière…\nIn the last chapter, you successfully perform RAG by-hand: embedding a series of texts and a search query, performing a cosine distance calculation to determine their similarity, retrieving the most similar texts, and inserting them into a prompt for a generative model.\n\n3. À suivre !\nIn this chapter, we'll use Weaviate to embed and store our embeddings for a more scalable and efficient solution.\n\nAdditionally, we'll use Weaviate to orchestrate the RAG workflow using a higher-level syntax than that we've used up to this point.\n\nNow we have better tools at our disposal, we may as well upgrade the data, too!\n\n4. Des chaînes aux PDF\nNow, we'll embed and store PDF documents rather than simple strings.\n\nPDFs contain more diverse data structures, including headings, tables, and images. In this chapter, we'll focus on just the text content, but we'll include images in Chapter 3.\n\nWe'll use the docling library to convert the PDF files into markdown files, which contain raw text with additional character formatting for headers and tables.\n\nThis system will allow us to ask questions requiring a document or series of documents, and receive smart, informed responses from the generative model.\n\n5. Retour au « R » de RAG\nThe retrieval piece of the RAG workflow is the most nuanced, so we'll take a bit of time to discuss different strategies to search for and retrieve relevant documents.\n\n6. Recherche par vecteurs\nPreviously, we searched using vectors, embedding a search query like \"retrieval augmented generation\", and comparing its cosine distance to a series of embedded strings or documents to return the closest.\n\nVector search is \"smart\" in the sense that synonyms, typos, and alternative wordings should produce the same or similar documents. This makes it a great choice for messy user inputs.\n\n7. Recherche par mots-clés\nThere are also keyword searches, which use the frequency that search terms are used across documents to determine which are the most relevant.\n\nKeyword searches are often simpler and reward exact matches, but are much less flexible to messy user inputs as we saw before.\n\n8. Le meilleur des deux mondes : recherche hybride\nHowever, you can have the best of both worlds. A hybrid approach performs both searches simultaneously, and then weights the rankings based on a value, alpha.\n\nThis alpha value is essentially used to assign greater value to vector or keyword results.\n\nUltimately, the best approach is the one that gives the best results for your use case.\n\n9. Passons à la pratique !\nIn the exercises, you'll have the chance to experiment with all three. See you there!",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Flux RAG avec Weaviate",
+                  "text": "Welcome back!"
+                },
+                {
+                  "heading": "2. Retour en arrière…",
+                  "text": "In the last chapter, you successfully perform RAG by-hand: embedding a series of texts and a search query, performing a cosine distance calculation to determine their similarity, retrieving the most similar texts, and inserting them into a prompt for a generative model."
+                },
+                {
+                  "heading": "3. À suivre !",
+                  "text": "In this chapter, we'll use Weaviate to embed and store our embeddings for a more scalable and efficient solution.\n\nAdditionally, we'll use Weaviate to orchestrate the RAG workflow using a higher-level syntax than that we've used up to this point.\n\nNow we have better tools at our disposal, we may as well upgrade the data, too!"
+                },
+                {
+                  "heading": "4. Des chaînes aux PDF",
+                  "text": "Now, we'll embed and store PDF documents rather than simple strings.\n\nPDFs contain more diverse data structures, including headings, tables, and images. In this chapter, we'll focus on just the text content, but we'll include images in Chapter 3.\n\nWe'll use the docling library to convert the PDF files into markdown files, which contain raw text with additional character formatting for headers and tables.\n\nThis system will allow us to ask questions requiring a document or series of documents, and receive smart, informed responses from the generative model."
+                },
+                {
+                  "heading": "5. Retour au « R » de RAG",
+                  "text": "The retrieval piece of the RAG workflow is the most nuanced, so we'll take a bit of time to discuss different strategies to search for and retrieve relevant documents."
+                },
+                {
+                  "heading": "6. Recherche par vecteurs",
+                  "text": "Previously, we searched using vectors, embedding a search query like \"retrieval augmented generation\", and comparing its cosine distance to a series of embedded strings or documents to return the closest.\n\nVector search is \"smart\" in the sense that synonyms, typos, and alternative wordings should produce the same or similar documents. This makes it a great choice for messy user inputs."
+                },
+                {
+                  "heading": "7. Recherche par mots-clés",
+                  "text": "There are also keyword searches, which use the frequency that search terms are used across documents to determine which are the most relevant.\n\nKeyword searches are often simpler and reward exact matches, but are much less flexible to messy user inputs as we saw before."
+                },
+                {
+                  "heading": "8. Le meilleur des deux mondes : recherche hybride",
+                  "text": "However, you can have the best of both worlds. A hybrid approach performs both searches simultaneously, and then weights the rankings based on a value, alpha.\n\nThis alpha value is essentially used to assign greater value to vector or keyword results.\n\nUltimately, the best approach is the one that gives the best results for your use case."
+                },
+                {
+                  "heading": "9. Passons à la pratique !",
+                  "text": "In the exercises, you'll have the chance to experiment with all three. See you there!"
+                }
+              ]
+            },
+            {
+              "type": "download",
+              "id": "dc_ch02_slides",
+              "title": {
+                "en": "Chapter 2 slides",
+                "fr": "Chapter 2 slides"
+              },
+              "description": {
+                "en": "Official course slides provided in the local DataCamp package.",
+                "fr": "Official course slides provided in the local DataCamp package."
+              },
+              "url": "/api/assets/chapter_02_slides_5508eaa5.pdf",
+              "filename": "chapter_02_slides.pdf"
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act02",
+          "title": {
+            "en": "Extraction de texte PDF et découpage en segments",
+            "fr": "Extraction de texte PDF et découpage en segments"
+          },
+          "description": {
+            "en": "Même s’il est amusant de coder des workflows RAG à la main, vous pourriez passer à côté d’optimisations offertes par des outils comme Weaviate. Dans ce chapitre, vous allez générer des embeddings, stocker, récupérer et générer des réponses, le tout avec Weaviate !",
+            "fr": "Même s’il est amusant de coder des workflows RAG à la main, vous pourriez passer à côté d’optimisations offertes par des outils comme Weaviate. Dans ce chapitre, vous allez générer des embeddings, stocker, récupérer et générer des réponses, le tout avec Weaviate !"
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_2_act_02_tp",
+              "title": {
+                "en": "Extraction de texte PDF et découpage en segments",
+                "fr": "Extraction de texte PDF et découpage en segments"
+              },
+              "assignment": "",
+              "instructions": "Exécutez le code fourni pour traiter les documents PDF avec docling et les analyser en fichiers markdown.\n\nDéfinissez une fonction get_chunks_by_length_with_overlap() pour segmenter md_txt avec une longueur de segment de 500 caractères et un chevauchement de 100 caractères.\n\nDéfinissez une fonction get_chunks_using_markers() pour segmenter md_text_1 en le découpant sur les intertitres non titulaires (\"\\n##\").\n\nAppliquez la fonction get_chunks_using_markers() à md_text_2 et comparez les résultats avec md_text_1.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Exécutez le code fourni pour traiter les documents PDF avec docling et les analyser en fichiers markdown.",
+                "Définissez une fonction get_chunks_by_length_with_overlap() pour segmenter md_txt avec une longueur de segment de 500 caractères et un chevauchement de 100 caractères.",
+                "Définissez une fonction get_chunks_using_markers() pour segmenter md_text_1 en le découpant sur les intertitres non titulaires (\"\\n##\").",
+                "Appliquez la fonction get_chunks_using_markers() à md_text_2 et comparez les résultats avec md_text_1.",
+                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_02_slides_5508eaa5.pdf"
+                }
+              ],
+              "hint": "Vous pouvez utiliser la méthode de chaîne .split() pour découper une chaîne en fonction de l’occurrence d’un motif ou marqueur particulier.\n\nLorsque vous appelez get_chunks_using_markers(), utilisez les valeurs par défaut des arguments chunk_size et overlap.",
+              "solution": "# Install docling...\n\n## TASK 1\nfrom pathlib import Path\nfrom docling.document_converter import DocumentConverter\n\ndef parse_pdf(input_doc_path: Path, output_dir: Path):\n\n    md_filepath = output_dir / f\"{input_doc_path.stem}-parsed-text.md\"\n    \n    if md_filepath.exists():\n        return md_filepath\n    \n    doc_converter = DocumentConverter()\n    conv_res = doc_converter.convert(input_doc_path)\n\n    with md_filepath.open(\"w\", encoding=\"utf-8\") as md_file:\n        md_file.write(conv_res.document.export_to_markdown())\n    \n    return md_filepath\n\ndata_folder = Path(\"data/pdfs\")\noutput_dir = Path(\"data/parsed\")\noutput_dir.mkdir(parents=True, exist_ok=True)\n\ninput_pdf_name = \"howto-free-threading-python.pdf\"\ninput_doc_path = data_folder / input_pdf_name\nparse_pdf(input_doc_path, output_dir)\n\nmd_filepath = Path(\"data/parsed/howto-free-threading-python-parsed-text.md\")\nmd_txt = md_filepath.read_text()\nprint(md_txt[:2000])\n\n## TASK 2\ndef get_chunks_by_length_with_overlap(src_text: str, chunk_length: int = 500, overlap: int = 100) -> list[str]:\n    \"\"\"\n    Split text into chunks of approximately `chunk_length` characters.\n    \"\"\"\n    chunks = []\n    for i in range(0, len(src_text), chunk_length):\n        chunks.append(src_text[i:i + chunk_length + overlap])\n    return chunks\n  \nfrom IPython.display import display, Markdown\n\nchunks = get_chunks_by_length_with_overlap(md_txt)\ndisplay(Markdown(chunks[0]))\nprint(len(chunks[0]))\n\n## TASK 3\ndef get_chunks_using_markers(src_text: str) -> list[str]:\n    \"\"\"\n    Split the source text into chunks using markers.\n    \"\"\"\n    marker = \"\\n##\"\n\n    # Split by marker and reconstruct with markers (except first chunk)\n    parts = src_text.split(marker)\n    chunks = []\n\n    # Add first chunk if it exists and isn't empty\n    if parts[0].strip():\n        chunks.append(parts[0].strip())\n\n    # Add remaining chunks with markers reattached\n    for part in parts[1:]:\n        if part.strip():\n            chunks.append(marker + part.strip())\n\n    return chunks\n  \nmd_file_1 = Path(\"data/parsed/howto-free-threading-python-parsed-text.md\")\nmd_text_1 = md_file_1.read_text(encoding=\"utf-8\")\nchunks = get_chunks_using_markers(md_text_1)\n\nfor chunk in chunks[:5]:\n    print(\"\\n\\nChunk:\" + \"=\" * 10 + f\"\\n{chunk}\")\n\nmd_file_2 = Path(\"data/parsed/hai_ai-index-report-2025_chapter2_excerpts-parsed-text.md\")\nmd_text_2 = md_file_2.read_text(encoding=\"utf-8\")\nchunks = get_chunks_using_markers(md_text_2)\n\nfor chunk in chunks[:5]:\n    print(\"\\n\\nChunk:\" + \"=\" * 10 + f\"\\n{chunk}\")",
+              "successMessage": "Bravo ! À retenir : la meilleure façon de découper vos documents peut varier selon leur structure et leur contenu. Essayez d’abord d’identifier une logique de découpage évidente ; sinon, expérimentez plusieurs méthodes pour voir laquelle offre la meilleure performance.",
+              "xp": 100
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act03",
+          "title": {
+            "en": "Premiers pas avec Weaviate",
+            "fr": "Premiers pas avec Weaviate"
+          },
+          "description": {
+            "en": "Même s’il est amusant de coder des workflows RAG à la main, vous pourriez passer à côté d’optimisations offertes par des outils comme Weaviate. Dans ce chapitre, vous allez générer des embeddings, stocker, récupérer et générer des réponses, le tout avec Weaviate !",
+            "fr": "Même s’il est amusant de coder des workflows RAG à la main, vous pourriez passer à côté d’optimisations offertes par des outils comme Weaviate. Dans ce chapitre, vous allez générer des embeddings, stocker, récupérer et générer des réponses, le tout avec Weaviate !"
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_2_act_03_tp",
+              "title": {
+                "en": "Premiers pas avec Weaviate",
+                "fr": "Premiers pas avec Weaviate"
+              },
+              "assignment": "",
+              "instructions": "Exécutez le code pour charger le jeu de données weaviate/agents depuis Hugging Face et ne conserver que les 200 premières lignes.\n\nCréez un client Weaviate avec le module weaviate et la configuration fournie ; vérifiez son fonctionnement avec les méthodes du client .is_ready() et .get_meta().\n\nCréez une collection appelée \"Movies\", ajoutez une autre propriété TEXT appelée \"title\", et spécifiez un modèle d’embedding OpenAI avec la méthode .text2vec_openai().\n\nRécupérez la collection, puis complétez la boucle pour prétraiter chaque ligne et l’ajouter à la collection ; fermez la connexion du client.\n\nRemarque : si vous utilisez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Exécutez le code pour charger le jeu de données weaviate/agents depuis Hugging Face et ne conserver que les 200 premières lignes.",
+                "Créez un client Weaviate avec le module weaviate et la configuration fournie ; vérifiez son fonctionnement avec les méthodes du client .is_ready() et .get_meta().",
+                "Créez une collection appelée \"Movies\", ajoutez une autre propriété TEXT appelée \"title\", et spécifiez un modèle d’embedding OpenAI avec la méthode .text2vec_openai().",
+                "Récupérez la collection, puis complétez la boucle pour prétraiter chaque ligne et l’ajouter à la collection ; fermez la connexion du client.",
+                "Remarque : si vous utilisez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_02_slides_5508eaa5.pdf"
+                }
+              ],
+              "hint": "Pour créer un client Weaviate et définir une configuration d’embedding, appelez la fonction connect_to_embedded().\n\nUtilisez la fonction Property() pour en créer une appelée \"title\" avec le type de données DataType.TEXT.\n\nPour récupérer la collection, appelez client.collections.use() avec le nom de la collection.",
+              "solution": "# Install weaviate-client...\n\n## TASK 1\nfrom datasets import load_dataset\n\nmovies_dataset = load_dataset(\"weaviate/agents\", \"personalization-agent-movies\", split=\"train\")\n\nprint(f\"Dataset: {movies_dataset.config_name}\")\nfor o in movies_dataset[:2][\"properties\"]:\n    print(o)\n    \nmovies_data = movies_dataset[:1000][\"properties\"]\n\n## TASK 2\nimport weaviate\nfrom openai import OpenAI as OpenAIClient\n\nraw_client = OpenAIClient()\nAPI_KEY  = str(raw_client.api_key)\nAPI_BASE = str(raw_client.base_url)\n\nHEADERS = {\n    \"X-OpenAI-Api-Key\": API_KEY,\n    \"X-OpenAI-BaseURL\": API_BASE.rstrip(\"/\").removesuffix(\"/v1\"),\n}\n\ntry:\n    client = weaviate.connect_to_embedded(\n        version=\"1.32.3\",\n        headers=HEADERS,\n        environment_variables={\"LOG_LEVEL\": \"error\"},\n    )\nexcept weaviate.exceptions.WeaviateStartUpError:\n    # If already running, connect to it instead\n    client = weaviate.connect_to_local(\n        port=8079,\n        grpc_port=50050,\n        headers=HEADERS,\n    )\n\nclient.is_ready()\nclient.get_meta()[\"version\"]\n\n## TASK 3\nfrom weaviate.classes.config import Property, DataType, Configure\n\n# Delete \"Movies\" if it's already present to allow repeated runs\nif \"Movies\" in client.collections.list_all():\n    client.collections.delete(\"Movies\")\n\nclient.collections.create(\n    name=\"Movies\",\n    properties=[\n        Property(\n            name=\"title\",\n            data_type=DataType.TEXT,\n        ),\n        Property(\n            name=\"overview\",\n            data_type=DataType.TEXT,\n        ),\n        Property(\n            name=\"release_year\",\n            data_type=DataType.INT,\n        ),\n        Property(\n            name=\"popularity\",\n            data_type=DataType.NUMBER,\n        ),\n    ],\n    vector_config=[\n        Configure.Vectors.text2vec_openai(\n            name=\"default\",\n            source_properties=[\"title\", \"overview\"],\n            model=\"text-embedding-3-small\"\n        )\n    ]\n)\n\n## TASK 4\nmovies = client.collections.get(\"Movies\")\n\ndef preprocess_row(item: dict) -> dict:\n    obj = {\n        \"title\": item[\"title\"],\n        \"overview\": item[\"overview\"],\n        \"release_year\": item[\"release_date\"].year,\n        \"popularity\": item[\"popularity\"],\n    }\n    return obj\n\n\nfor i, item in enumerate(movies_data[:2]):\n    print(preprocess_row(item))\n\nfrom tqdm import tqdm\nfrom weaviate.util import generate_uuid5\n\nwith movies.batch.fixed_size(batch_size=100) as batch:\n    for item in tqdm(movies_data):\n        obj = preprocess_row(item)\n\n        # Add object to batch for import\n        batch.add_object(\n            properties=obj,\n            uuid=generate_uuid5(item[\"title\"]+item[\"overview\"])\n        )\n\nif movies.batch.failed_objects:\n    print(f\"{len(movies.batch.failed_objects)} objects failed during import:\")\n    for failed in movies.batch.failed_objects[:3]:\n        print(failed.message)\n\nprint(f\"Collection size: {len(movies)}\")\nclient.close()",
+              "successMessage": "Bravo ! Utiliser Weaviate va nous permettre d’exécuter du RAG rapidement et efficacement sur nos données, et avec très peu de code. Passons maintenant à la recherche et aux requêtes dans nos données avec Weaviate !",
+              "xp": 100
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act04",
+          "title": {
+            "en": "Requêtes dans Weaviate",
+            "fr": "Requêtes dans Weaviate"
+          },
+          "description": {
+            "en": "Même s’il est amusant de coder des workflows RAG à la main, vous pourriez passer à côté d’optimisations offertes par des outils comme Weaviate. Dans ce chapitre, vous allez générer des embeddings, stocker, récupérer et générer des réponses, le tout avec Weaviate !",
+            "fr": "Même s’il est amusant de coder des workflows RAG à la main, vous pourriez passer à côté d’optimisations offertes par des outils comme Weaviate. Dans ce chapitre, vous allez générer des embeddings, stocker, récupérer et générer des réponses, le tout avec Weaviate !"
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_2_act_04_tp",
+              "title": {
+                "en": "Requêtes dans Weaviate",
+                "fr": "Requêtes dans Weaviate"
+              },
+              "assignment": "",
+              "instructions": "Effectuez une recherche par mots-clés avec BM25, d’abord avec la requête \"space\", puis avec \"spaace\".\n\nEffectuez une recherche vectorielle sur ces deux mêmes requêtes et comparez les résultats.\n\nEffectuez une recherche hybride sur la requête \"space\" avec une valeur alpha de 0.5 et comparez avec les résultats des recherches par mots-clés et vectorielle.\n\nEffectuez une recherche vectorielle avec la requête \"science fiction\" en appliquant un filtre sur release_year supérieur à 2015.\n\nReprenez la même requête, mais avec deux filtres : release_year inférieur à 2015 et popularity supérieur à 100.\n\nRemarque : si vous utilisez DataLab en mode restreint (Restricted Mode), cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Effectuez une recherche par mots-clés avec BM25, d’abord avec la requête \"space\", puis avec \"spaace\".",
+                "Effectuez une recherche vectorielle sur ces deux mêmes requêtes et comparez les résultats.",
+                "Effectuez une recherche hybride sur la requête \"space\" avec une valeur alpha de 0.5 et comparez avec les résultats des recherches par mots-clés et vectorielle.",
+                "Effectuez une recherche vectorielle avec la requête \"science fiction\" en appliquant un filtre sur release_year supérieur à 2015.",
+                "Reprenez la même requête, mais avec deux filtres : release_year inférieur à 2015 et popularity supérieur à 100."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_02_slides_5508eaa5.pdf"
+                }
+              ],
+              "hint": "Vous devrez appeler trois méthodes de recherche sur la collection (movies) : .query.bm25(), .query.near_text() et .query.hybrid().\n\nChaque méthode de recherche accepte un argument optionnel filters, qui prend des filtres sous la forme : (  ).\n\nPour filtrer sur les valeurs de lignes dans des colonnes particulières, appelez la méthode Filter.by_property() sur le nom de la colonne, puis enchaînez-lui un opérateur avec la notation pointée : .greater_than().",
+              "solution": "# Install weaviate-client...\n\n## TASK 1\nimport weaviate\nfrom openai import OpenAI as OpenAIClient\n\nraw_client = OpenAIClient()\nAPI_KEY  = str(raw_client.api_key)\nAPI_BASE = str(raw_client.base_url)\n\nHEADERS = {\n    \"X-OpenAI-Api-Key\": API_KEY,\n    \"X-OpenAI-BaseURL\": API_BASE.rstrip(\"/\").removesuffix(\"/v1\"),\n}\n\ntry:\n    client = weaviate.connect_to_embedded(\n        version=\"1.32.3\",\n        headers=HEADERS,\n        environment_variables={\"LOG_LEVEL\": \"error\"},\n    )\nexcept weaviate.exceptions.WeaviateStartUpError:\n    # If already running, connect to it instead\n    client = weaviate.connect_to_local(\n        port=8079,\n        grpc_port=50050,\n        headers=HEADERS,\n    )\n\nmovies = client.collections.get(\"Movies\")\n\nresponse = movies.query.bm25(\n    query=\"space\",\n    limit=5,\n    query_properties=[\"title\"]\n)\n\nprint(len(response.objects), \"objects found\")\nfor o in response.objects:\n    print(f\"Title: {o.properties['title']}\")\n    print(f\"Release Year: {o.properties['release_year']}\")\n    print()\n\nresponse = movies.query.bm25(\n    query=\"spaace\",\n    limit=5,\n    query_properties=[\"title\"]\n)\n\nprint(len(response.objects), \"objects found\")\nfor o in response.objects:\n    print(f\"Title: {o.properties['title']}\")\n    print(f\"Release Year: {o.properties['release_year']}\")\n    print()\n\n## TASK 2\nresponse = movies.query.near_text(\n    query=\"space\",\n    limit=3,\n)\n\nprint(len(response.objects), \"objects found\")\nfor o in response.objects:\n    print(f\"Title: {o.properties['title']}\")\n    print(f\"Release Year: {o.properties['release_year']}\")\n    print()\n    \nresponse = movies.query.near_text(\n    query=\"spaace\",\n    limit=3,\n)\n\nprint(len(response.objects), \"objects found\")\nfor o in response.objects:\n    print(f\"Title: {o.properties['title']}\")\n    print(f\"Release Year: {o.properties['release_year']}\")\n    print()\n    \n## TASK 3\nresponse = movies.query.hybrid(\n    query=\"space\",\n    limit=3,\n    alpha=0.5  # Balance between keyword & vector search\n)\n\nprint(len(response.objects), \"objects found\")\nfor o in response.objects:\n    print(f\"Title: {o.properties['title']}\")\n    print(f\"Release Year: {o.properties['release_year']}\")\n    print()\n\n## TASK 4\nfrom weaviate.classes.query import Filter\n\nresponse = movies.query.near_text(\n    query=\"science fiction\",\n    limit=3,\n    filters=Filter.by_property(\"release_year\").greater_than(2015)\n)\n\nprint(len(response.objects), \"objects found\")\nfor o in response.objects:\n    print(f\"Title: {o.properties['title']}\")\n    print(f\"Release Year: {o.properties['release_year']}\")\n    print()\n\nresponse = movies.query.near_text(\n    query=\"science fiction\",\n    limit=3,\n    filters=(\n        Filter.by_property(\"release_year\").less_than(2015) &\n        Filter.by_property(\"popularity\").greater_than(100)\n    )\n)\n\nprint(len(response.objects), \"objects found\")\nfor o in response.objects:\n    print(f\"Title: {o.properties['title']}\")\n    print(f\"Release Year: {o.properties['release_year']}\")\n    print()\n    \nclient.close()",
+              "successMessage": "Excellentes recherches ! Maintenant que vous maîtrisez les stratégies de recherche RAG les plus courantes, il est temps de tout assembler et de construire un workflow RAG de bout en bout avec Weaviate !",
+              "xp": 100
+            }
+          ]
+        },
+        {
+          "id": "dc_ch02_act05",
+          "title": {
+            "en": "RAG de bout en bout",
+            "fr": "RAG de bout en bout"
+          },
+          "description": {
+            "en": "Même s’il est amusant de coder des workflows RAG à la main, vous pourriez passer à côté d’optimisations offertes par des outils comme Weaviate. Dans ce chapitre, vous allez générer des embeddings, stocker, récupérer et générer des réponses, le tout avec Weaviate !",
+            "fr": "Même s’il est amusant de coder des workflows RAG à la main, vous pourriez passer à côté d’optimisations offertes par des outils comme Weaviate. Dans ce chapitre, vous allez générer des embeddings, stocker, récupérer et générer des réponses, le tout avec Weaviate !"
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_2_act_05_tp",
+              "title": {
+                "en": "RAG de bout en bout",
+                "fr": "RAG de bout en bout"
+              },
+              "assignment": "",
+              "instructions": "Configurez la collection pour utiliser le modèle text-embedding-3-small pour les embeddings et le modèle génératif gpt-4o-mini.\n\nExécutez le code fourni pour découper le PDF parsé et insérer les segments dans la collection.\n\nRéalisez une recherche hybride en utilisant les variables query et task fournies.\n\nDéfinissez une fonction task_to_query() pour générer une requête à partir d’une tâche, puis utilisez-la pour effectuer une recherche vectorielle avec la variable task fournie.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Configurez la collection pour utiliser le modèle text-embedding-3-small pour les embeddings et le modèle génératif gpt-4o-mini.",
+                "Exécutez le code fourni pour découper le PDF parsé et insérer les segments dans la collection.",
+                "Réalisez une recherche hybride en utilisant les variables query et task fournies.",
+                "Définissez une fonction task_to_query() pour générer une requête à partir d’une tâche, puis utilisez-la pour effectuer une recherche vectorielle avec la variable task fournie.",
+                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_02_slides_5508eaa5.pdf"
+                }
+              ],
+              "hint": "Le modèle dans Configure.Vectors.text2vec_openai() doit être text-embedding-3-small et gpt-4o-mini pour Configure.Generative.openai().\n\nVous pouvez effectuer une recherche hybride en appelant .query.hybrid() sur la variable de collection, chunks.\n\nPour la recherche vectorielle, l’argument grouped_task doit être défini sur task, et l’argument query doit être défini sur task_to_query(task).",
+              "solution": "# Install weaviate-client...\n\nimport weaviate\nfrom openai import OpenAI as OpenAIClient\n\nraw_client = OpenAIClient()\nAPI_KEY  = str(raw_client.api_key)\nAPI_BASE = str(raw_client.base_url)\n\nHEADERS = {\n    \"X-OpenAI-Api-Key\": API_KEY,\n    \"X-OpenAI-BaseURL\": API_BASE.rstrip(\"/\").removesuffix(\"/v1\"),\n}\n\ntry:\n    client = weaviate.connect_to_embedded(\n        version=\"1.32.3\",\n        headers=HEADERS,\n        environment_variables={\"LOG_LEVEL\": \"error\"},\n    )\nexcept weaviate.exceptions.WeaviateStartUpError:\n    # If already running, connect to it instead\n    client = weaviate.connect_to_local(\n        port=8079,\n        grpc_port=50050,\n        headers=HEADERS,\n    )\n\nfrom weaviate.classes.config import Property, DataType, Configure, Tokenization\n\n# Delete \"Chunks\" if it's already present to allow repeated runs\nif \"Chunks\" in client.collections.list_all():\n    client.collections.delete(\"Chunks\")\n\nclient.collections.create(\n    name=\"Chunks\",\n    properties=[\n        Property(\n            name=\"document_title\",\n            data_type=DataType.TEXT,\n        ),\n        Property(\n            name=\"chunk\",\n            data_type=DataType.TEXT,\n        ),\n        Property(\n            name=\"chunk_number\",\n            data_type=DataType.INT,\n        ),\n        Property(\n            name=\"filename\",\n            data_type=DataType.TEXT,\n            tokenization=Tokenization.FIELD\n        ),\n    ],\n    vector_config=[\n        Configure.Vectors.text2vec_openai(\n            name=\"default\",\n            source_properties=[\"document_title\", \"chunk\"],\n            model=\"text-embedding-3-small\"\n        )\n    ],\n    generative_config=Configure.Generative.openai(\n        model=\"gpt-4o-mini\"\n    )\n)\n\n## TASK 1\ndef get_chunks_by_length_with_overlap(src_text: str, chunk_length: int = 500, overlap: int = 100) -> list[str]:\n    \"\"\"\n    Split text into chunks of approximately `chunk_length` characters.\n    \"\"\"\n    chunks = []\n    for i in range(0, len(src_text), chunk_length):\n        chunks.append(src_text[i:i + chunk_length + overlap])\n    return chunks\n\nfrom pathlib import Path\n\nfilepath = Path(\"data/parsed/hai_ai-index-report-2025_chapter2_final-parsed-text.md\")\nraw_text = filepath.read_text(encoding=\"utf-8\")\nchunk_texts = get_chunks_by_length_with_overlap(raw_text)\nprint(f\"Number of chunks: {len(chunk_texts)}\")\n\nchunks = client.collections.get(\"Chunks\")\n\n## TASK 2\nfrom tqdm import tqdm\nfrom weaviate.util import generate_uuid5\n\nwith chunks.batch.fixed_size(batch_size=100) as batch:\n    for i, chunk in tqdm(enumerate(chunk_texts)):\n        obj = {\n            \"document_title\": \"HAI AI Index Report 2025 - Chapter 2\",\n            \"filename\": filepath.name,\n            \"chunk\": chunk,\n            \"chunk_number\": i + 1,\n        }\n\n        # Add object to batch for import\n        batch.add_object(\n            properties=obj,\n            uuid=generate_uuid5(obj),\n        )\n\n# Check for any failed objects during import\nif chunks.batch.failed_objects:\n    print(f\"{len(chunks.batch.failed_objects)} objects failed during import:\")\n    for failed in chunks.batch.failed_objects[:3]:\n        print(failed.message)\n        \nprint(f\"Collection size: {len(chunks)}\")\n\n## TASK 3\nimport textwrap\n\nquery = \"latest developments in retrieval augmented generation (RAG)\"\n\nprint(f\"===== {query} =====\")\nresponse = chunks.query.hybrid(\n    query=query,\n    limit=5\n)\n\nfor i, o in enumerate(response.objects):\n    print(textwrap.indent(f\"> Result {i + 1}:\", \"  \"))\n    wrapped_text = textwrap.fill(o.properties['chunk'][:200]+\"...\", width=80)\n    print(textwrap.indent(wrapped_text, \"    \"))\n    print()\n    \nimport textwrap\n\nquery = \"latest developments in retrieval augmented generation (RAG)\"\ntask = \"what developments have there been in RAG recently?\"\n\nresponse = chunks.generate.hybrid(\n    query=query,\n    limit=5,\n    grouped_task=task\n)\n\nprint(f\"RAG response: \\n{response.generative.text}.\")\n\nprint(f\"\\nSupporting passages:\")\nfor i, o in enumerate(response.objects):\n    print(textwrap.indent(f\"> Result {i + 1}:\", \"  \"))\n    wrapped_text = textwrap.fill(o.properties['chunk'][:200]+\"...\", width=80)\n    print(textwrap.indent(wrapped_text, \"    \"))\n    print()\n\n## TASK 4\ndef task_to_query(task: str) -> str:\n    from openai import OpenAI\n    client = OpenAI()\n    \"\"\"\n    Convert a task to a search query for Weaviate.\n    \"\"\"\n    response = client.chat.completions.create(\n        model=\"gpt-4o-mini\",\n        messages=[\n            {\n                \"role\": \"user\",\n                \"content\": f\"\"\"\n                    Provide the answer only and nothing else at all.\n                    To perform the below task, what search query should I use on\n                    a vector database like Weaviate to find relevant information?\n\n                    Task: {task}\n                \"\"\",\n            }\n        ],\n    )\n    return response.choices[0].message.content.strip()\n\ntask = \"what developments have there been in RAG recently?\"\nquery = task_to_query(task)\nprint(f\"Task to query: \\nTask '{task}': \\nQuery: '{query}'\")\n\nresponse = chunks.generate.near_text(\n    query=query,  # Generated query from the RAG task\n    limit=3,\n    grouped_task=task  # RAG task - user input\n)\n\nprint(f\"RAG response: \\n{response.generative.text}.\")\n\nclient.close()",
+              "successMessage": "Bravo ! Vous avez réussi à parser, segmenter et stocker un PDF pour l’interroger avec Weaviate. Vous avez ensuite orchestré un flux de travail permettant d’utiliser une requête pour récupérer les segments les plus pertinents et générer une réponse étayée !",
+              "xp": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "datacamp_ch03",
+      "title": {
+        "en": "RAG multimodal",
+        "fr": "RAG multimodal"
+      },
+      "description": {
+        "en": "Dans le chapitre précédent, vous avez utilisé le contenu textuel des PDF pour construire vos segments de document, mais laissé de côté le contenu image. Cela fait perdre beaucoup de contexte potentiellement utile pour la récupération et la génération ! Dans ce chapitre, vous utiliserez les modèles multimodaux ColPali pour créer des embeddings et générer du texte et des images afin d’apporter davantage de contexte aux réponses de votre modèle.",
+        "fr": "Dans le chapitre précédent, vous avez utilisé le contenu textuel des PDF pour construire vos segments de document, mais laissé de côté le contenu image. Cela fait perdre beaucoup de contexte potentiellement utile pour la récupération et la génération ! Dans ce chapitre, vous utiliserez les modèles multimodaux ColPali pour créer des embeddings et générer du texte et des images afin d’apporter davantage de contexte aux réponses de votre modèle."
+      },
+      "competencyTags": [
+        "rag_knowledge"
+      ],
+      "recommendedVideos": [],
+      "recommendedVideosManaged": false,
+      "chapters": [
+        {
+          "id": "dc_ch03_act01",
+          "title": {
+            "en": "RAG avec texte et images",
+            "fr": "RAG avec texte et images"
+          },
+          "description": {
+            "en": "Dans le chapitre précédent, vous avez utilisé le contenu textuel des PDF pour construire vos segments de document, mais laissé de côté le contenu image. Cela fait perdre beaucoup de contexte potentiellement utile pour la récupération et la génération ! Dans ce chapitre, vous utiliserez les modèles multimodaux ColPali pour créer des embeddings et générer du texte et des images afin d’apporter davantage de contexte aux réponses de votre modèle.",
+            "fr": "Dans le chapitre précédent, vous avez utilisé le contenu textuel des PDF pour construire vos segments de document, mais laissé de côté le contenu image. Cela fait perdre beaucoup de contexte potentiellement utile pour la récupération et la génération ! Dans ce chapitre, vous utiliserez les modèles multimodaux ColPali pour créer des embeddings et générer du texte et des images afin d’apporter davantage de contexte aux réponses de votre modèle."
+          },
+          "type": "teaching",
+          "sourceActivityType": "VideoExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_3_act_01_video",
+              "title": {
+                "en": "RAG avec texte et images",
+                "fr": "RAG avec texte et images"
+              },
+              "mp4Url": "/api/assets/ch03_ex01_rag_avec_texte_et_images_f61a5d31.mp4",
+              "audioUrl": "/api/assets/ch03_ex01_rag_avec_texte_et_images_f4436dc4.mp3",
+              "subtitleUrlFr": "/api/assets/ch03_ex01_rag_avec_texte_et_images_fr_2a78560f.vtt",
+              "subtitleUrlEn": "/api/assets/ch03_ex01_rag_avec_texte_et_images_en_976119e8.vtt",
+              "slidesPdf": "/api/assets/chapter_03_slides_a6c75158.pdf",
+              "projectorSlides": [
+                {
+                  "number": 1,
+                  "title": "RAG avec texte et images",
+                  "type": "TitleSlide",
+                  "script": "Congrats on making it to the final chapter of the course - we've left the best until last!\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": "",
+                  "instructorName": "JP Hwang",
+                  "instructorTitle": "Senior Developer Educator, Weaviate",
+                  "technology": "python"
+                },
+                {
+                  "number": 2,
+                  "title": "Et les images ?",
+                  "type": "TwoColumns",
+                  "script": "In the PDF documents we're processed so far, we've essentially ignored the image content.\n\nDocling converts any images into an image placeholder, which can be useful, but all of the context captured in the image has been lost.\n\nIn this video and the coming exercises, we'll treat each PDF page as an image, rather than breaking them into the sub-components of text and images.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n* Images après docling : `<!-- image -->`\n* Contexte d'image perdu\n\n&nbsp;\n\n* **Nouvelle approche** : traiter tout le document comme une image",
+                  "contentLeft": "&nbsp;\n\n* Images après docling : `<!-- image -->`\n* Contexte d'image perdu\n\n&nbsp;\n\n* **Nouvelle approche** : traiter tout le document comme une image",
+                  "contentRight": ""
+                },
+                {
+                  "number": 3,
+                  "title": "RAG avec images",
+                  "type": "FullSlide",
+                  "script": "The pipeline for performing RAG with images is virtually the same as a text-only RAG system. The only difference is that a multi-modal embedding model is required to embed both the text query and the image documents.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 4,
+                  "title": "Modèles d'embedding multimodaux",
+                  "type": "FullSlide",
+                  "script": "This model, in essence, is able to embed text and images into shared representations, so an embedded image of a cat and an embedded version of the story  \"The Cat in the Hat\" should appear next to one another in the vector-space.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 5,
+                  "title": "Encodage des images",
+                  "type": "FullSlide",
+                  "script": "We'll be using a ColPali model to do this.\n\nColPali breaks images up into patches and turns each patch into a vector using a vision–language model, or VLM.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 6,
+                  "title": "Encodage des images",
+                  "type": "FullSlide",
+                  "script": "A text query is also broken into smaller pieces called tokens, and each token is turned into a vector in the same space. To find the best match,\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 7,
+                  "title": "Encodage des images",
+                  "type": "FullSlide",
+                  "script": "the model compares every text token with the image patches, takes the best matches, and adds them up. The image whose patches align best with the query tokens is retrieved.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 8,
+                  "title": "Augmenter et générer avec des images",
+                  "type": "FullSlide",
+                  "script": "To use this retrieved context for generation, we need a multi-modal generative model that accepts both text and image inputs.\n\nWe'll be using a GPT model from OpenAI for this. This multi-modal generative model requires a prompt that integrates both the user input text and retrieved document image.\n\n",
+                  "images": [
+                    {
+                      "alt": "Invite multimodale",
+                      "url": "/api/assets/ch03_ex01_rag_avec_texte_et_images_026_multi_modal_prompt_86d39f27.png"
+                    }
+                  ],
+                  "content": "&nbsp;",
+                  "contentLeft": "&nbsp;",
+                  "contentRight": ""
+                },
+                {
+                  "number": 9,
+                  "title": "Passons à la pratique !",
+                  "type": "FinalSlide",
+                  "script": "Now it's time for you to try this out yourself!\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                }
+              ],
+              "projectorTimings": [
+                {
+                  "time": 0,
+                  "slideIndex": 0,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.006392197300893367,
+                  "slideIndex": 0,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.05435583539251093,
+                  "slideIndex": 1,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.07960504656909333,
+                  "slideIndex": 1,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.14018793005132105,
+                  "slideIndex": 1,
+                  "fragment": 1
+                },
+                {
+                  "time": 0.19178519292910093,
+                  "slideIndex": 1,
+                  "fragment": 2
+                },
+                {
+                  "time": 0.25994598935563584,
+                  "slideIndex": 2,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.3823919026800988,
+                  "slideIndex": 3,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.499179405056073,
+                  "slideIndex": 4,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.5965220775517962,
+                  "slideIndex": 5,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.6798312963314959,
+                  "slideIndex": 6,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.7836372457707661,
+                  "slideIndex": 7,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.9738770100741304,
+                  "slideIndex": 8,
+                  "fragment": -1
+                }
+              ],
+              "projectorTimingUnit": "fraction",
+              "projectorDuration": 300,
+              "transcript": "1. RAG avec texte et images\nCongrats on making it to the final chapter of the course - we've left the best until last!\n\n2. Et les images ?\nIn the PDF documents we're processed so far, we've essentially ignored the image content.\n\nDocling converts any images into an image placeholder, which can be useful, but all of the context captured in the image has been lost.\n\nIn this video and the coming exercises, we'll treat each PDF page as an image, rather than breaking them into the sub-components of text and images.\n\n3. RAG avec images\nThe pipeline for performing RAG with images is virtually the same as a text-only RAG system. The only difference is that a multi-modal embedding model is required to embed both the text query and the image documents.\n\n4. Modèles d'embedding multimodaux\nThis model, in essence, is able to embed text and images into shared representations, so an embedded image of a cat and an embedded version of the story  \"The Cat in the Hat\" should appear next to one another in the vector-space.\n\n5. Encodage des images\nWe'll be using a ColPali model to do this.\n\nColPali breaks images up into patches and turns each patch into a vector using a vision–language model, or VLM.\n\n6. Encodage des images\nA text query is also broken into smaller pieces called tokens, and each token is turned into a vector in the same space. To find the best match,\n\n7. Encodage des images\nthe model compares every text token with the image patches, takes the best matches, and adds them up. The image whose patches align best with the query tokens is retrieved.\n\n8. Augmenter et générer avec des images\nTo use this retrieved context for generation, we need a multi-modal generative model that accepts both text and image inputs.\n\nWe'll be using a GPT model from OpenAI for this. This multi-modal generative model requires a prompt that integrates both the user input text and retrieved document image.\n\n9. Passons à la pratique !\nNow it's time for you to try this out yourself!",
+              "transcriptSegments": [
+                {
+                  "heading": "1. RAG avec texte et images",
+                  "text": "Congrats on making it to the final chapter of the course - we've left the best until last!"
+                },
+                {
+                  "heading": "2. Et les images ?",
+                  "text": "In the PDF documents we're processed so far, we've essentially ignored the image content.\n\nDocling converts any images into an image placeholder, which can be useful, but all of the context captured in the image has been lost.\n\nIn this video and the coming exercises, we'll treat each PDF page as an image, rather than breaking them into the sub-components of text and images."
+                },
+                {
+                  "heading": "3. RAG avec images",
+                  "text": "The pipeline for performing RAG with images is virtually the same as a text-only RAG system. The only difference is that a multi-modal embedding model is required to embed both the text query and the image documents."
+                },
+                {
+                  "heading": "4. Modèles d'embedding multimodaux",
+                  "text": "This model, in essence, is able to embed text and images into shared representations, so an embedded image of a cat and an embedded version of the story  \"The Cat in the Hat\" should appear next to one another in the vector-space."
+                },
+                {
+                  "heading": "5. Encodage des images",
+                  "text": "We'll be using a ColPali model to do this.\n\nColPali breaks images up into patches and turns each patch into a vector using a vision–language model, or VLM."
+                },
+                {
+                  "heading": "6. Encodage des images",
+                  "text": "A text query is also broken into smaller pieces called tokens, and each token is turned into a vector in the same space. To find the best match,"
+                },
+                {
+                  "heading": "7. Encodage des images",
+                  "text": "the model compares every text token with the image patches, takes the best matches, and adds them up. The image whose patches align best with the query tokens is retrieved."
+                },
+                {
+                  "heading": "8. Augmenter et générer avec des images",
+                  "text": "To use this retrieved context for generation, we need a multi-modal generative model that accepts both text and image inputs.\n\nWe'll be using a GPT model from OpenAI for this. This multi-modal generative model requires a prompt that integrates both the user input text and retrieved document image."
+                },
+                {
+                  "heading": "9. Passons à la pratique !",
+                  "text": "Now it's time for you to try this out yourself!"
+                }
+              ]
+            },
+            {
+              "type": "download",
+              "id": "dc_ch03_slides",
+              "title": {
+                "en": "Chapter 3 slides",
+                "fr": "Chapter 3 slides"
+              },
+              "description": {
+                "en": "Official course slides provided in the local DataCamp package.",
+                "fr": "Official course slides provided in the local DataCamp package."
+              },
+              "url": "/api/assets/chapter_03_slides_a6c75158.pdf",
+              "filename": "chapter_03_slides.pdf"
+            }
+          ]
+        },
+        {
+          "id": "dc_ch03_act02",
+          "title": {
+            "en": "Préparer le RAG multimodal",
+            "fr": "Préparer le RAG multimodal"
+          },
+          "description": {
+            "en": "Dans le chapitre précédent, vous avez utilisé le contenu textuel des PDF pour construire vos segments de document, mais laissé de côté le contenu image. Cela fait perdre beaucoup de contexte potentiellement utile pour la récupération et la génération ! Dans ce chapitre, vous utiliserez les modèles multimodaux ColPali pour créer des embeddings et générer du texte et des images afin d’apporter davantage de contexte aux réponses de votre modèle.",
+            "fr": "Dans le chapitre précédent, vous avez utilisé le contenu textuel des PDF pour construire vos segments de document, mais laissé de côté le contenu image. Cela fait perdre beaucoup de contexte potentiellement utile pour la récupération et la génération ! Dans ce chapitre, vous utiliserez les modèles multimodaux ColPali pour créer des embeddings et générer du texte et des images afin d’apporter davantage de contexte aux réponses de votre modèle."
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_3_act_02_tp",
+              "title": {
+                "en": "Préparer le RAG multimodal",
+                "fr": "Préparer le RAG multimodal"
+              },
+              "assignment": "",
+              "instructions": "Instanciez le modèle et le processeur associé pour calculer les embeddings texte et image.\n\nPrétraitez les entrées d’images et générez les embeddings image à l’aide du model et du processor que vous avez définis.\n\nCréez et utilisez une collection appelée \"Pages\" pour stocker les pages PDF et leurs embeddings.\n\nAjoutez les embeddings image à la collection \"Pages\" et fermez la connexion.\n\nRemarque : Si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Instanciez le modèle et le processeur associé pour calculer les embeddings texte et image.",
+                "Prétraitez les entrées d’images et générez les embeddings image à l’aide du model et du processor que vous avez définis.",
+                "Créez et utilisez une collection appelée \"Pages\" pour stocker les pages PDF et leurs embeddings.",
+                "Ajoutez les embeddings image à la collection \"Pages\" et fermez la connexion.",
+                "Remarque : Si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_03_slides_a6c75158.pdf"
+                }
+              ],
+              "hint": "L’appel de la méthode .from_pretrained() sur les classes ColIdefics3 et ColIdefics3Processor permet de charger le modèle et le processeur, en spécifiant l’ID de modèle \"vidore/colSmol-256M\".\n\nPour prétraiter les entrées d’images, appelez la méthode .process_images() sur le processeur en lui passant images ; de même, passez **batch_images à model() pour générer les embeddings.\n\nCréez une collection Weaviate avec client.collections.create(), puis utilisez-la en appelant client.collections.use() et en affectant le résultat à pages.\n\nAffectez la variable d’itération embedding à la clé \"default\" du champ vector.",
+              "solution": "# Install the necessary libraries...\n\n\n## TASK 1\nimport os\nimport torch\nfrom colpali_engine.models import ColIdefics3, ColIdefics3Processor\n\nos.environ[\"CUDA_VISIBLE_DEVICES\"] = \"-1\"\nos.environ[\"TF_CPP_MIN_LOG_LEVEL\"] = \"3\"\n\nmodel = ColIdefics3.from_pretrained(\n    \"vidore/colSmol-256M\",\n    torch_dtype=torch.float32,  # use float32 for CPU\n    device_map=\"cpu\"            # explicitly use CPU\n).eval()\n\nprocessor = ColIdefics3Processor.from_pretrained(\n    \"vidore/colSmol-256M\"\n)\n\nprocessor.image_processor.token_pooling = True\nprocessor.image_processor.size = {\"longest_edge\": 224}\n\n## TASK 2\nimage_embeddings_list = []\nfor image_path in image_paths:\n    images = [Image.open(image_path)]\n\n    # 🧪 Preprocess inputs\n    batch_images = processor.process_images(images).to(\"cpu\")\n\n    # ⚡ Inference\n    with torch.no_grad():\n        image_embeddings = model(**batch_images)\n    image_embeddings_list.append(image_embeddings[0])\n\nall_embeddings = torch.stack(image_embeddings_list)\nprint(all_embeddings.size())\nprint(all_embeddings[0][0][:3])\n\n## TASK 3\nimport weaviate\nimport os\n\nclient = weaviate.connect_to_embedded(\n    version=\"1.32.3\",\n    headers={\n        \"X-OpenAI-Api-Key\": os.getenv(\"OPENAI_API_KEY\"),\n    },\n    environment_variables={\"LOG_LEVEL\": \"error\"}  # Reduce amount of logs\n)\n\nfrom weaviate.classes.config import Property, DataType, Configure\n\n# Delete \"Pages\" if it's already present to allow repeated runs\nif \"Pages\" in client.collections.list_all():\n    client.collections.delete(\"Pages\")\n\nclient.collections.create(\n    name=\"Pages\",\n    properties=[\n        Property(\n            name=\"document_title\",\n            data_type=DataType.TEXT,\n        ),\n        Property(\n            name=\"page_image\",\n            data_type=DataType.BLOB,\n        ),\n        Property(\n            name=\"filename\",\n            data_type=DataType.TEXT,\n        ),\n    ],\n    vector_config=[\n        Configure.MultiVectors.self_provided(name=\"default\")\n    ]\n)\n\npages = client.collections.use(\"Pages\")\n\nimport numpy as np\nimport json\n\nwith open(\"data/embeddings/embeddings_metadata.json\", \"r\") as f:\n    metadata = json.load(f)\n\nembeddings = np.load(\"data/embeddings/image_embeddings.npy\")\nprint(embeddings.shape)\nprint(embeddings[0][0][:3])\n\n## TASK 4\nfrom tqdm import tqdm\nfrom pathlib import Path\nimport base64\nfrom weaviate.util import generate_uuid5\n\nwith pages.batch.fixed_size(batch_size=100) as batch:\n    for i, embedding in tqdm(enumerate(embeddings)):\n        filepath = Path(metadata[\"image_paths\"][i])\n        image = filepath.read_bytes()\n        base64_image = base64.b64encode(image).decode('utf-8')\n        obj = {\n            \"document_title\": \"Stanford AI Index Report 2025\",\n            \"page_image\": base64_image,\n            \"filename\": filepath.name\n        }\n\n        # Add object to batch for import with (batch.add_object())\n        # This time, manually provide the vector with `{\"default\": embedding}`\n        batch.add_object(\n            properties=obj,\n            uuid=generate_uuid5(str(filepath)),\n            vector={\"default\": embedding}\n        )\n\nclient.close()",
+              "successMessage": "Bravo ! Maintenant que vos images sont intégrées et stockées, vous êtes prêt à démarrer votre flux RAG multimodal dans les derniers exercices du cours. Vous pouvez le faire !",
+              "xp": 100
+            }
+          ]
+        },
+        {
+          "id": "dc_ch03_act03",
+          "title": {
+            "en": "RAG multi-modal avec Weaviate",
+            "fr": "RAG multi-modal avec Weaviate"
+          },
+          "description": {
+            "en": "Dans le chapitre précédent, vous avez utilisé le contenu textuel des PDF pour construire vos segments de document, mais laissé de côté le contenu image. Cela fait perdre beaucoup de contexte potentiellement utile pour la récupération et la génération ! Dans ce chapitre, vous utiliserez les modèles multimodaux ColPali pour créer des embeddings et générer du texte et des images afin d’apporter davantage de contexte aux réponses de votre modèle.",
+            "fr": "Dans le chapitre précédent, vous avez utilisé le contenu textuel des PDF pour construire vos segments de document, mais laissé de côté le contenu image. Cela fait perdre beaucoup de contexte potentiellement utile pour la récupération et la génération ! Dans ce chapitre, vous utiliserez les modèles multimodaux ColPali pour créer des embeddings et générer du texte et des images afin d’apporter davantage de contexte aux réponses de votre modèle."
+          },
+          "type": "exercise",
+          "sourceActivityType": "DatalabExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "cloud_exercise",
+              "id": "dc_3_act_03_tp",
+              "title": {
+                "en": "RAG multi-modal avec Weaviate",
+                "fr": "RAG multi-modal avec Weaviate"
+              },
+              "assignment": "",
+              "instructions": "Instanciez le modèle ColIdefics3 ainsi que le processeur associé et générez l’embedding de la requête fournie (query).\n\nUtilisez query_embedding pour interroger la collection pages via une recherche vectorielle et renvoyer les 3 meilleures images de page.\n\nCréez une invite multi-modale en utilisant la propriété d’image \"page_image\", puis utilisez-la avec query_embedding pour interroger la collection pages.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
+              "environmentGuide": {
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+              },
+              "steps": [
+                "Instanciez le modèle ColIdefics3 ainsi que le processeur associé et générez l’embedding de la requête fournie (query).",
+                "Utilisez query_embedding pour interroger la collection pages via une recherche vectorielle et renvoyer les 3 meilleures images de page.",
+                "Créez une invite multi-modale en utilisant la propriété d’image \"page_image\", puis utilisez-la avec query_embedding pour interroger la collection pages.",
+                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
+              ],
+              "resources": [
+                {
+                  "title": {
+                    "en": "Chapter slides (PDF)",
+                    "fr": "Chapter slides (PDF)"
+                  },
+                  "description": {
+                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
+                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
+                  },
+                  "url": "/api/assets/chapter_03_slides_a6c75158.pdf"
+                }
+              ],
+              "hint": "Pour créer batch_queries, appelez .process_queries() sur le processeur en lui passant une liste contenant query.\n\nVous devez décompacter batch_queries à l’intérieur de model() à l’aide de **.\n\nLa méthode GenerativeParameters.grouped_task() peut être utilisée pour créer le mode multi-modal en utilisant les arguments prompt et image_properties.\n\nUtilisez pages.query.near_vector() pour effectuer une recherche vectorielle dans la collection pages.",
+              "solution": "# Install the necessary libraries and re-create the collection and embeddings...\n\n## TASK 1\nimport os\nimport torch\nfrom colpali_engine.models import ColIdefics3, ColIdefics3Processor\n\nos.environ[\"CUDA_VISIBLE_DEVICES\"] = \"-1\"\nos.environ[\"TF_CPP_MIN_LOG_LEVEL\"] = \"3\"\n\nmodel = ColIdefics3.from_pretrained(\n    \"vidore/colSmol-256M\",\n    torch_dtype=torch.float32,  # use float32 for CPU\n    device_map=\"cpu\",           # explicitly use CPU\n).eval()\n\nprocessor = ColIdefics3Processor.from_pretrained(\n    \"vidore/colSmol-256M\",\n)\n\nprocessor.image_processor.token_pooling = True\nprocessor.image_processor.size = {\"longest_edge\": 224}\n\nquery = \"self-driving cars\"\nbatch_queries = processor.process_queries([query]).to(\"cpu\")\n\nwith torch.no_grad():\n    query_embeddings = model(**batch_queries)\nquery_embedding = query_embeddings[0].to(\"cpu\").tolist()\n\n## TASK 2\nresponse = pages.query.near_vector(\n    near_vector=query_embedding,\n    limit=3,\n)\n\nfor o in response.objects:\n    print(f\"Filename: {o.properties['filename']}\")\n\n## TASK 3\nfrom weaviate.classes.generate import GenerativeConfig, GenerativeParameters\n\nprompt = GenerativeParameters.grouped_task(\n    prompt=\"What advances have there been in self-driving cars?\",\n    image_properties=[\"page_image\"],  # Property containing images in Weaviate\n)\n\n# We use pages.generate() here to generate a response based on the retrieved pages\nresponse = pages.generate.near_vector(\n    near_vector=query_embedding,\n    limit=3,\n    # These parameters are used to define the RAG task & model\n    grouped_task=prompt,\n    generative_provider=GenerativeConfig.openai(model=\"gpt-4o-mini\",)\n)\n\nprint(response.generative.text)\n\nclient.close()",
+              "successMessage": "Bravo ! Vous êtes arrivé à la fin du cours. Récapitulons tout ce que vous avez appris et voyons comment poursuivre votre progression.",
+              "xp": 100
+            }
+          ]
+        },
+        {
+          "id": "dc_ch03_act04",
+          "title": {
+            "en": "Félicitations !",
+            "fr": "Félicitations !"
+          },
+          "description": {
+            "en": "Dans le chapitre précédent, vous avez utilisé le contenu textuel des PDF pour construire vos segments de document, mais laissé de côté le contenu image. Cela fait perdre beaucoup de contexte potentiellement utile pour la récupération et la génération ! Dans ce chapitre, vous utiliserez les modèles multimodaux ColPali pour créer des embeddings et générer du texte et des images afin d’apporter davantage de contexte aux réponses de votre modèle.",
+            "fr": "Dans le chapitre précédent, vous avez utilisé le contenu textuel des PDF pour construire vos segments de document, mais laissé de côté le contenu image. Cela fait perdre beaucoup de contexte potentiellement utile pour la récupération et la génération ! Dans ce chapitre, vous utiliserez les modèles multimodaux ColPali pour créer des embeddings et générer du texte et des images afin d’apporter davantage de contexte aux réponses de votre modèle."
+          },
+          "type": "teaching",
+          "sourceActivityType": "VideoExercise",
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "video",
+              "id": "dc_3_act_04_video",
+              "title": {
+                "en": "Félicitations !",
+                "fr": "Félicitations !"
+              },
+              "mp4Url": "/api/assets/ch03_ex04_f_licitations_c0dea581.mp4",
+              "audioUrl": "/api/assets/ch03_ex04_f_licitations_874b78f7.mp3",
+              "subtitleUrlFr": "/api/assets/ch03_ex04_f_licitations_fr_762a8120.vtt",
+              "subtitleUrlEn": "/api/assets/ch03_ex04_f_licitations_en_0a3ae07d.vtt",
+              "slidesPdf": "/api/assets/chapter_03_slides_a6c75158.pdf",
+              "projectorSlides": [
+                {
+                  "number": 1,
+                  "title": "Félicitations !",
+                  "type": "TitleSlide",
+                  "script": "Congratulations on making it to the end of the course! Let's recap everything you've learned and see where you can go from here.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": "",
+                  "instructorName": "JP Hwang",
+                  "instructorTitle": "Senior Developer Educator, Weaviate",
+                  "technology": "python"
+                },
+                {
+                  "number": 2,
+                  "title": "Chapitre 1 – Bases de RAG avec Weaviate",
+                  "type": "FullSlide",
+                  "script": "In Chapter 1, you started putting the RAG pieces together:\n\nyou used LLMs to generate text, create text embeddings as a means to compare the similarity between two pieces of text. This allowed you to, for a given user input, retrieve the most semantically similar information.\n\nFinally, you integrated this retrieved information with the user query into a prompt so that your LLM can answer questions beyond its training data.\n\n",
+                  "images": [
+                    {
+                      "alt": "chapter1_recap.png",
+                      "url": "/api/assets/ch01_ex01_de_rag_r_ussite_011_chapter1_recap_30193659.png"
+                    }
+                  ],
+                  "content": "&nbsp;",
+                  "contentLeft": "&nbsp;",
+                  "contentRight": ""
+                },
+                {
+                  "number": 3,
+                  "title": "Chapitre 2 – RAG de bout en bout avec Weaviate",
+                  "type": "FullSlide",
+                  "script": "In Chapter 2, you used Weaviate to orchestrate your RAG workflow. You also went from embedding simple string to embedding PDF documents, which you processed using the docling library.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 4,
+                  "title": "Chapitre 3 – RAG multimodal",
+                  "type": "FullSlide",
+                  "script": "Finally, in Chapter 3, you added images into the mix. You used a multi-modal embedding model to consider a PDF not as a document containing text and image elements, but as a single image.\n\nYou used ColPali to embed these image documents and a text query to retrieve the most similar image documents. Then, you crafted a prompt to combine the retrieved image and text query and sent them to a multi-modal generative model from OpenAI.\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                },
+                {
+                  "number": 5,
+                  "title": "Et ensuite ?",
+                  "type": "TwoColumns",
+                  "script": "We're accomplished a lot in this course, but there are many avenues you can continue down.\n\nAgentic RAG, where AI agents are able to choose to trigger a RAG workflow is an exciting avenue to explore. This means your agent can perform RAG on different data sources depending on the users question.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n### Agentic RAG\n- Cours : [AI Agents with Hugging Face smolagents](www.datacamp.com/courses/ai-agents-with-hugging-face-smolagents)\n- Tutoriel : [Agentic RAG : guide étape par étape avec projet démo](https://www.datacamp.com/tutorial/agentic-rag-tutorial)\n- Blog : [Agentic RAG : fonctionnement, cas d’usage, comparaison avec RAG](https://www.datacamp.com/blog/agentic-rag)",
+                  "contentLeft": "&nbsp;\n\n### Agentic RAG\n- Cours : [AI Agents with Hugging Face smolagents](www.datacamp.com/courses/ai-agents-with-hugging-face-smolagents)\n- Tutoriel : [Agentic RAG : guide étape par étape avec projet démo](https://www.datacamp.com/tutorial/agentic-rag-tutorial)\n- Blog : [Agentic RAG : fonctionnement, cas d’usage, comparaison avec RAG](https://www.datacamp.com/blog/agentic-rag)",
+                  "contentRight": ""
+                },
+                {
+                  "number": 6,
+                  "title": "Et ensuite ?",
+                  "type": "TwoColumns",
+                  "script": "Additionally, the ColPali model isn't the only multi-modal embedding model out there. Other providers, such as Cohere, offer multi-modal models that are well worth checking out.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n### Agentic RAG\n- Cours : [AI Agents with Hugging Face smolagents](www.datacamp.com/courses/ai-agents-with-hugging-face-smolagents)\n- Tutoriel : [Agentic RAG : guide étape par étape avec projet démo](https://www.datacamp.com/tutorial/agentic-rag-tutorial)\n- Blog : [Agentic RAG : fonctionnement, cas d’usage, comparaison avec RAG](https://www.datacamp.com/blog/agentic-rag)\n\n### Embeddings multimodales\n- [Modèle d’embedding multimodal de Cohere](https://cohere.com/embed)",
+                  "contentLeft": "&nbsp;\n\n### Agentic RAG\n- Cours : [AI Agents with Hugging Face smolagents](www.datacamp.com/courses/ai-agents-with-hugging-face-smolagents)\n- Tutoriel : [Agentic RAG : guide étape par étape avec projet démo](https://www.datacamp.com/tutorial/agentic-rag-tutorial)\n- Blog : [Agentic RAG : fonctionnement, cas d’usage, comparaison avec RAG](https://www.datacamp.com/blog/agentic-rag)\n\n### Embeddings multimodales\n- [Modèle d’embedding multimodal de Cohere](https://cohere.com/embed)",
+                  "contentRight": ""
+                },
+                {
+                  "number": 7,
+                  "title": "Et ensuite ?",
+                  "type": "TwoColumns",
+                  "script": "Finally, to learn more about how Weaviate can support and orchestrate data sources for your AI applications, check out the following learning resources.\n\n",
+                  "images": [],
+                  "content": "&nbsp;\n\n### Agentic RAG\n- Cours : [AI Agents with Hugging Face smolagents](www.datacamp.com/courses/ai-agents-with-hugging-face-smolagents)\n- Tutoriel : [Agentic RAG : guide étape par étape avec projet démo](https://www.datacamp.com/tutorial/agentic-rag-tutorial)\n- Blog : [Agentic RAG : fonctionnement, cas d’usage, comparaison avec RAG](https://www.datacamp.com/blog/agentic-rag)\n\n### Embeddings multimodales\n- [Modèle d’embedding multimodal de Cohere](https://cohere.com/embed)\n\n&nbsp;\n\n### Weaviate\n- [Weaviate Learning Center](https://weaviate.io/learn)\n- [Weaviate Academy](https://docs.weaviate.io/academy)",
+                  "contentLeft": "&nbsp;\n\n### Agentic RAG\n- Cours : [AI Agents with Hugging Face smolagents](www.datacamp.com/courses/ai-agents-with-hugging-face-smolagents)\n- Tutoriel : [Agentic RAG : guide étape par étape avec projet démo](https://www.datacamp.com/tutorial/agentic-rag-tutorial)\n- Blog : [Agentic RAG : fonctionnement, cas d’usage, comparaison avec RAG](https://www.datacamp.com/blog/agentic-rag)\n\n### Embeddings multimodales\n- [Modèle d’embedding multimodal de Cohere](https://cohere.com/embed)",
+                  "contentRight": "&nbsp;\n\n### Weaviate\n- [Weaviate Learning Center](https://weaviate.io/learn)\n- [Weaviate Academy](https://docs.weaviate.io/academy)"
+                },
+                {
+                  "number": 8,
+                  "title": "Félicitations !",
+                  "type": "FinalSlide",
+                  "script": "Congratulations, again, and best of luck on the rest of your AI journey!\n\n",
+                  "images": [],
+                  "content": "",
+                  "contentLeft": "",
+                  "contentRight": ""
+                }
+              ],
+              "projectorTimings": [
+                {
+                  "time": 0,
+                  "slideIndex": 0,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.0064147213384334895,
+                  "slideIndex": 0,
+                  "fragment": 0
+                },
+                {
+                  "time": 0.06813335180352482,
+                  "slideIndex": 1,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.2959103063668538,
+                  "slideIndex": 2,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.3873984824652344,
+                  "slideIndex": 3,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.6333023361813177,
+                  "slideIndex": 4,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.7807784828227219,
+                  "slideIndex": 5,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.8776293300682803,
+                  "slideIndex": 6,
+                  "fragment": -1
+                },
+                {
+                  "time": 0.9552643978121761,
+                  "slideIndex": 7,
+                  "fragment": -1
+                }
+              ],
+              "projectorTimingUnit": "fraction",
+              "projectorDuration": 300,
+              "transcript": "1. Félicitations !\nCongratulations on making it to the end of the course! Let's recap everything you've learned and see where you can go from here.\n\n2. Chapitre 1 – Bases de RAG avec Weaviate\nIn Chapter 1, you started putting the RAG pieces together:\n\nyou used LLMs to generate text, create text embeddings as a means to compare the similarity between two pieces of text. This allowed you to, for a given user input, retrieve the most semantically similar information.\n\nFinally, you integrated this retrieved information with the user query into a prompt so that your LLM can answer questions beyond its training data.\n\n3. Chapitre 2 – RAG de bout en bout avec Weaviate\nIn Chapter 2, you used Weaviate to orchestrate your RAG workflow. You also went from embedding simple string to embedding PDF documents, which you processed using the docling library.\n\n4. Chapitre 3 – RAG multimodal\nFinally, in Chapter 3, you added images into the mix. You used a multi-modal embedding model to consider a PDF not as a document containing text and image elements, but as a single image.\n\nYou used ColPali to embed these image documents and a text query to retrieve the most similar image documents. Then, you crafted a prompt to combine the retrieved image and text query and sent them to a multi-modal generative model from OpenAI.\n\n5. Et ensuite ?\nWe're accomplished a lot in this course, but there are many avenues you can continue down.\n\nAgentic RAG, where AI agents are able to choose to trigger a RAG workflow is an exciting avenue to explore. This means your agent can perform RAG on different data sources depending on the users question.\n\n6. Et ensuite ?\nAdditionally, the ColPali model isn't the only multi-modal embedding model out there. Other providers, such as Cohere, offer multi-modal models that are well worth checking out.\n\n7. Et ensuite ?\nFinally, to learn more about how Weaviate can support and orchestrate data sources for your AI applications, check out the following learning resources.\n\n8. Félicitations !\nCongratulations, again, and best of luck on the rest of your AI journey!",
+              "transcriptSegments": [
+                {
+                  "heading": "1. Félicitations !",
+                  "text": "Congratulations on making it to the end of the course! Let's recap everything you've learned and see where you can go from here."
+                },
+                {
+                  "heading": "2. Chapitre 1 – Bases de RAG avec Weaviate",
+                  "text": "In Chapter 1, you started putting the RAG pieces together:\n\nyou used LLMs to generate text, create text embeddings as a means to compare the similarity between two pieces of text. This allowed you to, for a given user input, retrieve the most semantically similar information.\n\nFinally, you integrated this retrieved information with the user query into a prompt so that your LLM can answer questions beyond its training data."
+                },
+                {
+                  "heading": "3. Chapitre 2 – RAG de bout en bout avec Weaviate",
+                  "text": "In Chapter 2, you used Weaviate to orchestrate your RAG workflow. You also went from embedding simple string to embedding PDF documents, which you processed using the docling library."
+                },
+                {
+                  "heading": "4. Chapitre 3 – RAG multimodal",
+                  "text": "Finally, in Chapter 3, you added images into the mix. You used a multi-modal embedding model to consider a PDF not as a document containing text and image elements, but as a single image.\n\nYou used ColPali to embed these image documents and a text query to retrieve the most similar image documents. Then, you crafted a prompt to combine the retrieved image and text query and sent them to a multi-modal generative model from OpenAI."
+                },
+                {
+                  "heading": "5. Et ensuite ?",
+                  "text": "We're accomplished a lot in this course, but there are many avenues you can continue down.\n\nAgentic RAG, where AI agents are able to choose to trigger a RAG workflow is an exciting avenue to explore. This means your agent can perform RAG on different data sources depending on the users question."
+                },
+                {
+                  "heading": "6. Et ensuite ?",
+                  "text": "Additionally, the ColPali model isn't the only multi-modal embedding model out there. Other providers, such as Cohere, offer multi-modal models that are well worth checking out."
+                },
+                {
+                  "heading": "7. Et ensuite ?",
+                  "text": "Finally, to learn more about how Weaviate can support and orchestrate data sources for your AI applications, check out the following learning resources."
+                },
+                {
+                  "heading": "8. Félicitations !",
+                  "text": "Congratulations, again, and best of luck on the rest of your AI journey!"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
