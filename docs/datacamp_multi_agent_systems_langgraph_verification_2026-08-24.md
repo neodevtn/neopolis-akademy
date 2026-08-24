@@ -23,3 +23,7 @@ L’audit canonique confirme **2 chapitres**, **13 activités**, **4 leçons Pro
 Le typage TypeScript est valide. Les tests ciblés du convertisseur, du cours LangGraph et des catégories sont réussis : 3 fichiers et 10 tests. La validation globale des contenus ne relève aucune erreur ; les avertissements de similarité de choix sont historiques et indépendants de ce cours.
 
 Le contrôle final de production sera exécuté après la publication, avant de poursuivre le lot.
+
+## Contrôle média de production
+
+L’audit sur le domaine public a contrôlé les **24 références média uniques** réellement consommées par le cours. Les 24 répondent **HTTP 200**, sans 404, 429, URL DataCamp externe ni chemin de stockage direct. La couverture inclut les quatre audios Projector, les sous-titres, les PDF de slides et les images locales synchronisées.
