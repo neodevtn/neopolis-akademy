@@ -16,3 +16,11 @@ export function isSequentialCourseRouteLocked(input: {
 }): boolean {
   return input.role !== "admin" && !input.previousCourseCompleted;
 }
+
+export function isSequentialLessonLocked(input: {
+  lessonIndex: number;
+  nextUnlocked: number;
+  role: LearningRole;
+}): boolean {
+  return input.role !== "admin" && input.lessonIndex > input.nextUnlocked;
+}

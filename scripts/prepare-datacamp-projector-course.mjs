@@ -169,16 +169,23 @@ if (firstActivity) {
     ? course.sourceCourseTitle
     : `${course.sourceCourseTitle?.fr || ""} ${course.sourceCourseTitle?.en || ""}`;
   const isReplitCourse = /replit/i.test(courseTitle);
+  const isWindsurfCourse = /windsurf/i.test(courseTitle);
+  const preparationFr = isReplitCourse
+    ? "## Avant de commencer\n\nCréez ou ouvrez un compte Replit pour reproduire les mises en situation du cours dans votre propre environnement. Utilisez uniquement des données de démonstration, n’ajoutez jamais de mot de passe, clé API ou donnée sensible dans un projet ou un prompt."
+    : isWindsurfCourse
+      ? "## Avant de commencer\n\nInstallez Windsurf sur votre ordinateur depuis le site officiel, puis ouvrez un dossier de projet de démonstration ou créez-en un nouveau. Vous pouvez importer vos préférences depuis VS Code si nécessaire. Utilisez uniquement des données de test : ne placez jamais de mots de passe, clés API, jetons ou données confidentielles dans un projet, un prompt ou une règle Cascade."
+      : "## Avant de commencer\n\nCe cours se réalise directement dans Neopolis avec des activités interactives. Pour les mises en situation, préparez un chatbot IA autorisé par votre organisation ; ne partagez jamais de données sensibles, de mots de passe ou de clés API.";
+  const preparationEn = isReplitCourse
+    ? "## Before you start\n\nCreate or open a Replit account to reproduce the course scenarios in your own environment. Use demonstration data only; never add passwords, API keys, or sensitive data to a project or prompt."
+    : isWindsurfCourse
+      ? "## Before you start\n\nInstall Windsurf from its official website, then open a demonstration project folder or create a new one. You may import VS Code preferences if needed. Use test data only: never place passwords, API keys, tokens, or confidential data in a project, prompt, or Cascade rule."
+      : "## Before you start\n\nThis course is completed in Neopolis through interactive activities. For the scenarios, prepare an AI chatbot approved by your organization; never share sensitive data, passwords, or API keys.";
   firstActivity.blocks.unshift({
     type: "content",
     id: `neopolis_${course.courseId}_environment_preparation`,
     body: {
-      fr: isReplitCourse
-        ? "## Avant de commencer\n\nCréez ou ouvrez un compte Replit pour reproduire les mises en situation du cours dans votre propre environnement. Utilisez uniquement des données de démonstration, n’ajoutez jamais de mot de passe, clé API ou donnée sensible dans un projet ou un prompt."
-        : "## Avant de commencer\n\nCe cours se réalise directement dans Neopolis avec des activités interactives. Pour les mises en situation, préparez un chatbot IA autorisé par votre organisation ; ne partagez jamais de données sensibles, de mots de passe ou de clés API.",
-      en: isReplitCourse
-        ? "## Before you start\n\nCreate or open a Replit account to reproduce the course scenarios in your own environment. Use demonstration data only; never add passwords, API keys, or sensitive data to a project or prompt."
-        : "## Before you start\n\nThis course is completed in Neopolis through interactive activities. For the scenarios, prepare an AI chatbot approved by your organization; never share sensitive data, passwords, or API keys.",
+      fr: preparationFr,
+      en: preparationEn,
     },
   });
 }

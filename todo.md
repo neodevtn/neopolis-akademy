@@ -2085,3 +2085,7 @@
 
 ### Cours 14 — L’IA pour les ressources humaines
 - [x] Publier le paquet prêt, ses médias locaux et activités standardisées, puis contrôler les 47 médias uniques en production
+
+### Cours 15 — Développement logiciel avec Windsurf
+- [ ] Importer le paquet prêt, ses médias locaux et activités standardisées, puis contrôler et publier après audit de production
+- [x] Garantir le bypass administrateur lors de l’ouverture d’une leçon Windsurf non encore complétée par lien profond

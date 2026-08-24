@@ -4,6 +4,8 @@ import { CheckCircle2, Lock, PlayCircle, ChevronRight, BookOpen, Video, Brain, T
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { resolveI18n } from "./contentDetectors";
 import { normalizeChapterProgress } from "./chapterProgress";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { isSequentialLessonLocked } from "@shared/learningAccess";
 
 export function LessonSidebarContent({
   lessons,
@@ -38,6 +40,7 @@ export function LessonSidebarContent({
   chaptersData?: any[];
   sections?: any[];
 }) {
+  const { user } = useAuth();
   const safeChapterProgress = normalizeChapterProgress(chapterProgress);
   const safeChapterTotal = safeChapterProgress.total;
   const safeChapterCurrent = safeChapterProgress.current;
@@ -90,8 +93,8 @@ export function LessonSidebarContent({
       </p>
       {lessons.map((lesson, idx) => {
         const completed = isLessonComplete(courseId, idx);
-        const isCurrent = idx === nextUnlocked && !completed;
-        const isLocked = idx > nextUnlocked;
+        const isCurrent = (idx === nextUnlocked && !completed) || (user?.role === "admin" && activeLessonIndex === idx && !completed);
+        const isLocked = isSequentialLessonLocked({ lessonIndex: idx, nextUnlocked, role: user?.role });
         const isActive = activeLessonIndex === idx;
 
         let statusIcon: React.ReactNode;
@@ -160,7 +163,7 @@ export function LessonSidebarContent({
         }
 
         // Clickable if completed or current
-        const isClickable = completed || isCurrent;
+        const isClickable = completed || isCurrent || !isLocked;
 
         // Get sub-screens (blocks) for this chapter when it's the active one
         const showSubScreens = isActive && chaptersData && chaptersData[idx];

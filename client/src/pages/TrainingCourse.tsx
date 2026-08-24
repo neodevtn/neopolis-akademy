@@ -547,10 +547,10 @@ export default function TrainingCourse() {
             const displayedLesson = courseLessons[displayedIndex];
             const isReviewMode = isSingleLessonCourse
               ? (chapterProgress !== null && chapterProgress.current < nextUnlocked)
-              : (activeLessonIndex !== null && isLessonComplete(course.id, activeLessonIndex));
+              : (activeLessonIndex !== null && (isLessonComplete(course.id, activeLessonIndex) || user?.role === "admin"));
             const isCurrentLesson = isSingleLessonCourse
               ? !completed
-              : (displayedIndex === nextUnlocked && !isLessonComplete(course.id, nextUnlocked));
+              : (user?.role === "admin" || (displayedIndex === nextUnlocked && !isLessonComplete(course.id, nextUnlocked)));
 
             // If no active review and current lesson is completed, show nothing (course complete state handles it)
             if (!displayedLesson) return null;
