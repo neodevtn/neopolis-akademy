@@ -2060,3 +2060,6 @@
 
 ### Cours 06 — L’IA pour la finance
 - [x] Publier le cours avec les 346 médias locaux disponibles, documenter le logo Projector Perplexity absent sans URL externe et vérifier le contrôle média de production
+
+### Cours 07 — Introduction au Model Context Protocol (MCP)
+- [ ] Publier les 339 médias locaux, les 34 activités MCP et vérifier les 88 médias utilisés sur le domaine de production
