@@ -74,6 +74,17 @@ const manifest = {
           hint_html: "<p>Utilisez le SDK.</p>",
         },
       },
+      {
+        chapter_number: 1,
+        exercise_number: 6,
+        exercise_id: 6,
+        type: "ChatExercise",
+        title: "Simulation conversationnelle pilote",
+        content: {
+          assignment_text: "L’agent FoodGPT est conçu pour proposer des recettes.\n\nVous testez les prompts suivants :\n\nUn message agressif\n\nUNE LISTE EN MAJUSCULES\n\nUne phrase absurde\n\nQuels types d’entrées font échouer l’agent ?",
+          question: { solutionItems: [{ answer: "Insultes", correct: true, feedback: "À tester" }, { answer: "Majuscules", correct: false, feedback: "Fonctionne" }, { answer: "Phrases absurdes", correct: true, feedback: "À tester" }] },
+        },
+      },
     ],
   }],
 };
@@ -87,7 +98,7 @@ describe("convertDataCampV1", () => {
     ]);
     const course = convertDataCampV1(manifest, assets);
     expect(course.courseId).toBe("pilot_course__01");
-    expect(course.lessons[0].chapters).toHaveLength(5);
+    expect(course.lessons[0].chapters).toHaveLength(6);
     expect(course.lessons[0].chapters[0].blocks[0]).toMatchObject({
       type: "video",
       audioUrl: "/api/assets/video_hash.mp3",
@@ -100,6 +111,11 @@ describe("convertDataCampV1", () => {
     expect(course.lessons[0].chapters[2].blocks[0]).toMatchObject({ type: "multi_choice_exercise", correctAnswers: "a" });
     expect(course.lessons[0].chapters[3].blocks[0]).toMatchObject({ type: "resource_review", resourceUrl: "/api/assets/chapter_hash.pdf" });
     expect(course.lessons[0].chapters[4].blocks[0]).toMatchObject({ type: "cloud_exercise", environmentGuide: expect.any(Object), resources: [{ url: "/api/assets/chapter_hash.pdf" }] });
+    expect(course.lessons[0].chapters[5].blocks[0]).toMatchObject({
+      type: "multi_choice_exercise",
+      correctAnswers: "a,c",
+      chatScenario: { agentName: "FoodGPT", messages: [{ role: "user" }, { role: "user" }, { role: "user" }] },
+    });
     expect(course.lessons[0].chapters.every((chapter) => chapter.requiredBeforeAdvance)).toBe(true);
     expect(course.lessons[0].competencyTags).toEqual(["ai_solution_design"]);
     expect(course.datacampImport.competencyTagging).toBe("lesson_content_signals_v1");

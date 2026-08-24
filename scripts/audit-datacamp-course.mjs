@@ -160,7 +160,7 @@ if (productionBaseUrl && media.length) {
           attempt,
           checkedWith: "range_get",
         };
-        if (rangeResponse.ok || rangeResponse.status < 500 || attempt === 3) return lastResult;
+        if (rangeResponse.ok || rangeResponse.status === 404 || attempt === 3) return lastResult;
       } catch (error) {
         try {
           const rangeResponse = await fetch(`${productionBaseUrl}${url}`, {
@@ -183,12 +183,16 @@ if (productionBaseUrl && media.length) {
           if (attempt === 3) return lastResult;
         }
       }
-      await new Promise((resolve) => setTimeout(resolve, attempt * 350));
+      const retryAfterSeconds = Number(lastResult.retryAfter || 0);
+      await new Promise((resolve) => setTimeout(resolve, Math.max(attempt * 1000, retryAfterSeconds * 1000)));
     }
     return lastResult;
   };
   const checks = [];
-  for (const mediaEntry of media) checks.push(await checkMedia(mediaEntry));
+  for (const [index, mediaEntry] of media.entries()) {
+    checks.push(await checkMedia(mediaEntry));
+    if (index < media.length - 1) await new Promise((resolve) => setTimeout(resolve, 600));
+  }
   report.productionMedia = checks;
   if (checks.some((check) => !check.ok)) report.errors.push("Au moins un média ne répond pas avec un statut HTTP de succès en production.");
 }

@@ -266,7 +266,7 @@ describe("Admin API - Communications ciblées", () => {
     expect(result).toHaveProperty("sample");
     expect(typeof result.count).toBe("number");
     expect(Array.isArray(result.sample)).toBe(true);
-  });
+  }, 15_000);
 
   it("accepte un segment de progression par cours, période et sélection manuelle sans envoi", async () => {
     const caller = appRouter.createCaller(createAdminContext());

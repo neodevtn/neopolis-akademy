@@ -15,5 +15,8 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["server/**/*.test.ts", "server/**/*.spec.ts", "client/**/*.test.ts", "client/**/*.spec.ts", "shared/**/*.test.ts", "shared/**/*.spec.ts"],
+    // Several integration suites query the shared development database. Run files
+    // serially so a reporting or segmentation query cannot time out behind another suite.
+    fileParallelism: false,
   },
 });

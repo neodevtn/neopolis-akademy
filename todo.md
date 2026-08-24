@@ -2033,3 +2033,10 @@
 - [x] Convertir le cours avec les blocs standards, les médias Projector audio/diapositives/transcripts, la progression séquentielle et les tags de compétences
 - [x] Intégrer le catalogue, l’indexation de recherche, les règles XP et les ressources de la bibliothèque média
 - [x] Tester les médias, un QCM, un tri, un exercice visuel, le rendu desktop/mobile, puis publier avec rapport et captures
+
+## Import DataCamp — Concevoir des systèmes agentiques évolutifs
+- [x] Télécharger et valider le paquet Drive, le manifeste, le contenu LLM, le rapport de complétude, le prompt et la somme SHA-256
+- [x] Vérifier les compteurs canoniques : 3 chapitres, 29 activités, 10 Projector et 399 ressources locales
+- [x] Convertir le cours avec les blocs standards, les médias Projector audio/diapositives/transcripts, la progression séquentielle et les tags de compétences
+- [x] Intégrer le catalogue, l’indexation de recherche, les règles XP, les préparations d’environnement et les ressources de la bibliothèque média
+- [x] Tester chaque type d’activité, les médias, le parcours desktop/mobile et la recherche, puis publier avec le rapport de contrôle

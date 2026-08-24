@@ -22,6 +22,33 @@ const [manifestRaw, uploadLog] = await Promise.all([
   fs.readFile(uploadLogPath, "utf8"),
 ]);
 const manifest = JSON.parse(manifestRaw);
+
+async function hydrateCanonicalActivities() {
+  const chaptersDir = path.join(packageRoot, "chapters");
+  let files = [];
+  try {
+    files = await fs.readdir(chaptersDir);
+  } catch {
+    return;
+  }
+  const canonicalActivities = new Map();
+  for (const file of files.filter((entry) => entry.endsWith("_canonical.json"))) {
+    const chapter = JSON.parse(await fs.readFile(path.join(chaptersDir, file), "utf8"));
+    for (const activity of chapter.activities || []) {
+      canonicalActivities.set(String(activity.exercise_id), activity);
+    }
+  }
+  for (const chapter of manifest.chapters || []) {
+    for (const activity of chapter.activities || []) {
+      const canonical = canonicalActivities.get(String(activity.exercise_id));
+      if (canonical?.content && (!activity.content || Object.keys(activity.content).length === 0)) {
+        activity.content = canonical.content;
+      }
+    }
+  }
+}
+
+await hydrateCanonicalActivities();
 const absoluteAssetMap = parseUploadLog(uploadLog);
 const assetMap = new Map();
 for (const [absolutePath, url] of absoluteAssetMap.entries()) {
@@ -133,7 +160,7 @@ const firstActivity = course.lessons[0]?.chapters[0];
 if (firstActivity) {
   firstActivity.blocks.unshift({
     type: "content",
-    id: "neopolis_intro_ai_work_environment_preparation",
+    id: `neopolis_${course.courseId}_environment_preparation`,
     body: {
       fr: "## Avant de commencer\n\nCe cours se réalise directement dans Neopolis avec des activités interactives. Pour les mises en situation, préparez un chatbot IA autorisé par votre organisation ; ne partagez jamais de données sensibles, de mots de passe ou de clés API.",
       en: "## Before you start\n\nThis course is completed in Neopolis through interactive activities. For the scenarios, prepare an AI chatbot approved by your organization; never share sensitive data, passwords, or API keys.",

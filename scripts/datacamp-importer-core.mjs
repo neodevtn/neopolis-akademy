@@ -183,6 +183,25 @@ function extractChoiceData(activity) {
   };
 }
 
+function buildChatScenarioBlock(activity) {
+  const content = activityContent(activity);
+  const assignment = htmlToText(content.assignment_text || content.assignment_html || "");
+  const choiceBlock = extractChoiceData(activity);
+  const paragraphs = assignment.split(/\n{2,}/).map((paragraph) => paragraph.trim()).filter(Boolean);
+  const promptLeadIndex = paragraphs.findIndex((paragraph) => /prompts?|messages?/i.test(paragraph));
+  const promptMessages = promptLeadIndex >= 0 ? paragraphs.slice(promptLeadIndex + 1, -1) : [];
+  const agentName = assignment.match(/\b([A-Za-z][A-Za-z0-9_-]{2,})\s+est conçu/i)?.[1] || "Agent";
+
+  return {
+    ...choiceBlock,
+    chatScenario: {
+      agentName,
+      context: toI18n(assignment),
+      messages: promptMessages.map((text) => ({ role: "user", text: toI18n(text) })),
+    },
+  };
+}
+
 function buildVideoBlock(activity, assetMap, slidesPdf) {
   const video = activity.video || {};
   const audioUrl = assetFor(video.audio_local, assetMap);
@@ -367,6 +386,10 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
       type = "exercise";
       blocks = [buildAiEvaluationBlock(activity)];
       break;
+    case "ChatExercise":
+      type = "quiz";
+      blocks = [buildChatScenarioBlock(activity)];
+      break;
     case "VisualExercise":
       if (Array.isArray(activityContent(activity).question?.solutionItems) && activityContent(activity).question.solutionItems.length > 0) {
         type = "quiz";
@@ -406,6 +429,7 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
     title: toI18n(activity.title),
     description: toI18n(sourceChapter.description || ""),
     type,
+    sourceActivityType: activity.type,
     requiredBeforeAdvance: true,
     blocks,
   };

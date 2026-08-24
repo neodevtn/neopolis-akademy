@@ -36,5 +36,5 @@ describe("admin.getLearningReports", () => {
     });
     expect(report.coursePerformance).toEqual(expect.any(Array));
     expect(report.topLearners).toEqual(expect.any(Array));
-  });
+  }, 15_000);
 });

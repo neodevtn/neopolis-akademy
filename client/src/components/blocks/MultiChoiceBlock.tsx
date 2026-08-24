@@ -23,6 +23,10 @@ export function MultiChoiceBlock({ block, lang, t, onComplete, blockIdx }: Multi
 
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
+  const chatScenario = block.chatScenario;
+  const resolveText = (value: unknown) => typeof value === "object" && value !== null
+    ? (value as Record<string, string>)[lang] || (value as Record<string, string>).en || (value as Record<string, string>).fr || ""
+    : String(value || "");
 
   const toggleOption = (id: string) => {
     if (submitted) return;
@@ -55,6 +59,19 @@ export function MultiChoiceBlock({ block, lang, t, onComplete, blockIdx }: Multi
         <span className="text-xs text-muted-foreground ml-auto">{t({ en: "Select all that apply", fr: "Sélectionnez toutes les bonnes réponses" })}</span>
       </div>
       <div className="p-4 space-y-3">
+        {chatScenario && (
+          <section className="rounded-lg border border-sky-200 bg-sky-50/70 p-3 space-y-3" aria-label={t({ en: "Conversation scenario", fr: "Scénario de conversation" })}>
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-sky-800">
+              <span>{t({ en: "Chat scenario", fr: "Scénario de chat" })}</span>
+              {chatScenario.agentName && <span className="normal-case tracking-normal text-sky-700">· {chatScenario.agentName}</span>}
+            </div>
+            {chatScenario.messages?.map((message: any, index: number) => (
+              <div key={`${message.role || "user"}-${index}`} className="ml-auto max-w-[92%] rounded-2xl rounded-br-sm bg-primary px-3 py-2 text-sm text-primary-foreground">
+                {resolveText(message.text)}
+              </div>
+            ))}
+          </section>
+        )}
         <p className="text-sm font-medium text-foreground">{question}</p>
         <div className="space-y-2">
           {options.map((opt) => {
