@@ -21,3 +21,7 @@ La validation complète et l’indexation de recherche sont terminées. Le contr
 L’audit canonique confirme **3 leçons**, **31 activités** et **11 leçons Projector**. Il identifie 82 références média locales, sans erreur de structure, média invalide, URL DataCamp publiée ou défaut de verrouillage séquentiel. Les activités sont converties avec 17 TP `cloud_exercise`, 2 QCM et 1 tri standard ; les corrections restent associées aux blocs interactifs.
 
 Le typage TypeScript, la validation de tous les JSON et la suite complète sont réussis : **91 fichiers de test et 336 tests**. Le test dédié contrôle les compteurs, la catégorie IA de productivité & collaboration, les 11 Projector audio, les 17 TP, le tri, les QCM et l’absence d’URL externe.
+
+## Contrôle média de production
+
+L’audit sur le domaine public a contrôlé les **54 références média uniques** réellement consommées par le cours. Les 54 répondent **HTTP 200**, sans 404, 429, URL DataCamp externe ni chemin de stockage direct. La couverture inclut les onze audios Projector, les sous-titres, les PDF de slides et les images locales synchronisées.

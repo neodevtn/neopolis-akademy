@@ -2078,4 +2078,4 @@
 - [x] Publier le paquet prêt, ses médias locaux et activités standardisées, puis contrôler les 52 médias uniques en production
 
 ### Cours 12 — L’IA pour le conseil
-- [ ] Publier le paquet prêt, ses médias locaux et activités standardisées, puis contrôler les 82 médias uniques en production
+- [x] Publier le paquet prêt, ses médias locaux et activités standardisées, puis contrôler les 54 médias uniques en production
