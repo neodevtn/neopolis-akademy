@@ -231,12 +231,19 @@ function buildVideoBlock(activity, assetMap, slidesPdf) {
 }
 
 function extractInstructionSteps(instructions) {
-  return String(instructions || "")
+  const raw = String(instructions || "");
+  const listed = raw
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => /^(?:[-*•]|\d+[.)])\s+/.test(line))
     .map((line) => line.replace(/^(?:[-*•]|\d+[.)])\s+/, "").trim())
     .filter(Boolean);
+  if (listed.length) return listed;
+  return raw
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.replace(/\s+/g, " ").trim())
+    .filter((paragraph) => paragraph.length > 0)
+    .slice(0, 5);
 }
 
 function buildPracticalBlock(activity, slidesPdf) {
@@ -364,6 +371,7 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
       break;
     case "NormalExercise":
     case "CloudExercise":
+    case "DatalabExercise":
       type = "exercise";
       blocks = [buildPracticalBlock(activity, slidesPdf)];
       break;

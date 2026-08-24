@@ -20,7 +20,7 @@ describe("training category coverage", () => {
 
   it("keeps DataCamp provenance while using subject-specific categories", () => {
     const partnerCertifications = trainingIndex.certifications.filter((certification) => certification.id.startsWith("datacamp_"));
-    expect(partnerCertifications).toHaveLength(31);
+    expect(partnerCertifications).toHaveLength(32);
     expect(partnerCertifications.every((certification) => certification.provider === "datacamp" && certification.group !== "datacamp_partner")).toBe(true);
   });
 });

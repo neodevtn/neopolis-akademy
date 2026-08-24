@@ -63,7 +63,7 @@ const manifest = {
         chapter_number: 1,
         exercise_number: 5,
         exercise_id: 5,
-        type: "NormalExercise",
+        type: "DatalabExercise",
         title: "TP pilote",
         xp: 100,
         content: {
