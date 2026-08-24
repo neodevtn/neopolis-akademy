@@ -24,6 +24,7 @@ export function MultiChoiceBlock({ block, lang, t, onComplete, blockIdx }: Multi
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
   const chatScenario = block.chatScenario;
+  const visualAssetUrl = typeof block.visualAssetUrl === "string" ? block.visualAssetUrl : "";
   const resolveText = (value: unknown) => typeof value === "object" && value !== null
     ? (value as Record<string, string>)[lang] || (value as Record<string, string>).en || (value as Record<string, string>).fr || ""
     : String(value || "");
@@ -71,6 +72,11 @@ export function MultiChoiceBlock({ block, lang, t, onComplete, blockIdx }: Multi
               </div>
             ))}
           </section>
+        )}
+        {visualAssetUrl && (
+          <figure className="overflow-hidden rounded-lg border border-border bg-muted/20">
+            <img src={visualAssetUrl} alt={t({ en: "Visual context for the question", fr: "Contexte visuel de la question" })} className="max-h-[420px] w-full object-contain" loading="lazy" />
+          </figure>
         )}
         <p className="text-sm font-medium text-foreground">{question}</p>
         <div className="space-y-2">

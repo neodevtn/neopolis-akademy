@@ -2051,3 +2051,6 @@
 
 ### Cours 03 — Coder avec l’aide de l’IA pour les développeurs
 - [x] Publier le cours, vérifier les médias en production et archiver son rapport de contrôle
+
+### Cours 04 — Développement logiciel avec GitHub Copilot
+- [ ] Publier le cours, vérifier les médias en production et archiver son rapport de contrôle

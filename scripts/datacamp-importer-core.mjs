@@ -123,7 +123,7 @@ function activityContent(activity) {
   return activity?.content || {};
 }
 
-function extractChoiceData(activity) {
+function extractChoiceData(activity, assetMap = new Map()) {
   const content = activityContent(activity);
   const nestedQuestion = content.question && typeof content.question === "object" ? content.question : null;
   const solutionItems = Array.isArray(nestedQuestion?.solutionItems) ? nestedQuestion.solutionItems : [];
@@ -152,6 +152,7 @@ function extractChoiceData(activity) {
       correctAnswers: correctAnswers.join(","),
       explanation: toI18n(explanation),
       hint,
+      ...(assetFor(activity.asset?.local, assetMap) ? { visualAssetUrl: assetFor(activity.asset.local, assetMap) } : {}),
     };
   }
   const answers = nestedQuestion?.possible_answers?.length
@@ -180,13 +181,14 @@ function extractChoiceData(activity) {
     correctAnswer: String.fromCharCode(97 + correctIndex),
     explanation: toI18n(htmlToText(feedback[correctIndex] || "")),
     hint,
+    ...(assetFor(activity.asset?.local, assetMap) ? { visualAssetUrl: assetFor(activity.asset.local, assetMap) } : {}),
   };
 }
 
-function buildChatScenarioBlock(activity) {
+function buildChatScenarioBlock(activity, assetMap) {
   const content = activityContent(activity);
   const assignment = htmlToText(content.assignment_text || content.assignment_html || "");
-  const choiceBlock = extractChoiceData(activity);
+  const choiceBlock = extractChoiceData(activity, assetMap);
   const paragraphs = assignment.split(/\n{2,}/).map((paragraph) => paragraph.trim()).filter(Boolean);
   const promptLeadIndex = paragraphs.findIndex((paragraph) => /prompts?|messages?/i.test(paragraph));
   const promptMessages = promptLeadIndex >= 0 ? paragraphs.slice(promptLeadIndex + 1, -1) : [];
@@ -357,7 +359,7 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
       break;
     case "PureMultipleChoiceExercise":
       type = "quiz";
-      blocks = [extractChoiceData(activity)];
+      blocks = [extractChoiceData(activity, assetMap)];
       break;
     case "NormalExercise":
       type = "exercise";
@@ -371,7 +373,7 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
     case "MultipleChoiceExercise":
     case "PureMultipleChoiceExercise":
       type = "quiz";
-      blocks = [extractChoiceData(activity)];
+      blocks = [extractChoiceData(activity, assetMap)];
       break;
     case "DragAndDropExercise":
       type = "exercise";
@@ -388,12 +390,12 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
       break;
     case "ChatExercise":
       type = "quiz";
-      blocks = [buildChatScenarioBlock(activity)];
+      blocks = [buildChatScenarioBlock(activity, assetMap)];
       break;
     case "VisualExercise":
       if (Array.isArray(activityContent(activity).question?.solutionItems) && activityContent(activity).question.solutionItems.length > 0) {
         type = "quiz";
-        blocks = [extractChoiceData(activity)];
+        blocks = [extractChoiceData(activity, assetMap)];
       } else {
         type = "resource";
         blocks = slidesPdf ? [{

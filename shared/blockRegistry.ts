@@ -466,6 +466,7 @@ const multiChoiceBlock: BlockTypeDefinition = {
   since: "2.0",
   schema: [
     { key: "question", label: { en: "Question", fr: "Question" }, type: "i18n_text", required: true },
+    { key: "visualAssetUrl", label: { en: "Visual context image", fr: "Image de contexte visuel" }, type: "text", placeholder: "/api/assets/example.png" },
     { key: "options", label: { en: "Options", fr: "Options" }, type: "array", required: true, arrayItemSchema: [
       { key: "id", label: { en: "ID", fr: "ID" }, type: "text", required: true },
       { key: "text", label: { en: "Option text", fr: "Texte de l'option" }, type: "i18n_text", required: true },

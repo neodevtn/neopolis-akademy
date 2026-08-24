@@ -11,14 +11,15 @@ const packageRoot = valueFor("--package-root");
 const assetRoot = valueFor("--asset-root");
 const uploadLogPath = valueFor("--upload-log");
 const outputPath = valueFor("--output");
+const manifestPath = valueFor("--manifest") || path.join(packageRoot, "COURSE_MANIFEST.json");
 
 if (!packageRoot || !assetRoot || !uploadLogPath || !outputPath) {
-  console.error("Usage: node scripts/prepare-datacamp-projector-course.mjs --package-root <course-root> --asset-root <asset-root> --upload-log <upload-log.txt> --output <course.json>");
+  console.error("Usage: node scripts/prepare-datacamp-projector-course.mjs --package-root <course-root> --asset-root <asset-root> --upload-log <upload-log.txt> --output <course.json> [--manifest <enriched-manifest.json>]");
   process.exit(1);
 }
 
 const [manifestRaw, uploadLog] = await Promise.all([
-  fs.readFile(path.join(packageRoot, "COURSE_MANIFEST.json"), "utf8"),
+  fs.readFile(manifestPath, "utf8"),
   fs.readFile(uploadLogPath, "utf8"),
 ]);
 const manifest = JSON.parse(manifestRaw);
@@ -141,8 +142,9 @@ async function augmentProjectorActivity(activity) {
     en_local: getSubtitleLocal(video, "english"),
   };
 
-  if (!video.audio_local || !localAsset(video.audio_local)) {
-    throw new Error(`Audio Projector local introuvable pour ${activity.title}`);
+  const projectorMediaLocal = video.audio_local || video.mp4_local || video.hls_local;
+  if (!projectorMediaLocal || !localAsset(projectorMediaLocal)) {
+    throw new Error(`Média Projector local introuvable pour ${activity.title}`);
   }
   if (!video.projectorSlides.length || !video.projectorTimings.length) {
     throw new Error(`Slides ou timings Projector absents pour ${activity.title}`);
