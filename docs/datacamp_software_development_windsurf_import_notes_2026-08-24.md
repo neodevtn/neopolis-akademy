@@ -49,3 +49,18 @@ L’audit local automatisé a confirmé que le cours ne contient ni URL DataCamp
 Le contrôle par lien profond d’une leçon Windsurf non encore complétée a révélé que le lecteur masquait encore son contenu pour un administrateur, malgré le bypass de cours déjà présent. La règle de verrouillage des leçons a été centralisée dans `shared/learningAccess.ts` : les apprenants restent bloqués au-delà de leur prochaine leçon autorisée, tandis qu’un administrateur peut ouvrir une leçon future depuis la barre latérale ou un lien profond. La nouvelle règle est couverte par un test dédié sans assouplir le parcours séquentiel apprenant.
 
 La capture de contrôle après correctif ouvre effectivement `?lesson=2&chapter=0` : le chapitre 3, « Du prototype à la production en une journée », s’affiche en **Mode Révision**, avec l’activité `1/10 Générer l’ossature de l’application de news` et son bloc vidéo. Le contenu n’est plus masqué, tandis que le parcours standard reste séquentiel pour les apprenants.
+
+## Vérification de production
+
+Le premier appel public effectué immédiatement après le checkpoint a atteint une version encore en propagation et a renvoyé le fallback HTML. Après propagation, le JSON publié répond avec `Content-Type: application/json`, **250 911 octets**, et le cours est rendu sur le domaine public. La vérification navigateur avec cache-buster confirme le titre, les trois chapitres, la préparation visible, le lecteur Projector du chapitre 1, les 18 slides, le transcript, le PDF de slides et le sous-titre local via `/api/assets/`.
+
+| Contrôle production | Résultat |
+|---|---:|
+| JSON de cours | HTTP 200, JSON servi |
+| Médias consommés | 72 / 72 locaux et valides |
+| Médias invalides / erreurs d’audit | 0 / 0 |
+| Vidéos Projector | 11 / 11 déclarées avec slides et transcript |
+| Verrouillage séquentiel apprenant | Actif |
+| Bypass administrateur par lien profond | Vérifié après correctif |
+
+L’audit automatisé de production n’a détecté ni URL DataCamp externe, ni chemin `/manus-storage/` dans le JSON, ni référence média invalide. Les contrôles de code, de données et de disponibilité sont donc clôturés pour cette version publiée.
