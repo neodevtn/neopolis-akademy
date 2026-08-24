@@ -2127,4 +2127,4 @@
 - [x] Importer le paquet vérifié, ses médias locaux disponibles et 45 activités standardisées, puis contrôler et publier après audit de production
 
 ### Cours 31 — Modèles d’IA évolutifs avec PyTorch Lightning
-- [ ] Importer le paquet vérifié, ses médias locaux et 30 activités standardisées, puis contrôler et publier après audit de production
+- [x] Importer le paquet vérifié, ses médias locaux et 30 activités standardisées, puis contrôler et publier après audit de production

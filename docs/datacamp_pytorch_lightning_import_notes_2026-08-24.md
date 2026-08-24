@@ -7,3 +7,7 @@ La conversion Neopolis conserve les 30 activités ordonnées, 10 leçons Project
 Les contrôles desktop et mobile affichent le titre, les trois chapitres, la progression, la préparation et la leçon Projector initiale. Le bandeau de consentement de la prévisualisation peut recouvrir la zone basse, sans empêcher la consultation du cours.
 
 `pnpm check`, `pnpm validate-courses`, le test de parité PyTorch Lightning et le contrôle de catégories sont réussis. Le validateur ne remonte aucune erreur ; les 223 avertissements historiques de similarité de quiz concernent d’autres contenus et restent non bloquants.
+
+## Vérification de production
+
+L’audit sur `https://akademy.neodev.click` confirme 54 / 54 médias consommés et locaux valides, sans URL DataCamp externe, chemin `/manus-storage/`, média invalide ni erreur structurelle. Il confirme aussi les 3 chapitres, 30 activités, 10 Projector, 20 exercices interactifs, les tags de compétence de chaque chapitre et le verrouillage séquentiel.
