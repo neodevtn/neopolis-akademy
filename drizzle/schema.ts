@@ -146,6 +146,23 @@ export const examAttempts = mysqlTable("exam_attempts", {
 export type ExamAttempt = typeof examAttempts.$inferSelect;
 export type InsertExamAttempt = typeof examAttempts.$inferInsert;
 
+/** Une unique session active par apprenant et certification, restaurée après rafraîchissement. */
+export const examSessions = mysqlTable("exam_sessions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  certificationId: varchar("certificationId", { length: 200 }).notNull(),
+  questions: json("questions").notNull(),
+  answers: json("answers").notNull(),
+  currentIndex: int("currentIndex").notNull().default(0),
+  selectedIds: json("selectedIds").notNull(),
+  startedAt: timestamp("startedAt").notNull(),
+  expiresAt: timestamp("expiresAt").notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("exam_sessions_user_cert_unique").on(table.userId, table.certificationId),
+]);
+export type InsertExamSession = typeof examSessions.$inferInsert;
+
 /**
  * Learner credentials issued from verified course completions or passing exam attempts.
  * The composite key keeps awards idempotent even if a client retries a completion request.

@@ -29,6 +29,8 @@ import {
   ArrowRight,
   Bell,
   MailOpen,
+  SlidersHorizontal,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
@@ -123,8 +125,8 @@ export default function TrainingDashboard() {
       order: 1,
     },
     business_ai_literacy: {
-      label: { en: "Business AI Literacy", fr: "Business AI Literacy" },
-      subtitle: { en: "AI fundamentals, strategy, governance and management for business professionals", fr: "Fondamentaux IA, stratégie, gouvernance et management pour les professionnels" },
+      label: { en: "AI Foundations, Strategy & Governance", fr: "Fondamentaux, stratégie & gouvernance IA" },
+      subtitle: { en: "Core AI literacy, strategy, governance and management for business professionals", fr: "Culture IA, stratégie, gouvernance et management pour les professionnels" },
       badge: "Accessible",
       badgeColor: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400",
       hoverBorder: "hover:border-emerald-400/30",
@@ -134,7 +136,7 @@ export default function TrainingDashboard() {
       order: 2,
     },
     fullstack_ai_engineering: {
-      label: { en: "Full-Stack AI Engineering", fr: "Ingénierie IA Full-Stack" },
+      label: { en: "AI Engineering, RAG & MLOps", fr: "Ingénierie IA, RAG & MLOps" },
       subtitle: { en: "Production-grade AI: RAG, LLMOps, Security, Infrastructure, Open-Source LLMs", fr: "IA production : RAG, LLMOps, Sécurité, Infrastructure, LLMs Open-Source" },
       badge: "New",
       badgeColor: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400",
@@ -145,7 +147,7 @@ export default function TrainingDashboard() {
       order: 3,
     },
     bi_data_analytics: {
-      label: { en: "BI & Data", fr: "BI & Data" },
+      label: { en: "Data, BI & AI Analytics", fr: "Data, BI & analytics IA" },
       subtitle: { en: "Data profiling, star schema modeling, DAX, Power BI, executive reporting with Codex", fr: "Profiling de données, modélisation en étoile, DAX, Power BI, reporting exécutif avec Codex" },
       badge: "BI",
       badgeColor: "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400",
@@ -745,15 +747,80 @@ function CatalogTab({
   const requestedQuery = new URLSearchParams(urlSearch).get("search") || "";
   const navigateCatalog = (group: string, search: string) => navigate(buildNavigationUrl("/training", { tab: "catalog", group: group === "all" ? null : group, search: search || null }));
   const selectGroup = (group: string) => navigateCatalog(group, requestedQuery);
+  const [levelFilter, setLevelFilter] = useState("all");
+  const [skillFilter, setSkillFilter] = useState("all");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [technologyFilter, setTechnologyFilter] = useState("all");
+  const [durationFilter, setDurationFilter] = useState("all");
 
-  const filteredCerts = selectedGroup === "all"
-    ? certCompletionData
-    : certCompletionData.filter((cert) => cert.group === selectedGroup);
+  const catalogMetadata = useMemo(() => certCompletionData.map((cert) => {
+    const source = JSON.stringify({ title: cert.title, description: cert.description, group: cert.group }).toLowerCase();
+    const includes = (...terms: string[]) => terms.some((term) => source.includes(term));
+    const skills = [
+      includes("rag", "retrieval", "vector", "weaviate", "haystack", "llamaindex", "graph") && "rag",
+      includes("agent", "langgraph", "crewai", "smolagent", "orchestrat") && "agents",
+      includes("prompt", "copilot", "claude", "gemini") && "prompting",
+      includes("python", "api", "fastapi", "pytorch", "databricks", "develop") && "development",
+      includes("data", "bi", "analytics", "snowflake", "reporting") && "data_bi",
+      includes("work", "word", "powerpoint", "sales", "marketing", "finance", "human resources") && "productivity",
+    ].filter(Boolean) as string[];
+    const technologies = [
+      includes("claude") && "claude", includes("openai") && "openai", includes("langchain") && "langchain",
+      includes("langgraph") && "langgraph", includes("hugging face") && "hugging_face", includes("pytorch") && "pytorch",
+      includes("snowflake") && "snowflake", includes("databricks") && "databricks", includes("mongodb") && "mongodb",
+      includes("weaviate") && "weaviate", includes("haystack") && "haystack", includes("crewai") && "crewai",
+      includes("llamaindex") && "llamaindex", includes("google cloud") && "google_cloud", includes("copilot") && "microsoft_copilot",
+      includes("windsurf") && "windsurf",
+    ].filter(Boolean) as string[];
+    const roles = [
+      (skills.includes("development") || skills.includes("rag") || skills.includes("agents")) && "engineer",
+      skills.includes("data_bi") && "analyst",
+      (skills.includes("prompting") || skills.includes("productivity")) && "business",
+      includes("strategy", "governance", "management", "consulting") && "manager",
+    ].filter(Boolean) as string[];
+    const activityCount = Number((cert as any).totalActivities || cert.totalExercises || 0);
+    const duration = activityCount <= 15 ? "short" : activityCount <= 30 ? "medium" : "long";
+    const level = String((cert.level as any)?.en || "beginner").toLowerCase();
+    return { id: cert.id, level, skills, roles, technologies, duration };
+  }), [certCompletionData]);
+  const metadataByCertification = new Map(catalogMetadata.map((metadata) => [metadata.id, metadata]));
+  const filterLabels = {
+    skills: { rag: "RAG", agents: "Agents IA", prompting: "Prompt engineering", development: "Développement IA", data_bi: "Data & BI", productivity: "IA au travail" },
+    roles: { engineer: "Ingénieur·e IA", analyst: "Data analyst / BI", business: "Métier & productivité", manager: "Manager / consultant" },
+    technologies: { claude: "Claude", openai: "OpenAI", langchain: "LangChain", langgraph: "LangGraph", hugging_face: "Hugging Face", pytorch: "PyTorch", snowflake: "Snowflake", databricks: "Databricks", mongodb: "MongoDB", weaviate: "Weaviate", haystack: "Haystack", crewai: "CrewAI", llamaindex: "LlamaIndex", google_cloud: "Google Cloud", microsoft_copilot: "Microsoft Copilot", windsurf: "Windsurf" },
+    durations: { short: "Courte — jusqu’à 15 activités", medium: "Moyenne — 16 à 30 activités", long: "Approfondie — plus de 30 activités" },
+  } as const;
+  const available = (key: "skills" | "roles" | "technologies") => Array.from(new Set(catalogMetadata.flatMap((metadata) => metadata[key]))).sort();
+  const filteredCerts = certCompletionData.filter((cert) => {
+    const metadata = metadataByCertification.get(cert.id);
+    return (selectedGroup === "all" || cert.group === selectedGroup)
+      && (levelFilter === "all" || metadata?.level === levelFilter)
+      && (skillFilter === "all" || metadata?.skills.includes(skillFilter))
+      && (roleFilter === "all" || metadata?.roles.includes(roleFilter))
+      && (technologyFilter === "all" || metadata?.technologies.includes(technologyFilter))
+      && (durationFilter === "all" || metadata?.duration === durationFilter);
+  });
+  const clearAdvancedFilters = () => { setLevelFilter("all"); setSkillFilter("all"); setRoleFilter("all"); setTechnologyFilter("all"); setDurationFilter("all"); };
+  const hasAdvancedFilters = [levelFilter, skillFilter, roleFilter, technologyFilter, durationFilter].some((filter) => filter !== "all");
   const certificationTitles = Object.fromEntries(certCompletionData.map((cert) => [cert.id, t(cert.title)]));
 
   return (
     <div className="space-y-6">
       <TrainingSearchPanel groups={groups as Array<[string, { label: { en: string; fr: string }; order: number }]>} certificationTitles={certificationTitles} initialQuery={requestedQuery} onQueryChange={(value) => navigateCatalog(selectedGroup, value)} />
+      <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground"><SlidersHorizontal className="h-4 w-4 text-primary" />{t({ en: "Filter by learner profile", fr: "Filtrer selon votre profil" })}</div>
+          {hasAdvancedFilters && <button onClick={clearAdvancedFilters} className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"><X className="h-3.5 w-3.5" />{t({ en: "Reset filters", fr: "Réinitialiser" })}</button>}
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <label className="text-xs font-medium text-muted-foreground">{t({ en: "Level", fr: "Niveau" })}<select value={levelFilter} onChange={(event) => setLevelFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All levels", fr: "Tous les niveaux" })}</option><option value="beginner">{t({ en: "Beginner", fr: "Débutant" })}</option><option value="intermediate">{t({ en: "Intermediate", fr: "Intermédiaire" })}</option><option value="advanced">{t({ en: "Advanced", fr: "Avancé" })}</option></select></label>
+          <label className="text-xs font-medium text-muted-foreground">{t({ en: "Skill", fr: "Compétence" })}<select value={skillFilter} onChange={(event) => setSkillFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All skills", fr: "Toutes les compétences" })}</option>{available("skills").map((value) => <option key={value} value={value}>{filterLabels.skills[value as keyof typeof filterLabels.skills]}</option>)}</select></label>
+          <label className="text-xs font-medium text-muted-foreground">{t({ en: "Role", fr: "Métier" })}<select value={roleFilter} onChange={(event) => setRoleFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All roles", fr: "Tous les métiers" })}</option>{available("roles").map((value) => <option key={value} value={value}>{filterLabels.roles[value as keyof typeof filterLabels.roles]}</option>)}</select></label>
+          <label className="text-xs font-medium text-muted-foreground">{t({ en: "Technology", fr: "Technologie" })}<select value={technologyFilter} onChange={(event) => setTechnologyFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All technologies", fr: "Toutes les technologies" })}</option>{available("technologies").map((value) => <option key={value} value={value}>{filterLabels.technologies[value as keyof typeof filterLabels.technologies]}</option>)}</select></label>
+          <label className="text-xs font-medium text-muted-foreground">{t({ en: "Estimated duration", fr: "Durée estimée" })}<select value={durationFilter} onChange={(event) => setDurationFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All durations", fr: "Toutes les durées" })}</option>{Object.entries(filterLabels.durations).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">{t({ en: "Duration is estimated from the published number of learning activities.", fr: "La durée est estimée à partir du nombre d’activités pédagogiques publiées." })}</p>
+      </div>
       {/* Filter pills */}
       <div className="flex flex-wrap gap-2">
         <button
@@ -840,6 +907,7 @@ function CatalogTab({
           );
         })}
       </motion.div>
+      {filteredCerts.length === 0 && <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-8 text-center text-sm text-muted-foreground">{t({ en: "No course matches all selected criteria.", fr: "Aucune formation ne correspond à tous les critères sélectionnés." })}</div>}
     </div>
   );
 }

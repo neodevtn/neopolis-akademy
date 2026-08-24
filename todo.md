@@ -2140,3 +2140,8 @@
 
 ### Cours 35 — Innover avec Google Cloud AI
 - [x] Importer le paquet vérifié, ses médias locaux et 23 activités standardisées, puis contrôler et publier après audit de production
+
+## Catalogue et examens
+- [x] Ajouter des filtres multi-critères de formation : niveau, compétences, métier, technologie et durée
+- [x] Réorganiser les catégories de formation avec une taxonomie lisible et cohérente
+- [x] Persister les réponses, la position et le chronomètre d’un examen pour survivre à un rafraîchissement de page

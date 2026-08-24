@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getExamSession, saveExamSession, clearExamSession, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients } from "./db";
 import { awardCertification, awardCourseCompletionBadge } from "./achievementService";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
@@ -506,6 +506,17 @@ export const appRouter = router({
       .query(async ({ ctx, input }) => {
         return await getExamAttempts(ctx.user.id, input?.certificationId);
       }),
+
+    getExamSession: protectedProcedure.input(z.object({ certificationId: z.string() })).query(async ({ ctx, input }) =>
+      getExamSession(ctx.user.id, input.certificationId)),
+
+    saveExamSession: protectedProcedure.input(z.object({
+      certificationId: z.string(), questions: z.array(z.any()), answers: z.array(z.any()),
+      currentIndex: z.number().int().min(0), selectedIds: z.array(z.string()), startedAt: z.date(), expiresAt: z.date(),
+    })).mutation(async ({ ctx, input }) => saveExamSession({ ...input, userId: ctx.user.id })),
+
+    clearExamSession: protectedProcedure.input(z.object({ certificationId: z.string() })).mutation(async ({ ctx, input }) =>
+      clearExamSession(ctx.user.id, input.certificationId)),
 
     getAchievements: protectedProcedure.query(async ({ ctx }) => getUserAchievements(ctx.user.id)),
 

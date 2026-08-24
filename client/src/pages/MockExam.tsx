@@ -13,6 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { announceAchievement } from "@/components/AchievementCelebration";
 import { BrandLogo } from "@/components/BrandLogo";
+import { canRestoreExamSession, getExamSessionRemainingSeconds } from "@shared/examSession";
 
 type ExamState = "intro" | "active" | "review" | "locked";
 
@@ -85,6 +86,7 @@ export default function MockExam() {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [selectedForCurrent, setSelectedForCurrent] = useState<string[]>([]);
+  const [sessionRestored, setSessionRestored] = useState(false);
 
   const timeLimit = (examConfig?.timeLimit || 90) * 60;
 
@@ -94,6 +96,42 @@ export default function MockExam() {
       if (result.achievement) announceAchievement(result.achievement);
     },
   });
+  const activeSessionQuery = trpc.training.getExamSession.useQuery(
+    { certificationId: certId || "" },
+    { enabled: Boolean(isAuthenticated && certId) },
+  );
+  const saveExamSessionMutation = trpc.training.saveExamSession.useMutation();
+  const clearExamSessionMutation = trpc.training.clearExamSession.useMutation();
+
+  useEffect(() => {
+    if (activeSessionQuery.isLoading) return;
+    const session = activeSessionQuery.data;
+    if (session && canRestoreExamSession(session.expiresAt)) {
+      const remaining = getExamSessionRemainingSeconds(session.expiresAt);
+      setExamQuestions((session.questions as any[]) || []);
+      setAnswers((session.answers as Answer[]) || []);
+      setCurrentIndex(session.currentIndex || 0);
+      setSelectedForCurrent((session.selectedIds as string[]) || []);
+      setStartTime(new Date(session.startedAt));
+      setTimeRemaining(remaining);
+      setExamState(remaining > 0 ? "active" : "review");
+      if (remaining === 0 && certId) clearExamSessionMutation.mutate({ certificationId: certId });
+    }
+    setSessionRestored(true);
+  }, [activeSessionQuery.data, activeSessionQuery.isLoading, certId]);
+
+  useEffect(() => {
+    if (!sessionRestored || examState !== "active" || !certId || !startTime || examQuestions.length === 0) return;
+    saveExamSessionMutation.mutate({
+      certificationId: certId,
+      questions: examQuestions,
+      answers,
+      currentIndex,
+      selectedIds: selectedForCurrent,
+      startedAt: startTime,
+      expiresAt: new Date(Date.now() + timeRemaining * 1000),
+    });
+  }, [sessionRestored, examState, certId, examQuestions, answers, currentIndex, selectedForCurrent, startTime, timeRemaining]);
 
   // Timer
   useEffect(() => {
@@ -116,14 +154,20 @@ export default function MockExam() {
     // Shuffle and select questions
     const shuffled = [...certQuestions].sort(() => Math.random() - 0.5);
     const count = examConfig?.totalQuestions || Math.min(certQuestions.length, 20);
-    setExamQuestions(shuffled.slice(0, count));
+    const questions = shuffled.slice(0, count);
+    const startedAt = new Date();
+    setExamQuestions(questions);
     setExamState("active");
     setTimeRemaining(timeLimit);
-    setStartTime(new Date());
+    setStartTime(startedAt);
     setAnswers([]);
     setCurrentIndex(0);
     setSelectedForCurrent([]);
-  }, [certQuestions, examConfig, timeLimit]);
+    if (certId) saveExamSessionMutation.mutate({
+      certificationId: certId, questions, answers: [], currentIndex: 0, selectedIds: [], startedAt,
+      expiresAt: new Date(startedAt.getTime() + timeLimit * 1000),
+    });
+  }, [certQuestions, examConfig, timeLimit, certId]);
 
   const confirmAnswer = useCallback(() => {
     const currentQ = examQuestions[currentIndex];
@@ -142,14 +186,16 @@ export default function MockExam() {
 
   const finishExam = useCallback(() => {
     setExamState("review");
-  }, []);
+    if (certId) clearExamSessionMutation.mutate({ certificationId: certId });
+  }, [certId]);
 
   const finishExamWithAnswer = useCallback((lastQId: string, lastSelected: string[]) => {
     // Calculate score with all answers including the last one
     const allAnswers = [...answers, { questionId: lastQId, selectedIds: lastSelected }];
     setAnswers(allAnswers);
     setExamState("review");
-  }, [answers]);
+    if (certId) clearExamSessionMutation.mutate({ certificationId: certId });
+  }, [answers, certId]);
 
   const toggleSelection = useCallback((choiceId: string) => {
     setSelectedForCurrent((prev) => {

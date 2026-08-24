@@ -1,6 +1,6 @@
 import { eq, desc, asc, sql, and, or, like, count, gt, isNull, isNotNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, InsertTrainingProgress, InsertExamAttempt, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { engagementBucket, firstAttemptRate, isPedagogicalReportingEvent } from "./reportingMetrics";
 import { learnerReportingLabel } from "@shared/learnerReportingLabel";
@@ -258,6 +258,31 @@ export async function getExamAttempts(userId: number, certificationId?: string) 
   return await db.select().from(examAttempts)
     .where(eq(examAttempts.userId, userId))
     .orderBy(desc(examAttempts.finishedAt));
+}
+
+export async function getExamSession(userId: number, certificationId: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const sessions = await db.select().from(examSessions)
+    .where(and(eq(examSessions.userId, userId), eq(examSessions.certificationId, certificationId)))
+    .limit(1);
+  return sessions[0] ?? null;
+}
+
+export async function saveExamSession(data: InsertExamSession) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(examSessions)
+    .where(and(eq(examSessions.userId, data.userId), eq(examSessions.certificationId, data.certificationId)));
+  await db.insert(examSessions).values(data);
+  return getExamSession(data.userId, data.certificationId);
+}
+
+export async function clearExamSession(userId: number, certificationId: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(examSessions)
+    .where(and(eq(examSessions.userId, userId), eq(examSessions.certificationId, certificationId)));
 }
 
 // ============ Learner achievements ============
