@@ -16,3 +16,7 @@ Une seconde capture desktop, une fois les données hydratées, confirme le rendu
 L’audit canonique confirme **3 leçons**, **29 activités**, **10 Projector**, 14 TP `cloud_exercise`, 2 tris, 2 expériences visuelles et 1 QCM. Il relève 94 références média locales, aucune erreur de structure ni URL DataCamp publiée. Le contrôle local couvre les trois types d’activité interactifs et la progression séquentielle.
 
 Le typage TypeScript, la validation de tous les JSON et la suite complète sont réussis : **92 fichiers de test et 339 tests**. Les tests dédiés couvrent les compteurs, les Projector, les 14 TP, les deux tris, les deux visuels, le QCM, la catégorie de productivité, la recherche et l’absence de média externe. Le contrôle média sur le domaine de production sera effectué après déploiement.
+
+## Contrôle média de production
+
+L’audit sur le domaine public a contrôlé les **67 références média uniques** réellement consommées par le cours. Les 67 répondent **HTTP 200**, sans 404, 429, URL DataCamp externe ni chemin de stockage direct. La couverture inclut les dix leçons Projector, leurs audios/MP4, sous-titres, PDF de slides et images locales synchronisées.
