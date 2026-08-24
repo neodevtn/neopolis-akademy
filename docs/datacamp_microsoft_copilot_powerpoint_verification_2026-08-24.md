@@ -19,3 +19,7 @@ Les captures directes des routes profondes QCM, TP et vidéo finale ont échoué
 ## Validation automatisée
 
 La validation de tous les JSON de cours est réussie. La suite complète compte **89 fichiers de test et 330 tests réussis** ; elle couvre notamment le convertisseur DataCamp, les composants de TP, les médias Projector, l’index de recherche, la catégorie de productivité et le nouveau cours PowerPoint. L’audit structurel ne relève aucune erreur : 20/20 activités et 7/7 vidéos Projector sont conservées, avec 57 références média locales valides. Le contrôle média sur le domaine de production sera effectué après publication.
+
+## Contrôle média de production
+
+L’audit sur le domaine public a contrôlé les **38 références média uniques** réellement consommées par le cours. Les 38 répondent **HTTP 200**, sans 404, 429, URL DataCamp externe ni chemin de stockage direct. Le contrôle couvre les sept audios Projector, leurs sous-titres, les PDF de slides, ainsi que les images locales des diapositives.

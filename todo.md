@@ -2069,4 +2069,4 @@
 - [x] Reprendre le téléchargement des parties ZIP depuis le dossier Drive parent désormais public et vérifier leur intégrité
 
 ### Cours 09 — Microsoft Copilot dans PowerPoint
-- [ ] Importer le paquet prêt, ses médias locaux et activités standardisées, puis contrôler et publier après audit de production
+- [x] Importer le paquet prêt, ses médias locaux et activités standardisées, puis contrôler et publier après audit de production
