@@ -160,12 +160,20 @@ for (const chapter of manifest.chapters || []) {
 const course = convertDataCampV1(manifest, assetMap);
 const firstActivity = course.lessons[0]?.chapters[0];
 if (firstActivity) {
+  const courseTitle = typeof course.sourceCourseTitle === "string"
+    ? course.sourceCourseTitle
+    : `${course.sourceCourseTitle?.fr || ""} ${course.sourceCourseTitle?.en || ""}`;
+  const isReplitCourse = /replit/i.test(courseTitle);
   firstActivity.blocks.unshift({
     type: "content",
     id: `neopolis_${course.courseId}_environment_preparation`,
     body: {
-      fr: "## Avant de commencer\n\nCe cours se réalise directement dans Neopolis avec des activités interactives. Pour les mises en situation, préparez un chatbot IA autorisé par votre organisation ; ne partagez jamais de données sensibles, de mots de passe ou de clés API.",
-      en: "## Before you start\n\nThis course is completed in Neopolis through interactive activities. For the scenarios, prepare an AI chatbot approved by your organization; never share sensitive data, passwords, or API keys.",
+      fr: isReplitCourse
+        ? "## Avant de commencer\n\nCréez ou ouvrez un compte Replit pour reproduire les mises en situation du cours dans votre propre environnement. Utilisez uniquement des données de démonstration, n’ajoutez jamais de mot de passe, clé API ou donnée sensible dans un projet ou un prompt."
+        : "## Avant de commencer\n\nCe cours se réalise directement dans Neopolis avec des activités interactives. Pour les mises en situation, préparez un chatbot IA autorisé par votre organisation ; ne partagez jamais de données sensibles, de mots de passe ou de clés API.",
+      en: isReplitCourse
+        ? "## Before you start\n\nCreate or open a Replit account to reproduce the course scenarios in your own environment. Use demonstration data only; never add passwords, API keys, or sensitive data to a project or prompt."
+        : "## Before you start\n\nThis course is completed in Neopolis through interactive activities. For the scenarios, prepare an AI chatbot approved by your organization; never share sensitive data, passwords, or API keys.",
     },
   });
 }
