@@ -2089,3 +2089,6 @@
 ### Cours 15 — Développement logiciel avec Windsurf
 - [x] Importer le paquet prêt, ses médias locaux et activités standardisées, puis contrôler et publier après audit de production
 - [x] Garantir le bypass administrateur lors de l’ouverture d’une leçon Windsurf non encore complétée par lien profond
+
+### Cours 16 — Programmation assistée par IA avancée pour les développeurs
+- [ ] Importer le paquet prêt, ses médias locaux et 32 activités standardisées, puis contrôler et publier après audit de production

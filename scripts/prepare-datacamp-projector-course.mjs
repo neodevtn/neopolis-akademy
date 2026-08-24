@@ -87,6 +87,13 @@ function extractSlideImages(value, localImages, label) {
     const localPath = localImages.get(match[2]);
     const url = localAsset(localPath);
     if (!url && optionalMissingProjectorImages.has(localPath)) continue;
+    // Some Projector slides reference a short animation that is already embedded in
+    // the lesson's downloaded MP4 but is not separately included in the canonical
+    // local image manifest. Do not expose its external URL as an image fallback.
+    if (!url && /\.(?:mp4|webm|mov)(?:\?.*)?$/i.test(match[2])) {
+      console.warn(`Animation Projector intégrée à la vidéo locale, omise comme image de slide : ${match[2]}`);
+      continue;
+    }
     if (!url) throw new Error(`Image Projector locale introuvable pour ${label}: ${match[2]}`);
     images.push({ alt: match[1] || "Illustration de slide", url });
   }

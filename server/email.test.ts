@@ -15,5 +15,5 @@ describe("Resend API Key Validation", () => {
     // If invalid, we'll get an authentication error
     expect(error).toBeNull();
     expect(data).toBeDefined();
-  });
+  }, 15_000);
 });
