@@ -28,6 +28,7 @@
 | Ressources locales du paquet | 399 | 399 téléversées dans la bibliothèque média | Conforme |
 | Références média réellement consommées par le cours | 193 | 193 via `/api/assets/` | Conforme |
 | Références média HTTP locales | 193 | 193 réponses HTTP 200 | Conforme |
+| Références média HTTP de production | 193 | 193 réponses HTTP 200 sur `akademy.neodev.click` | Conforme |
 
 Les dix leçons DataCamp Projector conservent le format audio MP3 local, les slides synchronisées, la transcription segmentée, les sous-titres français et anglais ainsi que le PDF de slides. Aucune URL de média DataCamp ou chemin `/manus-storage/` n’est présent dans le JSON du cours publié.
 
@@ -61,6 +62,7 @@ La progression séquentielle est appliquée à chacune des 29 activités. Les tr
 | `pnpm validate-courses` | 0 erreur de validation ; avertissements historiques de similarité de distracteurs conservés hors de ce cours |
 | Audit DataCamp structurel | 29 activités, 10 Projector, 19 activités interactives, 193 / 193 médias locaux, aucune erreur |
 | Audit HTTP local à débit contrôlé | 193 / 193 réponses HTTP 200 |
+| Audit HTTP de production à débit contrôlé | 193 / 193 réponses HTTP 200 |
 
 ## Écarts restants
 
