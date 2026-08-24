@@ -2122,3 +2122,6 @@
 
 ### Cours 28 — Créer des workflows agentiques avec LlamaIndex
 - [x] Importer le paquet vérifié, ses médias locaux et 15 activités standardisées, puis contrôler et publier après audit de production
+
+### Cours 30 — Entraîner efficacement des modèles d’IA avec PyTorch
+- [ ] Importer le paquet vérifié, ses médias locaux disponibles et 45 activités standardisées, puis contrôler et publier après audit de production
