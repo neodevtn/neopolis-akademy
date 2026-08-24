@@ -58,6 +58,7 @@ export function htmlToText(value) {
     .replace(/<em[^>]*>|<i[^>]*>/gi, "_")
     .replace(/<\/(em|i)>/gi, "_")
     .replace(/<[^>]+>/g, ""))
+    .replace(/https?:\/\/[^\s]*(?:datacamp\.com|googleusercontent\.com|storage\.googleapis\.com)[^\s]*/gi, "")
     .replace(/[ \t]+\n/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
@@ -362,6 +363,7 @@ function buildChapter(activity, sourceChapter, assetMap, activityIndex) {
       blocks = [extractChoiceData(activity, assetMap)];
       break;
     case "NormalExercise":
+    case "CloudExercise":
       type = "exercise";
       blocks = [buildPracticalBlock(activity, slidesPdf)];
       break;

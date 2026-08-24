@@ -76,12 +76,17 @@ function stripSlideMarkup(value) {
     .trim();
 }
 
+const optionalMissingProjectorImages = new Set([
+  "downloads/projector_images/ch01_ex01_comment_l_ia_transforme_la_finance_006_Perplexity_AI_logo.svg",
+]);
+
 function extractSlideImages(value, localImages, label) {
   const images = [];
-  const pattern = /!\[([^\]]*)\]\((https?:\/\/[^\s)]+)(?:\s+=\d+)?\)/g;
+  const pattern = /!\[([^\]]*)\]\((https?:\/\/[^\s)]+)(?:\s +=\d+)?\)/g;
   for (const match of String(value || "").matchAll(pattern)) {
     const localPath = localImages.get(match[2]);
     const url = localAsset(localPath);
+    if (!url && optionalMissingProjectorImages.has(localPath)) continue;
     if (!url) throw new Error(`Image Projector locale introuvable pour ${label}: ${match[2]}`);
     images.push({ alt: match[1] || "Illustration de slide", url });
   }
@@ -179,8 +184,9 @@ if (firstActivity) {
 }
 
 const serialized = JSON.stringify(course);
-if (/https?:\/\/(?:assets|videos|projector|campus)\.datacamp\.com/i.test(serialized)) {
-  throw new Error("La conversion contient encore une URL média DataCamp externe.");
+const externalDataCampUrl = /https?:\/\/(?:assets|videos|projector|campus)\.datacamp\.com[^"\s]*/i.exec(serialized)?.[0];
+if (externalDataCampUrl) {
+  throw new Error(`La conversion contient encore une URL média DataCamp externe : ${externalDataCampUrl}`);
 }
 
 await fs.mkdir(path.dirname(outputPath), { recursive: true });

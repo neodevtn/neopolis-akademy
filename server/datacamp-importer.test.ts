@@ -85,6 +85,20 @@ const manifest = {
           question: { solutionItems: [{ answer: "Insultes", correct: true, feedback: "À tester" }, { answer: "Majuscules", correct: false, feedback: "Fonctionne" }, { answer: "Phrases absurdes", correct: true, feedback: "À tester" }] },
         },
       },
+      {
+        chapter_number: 1,
+        exercise_number: 7,
+        exercise_id: 7,
+        type: "CloudExercise",
+        title: "TP cloud pilote",
+        xp: 100,
+        content: {
+          assignment_html: "<p>Réalisez une analyse dans votre environnement autonome.</p>",
+          instructions_markdown: "<ol><li>Préparez votre outil autorisé.</li><li>Rédigez une réponse justifiée.</li></ol>",
+          hint_html: "<p>Ne partagez aucune donnée sensible.</p>",
+          question: { prompt: "<exercise_objective>Cette balise interne ne doit pas être affichée.</exercise_objective>" },
+        },
+      },
     ],
   }],
 };
@@ -98,7 +112,7 @@ describe("convertDataCampV1", () => {
     ]);
     const course = convertDataCampV1(manifest, assets);
     expect(course.courseId).toBe("pilot_course__01");
-    expect(course.lessons[0].chapters).toHaveLength(6);
+    expect(course.lessons[0].chapters).toHaveLength(7);
     expect(course.lessons[0].chapters[0].blocks[0]).toMatchObject({
       type: "video",
       audioUrl: "/api/assets/video_hash.mp3",
@@ -116,6 +130,12 @@ describe("convertDataCampV1", () => {
       correctAnswers: "a,c",
       chatScenario: { agentName: "FoodGPT", messages: [{ role: "user" }, { role: "user" }, { role: "user" }] },
     });
+    expect(course.lessons[0].chapters[6].blocks[0]).toMatchObject({
+      type: "cloud_exercise",
+      assignment: "Réalisez une analyse dans votre environnement autonome.",
+      steps: ["Préparez votre outil autorisé.", "Rédigez une réponse justifiée."],
+    });
+    expect(JSON.stringify(course.lessons[0].chapters[6].blocks[0])).not.toContain("exercise_objective");
     expect(course.lessons[0].chapters.every((chapter) => chapter.requiredBeforeAdvance)).toBe(true);
     expect(course.lessons[0].competencyTags).toEqual(["ai_solution_design"]);
     expect(course.datacampImport.competencyTagging).toBe("lesson_content_signals_v1");
@@ -124,6 +144,7 @@ describe("convertDataCampV1", () => {
   it("nettoie le HTML de source sans injecter de balisage libre", () => {
     expect(htmlToText("<p>Texte&nbsp;<strong>important</strong></p><ul><li>Point</li></ul>")).toContain("**important**");
     expect(htmlToText("<p>Texte</p>")).not.toContain("<p>");
+    expect(htmlToText('<p>Consultez <a href="https://assets.datacamp.com/path/source.pdf">le support local</a>.</p>')).toBe("Consultez le support local.");
   });
 
   it("transforme les chemins de stockage uploadés en références du proxy applicatif", () => {
