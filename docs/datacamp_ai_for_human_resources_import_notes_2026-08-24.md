@@ -19,3 +19,7 @@ Au format mobile 375 × 812, le fil d’Ariane, le titre, le compteur 0/3 leçon
 L’audit canonique confirme 3 leçons, 32 activités, 11 Projector, 16 TP autonomes et 5 tris. Il ne détecte aucun bloc non autorisé, média non local, activité évaluée non taguée ou TP dépourvu de préparation. Le contrôle HTTP local confirme **47/47 références média uniques** accessibles via `/api/assets/`.
 
 Le typage TypeScript, la validation de tous les JSON et la suite complète sont réussis : **93 fichiers de test et 342 tests**. Le test dédié couvre les compteurs, les 11 Projector, les 16 TP, les 5 tris, le catalogue, la progression séquentielle et l’absence d’URL DataCamp externe. Le contrôle média de production reste à exécuter après publication.
+
+## Contrôle média de production
+
+L’audit sur le domaine public a contrôlé les **47 références média uniques** réellement consommées par le cours, réparties en quatre lots à débit maîtrisé. Les 47 répondent **HTTP 200**, sans 404, 429, URL DataCamp externe ni chemin de stockage direct. La couverture inclut les onze leçons Projector, leurs pistes audio, sous-titres, PDF de slides et images locales synchronisées.

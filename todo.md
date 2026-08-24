@@ -2084,4 +2084,4 @@
 - [x] Publier le paquet prêt, ses médias locaux et activités standardisées, puis contrôler les 67 médias uniques en production
 
 ### Cours 14 — L’IA pour les ressources humaines
-- [ ] Publier le paquet prêt, ses médias locaux et activités standardisées, puis contrôler les 47 médias uniques en production
+- [x] Publier le paquet prêt, ses médias locaux et activités standardisées, puis contrôler les 47 médias uniques en production
