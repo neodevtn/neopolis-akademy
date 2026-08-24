@@ -2059,4 +2059,4 @@
 - [x] Enregistrer le cours, tester les médias et activités, puis publier avec un rapport de contrôle de production
 
 ### Cours 06 — L’IA pour la finance
-- [ ] Publier le cours avec les 346 médias locaux disponibles, documenter le logo Projector Perplexity absent sans URL externe et vérifier le contrôle média de production
+- [x] Publier le cours avec les 346 médias locaux disponibles, documenter le logo Projector Perplexity absent sans URL externe et vérifier le contrôle média de production

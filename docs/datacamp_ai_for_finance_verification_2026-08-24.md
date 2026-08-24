@@ -28,3 +28,7 @@ La suite complète a validé **86 fichiers et 321 tests**. La validation JSON es
 ## Écart et risque restant
 
 La capture automatisée de quatre écrans profonds a échoué au niveau du service de capture, sans erreur client ou serveur associée. Les activités concernées ont été contrôlées structurellement dans le JSON et les composants QCM, tri et TP sont couverts par la suite de tests. Le contrôle média de production reste à exécuter après publication.
+
+## Contrôle média de production
+
+L’audit de production a contrôlé les **52 références média uniques** effectivement consommées par le cours, en deux lots à débit maîtrisé. Les 52 répondent **HTTP 200**, sans 404, 429 ni URL DataCamp externe. Cette vérification inclut les pistes audio Projector, sous-titres, PDF de slides et images locales attachées aux leçons.
