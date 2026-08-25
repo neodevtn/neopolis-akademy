@@ -389,6 +389,8 @@ function renderFieldEditor(
       return <Textarea value={getI18nValue(field.key, lang)} onChange={(e) => updateI18nField(field.key, lang, e.target.value)} rows={field.type === "i18n_richtext" ? 8 : 4} placeholder={field.placeholder} />;
     case "i18n_richtext":
       return <WysiwygMarkdownEditor value={getI18nValue(field.key, lang)} onChange={(value) => updateI18nField(field.key, lang, value)} placeholder={field.placeholder} />;
+    case "i18n_html":
+      return <Textarea value={getI18nValue(field.key, lang)} onChange={(event) => updateI18nField(field.key, lang, event.target.value)} rows={10} className="font-mono text-xs bg-slate-950 text-emerald-300" placeholder="&lt;section&gt;...&lt;/section&gt;" spellCheck={false} />;
     case "richtext":
       return <WysiwygMarkdownEditor value={editData[field.key] || ""} onChange={(value) => updateField(field.key, value)} placeholder={field.placeholder} />;
     case "array":

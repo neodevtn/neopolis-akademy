@@ -672,6 +672,7 @@ export default function TrainingCourse() {
                     t={t}
                     certId={certId || ""}
                     courseId={courseId || ""}
+                    courseTheme={(course as any)?.learningTheme || (courseId === "automatisation_comptable_ia__01" ? "finance-ledger" : "neopolis")}
                     onComplete={() => {
                       if (isSingleLessonCourse) {
                         // For single-lesson courses, advance chapter progress to the end

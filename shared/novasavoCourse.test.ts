@@ -20,12 +20,13 @@ describe("cours Novasavo paginé", () => {
     expect(course.lessons[0].chapters.filter((chapter: any) => chapter.requiredBeforeAdvance)).toHaveLength(4);
   });
 
-  it("utilise uniquement des blocs Novasavo déclarés dans la bibliothèque standard", () => {
+  it("utilise des familles génériques déclarées dans la bibliothèque standard", () => {
     const types = new Set(course.lessons.flatMap((lesson: any) => lesson.chapters.flatMap((chapter: any) => chapter.blocks.map((block: any) => block.type))));
-    ["unit_hero_blue", "inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback", "timeline_step_cards", "process_flow_diagram", "mistake_correction_pairs", "ai_assistant_prompt_panel", "accounting_comparison_visual", "key_points_summary", "notes_highlights_bookmarks_panel", "competency_progress_hud"].forEach((type) => {
+    ["learning_section", "knowledge_check", "sequence_visual", "comparison_panel", "learning_tools", "learning_progress"].forEach((type) => {
       expect(types.has(type)).toBe(true);
       expect(getBlockDef(type)).toBeDefined();
     });
+    ["unit_hero_blue", "inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback", "timeline_step_cards", "process_flow_diagram", "mistake_correction_pairs", "ai_assistant_prompt_panel", "accounting_comparison_visual", "key_points_summary", "notes_highlights_bookmarks_panel", "competency_progress_hud"].forEach((type) => expect(types.has(type)).toBe(false));
   });
 
   it("conserve les deux questions visibles dans les captures source et ne publie aucun libellé XP", () => {

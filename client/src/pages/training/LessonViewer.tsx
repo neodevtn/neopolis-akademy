@@ -27,6 +27,8 @@ import { OrderingBlock } from "@/components/blocks/OrderingBlock";
 import { AiEvaluationBlock } from "@/components/blocks/AiEvaluationBlock";
 import { MultiChoiceBlock } from "@/components/blocks/MultiChoiceBlock";
 import { NovasavoLearningBlock } from "@/components/blocks/NovasavoLearningBlocks";
+import { BlockCustomizationFrame } from "@/components/blocks/BlockCustomizationFrame";
+import { ComparisonPanelBlock, KnowledgeCheckBlock, LearningProgressBlock, LearningSectionBlock, LearningToolsBlock, SequenceVisualBlock } from "@/components/blocks/GenericLearningBlocks";
 import LessonQuiz from "./LessonQuiz";
 import NumericAnswerExercise from "@/components/NumericAnswerExercise";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -49,6 +51,7 @@ export default function LessonViewer({
   onChapterChange,
   onMediaPlaybackChange,
   initialChapter,
+  courseTheme,
 }: {
   lesson: any;
   lessonIndex: number;
@@ -65,6 +68,7 @@ export default function LessonViewer({
   onChapterChange?: (current: number, total: number) => void;
   onMediaPlaybackChange?: (isPlaying: boolean) => void;
   initialChapter?: number;
+  courseTheme?: any;
 }) {
   const { user } = useAuth();
   const recordCompetencyOutcome = trpc.competencies.recordAssessmentOutcome.useMutation();
@@ -175,7 +179,7 @@ export default function LessonViewer({
           if (scIds.length > 0 && !scIds.every((id: string) => completedExercises.has(id))) return;
           const cloudIds = blocks.filter((b: any) => b.type === 'cloud_exercise').map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
           if (cloudIds.length > 0 && !cloudIds.every((id: string) => completedCloudExercises.has(id))) return;
-          const novasavoIds = blocks.filter((b: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback"].includes(b.type)).map((b: any, i: number) => b.id || `novasavo_${i}`);
+          const novasavoIds = blocks.filter((b: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback", "knowledge_check"].includes(b.type)).map((b: any, i: number) => b.id || `novasavo_${i}`);
           if (novasavoIds.length > 0 && !novasavoIds.every((id: string) => completedNovasavoInteractions.has(id))) return;
         }
         setCurrentChapter(p => p + 1);
@@ -210,7 +214,7 @@ export default function LessonViewer({
   const canEditCurrentChapter = user?.role === "admin";
   const currentChapterEditHref = getContextualCourseEditorHref({ courseId, lessonIndex, chapterIndex: currentChapter });
   const novasavoInteractionIds = (chapter?.blocks || [])
-    .filter((block: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback"].includes(block.type))
+    .filter((block: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback", "knowledge_check"].includes(block.type))
     .map((block: any, index: number) => block.id || `novasavo_${index}`);
   const isGatedByNovasavoInteraction = !isReviewMode && novasavoInteractionIds.length > 0 && !novasavoInteractionIds.every((id: string) => completedNovasavoInteractions.has(id));
 
@@ -255,6 +259,21 @@ export default function LessonViewer({
             chapterIndex: currentChapter,
           });
         }} /></div>;
+      case "learning_section":
+        return <LearningSectionBlock key={blockIdx} block={block} lang={lang} />;
+      case "knowledge_check":
+        return <KnowledgeCheckBlock key={blockIdx} block={block} lang={lang} onComplete={(id, isCorrect) => {
+          setCompletedNovasavoInteractions((current) => new Set(current).add(id));
+          if (isCorrect) recordCompetencyOutcome.mutate({ sourceType: "checkpoint_passed", sourceKey: courseId, eventKey: `knowledge-check:${courseId}:${lessonIndex}:${currentChapter}:${id}`, score: 100, certificationId: certId, courseId, lessonIndex, chapterIndex: currentChapter });
+        }} />;
+      case "sequence_visual":
+        return <SequenceVisualBlock key={blockIdx} block={block} lang={lang} />;
+      case "comparison_panel":
+        return <ComparisonPanelBlock key={blockIdx} block={block} lang={lang} />;
+      case "learning_tools":
+        return <LearningToolsBlock key={blockIdx} block={block} lang={lang} courseId={courseId} lessonTitle={resolveI18n(lesson.title, lang)} screenTitle={resolveI18n(chapter?.title, lang)} />;
+      case "learning_progress":
+        return <LearningProgressBlock key={blockIdx} block={block} lang={lang} />;
       case "content": {
         const body = block.body || {};
         let text = typeof body === "string" ? body : (body[lang] || body.en || "");
@@ -1123,7 +1142,7 @@ export default function LessonViewer({
                     </div>
                   </div>
                 )}
-                {orderedBlocks.map((block: any, idx: number) => renderBlock(block, allBlocks.indexOf(block) >= 0 ? allBlocks.indexOf(block) : idx))}
+                {orderedBlocks.map((block: any, idx: number) => <BlockCustomizationFrame key={block.id || `${block.type}-${idx}`} block={block} lang={lang} theme={courseTheme}>{renderBlock(block, allBlocks.indexOf(block) >= 0 ? allBlocks.indexOf(block) : idx)}</BlockCustomizationFrame>)}
               </div>
             );
           })()}

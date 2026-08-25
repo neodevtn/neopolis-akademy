@@ -2214,3 +2214,12 @@
 - [x] Ajouter un garde-fou mobile global limité au lecteur de formation
 - [x] Automatiser l’assertion `scrollWidth <= clientWidth + 2` sur les deux viewports
 - [x] Publier puis confirmer les métriques de production avec `overflow=false`
+
+## Généralisation de la bibliothèque de blocs pédagogiques
+- [x] Inventorier les blocs spécifiques, leurs usages et les variantes visuelles déployées
+- [x] Définir des composants génériques paramétrables et un contrat de styles inline sûr
+- [x] Présenter le mapping de migration et faire valider la bibliothèque cible avant propagation
+- [x] Migrer les formations par lots en conservant un adaptateur de rétrocompatibilité
+- [x] Contrôler les rendus navigateur desktop/mobile de chaque lot et publier sans régression
+- [x] Ajouter des templates par formation : palette, typographie, rayons, densité et variantes de composants
+- [x] Ajouter des overrides HTML/CSS encadrés et validés pour chaque type de bloc, sans exécution de script

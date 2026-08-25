@@ -19,7 +19,7 @@ export type BlockCategory =
 export interface BlockFieldSchema {
   key: string;
   label: { en: string; fr: string };
-  type: "text" | "textarea" | "richtext" | "number" | "boolean" | "select" | "array" | "json" | "code" | "i18n_text" | "i18n_textarea" | "i18n_richtext";
+  type: "text" | "textarea" | "richtext" | "number" | "boolean" | "select" | "array" | "json" | "code" | "i18n_text" | "i18n_textarea" | "i18n_richtext" | "i18n_html";
   required?: boolean;
   placeholder?: string;
   options?: { value: string; label: string }[]; // for select
@@ -566,6 +566,63 @@ const novasavoBlocks = [
   novasavoBlock("course_completion_next_unit_panel", "Passage à l’unité suivante", "assessment"),
 ];
 
+const genericLearningBlocks: BlockTypeDefinition[] = [
+  {
+    type: "learning_section", label: { en: "Learning section", fr: "Section pédagogique" }, description: { en: "Reusable hero, objectives, summary or transition section", fr: "Section réutilisable pour hero, objectifs, synthèse ou transition" }, category: "layout", icon: "PanelsTopLeft", color: "bg-blue-100 text-blue-700", since: "4.0",
+    schema: [
+      { key: "sectionKind", label: { en: "Section kind", fr: "Type de section" }, type: "select", options: [{ value: "hero", label: "Hero" }, { value: "objectives", label: "Objectifs" }, { value: "content", label: "Contenu" }, { value: "summary", label: "Synthèse" }, { value: "transition", label: "Transition" }], defaultValue: "content" },
+      { key: "eyebrow", label: { en: "Eyebrow", fr: "Sur-titre" }, type: "i18n_text" },
+      { key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true },
+      { key: "body", label: { en: "Content", fr: "Contenu" }, type: "i18n_richtext" },
+      { key: "items", label: { en: "Items", fr: "Éléments" }, type: "json" },
+    ], defaultData: { type: "learning_section", sectionKind: "content", title: { en: "", fr: "" } },
+  },
+  {
+    type: "knowledge_check", label: { en: "Knowledge check", fr: "Vérification des acquis" }, description: { en: "Configurable myth/reality, multiple-choice or scenario interaction", fr: "Interaction configurable mythe/réalité, QCM ou scénario" }, category: "interactive", icon: "CircleHelp", color: "bg-indigo-100 text-indigo-700", since: "4.0",
+    schema: [
+      { key: "mode", label: { en: "Interaction mode", fr: "Mode d’interaction" }, type: "select", options: [{ value: "myth_reality", label: "Mythe / réalité" }, { value: "multiple_choice", label: "Choix multiple" }, { value: "scenario", label: "Scénario" }], defaultValue: "multiple_choice" },
+      { key: "prompt", label: { en: "Prompt", fr: "Consigne" }, type: "i18n_textarea", required: true },
+      { key: "options", label: { en: "Options", fr: "Options" }, type: "json", required: true },
+      { key: "correctAnswer", label: { en: "Correct answer", fr: "Bonne réponse" }, type: "text", required: true },
+      { key: "explanation", label: { en: "Feedback", fr: "Feedback" }, type: "i18n_textarea" },
+      { key: "competencyPoints", label: { en: "Competency points", fr: "Points de compétences" }, type: "number", defaultValue: 1 },
+      { key: "required", label: { en: "Required to continue", fr: "Obligatoire pour continuer" }, type: "boolean", defaultValue: true },
+    ], defaultData: { type: "knowledge_check", mode: "multiple_choice", prompt: { en: "", fr: "" }, options: [], correctAnswer: "", competencyPoints: 1, required: true },
+  },
+  {
+    type: "sequence_visual", label: { en: "Sequence visual", fr: "Séquence visuelle" }, description: { en: "Timeline, flow or sequential learning cards", fr: "Timeline, flux ou cartes pédagogiques séquentielles" }, category: "layout", icon: "GitBranch", color: "bg-cyan-100 text-cyan-700", since: "4.0",
+    schema: [{ key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true }, { key: "items", label: { en: "Steps", fr: "Étapes" }, type: "json", required: true }], defaultData: { type: "sequence_visual", title: { en: "", fr: "" }, items: [] },
+  },
+  {
+    type: "comparison_panel", label: { en: "Comparison panel", fr: "Panneau comparatif" }, description: { en: "Configurable before/after, mistakes/corrections or multi-column comparison", fr: "Comparaison configurable avant/après, erreurs/corrections ou multi-colonnes" }, category: "layout", icon: "Columns2", color: "bg-amber-100 text-amber-700", since: "4.0",
+    schema: [{ key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true }, { key: "columns", label: { en: "Columns", fr: "Colonnes" }, type: "json", required: true }], defaultData: { type: "comparison_panel", title: { en: "", fr: "" }, columns: [] },
+  },
+  {
+    type: "learning_tools", label: { en: "Learning tools", fr: "Outils d’apprentissage" }, description: { en: "Assistant, notes, signets and guided tools", fr: "Assistant, notes, signets et outils guidés" }, category: "content", icon: "WandSparkles", color: "bg-slate-100 text-slate-700", since: "4.0",
+    schema: [{ key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true }, { key: "body", label: { en: "Content", fr: "Contenu" }, type: "i18n_textarea" }, { key: "tools", label: { en: "Tools", fr: "Outils" }, type: "json" }], defaultData: { type: "learning_tools", title: { en: "", fr: "" }, tools: [] },
+  },
+  {
+    type: "learning_progress", label: { en: "Learning progress", fr: "Progression d’apprentissage" }, description: { en: "Competency points and progression guidance", fr: "Points de compétences et consignes de progression" }, category: "layout", icon: "ChartNoAxesCombined", color: "bg-emerald-100 text-emerald-700", since: "4.0",
+    schema: [{ key: "label", label: { en: "Label", fr: "Libellé" }, type: "i18n_text" }, { key: "copy", label: { en: "Guidance", fr: "Consigne" }, type: "i18n_textarea" }, { key: "points", label: { en: "Competency points", fr: "Points de compétences" }, type: "number", defaultValue: 1 }], defaultData: { type: "learning_progress", label: { en: "", fr: "" }, points: 1 },
+  },
+];
+
+const universalCustomizationSchema: BlockFieldSchema[] = [
+  { key: "styleTone", label: { en: "Visual tone", fr: "Ton visuel" }, type: "select", options: [{ value: "brand", label: "Marque" }, { value: "info", label: "Information" }, { value: "success", label: "Succès" }, { value: "warning", label: "Avertissement" }, { value: "neutral", label: "Neutre" }, { value: "contrast", label: "Contraste" }], defaultValue: "brand", helpText: { en: "Uses the course template palette", fr: "Utilise la palette du template de formation" } },
+  { key: "styleVariant", label: { en: "Visual variant", fr: "Variante visuelle" }, type: "select", options: [{ value: "soft", label: "Douce" }, { value: "solid", label: "Pleine" }, { value: "outlined", label: "Contour" }, { value: "gradient", label: "Dégradé" }], defaultValue: "soft" },
+  { key: "styleAccent", label: { en: "Accent", fr: "Accent" }, type: "select", options: [{ value: "blue", label: "Bleu" }, { value: "indigo", label: "Indigo" }, { value: "emerald", label: "Émeraude" }, { value: "amber", label: "Ambre" }, { value: "slate", label: "Ardoise" }], defaultValue: "blue" },
+  { key: "styleDensity", label: { en: "Spacing", fr: "Densité" }, type: "select", options: [{ value: "compact", label: "Compact" }, { value: "comfortable", label: "Confortable" }, { value: "spacious", label: "Aéré" }], defaultValue: "comfortable" },
+  { key: "styleLayout", label: { en: "Layout", fr: "Disposition" }, type: "select", options: [{ value: "stack", label: "Empilé" }, { value: "split", label: "Deux zones" }, { value: "grid", label: "Grille" }, { value: "timeline", label: "Timeline" }, { value: "flow", label: "Flux" }], defaultValue: "stack" },
+  { key: "overrideMode", label: { en: "Advanced override", fr: "Override avancé" }, type: "select", options: [{ value: "none", label: "Aucun" }, { value: "append", label: "Ajouter après le bloc" }, { value: "replace", label: "Remplacer le rendu (lecture seule)" }], defaultValue: "none", helpText: { en: "Interactive and assessment blocks cannot be replaced", fr: "Les blocs interactifs et d’évaluation ne peuvent pas être remplacés" } },
+  { key: "customHtml", label: { en: "Custom HTML", fr: "HTML personnalisé" }, type: "i18n_html", helpText: { en: "Sanitized: scripts, handlers, forms and embeds are removed", fr: "Sanitisé : scripts, handlers, formulaires et embeds sont retirés" } },
+  { key: "customCss", label: { en: "Custom CSS", fr: "CSS personnalisé" }, type: "code", helpText: { en: "Scoped to this block. Imports, URLs, fixed positioning and !important are rejected", fr: "Scopé à ce bloc. Imports, URLs, position fixe et !important sont rejetés" } },
+];
+
+const withUniversalCustomization = (definition: BlockTypeDefinition): BlockTypeDefinition => ({
+  ...definition,
+  schema: [...definition.schema, ...universalCustomizationSchema],
+});
+
 // ============================================================
 // REGISTRY EXPORT
 // ============================================================
@@ -606,7 +663,8 @@ export const BLOCK_REGISTRY: BlockTypeDefinition[] = [
   twoColumnsBlock,
   finalSlideBlock,
   ...novasavoBlocks,
-];
+  ...genericLearningBlocks,
+].map(withUniversalCustomization);
 
 /** Get block definition by type */
 export function getBlockDef(type: string): BlockTypeDefinition | undefined {
