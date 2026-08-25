@@ -9,7 +9,7 @@ Le cours est généré depuis le manifeste autorisé Novasavo puis indexé sous 
 | Interactions inline obligatoires | 24 |
 | Catégorie | Finance & Comptabilité |
 | Contrôle navigateur prévisualisation | La route charge puis affiche le garde d’authentification attendu ; aucun compte apprenant n’était disponible dans cette session pour contrôler les écrans protégés |
-| Contrôle de production initial | La route a répondu, mais le client affichait encore « Cours introuvable » pendant la propagation du nouveau bundle ; un nouveau contrôle est requis après disponibilité du déploiement |
+| Contrôle de production | La route de production charge correctement le cours, la sidebar affiche les 12 unités plus l’examen final, et l’écran 1/6 de l’unité 1 présente le lecteur paginé |
 
 Les activités **Mythe ou réalité** et **Scénario** renvoient un feedback immédiatement et bloquent l’avancement avant réponse. Les points sont adressés aux événements de compétences de type `checkpoint_passed`. L’examen final est la treizième leçon et bénéficie donc du verrouillage séquentiel standard après les douze unités.
 
