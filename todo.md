@@ -2241,3 +2241,9 @@
 - [x] Corriger le rendu des retours à la ligne échappés dans les descriptions de blocs de code détecté par la matrice QA
 - [x] Éliminer les clés React dupliquées dans les checkpoints multi-questions détectées par la matrice QA
 - [x] Stabiliser la sonde QA en prévisualisation sans réduire la limitation de débit de production
+
+## Pipeline de publication — matrice QA des blocs
+- [x] Auditer les scripts de validation et les points d’entrée de publication existants
+- [x] Ajouter une commande de pipeline qui orchestre la validation des cours, les tests et la matrice QA desktop/mobile
+- [x] Définir les seuils bloquants, rapports exploitables et conditions explicites de publication
+- [x] Tester, documenter puis publier l’intégration du pipeline QA
