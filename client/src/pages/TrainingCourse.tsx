@@ -10,7 +10,7 @@ import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
   BookOpen, Lock, LogIn, LogOut, ArrowRight, Moon, Sun, Menu, X, Check, Filter, Video, Eye,
-  FileText, ChevronDown, Brain, Target, Trophy, Download, ArrowUp, Timer, RefreshCw, MessageSquareText
+  FileText, ChevronDown, Brain, Target, Trophy, Download, ArrowUp, Timer, RefreshCw, MessageSquareText, Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -176,6 +176,10 @@ export default function TrainingCourse() {
 
   const course = trainingIndex.courses.find((c: any) => c.id === courseId);
   const cert = trainingIndex.certifications.find((c: any) => c.id === certId);
+  const courseAccessQuery = trpc.trainingAccess.canOpen.useQuery(
+    { courseId: courseId || "" },
+    { enabled: isAuthenticated && !!courseId && user?.role !== "admin" },
+  );
 
   // Course data with caching and prefetching
   const { courseLessons, courseExercises, courseSections, loading: lessonsLoading, error: courseLoadError, retry: retryCourseLoad } = useCourseData(courseId);
@@ -236,6 +240,14 @@ export default function TrainingCourse() {
         </main>
       </div>
     );
+  }
+
+  if (user?.role !== "admin" && courseAccessQuery.isLoading) {
+    return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
+  }
+
+  if (user?.role !== "admin" && courseAccessQuery.data && !courseAccessQuery.data.allowed) {
+    return <div className="min-h-screen bg-background"><main className="mx-auto max-w-lg px-5 py-28 text-center"><div className="rounded-2xl border border-border bg-card p-9"><Lock className="mx-auto mb-5 h-10 w-10 text-amber-600" /><h1 className="text-xl font-bold text-foreground">Formation visible, accès non attribué</h1><p className="mt-3 text-sm leading-relaxed text-muted-foreground">Cette formation est disponible au catalogue, mais n’est pas encore affectée à l’un de vos groupes d’apprenants. Contactez votre administrateur.</p><Button className="mt-6" variant="outline" onClick={() => navigate("/training")}>Retour au catalogue</Button></div></main></div>;
   }
 
     if (!course || !cert) {

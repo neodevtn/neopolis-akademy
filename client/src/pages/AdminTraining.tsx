@@ -22,7 +22,7 @@ import {
   UserPlus, Ban, ShieldCheck, Download, BarChart3, Mail,
   MoreVertical, UserX, UserCheck, TrendingUp, Activity,
   Clock, CheckCircle2, AlertTriangle, RefreshCw, Edit2, Send,
-  UserCog, MessageSquareText,
+  UserCog, MessageSquareText, Layers,
 } from "lucide-react";
 import { FileText, Video, BookMarked, XCircle, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -70,6 +70,12 @@ export default function AdminTraining() {
   const [inviteName, setInviteName] = useState("");
   const [inviteLang, setInviteLang] = useState<"fr" | "en">("fr");
   const [inviteMessage, setInviteMessage] = useState("");
+  const [inviteGroupIds, setInviteGroupIds] = useState<number[]>([]);
+  const [groupName, setGroupName] = useState("");
+  const [groupDescription, setGroupDescription] = useState("");
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
+  const [groupMemberIds, setGroupMemberIds] = useState<number[]>([]);
+  const [groupCourseIds, setGroupCourseIds] = useState<string[]>([]);
   const [inviteResults, setInviteResults] = useState<{ email: string; success: boolean; error?: string }[] | null>(null);
   const [editEmailId, setEditEmailId] = useState<number | null>(null);
   const [editEmailValue, setEditEmailValue] = useState("");
@@ -85,6 +91,7 @@ export default function AdminTraining() {
     selected: { title: "Candidats sélectionnés", description: "Vérifier l’activation des comptes et relancer les candidats retenus" },
     analytics: { title: "Reporting d’apprentissage", description: "Analyser la performance, l’implication et l’évolution des apprenants" },
     feedback: { title: "Feedback formations", description: "Piloter les notations, suggestions et réponses pédagogiques" },
+    groups: { title: "Groupes d’apprenants", description: "Affecter des apprenants et ouvrir précisément les formations autorisées" },
   } as Record<string, { title: string; description: string }>)[activeTab] || { title: "Gestion des apprenants", description: "Suivi, invitations et analyses de la formation" };
 
   const navigateTraining = (tab: string, learnerId?: number | null) => {
@@ -150,7 +157,7 @@ export default function AdminTraining() {
   useEffect(() => {
     const params = new URLSearchParams(urlSearch);
     const tab = params.get("tab");
-    if (["learners", "invitations", "selected", "analytics", "feedback"].includes(tab || "")) setActiveTab(tab!);
+    if (["learners", "invitations", "selected", "analytics", "feedback", "groups"].includes(tab || "")) setActiveTab(tab!);
     else setActiveTab("learners");
     const learnerId = Number(params.get("learner"));
     if (Number.isInteger(learnerId) && learnerId > 0) setSelectedUserId(learnerId);
@@ -202,6 +209,39 @@ export default function AdminTraining() {
     { page: directInvitationTable.page, pageSize: 10, search: directInvitationTable.search || undefined, sortBy: directInvitationTable.sortBy, sortDirection: directInvitationTable.sortDirection },
     { enabled: isAuthenticated && user?.role === "admin" && activeTab === "invitations" }
   );
+  const learnerGroupsQuery = trpc.admin.listLearnerGroups.useQuery(undefined, {
+    enabled: isAuthenticated && user?.role === "admin" && ["groups", "invitations", "selected"].includes(activeTab),
+  });
+  const groupLearnersQuery = trpc.admin.getLearners.useQuery(
+    { page: 1, pageSize: 200, sortBy: "name", sortDirection: "asc" },
+    { enabled: isAuthenticated && user?.role === "admin" && activeTab === "groups" },
+  );
+  const learnerGroupDetailQuery = trpc.admin.getLearnerGroupDetail.useQuery(
+    { groupId: selectedGroupId! },
+    { enabled: isAuthenticated && user?.role === "admin" && activeTab === "groups" && !!selectedGroupId },
+  );
+  useEffect(() => {
+    if (!learnerGroupDetailQuery.data) return;
+    setGroupMemberIds(learnerGroupDetailQuery.data.memberIds);
+    setGroupCourseIds(learnerGroupDetailQuery.data.courses.map((course) => course.courseId));
+  }, [learnerGroupDetailQuery.data]);
+  const createLearnerGroupMutation = trpc.admin.createLearnerGroup.useMutation({
+    onSuccess: () => {
+      toast.success("Groupe créé. Vous pouvez maintenant lui affecter des apprenants et des formations.");
+      setGroupName("");
+      setGroupDescription("");
+      learnerGroupsQuery.refetch();
+    },
+    onError: (error) => toast.error(error.message || "Impossible de créer le groupe"),
+  });
+  const replaceGroupMembersMutation = trpc.admin.replaceLearnerGroupMembers.useMutation({
+    onSuccess: () => { toast.success("Membres du groupe enregistrés"); learnerGroupsQuery.refetch(); learnerGroupDetailQuery.refetch(); },
+    onError: (error) => toast.error(error.message || "Impossible d’enregistrer les membres"),
+  });
+  const replaceGroupCoursesMutation = trpc.admin.replaceLearnerGroupCourses.useMutation({
+    onSuccess: () => { toast.success("Formations autorisées enregistrées"); learnerGroupsQuery.refetch(); learnerGroupDetailQuery.refetch(); },
+    onError: (error) => toast.error(error.message || "Impossible d’enregistrer les formations"),
+  });
 
   const analyticsQuery = trpc.admin.getAnalytics.useQuery(undefined, {
     enabled: isAuthenticated && user?.role === "admin" && activeTab === "analytics",
@@ -828,6 +868,14 @@ export default function AdminTraining() {
                       </div>
                     </div>
                     <div>
+                      <label className="text-sm font-medium text-foreground mb-1.5 block">Groupes d’accès</label>
+                      <p className="mb-2 text-xs text-muted-foreground">Les groupes sélectionnés seront attribués dès l’activation du compte.</p>
+                      <div className="max-h-32 space-y-2 overflow-y-auto rounded-md border border-input bg-muted/20 p-3">
+                        {learnerGroupsQuery.data?.map((group) => <label key={group.id} className="flex cursor-pointer items-center gap-2 text-sm"><input type="checkbox" checked={inviteGroupIds.includes(group.id)} onChange={(event) => setInviteGroupIds((ids) => event.target.checked ? [...ids, group.id] : ids.filter((id) => id !== group.id))} /><span>{group.name}</span>{group.isSystem ? <span className="text-xs text-muted-foreground">(accès total)</span> : null}</label>)}
+                        {!learnerGroupsQuery.data?.length && <span className="text-xs text-muted-foreground">Créez d’abord un groupe dans l’onglet Groupes.</span>}
+                      </div>
+                    </div>
+                    <div>
                       <label className="text-sm font-medium text-foreground mb-1.5 block">Message personnalisé (optionnel)</label>
                       <textarea
                         className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm min-h-[80px] resize-y"
@@ -843,7 +891,7 @@ export default function AdminTraining() {
                     <Button
                       className="bg-primary hover:bg-primary/90 text-primary-foreground"
                       disabled={parsedInviteEmails.emails.length === 0 || parsedInviteEmails.invalid.length > 0 || parsedInviteEmails.emails.length > 100 || bulkInviteMutation.isPending}
-                      onClick={() => bulkInviteMutation.mutate({ invitations: parsedInviteEmails.emails.map((email) => ({ email, name: parsedInviteEmails.emails.length === 1 ? inviteName || undefined : undefined })), language: inviteLang, message: inviteMessage || undefined })}
+                      onClick={() => bulkInviteMutation.mutate({ invitations: parsedInviteEmails.emails.map((email) => ({ email, name: parsedInviteEmails.emails.length === 1 ? inviteName || undefined : undefined })), language: inviteLang, message: inviteMessage || undefined, groupIds: inviteGroupIds })}
                     >
                       {bulkInviteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
                       <span className="ml-1.5">Envoyer {parsedInviteEmails.emails.length || "les"} invitation{parsedInviteEmails.emails.length > 1 ? "s" : ""}</span>
@@ -882,6 +930,9 @@ export default function AdminTraining() {
               </TabsTrigger>
               <TabsTrigger value="feedback" className="gap-1.5">
                 <MessageSquareText className="w-4 h-4" /> Feedback
+              </TabsTrigger>
+              <TabsTrigger value="groups" className="gap-1.5">
+                <Layers className="w-4 h-4" /> Groupes
               </TabsTrigger>
             </TabsList>
 
@@ -1045,6 +1096,26 @@ export default function AdminTraining() {
             </TabsContent>
 
             {/* TAB: Invitations directes */}
+            <TabsContent value="groups">
+              <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
+                <form className="rounded-2xl border border-border bg-card p-5" onSubmit={(event) => { event.preventDefault(); createLearnerGroupMutation.mutate({ name: groupName, description: groupDescription || undefined }); }}>
+                  <h2 className="text-base font-semibold">Nouveau groupe</h2>
+                  <p className="mt-1 text-sm text-muted-foreground">Un groupe donne accès aux formations qui lui sont affectées. « Full access » conserve les accès existants.</p>
+                  <div className="mt-5 space-y-3">
+                    <Input value={groupName} onChange={(event) => setGroupName(event.target.value)} placeholder="Ex. Finance — Cohorte 2026" required />
+                    <Input value={groupDescription} onChange={(event) => setGroupDescription(event.target.value)} placeholder="Description facultative" />
+                    <Button className="w-full" disabled={!groupName.trim() || createLearnerGroupMutation.isPending}>{createLearnerGroupMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Layers className="mr-2 h-4 w-4" />} Créer le groupe</Button>
+                  </div>
+                </form>
+                <div className="overflow-hidden rounded-2xl border border-border bg-card">
+                  {learnerGroupsQuery.isLoading ? <div className="p-10 text-center"><Loader2 className="mx-auto h-5 w-5 animate-spin text-primary" /></div> : learnerGroupsQuery.data?.length ? (
+                    <Table><TableHeader><TableRow><TableHead>Groupe</TableHead><TableHead>Membres</TableHead><TableHead>Formations autorisées</TableHead><TableHead>Statut</TableHead></TableRow></TableHeader><TableBody>{learnerGroupsQuery.data.map((group) => <TableRow key={group.id} className="cursor-pointer hover:bg-muted/40" onClick={() => setSelectedGroupId(group.id)}><TableCell><p className="font-medium">{group.name}</p><p className="text-xs text-muted-foreground">{group.description || "Sans description"}</p></TableCell><TableCell>{group.memberCount}</TableCell><TableCell>{group.isSystem ? "Toutes les formations" : group.courseCount}</TableCell><TableCell>{group.isSystem ? <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-medium text-emerald-700">Système</span> : <span className="text-sm text-muted-foreground">{group.active ? "Actif" : "Inactif"}</span>}</TableCell></TableRow>)}</TableBody></Table>
+                  ) : <div className="p-10 text-center text-sm text-muted-foreground">Aucun groupe. Créez votre premier groupe pour distribuer les accès.</div>}
+                </div>
+              </div>
+              {learnerGroupDetailQuery.data && !learnerGroupDetailQuery.data.isSystem && <div className="mt-6 grid gap-6 rounded-2xl border border-border bg-card p-5 lg:grid-cols-2"><div><h2 className="font-semibold">Membres — {learnerGroupDetailQuery.data.name}</h2><div className="mt-3 max-h-64 space-y-2 overflow-y-auto pr-2">{groupLearnersQuery.data?.users.map((learner: any) => <label key={learner.id} className="flex items-center gap-2 text-sm"><input type="checkbox" checked={groupMemberIds.includes(learner.id)} onChange={(event) => setGroupMemberIds((ids) => event.target.checked ? [...ids, learner.id] : ids.filter((id) => id !== learner.id))} /><span>{learner.name || learner.email}</span><span className="text-xs text-muted-foreground">{learner.email}</span></label>)}</div><Button className="mt-4" onClick={() => replaceGroupMembersMutation.mutate({ groupId: learnerGroupDetailQuery.data!.id, userIds: groupMemberIds })} disabled={replaceGroupMembersMutation.isPending}>Enregistrer les membres</Button></div><div><h2 className="font-semibold">Formations autorisées</h2><p className="mt-1 text-xs text-muted-foreground">Les formations non cochées restent visibles mais ne peuvent pas être ouvertes.</p><div className="mt-3 max-h-64 space-y-2 overflow-y-auto pr-2">{trainingIndex.courses.map((course: any) => <label key={course.id} className="flex items-center gap-2 text-sm"><input type="checkbox" checked={groupCourseIds.includes(course.id)} onChange={(event) => setGroupCourseIds((ids) => event.target.checked ? [...ids, course.id] : ids.filter((id) => id !== course.id))} /><span>{course.title}</span></label>)}</div><Button className="mt-4" onClick={() => replaceGroupCoursesMutation.mutate({ groupId: learnerGroupDetailQuery.data!.id, courses: trainingIndex.courses.filter((course: any) => groupCourseIds.includes(course.id)).map((course: any) => ({ courseId: course.id, certificationId: course.certId })) })} disabled={replaceGroupCoursesMutation.isPending}>Enregistrer les formations</Button></div></div>}
+            </TabsContent>
+
             <TabsContent value="invitations">
               <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl text-sm text-blue-700 dark:text-blue-300">
                 Cet onglet affiche uniquement les <strong>invitations directes</strong> (envoyées sans passer par une candidature). Les invitations liées à une candidature sont visibles dans l'onglet <strong>Candidats sélectionnés</strong>.
@@ -1138,6 +1209,7 @@ export default function AdminTraining() {
               <SelectedCandidatesPanel
                 data={selectedCandidatesQuery.data}
                 emailStats={emailStatsQuery.data}
+                groups={learnerGroupsQuery.data || []}
                 isLoading={selectedCandidatesQuery.isLoading}
                 table={selectedCandidateTable}
                 onTableChange={updateSelectedCandidateTable}
@@ -1148,8 +1220,8 @@ export default function AdminTraining() {
                 onUpdateEmail={(applicationId: number, newEmail: string) => {
                   updateEmailMutation.mutate({ applicationId, newEmail });
                 }}
-                onResendInvitation={(applicationId: number, email: string, name?: string) => {
-                  resendCandidateInvitationMutation.mutate({ applicationId, email, name });
+                onResendInvitation={(applicationId: number, email: string, name: string | undefined, groupIds: number[]) => {
+                  resendCandidateInvitationMutation.mutate({ applicationId, email, name, groupIds });
                 }}
                 isUpdatingEmail={updateEmailMutation.isPending}
                 isResending={resendCandidateInvitationMutation.isPending}
@@ -1572,6 +1644,7 @@ function StatCard({ icon, value, label }: { icon: React.ReactNode; value: number
 interface SelectedCandidatesPanelProps {
   data: { candidates: any[]; total: number; page: number; pageSize: number } | undefined;
   emailStats: any | undefined;
+  groups: Array<{ id: number; name: string; isSystem: number }>;
   isLoading: boolean;
   table: { page: number; search: string; sortBy: "updatedAt" | "email" | "firstName" | "scoreTotal"; sortDirection: "asc" | "desc" };
   onTableChange: (next: Partial<{ page: number; search: string; sortBy: "updatedAt" | "email" | "firstName" | "scoreTotal"; sortDirection: "asc" | "desc" }>) => void;
@@ -1580,7 +1653,7 @@ interface SelectedCandidatesPanelProps {
   setEditEmailId: (id: number | null) => void;
   setEditEmailValue: (val: string) => void;
   onUpdateEmail: (applicationId: number, newEmail: string) => void;
-  onResendInvitation: (applicationId: number, email: string, name?: string) => void;
+  onResendInvitation: (applicationId: number, email: string, name: string | undefined, groupIds: number[]) => void;
   isUpdatingEmail: boolean;
   isResending: boolean;
 }
@@ -1588,6 +1661,7 @@ interface SelectedCandidatesPanelProps {
 function SelectedCandidatesPanel({
   data,
   emailStats,
+  groups,
   isLoading,
   table,
   onTableChange,
@@ -1600,6 +1674,7 @@ function SelectedCandidatesPanel({
   isUpdatingEmail,
   isResending,
 }: SelectedCandidatesPanelProps) {
+  const [candidateGroupIds, setCandidateGroupIds] = useState<number[]>([]);
   if (isLoading) {
     return (
       <div className="p-12 text-center">
@@ -1674,6 +1749,7 @@ function SelectedCandidatesPanel({
         <div className="relative w-full sm:max-w-sm"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input value={table.search} onChange={(event) => onTableChange({ search: event.target.value, page: 1 })} placeholder="Rechercher un candidat ou un e-mail…" className="pl-9" /></div>
         <p className="text-xs text-muted-foreground">Indicateurs hors total calculés sur la page affichée.</p>
       </div>
+      <div className="rounded-xl border border-border bg-muted/25 p-3 text-sm"><p className="font-medium">Groupes à affecter à la prochaine invitation</p><p className="mt-1 text-xs text-muted-foreground">Choisissez les accès avant de cliquer sur « Inviter ». Le compte recevra ces droits lors de l’acceptation.</p><div className="mt-2 flex flex-wrap gap-3">{groups.map((group) => <label key={group.id} className="flex items-center gap-1.5"><input type="checkbox" checked={candidateGroupIds.includes(group.id)} onChange={(event) => setCandidateGroupIds((ids) => event.target.checked ? [...ids, group.id] : ids.filter((id) => id !== group.id))} />{group.name}</label>)}</div></div>
 
       {/* Table */}
       <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
@@ -1783,7 +1859,7 @@ function SelectedCandidatesPanel({
                           variant="outline"
                           className="h-7 px-2 text-xs gap-1"
                           disabled={isResending}
-                          onClick={() => onResendInvitation(candidate.id, candidate.email, `${candidate.firstName} ${candidate.lastName}`)}
+                          onClick={() => onResendInvitation(candidate.id, candidate.email, `${candidate.firstName} ${candidate.lastName}`, candidateGroupIds)}
                           title="Envoyer/Renvoyer l'invitation"
                         >
                           {isResending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}

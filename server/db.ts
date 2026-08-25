@@ -1,6 +1,6 @@
-import { eq, desc, asc, sql, and, or, like, count, gt, isNull, isNotNull } from "drizzle-orm";
+import { eq, desc, asc, sql, and, or, like, count, gt, isNull, isNotNull, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog, learnerGroups, learnerGroupMemberships, learnerGroupCourses, invitationGroups } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { engagementBucket, firstAttemptRate, isPedagogicalReportingEvent } from "./reportingMetrics";
 import { learnerReportingLabel } from "@shared/learnerReportingLabel";
@@ -565,7 +565,57 @@ export async function updateUserRole(userId: number, role: "user" | "manager" | 
   return { userId, role };
 }
 
-export async function createInvitation(email: string, name: string | null, invitedBy: number, expiresInDays: number = 7) {
+export async function listLearnerGroups() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const groups = await db.select().from(learnerGroups).orderBy(desc(learnerGroups.isSystem), asc(learnerGroups.name));
+  const members = await db.select({ groupId: learnerGroupMemberships.groupId, total: count() }).from(learnerGroupMemberships).groupBy(learnerGroupMemberships.groupId);
+  const courses = await db.select({ groupId: learnerGroupCourses.groupId, total: count() }).from(learnerGroupCourses).groupBy(learnerGroupCourses.groupId);
+  return groups.map((group) => ({ ...group, memberCount: members.find((item) => item.groupId === group.id)?.total ?? 0, courseCount: courses.find((item) => item.groupId === group.id)?.total ?? 0 }));
+}
+
+export async function getLearnerGroupDetail(groupId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [group] = await db.select().from(learnerGroups).where(eq(learnerGroups.id, groupId)).limit(1);
+  if (!group) return null;
+  const members = await db.select({ userId: learnerGroupMemberships.userId }).from(learnerGroupMemberships).where(eq(learnerGroupMemberships.groupId, groupId));
+  const courses = await db.select({ courseId: learnerGroupCourses.courseId, certificationId: learnerGroupCourses.certificationId }).from(learnerGroupCourses).where(eq(learnerGroupCourses.groupId, groupId));
+  return { ...group, memberIds: members.map((member) => member.userId), courses };
+}
+
+export async function createLearnerGroup(input: { name: string; description?: string; color?: string; createdBy: number }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(learnerGroups).values({ name: input.name.trim(), description: input.description?.trim() || null, color: input.color || "#1d4ed8", createdBy: input.createdBy });
+  return { id: result[0].insertId };
+}
+
+export async function replaceLearnerGroupMembers(groupId: number, userIds: number[], assignedBy: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(learnerGroupMemberships).where(eq(learnerGroupMemberships.groupId, groupId));
+  if (userIds.length) await db.insert(learnerGroupMemberships).values(userIds.map((userId) => ({ groupId, userId, assignedBy })));
+}
+
+export async function replaceLearnerGroupCourses(groupId: number, courses: { courseId: string; certificationId?: string }[], assignedBy: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(learnerGroupCourses).where(eq(learnerGroupCourses.groupId, groupId));
+  if (courses.length) await db.insert(learnerGroupCourses).values(courses.map((course) => ({ groupId, courseId: course.courseId, certificationId: course.certificationId || null, assignedBy })));
+}
+
+export async function userCanAccessCourse(userId: number, courseId: string) {
+  const db = await getDb();
+  if (!db) return false;
+  const memberships = await db.select({ groupId: learnerGroupMemberships.groupId, isSystem: learnerGroups.isSystem }).from(learnerGroupMemberships).innerJoin(learnerGroups, eq(learnerGroupMemberships.groupId, learnerGroups.id)).where(and(eq(learnerGroupMemberships.userId, userId), eq(learnerGroups.active, 1)));
+  if (memberships.some((membership) => membership.isSystem === 1)) return true;
+  const groupIds = memberships.map((membership) => membership.groupId);
+  if (!groupIds.length) return false;
+  return (await db.select({ id: learnerGroupCourses.id }).from(learnerGroupCourses).where(and(eq(learnerGroupCourses.courseId, courseId), inArray(learnerGroupCourses.groupId, groupIds))).limit(1)).length > 0;
+}
+
+export async function createInvitation(email: string, name: string | null, invitedBy: number, expiresInDays: number = 7, groupIds: number[] = []) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
@@ -579,8 +629,20 @@ export async function createInvitation(email: string, name: string | null, invit
     token,
     expiresAt,
   });
+  const invitationId = result[0].insertId;
+  if (groupIds.length) await db.insert(invitationGroups).values(Array.from(new Set(groupIds)).map((groupId) => ({ invitationId, groupId })));
+  return { id: invitationId, email, name, token, expiresAt, status: 'pending' as const };
+}
 
-  return { id: result[0].insertId, email, name, token, expiresAt, status: 'pending' as const };
+export async function applyInvitationGroupsToUser(token: string, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [invitation] = await db.select({ id: userInvitations.id }).from(userInvitations).where(eq(userInvitations.token, token)).limit(1);
+  if (!invitation) return;
+  const groups = await db.select({ groupId: invitationGroups.groupId }).from(invitationGroups).where(eq(invitationGroups.invitationId, invitation.id));
+  for (const group of groups) {
+    await db.insert(learnerGroupMemberships).values({ userId, groupId: group.groupId, assignedBy: null }).onDuplicateKeyUpdate({ set: { assignedAt: sql`CURRENT_TIMESTAMP` } });
+  }
 }
 
 export async function getInvitations(page: number = 1, pageSize: number = 20) {
@@ -1207,7 +1269,7 @@ export async function getEmailDeliveryStats() {
   };
 }
 
-export async function createInvitationWithTracking(email: string, name: string | null, invitedBy: number, applicationId?: number, expiresInDays: number = 7) {
+export async function createInvitationWithTracking(email: string, name: string | null, invitedBy: number, applicationId?: number, expiresInDays: number = 7, groupIds: number[] = []) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
@@ -1223,7 +1285,13 @@ export async function createInvitationWithTracking(email: string, name: string |
     applicationId: applicationId || null,
   });
 
-  return { id: result[0].insertId, email, name, token, expiresAt, status: 'pending' as const };
+  const invitationId = result[0].insertId;
+  const uniqueGroupIds = Array.from(new Set(groupIds));
+  if (uniqueGroupIds.length) {
+    await db.insert(invitationGroups).values(uniqueGroupIds.map((groupId) => ({ invitationId, groupId })));
+  }
+
+  return { id: invitationId, email, name, token, expiresAt, status: 'pending' as const };
 }
 
 

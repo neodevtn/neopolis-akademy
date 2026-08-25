@@ -328,6 +328,7 @@ export function registerAuthRoutes(app: Express) {
       if (existingUser) {
         // User already exists - just set password and mark invitation accepted
         await db.setUserPasswordHash(existingUser.openId, await bcrypt.hash(password, SALT_ROUNDS));
+        await db.applyInvitationGroupsToUser(token, existingUser.id);
         await db.markInvitationAccepted(token);
 
         const sessionToken = await sdk.createSessionToken(existingUser.openId, {
@@ -354,6 +355,9 @@ export function registerAuthRoutes(app: Express) {
         loginMethod: "email",
         lastSignedIn: new Date(),
       });
+
+      const createdUser = await db.getUserByOpenId(openId);
+      if (createdUser) await db.applyInvitationGroupsToUser(token, createdUser.id);
 
       // Set password hash
       await db.setUserPasswordHash(openId, passwordHash);

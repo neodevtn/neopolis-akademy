@@ -17,6 +17,7 @@ import { acknowledgeLearnerCommunication, getLearnerCommunications, markLearnerC
 import { adminContentRouter } from "./adminContentRouter";
 import { videoRecommendationsRouter } from "./videoRecommendationsRouter";
 import { createAdminNotification } from "./notificationsDb";
+import { createLearnerGroup, getLearnerGroupDetail, listLearnerGroups, replaceLearnerGroupCourses, replaceLearnerGroupMembers, userCanAccessCourse } from "./db";
 import { applyCompetencyEvent, getCompetencyFramework, getCompetencyLeaderboard, getContentCompetencyTags, getGamificationConfig, getUserCompetencies, getUserGamification, replaceCompetencyFramework, saveGamificationConfig } from "./competencyService";
 import { COMPETENCY_SOURCE_TYPES } from "../shared/competencyFramework";
 import { backfillCompetencies } from "./competencyBackfill";
@@ -764,18 +765,52 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
         return await updateUserRole(input.userId, input.role);
       }),
 
+    listLearnerGroups: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+      return listLearnerGroups();
+    }),
+
+    getLearnerGroupDetail: protectedProcedure.input(z.object({ groupId: z.number() })).query(async ({ ctx, input }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+      const group = await getLearnerGroupDetail(input.groupId);
+      if (!group) throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" });
+      return group;
+    }),
+
+    createLearnerGroup: protectedProcedure
+      .input(z.object({ name: z.string().trim().min(2).max(160), description: z.string().max(2000).optional(), color: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional() }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        return createLearnerGroup({ ...input, createdBy: ctx.user.id });
+      }),
+
+    replaceLearnerGroupMembers: protectedProcedure
+      .input(z.object({ groupId: z.number(), userIds: z.array(z.number()).max(500) }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        return replaceLearnerGroupMembers(input.groupId, Array.from(new Set(input.userIds)), ctx.user.id);
+      }),
+
+    replaceLearnerGroupCourses: protectedProcedure
+      .input(z.object({ groupId: z.number(), courses: z.array(z.object({ courseId: z.string().min(1).max(200), certificationId: z.string().max(200).optional() })).max(500) }))
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        return replaceLearnerGroupCourses(input.groupId, input.courses, ctx.user.id);
+      }),
+
     createInvitation: protectedProcedure
       .input(z.object({
         email: z.string().email(),
         name: z.string().optional(),
         language: z.enum(["fr", "en"]).optional().default("fr"),
         message: z.string().optional(),
+        groupIds: z.array(z.number()).max(100).optional().default([]),
       }))
       .mutation(async ({ ctx, input }) => {
         if (ctx.user.role !== "admin") {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
-        const invitation = await createInvitation(input.email, input.name || null, ctx.user.id);
+        const invitation = await createInvitation(input.email, input.name || null, ctx.user.id, 7, input.groupIds);
 
         // Send invitation email
         try {
@@ -833,6 +868,7 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
         })).min(1).max(100),
         language: z.enum(["fr", "en"]).optional().default("fr"),
         message: z.string().optional(),
+        groupIds: z.array(z.number()).max(100).optional().default([]),
       }))
       .mutation(async ({ ctx, input }) => {
         if (ctx.user.role !== "admin") {
@@ -843,7 +879,7 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
 
         for (const inv of input.invitations) {
           try {
-            const invitation = await createInvitation(inv.email, inv.name || null, ctx.user.id);
+            const invitation = await createInvitation(inv.email, inv.name || null, ctx.user.id, 7, input.groupIds);
             const invitationLink = `${baseUrl}/accept-invitation?token=${invitation.token}`;
             try {
               await sendInvitationEmail({
@@ -947,6 +983,7 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
         email: z.string().email(),
         name: z.string().optional(),
         language: z.enum(["fr", "en"]).optional().default("fr"),
+        groupIds: z.array(z.number()).max(100).optional().default([]),
       }))
       .mutation(async ({ ctx, input }) => {
         if (ctx.user.role !== "admin") {
@@ -957,7 +994,9 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
           input.email,
           input.name || null,
           ctx.user.id,
-          input.applicationId
+          input.applicationId,
+          7,
+          input.groupIds,
         );
         const baseUrl = process.env.VITE_APP_URL || "https://akademy.neodev.click";
         const invitationLink = `${baseUrl}/accept-invitation?token=${invitation.token}`;
@@ -997,6 +1036,12 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
         }
         return await getEmailDeliveryStats();
       }),
+  }),
+
+  trainingAccess: router({
+    canOpen: protectedProcedure
+      .input(z.object({ courseId: z.string().min(1).max(200) }))
+      .query(async ({ ctx, input }) => ({ allowed: ctx.user.role === "admin" || await userCanAccessCourse(ctx.user.id, input.courseId) })),
   }),
 
   // Enhanced admin tools (notes, tags, communications, bulk actions, analytics)

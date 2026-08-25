@@ -23,6 +23,45 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
+/** Groupes d’apprenants administrables. Le groupe système Full access préserve les accès historiques. */
+export const learnerGroups = mysqlTable("learner_groups", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 160 }).notNull().unique(),
+  description: text("description"),
+  color: varchar("color", { length: 20 }).notNull().default("#1d4ed8"),
+  isSystem: int("isSystem").notNull().default(0),
+  active: int("active").notNull().default(1),
+  createdBy: int("createdBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type LearnerGroup = typeof learnerGroups.$inferSelect;
+
+/** Relation many-to-many utilisateur ↔ groupe. */
+export const learnerGroupMemberships = mysqlTable("learner_group_memberships", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  groupId: int("groupId").notNull(),
+  assignedBy: int("assignedBy"),
+  assignedAt: timestamp("assignedAt").defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("learner_group_membership_unique").on(table.userId, table.groupId),
+  index("learner_group_membership_group_idx").on(table.groupId, table.userId),
+]);
+
+/** Relation many-to-many groupe ↔ cours. Un cours sans affectation reste ouvert au catalogue mais non accessible hors Full access. */
+export const learnerGroupCourses = mysqlTable("learner_group_courses", {
+  id: int("id").autoincrement().primaryKey(),
+  groupId: int("groupId").notNull(),
+  certificationId: varchar("certificationId", { length: 200 }),
+  courseId: varchar("courseId", { length: 200 }).notNull(),
+  assignedBy: int("assignedBy"),
+  assignedAt: timestamp("assignedAt").defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("learner_group_course_unique").on(table.groupId, table.courseId),
+  index("learner_group_course_course_idx").on(table.courseId, table.groupId),
+]);
+
 /**
  * Applications table - stores all candidatures with scoring
  */
@@ -363,6 +402,17 @@ export const userInvitations = mysqlTable("user_invitations", {
 
 export type UserInvitation = typeof userInvitations.$inferSelect;
 export type InsertUserInvitation = typeof userInvitations.$inferInsert;
+
+/** Groupes choisis lors de l’invitation, à appliquer lorsque le compte est créé ou activé. */
+export const invitationGroups = mysqlTable("invitation_groups", {
+  id: int("id").autoincrement().primaryKey(),
+  invitationId: int("invitationId").notNull(),
+  groupId: int("groupId").notNull(),
+  assignedAt: timestamp("assignedAt").defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("invitation_group_unique").on(table.invitationId, table.groupId),
+  index("invitation_group_invitation_idx").on(table.invitationId),
+]);
 
 /**
  * Admin notes - private notes attached to users or applications

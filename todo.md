@@ -2155,3 +2155,10 @@
 - [x] Convertir les 103 pages canoniques, 82 checkpoints/labs et 98 références vidéo avec les blocs standards Neopolis
 - [x] Intégrer les ressources locales autorisées, les notebooks téléchargeables, l’attribution Apache-2.0 et la préparation d’environnement
 - [ ] Contrôler les activités, médias, XP, recherche et verrouillage séquentiel avant publication
+
+## Groupes d’apprenants et accès aux formations
+- [x] Créer les groupes, appartenances utilisateur-groupe et affectations formation-groupe administrables (relations many-to-many)
+- [x] Migrer les utilisateurs actuels vers le groupe système « Full access »
+- [x] Restreindre l’ouverture des formations aux groupes affectés tout en conservant leur visibilité dans le catalogue
+- [x] Ajouter la sélection de groupes à l’acceptation de candidature et à l’envoi d’invitations
+- [x] Tester puis publier les parcours administrateur et apprenant
