@@ -209,6 +209,10 @@ export default function LessonViewer({
   const chapter = chapters[currentChapter];
   const canEditCurrentChapter = user?.role === "admin";
   const currentChapterEditHref = getContextualCourseEditorHref({ courseId, lessonIndex, chapterIndex: currentChapter });
+  const novasavoInteractionIds = (chapter?.blocks || [])
+    .filter((block: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback"].includes(block.type))
+    .map((block: any, index: number) => block.id || `novasavo_${index}`);
+  const isGatedByNovasavoInteraction = !isReviewMode && novasavoInteractionIds.length > 0 && !novasavoInteractionIds.every((id: string) => completedNovasavoInteractions.has(id));
 
   if (!chapter && !showQuiz) {
     return (
@@ -233,11 +237,14 @@ export default function LessonViewer({
       case "mistake_correction_pairs":
       case "ai_assistant_prompt_panel":
       case "notes_highlights_bookmarks_panel":
+      case "accounting_comparison_visual":
+      case "key_points_summary":
+      case "competency_progress_hud":
       case "xp_progress_hud":
       case "course_completion_next_unit_panel":
-        return <NovasavoLearningBlock key={blockIdx} block={block} lang={lang} courseId={courseId} lessonTitle={resolveI18n(lesson.title, lang)} screenTitle={resolveI18n(chapter?.title, lang)} onComplete={(id) => {
+        return <NovasavoLearningBlock key={blockIdx} block={block} lang={lang} courseId={courseId} lessonTitle={resolveI18n(lesson.title, lang)} screenTitle={resolveI18n(chapter?.title, lang)} onComplete={(id, isCorrect) => {
           setCompletedNovasavoInteractions((current) => new Set(current).add(id));
-          recordCompetencyOutcome.mutate({
+          if (isCorrect) recordCompetencyOutcome.mutate({
             sourceType: "checkpoint_passed",
             sourceKey: courseId,
             eventKey: `novasavo:${courseId}:${lessonIndex}:${currentChapter}:${id}`,
@@ -1036,7 +1043,7 @@ export default function LessonViewer({
                 variant="ghost"
                 size="sm"
                 onClick={() => { setCurrentChapter((p) => p + 1); }}
-                disabled={currentChapter >= totalChapters - 1}
+                disabled={currentChapter >= totalChapters - 1 || isGatedByNovasavoInteraction}
                 className="gap-1 text-xs text-muted-foreground hover:text-foreground"
               >
                 {t({ en: "Next", fr: "Suivant" })}
@@ -1061,7 +1068,8 @@ export default function LessonViewer({
             const hasBucketSort = allBlocks.some((b: any) => b.type === 'bucket_sort');
             const hasFlipCards = allBlocks.some((b: any) => b.type === 'flip_cards');
             const hasMatching = allBlocks.some((b: any) => b.type === 'matching');
-            const hasInteractive = hasVideo || hasExercise || hasBucketSort || hasFlipCards || hasMatching;
+            const hasNovasavoStructure = allBlocks.some((block: any) => ["unit_hero_blue", "learning_objectives_panel", "inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback", "timeline_step_cards", "process_flow_diagram", "mistake_correction_pairs", "ai_assistant_prompt_panel", "accounting_comparison_visual", "key_points_summary"].includes(block.type));
+            const hasInteractive = hasVideo || hasExercise || hasBucketSort || hasFlipCards || hasMatching || hasNovasavoStructure;
             // Get screen title for illustration theme detection
             const firstCB = contentBlocks[0];
             let illustTitle = '';
@@ -1212,7 +1220,9 @@ export default function LessonViewer({
               const lastAllSCDone = lastChapterSCIds.length === 0 || lastChapterSCIds.every((id: string) => completedExercises.has(id));
               const lastChapterCheckpointIds = (chapter?.blocks || []).filter((b: any) => b.type === 'checkpoint').map((b: any, i: number) => b.exerciseId || `checkpoint_${i}`);
               const lastAllCheckpointsDone = lastChapterCheckpointIds.length === 0 || lastChapterCheckpointIds.every((id: string) => completedExercises.has(id));
-              const lastIsGated = !lastAllVideosWatched || !lastAllCloudDone || !lastAllMatchingDone || !lastAllSCDone || !lastAllCheckpointsDone;
+                const lastNovasavoIds = (chapter?.blocks || []).filter((block: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback"].includes(block.type)).map((block: any, index: number) => block.id || `novasavo_${index}`);
+                const lastAllNovasavoDone = lastNovasavoIds.length === 0 || lastNovasavoIds.every((id: string) => completedNovasavoInteractions.has(id));
+                const lastIsGated = !lastAllVideosWatched || !lastAllCloudDone || !lastAllMatchingDone || !lastAllSCDone || !lastAllCheckpointsDone || !lastAllNovasavoDone;
                 return (
                   <Button
                     size="sm"
@@ -1285,6 +1295,7 @@ export default function LessonViewer({
                 .map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
               const allCloudExercisesCompleted = chapterCloudExerciseIds.length === 0 || chapterCloudExerciseIds.every((id: string) => completedCloudExercises.has(id));
               const isGatedByCloudExercise = chapterCloudExerciseIds.length > 0 && !allCloudExercisesCompleted && !isReviewMode;
+              const isGatedByNovasavo = isGatedByNovasavoInteraction;
               const passageConditions = [
                 isGatedByVideo && t({ en: "Watch or mark the official video as watched.", fr: "Regardez ou marquez comme vue la vidéo officielle." }),
                 isGatedByFlipCards && t({ en: "Turn over every study card.", fr: "Retournez toutes les cartes de révision." }),
@@ -1292,13 +1303,14 @@ export default function LessonViewer({
                 (isGatedByExercises || isGatedBySingleChoice) && t({ en: "Submit the required validation activity.", fr: "Soumettez l’activité de validation requise." }),
                 isGatedByResourceReview && t({ en: "Open and confirm review of the required local resource.", fr: "Ouvrez puis confirmez la consultation de la ressource locale requise." }),
                 isGatedByCloudExercise && t({ en: "Submit the practical exercise.", fr: "Soumettez l’exercice pratique." }),
+                isGatedByNovasavo && t({ en: "Answer the required inline activity.", fr: "Répondez à l’activité intégrée obligatoire." }),
               ].filter(Boolean);
               const chapterTitle = resolveI18n(chapter?.title, 'en');
               const isStructuralChapter = /^(Module Introduction|Key Takeaways|Module Complete)$/i.test(chapterTitle);
               const isTeachingChapter = chapter?.type === 'teaching' && !isStructuralChapter;
-              const needsQuiz = isTeachingChapter && !isReviewMode && !chapterQuizPassed.has(currentChapter);
+              const needsQuiz = isTeachingChapter && !isReviewMode && !chapterQuizPassed.has(currentChapter) && courseId !== "automatisation_comptable_ia__01";
 
-              const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice || isGatedByResourceReview || isGatedByCloudExercise;
+              const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice || isGatedByResourceReview || isGatedByCloudExercise || isGatedByNovasavo;
               return (
                 <div className="flex flex-col items-end gap-1.5">
                   {passageConditions.length > 0 && (
@@ -1330,7 +1342,7 @@ export default function LessonViewer({
                       <>{t({ en: "🎥 Watch video to continue", fr: "🎥 Regardez la vidéo pour continuer" })}</>
                     ) : isGatedByFlipCards ? (
                       <>{t({ en: "🃏 Flip all cards to continue", fr: "🃏 Retournez toutes les cartes" })}</>
-                    ) : (isGatedByExercises || isGatedBySingleChoice || isGatedByMatching || isGatedByCloudExercise) ? (
+                    ) : (isGatedByExercises || isGatedBySingleChoice || isGatedByMatching || isGatedByCloudExercise || isGatedByNovasavo) ? (
                       <>{t({ en: "Complete activity to continue", fr: "Validez l'activité pour continuer" })}</>
                     ) : (
                       <>{t({ en: "Next", fr: "Suivant" })} →</>

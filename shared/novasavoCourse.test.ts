@@ -14,18 +14,27 @@ describe("cours Novasavo paginé", () => {
     expect(course.lessons.at(-1).id).toBe("novasavo_final_exam");
   });
 
-  it("découpe chaque unité en écrans courts avec deux validations obligatoires", () => {
-    course.lessons.slice(0, 12).forEach((lesson: any) => {
-      expect(lesson.chapters).toHaveLength(6);
-      expect(lesson.chapters.filter((chapter: any) => chapter.requiredBeforeAdvance)).toHaveLength(2);
-    });
+  it("reconstruit l’unité 1 en dix-sept écrans courts et conserve les autres unités paginées", () => {
+    expect(course.lessons[0].chapters).toHaveLength(17);
+    expect(course.lessons.slice(1, 12).every((lesson: any) => lesson.chapters.length === 6)).toBe(true);
+    expect(course.lessons[0].chapters.filter((chapter: any) => chapter.requiredBeforeAdvance)).toHaveLength(4);
   });
 
   it("utilise uniquement des blocs Novasavo déclarés dans la bibliothèque standard", () => {
     const types = new Set(course.lessons.flatMap((lesson: any) => lesson.chapters.flatMap((chapter: any) => chapter.blocks.map((block: any) => block.type))));
-    ["unit_hero_blue", "inline_myth_reality", "inline_scenario_question_feedback", "timeline_step_cards", "process_flow_diagram", "mistake_correction_pairs", "ai_assistant_prompt_panel", "notes_highlights_bookmarks_panel", "xp_progress_hud"].forEach((type) => {
+    ["unit_hero_blue", "inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback", "timeline_step_cards", "process_flow_diagram", "mistake_correction_pairs", "ai_assistant_prompt_panel", "accounting_comparison_visual", "key_points_summary", "notes_highlights_bookmarks_panel", "competency_progress_hud"].forEach((type) => {
       expect(types.has(type)).toBe(true);
       expect(getBlockDef(type)).toBeDefined();
     });
+  });
+
+  it("conserve les deux questions visibles dans les captures source et ne publie aucun libellé XP", () => {
+    const unitOneBlocks = course.lessons[0].chapters.flatMap((chapter: any) => chapter.blocks);
+    const firstStep = unitOneBlocks.find((block: any) => block.id === "novasavo_u01_first_step");
+    const scenario = unitOneBlocks.find((block: any) => block.id === "novasavo_u01_scenario");
+    expect(firstStep.prompt.fr).toBe("Quelle est la première étape du cycle comptable manuel ?");
+    expect(scenario.scenario.fr).toContain("fournitures de bureau pour 300 €");
+    expect(JSON.stringify(course)).not.toContain("XP");
+    expect(JSON.stringify(course)).not.toContain("xp_progress_hud");
   });
 });

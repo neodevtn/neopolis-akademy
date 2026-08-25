@@ -2191,3 +2191,13 @@
 - [x] Rendre la gestion des groupes visible dans la navigation principale d’administration
 - [x] Corriger le rendu d’objets bilingues dans l’éditeur de groupes pour supprimer le crash React
 - [x] Tester l’ouverture, l’édition et la sauvegarde d’un groupe avant publication
+
+## Correctif approfondi — cours Novasavo Automatisation comptable par l’IA
+- [x] Auditer le ZIP de correction, le prompt complet et le rapport de bugs source
+- [x] Reconstruire l’unité 1 en 15 à 17 écrans courts dans l’ordre Novasavo autorisé
+- [x] Conserver les interactions inline à leur emplacement : mythe/réalité, QCM, scénarios, erreurs, timeline, diagrammes et comparaisons
+- [x] Verrouiller le bouton Suivant tant que chaque interaction obligatoire n’est pas terminée
+- [x] Remplacer tout libellé XP Novasavo par les points de compétences Neopolis et corriger les compteurs de progression
+- [x] Retirer les éléments intrusifs, masquer les contrôles admin aux apprenants et renforcer les blocs pédagogiques réels
+- [x] Contrôler navigateur desktop/mobile avec captures, valider puis publier le correctif
+- [x] Vérifier avec le compte apprenant démo les interactions, verrous, compteurs, protections et la bannière non intrusive

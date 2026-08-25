@@ -42,11 +42,18 @@ export function LessonSidebarContent({
 }) {
   const { user } = useAuth();
   const safeChapterProgress = normalizeChapterProgress(chapterProgress);
+  const isNovasavoCourse = courseId === "automatisation_comptable_ia__01";
+  const navigableLessons = isNovasavoCourse ? lessons.filter((lesson) => lesson.id !== "novasavo_final_exam") : lessons;
   const safeChapterTotal = safeChapterProgress.total;
   const safeChapterCurrent = safeChapterProgress.current;
   // Calculate overall progress percentage
-  const completedCount = lessons.filter((_, idx) => isLessonComplete(courseId, idx)).length;
-  const progressPct = lessons.length > 0 ? Math.round((completedCount / lessons.length) * 100) : 0;
+  const completedCount = navigableLessons.filter((_, idx) => isLessonComplete(courseId, idx)).length;
+  const activeUnitFraction = isNovasavoCourse && safeChapterTotal > 0 && displayedLessonIndex < navigableLessons.length
+    ? Math.min(1, (safeChapterCurrent + 1) / safeChapterTotal)
+    : 0;
+  const progressPct = isNovasavoCourse
+    ? Math.round(Math.min(100, ((Math.min(completedCount, navigableLessons.length) + activeUnitFraction) / Math.max(1, navigableLessons.length)) * 100))
+    : lessons.length > 0 ? Math.round((completedCount / lessons.length) * 100) : 0;
 
   // Build section boundaries: map lesson index -> section title to show BEFORE it
   const sectionBoundaries: Record<number, string> = {};
@@ -89,7 +96,7 @@ export function LessonSidebarContent({
   return (
     <div className="p-3 space-y-1">
       <p className="text-xs font-bold uppercase tracking-wider px-3 py-2 text-muted-foreground">
-        {t({ en: "Progress", fr: "Progression" })}
+        {isNovasavoCourse ? t({ en: "Units and final exam", fr: "Unités et examen final" }) : t({ en: "Progress", fr: "Progression" })}
       </p>
       {lessons.map((lesson, idx) => {
         const completed = isLessonComplete(courseId, idx);
@@ -314,7 +321,7 @@ export default function LessonSidebar({
           <SheetContent side="left" className="w-72 p-0 overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b border-border">
               <span className="text-sm font-bold text-foreground">
-                {t({ en: "Lessons", fr: "Leçons" })}
+                {courseId === "automatisation_comptable_ia__01" ? t({ en: "Units and final exam", fr: "Unités et examen final" }) : t({ en: "Lessons", fr: "Leçons" })}
               </span>
             </div>
             {sidebarContent}

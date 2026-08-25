@@ -1,4 +1,4 @@
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { extractEntryBundle, isLearnerLearningRoute, shouldShowPlatformUpdate } from "@/lib/platformUpdate";
 
@@ -12,6 +12,7 @@ function getLoadedEntryBundle(): string | null {
 
 export function PlatformUpdateNotice() {
   const [updateAvailable, setUpdateAvailable] = useState(false);
+  const [dismissed, setDismissed] = useState(() => typeof window !== "undefined" && sessionStorage.getItem("neopolis-update-dismissed") === "true");
   const loadedBundleRef = useRef<string | null>(getLoadedEntryBundle());
   const enabled = typeof window !== "undefined" && isLearnerLearningRoute(window.location.pathname);
 
@@ -49,23 +50,16 @@ export function PlatformUpdateNotice() {
     };
   }, [enabled]);
 
-  if (!enabled || !updateAvailable) return null;
+  if (!enabled || !updateAvailable || dismissed) return null;
 
   return (
-    <div className="fixed inset-x-0 top-3 z-[80] flex justify-center px-4" role="status" aria-live="polite">
-      <div className="flex w-full max-w-3xl flex-col gap-3 border border-amber-300 bg-amber-50 px-4 py-3 text-amber-950 shadow-lg sm:flex-row sm:items-center sm:justify-between">
+    <div className="fixed bottom-4 right-4 z-[80] flex max-w-sm px-4" role="status" aria-live="polite">
+      <div className="flex w-full flex-col gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-amber-950 shadow-lg">
         <div>
           <p className="text-sm font-semibold">Une mise à jour de Neopolis Akademy est disponible.</p>
           <p className="text-sm">Rafraîchissez maintenant pour poursuivre votre cours avec la version la plus récente.</p>
         </div>
-        <button
-          type="button"
-          onClick={() => window.location.reload()}
-          className="inline-flex shrink-0 items-center justify-center gap-2 bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <RefreshCw className="h-4 w-4" aria-hidden="true" />
-          Rafraîchir maintenant
-        </button>
+        <div className="flex items-center gap-2"><button type="button" onClick={() => window.location.reload()} className="inline-flex shrink-0 items-center justify-center gap-2 bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><RefreshCw className="h-4 w-4" aria-hidden="true" />Rafraîchir</button><button type="button" aria-label="Masquer cette notification" onClick={() => { sessionStorage.setItem("neopolis-update-dismissed", "true"); setDismissed(true); }} className="rounded-md p-2 text-amber-950 hover:bg-amber-100"><X className="h-4 w-4" /></button></div>
       </div>
     </div>
   );

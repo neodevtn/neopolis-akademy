@@ -307,6 +307,8 @@ export default function TrainingCourse() {
     ? (courseLessons[0]?.chapters?.length || 1)
     : courseLessons.length;
   const totalLessons = totalProgressUnits;
+  const isNovasavoCourse = course.id === "automatisation_comptable_ia__01";
+  const novasavoUnitsTotal = isNovasavoCourse ? 12 : totalLessons;
   const completed = isCourseComplete(course.id, totalLessons);
   const nextUnlocked = isSingleLessonCourse
     ? (() => {
@@ -317,6 +319,9 @@ export default function TrainingCourse() {
       })()
     : getNextUnlockedLesson(course.id, totalLessons);
   const activeMultiLessonIndex = activeLessonIndex ?? nextUnlocked;
+  const visibleUnitCurrent = isNovasavoCourse
+    ? (activeMultiLessonIndex >= 12 ? 12 : Math.min(activeMultiLessonIndex + 1, 12))
+    : Math.min(nextUnlocked, totalLessons);
   const activeMultiLessonChapterTotal = Math.max(1, courseLessons[activeMultiLessonIndex]?.chapters?.length || 1);
   const videos = course.videos || [];
 
@@ -502,8 +507,9 @@ export default function TrainingCourse() {
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-1.5">
                 <BookOpen className="w-4 h-4 text-primary" />
-                <span className="font-medium text-foreground">{Math.min(nextUnlocked, totalLessons)}</span>
-                <span>/ {totalLessons} {isSingleLessonCourse ? t({ en: "chapters", fr: "chapitres" }) : t({ en: "lessons", fr: "leçons" })}</span>
+                <span className="font-medium text-foreground">{visibleUnitCurrent}</span>
+                <span>/ {isNovasavoCourse ? novasavoUnitsTotal : totalLessons} {isNovasavoCourse ? t({ en: "units", fr: "unités" }) : isSingleLessonCourse ? t({ en: "chapters", fr: "chapitres" }) : t({ en: "lessons", fr: "leçons" })}</span>
+                {isNovasavoCourse && activeMultiLessonIndex >= 12 && <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{t({ en: "Final exam", fr: "Examen final" })}</span>}
               </div>
               {videos.length > 0 && (
                 <div className="flex items-center gap-1.5">
@@ -518,17 +524,17 @@ export default function TrainingCourse() {
               <div className="mt-4 space-y-2">
                 {/* Lessons progress */}
                 <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground w-14">{isSingleLessonCourse ? t({ en: "Chapters", fr: "Chapitres" }) : t({ en: "Lessons", fr: "Leçons" })}</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground w-14">{isNovasavoCourse ? t({ en: "Units", fr: "Unités" }) : isSingleLessonCourse ? t({ en: "Chapters", fr: "Chapitres" }) : t({ en: "Lessons", fr: "Leçons" })}</span>
                   <div className="flex-1 rounded-full h-2 bg-secondary">
                     <motion.div
                       className="bg-primary h-2 rounded-full"
                       initial={{ width: 0 }}
-                      animate={{ width: `${Math.min(100, (nextUnlocked / totalLessons) * 100)}%` }}
+                      animate={{ width: `${Math.min(100, ((isNovasavoCourse ? visibleUnitCurrent : nextUnlocked) / (isNovasavoCourse ? novasavoUnitsTotal : totalLessons)) * 100)}%` }}
                       transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
                     />
                   </div>
                   <span className="text-xs font-medium whitespace-nowrap text-muted-foreground">
-                    {Math.min(nextUnlocked, totalLessons)}/{totalLessons}
+                    {isNovasavoCourse ? `${visibleUnitCurrent}/${novasavoUnitsTotal}` : `${Math.min(nextUnlocked, totalLessons)}/${totalLessons}`}
                   </span>
                 </div>
                 {/* Videos progress */}
@@ -649,7 +655,7 @@ export default function TrainingCourse() {
                 </div>
                 <div className="p-6 sm:p-8">
                   <LessonViewer
-                    key={`${displayedLesson.id || displayedIndex}:${chapterProgress?.current ?? 0}`}
+                    key={displayedLesson.id || String(displayedIndex)}
                     lesson={displayedLesson}
                     lessonIndex={displayedIndex}
                     lang={lang}

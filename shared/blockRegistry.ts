@@ -543,7 +543,7 @@ const novasavoBlock = (type: string, fr: string, category: BlockCategory = "cont
     { key: "prompt", label: { en: "Prompt", fr: "Consigne" }, type: "i18n_textarea" },
     { key: "options", label: { en: "Options", fr: "Options" }, type: "json" },
     { key: "explanation", label: { en: "Feedback", fr: "Feedback" }, type: "i18n_textarea" },
-    { key: "xp", label: { en: "XP", fr: "XP" }, type: "number", defaultValue: 5 },
+    { key: "competencyPoints", label: { en: "Competency points", fr: "Points de compétences" }, type: "number", defaultValue: 1 },
   ],
   defaultData: { type, title: { en: "", fr: "" }, body: { en: "", fr: "" } },
 });
@@ -559,7 +559,10 @@ const novasavoBlocks = [
   novasavoBlock("mistake_correction_pairs", "Erreurs et corrections", "content"),
   novasavoBlock("ai_assistant_prompt_panel", "Panneau de prompt assistant IA", "interactive"),
   novasavoBlock("notes_highlights_bookmarks_panel", "Notes, surlignages et signets", "content"),
-  novasavoBlock("xp_progress_hud", "Indicateur XP et progression", "layout"),
+  novasavoBlock("accounting_comparison_visual", "Comparaison des pratiques comptables", "layout"),
+  novasavoBlock("key_points_summary", "Synthèse des points clés", "content"),
+  novasavoBlock("competency_progress_hud", "Points de compétences et progression", "layout"),
+  novasavoBlock("xp_progress_hud", "Indicateur de progression (ancien)", "layout"),
   novasavoBlock("course_completion_next_unit_panel", "Passage à l’unité suivante", "assessment"),
 ];
 
