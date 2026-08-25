@@ -2148,13 +2148,13 @@
 
 ## Cours partenaire Hugging Face Learn
 - [x] Inventorier les paquets Hugging Face Learn disponibles dans Drive/local et définir leur ordre de traitement
-- [ ] Importer séquentiellement chaque paquet validé avec blocs standards, bibliothèque média, XP, recherche et verrouillage séquentiel
-- [ ] Contrôler et publier chaque cours avant de passer au paquet Hugging Face Learn suivant
+- [x] Importer séquentiellement chaque paquet validé avec blocs standards, bibliothèque média, XP, recherche et verrouillage séquentiel — **arrêté sur instruction explicite de l’utilisateur ; aucun paquet Hugging Face supplémentaire ne doit être importé sans nouvelle demande.**
+- [x] Contrôler et publier chaque cours avant de passer au paquet Hugging Face Learn suivant — **clos avec l’arrêt explicite des imports supplémentaires.**
 
 ### Hugging Face Learn — Cours 1 : LLM Course
 - [x] Convertir les 103 pages canoniques, 82 checkpoints/labs et 98 références vidéo avec les blocs standards Neopolis
 - [x] Intégrer les ressources locales autorisées, les notebooks téléchargeables, l’attribution Apache-2.0 et la préparation d’environnement
-- [ ] Contrôler les activités, médias, XP, recherche et verrouillage séquentiel avant publication
+- [x] Contrôler les activités, médias, XP, recherche et verrouillage séquentiel avant publication — **contrôlé et publié avant l’arrêt demandé des imports Hugging Face.**
 
 ## Groupes d’apprenants et accès aux formations
 - [x] Créer les groupes, appartenances utilisateur-groupe et affectations formation-groupe administrables (relations many-to-many)
