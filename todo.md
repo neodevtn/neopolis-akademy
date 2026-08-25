@@ -2145,3 +2145,13 @@
 - [x] Ajouter des filtres multi-critères de formation : niveau, compétences, métier, technologie et durée
 - [x] Réorganiser les catégories de formation avec une taxonomie lisible et cohérente
 - [x] Persister les réponses, la position et le chronomètre d’un examen pour survivre à un rafraîchissement de page
+
+## Cours partenaire Hugging Face Learn
+- [x] Inventorier les paquets Hugging Face Learn disponibles dans Drive/local et définir leur ordre de traitement
+- [ ] Importer séquentiellement chaque paquet validé avec blocs standards, bibliothèque média, XP, recherche et verrouillage séquentiel
+- [ ] Contrôler et publier chaque cours avant de passer au paquet Hugging Face Learn suivant
+
+### Hugging Face Learn — Cours 1 : LLM Course
+- [x] Convertir les 103 pages canoniques, 82 checkpoints/labs et 98 références vidéo avec les blocs standards Neopolis
+- [x] Intégrer les ressources locales autorisées, les notebooks téléchargeables, l’attribution Apache-2.0 et la préparation d’environnement
+- [ ] Contrôler les activités, médias, XP, recherche et verrouillage séquentiel avant publication
