@@ -1164,7 +1164,7 @@ export default function LessonViewer({
           )}
 
                     {/* Chapter navigation */}
-          <div className="mt-8 pt-5 border-t border-[#e8e5e0] dark:border-slate-700">
+          <div className="mt-8 w-full min-w-0 max-w-full border-t border-[#e8e5e0] pt-5 dark:border-slate-700">
             {/* Progress bar */}
             <div className="mb-4 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:gap-3">
               <span className="text-xs font-medium text-muted-foreground sm:whitespace-nowrap">

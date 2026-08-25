@@ -61,6 +61,16 @@ export default function TrainingCourse() {
   const mediaPlayingRef = useRef(false);
   const learningPositionRef = useRef<{ lessonIndex: number | null; chapterIndex?: number }>({ lessonIndex: null });
 
+  useEffect(() => {
+    const routeClass = "training-course-page";
+    document.documentElement.classList.add(routeClass);
+    document.body.classList.add(routeClass);
+    return () => {
+      document.documentElement.classList.remove(routeClass);
+      document.body.classList.remove(routeClass);
+    };
+  }, []);
+
   const navigateCoursePosition = useCallback((lesson: number, chapter = 0) => {
     navigate(buildNavigationUrl(`/training/${certId}/${courseId}`, { lesson: Math.max(0, lesson), chapter: Math.max(0, chapter) }));
   }, [certId, courseId, navigate]);
@@ -351,7 +361,7 @@ export default function TrainingCourse() {
   return (
     <div className="training-course-shell min-h-screen max-w-full overflow-x-hidden bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-card/80 backdrop-blur-md border-b border-border">
+      <header className="training-course-header sticky top-0 z-30 max-w-full bg-card/80 backdrop-blur-md border-b border-border">
         <div className="mx-auto flex w-full min-w-0 max-w-7xl items-center justify-between px-3 py-3 sm:px-6 sm:py-4">
           <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
             {/* Mobile sidebar toggle */}
@@ -369,7 +379,7 @@ export default function TrainingCourse() {
               <span className="hidden rounded-full bg-primary/15 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-primary sm:inline">Training</span>
             </div>
           </div>
-          <div className="flex shrink-0 items-center gap-0.5 sm:gap-3">
+          <div className="training-header-actions flex shrink-0 items-center gap-0.5 sm:gap-3">
             {certId && courseId ? <Button variant="ghost" size="sm" onClick={() => setShareOpen(true)} className="shrink-0 gap-1.5 px-2 text-muted-foreground hover:text-foreground sm:px-3" title="Partager cette formation">
               <Share2 className="h-4 w-4" />
               <span className="hidden lg:inline">Partager</span>
@@ -384,7 +394,7 @@ export default function TrainingCourse() {
             >
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
-            <LanguageSwitcher />
+            <div className="training-header-language shrink-0"><LanguageSwitcher /></div>
             <button
               onClick={() => logout()}
               className="flex shrink-0 items-center gap-1.5 rounded-full border border-red-200 px-2 py-1.5 text-xs font-medium text-red-600 transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-700 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950/30 sm:px-3"

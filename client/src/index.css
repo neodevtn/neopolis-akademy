@@ -219,6 +219,17 @@
   overflow-x: hidden;
 }
 
+/* Guardrail limited to the training reader route. The component layouts above
+   remain responsible for fitting their content; this only prevents a fixed or
+   third-party element from expanding the document width on a phone. */
+html.training-course-page,
+body.training-course-page,
+#root:has(.training-course-shell) {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 .training-course-shell .novasavo-learning-block,
 .training-course-shell .novasavo-learning-block > section {
   width: 100%;
@@ -227,6 +238,16 @@
 }
 
 @media (max-width: 639px) {
+  .training-course-header {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .training-header-actions {
+    min-width: 0;
+    max-width: calc(100vw - 10rem);
+  }
+
   .training-course-shell .novasavo-learning-block button,
   .training-course-shell .novasavo-learning-block input,
   .training-course-shell .novasavo-learning-block textarea {
@@ -239,6 +260,28 @@
   .training-course-shell .novasavo-learning-block h3,
   .training-course-shell .novasavo-learning-block span {
     overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 419px) {
+  .training-course-header .training-header-actions {
+    gap: 0.125rem;
+  }
+
+  .training-course-header .training-header-actions > button {
+    padding-left: 0.375rem;
+    padding-right: 0.375rem;
+  }
+
+  .training-course-header .training-header-language button {
+    gap: 0.25rem;
+    padding-left: 0.375rem;
+    padding-right: 0.375rem;
+  }
+
+  .scroll-to-top {
+    right: max(1rem, env(safe-area-inset-right));
+    max-width: calc(100vw - 2rem);
   }
 }
 

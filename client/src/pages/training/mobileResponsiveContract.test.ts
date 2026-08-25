@@ -10,6 +10,8 @@ describe("contrat responsive du lecteur de formation", () => {
     const coursePage = source("client/src/pages/TrainingCourse.tsx");
 
     expect(coursePage).toContain("training-course-shell min-h-screen max-w-full overflow-x-hidden");
+    expect(coursePage).toContain("training-course-page");
+    expect(coursePage).toContain("training-header-actions");
     expect(coursePage).toContain("w-full min-w-0 max-w-7xl");
     expect(coursePage).toContain("hidden lg:inline");
     expect(coursePage).toContain("min-w-0 max-w-full p-4 sm:p-8");
@@ -29,5 +31,17 @@ describe("contrat responsive du lecteur de formation", () => {
     expect(blocks).toContain("w-full min-w-0 max-w-full rounded-2xl");
     expect(blocks).toContain("w-full max-w-full break-words rounded-xl");
     expect(blocks).toContain("flex min-w-0 flex-col gap-2 sm:flex-row");
+  });
+
+  it("déclare une protection de route et une sonde navigateur de scrollWidth", () => {
+    const styles = source("client/src/index.css");
+    const overflowProbe = source("scripts/check-training-overflow.mjs");
+
+    expect(styles).toContain("html.training-course-page");
+    expect(styles).toContain("#root:has(.training-course-shell)");
+    expect(styles).toContain("max-width: calc(100vw - 2rem)");
+    expect(overflowProbe).toContain("root.scrollWidth > viewportWidth + 2");
+    expect(overflowProbe).toContain("390x844");
+    expect(overflowProbe).toContain("375x667");
   });
 });

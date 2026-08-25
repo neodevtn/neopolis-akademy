@@ -2207,3 +2207,10 @@
 - [x] Rendre l’en-tête, les cartes pédagogiques et les options d’interaction compacts à largeur mobile
 - [x] Assurer que le footer de navigation, son instruction et son CTA restent visibles et cliquables
 - [x] Contrôler et capturer les viewports 390×844 et 375×667 avant publication
+
+## Correctif bloquant — métriques d’overflow publiées
+- [x] Reproduire les valeurs `scrollWidth` publiées aux viewports 390×844 et 375×667
+- [x] Corriger le conteneur d’actions du header, le bouton fixe et le footer responsables du dépassement
+- [x] Ajouter un garde-fou mobile global limité au lecteur de formation
+- [x] Automatiser l’assertion `scrollWidth <= clientWidth + 2` sur les deux viewports
+- [ ] Publier puis confirmer les métriques de production avec `overflow=false`

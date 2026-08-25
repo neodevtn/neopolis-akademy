@@ -22,4 +22,8 @@ Le lecteur a reçu une contrainte de largeur commune aux pages de formation et a
 
 La navigation de bas d’écran passe sur une colonne mobile. L’instruction de passage et le bouton d’action occupent toute la largeur disponible et conservent un retour à la ligne lisible. Les contrôles ont été capturés aux deux formats demandés : **390×844** et **375×667**, sur l’écran Mythe/Réalité (2/17) et le QCM de l’écran 9/17. Les captures confirment que le header, les options, l’instruction et la navigation restent à l’intérieur du viewport. La prévisualisation identifie explicitement son contexte « Mode Révision » ; cette commande est absente de la session apprenant de contrôle.
 
+### Mesure automatisée de largeur
+
+Le script `pnpm check:training-overflow` ouvre le lecteur avec la session apprenant de démonstration et échoue si `document.documentElement.scrollWidth > clientWidth + 2`. Il contrôle les deux formats QA demandés : **390×844** et **375×667**. Le correctif ajoute une contrainte de route dédiée au lecteur (`training-course-page`), compacte les actions de l’en-tête sous 420 px, limite le bouton fixe à la largeur disponible et empile le footer de navigation sur mobile. Avant la publication de contrôle, les mesures locales obtenues sont `390/390` et `375/375`, soit `overflowPx=0` pour les deux viewports.
+
 Le paquet fourni contient le manifeste, la spécification de pagination et les éléments observés du lecteur. Les unités dépourvues d’export textuel complet ont été construites comme des écrans pédagogiques équivalents à partir de leurs intitulés et exigences de navigation ; elles ne doivent pas être présentées comme une transcription mot à mot de Novasavo.
