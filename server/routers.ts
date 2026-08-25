@@ -23,6 +23,7 @@ import { COMPETENCY_SOURCE_TYPES } from "../shared/competencyFramework";
 import { backfillCompetencies } from "./competencyBackfill";
 import { completeLearnerOrientation, createLegacyOrientationReminderDraft, createOrientationProposal, getAdminOrientationOverview, getLearnerOrientation, respondToOrientationProposal, saveLearnerOrientationGoals } from "./orientationService";
 import { isCriticalCourseFeedback } from "../shared/courseFeedback";
+import { invokeLLM } from "./_core/llm";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -32,6 +33,28 @@ const orientationGoalsSchema = z.array(z.object({
 export const appRouter = router({
   system: systemRouter,
   videoRecommendations: videoRecommendationsRouter,
+  courseAssistant: router({
+    ask: protectedProcedure.input(z.object({
+      courseId: z.literal("automatisation_comptable_ia__01"),
+      lessonTitle: z.string().trim().min(2).max(240),
+      screenTitle: z.string().trim().min(2).max(240),
+      context: z.string().trim().min(2).max(2400),
+      question: z.string().trim().min(2).max(1000),
+    })).mutation(async ({ input }) => {
+      const response = await invokeLLM({
+        model: "gpt-5-mini",
+        maxTokens: 700,
+        messages: [
+          { role: "system", content: "Vous êtes l’assistant pédagogique du cours Neopolis Automatisation comptable par l’IA. Répondez en français avec pédagogie, sans dépasser 250 mots. Expliquez des notions générales et des contrôles à appliquer. Ne donnez jamais de conseil comptable, fiscal, juridique ou financier personnalisé ; n’acceptez pas de données sensibles et recommandez un professionnel qualifié pour toute décision réelle." },
+          { role: "user", content: `Unité : ${input.lessonTitle}\nÉcran : ${input.screenTitle}\nContexte : ${input.context}\n\nQuestion : ${input.question}` },
+        ],
+      });
+      const content = response.choices?.[0]?.message?.content;
+      const answer = typeof content === "string" ? content.trim() : "";
+      if (!answer) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "L’assistant n’a pas produit de réponse exploitable." });
+      return { answer };
+    }),
+  }),
   orientation: router({
     getMine: protectedProcedure.query(async ({ ctx }) => getLearnerOrientation(ctx.user.id)),
     saveGoals: protectedProcedure.input(z.object({

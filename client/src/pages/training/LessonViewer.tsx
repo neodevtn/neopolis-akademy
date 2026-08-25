@@ -26,6 +26,7 @@ import { CodeReplBlock } from "@/components/blocks/CodeReplBlock";
 import { OrderingBlock } from "@/components/blocks/OrderingBlock";
 import { AiEvaluationBlock } from "@/components/blocks/AiEvaluationBlock";
 import { MultiChoiceBlock } from "@/components/blocks/MultiChoiceBlock";
+import { NovasavoLearningBlock } from "@/components/blocks/NovasavoLearningBlocks";
 import LessonQuiz from "./LessonQuiz";
 import NumericAnswerExercise from "@/components/NumericAnswerExercise";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -84,6 +85,7 @@ export default function LessonViewer({
   const [matchingCompleted, setMatchingCompleted] = useState<Set<string>>(new Set());
   // Track completed cloud exercises (TP)
   const [completedCloudExercises, setCompletedCloudExercises] = useState<Set<string>>(new Set());
+  const [completedNovasavoInteractions, setCompletedNovasavoInteractions] = useState<Set<string>>(new Set());
   // Track whether we're syncing from parent to avoid calling onChapterChange back
   const isSyncingFromParent = useRef(false);
   const prevLessonId = useRef(lesson.id);
@@ -173,6 +175,8 @@ export default function LessonViewer({
           if (scIds.length > 0 && !scIds.every((id: string) => completedExercises.has(id))) return;
           const cloudIds = blocks.filter((b: any) => b.type === 'cloud_exercise').map((b: any, i: number) => b.id || `cloud_exercise_${i}`);
           if (cloudIds.length > 0 && !cloudIds.every((id: string) => completedCloudExercises.has(id))) return;
+          const novasavoIds = blocks.filter((b: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback"].includes(b.type)).map((b: any, i: number) => b.id || `novasavo_${i}`);
+          if (novasavoIds.length > 0 && !novasavoIds.every((id: string) => completedNovasavoInteractions.has(id))) return;
         }
         setCurrentChapter(p => p + 1);
       } else if (e.key === 'ArrowLeft' && currentChapter > 0) {
@@ -181,7 +185,7 @@ export default function LessonViewer({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentChapter, isLastChapter, completedVideos, flipCardsCompleted, matchingCompleted, completedExercises, completedCloudExercises, isReviewMode, chapters]);
+  }, [currentChapter, isLastChapter, completedVideos, flipCardsCompleted, matchingCompleted, completedExercises, completedCloudExercises, completedNovasavoInteractions, isReviewMode, chapters]);
 
   // When chapter changes from internal navigation (Next button, etc.) - only scroll
   useEffect(() => {
@@ -219,6 +223,31 @@ export default function LessonViewer({
   // Render a single block
   const renderBlock = (block: any, blockIdx: number) => {
     switch (block.type) {
+      case "unit_hero_blue":
+      case "learning_objectives_panel":
+      case "inline_myth_reality":
+      case "inline_multiple_choice_feedback":
+      case "inline_scenario_question_feedback":
+      case "timeline_step_cards":
+      case "process_flow_diagram":
+      case "mistake_correction_pairs":
+      case "ai_assistant_prompt_panel":
+      case "notes_highlights_bookmarks_panel":
+      case "xp_progress_hud":
+      case "course_completion_next_unit_panel":
+        return <NovasavoLearningBlock key={blockIdx} block={block} lang={lang} courseId={courseId} lessonTitle={resolveI18n(lesson.title, lang)} screenTitle={resolveI18n(chapter?.title, lang)} onComplete={(id) => {
+          setCompletedNovasavoInteractions((current) => new Set(current).add(id));
+          recordCompetencyOutcome.mutate({
+            sourceType: "checkpoint_passed",
+            sourceKey: courseId,
+            eventKey: `novasavo:${courseId}:${lessonIndex}:${currentChapter}:${id}`,
+            score: 100,
+            certificationId: certId,
+            courseId,
+            lessonIndex,
+            chapterIndex: currentChapter,
+          });
+        }} />;
       case "content": {
         const body = block.body || {};
         let text = typeof body === "string" ? body : (body[lang] || body.en || "");

@@ -2170,3 +2170,11 @@
 - [x] Enregistrer l’origine de candidature et attribuer le parrain au moment de la soumission
 - [x] Ajouter une administration des règles, promesses de récompense, références et conversions
 - [x] Tester, documenter et publier le parcours sans attribuer automatiquement de valeur financière ou de tokens
+
+## Cours partenaire Novasavo — Automatisation comptable par l’IA
+- [x] Auditer le manifeste, la spécification de pagination et les interactions du dossier source
+- [x] Importer les 12 unités dans l’ordre sous Finance & Comptabilité
+- [x] Créer et enregistrer les blocs standards paginés et interactifs requis
+- [x] Relier les interactions à leur feedback, au verrouillage de progression et aux événements XP
+- [x] Indexer le cours pour la recherche et verrouiller l’examen final derrière les douze unités
+- [x] Valider structure, TypeScript, JSON de cours et suite de tests avant publication

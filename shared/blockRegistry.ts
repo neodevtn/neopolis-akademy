@@ -529,6 +529,40 @@ const finalSlideBlock: BlockTypeDefinition = {
   defaultData: { type: "FinalSlide" },
 };
 
+const novasavoBlock = (type: string, fr: string, category: BlockCategory = "content"): BlockTypeDefinition => ({
+  type,
+  label: { en: fr, fr },
+  description: { en: `Novasavo paginated learning block: ${fr}`, fr: `Bloc pédagogique paginé Novasavo : ${fr}` },
+  category,
+  icon: category === "interactive" ? "MousePointerClick" : "PanelsTopLeft",
+  color: category === "interactive" ? "bg-indigo-100 text-indigo-700" : "bg-blue-100 text-blue-700",
+  since: "3.0",
+  schema: [
+    { key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text" },
+    { key: "body", label: { en: "Content", fr: "Contenu" }, type: "i18n_richtext" },
+    { key: "prompt", label: { en: "Prompt", fr: "Consigne" }, type: "i18n_textarea" },
+    { key: "options", label: { en: "Options", fr: "Options" }, type: "json" },
+    { key: "explanation", label: { en: "Feedback", fr: "Feedback" }, type: "i18n_textarea" },
+    { key: "xp", label: { en: "XP", fr: "XP" }, type: "number", defaultValue: 5 },
+  ],
+  defaultData: { type, title: { en: "", fr: "" }, body: { en: "", fr: "" } },
+});
+
+const novasavoBlocks = [
+  novasavoBlock("unit_hero_blue", "En-tête d’unité bleu", "layout"),
+  novasavoBlock("learning_objectives_panel", "Objectifs d’apprentissage", "layout"),
+  novasavoBlock("inline_myth_reality", "Mythe ou réalité", "interactive"),
+  novasavoBlock("inline_multiple_choice_feedback", "QCM avec feedback", "interactive"),
+  novasavoBlock("inline_scenario_question_feedback", "Question scénario avec feedback", "interactive"),
+  novasavoBlock("timeline_step_cards", "Cartes étapes chronologiques", "layout"),
+  novasavoBlock("process_flow_diagram", "Diagramme de processus", "layout"),
+  novasavoBlock("mistake_correction_pairs", "Erreurs et corrections", "content"),
+  novasavoBlock("ai_assistant_prompt_panel", "Panneau de prompt assistant IA", "interactive"),
+  novasavoBlock("notes_highlights_bookmarks_panel", "Notes, surlignages et signets", "content"),
+  novasavoBlock("xp_progress_hud", "Indicateur XP et progression", "layout"),
+  novasavoBlock("course_completion_next_unit_panel", "Passage à l’unité suivante", "assessment"),
+];
+
 // ============================================================
 // REGISTRY EXPORT
 // ============================================================
@@ -568,6 +602,7 @@ export const BLOCK_REGISTRY: BlockTypeDefinition[] = [
   fullSlideBlock,
   twoColumnsBlock,
   finalSlideBlock,
+  ...novasavoBlocks,
 ];
 
 /** Get block definition by type */
