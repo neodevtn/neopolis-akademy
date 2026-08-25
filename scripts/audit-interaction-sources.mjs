@@ -11,7 +11,7 @@ const summaryPath = path.join(root, "docs", "interaction-source-audit.md");
 const interactiveBlockTypes = new Set([
   "single_choice_exercise", "multi_choice_exercise", "bucket_sort", "fill_blank", "matching",
   "ordering", "code_repl", "cloud_exercise", "terminal_sim", "ai_evaluation", "resource_review", "exercise",
-  "checkpoint", "flip_card", "checklist",
+  "checkpoint", "flip_cards", "checklist", "knowledge_check", "learning_tools",
 ]);
 
 const isI18n = (value) => value && typeof value === "object" && !Array.isArray(value) && ("fr" in value || "en" in value);

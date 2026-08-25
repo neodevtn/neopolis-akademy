@@ -335,6 +335,34 @@ for (const fname of files) {
         } else {
           chapterIds.set(cid, ci);
         }
+
+        // ── Generic learning blocks: preserve interactive contracts ──────────
+        for (const [bi, block] of (ch.blocks || []).entries()) {
+          const blockContext = `Lesson "${lid}", chapter "${cid}", block ${bi + 1}`;
+          if (!block?.type) {
+            fileIssues.push({ level: 'error', type: 'missing_block_type', msg: `${blockContext}: block type is required` });
+            totalErrors++;
+            continue;
+          }
+
+          if (block.type === 'knowledge_check') {
+            const expectedAnswers = block.mode === 'myth_reality'
+              ? new Set(['mythe', 'realite'])
+              : new Set((block.options || []).map(option => String(option?.id ?? option?.value ?? '')));
+            if (!block.correctAnswer || !expectedAnswers.has(String(block.correctAnswer))) {
+              fileIssues.push({ level: 'error', type: 'invalid_knowledge_check_answer', msg: `${blockContext}: correctAnswer must match a declared response` });
+              totalErrors++;
+            }
+            if (!getText(block.explanation).trim()) {
+              fileIssues.push({ level: 'error', type: 'missing_knowledge_check_feedback', msg: `${blockContext}: interactive feedback explanation is required` });
+              totalErrors++;
+            }
+            if (!getText(block.prompt || block.scenario).trim()) {
+              fileIssues.push({ level: 'error', type: 'missing_knowledge_check_prompt', msg: `${blockContext}: prompt or scenario is required` });
+              totalErrors++;
+            }
+          }
+        }
       }
 
       // ── 5. Empty chapters ─────────────────────────────────────────────────

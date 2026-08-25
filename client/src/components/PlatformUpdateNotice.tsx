@@ -1,19 +1,13 @@
 import { RefreshCw, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { extractEntryBundle, isLearnerLearningRoute, shouldShowPlatformUpdate } from "@/lib/platformUpdate";
+import { extractPlatformVersion, isLearnerLearningRoute, shouldShowVersionUpdate } from "@/lib/platformUpdate";
 
 const POLL_INTERVAL_MS = 60_000;
-
-function getLoadedEntryBundle(): string | null {
-  if (typeof document === "undefined") return null;
-  const entry = document.querySelector<HTMLScriptElement>('script[type="module"][src*="/assets/index-"]');
-  return entry?.getAttribute("src") ?? null;
-}
 
 export function PlatformUpdateNotice() {
   const [updateAvailable, setUpdateAvailable] = useState(false);
   const [dismissed, setDismissed] = useState(() => typeof window !== "undefined" && sessionStorage.getItem("neopolis-update-dismissed") === "true");
-  const loadedBundleRef = useRef<string | null>(getLoadedEntryBundle());
+  const loadedVersionRef = useRef<string | null>(null);
   const enabled = typeof window !== "undefined" && isLearnerLearningRoute(window.location.pathname);
 
   useEffect(() => {
@@ -25,16 +19,16 @@ export function PlatformUpdateNotice() {
     let cancelled = false;
     const checkForUpdate = async () => {
       try {
-        const response = await fetch(`/?platform-update=${Date.now()}`, { cache: "no-store" });
+        const response = await fetch(`/__manus__/version.json?platform-update=${Date.now()}`, { cache: "no-store" });
         if (!response.ok) return;
 
-        const availableBundle = extractEntryBundle(await response.text());
-        const loadedBundle = loadedBundleRef.current;
-        if (!loadedBundle && availableBundle) {
-          loadedBundleRef.current = availableBundle;
+        const availableVersion = extractPlatformVersion(await response.json());
+        const loadedVersion = loadedVersionRef.current;
+        if (!loadedVersion && availableVersion) {
+          loadedVersionRef.current = availableVersion;
           return;
         }
-        if (!cancelled && shouldShowPlatformUpdate(loadedBundle, availableBundle)) {
+        if (!cancelled && shouldShowVersionUpdate(loadedVersion, availableVersion)) {
           setUpdateAvailable(true);
         }
       } catch {

@@ -102,6 +102,29 @@ export function securityHeaders(req: Request, res: Response, next: NextFunction)
 // ─── Global Rate Limit Middleware (F-003) ───
 // 300 requests per minute per IP for all routes
 export function globalRateLimit(req: Request, res: Response, next: NextFunction) {
+  // La sonde Playwright interne est réservée à la prévisualisation. Elle parcourt
+  // de nombreux écrans pour détecter des régressions et ne doit jamais modifier
+  // le budget de débit appliqué aux utilisateurs de production.
+  if (process.env.NODE_ENV !== "production" && req.get("x-neopolis-qa-probe") === "1") {
+    next();
+    return;
+  }
+
+  // Les bundles, médias et JSON de cours peuvent être demandés en rafale lors du
+  // chargement d’un écran. Ils ne déclenchent aucune opération métier : les
+  // compter avec les endpoints API ferait échouer un parcours légitime avant
+  // que les limites spécialisées d’authentification, soumission et tRPC ne jouent.
+  if (req.method === "GET" && (
+    req.path === "/" ||
+    req.path === "/__manus__/version.json" ||
+    req.path.startsWith("/assets/") ||
+    req.path.startsWith("/data/") ||
+    req.path.startsWith("/api/assets/")
+  )) {
+    next();
+    return;
+  }
+
   const ip = getClientIp(req);
   const allowed = checkRateLimit(ip, "global", 300, 60 * 1000);
 

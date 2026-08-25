@@ -598,7 +598,30 @@ export default function TrainingCourse() {
 
             // If no active review and current lesson is completed, show nothing (course complete state handles it)
             if (!displayedLesson) return null;
-            if (!isSingleLessonCourse && !isReviewMode && !isCurrentLesson) return null;
+            if (!isSingleLessonCourse && !isReviewMode && !isCurrentLesson) {
+              const resumeLesson = courseLessons[nextUnlocked];
+              return (
+                <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-6 text-center dark:border-amber-900/60 dark:bg-amber-950/20">
+                  <Lock className="mx-auto mb-3 h-8 w-8 text-amber-600 dark:text-amber-400" />
+                  <h2 className="text-lg font-semibold text-foreground">Unité verrouillée</h2>
+                  <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">
+                    Terminez l’unité actuellement disponible avant de poursuivre ce parcours séquentiel.
+                  </p>
+                  <Button
+                    className="mt-5"
+                    onClick={() => {
+                      const resumeTotal = Math.max(1, courseLessons[nextUnlocked]?.chapters?.length || 1);
+                      setActiveLessonIndex(nextUnlocked);
+                      setChapterProgress({ current: 0, total: resumeTotal });
+                      setChapterProgressLessonIndex(nextUnlocked);
+                      navigateCoursePosition(nextUnlocked, 0);
+                    }}
+                  >
+                    Reprendre {resumeLesson ? `l’unité ${nextUnlocked + 1}` : "le parcours"}
+                  </Button>
+                </div>
+              );
+            }
 
             // Match videos to this lesson by title
             const lessonTitle = (resolveI18n(displayedLesson.title, "en") || "").toLowerCase().trim();

@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { Terminal, Play, CheckCircle2, XCircle, RotateCcw, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { normalizeInstructionText } from "@shared/displayText";
 
 interface CodeReplBlockProps {
   block: any;
@@ -11,7 +12,7 @@ interface CodeReplBlockProps {
 }
 
 export function CodeReplBlock({ block, lang, t, onComplete, blockIdx }: CodeReplBlockProps) {
-  const instructions = typeof block.instructions === "object" ? (block.instructions[lang] || block.instructions.en || "") : (block.instructions || "");
+  const instructions = normalizeInstructionText(typeof block.instructions === "object" ? (block.instructions[lang] || block.instructions.en || "") : block.instructions);
   const language = block.language || "python";
   const starterCode = block.starterCode || "";
   const solutionCode = block.solutionCode || "";

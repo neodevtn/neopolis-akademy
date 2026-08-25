@@ -1146,7 +1146,7 @@ export default function LessonViewer({
                     </div>
                   </div>
                 )}
-                {orderedBlocks.map((block: any, idx: number) => <BlockCustomizationFrame key={block.id || `${block.type}-${idx}`} block={block} lang={lang} theme={courseTheme}>{renderBlock(block, allBlocks.indexOf(block) >= 0 ? allBlocks.indexOf(block) : idx)}</BlockCustomizationFrame>)}
+                {orderedBlocks.map((block: any, idx: number) => <BlockCustomizationFrame key={`${block.id || block.type || "block"}-${idx}`} block={block} lang={lang} theme={courseTheme}>{renderBlock(block, allBlocks.indexOf(block) >= 0 ? allBlocks.indexOf(block) : idx)}</BlockCustomizationFrame>)}
               </div>
             );
           })()}

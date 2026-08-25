@@ -2230,3 +2230,14 @@
 - [x] Masquer ou retirer de la sélection les blocs legacy dépréciés lorsque leur équivalent générique existe
 - [x] Identifier et supprimer les médias ou illustrations parasites du rendu des cours
 - [x] Comparer les écrans éditeur, apprenant et source, puis valider les correctifs navigateur desktop/mobile
+
+## Assurance qualité transversale des blocs de cours
+- [x] Inventorier les familles de blocs et sélectionner des écrans représentatifs dans plusieurs formations
+- [x] Associer les références originales disponibles et les critères visuels/interactifs de chaque famille
+- [x] Automatiser les contrôles de rendu et d’interactivité pour prévenir les régressions croisées
+- [x] Corriger les écarts confirmés par famille de blocs avec tests de compatibilité sur les autres cours
+- [x] Contrôler les échantillons navigateur desktop/mobile, publier et documenter la couverture
+- [x] Remplacer l’écran vide d’une unité séquentiellement verrouillée par une explication explicite et une action de retour
+- [x] Corriger le rendu des retours à la ligne échappés dans les descriptions de blocs de code détecté par la matrice QA
+- [x] Éliminer les clés React dupliquées dans les checkpoints multi-questions détectées par la matrice QA
+- [x] Stabiliser la sonde QA en prévisualisation sans réduire la limitation de débit de production
