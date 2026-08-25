@@ -38,4 +38,10 @@ describe("cours Novasavo paginé", () => {
     expect(JSON.stringify(course)).not.toContain("XP");
     expect(JSON.stringify(course)).not.toContain("xp_progress_hud");
   });
+
+  it("désactive les illustrations heuristiques absentes des blocs déclarés par le cours", () => {
+    const lessonViewer = readFileSync(resolve(process.cwd(), "client/src/pages/training/LessonViewer.tsx"), "utf8");
+    expect(lessonViewer).toContain("const shouldRenderAutomaticIllustration = false");
+    expect(lessonViewer).not.toContain("{isSparse && (");
+  });
 });

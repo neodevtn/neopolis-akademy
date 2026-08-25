@@ -536,6 +536,7 @@ const novasavoBlock = (type: string, fr: string, category: BlockCategory = "cont
   category,
   icon: category === "interactive" ? "MousePointerClick" : "PanelsTopLeft",
   color: category === "interactive" ? "bg-indigo-100 text-indigo-700" : "bg-blue-100 text-blue-700",
+  deprecated: true,
   since: "3.0",
   schema: [
     { key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text" },

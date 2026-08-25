@@ -144,7 +144,7 @@ export function BlockLibrary({ blocks, onChange, lang, t, onRequestMedia }: Bloc
 
       {/* Block Palette Dialog */}
       <Dialog open={showPalette} onOpenChange={setShowPalette}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-4xl max-h-[80vh] overflow-x-hidden overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t({ en: "Block Library", fr: "Bibliothèque de blocs" })}</DialogTitle>
             <p className="text-sm text-muted-foreground">Choisissez un bloc : son formulaire visuel s’ouvrira ensuite pour ajouter son contenu et son média associé.</p>
@@ -169,19 +169,19 @@ export function BlockLibrary({ blocks, onChange, lang, t, onRequestMedia }: Bloc
                     <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
                       {lang === "fr" ? catLabel.fr : catLabel.en}
                     </h3>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
                       {visibleTypes.map((bt) => (
                         <button
                           key={bt.type}
                           onClick={() => addBlock(bt)}
-                          className="flex items-start gap-3 p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-all text-left"
+                          className="flex min-w-0 items-start gap-3 rounded-lg border border-border p-4 text-left transition-colors hover:border-primary/50 hover:bg-primary/5"
                         >
-                          <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 shrink-0 mt-0.5 ${bt.color}`}>
+                          <Badge variant="secondary" className={`mt-0.5 max-w-40 shrink-0 truncate px-1.5 py-0 text-[10px] ${bt.color}`} title={bt.type}>
                             {bt.type}
                           </Badge>
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium text-foreground">{lang === "fr" ? bt.label.fr : bt.label.en}</p>
-                            <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{lang === "fr" ? bt.description.fr : bt.description.en}</p>
+                          <div className="min-w-0 flex-1">
+                            <p className="break-words text-sm font-medium leading-5 text-foreground">{lang === "fr" ? bt.label.fr : bt.label.en}</p>
+                            <p className="mt-1 line-clamp-2 break-words text-xs leading-5 text-muted-foreground">{lang === "fr" ? bt.description.fr : bt.description.en}</p>
                           </div>
                         </button>
                       ))}
@@ -228,8 +228,8 @@ function BlockEditorDialog({ block, blockDef, lang, onLangChange, t, onSave, onR
   onRequestMedia?: (fieldKey: string) => void;
   onClose: () => void;
 }) {
-  const [editData, setEditData] = useState<any>(() => hydrateBlockForEditor(block));
-  useEffect(() => setEditData(hydrateBlockForEditor(block)), [block]);
+  const [editData, setEditData] = useState<any>(() => hydrateBlockForEditor(block, blockDef?.schema));
+  useEffect(() => setEditData(hydrateBlockForEditor(block, blockDef?.schema)), [block, blockDef]);
 
   if (!blockDef) {
     // Fallback: raw JSON editor for unknown block types
@@ -288,9 +288,26 @@ function BlockEditorDialog({ block, blockDef, lang, onLangChange, t, onSave, onR
     return val[l] || "";
   };
 
+  const editorFields = getEditorFields(editData, blockDef.schema);
+  const advancedFieldKeys = new Set(["styleTone", "styleVariant", "styleAccent", "styleDensity", "styleLayout", "overrideMode", "customHtml", "customCss"]);
+  const contentFields = editorFields.filter((field) => !advancedFieldKeys.has(field.key));
+  const advancedFields = editorFields.filter((field) => advancedFieldKeys.has(field.key));
+  const renderEditorField = (field: any) => (
+    <div key={field.key}>
+      <label className="mb-1 block text-xs font-medium text-muted-foreground">
+        {lang === "fr" ? field.label.fr : field.label.en}
+        {field.required && <span className="ml-0.5 text-red-500">*</span>}
+      </label>
+      {field.helpText && (
+        <p className="mb-1 text-[10px] text-muted-foreground">{lang === "fr" ? field.helpText.fr : field.helpText.en}</p>
+      )}
+      {renderFieldEditor(field, editData, lang, updateField, updateI18nField, getI18nValue, onRequestMedia)}
+    </div>
+  );
+
   return (
     <Dialog open onOpenChange={(o) => { if (!o) onClose(); }}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="w-[calc(100vw-2rem)] max-w-3xl max-h-[80vh] overflow-x-hidden overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Badge className={blockDef.color}>{blockDef.type}</Badge>
@@ -303,18 +320,14 @@ function BlockEditorDialog({ block, blockDef, lang, onLangChange, t, onSave, onR
             <TabsTrigger value="fr">🇫🇷 Français</TabsTrigger>
           </TabsList>
           <TabsContent value={lang} className="space-y-4">
-            {getEditorFields(editData, blockDef.schema).map((field) => (
-              <div key={field.key}>
-                <label className="text-xs font-medium text-muted-foreground mb-1 block">
-                  {lang === "fr" ? field.label.fr : field.label.en}
-                  {field.required && <span className="text-red-500 ml-0.5">*</span>}
-                </label>
-                {field.helpText && (
-                  <p className="text-[10px] text-muted-foreground mb-1">{lang === "fr" ? field.helpText.fr : field.helpText.en}</p>
-                )}
-                {renderFieldEditor(field, editData, lang, updateField, updateI18nField, getI18nValue, onRequestMedia)}
-              </div>
-            ))}
+            {contentFields.map(renderEditorField)}
+            {advancedFields.length > 0 && (
+              <details className="rounded-xl border border-border bg-muted/20 p-3">
+                <summary className="cursor-pointer text-sm font-semibold text-foreground">{t({ en: "Appearance & advanced overrides", fr: "Apparence et overrides avancés" })}</summary>
+                <p className="mt-1 text-xs text-muted-foreground">{t({ en: "Optional course-template settings. Interactive behavior remains protected.", fr: "Réglages optionnels du template. Le comportement interactif reste protégé." })}</p>
+                <div className="mt-4 space-y-4">{advancedFields.map(renderEditorField)}</div>
+              </details>
+            )}
           </TabsContent>
         </Tabs>
         <DialogFooter>

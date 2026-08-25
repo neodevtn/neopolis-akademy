@@ -27,6 +27,14 @@ describe("block editor parity", () => {
     expect(hydrateBlockForEditor(video).url).toBe("https://www.youtube.com/watch?v=abc123");
   });
 
+  it("hydrate les valeurs par défaut des réglages avancés lorsqu’un bloc existant ne les possède pas", () => {
+    const hydrated = hydrateBlockForEditor(
+      { type: "learning_section", title: { fr: "Titre" } },
+      [{ key: "styleTone", label: { en: "Tone", fr: "Ton" }, type: "select", defaultValue: "brand" }],
+    );
+    expect(hydrated.styleTone).toBe("brand");
+  });
+
   it("identifies all media runtime fields for the media library", () => {
     expect(isMediaEditorField("audioUrl")).toBe(true);
     expect(isMediaEditorField("subtitleUrlFr")).toBe(true);

@@ -2223,3 +2223,10 @@
 - [x] Contrôler les rendus navigateur desktop/mobile de chaque lot et publier sans régression
 - [x] Ajouter des templates par formation : palette, typographie, rayons, densité et variantes de composants
 - [x] Ajouter des overrides HTML/CSS encadrés et validés pour chaque type de bloc, sans exécution de script
+
+## Correctif de cohérence visuelle — éditeur et lecteur
+- [x] Corriger la grille de la bibliothèque de blocs afin que les cartes, libellés et descriptions ne soient jamais tronqués
+- [x] Regrouper les options de style et d’override dans une section avancée lisible de l’éditeur
+- [x] Masquer ou retirer de la sélection les blocs legacy dépréciés lorsque leur équivalent générique existe
+- [x] Identifier et supprimer les médias ou illustrations parasites du rendu des cours
+- [x] Comparer les écrans éditeur, apprenant et source, puis valider les correctifs navigateur desktop/mobile

@@ -1129,9 +1129,13 @@ export default function LessonViewer({
               totalTextLen < 400 ||
               (contentAfterTitle.length < 200 && !hasMarkdownStructure)
             );
+            // Les illustrations générées par heuristique ne figurent ni dans les JSON,
+            // ni dans les sources pédagogiques : elles ne doivent jamais être injectées.
+            // Seuls les médias explicitement déclarés dans un bloc peuvent être rendus.
+            const shouldRenderAutomaticIllustration = false;
             return (
               <div className="w-full min-w-0 max-w-full space-y-8">
-                {isSparse && (
+                {shouldRenderAutomaticIllustration && isSparse && (
                   <div className="w-full flex justify-center py-4">
                     <div className="w-full max-w-sm h-52 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900/40 dark:to-blue-950/30 border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
                       <CourseIllustration

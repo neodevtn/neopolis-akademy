@@ -7,6 +7,7 @@ export type EditableField = {
   helpText?: { en: string; fr: string };
   options?: Array<{ value: string; label: string }>;
   arrayItemSchema?: EditableField[];
+  defaultValue?: any;
 };
 
 const INTERNAL_BLOCK_KEYS = new Set(["type", "id", "label", "source_page", "order", "mediaUnavailable", "optionalMediaUnavailable"]);
@@ -60,9 +61,14 @@ export function getEditorFields(block: Record<string, unknown>, declaredFields: 
   return [...declaredFields, ...getRuntimeEditorFields(block, declaredFields)];
 }
 
-export function hydrateBlockForEditor(block: Record<string, any>): Record<string, any> {
+export function hydrateBlockForEditor(block: Record<string, any>, declaredFields: EditableField[] = []): Record<string, any> {
   const hydrated = { ...block };
   if (!hydrated.url) hydrated.url = hydrated.watchUrl || hydrated.embedUrl || (hydrated.videoId ? `https://www.youtube.com/watch?v=${hydrated.videoId}` : "");
+  for (const field of declaredFields) {
+    if (hydrated[field.key] === undefined && field.defaultValue !== undefined) {
+      hydrated[field.key] = typeof field.defaultValue === "object" ? structuredClone(field.defaultValue) : field.defaultValue;
+    }
+  }
   return hydrated;
 }
 
