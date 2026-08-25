@@ -23,7 +23,7 @@ Le contrôle desktop affiche le cours dans le lecteur standard, avec l’en-têt
 
 ## Écarts source documentés
 
-Les 98 vidéos déclarées sont des références YouTube du manifeste ; le paquet ne les fournit pas sous forme de médias locaux téléchargeables. Elles restent donc déclarées comme vidéos source dans le catalogue, sans être remplacées par une URL média externe dans les blocs de contenu. Les illustrations distantes non incluses dans le paquet sont signalées dans le texte, sans hotlink.
+Les 98 vidéos déclarées sont des références YouTube du manifeste ; le paquet ne les fournit pas sous forme de médias locaux téléchargeables. Elles restent comptabilisées dans les métadonnées de provenance du cours, mais aucun lecteur ni URL externe n’est publié dans Neopolis. Les illustrations distantes non incluses dans le paquet sont signalées dans le texte, sans hotlink.
 
 ## Correction de lisibilité
 

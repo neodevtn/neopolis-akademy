@@ -41,7 +41,7 @@ const course = {
   videos: [],
   downloadCount: 11,
   chapterCount: 14,
-  videoCount: 98,
+  videoCount: 0,
   totalActivities: 103,
 };
 

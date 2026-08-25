@@ -100,16 +100,9 @@ for (const page of manifest.pages) {
 
   const body = pageMarkdown(page);
   const blocks = [{ type: "content", id: `${pageId(page.index)}_content`, body: localized(body) }];
-  for (const [videoIndex, video] of (page.videos ?? []).entries()) {
-    blocks.push({
-      type: "video",
-      id: `${pageId(page.index)}_video_${videoIndex + 1}`,
-      title: localized(page.title),
-      youtubeId: video.video_id,
-      youtubeUrl: video.watch_url,
-      sourceProvider: "YouTube",
-    });
-  }
+  // The source manifest may enumerate YouTube references without supplying a
+  // redistributable local media file. Those references are tracked in
+  // huggingFaceImport.expected but are not embedded or hotlinked in Neopolis.
   if (isInteractive(page)) blocks.push(exerciseBlock(page, body));
 
   currentLesson.chapters.push({
@@ -154,6 +147,7 @@ const course = {
       pages_extracted: manifest.pages.length,
       checkpoint_or_lab_pages: manifest.counts.checkpoint_or_lab_pages,
       videos_expected: manifest.counts.videos,
+      videos_local: 0,
       supplemental_files_expected: manifest.counts.supplemental_files,
       supplemental_files_local: downloads.length,
       missing_source_files: manifest.missing_source_files,

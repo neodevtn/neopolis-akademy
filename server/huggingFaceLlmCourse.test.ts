@@ -24,6 +24,8 @@ describe("Hugging Face Learn · LLM Course", () => {
   it("publie seulement les téléchargements locaux via le proxy média", () => {
     const serialized = JSON.stringify(course);
     expect(serialized).not.toContain("https://huggingface.co");
+    expect(serialized).not.toContain("youtube.com");
+    expect(serialized).not.toContain("youtu.be");
     expect(serialized).not.toContain("/manus-storage/");
     const downloads = blocks.filter((block: any) => block.type === "download");
     expect(downloads).toHaveLength(11);
