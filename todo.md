@@ -2213,4 +2213,4 @@
 - [x] Corriger le conteneur d’actions du header, le bouton fixe et le footer responsables du dépassement
 - [x] Ajouter un garde-fou mobile global limité au lecteur de formation
 - [x] Automatiser l’assertion `scrollWidth <= clientWidth + 2` sur les deux viewports
-- [ ] Publier puis confirmer les métriques de production avec `overflow=false`
+- [x] Publier puis confirmer les métriques de production avec `overflow=false`
