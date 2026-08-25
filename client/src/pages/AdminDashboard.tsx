@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
-import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Columns3, Bell, BellRing, UserX, FileCheck, CalendarClock, Save, Filter } from "lucide-react";
+import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Columns3, Bell, BellRing, UserX, FileCheck, CalendarClock, Save, Filter, Gift } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 import { AdminNavbar } from "@/components/AdminNavbar";
@@ -23,7 +23,7 @@ import { toPreviewMediaUrl } from "@/lib/mediaUrl";
 
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
-type TabType = "candidatures" | "kanban" | "communications" | "invitations" | "analytics" | "activity";
+type TabType = "candidatures" | "kanban" | "communications" | "invitations" | "analytics" | "activity" | "referrals";
 
 // Notification type icons
 const NOTIF_ICONS: Record<string, { icon: any; color: string }> = {
@@ -39,7 +39,7 @@ export default function AdminDashboard() {
   const urlSearch = useSearch();
   const getTabFromUrl = (): TabType => {
     const tab = new URLSearchParams(urlSearch).get("tab");
-    return ["candidatures", "kanban", "communications", "invitations", "analytics", "activity"].includes(tab || "") ? tab as TabType : "candidatures";
+    return ["candidatures", "kanban", "communications", "invitations", "analytics", "activity", "referrals"].includes(tab || "") ? tab as TabType : "candidatures";
   };
   const [activeTab, setActiveTab] = useState<TabType>(getTabFromUrl);
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -82,6 +82,7 @@ export default function AdminDashboard() {
   const [activityFrom, setActivityFrom] = useState("");
   const [activityTo, setActivityTo] = useState("");
   const [selectedActivity, setSelectedActivity] = useState<any | null>(null);
+  const [referralNotes, setReferralNotes] = useState<Record<number, string>>({});
 
   // Invitation mass sending state
   const [invitDialog, setInvitDialog] = useState(false);
@@ -286,6 +287,15 @@ export default function AdminDashboard() {
   }, [commAudience, commCourseId, commCourseProgressStatus, commActivityWithinDays, commUseCompetencyFilter, commCompetencyId, commMinCompetencyLevel, commManualEmails.length, communicationSegmentOptionsQuery.data?.courses, competencyFrameworkQuery.data?.definitions]);
 
   const analyticsQuery = trpc.adminTools.analytics.getLearnerAnalytics.useQuery(undefined, { enabled: activeTab === "analytics" });
+  const referralOverviewQuery = trpc.referral.getAdminOverview.useQuery(undefined, { enabled: activeTab === "referrals" && isAuthenticated && user?.role === "admin" });
+  const updateReferralCampaignMutation = trpc.referral.updateCampaign.useMutation({
+    onSuccess: () => { referralOverviewQuery.refetch(); toast.success("Programme de parrainage mis à jour"); },
+    onError: (error) => toast.error(error.message || "Impossible de mettre à jour le programme"),
+  });
+  const updateReferralConversionMutation = trpc.referral.updateConversionStatus.useMutation({
+    onSuccess: () => { referralOverviewQuery.refetch(); toast.success("Statut de conversion mis à jour"); },
+    onError: (error) => toast.error(error.message || "Impossible de mettre à jour la conversion"),
+  });
   const activityLogInput = useMemo(() => ({
     page: activityPage,
     pageSize: 25,
@@ -967,6 +977,35 @@ export default function AdminDashboard() {
               <p className="text-muted-foreground text-center py-20">Aucune donnée disponible.</p>
             )}
           </>
+        )}
+
+        {/* ==================== REFERRAL TAB ==================== */}
+        {activeTab === "referrals" && (
+          <section>
+            <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div><p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">Acquisition traçable</p><h1 className="wise-display-md">Parrainage et récompenses</h1><p className="mt-2 max-w-3xl text-sm text-muted-foreground">Les récompenses sont des promesses administrables. Elles ne sont attribuées qu’après validation manuelle de chaque conversion.</p></div>
+            </div>
+            {referralOverviewQuery.isLoading ? <div className="flex justify-center py-16"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div> : referralOverviewQuery.data ? <>
+              <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+                <StatCard icon={<Gift className="w-4 h-4" />} value={referralOverviewQuery.data.conversions.length} label="Candidatures attribuées" />
+                <StatCard icon={<Clock className="w-4 h-4" />} value={referralOverviewQuery.data.counts.pending || 0} label="À examiner" />
+                <StatCard icon={<CheckCircle className="w-4 h-4" />} value={referralOverviewQuery.data.counts.eligible || 0} label="Éligibles" />
+                <StatCard icon={<Gift className="w-4 h-4" />} value={referralOverviewQuery.data.counts.rewarded || 0} label="Récompensées" />
+              </div>
+              <form className="mb-8 rounded-xl border border-border bg-card p-5" onSubmit={(event) => {
+                event.preventDefault();
+                const form = new FormData(event.currentTarget);
+                updateReferralCampaignMutation.mutate({ id: referralOverviewQuery.data!.campaign.id, active: form.get("active") ? 1 : 0, tokenRewardLabel: String(form.get("tokenRewardLabel") || ""), giftRewardLabel: String(form.get("giftRewardLabel") || ""), eligibilityText: String(form.get("eligibilityText") || ""), shareMessage: String(form.get("shareMessage") || "") });
+              }}>
+                <div className="mb-4 flex items-center justify-between gap-4"><div><h2 className="font-semibold">Règles et message de partage</h2><p className="text-xs text-muted-foreground">Éditez les promesses affichées aux apprenants et les conditions de validation.</p></div><label className="flex items-center gap-2 text-sm font-medium"><input type="checkbox" name="active" defaultChecked={referralOverviewQuery.data.campaign.active === 1} /> Programme actif</label></div>
+                <div className="grid gap-4 md:grid-cols-2"><div><Label htmlFor="tokenRewardLabel">Promesse de tokens</Label><Input id="tokenRewardLabel" name="tokenRewardLabel" defaultValue={referralOverviewQuery.data.campaign.tokenRewardLabel} /></div><div><Label htmlFor="giftRewardLabel">Promesse de cadeau</Label><Input id="giftRewardLabel" name="giftRewardLabel" defaultValue={referralOverviewQuery.data.campaign.giftRewardLabel} /></div></div>
+                <div className="mt-4"><Label htmlFor="eligibilityText">Conditions d’éligibilité</Label><Textarea id="eligibilityText" name="eligibilityText" defaultValue={referralOverviewQuery.data.campaign.eligibilityText || ""} rows={3} /></div>
+                <div className="mt-4"><Label htmlFor="shareMessage">Message proposé au partage</Label><Textarea id="shareMessage" name="shareMessage" defaultValue={referralOverviewQuery.data.campaign.shareMessage || ""} rows={3} /></div>
+                <div className="mt-4 flex justify-end"><Button type="submit" disabled={updateReferralCampaignMutation.isPending} className="gap-2"><Save className="h-4 w-4" />Enregistrer les règles</Button></div>
+              </form>
+              <div className="overflow-x-auto rounded-xl border border-border bg-card"><table className="w-full min-w-[900px] text-sm"><thead className="border-b border-border bg-muted/30 text-left text-xs uppercase tracking-wide text-muted-foreground"><tr><th className="px-4 py-3">Parrain</th><th className="px-4 py-3">Candidat</th><th className="px-4 py-3">Origine</th><th className="px-4 py-3">Date</th><th className="px-4 py-3">Note</th><th className="px-4 py-3">Validation</th></tr></thead><tbody>{referralOverviewQuery.data.conversions.length ? referralOverviewQuery.data.conversions.map((conversion: any) => <tr key={conversion.id} className="border-b border-border/60 last:border-0"><td className="px-4 py-3"><p className="font-medium">{conversion.referrerName || "Apprenant"}</p><p className="text-xs text-muted-foreground">{conversion.referrerEmail || "—"}</p></td><td className="px-4 py-3"><a className="text-primary hover:underline" href={buildNavigationUrl("/admin", { tab: "candidatures", application: conversion.applicationId })}>{conversion.referredEmail}</a></td><td className="px-4 py-3">{conversion.shareTarget || conversion.sourceChannel || "Lien direct"}</td><td className="px-4 py-3 text-muted-foreground">{new Date(conversion.createdAt).toLocaleDateString("fr-FR")}</td><td className="px-4 py-3"><Input aria-label={`Note récompense ${conversion.referredEmail}`} value={referralNotes[conversion.id] ?? conversion.rewardNote ?? ""} onChange={(event) => setReferralNotes((notes) => ({ ...notes, [conversion.id]: event.target.value }))} placeholder="Motif / référence" /></td><td className="px-4 py-3"><Select value={conversion.status} onValueChange={(status) => updateReferralConversionMutation.mutate({ id: conversion.id, status: status as "pending" | "eligible" | "rewarded" | "rejected", rewardNote: referralNotes[conversion.id] ?? conversion.rewardNote ?? "" })}><SelectTrigger className="w-36"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="pending">À examiner</SelectItem><SelectItem value="eligible">Éligible</SelectItem><SelectItem value="rewarded">Récompensé</SelectItem><SelectItem value="rejected">Non retenu</SelectItem></SelectContent></Select></td></tr>) : <tr><td colSpan={6} className="px-4 py-12 text-center text-muted-foreground">Aucune candidature attribuée pour le moment. Les liens partagés par les apprenants apparaîtront ici dès la soumission d’une candidature.</td></tr>}</tbody></table></div>
+            </> : <p className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">Le programme de parrainage n’a pas pu être chargé.</p>}
+          </section>
         )}
 
         {/* ==================== KANBAN TAB ==================== */}

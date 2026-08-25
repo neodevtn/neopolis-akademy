@@ -47,6 +47,7 @@ import { getLearnerDashboardTab, getLearnerOrientationAccess, type LearnerDashbo
 import { buildRecommendedLearningPath } from "@/lib/recommendedLearningPath";
 import { BrandLogo } from "@/components/BrandLogo";
 import { TrainingSearchPanel } from "@/components/TrainingSearchPanel";
+import { ReferralShareCard } from "@/components/ReferralShareCard";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -403,6 +404,7 @@ export default function TrainingDashboard() {
                 t={t}
                 getLastVisitedCourse={getLastVisitedCourse}
               />
+              <div className="mt-6"><ReferralShareCard title="Partagez Neopolis Akademy avec votre réseau" /></div>
             </motion.div>
           )}
           {activeTab === "orientation" && (
@@ -453,6 +455,7 @@ export default function TrainingDashboard() {
                 canDownload
                 emptyText="Vos badges et diplômes apparaîtront ici dès la réussite d’un cours ou d’une certification."
               />
+              <div className="mt-6"><ReferralShareCard content="achievement" achievementId={achievementsQuery.data?.[0]?.id} title="Partagez vos réussites et invitez votre réseau" /></div>
             </motion.div>
           )}
           {activeTab === "skills" && (

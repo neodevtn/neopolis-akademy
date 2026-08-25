@@ -10,7 +10,7 @@ import trainingIndex from "@/data/trainingIndex.json";
 import {
   ArrowLeft, CheckCircle2, PlayCircle, ChevronRight, ChevronLeft,
   BookOpen, Lock, LogIn, LogOut, ArrowRight, Moon, Sun, Menu, X, Check, Filter, Video, Eye,
-  FileText, ChevronDown, Brain, Target, Trophy, Download, ArrowUp, Timer, RefreshCw, MessageSquareText, Loader2
+  FileText, ChevronDown, Brain, Target, Trophy, Download, ArrowUp, Timer, RefreshCw, MessageSquareText, Loader2, Share2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -29,6 +29,7 @@ import { buildNavigationUrl } from "@shared/navigationUrls";
 import { isSequentialCourseRouteLocked } from "@shared/learningAccess";
 import { BrandLogo } from "@/components/BrandLogo";
 import { CourseFeedbackPanel } from "@/components/CourseFeedbackPanel";
+import { ReferralShareCard } from "@/components/ReferralShareCard";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -52,6 +53,7 @@ export default function TrainingCourse() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [activeLessonIndex, setActiveLessonIndex] = useState<number | null>(null);
   const [chapterProgress, setChapterProgress] = useState<{ current: number; total: number } | null>(null);
   const [chapterProgressLessonIndex, setChapterProgressLessonIndex] = useState<number | null>(null);
@@ -362,6 +364,10 @@ export default function TrainingCourse() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            {certId && courseId ? <Button variant="ghost" size="sm" onClick={() => setShareOpen(true)} className="gap-1.5 text-muted-foreground hover:text-foreground" title="Partager cette formation">
+              <Share2 className="h-4 w-4" />
+              <span className="hidden lg:inline">Partager</span>
+            </Button> : null}
             {certId && courseId ? <Button variant="ghost" size="sm" onClick={() => setFeedbackOpen(true)} className="gap-1.5 text-muted-foreground hover:text-foreground" title="Donner un avis ou une suggestion">
               <MessageSquareText className="h-4 w-4" />
               <span className="hidden lg:inline">Avis</span>
@@ -392,6 +398,15 @@ export default function TrainingCourse() {
             <DialogDescription>Votre retour est privé et aide l’équipe pédagogique à améliorer cette formation.</DialogDescription>
           </DialogHeader>
           <CourseFeedbackPanel certificationId={certId} courseId={courseId} />
+        </DialogContent>
+      </Dialog> : null}
+      {certId && courseId ? <Dialog open={shareOpen} onOpenChange={setShareOpen}>
+        <DialogContent className="max-h-[88vh] max-w-2xl overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Partager cette formation</DialogTitle>
+            <DialogDescription>Votre lien unique permet d’attribuer les candidatures provenant de votre partage.</DialogDescription>
+          </DialogHeader>
+          <ReferralShareCard compact content="course" courseId={courseId} certificationId={certId} title={resolveI18n(course?.title, lang) || "Partagez cette formation"} />
         </DialogContent>
       </Dialog> : null}
 

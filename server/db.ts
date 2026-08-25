@@ -1,10 +1,12 @@
 import { eq, desc, asc, sql, and, or, like, count, gt, isNull, isNotNull, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog, learnerGroups, learnerGroupMemberships, learnerGroupCourses, invitationGroups } from "../drizzle/schema";
+import { customAlphabet } from "nanoid";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog, learnerGroups, learnerGroupMemberships, learnerGroupCourses, invitationGroups, referralCampaigns, referralCodes, referralConversions } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { engagementBucket, firstAttemptRate, isPedagogicalReportingEvent } from "./reportingMetrics";
 import { learnerReportingLabel } from "@shared/learnerReportingLabel";
 import { normalizeCourseFeedbackComment, normalizeCourseRating } from "../shared/courseFeedback";
+import { normalizeReferralCode } from "../shared/referral";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -99,6 +101,149 @@ export async function getAdminEmailRecipients(): Promise<string[]> {
   return Array.from(new Set(admins
     .filter((admin) => admin.blocked === 0 && typeof admin.email === "string" && admin.email.trim())
     .map((admin) => admin.email!.trim().toLowerCase())));
+}
+
+// ============ Referral programme ============
+
+const referralCodeSuffix = customAlphabet("ABCDEFGHJKLMNPQRSTUVWXYZ23456789", 8);
+const DEFAULT_REFERRAL_CAMPAIGN = {
+  name: "Parrainage Neopolis",
+  tokenRewardLabel: "Tokens gratuits",
+  giftRewardLabel: "Cadeaux Neopolis",
+  eligibilityText: "La récompense est soumise à la validation de la candidature par Neopolis Akademy et aux règles du programme en vigueur.",
+  shareMessage: "Je développe mes compétences IA avec Neopolis Akademy. Rejoignez-moi avec ce lien de parrainage !",
+};
+
+export async function getReferralCampaign() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [campaign] = await db.select().from(referralCampaigns).orderBy(desc(referralCampaigns.id)).limit(1);
+  if (campaign) return campaign;
+
+  try {
+    const result = await db.insert(referralCampaigns).values(DEFAULT_REFERRAL_CAMPAIGN);
+    const [created] = await db.select().from(referralCampaigns).where(eq(referralCampaigns.id, Number(result[0].insertId))).limit(1);
+    return created;
+  } catch {
+    const [concurrentCampaign] = await db.select().from(referralCampaigns).orderBy(desc(referralCampaigns.id)).limit(1);
+    if (concurrentCampaign) return concurrentCampaign;
+    throw new Error("Unable to create referral campaign");
+  }
+}
+
+async function getOrCreateReferralCode(userId: number, campaignId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [existing] = await db.select().from(referralCodes)
+    .where(and(eq(referralCodes.userId, userId), eq(referralCodes.campaignId, campaignId))).limit(1);
+  if (existing) return existing;
+
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    try {
+      const code = `NEO-${referralCodeSuffix()}`;
+      const result = await db.insert(referralCodes).values({ userId, campaignId, code });
+      const [created] = await db.select().from(referralCodes).where(eq(referralCodes.id, Number(result[0].insertId))).limit(1);
+      return created;
+    } catch {
+      const [concurrent] = await db.select().from(referralCodes)
+        .where(and(eq(referralCodes.userId, userId), eq(referralCodes.campaignId, campaignId))).limit(1);
+      if (concurrent) return concurrent;
+    }
+  }
+  throw new Error("Unable to create referral code");
+}
+
+export async function getReferralProgramForUser(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const campaign = await getReferralCampaign();
+  const conversions = await db.select({ id: referralConversions.id, status: referralConversions.status, createdAt: referralConversions.createdAt })
+    .from(referralConversions).where(eq(referralConversions.referrerUserId, userId)).orderBy(desc(referralConversions.createdAt));
+  const counts = conversions.reduce<Record<string, number>>((acc, conversion) => {
+    acc[conversion.status] = (acc[conversion.status] || 0) + 1;
+    return acc;
+  }, { pending: 0, eligible: 0, rewarded: 0, rejected: 0 });
+  if (campaign.active !== 1) return { campaign, code: null, counts, conversions };
+  const code = await getOrCreateReferralCode(userId, campaign.id);
+  return { campaign, code, counts, conversions };
+}
+
+export async function resolveReferralCode(rawCode?: string | null) {
+  const code = normalizeReferralCode(rawCode);
+  if (!code) return null;
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [referralCode] = await db.select().from(referralCodes)
+    .where(and(eq(referralCodes.code, code), eq(referralCodes.active, 1))).limit(1);
+  if (!referralCode) return null;
+  const [campaign] = await db.select().from(referralCampaigns)
+    .where(and(eq(referralCampaigns.id, referralCode.campaignId), eq(referralCampaigns.active, 1))).limit(1);
+  if (!campaign) return null;
+  return { referralCode, campaign };
+}
+
+export async function recordReferralConversion(input: { applicationId: number; referredEmail: string; referralCode?: string | null; sourceChannel?: string | null; shareTarget?: string | null }) {
+  const resolved = await resolveReferralCode(input.referralCode);
+  if (!resolved) return null;
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [referrer] = await db.select({ email: users.email }).from(users).where(eq(users.id, resolved.referralCode.userId)).limit(1);
+  if (referrer?.email?.trim().toLowerCase() === input.referredEmail.trim().toLowerCase()) return null;
+
+  await db.update(applications).set({
+    referralCode: resolved.referralCode.code,
+    referrerUserId: resolved.referralCode.userId,
+    referralSource: input.sourceChannel || null,
+  }).where(eq(applications.id, input.applicationId));
+  try {
+    await db.insert(referralConversions).values({
+      campaignId: resolved.campaign.id,
+      referralCodeId: resolved.referralCode.id,
+      referrerUserId: resolved.referralCode.userId,
+      applicationId: input.applicationId,
+      referredEmail: input.referredEmail.trim().toLowerCase(),
+      sourceChannel: input.sourceChannel || null,
+      shareTarget: input.shareTarget || null,
+    });
+  } catch {
+    // The unique application constraint makes repeat public submissions idempotent.
+  }
+  return resolved;
+}
+
+export async function getReferralAdminOverview() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const campaign = await getReferralCampaign();
+  const conversions = await db.select({
+    id: referralConversions.id, status: referralConversions.status, referredEmail: referralConversions.referredEmail,
+    sourceChannel: referralConversions.sourceChannel, shareTarget: referralConversions.shareTarget,
+    rewardNote: referralConversions.rewardNote, createdAt: referralConversions.createdAt,
+    applicationId: referralConversions.applicationId, referrerName: users.name, referrerEmail: users.email,
+  }).from(referralConversions).leftJoin(users, eq(referralConversions.referrerUserId, users.id))
+    .where(eq(referralConversions.campaignId, campaign.id)).orderBy(desc(referralConversions.createdAt));
+  const counts = conversions.reduce<Record<string, number>>((acc, conversion) => {
+    acc[conversion.status] = (acc[conversion.status] || 0) + 1;
+    return acc;
+  }, { pending: 0, eligible: 0, rewarded: 0, rejected: 0 });
+  return { campaign, conversions, counts };
+}
+
+export async function updateReferralCampaign(input: { id: number; active: number; tokenRewardLabel: string; giftRewardLabel: string; eligibilityText?: string | null; shareMessage?: string | null }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(referralCampaigns).set({
+    active: input.active, tokenRewardLabel: input.tokenRewardLabel, giftRewardLabel: input.giftRewardLabel,
+    eligibilityText: input.eligibilityText || null, shareMessage: input.shareMessage || null,
+  }).where(eq(referralCampaigns.id, input.id));
+}
+
+export async function updateReferralConversionStatus(input: { id: number; status: "pending" | "eligible" | "rewarded" | "rejected"; rewardNote?: string | null; reviewedBy: number }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(referralConversions).set({
+    status: input.status, rewardNote: input.rewardNote || null, reviewedBy: input.reviewedBy, reviewedAt: new Date(),
+  }).where(eq(referralConversions.id, input.id));
 }
 
 // ============ Applications ============

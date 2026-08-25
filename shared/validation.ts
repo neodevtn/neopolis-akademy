@@ -107,6 +107,11 @@ export const applicationSchema = z.object({
   photoFileKey: z.string().max(500).optional().default(""),
   videoFileUrl: z.string().max(500).optional().default(""),
   videoFileKey: z.string().max(500).optional().default(""),
+
+  // Attribution de parrainage capturée depuis le lien public, sans exposer le parrain dans le formulaire.
+  referralCode: z.string().max(48).optional().default(""),
+  referralSource: z.string().max(80).optional().default(""),
+  referralShareTarget: z.string().max(80).optional().default(""),
 });
 
 export type ApplicationInput = z.infer<typeof applicationSchema>;

@@ -2162,3 +2162,11 @@
 - [x] Restreindre l’ouverture des formations aux groupes affectés tout en conservant leur visibilité dans le catalogue
 - [x] Ajouter la sélection de groupes à l’acceptation de candidature et à l’envoi d’invitations
 - [x] Tester puis publier les parcours administrateur et apprenant
+
+## Parrainage, récompenses et partage social
+- [x] Cartographier les parcours de candidature, succès apprenant et canaux sociaux réutilisables pour le parrainage
+- [x] Ajouter les données de code/lien de parrainage, attribution d’origine et états de récompense
+- [x] Produire des liens suivis et des boutons de partage accessibles pour formations et réussites apprenant
+- [x] Enregistrer l’origine de candidature et attribuer le parrain au moment de la soumission
+- [x] Ajouter une administration des règles, promesses de récompense, références et conversions
+- [x] Tester, documenter et publier le parcours sans attribuer automatiquement de valeur financière ou de tokens

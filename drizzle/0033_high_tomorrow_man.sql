@@ -1,0 +1,1 @@
+ALTER TABLE `referral_campaigns` ADD CONSTRAINT `referral_campaigns_name_unique` UNIQUE(`name`);

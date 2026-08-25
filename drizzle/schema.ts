@@ -62,6 +62,55 @@ export const learnerGroupCourses = mysqlTable("learner_group_courses", {
   index("learner_group_course_course_idx").on(table.courseId, table.groupId),
 ]);
 
+/** Programme administrable de parrainage : promesses de récompense, jamais attribuées automatiquement. */
+export const referralCampaigns = mysqlTable("referral_campaigns", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 160 }).notNull().unique(),
+  active: int("active").notNull().default(1),
+  tokenRewardLabel: varchar("tokenRewardLabel", { length: 300 }).notNull().default("Tokens gratuits"),
+  giftRewardLabel: varchar("giftRewardLabel", { length: 300 }).notNull().default("Cadeaux Neopolis"),
+  eligibilityText: text("eligibilityText"),
+  shareMessage: text("shareMessage"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+/** Code stable, unique et personnel utilisé dans les liens de partage apprenant. */
+export const referralCodes = mysqlTable("referral_codes", {
+  id: int("id").autoincrement().primaryKey(),
+  campaignId: int("campaignId").notNull(),
+  userId: int("userId").notNull(),
+  code: varchar("code", { length: 48 }).notNull().unique(),
+  active: int("active").notNull().default(1),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("referral_code_user_campaign_unique").on(table.userId, table.campaignId),
+  index("referral_code_campaign_idx").on(table.campaignId, table.active),
+]);
+
+/** Conversion traçable d’un partage vers une candidature, soumise à validation manuelle avant toute récompense. */
+export const referralConversions = mysqlTable("referral_conversions", {
+  id: int("id").autoincrement().primaryKey(),
+  campaignId: int("campaignId").notNull(),
+  referralCodeId: int("referralCodeId").notNull(),
+  referrerUserId: int("referrerUserId").notNull(),
+  applicationId: int("applicationId").notNull(),
+  referredEmail: varchar("referredEmail", { length: 320 }).notNull(),
+  sourceChannel: varchar("sourceChannel", { length: 80 }),
+  shareTarget: varchar("shareTarget", { length: 80 }),
+  status: mysqlEnum("status", ["pending", "eligible", "rewarded", "rejected"]).notNull().default("pending"),
+  rewardNote: text("rewardNote"),
+  reviewedBy: int("reviewedBy"),
+  reviewedAt: timestamp("reviewedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("referral_conversion_application_unique").on(table.applicationId),
+  index("referral_conversion_referrer_idx").on(table.referrerUserId, table.status),
+  index("referral_conversion_campaign_idx").on(table.campaignId, table.status),
+]);
+
 /**
  * Applications table - stores all candidatures with scoring
  */
@@ -133,6 +182,11 @@ export const applications = mysqlTable("applications", {
   photoFileUrl: varchar("photoFileUrl", { length: 500 }),
   videoFileKey: varchar("videoFileKey", { length: 500 }),
   videoFileUrl: varchar("videoFileUrl", { length: 500 }),
+
+  // Attribution marketing et parrainage, capturée lors de la soumission publique.
+  referralCode: varchar("referralCode", { length: 48 }),
+  referrerUserId: int("referrerUserId"),
+  referralSource: varchar("referralSource", { length: 80 }),
   
   // Scoring
   scoreTechnique: decimal("scoreTechnique", { precision: 5, scale: 2 }).notNull(),

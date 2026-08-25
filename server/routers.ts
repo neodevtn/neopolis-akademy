@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getExamSession, saveExamSession, clearExamSession, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getExamSession, saveExamSession, clearExamSession, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients, getReferralProgramForUser, getReferralAdminOverview, recordReferralConversion, updateReferralCampaign, updateReferralConversionStatus } from "./db";
 import { awardCertification, awardCourseCompletionBadge } from "./achievementService";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
@@ -126,6 +126,31 @@ export const appRouter = router({
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
+    }),
+  }),
+
+  referral: router({
+    getMine: protectedProcedure.query(async ({ ctx }) => getReferralProgramForUser(ctx.user.id)),
+    getAdminOverview: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      return getReferralAdminOverview();
+    }),
+    updateCampaign: protectedProcedure.input(z.object({
+      id: z.number().int().positive(), active: z.number().int().min(0).max(1),
+      tokenRewardLabel: z.string().trim().min(2).max(300), giftRewardLabel: z.string().trim().min(2).max(300),
+      eligibilityText: z.string().trim().max(4000).optional(), shareMessage: z.string().trim().max(1200).optional(),
+    })).mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      await updateReferralCampaign(input);
+      return { success: true };
+    }),
+    updateConversionStatus: protectedProcedure.input(z.object({
+      id: z.number().int().positive(), status: z.enum(["pending", "eligible", "rewarded", "rejected"]),
+      rewardNote: z.string().trim().max(2000).optional(),
+    })).mutation(async ({ ctx, input }) => {
+      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      await updateReferralConversionStatus({ ...input, reviewedBy: ctx.user.id });
+      return { success: true };
     }),
   }),
 
@@ -273,6 +298,14 @@ export const appRouter = router({
           scoreTotal: scores.scoreTotal.toString(),
         });
 
+        const referral = await recordReferralConversion({
+          applicationId: application.id,
+          referredEmail: input.email,
+          referralCode: input.referralCode,
+          sourceChannel: input.referralSource,
+          shareTarget: input.referralShareTarget,
+        });
+
         // Send the internal notification through Neopolis email, not Manus platform mail.
         try {
           await sendAdminNewApplicationEmail({
@@ -321,6 +354,7 @@ export const appRouter = router({
         return {
           id: application.id,
           success: true,
+          referred: Boolean(referral),
           message: "Votre candidature a été soumise avec succès. Vous recevrez un email de confirmation.",
         };
       }),

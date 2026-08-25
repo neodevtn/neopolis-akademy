@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { BrandLogo } from "@/components/BrandLogo";
-import { Activity, AlertTriangle, ArrowLeft, BarChart3, BookOpen, ChevronDown, FileImage, KanbanSquare, LayoutDashboard, Menu, MessageSquare, UserCheck, UserPlus, Users } from "lucide-react";
+import { Activity, AlertTriangle, ArrowLeft, BarChart3, BookOpen, ChevronDown, FileImage, Gift, KanbanSquare, LayoutDashboard, Menu, MessageSquare, UserCheck, UserPlus, Users } from "lucide-react";
 
 type AdminPage = "candidatures" | "training" | "content" | "media" | "errors";
 type NavItem = { label: string; href: string; icon: typeof LayoutDashboard; page: AdminPage; description: string };
@@ -15,6 +15,7 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
       { label: "Évaluation", href: "/admin?tab=analytics", icon: BarChart3, page: "candidatures", description: "Analyser les candidatures" },
       { label: "Invitations de candidature", href: "/admin?tab=invitations", icon: UserPlus, page: "candidatures", description: "Relancer les candidats" },
       { label: "Candidats sélectionnés", href: "/admin/training?tab=selected", icon: UserCheck, page: "training", description: "Activer les comptes" },
+      { label: "Parrainage", href: "/admin?tab=referrals", icon: Gift, page: "candidatures", description: "Origines et récompenses" },
     ],
   },
   {

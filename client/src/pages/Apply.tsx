@@ -123,6 +123,15 @@ export default function Apply() {
   const stepTitles = getStepTitles(t);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [referralTracking] = useState(() => {
+    if (typeof window === "undefined") return { referralCode: "", referralSource: "", referralShareTarget: "" };
+    const params = new URLSearchParams(window.location.search);
+    return {
+      referralCode: params.get("ref") || "",
+      referralSource: params.get("utm_source") || "",
+      referralShareTarget: params.get("utm_medium") || "",
+    };
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string>("");
   const [cvFile, setCvFile] = useState<File | null>(null);
@@ -449,6 +458,7 @@ export default function Apply() {
       linkedinUrl: formData.linkedinUrl, twitterUrl: formData.twitterUrl, githubUrl: formData.githubUrl,
       websiteUrl: formData.websiteUrl, otherSocialUrl: formData.otherSocialUrl,
       cvFileUrl, cvFileKey, photoFileUrl, photoFileKey, videoFileUrl, videoFileKey,
+      ...referralTracking,
     };
 
     const validationResult = applicationSchema.safeParse(fullData);
