@@ -349,11 +349,11 @@ export default function TrainingCourse() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="training-course-shell min-h-screen max-w-full overflow-x-hidden bg-background">
       {/* Header */}
       <header className="sticky top-0 z-30 bg-card/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="mx-auto flex w-full min-w-0 max-w-7xl items-center justify-between px-3 py-3 sm:px-6 sm:py-4">
+          <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
             {/* Mobile sidebar toggle */}
             <button
               onClick={() => setSidebarOpen(true)}
@@ -364,34 +364,34 @@ export default function TrainingCourse() {
             <Link href={`/training/${certId}`} className="text-muted-foreground hover:text-foreground transition-colors">
               <ArrowLeft className="w-5 h-5" />
             </Link>
-            <div className="flex items-center gap-2.5">
-              <BrandLogo className="h-8 max-w-[160px]" />
-              <span className="text-xs bg-primary/15 text-primary px-2.5 py-1 rounded-full font-semibold tracking-wide uppercase">Training</span>
+            <div className="flex min-w-0 items-center gap-2 sm:gap-2.5">
+              <BrandLogo className="h-7 max-w-[112px] shrink-0 object-contain sm:h-8 sm:max-w-[160px]" />
+              <span className="hidden rounded-full bg-primary/15 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-primary sm:inline">Training</span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            {certId && courseId ? <Button variant="ghost" size="sm" onClick={() => setShareOpen(true)} className="gap-1.5 text-muted-foreground hover:text-foreground" title="Partager cette formation">
+          <div className="flex shrink-0 items-center gap-0.5 sm:gap-3">
+            {certId && courseId ? <Button variant="ghost" size="sm" onClick={() => setShareOpen(true)} className="shrink-0 gap-1.5 px-2 text-muted-foreground hover:text-foreground sm:px-3" title="Partager cette formation">
               <Share2 className="h-4 w-4" />
               <span className="hidden lg:inline">Partager</span>
             </Button> : null}
-            {certId && courseId ? <Button variant="ghost" size="sm" onClick={() => setFeedbackOpen(true)} className="gap-1.5 text-muted-foreground hover:text-foreground" title="Donner un avis ou une suggestion">
+            {certId && courseId ? <Button variant="ghost" size="sm" onClick={() => setFeedbackOpen(true)} className="shrink-0 gap-1.5 px-2 text-muted-foreground hover:text-foreground sm:px-3" title="Donner un avis ou une suggestion">
               <MessageSquareText className="h-4 w-4" />
               <span className="hidden lg:inline">Avis</span>
             </Button> : null}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground"
+              className="shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-secondary sm:p-2"
             >
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
             <LanguageSwitcher />
             <button
               onClick={() => logout()}
-              className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full transition-all hover:bg-red-50 dark:hover:bg-red-950/30 text-red-600 dark:text-red-400 hover:text-red-700 border border-red-200 dark:border-red-800 hover:border-red-300"
+              className="flex shrink-0 items-center gap-1.5 rounded-full border border-red-200 px-2 py-1.5 text-xs font-medium text-red-600 transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-700 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950/30 sm:px-3"
               title="Déconnexion"
             >
               <LogOut size={13} />
-              <span className="hidden md:inline">Déconnexion</span>
+              <span className="hidden lg:inline">Déconnexion</span>
             </button>
           </div>
         </div>
@@ -416,7 +416,7 @@ export default function TrainingCourse() {
         </DialogContent>
       </Dialog> : null}
 
-      <div className="flex overflow-x-hidden">
+      <div className="flex w-full min-w-0 max-w-full overflow-x-hidden">
         {/* Sidebar */}
         {!lessonsLoading && courseLessons.length > 0 && (
           <LessonSidebar
@@ -486,13 +486,13 @@ export default function TrainingCourse() {
 
         {/* Main content */}
         <motion.main
-          className="flex-1 max-w-4xl mx-auto px-4 py-8 lg:px-8 min-w-0"
+          className="mx-auto w-full min-w-0 max-w-4xl flex-1 px-4 py-5 sm:px-6 sm:py-8 lg:px-8"
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
         >
           {/* Course Header */}
-          <motion.div variants={fadeInUp} className="bg-card rounded-2xl border border-border p-6 mb-6 shadow-sm">
+          <motion.div variants={fadeInUp} className="mb-6 w-full min-w-0 max-w-full rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-6">
             <div className="flex items-center gap-2 text-sm mb-2 text-muted-foreground">
               <Link href="/training" className="hover:text-primary transition-colors">
                 {t({ en: "Training", fr: "Formation" })}
@@ -502,7 +502,7 @@ export default function TrainingCourse() {
                 {t(cert.title)}
               </Link>
             </div>
-            <h1 className="text-2xl font-bold mb-2 text-foreground">{t(course.title)}</h1>
+            <h1 className="mb-2 break-words text-2xl font-bold text-foreground">{t(course.title)}</h1>
             {/* Global progress summary */}
             <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-1.5">
@@ -523,7 +523,7 @@ export default function TrainingCourse() {
             {totalLessons > 0 && (
               <div className="mt-4 space-y-2">
                 {/* Lessons progress */}
-                <div className="flex items-center gap-3">
+                <div className="flex min-w-0 flex-wrap items-center gap-3">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground w-14">{isNovasavoCourse ? t({ en: "Units", fr: "Unités" }) : isSingleLessonCourse ? t({ en: "Chapters", fr: "Chapitres" }) : t({ en: "Lessons", fr: "Leçons" })}</span>
                   <div className="flex-1 rounded-full h-2 bg-secondary">
                     <motion.div
@@ -653,7 +653,7 @@ export default function TrainingCourse() {
                     </div>
                   )}
                 </div>
-                <div className="p-6 sm:p-8">
+                <div className="min-w-0 max-w-full p-4 sm:p-8">
                   <LessonViewer
                     key={displayedLesson.id || String(displayedIndex)}
                     lesson={displayedLesson}

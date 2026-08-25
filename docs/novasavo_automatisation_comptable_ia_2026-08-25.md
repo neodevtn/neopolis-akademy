@@ -16,4 +16,10 @@ L’unité 1 a été reconstruite en **17 écrans** courts, dans le déroulé au
 
 Les compteurs distinguent désormais explicitement les **12 unités** et l’**examen final** ; le lecteur affiche le compteur interne d’écran, par exemple `2/17`, sans mélanger ces notions. Le contrôle d’édition est conditionné au rôle administrateur et reste absent pour l’apprenant démo. La notification de mise à jour a été déplacée dans un toast discret et fermable par session afin de ne pas occulter l’activité.
 
+## Correctif responsive mobile — contrôle du 25 août 2026
+
+Le lecteur a reçu une contrainte de largeur commune aux pages de formation et aux blocs Novasavo : `width/max-width: 100%`, `min-width: 0`, `box-sizing: border-box` et absence de débordement horizontal. L’en-tête conserve seulement les icônes utiles sur mobile ; le libellé de déconnexion est masqué avant le breakpoint large. Les cartes, options QCM, assistant, notes et réponses longues coupent désormais leurs libellés au lieu d’élargir la page.
+
+La navigation de bas d’écran passe sur une colonne mobile. L’instruction de passage et le bouton d’action occupent toute la largeur disponible et conservent un retour à la ligne lisible. Les contrôles ont été capturés aux deux formats demandés : **390×844** et **375×667**, sur l’écran Mythe/Réalité (2/17) et le QCM de l’écran 9/17. Les captures confirment que le header, les options, l’instruction et la navigation restent à l’intérieur du viewport. La prévisualisation identifie explicitement son contexte « Mode Révision » ; cette commande est absente de la session apprenant de contrôle.
+
 Le paquet fourni contient le manifeste, la spécification de pagination et les éléments observés du lecteur. Les unités dépourvues d’export textuel complet ont été construites comme des écrans pédagogiques équivalents à partir de leurs intitulés et exigences de navigation ; elles ne doivent pas être présentées comme une transcription mot à mot de Novasavo.

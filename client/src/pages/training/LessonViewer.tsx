@@ -242,7 +242,7 @@ export default function LessonViewer({
       case "competency_progress_hud":
       case "xp_progress_hud":
       case "course_completion_next_unit_panel":
-        return <NovasavoLearningBlock key={blockIdx} block={block} lang={lang} courseId={courseId} lessonTitle={resolveI18n(lesson.title, lang)} screenTitle={resolveI18n(chapter?.title, lang)} onComplete={(id, isCorrect) => {
+        return <div key={blockIdx} className="novasavo-learning-block w-full min-w-0 max-w-full"><NovasavoLearningBlock block={block} lang={lang} courseId={courseId} lessonTitle={resolveI18n(lesson.title, lang)} screenTitle={resolveI18n(chapter?.title, lang)} onComplete={(id, isCorrect) => {
           setCompletedNovasavoInteractions((current) => new Set(current).add(id));
           if (isCorrect) recordCompetencyOutcome.mutate({
             sourceType: "checkpoint_passed",
@@ -254,7 +254,7 @@ export default function LessonViewer({
             lessonIndex,
             chapterIndex: currentChapter,
           });
-        }} />;
+        }} /></div>;
       case "content": {
         const body = block.body || {};
         let text = typeof body === "string" ? body : (body[lang] || body.en || "");
@@ -906,7 +906,7 @@ export default function LessonViewer({
   };
 
   return (
-    <div className="mt-2">
+    <div className="mt-2 w-full min-w-0 max-w-full">
       {/* Reading progress bar */}
       <div className="reading-progress-bar" style={{ width: `${readingProgress}%` }} />
 
@@ -921,7 +921,7 @@ export default function LessonViewer({
 
       {/* Sticky chapter title bar - appears on scroll */}
       <div className={`sticky-chapter-bar ${showScrollTop ? 'visible' : ''}`}>
-        <div className="flex items-center gap-3 max-w-3xl mx-auto px-4">
+        <div className="mx-auto flex w-full min-w-0 max-w-3xl items-center gap-3 px-4">
           <span className="text-xs font-semibold text-[#c75b3a] uppercase tracking-wider">
             {currentChapter + 1}/{totalChapters}
           </span>
@@ -1025,7 +1025,7 @@ export default function LessonViewer({
           {/* Render all blocks in the current chapter */}
           {/* Exercise navigation bar (top) - visible when in checkpoint/exercise chapters */}
           {chapter && (chapter.type === 'checkpoint' || chapter.type === 'exercise' || chapter.type === 'quiz') && totalChapters > 1 && (
-            <div className="flex items-center justify-between mb-4 px-2 py-2 bg-muted/30 rounded-lg border border-border/50">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border/50 bg-muted/30 px-2 py-2">
               <Button
                 variant="ghost"
                 size="sm"
@@ -1111,7 +1111,7 @@ export default function LessonViewer({
               (contentAfterTitle.length < 200 && !hasMarkdownStructure)
             );
             return (
-              <div className="space-y-8">
+              <div className="w-full min-w-0 max-w-full space-y-8">
                 {isSparse && (
                   <div className="w-full flex justify-center py-4">
                     <div className="w-full max-w-sm h-52 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900/40 dark:to-blue-950/30 border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
@@ -1166,8 +1166,8 @@ export default function LessonViewer({
                     {/* Chapter navigation */}
           <div className="mt-8 pt-5 border-t border-[#e8e5e0] dark:border-slate-700">
             {/* Progress bar */}
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+            <div className="mb-4 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:gap-3">
+              <span className="text-xs font-medium text-muted-foreground sm:whitespace-nowrap">
                 {t({ en: `Screen ${currentChapter + 1} of ${totalChapters}`, fr: `Écran ${currentChapter + 1} sur ${totalChapters}` })}
               </span>
               <div className="flex-1 h-1.5 rounded-full bg-[#e8e5e0] dark:bg-slate-700 overflow-hidden">
@@ -1178,14 +1178,14 @@ export default function LessonViewer({
               </div>
             </div>
             {/* Navigation buttons with keyboard hints */}
-            <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex w-full items-center gap-2 sm:w-auto">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => { setCurrentChapter((p) => p - 1); setShowTranscript(false); setShowChapterQuiz(false); }}
                 disabled={currentChapter === 0}
-                className="gap-1.5 text-muted-foreground hover:text-foreground"
+                className="w-full justify-start gap-1.5 text-muted-foreground hover:text-foreground sm:w-auto"
               >
                 ← {t({ en: "Previous", fr: "Précédent" })}
               </Button>
@@ -1312,13 +1312,13 @@ export default function LessonViewer({
 
               const isGated = isGatedByExercises || isGatedByVideo || isGatedByFlipCards || isGatedByMatching || isGatedBySingleChoice || isGatedByResourceReview || isGatedByCloudExercise || isGatedByNovasavo;
               return (
-                <div className="flex flex-col items-end gap-1.5">
+                <div className="flex w-full min-w-0 flex-col items-stretch gap-2 sm:w-auto sm:items-end sm:gap-1.5">
                   {passageConditions.length > 0 && (
-                    <p className="max-w-xs text-right text-xs text-muted-foreground" role="status">
+                    <p className="w-full max-w-none text-left text-xs leading-relaxed text-muted-foreground sm:max-w-xs sm:text-right" role="status">
                       {t({ en: "To continue: ", fr: "Pour continuer : " })}{passageConditions.join(" ")}
                     </p>
                   )}
-                  <div className="flex items-center gap-2">
+                  <div className="flex w-full flex-col items-stretch gap-2 sm:w-auto sm:flex-row sm:items-center">
                   <span className="kbd-hint hidden md:inline-flex">→</span>
                   <Button
                     variant="ghost"
@@ -1335,7 +1335,7 @@ export default function LessonViewer({
                         setShowChapterQuiz(false);
                       }
                     }}
-                    className={`gap-1 font-medium ${isGated ? 'text-muted-foreground cursor-not-allowed' : 'text-[#c75b3a] hover:text-[#a84a2e]'}`}
+                    className={`w-full justify-center whitespace-normal text-center leading-snug sm:w-auto sm:whitespace-nowrap ${isGated ? 'text-muted-foreground cursor-not-allowed' : 'text-[#c75b3a] hover:text-[#a84a2e]'}`}
                     title={isGatedByVideo ? (lang === 'fr' ? 'Regardez la vidéo pour continuer (ou marquez-la comme vue)' : 'Watch the video to continue (or mark it as watched)') : isGatedByFlipCards ? (lang === 'fr' ? 'Retournez toutes les cartes pour continuer' : 'Flip all cards to continue') : (isGatedByExercises || isGatedBySingleChoice || isGatedByMatching || isGatedByCloudExercise) ? (lang === 'fr' ? 'Validez cette activité pour continuer' : 'Complete this activity to continue') : undefined}
                   >
                     {isGatedByVideo ? (

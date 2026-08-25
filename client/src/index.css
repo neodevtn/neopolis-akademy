@@ -203,6 +203,43 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+
+  .training-course-shell,
+  .training-course-shell * {
+    box-sizing: border-box;
+  }
+}
+
+/* The course reader must never create a horizontal document scroll on phones.
+   Interactive blocks may contain long accounting labels and are therefore
+   constrained at the course-shell boundary rather than clipped individually. */
+.training-course-shell {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.training-course-shell .novasavo-learning-block,
+.training-course-shell .novasavo-learning-block > section {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 639px) {
+  .training-course-shell .novasavo-learning-block button,
+  .training-course-shell .novasavo-learning-block input,
+  .training-course-shell .novasavo-learning-block textarea {
+    max-width: 100%;
+  }
+
+  .training-course-shell .novasavo-learning-block p,
+  .training-course-shell .novasavo-learning-block h1,
+  .training-course-shell .novasavo-learning-block h2,
+  .training-course-shell .novasavo-learning-block h3,
+  .training-course-shell .novasavo-learning-block span {
+    overflow-wrap: anywhere;
+  }
 }
 
 @media (min-width: 1024px) {

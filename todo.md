@@ -2201,3 +2201,9 @@
 - [x] Retirer les éléments intrusifs, masquer les contrôles admin aux apprenants et renforcer les blocs pédagogiques réels
 - [x] Contrôler navigateur desktop/mobile avec captures, valider puis publier le correctif
 - [x] Vérifier avec le compte apprenant démo les interactions, verrous, compteurs, protections et la bannière non intrusive
+
+## Correctif mobile — lecteur Novasavo
+- [x] Supprimer le débordement horizontal des pages de formation et de leurs blocs standard
+- [x] Rendre l’en-tête, les cartes pédagogiques et les options d’interaction compacts à largeur mobile
+- [x] Assurer que le footer de navigation, son instruction et son CTA restent visibles et cliquables
+- [x] Contrôler et capturer les viewports 390×844 et 375×667 avant publication
