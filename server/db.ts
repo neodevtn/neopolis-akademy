@@ -1,12 +1,13 @@
 import { eq, desc, asc, sql, and, or, like, count, gt, isNull, isNotNull, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { customAlphabet } from "nanoid";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog, learnerGroups, learnerGroupMemberships, learnerGroupCourses, invitationGroups, referralCampaigns, referralCodes, referralConversions } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog, learnerGroups, learnerGroupMemberships, learnerGroupCourses, courseLifecycleStates, invitationGroups, referralCampaigns, referralCodes, referralConversions } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { engagementBucket, firstAttemptRate, isPedagogicalReportingEvent } from "./reportingMetrics";
 import { learnerReportingLabel } from "@shared/learnerReportingLabel";
 import { normalizeCourseFeedbackComment, normalizeCourseRating } from "../shared/courseFeedback";
 import { normalizeReferralCode } from "../shared/referral";
+import { canLearnerOpenLifecycle, type CourseLifecycleStatus } from "../shared/courseLifecycle";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -753,11 +754,20 @@ export async function replaceLearnerGroupCourses(groupId: number, courses: { cou
 export async function userCanAccessCourse(userId: number, courseId: string) {
   const db = await getDb();
   if (!db) return false;
+  const lifecycle = await getCourseLifecycleState(courseId);
+  if (!canLearnerOpenLifecycle(lifecycle.status)) return false;
   const memberships = await db.select({ groupId: learnerGroupMemberships.groupId, isSystem: learnerGroups.isSystem }).from(learnerGroupMemberships).innerJoin(learnerGroups, eq(learnerGroupMemberships.groupId, learnerGroups.id)).where(and(eq(learnerGroupMemberships.userId, userId), eq(learnerGroups.active, 1)));
   if (memberships.some((membership) => membership.isSystem === 1)) return true;
   const groupIds = memberships.map((membership) => membership.groupId);
   if (!groupIds.length) return false;
   return (await db.select({ id: learnerGroupCourses.id }).from(learnerGroupCourses).where(and(eq(learnerGroupCourses.courseId, courseId), inArray(learnerGroupCourses.groupId, groupIds))).limit(1)).length > 0;
+}
+
+export async function getCourseLifecycleState(courseId: string): Promise<{ status: CourseLifecycleStatus; reason: string | null }> {
+  const db = await getDb();
+  if (!db) return { status: "active", reason: null };
+  const [state] = await db.select({ status: courseLifecycleStates.status, reason: courseLifecycleStates.reason }).from(courseLifecycleStates).where(eq(courseLifecycleStates.courseId, courseId)).limit(1);
+  return state ? { status: state.status as CourseLifecycleStatus, reason: state.reason } : { status: "active", reason: null };
 }
 
 export async function createInvitation(email: string, name: string | null, invitedBy: number, expiresInDays: number = 7, groupIds: number[] = []) {

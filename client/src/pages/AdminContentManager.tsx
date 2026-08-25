@@ -37,6 +37,7 @@ import { LessonManager } from "@/components/admin/LessonManager";
 import { ChapterManager } from "@/components/admin/ChapterManager";
 import { CatalogMetadataEditor } from "@/components/admin/CatalogMetadataEditor";
 import { CompetencyManager } from "@/components/admin/CompetencyManager";
+import { CatalogOperationsConsole } from "@/components/admin/CatalogOperationsConsole";
 import { resolveEditableInteractions } from "@/lib/editableInteractions";
 import { cloneCourseDraft } from "@shared/contentStudio";
 import { normalizeQuestionBank, serializeQuestionBank } from "@shared/questionBank";
@@ -113,6 +114,7 @@ export default function AdminContentManager() {
   const [selectedQuizKey, setSelectedQuizKey] = useState("");
   const [examQuestions, setExamQuestions] = useState<any[]>([]);
   const [examConfigDrafts, setExamConfigDrafts] = useState<Record<string, ExamConfiguration>>({});
+  const [catalogSettingsOpen, setCatalogSettingsOpen] = useState(false);
 
   const readViewMode = (params: URLSearchParams): ViewMode => {
     const mode = params.get("mode");
@@ -218,6 +220,14 @@ export default function AdminContentManager() {
     onSuccess: () => { toast.success("Catalogue pédagogique sauvegardé."); catalogQuery.refetch(); },
     onError: (error) => toast.error(error.message),
   });
+  const setCourseLifecycleMut = trpc.adminContent.setCourseLifecycle.useMutation({
+    onSuccess: () => { toast.success("État de la formation mis à jour."); coursesQuery.refetch(); },
+    onError: (error) => toast.error(error.message),
+  });
+  const bulkSetCourseLifecycleMut = trpc.adminContent.bulkSetCourseLifecycle.useMutation({
+    onSuccess: (result) => { toast.success(`${result.count} formation(s) mise(s) à jour.`); coursesQuery.refetch(); },
+    onError: (error) => toast.error(error.message),
+  });
 
   const activeTrainingIndex: any = catalogQuery.data || trainingIndex;
   const certifications = activeTrainingIndex.certifications || [];
@@ -252,124 +262,16 @@ export default function AdminContentManager() {
   };
 
   // ─── BROWSE VIEW ───
-  const renderBrowse = () => (
-    <div className="space-y-6">
-      {/* Search bar */}
-      <div className="flex items-center gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <Input
-            placeholder="Rechercher un cours, quiz, exercice..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <Button variant="outline" className="shrink-0" onClick={() => navigateContent("catalog")}><GraduationCap className="mr-1.5 h-4 w-4" /> Gérer le catalogue</Button>
-      </div>
-
-      {/* Certifications overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {certifications.map((cert: any) => (
-          <Card key={cert.id} className="hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-emerald-500">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-semibold flex items-center gap-2">
-                <span>{cert.icon}</span>
-                <span className="truncate">{cert.title.fr}</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                <span className="flex items-center gap-1"><BookOpen className="w-3 h-3" />{cert.courseCount} cours</span>
-                <span className="flex items-center gap-1"><Layers className="w-3 h-3" />{cert.totalLessons} leçons</span>
-                <span className="flex items-center gap-1"><PenTool className="w-3 h-3" />{cert.totalExercises} exercices</span>
-                {cert.totalVideos > 0 && <span className="flex items-center gap-1"><PlayCircleIcon className="w-3 h-3" />{cert.totalVideos} vidéos</span>}
-                {(cert as any).totalDownloads > 0 && <span className="flex items-center gap-1"><Download className="w-3 h-3" />{(cert as any).totalDownloads} téléchargements</span>}
-              </div>
-              <div className="flex gap-2">
-                <Button size="sm" variant="outline" className="text-xs" onClick={() => {
-                  navigateContent("exam-simulate", { certificationId: cert.id });
-                }}>
-                  <Play className="w-3 h-3 mr-1" /> Simuler Examen
-                </Button>
-                <Button size="sm" variant="outline" className="text-xs" onClick={() => {
-                  navigateContent("edit-exam", { certificationId: cert.id });
-                }}>
-                  <Edit3 className="w-3 h-3 mr-1" /> Éditer Examen
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Course list */}
-      <div>
-        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-emerald-600" />
-          Tous les cours ({filteredCourses.length})
-        </h3>
-        <div className="border rounded-lg overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="text-left px-4 py-2 font-medium">Cours</th>
-                <th className="text-left px-4 py-2 font-medium">Certification</th>
-                <th className="text-center px-4 py-2 font-medium">Leçons</th>
-                <th className="text-center px-4 py-2 font-medium">Exercices</th>
-                <th className="text-right px-4 py-2 font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredCourses.map(course => {
-                const cert = getCertForCourse(course.courseId);
-                return (
-                  <tr key={course.courseId} className="border-b hover:bg-gray-50">
-                    <td className="px-4 py-2.5">
-                      <span className="font-medium text-gray-900">{course.title}</span>
-                      <br />
-                      <span className="text-xs text-gray-400">{course.courseId}</span>
-                    </td>
-                    <td className="px-4 py-2.5">
-                      {cert && <Badge variant="secondary" className="text-xs">{cert.icon} {cert.title.fr.split(" – ")[0]}</Badge>}
-                    </td>
-                    <td className="text-center px-4 py-2.5">{course.lessonsCount}</td>
-                    <td className="text-center px-4 py-2.5">{course.exercisesCount}</td>
-                    <td className="text-right px-4 py-2.5">
-                      <div className="flex items-center justify-end gap-1">
-                        <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => {
-                          setCourseDraft(null);
-                          navigateContent("course", { courseId: course.courseId, lesson: 0, chapter: 0 });
-                        }}>
-                          <Eye className="w-3.5 h-3.5 mr-1" /> Consulter
-                        </Button>
-                        <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => {
-                          navigateContent("quiz-simulate", { courseId: course.courseId });
-                        }}>
-                          <Play className="w-3.5 h-3.5 mr-1" /> Quiz
-                        </Button>
-                        <Button size="sm" variant="ghost" className="h-7 px-2 text-blue-600" onClick={() => {
-                          setCourseDraft(null);
-                          navigateContent("edit-course", { courseId: course.courseId, lesson: 0, chapter: 0 });
-                        }}>
-                          <Edit3 className="w-3.5 h-3.5 mr-1" /> Éditer
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
+  const applyLifecycle = (courseIds: string[], status: "active" | "disabled" | "archived", reason?: string) => {
+    if (courseIds.length === 1) setCourseLifecycleMut.mutate({ courseId: courseIds[0], status, reason });
+    else bulkSetCourseLifecycleMut.mutate({ courseIds, status, reason });
+  };
+  const renderBrowse = () => <CatalogOperationsConsole courses={coursesQuery.data || []} certifications={certifications} catalogMode={false} onOpenCatalogSettings={() => navigateContent("catalog")} onOpenCourse={(courseId, mode) => { setCourseDraft(null); navigateContent(mode, { courseId, lesson: 0, chapter: 0 }); }} onSetLifecycle={applyLifecycle} isSavingLifecycle={setCourseLifecycleMut.isPending || bulkSetCourseLifecycleMut.isPending} />;
 
   const renderCatalog = () => {
     if (catalogQuery.isLoading) return <div className="py-10 text-center text-sm text-muted-foreground">Chargement du catalogue…</div>;
     if (!catalogQuery.data) return <div className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">Le catalogue est indisponible. Réessayez dans quelques instants.</div>;
-    return <div className="space-y-8"><CatalogMetadataEditor value={catalogQuery.data} onSave={(data) => updateCatalogMut.mutate({ data })} isSaving={updateCatalogMut.isPending} /><CompetencyManager /></div>;
+    return <div className="space-y-6"><CatalogOperationsConsole courses={coursesQuery.data || []} certifications={(catalogQuery.data as any).certifications || []} catalogMode onOpenCatalogSettings={() => setCatalogSettingsOpen(true)} onOpenCourse={(courseId, mode) => { setCourseDraft(null); navigateContent(mode, { courseId, lesson: 0, chapter: 0 }); }} onSetLifecycle={applyLifecycle} isSavingLifecycle={setCourseLifecycleMut.isPending || bulkSetCourseLifecycleMut.isPending} /><Dialog open={catalogSettingsOpen} onOpenChange={setCatalogSettingsOpen}><DialogContent className="max-h-[88vh] max-w-6xl overflow-y-auto"><DialogHeader><DialogTitle>Paramètres avancés du catalogue</DialogTitle></DialogHeader><CatalogMetadataEditor value={catalogQuery.data} onSave={(data) => updateCatalogMut.mutate({ data })} isSaving={updateCatalogMut.isPending} /></DialogContent></Dialog><CompetencyManager /></div>;
   };
 
   // ─── COURSE VIEW (Consultation) ───

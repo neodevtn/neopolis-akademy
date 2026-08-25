@@ -17,7 +17,7 @@ import { acknowledgeLearnerCommunication, getLearnerCommunications, markLearnerC
 import { adminContentRouter } from "./adminContentRouter";
 import { videoRecommendationsRouter } from "./videoRecommendationsRouter";
 import { createAdminNotification } from "./notificationsDb";
-import { createLearnerGroup, getLearnerGroupDetail, listLearnerGroups, replaceLearnerGroupCourses, replaceLearnerGroupMembers, userCanAccessCourse } from "./db";
+import { createLearnerGroup, getCourseLifecycleState, getLearnerGroupDetail, listLearnerGroups, replaceLearnerGroupCourses, replaceLearnerGroupMembers, userCanAccessCourse } from "./db";
 import { applyCompetencyEvent, getCompetencyFramework, getCompetencyLeaderboard, getContentCompetencyTags, getGamificationConfig, getUserCompetencies, getUserGamification, replaceCompetencyFramework, saveGamificationConfig } from "./competencyService";
 import { COMPETENCY_SOURCE_TYPES } from "../shared/competencyFramework";
 import { backfillCompetencies } from "./competencyBackfill";
@@ -1098,7 +1098,12 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
   trainingAccess: router({
     canOpen: protectedProcedure
       .input(z.object({ courseId: z.string().min(1).max(200) }))
-      .query(async ({ ctx, input }) => ({ allowed: ctx.user.role === "admin" || await userCanAccessCourse(ctx.user.id, input.courseId) })),
+      .query(async ({ ctx, input }) => {
+        const lifecycle = await getCourseLifecycleState(input.courseId);
+        if (ctx.user.role === "admin") return { allowed: true, lifecycle };
+        if (lifecycle.status !== "active") return { allowed: false, lifecycle, reason: "course_inactive" as const };
+        return { allowed: await userCanAccessCourse(ctx.user.id, input.courseId), lifecycle, reason: "group_access" as const };
+      }),
   }),
 
   // Enhanced admin tools (notes, tags, communications, bulk actions, analytics)

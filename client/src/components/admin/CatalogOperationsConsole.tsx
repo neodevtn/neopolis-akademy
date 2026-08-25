@@ -1,0 +1,70 @@
+import { useMemo, useState } from "react";
+import { Archive, ArchiveRestore, BookOpen, ChevronLeft, ChevronRight, Edit3, Eye, Filter, FolderTree, MoreHorizontal, Power, Search, ShieldCheck, SlidersHorizontal, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+type LifecycleStatus = "active" | "disabled" | "archived";
+type CourseRow = { courseId: string; title: string; lessonsCount: number; exercisesCount: number; sectionsCount: number; lifecycleStatus?: LifecycleStatus; lifecycleReason?: string | null };
+const label = (value: any) => typeof value === "string" ? value : value?.fr || value?.en || "Sans titre";
+const statusConfig: Record<LifecycleStatus, { label: string; className: string }> = {
+  active: { label: "Publié", className: "border-emerald-200 bg-emerald-50 text-emerald-800" },
+  disabled: { label: "Désactivé", className: "border-amber-200 bg-amber-50 text-amber-900" },
+  archived: { label: "Archivé", className: "border-slate-200 bg-slate-100 text-slate-700" },
+};
+
+export function CatalogOperationsConsole({
+  courses, certifications, catalogMode, onOpenCourse, onOpenCatalogSettings, onSetLifecycle, isSavingLifecycle,
+}: {
+  courses: CourseRow[];
+  certifications: any[];
+  catalogMode: boolean;
+  onOpenCourse: (courseId: string, mode: "course" | "edit-course") => void;
+  onOpenCatalogSettings: () => void;
+  onSetLifecycle: (courseIds: string[], status: LifecycleStatus, reason?: string) => void;
+  isSavingLifecycle?: boolean;
+}) {
+  const [query, setQuery] = useState("");
+  const [status, setStatus] = useState<LifecycleStatus | "all">("all");
+  const [certificationId, setCertificationId] = useState("all");
+  const [selected, setSelected] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
+  const [action, setAction] = useState<{ ids: string[]; status: LifecycleStatus } | null>(null);
+  const [reason, setReason] = useState("");
+  const perPage = 15;
+  const certificationFor = (courseId: string) => certifications.find((cert) => (cert.courses || []).includes(courseId));
+  const rows = useMemo(() => courses.filter((course) => {
+    const currentStatus = course.lifecycleStatus || "active";
+    const cert = certificationFor(course.courseId);
+    const haystack = `${course.title} ${course.courseId} ${label(cert?.title)}`.toLowerCase();
+    return (status === "all" || currentStatus === status) && (certificationId === "all" || cert?.id === certificationId) && (!query.trim() || haystack.includes(query.toLowerCase().trim()));
+  }), [courses, certifications, certificationId, query, status]);
+  const pageCount = Math.max(1, Math.ceil(rows.length / perPage));
+  const shown = rows.slice((page - 1) * perPage, page * perPage);
+  const statusCounts = courses.reduce<Record<LifecycleStatus, number>>((acc, course) => { acc[course.lifecycleStatus || "active"] += 1; return acc; }, { active: 0, disabled: 0, archived: 0 });
+  const toggleAll = () => setSelected(selected.length === shown.length ? [] : shown.map((course) => course.courseId));
+  const confirmLifecycle = () => {
+    if (!action) return;
+    onSetLifecycle(action.ids, action.status, reason.trim() || undefined);
+    setAction(null); setReason(""); setSelected([]);
+  };
+  const title = action?.status === "active" ? "Réactiver les formations" : action?.status === "disabled" ? "Désactiver les formations" : "Archiver les formations";
+  const description = action?.status === "active" ? "Les formations seront de nouveau accessibles selon les groupes d’apprenants." : action?.status === "disabled" ? "Les formations restent visibles mais l’ouverture est bloquée pour les apprenants. Les contenus et la progression sont conservés." : "Les formations sont retirées du cycle opérationnel. Aucun contenu ni historique apprenant ne sera supprimé.";
+
+  return <div className="space-y-6">
+    <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-6"><div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-primary/10 to-transparent" /><div className="relative flex flex-col justify-between gap-5 lg:flex-row lg:items-end"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Administration pédagogique</p><h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground">{catalogMode ? "Catalogue, taxonomie et publications" : "Pilotage des contenus de formation"}</h2><p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">Une vue de gestion unique pour trouver, éditer, désactiver, archiver ou réactiver les formations sans jamais perdre les contenus ni l’historique des apprenants.</p></div><div className="grid grid-cols-3 gap-2 sm:min-w-96">{(["active", "disabled", "archived"] as LifecycleStatus[]).map((item) => <button type="button" key={item} onClick={() => { setStatus(item); setPage(1); }} className={`rounded-xl border p-3 text-left transition-colors ${status === item ? statusConfig[item].className : "border-border bg-background hover:bg-muted/50"}`}><p className="text-lg font-bold">{statusCounts[item]}</p><p className="text-xs font-medium">{statusConfig[item].label}</p></button>)}</div></div></section>
+
+    <section className="rounded-2xl border border-border bg-card"><div className="flex flex-col gap-4 border-b border-border p-4 lg:flex-row lg:items-center lg:justify-between"><div className="flex flex-1 flex-col gap-3 sm:flex-row"><div className="relative min-w-0 flex-1"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); }} placeholder="Rechercher par titre, identifiant ou certification…" className="pl-9" /></div><Select value={status} onValueChange={(value) => { setStatus(value as LifecycleStatus | "all"); setPage(1); }}><SelectTrigger className="w-full sm:w-40"><Filter className="mr-2 h-3.5 w-3.5" /><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">Tous les états</SelectItem><SelectItem value="active">Publiés</SelectItem><SelectItem value="disabled">Désactivés</SelectItem><SelectItem value="archived">Archivés</SelectItem></SelectContent></Select><Select value={certificationId} onValueChange={(value) => { setCertificationId(value); setPage(1); }}><SelectTrigger className="w-full sm:w-56"><FolderTree className="mr-2 h-3.5 w-3.5" /><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">Toutes les certifications</SelectItem>{certifications.map((cert) => <SelectItem key={cert.id} value={cert.id}>{label(cert.title)}</SelectItem>)}</SelectContent></Select></div><div className="flex items-center gap-2"><Button variant="outline" size="sm" onClick={() => { setQuery(""); setStatus("all"); setCertificationId("all"); setPage(1); }}><X className="mr-1 h-3.5 w-3.5" /> Réinitialiser</Button>{catalogMode && <Button size="sm" onClick={onOpenCatalogSettings}><SlidersHorizontal className="mr-1.5 h-3.5 w-3.5" /> Paramètres du catalogue</Button>}</div></div>
+      {selected.length > 0 && <div className="flex flex-wrap items-center justify-between gap-3 border-b border-primary/20 bg-primary/5 px-4 py-3"><p className="text-sm font-semibold">{selected.length} formation{selected.length > 1 ? "s" : ""} sélectionnée{selected.length > 1 ? "s" : ""}</p><div className="flex flex-wrap gap-2"><Button size="sm" variant="outline" onClick={() => setAction({ ids: selected, status: "active" })}><ArchiveRestore className="mr-1 h-3.5 w-3.5" /> Réactiver</Button><Button size="sm" variant="outline" onClick={() => setAction({ ids: selected, status: "disabled" })}><Power className="mr-1 h-3.5 w-3.5" /> Désactiver</Button><Button size="sm" variant="outline" onClick={() => setAction({ ids: selected, status: "archived" })}><Archive className="mr-1 h-3.5 w-3.5" /> Archiver</Button></div></div>}
+      <div className="overflow-x-auto"><table className="w-full min-w-[850px] text-sm"><thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground"><tr><th className="w-12 px-4 py-3"><input aria-label="Tout sélectionner" type="checkbox" checked={shown.length > 0 && selected.length === shown.length} onChange={toggleAll} /></th><th className="px-3 py-3 text-left">Formation</th><th className="px-3 py-3 text-left">Programme</th><th className="px-3 py-3 text-center">Structure</th><th className="px-3 py-3 text-left">État</th><th className="px-4 py-3 text-right">Actions</th></tr></thead><tbody>{shown.map((course) => { const cert = certificationFor(course.courseId); const lifecycle = (course.lifecycleStatus || "active") as LifecycleStatus; return <tr key={course.courseId} className="border-t border-border/70 hover:bg-muted/30"><td className="px-4 py-4"><input aria-label={`Sélectionner ${course.title}`} type="checkbox" checked={selected.includes(course.courseId)} onChange={() => setSelected((items) => items.includes(course.courseId) ? items.filter((id) => id !== course.courseId) : [...items, course.courseId])} /></td><td className="px-3 py-4"><p className="font-semibold text-foreground">{course.title}</p><p className="mt-1 font-mono text-xs text-muted-foreground">{course.courseId}</p></td><td className="px-3 py-4"><p className="max-w-56 truncate text-sm">{label(cert?.title)}</p><p className="mt-1 text-xs text-muted-foreground">{cert?.group || "Sans catégorie"}</p></td><td className="px-3 py-4 text-center"><p className="font-semibold">{course.lessonsCount}</p><p className="text-xs text-muted-foreground">leçons · {course.exercisesCount} exercices</p></td><td className="px-3 py-4"><Badge variant="outline" className={statusConfig[lifecycle].className}>{statusConfig[lifecycle].label}</Badge>{course.lifecycleReason && <p className="mt-1 max-w-52 truncate text-xs text-muted-foreground" title={course.lifecycleReason}>{course.lifecycleReason}</p>}</td><td className="px-4 py-4"><div className="flex justify-end gap-1"><Button size="sm" variant="ghost" onClick={() => onOpenCourse(course.courseId, "course")}><Eye className="mr-1 h-3.5 w-3.5" /> Ouvrir</Button><Button size="sm" variant="ghost" className="text-primary" onClick={() => onOpenCourse(course.courseId, "edit-course")}><Edit3 className="mr-1 h-3.5 w-3.5" /> Éditer</Button><Select value={lifecycle} onValueChange={(value) => { if (value !== lifecycle) setAction({ ids: [course.courseId], status: value as LifecycleStatus }); }}><SelectTrigger aria-label={`Changer l’état de ${course.title}`} className="h-8 w-10 border-0 p-0 shadow-none"><MoreHorizontal className="h-4 w-4" /></SelectTrigger><SelectContent><SelectItem value="active">Réactiver</SelectItem><SelectItem value="disabled">Désactiver</SelectItem><SelectItem value="archived">Archiver</SelectItem></SelectContent></Select></div></td></tr>; })}</tbody></table></div>
+      {rows.length === 0 && <div className="p-12 text-center"><BookOpen className="mx-auto h-8 w-8 text-muted-foreground" /><p className="mt-3 font-semibold">Aucune formation ne correspond aux filtres.</p><p className="mt-1 text-sm text-muted-foreground">Modifiez les filtres ou réinitialisez la recherche.</p></div>}
+      <div className="flex items-center justify-between border-t border-border p-4 text-sm"><p className="text-muted-foreground">{rows.length} formation{rows.length > 1 ? "s" : ""} trouvée{rows.length > 1 ? "s" : ""} · page {page}/{pageCount}</p><div className="flex gap-2"><Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((current) => current - 1)}><ChevronLeft className="h-4 w-4" /> Précédent</Button><Button variant="outline" size="sm" disabled={page >= pageCount} onClick={() => setPage((current) => current + 1)}>Suivant <ChevronRight className="h-4 w-4" /></Button></div></div>
+    </section>
+
+    {catalogMode && <section className="grid gap-4 lg:grid-cols-3">{certifications.map((cert) => <article key={cert.id} className="rounded-2xl border border-border bg-card p-5"><div className="flex items-start justify-between gap-3"><div><Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary">{cert.group || "Sans catégorie"}</Badge><h3 className="mt-3 font-semibold leading-snug">{label(cert.title)}</h3></div><ShieldCheck className="h-5 w-5 text-primary" /></div><div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs"><div className="rounded-lg bg-muted/50 p-2"><strong className="block text-sm">{cert.courseCount ?? 0}</strong>cours</div><div className="rounded-lg bg-muted/50 p-2"><strong className="block text-sm">{cert.totalLessons ?? 0}</strong>leçons</div><div className="rounded-lg bg-muted/50 p-2"><strong className="block text-sm">{cert.totalExercises ?? 0}</strong>exercices</div></div></article>)}</section>}
+
+    <Dialog open={!!action} onOpenChange={(open) => { if (!open) { setAction(null); setReason(""); } }}><DialogContent><DialogHeader><DialogTitle>{title}</DialogTitle><DialogDescription>{description}</DialogDescription></DialogHeader><label className="grid gap-2 text-sm font-medium">Motif administratif <span className="font-normal text-muted-foreground">(recommandé, affiché aux apprenants si le cours est indisponible)</span><Input value={reason} onChange={(event) => setReason(event.target.value)} placeholder="Ex. Mise à jour pédagogique en cours" /></label>{action?.status === "archived" && <p className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">L’archivage est réversible. Il ne supprime pas le JSON, les médias, les résultats ni les données de progression.</p>}<DialogFooter><Button variant="outline" onClick={() => setAction(null)}>Annuler</Button><Button disabled={isSavingLifecycle} onClick={confirmLifecycle}>{isSavingLifecycle ? "Application…" : "Confirmer"}</Button></DialogFooter></DialogContent></Dialog>
+  </div>;
+}

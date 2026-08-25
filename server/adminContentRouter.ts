@@ -8,6 +8,9 @@ import { validateCatalogIndex } from "../shared/catalogValidation";
 import { listGlobalMediaAssets, removeUnusedMediaMetadata, replaceMediaEverywhere, saveMediaMetadata } from "./mediaCatalog";
 import { storagePut } from "./storage";
 import { applyCatalogMetrics } from "../shared/catalogMetrics";
+import { eq } from "drizzle-orm";
+import { courseLifecycleStates } from "../drizzle/schema";
+import { getDb } from "./db";
 
 /**
  * Admin Content Management Router
@@ -118,8 +121,32 @@ export const adminContentRouter = router({
         // Skip invalid files
       }
     }
-    return courses;
+    const db = await getDb();
+    const states = db ? await db.select().from(courseLifecycleStates) : [];
+    const statesByCourseId = new Map(states.map((state) => [state.courseId, state]));
+    return courses.map((course) => {
+      const state = statesByCourseId.get(course.courseId);
+      return { ...course, lifecycleStatus: state?.status || "active", lifecycleReason: state?.reason || null, lifecycleUpdatedAt: state?.updatedAt || null };
+    });
   }),
+
+  setCourseLifecycle: adminProcedure
+    .input(z.object({ courseId: z.string().min(1).max(200), status: z.enum(["active", "disabled", "archived"]), reason: z.string().trim().max(2000).optional() }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Base de données indisponible.");
+      await db.insert(courseLifecycleStates).values({ courseId: input.courseId, status: input.status, reason: input.reason || null, updatedBy: ctx.user.id }).onDuplicateKeyUpdate({ set: { status: input.status, reason: input.reason || null, updatedBy: ctx.user.id, updatedAt: new Date() } });
+      return { success: true };
+    }),
+
+  bulkSetCourseLifecycle: adminProcedure
+    .input(z.object({ courseIds: z.array(z.string().min(1).max(200)).min(1).max(100), status: z.enum(["active", "disabled", "archived"]), reason: z.string().trim().max(2000).optional() }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Base de données indisponible.");
+      await Promise.all(input.courseIds.map((courseId) => db.insert(courseLifecycleStates).values({ courseId, status: input.status, reason: input.reason || null, updatedBy: ctx.user.id }).onDuplicateKeyUpdate({ set: { status: input.status, reason: input.reason || null, updatedBy: ctx.user.id, updatedAt: new Date() } })));
+      return { success: true, count: input.courseIds.length };
+    }),
 
   // Get full course content by courseId
   getCourse: adminProcedure

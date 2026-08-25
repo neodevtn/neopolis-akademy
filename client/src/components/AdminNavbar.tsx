@@ -32,7 +32,8 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
   {
     label: "Pédagogie",
     items: [
-      { label: "Contenu des cours", href: "/admin/content", icon: BookOpen, page: "content", description: "Cours, quiz et examens" },
+      { label: "Contenus des cours", href: "/admin/content", icon: BookOpen, page: "content", description: "Éditer les leçons et interactions" },
+      { label: "Catalogue & publications", href: "/admin/content?mode=catalog", icon: BookOpen, page: "content", description: "Organiser et gérer les états" },
       { label: "Bibliothèque médias", href: "/admin/media", icon: FileImage, page: "media", description: "Vidéos, PDF et images" },
     ],
   },

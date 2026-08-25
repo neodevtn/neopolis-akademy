@@ -2178,3 +2178,11 @@
 - [x] Relier les interactions à leur feedback, au verrouillage de progression et aux événements XP
 - [x] Indexer le cours pour la recherche et verrouiller l’examen final derrière les douze unités
 - [x] Valider structure, TypeScript, JSON de cours et suite de tests avant publication
+
+## Refonte administration du catalogue et des contenus
+- [x] Auditer les flux, données et défauts UX des pages catalogue et contenu existantes
+- [x] Mettre en place une navigation et des vues de gestion cohérentes, accessibles et orientées tâches
+- [x] Ajouter recherche, filtres, tri, pagination et actions groupées sur les formations et contenus
+- [x] Ajouter un cycle de vie sûr des cours : actif, désactivé, archivé, suppression logique confirmée et restauration
+- [x] Clarifier les détails de cours, ses dépendances et les actions risquées dans l’administration
+- [x] Tester, documenter puis publier la refonte

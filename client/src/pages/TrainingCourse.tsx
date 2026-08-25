@@ -249,7 +249,8 @@ export default function TrainingCourse() {
   }
 
   if (user?.role !== "admin" && courseAccessQuery.data && !courseAccessQuery.data.allowed) {
-    return <div className="min-h-screen bg-background"><main className="mx-auto max-w-lg px-5 py-28 text-center"><div className="rounded-2xl border border-border bg-card p-9"><Lock className="mx-auto mb-5 h-10 w-10 text-amber-600" /><h1 className="text-xl font-bold text-foreground">Formation visible, accès non attribué</h1><p className="mt-3 text-sm leading-relaxed text-muted-foreground">Cette formation est disponible au catalogue, mais n’est pas encore affectée à l’un de vos groupes d’apprenants. Contactez votre administrateur.</p><Button className="mt-6" variant="outline" onClick={() => navigate("/training")}>Retour au catalogue</Button></div></main></div>;
+    const inactive = courseAccessQuery.data.reason === "course_inactive";
+    return <div className="min-h-screen bg-background"><main className="mx-auto max-w-lg px-5 py-28 text-center"><div className="rounded-2xl border border-border bg-card p-9"><Lock className="mx-auto mb-5 h-10 w-10 text-amber-600" /><h1 className="text-xl font-bold text-foreground">{inactive ? "Formation temporairement indisponible" : "Formation visible, accès non attribué"}</h1><p className="mt-3 text-sm leading-relaxed text-muted-foreground">{inactive ? (courseAccessQuery.data.lifecycle?.reason || "Cette formation a été désactivée ou archivée par l’administration. Elle reste visible au catalogue mais ne peut pas être ouverte actuellement.") : "Cette formation est disponible au catalogue, mais n’est pas encore affectée à l’un de vos groupes d’apprenants. Contactez votre administrateur."}</p><Button className="mt-6" variant="outline" onClick={() => navigate("/training")}>Retour au catalogue</Button></div></main></div>;
   }
 
     if (!course || !cert) {

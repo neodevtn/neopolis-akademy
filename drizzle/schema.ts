@@ -62,6 +62,20 @@ export const learnerGroupCourses = mysqlTable("learner_group_courses", {
   index("learner_group_course_course_idx").on(table.courseId, table.groupId),
 ]);
 
+/** Cycle de vie d’un cours : une désactivation reste réversible et ne supprime jamais les contenus ni l’historique apprenant. */
+export const courseLifecycleStates = mysqlTable("course_lifecycle_states", {
+  id: int("id").autoincrement().primaryKey(),
+  courseId: varchar("courseId", { length: 200 }).notNull().unique(),
+  status: mysqlEnum("status", ["active", "disabled", "archived"]).notNull().default("active"),
+  reason: text("reason"),
+  updatedBy: int("updatedBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  index("course_lifecycle_status_idx").on(table.status),
+]);
+export type CourseLifecycleState = typeof courseLifecycleStates.$inferSelect;
+
 /** Programme administrable de parrainage : promesses de récompense, jamais attribuées automatiquement. */
 export const referralCampaigns = mysqlTable("referral_campaigns", {
   id: int("id").autoincrement().primaryKey(),
