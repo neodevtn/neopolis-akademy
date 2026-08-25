@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { BrandLogo } from "@/components/BrandLogo";
-import { Activity, AlertTriangle, ArrowLeft, BarChart3, BookOpen, ChevronDown, FileImage, Gift, KanbanSquare, LayoutDashboard, Menu, MessageSquare, UserCheck, UserPlus, Users } from "lucide-react";
+import { Activity, AlertTriangle, ArrowLeft, BarChart3, BookOpen, ChevronDown, FileImage, Gift, KanbanSquare, Layers, LayoutDashboard, Menu, MessageSquare, UserCheck, UserPlus, Users } from "lucide-react";
 
 type AdminPage = "candidatures" | "training" | "content" | "media" | "errors";
 type NavItem = { label: string; href: string; icon: typeof LayoutDashboard; page: AdminPage; description: string };
@@ -22,6 +22,7 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
     label: "Apprenants",
     items: [
       { label: "Suivi des apprenants", href: "/admin/training?tab=learners", icon: Users, page: "training", description: "Progression et engagement" },
+      { label: "Groupes d’apprenants", href: "/admin/training?tab=groups", icon: Layers, page: "training", description: "Accès aux formations" },
       { label: "Invitations directes", href: "/admin/training?tab=invitations", icon: UserPlus, page: "training", description: "Inviter et annuler" },
       { label: "Reporting", href: "/admin/training?tab=analytics", icon: BarChart3, page: "training", description: "Performance et tendances" },
       { label: "Feedback formations", href: "/admin/training?tab=feedback", icon: MessageSquare, page: "training", description: "Avis et suggestions" },

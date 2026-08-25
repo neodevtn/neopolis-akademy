@@ -2186,3 +2186,8 @@
 - [x] Ajouter un cycle de vie sûr des cours : actif, désactivé, archivé, suppression logique confirmée et restauration
 - [x] Clarifier les détails de cours, ses dépendances et les actions risquées dans l’administration
 - [x] Tester, documenter puis publier la refonte
+
+## Correctif urgent — gestion des groupes
+- [x] Rendre la gestion des groupes visible dans la navigation principale d’administration
+- [x] Corriger le rendu d’objets bilingues dans l’éditeur de groupes pour supprimer le crash React
+- [x] Tester l’ouverture, l’édition et la sauvegarde d’un groupe avant publication
