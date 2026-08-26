@@ -2255,5 +2255,7 @@
 - [x] Intégrer une évaluation IA serveur sécurisée via OpenRouter, structurée, traçable et contrôlée par l’apprenant — critères explicites, seuil, feedback transparent, tentatives immuables et modèle consignés ; tests de sécurité et de bornage ajoutés
 - [x] Régénérer la matrice QA depuis les JSON actuels et corriger la sonde de prévisualisation pour distinguer les verrouillages légitimes ; pipeline `qa:publish` validé desktop et mobile
 - [x] Rejouer le parcours Novasavo : 77 écrans rendus en audit administrateur, quatre interactions obligatoires de l’unité 1 déverrouillées en session apprenant et absence d’overflow mobile vérifiée à 390 × 844 et 375 × 667
-- [ ] Rejouer l’intégralité du parcours Novasavo avec contrôle de progression, interactions, feedback et navigation
-- [ ] Préparer l’audit et les adaptations par vagues, en priorité pour Anthropic puis DataCamp
+- [x] Rejouer l’intégralité du parcours Novasavo avec contrôle de progression, interactions, feedback et navigation — 77 écrans rendus, 4 interactions obligatoires validées, feedback et déverrouillage contrôlés, mobile sans overflow
+- [x] Préparer l’audit et les adaptations par vagues, en priorité pour Anthropic puis DataCamp — inventaire reproductible, méthode de décision par source et interdiction explicite d’activer une réponse libre sans rubrique exploitable
+- [x] Auditer le lot Anthropic : 25 cours, 556 écrans, 328 interactions déterministes et aucune réponse libre dotée d’une rubrique source activable
+- [x] Normaliser quatre consignes Anthropic confirmées de tri/association qui imposaient gauche/droite, sans modifier leur réponse attendue ni leur verrouillage
