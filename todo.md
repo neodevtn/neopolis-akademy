@@ -1,5 +1,20 @@
 # Project TODO — Neopolis Akademy
 
+## Diagnostic d’accès apprenant — Wefa Naouch
+- [x] Identifier le compte Wefa Naouch, ses groupes d’apprenants et la formation qui retourne « accès non attribué » — compte actif sans aucun groupe
+- [x] Corriger uniquement l’appartenance ou l’affectation de formation nécessaire, avec une trace d’administration — rattachement au groupe système Full access
+- [x] Vérifier la route concernée en vue apprenant et publier le correctif si du code est requis — règle serveur `userCanAccessCourse` confirmée pour le cours Novasavo
+
+## Groupe par défaut — Full access
+- [x] Rattacher Wafa Nawech au groupe système Full access et vérifier son accès aux formations
+- [x] Ajouter une règle de secours durable : tout utilisateur sans groupe est affecté à Full access lors de l’invitation, de l’inscription ou de la première résolution d’accès
+- [x] Ajouter Full access à tous les comptes actifs existants qui ne l’ont pas encore, sans retirer ni écraser leurs groupes restreints existants — zéro compte actif sans Full access après réconciliation
+- [x] Ajouter des tests d’intégration réels des flux invitation, création de compte et première ouverture sans groupe — invitation sans groupe, upsert, premier accès et nettoyage réversible validés
+- [x] Ajouter une trace d’administration aux affectations automatiques et à la réconciliation Full access — événement durable consultable pour Wafa Nawech
+- [x] Rejouer une affectation manuelle Full access et vérifier l’événement durable avec `assignedBy` — événement durable validé avec l’identifiant administrateur responsable
+- [x] Vérifier en navigateur avec une session apprenant que la route auparavant bloquée s’ouvre après Full access — Novasavo s’ouvre sans message d’accès refusé
+- [ ] Publier/checkpointer les changements Full access et vérifier en production qu’un compte sans groupe reçoit l’accès attendu
+
 ## Fiabilité des listes, communications et indicateurs
 - [x] Auditer la limite actuelle de la liste d’invitations et la remplacer par une table paginée, recherchable et triable côté serveur — 183 invitations directes contrôlées sur 8 pages
 - [x] Diagnostiquer l’état de lecture des communiqués côté apprenant et assurer une persistance distincte par utilisateur et par communiqué

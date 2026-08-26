@@ -8,6 +8,7 @@ import { learnerReportingLabel } from "@shared/learnerReportingLabel";
 import { normalizeCourseFeedbackComment, normalizeCourseRating } from "../shared/courseFeedback";
 import { normalizeReferralCode } from "../shared/referral";
 import { canLearnerOpenLifecycle, type CourseLifecycleStatus } from "../shared/courseLifecycle";
+import { getNewLearnerGroupMemberIds, needsDefaultLearnerGroup } from "../shared/defaultLearnerGroup";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -76,6 +77,8 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     await db.insert(users).values(values).onDuplicateKeyUpdate({
       set: updateSet,
     });
+    const [storedUser] = await db.select({ id: users.id }).from(users).where(eq(users.openId, user.openId)).limit(1);
+    if (storedUser) await ensureUserHasDefaultLearnerGroup(storedUser.id, { source: "account_upsert" });
   } catch (error) {
     console.error("[Database] Failed to upsert user:", error);
     throw error;
@@ -740,8 +743,22 @@ export async function createLearnerGroup(input: { name: string; description?: st
 export async function replaceLearnerGroupMembers(groupId: number, userIds: number[], assignedBy: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.delete(learnerGroupMemberships).where(eq(learnerGroupMemberships.groupId, groupId));
-  if (userIds.length) await db.insert(learnerGroupMemberships).values(userIds.map((userId) => ({ groupId, userId, assignedBy })));
+  const [group] = await db.select({ id: learnerGroups.id, isSystem: learnerGroups.isSystem, name: learnerGroups.name }).from(learnerGroups).where(eq(learnerGroups.id, groupId)).limit(1);
+  const existingMembers = await db.select({ userId: learnerGroupMemberships.userId }).from(learnerGroupMemberships).where(eq(learnerGroupMemberships.groupId, groupId));
+  const existingUserIds = existingMembers.map((member) => member.userId);
+  const normalizedUserIds = Array.from(new Set(userIds));
+  const newlyAssignedUserIds = getNewLearnerGroupMemberIds(existingUserIds, normalizedUserIds);
+  const nextUsers = new Set(normalizedUserIds);
+  const removedUserIds = existingUserIds.filter((userId) => !nextUsers.has(userId));
+  if (removedUserIds.length) await db.delete(learnerGroupMemberships).where(and(eq(learnerGroupMemberships.groupId, groupId), inArray(learnerGroupMemberships.userId, removedUserIds)));
+  if (newlyAssignedUserIds.length) await db.insert(learnerGroupMemberships).values(newlyAssignedUserIds.map((userId) => ({ groupId, userId, assignedBy })));
+  if (group?.isSystem === 1 && newlyAssignedUserIds.length) {
+    await db.insert(learnerActivityLog).values(newlyAssignedUserIds.map((userId) => ({
+      userId,
+      actionType: "learner_group_full_access_manually_assigned",
+      metadata: { groupId: group.id, groupName: group.name, source: "admin_group_membership_update", assignedBy },
+    })));
+  }
 }
 
 export async function replaceLearnerGroupCourses(groupId: number, courses: { courseId: string; certificationId?: string }[], assignedBy: number) {
@@ -751,11 +768,37 @@ export async function replaceLearnerGroupCourses(groupId: number, courses: { cou
   if (courses.length) await db.insert(learnerGroupCourses).values(courses.map((course) => ({ groupId, courseId: course.courseId, certificationId: course.certificationId || null, assignedBy })));
 }
 
+/**
+ * Protège les comptes créés sans sélection explicite de groupe : Full access est
+ * le groupe système de continuité, sans jamais remplacer un groupe déjà attribué.
+ */
+export async function ensureUserHasDefaultLearnerGroup(
+  userId: number,
+  options: { assignedBy?: number | null; source?: "invitation_fallback" | "access_fallback" | "account_upsert" } = {},
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const assignedBy = options.assignedBy ?? null;
+  const source = options.source ?? "access_fallback";
+  const memberships = await db.select({ id: learnerGroupMemberships.id }).from(learnerGroupMemberships).where(eq(learnerGroupMemberships.userId, userId)).limit(1);
+  if (!needsDefaultLearnerGroup(memberships.length)) return { assigned: false, groupId: null };
+  const [defaultGroup] = await db.select({ id: learnerGroups.id }).from(learnerGroups).where(and(eq(learnerGroups.isSystem, 1), eq(learnerGroups.active, 1))).orderBy(desc(learnerGroups.id)).limit(1);
+  if (!defaultGroup) throw new Error("Le groupe système Full access est introuvable ou inactif.");
+  await db.insert(learnerGroupMemberships).values({ userId, groupId: defaultGroup.id, assignedBy }).onDuplicateKeyUpdate({ set: { assignedAt: sql`CURRENT_TIMESTAMP` } });
+  await db.insert(learnerActivityLog).values({
+    userId,
+    actionType: "learner_group_full_access_assigned",
+    metadata: { groupId: defaultGroup.id, source, assignedBy },
+  });
+  return { assigned: true, groupId: defaultGroup.id };
+}
+
 export async function userCanAccessCourse(userId: number, courseId: string) {
   const db = await getDb();
-  if (!db) return false;
+  if (!db) throw new Error("Database not available");
   const lifecycle = await getCourseLifecycleState(courseId);
   if (!canLearnerOpenLifecycle(lifecycle.status)) return false;
+  await ensureUserHasDefaultLearnerGroup(userId, { source: "access_fallback" });
   const memberships = await db.select({ groupId: learnerGroupMemberships.groupId, isSystem: learnerGroups.isSystem }).from(learnerGroupMemberships).innerJoin(learnerGroups, eq(learnerGroupMemberships.groupId, learnerGroups.id)).where(and(eq(learnerGroupMemberships.userId, userId), eq(learnerGroups.active, 1)));
   if (memberships.some((membership) => membership.isSystem === 1)) return true;
   const groupIds = memberships.map((membership) => membership.groupId);
@@ -798,6 +841,7 @@ export async function applyInvitationGroupsToUser(token: string, userId: number)
   for (const group of groups) {
     await db.insert(learnerGroupMemberships).values({ userId, groupId: group.groupId, assignedBy: null }).onDuplicateKeyUpdate({ set: { assignedAt: sql`CURRENT_TIMESTAMP` } });
   }
+  await ensureUserHasDefaultLearnerGroup(userId, { source: "invitation_fallback" });
 }
 
 export async function getInvitations(page: number = 1, pageSize: number = 20) {
