@@ -318,7 +318,7 @@ export default function TrainingCourse() {
     : courseLessons.length;
   const totalLessons = totalProgressUnits;
   const isNovasavoCourse = course.id === "automatisation_comptable_ia__01";
-  const novasavoUnitsTotal = isNovasavoCourse ? 12 : totalLessons;
+  const novasavoUnitsTotal = isNovasavoCourse ? Math.max(1, courseLessons.length) : totalLessons;
   const completed = isCourseComplete(course.id, totalLessons);
   const nextUnlocked = isSingleLessonCourse
     ? (() => {
@@ -330,7 +330,7 @@ export default function TrainingCourse() {
     : getNextUnlockedLesson(course.id, totalLessons);
   const activeMultiLessonIndex = activeLessonIndex ?? nextUnlocked;
   const visibleUnitCurrent = isNovasavoCourse
-    ? (activeMultiLessonIndex >= 12 ? 12 : Math.min(activeMultiLessonIndex + 1, 12))
+    ? Math.min(activeMultiLessonIndex + 1, novasavoUnitsTotal)
     : Math.min(nextUnlocked, totalLessons);
   const activeMultiLessonChapterTotal = Math.max(1, courseLessons[activeMultiLessonIndex]?.chapters?.length || 1);
   const videos = course.videos || [];
@@ -519,7 +519,7 @@ export default function TrainingCourse() {
                 <BookOpen className="w-4 h-4 text-primary" />
                 <span className="font-medium text-foreground">{visibleUnitCurrent}</span>
                 <span>/ {isNovasavoCourse ? novasavoUnitsTotal : totalLessons} {isNovasavoCourse ? t({ en: "units", fr: "unités" }) : isSingleLessonCourse ? t({ en: "chapters", fr: "chapitres" }) : t({ en: "lessons", fr: "leçons" })}</span>
-                {isNovasavoCourse && activeMultiLessonIndex >= 12 && <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{t({ en: "Final exam", fr: "Examen final" })}</span>}
+                {isNovasavoCourse && activeMultiLessonIndex >= novasavoUnitsTotal && <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{t({ en: "Final exam", fr: "Examen final" })}</span>}
               </div>
               {videos.length > 0 && (
                 <div className="flex items-center gap-1.5">

@@ -1,5 +1,13 @@
 # Project TODO — Neopolis Akademy
 
+## Fiabilité des listes, communications et indicateurs
+- [x] Auditer la limite actuelle de la liste d’invitations et la remplacer par une table paginée, recherchable et triable côté serveur — 183 invitations directes contrôlées sur 8 pages
+- [x] Diagnostiquer l’état de lecture des communiqués côté apprenant et assurer une persistance distincte par utilisateur et par communiqué
+- [x] Inventorier tous les indicateurs de certification, cours, leçon et activité afin d’identifier les attributs déclaratifs et les valeurs injectées dans les textes
+- [x] Définir une source de vérité et des fonctions de calcul uniques pour les indicateurs des catalogues, formations et cours, puis supprimer les compteurs incohérents ou codés en dur
+- [x] Auditer et migrer les rendus restants d’indicateurs de leçon/activité vers les métriques synchronisées ou la progression réelle, puis documenter la couverture complète
+- [ ] Créer le checkpoint, publier les corrections, puis vérifier en production les invitations, l’historique apprenant et les compteurs de formation/cours
+
 ## Extension transversale — Assistants Anthropic et DataCamp
 - [x] Inventorier les panneaux d’assistant, points d’entrée, réponses préremplies, rendus Markdown et contraintes visuelles des cours Anthropic et DataCamp — aucun panneau assistant ou bloc d’évaluation IA dans Anthropic ; 13 évaluations IA source dans trois cours DataCamp et aucun panneau assistant générique actif
 - [x] Appliquer aux composants concernés le contrat d’assistant contextuel, le refus hors périmètre, le rendu Markdown sûr et la réponse non tronquée — renderer Markdown standardisé pour les assistants et les évaluations DataCamp ; seuil de passage du bloc aligné sur `passingScore`

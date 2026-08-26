@@ -841,10 +841,12 @@ export async function getDirectInvitations(
     .where(where)
     .orderBy(orderBy)
     .limit(pageSize).offset(offset);
-  const [{ total }] = await db.select({ total: count() }).from(userInvitations)
-    .where(where);
+  const [{ total }] = await db.select({ total: count() }).from(userInvitations).where(where);
+  const statusRows = await db.select({ status: userInvitations.status, total: count() }).from(userInvitations)
+    .where(isNull(userInvitations.applicationId)).groupBy(userInvitations.status);
+  const statusCounts = Object.fromEntries(statusRows.map((row) => [row.status, Number(row.total)]));
 
-  return { invitations, total, page, pageSize, search: normalizedSearch || "", sortBy, sortDirection };
+  return { invitations, total, page, pageSize, search: normalizedSearch || "", sortBy, sortDirection, statusCounts };
 }
 
 export async function cancelInvitation(invitationId: number) {

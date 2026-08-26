@@ -9,8 +9,8 @@ describe("cours DataCamp Introduction au Model Context Protocol", () => {
   it("respecte les compteurs canoniques et le classement développeur", () => {
     const certification = catalog.certifications.find((entry: any) => entry.id === "datacamp_introduction_to_model_context_protocol_mcp");
     const courseIndex = catalog.courses.find((entry: any) => entry.id === "introduction_to_model_context_protocol_mcp__01");
-    expect(certification).toMatchObject({ group: "fullstack_ai_engineering", totalLessons: 3, totalActivities: 34, totalVideos: 11, totalExercises: 23, totalDownloads: 3 });
-    expect(courseIndex).toMatchObject({ certId: certification?.id, totalActivities: 34, videoCount: 11, exerciseCount: 23 });
+    expect(certification).toMatchObject({ group: "fullstack_ai_engineering", totalLessons: 3, totalActivities: 34, totalVideos: 11, totalExercises: 21, totalDownloads: 3 });
+    expect(courseIndex).toMatchObject({ certId: certification?.id, totalActivities: 34, videoCount: 11, exerciseCount: 21 });
   });
 
   it("préserve les Projector, TP MCP et tris interactifs avec verrouillage", () => {

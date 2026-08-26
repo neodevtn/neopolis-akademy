@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
-import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Columns3, Bell, BellRing, UserX, FileCheck, CalendarClock, Save, Filter, Gift } from "lucide-react";
+import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Columns3, Bell, BellRing, UserX, FileCheck, CalendarClock, Save, Filter, Gift, Search } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 import { AdminNavbar } from "@/components/AdminNavbar";
@@ -89,6 +89,10 @@ export default function AdminDashboard() {
   const [invitEmails, setInvitEmails] = useState("");
   const [invitMessage, setInvitMessage] = useState("");
   const [invitLang, setInvitLang] = useState<"fr" | "en">("fr");
+  const [invitationPage, setInvitationPage] = useState(1);
+  const [invitationSearch, setInvitationSearch] = useState("");
+  const [invitationSortBy, setInvitationSortBy] = useState<"createdAt" | "email" | "name" | "status" | "expiresAt">("createdAt");
+  const [invitationSortDirection, setInvitationSortDirection] = useState<"asc" | "desc">("desc");
 
   const navigateAdmin = (tab: TabType, applicationId?: number | null) => {
     const params = new URLSearchParams({ tab });
@@ -309,7 +313,14 @@ export default function AdminDashboard() {
   const availableActivityActions = useMemo(() => Array.from(new Set((activityLogQuery.data?.items || []).map((item: any) => item.action))).sort(), [activityLogQuery.data?.items]);
 
   // Invitations
-  const invitationsQuery = trpc.admin.getInvitations.useQuery(undefined, { enabled: activeTab === "invitations" });
+  const invitationInput = useMemo(() => ({
+    page: invitationPage,
+    pageSize: 25,
+    search: invitationSearch.trim() || undefined,
+    sortBy: invitationSortBy,
+    sortDirection: invitationSortDirection,
+  }), [invitationPage, invitationSearch, invitationSortBy, invitationSortDirection]);
+  const invitationsQuery = trpc.admin.getDirectInvitations.useQuery(invitationInput, { enabled: activeTab === "invitations" });
   const bulkInviteMutation = trpc.admin.bulkCreateInvitations.useMutation({
     onSuccess: (data) => {
       invitationsQuery.refetch();
@@ -819,7 +830,7 @@ export default function AdminDashboard() {
         {activeTab === "invitations" && (
           <>
             <div className="flex items-center justify-between mb-8">
-              <h1 className="wise-display-md">Invitations</h1>
+              <div><h1 className="wise-display-md">Invitations directes</h1><p className="mt-1 text-sm text-muted-foreground">Les invitations liées aux candidatures sont suivies dans les candidatures sélectionnées.</p></div>
               <Button className="gap-2" onClick={() => setInvitDialog(true)}>
                 <Plus className="w-4 h-4" /> Envoi en masse
               </Button>
@@ -827,9 +838,14 @@ export default function AdminDashboard() {
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4 mb-6">
-              <StatCard icon={<Mail className="w-4 h-4" />} value={invitationsQuery.data?.invitations?.length || 0} label="Total invitations" />
-              <StatCard icon={<CheckCircle className="w-4 h-4" />} value={invitationsQuery.data?.invitations?.filter((i: any) => i.status === "accepted").length || 0} label="Acceptées" />
-              <StatCard icon={<Clock className="w-4 h-4" />} value={invitationsQuery.data?.invitations?.filter((i: any) => i.status === "pending").length || 0} label="En attente" />
+              <StatCard icon={<Mail className="w-4 h-4" />} value={invitationsQuery.data?.total || 0} label="Total invitations" />
+              <StatCard icon={<CheckCircle className="w-4 h-4" />} value={invitationsQuery.data?.statusCounts?.accepted || 0} label="Acceptées" />
+              <StatCard icon={<Clock className="w-4 h-4" />} value={invitationsQuery.data?.statusCounts?.pending || 0} label="En attente" />
+            </div>
+
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="relative w-full sm:max-w-sm"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input value={invitationSearch} onChange={(event) => { setInvitationSearch(event.target.value); setInvitationPage(1); }} placeholder="Rechercher un e-mail ou un nom…" className="pl-9" /></div>
+              <p className="text-xs text-muted-foreground">Recherche, tri et pagination sont appliqués côté serveur.</p>
             </div>
 
             {/* Invitations list */}
@@ -837,11 +853,7 @@ export default function AdminDashboard() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Email</th>
-                    <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Nom</th>
-                    <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Statut</th>
-                    <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Envoyée le</th>
-                    <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Expire le</th>
+                    {([ ["email", "Email"], ["name", "Nom"], ["status", "Statut"], ["createdAt", "Envoyée le"], ["expiresAt", "Expire le"] ] as const).map(([column, label]) => <th key={column} className="text-left p-4 text-xs font-medium text-muted-foreground uppercase"><button type="button" className="inline-flex items-center gap-1 hover:text-foreground" onClick={() => { const sameColumn = invitationSortBy === column; setInvitationSortBy(column); setInvitationSortDirection(sameColumn && invitationSortDirection === "asc" ? "desc" : "asc"); setInvitationPage(1); }}>{label}{invitationSortBy === column ? (invitationSortDirection === "asc" ? " ↑" : " ↓") : " ↕"}</button></th>)}
                     <th className="text-left p-4 text-xs font-medium text-muted-foreground uppercase">Actions</th>
                   </tr>
                 </thead>
@@ -872,6 +884,10 @@ export default function AdminDashboard() {
                 </tbody>
               </table>
             </div>
+            {invitationsQuery.data && invitationsQuery.data.total > 0 && (() => {
+              const totalPages = Math.max(1, Math.ceil(invitationsQuery.data.total / invitationsQuery.data.pageSize));
+              return <div className="mt-4 flex flex-col gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between"><span className="text-muted-foreground">{invitationsQuery.data.total} invitation{invitationsQuery.data.total > 1 ? "s" : ""} · page {invitationPage}/{totalPages}</span><div className="flex gap-2"><Button variant="outline" size="sm" disabled={invitationPage <= 1 || invitationsQuery.isFetching} onClick={() => setInvitationPage((page) => page - 1)}><ChevronLeft className="mr-1 h-4 w-4" /> Précédent</Button><Button variant="outline" size="sm" disabled={invitationPage >= totalPages || invitationsQuery.isFetching} onClick={() => setInvitationPage((page) => page + 1)}>Suivant <ChevronRight className="ml-1 h-4 w-4" /></Button></div></div>;
+            })()}
           </>
         )}
 

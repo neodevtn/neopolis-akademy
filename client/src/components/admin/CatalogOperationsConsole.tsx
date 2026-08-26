@@ -44,6 +44,15 @@ export function CatalogOperationsConsole({
   const pageCount = Math.max(1, Math.ceil(rows.length / perPage));
   const shown = rows.slice((page - 1) * perPage, page * perPage);
   const statusCounts = courses.reduce<Record<LifecycleStatus, number>>((acc, course) => { acc[course.lifecycleStatus || "active"] += 1; return acc; }, { active: 0, disabled: 0, archived: 0 });
+  const certificationMetrics = (certification: any) => {
+    const courseIds = new Set(certification?.courses || []);
+    const linkedCourses = courses.filter((course) => courseIds.has(course.courseId));
+    return linkedCourses.reduce((totals, course) => ({
+      courses: totals.courses + 1,
+      lessons: totals.lessons + Number(course.lessonsCount || 0),
+      exercises: totals.exercises + Number(course.exercisesCount || 0),
+    }), { courses: 0, lessons: 0, exercises: 0 });
+  };
   const toggleAll = () => setSelected(selected.length === shown.length ? [] : shown.map((course) => course.courseId));
   const confirmLifecycle = () => {
     if (!action) return;
@@ -63,7 +72,7 @@ export function CatalogOperationsConsole({
       <div className="flex items-center justify-between border-t border-border p-4 text-sm"><p className="text-muted-foreground">{rows.length} formation{rows.length > 1 ? "s" : ""} trouvée{rows.length > 1 ? "s" : ""} · page {page}/{pageCount}</p><div className="flex gap-2"><Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((current) => current - 1)}><ChevronLeft className="h-4 w-4" /> Précédent</Button><Button variant="outline" size="sm" disabled={page >= pageCount} onClick={() => setPage((current) => current + 1)}>Suivant <ChevronRight className="h-4 w-4" /></Button></div></div>
     </section>
 
-    {catalogMode && <section className="grid gap-4 lg:grid-cols-3">{certifications.map((cert) => <article key={cert.id} className="rounded-2xl border border-border bg-card p-5"><div className="flex items-start justify-between gap-3"><div><Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary">{cert.group || "Sans catégorie"}</Badge><h3 className="mt-3 font-semibold leading-snug">{label(cert.title)}</h3></div><ShieldCheck className="h-5 w-5 text-primary" /></div><div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs"><div className="rounded-lg bg-muted/50 p-2"><strong className="block text-sm">{cert.courseCount ?? 0}</strong>cours</div><div className="rounded-lg bg-muted/50 p-2"><strong className="block text-sm">{cert.totalLessons ?? 0}</strong>leçons</div><div className="rounded-lg bg-muted/50 p-2"><strong className="block text-sm">{cert.totalExercises ?? 0}</strong>exercices</div></div></article>)}</section>}
+    {catalogMode && <section className="grid gap-4 lg:grid-cols-3">{certifications.map((cert) => { const metrics = certificationMetrics(cert); return <article key={cert.id} className="rounded-2xl border border-border bg-card p-5"><div className="flex items-start justify-between gap-3"><div><Badge variant="outline" className="border-primary/20 bg-primary/5 text-primary">{cert.group || "Sans catégorie"}</Badge><h3 className="mt-3 font-semibold leading-snug">{label(cert.title)}</h3></div><ShieldCheck className="h-5 w-5 text-primary" /></div><div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs"><div className="rounded-lg bg-muted/50 p-2"><strong className="block text-sm">{metrics.courses}</strong>cours</div><div className="rounded-lg bg-muted/50 p-2"><strong className="block text-sm">{metrics.lessons}</strong>leçons</div><div className="rounded-lg bg-muted/50 p-2"><strong className="block text-sm">{metrics.exercises}</strong>exercices</div></div></article>; })}</section>}
 
     <Dialog open={!!action} onOpenChange={(open) => { if (!open) { setAction(null); setReason(""); } }}><DialogContent><DialogHeader><DialogTitle>{title}</DialogTitle><DialogDescription>{description}</DialogDescription></DialogHeader><label className="grid gap-2 text-sm font-medium">Motif administratif <span className="font-normal text-muted-foreground">(recommandé, affiché aux apprenants si le cours est indisponible)</span><Input value={reason} onChange={(event) => setReason(event.target.value)} placeholder="Ex. Mise à jour pédagogique en cours" /></label>{action?.status === "archived" && <p className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">L’archivage est réversible. Il ne supprime pas le JSON, les médias, les résultats ni les données de progression.</p>}<DialogFooter><Button variant="outline" onClick={() => setAction(null)}>Annuler</Button><Button disabled={isSavingLifecycle} onClick={confirmLifecycle}>{isSavingLifecycle ? "Application…" : "Confirmer"}</Button></DialogFooter></DialogContent></Dialog>
   </div>;

@@ -254,17 +254,24 @@ export function isUniversalCommunication(filterValue: unknown) {
   return filter.audience === "all" && !filter.competencyId && !filter.courseId && !(Array.isArray(filter.tags) && filter.tags.length) && !(Array.isArray(filter.status) && filter.status.length) && !(Array.isArray(filter.manualEmails) && filter.manualEmails.length) && !(Array.isArray(filter.role) && filter.role.length);
 }
 
+export function isManuallyTargetedCommunication(filterValue: unknown, email: string | null | undefined) {
+  const normalizedEmail = email?.trim().toLowerCase();
+  if (!normalizedEmail) return false;
+  const filter = readCommunicationFilter(filterValue);
+  return Array.isArray(filter.manualEmails) && filter.manualEmails.some((candidate) => String(candidate).trim().toLowerCase() === normalizedEmail);
+}
+
 export async function createCommunicationReceiptsForRecipients(communicationId: number, recipients: Recipient[]) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const emails = new Set(recipients.map((recipient) => recipient.email.trim().toLowerCase()).filter(Boolean));
   if (!emails.size) return 0;
-  const learnerRows = await db.select({ id: users.id, email: users.email }).from(users).where(eq(users.role, "user"));
-  const matchingUsers = learnerRows.filter((user) => user.email && emails.has(user.email.trim().toLowerCase()));
-  for (const learner of matchingUsers) {
+  const recipientUsers = await db.select({ id: users.id, email: users.email }).from(users);
+  const matchingUsers = recipientUsers.filter((user) => user.email && emails.has(user.email.trim().toLowerCase()));
+  for (const recipient of matchingUsers) {
     const existing = await db.select({ id: communicationReceipts.id }).from(communicationReceipts)
-      .where(and(eq(communicationReceipts.communicationId, communicationId), eq(communicationReceipts.userId, learner.id))).limit(1);
-    if (!existing.length) await db.insert(communicationReceipts).values({ communicationId, userId: learner.id });
+      .where(and(eq(communicationReceipts.communicationId, communicationId), eq(communicationReceipts.userId, recipient.id))).limit(1);
+    if (!existing.length) await db.insert(communicationReceipts).values({ communicationId, userId: recipient.id });
   }
   return matchingUsers.length;
 }
@@ -272,13 +279,17 @@ export async function createCommunicationReceiptsForRecipients(communicationId: 
 export async function getLearnerCommunications(userId: number, limit = 100): Promise<LearnerCommunication[]> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const [sentCommunications, receipts] = await Promise.all([
+  const [sentCommunications, receipts, userRows] = await Promise.all([
     db.select().from(communications).where(eq(communications.status, "sent")).orderBy(desc(communications.sentAt)).limit(limit),
     db.select().from(communicationReceipts).where(eq(communicationReceipts.userId, userId)),
+    db.select({ email: users.email }).from(users).where(eq(users.id, userId)).limit(1),
   ]);
+  const learnerEmail = userRows[0]?.email?.trim().toLowerCase() || "";
   const receiptByCommunication = new Map(receipts.map((receipt) => [receipt.communicationId, receipt]));
   return sentCommunications
-    .filter((communication) => receiptByCommunication.has(communication.id) || isUniversalCommunication(communication.recipientFilter))
+    .filter((communication) => {
+      return receiptByCommunication.has(communication.id) || isUniversalCommunication(communication.recipientFilter) || isManuallyTargetedCommunication(communication.recipientFilter, learnerEmail);
+    })
     .map((communication) => {
       const receipt = receiptByCommunication.get(communication.id);
       return {

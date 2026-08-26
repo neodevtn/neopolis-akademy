@@ -12,8 +12,8 @@ import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { motion } from "framer-motion";
 import { isSequentialCourseCardLocked } from "@shared/learningAccess";
-import { usesActivityTotals } from "@shared/trainingMetrics";
 import { BrandLogo } from "@/components/BrandLogo";
+import { getCertificationCatalogMetrics, getCourseCatalogMetrics } from "@/lib/catalogMetrics";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -35,9 +35,9 @@ export default function TrainingCertification() {
 
   const cert = trainingIndex.certifications.find((c) => c.id === certId);
   const courses = cert ? trainingIndex.courses.filter((c) => c.certId === certId) : [];
+  const certificationMetrics = getCertificationCatalogMetrics(certId || "", courses);
   const courseIds = courses.map((c) => c.id);
   const isDataCampPartner = (cert as any)?.provider === "datacamp";
-  const usesActivityTotal = usesActivityTotals(cert as any);
   const dataCampActivityTotal = useMemo(() => courses.reduce((sum, course) => sum + Number((course as any).totalActivities || (course as any).chapterCount || 0), 0), [courses]);
 
   const totalLessonsMap = useMemo(() => {
@@ -222,29 +222,24 @@ export default function TrainingCertification() {
           <div className="flex items-center gap-5 mt-4 text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5">
               <BookOpen className="w-4 h-4" />
-              {cert.courseCount} {t({ en: "courses", fr: "cours" })}
+              {certificationMetrics.courseCount} {t({ en: "courses", fr: "cours" })}
             </span>
             <span className="flex items-center gap-1.5">
-              {usesActivityTotal ? dataCampActivityTotal : cert.totalExercises} {usesActivityTotal ? t({ en: "activities", fr: "activités" }) : ((cert as any).exerciseLabel ? t((cert as any).exerciseLabel) : t({ en: "exercises", fr: "exercices" }))}
+              {certificationMetrics.totalActivities} {t({ en: "activities", fr: "activités" })}
             </span>
-            {cert.totalVideos > 0 && (
+            {certificationMetrics.videoCount > 0 && (
               <span className="flex items-center gap-1.5">
                 <PlayCircle className="w-4 h-4" />
-                {cert.totalVideos} {t({ en: "videos", fr: "vid\u00e9os" })}
+                {certificationMetrics.videoCount} {t({ en: "videos", fr: "vidéos" })}
               </span>
             )}
-            {cert.totalDownloads > 0 && (
+            {certificationMetrics.downloadCount > 0 && (
               <span className="flex items-center gap-1.5">
                 <Download className="w-4 h-4" />
-                {cert.totalDownloads} {t({ en: "downloads", fr: "t\u00e9l\u00e9chargements" })}
+                {certificationMetrics.downloadCount} {t({ en: "downloads", fr: "téléchargements" })}
               </span>
             )}
           </div>
-          {(cert as any).breakdown && (
-            <p className="text-xs text-muted-foreground mt-2">
-              {t((cert as any).breakdown)}
-            </p>
-          )}
         </motion.div>
 
         {/* Certificate Download */}
@@ -391,14 +386,11 @@ export default function TrainingCertification() {
         {/* Progress Summary Cards */}
         <motion.div variants={fadeInUp} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-8">
           {(() => {
-            const totalChapters = usesActivityTotal
-              ? courses.reduce((sum, c) => sum + Number((c as any).totalActivities || (c as any).chapterCount || 0), 0)
-              : courses.reduce((sum, c) => sum + ((c as any).chapterCount || c.lessonCount || 0), 0);
+            const totalChapters = certificationMetrics.chapterCount;
             const completedChapters = Object.values(courseProgressMap).reduce((sum, p) => sum + p.completed, 0);
-            const totalExercises = courses.reduce((sum, c) => sum + (c.exerciseCount || 0), 0);
-            const totalActivities = courses.reduce((sum, c) => sum + Number((c as any).totalActivities || (c as any).chapterCount || 0), 0);
-            const totalVideos = courses.reduce((sum, c) => sum + (c.videos?.length || 0), 0);
-            const totalDownloads = courses.reduce((sum, c) => sum + ((c as any).downloadCount || 0), 0);
+            const totalExercises = certificationMetrics.exerciseCount;
+            const totalVideos = certificationMetrics.videoCount;
+            const totalDownloads = certificationMetrics.downloadCount;
             const completedCourses = courses.filter(c => (courseProgressMap[c.id]?.pct ?? 0) >= 100).length;
             return (
               <>
@@ -407,17 +399,15 @@ export default function TrainingCertification() {
                     <BookOpen className="w-4 h-4 text-primary" />
                   </div>
                   <div className="text-lg font-bold text-foreground">{completedChapters}/{totalChapters}</div>
-                  <div className="text-[11px] text-muted-foreground mt-0.5">{usesActivityTotal ? t({ en: "Activities", fr: "Activités" }) : t({ en: "Chapters", fr: "Chapitres" })}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">{t({ en: "Chapters", fr: "Chapitres" })}</div>
                 </div>
-                {!usesActivityTotal && (
-                  <div className="bg-card rounded-xl border border-border p-4 text-center">
-                    <div className="w-9 h-9 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mx-auto mb-2">
-                      <Target className="w-4 h-4 text-orange-600 dark:text-orange-400" />
-                    </div>
-                    <div className="text-lg font-bold text-foreground">{totalExercises}</div>
-                    <div className="text-[11px] text-muted-foreground mt-0.5">{(cert as any).exerciseLabel ? t((cert as any).exerciseLabel) : t({ en: "Exercises", fr: "Exercices" })}</div>
+                <div className="bg-card rounded-xl border border-border p-4 text-center">
+                  <div className="w-9 h-9 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center mx-auto mb-2">
+                    <Target className="w-4 h-4 text-orange-600 dark:text-orange-400" />
                   </div>
-                )}
+                  <div className="text-lg font-bold text-foreground">{totalExercises}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">{t({ en: "Interactive exercises", fr: "Exercices interactifs" })}</div>
+                </div>
                 <div className="bg-card rounded-xl border border-border p-4 text-center">
                   <div className="w-9 h-9 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
@@ -468,8 +458,7 @@ export default function TrainingCertification() {
         <motion.div variants={staggerContainer} className="space-y-3">
           {courses.map((course, idx) => {
             const progress = courseProgressMap[course.id] || { completed: 0, total: 0, pct: 0 };
-            const courseActivityTotal = Number((course as any).totalActivities || (course as any).chapterCount || progress.total || 0);
-            const courseChapterTotal = Number(course.lessonCount || 0);
+            const courseMetrics = getCourseCatalogMetrics(course);
             const completed = progress.pct >= 100;
             const started = progress.completed > 0;
             // Sequential locking: course is locked if previous course is not completed (except first course)
@@ -496,25 +485,20 @@ export default function TrainingCertification() {
                         <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <BookOpen className="w-3 h-3" />
-                            {usesActivityTotal ? courseChapterTotal : progress.total} {t({ en: "chapters", fr: "chapitres" })}
+                            {courseMetrics.chapterCount} {t({ en: "chapters", fr: "chapitres" })}
                           </span>
-                          {usesActivityTotal ? (
-                            <span className="flex items-center gap-1">{courseActivityTotal} {t({ en: "activities", fr: "activités" })}</span>
-                          ) : course.exerciseCount > 0 && (
-                            <span className="flex items-center gap-1">
-                              {course.exerciseCount} {(course as any).exerciseLabel ? t((course as any).exerciseLabel) : t({ en: "exercises", fr: "exercices" })}
-                            </span>
-                          )}
-                          {((course.videos && course.videos.length > 0) || (course as any).videoCount > 0) && (
+                          <span className="flex items-center gap-1">{courseMetrics.totalActivities} {t({ en: "activities", fr: "activités" })}</span>
+                          {courseMetrics.exerciseCount > 0 && <span className="flex items-center gap-1">{courseMetrics.exerciseCount} {t({ en: "interactive exercises", fr: "exercices interactifs" })}</span>}
+                          {courseMetrics.videoCount > 0 && (
                             <span className="flex items-center gap-1">
                               <PlayCircle className="w-3 h-3" />
-                              {(course as any).videoCount || course.videos?.length || 0} {t({ en: "videos", fr: "vidéos" })}
+                              {courseMetrics.videoCount} {t({ en: "videos", fr: "vidéos" })}
                             </span>
                           )}
-                          {(course as any).downloadCount > 0 && (
+                          {courseMetrics.downloadCount > 0 && (
                             <span className="flex items-center gap-1">
                               <Download className="w-3 h-3" />
-                              {(course as any).downloadCount} {t({ en: "downloads", fr: "téléchargements" })}
+                              {courseMetrics.downloadCount} {t({ en: "downloads", fr: "téléchargements" })}
                             </span>
                           )}
                         </div>
@@ -548,25 +532,20 @@ export default function TrainingCertification() {
                       <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <BookOpen className="w-3 h-3" />
-                          {usesActivityTotal ? courseChapterTotal : progress.total} {t({ en: "chapters", fr: "chapitres" })}
+                          {courseMetrics.chapterCount} {t({ en: "chapters", fr: "chapitres" })}
                         </span>
-                        {usesActivityTotal ? (
-                          <span className="flex items-center gap-1">{courseActivityTotal} {t({ en: "activities", fr: "activités" })}</span>
-                        ) : course.exerciseCount > 0 && (
-                          <span className="flex items-center gap-1">
-                            {course.exerciseCount} {(course as any).exerciseLabel ? t((course as any).exerciseLabel) : t({ en: "exercises", fr: "exercices" })}
-                          </span>
-                        )}
-                        {((course.videos && course.videos.length > 0) || (course as any).videoCount > 0) && (
+                        <span className="flex items-center gap-1">{courseMetrics.totalActivities} {t({ en: "activities", fr: "activités" })}</span>
+                        {courseMetrics.exerciseCount > 0 && <span className="flex items-center gap-1">{courseMetrics.exerciseCount} {t({ en: "interactive exercises", fr: "exercices interactifs" })}</span>}
+                        {courseMetrics.videoCount > 0 && (
                           <span className="flex items-center gap-1">
                             <PlayCircle className="w-3 h-3" />
-                            {(course as any).videoCount || course.videos?.length || 0} {t({ en: "videos", fr: "vid\u00e9os" })}
+                            {courseMetrics.videoCount} {t({ en: "videos", fr: "vidéos" })}
                           </span>
                         )}
-                        {(course as any).downloadCount > 0 && (
+                        {courseMetrics.downloadCount > 0 && (
                           <span className="flex items-center gap-1">
                             <Download className="w-3 h-3" />
-                            {(course as any).downloadCount} {t({ en: "downloads", fr: "téléchargements" })}
+                            {courseMetrics.downloadCount} {t({ en: "downloads", fr: "téléchargements" })}
                           </span>
                         )}
                       </div>

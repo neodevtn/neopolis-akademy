@@ -43,6 +43,7 @@ import { CompetencyProfile } from "@/components/CompetencyProfile";
 import { WeeklyGoalCard } from "@/components/WeeklyGoalCard";
 import { OrientationPanel } from "@/components/OrientationPanel";
 import { buildNavigationUrl } from "@shared/navigationUrls";
+import { getCertificationCatalogMetrics } from "@/lib/catalogMetrics";
 import { getLearnerDashboardTab, getLearnerOrientationAccess, type LearnerDashboardTab } from "@/lib/learnerDashboardNavigation";
 import { buildRecommendedLearningPath } from "@/lib/recommendedLearningPath";
 import { BrandLogo } from "@/components/BrandLogo";
@@ -188,7 +189,8 @@ export default function TrainingDashboard() {
       const totalLessonsMap: Record<string, number> = {};
       courses.forEach((c) => { totalLessonsMap[c.id] = c.lessonCount || 1; });
       const progressPct = getCertProgress(courseIds, totalLessonsMap);
-      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, courseCount: cert.courseCount, totalExercises: cert.totalExercises, totalVideos: cert.totalVideos, totalDownloads: (cert as any).totalDownloads || 0, exerciseLabel: (cert as any).exerciseLabel, breakdown: (cert as any).breakdown, catalogTag: (cert as any).catalogTag, progress: progressPct, completed: progressPct >= 100, group: (cert as any).group };
+      const metrics = getCertificationCatalogMetrics(cert.id, trainingIndex.courses);
+      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, ...metrics, catalogTag: (cert as any).catalogTag, progress: progressPct, completed: progressPct >= 100, group: (cert as any).group };
     });
   }, [getCertProgress]);
 
@@ -350,8 +352,8 @@ export default function TrainingDashboard() {
             {[
               { value: String(trainingIndex.certifications.length), label: { en: "Certifications", fr: "Certifications" }, icon: <GraduationCap className="w-4 h-4" /> },
               { value: String(trainingIndex.courses.length), label: { en: "Courses", fr: "Cours" }, icon: <BookOpen className="w-4 h-4" /> },
-              { value: String(trainingIndex.certifications.reduce((s: number, c: any) => s + c.totalVideos, 0)), label: { en: "Videos", fr: "Vidéos" }, icon: <Play className="w-4 h-4" /> },
-              { value: String(trainingIndex.certifications.reduce((s: number, c: any) => s + c.totalExercises, 0)) + "+", label: { en: "Exercises", fr: "Exercices" }, icon: <Dumbbell className="w-4 h-4" /> },
+              { value: String(certCompletionData.reduce((s: number, c: any) => s + c.videoCount, 0)), label: { en: "Videos", fr: "Vidéos" }, icon: <Play className="w-4 h-4" /> },
+              { value: String(certCompletionData.reduce((s: number, c: any) => s + c.exerciseCount, 0)), label: { en: "Interactive exercises", fr: "Exercices interactifs" }, icon: <Dumbbell className="w-4 h-4" /> },
             ].map((stat, i) => (
               <div key={i} className="flex items-center gap-3 bg-card rounded-xl border border-border p-3.5 shadow-sm">
                 <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary flex-shrink-0">
@@ -781,7 +783,7 @@ function CatalogTab({
       (skills.includes("prompting") || skills.includes("productivity")) && "business",
       includes("strategy", "governance", "management", "consulting") && "manager",
     ].filter(Boolean) as string[];
-    const activityCount = Number((cert as any).totalActivities || cert.totalExercises || 0);
+    const activityCount = Number(cert.totalActivities || 0);
     const duration = activityCount <= 15 ? "short" : activityCount <= 30 ? "medium" : "long";
     const level = String((cert.level as any)?.en || "beginner").toLowerCase();
     return { id: cert.id, level, skills, roles, technologies, duration };
@@ -883,20 +885,11 @@ function CatalogTab({
                 <h3 className={`text-base font-semibold text-foreground ${groupCfg.hoverText} transition-colors mb-2 leading-tight`}>{t(cert.title)}</h3>
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-2 leading-relaxed">{t(cert.description)}</p>
                 <div className="flex items-center gap-3 text-xs text-muted-foreground mb-4 flex-wrap">
-                  {(cert as any).breakdown ? (
-                    <>
-                      <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" />{(cert as any).breakdown.chapters || cert.courseCount} {t({ en: "chapters", fr: "chapitres" })}</span>
-                      <span className="flex items-center gap-1"><Dumbbell className="w-3.5 h-3.5" />{cert.totalExercises} {(cert as any).exerciseLabel ? t((cert as any).exerciseLabel) : t({ en: "exercises", fr: "exercices" })}</span>
-                      {cert.totalVideos > 0 && <span className="flex items-center gap-1"><Play className="w-3.5 h-3.5" />{cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}</span>}
-                      {(cert as any).totalDownloads > 0 && <span className="flex items-center gap-1"><Download className="w-3.5 h-3.5" />{(cert as any).totalDownloads} {t({ en: "downloads", fr: "téléchargements" })}</span>}
-                    </>
-                  ) : (
-                    <>
-                      <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" />{cert.courseCount} {t({ en: "courses", fr: "cours" })}</span>
-                      <span className="flex items-center gap-1"><Dumbbell className="w-3.5 h-3.5" />{cert.totalExercises} {(cert as any).exerciseLabel ? t((cert as any).exerciseLabel) : t({ en: "exercises", fr: "exercices" })}</span>
-                      {cert.totalVideos > 0 && <span className="flex items-center gap-1"><Play className="w-3.5 h-3.5" />{cert.totalVideos} {t({ en: "videos", fr: "vidéos" })}</span>}
-                    </>
-                  )}
+                  <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" />{cert.courseCount} {t({ en: "courses", fr: "cours" })}</span>
+                  <span className="flex items-center gap-1"><Library className="w-3.5 h-3.5" />{cert.totalActivities} {t({ en: "activities", fr: "activités" })}</span>
+                  <span className="flex items-center gap-1"><Dumbbell className="w-3.5 h-3.5" />{cert.exerciseCount} {t({ en: "interactive exercises", fr: "exercices interactifs" })}</span>
+                  {cert.videoCount > 0 && <span className="flex items-center gap-1"><Play className="w-3.5 h-3.5" />{cert.videoCount} {t({ en: "videos", fr: "vidéos" })}</span>}
+                  {cert.downloadCount > 0 && <span className="flex items-center gap-1"><Download className="w-3.5 h-3.5" />{cert.downloadCount} {t({ en: "downloads", fr: "téléchargements" })}</span>}
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden">
