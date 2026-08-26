@@ -29,3 +29,7 @@ Le test du cours MCP a notamment été aligné sur les **21 exercices interactif
 ## Couverture des rendus
 
 La revue couvre désormais les cartes du tableau de bord apprenant, les en-têtes et résumés de certification, les cartes de cours verrouillées et déverrouillées, ainsi que les cartes de catalogue de l’administration. Les compteurs d’écran et d’activité dans le lecteur sont déjà calculés à partir de `currentChapter`, `totalChapters` et de l’état de progression réel ; aucun libellé statique de type `0/13` n’a été retenu. La seule propriété `courseCount` encore lue dans le tableau de bord est la valeur dérivée produite par `catalogMetrics`, et non un attribut de certification lu directement depuis le JSON.
+
+## Vérification de production
+
+La version publiée a été rejouée sur le domaine de production avec une session administrateur. La **carte n8n du catalogue apprenant** et la **fiche de certification n8n** affichent toutes deux **32 activités**, **10 vidéos**, **22 exercices interactifs** et **3 téléchargements**. Le lecteur Novasavo affiche désormais **1/12 unités** au premier écran ; l’examen final est conservé comme étape distincte et ne gonfle plus le total des unités.

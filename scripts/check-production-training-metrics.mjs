@@ -21,6 +21,14 @@ try {
   };
 
   const n8nTitle = /Initiation.*automatisation.*workflows.*n8n/i;
+  await page.goto(`${baseUrl}/training?tab=catalog`, { waitUntil: "commit", timeout: 60_000 });
+  const catalogCard = page.locator("a[href='/training/initiation_automatisation_workflows_n8n']");
+  await catalogCard.waitFor({ state: "visible", timeout: 45_000 });
+  const catalogCardText = (await catalogCard.innerText()).replace(/\s+/g, " ");
+  for (const expected of ["32 activités", "10 vidéos", "22 exercices interactifs", "3 téléchargements"]) {
+    if (!catalogCardText.toLocaleLowerCase("fr-FR").includes(expected)) throw new Error(`La carte catalogue n8n ne présente pas la métrique calculée « ${expected} ». Contenu=${catalogCardText}`);
+  }
+
   const certification = await open("/training/initiation_automatisation_workflows_n8n", n8nTitle);
   for (const expected of ["32 activités", "10 vidéos", "22 exercices interactifs", "3 téléchargements"]) {
     if (!certification.toLocaleLowerCase("fr-FR").includes(expected)) throw new Error(`La fiche de certification n8n ne présente pas la métrique calculée « ${expected} ».`);
