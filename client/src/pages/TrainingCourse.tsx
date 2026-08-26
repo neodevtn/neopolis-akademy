@@ -318,7 +318,9 @@ export default function TrainingCourse() {
     : courseLessons.length;
   const totalLessons = totalProgressUnits;
   const isNovasavoCourse = course.id === "automatisation_comptable_ia__01";
-  const novasavoUnitsTotal = isNovasavoCourse ? Math.max(1, courseLessons.length) : totalLessons;
+  const novasavoUnitsTotal = isNovasavoCourse
+    ? Math.max(1, courseLessons.filter((lesson) => lesson.id !== "novasavo_final_exam").length)
+    : totalLessons;
   const completed = isCourseComplete(course.id, totalLessons);
   const nextUnlocked = isSingleLessonCourse
     ? (() => {

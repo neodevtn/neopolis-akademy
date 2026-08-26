@@ -14,8 +14,13 @@ try {
   if (!cookie) throw new Error("Cookie de session administrateur absent.");
   await context.addCookies([{ name: "app_session_id", value: cookie, url: baseUrl, httpOnly: true, sameSite: "Lax" }]);
   const page = await context.newPage();
-  await page.goto(`${baseUrl}/admin?tab=invitations`, { waitUntil: "domcontentloaded" });
-  await page.getByRole("heading", { name: "Invitations directes" }).waitFor({ state: "visible", timeout: 15_000 });
+  await page.goto(`${baseUrl}/admin?tab=invitations`, { waitUntil: "commit", timeout: 45_000 });
+  try {
+    await page.getByRole("heading", { name: "Invitations directes" }).waitFor({ state: "visible", timeout: 45_000 });
+  } catch {
+    const body = (await page.locator("body").innerText()).replace(/\s+/g, " ").slice(0, 800);
+    throw new Error(`Table d’invitations non rendue. URL finale=${page.url()} ; contenu=${body}`);
+  }
   const search = page.getByPlaceholder("Rechercher un e-mail ou un nom…");
   await search.waitFor({ state: "visible", timeout: 8_000 });
   const pageLabel = page.getByText(/invitations? · page 1\//i);
