@@ -48,11 +48,6 @@ const lessonFor = (unit, position) => {
       { id: `${prefix}_screen_05`, title: i18n("Scénario de validation"), type: "checkpoint", requiredBeforeAdvance: true, blocks: [
         { type: "knowledge_check", mode: "scenario", styleTone: "contrast", id: `${prefix}_scenario`, scenario: i18n(`Vous déployez une automatisation liée à ${topic}. Quelle approche est la plus sûre ?`), options: options("Tester sur un périmètre contrôlé, traiter les exceptions et faire valider les résultats."), correctAnswer: "b", explanation: i18n("Un déploiement progressif avec contrôles et traçabilité limite les risques opérationnels."), competencyPoints: 2, required: true },
       ] },
-      { id: `${prefix}_screen_06`, title: i18n("Notes et passage à la suite"), type: "teaching", requiredBeforeAdvance: false, blocks: [
-        { type: "learning_tools", toolMode: "notes", id: `${prefix}_notes`, title: i18n("Notes et signets") },
-        { type: "learning_progress", id: `${prefix}_competency_progress`, points: 3 },
-        { type: "learning_section", sectionKind: "transition", id: `${prefix}_next`, title: i18n("Passage à l’unité suivante"), body: i18n("Lorsque vous êtes prêt, poursuivez avec l’unité suivante.") },
-      ] },
     ],
   };
 };
@@ -124,9 +119,6 @@ const unitOneLesson = (unit) => {
       ] },
       { id: `${prefix}_screen_17`, title: i18n("Points clés"), type: "teaching", requiredBeforeAdvance: false, blocks: [
         { type: "learning_section", sectionKind: "summary", id: `${prefix}_key_points`, title: i18n("Points clés"), items: [i18n("La partie double garantit l’équilibre de chaque écriture."), i18n("Le cycle comptable suit huit étapes interdépendantes."), i18n("Les pièces justificatives et les contrôles constituent la base d’une automatisation fiable.")] },
-        { type: "learning_tools", toolMode: "notes", id: `${prefix}_notes`, title: i18n("Notes et signets") },
-        { type: "learning_progress", id: `${prefix}_competency_progress`, points: 6 },
-        { type: "learning_section", sectionKind: "transition", id: `${prefix}_next`, title: i18n("Passage à l’unité suivante"), body: i18n("Poursuivez avec la prochaine unité lorsque vous êtes prêt.") },
       ] },
     ],
   };

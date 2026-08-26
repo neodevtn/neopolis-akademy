@@ -13,7 +13,7 @@ const screenshotsDir = resolve("docs/block-qa-screenshots");
 const mobile = process.argv.includes("--mobile");
 const maxSamples = Number(process.env.BLOCK_QA_MAX_SAMPLES || 24);
 const sampleOffset = Number(process.env.BLOCK_QA_SAMPLE_OFFSET || 0);
-const waitBetweenSamplesMs = Number(process.env.BLOCK_QA_WAIT_MS || 6500);
+const waitBetweenSamplesMs = Number(process.env.BLOCK_QA_WAIT_MS || 0);
 
 if (!qaEmail || !qaPassword) throw new Error("QA_EMAIL et QA_PASSWORD, ou DEMO_EMAIL et DEMO_PASSWORD, sont requis.");
 
@@ -46,49 +46,49 @@ try {
   const sessionCookie = login.headers()["set-cookie"]?.match(/app_session_id=([^;]+)/)?.[1];
   if (!sessionCookie) throw new Error("La connexion démo n’a pas renvoyé de cookie de session.");
   await context.addCookies([{ name: "app_session_id", value: sessionCookie, url: baseUrl, httpOnly: true, sameSite: "Lax" }]);
-  const page = await context.newPage();
+  let page = await context.newPage();
 
-  for (const sample of samples) {
+  for (const [sampleIndex, sample] of samples.entries()) {
+    if (sampleIndex > 0 && sampleIndex % 8 === 0) {
+      await page.close().catch(() => undefined);
+      page = await context.newPage();
+    }
     const courseMeta = courseIndex.get(sample.courseId);
     const certId = courseMeta?.certId || sample.courseId.replace(/__\d+$/, "");
     const url = `${baseUrl}/training/${certId}/${sample.courseId}?lesson=${sample.lessonIndex}&chapter=${sample.chapterIndex}`;
-    await page.goto(url, { waitUntil: "domcontentloaded" });
-    await page.waitForFunction(() => document.body.innerText.trim().length > 150 || /too many requests/i.test(document.body.innerText), { timeout: 8000 }).catch(() => undefined);
-    await page.waitForTimeout(400);
-    const acceptCookies = page.getByRole("button", { name: "Accepter" });
-    if (await acceptCookies.count()) await acceptCookies.first().click().catch(() => undefined);
-    const locked = await page.getByRole("heading", { name: "Unité verrouillée" }).count() > 0;
-    const selector = `[data-block-type="${sample.type}"]`;
-    const rendered = await page.locator(selector).count();
-    const measurement = await page.evaluate(() => ({
-      clientWidth: document.documentElement.clientWidth,
-      scrollWidth: document.documentElement.scrollWidth,
-    }));
-    const bodyText = await page.locator("body").innerText().catch(() => "");
-    const rateLimited = /too many requests|trop de requêtes/i.test(bodyText);
-    const screenshot = resolve(screenshotsDir, `${mobile ? "mobile" : "desktop"}-${sample.type}-${sample.courseId}-l${sample.lessonIndex + 1}-e${sample.chapterIndex + 1}.png`);
-    await page.screenshot({ path: screenshot, fullPage: false });
-    results.push({
-      type: sample.type,
-      courseId: sample.courseId,
-      lessonIndex: sample.lessonIndex,
-      chapterIndex: sample.chapterIndex,
-      required: sample.required,
-      locked,
-      url,
-      finalUrl: page.url(),
-      bodyText: bodyText.slice(0, 500),
-      rendered,
-      rateLimited,
-      clientWidth: measurement.clientWidth,
-      scrollWidth: measurement.scrollWidth,
-      overflow: measurement.scrollWidth > measurement.clientWidth + 2,
-      screenshot,
-    });
-    if (rateLimited) {
-      await page.waitForTimeout(waitBetweenSamplesMs);
-    } else {
-      await page.waitForTimeout(waitBetweenSamplesMs);
+    let lastError = "";
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        await page.goto(url, { waitUntil: "domcontentloaded" });
+        await page.waitForFunction(() => document.body.innerText.trim().length > 150 || /too many requests|cours verrouillé|unité verrouillée/i.test(document.body.innerText), { timeout: 10000 }).catch(() => undefined);
+        await page.waitForTimeout(400);
+        const acceptCookies = page.getByRole("button", { name: "Accepter" });
+        if (await acceptCookies.count()) await acceptCookies.first().click().catch(() => undefined);
+        let bodyText = await page.locator("body").innerText().catch(() => "");
+        if (!bodyText.trim()) {
+          await page.reload({ waitUntil: "domcontentloaded" });
+          await page.waitForFunction(() => document.body.innerText.trim().length > 150 || /too many requests|cours verrouillé|unité verrouillée/i.test(document.body.innerText), { timeout: 10000 }).catch(() => undefined);
+          bodyText = await page.locator("body").innerText().catch(() => "");
+        }
+        const locked = /(?:Cours|Unité) verrouillé(?:e)?/i.test(bodyText);
+        const selector = `[data-block-type="${sample.type}"]`;
+        const rendered = await page.locator(selector).count();
+        const measurement = await page.evaluate(() => ({ clientWidth: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth }));
+        const rateLimited = /too many requests|trop de requêtes/i.test(bodyText);
+        const screenshot = resolve(screenshotsDir, `${mobile ? "mobile" : "desktop"}-${sample.type}-${sample.courseId}-l${sample.lessonIndex + 1}-e${sample.chapterIndex + 1}.png`);
+        await page.screenshot({ path: screenshot, fullPage: false });
+        results.push({ type: sample.type, courseId: sample.courseId, lessonIndex: sample.lessonIndex, chapterIndex: sample.chapterIndex, required: sample.required, locked, url, finalUrl: page.url(), bodyText: bodyText.slice(0, 500), rendered, rateLimited, clientWidth: measurement.clientWidth, scrollWidth: measurement.scrollWidth, overflow: measurement.scrollWidth > measurement.clientWidth + 2, screenshot });
+        await page.waitForTimeout(waitBetweenSamplesMs);
+        lastError = "";
+        break;
+      } catch (error) {
+        lastError = error instanceof Error ? error.message : "Erreur inconnue de navigateur";
+        await page.close().catch(() => undefined);
+        page = await context.newPage();
+      }
+    }
+    if (lastError) {
+      results.push({ type: sample.type, courseId: sample.courseId, lessonIndex: sample.lessonIndex, chapterIndex: sample.chapterIndex, required: sample.required, locked: false, url, finalUrl: "", bodyText: lastError, rendered: 0, rateLimited: false, clientWidth: 0, scrollWidth: 0, overflow: false, screenshot: "" });
     }
   }
   await context.close();

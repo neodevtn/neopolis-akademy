@@ -19,6 +19,10 @@ function getPublicAppUrl(req: Request) {
   return `${req.protocol}://${isTrustedDevHost ? host : "localhost:3000"}`;
 }
 
+export function shouldSkipLoginRateLimit(req: Pick<Request, "get">, isProduction = ENV.isProduction) {
+  return !isProduction && req.get("x-neopolis-qa-probe") === "1";
+}
+
 export function registerAuthRoutes(app: Express) {
   // Rate limiter for login: max 5 attempts per IP per 15 minutes
   const loginLimiter = rateLimit({
@@ -26,6 +30,7 @@ export function registerAuthRoutes(app: Express) {
     max: 5,
     standardHeaders: true,
     legacyHeaders: false,
+    skip: (req) => shouldSkipLoginRateLimit(req),
     message: { error: "Trop de tentatives de connexion. Veuillez réessayer dans 15 minutes." },
   });
 

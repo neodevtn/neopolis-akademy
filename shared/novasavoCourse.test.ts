@@ -14,18 +14,20 @@ describe("cours Novasavo paginé", () => {
     expect(course.lessons.at(-1).id).toBe("novasavo_final_exam");
   });
 
-  it("reconstruit l’unité 1 en dix-sept écrans courts et conserve les autres unités paginées", () => {
+  it("reconstruit l’unité 1 en dix-sept écrans courts et retire les écrans artificiels des autres unités", () => {
     expect(course.lessons[0].chapters).toHaveLength(17);
-    expect(course.lessons.slice(1, 12).every((lesson: any) => lesson.chapters.length === 6)).toBe(true);
+    expect(course.lessons.slice(1, 12).every((lesson: any) => lesson.chapters.length === 5)).toBe(true);
     expect(course.lessons[0].chapters.filter((chapter: any) => chapter.requiredBeforeAdvance)).toHaveLength(4);
   });
 
   it("utilise des familles génériques déclarées dans la bibliothèque standard", () => {
     const types = new Set(course.lessons.flatMap((lesson: any) => lesson.chapters.flatMap((chapter: any) => chapter.blocks.map((block: any) => block.type))));
-    ["learning_section", "knowledge_check", "sequence_visual", "comparison_panel", "learning_tools", "learning_progress"].forEach((type) => {
+    ["learning_section", "knowledge_check", "sequence_visual", "comparison_panel", "learning_tools"].forEach((type) => {
       expect(types.has(type)).toBe(true);
       expect(getBlockDef(type)).toBeDefined();
     });
+    expect(types.has("learning_progress")).toBe(false);
+    expect(course.lessons.flatMap((lesson: any) => lesson.chapters.flatMap((chapter: any) => chapter.blocks)).some((block: any) => block.toolMode === "notes")).toBe(false);
     ["unit_hero_blue", "inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback", "timeline_step_cards", "process_flow_diagram", "mistake_correction_pairs", "ai_assistant_prompt_panel", "accounting_comparison_visual", "key_points_summary", "notes_highlights_bookmarks_panel", "competency_progress_hud"].forEach((type) => expect(types.has(type)).toBe(false));
   });
 

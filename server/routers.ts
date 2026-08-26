@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getExamSession, saveExamSession, clearExamSession, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients, getReferralProgramForUser, getReferralAdminOverview, recordReferralConversion, updateReferralCampaign, updateReferralConversionStatus } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getExamSession, saveExamSession, clearExamSession, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients, getReferralProgramForUser, getReferralAdminOverview, recordReferralConversion, updateReferralCampaign, updateReferralConversionStatus, saveAiResponseEvaluation } from "./db";
 import { awardCertification, awardCourseCompletionBadge } from "./achievementService";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
@@ -24,6 +24,7 @@ import { backfillCompetencies } from "./competencyBackfill";
 import { completeLearnerOrientation, createLegacyOrientationReminderDraft, createOrientationProposal, getAdminOrientationOverview, getLearnerOrientation, respondToOrientationProposal, saveLearnerOrientationGoals } from "./orientationService";
 import { isCriticalCourseFeedback } from "../shared/courseFeedback";
 import { invokeLLM } from "./_core/llm";
+import { evaluateFreeResponseWithOpenRouter } from "./openrouterEvaluation";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -688,43 +689,60 @@ export const appRouter = router({
         lang: z.string().default("en"),
       }))
       .mutation(async ({ input }) => {
-        const { invokeLLM } = await import("./_core/llm");
-        const systemPrompt = `You are an expert educator evaluating a student's answer. 
-Evaluate the answer based on the rubric provided. Return a JSON object with:
-- score: number (0 to ${input.maxScore})
-- feedback: string (2-3 sentences of overall feedback in ${input.lang === "fr" ? "French" : "English"})
-- strengths: string[] (1-3 bullet points of what was done well, in ${input.lang === "fr" ? "French" : "English"})
-- improvements: string[] (1-3 bullet points of what could be improved, in ${input.lang === "fr" ? "French" : "English"})
-
-Rubric: ${input.rubric}
-
-IMPORTANT: Return ONLY valid JSON, no markdown formatting.`;
-        const userMessage = `Question: ${input.prompt}\n\nStudent's answer: ${input.answer}`;
         try {
-          const result = await invokeLLM({
-            messages: [
-              { role: "system", content: systemPrompt },
-              { role: "user", content: userMessage },
-            ],
-            model: "claude-sonnet-4-20250514",
-            max_tokens: 1000,
+          return await evaluateFreeResponseWithOpenRouter({
+            prompt: input.prompt,
+            answer: input.answer,
+            criteria: [{ id: "rubric", label: input.lang === "fr" ? "Critères de réussite" : "Success criteria", description: input.rubric, weight: 1 }],
+            maxScore: input.maxScore,
+            language: input.lang === "fr" ? "fr" : "en",
           });
-          const msg = result.choices?.[0]?.message;
-          const text = typeof msg?.content === "string" ? msg.content : Array.isArray(msg?.content) ? (msg.content.find((c: any) => c.type === "text") as any)?.text || "" : "";
-          const jsonMatch = text.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            const parsed = JSON.parse(jsonMatch[0]);
-            return {
-              score: Math.min(input.maxScore, Math.max(0, parsed.score || 0)),
-              feedback: parsed.feedback || "",
-              strengths: parsed.strengths || [],
-              improvements: parsed.improvements || [],
-            };
-          }
-          return { score: 0, feedback: text.slice(0, 300), strengths: [] as string[], improvements: [] as string[] };
-        } catch (err: any) {
-          return { score: 0, feedback: `Evaluation error: ${err.message}`, strengths: [] as string[], improvements: [] as string[] };
+        } catch {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: input.lang === "fr" ? "L’évaluation est momentanément indisponible. Veuillez réessayer." : "The evaluation is temporarily unavailable. Please try again." });
         }
+      }),
+    evaluateFreeResponse: protectedProcedure
+      .input(z.object({
+        certificationId: z.string().max(200).optional(),
+        courseId: z.string().min(2).max(200),
+        lessonIndex: z.number().int().min(0),
+        chapterIndex: z.number().int().min(0),
+        blockId: z.string().min(2).max(255),
+        prompt: z.string().trim().min(12).max(6000),
+        answer: z.string().trim().min(20).max(12000),
+        rubric: z.array(z.object({ id: z.string().min(2).max(80), label: z.string().min(2).max(160), description: z.string().min(5).max(1000), weight: z.number().positive().max(100) })).min(1).max(8),
+        maxScore: z.number().min(1).max(100).default(10),
+        passingScore: z.number().min(0).max(100),
+        lang: z.enum(["fr", "en"]).default("fr"),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        if (input.passingScore > input.maxScore) throw new TRPCError({ code: "BAD_REQUEST", message: "Le seuil de réussite ne peut pas dépasser le score maximal." });
+        let evaluation;
+        try {
+          evaluation = await evaluateFreeResponseWithOpenRouter({ prompt: input.prompt, answer: input.answer, criteria: input.rubric, maxScore: input.maxScore, language: input.lang });
+        } catch {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: input.lang === "fr" ? "L’évaluation est momentanément indisponible. Votre réponse n’a pas été enregistrée ; veuillez réessayer." : "The evaluation is temporarily unavailable. Your response was not recorded; please try again." });
+        }
+        const passed = evaluation.score >= input.passingScore;
+        const persistence = await saveAiResponseEvaluation({
+          userId: ctx.user.id,
+          certificationId: input.certificationId,
+          courseId: input.courseId,
+          lessonIndex: input.lessonIndex,
+          chapterIndex: input.chapterIndex,
+          blockId: input.blockId,
+          answer: input.answer,
+          rubric: input.rubric,
+          score: evaluation.score,
+          maxScore: input.maxScore,
+          passingScore: input.passingScore,
+          passed,
+          feedback: evaluation.feedback,
+          strengths: evaluation.strengths,
+          improvements: evaluation.improvements,
+          model: "google/gemini-3.7-flash",
+        });
+        return { ...evaluation, passed, attemptNumber: persistence.attemptNumber, model: "google/gemini-3.7-flash" };
       }),
   }),
 

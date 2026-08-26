@@ -2247,3 +2247,13 @@
 - [x] Ajouter une commande de pipeline qui orchestre la validation des cours, les tests et la matrice QA desktop/mobile
 - [x] Définir les seuils bloquants, rapports exploitables et conditions explicites de publication
 - [x] Tester, documenter puis publier l’intégration du pipeline QA
+
+## Audit pédagogique Novasavo et évaluation IA
+- [x] Auditer tous les écrans et blocs de « Automatisation comptable par l’IA » afin d’écarter les notions incompatibles avec Neopolis
+- [x] Identifier les réponses libres réellement évaluables et définir pour chacune une rubrique explicite, un seuil et un feedback attendu — aucune activité source rubricée utilisable n’a été trouvée ; aucune activité IA fictive ne sera ajoutée au cours
+- [x] Retirer du générateur canonique les 12 écrans artificiels de notes/progression/transition et régénérer le JSON en conservant 12 unités, 77 écrans et 31 contrôles déterministes obligatoires
+- [x] Intégrer une évaluation IA serveur sécurisée via OpenRouter, structurée, traçable et contrôlée par l’apprenant — critères explicites, seuil, feedback transparent, tentatives immuables et modèle consignés ; tests de sécurité et de bornage ajoutés
+- [x] Régénérer la matrice QA depuis les JSON actuels et corriger la sonde de prévisualisation pour distinguer les verrouillages légitimes ; pipeline `qa:publish` validé desktop et mobile
+- [x] Rejouer le parcours Novasavo : 77 écrans rendus en audit administrateur, quatre interactions obligatoires de l’unité 1 déverrouillées en session apprenant et absence d’overflow mobile vérifiée à 390 × 844 et 375 × 667
+- [ ] Rejouer l’intégralité du parcours Novasavo avec contrôle de progression, interactions, feedback et navigation
+- [ ] Préparer l’audit et les adaptations par vagues, en priorité pour Anthropic puis DataCamp

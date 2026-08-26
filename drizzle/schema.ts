@@ -451,6 +451,36 @@ export type ChapterProgress = typeof chapterProgress.$inferSelect;
 export type InsertChapterProgress = typeof chapterProgress.$inferInsert;
 
 /**
+ * Immutable, reviewable outcomes from AI-assisted free-response assessments.
+ * The rubric lives with each attempt to keep feedback auditable after course edits.
+ */
+export const aiResponseEvaluations = mysqlTable("ai_response_evaluations", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  certificationId: varchar("certificationId", { length: 200 }),
+  courseId: varchar("courseId", { length: 200 }).notNull(),
+  lessonIndex: int("lessonIndex").notNull(),
+  chapterIndex: int("chapterIndex").notNull(),
+  blockId: varchar("blockId", { length: 255 }).notNull(),
+  attemptNumber: int("attemptNumber").notNull(),
+  answer: text("answer").notNull(),
+  rubric: json("rubric").notNull(),
+  score: decimal("score", { precision: 6, scale: 2 }).notNull(),
+  maxScore: decimal("maxScore", { precision: 6, scale: 2 }).notNull(),
+  passingScore: decimal("passingScore", { precision: 6, scale: 2 }).notNull(),
+  passed: int("passed").notNull().default(0),
+  feedback: text("feedback").notNull(),
+  strengths: json("strengths"),
+  improvements: json("improvements"),
+  model: varchar("model", { length: 160 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => [
+  index("ai_response_evaluation_block_idx").on(table.userId, table.courseId, table.blockId),
+  index("ai_response_evaluation_course_idx").on(table.courseId, table.lessonIndex, table.chapterIndex),
+]);
+export type AiResponseEvaluation = typeof aiResponseEvaluations.$inferSelect;
+
+/**
  * User invitations - tracks pending invitations sent by admins
  */
 export const userInvitations = mysqlTable("user_invitations", {

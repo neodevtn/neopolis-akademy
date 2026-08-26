@@ -406,12 +406,14 @@ const aiEvaluationBlock: BlockTypeDefinition = {
   schema: [
     { key: "title", label: { en: "Title", fr: "Titre" }, type: "i18n_text", required: true },
     { key: "prompt", label: { en: "Question/Prompt", fr: "Question/Consigne" }, type: "i18n_richtext", required: true },
-    { key: "rubric", label: { en: "Evaluation rubric (for AI)", fr: "Grille d'évaluation (pour l'IA)" }, type: "textarea", required: true, helpText: { en: "Criteria the AI uses to evaluate the answer", fr: "Critères utilisés par l'IA pour évaluer la réponse" } },
+    { key: "rubricCriteria", label: { en: "Structured evaluation criteria", fr: "Critères d’évaluation structurés" }, type: "json", required: true, helpText: { en: "Array of {id, label, description, weight}. Only explicit criteria are used and displayed to the learner.", fr: "Tableau de {id, label, description, weight}. Seuls ces critères explicites sont utilisés et affichés à l’apprenant." } },
+    { key: "passingScore", label: { en: "Passing score", fr: "Score minimal de réussite" }, type: "number", defaultValue: 7, helpText: { en: "The learner can continue only after reaching this score.", fr: "L’apprenant peut continuer uniquement après avoir atteint ce score." } },
+    { key: "rubric", label: { en: "Legacy rubric (optional)", fr: "Grille historique (optionnelle)" }, type: "textarea", helpText: { en: "Kept only for backward compatibility. New activities must use structured criteria above.", fr: "Conservée uniquement pour compatibilité. Les nouvelles activités doivent utiliser les critères structurés ci-dessus." } },
     { key: "maxScore", label: { en: "Max score", fr: "Score maximum" }, type: "number", defaultValue: 10 },
     { key: "sampleAnswer", label: { en: "Sample good answer", fr: "Exemple de bonne réponse" }, type: "i18n_textarea" },
     { key: "minWords", label: { en: "Minimum word count", fr: "Nombre minimum de mots" }, type: "number", defaultValue: 50 },
   ],
-  defaultData: { type: "ai_evaluation", title: { en: "", fr: "" }, prompt: { en: "", fr: "" }, rubric: "", maxScore: 10, sampleAnswer: { en: "", fr: "" }, minWords: 50 },
+  defaultData: { type: "ai_evaluation", title: { en: "", fr: "" }, prompt: { en: "", fr: "" }, rubricCriteria: [], passingScore: 7, rubric: "", maxScore: 10, sampleAnswer: { en: "", fr: "" }, minWords: 50 },
 };
 
 const calloutBlock: BlockTypeDefinition = {

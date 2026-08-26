@@ -1,7 +1,7 @@
 import { eq, desc, asc, sql, and, or, like, count, gt, isNull, isNotNull, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { customAlphabet } from "nanoid";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog, learnerGroups, learnerGroupMemberships, learnerGroupCourses, courseLifecycleStates, invitationGroups, referralCampaigns, referralCodes, referralConversions } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog, learnerGroups, learnerGroupMemberships, learnerGroupCourses, courseLifecycleStates, invitationGroups, referralCampaigns, referralCodes, referralConversions, aiResponseEvaluations } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { engagementBucket, firstAttemptRate, isPedagogicalReportingEvent } from "./reportingMetrics";
 import { learnerReportingLabel } from "@shared/learnerReportingLabel";
@@ -1514,4 +1514,65 @@ export async function getLearnerLearningEvents(userId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(learningEvents).where(eq(learningEvents.userId, userId)).orderBy(desc(learningEvents.createdAt));
+}
+
+export async function saveAiResponseEvaluation(input: {
+  userId: number;
+  certificationId?: string;
+  courseId: string;
+  lessonIndex: number;
+  chapterIndex: number;
+  blockId: string;
+  answer: string;
+  rubric: unknown;
+  score: number;
+  maxScore: number;
+  passingScore: number;
+  passed: boolean;
+  feedback: string;
+  strengths: string[];
+  improvements: string[];
+  model: string;
+}) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const previous = await db.select({ total: count() }).from(aiResponseEvaluations).where(and(
+    eq(aiResponseEvaluations.userId, input.userId),
+    eq(aiResponseEvaluations.courseId, input.courseId),
+    eq(aiResponseEvaluations.blockId, input.blockId),
+  ));
+  const attemptNumber = Number(previous[0]?.total || 0) + 1;
+  const result = await db.insert(aiResponseEvaluations).values({
+    userId: input.userId,
+    certificationId: input.certificationId || null,
+    courseId: input.courseId,
+    lessonIndex: input.lessonIndex,
+    chapterIndex: input.chapterIndex,
+    blockId: input.blockId,
+    attemptNumber,
+    answer: input.answer,
+    rubric: input.rubric,
+    score: input.score.toFixed(2),
+    maxScore: input.maxScore.toFixed(2),
+    passingScore: input.passingScore.toFixed(2),
+    passed: input.passed ? 1 : 0,
+    feedback: input.feedback,
+    strengths: input.strengths,
+    improvements: input.improvements,
+    model: input.model,
+  });
+  await recordLearningEvent({
+    userId: input.userId,
+    eventType: "ai_response_evaluated",
+    certificationId: input.certificationId,
+    courseId: input.courseId,
+    lessonIndex: input.lessonIndex,
+    chapterIndex: input.chapterIndex,
+    exerciseId: input.blockId,
+    score: Math.round((input.score / Math.max(1, input.maxScore)) * 100),
+    success: input.passed ? 1 : 0,
+    attemptNumber,
+    metadata: { model: input.model, passingScore: input.passingScore },
+  });
+  return { id: result[0].insertId, attemptNumber };
 }

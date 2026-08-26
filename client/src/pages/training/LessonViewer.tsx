@@ -914,7 +914,7 @@ export default function LessonViewer({
         return <OrderingBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setMatchingCompleted((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
       }
       case "ai_evaluation": {
-        return <AiEvaluationBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+        return <AiEvaluationBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} evaluationContext={{ certificationId: certId, courseId, lessonIndex, chapterIndex: currentChapter }} onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
       }
       case "multi_choice_exercise": {
         return <MultiChoiceBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
