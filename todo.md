@@ -1,5 +1,14 @@
 # Project TODO — Neopolis Akademy
 
+## Correctif global — Assistant pédagogique contextuel
+- [x] Auditer tous les rendus, points d’entrée et réponses d’assistant pédagogique afin d’identifier toute réponse simulée, préremplie ou déconnectée de la requête saisie — 12 panneaux actuellement présents, tous dans Novasavo
+- [x] Faire répondre l’assistant à la requête réellement envoyée, avec refus court et recentrage pédagogique pour les demandes hors périmètre
+- [x] Empêcher qu’une question suggérée soit traitée comme une requête apprenant tant qu’elle n’a pas été explicitement sélectionnée
+- [x] Vérifier la visibilité des contrôles de révision/édition entre apprenant et administrateur — contrôles cachés côté apprenant et visibles côté administrateur
+- [x] Supprimer toute hauteur ou contrainte de débordement qui tronque la réponse d’un assistant, avec une lecture complète et accessible sur mobile comme desktop
+- [x] Rendre le Markdown des réponses d’assistant de façon sûre et lisible afin de ne plus afficher de syntaxe brute telle que `**texte**`
+- [x] Ajouter des tests de non-régression, rejouer les assistants concernés, exécuter la QA de publication et publier le correctif — tests unitaires, 12 panneaux vérifiés, contrôle apprenant/admin et QA desktop/mobile réussis
+
 ## Configuration & Thème
 - [x] Configurer le thème dark (navy/rouge/blanc) dans index.css
 - [x] Ajouter les Google Fonts (Inter/Montserrat)

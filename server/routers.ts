@@ -25,6 +25,7 @@ import { completeLearnerOrientation, createLegacyOrientationReminderDraft, creat
 import { isCriticalCourseFeedback } from "../shared/courseFeedback";
 import { invokeLLM } from "./_core/llm";
 import { evaluateFreeResponseWithOpenRouter } from "./openrouterEvaluation";
+import { buildCourseAssistantMessages, extractCourseAssistantText, isClearlyOutOfScopeCourseAssistantQuestion, outOfScopeCourseAssistantReply } from "./courseAssistant";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -36,24 +37,23 @@ export const appRouter = router({
   videoRecommendations: videoRecommendationsRouter,
   courseAssistant: router({
     ask: protectedProcedure.input(z.object({
-      courseId: z.literal("automatisation_comptable_ia__01"),
+      courseId: z.string().trim().min(2).max(200),
       lessonTitle: z.string().trim().min(2).max(240),
       screenTitle: z.string().trim().min(2).max(240),
       context: z.string().trim().min(2).max(2400),
       question: z.string().trim().min(2).max(1000),
     })).mutation(async ({ input }) => {
+      if (isClearlyOutOfScopeCourseAssistantQuestion(input.question)) {
+        return { answer: outOfScopeCourseAssistantReply(input), inScope: false };
+      }
       const response = await invokeLLM({
-        model: "gpt-5-mini",
-        maxTokens: 700,
-        messages: [
-          { role: "system", content: "Vous êtes l’assistant pédagogique du cours Neopolis Automatisation comptable par l’IA. Répondez en français avec pédagogie, sans dépasser 250 mots. Expliquez des notions générales et des contrôles à appliquer. Ne donnez jamais de conseil comptable, fiscal, juridique ou financier personnalisé ; n’acceptez pas de données sensibles et recommandez un professionnel qualifié pour toute décision réelle." },
-          { role: "user", content: `Unité : ${input.lessonTitle}\nÉcran : ${input.screenTitle}\nContexte : ${input.context}\n\nQuestion : ${input.question}` },
-        ],
+        model: "claude-haiku-4-5",
+        maxTokens: 420,
+        messages: buildCourseAssistantMessages(input),
       });
-      const content = response.choices?.[0]?.message?.content;
-      const answer = typeof content === "string" ? content.trim() : "";
+      const answer = extractCourseAssistantText(response.choices?.[0]?.message?.content);
       if (!answer) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "L’assistant n’a pas produit de réponse exploitable." });
-      return { answer };
+      return { answer, inScope: true };
     }),
   }),
   orientation: router({

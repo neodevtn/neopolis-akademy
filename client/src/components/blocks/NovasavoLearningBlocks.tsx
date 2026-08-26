@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 
@@ -8,17 +8,45 @@ const value = (item: unknown, lang: string) => {
   return "";
 };
 
+function renderAssistantInlineMarkdown(text: string) {
+  return text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g).map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) return <strong key={index}>{part.slice(2, -2)}</strong>;
+    if (part.startsWith("`") && part.endsWith("`")) return <code key={index} className="rounded bg-white/10 px-1 py-0.5 text-[0.9em]">{part.slice(1, -1)}</code>;
+    return part;
+  });
+}
+
+function AssistantMarkdown({ content }: { content: string }) {
+  const blocks = content.trim().split(/\n\s*\n/).filter(Boolean);
+  return <div className="space-y-3 text-sm leading-relaxed">
+    {blocks.map((block, index) => {
+      const lines = block.split("\n").filter(Boolean);
+      const isUnorderedList = lines.every((line) => /^[-*]\s+/.test(line));
+      const isOrderedList = lines.every((line) => /^\d+[.)]\s+/.test(line));
+      if (isUnorderedList) return <ul key={index} className="list-disc space-y-1 pl-5">{lines.map((line, lineIndex) => <li key={lineIndex}>{renderAssistantInlineMarkdown(line.replace(/^[-*]\s+/, ""))}</li>)}</ul>;
+      if (isOrderedList) return <ol key={index} className="list-decimal space-y-1 pl-5">{lines.map((line, lineIndex) => <li key={lineIndex}>{renderAssistantInlineMarkdown(line.replace(/^\d+[.)]\s+/, ""))}</li>)}</ol>;
+      return <p key={index}>{lines.map((line, lineIndex) => <span key={lineIndex}>{lineIndex > 0 && <br />}{renderAssistantInlineMarkdown(line)}</span>)}</p>;
+    })}
+  </div>;
+}
+
 export function NovasavoLearningBlock({ block, lang, onComplete, courseId, lessonTitle, screenTitle }: { block: any; lang: string; onComplete: (id: string, isCorrect: boolean) => void; courseId?: string; lessonTitle?: string; screenTitle?: string }) {
   const [answer, setAnswer] = useState<string | null>(null);
   const [notes, setNotes] = useState("");
   const [bookmarked, setBookmarked] = useState(false);
   const [assistantQuestion, setAssistantQuestion] = useState("");
+  const [submittedAssistantQuestion, setSubmittedAssistantQuestion] = useState("");
+  const assistantAnswerRef = useRef<HTMLDivElement>(null);
   const assistantMutation = trpc.courseAssistant.ask.useMutation();
   const title = value(block.title, lang);
   const body = value(block.body || block.description, lang);
   const options = useMemo(() => (block.options || []).map((option: any) => ({ ...option, label: value(option.text || option.label, lang) })), [block.options, lang]);
   const complete = (selected: string) => { setAnswer(selected); onComplete(block.id || block.type, selected === block.correctAnswer); };
   const correct = answer !== null && answer === block.correctAnswer;
+
+  useEffect(() => {
+    if (assistantMutation.data?.answer) assistantAnswerRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [assistantMutation.data?.answer]);
 
   if (block.type === "unit_hero_blue") return <section className="w-full min-w-0 max-w-full overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 p-4 text-white sm:p-7 md:p-10"><p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-100">Finance & Comptabilité · Unité {block.unitNumber}/12</p><h1 className="mt-4 max-w-3xl break-words text-3xl font-extrabold leading-tight md:text-5xl">{title}</h1><p className="mt-4 max-w-2xl break-words text-lg text-blue-50">{body}</p><div className="mt-7 flex flex-wrap items-center gap-3 text-sm font-semibold text-blue-100"><span>≈ {block.duration || "20 min"}</span><span className="h-1 w-12 shrink-0 rounded-full bg-white/40 sm:w-20" /><span>Progression séquentielle</span></div></section>;
   if (block.type === "learning_objectives_panel") return <section className="grid gap-5 rounded-2xl border border-border bg-card p-6 md:grid-cols-[180px_1fr]"><h2 className="text-xl font-bold text-foreground">Cette unité va vous apporter</h2><ul className="space-y-3">{(block.items || []).map((item: any, index: number) => <li key={index} className="flex gap-3 text-sm leading-relaxed text-muted-foreground"><span className="font-bold text-primary">{String(index + 1).padStart(2, "0")}</span><span>{value(item, lang)}</span></li>)}</ul></section>;
@@ -31,9 +59,12 @@ export function NovasavoLearningBlock({ block, lang, onComplete, courseId, lesso
     const context = value(block.prompt, lang) || body;
     const ask = () => {
       if (!assistantQuestion.trim() || !courseId || !lessonTitle || !screenTitle) return;
-      assistantMutation.mutate({ courseId: "automatisation_comptable_ia__01", lessonTitle, screenTitle, context, question: assistantQuestion.trim() });
+      const question = assistantQuestion.trim();
+      setSubmittedAssistantQuestion(question);
+      assistantMutation.reset();
+      assistantMutation.mutate({ courseId, lessonTitle, screenTitle, context, question });
     };
-    return <section className="w-full min-w-0 max-w-full rounded-2xl bg-slate-950 p-4 text-white sm:p-6"><p className="text-xs font-bold uppercase tracking-wider text-blue-300">Demandez à votre assistant</p><h2 className="mt-2 break-words text-xl font-bold">{title}</h2><p className="mt-4 break-words rounded-xl bg-white/10 p-4 text-sm leading-relaxed text-slate-100">{context}</p><div className="mt-4 flex flex-wrap gap-2"><Button className="max-w-full whitespace-normal" variant="outline" onClick={() => navigator.clipboard?.writeText(context)}>Copier le prompt</Button><Button className="max-w-full whitespace-normal" variant="outline" onClick={() => setAssistantQuestion("Peux-tu donner un exemple simple et rappeler le contrôle humain à conserver ?")}>Question suggérée</Button></div><div className="mt-4 flex min-w-0 flex-col gap-2 sm:flex-row"><input value={assistantQuestion} onChange={(event) => setAssistantQuestion(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") ask(); }} className="min-w-0 w-full flex-1 rounded-lg border border-white/20 bg-white px-3 py-2 text-sm text-slate-950" placeholder="Posez une autre question…" /><Button className="w-full sm:w-auto" disabled={!assistantQuestion.trim() || !courseId || assistantMutation.isPending} onClick={ask}>{assistantMutation.isPending ? "Réponse…" : "Demander"}</Button></div>{assistantMutation.data?.answer && <div className="mt-4 break-words rounded-xl border border-blue-300/30 bg-blue-500/10 p-4 text-sm leading-relaxed text-blue-50"><strong className="text-blue-200">Assistant pédagogique</strong><p className="mt-1 whitespace-pre-wrap">{assistantMutation.data.answer}</p></div>}{assistantMutation.error && <p className="mt-3 text-sm text-rose-200">Réponse indisponible. Utilisez le prompt avec un assistant autorisé par votre organisation.</p>}</section>;
+    return <section className="w-full min-w-0 max-w-full rounded-2xl bg-slate-950 p-4 text-white sm:p-6"><p className="text-xs font-bold uppercase tracking-wider text-blue-300">Demandez à votre assistant</p><h2 className="mt-2 break-words text-xl font-bold">{title}</h2><p className="mt-4 break-words rounded-xl bg-white/10 p-4 text-sm leading-relaxed text-slate-100">{context}</p><div className="mt-4 flex flex-wrap gap-2"><Button className="max-w-full whitespace-normal" variant="outline" onClick={() => navigator.clipboard?.writeText(context)}>Copier la consigne</Button><Button className="max-w-full whitespace-normal" variant="outline" onClick={() => setAssistantQuestion("Peux-tu donner un exemple simple et rappeler le contrôle humain à conserver ?")}>Utiliser la question suggérée</Button></div><div className="mt-4 flex min-w-0 flex-col gap-2 sm:flex-row"><input value={assistantQuestion} onChange={(event) => setAssistantQuestion(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") ask(); }} className="min-w-0 w-full flex-1 rounded-lg border border-white/20 bg-white px-3 py-2 text-sm text-slate-950" placeholder="Posez une autre question…" aria-label="Question pour l’assistant pédagogique" /><Button className="w-full sm:w-auto" disabled={!assistantQuestion.trim() || !courseId || assistantMutation.isPending} onClick={ask}>{assistantMutation.isPending ? "Réponse…" : "Demander"}</Button></div>{assistantMutation.data?.answer && <div ref={assistantAnswerRef} tabIndex={-1} data-testid="assistant-answer" className="mt-4 min-h-0 max-h-none overflow-visible break-words rounded-xl border border-blue-300/30 bg-blue-500/10 p-4 text-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300"><strong className="text-blue-200">Réponse à votre question</strong>{submittedAssistantQuestion && <p className="mt-2 break-words border-l-2 border-blue-200/60 pl-3 text-xs italic text-blue-100">« {submittedAssistantQuestion} »</p>}<div className="mt-3 break-words [overflow-wrap:anywhere]"><AssistantMarkdown content={assistantMutation.data.answer} /></div></div>}{assistantMutation.error && <p className="mt-3 text-sm text-rose-200">Réponse indisponible. Réessayez dans un instant.</p>}</section>;
   }
   if (block.type === "notes_highlights_bookmarks_panel") return <section className="w-full min-w-0 max-w-full rounded-2xl border border-border bg-card p-4 sm:p-6"><div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"><div className="min-w-0"><h2 className="text-xl font-bold">Mes notes</h2><p className="text-sm text-muted-foreground">Conservez vos points clés pendant cette lecture.</p></div><Button className="w-full whitespace-normal sm:w-auto" variant={bookmarked ? "default" : "outline"} onClick={() => setBookmarked((current) => !current)}>{bookmarked ? "Signet ajouté" : "Ajouter un signet"}</Button></div><textarea value={notes} onChange={(event) => setNotes(event.target.value)} className="mt-4 min-h-28 w-full min-w-0 max-w-full rounded-xl border border-input bg-background p-3 text-sm" placeholder="Écrivez une note personnelle…" /></section>;
   if (block.type === "competency_progress_hud" || block.type === "xp_progress_hud") return <section className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-blue-200 bg-blue-50 p-5"><div><p className="text-xs font-bold uppercase tracking-wider text-primary">Progression des compétences</p><p className="mt-1 font-semibold">Validez les activités obligatoires pour débloquer l’écran suivant.</p></div><div className="rounded-full bg-white px-4 py-2 text-sm font-bold text-primary">{block.competencyPoints || 1} point{(block.competencyPoints || 1) > 1 ? "s" : ""} de compétences</div></section>;
