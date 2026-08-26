@@ -14,3 +14,5 @@ Tout compte actif sans appartenance à un groupe est rattaché au groupe systèm
 ## Réconciliation et contrôle
 
 Wafa Nawech a été rattachée au groupe système Full access et son ouverture du cours Novasavo a été vérifiée dans une session navigateur dédiée, sans message d’accès refusé. La réconciliation a également ajouté Full access à tous les comptes actifs qui ne le possédaient pas déjà, sans retirer leurs autres groupes. Le journal apprenant contient un événement durable de réconciliation pour le compte concerné.
+
+La même session Wafa a ensuite ouvert le cours Novasavo sur le domaine de production `akademy.neodev.click` après publication. La route s’est chargée et le message « accès non attribué » n’était pas présent.

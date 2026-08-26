@@ -13,7 +13,7 @@
 - [x] Ajouter une trace d’administration aux affectations automatiques et à la réconciliation Full access — événement durable consultable pour Wafa Nawech
 - [x] Rejouer une affectation manuelle Full access et vérifier l’événement durable avec `assignedBy` — événement durable validé avec l’identifiant administrateur responsable
 - [x] Vérifier en navigateur avec une session apprenant que la route auparavant bloquée s’ouvre après Full access — Novasavo s’ouvre sans message d’accès refusé
-- [ ] Publier/checkpointer les changements Full access et vérifier en production qu’un compte sans groupe reçoit l’accès attendu
+- [x] Publier/checkpointer les changements Full access et vérifier en production qu’un compte sans groupe reçoit l’accès attendu — Wafa ouvre Novasavo sur le domaine publié sans message d’accès non attribué
 
 ## Fiabilité des listes, communications et indicateurs
 - [x] Auditer la limite actuelle de la liste d’invitations et la remplacer par une table paginée, recherchable et triable côté serveur — 183 invitations directes contrôlées sur 8 pages
