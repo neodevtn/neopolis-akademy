@@ -3,6 +3,7 @@ import { BrainCircuit, Send, Loader2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
+import { Streamdown } from "streamdown";
 
 interface AiEvaluationBlockProps {
   block: any;
@@ -41,7 +42,7 @@ export function AiEvaluationBlock({ block, lang, t, onComplete, blockIdx, evalua
     onSuccess: (data: any) => {
       setEvaluation(data);
       setIsEvaluating(false);
-      if (data.score >= maxScore * 0.7 && onComplete) {
+      if (data.score >= passingScore && onComplete) {
         onComplete(block.id || `ai_eval_${blockIdx}`);
       }
     },
@@ -100,7 +101,7 @@ export function AiEvaluationBlock({ block, lang, t, onComplete, blockIdx, evalua
       </div>
       <div className="p-4 space-y-4">
         {/* Prompt */}
-        <div className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">{prompt}</div>
+        <div className="text-sm leading-relaxed text-foreground"><Streamdown>{prompt}</Streamdown></div>
         {usesTrackedRubric && (
           <div className="rounded-lg border border-fuchsia-200 bg-fuchsia-50/50 p-3 text-sm text-foreground dark:border-fuchsia-800 dark:bg-fuchsia-950/10">
             <p className="font-medium">{t({ en: "What your response must show", fr: "Ce que votre réponse doit montrer" })}</p>
@@ -142,13 +143,13 @@ export function AiEvaluationBlock({ block, lang, t, onComplete, blockIdx, evalua
               <div className="text-sm text-muted-foreground">{t({ en: "AI Score", fr: "Score IA" })}</div>
               {evaluation.attemptNumber && <div className="text-xs text-muted-foreground">{t({ en: `Attempt ${evaluation.attemptNumber}`, fr: `Tentative ${evaluation.attemptNumber}` })}</div>}
             </div>
-            <p className="text-sm text-foreground">{evaluation.feedback}</p>
+            <div className="text-sm text-foreground"><Streamdown>{evaluation.feedback}</Streamdown></div>
             {usesTrackedRubric && <p className={`text-sm font-medium ${evaluation.passed ? "text-green-700" : "text-amber-700"}`}>{evaluation.passed ? t({ en: "Requirement met: you may continue.", fr: "Seuil atteint : vous pouvez continuer." }) : t({ en: "Requirement not yet met: refine your response and try again.", fr: "Seuil non atteint : améliorez votre réponse et réessayez." })}</p>}
             {evaluation.strengths.length > 0 && (
               <div>
                 <p className="text-xs font-medium text-green-700 dark:text-green-400 mb-1">{t({ en: "Strengths:", fr: "Points forts :" })}</p>
                 <ul className="text-xs text-green-600 dark:text-green-400 space-y-0.5">
-                  {evaluation.strengths.map((s, i) => <li key={i}>• {s}</li>)}
+                  {evaluation.strengths.map((s, i) => <li key={i}><Streamdown>{s}</Streamdown></li>)}
                 </ul>
               </div>
             )}
@@ -156,7 +157,7 @@ export function AiEvaluationBlock({ block, lang, t, onComplete, blockIdx, evalua
               <div>
                 <p className="text-xs font-medium text-amber-700 dark:text-amber-400 mb-1">{t({ en: "To improve:", fr: "À améliorer :" })}</p>
                 <ul className="text-xs text-amber-600 dark:text-amber-400 space-y-0.5">
-                  {evaluation.improvements.map((s, i) => <li key={i}>• {s}</li>)}
+                  {evaluation.improvements.map((s, i) => <li key={i}><Streamdown>{s}</Streamdown></li>)}
                 </ul>
               </div>
             )}
@@ -167,7 +168,7 @@ export function AiEvaluationBlock({ block, lang, t, onComplete, blockIdx, evalua
         {showSample && sampleAnswer && (
           <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/10 p-3">
             <p className="text-xs font-medium text-amber-700 dark:text-amber-300 mb-1">{t({ en: "Sample answer:", fr: "Exemple de réponse :" })}</p>
-            <p className="text-sm text-foreground whitespace-pre-wrap">{sampleAnswer}</p>
+            <div className="text-sm text-foreground"><Streamdown>{sampleAnswer}</Streamdown></div>
           </div>
         )}
 

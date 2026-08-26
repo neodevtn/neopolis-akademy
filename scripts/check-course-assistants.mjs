@@ -10,25 +10,34 @@ const learnerPassword = process.env.QA_PASSWORD;
 const reportPath = resolve("docs/course_assistant_qa_2026-08-26.json");
 const desktop = process.env.COURSE_ASSISTANT_QA_VIEWPORT === "desktop";
 const viewport = desktop ? { width: 1440, height: 1000 } : { width: 390, height: 844 };
+const requestedCatalog = (process.env.COURSE_ASSISTANT_QA_CATALOG || "all").toLowerCase();
 const index = JSON.parse(readFileSync(resolve("client/src/data/trainingIndex.json"), "utf8"));
 const courseMeta = new Map((index.courses || []).map((course) => [course.id, course]));
 
 if (!adminEmail || !adminPassword || !learnerEmail || !learnerPassword) throw new Error("QA_ADMIN_EMAIL, QA_ADMIN_PASSWORD, QA_EMAIL et QA_PASSWORD sont requis.");
 
 const assistants = [];
+const getCatalog = (courseId) => {
+  const certId = courseMeta.get(courseId)?.certId || "";
+  if (certId.startsWith("datacamp_")) return "datacamp";
+  if (certId.includes("claude_certified") || certId.includes("anthropic")) return "anthropic";
+  if (certId.includes("novasavo")) return "novasavo";
+  return "other";
+};
 for (const filename of readdirSync(resolve("client/public/data/courses")).filter((name) => name.endsWith(".json"))) {
   const course = JSON.parse(readFileSync(join(resolve("client/public/data/courses"), filename), "utf8"));
   for (const [lessonIndex, lesson] of (course.lessons || []).entries()) {
     for (const [chapterIndex, chapter] of (lesson.chapters || []).entries()) {
       for (const block of chapter.blocks || []) {
-        if (block.type === "learning_tools" && block.toolMode === "assistant") assistants.push({ courseId: course.courseId, lessonIndex, chapterIndex, blockId: block.id });
+        if (block.type === "learning_tools" && block.toolMode === "assistant") assistants.push({ courseId: course.courseId, lessonIndex, chapterIndex, blockId: block.id, catalog: getCatalog(course.courseId) });
       }
     }
   }
 }
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium", headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--disable-software-rasterizer", "--no-zygote"] });
-const result = { generatedAt: new Date().toISOString(), assistantCount: assistants.length, staticChecks: [], interactiveCheck: null };
+const scopedAssistants = requestedCatalog === "all" ? assistants : assistants.filter((item) => item.catalog === requestedCatalog);
+const result = { generatedAt: new Date().toISOString(), requestedCatalog, assistantCount: assistants.length, scopedAssistantCount: scopedAssistants.length, catalogCounts: Object.fromEntries(["anthropic", "datacamp", "novasavo", "other"].map((catalog) => [catalog, assistants.filter((item) => item.catalog === catalog).length])), staticChecks: [], interactiveCheck: null };
 try {
   async function authenticatedContext(email, password, label) {
     const context = await browser.newContext({ viewport, extraHTTPHeaders: { "x-neopolis-qa-probe": "1" } });
@@ -45,7 +54,12 @@ try {
     result.staticChecks.push({ ...item, certId: meta?.certId || null, resolvable: Boolean(meta?.certId) });
   }
 
-  const target = assistants[0];
+  const target = scopedAssistants[0];
+  if (!target && requestedCatalog !== "all") {
+    writeFileSync(reportPath, `${JSON.stringify({ viewport, ...result }, null, 2)}\n`);
+    console.table({ catalog: requestedCatalog, assistants: 0, resolvable: 0, interactiveCheck: "non requis" });
+    process.exit(0);
+  }
   if (!target) throw new Error("Aucun assistant pédagogique trouvé dans les cours.");
   const targetMeta = courseMeta.get(target.courseId);
   const targetUrl = `${baseUrl}/training/${targetMeta.certId}/${target.courseId}?lesson=${target.lessonIndex}&chapter=${target.chapterIndex}`;
@@ -70,7 +84,7 @@ try {
     const computed = getComputedStyle(element);
     return { maxHeight: computed.maxHeight, overflowY: computed.overflowY, scrollHeight: element.scrollHeight, clientHeight: element.clientHeight };
   });
-  const relevantQuestion = "Quels contrôles puis-je appliquer pour vérifier une suggestion de catégorisation comptable, sans donnée réelle ?";
+  const relevantQuestion = "Peux-tu expliquer le concept présenté sur cet écran avec un exemple simple, sans utiliser de données réelles ?";
   const relevantRequest = page.waitForResponse((response) => response.url().includes("courseAssistant.ask") && response.request().method() === "POST");
   await page.getByLabel("Question pour l’assistant pédagogique").fill(relevantQuestion);
   await page.getByRole("button", { name: "Demander" }).click();
@@ -123,5 +137,5 @@ try {
 }
 
 writeFileSync(reportPath, `${JSON.stringify({ viewport, ...result }, null, 2)}\n`);
-console.table({ assistants: result.assistantCount, resolvable: result.staticChecks.filter((item) => item.resolvable).length, outOfScope: result.interactiveCheck?.containsOutOfScopeMessage, fullResponseVisible: result.interactiveCheck?.fullResponseVisible, learnerControlsHidden: result.interactiveCheck?.learnerControlsHidden, adminControlsVisible: result.interactiveCheck?.adminControlsVisible, relevantQuestionDisplayed: result.interactiveCheck?.relevantQuestion.displayed, relevantQuestionRejected: result.interactiveCheck?.relevantQuestion.rejectedAsOutOfScope, relevantAnswerVisible: result.interactiveCheck?.relevantQuestion.fullResponseVisible, markdownFormatted: result.interactiveCheck?.relevantQuestion.markdownFormatted });
+console.table({ catalog: requestedCatalog, assistants: result.scopedAssistantCount, resolvable: result.staticChecks.filter((item) => item.resolvable).length, outOfScope: result.interactiveCheck?.containsOutOfScopeMessage, fullResponseVisible: result.interactiveCheck?.fullResponseVisible, learnerControlsHidden: result.interactiveCheck?.learnerControlsHidden, adminControlsVisible: result.interactiveCheck?.adminControlsVisible, relevantQuestionDisplayed: result.interactiveCheck?.relevantQuestion.displayed, relevantQuestionRejected: result.interactiveCheck?.relevantQuestion.rejectedAsOutOfScope, relevantAnswerVisible: result.interactiveCheck?.relevantQuestion.fullResponseVisible, markdownFormatted: result.interactiveCheck?.relevantQuestion.markdownFormatted });
 if (result.staticChecks.some((item) => !item.resolvable) || !result.interactiveCheck?.containsOutOfScopeMessage || result.interactiveCheck.repeatsSuggestedContext || !result.interactiveCheck.fullResponseVisible || !result.interactiveCheck.learnerControlsHidden || !result.interactiveCheck.adminControlsVisible || !result.interactiveCheck.relevantQuestion.displayed || result.interactiveCheck.relevantQuestion.rejectedAsOutOfScope || !result.interactiveCheck.relevantQuestion.fullResponseVisible || !result.interactiveCheck.relevantQuestion.answerChanged || !result.interactiveCheck.relevantQuestion.markdownFormatted) process.exitCode = 1;

@@ -1,5 +1,11 @@
 # Project TODO — Neopolis Akademy
 
+## Extension transversale — Assistants Anthropic et DataCamp
+- [x] Inventorier les panneaux d’assistant, points d’entrée, réponses préremplies, rendus Markdown et contraintes visuelles des cours Anthropic et DataCamp — aucun panneau assistant ou bloc d’évaluation IA dans Anthropic ; 13 évaluations IA source dans trois cours DataCamp et aucun panneau assistant générique actif
+- [x] Appliquer aux composants concernés le contrat d’assistant contextuel, le refus hors périmètre, le rendu Markdown sûr et la réponse non tronquée — renderer Markdown standardisé pour les assistants et les évaluations DataCamp ; seuil de passage du bloc aligné sur `passingScore`
+- [x] Vérifier que les contrôles de révision/édition restent invisibles aux apprenants et visibles aux administrateurs — confirmé par le lecteur commun ; aucun contrôle d’édition n’est rendu dans les évaluations DataCamp côté apprenant
+- [x] Rejouer des assistants représentatifs Anthropic et DataCamp sur desktop et mobile, puis exécuter la QA de publication et publier le correctif — Anthropic ne contient aucun bloc concerné ; une évaluation DataCamp a été rejouée desktop/mobile, puis la QA complète a réussi
+
 ## Correctif global — Assistant pédagogique contextuel
 - [x] Auditer tous les rendus, points d’entrée et réponses d’assistant pédagogique afin d’identifier toute réponse simulée, préremplie ou déconnectée de la requête saisie — 12 panneaux actuellement présents, tous dans Novasavo
 - [x] Faire répondre l’assistant à la requête réellement envoyée, avec refus court et recentrage pédagogique pour les demandes hors périmètre
