@@ -65,6 +65,12 @@
 - [x] Établir l’audit initial activité par activité — 20/20 activités présentes ; 11 TP disposant de rubriques explicites et un média externe à nettoyer
 - [ ] Nettoyer le média externe résiduel, confirmer les 11 TP rubricés et rejouer les interactions avant toute publication
 
+## Lot DataCamp suivant — Microsoft Copilot dans Word
+- [x] Restaurer et vérifier le paquet officiel Drive — archive de treize parties validée SHA-256 ; 3 chapitres, 29 activités et 10 vidéos source
+- [x] Établir l’audit initial activité par activité — 29/29 activités présentes ; 9 TP avec rubriques explicites et 5 candidats sans rubrique
+- [ ] Examiner les cinq TP sans rubrique, convertir uniquement les neuf TP admissibles et retirer les dépendances non reproductibles avec justification canonique
+- [ ] Synchroniser les métriques, rejouer les interactions conservées et exécuter la QA avant toute publication
+
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
 - [x] Valider le rapport automatisé d’artefacts QA AI for Finance puis refaire `git status --short` pour confirmer l’état final après nettoyage — `git diff --check` réussi et état Git limité aux sources, tests, données et preuves attendus ; validations TypeScript, JSON et 426 tests vertes
