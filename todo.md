@@ -51,6 +51,12 @@
 - [ ] Convertir les 9 TP rubricés et vérifier les métriques, interactions et médias locaux avant publication
 - [ ] Corriger la sonde de métriques pour les cours sans téléchargement affichable et confirmer le contrôle de production AI for Sales
 
+## Lot DataCamp suivant — Introduction à l’IA générative dans Snowflake
+- [x] Restaurer et vérifier le paquet officiel Drive — archive de trois parties validée SHA-256 ; 2 chapitres, 20 activités et 7 vidéos source
+- [x] Établir l’audit initial activité par activité — 20/20 activités présentes ; 13 TP cloud sans rubrique explicite et un média externe à nettoyer
+- [ ] Confirmer le retrait canonique des 13 TP non rubricés, supprimer leurs références associées et ne conserver aucun exercice libre inventé
+- [ ] Corriger le média externe restant, synchroniser les métriques et valider le cours conservé avant toute publication
+
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
 - [x] Valider le rapport automatisé d’artefacts QA AI for Finance puis refaire `git status --short` pour confirmer l’état final après nettoyage — `git diff --check` réussi et état Git limité aux sources, tests, données et preuves attendus ; validations TypeScript, JSON et 426 tests vertes
