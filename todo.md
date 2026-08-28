@@ -4,7 +4,7 @@
 - [x] Auditer la requête et le composant du journal opérationnel de la page Administration → Erreurs client
 - [x] Ajouter une pagination serveur et une recherche au journal tout en conservant l’ordre des événements
 - [x] Afficher total, plage courante et contrôles précédente/suivante accessibles dans l’interface — 10 345 événements sur 414 pages contrôlés
-- [ ] Publier le correctif de pagination du journal opérationnel et vérifier sur le domaine public la recherche et le passage de page
+- [x] Publier le correctif de pagination du journal opérationnel et vérifier sur le domaine public la recherche et le passage de page — 10 352 événements sur 415 pages, navigation 1→2 et recherche `learning time` validées
 
 ## Relance des invitations expirées
 - [x] Identifier les invitations expirées, les destinataires déjà inscrits et les statuts d’envoi afin de définir le périmètre éligible — 92 invitations contrôlées, 85 destinataires uniques éligibles

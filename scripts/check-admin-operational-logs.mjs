@@ -14,9 +14,23 @@ try {
   if (!cookie) throw new Error("Cookie de session administrateur absent.");
   await context.addCookies([{ name: "app_session_id", value: cookie, url: baseUrl, httpOnly: true, sameSite: "Lax" }]);
   const page = await context.newPage();
+  let operationalRpc = "aucune requête tRPC observée";
+  page.on("response", async (response) => {
+    if (!response.url().includes("system.getOperationalLogs")) return;
+    try {
+      operationalRpc = `${response.status()} ${await response.text()}`.slice(0, 1_000);
+    } catch {
+      operationalRpc = `${response.status()} réponse illisible`;
+    }
+  });
   await page.goto(`${baseUrl}/admin/errors`, { waitUntil: "commit", timeout: 45_000 });
   const search = page.getByRole("textbox", { name: "Rechercher dans le journal opérationnel" });
-  await search.waitFor({ state: "visible", timeout: 45_000 });
+  try {
+    await search.waitFor({ state: "visible", timeout: 45_000 });
+  } catch {
+    const body = (await page.locator("body").innerText()).replace(/\s+/g, " ").slice(0, 1_500);
+    throw new Error(`Journal opérationnel non rendu. URL=${page.url()} ; contenu=${body} ; tRPC=${operationalRpc}`);
+  }
   const summary = page.getByText(/Événements 1–25 sur \d+ · Page 1 sur \d+/i);
   try {
     await summary.waitFor({ state: "visible", timeout: 20_000 });
