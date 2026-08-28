@@ -1,5 +1,11 @@
 # Project TODO — Neopolis Akademy
 
+## Relance des invitations expirées
+- [x] Identifier les invitations expirées, les destinataires déjà inscrits et les statuts d’envoi afin de définir le périmètre éligible — 92 invitations contrôlées, 85 destinataires uniques éligibles
+- [x] Préparer une relance qui conserve le groupe affecté et invalide proprement l’ancien lien
+- [x] Obtenir la validation du nombre de destinataires avant tout envoi d’e-mail — confirmation explicite reçue pour 85 relances
+- [x] Envoyer les relances approuvées, vérifier les journaux et consigner le résultat — 85 envoyées et suivies, 0 échec, 86 anciens liens expirés invalidés
+
 ## Diagnostic d’accès apprenant — Wefa Naouch
 - [x] Identifier le compte Wefa Naouch, ses groupes d’apprenants et la formation qui retourne « accès non attribué » — compte actif sans aucun groupe
 - [x] Corriger uniquement l’appartenance ou l’affectation de formation nécessaire, avec une trace d’administration — rattachement au groupe système Full access
