@@ -76,6 +76,11 @@
 - [x] Établir l’audit initial activité par activité — 40/40 activités présentes ; aucun TP cloud ou exercice libre à adapter
 - [ ] Vérifier les deux URL détectées comme exemples pédagogiques non chargés, synchroniser les métriques et rejouer les interactions déterministes avant publication
 
+## Lot DataCamp suivant — Building Agentic Workflows with LlamaIndex
+- [x] Restaurer le paquet officiel Drive, valider son empreinte et auditer ses exercices DataLab avant toute adaptation — SHA-256 validé ; 5 Projector et 10 activités DataLab sources
+- [x] Étendre l’audit d’alignement aux `DatalabExercise`, puis retirer les dix activités LlamaIndex sans rubrique ou critère source explicite — audit 15/15, 10 retraits assumés, aucune omission involontaire ni média externe
+- [x] Ajouter un test de régression pour les cinq Projector LlamaIndex conservés et l’absence de TP libre sans rubrique — deux tests ciblés et QA complète à six étapes réussis
+
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
 - [x] Valider le rapport automatisé d’artefacts QA AI for Finance puis refaire `git status --short` pour confirmer l’état final après nettoyage — `git diff --check` réussi et état Git limité aux sources, tests, données et preuves attendus ; validations TypeScript, JSON et 426 tests vertes

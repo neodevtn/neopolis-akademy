@@ -57,6 +57,7 @@ const findings = sourceActivities.map((sourceActivity) => {
   const hasLocalAssets = Boolean(
     sourceActivity.file_assets?.length || sourceActivity.referenced_files?.length || sourceActivity.attachments,
   );
+  const requiresLocalRuntime = ["CloudExercise", "DatalabExercise", "IDEExercise"].includes(sourceActivity.type);
 
   const key = `${sourceActivity.chapter_number}.${sourceActivity.exercise_number}`;
   const intentionallyRemoved = intentionallyOmitted.has(key) && !current;
@@ -75,9 +76,9 @@ const findings = sourceActivities.map((sourceActivity) => {
     provisionalDecision:
       intentionallyRemoved
         ? "removed_non_reproducible"
-        : sourceActivity.type === "CloudExercise" && !hasExplicitRubric && !hasLocalAssets
+        : requiresLocalRuntime && !hasExplicitRubric && !hasLocalAssets
         ? "remove_candidate"
-        : sourceActivity.type === "CloudExercise" && hasExplicitRubric
+        : requiresLocalRuntime && hasExplicitRubric
           ? "local_rubric_candidate"
           : "preserve_or_verify",
   };
@@ -104,6 +105,7 @@ const output = {
     missingActivities: missing.length,
     intentionallyRemovedActivities: findings.filter((finding) => finding.provisionalDecision === "removed_non_reproducible").length,
     cloudExercises: findings.filter((finding) => finding.sourceType === "CloudExercise").length,
+    runtimeExercises: findings.filter((finding) => ["CloudExercise", "DatalabExercise", "IDEExercise"].includes(finding.sourceType)).length,
     localRubricCandidates: findings.filter((finding) => finding.provisionalDecision === "local_rubric_candidate").length,
     removalCandidates: findings.filter((finding) => finding.provisionalDecision === "remove_candidate").length,
     ...flagCounts,
