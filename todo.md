@@ -100,6 +100,10 @@
 - [x] Retirer les huit activités DataLab sans rubrique et nettoyer le lien externe résiduel — audit 13/13 sans omission et 0 média externe
 - [x] Exécuter un contrôle statistique dédié des cinq Projector MongoDB LangGraph : audio, slides, transcription, médias locaux et absence de référence fournisseur visible — 5/5 audio/slides locaux, 64 slides, 64 segments de transcription et 0 référence fournisseur visible
 
+## Lot DataCamp suivant — Graph RAG avec LangChain et Neo4j
+- [ ] Restaurer le paquet officiel Drive, valider son empreinte et auditer les exercices DataLab avant toute adaptation
+- [ ] Qualifier et, si nécessaire, retirer le lien externe Graph RAG ; protéger les 37 activités déterministes par test, QA et contrôle des métriques
+
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
 - [x] Valider le rapport automatisé d’artefacts QA AI for Finance puis refaire `git status --short` pour confirmer l’état final après nettoyage — `git diff --check` réussi et état Git limité aux sources, tests, données et preuves attendus ; validations TypeScript, JSON et 426 tests vertes
