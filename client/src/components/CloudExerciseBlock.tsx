@@ -258,7 +258,7 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evalu
         {tpNonDl.length > 0 && (
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
             <p className="text-xs font-medium text-gray-500 mb-1">
-              {t({ en: 'DataCamp VM files (not directly downloadable — rebuild from instructions)', fr: 'Fichiers DataCamp VM (non téléchargeables — reconstruire depuis les instructions)' })}
+              {t({ en: 'Source environment files (not directly downloadable — rebuild from the instructions)', fr: 'Fichiers de l’environnement source (non téléchargeables — reconstruire depuis les instructions)' })}
             </p>
             <p className="text-xs text-gray-400 font-mono">{tpNonDl.join(', ')}</p>
           </div>

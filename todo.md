@@ -19,6 +19,18 @@
 - [ ] Appliquer les contrôles globaux DataCamp : aucune mention XP, aucun HTML/Markdown brut, aucun lien externe DataCamp, et libellé honnête « Audio + diapositives » pour Projector
 - [ ] Ne passer à chaque cours prioritaire suivant qu’après contrôle apprenant, QA, publication et rapport de correction du cours courant
 
+## Lot DataCamp suivant — AI for Finance
+- [x] Récupérer et comparer le manifeste canonique `ai-for-finance` avec le cours Neopolis, écran et activité par activité
+- [x] Vérifier les 9 TP AI for Finance conservés, fondés sur une rubrique source explicite sans assets locaux déclarés, et documenter leur autonomie réelle avant publication
+- [x] Synchroniser les indicateurs AI for Finance après retrait des activités 1.8 et 1.11, puis contrôler les compteurs rendus dans la fiche et le catalogue — 28 activités, 10 vidéos, 18 exercices interactifs et 3 téléchargements
+- [x] Corriger le tri « Augmentation ou automation ? », les références DataCamp et les fragments de contenu brut
+- [x] Supprimer le breakdown manuel périmé du cours AI for Finance et protéger la synchronisation de son identifiant catalogue — adaptateur rejoué ; test confirme 28 activités, 18 exercices, 10 vidéos, 3 téléchargements et l’absence de `breakdown`/`exerciseLabel` manuel
+- [ ] Publier AI for Finance après les contrôles apprenant, les neuf TP, le tri interactif et la QA complète déjà validés, puis vérifier la production
+
+## Hygiène du checkpoint — AI for Finance
+- [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
+- [x] Valider le rapport automatisé d’artefacts QA AI for Finance puis refaire `git status --short` pour confirmer l’état final après nettoyage — `git diff --check` réussi et état Git limité aux sources, tests, données et preuves attendus ; validations TypeScript, JSON et 426 tests vertes
+
 ## Pagination du journal opérationnel
 - [x] Auditer la requête et le composant du journal opérationnel de la page Administration → Erreurs client
 - [x] Ajouter une pagination serveur et une recherche au journal tout en conservant l’ordre des événements

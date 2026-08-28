@@ -27,6 +27,14 @@ interface MatchingExerciseProps {
   onComplete?: () => void;
 }
 
+export function isPlacementComplete(cards: BucketSortExercise['cards'], placements: Record<string, string>) {
+  return cards.every((card) => Boolean(placements[card.id]));
+}
+
+export function isPlacementCorrect(cards: BucketSortExercise['cards'], placements: Record<string, string>) {
+  return cards.every((card) => placements[card.id] === card.correctBucket);
+}
+
 // Bucket colors (Skilljar style - colored dashed borders)
 const BUCKET_COLORS = [
   { border: '#c75b3a', bg: '#fef3f0', text: '#c75b3a' }, // coral/orange
@@ -107,13 +115,14 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
   const [recentlyPlaced, setRecentlyPlaced] = useState<Set<string>>(new Set());
   // Track recently returned cards for entrance animation
   const [recentlyReturned, setRecentlyReturned] = useState<Set<string>>(new Set());
+  const [draggedCard, setDraggedCard] = useState<string | null>(null);
   // Track hovered bucket
   const [hoveredBucket, setHoveredBucket] = useState<string | null>(null);
   // Timeout refs for clearing animation states
   const animTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const unplacedCards = exercise.cards.filter(c => !placements[c.id]);
-  const allPlaced = unplacedCards.length === 0;
+  const allPlaced = isPlacementComplete(exercise.cards, placements);
 
   // If exercise was already completed (from localStorage), notify parent on mount
   useEffect(() => {
@@ -144,29 +153,35 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
     setSelectedCard(prev => prev === cardId ? null : cardId);
   }, [submitted, placements]);
 
-  const handleBucketClick = useCallback((bucketId: string) => {
-    if (submitted || !selectedCard) return;
-    const newPlacements = { ...placements, [selectedCard]: bucketId };
-    setPlacements(newPlacements);
-    // Mark as recently placed for entrance animation
-    const placedCard = selectedCard;
-    setRecentlyPlaced(prev => new Set(prev).add(placedCard));
+  const placeCardInBucket = useCallback((cardId: string, bucketId: string) => {
+    if (submitted) return;
+    setPlacements((current) => ({ ...current, [cardId]: bucketId }));
+    setRecentlyPlaced((previous) => new Set(previous).add(cardId));
     setSelectedCard(null);
-    // Clear animation state after transition completes
+    setDraggedCard(null);
     setTimeout(() => {
-      setRecentlyPlaced(prev => {
-        const next = new Set(prev);
-        next.delete(placedCard);
+      setRecentlyPlaced((previous) => {
+        const next = new Set(previous);
+        next.delete(cardId);
         return next;
       });
     }, 350);
-  }, [submitted, selectedCard, placements]);
+  }, [submitted]);
+
+  const handleDrop = useCallback((event: React.DragEvent<HTMLDivElement>, bucketId: string) => {
+    event.preventDefault();
+    const cardId = event.dataTransfer.getData('text/plain') || draggedCard;
+    if (cardId) placeCardInBucket(cardId, bucketId);
+    setHoveredBucket(null);
+  }, [draggedCard, placeCardInBucket]);
 
   const handleSubmit = () => {
     if (!allPlaced) return;
     setSubmitted(true);
-    saveAttempt(exercise.id, placements);
-    onComplete?.();
+    if (isPlacementCorrect(exercise.cards, placements)) {
+      saveAttempt(exercise.id, placements);
+      onComplete?.();
+    }
   };
 
   const handleReset = () => {
@@ -191,7 +206,7 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
     : 0;
 
   const totalCards = exercise.cards.length;
-  const isAllCorrect = correctCount === totalCards;
+  const isAllCorrect = isPlacementCorrect(exercise.cards, placements);
 
   return (
     <div className="my-6 space-y-5">
@@ -228,6 +243,16 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
               <button
                 key={card.id}
                 onClick={() => handleCardClick(card.id)}
+                draggable={!submitted}
+                onDragStart={(event) => {
+                  event.dataTransfer.effectAllowed = 'move';
+                  event.dataTransfer.setData('text/plain', card.id);
+                  setDraggedCard(card.id);
+                  setSelectedCard(card.id);
+                }}
+                onDragEnd={() => setDraggedCard(null)}
+                aria-pressed={isSelected}
+                data-card-id={card.id}
                 className="px-4 py-3 rounded-lg border text-sm text-left"
                 style={{
                   transition: `all 200ms ${EASE_OUT}`,
@@ -259,9 +284,26 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
           return (
             <div
               key={bucket.id}
-              onClick={() => handleBucketClick(bucket.id)}
+              onClick={() => {
+                if (selectedCard) placeCardInBucket(selectedCard, bucket.id);
+              }}
+              onKeyDown={(event) => {
+                if ((event.key === 'Enter' || event.key === ' ') && selectedCard) {
+                  event.preventDefault();
+                  placeCardInBucket(selectedCard, bucket.id);
+                }
+              }}
+              onDragOver={(event) => {
+                if (!submitted) event.preventDefault();
+              }}
+              onDrop={(event) => handleDrop(event, bucket.id)}
               onMouseEnter={() => isTarget && setHoveredBucket(bucket.id)}
               onMouseLeave={() => setHoveredBucket(null)}
+              role="button"
+              tabIndex={submitted ? -1 : 0}
+              data-bucket-id={bucket.id}
+              aria-label={lang === 'fr' ? `Catégorie ${getText(bucket.label)}. ${isTarget ? 'Appuyez sur Entrée pour placer la carte sélectionnée.' : 'Sélectionnez une carte ou faites-la glisser ici.'}` : `Bucket ${getText(bucket.label)}. ${isTarget ? 'Press Enter to place the selected card.' : 'Select a card or drag it here.'}`}
+              aria-disabled={submitted}
               className="rounded-lg p-4 min-h-[100px]"
               style={{
                 border: `2px dashed ${color.border}`,
@@ -271,11 +313,28 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
                 boxShadow: isHovered ? `0 0 0 3px ${color.border}30, 0 4px 12px ${color.border}15` : 'none',
                 cursor: isTarget ? 'pointer' : 'default',
               }}
-            >
-              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: color.text }}>
-                {getText(bucket.label)}
-              </p>
-              <div className="flex flex-wrap gap-2">
+              >
+                <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: color.text }}>
+                  {getText(bucket.label)}
+                </p>
+                {!submitted && (
+                  <button
+                    type="button"
+                    data-bucket-action={bucket.id}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      if (selectedCard) placeCardInBucket(selectedCard, bucket.id);
+                    }}
+                    disabled={!selectedCard}
+                    className="mb-3 inline-flex min-h-9 items-center rounded-md border px-3 py-1.5 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-55"
+                    style={{ borderColor: color.border, color: color.text, backgroundColor: color.bg }}
+                  >
+                    {selectedCard
+                      ? (lang === 'fr' ? 'Placer la carte sélectionnée ici' : 'Place selected card here')
+                      : (lang === 'fr' ? 'Sélectionnez une carte à placer' : 'Select a card to place')}
+                  </button>
+                )}
+                <div className="flex flex-wrap gap-2">
                 {cardsInBucket.map(card => {
                   const result = getCardResult(card.id);
                   const isRecentlyPlacedCard = recentlyPlaced.has(card.id);
@@ -287,6 +346,14 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
                         e.stopPropagation();
                         handleCardClick(card.id);
                       }}
+                      draggable={!submitted}
+                      onDragStart={(event) => {
+                        event.dataTransfer.effectAllowed = 'move';
+                        event.dataTransfer.setData('text/plain', card.id);
+                        setDraggedCard(card.id);
+                        setSelectedCard(card.id);
+                      }}
+                      onDragEnd={() => setDraggedCard(null)}
                       disabled={submitted}
                       className="px-3 py-2 rounded-md border text-xs font-medium flex items-center gap-1.5"
                       style={{
@@ -303,6 +370,13 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
                       {result === 'incorrect' && <XCircle className="h-3 w-3" />}
                       {!submitted && <Undo2 className="h-3 w-3 opacity-50" />}
                       {decodeText(card.text)}
+                      {result === 'incorrect' && (
+                        <span className="sr-only">
+                          {lang === 'fr'
+                            ? ` Réponse attendue : ${getText(exercise.buckets.find((bucket) => bucket.id === card.correctBucket)?.label)}.`
+                            : ` Expected bucket: ${getText(exercise.buckets.find((bucket) => bucket.id === card.correctBucket)?.label)}.`}
+                        </span>
+                      )}
                     </button>
                   );
                 })}
@@ -317,7 +391,7 @@ export function MatchingExercise({ exercise, lang, onComplete }: MatchingExercis
                   >
                     {isTarget
                       ? (lang === 'fr' ? 'Cliquez pour placer ici' : 'Click to place here')
-                      : (lang === 'fr' ? 'Glissez les cartes ici' : 'Drop cards here')}
+                      : (lang === 'fr' ? 'Sélectionnez une carte ou glissez-la ici' : 'Select a card or drag it here')}
                   </span>
                 )}
               </div>
