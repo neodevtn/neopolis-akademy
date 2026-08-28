@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { AdminNavbar } from "@/components/AdminNavbar";
@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { getLoginUrl } from "@/const";
-import { AlertTriangle, RefreshCw, Search, Filter, Clock, Globe, Code, Layers, Trash2, CheckCircle } from "lucide-react";
+import { AlertTriangle, ChevronLeft, ChevronRight, RefreshCw, Search, Filter, Clock, Globe, Code, Layers, Trash2, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 
 type SourceFilter = "all" | "window" | "promise" | "boundary" | "manual";
+type OperationalLog = { id: string; timestamp: number; type: string; category: "learning" | "incident"; courseId: string; details: { message?: string } };
 
 export default function AdminErrors() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -18,6 +19,8 @@ export default function AdminErrors() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [operationalPage, setOperationalPage] = useState(1);
+  const [operationalSearch, setOperationalSearch] = useState("");
 
   const utils = trpc.useUtils();
 
@@ -31,9 +34,13 @@ export default function AdminErrors() {
     { enabled: isAuthenticated && user?.role === "admin", refetchInterval: 15_000 }
   );
   const operationalLogsQuery = trpc.system.getOperationalLogs.useQuery(
-    { limit: 50 },
+    { page: operationalPage, pageSize: 25, search: operationalSearch.trim() || undefined },
     { enabled: isAuthenticated && user?.role === "admin", refetchInterval: 15_000 }
   );
+
+  useEffect(() => {
+    setOperationalPage(1);
+  }, [operationalSearch]);
 
   const deleteMutation = trpc.system.deleteClientErrors.useMutation({
     onSuccess: (data) => {
@@ -60,6 +67,12 @@ export default function AdminErrors() {
   });
 
   const errors = errorsQuery.data || [];
+  const operationalLogs: OperationalLog[] = operationalLogsQuery.data?.items || [];
+  const operationalTotal = operationalLogsQuery.data?.total || 0;
+  const operationalTotalPages = operationalLogsQuery.data?.totalPages || 1;
+  const operationalCurrentPage = operationalLogsQuery.data?.page || operationalPage;
+  const operationalStart = operationalTotal === 0 ? 0 : (operationalCurrentPage - 1) * 25 + 1;
+  const operationalEnd = Math.min(operationalCurrentPage * 25, operationalTotal);
 
   // Use server-computed stats and chart data
   const chartData = statsQuery.data?.hourlyData || [];
@@ -201,19 +214,32 @@ export default function AdminErrors() {
               <h2 className="wise-body-lg font-semibold" style={{ color: "var(--wise-ink)" }}>Journal opérationnel</h2>
               <p className="text-xs mt-1" style={{ color: "var(--wise-mute)" }}>Progression, temps d’apprentissage, tentatives et incidents récents.</p>
             </div>
-            <Badge variant="secondary">{operationalLogsQuery.data?.length || 0} événement(s)</Badge>
+            <Badge variant="secondary">{operationalTotal} événement(s)</Badge>
           </div>
-          {(operationalLogsQuery.data?.length || 0) === 0 ? (
+          <div className="relative mb-4 max-w-md">
+            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--wise-mute)" }} />
+            <Input aria-label="Rechercher dans le journal opérationnel" value={operationalSearch} onChange={(event) => setOperationalSearch(event.target.value)} placeholder="Rechercher un cours, un événement ou un incident..." className="pl-9" />
+          </div>
+          {operationalTotal === 0 ? (
             <p className="text-sm py-4" style={{ color: "var(--wise-mute)" }}>En attente d’activité réelle : les nouveaux événements s’afficheront automatiquement.</p>
           ) : (
-            <div className="max-h-72 overflow-y-auto divide-y divide-border">
-              {operationalLogsQuery.data?.map((log) => (
+            <>
+              <div className="divide-y divide-border">
+              {operationalLogs.map((log) => (
                 <div key={log.id} className="py-3 flex items-start justify-between gap-4 text-sm">
                   <div className="min-w-0"><p className="font-medium text-foreground">{log.category === "incident" ? "Incident client" : log.type.replaceAll("_", " ")}</p><p className="text-xs text-muted-foreground truncate">{log.courseId || (log.details as any).message || "Plateforme"}</p></div>
                   <span className="text-xs text-muted-foreground whitespace-nowrap">{new Date(log.timestamp).toLocaleString()}</span>
                 </div>
               ))}
-            </div>
+              </div>
+              <div className="mt-4 flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-xs" style={{ color: "var(--wise-mute)" }}>Événements {operationalStart}–{operationalEnd} sur {operationalTotal} · Page {operationalCurrentPage} sur {operationalTotalPages}</p>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" aria-label="Page précédente du journal opérationnel" onClick={() => setOperationalPage((page) => Math.max(1, page - 1))} disabled={operationalCurrentPage <= 1 || operationalLogsQuery.isFetching}><ChevronLeft size={15} />Précédent</Button>
+                  <Button size="sm" variant="outline" aria-label="Page suivante du journal opérationnel" onClick={() => setOperationalPage((page) => Math.min(operationalTotalPages, page + 1))} disabled={operationalCurrentPage >= operationalTotalPages || operationalLogsQuery.isFetching}>Suivant<ChevronRight size={15} /></Button>
+                </div>
+              </div>
+            </>
           )}
         </div>
 

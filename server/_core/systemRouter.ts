@@ -3,7 +3,8 @@ import { notifyOwner } from "./notification";
 import { adminProcedure, publicProcedure, router } from "./trpc";
 import { getDb } from "../db";
 import { clientErrors, learningEvents } from "../../drizzle/schema";
-import { desc, eq, like, and, gte, inArray, notLike } from "drizzle-orm";
+import { desc, eq, like, and, gte, inArray, notLike, sql } from "drizzle-orm";
+import { normalizeOperationalLogPage } from "../../shared/operationalLogPagination";
 
 // Rate limit: max 10 reports per IP per minute
 const ipReportCounts = new Map<string, { count: number; resetAt: number }>();
@@ -223,35 +224,32 @@ export const systemRouter = router({
 
   // Real operational timeline: combines learner events with client incidents.
   getOperationalLogs: adminProcedure
-    .input(z.object({ limit: z.number().min(1).max(200).optional().default(100) }).optional())
+    .input(z.object({ page: z.number().int().min(1).optional().default(1), pageSize: z.number().int().min(10).max(100).optional().default(25), search: z.string().trim().max(120).optional() }).optional())
     .query(async ({ input }) => {
       const db = await getDb();
-      if (!db) return [];
-      const limit = input?.limit ?? 100;
-      const [learning, errors] = await Promise.all([
-        db.select().from(learningEvents).orderBy(desc(learningEvents.createdAt)).limit(limit),
-        db.select().from(clientErrors).orderBy(desc(clientErrors.createdAt)).limit(limit),
-      ]);
-      return [
-        ...learning.map((event) => ({
-          id: `learning-${event.id}`,
-          timestamp: event.createdAt.getTime(),
-          type: event.eventType,
-          category: "learning" as const,
-          userId: event.userId,
-          courseId: event.courseId || "",
-          details: { lessonIndex: event.lessonIndex, chapterIndex: event.chapterIndex, durationSeconds: event.durationSeconds, success: event.success, score: event.score, attemptNumber: event.attemptNumber },
-        })),
-        ...errors.map((error) => ({
-          id: `error-${error.id}`,
-          timestamp: error.createdAt.getTime(),
-          type: error.source,
-          category: "incident" as const,
-          userId: null,
-          courseId: "",
-          details: { message: error.message, url: error.url },
-        })),
-      ].sort((a, b) => b.timestamp - a.timestamp).slice(0, limit);
+      if (!db) return { items: [], total: 0, page: 1, pageSize: input?.pageSize ?? 25, totalPages: 1 };
+      const { page, pageSize, offset } = normalizeOperationalLogPage(input?.page ?? 1, input?.pageSize ?? 25);
+      const term = input?.search?.trim();
+      const source = sql`
+        SELECT CONCAT('learning-', id) AS id, UNIX_TIMESTAMP(createdAt) * 1000 AS timestamp, eventType AS type, 'learning' AS category, userId, COALESCE(courseId, '') AS courseId,
+          JSON_OBJECT('lessonIndex', lessonIndex, 'chapterIndex', chapterIndex, 'durationSeconds', durationSeconds, 'success', success, 'score', score, 'attemptNumber', attemptNumber) AS details
+        FROM learning_events
+        UNION ALL
+        SELECT CONCAT('error-', id) AS id, UNIX_TIMESTAMP(createdAt) * 1000 AS timestamp, source AS type, 'incident' AS category, NULL AS userId, '' AS courseId,
+          JSON_OBJECT('message', message, 'url', url) AS details
+        FROM client_errors`;
+      const filter = term ? sql`WHERE CONVERT(CONCAT_WS(' ', REPLACE(type, '_', ' '), category, courseId, CAST(details AS CHAR)) USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONVERT(${`%${term}%`} USING utf8mb4) COLLATE utf8mb4_unicode_ci` : sql``;
+      const [countRows] = await db.execute(sql`SELECT COUNT(*) AS total FROM (${source}) AS operational ${filter}`) as unknown as [{ total: number }[], unknown];
+      const [rows] = await db.execute(sql`SELECT * FROM (${source}) AS operational ${filter} ORDER BY timestamp DESC LIMIT ${pageSize} OFFSET ${offset}`) as unknown as [{ id: string; timestamp: number; type: string; category: "learning" | "incident"; userId: number | null; courseId: string; details: unknown }[], unknown];
+      const total = Number(countRows[0]?.total || 0);
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+      return {
+        items: rows.map((row) => ({ ...row, timestamp: Number(row.timestamp), details: typeof row.details === "string" ? JSON.parse(row.details) : row.details })),
+        total,
+        page: Math.min(page, totalPages),
+        pageSize,
+        totalPages,
+      };
     }),
 
   // Admin endpoint to delete specific errors (mark as resolved)
