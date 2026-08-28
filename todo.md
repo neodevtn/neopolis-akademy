@@ -49,6 +49,7 @@
 - [x] Établir l’audit initial activité par activité — 26/26 activités présentes, 9 TP avec rubriques explicites et 4 candidats au retrait sans rubrique
 - [ ] Examiner les activités 1.3, 1.6, 2.5 et 2.6 sans rubrique explicite, puis retirer seulement les dépendances non reproductibles avec justification canonique
 - [ ] Convertir les 9 TP rubricés et vérifier les métriques, interactions et médias locaux avant publication
+- [ ] Corriger la sonde de métriques pour les cours sans téléchargement affichable et confirmer le contrôle de production AI for Sales
 
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
