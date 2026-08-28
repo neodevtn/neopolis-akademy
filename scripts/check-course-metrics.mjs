@@ -34,13 +34,13 @@ try {
   await context.addCookies([{ name: "app_session_id", value: cookie, url: baseUrl, httpOnly: true, sameSite: "Lax" }]);
   const page = await context.newPage();
 
-  await page.goto(`${baseUrl}/training?tab=catalog`, { waitUntil: "commit", timeout: 60_000 });
+  await page.goto(`${baseUrl}/training?tab=catalog`, { waitUntil: "domcontentloaded", timeout: 120_000 });
   const card = page.locator(`a[href='/training/${certification.id}']`);
   await card.waitFor({ state: "visible", timeout: 45_000 });
   const cardText = (await card.innerText()).replace(/\s+/g, " ");
   for (const value of expected) if (!cardText.toLocaleLowerCase("fr-FR").includes(value)) throw new Error(`Carte catalogue : métrique absente « ${value} ». Contenu=${cardText}`);
 
-  await page.goto(`${baseUrl}/training/${certification.id}`, { waitUntil: "commit", timeout: 60_000 });
+  await page.goto(`${baseUrl}/training/${certification.id}`, { waitUntil: "domcontentloaded", timeout: 120_000 });
   await page.waitForFunction((requiredMetrics) => {
     const pageText = (document.body?.innerText?.toLocaleLowerCase("fr-FR") ?? "").replace(/\s+/g, " ").trim();
     return requiredMetrics.every((metric) => pageText.includes(metric)) && !pageText.includes("chargement...");

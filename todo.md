@@ -91,6 +91,7 @@
 - [x] Retirer les neuf activités DataLab LangGraph sans rubrique source et nettoyer le lien externe résiduel — audit 13/13, 9 retraits assumés et 0 média externe
 - [x] Rejouer et documenter un écran Projector LangGraph avec une session apprenant — rendu, audio, slides et absence de référence fournisseur validés ; les écrans ultérieurs restent verrouillés séquentiellement
 - [x] Exécuter et archiver un contrôle statistique des quatre Projector LangGraph, incluant audio, slides, sous-titres/transcriptions, médias locaux et chaînes fournisseur visibles — 4/4 Projector : audio/slides locaux, 44 slides, 44 segments de transcription, 0 référence fournisseur visible
+- [x] Reprendre le contrôle public complet de la carte catalogue et de la fiche : sonde réexécutée avec chargement DOM, carte et fiche confirment 4 activités, 0 exercice interactif, 4 vidéos et 2 téléchargements
 
 ## Lot DataCamp suivant — Priorité après LangGraph
 - [ ] Identifier le prochain cours DataCamp à forte dépendance DataLab dans l’audit, restaurer son paquet officiel et vérifier son empreinte avant toute adaptation
