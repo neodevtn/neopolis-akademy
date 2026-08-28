@@ -91,6 +91,15 @@
 - [x] Rejouer et documenter un écran Projector LangGraph avec une session apprenant — rendu, audio, slides et absence de référence fournisseur validés ; les écrans ultérieurs restent verrouillés séquentiellement
 - [x] Exécuter et archiver un contrôle statistique des quatre Projector LangGraph, incluant audio, slides, sous-titres/transcriptions, médias locaux et chaînes fournisseur visibles — 4/4 Projector : audio/slides locaux, 44 slides, 44 segments de transcription, 0 référence fournisseur visible
 
+## Lot DataCamp suivant — Priorité après LangGraph
+- [ ] Identifier le prochain cours DataCamp à forte dépendance DataLab dans l’audit, restaurer son paquet officiel et vérifier son empreinte avant toute adaptation
+
+## Lot DataCamp suivant — Agents text-to-query avec MongoDB et LangGraph
+- [x] Restaurer le paquet officiel Drive et vérifier son empreinte — archive de douze parties validée SHA-256 ; 13 activités source dont 8 DataLab
+- [x] Établir l’audit initial activité par activité — 13/13 activités présentes ; 8 DataLab sans rubrique explicite et un lien externe à nettoyer
+- [x] Retirer les huit activités DataLab sans rubrique et nettoyer le lien externe résiduel — audit 13/13 sans omission et 0 média externe
+- [x] Exécuter un contrôle statistique dédié des cinq Projector MongoDB LangGraph : audio, slides, transcription, médias locaux et absence de référence fournisseur visible — 5/5 audio/slides locaux, 64 slides, 64 segments de transcription et 0 référence fournisseur visible
+
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
 - [x] Valider le rapport automatisé d’artefacts QA AI for Finance puis refaire `git status --short` pour confirmer l’état final après nettoyage — `git diff --check` réussi et état Git limité aux sources, tests, données et preuves attendus ; validations TypeScript, JSON et 426 tests vertes

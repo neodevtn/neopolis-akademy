@@ -322,7 +322,7 @@
                 },
                 {
                   "heading": "8. Format du cours",
-                  "text": "Throughout the course, we'll be working side-by-side to tackle exercises, which will be completed in DataLab Notebooks with accompanying videos. DataLab is DataCamp's proprietary cloud-based notebook IDE. If you've used other notebook IDEs, you should find DataLab pretty intuitive; if you're not familiar with notebooks, you can think of a notebook as a series of cells to execute your code in.\n\nIf you run one cell, any variables or libraries defined in that cell will be available in subsequent cells, and so on.\n\nWorking in these notebooks will give you greater insight into how to build text-to-query agents for your own projects.\n\nIn the exercise, you can either start the video and code-along with us, or you can watch the video first and code afterwards - the choice is yours!"
+                  "text": "Throughout the course, we'll be working side-by-side to tackle exercises, which will be completed in environnement de pratique Notebooks with accompanying videos. environnement de pratique is plateforme source's proprietary cloud-based notebook IDE. If you've used other notebook IDEs, you should find environnement de pratique pretty intuitive; if you're not familiar with notebooks, you can think of a notebook as a series of cells to execute your code in.\n\nIf you run one cell, any variables or libraries defined in that cell will be available in subsequent cells, and so on.\n\nWorking in these notebooks will give you greater insight into how to build text-to-query agents for your own projects.\n\nIn the exercise, you can either start the video and code-along with us, or you can watch the video first and code afterwards - the choice is yours!"
                 },
                 {
                   "heading": "9. Format du cours",
@@ -347,59 +347,6 @@
               },
               "url": "/api/assets/chapter_01_slides_e6f6b41b.pdf",
               "filename": "chapter_01_slides.pdf"
-            }
-          ]
-        },
-        {
-          "id": "dc_ch01_act02",
-          "title": {
-            "en": "Préparez-vous pour les exercices pratiques",
-            "fr": "Préparez-vous pour les exercices pratiques"
-          },
-          "description": {
-            "en": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !",
-            "fr": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !"
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_02_tp",
-              "title": {
-                "en": "Préparez-vous pour les exercices pratiques",
-                "fr": "Préparez-vous pour les exercices pratiques"
-              },
-              "assignment": "",
-              "instructions": "Suivez les instructions pour créer votre cluster MongoDB et ajouter la chaîne de connexion dans la variable d’environnement MONGODB_URI.\n\nInitialisez un client Python MongoDB en utilisant votre variable d’environnement MONGODB_URI.\n\nVérifiez la connexion à votre cluster avec une commande \"ping\".\n\nRemarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Suivez les instructions pour créer votre cluster MongoDB et ajouter la chaîne de connexion dans la variable d’environnement MONGODB_URI.",
-                "Initialisez un client Python MongoDB en utilisant votre variable d’environnement MONGODB_URI.",
-                "Vérifiez la connexion à votre cluster avec une commande \"ping\".",
-                "Remarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_e6f6b41b.pdf"
-                }
-              ],
-              "hint": "Passez la variable MONGODB_URL à la classe MongoClient de pymongo.\n\nPour vérifier la connexion, appelez la méthode .command() sur mongodb_client.admin en lui passant \"ping\".",
-              "solution": "# Install libraries...\n\n## TASK 1\nimport os\nfrom pymongo import MongoClient\n\nMONGODB_URI = os.environ[\"MONGODB_URI\"]\n\n## TASK 2\n# Initialize a MongoDB Python client\nmongodb_client = MongoClient(MONGODB_URI, appname=\"datacamp_text_to_query_course\")\n\n# Check the connection to your cluster\nping_result = mongodb_client.admin.command(\"ping\")\nprint(ping_result)",
-              "successMessage": "Ping reçu et connexion confirmée ! Maintenant que tout est en place, voyons comment transformer des saisies utilisateur en requêtes MongoDB et dialoguer avec nos bases de données.",
-              "xp": 100
             }
           ]
         },
@@ -988,166 +935,6 @@
               ]
             }
           ]
-        },
-        {
-          "id": "dc_ch01_act04",
-          "title": {
-            "en": "Écrire des requêtes MongoDB",
-            "fr": "Écrire des requêtes MongoDB"
-          },
-          "description": {
-            "en": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !",
-            "fr": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !"
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_04_tp",
-              "title": {
-                "en": "Écrire des requêtes MongoDB",
-                "fr": "Écrire des requêtes MongoDB"
-              },
-              "assignment": "",
-              "instructions": "Accédez à la base sample_mflix à partir de votre mongodb_client, et listez les collections qu’elle contient.\n\nSélectionnez la collection \"movies\" et prévisualisez un document d’exemple.\n\nFiltrez la collection pour les films sortis avant 1905.\n\nFiltrez la collection pour les films sortis avant 1930 ET avec des notes IMDB supérieures ou égales à 8.\n\nRemarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Accédez à la base sample_mflix à partir de votre mongodb_client, et listez les collections qu’elle contient.",
-                "Sélectionnez la collection \"movies\" et prévisualisez un document d’exemple.",
-                "Filtrez la collection pour les films sortis avant 1905.",
-                "Filtrez la collection pour les films sortis avant 1930 ET avec des notes IMDB supérieures ou égales à 8.",
-                "Remarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_e6f6b41b.pdf"
-                }
-              ],
-              "hint": "Appelez la méthode .list_collection_names() sur votre base de données pour voir les collections disponibles.\n\nLa méthode .find_one({}) peut être utilisée pour prévisualiser un document d’exemple.\n\nPour filtrer sur une seule condition, passez un dictionnaire dont la clé est la colonne à filtrer, et la valeur est un autre dictionnaire indiquant l’opération de comparaison à effectuer ainsi que la valeur de comparaison : $: .\n\nPour filtrer sur plusieurs conditions, créez un dictionnaire avec une clé $and associée à une liste de dictionnaires, chacun suivant le même schéma de mappage nom de colonne → opération que dans le cas à condition unique.",
-              "solution": "## Install libraries and create the client...\n\n## TASK 1\n# Access the sample_mflix database\ndb = mongodb_client[\"sample_mflix\"]\ndb.list_collection_names()\n\n## TASK 2\ncollection = db[\"movies\"]\ncollection.find_one({})\n\n## TASK 3\nold_movies_query = {\"year\": {\"$lt\": 1905}}\n\nimport pprint\n\n# Execute the query and iterate through the resulting cursor\nfor doc in collection.find(old_movies_query):\n    pprint.pprint(doc)\n\n## TASK 4\nbest_old_movies_query = { \"$and\":[\n                    {\"year\": {\"$lt\": 1930}},\n                    {\"imdb.rating\": {\"$gte\": 8}}\n                  ]\n        }\n\n# Execute the query and iterate through the resulting cursor\nfor doc in collection.find(best_old_movies_query):\n    pprint.pprint(doc)",
-              "successMessage": "Bravo ! Vous savez maintenant charger des collections de base de données et écrire des requêtes de filtrage. Passons à la vitesse supérieure avec du tri et des agrégations groupées !",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch01_act05",
-          "title": {
-            "en": "Des agrégations plus complexes",
-            "fr": "Des agrégations plus complexes"
-          },
-          "description": {
-            "en": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !",
-            "fr": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !"
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_05_tp",
-              "title": {
-                "en": "Des agrégations plus complexes",
-                "fr": "Des agrégations plus complexes"
-              },
-              "assignment": "",
-              "instructions": "Créez le pipeline d’agrégation pour lister les 5 meilleurs films avec les meilleures notes IMDB, composé des étapes $sort, $limit et $project.\n\nCréez le pipeline d’agrégation pour trouver les 5 meilleurs réalisateurs par note IMDB moyenne, ayant réalisé au moins 20 films, composé des étapes $unwind, $group, $match, $sort et $limit.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Créez le pipeline d’agrégation pour lister les 5 meilleurs films avec les meilleures notes IMDB, composé des étapes $sort, $limit et $project.",
-                "Créez le pipeline d’agrégation pour trouver les 5 meilleurs réalisateurs par note IMDB moyenne, ayant réalisé au moins 20 films, composé des étapes $unwind, $group, $match, $sort et $limit.",
-                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_e6f6b41b.pdf"
-                }
-              ],
-              "hint": "Chaque opération dans un pipeline d’agrégation doit être un dictionnaire, où la clé indique l’opération effectuée et la valeur correspond aux paramètres de l’opération.\n\nL’opération $sort doit être associée à un dictionnaire contenant le nom de la colonne à trier et soit 1 (ordre croissant) soit -1 (ordre décroissant).\n\nL’opération $project requiert un dictionnaire de noms de colonnes associés à 1 ou 0 selon qu’elles doivent être projetées ou non.\n\n$group prend un dictionnaire contenant la colonne de groupement associée à _id, ainsi que les colonnes agrégées à créer ; ces noms de colonnes agrégées nécessitent leurs propres dictionnaires indiquant l’opération d’agrégation ($sum, $avg) et la cible sur laquelle l’appliquer.",
-              "solution": "## Install libraries and create the client...\n# Access the sample_mflix database\ndb = mongodb_client[\"sample_mflix\"]\n\n# Access the movies collection\ncollection = db[\"movies\"]\n\n\n## TASK 1\nsort_query = [\n          { \"$sort\": { \"imdb.rating\": -1 } },\n          { \"$limit\": 5 },\n          { \"$project\": { \"title\": 1, \"_id\": 0} } ]\n\nfor doc in collection.aggregate(sort_query):\n    print(doc)\n    \n## TASK 2\ngroup_query = [ { \"$unwind\": \"$directors\" },\n          { \"$group\": { \"_id\": \"$directors\", \"filmCount\": { \"$sum\": 1 }, \"avgRating\": { \"$avg\": \"$imdb.rating\" } } },\n          { \"$match\": { \"filmCount\": { \"$gte\": 20 } } },\n          { \"$sort\": { \"avgRating\": -1 } },\n          { \"$limit\": 5 } ]\n\n# Execute the aggregation pipeline and iterate through the resulting cursor\nfor doc in collection.aggregate(group_query):\n    print(doc)",
-              "successMessage": "Vous avez manipulé ces données avec brio ! Dans votre workflow text-to-query, un LLM générera ces requêtes, mais comprendre les bases du langage de requête vous aidera à déboguer les erreurs et les problèmes lors du développement.",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch01_act06",
-          "title": {
-            "en": "Un workflow text-to-query en pratique",
-            "fr": "Un workflow text-to-query en pratique"
-          },
-          "description": {
-            "en": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !",
-            "fr": "Apprenez à créer des agents de text-to-query pour pouvoir converser avec vos données !"
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_06_tp",
-              "title": {
-                "en": "Un workflow text-to-query en pratique",
-                "fr": "Un workflow text-to-query en pratique"
-              },
-              "assignment": "",
-              "instructions": "Initialisez un LLM OpenAI avec une valeur temperature appropriée en utilisant la classe ChatOpenAI de LangChain.\n\nConvertissez la requête en langage naturel fournie en une requête MongoDB, exécutez-la et obtenez les résultats sous forme de liste Python.\n\nCréez un modèle d’invite pour le LLM, composé d’un prompt système et d’un espace réservé pour les messages, à l’aide de la méthode .from_messages().\n\nChaînez le prompt avec le LLM à l’aide de l’opérateur |, puis invoquez-le sur les résultats de la requête (docs) et la requête utilisateur (user_query).\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Initialisez un LLM OpenAI avec une valeur temperature appropriée en utilisant la classe ChatOpenAI de LangChain.",
-                "Convertissez la requête en langage naturel fournie en une requête MongoDB, exécutez-la et obtenez les résultats sous forme de liste Python.",
-                "Créez un modèle d’invite pour le LLM, composé d’un prompt système et d’un espace réservé pour les messages, à l’aide de la méthode .from_messages().",
-                "Chaînez le prompt avec le LLM à l’aide de l’opérateur |, puis invoquez-le sur les résultats de la requête (docs) et la requête utilisateur (user_query).",
-                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_e6f6b41b.pdf"
-                }
-              ],
-              "hint": "Pour améliorer la cohérence des résultats du RAG, définissez temperature à 0 dans ChatOpenAI.\n\nLa requête MongoDB associée à la saisie utilisateur est la même que celle que vous avez écrite dans le dernier exercice : vous devez $unwind le champ $directors, $match le filmCount pour être supérieur ou égal à 20 avec l’opérateur $gte, et $limit à 5.\n\nLe premier message dans .from_messages() doit être un tuple contenant le rôle \"system\" et la variable system_prompt fournie.\n\nAssurez-vous de chaîner (|) depuis prompt vers llm.",
-              "solution": "## Install libraries and create the client...\n# Access the sample_mflix database\ndb = mongodb_client[\"sample_mflix\"]\n\n# Access the movies collection\ncollection = db[\"movies\"]\n\n## TASK 1\nfrom langchain_openai import ChatOpenAI\n\nllm = ChatOpenAI(\n    model=\"gpt-4o-mini\",\n    temperature=0\n)\n\n## TASK 2\n# Natural language user query\nuser_query = \"Give me the top 5 directors by average IMDB rating, who have made at least 20 movies\"\n\n# Convert natural language query to MongoDB query\nmongodb_query = [{\"$unwind\": \"$directors\"},\n          {\"$group\": {\"_id\": \"$directors\", \"filmCount\": {\"$sum\": 1}, \"avgRating\": {\"$avg\": \"$imdb.rating\"}}},\n          {\"$match\": {\"filmCount\": {\"$gte\": 20}}},\n          {\"$sort\": {\"avgRating\": -1}},\n          {\"$limit\": 5}]\n\n# Execute the query and obtain results\ndocs = [doc for doc in collection.aggregate(mongodb_query)]\ndocs\n\n## TASK 3\nfrom langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder\n\n# Create a system prompt for the LLM\nsystem_prompt = \"\"\"You are an assistant for question-answering tasks.\nUse the following pieces of retrieved context to answer the question.\nIf you don't know the answer, just say that you don't know.\nContext: {context}\"\"\"\n\n# Create a templated prompt for the LLM\nprompt = ChatPromptTemplate.from_messages(\n    [\n        (\"system\", system_prompt),\n        MessagesPlaceholder(variable_name=\"messages\"),\n    ]\n)\n\n## TASK 4\n# Chain the prompt with the LLM\nllm_with_prompt = prompt | llm\n\nimport json\n\nresponse = llm_with_prompt.invoke({\"context\": json.dumps(docs),\n                                   \"messages\": [(\"user\", user_query)]})\n# Print the LLM's response\nprint(response.content, end=\"\")",
-              "successMessage": "Bravo ! Vous avez transformé une requête utilisateur en requête MongoDB, l’avez exécutée sur la base de données et avez fourni les résultats à un LLM pour répondre à la question. C’est encore un peu manuel pour le moment, donc dans le chapitre 2, nous utiliserons un agent d’IA pour automatiser ces étapes !",
-              "xp": 100
-            }
-          ]
         }
       ]
     },
@@ -1538,167 +1325,6 @@
               "filename": "chapter_02_slides.pdf"
             }
           ]
-        },
-        {
-          "id": "dc_ch02_act02",
-          "title": {
-            "en": "Constituer la boîte à outils de l’agent",
-            "fr": "Constituer la boîte à outils de l’agent"
-          },
-          "description": {
-            "en": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques.",
-            "fr": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques."
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_02_tp",
-              "title": {
-                "en": "Constituer la boîte à outils de l’agent",
-                "fr": "Constituer la boîte à outils de l’agent"
-              },
-              "assignment": "",
-              "instructions": "Créez une instance MongoDB compatible avec LangChain en utilisant votre MONGODB_URI et en spécifiant la base de données \"sample_mflix\".\n\nInitialisez le toolkit de base de données MongoDB et affichez les outils présents dans le toolkit en utilisant db et llm définis précédemment.\n\nTestez les quatre outils du toolkit avec les entrées fournies.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Créez une instance MongoDB compatible avec LangChain en utilisant votre MONGODB_URI et en spécifiant la base de données \"sample_mflix\".",
-                "Initialisez le toolkit de base de données MongoDB et affichez les outils présents dans le toolkit en utilisant db et llm définis précédemment.",
-                "Testez les quatre outils du toolkit avec les entrées fournies.",
-                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_b7db1e19.pdf"
-                }
-              ],
-              "hint": "Pour créer une instance MongoDB compatible avec LangChain, appelez la méthode .from_connection_string() sur MongoDBDatabase, en lui passant votre MONGODB_URI et le nom de la base de données.\n\nInitialisez le toolkit de base de données MongoDB à l’aide de la classe MongoDBDatabaseToolkit, en lui passant la base compatible LangChain, db, et llm ; appelez .get_tools() sur cette classe pour extraire les outils du toolkit.\n\nPour tester les outils, récupérez l’outil depuis toolmap en utilisant son nom comme clé ; invoquez-le avec les entrées fournies.",
-              "solution": "## Library installs and setup...\nimport os\nMONGODB_URI = os.environ[\"MONGODB_URI\"]\n\n## TASK 1\nfrom langchain_mongodb.agent_toolkit.database import MongoDBDatabase\n\n# Access the sample_mflix database using the MongoDBDatabase class\ndb = MongoDBDatabase.from_connection_string(connection_string=MONGODB_URI, database=\"sample_mflix\")\n\n## TASK 2\nfrom langchain_mongodb.agent_toolkit.toolkit import MongoDBDatabaseToolkit\nfrom langchain_openai import ChatOpenAI\n\nllm = ChatOpenAI(\n    model=\"gpt-4o-mini\",\n    temperature=0\n)\n\n# Initialize the MongoDB database toolkit\ntoolkit = MongoDBDatabaseToolkit(db=db, llm=llm)\n\n# Extract the tools from the toolkit\ntools = toolkit.get_tools()\n\n# Map tool names to tool objects\ntool_map = {tool.name:tool for tool in tools}\n\n# See what each tool does\n{tool.name:tool.description for tool in tools}\n\n## TASK 3\n# Test the mongodb_list_collections tool\ntool_map[\"mongodb_list_collections\"].invoke({})\n\n# Test the mongodb_schema tool\nprint(tool_map[\"mongodb_schema\"].invoke(\"theaters\"))\n\nimport json\n\n# Test the mongodb_query_checker tool\nquery = [{\"$unwind\": \"$directors\"},\n          {\"$group\": {\"_id\": \"$directors\", \"filmCount\": {\"$sum\": 1}, \"avgRating\": {\"$avg\": \"$imdb.rating\"}}},\n          {\"$match\": {\"filmCount\": {\"$gte\": 20}}},\n          {\"$sort\": {\"avgRating\": -1}},\n          {\"$limit\": 5}]\ntool_map[\"mongodb_query_checker\"].invoke(json.dumps(query))\n\n# Test the mongodb_query tool\nprint(tool_map[\"mongodb_query\"].invoke(f\"db.movies.aggregate({json.dumps(query)}\"), end=\"\")",
-              "successMessage": "Superbe ! Avec ces outils, votre agent IA pourra effectuer toutes les actions que vous avez réalisées à la fin du chapitre 1. Plutôt pratique, non ? Construisons maintenant une autre pièce clé du workflow text-to-query : le prompt.",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch02_act03",
-          "title": {
-            "en": "Créer l’invite text-to-query",
-            "fr": "Créer l’invite text-to-query"
-          },
-          "description": {
-            "en": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques.",
-            "fr": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques."
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_03_tp",
-              "title": {
-                "en": "Créer l’invite text-to-query",
-                "fr": "Créer l’invite text-to-query"
-              },
-              "assignment": "",
-              "instructions": "Importez et prévisualisez l’élément préconstruit MONGODB_AGENT_SYSTEM_PROMPT pour vous familiariser avec les instructions.\n\nDéfinissez un modèle d’invite contenant MONGODB_AGENT_SYSTEM_PROMPT pour indiquer à l’agent text-to-query comment utiliser les outils fournis ; préremplissez les paramètres top_k et tool_names.\n\nLiez les outils avec le LLM OpenAI, llm.\n\nChaînez prompt avec tool_augmented_llm à l’aide de l’opérateur |, puis invoquez-le sur l’entrée fournie.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Importez et prévisualisez l’élément préconstruit MONGODB_AGENT_SYSTEM_PROMPT pour vous familiariser avec les instructions.",
-                "Définissez un modèle d’invite contenant MONGODB_AGENT_SYSTEM_PROMPT pour indiquer à l’agent text-to-query comment utiliser les outils fournis ; préremplissez les paramètres top_k et tool_names.",
-                "Liez les outils avec le LLM OpenAI, llm.",
-                "Chaînez prompt avec tool_augmented_llm à l’aide de l’opérateur |, puis invoquez-le sur l’entrée fournie.",
-                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_b7db1e19.pdf"
-                }
-              ],
-              "hint": "Vous pouvez préremplir partiellement une invite LangChain avec la méthode .partial(), en indiquant les paramètres à renseigner et leurs valeurs en arguments.\n\nAppelez la méthode .bind_tools() sur la variable llm, en lui passant les outils à rendre disponibles.\n\nLors de l’enchaînement de l’invite et du LLM conscient des outils, faites un pipe (|) de l’invite vers le LLM conscient des outils.",
-              "solution": "## Library installs, re-define the MongoDB database toolkit, and LLM...\n\n## TASK 1\nfrom langchain_mongodb.agent_toolkit import MONGODB_AGENT_SYSTEM_PROMPT\n\n# Preview the system prompt\nMONGODB_AGENT_SYSTEM_PROMPT\n\n## TASK 2\nfrom langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder\n\n# Create a templated prompt for the LLM\nprompt = ChatPromptTemplate.from_messages(\n    [\n        (\"system\", MONGODB_AGENT_SYSTEM_PROMPT),\n        (\"system\", \"Do not re-run tools unless absolutely necessary. If you are not able to get enough information using the tools, reply with I DON'T KNOW. You have access to the following tools: {tool_names}.\"),\n        MessagesPlaceholder(variable_name=\"messages\"),\n    ]\n)\n\n# Pre-fill top_k and tool_names in the prompt template\nprompt = prompt.partial(top_k=5, tool_names=\", \".join([tool.name for tool in tools]))\n\n## TASK 3\n# Bind tools to the LLM\ntool_augmented_llm = llm.bind_tools(tools)\n\n## TASK 4\n# Chain the prompt and tool-augmented LLM\nllm_with_tools = prompt | tool_augmented_llm\n\n# Test the llm_with_tools chain\nllm_with_tools.invoke({\"messages\": [(\"user\", \"Give me the top 5 directors by IMDB rating, who have made at least 20 movies\")]}).tool_calls",
-              "successMessage": "Excellent travail ! Vous avez désormais toutes les pièces principales ; il ne reste plus qu’à commencer à les orchestrer avec LangGraph. Il est temps de créer et d’orchestrer votre agent text-to-query !",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch02_act04",
-          "title": {
-            "en": "Orchestrer l’agent text-to-query",
-            "fr": "Orchestrer l’agent text-to-query"
-          },
-          "description": {
-            "en": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques.",
-            "fr": "Rendez votre workflow text-to-query agentique ! En créant et en orchestrant des agents d’IA avec LangGraph, vous pourrez concevoir des workflows text-to-query intelligents et dynamiques."
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_04_tp",
-              "title": {
-                "en": "Orchestrer l’agent text-to-query",
-                "fr": "Orchestrer l’agent text-to-query"
-              },
-              "assignment": "",
-              "instructions": "Définissez l’état du graphe à l’aide de la classe GraphState, avec un seul attribut appelé messages.\n\nDéfinissez le nœud d’agent qui lit l’attribut messages de l’état du graphe, appelle llm_with_tools avec ces messages, puis ajoute le résultat à l’attribut messages de l’état du graphe.\n\nDéfinissez le nœud d’outil qui lit l’attribut tool_calls du message le plus récent dans l’état du graphe, extrait le nom de l’outil à exécuter (name), l’invoque avec les arguments (args) de l’appel d’outil, puis ajoute le résultat à l’attribut messages de l’état du graphe.\n\nInitialisez le graphe à l’aide de la classe StateGraph de LangGraph, avec l’état du graphe (GraphState) défini précédemment.\n\nAjoutez les nœuds et les arêtes au graphe, puis compilez-le.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Définissez l’état du graphe à l’aide de la classe GraphState, avec un seul attribut appelé messages.",
-                "Définissez le nœud d’agent qui lit l’attribut messages de l’état du graphe, appelle llm_with_tools avec ces messages, puis ajoute le résultat à l’attribut messages de l’état du graphe.",
-                "Définissez le nœud d’outil qui lit l’attribut tool_calls du message le plus récent dans l’état du graphe, extrait le nom de l’outil à exécuter (name), l’invoque avec les arguments (args) de l’appel d’outil, puis ajoute le résultat à l’attribut messages de l’état du graphe.",
-                "Initialisez le graphe à l’aide de la classe StateGraph de LangGraph, avec l’état du graphe (GraphState) défini précédemment.",
-                "Ajoutez les nœuds et les arêtes au graphe, puis compilez-le."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_b7db1e19.pdf"
-                }
-              ],
-              "hint": "La classe GraphState doit être définie comme un TypedDict avec un unique attribut messages de type liste.\n\nLe graphe peut être initialisé en passant la classe GraphState que vous avez définie à la classe StateGraph.\n\nVous pouvez ajouter des arêtes fixes au graphe avec .add_edge() et des arêtes conditionnelles avec .add_conditional_edges().\n\n.add_conditional_edges() nécessite un nœud source, une fonction qui décide quel chemin prendre, et un dictionnaire indiquant la destination selon le résultat de la fonction.\n\nN’oubliez pas de compiler le graphe avec .compile() avant de le visualiser.",
-              "solution": "## Install the libraries, re-define the MongoDB client, and recreate the LLM, toolkit, prompt, and binded LLM...\n\n## TASK 1\nfrom typing import Annotated\nfrom langgraph.graph.message import add_messages\nfrom typing_extensions import TypedDict\n\nclass GraphState(TypedDict):\n    messages: Annotated[list, add_messages]\n    \n## TASK 2\n# Define the agent node\ndef agent_node(state):\n    # Read \"messages\" from the graph state\n    messages = state[\"messages\"]\n    # Invoke the tool-augmented LLM to determine next action\n    result = llm_with_tools.invoke(messages)\n    # Append the result to the graph state\n    return {\"messages\": [result]}\n  \n## TASK 3\nfrom langchain_core.messages import ToolMessage\n\n# Define the tool node\ndef tool_node(state: GraphState):\n    result = []\n    # Read the tool invocation payload from the graph state\n    tool_calls = state[\"messages\"][-1].tool_calls\n    for tool_call in tool_calls:\n        # Extract the name of the tool to execute\n        tool = tool_map[tool_call[\"name\"]]\n        # Invoke the tool with the arguments extracted from the payload\n        observation = tool.invoke(tool_call[\"args\"])\n        # Create a ToolMessage to log the result of the tool execution\n        result.append(ToolMessage(content=observation, tool_call_id=tool_call[\"id\"]))\n    # Append the result to the graph state\n    return {\"messages\": result}\n  \n## TASK 4\nfrom langgraph.graph import StateGraph\n\n# Initialize the graph with graph state\ngraph = StateGraph(GraphState)\n\n## TASK 5\nfrom langgraph.graph import START, END\nfrom langgraph.prebuilt import tools_condition\n\n# Add a node called \"agent\" that calls the agent_node() function\ngraph.add_node(\"agent\", agent_node)\n# Add a node called \"tools\" that calls the tool_node() function\ngraph.add_node(\"tools\", tool_node)\n\n# Add a fixed edge from the START node to the \"agent\" node\ngraph.add_edge(START, \"agent\")\n# Add a fixed edge from the \"tool\" node to the \"agent\" node\ngraph.add_edge(\"tools\", \"agent\")\n# Add conditional edges from the \"agent\" node to the \"tool\" and \"END\" nodes\ngraph.add_conditional_edges(\n    \"agent\",\n    tools_condition,\n    {\"tools\": \"tools\", END: END},\n)\n\n# Compile and visualize the graph\napp = graph.compile()\napp",
-              "successMessage": "Superbe orchestration ! LangGraph offre un niveau de personnalisation et de contrôle très élevé pour tous types de workflows agentiques. Il ne manque qu’une chose à cet agent pour être réellement utilisable dans un contexte personnel ou professionnel : une mémoire. Ajoutons cela maintenant !",
-              "xp": 100
-            }
-          ]
         }
       ]
     },
@@ -2006,59 +1632,6 @@
           ]
         },
         {
-          "id": "dc_ch03_act02",
-          "title": {
-            "en": "Ajouter de la mémoire à l’agent",
-            "fr": "Ajouter de la mémoire à l’agent"
-          },
-          "description": {
-            "en": "Intégrez une mémoire à court terme dans votre agent de text-to-query afin d’éviter de relancer des requêtes pour combiner les insights.",
-            "fr": "Intégrez une mémoire à court terme dans votre agent de text-to-query afin d’éviter de relancer des requêtes pour combiner les insights."
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_3_act_02_tp",
-              "title": {
-                "en": "Ajouter de la mémoire à l’agent",
-                "fr": "Ajouter de la mémoire à l’agent"
-              },
-              "assignment": "",
-              "instructions": "Initialisez un objet MongoDBSaver avec mongodb_client et compilez le graphe en l’utilisant.\n\nUtilisez la fonction utilitaire execute_graph_with_memory() fournie, ainsi qu’un identifiant de thread créé avec uuid4(), pour répondre à la question : \"Which states have the most theaters?\".\n\nRépondez à la question : \"How many theaters does California have?\" sans fournir de contexte supplémentaire ; cela obligera l’agent à s’appuyer sur sa mémoire.\n\nRemarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Initialisez un objet MongoDBSaver avec mongodb_client et compilez le graphe en l’utilisant.",
-                "Utilisez la fonction utilitaire execute_graph_with_memory() fournie, ainsi qu’un identifiant de thread créé avec uuid4(), pour répondre à la question : \"Which states have the most theaters?\".",
-                "Répondez à la question : \"How many theaters does California have?\" sans fournir de contexte supplémentaire ; cela obligera l’agent à s’appuyer sur sa mémoire.",
-                "Remarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n’est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_03_slides_226834bb.pdf"
-                }
-              ],
-              "hint": "Instanciez un objet MongoDBSaver en appelant MongoDBSaver sur un client MongoDB.\n\nLors de la compilation du graphe, vous devez transmettre les éventuels checkpointers à l’argument checkpointer de .compile().\n\nVous pouvez revenir à un point de contrôle donné avec checkpointer.get(config), où config est un dictionnaire de la forme : {\"configurable\": {\"thread_id\": thread_id}}.",
-              "solution": "## Installs, recreate the agent from Chapter 2, MongoDB client setup...\nimport os\nfrom pymongo import MongoClient\n\nMONGODB_URI = os.environ[\"MONGODB_URI\"]\nmongodb_client = MongoClient(MONGODB_URI)\n\n## TASK 1\nfrom langgraph.checkpoint.mongodb import MongoDBSaver\n\ncheckpointer = MongoDBSaver(mongodb_client)\n\napp = graph.compile(checkpointer=checkpointer)\n\n## TASK 2\ndef execute_graph_with_memory(thread_id: str, user_input: str) -> None:\n  \"\"\"\n    Execute the memory-augmented agent\n\n    Args:\n        thread_id (str): Thread ID for which to retrieve memory\n        user_input (str): User query\n    \"\"\"\n  # Configure the thread ID\n  config = {\"configurable\": {\"thread_id\": thread_id}}\n  # Stream outputs from each step in the graph\n  for step in app.stream(\n      {\"messages\": [{\"role\": \"user\", \"content\": user_input}]},\n      config,\n      stream_mode=\"values\",\n  ):\n      # Print the latest message from the step\n      step[\"messages\"][-1].pretty_print()\n\nfrom uuid import uuid4\n\nthread_id = str(uuid4())\nexecute_graph_with_memory(thread_id, \"Which states have the most theaters?\")\n\n## TASK 3\n# Reset agent to a specific checkpoint\nconfig = {\"configurable\": {\"thread_id\": thread_id}}\ncheckpointer.get(config)\napp = graph.compile(checkpointer=checkpointer)\n\nexecute_graph_with_memory(thread_id, \"How many theaters does California have?\")\n\nimport pprint\n\n# List and analyze checkpoints\npprint.pprint(list(checkpointer.list(config, limit=5)))",
-              "successMessage": "Bravo ! Vous disposez désormais d’un agent text-to-query capable de répondre aux questions en interrogeant des sources de données, et d’enregistrer les conversations pour conserver une mémoire à court terme. Récapitulons ce que vous avez appris et voyons quelle est la suite !",
-              "xp": 100
-            }
-          ]
-        },
-        {
           "id": "dc_ch03_act03",
           "title": {
             "en": "Félicitations !",
@@ -2159,8 +1732,8 @@
                   "type": "FullSlide",
                   "script": "To continue your AI journey with MongoDB, consider checking-out the resources listed here.\n\n",
                   "images": [],
-                  "content": "&nbsp;\n\n**Pour aller plus loin avec MongoDB et les agents Text-to-Query**\n- Blog : [Agents Text-to-Query avec MongoDB](https://www.mongodb.com/company/blog/technical/natural-language-agents-mongodb-text-mql-langchain)\n- Blog : [Mémoire long terme pour agents avec LangGraph et MongoDB](https://www.mongodb.com/company/blog/product-release-announcements/powering-long-term-memory-for-agents-langgraph)\n- [Repo GitHub d’exemples Gen AI de MongoDB](https://github.com/mongodb-developer/GenAI-Showcase)\n- [AI Learning Hub de MongoDB](https://www.mongodb.com/resources/use-cases/artificial-intelligence)\n\n**Pour aller plus loin avec LangChain et LangGraph**\n* Cours DataCamp : [Développer des applications LLM avec LangChain](www.datacamp.com/courses/developing-llm-applications-with-langchain)\n* Cours DataCamp : [Concevoir des systèmes agents avec LangGraph](www.datacamp.com/courses/designing-agentic-systems-with-langchain)",
-                  "contentLeft": "&nbsp;\n\n**Pour aller plus loin avec MongoDB et les agents Text-to-Query**\n- Blog : [Agents Text-to-Query avec MongoDB](https://www.mongodb.com/company/blog/technical/natural-language-agents-mongodb-text-mql-langchain)\n- Blog : [Mémoire long terme pour agents avec LangGraph et MongoDB](https://www.mongodb.com/company/blog/product-release-announcements/powering-long-term-memory-for-agents-langgraph)\n- [Repo GitHub d’exemples Gen AI de MongoDB](https://github.com/mongodb-developer/GenAI-Showcase)\n- [AI Learning Hub de MongoDB](https://www.mongodb.com/resources/use-cases/artificial-intelligence)\n\n**Pour aller plus loin avec LangChain et LangGraph**\n* Cours DataCamp : [Développer des applications LLM avec LangChain](www.datacamp.com/courses/developing-llm-applications-with-langchain)\n* Cours DataCamp : [Concevoir des systèmes agents avec LangGraph](www.datacamp.com/courses/designing-agentic-systems-with-langchain)",
+                  "content": "",
+                  "contentLeft": "",
                   "contentRight": ""
                 },
                 {
@@ -2263,5 +1836,6 @@
         }
       ]
     }
-  ]
+  ],
+  "exerciseCount": 0
 }
