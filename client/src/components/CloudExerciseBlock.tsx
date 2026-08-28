@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Timer, CheckCircle2, ChevronDown, Download } from "lucide-react";
 import PageContent, { renderInlineFormatting } from "@/pages/training/PageContent";
+import { Streamdown } from "streamdown";
 
 /**
  * Extract learner-friendly objectives from the raw grading prompt.
@@ -54,17 +55,26 @@ export function adaptDataCampVmText(text: string, hasUnavailableVmFiles: boolean
     .replace(/dans le dossier\s+Desktop\/Resources/gi, "dans votre environnement après sa reconstitution");
 }
 
+export function toCompetencyPercentage(score: number, maxScore: number): number {
+  if (!Number.isFinite(score) || !Number.isFinite(maxScore) || maxScore <= 0) return 0;
+  return Math.max(0, Math.min(100, Math.round((score / maxScore) * 100)));
+}
+
 interface CloudExerciseBlockProps {
   block: any;
   lang: string;
   t: (obj: { en: string; fr: string }) => string;
   blockIdx: number;
-  onComplete?: (id: string) => void;
+  onComplete?: (id: string, outcome?: { score: number; rubricEvaluated: boolean }) => void;
+  evaluationContext?: { certificationId: string; courseId: string; lessonIndex: number; chapterIndex: number };
+  onEvaluate?: (input: Record<string, unknown>) => Promise<{ score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number }>;
 }
 
-export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: CloudExerciseBlockProps) {
+export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete, evaluationContext, onEvaluate }: CloudExerciseBlockProps) {
   const [submitted, setSubmitted] = useState(false);
   const [answer, setAnswer] = useState("");
+  const [evaluation, setEvaluation] = useState<{ score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number } | null>(null);
+  const [isEvaluating, setIsEvaluating] = useState(false);
 
   const tpTitle = typeof block.title === 'object' ? (block.title?.[lang] || block.title?.en || '') : (block.title || '');
   const tpAssignment = block.assignment || '';
@@ -78,6 +88,10 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
   const tpSolution = block.solution || '';
   const tpSuccess = block.successMessage || '';
   const tpPrompt = block.prompt || '';
+  const rubricCriteria = Array.isArray(block.rubricCriteria) ? block.rubricCriteria : [];
+  const usesTrackedRubric = rubricCriteria.length > 0 && Boolean(evaluationContext);
+  const maxScore = Number(block.maxScore) || rubricCriteria.length || 1;
+  const passingScore = Number(block.passingScore) || maxScore;
   const tpNonDl = Array.from(new Set([
     ...(Array.isArray(block.nonDownloadableFiles) ? block.nonDownloadableFiles : []),
     ...(Array.isArray(block.referencedFiles)
@@ -88,6 +102,39 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
   const learnerAssignment = adaptDataCampVmText(tpAssignment, hasUnavailableVmFiles);
   const learnerHint = adaptDataCampVmText(tpHint, hasUnavailableVmFiles);
   const learnerSolution = adaptDataCampVmText(tpSolution, hasUnavailableVmFiles);
+  const evaluationPrompt = block.evaluationPrompt || learnerAssignment;
+  const completeEvaluation = (data: { score: number; feedback: string; strengths: string[]; improvements: string[]; passed: boolean; attemptNumber?: number }) => {
+      setEvaluation(data);
+      setIsEvaluating(false);
+      if (data.passed) {
+        setSubmitted(true);
+        onComplete?.(block.id || `cloud_exercise_${blockIdx}`, { score: toCompetencyPercentage(data.score, maxScore), rubricEvaluated: true });
+      }
+    };
+  const failEvaluation = () => {
+      setEvaluation({ score: 0, feedback: t({ en: "The evaluation could not be completed. Please try again.", fr: "L’évaluation n’a pas pu être effectuée. Veuillez réessayer." }), strengths: [], improvements: [], passed: false });
+      setIsEvaluating(false);
+    };
+
+  const submit = () => {
+    if (!answer.trim()) return;
+    if (!usesTrackedRubric || !evaluationContext || !onEvaluate) {
+      setSubmitted(true);
+      onComplete?.(block.id || `cloud_exercise_${blockIdx}`);
+      return;
+    }
+    setIsEvaluating(true);
+    void onEvaluate({
+      ...evaluationContext,
+      blockId: block.id || `cloud_exercise_${blockIdx}`,
+      answer,
+      prompt: evaluationPrompt,
+      rubric: rubricCriteria,
+      maxScore,
+      passingScore,
+      lang: lang === "en" ? "en" : "fr",
+    }).then(completeEvaluation).catch(failEvaluation);
+  };
 
   return (
     <div className="my-6 rounded-xl border-2 border-blue-200 overflow-hidden bg-card">
@@ -98,7 +145,6 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
         </span>
         <span className="font-semibold text-foreground">{tpTitle}</span>
         <span className="ml-2 px-2 py-0.5 text-xs font-bold rounded bg-blue-100 text-blue-700">TP</span>
-        {block.xp > 0 && <span className="ml-auto text-xs text-blue-600 font-medium">{block.xp} XP</span>}
       </div>
 
       <div className="p-4 space-y-4">
@@ -174,9 +220,11 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
         )}
 
         {/* Evaluation criteria - transformed into learner-friendly rubric */}
-        {tpPrompt && (() => {
+        {(tpPrompt || rubricCriteria.length > 0) && (() => {
           // Parse the raw grading prompt into learner-friendly bullets
-          const bullets = extractLearnerObjectives(tpPrompt);
+          const bullets = rubricCriteria.length > 0
+            ? rubricCriteria.map((criterion: any) => criterion.label || criterion.description).filter(Boolean)
+            : extractLearnerObjectives(tpPrompt);
           if (bullets.length === 0) return null;
           return (
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
@@ -226,21 +274,26 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
             placeholder={t({ en: 'Describe what you did, paste your workflow JSON, or note the result...', fr: 'Décrivez ce que vous avez fait, collez votre workflow JSON, ou notez le résultat...' })}
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
-            disabled={submitted}
+            disabled={submitted || isEvaluating}
           />
         {!submitted && (
             <button
-              onClick={() => {
-                setSubmitted(true);
-                const id = block.id || `cloud_exercise_${blockIdx}`;
-                onComplete?.(id);
-              }}
-              disabled={answer.trim().length === 0}
+              onClick={submit}
+              disabled={answer.trim().length === 0 || isEvaluating}
               className="mt-3 px-5 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
             >
               <CheckCircle2 className="w-4 h-4" />
-              {t({ en: 'Submit', fr: 'Valider' })}
+              {isEvaluating ? t({ en: 'Evaluating…', fr: 'Évaluation…' }) : usesTrackedRubric ? t({ en: 'Evaluate my answer', fr: 'Évaluer ma réponse' }) : t({ en: 'Submit', fr: 'Valider' })}
             </button>
+          )}
+          {evaluation && (
+            <div className="mt-4 rounded-lg border border-blue-200 bg-blue-50/50 p-4 space-y-3 text-sm text-foreground">
+              <p className="font-semibold">{t({ en: `Result: ${evaluation.score}/${maxScore}`, fr: `Résultat : ${evaluation.score}/${maxScore}` })}</p>
+              <Streamdown>{evaluation.feedback}</Streamdown>
+              {evaluation.strengths.length > 0 && <ul className="list-disc pl-5 text-green-700">{evaluation.strengths.map((item, index) => <li key={index}><Streamdown>{item}</Streamdown></li>)}</ul>}
+              {evaluation.improvements.length > 0 && <ul className="list-disc pl-5 text-amber-700">{evaluation.improvements.map((item, index) => <li key={index}><Streamdown>{item}</Streamdown></li>)}</ul>}
+              {usesTrackedRubric && <p className={evaluation.passed ? "font-medium text-green-700" : "font-medium text-amber-700"}>{evaluation.passed ? t({ en: "Requirement met: you may continue. The associated competency points are being recorded.", fr: "Seuil atteint : vous pouvez continuer. Les points de compétences associés sont enregistrés." }) : t({ en: "Requirement not yet met: refine your response and try again.", fr: "Seuil non atteint : améliorez votre réponse et réessayez." })}</p>}
+            </div>
           )}
           {submitted && (
             <div className="mt-3 flex items-center gap-2 text-green-600 text-sm font-medium">
@@ -252,14 +305,14 @@ export function CloudExerciseBlock({ block, lang, t, blockIdx, onComplete }: Clo
 
         {/* Solution (only visible after submission) */}
         {learnerSolution && (
-          submitted ? (
+          (submitted || evaluation) ? (
             <details className="border border-green-200 rounded-lg bg-green-50/50" open>
               <summary className="px-4 py-2 cursor-pointer text-sm font-medium text-green-700 hover:text-green-800 flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4" />
                 {t({ en: 'Solution', fr: 'Correction' })}
               </summary>
-              <div className="px-4 pb-3 text-sm text-green-800 whitespace-pre-wrap font-mono bg-green-50 rounded-b-lg">
-                {learnerSolution}
+              <div className="px-4 pb-3 text-sm text-green-800 bg-green-50 rounded-b-lg prose prose-sm max-w-none">
+                <Streamdown>{learnerSolution}</Streamdown>
               </div>
             </details>
           ) : (

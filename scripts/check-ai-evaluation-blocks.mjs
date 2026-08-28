@@ -6,6 +6,7 @@ const baseUrl = (process.env.COURSE_AI_BLOCK_QA_URL || "http://127.0.0.1:3000").
 const learnerEmail = process.env.QA_EMAIL;
 const learnerPassword = process.env.QA_PASSWORD;
 const requestedCatalog = (process.env.COURSE_AI_BLOCK_QA_CATALOG || "all").toLowerCase();
+const requestedCourseId = process.env.COURSE_AI_BLOCK_QA_COURSE_ID || null;
 const desktop = process.env.COURSE_AI_BLOCK_QA_VIEWPORT === "desktop";
 const viewport = desktop ? { width: 1440, height: 1000 } : { width: 390, height: 844 };
 const reportPath = resolve("docs/ai_evaluation_block_qa_2026-08-26.json");
@@ -27,13 +28,15 @@ for (const filename of readdirSync(resolve("client/public/data/courses")).filter
   for (const [lessonIndex, lesson] of (course.lessons || []).entries()) {
     for (const [chapterIndex, chapter] of (lesson.chapters || []).entries()) {
       for (const block of chapter.blocks || []) {
-        if (block.type === "ai_evaluation") blocks.push({ courseId: course.courseId, lessonIndex, chapterIndex, blockId: block.id, catalog: catalogFor(course.courseId), minWords: block.minWords || 50 });
+        if (block.type === "ai_evaluation" || (block.type === "cloud_exercise" && Array.isArray(block.rubricCriteria) && block.rubricCriteria.length > 0)) {
+          blocks.push({ courseId: course.courseId, lessonIndex, chapterIndex, blockId: block.id, catalog: catalogFor(course.courseId), minWords: block.minWords || 1, type: block.type });
+        }
       }
     }
   }
 }
 
-const scopedBlocks = requestedCatalog === "all" ? blocks : blocks.filter((block) => block.catalog === requestedCatalog);
+const scopedBlocks = blocks.filter((block) => (requestedCatalog === "all" || block.catalog === requestedCatalog) && (!requestedCourseId || block.courseId === requestedCourseId));
 const result = {
   generatedAt: new Date().toISOString(),
   requestedCatalog,
@@ -67,11 +70,13 @@ try {
     const textarea = page.locator("textarea").first();
     await textarea.waitFor({ state: "visible", timeout: 15_000 });
     const initialText = await page.locator("body").innerText();
-    const baseAnswer = "Je commence par formuler une demande claire avec le contexte utile et un objectif observable. Je vérifie ensuite le résultat obtenu avec un exemple entièrement fictif. Je contrôle la cohérence entre la demande, les éléments fournis et la réponse proposée. J’identifie les limites, les ambiguïtés et les hypothèses qui demandent une vérification humaine. Enfin, je reformule mon instruction avec des critères plus précis, je compare le nouveau résultat au précédent et je conserve seulement une conclusion justifiée, reproductible et adaptée au sujet de l’exercice.";
+    const baseAnswer = target.courseId === "ai_for_consulting__01"
+      ? "Je souhaite identifier cinq cas d’usage de l’IA générative dans le conseil, notamment pour la recherche, l’analyse, la préparation de livrables et le support aux clients. Présentez les résultats dans une liste claire avec une brève explication de la valeur apportée à chaque étape d’une mission de conseil."
+      : "Je commence par formuler une demande claire avec le contexte utile et un objectif observable. Je vérifie ensuite le résultat obtenu avec un exemple entièrement fictif. Je contrôle la cohérence entre la demande, les éléments fournis et la réponse proposée. J’identifie les limites, les ambiguïtés et les hypothèses qui demandent une vérification humaine. Enfin, je reformule mon instruction avec des critères plus précis, je compare le nouveau résultat au précédent et je conserve seulement une conclusion justifiée, reproductible et adaptée au sujet de l’exercice.";
     const baseWordCount = baseAnswer.trim().split(/\s+/).length;
     const answer = Array.from({ length: Math.max(1, Math.ceil((target.minWords + 8) / baseWordCount)) }, () => baseAnswer).join(" ");
     await textarea.fill(answer);
-    const evaluateButton = page.getByRole("button", { name: /Évaluer avec l.?IA|Evaluate with AI/ });
+    const evaluateButton = page.getByRole("button", { name: /Évaluer avec l.?IA|Evaluate with AI|Évaluer ma réponse|Evaluate my answer/ });
     if (!(await evaluateButton.count())) {
       const buttonLabels = await page.getByRole("button").allTextContents();
       throw new Error(`Bouton d’évaluation absent sur ${page.url()}. Boutons visibles : ${buttonLabels.join(" | ")}. Page : ${(await page.locator("body").innerText()).slice(0, 900)}`);
@@ -80,8 +85,8 @@ try {
     const responseRequest = page.waitForResponse((response) => response.url().includes("training.evaluate") && response.request().method() === "POST");
     await evaluateButton.click();
     const response = await responseRequest;
-    await page.waitForFunction(() => /Score IA|AI Score|Évaluation échouée|Evaluation failed|n’a pas pu être effectuée|could not be completed/.test(document.body.innerText), { timeout: 15_000 }).catch(() => undefined);
-    const evaluationCard = page.getByText(/Score IA|AI Score/).locator("..").locator("..");
+    await page.waitForFunction(() => /Score IA|AI Score|Résultat\s*:|Result\s*:|Évaluation échouée|Evaluation failed|n’a pas pu être effectuée|could not be completed/.test(document.body.innerText), { timeout: 15_000 }).catch(() => undefined);
+    const evaluationCard = page.getByText(/Score IA|AI Score|Résultat\s*:|Result\s*:/).locator("..");
     const evaluationText = await evaluationCard.innerText().catch(async () => page.locator("body").innerText());
     const style = await evaluationCard.evaluate((element) => {
       const computed = getComputedStyle(element);
@@ -89,6 +94,17 @@ try {
     }).catch(() => ({ maxHeight: "", overflowY: "", scrollHeight: 0, clientHeight: 0 }));
     const screenshot = resolve(`docs/block-qa-screenshots/ai-evaluation-${requestedCatalog}-${desktop ? "desktop" : "mobile"}.png`);
     await page.screenshot({ path: screenshot, fullPage: true });
+    let competencyContributionVisible = null;
+    if (target.type === "cloud_exercise") {
+      await page.goto(`${baseUrl}/training?tab=skills`, { waitUntil: "domcontentloaded" });
+      await page.getByRole("button", { name: /prompt engineering/i }).waitFor({ state: "visible", timeout: 15_000 });
+      await page.getByRole("button", { name: /prompt engineering/i }).click();
+      await page.waitForFunction(() => /exercise passed|exercice réussi/i.test(document.body.innerText), { timeout: 10_000 }).catch(() => undefined);
+      const competencyText = await page.locator("body").innerText();
+      competencyContributionVisible = /exercise passed|exercice réussi/i.test(competencyText);
+      result.competencyProfile = competencyText.slice(0, 2400);
+      await page.screenshot({ path: resolve(`docs/block-qa-screenshots/ai-evaluation-${requestedCatalog}-competencies-${desktop ? "desktop" : "mobile"}.png`), fullPage: true });
+    }
     result.interactiveCheck = {
       courseId: target.courseId,
       lessonIndex: target.lessonIndex,
@@ -96,10 +112,11 @@ try {
       blockId: target.blockId,
       requestStatus: response.status(),
       inputAccepted: true,
-      feedbackVisible: /Score IA|AI Score/.test(evaluationText),
+      feedbackVisible: /Score IA|AI Score|Résultat\s*:|Result\s*:/.test(evaluationText),
       markdownFormatted: !evaluationText.includes("**"),
       fullResponseVisible: style.maxHeight === "none" && style.overflowY === "visible" && style.scrollHeight <= style.clientHeight,
       learnerControlsHidden: !/Modifier cet écran|Mode Révision/i.test(initialText),
+      competencyContributionVisible,
       screenshot,
     };
     await context.close();
@@ -109,5 +126,5 @@ try {
   await browser.close();
 }
 
-console.table({ catalog: requestedCatalog, aiEvaluationBlocks: result.scopedBlockCount, feedbackVisible: result.interactiveCheck?.feedbackVisible ?? "non requis", markdownFormatted: result.interactiveCheck?.markdownFormatted ?? "non requis", fullResponseVisible: result.interactiveCheck?.fullResponseVisible ?? "non requis", learnerControlsHidden: result.interactiveCheck?.learnerControlsHidden ?? "non requis" });
-if (result.staticChecks.some((block) => !block.resolvable) || (result.interactiveCheck && (!result.interactiveCheck.feedbackVisible || !result.interactiveCheck.markdownFormatted || !result.interactiveCheck.fullResponseVisible || !result.interactiveCheck.learnerControlsHidden))) process.exitCode = 1;
+console.table({ catalog: requestedCatalog, aiEvaluationBlocks: result.scopedBlockCount, feedbackVisible: result.interactiveCheck?.feedbackVisible ?? "non requis", markdownFormatted: result.interactiveCheck?.markdownFormatted ?? "non requis", fullResponseVisible: result.interactiveCheck?.fullResponseVisible ?? "non requis", learnerControlsHidden: result.interactiveCheck?.learnerControlsHidden ?? "non requis", competencyContributionVisible: result.interactiveCheck?.competencyContributionVisible ?? "non requis" });
+if (result.staticChecks.some((block) => !block.resolvable) || (result.interactiveCheck && (!result.interactiveCheck.feedbackVisible || !result.interactiveCheck.markdownFormatted || !result.interactiveCheck.fullResponseVisible || !result.interactiveCheck.learnerControlsHidden || result.interactiveCheck.competencyContributionVisible === false))) process.exitCode = 1;

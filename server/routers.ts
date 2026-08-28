@@ -125,7 +125,7 @@ export const appRouter = router({
         });
       }),
     recordAssessmentOutcome: protectedProcedure
-      .input(z.object({ sourceType: z.enum(["quiz_passed", "checkpoint_passed"]), sourceKey: z.string().min(1).max(255), eventKey: z.string().min(1).max(255), score: z.number().min(0).max(100), certificationId: z.string().optional(), courseId: z.string().optional(), lessonIndex: z.number().int().optional(), chapterIndex: z.number().int().optional() }))
+      .input(z.object({ sourceType: z.enum(["quiz_passed", "checkpoint_passed", "exercise_passed"]), sourceKey: z.string().min(1).max(255), eventKey: z.string().min(1).max(255), score: z.number().min(0).max(100), certificationId: z.string().optional(), courseId: z.string().optional(), lessonIndex: z.number().int().optional(), chapterIndex: z.number().int().optional() }))
       .mutation(async ({ ctx, input }) => {
         await recordLearningEvent({ userId: ctx.user.id, eventType: input.sourceType, certificationId: input.certificationId, courseId: input.courseId, lessonIndex: input.lessonIndex, chapterIndex: input.chapterIndex, score: Math.round(input.score), success: 1, metadata: { eventKey: input.eventKey } });
         const competencyTags = getContentCompetencyTags({ courseId: input.courseId, lessonIndex: input.lessonIndex, certificationId: input.certificationId });

@@ -1,5 +1,24 @@
 # Project TODO — Neopolis Akademy
 
+## Audit comparatif avancé — DataCamp et Neopolis
+- [ ] Vérifier, après le test utilisateur, que la session Chrome locale Mighty-Shadow et non un navigateur distant porte les sessions apprenant DataCamp et Neopolis pour la comparaison côte à côte
+- [ ] Confirmer que la session utilisée n’est plus identifiée comme « Browser: Sandbox » avant de consulter ou répondre aux activités DataCamp
+- [ ] Inventorier tous les cours DataCamp présents dans Neopolis et les regrouper en vagues d’audit traçables
+- [ ] Comparer, en apprenant avancé, les structures, médias, consignes, interactions, corrections et conditions de passage avec les sources DataCamp accessibles
+- [ ] Corriger les divergences reproductibles avec les blocs standards Neopolis et supprimer les activités non reproductibles avec leurs références associées
+- [ ] Rejouer les parcours corrigés, exécuter la QA de publication et consigner pour chaque cours les écarts assumés
+
+## Correctifs DataCamp selon le paquet d’audit du 28 août
+- [x] Traiter d’abord `ai-for-consulting` : comparer source/Neopolis, convertir en TP local les dépendances reproductibles et retirer entièrement les éléments impossibles
+- [x] Raccorder les 16 TP ai-for-consulting disposant de critères source explicites à une évaluation réellement rubricée, persistée et non validée par simple texte saisi
+- [x] Retirer l’activité 3.9 sans critères ni ressources locales exploitables, puis recalculer navigation et compteurs sans référence résiduelle
+- [x] Retirer les recommandations externes DataCamp du contenu Projector tout en conservant les médias locaux du cours
+- [x] Vérifier après un TP cloud que les points de compétences associés sont effectivement visibles et actualisés côté apprenant, sans affichage XP — contribution `exercise passed` visible à +1,0 point dans Prompt engineering
+- [x] Vérifier dans le profil administrateur du même apprenant la contribution `exercise passed` ainsi que la valeur actualisée des points après le TP DataCamp, sans mention XP — total 4/100 et delta +1,0 visibles
+- [x] Normaliser le score de chaque TP cloud évalué sur une échelle 0–100 avant l’événement de compétence, y compris lorsque la rubrique source a un score maximal de 1 — score binaire validé à 100/100
+- [ ] Appliquer les contrôles globaux DataCamp : aucune mention XP, aucun HTML/Markdown brut, aucun lien externe DataCamp, et libellé honnête « Audio + diapositives » pour Projector
+- [ ] Ne passer à chaque cours prioritaire suivant qu’après contrôle apprenant, QA, publication et rapport de correction du cours courant
+
 ## Pagination du journal opérationnel
 - [x] Auditer la requête et le composant du journal opérationnel de la page Administration → Erreurs client
 - [x] Ajouter une pagination serveur et une recherche au journal tout en conservant l’ordre des événements

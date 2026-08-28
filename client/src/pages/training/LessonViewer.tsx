@@ -72,6 +72,7 @@ export default function LessonViewer({
 }) {
   const { user } = useAuth();
   const recordCompetencyOutcome = trpc.competencies.recordAssessmentOutcome.useMutation();
+  const evaluateFreeResponse = trpc.training.evaluateFreeResponse.useMutation();
   const [currentChapter, setCurrentChapter] = useState(initialChapter ?? 0);
   // validatedChapter tracks the highest chapter index that was VALIDATED (quiz passed or exercises completed)
   // This is what gets persisted as progress - NOT the navigation position
@@ -893,7 +894,19 @@ export default function LessonViewer({
         );
       }
       case "cloud_exercise": {
-        return <CloudExerciseBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} onComplete={(id) => setCompletedCloudExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })} />;
+        return <CloudExerciseBlock key={blockIdx} block={block} lang={lang} t={t} blockIdx={blockIdx} evaluationContext={{ certificationId: certId, courseId, lessonIndex, chapterIndex: currentChapter }} onEvaluate={(input) => evaluateFreeResponse.mutateAsync(input as any)} onComplete={(id, outcome) => {
+          setCompletedCloudExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; });
+          if (outcome?.rubricEvaluated) recordCompetencyOutcome.mutate({
+            sourceType: "exercise_passed",
+            sourceKey: courseId,
+            eventKey: `cloud-exercise:${courseId}:${lessonIndex}:${currentChapter}:${id}`,
+            score: outcome.score,
+            certificationId: certId,
+            courseId,
+            lessonIndex,
+            chapterIndex: currentChapter,
+          });
+        }} />;
       }
       case "callout": {
         return <CalloutBlock key={blockIdx} block={block} lang={lang} />;

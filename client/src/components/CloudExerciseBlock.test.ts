@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { CloudExerciseBlock } from "@/components/CloudExerciseBlock";
-import { adaptDataCampVmText } from "@/components/CloudExerciseBlock";
+import { adaptDataCampVmText, toCompetencyPercentage } from "@/components/CloudExerciseBlock";
 import { renderInlineFormatting } from "@/pages/training/PageContent";
 
 describe("Cloud exercise learner criteria", () => {
@@ -45,5 +45,12 @@ describe("Cloud exercise learner criteria", () => {
     expect(adapted).toContain("reconstituez le workflow `currency_exchange.json`");
     expect(adapted).not.toContain("connecté automatiquement");
     expect(adapted).not.toContain("Desktop de la VM");
+  });
+
+  it("normalise un score de rubrique en pourcentage avant la contribution de compétence", () => {
+    expect(toCompetencyPercentage(1, 1)).toBe(100);
+    expect(toCompetencyPercentage(3, 4)).toBe(75);
+    expect(toCompetencyPercentage(-1, 4)).toBe(0);
+    expect(toCompetencyPercentage(8, 4)).toBe(100);
   });
 });
