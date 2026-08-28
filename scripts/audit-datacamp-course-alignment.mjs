@@ -60,6 +60,13 @@ const findings = sourceActivities.map((sourceActivity) => {
     sourceActivity.file_assets?.length || sourceActivity.referenced_files?.length || sourceActivity.attachments,
   );
   const requiresLocalRuntime = ["CloudExercise", "DatalabExercise", "IDEExercise"].includes(sourceActivity.type);
+  const hasDeterministicResponse = Boolean(
+    sourceActivity.content?.question?.solutionItems?.length ||
+      (sourceActivity.content?.possible_answers?.length && sourceActivity.content?.feedbacks?.length),
+  );
+  const requiresProviderEmbeddedApp = Boolean(
+    sourceActivity.asset?.assetType === "EmbeddedApp" && !hasLocalAssets && !hasDeterministicResponse,
+  );
 
   const key = `${sourceActivity.chapter_number}.${sourceActivity.exercise_number}`;
   const intentionallyRemoved = intentionallyOmitted.has(key) && !current;
@@ -74,11 +81,13 @@ const findings = sourceActivities.map((sourceActivity) => {
     blockTypes: (current?.blocks ?? []).map((block) => block.type),
     explicitRubric: hasExplicitRubric,
     sourceLocalAssets: hasLocalAssets,
+    providerEmbeddedApp: requiresProviderEmbeddedApp,
+    deterministicResponse: hasDeterministicResponse,
     flags,
     provisionalDecision:
       intentionallyRemoved
         ? "removed_non_reproducible"
-        : requiresLocalRuntime && !hasExplicitRubric && !hasLocalAssets
+        : (requiresLocalRuntime || requiresProviderEmbeddedApp) && !hasExplicitRubric && !hasLocalAssets
         ? "remove_candidate"
         : requiresLocalRuntime && hasExplicitRubric
           ? "local_rubric_candidate"
@@ -108,6 +117,7 @@ const output = {
     intentionallyRemovedActivities: findings.filter((finding) => finding.provisionalDecision === "removed_non_reproducible").length,
     cloudExercises: findings.filter((finding) => finding.sourceType === "CloudExercise").length,
     runtimeExercises: findings.filter((finding) => ["CloudExercise", "DatalabExercise", "IDEExercise"].includes(finding.sourceType)).length,
+    providerEmbeddedAppCandidates: findings.filter((finding) => finding.providerEmbeddedApp && finding.provisionalDecision === "remove_candidate").length,
     localRubricCandidates: findings.filter((finding) => finding.provisionalDecision === "local_rubric_candidate").length,
     removalCandidates: findings.filter((finding) => finding.provisionalDecision === "remove_candidate").length,
     ...flagCounts,
