@@ -33,9 +33,11 @@ const currentByActivityId = new Map(
   currentActivities.map((chapter) => [chapter.id, chapter]),
 );
 
-const sourceActivities = source.chapters.flatMap((chapter) =>
-  chapter.activities.map((activity) => ({ chapterNumber: chapter.number, ...activity })),
-);
+const sourceActivities = Array.isArray(source.exercises)
+  ? source.exercises.map((activity) => ({ chapterNumber: activity.chapter_number, ...activity }))
+  : source.chapters.flatMap((chapter) =>
+      (chapter.activities ?? []).map((activity) => ({ chapterNumber: chapter.number, ...activity })),
+    );
 
 const forbiddenVisiblePatterns = {
   xp: /\b\d+\s*XP\b|XP\s*(quotidiens|DataCamp)|Indice\s*\(-?\d+\s*XP\)/i,

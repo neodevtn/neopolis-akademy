@@ -120,6 +120,15 @@
 ## Lot DataCamp suivant — Priorité après CrewAI
 - [ ] Identifier le prochain paquet officiel DataCamp dans la liste des cours non encore audités, restaurer sa source et établir un audit activité par activité
 
+## Lot DataCamp suivant — Utiliser l’API OpenAI
+- [ ] Restaurer le paquet officiel Drive, vérifier son empreinte et auditer les activités avant toute adaptation
+- [x] Nettoyer les neuf références XP et trois liens externes du cours OpenAI, puis valider les 29 activités déterministes avant publication — audit 29/29, XP, lien externe, DataLab et HTML brut à 0
+- [x] Retirer les mentions de gamification et la recommandation DataLab indisponible des transcriptions ; conserver ou reformuler les deux références documentaires OpenAI uniquement si elles restent clairement non nécessaires au passage — liens externes retirés des textes apprenant, actifs locaux préservés
+- [x] Ajouter une régression pour les 29 activités OpenAI conservées et l’absence de références XP/DataLab visibles avant la QA complète — test ciblé et QA complète à six étapes réussis
+
+## Lot DataCamp suivant — Computer Vision
+- [ ] Restaurer le paquet officiel Drive, vérifier son empreinte et auditer les activités avant toute adaptation
+
 ## Lot DataCamp suivant — Introduction à l’IA pour le travail
 - [x] Restaurer le paquet officiel Drive, vérifier son empreinte et auditer les 33 activités avant toute adaptation — archive validée SHA-256 ; audit 33/33 sans omission ni dépendance runtime
 - [x] Retirer les deux fragments HTML bruts détectés, puis valider les 33 interactions déterministes et les 11 Projector locaux — HTML brut à 0, test ciblé réussi et QA complète à six étapes réussie
