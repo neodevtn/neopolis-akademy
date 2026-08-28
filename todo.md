@@ -138,6 +138,9 @@
 ## Lot DataCamp suivant — Priorité après smolagents
 - [ ] Identifier le prochain paquet DataCamp selon le rapport comparatif, restaurer sa source officielle et auditer son potentiel de reproductibilité avant toute adaptation
 
+## Lot DataCamp suivant — Innovating with Google Cloud AI
+- [x] Restaurer le paquet officiel Drive, vérifier son empreinte et auditer les activités avant toute adaptation — archive en trois parties validée SHA-256 ; 23/23 activités conservées, 11 visual exercises HTML5 locaux, 12 QCM, 0 dépendance externe et QA complète à six étapes réussie
+
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
 - [x] Valider le rapport automatisé d’artefacts QA AI for Finance puis refaire `git status --short` pour confirmer l’état final après nettoyage — `git diff --check` réussi et état Git limité aux sources, tests, données et preuves attendus ; validations TypeScript, JSON et 426 tests vertes
