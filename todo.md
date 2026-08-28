@@ -36,7 +36,13 @@
 - [x] Ajouter et exécuter une QA dédiée AI for Human Resources rejouant au moins un écran Projector et un tri conservé côté apprenant, en complément du TP rubricé — Projector 1.1 et tri 1.3 vérifiés au viewport mobile ; TP rubricé déjà rejoué
 - [x] Confirmer par preuve automatisée le nettoyage fournisseur, les métriques dérivées et le rejeu des interactions conservées avant publication — audits, test métier, QA complète six étapes et sondes ciblées réussis
 - [x] Stabiliser la matrice QA mobile en isolant chaque navigation de bloc afin d’éviter les crashs de renderer cumulés — `qa:publish` retrouve 6/6 étapes réussies
-- [ ] Archiver le checkpoint de preuve de production AI for Human Resources après vérification finale de `git status --short`
+- [x] Archiver le checkpoint de preuve de production AI for Human Resources après vérification finale de `git status --short` — checkpoint de preuve `085cf7fb` créé après les contrôles Projector, tri et TP en production
+
+## Lot DataCamp suivant — AI for Marketing
+- [x] Restaurer et vérifier le paquet officiel Drive — archive de 13 parties validée SHA-256 ; 3 chapitres, 29 activités et 400 téléchargements locaux
+- [x] Établir l’audit initial activité par activité — 29/29 présentes, 12 TP avec rubrique explicite et 2 candidats sans rubrique à examiner
+- [ ] Examiner les activités 2.8 et 2.13 sans rubrique explicite, puis adapter seulement les 12 TP admissibles ou justifier les retraits canoniques
+- [ ] Nettoyer les dépendances fournisseur visibles, synchroniser les métriques et rejouer les blocs Projector, tri et TP avant publication
 
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
