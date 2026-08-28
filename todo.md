@@ -140,6 +140,7 @@
 
 ## Lot DataCamp suivant — Innovating with Google Cloud AI
 - [x] Restaurer le paquet officiel Drive, vérifier son empreinte et auditer les activités avant toute adaptation — archive en trois parties validée SHA-256 ; 23/23 activités conservées, 11 visual exercises HTML5 locaux, 12 QCM, 0 dépendance externe et QA complète à six étapes réussie
+- [x] Corriger la sonde de métriques pour les cours sans compteur vidéo affichable et confirmer le contrôle public Google Cloud AI — production confirmée à 23 activités, 12 exercices, 0 vidéo et 0 téléchargement
 
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`

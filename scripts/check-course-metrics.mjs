@@ -21,7 +21,7 @@ const metrics = {
   interactiveExercises: blocks.filter((block) => ["cloud_exercise", "bucket_sort", "single_choice_exercise", "multiple_choice_exercise", "multi_choice_exercise", "visual_exercise", "resource_review", "code_exercise", "code_repl", "ai_evaluation"].includes(block.type)).length,
   downloads: blocks.filter((block) => block.type === "download").length,
 };
-const expected = [`${metrics.activities} activités`, `${metrics.videos} vidéos`, `${metrics.interactiveExercises} exercices interactifs`, ...(metrics.downloads > 0 ? [`${metrics.downloads} téléchargements`] : [])];
+const expected = [`${metrics.activities} activités`, ...(metrics.videos > 0 ? [`${metrics.videos} vidéos`] : []), `${metrics.interactiveExercises} exercices interactifs`, ...(metrics.downloads > 0 ? [`${metrics.downloads} téléchargements`] : [])];
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium", headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--no-zygote"] });
 try {
