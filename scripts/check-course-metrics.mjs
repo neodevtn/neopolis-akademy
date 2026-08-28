@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import { chromium } from "playwright-core";
+import { normalizeMetricText } from "./course-metrics-utils.mjs";
 
 const courseId = process.env.COURSE_METRICS_ID;
 const baseUrl = (process.env.COURSE_METRICS_QA_URL || "http://127.0.0.1:3000").replace(/\/$/, "");
@@ -41,10 +42,10 @@ try {
 
   await page.goto(`${baseUrl}/training/${certification.id}`, { waitUntil: "commit", timeout: 60_000 });
   await page.waitForFunction((requiredMetrics) => {
-    const pageText = document.body?.innerText?.toLocaleLowerCase("fr-FR") ?? "";
+    const pageText = (document.body?.innerText?.toLocaleLowerCase("fr-FR") ?? "").replace(/\s+/g, " ").trim();
     return requiredMetrics.every((metric) => pageText.includes(metric)) && !pageText.includes("chargement...");
   }, expected, { timeout: 45_000 });
-  const pageText = (await page.locator("body").innerText({ timeout: 45_000 })).replace(/\s+/g, " ");
+  const pageText = normalizeMetricText(await page.locator("body").innerText({ timeout: 45_000 }));
   for (const value of expected) if (!pageText.toLocaleLowerCase("fr-FR").includes(value)) throw new Error(`Fiche formation : métrique absente « ${value} ». Contenu=${pageText.slice(0, 1800)}`);
 
   console.table({ courseId, certificationId: certification.id, ...metrics });

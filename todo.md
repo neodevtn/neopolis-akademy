@@ -54,8 +54,9 @@
 ## Lot DataCamp suivant — Introduction à l’IA générative dans Snowflake
 - [x] Restaurer et vérifier le paquet officiel Drive — archive de trois parties validée SHA-256 ; 2 chapitres, 20 activités et 7 vidéos source
 - [x] Établir l’audit initial activité par activité — 20/20 activités présentes ; 13 TP cloud sans rubrique explicite et un média externe à nettoyer
-- [ ] Confirmer le retrait canonique des 13 TP non rubricés, supprimer leurs références associées et ne conserver aucun exercice libre inventé
-- [ ] Corriger le média externe restant, synchroniser les métriques et valider le cours conservé avant toute publication
+- [x] Vérifier dans le JSON et l’audit l’absence effective des 13 TP cloud non rubricés et de leurs références associées, sans exercice libre ajouté — audit 20 source / 7 conservées / 13 omissions déclarées, 0 candidat restant
+- [x] Scanner les médias et textes visibles Snowflake pour confirmer le nettoyage du média externe, puis rejouer la synchronisation des métriques avant clôture définitive — audit source corrigé à 0 média externe, synchronisation et tests ciblés réussis
+- [x] Reprendre le contrôle public de la carte et de la fiche : 7 activités, 0 exercice interactif, 7 vidéos et 2 téléchargements confirmés sur le domaine public
 
 ## Lot DataCamp suivant — Priorité à identifier
 - [ ] Identifier le prochain cours DataCamp à forte dépendance cloud dans le rapport d’audit, restaurer son paquet officiel et valider son empreinte avant toute adaptation
