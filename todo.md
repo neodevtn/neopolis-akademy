@@ -44,6 +44,12 @@
 - [ ] Examiner les activités 2.8 et 2.13 sans rubrique explicite, puis adapter seulement les 12 TP admissibles ou justifier les retraits canoniques
 - [ ] Nettoyer les dépendances fournisseur visibles, synchroniser les métriques et rejouer les blocs Projector, tri et TP avant publication
 
+## Lot DataCamp suivant — AI for Sales
+- [x] Restaurer et vérifier le paquet officiel Drive — archive de quatre parties validée SHA-256 ; 3 chapitres, 26 activités et 309 téléchargements locaux
+- [x] Établir l’audit initial activité par activité — 26/26 activités présentes, 9 TP avec rubriques explicites et 4 candidats au retrait sans rubrique
+- [ ] Examiner les activités 1.3, 1.6, 2.5 et 2.6 sans rubrique explicite, puis retirer seulement les dépendances non reproductibles avec justification canonique
+- [ ] Convertir les 9 TP rubricés et vérifier les métriques, interactions et médias locaux avant publication
+
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
 - [x] Valider le rapport automatisé d’artefacts QA AI for Finance puis refaire `git status --short` pour confirmer l’état final après nettoyage — `git diff --check` réussi et état Git limité aux sources, tests, données et preuves attendus ; validations TypeScript, JSON et 426 tests vertes
