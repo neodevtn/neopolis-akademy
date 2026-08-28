@@ -1,13 +1,13 @@
 # Audit des sources d’interaction
 
-Généré le 2026-08-28T19:53:41.040Z.
+Généré le 2026-08-28T22:08:40.646Z.
 
 | Indicateur | Nombre |
 |---|---:|
 | courses | 137 |
 | lessons | 737 |
-| chapters | 3283 |
-| interactiveBlocks | 1693 |
+| chapters | 3280 |
+| interactiveBlocks | 1690 |
 | chapterQuizQuestions | 2166 |
 | legacyExercises | 902 |
 | checkpointReferencedExercises | 124 |
@@ -28,7 +28,7 @@ Généré le 2026-08-28T19:53:41.040Z.
 | flip_cards | 139 |
 | knowledge_check | 31 |
 | learning_tools | 12 |
-| multi_choice_exercise | 148 |
+| multi_choice_exercise | 145 |
 | resource_review | 12 |
 | single_choice_exercise | 357 |
 

@@ -67,6 +67,13 @@ const findings = sourceActivities.map((sourceActivity) => {
   const requiresProviderEmbeddedApp = Boolean(
     sourceActivity.asset?.assetType === "EmbeddedApp" && !hasLocalAssets && !hasDeterministicResponse,
   );
+  const requiresVisualAsset = Boolean(
+    sourceActivity.type === "VisualExercise" && sourceActivity.asset?.assetType === "Image" && sourceActivity.asset?.assetUrl,
+  );
+  const hasLocalVisualAsset = Boolean(
+    current?.blocks?.some((block) => typeof block.visualAssetUrl === "string" && /^(?:\/api\/assets\/|\/manus-storage\/)/.test(block.visualAssetUrl)),
+  );
+  const missingRequiredVisualAsset = requiresVisualAsset && !hasLocalVisualAsset;
 
   const key = `${sourceActivity.chapter_number}.${sourceActivity.exercise_number}`;
   const intentionallyRemoved = intentionallyOmitted.has(key) && !current;
@@ -82,11 +89,15 @@ const findings = sourceActivities.map((sourceActivity) => {
     explicitRubric: hasExplicitRubric,
     sourceLocalAssets: hasLocalAssets,
     providerEmbeddedApp: requiresProviderEmbeddedApp,
+    sourceVisualAssetRequired: requiresVisualAsset,
+    localVisualAssetMapped: hasLocalVisualAsset,
     deterministicResponse: hasDeterministicResponse,
     flags,
     provisionalDecision:
       intentionallyRemoved
         ? "removed_non_reproducible"
+        : missingRequiredVisualAsset
+        ? "remove_candidate"
         : (requiresLocalRuntime || requiresProviderEmbeddedApp) && !hasExplicitRubric && !hasLocalAssets
         ? "remove_candidate"
         : requiresLocalRuntime && hasExplicitRubric
