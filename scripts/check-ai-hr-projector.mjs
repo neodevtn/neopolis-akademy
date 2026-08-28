@@ -5,7 +5,7 @@ const baseUrl = (process.env.PROJECTOR_QA_URL || "http://127.0.0.1:3000").replac
 const email = process.env.QA_EMAIL;
 const password = process.env.QA_PASSWORD;
 if (!email || !password) throw new Error("QA_EMAIL et QA_PASSWORD sont requis.");
-const result = { generatedAt: new Date().toISOString(), rendered: false, audioVisible: false, slideVisible: false, providerReferenceVisible: false };
+const result = { generatedAt: new Date().toISOString(), rendered: false, audioVisible: false, slideVisible: false, providerReferenceVisible: false, providerMatches: [] };
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium", headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--no-zygote"] });
 try {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, extraHTTPHeaders: { "x-neopolis-qa-probe": "1" } });
@@ -20,7 +20,9 @@ try {
   const projector = page.locator('[data-block-type="video"]');
   result.audioVisible = await projector.locator('video').count() > 0;
   result.slideVisible = await projector.getByRole('button', { name: /Lire la leçon|Mettre en pause/ }).count() > 0;
-  result.providerReferenceVisible = /DataCamp|Copilot/i.test(await projector.innerText());
+  const projectorText = await projector.innerText();
+  result.providerMatches = projectorText.match(/[^\n]{0,60}(?:DataCamp|Copilot)[^\n]{0,80}/gi) || [];
+  result.providerReferenceVisible = result.providerMatches.length > 0;
   await page.screenshot({ path: "docs/block-qa-screenshots/ai_for_human_resources__01-projector-mobile.png", fullPage: true });
   await context.close();
 } finally { await browser.close(); }

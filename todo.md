@@ -36,7 +36,7 @@
 - [x] Ajouter et exécuter une QA dédiée AI for Human Resources rejouant au moins un écran Projector et un tri conservé côté apprenant, en complément du TP rubricé — Projector 1.1 et tri 1.3 vérifiés au viewport mobile ; TP rubricé déjà rejoué
 - [x] Confirmer par preuve automatisée le nettoyage fournisseur, les métriques dérivées et le rejeu des interactions conservées avant publication — audits, test métier, QA complète six étapes et sondes ciblées réussis
 - [x] Stabiliser la matrice QA mobile en isolant chaque navigation de bloc afin d’éviter les crashs de renderer cumulés — `qa:publish` retrouve 6/6 étapes réussies
-- [ ] Exécuter la QA, publier puis contrôler l’expérience apprenant en production avant le cours suivant
+- [ ] Archiver le checkpoint de preuve de production AI for Human Resources après vérification finale de `git status --short`
 
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
