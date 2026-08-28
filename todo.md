@@ -104,6 +104,10 @@
 - [ ] Restaurer le paquet officiel Drive, valider son empreinte et auditer les exercices DataLab avant toute adaptation
 - [ ] Qualifier et, si nécessaire, retirer le lien externe Graph RAG ; protéger les 37 activités déterministes par test, QA et contrôle des métriques
 
+## Lot DataCamp suivant — Building AI Agents with Haystack
+- [ ] Restaurer le paquet officiel Drive, valider l’empreinte et auditer les six exercices DataLab avant toute adaptation
+- [ ] Retirer les six activités DataLab Haystack sans rubrique source, nettoyer le lien externe résiduel et valider les cinq Projector conservés avant publication
+
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
 - [x] Valider le rapport automatisé d’artefacts QA AI for Finance puis refaire `git status --short` pour confirmer l’état final après nettoyage — `git diff --check` réussi et état Git limité aux sources, tests, données et preuves attendus ; validations TypeScript, JSON et 426 tests vertes
