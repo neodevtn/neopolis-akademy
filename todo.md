@@ -108,6 +108,10 @@
 - [ ] Restaurer le paquet officiel Drive, valider l’empreinte et auditer les six exercices DataLab avant toute adaptation
 - [ ] Retirer les six activités DataLab Haystack sans rubrique source, nettoyer le lien externe résiduel et valider les cinq Projector conservés avant publication
 
+## Lot DataCamp suivant — Agents IA avec Hugging Face smolagents
+- [x] Restaurer le paquet officiel Drive, valider l’empreinte et auditer les exercices runtime avant toute adaptation — archive de quatorze parties validée SHA-256 ; 30/30 activités déterministes conservées, 0 TP cloud/DataLab, 0 média externe
+- [x] Ajouter un test de régression des 30 activités smolagents déterministes, puis exécuter la QA avant publication — test existant confirmé et QA complète à six étapes réussie
+
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
 - [x] Valider le rapport automatisé d’artefacts QA AI for Finance puis refaire `git status --short` pour confirmer l’état final après nettoyage — `git diff --check` réussi et état Git limité aux sources, tests, données et preuves attendus ; validations TypeScript, JSON et 426 tests vertes
