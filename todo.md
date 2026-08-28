@@ -41,15 +41,16 @@
 ## Lot DataCamp suivant — AI for Marketing
 - [x] Restaurer et vérifier le paquet officiel Drive — archive de 13 parties validée SHA-256 ; 3 chapitres, 29 activités et 400 téléchargements locaux
 - [x] Établir l’audit initial activité par activité — 29/29 présentes, 12 TP avec rubrique explicite et 2 candidats sans rubrique à examiner
-- [ ] Examiner les activités 2.8 et 2.13 sans rubrique explicite, puis adapter seulement les 12 TP admissibles ou justifier les retraits canoniques
-- [ ] Nettoyer les dépendances fournisseur visibles, synchroniser les métriques et rejouer les blocs Projector, tri et TP avant publication
+- [x] Examiner les activités 2.8 et 2.13 sans rubrique explicite, puis adapter seulement les 12 TP admissibles ou justifier les retraits canoniques — « As du chiffre » et « Mesurer et itérer » sont deux `CloudExercise` sans rubrique ni actif local déclaré ; elles sont retirées sans substitut, audit 29 source / 27 conservées / 2 omissions
+- [x] Nettoyer les dépendances fournisseur visibles, synchroniser les métriques et rejouer le tri et le TP avant publication — preuve publiée : 27 activités, 17 exercices, 10 vidéos et 3 téléchargements ; tri 1.6 et un TP rubricé rejoués avec verrou, feedback, déverrouillage, accessibilité et contribution de compétence
+- [x] Rejouer et documenter les Projector Marketing côté apprenant : préparation séquentielle QA de deux unités, puis matrice 10/10 confirmant rendu, flux vidéo local, slides, commande de lecture et 0 référence fournisseur visible
 
 ## Lot DataCamp suivant — AI for Sales
 - [x] Restaurer et vérifier le paquet officiel Drive — archive de quatre parties validée SHA-256 ; 3 chapitres, 26 activités et 309 téléchargements locaux
 - [x] Établir l’audit initial activité par activité — 26/26 activités présentes, 9 TP avec rubriques explicites et 4 candidats au retrait sans rubrique
-- [ ] Examiner les activités 1.3, 1.6, 2.5 et 2.6 sans rubrique explicite, puis retirer seulement les dépendances non reproductibles avec justification canonique
-- [ ] Convertir les 9 TP rubricés et vérifier les métriques, interactions et médias locaux avant publication
-- [ ] Corriger la sonde de métriques pour les cours sans téléchargement affichable et confirmer le contrôle de production AI for Sales
+- [ ] Examiner les activités 1.3, 1.6, 2.5 et 2.6 sans rubrique explicite, puis retirer seulement les dépendances non reproductibles avec justification canonique — documenter la décision activité par activité
+- [ ] Convertir les 9 TP rubricés et vérifier les métriques, interactions et médias locaux avant publication — consigner les contrôles exécutés
+- [ ] Corriger la sonde de métriques pour les cours sans téléchargement affichable et confirmer le contrôle de production AI for Sales — identifier le correctif et archiver le résultat public
 
 ## Lot DataCamp suivant — Introduction à l’IA générative dans Snowflake
 - [x] Restaurer et vérifier le paquet officiel Drive — archive de trois parties validée SHA-256 ; 2 chapitres, 20 activités et 7 vidéos source
@@ -59,7 +60,7 @@
 - [x] Reprendre le contrôle public de la carte et de la fiche : 7 activités, 0 exercice interactif, 7 vidéos et 2 téléchargements confirmés sur le domaine public
 
 ## Lot DataCamp suivant — Priorité à identifier
-- [ ] Identifier le prochain cours DataCamp à forte dépendance cloud dans le rapport d’audit, restaurer son paquet officiel et valider son empreinte avant toute adaptation
+- [x] Identifier le prochain cours DataCamp à forte dépendance cloud dans le rapport d’audit, restaurer son paquet officiel et valider son empreinte avant toute adaptation — Snowflake a été sélectionné, restauré et clôturé
 
 ## Lot DataCamp suivant — Microsoft Copilot dans PowerPoint
 - [x] Restaurer le paquet officiel Drive et vérifier son archive — quatre parties validées SHA-256 ; 3 chapitres, 20 activités et 7 Projector source
@@ -69,13 +70,13 @@
 ## Lot DataCamp suivant — Microsoft Copilot dans Word
 - [x] Restaurer et vérifier le paquet officiel Drive — archive de treize parties validée SHA-256 ; 3 chapitres, 29 activités et 10 vidéos source
 - [x] Établir l’audit initial activité par activité — 29/29 activités présentes ; 9 TP avec rubriques explicites et 5 candidats sans rubrique
-- [ ] Examiner les cinq TP sans rubrique, convertir uniquement les neuf TP admissibles et retirer les dépendances non reproductibles avec justification canonique
-- [ ] Synchroniser les métriques, rejouer les interactions conservées et exécuter la QA avant toute publication
+- [ ] Examiner les cinq TP sans rubrique, convertir uniquement les neuf TP admissibles et retirer les dépendances non reproductibles avec justification canonique — documenter chaque décision source
+- [ ] Synchroniser les métriques, rejouer les interactions conservées et exécuter la QA avant toute publication — consigner la QA et les rejeux exécutés
 
 ## Lot DataCamp suivant — Développement logiciel avec GitHub Copilot
 - [x] Restaurer et vérifier le paquet officiel Drive — archive de vingt parties validée SHA-256 ; 4 chapitres, 40 activités et 13 vidéos source
 - [x] Établir l’audit initial activité par activité — 40/40 activités présentes ; aucun TP cloud ou exercice libre à adapter
-- [ ] Vérifier les deux URL détectées comme exemples pédagogiques non chargés, synchroniser les métriques et rejouer les interactions déterministes avant publication
+- [ ] Vérifier les deux URL détectées comme exemples pédagogiques non chargés, synchroniser les métriques et rejouer les interactions déterministes avant publication — consigner leur qualification et les rejeux exécutés
 
 ## Lot DataCamp suivant — Building Agentic Workflows with LlamaIndex
 - [x] Restaurer le paquet officiel Drive, valider son empreinte et auditer ses exercices DataLab avant toute adaptation — SHA-256 validé ; 5 Projector et 10 activités DataLab sources
@@ -94,7 +95,7 @@
 - [x] Reprendre le contrôle public complet de la carte catalogue et de la fiche : sonde réexécutée avec chargement DOM, carte et fiche confirment 4 activités, 0 exercice interactif, 4 vidéos et 2 téléchargements
 
 ## Lot DataCamp suivant — Priorité après LangGraph
-- [ ] Identifier le prochain cours DataCamp à forte dépendance DataLab dans l’audit, restaurer son paquet officiel et vérifier son empreinte avant toute adaptation
+- [x] Identifier le prochain cours DataCamp à forte dépendance DataLab dans l’audit, restaurer son paquet officiel et vérifier son empreinte avant toute adaptation — MongoDB/LangGraph a été sélectionné, restauré et clôturé
 
 ## Lot DataCamp suivant — Agents text-to-query avec MongoDB et LangGraph
 - [x] Restaurer le paquet officiel Drive et vérifier son empreinte — archive de douze parties validée SHA-256 ; 13 activités source dont 8 DataLab
@@ -104,8 +105,8 @@
 - [x] Reprendre le contrôle public de la carte et de la fiche : 5 activités, 0 exercice interactif, 5 vidéos et 3 téléchargements confirmés par sonde authentifiée
 
 ## Lot DataCamp suivant — Graph RAG avec LangChain et Neo4j
-- [ ] Restaurer le paquet officiel Drive, valider son empreinte et auditer les exercices DataLab avant toute adaptation
-- [ ] Qualifier et, si nécessaire, retirer le lien externe Graph RAG ; protéger les 37 activités déterministes par test, QA et contrôle des métriques
+- [ ] Restaurer le paquet officiel Drive, valider son empreinte et auditer les exercices DataLab avant toute adaptation — retrouver et citer la preuve de restauration et d’empreinte
+- [ ] Qualifier et, si nécessaire, retirer le lien externe Graph RAG ; protéger les 37 activités déterministes par test, QA et contrôle des métriques — consigner les preuves de QA et de contrôle public
 
 ## Lot DataCamp suivant — Building AI Agents with Haystack
 - [x] Restaurer le paquet officiel Drive, valider l’empreinte et auditer les six exercices DataLab avant toute adaptation — paquet officiel SHA-256 validé ; 11 activités source dont 6 DataLab et 5 Projector
@@ -122,17 +123,17 @@
 - [x] Exécuter un contrôle statistique dédié des deux Projector CrewAI : audio, slides, transcription, médias locaux et absence de référence fournisseur visible — 2/2 vidéos MP4/HLS ou audio locaux, 31 slides, 31 segments de transcription et 0 référence fournisseur visible
 
 ## Lot DataCamp suivant — Priorité après CrewAI
-- [ ] Identifier le prochain paquet officiel DataCamp dans la liste des cours non encore audités, restaurer sa source et établir un audit activité par activité
+- [x] Identifier le prochain paquet officiel DataCamp dans la liste des cours non encore audités, restaurer sa source et établir un audit activité par activité — « Introduction à l’IA pour le travail » a été sélectionné et clôturé
 
 ## Lot DataCamp suivant — Utiliser l’API OpenAI
-- [ ] Restaurer le paquet officiel Drive, vérifier son empreinte et auditer les activités avant toute adaptation
+- [ ] Restaurer le paquet officiel Drive, vérifier son empreinte et auditer les activités avant toute adaptation — retrouver et citer la preuve de restauration et d’empreinte
 - [x] Nettoyer les neuf références XP et trois liens externes du cours OpenAI, puis valider les 29 activités déterministes avant publication — audit 29/29, XP, lien externe, DataLab et HTML brut à 0
 - [x] Retirer les mentions de gamification et la recommandation DataLab indisponible des transcriptions ; conserver ou reformuler les deux références documentaires OpenAI uniquement si elles restent clairement non nécessaires au passage — liens externes retirés des textes apprenant, actifs locaux préservés
 - [x] Ajouter une régression pour les 29 activités OpenAI conservées et l’absence de références XP/DataLab visibles avant la QA complète — test ciblé et QA complète à six étapes réussis
 - [x] Aligner la sonde de métriques OpenAI sur les 20 activités interactives dérivées du catalogue avant de conclure le contrôle de production — `code_repl` inclus ; production confirmée à 29 activités, 20 exercices, 9 vidéos et 3 téléchargements
 
 ## Lot DataCamp suivant — Computer Vision
-- [ ] Restaurer le paquet officiel Drive, vérifier son empreinte et auditer les activités avant toute adaptation
+- [x] Exclure le paquet Hugging Face « Computer Vision » du périmètre DataCamp selon l’instruction utilisateur ; aucune restauration ni adaptation ne doit être engagée
 
 ## Lot DataCamp suivant — Introduction à l’IA pour le travail
 - [x] Restaurer le paquet officiel Drive, vérifier son empreinte et auditer les 33 activités avant toute adaptation — archive validée SHA-256 ; audit 33/33 sans omission ni dépendance runtime
@@ -140,7 +141,7 @@
 - [x] Aligner la sonde de métriques sur les 22 exercices interactifs source, dont les huit exercices visuels, avant de conclure le contrôle public — le contrat inclut `resource_review`; production confirmée à 33 activités, 22 exercices, 11 vidéos et 4 téléchargements
 
 ## Lot DataCamp suivant — Priorité après smolagents
-- [ ] Identifier le prochain paquet DataCamp selon le rapport comparatif, restaurer sa source officielle et auditer son potentiel de reproductibilité avant toute adaptation
+- [x] Identifier le prochain paquet DataCamp selon le rapport comparatif, restaurer sa source officielle et auditer son potentiel de reproductibilité avant toute adaptation — Google Cloud AI puis L’IA pour les data analysts ont été sélectionnés et clôturés
 
 ## Lot DataCamp suivant — Innovating with Google Cloud AI
 - [x] Restaurer le paquet officiel Drive, vérifier son empreinte et auditer les activités avant toute adaptation — archive en trois parties validée SHA-256 ; 23/23 activités conservées, 11 visual exercises HTML5 locaux, 12 QCM, 0 dépendance externe et QA complète à six étapes réussie

@@ -24,12 +24,16 @@ try {
     const current = { lessonIndex, chapterIndex, rendered: false, audioVisible: false, slideVisible: false, providerReferenceVisible: false };
     try {
       await page.goto(`${baseUrl}/training/${courseSlug}/${courseId}?lesson=${lessonIndex}&chapter=${chapterIndex}`, { waitUntil: "domcontentloaded" });
-      await page.waitForSelector('[data-block-type="video"]', { timeout: 10000 });
+      await page.waitForSelector('[data-block-type="video"]', { timeout: 30000 });
       const projector = page.locator('[data-block-type="video"]');
       current.rendered = true;
       current.audioVisible = await projector.locator("video").count() > 0;
       current.slideVisible = await projector.getByRole("button", { name: /Lire la leçon|Mettre en pause/ }).count() > 0;
       current.providerReferenceVisible = /DataCamp|Copilot/i.test(await projector.innerText());
+    } catch (error) {
+      current.error = error instanceof Error ? error.message : String(error);
+      current.finalUrl = page.url();
+      current.pageText = (await page.locator("body").innerText()).replace(/\s+/g, " ").slice(0, 600);
     } finally { await page.close(); }
     result.results.push(current);
   }
