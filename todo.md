@@ -152,7 +152,7 @@
 - [x] Restaurer le ZIP officiel Drive, vérifier sa somme SHA-256 et contrôler le manifeste canonique : archive validée, 3 chapitres, 29 activités, 10 Projector et 399/399 téléchargements locaux
 - [x] Auditer les 29 activités : 3 exercices visuels retirés car leurs images canoniques déclarées ne sont pas fournies localement ; 26 activités déterministes et le scénario conversationnel sont conservés, les recommandations externes DataCamp sont retirées
 - [x] Adapter et tester le cours : 6 tris, un QCM et le scénario de chat rejoués avec verrou, feedback et déverrouillage ; 10 Projector locaux contrôlés ; QA complète à six étapes réussie
-- [ ] Publier le cours et contrôler la carte et la fiche de production avant de sélectionner un autre cours
+- [x] Publier le cours et contrôler la carte et la fiche de production : 26 activités, 16 exercices interactifs, 10 Projector et 3 téléchargements confirmés sur le domaine public
 
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
