@@ -85,6 +85,12 @@
 - [x] Télécharger et comparer l’empreinte SHA-256 officielle Weaviate à l’archive assemblée, puis consigner la preuve de restauration — `sha256sum -c official.sha256` retourne `OK`
 - [x] Rejouer au moins un écran Projector Weaviate avec la session apprenant, documenter audio/slides et confirmer le contrôle avant publication — rendu, audio, slides et absence de référence fournisseur confirmés
 
+## Lot DataCamp suivant — Systèmes multi-agents avec LangGraph
+- [x] Restaurer le paquet officiel Drive, valider l’empreinte et auditer les neuf exercices DataLab avant toute adaptation — archive de deux parties validée SHA-256 ; manifeste de 13 activités, dont 9 DataLab sans rubrique
+- [x] Retirer les neuf activités DataLab LangGraph sans rubrique source et nettoyer le lien externe résiduel — audit 13/13, 9 retraits assumés et 0 média externe
+- [x] Rejouer et documenter un écran Projector LangGraph avec une session apprenant — rendu, audio, slides et absence de référence fournisseur validés ; les écrans ultérieurs restent verrouillés séquentiellement
+- [x] Exécuter et archiver un contrôle statistique des quatre Projector LangGraph, incluant audio, slides, sous-titres/transcriptions, médias locaux et chaînes fournisseur visibles — 4/4 Projector : audio/slides locaux, 44 slides, 44 segments de transcription, 0 référence fournisseur visible
+
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
 - [x] Valider le rapport automatisé d’artefacts QA AI for Finance puis refaire `git status --short` pour confirmer l’état final après nettoyage — `git diff --check` réussi et état Git limité aux sources, tests, données et preuves attendus ; validations TypeScript, JSON et 426 tests vertes

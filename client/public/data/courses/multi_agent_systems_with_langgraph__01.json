@@ -84,7 +84,7 @@
                   "contentLeft": "",
                   "contentRight": "",
                   "instructorName": "James Chapman",
-                  "instructorTitle": "Curriculum Manager, DataCamp",
+                  "instructorTitle": "Curriculum Manager, plateforme source",
                   "technology": "python"
                 },
                 {
@@ -391,7 +391,7 @@
                 },
                 {
                   "heading": "11. Course format",
-                  "text": "Throughout the course, we'll be working side-by-side to tackle exercises, which will be completed in DataLab Notebooks with accompanying videos. DataLab is DataCamp's proprietary cloud-based notebook IDE. If you've used other notebook IDEs, you should find DataLab pretty intuitive; if you're not familiar with notebooks, you can think of a notebook as a series of cells to execute code in.\n\nIf you run one cell, any variables or libraries defined in that cell will be available in subsequent cells, and so on.\n\nIn the exercise, you can either start the video and code-along with us, or you can watch the video first and code afterwards - the choice is yours!"
+                  "text": "Throughout the course, we'll be working side-by-side to tackle exercises, which will be completed in environnement de pratique Notebooks with accompanying videos. environnement de pratique is plateforme source's proprietary cloud-based notebook IDE. If you've used other notebook IDEs, you should find environnement de pratique pretty intuitive; if you're not familiar with notebooks, you can think of a notebook as a series of cells to execute code in.\n\nIf you run one cell, any variables or libraries defined in that cell will be available in subsequent cells, and so on.\n\nIn the exercise, you can either start the video and code-along with us, or you can watch the video first and code afterwards - the choice is yours!"
                 },
                 {
                   "heading": "12. Course format",
@@ -416,273 +416,6 @@
               },
               "url": "/api/assets/chapter_01_slides_a0d02fdf.pdf",
               "filename": "chapter_01_slides.pdf"
-            }
-          ]
-        },
-        {
-          "id": "dc_ch01_act02",
-          "title": {
-            "en": "Boîte à outils de l'agent : outil Wikipedia",
-            "fr": "Boîte à outils de l'agent : outil Wikipedia"
-          },
-          "description": {
-            "en": "Apprenez à construire des agents IA à la manière LangGraph ! Constituez une boîte à outils pour permettre à votre agent d’interagir avec des API, de récupérer des données depuis des fichiers CSV et d’exécuter du code Python ! Commencez à bâtir un système à agent unique en utilisant des nœuds et des arêtes pour relier le LLM et les outils de façon contrôlée et méthodique.",
-            "fr": "Apprenez à construire des agents IA à la manière LangGraph ! Constituez une boîte à outils pour permettre à votre agent d’interagir avec des API, de récupérer des données depuis des fichiers CSV et d’exécuter du code Python ! Commencez à bâtir un système à agent unique en utilisant des nœuds et des arêtes pour relier le LLM et les outils de façon contrôlée et méthodique."
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_02_tp",
-              "title": {
-                "en": "Boîte à outils de l'agent : outil Wikipedia",
-                "fr": "Boîte à outils de l'agent : outil Wikipedia"
-              },
-              "assignment": "",
-              "instructions": "Assurez-vous d'abord d'exécuter la cellule pour installer les bibliothèques\n\nCréez un outil appelé wikipedia_tool() qui interroge Wikipedia avec l'argument query, récupère un résumé de huit phrases du premier résultat et renvoie ce résumé sous forme de chaîne de caractères.\n\nExécutez l'outil sur \"Apple Inc.\" pour vérifier qu'il fonctionne.\n\nRemarque : si vous utilisez DataLab en mode restreint, cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Assurez-vous d'abord d'exécuter la cellule pour installer les bibliothèques",
-                "Créez un outil appelé wikipedia_tool() qui interroge Wikipedia avec l'argument query, récupère un résumé de huit phrases du premier résultat et renvoie ce résumé sous forme de chaîne de caractères.",
-                "Exécutez l'outil sur \"Apple Inc.\" pour vérifier qu'il fonctionne.",
-                "Remarque : si vous utilisez DataLab en mode restreint, cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_a0d02fdf.pdf"
-                }
-              ],
-              "hint": "Utilisez le décorateur @tool pour convertir vos fonctions d'outil en outils appelables.\n\nUtilisez les fonctions wikipedia.search() et wikipedia.summary() dans votre wikipedia_tool().\n\nLes outils peuvent être déclenchés avec la méthode .invoke(), en lui passant l'entrée.",
-              "solution": "## Library installs...\n\nfrom typing import Annotated\nimport wikipedia\nfrom langchain_core.tools import tool\n\nwikipedia.set_user_agent(\n    \"company-research-tool/1.0 (https://www.datacamp.com; content@datacamp.com)\"\n)\n\n@tool\ndef wikipedia_tool(\n    query: Annotated[str, \"The Wikipedia search to execute to find key summary information.\"],\n):\n    \"\"\"Use this to search Wikipedia for factual information.\"\"\"\n    try:\n        # Step 1: Search using query\n        results = wikipedia.search(query)\n        \n        if not results:\n            return \"No results found on Wikipedia.\"\n        \n        # Step 2: Retrieve page title\n        title = results[0]\n\n        # Step 3: Fetch summary\n        summary = wikipedia.summary(title, sentences=8, auto_suggest=False, redirect=True)\n    except BaseException as e:\n        return f\"Failed to execute. Error: {repr(e)}\"\n    return f\"Successfully executed:\\nWikipedia summary: {summary}\"\n\n# Test with Apple query\ncompany_name = \"Apple Inc.\"\nwiki_summary = wikipedia_tool.invoke(f\"{company_name}\")\nprint(wiki_summary)",
-              "successMessage": "Bravo ! Savoir transformer des tâches en fonctions est une compétence clé pour créer des outils pour les agents. Passons à la vitesse supérieure et créons un outil pour charger des données boursières !",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch01_act03",
-          "title": {
-            "en": "Boîte à outils de l'agent : outil de données boursières",
-            "fr": "Boîte à outils de l'agent : outil de données boursières"
-          },
-          "description": {
-            "en": "Apprenez à construire des agents IA à la manière LangGraph ! Constituez une boîte à outils pour permettre à votre agent d’interagir avec des API, de récupérer des données depuis des fichiers CSV et d’exécuter du code Python ! Commencez à bâtir un système à agent unique en utilisant des nœuds et des arêtes pour relier le LLM et les outils de façon contrôlée et méthodique.",
-            "fr": "Apprenez à construire des agents IA à la manière LangGraph ! Constituez une boîte à outils pour permettre à votre agent d’interagir avec des API, de récupérer des données depuis des fichiers CSV et d’exécuter du code Python ! Commencez à bâtir un système à agent unique en utilisant des nœuds et des arêtes pour relier le LLM et les outils de façon contrôlée et méthodique."
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_03_tp",
-              "title": {
-                "en": "Boîte à outils de l'agent : outil de données boursières",
-                "fr": "Boîte à outils de l'agent : outil de données boursières"
-              },
-              "assignment": "",
-              "instructions": "Veillez à exécuter d'abord la cellule pour installer les bibliothèques\n\nCréez un outil appelé stock_data_tool() qui prend un symbole mnémonique de l'action (company_ticker) et un nombre de jours à remonter (num_days), puis renvoie une table au format Markdown contenant les données de performance boursière de cette entreprise sur cette période.\n\nAppelez l'outil sur \"META\" sur 4 jours pour vérifier qu'il fonctionne — notez que la table ne contient que des jours ouvrés, de sorte que le nombre de lignes peut être inférieur à num_days.\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Veillez à exécuter d'abord la cellule pour installer les bibliothèques",
-                "Créez un outil appelé stock_data_tool() qui prend un symbole mnémonique de l'action (company_ticker) et un nombre de jours à remonter (num_days), puis renvoie une table au format Markdown contenant les données de performance boursière de cette entreprise sur cette période.",
-                "Appelez l'outil sur \"META\" sur 4 jours pour vérifier qu'il fonctionne — notez que la table ne contient que des jours ouvrés, de sorte que le nombre de lignes peut être inférieur à num_days.",
-                "Remarque : si vous exécutez DataLab en mode restreint, cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_a0d02fdf.pdf"
-                }
-              ],
-              "hint": "Assurez-vous de filtrer les données de performance boursière à l'aide de la variable num_days ; convertissez la table en Markdown avec .to_markdown().\n\nLorsque vous appelez un outil qui prend plusieurs entrées avec la méthode .invoke(), vous devez passer un dictionnaire dont les noms des entrées sont les clés et les valeurs de test sont les valeurs du dictionnaire.",
-              "solution": "import os\nfrom typing import Annotated\nimport pandas as pd\nfrom langchain_core.tools import tool\n\n@tool\ndef stock_data_tool(\n    company_ticker: Annotated[str, \"The ticker symbol of the company to retrieve their stock performance data.\"], \n    num_days: Annotated[int, \"The number of business days of stock data required to respond to the user query.\"]\n) -> str:\n    \"\"\"\n    Use this to look-up stock performance data for companies to retrieve a table from a CSV. You may need to convert company names into ticker symbols to call this function, e.g, Apple Inc. -> AAPL, and you may need to convert weeks, months, and years, into days.\n    \"\"\"\n    \n    # Load the CSV for the company requested\n    file_path = f\"data/{company_ticker}.csv\"\n\n    if os.path.exists(file_path) is False:\n        return f\"Sorry, but data for company {company_ticker} is not available. Please try Apple, Amazon, Meta, Microsoft, Netflix, or Tesla.\"\n    \n    stock_df = pd.read_csv(file_path, index_col='Date', parse_dates=True)\n\n    # Ensure the index is in date format\n    stock_df.index = stock_df.index.date\n    \n    # Maximum num_days supported by the dataset\n    max_num_days = (stock_df.index.max() - stock_df.index.min()).days\n    \n    if num_days > max_num_days:\n        return \"Sorry, but this time period exceeds the data available. Please reduce it to continue.\"\n    \n    # Get the most recent date in the DataFrame\n    final_date = stock_df.index.max()\n\n    # Filter the DataFrame to get the last num_days of stock data\n    filtered_df = stock_df[stock_df.index > (final_date - pd.Timedelta(days=num_days+2))]\n\n    return f\"Successfully executed the stock performance data retrieval tool to retrieve the last *{num_days} days* of data for company **{company_ticker}**:\\n\\n{filtered_df.to_markdown()}\"\n\nretrieved_data = stock_data_tool.invoke({\"company_ticker\": \"META\", \"num_days\": 4})\nprint(retrieved_data)",
-              "successMessage": "Votre action est en hausse ! Un dernier outil : un outil Python qui pourra générer des graphiques à partir des données produites par l'outil que vous venez d'écrire. Vous allez y arriver !",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch01_act04",
-          "title": {
-            "en": "Boîte à outils de l'agent : outil Python",
-            "fr": "Boîte à outils de l'agent : outil Python"
-          },
-          "description": {
-            "en": "Apprenez à construire des agents IA à la manière LangGraph ! Constituez une boîte à outils pour permettre à votre agent d’interagir avec des API, de récupérer des données depuis des fichiers CSV et d’exécuter du code Python ! Commencez à bâtir un système à agent unique en utilisant des nœuds et des arêtes pour relier le LLM et les outils de façon contrôlée et méthodique.",
-            "fr": "Apprenez à construire des agents IA à la manière LangGraph ! Constituez une boîte à outils pour permettre à votre agent d’interagir avec des API, de récupérer des données depuis des fichiers CSV et d’exécuter du code Python ! Commencez à bâtir un système à agent unique en utilisant des nœuds et des arêtes pour relier le LLM et les outils de façon contrôlée et méthodique."
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_04_tp",
-              "title": {
-                "en": "Boîte à outils de l'agent : outil Python",
-                "fr": "Boîte à outils de l'agent : outil Python"
-              },
-              "assignment": "",
-              "instructions": "Assurez-vous d'abord d'exécuter la cellule pour installer les bibliothèques\n\nCréez un outil appelé python_repl_tool() qui prend et exécute du code arbitraire.\n\nLancez-le sur le code fourni (code).\n\nRemarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Assurez-vous d'abord d'exécuter la cellule pour installer les bibliothèques",
-                "Créez un outil appelé python_repl_tool() qui prend et exécute du code arbitraire.",
-                "Lancez-le sur le code fourni (code).",
-                "Remarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_a0d02fdf.pdf"
-                }
-              ],
-              "hint": "Appelez la méthode .run() sur l'objet Python REPL pour exécuter le code.",
-              "solution": "from langchain_core.tools import tool\nfrom typing import Annotated\nfrom langchain_experimental.utilities import PythonREPL\n\nrepl = PythonREPL()\n\n@tool\ndef python_repl_tool(\n    code: Annotated[str, \"The python code to execute to generate your chart.\"],\n):\n    \"\"\"Use this to execute python code. If you want to see the output of a value,\n    you should print it out with `print(...)`. This is visible to the user. The chart should be displayed using `plt.show()`.\"\"\"\n    try:\n        result = repl.run(code)\n    except BaseException as e:\n        return f\"Failed to execute. Error: {repr(e)}\"\n    return f\"Successfully executed the Python REPL tool.\\n\\nPython code executed:\\n\\`\\`\\`python\\n{code}\\n\\`\\`\\`\\n\\nCode output:\\n\\`\\`\\`\\n{result}\\`\\`\\`\"\n\ncode = f\"\"\"\nimport numpy as np\n\narr = np.arange(0, 9)\nprint(arr)\nprint(2 * arr)\n\"\"\"    \n\nprint(python_repl_tool.invoke({\"code\": code}))",
-              "successMessage": "Très bon début ! Vous utiliserez ces outils tout au long du reste du cours. Créons maintenant notre premier graphe composé d'un LLM.",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch01_act05",
-          "title": {
-            "en": "Orchestration agentique avec LangGraph",
-            "fr": "Orchestration agentique avec LangGraph"
-          },
-          "description": {
-            "en": "Apprenez à construire des agents IA à la manière LangGraph ! Constituez une boîte à outils pour permettre à votre agent d’interagir avec des API, de récupérer des données depuis des fichiers CSV et d’exécuter du code Python ! Commencez à bâtir un système à agent unique en utilisant des nœuds et des arêtes pour relier le LLM et les outils de façon contrôlée et méthodique.",
-            "fr": "Apprenez à construire des agents IA à la manière LangGraph ! Constituez une boîte à outils pour permettre à votre agent d’interagir avec des API, de récupérer des données depuis des fichiers CSV et d’exécuter du code Python ! Commencez à bâtir un système à agent unique en utilisant des nœuds et des arêtes pour relier le LLM et les outils de façon contrôlée et méthodique."
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_05_tp",
-              "title": {
-                "en": "Orchestration agentique avec LangGraph",
-                "fr": "Orchestration agentique avec LangGraph"
-              },
-              "assignment": "",
-              "instructions": "Assurez-vous d'abord d'exécuter la cellule pour installer les bibliothèques\n\nConstruisez une classe State pour créer un historique de messages où de nouveaux messages sont ajoutés à la liste, puis utilisez-la pour créer un état de graphe.\n\nDéfinissez un LLM gpt-4o-mini à l'aide de la classe ChatOpenAI, ainsi qu'une fonction appelée llm_node() pour l'invoquer sur les messages de l'état et stocker le résultat.\n\nConstruisez et compilez un graphe qui achemine l'entrée vers un nœud LLM, lequel appelle llm_node, puis renvoie le résultat.\n\nExécutez le code fourni pour visualiser le graphe et discuter avec votre agent !\n\nRemarque : si vous exécutez DataLab en mode restreint, cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Assurez-vous d'abord d'exécuter la cellule pour installer les bibliothèques",
-                "Construisez une classe State pour créer un historique de messages où de nouveaux messages sont ajoutés à la liste, puis utilisez-la pour créer un état de graphe.",
-                "Définissez un LLM gpt-4o-mini à l'aide de la classe ChatOpenAI, ainsi qu'une fonction appelée llm_node() pour l'invoquer sur les messages de l'état et stocker le résultat.",
-                "Construisez et compilez un graphe qui achemine l'entrée vers un nœud LLM, lequel appelle llm_node, puis renvoie le résultat.",
-                "Exécutez le code fourni pour visualiser le graphe et discuter avec votre agent !"
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_a0d02fdf.pdf"
-                }
-              ],
-              "hint": "La classe State doit avoir une propriété messages, qui est une liste à laquelle de nouveaux messages sont ajoutés via la fonction add_messages().\n\nPour convertir la classe State en état de graphe, appelez la classe StateGraph dessus.\n\nLa classe ChatOpenAI prend un argument model où vous pouvez spécifier le modèle à utiliser.\n\nDans la fonction llm_node(), veillez à invoquer le llm sur les \"messages\" de l'objet state.\n\nAppelez .add_node(\"name\", func) pour ajouter un nœud au graphe — laissez les parenthèses de la fonction de côté !\n\nAppelez .add_edge(\"node1\", \"node2\") pour ajouter une arête de \"node1\" vers \"node2\".",
-              "solution": "## Library installs...\n\n## TASK 1\nfrom typing import Annotated\nfrom typing_extensions import TypedDict\nfrom langgraph.graph import StateGraph, START, END\nfrom langgraph.graph.message import add_messages\n\n# Create the state to capture the messages\nclass State(TypedDict):\n    messages: Annotated[list, add_messages]\n\n# Create the graph state\ngraph_builder = StateGraph(State)\n\n## TASK 2\nimport os\nfrom langchain_openai import ChatOpenAI\n\n# Define an OpenAI LLM\nllm = ChatOpenAI(model=\"gpt-4o-mini\")\n\n# Takes the state, and appends the new messages to it\ndef llm_node(state: State):\n    return {\"messages\": [llm.invoke(state[\"messages\"])]}\n\n## TASK 3\n  \n# Create a node called \"llm\" that calls the llm_node() function\ngraph_builder.add_node(\"llm\", llm_node)\n\n# Connect the \"llm\" node to the START and END of the graph\ngraph_builder.add_edge(START, \"llm\")\ngraph_builder.add_edge(\"llm\", END)\n\n# Compile the graph\ngraph = graph_builder.compile()\n\n## TASK 4\n\n# Visualize the graph\ngraph\n\n# Chat with your LLM-only graph\nfrom course_helper_functions import pretty_print_messages\n\nfor chunk in graph.stream(\n    {\"messages\": [{\"role\": \"user\", \"content\": \"Tell me about Apple Inc.\"}]}\n):\n    pretty_print_messages(chunk)",
-              "successMessage": "Bravo ! Même si ce graphe LLM a les mêmes capacités qu'un simple appel LLM, il vous a donné les bases pour commencer à ajouter des outils. Passez à l'exercice suivant pour vous y mettre !",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch01_act06",
-          "title": {
-            "en": "Votre premier agent !",
-            "fr": "Votre premier agent !"
-          },
-          "description": {
-            "en": "Apprenez à construire des agents IA à la manière LangGraph ! Constituez une boîte à outils pour permettre à votre agent d’interagir avec des API, de récupérer des données depuis des fichiers CSV et d’exécuter du code Python ! Commencez à bâtir un système à agent unique en utilisant des nœuds et des arêtes pour relier le LLM et les outils de façon contrôlée et méthodique.",
-            "fr": "Apprenez à construire des agents IA à la manière LangGraph ! Constituez une boîte à outils pour permettre à votre agent d’interagir avec des API, de récupérer des données depuis des fichiers CSV et d’exécuter du code Python ! Commencez à bâtir un système à agent unique en utilisant des nœuds et des arêtes pour relier le LLM et les outils de façon contrôlée et méthodique."
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_1_act_06_tp",
-              "title": {
-                "en": "Votre premier agent !",
-                "fr": "Votre premier agent !"
-              },
-              "assignment": "",
-              "instructions": "Exécutez les deux premières cellules pour installer les bibliothèques et redéfinir les outils\n\nParcourez chaque outil et affichez ses attributs .name et .description.\n\nDéfinissez une liste contenant les trois outils, liez les outils au LLM pour le rendre « tool-aware », et complétez la fonction llm_node() pour qu'elle invoque le LLM sur les messages dans state.\n\nConstruisez un graphe linéaire qui transmet les entrées de START au LLM, puis aux outils, puis au nœud END.\n\nRemarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Exécutez les deux premières cellules pour installer les bibliothèques et redéfinir les outils",
-                "Parcourez chaque outil et affichez ses attributs .name et .description.",
-                "Définissez une liste contenant les trois outils, liez les outils au LLM pour le rendre « tool-aware », et complétez la fonction llm_node() pour qu'elle invoque le LLM sur les messages dans state.",
-                "Construisez un graphe linéaire qui transmet les entrées de START au LLM, puis aux outils, puis au nœud END.",
-                "Remarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_01_slides_a0d02fdf.pdf"
-                }
-              ],
-              "hint": "La fonction llm_node() doit appeler l'objet llm_with_tools.\n\nAjoutez un nœud LLM au graphe nommé \"llm\", qui appelle la fonction llm_node(), ainsi qu'un nœud d'outil, à définir d'abord avec la classe ToolNode.\n\nVous devez ajouter trois arêtes au graphe : de START vers \"llm\", de \"llm\" vers \"tools\", et de \"tools\" vers END.",
-              "solution": "## Library installs and tool definitions...\n\n## TASK 1\n# Loop through the tools and extract the .name and .description attributes\nfor tool in [wikipedia_tool, stock_data_tool, python_repl_tool]:\n    print(f\"The description for {tool.name}:\\n> {tool.description}\\n\")\n\n## TASK 2\nfrom typing import Annotated\nfrom typing_extensions import TypedDict\nfrom langgraph.graph import StateGraph, START, END\nfrom langgraph.graph.message import add_messages\nfrom langchain_openai import ChatOpenAI\n\nclass State(TypedDict):\n    messages: Annotated[list, add_messages]\n\ngraph_builder = StateGraph(State)\n\n# Add three tools to the list: wikipedia_tool, stock_data_tool, and python_repl_tool\ntools = [wikipedia_tool, stock_data_tool, python_repl_tool]\n\nllm = ChatOpenAI(model=\"gpt-4o-mini\")\n\n# Tell the LLM which tools it can call\nllm_with_tools = llm.bind_tools(tools)\n\ndef llm_node(state: State):\n    return {\"messages\": [llm_with_tools.invoke(state[\"messages\"])]}\n\n## TASK 3\nfrom langgraph.prebuilt import ToolNode\n\ngraph_builder.add_node(\"llm\", llm_node)\n\n# Create a tool node containing the three tools you defined\ntool_node = ToolNode(tools=tools)\ngraph_builder.add_node(\"tools\", tool_node)\n\n# Create edges to represent the linear workflow\ngraph_builder.add_edge(START, \"llm\")\ngraph_builder.add_edge(\"llm\", \"tools\")\ngraph_builder.add_edge(\"tools\", END)\n\ngraph = graph_builder.compile()",
-              "successMessage": "Félicitations pour la création de votre premier agent du cours ! Cet agent linéaire peut appeler des outils, mais il y a des problèmes avec `python_repl_tool()` et avec les requêtes ne nécessitant pas d'appel d'outil. Dans le prochain chapitre, vous allez perfectionner ce cas mono-agent avant de l'étendre en système multi-agents. À très vite !",
-              "xp": 100
             }
           ]
         }
@@ -741,7 +474,7 @@
                   "contentLeft": "",
                   "contentRight": "",
                   "instructorName": "James Chapman",
-                  "instructorTitle": "Curriculum Manager, DataCamp",
+                  "instructorTitle": "Curriculum Manager, plateforme source",
                   "technology": "python"
                 },
                 {
@@ -994,113 +727,6 @@
           ]
         },
         {
-          "id": "dc_ch02_act02",
-          "title": {
-            "en": "Appels conditionnels d'outils",
-            "fr": "Appels conditionnels d'outils"
-          },
-          "description": {
-            "en": "Depuis l’essor des agents IA, plusieurs modèles de conception agentique ont émergé, et vous en explorerez deux des plus répandus : les multi‑agents en essaim (ou décentralisés) et les multi‑agents avec superviseur. Vous verrez que LangGraph offre une large gamme de fonctionnalités pour conçoir des multi‑agents adaptés à votre cas d’usage.",
-            "fr": "Depuis l’essor des agents IA, plusieurs modèles de conception agentique ont émergé, et vous en explorerez deux des plus répandus : les multi‑agents en essaim (ou décentralisés) et les multi‑agents avec superviseur. Vous verrez que LangGraph offre une large gamme de fonctionnalités pour conçoir des multi‑agents adaptés à votre cas d’usage."
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_02_tp",
-              "title": {
-                "en": "Appels conditionnels d'outils",
-                "fr": "Appels conditionnels d'outils"
-              },
-              "assignment": "",
-              "instructions": "Exécutez les deux premières cellules pour installer les bibliothèques et redéfinir les outils\n\nRe-liez le LLM avec les outils pour le rendre conscient des outils.\n\nCréez des nœuds pour le LLM et les outils appelés respectivement \"llm\" et \"tools\".\n\nAjoutez les arêtes pour permettre l'utilisation conditionnelle des outils : ajoutez des arêtes standard reliant le LLM à START et END, et créez une arête conditionnelle pour router vers \"tools\" si la fonction tool_condition est satisfaite, et vers END sinon.\n\nRemarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Exécutez les deux premières cellules pour installer les bibliothèques et redéfinir les outils",
-                "Re-liez le LLM avec les outils pour le rendre conscient des outils.",
-                "Créez des nœuds pour le LLM et les outils appelés respectivement \"llm\" et \"tools\".",
-                "Ajoutez les arêtes pour permettre l'utilisation conditionnelle des outils : ajoutez des arêtes standard reliant le LLM à START et END, et créez une arête conditionnelle pour router vers \"tools\" si la fonction tool_condition est satisfaite, et vers END sinon.",
-                "Remarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_3d7075e6.pdf"
-                }
-              ],
-              "hint": "Appelez .bind_tools() sur l'objet llm, en lui passant la liste tools pour créer un LLM conscient de ses outils.\n\nLa méthode .add_conditional_edges() prend trois arguments : le nom du nœud de départ, la fonction qui détermine le critère d'appel du nœud cible (tools_condition), et une liste de nœuds vers lesquels router si le critère renvoie respectivement True et False.",
-              "solution": "## Library installs and tool definitions...\n\n## TASK 1\nfrom typing import Annotated\nfrom typing_extensions import TypedDict\nfrom langgraph.graph import StateGraph, START, END\nfrom langgraph.graph.message import add_messages\nfrom langchain_openai import ChatOpenAI\n\nclass State(TypedDict):\n    messages: Annotated[list, add_messages]\n\ngraph_builder = StateGraph(State)\n\n# Add three tools to the list: wikipedia_tool, stock_data_tool, and python_repl_tool\ntools = [wikipedia_tool, stock_data_tool, python_repl_tool]\n\nllm = ChatOpenAI(model=\"gpt-4o-mini\")\n\n# Tell the LLM which tools it can call\nllm_with_tools = llm.bind_tools(tools)\n\ndef llm_node(state: State):\n    return {\"messages\": [llm_with_tools.invoke(state[\"messages\"])]}\n\n## TASKS 2 + 3\nfrom langgraph.prebuilt import ToolNode, tools_condition\n\n# Create the llm and tools nodes\ngraph_builder.add_node(\"llm\", llm_node)\ntool_node = ToolNode(tools=tools)\ngraph_builder.add_node(\"tools\", tool_node)\n\n# Add the edges\ngraph_builder.add_edge(START, \"llm\")\ngraph_builder.add_conditional_edges(\"llm\", tools_condition, [\"tools\", END])\ngraph_builder.add_edge(\"tools\", \"llm\")\n\ngraph = graph_builder.compile()",
-              "successMessage": "Super ! Regardez-moi ça ! Avec les arêtes conditionnelles ajoutées, vous avez vraiment donné vie à votre agent. Désormais, tous vos agents pourront décider s'il faut effectuer un appel d'outil. Jusqu'ici, nous avons utilisé une syntaxe assez bas niveau ; essayons maintenant la syntaxe de plus haut niveau de LangGraph pour définir des agents.",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch02_act03",
-          "title": {
-            "en": "Des agents en une ligne",
-            "fr": "Des agents en une ligne"
-          },
-          "description": {
-            "en": "Depuis l’essor des agents IA, plusieurs modèles de conception agentique ont émergé, et vous en explorerez deux des plus répandus : les multi‑agents en essaim (ou décentralisés) et les multi‑agents avec superviseur. Vous verrez que LangGraph offre une large gamme de fonctionnalités pour conçoir des multi‑agents adaptés à votre cas d’usage.",
-            "fr": "Depuis l’essor des agents IA, plusieurs modèles de conception agentique ont émergé, et vous en explorerez deux des plus répandus : les multi‑agents en essaim (ou décentralisés) et les multi‑agents avec superviseur. Vous verrez que LangGraph offre une large gamme de fonctionnalités pour conçoir des multi‑agents adaptés à votre cas d’usage."
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_03_tp",
-              "title": {
-                "en": "Des agents en une ligne",
-                "fr": "Des agents en une ligne"
-              },
-              "assignment": "",
-              "instructions": "Exécutez les deux premières cellules pour installer les bibliothèques et redéfinir les outils\n\nRecréez votre agent construit avec des arêtes conditionnelles en utilisant la syntaxe de haut niveau create_react_agent() de LangGraph, en nommant l'agent \"finance_assistant\".\n\nRelancez la visualisation et le code du chatbot, puis comparez avec ce que vous aviez obtenu précédemment.\n\nRemarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Exécutez les deux premières cellules pour installer les bibliothèques et redéfinir les outils",
-                "Recréez votre agent construit avec des arêtes conditionnelles en utilisant la syntaxe de haut niveau create_react_agent() de LangGraph, en nommant l'agent \"finance_assistant\".",
-                "Relancez la visualisation et le code du chatbot, puis comparez avec ce que vous aviez obtenu précédemment.",
-                "Remarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_3d7075e6.pdf"
-                }
-              ],
-              "hint": "create_react_agent() crée un agent ReAct à partir d'un LLM, d'une liste d'outils à lui rendre disponibles, d'un prompt pour définir son comportement, et d'un nom pour référencer l'agent.",
-              "solution": "## Library installs and tool definitions...\n\n## TASK 1\nfrom langgraph.prebuilt import create_react_agent\nfrom langchain_openai import ChatOpenAI\n\n# Add three tools to the list: wikipedia_tool, stock_data_tool, and python_repl_tool\ntools = [wikipedia_tool, stock_data_tool, python_repl_tool]\n\nllm = ChatOpenAI(model=\"gpt-4o-mini\")\n\nprompt = \"\"\"\nYou are an assistant for research and analysis of Fortune 500 companies. You have access to three tools:\n- A Wikipedia tool for retrieving factual summary information about companies\n- A stock performance data tool for retrieving stock price information from local CSV files\n- A Python tool for executing Python code, which is to be used for creating stock performance visualizations\n\"\"\"\n\n# Create an agent using the create_react_agent function\nagent = create_react_agent(\n    llm,\n    tools=tools,\n    prompt=prompt,\n    name=\"finance_assistant\"\n)\n\n## TASK 2\nagent",
-              "successMessage": "Bravo ! Avec create_react_agent(), on retrouve les mêmes nœuds d'outil et de LLM ajoutés, et les outils seront appelés de manière conditionnelle via les arêtes conditionnelles. À partir de maintenant, nous utiliserons create_react_agent() afin de nous concentrer sur l'orchestration de plusieurs agents plutôt que sur leur définition. Vous pouvez le faire !",
-              "xp": 100
-            }
-          ]
-        },
-        {
           "id": "dc_ch02_act04",
           "title": {
             "en": "Cadres multi-agents",
@@ -1136,7 +762,7 @@
                   "contentLeft": "",
                   "contentRight": "",
                   "instructorName": "James Chapman",
-                  "instructorTitle": "Curriculum Manager, DataCamp",
+                  "instructorTitle": "Curriculum Manager, plateforme source",
                   "technology": "python"
                 },
                 {
@@ -1413,114 +1039,6 @@
           ]
         },
         {
-          "id": "dc_ch02_act05",
-          "title": {
-            "en": "Un autre agent !",
-            "fr": "Un autre agent !"
-          },
-          "description": {
-            "en": "Depuis l’essor des agents IA, plusieurs modèles de conception agentique ont émergé, et vous en explorerez deux des plus répandus : les multi‑agents en essaim (ou décentralisés) et les multi‑agents avec superviseur. Vous verrez que LangGraph offre une large gamme de fonctionnalités pour conçoir des multi‑agents adaptés à votre cas d’usage.",
-            "fr": "Depuis l’essor des agents IA, plusieurs modèles de conception agentique ont émergé, et vous en explorerez deux des plus répandus : les multi‑agents en essaim (ou décentralisés) et les multi‑agents avec superviseur. Vous verrez que LangGraph offre une large gamme de fonctionnalités pour conçoir des multi‑agents adaptés à votre cas d’usage."
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_05_tp",
-              "title": {
-                "en": "Un autre agent !",
-                "fr": "Un autre agent !"
-              },
-              "assignment": "",
-              "instructions": "Exécutez les deux premières cellules pour installer les bibliothèques et redéfinir les outils\n\nCréez des outils de transfert pour confier des tâches aux agents chercheur et analyste, transfer_to_researcher et transfer_to_analyst, respectivement.\n\nCréez deux agents pour gérer les outils de recherche et d'analyse, nommés \"researcher\" et \"analyst\", qui auront accès aux outils de tâches et aux outils de transfert.\n\nCréez le graphe de swarm à partir de research_agent et analyst_agent, en veillant à démarrer le flux de travail avec l'agent chercheur.\n\nRemarque : Si vous exécutez DataLab en mode restreint, cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible à l'avenir.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Exécutez les deux premières cellules pour installer les bibliothèques et redéfinir les outils",
-                "Créez des outils de transfert pour confier des tâches aux agents chercheur et analyste, transfer_to_researcher et transfer_to_analyst, respectivement.",
-                "Créez deux agents pour gérer les outils de recherche et d'analyse, nommés \"researcher\" et \"analyst\", qui auront accès aux outils de tâches et aux outils de transfert.",
-                "Créez le graphe de swarm à partir de research_agent et analyst_agent, en veillant à démarrer le flux de travail avec l'agent chercheur.",
-                "Remarque : Si vous exécutez DataLab en mode restreint, cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible à l'avenir."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_3d7075e6.pdf"
-                }
-              ],
-              "hint": "La fonction create_handoff_tool() permet de transférer à un autre agent spécifié avec l'argument agent_name.\n\nL'agent de recherche doit avoir accès à l'outil handoff_to_analyst et inversement.\n\nLa fonction create_swarm() accepte une liste d'agents à connecter, ainsi qu'un agent de démarrage indiqué avec l'argument default_active_agent.",
-              "solution": "## Library installs and tool definitions...\n\n## TASK 1\nfrom langchain_openai import ChatOpenAI\nfrom langgraph_swarm import create_handoff_tool\n\nllm = ChatOpenAI(model=\"gpt-4o-mini\")\n\n# Create a handoff tool for analyst -> researcher\ntransfer_to_researcher = create_handoff_tool(\n    agent_name=\"researcher\",\n    description=\"Transfer user to the researcher assistant, who can retrieve Wikipedia summaries or load stock performance data from CSV files.\",\n)\n\n# Create a handoff tool for researcher -> analyst\ntransfer_to_analyst = create_handoff_tool(\n    agent_name=\"analyst\",\n    description=\"Transfer user to the analyst assistant, who can create visualizations of provided data.\",\n)\n\n## TASK 2\nfrom langgraph.prebuilt import create_react_agent\n\n# Create a tool-calling researcher agent\nresearch_agent = create_react_agent(\n    llm,\n    tools=[wikipedia_tool, stock_data_tool, transfer_to_analyst],\n    prompt=\"You provide summaries from Wikipedia, and can load raw, numerical stock performance data from CSV files. If the task requires plotting stock data, simply output the raw data.\",\n    name=\"researcher\"\n)\n\n# Create a tool-calling analyst agent\nanalyst_agent = create_react_agent(\n    llm,\n    [python_repl_tool, transfer_to_researcher],\n    prompt=\"You generate plots of stock performance data provided by another assistant.\",\n    name=\"analyst\"\n)\n\n## TASK 3\nfrom langgraph_swarm import create_swarm\nfrom langgraph.checkpoint.memory import InMemorySaver\n\nconfig = {\"configurable\": {\"thread_id\": \"1\", \"user_id\": \"1\"}}\ncheckpointer = InMemorySaver()\n\n# Create the swarm multi-agent graph and compile it\nswarm = create_swarm(\n    agents=[research_agent, analyst_agent],\n    default_active_agent=\"researcher\"\n).compile(checkpointer=checkpointer)",
-              "successMessage": "Waouh, ce n'était pas simple, et vous avez brillamment réussi ! Explorons maintenant une autre architecture multi-agent : le superviseur multi-agent !",
-              "xp": 100
-            }
-          ]
-        },
-        {
-          "id": "dc_ch02_act06",
-          "title": {
-            "en": "Agents superviseurs",
-            "fr": "Agents superviseurs"
-          },
-          "description": {
-            "en": "Depuis l’essor des agents IA, plusieurs modèles de conception agentique ont émergé, et vous en explorerez deux des plus répandus : les multi‑agents en essaim (ou décentralisés) et les multi‑agents avec superviseur. Vous verrez que LangGraph offre une large gamme de fonctionnalités pour conçoir des multi‑agents adaptés à votre cas d’usage.",
-            "fr": "Depuis l’essor des agents IA, plusieurs modèles de conception agentique ont émergé, et vous en explorerez deux des plus répandus : les multi‑agents en essaim (ou décentralisés) et les multi‑agents avec superviseur. Vous verrez que LangGraph offre une large gamme de fonctionnalités pour conçoir des multi‑agents adaptés à votre cas d’usage."
-          },
-          "type": "exercise",
-          "sourceActivityType": "DatalabExercise",
-          "requiredBeforeAdvance": true,
-          "blocks": [
-            {
-              "type": "cloud_exercise",
-              "id": "dc_2_act_06_tp",
-              "title": {
-                "en": "Agents superviseurs",
-                "fr": "Agents superviseurs"
-              },
-              "assignment": "",
-              "instructions": "Exécutez les deux premières cellules pour installer les bibliothèques et redéfinir les outils\n\nCréez un agent appelé \"researcher\" avec les outils wikipedia_tool et stock_data_tool, et un agent \"analyst\" avec l'outil python_repl_tool.\n\nDéfinissez et compilez un graphe d'agent superviseur qui délègue des tâches aux agents \"researcher\" et \"analyst\".\n\nVisualisez votre graphe d'agent superviseur et expérimentez avec votre magnifique création !\n\nRemarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement.",
-              "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
-              },
-              "steps": [
-                "Exécutez les deux premières cellules pour installer les bibliothèques et redéfinir les outils",
-                "Créez un agent appelé \"researcher\" avec les outils wikipedia_tool et stock_data_tool, et un agent \"analyst\" avec l'outil python_repl_tool.",
-                "Définissez et compilez un graphe d'agent superviseur qui délègue des tâches aux agents \"researcher\" et \"analyst\".",
-                "Visualisez votre graphe d'agent superviseur et expérimentez avec votre magnifique création !",
-                "Remarque : si vous exécutez DataLab en mode restreint (Restricted Mode), cet exercice n'est pas encore pris en charge. Nous travaillons activement à le rendre disponible prochainement."
-              ],
-              "resources": [
-                {
-                  "title": {
-                    "en": "Chapter slides (PDF)",
-                    "fr": "Chapter slides (PDF)"
-                  },
-                  "description": {
-                    "en": "Download the official local chapter slides to reproduce this exercise in your own environment.",
-                    "fr": "Download the official local chapter slides to reproduce this exercise in your own environment."
-                  },
-                  "url": "/api/assets/chapter_02_slides_3d7075e6.pdf"
-                }
-              ],
-              "hint": "La fonction create_supervisor() permet de créer un agent superviseur qui délègue des tâches à des agents exécutants.\n\nN'oubliez pas d'appeler la méthode .compile() sur le résultat de create_supervisor() pour compiler le graphe.",
-              "solution": "## Library installs and tool definitions...\n\n## TASK 1\nfrom langchain_openai import ChatOpenAI\nfrom langgraph.prebuilt import create_react_agent\n\nllm = ChatOpenAI(model=\"gpt-4o-mini\")\n\n# Research agent and node\nresearch_agent = create_react_agent(\n    llm,\n    tools=[wikipedia_tool, stock_data_tool],\n    prompt=(\n        \"You are a research agent.\\n\\n\"\n        \"INSTRUCTIONS:\\n\"\n        \"- Assist ONLY with research-related tasks, including looking-up factual information and stock data. DO NOT write any code.\\n\"\n        \"- After you're done with your tasks, respond to the supervisor directly\\n\"\n        \"- Respond ONLY with the results of your work, do NOT include ANY other text.\"\n    ),\n    name=\"researcher\"\n)\n\n# Chart generator agent and node\nanalyst_agent = create_react_agent(\n    llm,\n    [python_repl_tool],\n    prompt=(\n        \"You are an agent that can run arbitrary Python code.\\n\\n\"\n        \"INSTRUCTIONS:\\n\"\n        \"- Assist ONLY with tasks that require running code to produce an output.\\n\"\n        \"- After you're done with your tasks, respond to the supervisor directly\\n\"\n        \"- Respond ONLY with the results of your work, do NOT include ANY other text.\"\n    ),\n    name=\"analyst\"\n)\n\n## TASK 2\nfrom langgraph_supervisor import create_supervisor\nfrom langgraph.checkpoint.memory import InMemorySaver\n\nconfig = {\"configurable\": {\"thread_id\": \"1\", \"user_id\": \"1\"}}\ncheckpointer = InMemorySaver()\n\nsupervisor = create_supervisor(\n    model=llm,\n    agents=[research_agent, analyst_agent],\n    prompt=(\n        \"You are a supervisor managing two agents:\\n\"\n        \"- a research agent. Assign research and data collection tasks to this agent\\n\"\n        \"- an analyst agent. Assign the creation of visualizations via code to this agent\\n\"\n        \"Assign work to one agent at a time, do not call agents in parallel.\\n\"\n        \"Do not do any work yourself.\"\n    ),\n    add_handoff_back_messages=True,\n    output_mode=\"full_history\",\n).compile(checkpointer=checkpointer)",
-              "successMessage": "Félicitations ! Vous avez créé un système multi-agents avec superviseur capable de traiter et de répondre à un large éventail de requêtes, en appelant les trois outils dont il dispose. Passons à la conclusion pour récapituler tout ce que vous avez appris !",
-              "xp": 100
-            }
-          ]
-        },
-        {
           "id": "dc_ch02_act07",
           "title": {
             "en": "Récapitulatif",
@@ -1556,7 +1074,7 @@
                   "contentLeft": "",
                   "contentRight": "",
                   "instructorName": "James Chapman",
-                  "instructorTitle": "Curriculum Manager, DataCamp",
+                  "instructorTitle": "Curriculum Manager, plateforme source",
                   "technology": "python"
                 },
                 {
@@ -1715,5 +1233,6 @@
         }
       ]
     }
-  ]
+  ],
+  "exerciseCount": 0
 }
