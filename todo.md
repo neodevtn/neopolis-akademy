@@ -28,6 +28,16 @@
 - [x] Fiabiliser la sonde de métriques afin qu’elle attende le rendu de la fiche de formation plutôt que le seul texte du bandeau de cookies — contrôle de la carte et de la fiche publié confirmé après attente explicite des métriques
 - [x] Publier AI for Finance après les contrôles apprenant, les neuf TP, le tri interactif et la QA complète déjà validés, puis vérifier la production — production confirmée : 28 activités, 18 exercices interactifs, 10 vidéos, 3 téléchargements ; TP rubricé et tri mobile vérifiés
 
+## Lot DataCamp suivant — AI for Human Resources
+- [x] Restaurer le paquet officiel Drive et vérifier l’archive complète — SHA-256 validé, 3 chapitres, 32 activités, 11 vidéos et 385 téléchargements source disponibles
+- [x] Établir l’audit activité-par-activité avec le manifeste officiel — 32/32 activités présentes ; 9 TP avec rubrique explicite et 7 candidats au retrait sans rubrique/asset source
+- [x] Examiner individuellement les 16 TP cloud, convertir uniquement ceux disposant d’une rubrique source explicite et retirer les autres avec justification canonique — 9 TP rubricés, 7 retraits justifiés (1.8, 2.2, 2.5, 2.11, 3.3, 3.5, 3.9)
+- [x] Scanner explicitement les vidéos, transcripts, slides et textes apprenant AI for Human Resources pour toute référence DataCamp/Copilot résiduelle, puis corriger les occurrences visibles — les seules occurrences restantes sont métadonnées, identifiants ou noms de fichiers non affichés
+- [x] Ajouter et exécuter une QA dédiée AI for Human Resources rejouant au moins un écran Projector et un tri conservé côté apprenant, en complément du TP rubricé — Projector 1.1 et tri 1.3 vérifiés au viewport mobile ; TP rubricé déjà rejoué
+- [x] Confirmer par preuve automatisée le nettoyage fournisseur, les métriques dérivées et le rejeu des interactions conservées avant publication — audits, test métier, QA complète six étapes et sondes ciblées réussis
+- [x] Stabiliser la matrice QA mobile en isolant chaque navigation de bloc afin d’éviter les crashs de renderer cumulés — `qa:publish` retrouve 6/6 étapes réussies
+- [ ] Exécuter la QA, publier puis contrôler l’expérience apprenant en production avant le cours suivant
+
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
 - [x] Valider le rapport automatisé d’artefacts QA AI for Finance puis refaire `git status --short` pour confirmer l’état final après nettoyage — `git diff --check` réussi et état Git limité aux sources, tests, données et preuves attendus ; validations TypeScript, JSON et 426 tests vertes

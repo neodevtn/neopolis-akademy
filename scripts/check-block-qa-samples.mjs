@@ -49,7 +49,7 @@ try {
   let page = await context.newPage();
 
   for (const [sampleIndex, sample] of samples.entries()) {
-    if (sampleIndex > 0 && sampleIndex % 8 === 0) {
+    if (sampleIndex > 0) {
       await page.close().catch(() => undefined);
       page = await context.newPage();
     }

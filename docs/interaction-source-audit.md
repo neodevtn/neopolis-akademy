@@ -1,13 +1,13 @@
 # Audit des sources d’interaction
 
-Généré le 2026-08-28T13:31:23.451Z.
+Généré le 2026-08-28T14:06:49.801Z.
 
 | Indicateur | Nombre |
 |---|---:|
 | courses | 137 |
 | lessons | 737 |
-| chapters | 3364 |
-| interactiveBlocks | 1774 |
+| chapters | 3357 |
+| interactiveBlocks | 1767 |
 | chapterQuizQuestions | 2166 |
 | legacyExercises | 902 |
 | checkpointReferencedExercises | 124 |
@@ -22,7 +22,7 @@ Généré le 2026-08-28T13:31:23.451Z.
 | ai_evaluation | 13 |
 | bucket_sort | 158 |
 | checkpoint | 222 |
-| cloud_exercise | 465 |
+| cloud_exercise | 458 |
 | code_repl | 208 |
 | exercise | 7 |
 | flip_cards | 139 |

@@ -6,7 +6,9 @@ const learnerEmail = process.env.QA_EMAIL;
 const learnerPassword = process.env.QA_PASSWORD;
 if (!learnerEmail || !learnerPassword) throw new Error("QA_EMAIL et QA_PASSWORD sont requis.");
 
-const course = JSON.parse(fs.readFileSync("client/public/data/courses/ai_for_finance__01.json", "utf8"));
+const courseId = process.env.CARD_SORT_QA_COURSE_ID || "ai_for_finance__01";
+const certificationId = process.env.CARD_SORT_QA_CERTIFICATION_ID || "datacamp_ai_for_finance";
+const course = JSON.parse(fs.readFileSync(`client/public/data/courses/${courseId}.json`, "utf8"));
 let target = null;
 for (const [lessonIndex, lesson] of (course.lessons || []).entries()) {
   for (const [chapterIndex, chapter] of (lesson.chapters || []).entries()) {
@@ -18,7 +20,7 @@ for (const [lessonIndex, lesson] of (course.lessons || []).entries()) {
   }
   if (target) break;
 }
-if (!target) throw new Error("Aucun tri de cartes AI for Finance trouvé.");
+if (!target) throw new Error(`Aucun tri de cartes trouvé pour ${courseId}.`);
 
 const text = (value) => typeof value === "string" ? value : (value?.fr || value?.en || "");
 const poolCard = (page, cardId) => page.locator(`button[data-card-id="${cardId}"]`);
@@ -32,7 +34,7 @@ try {
   if (!cookie) throw new Error("Cookie de session apprenant absent.");
   await context.addCookies([{ name: "app_session_id", value: cookie, url: baseUrl, httpOnly: true, sameSite: "Lax" }]);
   const page = await context.newPage();
-  await page.goto(`${baseUrl}/training/datacamp_ai_for_finance/ai_for_finance__01?lesson=${target.lessonIndex}&chapter=${target.chapterIndex}`, { waitUntil: "domcontentloaded" });
+  await page.goto(`${baseUrl}/training/${certificationId}/${courseId}?lesson=${target.lessonIndex}&chapter=${target.chapterIndex}`, { waitUntil: "domcontentloaded" });
   const accept = page.getByRole("button", { name: "Accepter" });
   if (await accept.count()) await accept.first().click().catch(() => undefined);
 
@@ -66,11 +68,11 @@ try {
   result.feedbackVisible = true;
   await page.waitForFunction(() => !/Validez l’activité pour continuer/i.test(document.body.innerText), { timeout: 5_000 }).catch(() => undefined);
   result.nextUnlockedAfterCorrect = !/Validez l’activité pour continuer/i.test(await page.locator("body").innerText());
-  await page.screenshot({ path: "docs/block-qa-screenshots/ai-for-finance-card-sort-mobile.png", fullPage: true });
+  await page.screenshot({ path: `docs/block-qa-screenshots/${courseId}-card-sort-mobile.png`, fullPage: true });
   await context.close();
 } finally {
   await browser.close();
 }
-fs.writeFileSync("docs/ai_for_finance_card_sort_qa_2026-08-28.json", `${JSON.stringify(result, null, 2)}\n`);
+fs.writeFileSync(`docs/${courseId}_card_sort_qa_2026-08-28.json`, `${JSON.stringify(result, null, 2)}\n`);
 console.table(result);
 if (!result.clickPlacement || !result.lockedBeforeSubmit || !result.submitEnabledAfterPlacement || !result.nextUnlockedAfterCorrect || !result.feedbackVisible || !result.accessibility) process.exitCode = 1;
