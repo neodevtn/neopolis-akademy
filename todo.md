@@ -125,6 +125,7 @@
 - [x] Nettoyer les neuf références XP et trois liens externes du cours OpenAI, puis valider les 29 activités déterministes avant publication — audit 29/29, XP, lien externe, DataLab et HTML brut à 0
 - [x] Retirer les mentions de gamification et la recommandation DataLab indisponible des transcriptions ; conserver ou reformuler les deux références documentaires OpenAI uniquement si elles restent clairement non nécessaires au passage — liens externes retirés des textes apprenant, actifs locaux préservés
 - [x] Ajouter une régression pour les 29 activités OpenAI conservées et l’absence de références XP/DataLab visibles avant la QA complète — test ciblé et QA complète à six étapes réussis
+- [x] Aligner la sonde de métriques OpenAI sur les 20 activités interactives dérivées du catalogue avant de conclure le contrôle de production — `code_repl` inclus ; production confirmée à 29 activités, 20 exercices, 9 vidéos et 3 téléchargements
 
 ## Lot DataCamp suivant — Computer Vision
 - [ ] Restaurer le paquet officiel Drive, vérifier son empreinte et auditer les activités avant toute adaptation
