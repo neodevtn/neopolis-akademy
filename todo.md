@@ -117,6 +117,13 @@
 - [x] Retirer les cinq activités DataLab CrewAI sans rubrique source et nettoyer les deux références externes — audit 7/7, 5 retraits assumés et 0 média externe
 - [x] Exécuter un contrôle statistique dédié des deux Projector CrewAI : audio, slides, transcription, médias locaux et absence de référence fournisseur visible — 2/2 vidéos MP4/HLS ou audio locaux, 31 slides, 31 segments de transcription et 0 référence fournisseur visible
 
+## Lot DataCamp suivant — Priorité après CrewAI
+- [ ] Identifier le prochain paquet officiel DataCamp dans la liste des cours non encore audités, restaurer sa source et établir un audit activité par activité
+
+## Lot DataCamp suivant — Introduction à l’IA pour le travail
+- [x] Restaurer le paquet officiel Drive, vérifier son empreinte et auditer les 33 activités avant toute adaptation — archive validée SHA-256 ; audit 33/33 sans omission ni dépendance runtime
+- [x] Retirer les deux fragments HTML bruts détectés, puis valider les 33 interactions déterministes et les 11 Projector locaux — HTML brut à 0, test ciblé réussi et QA complète à six étapes réussie
+
 ## Lot DataCamp suivant — Priorité après smolagents
 - [ ] Identifier le prochain paquet DataCamp selon le rapport comparatif, restaurer sa source officielle et auditer son potentiel de reproductibilité avant toute adaptation
 
