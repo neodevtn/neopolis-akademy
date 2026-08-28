@@ -108,8 +108,9 @@
 - [ ] Qualifier et, si nécessaire, retirer le lien externe Graph RAG ; protéger les 37 activités déterministes par test, QA et contrôle des métriques
 
 ## Lot DataCamp suivant — Building AI Agents with Haystack
-- [ ] Restaurer le paquet officiel Drive, valider l’empreinte et auditer les six exercices DataLab avant toute adaptation
-- [ ] Retirer les six activités DataLab Haystack sans rubrique source, nettoyer le lien externe résiduel et valider les cinq Projector conservés avant publication
+- [x] Restaurer le paquet officiel Drive, valider l’empreinte et auditer les six exercices DataLab avant toute adaptation — paquet officiel SHA-256 validé ; 11 activités source dont 6 DataLab et 5 Projector
+- [x] Retirer les six activités DataLab Haystack sans rubrique source, nettoyer le lien externe résiduel et valider les cinq Projector conservés avant publication — audit sans média externe, 5/5 Projector contrôlés, 49 slides et 49 segments de transcription, QA complète réussie
+- [x] Reprendre le contrôle public de la carte et de la fiche : 5 activités, 0 exercice interactif, 5 vidéos et 2 téléchargements confirmés par sonde authentifiée
 
 ## Lot DataCamp suivant — Agents IA avec Hugging Face smolagents
 - [x] Restaurer le paquet officiel Drive, valider l’empreinte et auditer les exercices runtime avant toute adaptation — archive de quatorze parties validée SHA-256 ; 30/30 activités déterministes conservées, 0 TP cloud/DataLab, 0 média externe
