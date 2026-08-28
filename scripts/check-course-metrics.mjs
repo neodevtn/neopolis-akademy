@@ -18,7 +18,7 @@ const blocks = chapters.flatMap((chapter) => chapter.blocks ?? []);
 const metrics = {
   activities: chapters.length,
   videos: blocks.filter((block) => block.type === "video").length,
-  interactiveExercises: blocks.filter((block) => ["cloud_exercise", "bucket_sort", "single_choice_exercise", "multiple_choice_exercise", "code_exercise", "ai_evaluation"].includes(block.type)).length,
+  interactiveExercises: blocks.filter((block) => ["cloud_exercise", "bucket_sort", "single_choice_exercise", "multiple_choice_exercise", "multi_choice_exercise", "code_exercise", "ai_evaluation"].includes(block.type)).length,
   downloads: blocks.filter((block) => block.type === "download").length,
 };
 const expected = [`${metrics.activities} activités`, `${metrics.videos} vidéos`, `${metrics.interactiveExercises} exercices interactifs`, `${metrics.downloads} téléchargements`];
