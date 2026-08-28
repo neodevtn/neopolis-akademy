@@ -64,7 +64,7 @@
 ## Lot DataCamp suivant — Microsoft Copilot dans PowerPoint
 - [x] Restaurer le paquet officiel Drive et vérifier son archive — quatre parties validées SHA-256 ; 3 chapitres, 20 activités et 7 Projector source
 - [x] Établir l’audit initial activité par activité — 20/20 activités présentes ; 11 TP disposant de rubriques explicites et un média externe à nettoyer
-- [ ] Nettoyer le média externe résiduel, confirmer les 11 TP rubricés et rejouer les interactions avant toute publication
+- [x] Nettoyer le média externe résiduel, confirmer les 11 TP rubricés et rejouer les interactions avant toute publication — audit à 0 média externe ; 11/11 rubriques, seuils et verrous valides ; TP 3.2 rejoué avec champ de réponse, correction masquée et Suivant verrouillé avant évaluation
 
 ## Lot DataCamp suivant — Microsoft Copilot dans Word
 - [x] Restaurer et vérifier le paquet officiel Drive — archive de treize parties validée SHA-256 ; 3 chapitres, 29 activités et 10 vidéos source
