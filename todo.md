@@ -146,7 +146,7 @@
 - [x] Sélectionner et restaurer le paquet officiel « L’IA pour les data analysts » : six fragments validés, SHA-256 et ZIP contrôlés, audit initial 39/39 activités sans dépendance Cloud/DataLab ni écart structurel
 - [x] Retirer les activités 1.2 et 4.2, seules activités `EmbeddedApp` sans réponse déterministe ni actif local, avec leurs dépendances opérationnelles ; conserver 37 activités reproductibles et resynchroniser les métriques à 37 activités, 26 exercices, 11 Projector et 4 téléchargements
 - [x] Rejouer l’audit, les 11 Projector locaux et la QA complète de « L’IA pour les data analysts » : 118 slides/transcriptions, aucun média ou libellé fournisseur visible, six étapes QA réussies
-- [ ] Publier « L’IA pour les data analysts » puis contrôler la carte et la fiche de production avant tout nouveau cours
+- [x] Publier « L’IA pour les data analysts » puis contrôler la carte et la fiche de production : 37 activités, 26 exercices interactifs, 11 vidéos et 4 téléchargements confirmés sur le domaine public
 
 ## Hygiène du checkpoint — AI for Finance
 - [x] Passer une vérification automatisée exhaustive sur tous les rapports et captures QA du lot AI for Finance, lister les preuves conservées et consigner tout artefact obsolète avant publication — `pnpm audit:ai-for-finance-artifacts` valide 57/57 artefacts (8 rapports, 3 captures dédiées, 46 captures de matrice), 0 invalide, 0 candidat obsolète et `deletedObsoleteArtifacts: []`
