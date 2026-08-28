@@ -101,6 +101,7 @@
 - [x] Établir l’audit initial activité par activité — 13/13 activités présentes ; 8 DataLab sans rubrique explicite et un lien externe à nettoyer
 - [x] Retirer les huit activités DataLab sans rubrique et nettoyer le lien externe résiduel — audit 13/13 sans omission et 0 média externe
 - [x] Exécuter un contrôle statistique dédié des cinq Projector MongoDB LangGraph : audio, slides, transcription, médias locaux et absence de référence fournisseur visible — 5/5 audio/slides locaux, 64 slides, 64 segments de transcription et 0 référence fournisseur visible
+- [x] Reprendre le contrôle public de la carte et de la fiche : 5 activités, 0 exercice interactif, 5 vidéos et 3 téléchargements confirmés par sonde authentifiée
 
 ## Lot DataCamp suivant — Graph RAG avec LangChain et Neo4j
 - [ ] Restaurer le paquet officiel Drive, valider son empreinte et auditer les exercices DataLab avant toute adaptation
