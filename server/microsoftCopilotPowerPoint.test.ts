@@ -21,6 +21,7 @@ describe("cours DataCamp Microsoft Copilot dans PowerPoint", () => {
     expect(projector.every((block: any) => block.audioUrl && block.slidesPdf && block.transcriptSegments?.length)).toBe(true);
     expect(labs).toHaveLength(11);
     expect(labs.every((block: any) => block.environmentGuide && !JSON.stringify(block).includes("<exercise_objective>"))).toBe(true);
+    expect(labs.every((block: any) => block.rubricCriteria?.length && block.rubricVersion === "datacamp-source-2026-08-28" && block.passingScore === block.maxScore)).toBe(true);
     expect(blocks.filter((block: any) => block.type === "multi_choice_exercise" || block.type === "single_choice_exercise")).toHaveLength(2);
     expect(activities.every((activity: any) => activity.requiredBeforeAdvance)).toBe(true);
   });
