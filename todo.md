@@ -123,6 +123,7 @@
 ## Lot DataCamp suivant — Introduction à l’IA pour le travail
 - [x] Restaurer le paquet officiel Drive, vérifier son empreinte et auditer les 33 activités avant toute adaptation — archive validée SHA-256 ; audit 33/33 sans omission ni dépendance runtime
 - [x] Retirer les deux fragments HTML bruts détectés, puis valider les 33 interactions déterministes et les 11 Projector locaux — HTML brut à 0, test ciblé réussi et QA complète à six étapes réussie
+- [x] Aligner la sonde de métriques sur les 22 exercices interactifs source, dont les huit exercices visuels, avant de conclure le contrôle public — le contrat inclut `resource_review`; production confirmée à 33 activités, 22 exercices, 11 vidéos et 4 téléchargements
 
 ## Lot DataCamp suivant — Priorité après smolagents
 - [ ] Identifier le prochain paquet DataCamp selon le rapport comparatif, restaurer sa source officielle et auditer son potentiel de reproductibilité avant toute adaptation
