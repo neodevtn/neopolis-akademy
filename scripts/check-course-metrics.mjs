@@ -40,7 +40,10 @@ try {
   for (const value of expected) if (!cardText.toLocaleLowerCase("fr-FR").includes(value)) throw new Error(`Carte catalogue : métrique absente « ${value} ». Contenu=${cardText}`);
 
   await page.goto(`${baseUrl}/training/${certification.id}`, { waitUntil: "commit", timeout: 60_000 });
-  await page.waitForFunction(() => document.body?.innerText?.trim().length > 80, undefined, { timeout: 45_000 });
+  await page.waitForFunction((requiredMetrics) => {
+    const pageText = document.body?.innerText?.toLocaleLowerCase("fr-FR") ?? "";
+    return requiredMetrics.every((metric) => pageText.includes(metric)) && !pageText.includes("chargement...");
+  }, expected, { timeout: 45_000 });
   const pageText = (await page.locator("body").innerText({ timeout: 45_000 })).replace(/\s+/g, " ");
   for (const value of expected) if (!pageText.toLocaleLowerCase("fr-FR").includes(value)) throw new Error(`Fiche formation : métrique absente « ${value} ». Contenu=${pageText.slice(0, 1800)}`);
 
