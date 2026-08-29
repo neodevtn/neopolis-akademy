@@ -305,13 +305,13 @@ export default function TrainingDashboard() {
             </Link>
             <div className="flex min-w-0 items-center gap-1.5 sm:gap-2.5">
               <BrandLogo className="h-7 max-w-[82px] sm:h-8 sm:max-w-[160px]" />
-              <span className="rounded-full bg-primary/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary sm:px-2.5 sm:py-1 sm:text-xs">Training</span>
+              <span className="hidden rounded-full bg-primary/15 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-primary sm:inline-flex">Training</span>
             </div>
           </div>
-          <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-3">
+          <div className="ml-auto flex shrink-0 items-center gap-0.5 sm:gap-3">
             <button
               onClick={toggleTheme}
-              className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-secondary sm:p-2"
+              className="rounded-lg p-1 text-muted-foreground transition-colors hover:bg-secondary sm:p-2"
             >
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
@@ -327,7 +327,7 @@ export default function TrainingDashboard() {
             {isAuthenticated && (
               <button
                 onClick={() => logout()}
-                className="flex items-center gap-1.5 rounded-full border border-red-200 px-1.5 py-1.5 text-xs font-medium text-red-600 transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-700 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950/30 sm:px-3"
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-red-200 p-1 text-xs font-medium text-red-600 transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-700 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950/30 sm:h-auto sm:w-auto sm:px-3 sm:py-1.5"
                 title="Déconnexion"
               >
                 <LogOut size={13} />
