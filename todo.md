@@ -1,6 +1,7 @@
 # Project TODO — Neopolis Akademy
 
 ## Audit comparatif avancé — DataCamp et Neopolis
+- [ ] Contrôle global transversal DataCamp reporté sur instruction utilisateur du 29 août 2026 ; ne pas l’exécuter dans la présente clôture rapide
 - [ ] Vérifier, après le test utilisateur, que la session Chrome locale Mighty-Shadow et non un navigateur distant porte les sessions apprenant DataCamp et Neopolis pour la comparaison côte à côte
 - [ ] Confirmer que la session utilisée n’est plus identifiée comme « Browser: Sandbox » avant de consulter ou répondre aux activités DataCamp
 - [ ] Inventorier tous les cours DataCamp présents dans Neopolis et les regrouper en vagues d’audit traçables
@@ -111,8 +112,14 @@
 - [x] Reprendre le contrôle public de la carte et de la fiche : 5 activités, 0 exercice interactif, 5 vidéos et 3 téléchargements confirmés par sonde authentifiée
 
 ## Lot DataCamp suivant — Graph RAG avec LangChain et Neo4j
-- [ ] Restaurer le paquet officiel Drive, valider son empreinte et auditer les exercices DataLab avant toute adaptation — retrouver et citer la preuve de restauration et d’empreinte
-- [ ] Qualifier et, si nécessaire, retirer le lien externe Graph RAG ; protéger les 37 activités déterministes par test, QA et contrôle des métriques — consigner les preuves de QA et de contrôle public
+- [x] Restaurer le paquet officiel Drive, valider son empreinte et auditer les exercices DataLab avant toute adaptation — archive de 14 fragments, SHA-256 `3b8a170c…46384747`, `unzip -t` et manifeste à 37 activités / 11 Projector documentés
+- [x] Qualifier l’exercice visuel 2.2 « Éléments d’un graphe lexical » sans actif local mappé et, s’il est réellement absent, le retirer avec sa référence associée — actif `identifying-elements.png` déclaré uniquement sur `assets.datacamp.com`, absent du paquet et de l’index local ; retrait 2.2 déclaré, audit 37 source / 36 conservées / 1 omission, 0 média externe
+- [x] Resynchroniser les métriques dérivées et exécuter la QA complète après le retrait Graph RAG — 36 activités, 22 exercices, 11 Projector et 3 téléchargements ; six étapes QA réussies
+- [x] Rejouer un exercice Code REPL Graph RAG en session apprenant et vérifier saisie, solution masquée, feedback et verrouillage séquentiel sans exécuter de code arbitraire — activité 1.4 contrôlée localement : éditeur, solution masquée, feedback canonique et Suivant déverrouillé après validation déterministe
+- [ ] Publier Graph RAG adapté puis confirmer la carte et la fiche de production avant tout autre lot
+
+## Correctif de sécurité — Code REPL
+- [x] Retirer l’exécution JavaScript arbitraire par `new Function` du bloc standard Code REPL, définir un comportement sûr pour les langages sans runtime sandboxé et couvrir la non-exécution par des tests — validation déterministe par solution canonique normalisée, libellé explicite et test statique sans `new Function` ni `eval`, TypeScript validé
 
 ## Lot DataCamp suivant — Building AI Agents with Haystack
 - [x] Restaurer le paquet officiel Drive, valider l’empreinte et auditer les six exercices DataLab avant toute adaptation — paquet officiel SHA-256 validé ; 11 activités source dont 6 DataLab et 5 Projector

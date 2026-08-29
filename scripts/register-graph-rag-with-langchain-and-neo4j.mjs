@@ -1,5 +1,49 @@
 import fs from "node:fs/promises";
-const file=new URL("../client/src/data/trainingIndex.json",import.meta.url);const index=JSON.parse(await fs.readFile(file,"utf8"));
-const certification={id:"datacamp_graph_rag_with_langchain_and_neo4j",title:{en:"DataCamp · Graph RAG with LangChain and Neo4j",fr:"DataCamp · Graph RAG avec LangChain et Neo4j"},description:{en:"Authorized DataCamp partner course on Graph RAG, hybrid retrieval and long-term graph memory.",fr:"Cours partenaire DataCamp autorisé sur le Graph RAG, la récupération hybride et la mémoire graphe."},level:{en:"Advanced",fr:"Avancé"},icon:"◆",courseCount:1,totalLessons:3,totalExercises:26,totalVideos:11,totalDownloads:3,totalActivities:37,courses:["graph_rag_with_langchain_and_neo4j__01"],group:"fullstack_ai_engineering",provider:"datacamp",breakdown:{en:"3 chapters · 37 activities · 11 Projector lessons · 26 interactive exercises · 22 guided practical exercises · 1 visual exercise · 3 downloads",fr:"3 chapitres · 37 activités · 11 leçons Projector · 26 exercices interactifs · 22 TP guidés · 1 exercice visuel · 3 téléchargements",chapters:3},exerciseLabel:{en:"activities",fr:"activités"}};
-const course={id:"graph_rag_with_langchain_and_neo4j__01",certId:certification.id,title:{en:"Graph RAG with LangChain and Neo4j",fr:"Graph RAG avec LangChain et Neo4j"},order:1,lessonCount:3,exerciseCount:26,videoCount:11,downloadCount:3,chapterCount:37,totalActivities:37,exerciseLabel:certification.exerciseLabel,breakdown:certification.breakdown,videos:[]};
-for(const [items,entry] of [[index.certifications,certification],[index.courses,course]]){const p=items.findIndex((item)=>item.id===entry.id);if(p<0)items.push(entry);else items[p]=entry;}await fs.writeFile(file,`${JSON.stringify(index,null,2)}\n`);
+
+const indexPath = new URL("../client/src/data/trainingIndex.json", import.meta.url);
+const coursePath = new URL("../client/public/data/courses/graph_rag_with_langchain_and_neo4j__01.json", import.meta.url);
+const [index, courseData] = await Promise.all([indexPath, coursePath].map(async (file) => JSON.parse(await fs.readFile(file, "utf8"))));
+
+const interactive = new Set(["exercise", "single_choice_exercise", "multi_choice_exercise", "multi_choice", "matching", "bucket_sort", "fill_blank", "code_repl", "terminal_sim", "ai_evaluation", "ordering", "cloud_exercise", "resource_review"]);
+const activities = courseData.lessons.flatMap((lesson) => lesson.chapters || []);
+const blocks = activities.flatMap((activity) => activity.blocks || []);
+const downloads = new Set(blocks.flatMap((block) => [block.url, block.downloadUrl, block.fileUrl, block.slidesPdf, ...(block.resources || []).map((resource) => resource?.url), ...(block.downloads || []).map((download) => download?.url || download)]).filter((url) => typeof url === "string" && url.trim()));
+const metric = {
+  lessonCount: courseData.lessons.length,
+  chapterCount: activities.length,
+  exerciseCount: blocks.filter((block) => interactive.has(block.type)).length,
+  videoCount: blocks.filter((block) => block.type === "video").length,
+  downloadCount: downloads.size + blocks.filter((block) => (block.type === "download" || block.type === "file_download") && !block.url && !block.downloadUrl && !block.fileUrl && !block.slidesPdf).length,
+  totalActivities: activities.length,
+};
+
+const certification = {
+  id: "datacamp_graph_rag_with_langchain_and_neo4j",
+  title: { en: "DataCamp · Graph RAG with LangChain and Neo4j", fr: "DataCamp · Graph RAG avec LangChain et Neo4j" },
+  description: { en: "Authorized DataCamp partner course on Graph RAG, hybrid retrieval and long-term graph memory.", fr: "Cours partenaire DataCamp autorisé sur le Graph RAG, la récupération hybride et la mémoire graphe." },
+  level: { en: "Advanced", fr: "Avancé" },
+  icon: "◆",
+  courseCount: 1,
+  totalLessons: metric.lessonCount,
+  totalExercises: metric.exerciseCount,
+  totalVideos: metric.videoCount,
+  totalDownloads: metric.downloadCount,
+  totalActivities: metric.totalActivities,
+  courses: ["graph_rag_with_langchain_and_neo4j__01"],
+  group: "fullstack_ai_engineering",
+  provider: "datacamp",
+};
+const course = {
+  id: "graph_rag_with_langchain_and_neo4j__01",
+  certId: certification.id,
+  title: { en: "Graph RAG with LangChain and Neo4j", fr: "Graph RAG avec LangChain et Neo4j" },
+  order: 1,
+  ...metric,
+  videos: [],
+};
+for (const [items, entry] of [[index.certifications, certification], [index.courses, course]]) {
+  const position = items.findIndex((item) => item.id === entry.id);
+  if (position < 0) items.push(entry);
+  else items[position] = entry;
+}
+await fs.writeFile(indexPath, `${JSON.stringify(index, null, 2)}\n`);

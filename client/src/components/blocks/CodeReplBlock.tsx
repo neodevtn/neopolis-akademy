@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Terminal, Play, CheckCircle2, XCircle, RotateCcw, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { normalizeInstructionText } from "@shared/displayText";
+import { matchesCanonicalSolution } from "@shared/codeReplValidation";
 
 interface CodeReplBlockProps {
   block: any;
@@ -16,7 +17,6 @@ export function CodeReplBlock({ block, lang, t, onComplete, blockIdx }: CodeRepl
   const language = block.language || "python";
   const starterCode = block.starterCode || "";
   const solutionCode = block.solutionCode || "";
-  const expectedOutput = block.expectedOutput || "";
 
   const [code, setCode] = useState(starterCode);
   const [output, setOutput] = useState("");
@@ -31,34 +31,13 @@ export function CodeReplBlock({ block, lang, t, onComplete, blockIdx }: CodeRepl
     setIsCorrect(null);
 
     try {
-      // Simulate code execution via eval for JS or display expected output comparison
-      if (language === "javascript" || language === "typescript") {
-        try {
-          const logs: string[] = [];
-          const mockConsole = { log: (...args: any[]) => logs.push(args.map(String).join(" ")), error: (...args: any[]) => logs.push("Error: " + args.map(String).join(" ")) };
-          const fn = new Function("console", code);
-          fn(mockConsole);
-          const result = logs.join("\n");
-          setOutput(result);
-          if (expectedOutput && result.trim() === expectedOutput.trim()) {
-            setIsCorrect(true);
-            if (onComplete) onComplete(block.id || `code_repl_${blockIdx}`);
-          } else if (expectedOutput) {
-            setIsCorrect(false);
-          }
-        } catch (err: any) {
-          setOutput(`Error: ${err.message}`);
-          setIsCorrect(false);
-        }
-      } else {
-        // For Python/SQL, we show a simulated output panel
-        // In a real implementation, this would call a sandboxed execution API
-        setOutput(t({ en: "⚡ Code submitted. In a production environment, this would execute in a sandboxed runtime.", fr: "⚡ Code soumis. En production, ceci s'exécuterait dans un runtime sandboxé." }));
-        if (expectedOutput && code.trim().includes(expectedOutput.trim().split("\n")[0])) {
-          setIsCorrect(true);
-          if (onComplete) onComplete(block.id || `code_repl_${blockIdx}`);
-        }
-      }
+      const isMatch = matchesCanonicalSolution(code, solutionCode);
+      setIsCorrect(isMatch);
+      setOutput(t(isMatch
+        ? { en: "Your code matches the expected solution.", fr: "Votre code correspond à la solution attendue." }
+        : { en: "Your code does not match the expected solution yet. Review the instructions and try again.", fr: "Votre code ne correspond pas encore à la solution attendue. Relisez les consignes et réessayez." },
+      ));
+      if (isMatch && onComplete) onComplete(block.id || `code_repl_${blockIdx}`);
     } finally {
       setIsRunning(false);
     }
@@ -133,7 +112,7 @@ export function CodeReplBlock({ block, lang, t, onComplete, blockIdx }: CodeRepl
         <div className="flex items-center gap-2 flex-wrap">
           <Button onClick={handleRun} disabled={isRunning} className="bg-emerald-600 hover:bg-emerald-700 gap-1">
             <Play className="w-3.5 h-3.5" />
-            {isRunning ? t({ en: "Running...", fr: "Exécution..." }) : t({ en: "Run", fr: "Exécuter" })}
+            {isRunning ? t({ en: "Checking...", fr: "Vérification..." }) : t({ en: "Check code", fr: "Vérifier le code" })}
           </Button>
           <Button onClick={handleReset} variant="outline" className="gap-1">
             <RotateCcw className="w-3.5 h-3.5" />
