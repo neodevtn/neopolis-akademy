@@ -1,6 +1,11 @@
 # Project TODO — Neopolis Akademy
 
 ## Audit comparatif avancé — DataCamp et Neopolis
+- [x] Comparer exhaustivement le catalogue de cours, les fichiers de cours et l’index de recherche afin d’identifier toute absence ou entrée obsolète — 177 cours catalogue, 177 fichiers de cours, 177 entrées cours et 3 519 chapitres comparés sans absence, doublon ni orphelin
+- [x] Corriger les écarts d’indexation vérifiés, couvrir les invariants catalogue/recherche par test et régénérer l’index — aucun écart de données ; index régénéré à 3 772 entrées et test de couverture par titre public ajouté
+- [x] Vérifier la recherche publique sur des cours représentatifs, publier et archiver le rapport d’audit d’indexation — cours et chapitres du TP « Agent de prospection Google Maps avec scoring automatique » retrouvés dans l’interface publique ; rapport JSON archivé
+- [ ] Publier le script, le test, l’index régénéré et le rapport d’audit, puis rejouer la recherche sur le domaine public après le déploiement
+- [ ] Consigner dans le suivi le checkpoint et la preuve de recherche publique correspondante
 - [x] Vérifier les sources RSS recommandées pour AI News et définir une lecture publique à la demande sans tâche planifiée — six flux actifs contrôlés ; OpenAI, Hugging Face, Google AI, MIT Technology Review, MarkTechPost et arXiv cs.AI retenus ; cache serveur de huit minutes
 - [x] Créer la rubrique publique AI News avec agrégation sûre, filtres de sources et recherche rapide dans les titres, extraits et catégories — route publique `/ai-news`, cartes limitées aux titres/extraits/liens, recherche rapide, filtres et états d’indisponibilité partielle ajoutés
 - [x] Tester les sources, les erreurs partielles, la recherche, le rendu public desktop/mobile et publier la rubrique AI News — 50 articles issus de six sources affichés, recherche « Cursor » ramenée à un résultat et filtre OpenAI confirmé ; vue mobile 390 × 844 contrôlée en prévisualisation, QA publication 6/6, route publique et chargement RSS confirmés sur `akademy.neodev.click`
