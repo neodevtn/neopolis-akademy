@@ -26,6 +26,11 @@ const ROUTE_PAGES: Record<string, Omit<SeoPage, "path">> = {
     description:
       "Candidatez au programme Neopolis Akademy et développez vos compétences en intelligence artificielle.",
   },
+  "/ai-news": {
+    title: "AI News | Veille intelligence artificielle | Neopolis Akademy",
+    description:
+      "Suivez les annonces, outils, analyses et prépublications qui comptent dans l’intelligence artificielle.",
+  },
   "/mentions-legales": {
     title: "Mentions légales | Neopolis Akademy",
     description: "Consultez les mentions légales de la plateforme Neopolis Akademy.",

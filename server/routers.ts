@@ -26,6 +26,7 @@ import { isCriticalCourseFeedback } from "../shared/courseFeedback";
 import { invokeLLM } from "./_core/llm";
 import { evaluateFreeResponseWithOpenRouter } from "./openrouterEvaluation";
 import { buildCourseAssistantMessages, extractCourseAssistantText, isClearlyOutOfScopeCourseAssistantQuestion, outOfScopeCourseAssistantReply } from "./courseAssistant";
+import { getAiNewsFeed } from "./aiNews";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -34,6 +35,9 @@ const orientationGoalsSchema = z.array(z.object({
 
 export const appRouter = router({
   system: systemRouter,
+  aiNews: router({
+    getFeed: publicProcedure.query(async () => getAiNewsFeed()),
+  }),
   videoRecommendations: videoRecommendationsRouter,
   courseAssistant: router({
     ask: protectedProcedure.input(z.object({

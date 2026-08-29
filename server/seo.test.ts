@@ -13,6 +13,13 @@ describe("server-rendered sharing metadata", () => {
     expect(metadata).toContain('<meta name="twitter:card" content="summary_large_image" />');
   });
 
+  it("publie des métadonnées publiques dédiées à la rubrique AI News", () => {
+    const metadata = renderSeoHead("/ai-news");
+
+    expect(metadata).toContain("<title>AI News | Veille intelligence artificielle | Neopolis Akademy</title>");
+    expect(metadata).toContain(`<link rel="canonical" href="${CANONICAL_ORIGIN}/ai-news" />`);
+  });
+
   it("contextualise l’aperçu social d’un lien de recommandation de cours", () => {
     const metadata = renderSeoHead("/refer?ref=NEO-AB12CD34&utm_content=course&course=ai_for_finance__01&share_title=L%E2%80%99IA%20pour%20la%20finance");
 

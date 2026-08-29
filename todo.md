@@ -1,6 +1,9 @@
 # Project TODO — Neopolis Akademy
 
 ## Audit comparatif avancé — DataCamp et Neopolis
+- [x] Vérifier les sources RSS recommandées pour AI News et définir une lecture publique à la demande sans tâche planifiée — six flux actifs contrôlés ; OpenAI, Hugging Face, Google AI, MIT Technology Review, MarkTechPost et arXiv cs.AI retenus ; cache serveur de huit minutes
+- [x] Créer la rubrique publique AI News avec agrégation sûre, filtres de sources et recherche rapide dans les titres, extraits et catégories — route publique `/ai-news`, cartes limitées aux titres/extraits/liens, recherche rapide, filtres et états d’indisponibilité partielle ajoutés
+- [ ] Tester les sources, les erreurs partielles, la recherche, le rendu public desktop/mobile et publier la rubrique AI News
 - [x] Auditer l’affichage actuel des communiqués apprenants, les données de lecture et les règles d’accusé de réception obligatoire — la page rendait tous les corps HTML à la suite ; les reçus et accusés importants serveur ont été identifiés comme invariants
 - [x] Reconcevoir les communiqués en boîte de réception compacte avec recherche, filtres, liste de messages et volet de lecture responsive — pagination côté serveur, recherche débouncée, filtre non lus/priorité, aperçus bornés, liste sélectionnable et volet de lecture ajoutés
 - [x] Republier puis vérifier la boîte de réception après le correctif mobile de l’en-tête — recherche « orientation » validée (2 à 1 communiqué), lecture persistante confirmée par l’API, état important non accusé couvert par test, sonde mobile publique 390 × 844 sans débordement et QA 6/6 réussie
