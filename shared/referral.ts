@@ -16,8 +16,9 @@ export function buildReferralUrl(input: {
   courseId?: string | null;
   certificationId?: string | null;
   achievementId?: number | null;
+  shareTitle?: string | null;
 }): string {
-  const url = new URL("/apply", input.origin);
+  const url = new URL("/refer", input.origin);
   url.searchParams.set("ref", input.referralCode);
   url.searchParams.set("utm_source", "referral");
   url.searchParams.set("utm_medium", input.target || "share");
@@ -26,6 +27,7 @@ export function buildReferralUrl(input: {
   if (input.courseId) url.searchParams.set("course", input.courseId);
   if (input.certificationId) url.searchParams.set("certification", input.certificationId);
   if (input.achievementId) url.searchParams.set("achievement", String(input.achievementId));
+  if (input.shareTitle) url.searchParams.set("share_title", input.shareTitle.slice(0, 140));
   return url.toString();
 }
 

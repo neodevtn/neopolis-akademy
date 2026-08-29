@@ -1,3 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
+
 export const CANONICAL_ORIGIN = "https://akademy.neodev.click";
 export const SITE_NAME = "Neopolis Akademy";
 export const SHARE_IMAGE_URL = `${CANONICAL_ORIGIN}/api/assets/neopolis-akademy-social-share_7fc7d2a3.png`;
@@ -6,6 +9,7 @@ type SeoPage = {
   title: string;
   description: string;
   path: string;
+  openGraphPath?: string;
   noindex?: boolean;
 };
 
@@ -51,8 +55,67 @@ function normalizedPath(requestUrl: string) {
   return pathname || "/";
 }
 
+function cleanedText(value: string | null, maximum: number) {
+  return value?.replace(/\s+/g, " ").trim().slice(0, maximum) || "";
+}
+
+function titleFromIdentifier(value: string | null) {
+  const id = cleanedText(value, 140);
+  if (/^[a-z0-9_-]+$/i.test(id)) {
+    for (const directory of [
+      path.resolve(process.cwd(), "client/public/data/courses"),
+      path.resolve(process.cwd(), "dist/public/data/courses"),
+    ]) {
+      try {
+        const course = JSON.parse(fs.readFileSync(path.join(directory, `${id}.json`), "utf8"));
+        const title = course?.title;
+        if (typeof course?.sourceCourseTitle === "string" && course.sourceCourseTitle.trim()) return course.sourceCourseTitle.trim();
+        if (typeof title === "string" && title.trim()) return title.trim();
+        if (title && typeof title === "object") return cleanedText(title.fr || title.en || "", 140) || "Neopolis Akademy";
+      } catch {
+        // A missing or malformed public course file must not prevent a share preview.
+      }
+    }
+  }
+  const normalized = cleanedText(value, 140)
+    .replace(/^(datacamp|neopolis)[_-]/i, "")
+    .replace(/__\d+$/, "")
+    .replace(/[_-]+/g, " ")
+    .trim();
+  return normalized ? normalized.replace(/\bai\b/gi, "IA").replace(/\b\w/g, (letter) => letter.toUpperCase()) : "Neopolis Akademy";
+}
+
+function referralOpenGraphPath(url: URL) {
+  const params = new URLSearchParams();
+  ["ref", "utm_content", "course", "certification", "achievement", "share_title"].forEach((key) => {
+    const value = cleanedText(url.searchParams.get(key), key === "share_title" ? 140 : 80);
+    if (value) params.set(key, value);
+  });
+  return `/refer${params.size ? `?${params.toString()}` : ""}`;
+}
+
+function referralSeoPage(url: URL): SeoPage {
+  const content = cleanedText(url.searchParams.get("utm_content"), 32);
+  const courseTitle = cleanedText(url.searchParams.get("share_title"), 140) || titleFromIdentifier(url.searchParams.get("course") || url.searchParams.get("certification"));
+  const sharedCourse = content === "course" && courseTitle !== "Neopolis Akademy";
+  const achievement = content === "achievement";
+  const title = sharedCourse
+    ? `${courseTitle} | Formation recommandée par votre réseau`
+    : achievement
+      ? "Une réussite Neopolis Akademy vous est partagée"
+      : "Découvrez Neopolis Akademy avec votre réseau";
+  const description = sharedCourse
+    ? `Vous avez reçu une recommandation pour « ${courseTitle} ». Découvrez le parcours Neopolis Akademy avant de commencer votre candidature.`
+    : achievement
+      ? "Un membre de votre réseau partage sa réussite et vous invite à découvrir les parcours pratiques de Neopolis Akademy."
+      : "Un membre de votre réseau vous invite à découvrir les parcours pratiques de Neopolis Akademy avant de candidater.";
+  return { title, description, path: "/refer", openGraphPath: referralOpenGraphPath(url) };
+}
+
 export function getSeoPage(requestUrl: string): SeoPage {
+  const request = new URL(requestUrl, CANONICAL_ORIGIN);
   const path = normalizedPath(requestUrl);
+  if ((path === "/refer" || path === "/apply") && request.searchParams.get("ref")) return referralSeoPage(request);
   const exact = ROUTE_PAGES[path];
   if (exact) return { ...exact, path };
 
@@ -95,6 +158,7 @@ export function renderSeoHead(requestUrl: string) {
   const title = escapeHtml(page.title);
   const description = escapeHtml(page.description);
   const canonicalUrl = `${CANONICAL_ORIGIN}${page.path}`;
+  const openGraphUrl = `${CANONICAL_ORIGIN}${page.openGraphPath || page.path}`;
   const robots = page.noindex ? '<meta name="robots" content="noindex, nofollow" />' : "";
 
   return [
@@ -106,7 +170,7 @@ export function renderSeoHead(requestUrl: string) {
     '<meta property="og:locale" content="fr_FR" />',
     `<meta property="og:title" content="${title}" />`,
     `<meta property="og:description" content="${description}" />`,
-    `<meta property="og:url" content="${canonicalUrl}" />`,
+    `<meta property="og:url" content="${escapeHtml(openGraphUrl)}" />`,
     `<meta property="og:image" content="${SHARE_IMAGE_URL}" />`,
     '<meta property="og:image:width" content="1200" />',
     '<meta property="og:image:height" content="630" />',

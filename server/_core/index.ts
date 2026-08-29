@@ -59,6 +59,15 @@ async function startServer() {
   registerDemoAuthRoutes(app); // Keep legacy demo route for backwards compatibility
   app.use(certificateRouter);
 
+  // Previous referral links pointed directly to the multi-step form. Preserve
+  // attribution but first show the public, crawler-readable recommendation page.
+  app.get("/apply", (req, res, next) => {
+    if (!req.query.ref || req.query.referral_continue === "1") return next();
+    const params = new URLSearchParams(req.originalUrl.split("?")[1] || "");
+    params.delete("referral_continue");
+    res.redirect(302, `/refer${params.size ? `?${params.toString()}` : ""}`);
+  });
+
   // Resend webhook for email delivery tracking
   app.use(resendWebhookRouter);
 

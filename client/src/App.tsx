@@ -11,6 +11,7 @@ import DeferredCookieConsent from "./components/DeferredCookieConsent";
 // ─── Code-splitting: lazy-load all heavy pages ───
 const Home = lazy(() => import("./pages/Home"));
 const Apply = lazy(() => import("./pages/Apply"));
+const ReferralLanding = lazy(() => import("./pages/ReferralLanding"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminTraining = lazy(() => import("./pages/AdminTraining"));
 const AdminContentManager = lazy(() => import("./pages/AdminContentManager"));
@@ -52,6 +53,7 @@ function Router() {
     <Suspense fallback={<PageLoader />}>
       <Switch>
         <Route path={"/"} component={Home} />
+        <Route path={"/refer"} component={ReferralLanding} />
         <Route path={"/apply"} component={Apply} />
         <Route path={"/admin"} component={AdminDashboard} />
         <Route path={"/admin/training"} component={AdminTraining} />

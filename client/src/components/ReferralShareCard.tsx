@@ -29,13 +29,13 @@ export function ReferralShareCard({ content = "academy", courseId, certification
 
   const baseLink = useMemo(() => {
     if (!referralCode) return "";
-    return buildReferralUrl({ origin, referralCode, content, courseId, certificationId, achievementId, target: "copy" });
+    return buildReferralUrl({ origin, referralCode, content, courseId, certificationId, achievementId, shareTitle: content === "course" ? title : undefined, target: "copy" });
   }, [achievementId, certificationId, content, courseId, origin, referralCode]);
 
   if (referralQuery.isLoading || !program?.campaign || !referralCode || !baseLink) return null;
 
   const share = (target: Exclude<ReferralShareTarget, "copy">) => {
-    const referralUrl = buildReferralUrl({ origin, referralCode, content, courseId, certificationId, achievementId, target });
+    const referralUrl = buildReferralUrl({ origin, referralCode, content, courseId, certificationId, achievementId, shareTitle: content === "course" ? title : undefined, target });
     const message = program.campaign.shareMessage || "Rejoignez Neopolis Akademy avec mon lien de parrainage.";
     window.open(buildReferralShareUrl(target, referralUrl, message), "_blank", "noopener,noreferrer");
   };
