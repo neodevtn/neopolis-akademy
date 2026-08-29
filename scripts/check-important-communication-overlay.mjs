@@ -43,16 +43,16 @@ async function checkViewport(viewport, name) {
     const acknowledgement = page.getByText("J’accuse réception de ce communiqué.", { exact: true });
     const confirm = page.getByRole("button", { name: "Confirmer la réception" });
     const cookieHeading = page.getByText("Nous respectons votre vie privée", { exact: true });
-    const acceptCookies = page.getByRole("button", { name: "Accepter" });
-    const refuseCookies = page.getByRole("button", { name: "Refuser" });
+    const cookieActions = page.locator("[class*='fixed'][class*='z-40'] button");
     await cookieHeading.waitFor({ state: "visible", timeout: 12_000 });
+    await cookieActions.first().waitFor({ state: "attached", timeout: 12_000 });
 
     const visible = {
       dialog: await dialog.isVisible(),
       acknowledgement: await acknowledgement.isVisible(),
       confirm: await confirm.isVisible(),
       cookieBanner: await cookieHeading.isVisible(),
-      cookieActionsPresent: await acceptCookies.isVisible() && await refuseCookies.isVisible(),
+      cookieActionsPresent: await cookieActions.count() === 2 && await cookieActions.first().isVisible() && await cookieActions.nth(1).isVisible(),
     };
     await acknowledgement.scrollIntoViewIfNeeded();
     const acknowledgementInViewport = await acknowledgement.evaluate((element) => {
@@ -69,7 +69,7 @@ async function checkViewport(viewport, name) {
       const box = element.getBoundingClientRect();
       return box.top >= 0 && box.left >= 0 && box.bottom <= window.innerHeight && box.right <= window.innerWidth;
     });
-    const cookieActionsBlockedByDialog = await acceptCookies.evaluate((element) => {
+    const cookieActionsBlockedByDialog = await cookieActions.first().evaluate((element) => {
       const box = element.getBoundingClientRect();
       const topElement = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
       return Boolean(topElement && topElement !== element && !element.contains(topElement));
