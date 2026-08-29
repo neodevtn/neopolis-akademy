@@ -3,6 +3,7 @@
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [ ] Contrôle global transversal DataCamp reporté sur instruction utilisateur du 29 août 2026 ; ne pas l’exécuter dans la présente clôture rapide
 - [x] Pendant l’absence de l’utilisateur, vérifier les publications récentes, l’intégrité des checkpoints et les erreurs techniques exploitables sans relancer l’audit transversal reporté — dépôt propre hors suivi, trois derniers checkpoints présents, aucune erreur récente détectée dans les journaux serveur/navigateur et domaine public HTTP 200
+- [ ] Exécuter une dernière vérification autonome de disponibilité et des erreurs récentes avant la fin de la fenêtre de cinq heures, sans relancer l’audit transversal reporté — planification différée indisponible : la plateforme signale que le projet n’est pas déployé alors que le domaine public répond ; poursuivre les contrôles dans la session active
 - [ ] Vérifier, après le test utilisateur, que la session Chrome locale Mighty-Shadow et non un navigateur distant porte les sessions apprenant DataCamp et Neopolis pour la comparaison côte à côte
 - [ ] Confirmer que la session utilisée n’est plus identifiée comme « Browser: Sandbox » avant de consulter ou répondre aux activités DataCamp
 - [ ] Inventorier tous les cours DataCamp présents dans Neopolis et les regrouper en vagues d’audit traçables
