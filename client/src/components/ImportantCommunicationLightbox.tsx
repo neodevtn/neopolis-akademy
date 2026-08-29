@@ -1,6 +1,6 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
@@ -40,6 +40,7 @@ export function ImportantCommunicationLightbox() {
       >
         <DialogHeader className="shrink-0">
           <DialogTitle className="flex items-center gap-2 text-amber-700 dark:text-amber-400"><AlertTriangle className="h-5 w-5" /> Communication importante</DialogTitle>
+          <DialogDescription className="sr-only">Lisez ce communiqué et accusez-en réception avant de poursuivre votre navigation.</DialogDescription>
         </DialogHeader>
         <div className="min-h-0 flex-1 overflow-y-auto rounded-lg border border-amber-300/70 bg-amber-50/60 p-4 text-sm text-amber-950 dark:border-amber-700/60 dark:bg-amber-950/30 dark:text-amber-100">
           <p className="text-base font-semibold">{communication.subject}</p>

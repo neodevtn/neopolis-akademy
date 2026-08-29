@@ -139,16 +139,12 @@ function AnimatedSection({ children, className, style, id }: { children: React.R
 
 /* ─── Parallax Image Component ─── */
 function ParallaxImage() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  });
-  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1.02, 0.98]);
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 1200], [40, -40]);
+  const scale = useTransform(scrollY, [0, 600, 1200], [0.95, 1.02, 0.98]);
 
   return (
-    <motion.div ref={ref} style={{ y, scale }} className="relative">
+    <motion.div style={{ y, scale }} className="relative">
       <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[var(--neo-primary)]/10 to-transparent -z-10 blur-2xl" />
       <img
         src="/api/assets/partner_section_navy_v2_dc6ef3c5.jpg"

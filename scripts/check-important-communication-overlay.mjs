@@ -35,6 +35,13 @@ async function checkViewport(viewport, name) {
     await context.addCookies([{ name: "app_session_id", value: cookie, url: baseUrl, httpOnly: true, sameSite: "Lax" }]);
 
     const page = await context.newPage();
+    const relevantConsoleWarnings = [];
+    page.on("console", (message) => {
+      const text = message.text();
+      if (/Missing `Description`|container has a non-static position/.test(text)) {
+        relevantConsoleWarnings.push(text);
+      }
+    });
     await page.addInitScript(() => localStorage.removeItem("neopolis_cookie_consent"));
     await page.goto(`${baseUrl}/`, { waitUntil: "domcontentloaded", timeout: 60_000 });
 
@@ -60,6 +67,9 @@ async function checkViewport(viewport, name) {
       return box.top >= 0 && box.left >= 0 && box.bottom <= window.innerHeight && box.right <= window.innerWidth;
     });
     await confirm.scrollIntoViewIfNeeded();
+    await page.evaluate(() => window.scrollTo(0, Math.max(1000, document.documentElement.scrollHeight)));
+    await page.waitForTimeout(300);
+    await page.evaluate(() => window.scrollTo(0, 0));
     const topmost = await confirm.evaluate((element) => {
       const box = element.getBoundingClientRect();
       const topElement = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
@@ -89,7 +99,7 @@ async function checkViewport(viewport, name) {
       });
     }
     await page.screenshot({ path: `docs/block-qa-screenshots/important-communication-overlay-${name}.png`, fullPage: false });
-    return { viewport, ...visible, confirmTopmost: topmost, confirmInViewport: inViewport, acknowledgementInViewport, cookieActionsBlockedByDialog, feedbackTriggerRendered, feedbackTriggerOverlapsRequiredActions };
+    return { viewport, ...visible, confirmTopmost: topmost, confirmInViewport: inViewport, acknowledgementInViewport, cookieActionsBlockedByDialog, feedbackTriggerRendered, feedbackTriggerOverlapsRequiredActions, relevantConsoleWarnings };
   } finally {
     await context.close();
   }
@@ -115,5 +125,6 @@ const checks = [result.desktop, result.mobile].flatMap((entry) => [
   entry.acknowledgementInViewport,
   entry.cookieActionsBlockedByDialog,
   !entry.feedbackTriggerOverlapsRequiredActions,
+  entry.relevantConsoleWarnings.length === 0,
 ]);
 if (!checks.every(Boolean)) process.exitCode = 1;

@@ -9,5 +9,7 @@ describe("communication importante responsive", () => {
     expect(component).toContain("min-h-0 flex-1 overflow-y-auto");
     expect(component).toContain("flex shrink-0 cursor-pointer");
     expect(component).toContain("w-full shrink-0 gap-2");
+    expect(component).toContain("DialogDescription");
+    expect(component).toContain("accusez-en réception avant de poursuivre");
   });
 });
