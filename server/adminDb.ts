@@ -241,6 +241,37 @@ type LearnerCommunication = {
   isAcknowledged: boolean;
 };
 
+export type LearnerCommunicationInboxFilters = {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  readState?: "all" | "unread" | "read";
+  importance?: "all" | "important";
+};
+
+export function paginateLearnerCommunications(items: LearnerCommunication[], filters: LearnerCommunicationInboxFilters = {}) {
+  const page = Math.max(1, Math.floor(filters.page || 1));
+  const pageSize = Math.min(50, Math.max(10, Math.floor(filters.pageSize || 20)));
+  const search = (filters.search || "").trim().toLocaleLowerCase("fr-FR");
+  const matching = items.filter((item) => {
+    const searchable = `${item.subject} ${item.body.replace(/<[^>]*>/g, " ")}`.toLocaleLowerCase("fr-FR");
+    return (!search || searchable.includes(search))
+      && (filters.readState !== "unread" || !item.isRead)
+      && (filters.readState !== "read" || item.isRead)
+      && (filters.importance !== "important" || item.isImportant === 1);
+  });
+  const total = matching.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const normalizedPage = Math.min(page, totalPages);
+  return {
+    items: matching.slice((normalizedPage - 1) * pageSize, normalizedPage * pageSize),
+    total,
+    page: normalizedPage,
+    pageSize,
+    totalPages,
+  };
+}
+
 function readCommunicationFilter(value: unknown): Record<string, unknown> {
   if (typeof value === "string") {
     try { return JSON.parse(value) as Record<string, unknown>; } catch { return {}; }
@@ -276,7 +307,7 @@ export async function createCommunicationReceiptsForRecipients(communicationId: 
   return matchingUsers.length;
 }
 
-export async function getLearnerCommunications(userId: number, limit = 100): Promise<LearnerCommunication[]> {
+export async function getLearnerCommunications(userId: number, limit = 500): Promise<LearnerCommunication[]> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const [sentCommunications, receipts, userRows] = await Promise.all([
@@ -304,6 +335,15 @@ export async function getLearnerCommunications(userId: number, limit = 100): Pro
         isAcknowledged: Boolean(receipt?.acknowledgedAt),
       };
     });
+}
+
+export async function getLearnerCommunicationInbox(userId: number, filters: LearnerCommunicationInboxFilters = {}) {
+  const allItems = await getLearnerCommunications(userId);
+  return {
+    ...paginateLearnerCommunications(allItems, filters),
+    unreadCount: allItems.filter((item) => !item.isRead).length,
+    pendingImportant: allItems.filter((item) => item.isImportant === 1 && !item.isAcknowledged),
+  };
 }
 
 async function getVisibleLearnerCommunication(userId: number, communicationId: number) {

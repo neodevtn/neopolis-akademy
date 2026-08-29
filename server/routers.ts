@@ -13,7 +13,7 @@ import { sendAdminNewApplicationEmail, sendAdminCriticalCourseFeedbackEmail, sen
 import { generateCandidatePDF } from "./pdf";
 import { uploadRateLimit, submitRateLimit, getClientIp } from "./security";
 import { adminEnhancedRouter } from "./adminRouter";
-import { acknowledgeLearnerCommunication, getLearnerCommunications, markLearnerCommunicationRead } from "./adminDb";
+import { acknowledgeLearnerCommunication, getLearnerCommunicationInbox, markLearnerCommunicationRead } from "./adminDb";
 import { adminContentRouter } from "./adminContentRouter";
 import { videoRecommendationsRouter } from "./videoRecommendationsRouter";
 import { createAdminNotification } from "./notificationsDb";
@@ -636,11 +636,15 @@ export const appRouter = router({
       return moderateCourseFeedback({ feedbackId: input.feedbackId, adminId: ctx.user.id, status: input.status, adminResponse: input.adminResponse });
     }),
 
-    getCommunications: protectedProcedure.query(async ({ ctx }) => {
-      const items = await getLearnerCommunications(ctx.user.id);
-      const pendingImportant = items.filter((item) => item.isImportant === 1 && !item.isAcknowledged);
-      return { items, unreadCount: items.filter((item) => !item.isRead).length, pendingImportant };
-    }),
+    getCommunications: protectedProcedure
+      .input(z.object({
+        page: z.number().int().positive().optional(),
+        pageSize: z.number().int().min(10).max(50).optional(),
+        search: z.string().trim().max(120).optional(),
+        readState: z.enum(["all", "unread", "read"]).optional(),
+        importance: z.enum(["all", "important"]).optional(),
+      }).optional())
+      .query(async ({ ctx, input }) => getLearnerCommunicationInbox(ctx.user.id, input)),
 
     markCommunicationRead: protectedProcedure
       .input(z.object({ communicationId: z.number().positive() }))
