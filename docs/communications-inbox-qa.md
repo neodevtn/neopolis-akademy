@@ -25,6 +25,6 @@ La structure utilise un panneau unique empilé sous le point de rupture `lg`, av
 
 ## Contrôle de production
 
-Après propagation du checkpoint, l’onglet [Communiqués](https://akademy.neodev.click/training?tab=communications) a été rejoué avec le compte apprenant de démonstration. Le domaine public rend la boîte de réception en deux panneaux, avec deux aperçus courts dans la liste et un seul communiqué complet dans le volet de lecture. La recherche et les filtres restent présents ; les messages importants conservent leur état de réception confirmée.
+Après propagation du checkpoint, l’onglet [Communiqués](https://akademy.neodev.click/training?tab=communications) a été rejoué avec le compte apprenant de démonstration. Le domaine public rend la boîte de réception en deux panneaux, avec deux aperçus courts dans la liste et un seul communiqué complet dans le volet de lecture. La recherche et les filtres restent présents ; les messages importants conservent leur état de réception confirmée. La sonde publiée finale à 390 × 844 confirme les contrôles et la sélection, avec `scrollWidth = 390`, `clientWidth = 390` et `overflow = false`.
 
 Le communiqué non lu du compte de démonstration a été ouvert depuis la ligne de liste. La mutation de lecture a répondu `200` avec `success: true`, puis la réponse de la boîte de réception a confirmé l’état lu persistant. Les règles d’accusé des messages importants n’ont pas été modifiées.

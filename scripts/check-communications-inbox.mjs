@@ -36,9 +36,20 @@ try {
   const options = inboxList.getByRole("option");
   const optionsBefore = await options.count();
   const firstSubject = optionsBefore ? (await options.first().innerText()).split("\n")[0] : "";
-  if (optionsBefore > 1) await options.nth(1).click();
+  const communicationInput = encodeURIComponent(JSON.stringify({ "0": { json: { page: 1, pageSize: 20, search: "", readState: "all", importance: "all" } } }));
+  const readInbox = async () => {
+    const response = await context.request.get(`${baseUrl}/api/trpc/training.getCommunications?batch=1&input=${communicationInput}`);
+    const payload = await response.json();
+    return payload[0].result.data.json;
+  };
+  const beforeInbox = await readInbox();
+  const unreadIndex = beforeInbox.items.findIndex((item) => !item.isRead);
+  if (unreadIndex >= 0) await options.nth(unreadIndex).click();
+  else if (optionsBefore > 1) await options.nth(1).click();
   await page.waitForTimeout(250);
   const visibleDetail = await page.locator("article[aria-live='polite']").innerText();
+  const afterInbox = unreadIndex >= 0 ? await readInbox() : beforeInbox;
+  const readTransition = unreadIndex < 0 || (beforeInbox.items[unreadIndex]?.isRead === false && afterInbox.items.some((item) => item.id === beforeInbox.items[unreadIndex]?.id && item.isRead));
   const geometry = await page.evaluate(() => ({ clientWidth: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth }));
   const controls = {
     search: await page.getByPlaceholder("Rechercher un communiqué").count(),
@@ -54,6 +65,9 @@ try {
     optionsBefore,
     firstSubject,
     selectionWorks: optionsBefore < 2 || Boolean(visibleDetail.trim()),
+    readTransition,
+    unreadCountBefore: beforeInbox.unreadCount,
+    unreadCountAfter: afterInbox.unreadCount,
     controls,
     ...geometry,
     overflow: geometry.scrollWidth > geometry.clientWidth + 2,
@@ -66,4 +80,4 @@ try {
 
 writeFileSync(outputPath, `${JSON.stringify(report, null, 2)}\n`);
 console.table([report]);
-if (report.overflow || report.optionsBefore < 1 || !report.selectionWorks || Object.values(report.controls).some((count) => count < 1)) process.exitCode = 1;
+if (report.overflow || report.optionsBefore < 1 || !report.selectionWorks || !report.readTransition || Object.values(report.controls).some((count) => count < 1)) process.exitCode = 1;

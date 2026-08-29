@@ -110,7 +110,7 @@ export default function TrainingDashboard() {
   const gamificationQuery = trpc.competencies.getGamification.useQuery(undefined, { enabled: isAuthenticated });
   const [communicationInboxFilters, setCommunicationInboxFilters] = useState({ page: 1, pageSize: 20, search: "", readState: "all" as "all" | "unread" | "read", importance: "all" as "all" | "important" });
   const learnerCommunicationsQuery = trpc.training.getCommunications.useQuery(communicationInboxFilters, { enabled: isAuthenticated });
-  const markCommunicationReadMutation = trpc.training.markCommunicationRead.useMutation({ onSuccess: () => learnerCommunicationsQuery.refetch() });
+  const markCommunicationReadMutation = trpc.training.markCommunicationRead.useMutation();
   const orientationQuery = trpc.orientation.getMine.useQuery(undefined, { enabled: isAuthenticated });
   const saveOrientationGoalsMutation = trpc.orientation.saveGoals.useMutation({ onSuccess: () => orientationQuery.refetch() });
   const completeOrientationMutation = trpc.orientation.completeDiagnostic.useMutation({ onSuccess: () => orientationQuery.refetch() });
@@ -512,7 +512,10 @@ export default function TrainingDashboard() {
                 totalPages={learnerCommunicationsQuery.data?.totalPages || 1}
                 filters={communicationInboxFilters}
                 onFiltersChange={setCommunicationInboxFilters}
-                onRead={(communicationId) => markCommunicationReadMutation.mutate({ communicationId })}
+                onRead={async (communicationId) => {
+                  await markCommunicationReadMutation.mutateAsync({ communicationId });
+                  await learnerCommunicationsQuery.refetch();
+                }}
               />
             </motion.div>
           )}
@@ -750,9 +753,10 @@ function communicationsPreview(body: string) {
   return body.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-function CommunicationsTab({ items, isLoading, page, total, totalPages, filters, onFiltersChange, onRead }: { items: CommunicationItem[]; isLoading: boolean; page: number; total: number; totalPages: number; filters: CommunicationFilters; onFiltersChange: (filters: CommunicationFilters) => void; onRead: (communicationId: number) => void }) {
+function CommunicationsTab({ items, isLoading, page, total, totalPages, filters, onFiltersChange, onRead }: { items: CommunicationItem[]; isLoading: boolean; page: number; total: number; totalPages: number; filters: CommunicationFilters; onFiltersChange: (filters: CommunicationFilters) => void; onRead: (communicationId: number) => Promise<void> }) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [searchInput, setSearchInput] = useState(filters.search);
+  const [optimisticReadIds, setOptimisticReadIds] = useState<Set<number>>(() => new Set());
   const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (!items.length) { setSelectedId(null); return; }
@@ -762,9 +766,20 @@ function CommunicationsTab({ items, isLoading, page, total, totalPages, filters,
   useEffect(() => () => { if (searchTimer.current) clearTimeout(searchTimer.current); }, []);
 
   const selected = items.find((item) => item.id === selectedId) || null;
-  const openMessage = (item: CommunicationItem) => {
+  const isRead = (item: CommunicationItem) => item.isRead || optimisticReadIds.has(item.id);
+  const openMessage = async (item: CommunicationItem) => {
     setSelectedId(item.id);
-    if (!item.isRead) onRead(item.id);
+    if (isRead(item)) return;
+    setOptimisticReadIds((current) => new Set(current).add(item.id));
+    try {
+      await onRead(item.id);
+    } catch {
+      setOptimisticReadIds((current) => {
+        const next = new Set(current);
+        next.delete(item.id);
+        return next;
+      });
+    }
   };
   const updateFilters = (update: Partial<CommunicationFilters>) => onFiltersChange({ ...filters, ...update, page: update.page ?? (Object.keys(update).some((key) => key !== "page") ? 1 : filters.page) });
   const updateSearch = (value: string) => {
@@ -780,7 +795,7 @@ function CommunicationsTab({ items, isLoading, page, total, totalPages, filters,
       <div className="mt-4 flex flex-col gap-2 sm:flex-row"><label className="relative flex-1"><Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><input value={searchInput} onChange={(event) => updateSearch(event.target.value)} placeholder="Rechercher un communiqué" className="h-10 w-full rounded-lg border border-input bg-background pl-9 pr-3 text-sm text-foreground outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring" /></label><select value={filters.importance} onChange={(event) => updateFilters({ importance: event.target.value as CommunicationFilters["importance"] })} className="h-10 rounded-lg border border-input bg-background px-3 text-sm text-foreground"><option value="all">Toutes priorités</option><option value="important">Importants</option></select></div>
     </header>
     {!items.length ? <div className="p-10 text-center"><MailOpen className="mx-auto h-8 w-8 text-muted-foreground" /><p className="mt-3 font-medium">Aucun communiqué dans cette vue.</p><p className="mt-1 text-sm text-muted-foreground">Modifiez votre recherche ou vos filtres pour retrouver un message.</p></div> : <div className="grid min-h-[480px] lg:grid-cols-[minmax(300px,0.85fr)_minmax(0,1.6fr)]">
-      <div className="border-b border-border lg:border-b-0 lg:border-r" role="listbox" aria-label="Liste des communiqués">{items.map((item) => <button key={item.id} type="button" role="option" aria-selected={selected?.id === item.id} onClick={() => openMessage(item)} className={`block w-full border-b border-border px-4 py-4 text-left last:border-b-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${selected?.id === item.id ? "bg-primary/8" : "hover:bg-muted/45"}`}><div className="flex items-start gap-3"><span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${item.isRead ? "bg-transparent" : "bg-primary"}`} aria-label={item.isRead ? "Lu" : "Non lu"} /><div className="min-w-0 flex-1"><div className="flex items-start justify-between gap-3"><span className={`truncate text-sm ${item.isRead ? "font-medium" : "font-semibold"} text-foreground`}>{item.subject}</span><time className="shrink-0 text-[11px] text-muted-foreground">{new Date(item.sentAt || item.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" })}</time></div><p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">{communicationsPreview(item.body)}</p><div className="mt-2 flex items-center gap-2">{item.isImportant === 1 && <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800 dark:bg-amber-900/35 dark:text-amber-300">Important</span>}{!item.isRead && <span className="text-[10px] font-medium text-primary">Nouveau</span>}</div></div></div></button>)}</div>
+      <div className="border-b border-border lg:border-b-0 lg:border-r" role="listbox" aria-label="Liste des communiqués">{items.map((item) => { const itemIsRead = isRead(item); return <button key={item.id} type="button" role="option" aria-selected={selected?.id === item.id} onClick={() => { void openMessage(item); }} className={`block w-full border-b border-border px-4 py-4 text-left last:border-b-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${selected?.id === item.id ? "bg-primary/8" : "hover:bg-muted/45"}`}><div className="flex items-start gap-3"><span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${itemIsRead ? "bg-transparent" : "bg-primary"}`} aria-label={itemIsRead ? "Lu" : "Non lu"} /><div className="min-w-0 flex-1"><div className="flex items-start justify-between gap-3"><span className={`truncate text-sm ${itemIsRead ? "font-medium" : "font-semibold"} text-foreground`}>{item.subject}</span><time className="shrink-0 text-[11px] text-muted-foreground">{new Date(item.sentAt || item.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" })}</time></div><p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">{communicationsPreview(item.body)}</p><div className="mt-2 flex items-center gap-2">{item.isImportant === 1 && <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800 dark:bg-amber-900/35 dark:text-amber-300">Important</span>}{!itemIsRead && <span className="text-[10px] font-medium text-primary">Nouveau</span>}</div></div></div></button>; })}</div>
       <article className="min-w-0 bg-background px-5 py-5 sm:px-7 sm:py-6" aria-live="polite">{selected && <><header className="border-b border-border pb-5"><div className="flex flex-wrap items-start justify-between gap-3"><div className="min-w-0"><div className="mb-2 flex flex-wrap items-center gap-2">{selected.isImportant === 1 && <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:bg-amber-900/35 dark:text-amber-300">Important</span>}<span className="text-xs text-muted-foreground">Communication Neopolis Akademy</span></div><h3 className="text-lg font-semibold text-foreground sm:text-xl">{selected.subject}</h3></div><time className="text-xs text-muted-foreground">{new Date(selected.sentAt || selected.createdAt).toLocaleString("fr-FR", { dateStyle: "medium", timeStyle: "short" })}</time></div></header><div className="prose prose-sm mt-6 max-w-none break-words text-foreground dark:prose-invert" dangerouslySetInnerHTML={{ __html: selected.body }} />{selected.isImportant === 1 && <footer className="mt-8 border-t border-border pt-4 text-sm">{selected.isAcknowledged ? <span className="inline-flex items-center gap-2 font-medium text-emerald-700 dark:text-emerald-300"><MailOpen className="h-4 w-4" />Réception confirmée</span> : <span className="inline-flex items-center gap-2 font-medium text-amber-700 dark:text-amber-300"><Mail className="h-4 w-4" />Accusé de réception requis dans la fenêtre importante.</span>}</footer>}</>}</article>
     </div>}
     {totalPages > 1 && <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-muted/20 px-4 py-3 text-sm"><span className="text-muted-foreground">Page {page} sur {totalPages}</span><div className="flex gap-2"><Button variant="outline" size="sm" disabled={page <= 1} onClick={() => updateFilters({ page: page - 1 })}><ChevronLeft className="mr-1 h-4 w-4" />Précédent</Button><Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => updateFilters({ page: page + 1 })}>Suivant<ChevronRight className="ml-1 h-4 w-4" /></Button></div></footer>}
