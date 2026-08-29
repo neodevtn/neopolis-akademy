@@ -80,7 +80,9 @@
 ## Lot DataCamp suivant — Développement logiciel avec GitHub Copilot
 - [x] Restaurer et vérifier le paquet officiel Drive — archive de vingt parties validée SHA-256 ; 4 chapitres, 40 activités et 13 vidéos source
 - [x] Établir l’audit initial activité par activité — 40/40 activités présentes ; aucun TP cloud ou exercice libre à adapter
-- [ ] Vérifier les deux URL détectées comme exemples pédagogiques non chargés, synchroniser les métriques et rejouer les interactions déterministes avant publication — consigner leur qualification et les rejeux exécutés
+- [x] Vérifier les deux URL détectées comme exemples pédagogiques non chargés — `example.com` et `api.example.com/docs` restent des exemples canoniques non chargés et ne sont ni média, ni laboratoire, ni dépendance DataCamp
+- [x] Resynchroniser explicitement les métriques GitHub Copilot et en archiver la trace avant clôture — synchronisation globale réussie puis carte et fiche confirmées à 40 activités, 27 exercices, 13 vidéos et 4 téléchargements
+- [x] Rejouer en session apprenant QA un tri et une leçon Projector GitHub Copilot, avec preuve du verrou, du feedback et de l’absence de dépendance fournisseur visible — tri 1.6 validé avec verrou et feedback ; 3 Projector de l’unité 1 rendus avec audio/slides locaux et 0 dépendance opérationnelle visible
 
 ## Lot DataCamp suivant — Building Agentic Workflows with LlamaIndex
 - [x] Restaurer le paquet officiel Drive, valider son empreinte et auditer ses exercices DataLab avant toute adaptation — SHA-256 validé ; 5 Projector et 10 activités DataLab sources

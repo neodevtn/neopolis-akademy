@@ -33,7 +33,7 @@ try {
       current.rendered = true;
       current.audioVisible = await projector.locator("video").count() > 0;
       current.slideVisible = await projector.getByRole("button", { name: /Lire la leçon|Mettre en pause/ }).count() > 0;
-      current.providerReferenceVisible = /DataCamp|Explore more resources|Explorez plus de ressources/i.test(await projector.innerText());
+      current.providerReferenceVisible = /Explore more(?: DataCamp)?|Explorez plus de ressources|learn more[^\n]*DataCamp|https?:\/\/[^\s]*(?:datacamp|github)\./i.test(await projector.innerText());
     } catch (error) {
       current.error = error instanceof Error ? error.message : String(error);
       current.finalUrl = page.url();
