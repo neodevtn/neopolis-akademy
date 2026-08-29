@@ -209,12 +209,12 @@ export default function Home() {
           </div>
 
           {/* Right actions */}
-          <div className="flex items-center gap-2 ml-auto lg:ml-0 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-2 ml-auto lg:ml-0 shrink-0">
             <LanguageSwitcher />
             <DeferredHomeAuth slot="logout" />
             <DeferredHomeAuth
               slot="header-primary"
-              fallback={<Link href="/apply"><span className="flex items-center gap-1.5 text-xs md:text-sm font-semibold px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 hover:shadow-md active:scale-[0.97]">{t({ fr: "Postuler", en: "Apply", ar: "تقدّم" })} <ChevronRight size={14} /></span></Link>}
+              fallback={<Link href="/apply"><span className="flex items-center gap-1.5 text-xs md:text-sm font-semibold px-3 sm:px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 hover:shadow-md active:scale-[0.97]">{t({ fr: "Postuler", en: "Apply", ar: "تقدّم" })} <ChevronRight size={14} /></span></Link>}
             />
             <MobileMenuButton />
           </div>
