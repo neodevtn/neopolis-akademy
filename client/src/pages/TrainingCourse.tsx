@@ -30,6 +30,7 @@ import { isSequentialCourseRouteLocked } from "@shared/learningAccess";
 import { BrandLogo } from "@/components/BrandLogo";
 import { CourseFeedbackPanel } from "@/components/CourseFeedbackPanel";
 import { ReferralShareCard } from "@/components/ReferralShareCard";
+import { getStandaloneTpCertificationId } from "@/lib/iaAppliedMetiersCatalog";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -188,6 +189,7 @@ export default function TrainingCourse() {
 
   const course = trainingIndex.courses.find((c: any) => c.id === courseId);
   const cert = trainingIndex.certifications.find((c: any) => c.id === certId);
+  const standaloneTpCertificationId = getStandaloneTpCertificationId(course, certId);
   const courseAccessQuery = trpc.trainingAccess.canOpen.useQuery(
     { courseId: courseId || "" },
     { enabled: isAuthenticated && !!courseId && user?.role !== "admin" },
@@ -206,6 +208,11 @@ export default function TrainingCourse() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseId]);
+
+  useEffect(() => {
+    if (!standaloneTpCertificationId || !courseId) return;
+    navigate(`/training/${standaloneTpCertificationId}/${courseId}${urlSearch ? `?${urlSearch}` : ""}`, { replace: true });
+  }, [courseId, navigate, standaloneTpCertificationId, urlSearch]);
 
   // Loading state
   if (authLoading) {
@@ -261,6 +268,10 @@ export default function TrainingCourse() {
   if (user?.role !== "admin" && courseAccessQuery.data && !courseAccessQuery.data.allowed) {
     const inactive = courseAccessQuery.data.reason === "course_inactive";
     return <div className="min-h-screen bg-background"><main className="mx-auto max-w-lg px-5 py-28 text-center"><div className="rounded-2xl border border-border bg-card p-9"><Lock className="mx-auto mb-5 h-10 w-10 text-amber-600" /><h1 className="text-xl font-bold text-foreground">{inactive ? "Formation temporairement indisponible" : "Formation visible, accès non attribué"}</h1><p className="mt-3 text-sm leading-relaxed text-muted-foreground">{inactive ? (courseAccessQuery.data.lifecycle?.reason || "Cette formation a été désactivée ou archivée par l’administration. Elle reste visible au catalogue mais ne peut pas être ouverte actuellement.") : "Cette formation est disponible au catalogue, mais n’est pas encore affectée à l’un de vos groupes d’apprenants. Contactez votre administrateur."}</p><Button className="mt-6" variant="outline" onClick={() => navigate("/training")}>Retour au catalogue</Button></div></main></div>;
+  }
+
+  if (standaloneTpCertificationId) {
+    return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
   }
 
     if (!course || !cert) {

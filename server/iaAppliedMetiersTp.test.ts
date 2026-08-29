@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { getStandaloneTpCertificationIdForOrder } from "../client/src/lib/iaAppliedMetiersCatalog";
 
 const root = path.resolve(import.meta.dirname, "..");
 const source = JSON.parse(fs.readFileSync(path.resolve(root, "../ia_appliquee_metiers_tp_bundle/catalogue_ia_appliquee_metiers_tp.json"), "utf8"));
@@ -24,8 +25,9 @@ const text = (value: unknown) => typeof value === "string" ? value : (value as {
 
 describe("rubrique IA appliquée aux métiers - TP", () => {
   const tutorials = source.tutorials as any[];
-  const certification = catalog.certifications.find((entry: any) => entry.id === certificationId);
-  const indexedCourses = catalog.courses.filter((entry: any) => entry.certId === certificationId);
+  const category = catalog.categories.find((entry: any) => entry.id === certificationId);
+  const indexedCourses = catalog.courses.filter((entry: any) => entry.certId?.startsWith(`${certificationId}__formation_`));
+  const independentCertifications = catalog.certifications.filter((entry: any) => entry.group === certificationId);
 
   it("préserve les quarante identifiants, titres et positions canoniques", () => {
     expect(tutorials).toHaveLength(40);
@@ -45,15 +47,24 @@ describe("rubrique IA appliquée aux métiers - TP", () => {
     });
   });
 
-  it("crée la rubrique et les huit sous-catégories métier attendues", () => {
-    expect(certification?.title?.fr).toBe("IA appliquée aux métiers - TP");
-    expect(certification?.group).toBe(certificationId);
-    expect(certification?.subcategories).toHaveLength(8);
+  it("crée la rubrique, les huit sous-catégories et quarante formations métier autonomes", () => {
+    expect(category?.title?.fr).toBe("IA appliquée aux métiers - TP");
+    expect(category?.subcategories).toHaveLength(8);
+    expect(catalog.certifications.find((entry: any) => entry.id === certificationId)).toBeUndefined();
+    expect(independentCertifications).toHaveLength(40);
     expectedSubcategories.forEach(([from, to, title]) => {
       const matching = tutorials.filter((tutorial) => tutorial.order >= from && tutorial.order <= to);
       expect(matching).toHaveLength(to - from + 1);
       expect(matching.every((tutorial) => tutorial.category === title)).toBe(true);
       expect(indexedCourses.filter((course: any) => course.subCategory?.fr === title)).toHaveLength(to - from + 1);
+      matching.forEach((tutorial) => {
+        const certification = independentCertifications.find((entry: any) => entry.id === getStandaloneTpCertificationIdForOrder(tutorial.order));
+        expect(certification?.title?.fr).toBe(tutorial.title);
+        expect(certification?.courses).toEqual([courseId(tutorial.order)]);
+        expect(certification?.subCategory?.fr).toBe(title);
+        expect(certification?.isStandaloneTP).toBe(true);
+        expect(indexedCourses.find((entry: any) => entry.id === courseId(tutorial.order))?.certId).toBe(certification?.id);
+      });
     });
   });
 

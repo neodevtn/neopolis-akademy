@@ -1,4 +1,4 @@
-import { Link, useParams } from "wouter";
+import { Link, useLocation, useParams } from "wouter";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTrainingProgress } from "@/contexts/TrainingProgressContext";
@@ -7,13 +7,14 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
 import { CheckCircle2, PlayCircle, BookOpen, ArrowLeft, Clock, LogIn, Download, Trophy, History, Moon, Sun, ChevronRight, Layers, Lock, Target, Brain, Award } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { motion } from "framer-motion";
 import { isSequentialCourseCardLocked } from "@shared/learningAccess";
 import { BrandLogo } from "@/components/BrandLogo";
 import { getCertificationCatalogMetrics, getCourseCatalogMetrics } from "@/lib/catalogMetrics";
+import { IA_APPLIQUEE_METIERS_COLLECTION_ID, isStandaloneTpCertification } from "@/lib/iaAppliedMetiersCatalog";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -28,6 +29,7 @@ const staggerContainer = {
 
 export default function TrainingCertification() {
   const { certId } = useParams<{ certId: string }>();
+  const [, navigate] = useLocation();
   const { lang, t } = useLanguage();
   const { isAuthenticated, loading: authLoading, user } = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -46,6 +48,7 @@ export default function TrainingCertification() {
     return ungrouped.length ? [...groups, { id: "other", title: { fr: "Autres TP", en: "Other labs" }, courses: ungrouped }] : groups;
   }, [cert, courses]);
   const certificationMetrics = getCertificationCatalogMetrics(certId || "", courses);
+  const isStandaloneTP = isStandaloneTpCertification(cert as any);
   const courseIds = courses.map((c) => c.id);
   const isDataCampPartner = (cert as any)?.provider === "datacamp";
   const dataCampActivityTotal = useMemo(() => courses.reduce((sum, course) => sum + Number((course as any).totalActivities || (course as any).chapterCount || 0), 0), [courses]);
@@ -112,6 +115,14 @@ export default function TrainingCertification() {
     if (passing.length === 0) return null;
     return passing.reduce((best: any, curr: any) => curr.score > best.score ? curr : best);
   }, [examHistory]);
+
+  useEffect(() => {
+    if (certId === IA_APPLIQUEE_METIERS_COLLECTION_ID) navigate("/training?tab=catalog&group=ia_appliquee_metiers_tp", { replace: true });
+  }, [certId, navigate]);
+
+  if (certId === IA_APPLIQUEE_METIERS_COLLECTION_ID) {
+    return <div className="min-h-screen flex items-center justify-center bg-background"><div className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin" /></div>;
+  }
 
   if (!cert) {
     return (
@@ -292,7 +303,7 @@ export default function TrainingCertification() {
         )}
 
         {/* Mock Exam CTA */}
-        <motion.div variants={fadeInUp}>
+        {!isStandaloneTP && <motion.div variants={fadeInUp}>
           {certComplete ? (
             <Link
               href={`/mock-exam/${certId}`}
@@ -326,7 +337,7 @@ export default function TrainingCertification() {
               </div>
             </div>
           )}
-        </motion.div>
+        </motion.div>}
 
         {/* Exam History */}
         {examHistory && examHistory.length > 0 && (
@@ -459,10 +470,12 @@ export default function TrainingCertification() {
         <motion.div variants={fadeInUp}>
           <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
             <Layers className="w-5 h-5 text-primary" />
-            {t({ en: "Prep Courses", fr: "Cours de préparation" })}
+            {isStandaloneTP ? t({ en: "Practical learning path", fr: "Parcours pratique" }) : t({ en: "Prep Courses", fr: "Cours de préparation" })}
           </h2>
           <p className="text-sm text-muted-foreground mb-5">
-            {t({ en: "Complete each course in order to unlock the next one. Finish all courses to access the mock exam.", fr: "Terminez chaque cours dans l'ordre pour débloquer le suivant. Terminez tous les cours pour accéder à l'examen blanc." })}
+            {isStandaloneTP
+              ? t({ en: "Complete the short practical screens in order to validate this training.", fr: "Terminez les écrans pratiques courts dans l’ordre pour valider cette formation." })
+              : t({ en: "Complete each course in order to unlock the next one. Finish all courses to access the mock exam.", fr: "Terminez chaque cours dans l'ordre pour débloquer le suivant. Terminez tous les cours pour accéder à l'examen blanc." })}
           </p>
         </motion.div>
         <motion.div variants={staggerContainer} className="space-y-8">

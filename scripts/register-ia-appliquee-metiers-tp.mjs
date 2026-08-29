@@ -71,6 +71,7 @@ function subcategoryFor(tutorial) {
   return subcategory;
 }
 function courseIdFor(tutorial) { return `${certificationId}__${String(tutorial.order).padStart(2, "0")}`; }
+function standaloneCertificationIdFor(tutorial) { return `${certificationId}__formation_${String(tutorial.order).padStart(2, "0")}`; }
 function supportFileFor(tutorial) { return `${String(tutorial.order).padStart(2, "0")}-${tutorial.id}-support-fictif.md`; }
 function localizedList(items) { return (items || []).map((value) => `- ${value}`).join("\n"); }
 
@@ -260,25 +261,34 @@ function ensureCatalog(index, tutorials) {
     title: i18n("IA appliquée aux métiers - TP", "Applied AI for Business Roles – Labs"),
     subtitle: i18n("40 travaux pratiques guidés par métier, avec préparation d’environnement, contrôles et validation humaine.", "40 guided practical exercises by business role, with environment setup, controls and human validation."),
     order: 8,
+    subcategories: subcategories.map((entry) => ({ id: entry.id, title: entry.title, orderRange: `${entry.start}–${entry.end}` })),
   };
   const categoryIndex = index.categories.findIndex((entry) => entry.id === category.id);
   if (categoryIndex >= 0) index.categories[categoryIndex] = category; else index.categories.push(category);
 
   index.certifications ||= [];
-  const certification = {
-    id: certificationId,
-    title: i18n("IA appliquée aux métiers - TP", "Applied AI for Business Roles – Labs"),
-    description: i18n("Parcours de 40 travaux pratiques guidés pour appliquer l’IA aux métiers dans un environnement personnel de démonstration, avec données fictives, contrôles et validation humaine.", "A 40-lab guided path for applying AI to business roles in a personal demonstration environment, with fictional data, controls and human validation."),
-    level: i18n("Tous niveaux", "All levels"),
-    icon: "◈",
-    group: "ia_appliquee_metiers_tp",
-    provider: "curated_practical_sources",
-    catalogTag: i18n("Travaux pratiques par métier", "Business role practical labs"),
-    subcategories: subcategories.map((entry) => ({ id: entry.id, title: entry.title, orderRange: `${entry.start}–${entry.end}` })),
-    courses: tutorials.map(courseIdFor),
-  };
-  const certificationIndex = index.certifications.findIndex((entry) => entry.id === certificationId);
-  if (certificationIndex >= 0) index.certifications[certificationIndex] = { ...index.certifications[certificationIndex], ...certification }; else index.certifications.push(certification);
+  index.certifications = index.certifications.filter((entry) => entry.id !== certificationId);
+  for (const tutorial of tutorials) {
+    const subcategory = subcategoryFor(tutorial);
+    const certification = {
+      id: standaloneCertificationIdFor(tutorial),
+      title: i18n(tutorial.title),
+      description: i18n(`TP guidé pour ${tutorial.targetJob}. Préparation sûre, données fictives, contrôles et validation humaine.`, `Guided practical exercise for ${tutorial.targetJob}. Safe setup, fictional data, controls and human validation.`),
+      level: i18n(tutorial.level),
+      icon: "◈",
+      group: certificationId,
+      provider: "curated_practical_sources",
+      catalogTag: i18n(`TP ${tutorial.order} · ${subcategory.title.fr}`, `Lab ${tutorial.order} · ${subcategory.title.en}`),
+      subCategoryId: subcategory.id,
+      subCategory: subcategory.title,
+      canonicalOrder: tutorial.order,
+      isStandaloneTP: true,
+      courses: [courseIdFor(tutorial)],
+    };
+    const certificationIndex = index.certifications.findIndex((entry) => entry.id === certification.id);
+    if (certificationIndex >= 0) index.certifications[certificationIndex] = { ...index.certifications[certificationIndex], ...certification }; else index.certifications.push(certification);
+  }
+  index.certifications.sort((a, b) => `${a.group || ""}:${String(a.canonicalOrder || 0).padStart(3, "0")}:${a.id}`.localeCompare(`${b.group || ""}:${String(b.canonicalOrder || 0).padStart(3, "0")}:${b.id}`));
 }
 
 function upsertCourseIndex(index, tutorial) {
@@ -286,7 +296,7 @@ function upsertCourseIndex(index, tutorial) {
   const subcategory = subcategoryFor(tutorial);
   const entry = {
     id: courseId,
-    certId: certificationId,
+    certId: standaloneCertificationIdFor(tutorial),
     title: i18n(tutorial.title),
     description: i18n(`TP ${tutorial.order}/40 · ${tutorial.targetJob}. Outils : ${(tutorial.stack || []).join(", ")}.`),
     order: tutorial.order,
@@ -308,19 +318,21 @@ function upsertCourseIndex(index, tutorial) {
 function verifyBatch(tutorials, batch) {
   const assets = readAssetManifest();
   const index = readJson(indexPath);
-  const certification = index.certifications?.find((entry) => entry.id === certificationId);
-  if (!certification) throw new Error("La rubrique catalogue est absente.");
-  if (certification.title?.fr !== "IA appliquée aux métiers - TP") throw new Error("Le libellé de rubrique ne correspond pas à la demande.");
-  if (!Array.isArray(certification.subcategories) || certification.subcategories.length !== 8) throw new Error("Les huit sous-catégories métier sont requises.");
+  const category = index.categories?.find((entry) => entry.id === certificationId);
+  if (!category) throw new Error("La rubrique catalogue est absente.");
+  if (category.title?.fr !== "IA appliquée aux métiers - TP") throw new Error("Le libellé de rubrique ne correspond pas à la demande.");
+  if (!Array.isArray(category.subcategories) || category.subcategories.length !== 8) throw new Error("Les huit sous-catégories métier sont requises.");
   for (const tutorial of batch) {
     const courseId = courseIdFor(tutorial);
     const coursePath = path.join(coursesDir, `${courseId}.json`);
     const indexEntry = index.courses?.find((entry) => entry.id === courseId);
-    if (!fs.existsSync(coursePath) || !indexEntry) throw new Error(`TP ${tutorial.order} absent du cours ou de l’index.`);
+    const standaloneCertification = index.certifications?.find((entry) => entry.id === standaloneCertificationIdFor(tutorial));
+    if (!fs.existsSync(coursePath) || !indexEntry || !standaloneCertification) throw new Error(`TP ${tutorial.order} absent du cours, de l’index ou des formations.`);
     const course = readJson(coursePath);
     const raw = JSON.stringify(course);
     if (course.title?.fr !== tutorial.title || course.metadata?.canonicalTutorialId !== tutorial.id || course.metadata?.canonicalOrder !== tutorial.order) throw new Error(`Métadonnées canoniques invalides pour le TP ${tutorial.order}.`);
     if (indexEntry.title?.fr !== tutorial.title || indexEntry.targetJob !== tutorial.targetJob || JSON.stringify(indexEntry.tools) !== JSON.stringify(tutorial.tools) || JSON.stringify(indexEntry.acquiredSkills) !== JSON.stringify(tutorial.acquiredSkills)) throw new Error(`Index métier incomplet pour le TP ${tutorial.order}.`);
+    if (indexEntry.certId !== standaloneCertification.id || standaloneCertification.courses?.[0] !== courseId || standaloneCertification.subCategoryId !== subcategoryFor(tutorial).id) throw new Error(`Formation autonome invalide pour le TP ${tutorial.order}.`);
     if (!tutorial.sourceUrl.startsWith("https://") || course.sourceReference?.sourceUrl !== tutorial.sourceUrl) throw new Error(`URL source non sécurisée ou non canonique pour le TP ${tutorial.order}.`);
     if (!assets[tutorial.order]?.startsWith("/manus-storage/") || !raw.includes(assets[tutorial.order])) throw new Error(`Support fictif non relié au TP ${tutorial.order}.`);
     const chapters = course.lessons?.[0]?.chapters || [];

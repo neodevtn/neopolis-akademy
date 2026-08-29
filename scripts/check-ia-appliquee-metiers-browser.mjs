@@ -12,6 +12,7 @@ const mobile = process.argv.includes("--mobile");
 const certificationId = "ia_appliquee_metiers_tp";
 const samples = [1, 7, 11, 17, 22, 27, 32, 37];
 const courseId = (order) => `${certificationId}__${String(order).padStart(2, "0")}`;
+const standaloneCertificationId = (order) => `${certificationId}__formation_${String(order).padStart(2, "0")}`;
 const source = JSON.parse(fs.readFileSync(path.resolve(root, "../ia_appliquee_metiers_tp_bundle/catalogue_ia_appliquee_metiers_tp.json"), "utf8"));
 const byOrder = new Map(source.tutorials.map((tutorial) => [tutorial.order, tutorial]));
 const output = path.join(root, "docs", `ia-appliquee-metiers-browser-${mobile ? "mobile" : "desktop"}.json`);
@@ -38,7 +39,7 @@ try {
 
   for (const order of samples) {
     const tutorial = byOrder.get(order);
-    const url = `${baseUrl}/training/${certificationId}/${courseId(order)}?lesson=0&chapter=0`;
+    const url = `${baseUrl}/training/${standaloneCertificationId(order)}/${courseId(order)}?lesson=0&chapter=0`;
     await page.goto(url, { waitUntil: "domcontentloaded" });
     await page.waitForFunction((title) => document.body.innerText.includes(title), tutorial.title, { timeout: 12000 });
     const dimensions = await page.evaluate(() => ({ clientWidth: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth }));
@@ -57,7 +58,7 @@ try {
   await learnerContext.addCookies([{ name: "app_session_id", value: learnerSession, url: baseUrl, httpOnly: true, sameSite: "Lax" }]);
   page = await learnerContext.newPage();
 
-  const pilotBase = `${baseUrl}/training/${certificationId}/${courseId(1)}?lesson=0`;
+  const pilotBase = `${baseUrl}/training/${standaloneCertificationId(1)}/${courseId(1)}?lesson=0`;
   await page.goto(`${pilotBase}&chapter=1`, { waitUntil: "domcontentloaded" });
   await page.waitForSelector('[data-block-type="resource_review"]', { timeout: 12000 });
   const sourceAnchor = page.locator('[data-block-type="resource_review"] a[target="_blank"]');

@@ -1,6 +1,13 @@
 # Project TODO — Neopolis Akademy
 
 ## Audit comparatif avancé — DataCamp et Neopolis
+- [x] Auditer la rubrique IA appliquée aux métiers - TP, ses 40 TP, les liens actuels et les dépendances d’indexation afin de préparer leur séparation en formations autonomes — cause confirmée : une certification regroupait les 40 cours, alors que le catalogue présente les certifications comme formations principales
+- [x] Réintégrer les huit lots de cinq TP après l’ajout du format mono-cours, puis vérifier que les 40 formations autonomes portent leurs métadonnées, contenus et supports — huit lots réintégrés et contrôlés ; les 40 certifications portent `isStandaloneTP: true`
+- [x] Étendre les tests de structure pour exiger pour chacun des 40 TP une formation mono-cours, son indicateur autonome et sa sous-catégorie métier — test dédié renforcé sur les 40 certifications, leur unique cours rattaché et leur sous-catégorie
+- [x] Vérifier au navigateur des formations représentatives de chacune des huit sous-catégories, y compris les anciens liens profonds, avant de clôturer la correction — TP 01, 07, 11, 17, 22, 27, 32 et 37 contrôlés desktop/mobile ; redirection d’une ancienne URL conservant `lesson` et `chapter` validée
+- [x] Ajouter un contrôle automatisé de redirection des 40 anciens liens TP vers leur formation autonome, avec conservation de `lesson` et `chapter` — sonde Playwright 40/40 réussie
+- [x] Archiver un rapport consolidé des 40 formations autonomes : indicateur mono-cours, cours unique, support présent et mapping de lien profond — rapport détaillé relu dans `docs/ia-appliquee-metiers-standalone-structure.md` et sortie machine 40/40 enregistrée
+- [ ] Publier la correction de structure puis vérifier les cartes, les huit sous-catégories et les parcours publics desktop/mobile
 - [x] Archiver une preuve reproductible de l’audit initial des titres, descriptions, blocs pédagogiques et index avant nettoyage — rapport `visible-datacamp-mentions-before-cleanup.json` créé depuis `HEAD` : 220 mentions catalogue et 911 mentions de cours sur 48 cours
 - [x] Rejouer après le dernier nettoyage les contrôles locaux sur finance, ventes, n8n et Claude, avec une preuve exploitable du fil d’Ariane et des éléments médias réellement rendus — sonde navigateur archivée : 4/4 sans marque visible et fil d’Ariane présent ; ressources ou transcriptions confirmées pour finance, ventes et n8n ; aucun média n’est déclaré sur le premier écran Claude contrôlé
 - [x] Archiver explicitement les preuves par parcours du contrôle local final avant de clôturer le nettoyage de marque visible — rapport `visible-datacamp-mentions-browser-qa.json` et quatre captures dédiées enregistrés
