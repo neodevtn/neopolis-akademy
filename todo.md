@@ -48,9 +48,9 @@
 ## Lot DataCamp suivant — AI for Sales
 - [x] Restaurer et vérifier le paquet officiel Drive — archive de quatre parties validée SHA-256 ; 3 chapitres, 26 activités et 309 téléchargements locaux
 - [x] Établir l’audit initial activité par activité — 26/26 activités présentes, 9 TP avec rubriques explicites et 4 candidats au retrait sans rubrique
-- [ ] Examiner les activités 1.3, 1.6, 2.5 et 2.6 sans rubrique explicite, puis retirer seulement les dépendances non reproductibles avec justification canonique — documenter la décision activité par activité
-- [ ] Convertir les 9 TP rubricés et vérifier les métriques, interactions et médias locaux avant publication — consigner les contrôles exécutés
-- [ ] Corriger la sonde de métriques pour les cours sans téléchargement affichable et confirmer le contrôle de production AI for Sales — identifier le correctif et archiver le résultat public
+- [x] Examiner les activités 1.3, 1.6, 2.5 et 2.6 sans rubrique explicite, puis retirer seulement les dépendances non reproductibles avec justification canonique — les quatre `CloudExercise` sont sans rubrique ; 2.5 et 2.6 requièrent en plus des documents externes non livrés ; elles sont retirées sans substitut, audit 26 source / 22 conservées / 4 omissions
+- [x] Convertir les 9 TP rubricés et vérifier les métriques, interactions et médias locaux avant publication — 9/9 rubriques, seuils et verrous valides ; tri, QCM et TP de l’unité active rejoués ; matrice apprenant Projector 9/9 avec audio, slides et absence de référence fournisseur visible
+- [x] Corriger la sonde de métriques pour les cours sans téléchargement affichable et confirmer le contrôle de production AI for Sales — carte et fiche confirment 22 activités, 13 exercices et 9 vidéos ; le compteur nul de téléchargement est volontairement masqué
 
 ## Lot DataCamp suivant — Introduction à l’IA générative dans Snowflake
 - [x] Restaurer et vérifier le paquet officiel Drive — archive de trois parties validée SHA-256 ; 2 chapitres, 20 activités et 7 vidéos source
