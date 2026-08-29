@@ -35,6 +35,16 @@ export default function TrainingCertification() {
 
   const cert = trainingIndex.certifications.find((c) => c.id === certId);
   const courses = cert ? trainingIndex.courses.filter((c) => c.certId === certId) : [];
+  const courseGroups = useMemo(() => {
+    const configured = (cert as any)?.subcategories || [];
+    const groups = configured.map((subcategory: any) => ({
+      ...subcategory,
+      courses: courses.filter((course: any) => course.subCategoryId === subcategory.id),
+    })).filter((subcategory: any) => subcategory.courses.length > 0);
+    const groupedIds = new Set(groups.flatMap((subcategory: any) => subcategory.courses.map((course: any) => course.id)));
+    const ungrouped = courses.filter((course: any) => !groupedIds.has(course.id));
+    return ungrouped.length ? [...groups, { id: "other", title: { fr: "Autres TP", en: "Other labs" }, courses: ungrouped }] : groups;
+  }, [cert, courses]);
   const certificationMetrics = getCertificationCatalogMetrics(certId || "", courses);
   const courseIds = courses.map((c) => c.id);
   const isDataCampPartner = (cert as any)?.provider === "datacamp";
@@ -455,8 +465,12 @@ export default function TrainingCertification() {
             {t({ en: "Complete each course in order to unlock the next one. Finish all courses to access the mock exam.", fr: "Terminez chaque cours dans l'ordre pour débloquer le suivant. Terminez tous les cours pour accéder à l'examen blanc." })}
           </p>
         </motion.div>
-        <motion.div variants={staggerContainer} className="space-y-3">
-          {courses.map((course, idx) => {
+        <motion.div variants={staggerContainer} className="space-y-8">
+          {courseGroups.map((courseGroup: any) => (
+            <section key={courseGroup.id} className="space-y-3" aria-labelledby={`subcategory-${courseGroup.id}`}>
+              {courseGroups.length > 1 && <div className="border-b border-border pb-2"><h3 id={`subcategory-${courseGroup.id}`} className="text-base font-semibold text-foreground">{t(courseGroup.title)}</h3>{courseGroup.orderRange && <p className="mt-1 text-xs text-muted-foreground">TP {courseGroup.orderRange}</p>}</div>}
+              {courseGroup.courses.map((course: any) => {
+            const idx = courses.findIndex((item: any) => item.id === course.id);
             const progress = courseProgressMap[course.id] || { completed: 0, total: 0, pct: 0 };
             const courseMetrics = getCourseCatalogMetrics(course);
             const completed = progress.pct >= 100;
@@ -603,7 +617,9 @@ export default function TrainingCertification() {
                 )}
               </motion.div>
             );
-          })}
+              })}
+            </section>
+          ))}
         </motion.div>
       </motion.main>
     </div>

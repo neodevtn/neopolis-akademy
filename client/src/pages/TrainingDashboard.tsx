@@ -159,6 +159,17 @@ export default function TrainingDashboard() {
       iconBg: "bg-orange-50 dark:bg-orange-950/40",
       order: 4,
     },
+    ia_appliquee_metiers_tp: {
+      label: { en: "Applied AI for Business Roles – Labs", fr: "IA appliquée aux métiers - TP" },
+      subtitle: { en: "Guided practical AI work by business role, with safe environment preparation and human validation", fr: "Travaux pratiques IA guidés par métier, avec préparation d’environnement sûre et validation humaine" },
+      badge: "TP",
+      badgeColor: "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400",
+      hoverBorder: "hover:border-violet-400/30",
+      hoverText: "group-hover:text-violet-600 dark:group-hover:text-violet-400",
+      progressColor: "bg-violet-500",
+      iconBg: "bg-violet-50 dark:bg-violet-950/40",
+      order: 5,
+    },
     divers: {
       label: { en: "Specialized Tracks", fr: "Parcours Spécialisés" },
       subtitle: { en: "Cross-functional certifications: business process transformation, applied AI", fr: "Certifications transversales : transformation des processus, IA appliquée" },

@@ -1,0 +1,616 @@
+{
+  "courseId": "ia_appliquee_metiers_tp__13",
+  "id": "ia_appliquee_metiers_tp__13",
+  "title": {
+    "fr": "Chatbot de site web capable de lire le site et la documentation",
+    "en": "Chatbot de site web capable de lire le site et la documentation"
+  },
+  "description": {
+    "fr": "TP guidé pour Knowledge manager, support engineer, responsable expérience client. Outils : n8n, Perplexity, Pinecone, Gmail.",
+    "en": "TP guidé pour Knowledge manager, support engineer, responsable expérience client. Outils : n8n, Perplexity, Pinecone, Gmail."
+  },
+  "sourceReference": {
+    "sourceType": "YouTube",
+    "sourceUrl": "https://www.youtube.com/watch?v=mLTqabG0l7c",
+    "language": "EN"
+  },
+  "metadata": {
+    "canonicalTutorialId": "13-chatbot-de-site-web-capable-de-lire-le-site-et-la-documentation",
+    "canonicalOrder": 13,
+    "targetJob": "Knowledge manager, support engineer, responsable expérience client",
+    "level": "Avancé",
+    "duration": "3 h 30",
+    "tools": [
+      "n8n",
+      "Perplexity",
+      "Pinecone",
+      "Gmail sandbox",
+      "site ou documentation de test"
+    ],
+    "acquiredSkills": [
+      "Mettre en place un chatbot RAG orienté support",
+      "Limiter la recherche web au domaine de l'entreprise",
+      "Créer un ticket quand l'agent ne peut pas résoudre",
+      "Intégrer un widget de support dans un site"
+    ],
+    "skillTags": [
+      "ia-appliquee-metiers",
+      "support-client-e-commerce",
+      "n8n",
+      "perplexity",
+      "pinecone",
+      "gmail",
+      "avancé"
+    ]
+  },
+  "lessons": [
+    {
+      "id": "ia_appliquee_metiers_tp__13-lesson-01",
+      "title": {
+        "fr": "Chatbot de site web capable de lire le site et la documentation",
+        "en": "Chatbot de site web capable de lire le site et la documentation"
+      },
+      "competencyTags": [
+        "ai_business",
+        "ai_orchestration",
+        "prompt_engineering",
+        "ai_governance"
+      ],
+      "recommendedVideosManaged": false,
+      "recommendedVideos": [],
+      "chapters": [
+        {
+          "id": "ia_appliquee_metiers_tp__13-screen-01",
+          "type": "teaching",
+          "title": {
+            "fr": "Objectif du TP",
+            "en": "Objectif du TP"
+          },
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "learning_section",
+              "sectionKind": "hero",
+              "eyebrow": {
+                "fr": "Support client & E-commerce · TP 13/40",
+                "en": "Support client & E-commerce · TP 13/40"
+              },
+              "title": {
+                "fr": "Chatbot de site web capable de lire le site et la documentation",
+                "en": "Chatbot de site web capable de lire le site et la documentation"
+              },
+              "body": {
+                "fr": "Métier cible : Knowledge manager, support engineer, responsable expérience client. Niveau : Avancé. Durée indicative : 3 h 30.",
+                "en": "Métier cible : Knowledge manager, support engineer, responsable expérience client. Niveau : Avancé. Durée indicative : 3 h 30."
+              },
+              "items": [
+                {
+                  "fr": "Mettre en place un chatbot RAG orienté support",
+                  "en": "Mettre en place un chatbot RAG orienté support"
+                },
+                {
+                  "fr": "Limiter la recherche web au domaine de l'entreprise",
+                  "en": "Limiter la recherche web au domaine de l'entreprise"
+                },
+                {
+                  "fr": "Créer un ticket quand l'agent ne peut pas résoudre",
+                  "en": "Créer un ticket quand l'agent ne peut pas résoudre"
+                },
+                {
+                  "fr": "Intégrer un widget de support dans un site",
+                  "en": "Intégrer un widget de support dans un site"
+                }
+              ]
+            },
+            {
+              "type": "callout",
+              "variant": "info",
+              "title": {
+                "fr": "Cadre pratique",
+                "en": "Cadre pratique"
+              },
+              "body": {
+                "fr": "Vous reproduisez un cas d’usage dans votre propre environnement de démonstration. La ressource source reste consultable ; elle ne remplace pas les contrôles métier et de sécurité.",
+                "en": "Vous reproduisez un cas d’usage dans votre propre environnement de démonstration. La ressource source reste consultable ; elle ne remplace pas les contrôles métier et de sécurité."
+              }
+            }
+          ]
+        },
+        {
+          "id": "ia_appliquee_metiers_tp__13-screen-02",
+          "type": "teaching",
+          "title": {
+            "fr": "Préparer l’environnement",
+            "en": "Préparer l’environnement"
+          },
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "content",
+              "body": {
+                "fr": "## Préparation d’environnement\n\nTravaillez dans une **sandbox personnelle**, un brouillon local ou des comptes de démonstration. Préparez uniquement des données fictives et des accès de test.\n\n- Outils prévus : n8n, Perplexity, Pinecone, Gmail sandbox, site ou documentation de test.\n- Ne saisissez aucune clé, aucun mot de passe ni donnée personnelle réelle dans le TP ou dans sa preuve.\n- Pour tout envoi, publication, planification, modification de données ou décision à impact humain, conservez une **validation humaine explicite** avant l’action finale.\n\nCe parcours ne requiert aucun laboratoire hébergé par un fournisseur : adaptez les étapes à votre environnement local ou de démonstration.",
+                "en": "## Préparation d’environnement\n\nTravaillez dans une **sandbox personnelle**, un brouillon local ou des comptes de démonstration. Préparez uniquement des données fictives et des accès de test.\n\n- Outils prévus : n8n, Perplexity, Pinecone, Gmail sandbox, site ou documentation de test.\n- Ne saisissez aucune clé, aucun mot de passe ni donnée personnelle réelle dans le TP ou dans sa preuve.\n- Pour tout envoi, publication, planification, modification de données ou décision à impact humain, conservez une **validation humaine explicite** avant l’action finale.\n\nCe parcours ne requiert aucun laboratoire hébergé par un fournisseur : adaptez les étapes à votre environnement local ou de démonstration."
+              }
+            },
+            {
+              "type": "resource_review",
+              "id": "ia_appliquee_metiers_tp__13-source-review",
+              "title": {
+                "fr": "Ressource source",
+                "en": "Ressource source"
+              },
+              "instructions": {
+                "fr": "Ouvrez la ressource source dans un nouvel onglet. Repérez le résultat métier, les entrées, les sorties et les étapes de contrôle. Ensuite, revenez ici pour confirmer votre consultation.\n\n[Ouvrir la ressource source](https://www.youtube.com/watch?v=mLTqabG0l7c)",
+                "en": "Ouvrez la ressource source dans un nouvel onglet. Repérez le résultat métier, les entrées, les sorties et les étapes de contrôle. Ensuite, revenez ici pour confirmer votre consultation.\n\n[Ouvrir la ressource source](https://www.youtube.com/watch?v=mLTqabG0l7c)"
+              },
+              "resourceUrl": "https://www.youtube.com/watch?v=mLTqabG0l7c",
+              "resourceLabel": {
+                "fr": "Ouvrir la ressource source",
+                "en": "Ouvrir la ressource source"
+              }
+            }
+          ]
+        },
+        {
+          "id": "ia_appliquee_metiers_tp__13-screen-03",
+          "type": "teaching",
+          "title": {
+            "fr": "Construire progressivement",
+            "en": "Construire progressivement"
+          },
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "type": "sequence_visual",
+              "title": {
+                "fr": "Démarche de réalisation",
+                "en": "Démarche de réalisation"
+              },
+              "layout": "timeline",
+              "items": [
+                {
+                  "title": {
+                    "fr": "Cadrer",
+                    "en": "Cadrer"
+                  },
+                  "description": {
+                    "fr": "Définissez le cas d’usage pour Knowledge manager, support engineer, responsable expérience client et les limites d’automatisation.",
+                    "en": "Définissez le cas d’usage pour Knowledge manager, support engineer, responsable expérience client et les limites d’automatisation."
+                  }
+                },
+                {
+                  "title": {
+                    "fr": "Préparer",
+                    "en": "Préparer"
+                  },
+                  "description": {
+                    "fr": "Créez des données fictives adaptées aux outils : n8n, Perplexity, Pinecone.",
+                    "en": "Créez des données fictives adaptées aux outils : n8n, Perplexity, Pinecone."
+                  }
+                },
+                {
+                  "title": {
+                    "fr": "Tester",
+                    "en": "Tester"
+                  },
+                  "description": {
+                    "fr": "Exécutez des scénarios de test, relisez les sorties et consignez les écarts.",
+                    "en": "Exécutez des scénarios de test, relisez les sorties et consignez les écarts."
+                  }
+                },
+                {
+                  "title": {
+                    "fr": "Contrôler",
+                    "en": "Contrôler"
+                  },
+                  "description": {
+                    "fr": "Prévoyez une revue humaine avant toute action irréversible, coûteuse ou concernant une personne.",
+                    "en": "Prévoyez une revue humaine avant toute action irréversible, coûteuse ou concernant une personne."
+                  }
+                }
+              ]
+            },
+            {
+              "type": "comparison_panel",
+              "title": {
+                "fr": "Vérifications avant utilisation",
+                "en": "Vérifications avant utilisation"
+              },
+              "columns": [
+                {
+                  "title": {
+                    "fr": "À faire",
+                    "en": "À faire"
+                  },
+                  "items": [
+                    {
+                      "fr": "Utiliser des données fictives.",
+                      "en": "Utiliser des données fictives."
+                    },
+                    {
+                      "fr": "Définir un contrôle humain.",
+                      "en": "Définir un contrôle humain."
+                    },
+                    {
+                      "fr": "Tester les cas limites.",
+                      "en": "Tester les cas limites."
+                    }
+                  ]
+                },
+                {
+                  "title": {
+                    "fr": "À éviter",
+                    "en": "À éviter"
+                  },
+                  "items": [
+                    {
+                      "fr": "Exposer un secret ou une donnée personnelle.",
+                      "en": "Exposer un secret ou une donnée personnelle."
+                    },
+                    {
+                      "fr": "Déclencher une action finale sans validation.",
+                      "en": "Déclencher une action finale sans validation."
+                    },
+                    {
+                      "fr": "Déduire une décision sans vérification métier.",
+                      "en": "Déduire une décision sans vérification métier."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ia_appliquee_metiers_tp__13-checkpoint-01",
+          "type": "checkpoint",
+          "title": {
+            "fr": "Checkpoint : environnement et sécurité",
+            "en": "Checkpoint : environnement et sécurité"
+          },
+          "requiredBeforeAdvance": true,
+          "passThreshold": 1,
+          "blocks": [
+            {
+              "id": "ia_appliquee_metiers_tp__13-checkpoint-preparation",
+              "type": "knowledge_check",
+              "mode": "multiple_choice",
+              "prompt": {
+                "fr": "Avant de relier n8n au workflow de « Chatbot de site web capable de lire le site et la documentation », quelle pratique est attendue ?",
+                "en": "Avant de relier n8n au workflow de « Chatbot de site web capable de lire le site et la documentation », quelle pratique est attendue ?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "Utiliser une sandbox, des données fictives et prévoir une validation humaine pour toute action sensible.",
+                    "en": "Utiliser une sandbox, des données fictives et prévoir une validation humaine pour toute action sensible."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Copier les données réelles de production pour obtenir un résultat plus représentatif.",
+                    "en": "Copier les données réelles de production pour obtenir un résultat plus représentatif."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Mettre une clé API dans le workflow partagé pour que les autres puissent la réutiliser.",
+                    "en": "Mettre une clé API dans le workflow partagé pour que les autres puissent la réutiliser."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Activer directement les envois et modifications définitives avant les essais.",
+                    "en": "Activer directement les envois et modifications définitives avant les essais."
+                  }
+                }
+              ],
+              "correctAnswer": "a",
+              "explanation": {
+                "fr": "Le TP doit être testé dans un environnement maîtrisé, avec données fictives et contrôle humain des actions à impact.",
+                "en": "Le TP doit être testé dans un environnement maîtrisé, avec données fictives et contrôle humain des actions à impact."
+              },
+              "competencyPoints": 1.5,
+              "required": true
+            }
+          ]
+        },
+        {
+          "id": "ia_appliquee_metiers_tp__13-mini-project",
+          "type": "exercise",
+          "title": {
+            "fr": "Mini-projet et preuve de réalisation",
+            "en": "Mini-projet et preuve de réalisation"
+          },
+          "requiredBeforeAdvance": true,
+          "blocks": [
+            {
+              "id": "ia_appliquee_metiers_tp__13-mini-project-proof",
+              "type": "cloud_exercise",
+              "title": {
+                "fr": "Mini-projet pratique",
+                "en": "Mini-projet pratique"
+              },
+              "assignment": "Créer un assistant web qui répond depuis une mini documentation et ouvre un ticket e-mail si la confiance est insuffisante.",
+              "instructions": "Réalisez le mini-projet dans un environnement personnel de démonstration. Utilisez le support fictif fourni, puis décrivez dans la zone de preuve : le scénario testé, le résultat obtenu, un contrôle effectué et l’étape qui reste soumise à validation humaine.\n\n- Mettre en place un chatbot RAG orienté support\n- Limiter la recherche web au domaine de l'entreprise\n- Créer un ticket quand l'agent ne peut pas résoudre\n- Intégrer un widget de support dans un site",
+              "environmentGuide": {
+                "fr": "## Préparation d’environnement\n\nTravaillez dans une **sandbox personnelle**, un brouillon local ou des comptes de démonstration. Préparez uniquement des données fictives et des accès de test.\n\n- Outils prévus : n8n, Perplexity, Pinecone, Gmail sandbox, site ou documentation de test.\n- Ne saisissez aucune clé, aucun mot de passe ni donnée personnelle réelle dans le TP ou dans sa preuve.\n- Pour tout envoi, publication, planification, modification de données ou décision à impact humain, conservez une **validation humaine explicite** avant l’action finale.\n\nCe parcours ne requiert aucun laboratoire hébergé par un fournisseur : adaptez les étapes à votre environnement local ou de démonstration.",
+                "en": "## Préparation d’environnement\n\nTravaillez dans une **sandbox personnelle**, un brouillon local ou des comptes de démonstration. Préparez uniquement des données fictives et des accès de test.\n\n- Outils prévus : n8n, Perplexity, Pinecone, Gmail sandbox, site ou documentation de test.\n- Ne saisissez aucune clé, aucun mot de passe ni donnée personnelle réelle dans le TP ou dans sa preuve.\n- Pour tout envoi, publication, planification, modification de données ou décision à impact humain, conservez une **validation humaine explicite** avant l’action finale.\n\nCe parcours ne requiert aucun laboratoire hébergé par un fournisseur : adaptez les étapes à votre environnement local ou de démonstration."
+              },
+              "resources": [
+                {
+                  "title": {
+                    "fr": "Support fictif de TP 13",
+                    "en": "Support fictif de TP 13"
+                  },
+                  "description": {
+                    "fr": "Données de démonstration sans secret ni information réelle.",
+                    "en": "Données de démonstration sans secret ni information réelle."
+                  },
+                  "url": "/manus-storage/13-13-chatbot-de-site-web-capable-de-lire-le-site-et-la-documentation-support-fictif_f2778924.md"
+                }
+              ],
+              "hint": "Commencez par un seul cas fictif et conservez l’action finale en brouillon ou derrière une validation humaine.",
+              "solution": "## Correction et auto-vérification\n\nUne preuve complète décrit le scénario fictif, le workflow ou la procédure réalisée, le résultat observé et le contrôle humain prévu.\n\n### Erreurs fréquentes\n\n- Introduire des données réelles, identifiants ou clés dans l’exercice.\n- Déclencher un envoi, une publication ou une décision sans étape de validation.\n- Confondre une sortie IA avec une validation métier.\n\n### Vérification\n\nRelisez votre preuve : elle doit être cohérente avec l’objectif « Créer un assistant web qui répond depuis une mini documentation et ouvre un ticket e-mail si la confiance est insuffisante. » et montrer au moins un test avec données fictives.\n\n### Extension\n\nAjoutez un journal d’exécution, un cas limite supplémentaire et une règle d’escalade humaine.",
+              "successMessage": "Preuve enregistrée. Vous pouvez maintenant consulter la correction et terminer le quiz final."
+            }
+          ]
+        },
+        {
+          "id": "ia_appliquee_metiers_tp__13-final-quiz",
+          "type": "quiz",
+          "title": {
+            "fr": "Quiz final : valider la démarche",
+            "en": "Quiz final : valider la démarche"
+          },
+          "requiredBeforeAdvance": true,
+          "passThreshold": 4,
+          "blocks": [
+            {
+              "id": "ia_appliquee_metiers_tp__13-quiz-01",
+              "type": "single_choice_exercise",
+              "question": {
+                "fr": "Quel élément doit être conservé dans le mini-projet « Créer un assistant web qui répond depuis une mini documentation et ouvre un ticket e-mail si la confiance est insuffisante. » ?",
+                "en": "Quel élément doit être conservé dans le mini-projet « Créer un assistant web qui répond depuis une mini documentation et ouvre un ticket e-mail si la confiance est insuffisante. » ?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "Une preuve de test avec des données fictives et un résultat vérifiable.",
+                    "en": "Une preuve de test avec des données fictives et un résultat vérifiable."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Un mot de passe de production directement dans le workflow.",
+                    "en": "Un mot de passe de production directement dans le workflow."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Une action finale déclenchée sans relecture.",
+                    "en": "Une action finale déclenchée sans relecture."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Un export de données personnelles non anonymisées.",
+                    "en": "Un export de données personnelles non anonymisées."
+                  }
+                }
+              ],
+              "correctAnswer": "a",
+              "explanation": {
+                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                "en": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle."
+              }
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__13-quiz-02",
+              "type": "single_choice_exercise",
+              "question": {
+                "fr": "Vrai ou faux : un brouillon ou une validation humaine doit précéder toute action sensible générée par le workflow.",
+                "en": "Vrai ou faux : un brouillon ou une validation humaine doit précéder toute action sensible générée par le workflow."
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "Vrai : les actions sensibles exigent un contrôle humain explicite.",
+                    "en": "Vrai : les actions sensibles exigent un contrôle humain explicite."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Faux : l’automatisation dispense toujours de tout contrôle.",
+                    "en": "Faux : l’automatisation dispense toujours de tout contrôle."
+                  }
+                }
+              ],
+              "correctAnswer": "a",
+              "explanation": {
+                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                "en": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle."
+              }
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__13-quiz-03",
+              "type": "single_choice_exercise",
+              "question": {
+                "fr": "Quel contrôle aide à vérifier l’objectif « Mettre en place un chatbot RAG orienté support » ?",
+                "en": "Quel contrôle aide à vérifier l’objectif « Mettre en place un chatbot RAG orienté support » ?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "Comparer le résultat du test au critère métier défini puis documenter l’écart.",
+                    "en": "Comparer le résultat du test au critère métier défini puis documenter l’écart."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Considérer toute sortie du modèle comme correcte sans la relire.",
+                    "en": "Considérer toute sortie du modèle comme correcte sans la relire."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Supprimer les journaux et les traces de test avant la vérification.",
+                    "en": "Supprimer les journaux et les traces de test avant la vérification."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Remplacer le jeu de données fictif par une exportation client.",
+                    "en": "Remplacer le jeu de données fictif par une exportation client."
+                  }
+                }
+              ],
+              "correctAnswer": "a",
+              "explanation": {
+                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                "en": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle."
+              }
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__13-quiz-04",
+              "type": "single_choice_exercise",
+              "question": {
+                "fr": "Question de vigilance : parmi ces outils prévus — n8n, Perplexity, Pinecone, Gmail sandbox, site ou documentation de test — quelle donnée ne doit jamais être saisie dans le support ou le commentaire de preuve ?",
+                "en": "Question de vigilance : parmi ces outils prévus — n8n, Perplexity, Pinecone, Gmail sandbox, site ou documentation de test — quelle donnée ne doit jamais être saisie dans le support ou le commentaire de preuve ?"
+              },
+              "options": [
+                {
+                  "id": "a",
+                  "text": {
+                    "fr": "Une clé API, un mot de passe ou un identifiant réel.",
+                    "en": "Une clé API, un mot de passe ou un identifiant réel."
+                  }
+                },
+                {
+                  "id": "b",
+                  "text": {
+                    "fr": "Le nom fictif du dossier de démonstration.",
+                    "en": "Le nom fictif du dossier de démonstration."
+                  }
+                },
+                {
+                  "id": "c",
+                  "text": {
+                    "fr": "Le statut de test « à vérifier ».",
+                    "en": "Le statut de test « à vérifier »."
+                  }
+                },
+                {
+                  "id": "d",
+                  "text": {
+                    "fr": "Une note indiquant qu’une validation humaine est requise.",
+                    "en": "Une note indiquant qu’une validation humaine est requise."
+                  }
+                }
+              ],
+              "correctAnswer": "a",
+              "explanation": {
+                "fr": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle.",
+                "en": "La correction rappelle le cadre du TP : données fictives, contrôle humain et vérification avant toute action réelle."
+              }
+            },
+            {
+              "id": "ia_appliquee_metiers_tp__13-quiz-order",
+              "type": "bucket_sort",
+              "title": {
+                "fr": "Ordonnez la démarche de réalisation",
+                "en": "Ordonnez la démarche de réalisation"
+              },
+              "instructions": {
+                "fr": "Placez chaque action dans son étape. La correction est disponible après une tentative complète.",
+                "en": "Placez chaque action dans son étape. La correction est disponible après une tentative complète."
+              },
+              "buckets": [
+                {
+                  "id": "1",
+                  "label": {
+                    "fr": "1. Cadrer",
+                    "en": "1. Cadrer"
+                  }
+                },
+                {
+                  "id": "2",
+                  "label": {
+                    "fr": "2. Construire",
+                    "en": "2. Construire"
+                  }
+                },
+                {
+                  "id": "3",
+                  "label": {
+                    "fr": "3. Tester",
+                    "en": "3. Tester"
+                  }
+                },
+                {
+                  "id": "4",
+                  "label": {
+                    "fr": "4. Valider",
+                    "en": "4. Valider"
+                  }
+                }
+              ],
+              "cards": [
+                {
+                  "id": "cadrer",
+                  "text": {
+                    "fr": "Définir le résultat métier, les données fictives et les limites d’action.",
+                    "en": "Définir le résultat métier, les données fictives et les limites d’action."
+                  },
+                  "correctBucket": "1"
+                },
+                {
+                  "id": "construire",
+                  "text": {
+                    "fr": "Configurer le workflow dans un environnement de démonstration.",
+                    "en": "Configurer le workflow dans un environnement de démonstration."
+                  },
+                  "correctBucket": "2"
+                },
+                {
+                  "id": "tester",
+                  "text": {
+                    "fr": "Exécuter des cas fictifs, journaliser les sorties et relever les écarts.",
+                    "en": "Exécuter des cas fictifs, journaliser les sorties et relever les écarts."
+                  },
+                  "correctBucket": "3"
+                },
+                {
+                  "id": "valider",
+                  "text": {
+                    "fr": "Faire relire les actions sensibles avant toute utilisation réelle.",
+                    "en": "Faire relire les actions sensibles avant toute utilisation réelle."
+                  },
+                  "correctBucket": "4"
+                }
+              ],
+              "feedback": {
+                "fr": "La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés.",
+                "en": "La démarche correcte va du cadrage sûr à la validation humaine, après des tests documentés."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

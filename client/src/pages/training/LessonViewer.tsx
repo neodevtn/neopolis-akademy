@@ -9,7 +9,7 @@ import { VideoRecommendations } from "@/components/VideoRecommendations";
 import { YouTubePlayer } from "@/components/YouTubePlayer";
 import { trpc } from "@/lib/trpc";
 import { resolveI18n } from "./contentDetectors";
-import { getPersistedCompletionProgress, hasOptionalSupplementaryVideos } from "./chapterProgress";
+import { getPersistedCompletionProgress, hasOptionalSupplementaryVideos, isSequentialActivityNavigationLocked } from "./chapterProgress";
 import { ExerciseRenderer } from "@/components/ExerciseRenderer";
 import { FlipCardsGrid } from "@/components/FlipCard";
 import { TabbedContent } from "@/components/TabbedContent";
@@ -218,6 +218,14 @@ export default function LessonViewer({
     .filter((block: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback", "knowledge_check"].includes(block.type))
     .map((block: any, index: number) => block.id || `novasavo_${index}`);
   const isGatedByNovasavoInteraction = !isReviewMode && novasavoInteractionIds.length > 0 && !novasavoInteractionIds.every((id: string) => completedNovasavoInteractions.has(id));
+  const isTopActivityNavigationLocked = isSequentialActivityNavigationLocked({
+    blocks: chapter?.blocks || [],
+    reviewMode: isReviewMode,
+    completedExercises,
+    completedCloudExercises,
+    completedMatching: matchingCompleted,
+    completedInlineInteractions: completedNovasavoInteractions,
+  });
 
   if (!chapter && !showQuiz) {
     return (
@@ -1075,7 +1083,7 @@ export default function LessonViewer({
                 variant="ghost"
                 size="sm"
                 onClick={() => { setCurrentChapter((p) => p + 1); }}
-                disabled={currentChapter >= totalChapters - 1 || isGatedByNovasavoInteraction}
+                disabled={currentChapter >= totalChapters - 1 || isTopActivityNavigationLocked}
                 className="gap-1 text-xs text-muted-foreground hover:text-foreground"
               >
                 {t({ en: "Next", fr: "Suivant" })}

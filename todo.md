@@ -1,6 +1,12 @@
 # Project TODO — Neopolis Akademy
 
 ## Audit comparatif avancé — DataCamp et Neopolis
+- [x] Valider le bundle « IA appliquée aux métiers - TP » et traiter son JSON comme source canonique pour les 40 modules — intégrité, identifiants, ordre et répartitions métier contrôlés ; URL sources vérifiées par lots de cinq
+- [x] Ajouter la rubrique, ses huit sous-catégories métier et les 40 TP composés exclusivement à partir de blocs Neopolis standards — générateur canonique, index métier et regroupement apprenant ajoutés
+- [x] Ajouter préparation d’environnement sûre, ressources sources, mini-projets, checkpoints, quiz avec corrections, supports fictifs et indexation recherche — 40 supports téléversés dans la médiathèque, liens source visibles en nouvel onglet, index de 3 772 entrées régénéré
+- [x] Contrôler chaque lot de cinq TP, exécuter la QA de publication et vérifier les parcours publiés sur desktop et mobile — huit contrôles de lot réussis, tests dédiés, QA complète 6/6, huit catégories rendues sans overflow desktop/mobile et interactions du TP pilote rejouées
+- [ ] Publier réellement la rubrique « IA appliquée aux métiers - TP » puis vérifier sur le domaine public au moins un TP représentatif par sous-catégorie en desktop et mobile
+- [ ] Exécuter un contrôle de production des cartes, fiches et parcours de la nouvelle rubrique, puis archiver les preuves avant la clôture
 - [ ] Contrôle global transversal DataCamp reporté sur instruction utilisateur du 29 août 2026 ; ne pas l’exécuter dans la présente clôture rapide
 - [x] Empêcher la bannière de consentement aux cookies de recouvrir l’accusé de réception d’une communication importante, sans masquer aucun des deux parcours obligatoires — bannière sous le dialogue (`z-40` contre `z-50`), actions cookies visibles mais volontairement bloquées sous la communication obligatoire, CTA d’accusé visible et au premier plan desktop/mobile
 - [x] Créer un contrôle E2E authentifié qui force simultanément un communiqué important en attente et l’absence de consentement, puis vérifie sur desktop et mobile la case et le bouton de confirmation — les deux vues confirment dialogue, consentement, accusé et CTA visibles, en viewport et au premier plan
