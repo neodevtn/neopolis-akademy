@@ -4,17 +4,20 @@ import { normalizeMetricText } from "./course-metrics-utils.mjs";
 
 const courseId = process.env.COURSE_METRICS_ID;
 const baseUrl = (process.env.COURSE_METRICS_QA_URL || "http://127.0.0.1:3000").replace(/\/$/, "");
+const aggregateCertification = process.env.COURSE_METRICS_AGGREGATE === "1";
 const email = process.env.QA_ADMIN_EMAIL;
 const password = process.env.QA_ADMIN_PASSWORD;
 if (!courseId || !email || !password) throw new Error("COURSE_METRICS_ID, QA_ADMIN_EMAIL et QA_ADMIN_PASSWORD sont requis.");
 
-const coursePath = `client/public/data/courses/${courseId}.json`;
-const course = JSON.parse(fs.readFileSync(coursePath, "utf8"));
 const index = JSON.parse(fs.readFileSync("client/src/data/trainingIndex.json", "utf8"));
 const certification = index.certifications.find((entry) => (entry.courses ?? []).some((item) => (typeof item === "string" ? item : item.id) === courseId));
 if (!certification) throw new Error(`Certification introuvable pour ${courseId}.`);
 
-const chapters = course.lessons.flatMap((lesson) => lesson.chapters ?? []);
+const courseIds = aggregateCertification
+  ? (certification.courses ?? []).map((item) => typeof item === "string" ? item : item.id)
+  : [courseId];
+const selectedCourses = courseIds.map((id) => JSON.parse(fs.readFileSync(`client/public/data/courses/${id}.json`, "utf8")));
+const chapters = selectedCourses.flatMap((course) => course.lessons.flatMap((lesson) => lesson.chapters ?? []));
 const blocks = chapters.flatMap((chapter) => chapter.blocks ?? []);
 const metrics = {
   activities: chapters.length,
@@ -48,7 +51,7 @@ try {
   const pageText = normalizeMetricText(await page.locator("body").innerText({ timeout: 45_000 }));
   for (const value of expected) if (!pageText.toLocaleLowerCase("fr-FR").includes(value)) throw new Error(`Fiche formation : métrique absente « ${value} ». Contenu=${pageText.slice(0, 1800)}`);
 
-  console.table({ courseId, certificationId: certification.id, ...metrics });
+  console.table({ courseId: aggregateCertification ? `${certification.id} (agrégé)` : courseId, certificationId: certification.id, ...metrics });
   await context.close();
 } finally {
   await browser.close();
