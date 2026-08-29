@@ -116,7 +116,7 @@
 - [x] Qualifier l’exercice visuel 2.2 « Éléments d’un graphe lexical » sans actif local mappé et, s’il est réellement absent, le retirer avec sa référence associée — actif `identifying-elements.png` déclaré uniquement sur `assets.datacamp.com`, absent du paquet et de l’index local ; retrait 2.2 déclaré, audit 37 source / 36 conservées / 1 omission, 0 média externe
 - [x] Resynchroniser les métriques dérivées et exécuter la QA complète après le retrait Graph RAG — 36 activités, 22 exercices, 11 Projector et 3 téléchargements ; six étapes QA réussies
 - [x] Rejouer un exercice Code REPL Graph RAG en session apprenant et vérifier saisie, solution masquée, feedback et verrouillage séquentiel sans exécuter de code arbitraire — activité 1.4 contrôlée localement : éditeur, solution masquée, feedback canonique et Suivant déverrouillé après validation déterministe
-- [ ] Publier Graph RAG adapté puis confirmer la carte et la fiche de production avant tout autre lot
+- [x] Publier Graph RAG adapté puis confirmer la carte et la fiche de production avant tout autre lot — contrôle différé réussi sur les deux vues : 36 activités, 22 exercices interactifs, 11 Projector et 3 téléchargements
 
 ## Correctif de sécurité — Code REPL
 - [x] Retirer l’exécution JavaScript arbitraire par `new Function` du bloc standard Code REPL, définir un comportement sûr pour les langages sans runtime sandboxé et couvrir la non-exécution par des tests — validation déterministe par solution canonique normalisée, libellé explicite et test statique sans `new Function` ni `eval`, TypeScript validé
