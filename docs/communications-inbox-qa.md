@@ -21,10 +21,10 @@ Les règles de visibilité, de réception et d’accusé des communications impo
 
 ## Contrôle mobile
 
-La structure utilise un panneau unique empilé sous le point de rupture `lg`, avec un champ de recherche, un filtre de priorité et des éléments de liste accessibles au clavier. Une sonde Playwright reproductible couvre maintenant la boîte de réception à 390 × 844 : liste, sélection, recherche, filtres et absence de débordement. Après le compactage générique de l’en-tête apprenant, elle a mesuré `scrollWidth = 390` et `clientWidth = 390`.
+La structure utilise un panneau unique empilé sous le point de rupture `lg`, avec un champ de recherche, un filtre de priorité et des éléments de liste accessibles au clavier. Une sonde Playwright reproductible couvre maintenant la boîte de réception à 390 × 844 : liste, sélection, recherche, filtres et absence de débordement. Après le compactage générique de l’en-tête apprenant et le bornage explicite de la grille, la sonde publiée finale a mesuré une section de 358 px, une grille à une colonne de 356 px, une liste de 356 px, `scrollWidth = 390` et `clientWidth = 390`.
 
 ## Contrôle de production
 
 Après propagation du checkpoint, l’onglet [Communiqués](https://akademy.neodev.click/training?tab=communications) a été rejoué avec le compte apprenant de démonstration. Le domaine public rend la boîte de réception en deux panneaux, avec deux aperçus courts dans la liste et un seul communiqué complet dans le volet de lecture. La recherche et les filtres restent présents ; les messages importants conservent leur état de réception confirmée. La sonde publiée finale à 390 × 844 confirme les contrôles et la sélection, avec `scrollWidth = 390`, `clientWidth = 390` et `overflow = false`.
 
-Le communiqué non lu du compte de démonstration a été ouvert depuis la ligne de liste. La mutation de lecture a répondu `200` avec `success: true`, puis la réponse de la boîte de réception a confirmé l’état lu persistant. Les règles d’accusé des messages importants n’ont pas été modifiées.
+Le communiqué non lu du compte de démonstration a été ouvert depuis la ligne de liste, sans appeler directement une mutation depuis la console. La sonde a confirmé la transition de lecture et le compteur de non lus est passé de `1` à `0`. La réponse de la boîte de réception a ensuite confirmé l’état lu persistant. Les règles d’accusé des messages importants n’ont pas été modifiées.

@@ -52,6 +52,9 @@ try {
   const readTransition = unreadIndex < 0 || (beforeInbox.items[unreadIndex]?.isRead === false && afterInbox.items.some((item) => item.id === beforeInbox.items[unreadIndex]?.id && item.isRead));
   const geometry = await page.evaluate(() => {
     const clientWidth = document.documentElement.clientWidth;
+    const section = document.querySelector("section[aria-label='Boîte de réception des communiqués']");
+    const grid = section?.querySelector(":scope > div:last-of-type");
+    const list = document.querySelector("[role='listbox'][aria-label='Liste des communiqués']");
     const overflowElements = Array.from(document.querySelectorAll("body *"))
       .map((element) => {
         const rect = element.getBoundingClientRect();
@@ -66,7 +69,16 @@ try {
       })
       .filter((entry) => entry.width > 0 && (entry.right > clientWidth + 2 || entry.left < -2))
       .slice(0, 12);
-    return { clientWidth, scrollWidth: document.documentElement.scrollWidth, overflowElements };
+    return {
+      clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+      mobileBreakpoint: window.matchMedia("(min-width: 1024px)").matches,
+      sectionWidth: Math.round(section?.getBoundingClientRect().width || 0),
+      gridWidth: Math.round(grid?.getBoundingClientRect().width || 0),
+      listWidth: Math.round(list?.getBoundingClientRect().width || 0),
+      gridColumns: grid ? getComputedStyle(grid).gridTemplateColumns : "",
+      overflowElements,
+    };
   });
   const controls = {
     search: await page.getByPlaceholder("Rechercher un communiqué").count(),
