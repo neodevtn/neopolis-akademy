@@ -13,4 +13,6 @@ La rubrique AI News suivra le principe proposé par l’article Readless : assoc
 
 Les six flux ont été interrogés le 29 août 2026. Les flux OpenAI, Hugging Face, Google, MarkTechPost et arXiv ont retourné des RSS XML actifs ; le flux MIT Technology Review a retourné des publications de sa rubrique IA. Le flux `https://www.anthropic.com/news/rss.xml`, cité par l’article comme source d’actualité, n’a pas été retenu car il ne répond pas avec un flux RSS exploitable. Les flux seront lus à la demande par le serveur et mis en cache temporairement, sans tâche planifiée ni copie du contenu complet des éditeurs.
 
+Le contrôle navigateur du 29 août 2026 couvre aussi un scénario d’indisponibilité partielle simulée : une source indisponible affiche l’information appropriée et l’article issu de la source restante demeure lisible. Sur le domaine public, la recherche « Cursor » combinée au filtre « OpenAI News » affiche un résultat ; à 390 × 844, les dimensions mesurées sont `scrollWidth = 390`, `clientWidth = 390` et aucun débordement horizontal n’est détecté.
+
 [^1]: [Readless — *Best RSS Feeds for AI News in 2026: 10 Verified Sources*](https://www.readless.app/blog/best-ai-news-rss-feeds-2026)
