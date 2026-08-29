@@ -7,3 +7,9 @@ Le titre de la page est générique (« Candidature | Neopolis Akademy »). Le c
 ## Validation locale du correctif
 
 L’ancien lien `/apply?...&ref=...` retourne désormais une redirection `302` vers `/refer` en conservant les paramètres d’attribution. Le navigateur affiche ensuite une page de recommandation présentant « L’IA pour la finance », une explication du programme, un accès au parcours et un bouton d’entrée vers la candidature. Les balises Open Graph et Twitter renvoient le titre, la description et l’image sociale Neopolis Akademy ; l’image répond HTTP 200 au format PNG. L’aperçu n’expose pas le code de parrainage dans ses textes, et les valeurs issues de l’URL sont échappées avant insertion dans les métadonnées.
+
+## Contrôle de production
+
+Après propagation du checkpoint, le domaine public renvoie bien la redirection `302` des anciens liens puis affiche la page de recommandation. Avec le lien de cours de test, le titre de document et les balises Open Graph/Twitter indiquent « L’IA pour la finance | Formation recommandée par votre réseau ». Le bouton « Commencer ma candidature » ouvre `/apply` en préservant le code de recommandation, les paramètres UTM, le cours, la certification et le marqueur technique `referral_continue=1`, qui évite une redirection en boucle.
+
+La page de recommandation a également été contrôlée à 390 × 844. Le titre, les deux appels à l’action et le panneau d’information restent visibles, lisibles et actionnables dans la largeur de l’écran, sans défilement horizontal.
