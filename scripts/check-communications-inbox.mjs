@@ -50,7 +50,24 @@ try {
   const visibleDetail = await page.locator("article[aria-live='polite']").innerText();
   const afterInbox = unreadIndex >= 0 ? await readInbox() : beforeInbox;
   const readTransition = unreadIndex < 0 || (beforeInbox.items[unreadIndex]?.isRead === false && afterInbox.items.some((item) => item.id === beforeInbox.items[unreadIndex]?.id && item.isRead));
-  const geometry = await page.evaluate(() => ({ clientWidth: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth }));
+  const geometry = await page.evaluate(() => {
+    const clientWidth = document.documentElement.clientWidth;
+    const overflowElements = Array.from(document.querySelectorAll("body *"))
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          tag: element.tagName.toLowerCase(),
+          className: typeof element.className === "string" ? element.className.slice(0, 160) : "",
+          left: Math.round(rect.left),
+          right: Math.round(rect.right),
+          width: Math.round(rect.width),
+          text: (element.textContent || "").trim().replace(/\s+/g, " ").slice(0, 80),
+        };
+      })
+      .filter((entry) => entry.width > 0 && (entry.right > clientWidth + 2 || entry.left < -2))
+      .slice(0, 12);
+    return { clientWidth, scrollWidth: document.documentElement.scrollWidth, overflowElements };
+  });
   const controls = {
     search: await page.getByPlaceholder("Rechercher un communiqué").count(),
     all: await page.getByRole("button", { name: "Tous" }).count(),
