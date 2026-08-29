@@ -102,8 +102,8 @@
                 "fr": "Chapter 1 slides"
               },
               "description": {
-                "en": "Official course slides provided in the local DataCamp package.",
-                "fr": "Official course slides provided in the local DataCamp package."
+                "en": "Official course slides provided for this course.",
+                "fr": "Official course slides provided for this course."
               },
               "url": "/api/assets/chapter_01_slides_fe17924b.pdf",
               "filename": "chapter_01_slides.pdf"
@@ -255,8 +255,8 @@
               "assignment": "Your server's summarize tool needs a language model to condense some text — but you don't want the server holding an API key. With sampling, the server asks the connected client to run the prompt instead, and the client returns the generated text. You also want the summary kept to a single sentence, so you'll steer the model with a system prompt.\n\nFastMCP, Context, SamplingMessage, and TextContent are imported and the server mcp is created. run_tool(text_to_summarize) runs your tool through a real MCP client–server session; the connected client fulfills each sampling request by calling a real language model and returning its reply.",
               "instructions": "Call ctx.session.create_message() to ask the client to run the prompt.\n\nSteer the model by passing a system_prompt that tells it to reply with a single-sentence summary.\n\nReturn the generated text from the result with result.content.text.\n\n### Code de départ\n\n```python\n@mcp.tool()\nasync def summarize(text_to_summarize: str, ctx: Context):\n    prompt = f\"Please summarize the following text:\\n{text_to_summarize}\"\n\n    # Ask the client's model to summarize, steered by a system prompt\n    result = await ctx.session.____(\n        messages=[\n            SamplingMessage(role=\"user\", content=TextContent(type=\"text\", text=prompt))\n        ],\n        system_prompt=____,\n        max_tokens=1000,\n    )\n\n    # Return the generated text\n    return result.____.text\n\n\n# Run the tool through a real MCP client-server session\nsummary = run_tool(\"lots of text\")\nprint(summary)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [],
               "resources": [
@@ -423,8 +423,8 @@
               "assignment": "Your research server has an add_all tool that sums a list of numbers, working through them one at a time. Right now it stays silent, so the client can't tell how far along it is. You'll log a message when it starts, then report progress after each number so the client can render a smooth, advancing progress bar.\n\nFastMCP and Context are imported and the server mcp is created. run_tool(numbers) runs your tool through a real MCP client–server session and collects what the connected client receives into the lists LOGS and PROGRESS.",
               "instructions": "Use ctx.info() to log the message \"Adding the numbers...\" when the tool starts.\n\nAfter adding each number, call ctx.report_progress() inside the loop.\n\nReport the count done so far (i + 1) out of the total (len(numbers)).\n\n### Code de départ\n\n```python\n@mcp.tool()\nasync def add_all(numbers: list[int], ctx: Context) -> int:\n    # Log that the tool started\n    await ctx.____(\"Adding the numbers...\")\n\n    total = 0\n    for i, number in enumerate(numbers):\n        total += number\n        # Report progress after each number\n        await ctx.____(____, ____)\n\n    return total\n\n\n# Run the tool through a real MCP client-server session\nresult = run_tool([5, 3, 2])\nprint(result, LOGS, PROGRESS)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [],
               "resources": [
@@ -599,8 +599,8 @@
               "assignment": "The MCP SDK does not stop a tool from touching files outside the directories a user granted — that's on you. You'll write is_path_allowed(), which checks a requested path against the client's roots before any file is accessed.\n\nFastMCP and Context are imported and the server mcp is created. check_access(path) runs your function through a real MCP client–server session: the connected client grants one directory (/tmp/mcp_allowed_root, holding video.mp4), and mcp_outside.mp4 sits outside it. root_to_path() converts a root to a Path.",
               "instructions": "Call ctx.session.list_roots() to get the directories the server may access.\n\nReturn True when the requested path is inside one of the roots.\n\n### Code de départ\n\n```python\nasync def is_path_allowed(requested_path, ctx):\n    # Get the client's allowed roots\n    roots_result = await ctx.session.____()\n\n    for root in roots_result.roots:\n        root_path = root_to_path(root)\n        try:\n            requested_path.relative_to(root_path)\n            # Allow paths inside a root\n            return ____\n        except ValueError:\n            continue\n\n    return False\n\n\n# Check a file inside the allowed root, and one outside it\nallowed = check_access(\"/tmp/mcp_allowed_root/video.mp4\")\ndenied = check_access(\"/tmp/mcp_outside.mp4\")\nprint(allowed, denied)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [],
               "resources": [
@@ -646,8 +646,8 @@
               "assignment": "You built is_path_allowed() in the last exercise — now put it to work. A read_file tool should never hand back a file the user didn't grant access to, so it has to check the path against the client's roots before reading anything.\n\nFastMCP, Context, and Path are imported and the server mcp is created. Your is_path_allowed() is provided. run_tool(path) calls your tool through a real MCP client–server session: the connected client grants /tmp/mcp_allowed_root (holding notes.txt), and mcp_secret.txt sits outside it.",
               "instructions": "Guard the read: call is_path_allowed() with the requested Path and ctx, so the tool refuses when it returns False.\n\nWhen the path is allowed, read the file with Path.read_text() and return its contents.\n\n### Code de départ\n\n```python\n@mcp.tool()\nasync def read_file(path: str, ctx: Context) -> str:\n    requested = Path(path)\n\n    # Refuse paths outside the roots\n    if not await is_path_allowed(____, ctx):\n        return \"Access denied: that path is outside the allowed roots.\"\n\n    # Read and return the file\n    return requested.____()\n\n\n# Try a file inside the allowed root, and one outside it\ninside = run_tool(\"/tmp/mcp_allowed_root/notes.txt\")\noutside = run_tool(\"/tmp/mcp_secret.txt\")\nprint(inside)\nprint(outside)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [],
               "resources": [
@@ -729,8 +729,8 @@
                 "fr": "Chapter 2 slides"
               },
               "description": {
-                "en": "Official course slides provided in the local DataCamp package.",
-                "fr": "Official course slides provided in the local DataCamp package."
+                "en": "Official course slides provided for this course.",
+                "fr": "Official course slides provided for this course."
               },
               "url": "/api/assets/chapter_02_slides_bc089529.pdf",
               "filename": "chapter_02_slides.pdf"
@@ -923,8 +923,8 @@
               "assignment": "Time to hand-write two MCP messages. One asks the server to run the add tool and expects a result back; the other is a one-way notification telling the server the client is ready. On the wire, the difference is a single field: a request carries an id so its reply can be matched to it, while a notification has no id at all.\n\nNo imports or setup are needed — you'll work with plain Python dictionaries.",
               "instructions": "Give call_request an id of 1, so the server's reply can be matched back to it.\n\nSet the initialized notification's method to \"notifications/initialized\" (notice it has no id).\n\nComplete expects_reply() so it returns True only when a message carries an \"id\" key.\n\n### Code de départ\n\n```python\n# Build the request with an id\ncall_request = {\n    \"jsonrpc\": \"2.0\",\n    \"id\": ____,\n    \"method\": \"tools/call\",\n    \"params\": {\"name\": \"add\", \"arguments\": {\"a\": 5, \"b\": 3}},\n}\n\n# Build the one-way notification\ninitialized = {\n    \"jsonrpc\": \"2.0\",\n    \"method\": ____,\n}\n\n\n# Return True only if an id is present\ndef expects_reply(message):\n    return ____ in message\n\n\nrequest_expects_reply = expects_reply(call_request)\nnotification_expects_reply = expects_reply(initialized)\nprint(request_expects_reply, notification_expects_reply)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [],
               "resources": [

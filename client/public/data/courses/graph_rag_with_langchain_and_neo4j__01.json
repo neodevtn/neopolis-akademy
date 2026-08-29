@@ -712,8 +712,8 @@
                 "fr": "Chapter 1 slides"
               },
               "description": {
-                "en": "Official course slides provided in the local DataCamp package.",
-                "fr": "Official course slides provided in the local DataCamp package."
+                "en": "Official course slides provided for this course.",
+                "fr": "Official course slides provided for this course."
               },
               "url": "/api/assets/chapter_01_slides_f651a4c9.pdf",
               "filename": "chapter_01_slides.pdf"
@@ -744,8 +744,8 @@
               "assignment": "Il est temps de commencer à stocker des informations sous forme de graphes ! Pour commencer, vous allez créer un nœud pour représenter le livre Building Knowledge Graphs, un guide pratique pour créer des knowledge graphs dans Neo4j.\n\nNous avons fourni une fonction visualize_node() pour visualiser le graphe obtenu à l’aide de la bibliothèque matplotlib.",
               "instructions": "Créez un nouveau nœud de type \"Book\" avec l’identifiant unique building-knowledge-graphs.\n\n### Code de départ\n\n```python\nfrom langchain_neo4j.graphs.graph_document import Node\n\n# Create a Book node with a unique identifier\nbook = ____(\n    ____=\"____\",\n    ____=\"____\",\n    properties={\"title\": \"Building Knowledge Graphs\"}\n)\n\nprint(book.id, book.type, book.properties['title'])\nvisualize_node(book)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Créez un nouveau nœud de type \"Book\" avec l’identifiant unique building-knowledge-graphs."
@@ -794,8 +794,8 @@
               "assignment": "Le livre Building Knowledge Graphs a deux auteurs, Jesus Barrasa et Jim Webber. En plus du nœud book que vous avez déjà créé, nous avons ajouté deux nœuds supplémentaires, jesus et jim, qui représentent les deux auteurs.\n\nDans cet exercice, vous allez créer une relation WRITTEN_BY entre chaque nœud auteur et le livre en itérant sur les nœuds des auteurs.",
               "instructions": "Créez une relation de type \"WRITTEN_BY\" depuis le nœud book vers chaque nœud author.\n\n### Code de départ\n\n```python\nfrom langchain_neo4j.graphs.graph_document import Relationship\n\nrelationships = []\n\nfor author in [jesus, jim]:\n  \t# Create a Relationship between book and each author\n    relationships.append(____(\n    \t____=book, \n      \t____=author, \n      \t____=\"____\"\n    ))\n\nvisualize_graph([book, jesus, jim], relationships)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Créez une relation de type \"WRITTEN_BY\" depuis le nœud book vers chaque nœud author."
@@ -2349,8 +2349,8 @@
                 "fr": "Chapter 2 slides"
               },
               "description": {
-                "en": "Official course slides provided in the local DataCamp package.",
-                "fr": "Official course slides provided in the local DataCamp package."
+                "en": "Official course slides provided for this course.",
+                "fr": "Official course slides provided for this course."
               },
               "url": "/api/assets/chapter_02_slides_55a9b017.pdf",
               "filename": "chapter_02_slides.pdf"
@@ -2381,8 +2381,8 @@
               "assignment": "La conversion d’un texte non structuré en graphes lexicaux hiérarchiques est un processus itératif : vous créez des séparateurs pour chaque entité lexicale, puis vous découpez successivement selon chacun d’eux.\n\nDans cet exercice, vous allez concevoir un séparateur pour scinder la pièce Roméo et Juliette en actes. Voici un aperçu de la structure de la pièce :\n\nThe Project Gutenberg eBook of Romeo and Juliet\nThis ebook is for the use of anyone anywhere in the United States...\n\n**PROLOGUE:**\n\n Enter Chorus.\n\nCHORUS.\nTwo households, both alike in dignity...\n\nACT I\n\nSCENE I. A public place.\n Enter Sampson and Gregory armed with swords and bucklers.\n\nSAMPSON.\nGregory, on my word, we’ll not carry coals...\n...",
               "instructions": "Mettez à jour l’argument splitters pour découper également le texte selon le motif \\n\\nACT.\n\nConfigurez act_splitter pour traiter la liste separators comme des expressions régulières.\n\nDécoupez romeo_and_juliet à l’aide de act_splitter.\n\n### Code de départ\n\n```python\nact_splitter = RecursiveCharacterTextSplitter(\n  separators=[ \n    r\"\\n\\nTHE PROLOGUE.\",\n    r\"\\n\\n\\*\\*\\* END\",\n    # Split by the word ACT\n    r\"____\"\n  ],\n  # Configure the patterns as regular expressions\n  ____=True\n)\n\n# Split the play using act_splitter\nacts = act_splitter.____(____)\n\nfor act in acts:\n  print(act.strip().split(\"\\n\")[0])\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Mettez à jour l’argument splitters pour découper également le texte selon le motif \\n\\nACT.",
@@ -3445,8 +3445,8 @@
               "assignment": "Les sorties structurées sont essentielles pour obtenir des résultats cohérents à partir des Large Language Models, ce qui est crucial dans de nombreuses applications.\n\nIci, vous allez utiliser la bibliothèque pydantic pour définir les propriétés qui décrivent un personnage de Roméo et Juliette via une classe Character. Dans le prochain exercice, vous vous en servirez pour extraire des personnages comme sorties structurées à partir d’un passage de la pièce.",
               "instructions": "Créez une classe Character qui hérite de la classe de base appropriée de pydantic.\n\nDéfinissez la propriété name de la classe.\n\nDéfinissez une propriété optionnelle family pour prendre en compte les personnages dont la famille peut être inconnue.\n\n### Code de départ\n\n```python\nfrom pydantic import BaseModel, Field\nfrom typing import Optional\n\n# Inherit the correct pydantic class\nclass Character(____):\n\t# Describe the name property\n\tname: str = ____(description=\"The full name of the character\")                \n\t# Set family to optional\n\t____: Optional[str] = Field(description=\"The name of the family they belong to\")\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Créez une classe Character qui hérite de la classe de base appropriée de pydantic.",
@@ -3497,8 +3497,8 @@
               "assignment": "Lors de la création de graphes lexicaux, vous avez extrait le nom du personnage et les répliques à partir du texte à l’aide d’un découpeur de texte, mais cette approche entraîne souvent une perte de contexte aux points de séparation. Par exemple, les didascalies présentes dans le texte peuvent servir à déterminer à qui le personnage s’adresse à ce moment-là.\n\nVous allez utiliser la classe Character au sein d’une nouvelle classe Line pour décrire la réplique prononcée, ainsi que l’orateur et la liste des personnages à qui la réplique est adressée. Vous créerez également une classe enveloppe LineOutput pour extraire plusieurs de ces répliques en une seule fois.\n\nLa variable prompt contenant les instructions d’extraction a été définie pour vous, ainsi qu’une instance de LLM sous le nom llm.",
               "instructions": "Mettez à jour la classe LineOutput pour demander une liste d’objets Line.\n\nDéfinissez un LLM qui génère des sorties structurées en utilisant la classe LineOutput.\n\n### Code de départ\n\n```python\nclass Line(BaseModel):\n    text: str = Field(..., description=\"The text of the line\")\n    spoken_by: Character = Field(..., description=\"The character who speaks the line\")\n    spoken_to: Optional[list[Character]] = Field(None, description=\"The character who the line is spoken to\")\n\nclass LineOutput(BaseModel):\n    # Request more than one line from the text\n    lines: ____[Line] = Field(..., description=\"The lines from the text\")\n\n# Return an instance of LineOutput\nstructured_llm = llm.____(____)\n\nfor line in structured_llm.invoke(prompt.format_messages(text=text)):\n\tprint(line)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Mettez à jour la classe LineOutput pour demander une liste d’objets Line.",
@@ -3548,8 +3548,8 @@
               "assignment": "Même si les sorties structurées décrivent la façon dont vous souhaitez que les données soient renvoyées, cela laisse encore une grande part d’interprétation sur ce qui doit être renvoyé.\n\nLa classe Field vous permet de fournir des valeurs d’exemple qui indiquent au LLM à quoi ressemble une bonne extraction. Il s’agit d’un exemple de few-shot prompting pour des sorties structurées.\n\nVous allez étendre la classe Character pour contenir un champ id permettant d’identifier de manière unique les personnages. Vous souhaitez fournir au modèle deux exemples sur lesquels s’appuyer : \"romeo-montague\" et \"lady-capulet\".",
               "instructions": "Indiquez le mot-clé à utiliser pour fournir des valeurs d’exemple pour la propriété id.\n\n### Code de départ\n\n```python\nclass Character(BaseModel):\n\tid: str = Field(\n\t\tdescription=\"A unique identifer consisting of the Character's given name and their family name in slug case.\", \n\t\t# Provide example values of an ID\n\t\t____=[\"romeo-montague\", \"lady-capulet\"]\n\t)\n\tname: str = Field(description=\"The name of the character\")\n\nchain = prompt | llm.with_structured_output(Character)\n\nchain.invoke({\"text\": \"\"\"JULIET.\nO Romeo, Romeo, wherefore art thou Romeo? Deny thy father and refuse thy name. Or if thou wilt not, be but sworn my love, And I’ll no longer be a Capulet.\"\"\"})\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Indiquez le mot-clé à utiliser pour fournir des valeurs d’exemple pour la propriété id."
@@ -3958,8 +3958,8 @@
               "assignment": "La classe RunnableLambda est un composant essentiel d’une chaîne de recherche hybride. Avant de l’utiliser pour exécuter un récupérateur vectoriel, entraînez-vous d’abord à l’employer pour convertir une fonction Python en un exécutable LCEL.\n\nLa fonction reverse() définie par l’utilisateur prend une chaîne et la renvoie à l’envers. Mettez à jour le code pour renvoyer la chaîne d’entrée inversée.",
               "instructions": "Convertissez la fonction reverse() en un exécutable LCEL.\n\nAppelez l’exécutable reverse_chain pour inverser la chaîne fournie.\n\n### Code de départ\n\n```python\ndef reverse(input):\n    return input[::-1]\n\n# Convert reverse() into a runnable\nreverse_chain = ____\n\n# Reverse the input\noutput = reverse_chain.____(\"Hello, world!\")\nprint(output)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Convertissez la fonction reverse() en un exécutable LCEL.",
@@ -4009,8 +4009,8 @@
               "assignment": "Bien que la fonction RunnableLambda renvoie une seule valeur, vous devez aussi préserver l’état courant. RunnablePassthrough s’en charge en ajoutant de nouvelles clés à un dictionnaire qui contient l’entrée utilisateur, de sorte que les entrées et les résultats de RunnableLambda puissent être stockés côte à côte.\n\nComplétez le code pour ajouter une clé output supplémentaire à l’entrée de la chaîne.",
               "instructions": "Utilisez la bonne classe runnable pour ajouter une clé output à l’entrée de la chaîne.\n\nExtrayez la bonne clé de l’entrée à multiplier par 2 pour compléter la fonction lambda.\n\n### Code de départ\n\n```python\n# Add an output key to the chain\nchain = RunnablePassthrough.____(\n  \t# Multiply the input by 2\n    output=lambda x: x[____] * 2\n)\n\noutput = chain.invoke({\"input\": 2})\nprint(output)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Utilisez la bonne classe runnable pour ajouter une clé output à l’entrée de la chaîne.",
@@ -4495,8 +4495,8 @@
                 "fr": "Chapter 3 slides"
               },
               "description": {
-                "en": "Official course slides provided in the local DataCamp package.",
-                "fr": "Official course slides provided in the local DataCamp package."
+                "en": "Official course slides provided for this course.",
+                "fr": "Official course slides provided for this course."
               },
               "url": "/api/assets/chapter_03_slides_e3e543ea.pdf",
               "filename": "chapter_03_slides.pdf"
@@ -4527,8 +4527,8 @@
               "assignment": "La section Dramatis Personæ du texte décrit les personnages de la pièce et peut être considérée comme une source de vérité complète. Elle contient aussi de précieuses informations sur les relations entre les personnages.\n\n Dramatis Personæ\n\nESCALUS, Prince de Vérone.\nMERCUTIO, parent du Prince, et ami de Roméo.\nPARIS, jeune noble, parent du Prince.\nPage de Paris.\n\nComplétez le code pour extraire les personnages du texte personae à l’aide de character_chain, puis utilisez cette liste de personnages pour construire une liste de relations à partir du texte avec relationship_chain.\n\nLa fonction visualize_families() affichera les relations obtenues sous forme de graphe.",
               "instructions": "Appelez character_chain en lui passant personae pour extraire les entités correspondant aux personnages.\n\nAppelez relationship_chain avec le nom du personnage, personae, et les personnages extraits au format JSON (character_json) pour extraire les relations entre les trois personnages listés et ceux indiqués dans personae.\n\n### Code de départ\n\n```python\n# Extract characters from the personae variable\noutput = character_chain.____({\"personae\": ____})\n\ncharacter_json = dumps([dict(character) for character in output.characters])\n\n# Extract the relationships\nfor character_name in [\"Romeo\", \"Juliet\", \"Friar Lawrence\"]:\n    relationship_output = relationship_chain.invoke({\n        \"character_name\": character_name, \n        \"personae\": ____, \n        \"characters\": ____\n    })\n    \n    for relationship in relationship_output.relationships:\n        all_relationships.append(relationship)\n\nvisualize_families(all_relationships, output)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Appelez character_chain en lui passant personae pour extraire les entités correspondant aux personnages.",
@@ -5095,8 +5095,8 @@
               "assignment": "Maintenant que vous avez préparé votre jeu de données et choisi vos métriques, vous êtes prêt à lancer l’évaluation !\n\nLa liste cypher_dataset et metrics que vous avez créée dans l’exercice précédent est toujours disponible.",
               "instructions": "Évaluez cypher_dataset en utilisant la liste de métriques (metrics) pour calculer la précision du contenu sans référence et la sensibilité au bruit.\n\n### Code de départ\n\n```python\n# Evaluate the retrieval\ncypher_scores = ____(\n\t____=cypher_dataset,\n\t____=metrics,\n)\n\nprint(cypher_scores)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Évaluez cypher_dataset en utilisant la liste de métriques (metrics) pour calculer la précision du contenu sans référence et la sensibilité au bruit."

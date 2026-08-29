@@ -492,8 +492,8 @@
                 "fr": "Chapter 1 slides"
               },
               "description": {
-                "en": "Official course slides provided in the local DataCamp package.",
-                "fr": "Official course slides provided in the local DataCamp package."
+                "en": "Official course slides provided for this course.",
+                "fr": "Official course slides provided for this course."
               },
               "url": "/api/assets/chapter_01_slides_ceea290c.pdf",
               "filename": "chapter_01_slides.pdf"
@@ -524,8 +524,8 @@
               "assignment": "Vous faites partie d’une équipe Machine Learning qui a développé plusieurs modèles, chacun conçu pour des tâches différentes comme l’analyse de sentiments, la catégorisation de produits et la prédiction de l’attrition client. Vous travaillez au déploiement de ces modèles et devez créer un endpoint qui fournisse des informations de base sur chaque modèle.\n\nVotre tâche est d’implémenter un endpoint GET à la route /model-info/{model_id} qui récupère et renvoie ces informations essentielles sur le modèle.",
               "instructions": "Créez un endpoint GET à \"/model-info/{model_id}\" qui renvoie des informations sur un modèle spécifique.\n\nL’endpoint doit accepter un model_id comme paramètre de chemin.\n\nLevez une HTTPException avec un code d’état 404 indiquant que le modèle est introuvable si le model_id vaut 0.\n\n### Code de départ\n\n```python\nfrom fastapi import FastAPI, HTTPException\n\napp = FastAPI()\n\n# Add model_id as a path parameter in the route\n@app.get(\"/model-info/{____}\")\n# Pass on the model id as an argument\nasync def get_model_info(____: int):\n    if model_id == 0:\n      \t# Raise the right status code for not found\n        raise HTTPException(status_code=____, detail=\"Model not found\")\n    model_info = get_model_details(id)  \n\n    return {\"model_id\": model_id, \"model_name\": model_info}\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Créez un endpoint GET à \"/model-info/{model_id}\" qui renvoie des informations sur un modèle spécifique.",
@@ -576,8 +576,8 @@
               "assignment": "Alors que l’endpoint GET que vous avez créé plus tôt permet aux utilisateurs de récupérer des informations sur les modèles existants, vous avez maintenant besoin d’un moyen pour que les membres autorisés de l’équipe puissent enregistrer de nouveaux modèles ou mettre à jour les informations des modèles existants.\n\nVous devez créer un endpoint POST qui permet aux membres de l’équipe d’enregistrer de nouveaux modèles ou de mettre à jour des modèles existants.\nCet endpoint stockera les informations des modèles sur le serveur.",
               "instructions": "Créez un endpoint de requête POST à \"/register-model\".\n\nDéfinissez le paramètre de fonction model_info pour accepter et valider les informations du modèle entrant en utilisant le modèle Pydantic ModelInfo.\n\nConvertissez l’objet ModelInfo en dictionnaire et enregistrez-le dans model_db.\n\n### Code de départ\n\n```python\nmodel_db = {}\n\nclass ModelInfo(BaseModel):\n    model_id: int\n    model_name: str\n    description: str\n\n# Create the POST request endpoint\n@app.____(\"/register-model\", status_code=201)\n# Pass the model info from the request as function parameter \ndef register_model(____: ModelInfo):\n    # Add new model's information dictionary to the model database\n    model_db[model_info.model_id] = model_info.____\n    \n    return {\"message\": \"Model registered successfully\", \"model\": model_info}, 201\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Créez un endpoint de requête POST à \"/register-model\".",
@@ -960,8 +960,8 @@
               "assignment": "Dans cet exercice, vous allez créer un endpoint de prédiction qui utilise un modèle pré-entraîné pour estimer la progression du diabète.\n\nLe modèle a été entraîné sur un jeu de données comportant trois variables : age, bmi et blood_pressure. Il prédit ensuite un score de progression du diabète. À partir de ces entrées, il fournit un score de progression, utile pour évaluer l’évolution possible de la maladie dans le temps.\n\nVous utiliserez FastAPI pour créer un endpoint POST qui accepte des données patient et retourne une prédiction de la progression du diabète.",
               "instructions": "Créez une instance d’application FastAPI pour commencer à développer l’API.\n\nCréez un endpoint POST à /predict qui accepte les features du patient et renvoie une prédiction.\n\nUtilisez le modèle chargé pour effectuer une prédiction à partir des variables en entrée.\n\n### Code de départ\n\n```python\n# Create FastAPI instance\napp = ____()\n\n# Create a POST request endpoint at the route \"/predict\"\n@app.____(\"____\")\nasync def predict_progression(features: DiabetesFeatures):\n    input_data = [[\n        features.age,\n        features.bmi,\n        features.blood_pressure\n    ]]\n    \n    # Use the predict method to make a prediction\n    prediction = model.____(input_data)\n    return {\"predicted_progression\": float(prediction[0])}\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Créez une instance d’application FastAPI pour commencer à développer l’API.",
@@ -1389,8 +1389,8 @@
               "assignment": "Vous développez une application FastAPI pour déployer un modèle de Machine Learning qui prédit la note de qualité d’un café à partir d’attributs comme l’arôme, la saveur et l’altitude.\n\nLa première étape consiste à créer un modèle Pydantic pour valider les données d’entrée de la requête de votre modèle ML et garantir que seules des données valides circulent dans le modèle afin d’obtenir des prédictions fiables.",
               "instructions": "Importez la classe de validation de base de Pydantic pour créer un modèle de données.\n\nDéfinissez une classe nommée CoffeeQualityInput qui hérite de la classe de base Pydantic.\n\nAjoutez trois attributs à la classe : aroma (float), flavor (float) et altitude (int).\n\n### Code de départ\n\n```python\n# Import the base class from pydantic\nfrom pydantic import ____ \n\nclass CoffeeQualityInput(____):\n    # Use apt data type for each attribute of coffee quality\n    aroma: ____  \n    flavor: ____  \n    altitude: ____\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Importez la classe de validation de base de Pydantic pour créer un modèle de données.",
@@ -1441,8 +1441,8 @@
               "assignment": "Dans la continuité de votre travail de data scientist au sein de l’entreprise de café, vous devez maintenant créer un endpoint FastAPI qui valide la requête d’entrée avec le modèle de validation de données CoffeeQualityInput et la réponse avec QualityPrediction.\n\nCet endpoint recevra des données sur le café et renverra une prédiction de qualité ainsi qu’un score de confiance.\n\nLe modèle est déjà chargé dans une fonction appelée predict_quality pour cet exercice.",
               "instructions": "Définissez CoffeeQualityInput avec les champs aroma (float), flavor (float) et altitude (int).\n\nIndiquez le response_model pour valider la réponse dans le décorateur de requête POST.\n\nIndiquez le modèle de données pour valider la requête d’entrée contenant coffee_data.\n\n### Code de départ\n\n```python\nclass CoffeeQualityInput(BaseModel):\n    ____: ____\n    ____: ____\n    ____: ____\n    \nclass QualityPrediction(BaseModel):\n    quality_score: float \n    confidence: float\n\n# Specify the data model to validate response\n@app.post(\"/predict\", response_model=____) \n# Specify the data model to validate input request\ndef predict(coffee_data: ____):\n    prediction = predict_quality(coffee_data)\n    return prediction\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Définissez CoffeeQualityInput avec les champs aroma (float), flavor (float) et altitude (int).",
@@ -1778,8 +1778,8 @@
                 "fr": "Chapter 2 slides"
               },
               "description": {
-                "en": "Official course slides provided in the local DataCamp package.",
-                "fr": "Official course slides provided in the local DataCamp package."
+                "en": "Official course slides provided for this course.",
+                "fr": "Official course slides provided for this course."
               },
               "url": "/api/assets/chapter_02_slides_849742b4.pdf",
               "filename": "chapter_02_slides.pdf"
@@ -1810,8 +1810,8 @@
               "assignment": "Une autre exigence du système de modération de contenu est de prendre en compte le sentiment des commentaires des utilisateurs. Le système doit identifier des expressions problématiques spécifiques pour aider les modérateurs à examiner les contenus potentiellement inappropriés.\n\nVous allez créer un endpoint qui analyse le texte envoyé par les utilisateurs et extrait des indicateurs de modération standardisés.",
               "instructions": "Convertissez le texte entrant en minuscules dans la fonction analyze_comment() afin de le rendre insensible à la casse.\n\nExtrayez les mots-clés problématiques dans found_issues à partir du texte traité en utilisant la liste problem_keywords.\n\nRetournez une réponse JSON avec les clés suivantes : issues (liste de mots-clés), issue_count (entier) et original_text (chaîne de caractères).\n\n### Code de départ\n\n```python\n@app.post(\"/analyze_comment\")\ndef analyze_comment(text: str):\n    problem_keywords = [\"spam\", \"hate\", \"offensive\", \"abuse\"]\n    \n    # Convert the input text to lowercase\n    text_lower = ____\n    # Extract matching flags using list comprehension\n    found_issues = [____ for ____ in problem_keywords if keyword in text_lower]\n    # Return the dictionary with required keys\n    return {\n        \"____\": found_issues,\n        \"____\": len(found_issues),\n        \"____\": text\n    }\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Convertissez le texte entrant en minuscules dans la fonction analyze_comment() afin de le rendre insensible à la casse.",
@@ -2261,8 +2261,8 @@
               "assignment": "Vous poursuivez le développement du service de modération des commentaires utilisateurs. Votre objectif est de créer un modèle Pydantic User qui garantit l’intégrité des données pour tous les utilisateurs.\n\nImplémentez des validations pour le champ username (min 5, max 50 caractères).\n\nUtilisez la classe Field de Pydantic pour ajouter ces contraintes, puis testez votre modèle avec des données valides et invalides afin de vérifier qu’il gère correctement différents scénarios.",
               "instructions": "Importez les classes de base et de champ depuis Pydantic.\n\nFaites hériter le modèle User de la base model de Pydantic.\n\nAjoutez des validations de champ sur l’attribut username dans la classe User pour qu’il contienne au moins 5 caractères et pas plus de 20 caractères.\n\n### Code de départ\n\n```python\n# Import the base model and field validator from Pydantic\nfrom pydantic import ____, ____\n\n# Inherit Pydantic's base model\nclass User(____): \n    # Set minimum and maximum name length\n    username: str = ____(..., ____=5, ____=20)\n    email: str\n    age: int\n\nuser = User(username=\"john_doe\", email=\"john@mode360.com\", age=25)\nprint(user)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Importez les classes de base et de champ depuis Pydantic.",
@@ -2313,8 +2313,8 @@
               "assignment": "Mode360 Solutions est l’organisation derrière le système de modération des commentaires, et l’on vous confie la création d’un service de validation pour tous les employés. Le système doit pouvoir valider les informations saisies (username, email et age) afin que seuls les employés disposant d’une adresse e‑mail officielle puissent s’inscrire.\n\nVous devez définir un modèle Pydantic User en utilisant le décorateur @field_validator sur email pour vérifier que l’e‑mail saisi se termine par @mode360.com.\n\nCes validateurs renforcent la sécurité et l’intégration du système.",
               "instructions": "Ajoutez le décorateur Pydantic pour créer un validateur personnalisé sur le champ email.\n\nUtilisez la méthode de chaîne endswith pour vérifier que l’adresse e‑mail se termine par le domaine @mode360.com.\n\n### Code de départ\n\n```python\nfrom pydantic import BaseModel, field_validator, Field\n\nclass User(BaseModel):\n    username: str = Field(..., min_length=5, max_length=20)  \n    email: str\n    age: int\n\n    # Add the Pydantic decorator to validate\n    ____('email')  \n    def email_must_be_example_domain(cls, user_email):\n        # Use the endswith method to validate the email ends with @mode360.com\n        if not user_email.endswith(\"____\"):\n            raise ValueError('Email must be from the mode360.com domain')\n        return user_email\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Ajoutez le décorateur Pydantic pour créer un validateur personnalisé sur le champ email.",
@@ -2694,8 +2694,8 @@
               "assignment": "Vous devez déployer un modèle entraîné d’analyse de sentiments pour aider à modérer les commentaires des utilisateurs. Pour garantir zéro interruption de service, l’API doit être prête à analyser les commentaires dès son lancement.\n\nDans cet exercice, vous allez implémenter les événements de cycle de vie de FastAPI pour charger efficacement votre modèle et construire le système de modération des commentaires. La classe de modèle SentimentAnalyzer est déjà définie et importée pour vous.",
               "instructions": "Importez le décorateur de gestionnaire de contexte depuis le module contextlib pour créer l’événement de cycle de vie.\n\nUtilisez le décorateur de gestionnaire de contexte de FastAPI pour définir la fonction d’événement lifespan afin de garantir le chargement du modèle au démarrage.\n\nAppelez la fonction de chargement du modèle au démarrage dans l’événement lifespan.\n\nUtilisez yield pour permettre au processus de chargement du serveur de se poursuivre.\n\n### Code de départ\n\n```python\n# Import the context manager decorator from contextlib module\nfrom contextlib import ____\n\nsentiment_model = None\n\ndef load_model():\n    global sentiment_model\n    sentiment_model = SentmentAnalyzer(\"sentiment_model.joblib\")\n\n# Use FastAPI's context manager to define lifespan event\n@____\ndef lifespan(app: FastAPI):\n    # Call the function to load the model\n    ____\n    ____\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Importez le décorateur de gestionnaire de contexte depuis le module contextlib pour créer l’événement de cycle de vie.",
@@ -3045,8 +3045,8 @@
               "assignment": "Vous créez un système de modération de contenu où vous devez définir un endpoint POST pour tester un modèle d’analyse de sentiment pré-entraîné sur des commentaires d’utilisateurs.\n\nVous devez créer un endpoint qui s’appuie sur des modèles pydantic pour renvoyer les prédictions dans un format structuré.\n\nRemarque : les modèles Pydantic — CommentRequest et CommentResponse — sont déjà créés pour que vous puissiez les utiliser avec le sentiment_model pré-entraîné de la classe prédéfinie SentimentAnalyzer.",
               "instructions": "Implémentez un endpoint POST à la route /analyze.\n\nValidez le request dans la fonction analyze_comment() conformément à CommentRequest.\n\nEffectuez des prédictions avec sentiment_model en passant le text de request.\n\nRenvoyez les attributs de prédiction (text depuis request, \"label\" et \"score\" depuis result[0]) afin de formater la réponse sortante dans CommentResponse.\n\n### Code de départ\n\n```python\n# Create a POST request endpoint\n@app.____(\"/analyze\")\n# Capture the request text for validation as per CommentRequest model\ndef analyze_comment(____: CommentRequest):\n    try:\n        # Specify pass the request text to the model\n        result = sentiment_model(____.____)\n        # Specify the result attributes to complete the comment response\n        return CommentResponse(text=____, \n                               sentiment=____, \n                               confidence=____)\n    except Exception:\n        raise HTTPException(status_code=500,\n            detail=\"Prediction failed\"\n        )\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Implémentez un endpoint POST à la route /analyze.",
@@ -3437,8 +3437,8 @@
                 "fr": "Chapter 3 slides"
               },
               "description": {
-                "en": "Official course slides provided in the local DataCamp package.",
-                "fr": "Official course slides provided in the local DataCamp package."
+                "en": "Official course slides provided for this course.",
+                "fr": "Official course slides provided for this course."
               },
               "url": "/api/assets/chapter_03_slides_e75dffce.pdf",
               "filename": "chapter_03_slides.pdf"
@@ -3469,8 +3469,8 @@
               "assignment": "Vous construisez une API sécurisée et devez implémenter une vérification de clé d’API. L’API vérifiera la présence d’une clé dans l’en-tête X-API-Key de chaque requête et la comparera à un secret prédéfini. Vous utiliserez les fonctionnalités de sécurité intégrées de FastAPI pour mettre en place ce système d’authentification.\n\nLes classes FastAPI et HTTPException ont déjà été importées.",
               "instructions": "Importez la fonction nécessaire pour gérer les dépendances depuis FastAPI.\n\nCréez une instance d’en-tête de clé d’API afin d’ajouter une dépendance qui validera la clé d’API entrante dans la requête.\n\nComplétez la fonction verify_api_key en comparant la api_key reçue avec la clé secrète prédéfinie.\n\nLevez une exception HTTP lorsqu’une clé invalide est transmise dans la requête.\n\n### Code de départ\n\n```python\n# Import the function that handles dependencies\nfrom fastapi import ____\nfrom fastapi.security import APIKeyHeader\n\n# Create the API key instance\napi_key_header = ____(name=\"X-API-Key\")\nAPI_KEY = \"your_secret_key\"\n\n# Pass the APIKeyHeader instance and verify against input api_key\ndef verify_api_key(api_key: str = Depends(____)):\n    if api_key != ____:  \n      \t# Raise the HTTP exception here\n        raise ____(status_code=403, detail=\"Invalid API Key\")  \n    return api_key\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Importez la fonction nécessaire pour gérer les dépendances depuis FastAPI.",
@@ -3886,8 +3886,8 @@
               "assignment": "Vous développez une API d’analyse de sentiments où les utilisateurs peuvent analyser des textes. Pour éviter les abus, vous devez implémenter une limitation de débit qui n’autorise que 5 requêtes par minute et par clé API. La classe RateLimiter est déjà créée et vous devez ajouter la méthode is_rate_limited au sein de la classe RateLimiter pour vérifier le nombre de requêtes effectuées dans la fenêtre de temps d’une minute.\n\nLes classes datetime et timedelta de la bibliothèque datetime ont été pré-importées.",
               "instructions": "Récupérez l’heure actuelle et calculez l’horodatage d’il y a une minute.\n\nFiltrez la liste des requêtes pour ne conserver que les horodatages de la dernière minute.\n\nVérifiez si le nombre de requêtes récentes dépasse la limite.\n\n### Code de départ\n\n```python\ndef is_rate_limited(self, api_key: str) -> bool:\n    # Get current time and the timestamp for one minute ago\n    now = _____\n    minute_ago = now - _____(minutes=1)\n    \n    # Remove requests older than 1 minute\n    self.requests[api_key] = [\n        req_time for req_time in self.requests[api_key]\n        if req_time > _____]\n    \n    # Check if no. of requests exceeded the set limit\n    if len(self.requests[api_key]) ____ self.requests_per_minute:\n        return True\n    self.requests[api_key].append(now)\n    return False\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Récupérez l’heure actuelle et calculez l’horodatage d’il y a une minute.",
@@ -4225,8 +4225,8 @@
               "assignment": "Vous développez une plateforme d’analytique pour les réseaux sociaux qui doit analyser des avis afin d’en extraire le sentiment. Pour gérer une forte charge efficacement, vous devez implémenter un endpoint async. Le modèle d’analyse de sentiment est déjà chargé et disponible sous le nom sentiment_model.",
               "instructions": "Créez un endpoint POST asynchrone /analyze avec l’application FastAPI.\n\nAjoutez le mot-clé permettant d’appeler sentiment_model de manière asynchrone sans bloquer les autres opérations.\n\nExécutez sentiment_model dans un thread séparé avec le texte de l’avis, afin de ne pas bloquer la boucle d’événements.\n\n### Code de départ\n\n```python\nfrom fastapi import FastAPI\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass Review(BaseModel):\n    text: str\n\n# Create async endpoint at /analyze route\n@app.post(\"____\")\n# Write an asynchronous function to process review's text\n____ def analyze_review(review: Review):\n    # Run the model in a separate thread to avoid any event loop blockage\n    result = ____ asyncio.____(sentiment_model, ____)\n    return {\"sentiment\": result[0][\"label\"]}\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Créez un endpoint POST asynchrone /analyze avec l’application FastAPI.",
@@ -4277,8 +4277,8 @@
               "assignment": "Votre API d’analyse de sentiment reçoit des demandes pour traiter des lots de centaines d’avis en une seule fois. Pour gérer cela efficacement sans faire attendre les utilisateurs, vous allez mettre en place un traitement en arrière-plan afin que les requêtes soient traitées après l’envoi de la réponse au client.",
               "instructions": "Importez la classe de tâches en arrière-plan depuis fastapi.\n\nDéclarez le paramètre background_tasks pour traiter la requête comme une tâche exécutée en arrière-plan.\n\nPlanifiez la tâche de traitement qui analyse le texte des avis à l’aide de la fonction process_reviews.\n\n### Code de départ\n\n```python\n# Import the background task class\nfrom fastapi import ____\n# Create a background task dependency\n@app.post(\"/analyze_batch\")\nasync def analyze_batch(\n    reviews: Reviews,\n    background_tasks: ____\n):\n    async def process_reviews(texts: List[str]):\n        for text in texts:\n            result = await asyncio.to_thread(sentiment_model, text)\n            print(f\"Processed: {result[0]['label']}\")\n    # Add the task of analysing reviews' texts to the background\n    background_tasks.____(process_reviews, reviews.texts)\n    return {\"message\": \"Processing started\"}\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Importez la classe de tâches en arrière-plan depuis fastapi.",
@@ -4688,8 +4688,8 @@
                 "fr": "Chapter 4 slides"
               },
               "description": {
-                "en": "Official course slides provided in the local DataCamp package.",
-                "fr": "Official course slides provided in the local DataCamp package."
+                "en": "Official course slides provided for this course.",
+                "fr": "Official course slides provided for this course."
               },
               "url": "/api/assets/chapter_04_slides_7171319a.pdf",
               "filename": "chapter_04_slides.pdf"
@@ -4806,8 +4806,8 @@
               "assignment": "Un client de votre API de classification des manchots vous demande un point de terminaison qui prétraite des données à partir d’une chaîne de texte délimitée par des espaces, au lieu d’un dictionnaire JSON. Vous devez ajouter un schéma et un endpoint « v2 » à votre application pour accepter ce nouveau format d’entrée.\n\nL’instance FastAPI nommée app et la classe PenguinV1 ont été préchargées.",
               "instructions": "Ajoutez un modèle Pydantic PenguinV2 qui accepte un paramètre data de type chaîne de caractères.\n\nAjoutez un endpoint de classification des manchots v2 à l’URL /v2/penguin_classifier.\n\nUtilisez le modèle v2 comme entrée du point de terminaison v2.\n\n### Code de départ\n\n```python\n# Add v2 model\nclass ____(BaseModel):\n    data: str\n\n@app.post(\"/v1/penguin_classifier\")\ndef classify_penguin_v1(penguin: PenguinV1):\n    values = list(penguin.model_dump().values())\n    result = classifier.predict([values])[0]\n    return result\n\n# Add v2 endpoint\n@app.post(\"____\")\n# Use v2 model\ndef classify_penguin_v2(penguin: ____):\n    values = penguin.data.split()\n    result = classifier.predict([values])[0]\n    return result\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Ajoutez un modèle Pydantic PenguinV2 qui accepte un paramètre data de type chaîne de caractères.",
@@ -4858,8 +4858,8 @@
               "assignment": "Vous souhaitez ajouter un en-tête de description à votre API de classification des manchots.",
               "instructions": "Ajoutez une description à la définition de votre API.\n\n### Code de départ\n\n```python\nfrom fastapi import FastAPI\n\napp = FastAPI(\n    # Add a description\n    ____=\"API for penguin classification\"\n)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Ajoutez une description à la définition de votre API."
@@ -5141,8 +5141,8 @@
               "assignment": "On vous a demandé de créer un schéma pour un traitement par lots qui exécute un modèle de prédiction météo sur une liste d’entrées et renvoie tous les résultats dans une liste.",
               "instructions": "Importez la classe de typing qui permet de gérer des listes imbriquées.\n\nCréez la classe BatchInput en utilisant BaseModel.\n\nDans le modèle BatchInput, complétez le champ inputs afin qu’il contienne une liste de schémas ModelInput.\n\n### Code de départ\n\n```python\nfrom datetime import date\nfrom pydantic import BaseModel\n# Import class for nested lists\nfrom typing import ____\n\nclass ModelInput(BaseModel):\n    latitude: float\n    longitude: float\n    date: date\n\n# Create batch input model\nclass ____(BaseModel):\n    job_name: str\n    # Inputs are list of model inputs\n    inputs: ___[___]\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Importez la classe de typing qui permet de gérer des listes imbriquées.",
@@ -5193,8 +5193,8 @@
               "assignment": "Vous disposez d’une API pour mettre à jour un stock, et l’on vous a demandé d’afficher un message d’erreur clair lorsque des quantités négatives sont saisies.\n\nL’exception RequestValidationError a été préchargée pour vous.",
               "instructions": "Importez l’annotation de validation personnalisée de modèle.\n\nImplémentez une validation personnalisée qui s’exécute \"after\" les validations par défaut du modèle.\n\nLevez une exception RequestValidationError pour remonter les erreurs de validation à l’utilisateur de l’API.\n\n### Code de départ\n\n```python\n# Import annotation for custom validation\nfrom pydantic import BaseModel, ____\n\nclass InventoryRecord(BaseModel):\n    name: str\n    quantity: int\n\n    # Create custom validator that runs after default validation\n    @model_validator(mode=\"____\")\n    def validate_after(self):\n        if len(self.quantity) < 0:\n            # Raise request validation error\n            raise ____(\n                \"Negative quantity is not allowed!\"\n            )\n        return self\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Importez l’annotation de validation personnalisée de modèle.",
@@ -5245,8 +5245,8 @@
               "assignment": "Votre API de mise à jour des stocks est de plus en plus utilisée, et certains utilisateurs se plaignent que les erreurs de validation encodées en JSON sont difficiles à lire. Créons un gestionnaire d’erreurs global pour renvoyer les erreurs de validation des requêtes en texte brut.\n\nL’exception RequestValidationError a été préchargée pour vous.",
               "instructions": "Importez la classe pour les réponses en texte brut.\n\nAnnotez validation_exception_handler comme gestionnaire d’exception global.\n\nRetournez une réponse en texte brut pour toute exception de validation.\n\n### Code de départ\n\n```python\n# Import class for plain text response\nfrom fastapi.responses import ____\n\napp = FastAPI()\n\n# Create global exception handler\n@app.____(RequestValidationError)\nasync def validation_exception_handler(request, exc):\n    # Return plain text response\n    return ____(str(exc), status_code=400)\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Importez la classe pour les réponses en texte brut.",
@@ -5587,8 +5587,8 @@
               "assignment": "Vous créez une application FastAPI pour classifier des manchots et vous souhaitez mesurer le temps nécessaire pour charger le modèle et le consigner dans les journaux.",
               "instructions": "Chargez le journal d’erreurs de uvicorn.\n\nConsignez au niveau INFO le temps de traitement nécessaire pour charger le modèle.\n\n### Code de départ\n\n```python\nfrom fastapi import FastAPI\nimport logging\nimport joblib \nimport time\n\n# Get the uvicorn error logger\nlogger = logging.getLogger('____')\n\nstart_time = time.perf_counter()\nmodel = joblib.load('penguin_classifier.pkl')\nprocess_time = time.perf_counter() - start_time\n# Log the process time at the INFO level\nlogger.____(f\"Process time was {____} seconds.\")\n\napp = FastAPI()\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Chargez le journal d’erreurs de uvicorn.",
@@ -5638,8 +5638,8 @@
               "assignment": "Vous souhaitez ajouter à votre application un endpoint simple de vérification d’état (health check).",
               "instructions": "Ajoutez un endpoint GET à l’emplacement habituel des vérifications d’état.\n\nRetournez un status égal à \"OK\".\n\n### Code de départ\n\n```python\nfrom fastapi import FastAPI\n\napp = FastAPI()\n\n# Create health check endpoint\n@app.get(\"____\")\nasync def get_health():\n    # Return status OK\n    return {\"status\": \"____\"}\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Ajoutez un endpoint GET à l’emplacement habituel des vérifications d’état.",
@@ -5689,8 +5689,8 @@
               "assignment": "Vous souhaitez ajouter un endpoint de contrôle d’état qui fournit les paramètres du modèle à votre API de classification des manchots.\n\nLes paquets requis (FastAPI et joblib) ont déjà été importés.",
               "instructions": "Ajoutez un endpoint GET à l’emplacement habituel pour les contrôles d’état.\n\nRécupérez les paramètres du modèle sklearn à l’aide de la méthode get_params.\n\nIncluez les paramètres du modèle dans la réponse sous la clé params.\n\n### Code de départ\n\n```python\nmodel = joblib.load(\n    'penguin_classifier.pkl'\n)\napp = FastAPI()\n\n# Create health check endpoint\n@app.get(\"____\")\nasync def get_health():\n    # Capture the model params\n    params = ____.get_params()\n    return {\"status\": \"OK\",\n            # Include model params in response\n            \"params\": ____}\n```",
               "environmentGuide": {
-                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton DataCamp par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
-                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any DataCamp proxy or token with your own setup. Never paste an API key in your answer."
+                "fr": "Préparez votre environnement autonome : installez Python et le SDK requis, définissez vos identifiants personnels dans des variables d’environnement et remplacez tout proxy ou jeton formation par votre propre configuration. Ne publiez jamais de clé API dans votre réponse.",
+                "en": "Prepare your own environment: install Python and the required SDK, configure your personal credentials through environment variables, and replace any formation proxy or token with your own setup. Never paste an API key in your answer."
               },
               "steps": [
                 "Ajoutez un endpoint GET à l’emplacement habituel pour les contrôles d’état.",

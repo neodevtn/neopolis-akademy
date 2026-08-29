@@ -1,6 +1,12 @@
 # Project TODO — Neopolis Akademy
 
 ## Audit comparatif avancé — DataCamp et Neopolis
+- [x] Archiver une preuve reproductible de l’audit initial des titres, descriptions, blocs pédagogiques et index avant nettoyage — rapport `visible-datacamp-mentions-before-cleanup.json` créé depuis `HEAD` : 220 mentions catalogue et 911 mentions de cours sur 48 cours
+- [x] Rejouer après le dernier nettoyage les contrôles locaux sur finance, ventes, n8n et Claude, avec une preuve exploitable du fil d’Ariane et des éléments médias réellement rendus — sonde navigateur archivée : 4/4 sans marque visible et fil d’Ariane présent ; ressources ou transcriptions confirmées pour finance, ventes et n8n ; aucun média n’est déclaré sur le premier écran Claude contrôlé
+- [x] Archiver explicitement les preuves par parcours du contrôle local final avant de clôturer le nettoyage de marque visible — rapport `visible-datacamp-mentions-browser-qa.json` et quatre captures dédiées enregistrés
+- [x] Corriger les formulations de remplacement dégradées encore présentes dans le parcours ventes, puis revérifier son fil d’Ariane, ses transcriptions et ses ressources — comparaison « Microsoft Copilot et Microsoft Copilot Studio » et textes de narration corrigés, avec contrôle navigateur local
+- [ ] Publier le nettoyage et vérifier l’absence de mention dans le catalogue et les parcours publics, tout en préservant les identifiants et métadonnées techniques internes
+- [ ] Régénérer l’index, contrôler l’absence de mention dans le parcours public, exécuter la QA et publier le nettoyage
 - [x] Comparer exhaustivement le catalogue de cours, les fichiers de cours et l’index de recherche afin d’identifier toute absence ou entrée obsolète — 177 cours catalogue, 177 fichiers de cours, 177 entrées cours et 3 519 chapitres comparés sans absence, doublon ni orphelin
 - [x] Corriger les écarts d’indexation vérifiés, couvrir les invariants catalogue/recherche par test et régénérer l’index — aucun écart de données ; index régénéré à 3 772 entrées et test de couverture par titre public ajouté
 - [x] Vérifier la recherche publique sur des cours représentatifs, publier et archiver le rapport d’audit d’indexation — cours et chapitres du TP « Agent de prospection Google Maps avec scoring automatique » retrouvés dans l’interface publique ; rapport JSON archivé
