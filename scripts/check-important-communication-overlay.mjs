@@ -53,6 +53,11 @@ async function checkViewport(viewport, name) {
     const cookieActions = page.locator("[class*='fixed'][class*='z-40'] button");
     await cookieHeading.waitFor({ state: "visible", timeout: 12_000 });
     await cookieActions.first().waitFor({ state: "attached", timeout: 12_000 });
+    const dialogDiagnostics = await page.locator('[role="dialog"]').evaluateAll((dialogs) => dialogs.map((dialog) => ({
+      title: dialog.querySelector('[data-slot="dialog-title"]')?.textContent?.trim() || null,
+      describedBy: dialog.getAttribute("aria-describedby"),
+      descriptionPresent: Boolean(dialog.querySelector('[data-slot="dialog-description"]')),
+    })));
 
     const visible = {
       dialog: await dialog.isVisible(),
@@ -99,7 +104,7 @@ async function checkViewport(viewport, name) {
       });
     }
     await page.screenshot({ path: `docs/block-qa-screenshots/important-communication-overlay-${name}.png`, fullPage: false });
-    return { viewport, ...visible, confirmTopmost: topmost, confirmInViewport: inViewport, acknowledgementInViewport, cookieActionsBlockedByDialog, feedbackTriggerRendered, feedbackTriggerOverlapsRequiredActions, relevantConsoleWarnings };
+    return { viewport, ...visible, confirmTopmost: topmost, confirmInViewport: inViewport, acknowledgementInViewport, cookieActionsBlockedByDialog, feedbackTriggerRendered, feedbackTriggerOverlapsRequiredActions, relevantConsoleWarnings, dialogDiagnostics };
   } finally {
     await context.close();
   }
