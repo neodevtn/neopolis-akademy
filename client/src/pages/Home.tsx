@@ -212,11 +212,10 @@ export default function Home() {
           <div className="flex items-center gap-2 ml-auto lg:ml-0 shrink-0">
             <LanguageSwitcher />
             <DeferredHomeAuth slot="logout" />
-            <Link href="/apply">
-              <button className="flex items-center gap-1.5 text-xs md:text-sm font-semibold px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 hover:shadow-md active:scale-[0.97]">
-                {t({ fr: "Postuler", en: "Apply", ar: "تقدّم" })} <ChevronRight size={14} />
-              </button>
-            </Link>
+            <DeferredHomeAuth
+              slot="header-primary"
+              fallback={<Link href="/apply"><span className="flex items-center gap-1.5 text-xs md:text-sm font-semibold px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 hover:shadow-md active:scale-[0.97]">{t({ fr: "Postuler", en: "Apply", ar: "تقدّم" })} <ChevronRight size={14} /></span></Link>}
+            />
             <MobileMenuButton />
           </div>
         </div>
@@ -249,15 +248,11 @@ export default function Home() {
               </motion.p>
 
               {/* CTA buttons */}
-              <motion.div variants={fadeInUp} className="flex flex-wrap gap-3 mb-6">
-                <Link href="/apply" className="wise-btn-primary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">
-                  {t({ fr: "Déposer ma candidature", en: "Submit my application", ar: "تقديم طلبي" })} <ArrowRight size={18} />
-                </Link>
-                <a href="#formule">
-                  <button className="wise-btn-secondary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">
-                    {t({ fr: "Découvrir le programme", en: "Discover the program", ar: "اكتشف البرنامج" })}
-                  </button>
-                </a>
+              <motion.div variants={fadeInUp} className="mb-6">
+                <DeferredHomeAuth
+                  slot="hero-actions"
+                  fallback={<div className="flex flex-wrap gap-3"><Link href="/apply" className="wise-btn-primary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">{t({ fr: "Déposer ma candidature", en: "Submit my application", ar: "تقديم طلبي" })} <ArrowRight size={18} /></Link><a href="#formule" className="wise-btn-secondary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">{t({ fr: "Découvrir le programme", en: "Discover the program", ar: "اكتشف البرنامج" })}</a></div>}
+                />
               </motion.div>
 
               {/* Hero note (chips) */}

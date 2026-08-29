@@ -1,6 +1,9 @@
 # Project TODO — Neopolis Akademy
 
 ## Audit comparatif avancé — DataCamp et Neopolis
+- [x] Auditer l’accueil et les données de session disponibles afin d’identifier les actions utiles aux visiteurs et aux utilisateurs authentifiés — navigation, session différée et widget de reprise existant analysés
+- [x] Adapter l’accueil avec un message, des indicateurs et des appels à l’action distincts pour un apprenant connecté, sans modifier le parcours visiteur — salutation individualisée, accès aux formations/tableau de bord et bouton « Mon espace » ajoutés ; les CTA visiteurs restent inchangés
+- [ ] Tester les deux états d’authentification sur desktop et mobile, puis publier le correctif de personnalisation
 - [x] Auditer les liens de parrainage, la route de candidature et les métadonnées sociales afin d’identifier pourquoi les partages ne sont ni prévisualisés ni contextualisés — les partages visaient directement `/apply`, le formulaire commençait immédiatement à l’étape 1/10 et les balises renvoyaient le titre générique « Candidature »
 - [x] Créer une page publique de recommandation contextualisée avant le formulaire et fournir des métadonnées Open Graph/Twitter sûres aux robots sociaux — nouvelle route `/refer`, redirection rétrocompatible des anciens liens, titre canonique du cours, image sociale Neopolis et texte HTML échappé
 - [x] Ajouter des tests de métadonnées et de conservation des paramètres de parrainage, puis vérifier le lien public partagé et publier le correctif — 10 tests SEO/parrainage et 460 tests complets réussis ; QA publication 6/6 ; redirection 302, balises sociales, image et affichage public desktop/mobile confirmés

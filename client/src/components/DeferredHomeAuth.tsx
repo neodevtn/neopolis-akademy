@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 const HomeAuthEnhancements = lazy(() => import("./HomeAuthEnhancements"));
 
 type DeferredHomeAuthProps = {
-  slot: "training" | "logout" | "mobile-training" | "resume";
+  slot: "training" | "logout" | "mobile-training" | "resume" | "header-primary" | "hero-actions";
   fallback?: ReactNode;
   onNavigate?: () => void;
 };
@@ -28,7 +28,7 @@ export default function DeferredHomeAuth({ slot, fallback = null, onNavigate }: 
 
   return (
     <Suspense fallback={fallback}>
-      <HomeAuthEnhancements slot={slot} onNavigate={onNavigate} />
+      <HomeAuthEnhancements slot={slot} fallback={fallback} onNavigate={onNavigate} />
     </Suspense>
   );
 }
