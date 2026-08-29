@@ -40,4 +40,10 @@ describe("learner communication inbox pagination", () => {
     expect(result.totalPages).toBe(1);
     expect(result.items).toHaveLength(3);
   });
+
+  it("keeps an important message awaiting acknowledgement visible with its required state", () => {
+    const result = paginateLearnerCommunications(items, { importance: "important", pageSize: 10 });
+    expect(result.total).toBe(1);
+    expect(result.items[0]).toMatchObject({ id: 3, isImportant: 1, isRead: false, isAcknowledged: false });
+  });
 });

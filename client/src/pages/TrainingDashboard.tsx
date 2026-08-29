@@ -298,20 +298,20 @@ export default function TrainingDashboard() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="mx-auto flex max-w-7xl min-w-0 items-center justify-between gap-2 px-4 py-3 sm:px-6 sm:py-4">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-4">
             <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
               <ArrowLeft className="w-4 h-4" />
             </Link>
-            <div className="flex items-center gap-2.5">
-              <BrandLogo className="h-8 max-w-[160px]" />
-              <span className="text-xs bg-primary/15 text-primary px-2.5 py-1 rounded-full font-semibold tracking-wide uppercase">Training</span>
+            <div className="flex min-w-0 items-center gap-1.5 sm:gap-2.5">
+              <BrandLogo className="h-7 max-w-[82px] sm:h-8 sm:max-w-[160px]" />
+              <span className="rounded-full bg-primary/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary sm:px-2.5 sm:py-1 sm:text-xs">Training</span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-3">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground"
+              className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-secondary sm:p-2"
             >
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
@@ -327,7 +327,7 @@ export default function TrainingDashboard() {
             {isAuthenticated && (
               <button
                 onClick={() => logout()}
-                className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full transition-all hover:bg-red-50 dark:hover:bg-red-950/30 text-red-600 dark:text-red-400 hover:text-red-700 border border-red-200 dark:border-red-800 hover:border-red-300"
+                className="flex items-center gap-1.5 rounded-full border border-red-200 px-1.5 py-1.5 text-xs font-medium text-red-600 transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-700 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950/30 sm:px-3"
                 title="Déconnexion"
               >
                 <LogOut size={13} />
@@ -338,7 +338,7 @@ export default function TrainingDashboard() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
         {/* Welcome + Tabs */}
         <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
           {/* Greeting */}
