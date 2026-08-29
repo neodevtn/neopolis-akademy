@@ -33,4 +33,19 @@ describe("cours DataCamp Microsoft Copilot dans Word", () => {
     expect(serialized).not.toMatch(/https?:\/\/(?:assets|videos|projector|campus)\.datacamp\.com/i);
     expect(serialized).not.toContain("/manus-storage/");
   });
+
+  it("ne rend plus de recommandation DataCamp ou Microsoft dans les Projector", () => {
+    const projectorText = blocks
+      .filter((block: any) => block.type === "video")
+      .flatMap((block: any) => [
+        ...(block.projectorSlides || []).flatMap((slide: any) => [slide.script, slide.content, slide.contentLeft, slide.contentRight]),
+        ...(block.transcriptSegments || []).flatMap((segment: any) => [segment.heading, segment.text]),
+        block.transcript,
+      ])
+      .filter((value: unknown): value is string => typeof value === "string")
+      .join("\n");
+
+    expect(projectorText).not.toMatch(/Explorez plus de ressources DataCamp et Microsoft/i);
+    expect(projectorText).not.toMatch(/we have more DataCamp content for you/i);
+  });
 });

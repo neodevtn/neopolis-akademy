@@ -5,11 +5,17 @@ const baseUrl = (process.env.MULTI_CHOICE_QA_URL || "http://127.0.0.1:3000").rep
 const courseId = process.env.MULTI_CHOICE_QA_COURSE_ID;
 const certificationId = process.env.MULTI_CHOICE_QA_CERTIFICATION_ID;
 const sourceActivityType = process.env.MULTI_CHOICE_QA_SOURCE_TYPE || "";
+const selectedLessonIndex = process.env.MULTI_CHOICE_QA_LESSON_INDEX === undefined
+  ? null
+  : Number.parseInt(process.env.MULTI_CHOICE_QA_LESSON_INDEX, 10);
 const learnerEmail = process.env.QA_EMAIL;
 const learnerPassword = process.env.QA_PASSWORD;
 
 if (!courseId || !certificationId || !learnerEmail || !learnerPassword) {
   throw new Error("MULTI_CHOICE_QA_COURSE_ID, MULTI_CHOICE_QA_CERTIFICATION_ID, QA_EMAIL et QA_PASSWORD sont requis.");
+}
+if (selectedLessonIndex !== null && (!Number.isInteger(selectedLessonIndex) || selectedLessonIndex < 0)) {
+  throw new Error("MULTI_CHOICE_QA_LESSON_INDEX doit être un entier positif ou nul.");
 }
 
 const course = JSON.parse(fs.readFileSync(`client/public/data/courses/${courseId}.json`, "utf8"));
@@ -17,6 +23,7 @@ const text = (value) => typeof value === "string" ? value : value?.fr || value?.
 let target = null;
 
 for (const [lessonIndex, lesson] of course.lessons.entries()) {
+  if (selectedLessonIndex !== null && lessonIndex !== selectedLessonIndex) continue;
   for (const [chapterIndex, chapter] of lesson.chapters.entries()) {
     if (sourceActivityType && chapter.sourceActivityType !== sourceActivityType) continue;
     const block = chapter.blocks?.find((candidate) => candidate.type === "multi_choice_exercise");

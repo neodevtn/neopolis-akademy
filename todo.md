@@ -70,8 +70,12 @@
 ## Lot DataCamp suivant — Microsoft Copilot dans Word
 - [x] Restaurer et vérifier le paquet officiel Drive — archive de treize parties validée SHA-256 ; 3 chapitres, 29 activités et 10 vidéos source
 - [x] Établir l’audit initial activité par activité — 29/29 activités présentes ; 9 TP avec rubriques explicites et 5 candidats sans rubrique
-- [ ] Examiner les cinq TP sans rubrique, convertir uniquement les neuf TP admissibles et retirer les dépendances non reproductibles avec justification canonique — documenter chaque décision source
-- [ ] Synchroniser les métriques, rejouer les interactions conservées et exécuter la QA avant toute publication — consigner la QA et les rejeux exécutés
+- [x] Examiner les cinq TP sans rubrique, convertir uniquement les neuf TP admissibles et retirer les dépendances non reproductibles avec justification canonique — activités 1.3, 2.5, 2.6, 2.8 et 3.3 retirées sans substitut, audit 29 source / 24 conservées / 5 omissions, 0 média externe
+- [x] Contrôler les TP, QCM et Projector Word conservés — 9/9 TP rubricés et sans dépendance externe ; QCM 3.5 et TP 3.2 rejoués avec correction masquée, feedback ou verrou attendu ; 10 Projector avec audio/slides locaux et 105 slides/transcriptions, 0 référence fournisseur visible
+- [x] Resynchroniser les métriques Word et relancer la QA complète après le nettoyage final de la recommandation fournisseur — 137 cours et 75 certifications synchronisés, QA complète à six étapes réussie
+- [x] Contrôler de nouveau la carte et la fiche Word après la synchronisation : 24 activités, 14 exercices, 10 vidéos et 3 téléchargements attendus — valeurs confirmées par sonde authentifiée
+- [x] Réinitialiser uniquement la progression QA du cours Word avec l’autorisation explicite reçue, puis rejouer le tri dans son état apprenant initial — seules les tables de progression, chapitre et vidéo du cours Word ont été nettoyées pour le compte QA
+- [x] Rejouer un tri Word en unité active afin de vérifier à nouveau son verrou de soumission — tri 1.2 validé : placement au clic, cible clavier, soumission verrouillée jusqu’au placement complet, feedback et Suivant débloqué après réponse correcte
 
 ## Lot DataCamp suivant — Développement logiciel avec GitHub Copilot
 - [x] Restaurer et vérifier le paquet officiel Drive — archive de vingt parties validée SHA-256 ; 4 chapitres, 40 activités et 13 vidéos source

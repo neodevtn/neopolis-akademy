@@ -6,11 +6,15 @@ const email = process.env.QA_EMAIL;
 const password = process.env.QA_PASSWORD;
 const courseId = process.env.PROJECTOR_QA_ID;
 const courseSlug = process.env.PROJECTOR_QA_SLUG;
+const selectedLessonIndex = process.env.PROJECTOR_QA_LESSON_INDEX === undefined
+  ? null
+  : Number.parseInt(process.env.PROJECTOR_QA_LESSON_INDEX, 10);
 if (!email || !password || !courseId || !courseSlug) throw new Error("QA_EMAIL, QA_PASSWORD, PROJECTOR_QA_ID et PROJECTOR_QA_SLUG sont requis.");
+if (selectedLessonIndex !== null && (!Number.isInteger(selectedLessonIndex) || selectedLessonIndex < 0)) throw new Error("PROJECTOR_QA_LESSON_INDEX doit être un entier positif ou nul.");
 
 const course = JSON.parse(fs.readFileSync(`client/public/data/courses/${courseId}.json`, "utf8"));
 const targets = course.lessons.flatMap((lesson, lessonIndex) => lesson.chapters.map((chapter, chapterIndex) => ({ lessonIndex, chapterIndex, chapter })))
-  .filter(({ chapter }) => chapter.blocks?.some((block) => block.type === "video" && block.projectorSlides?.length));
+  .filter(({ chapter, lessonIndex }) => (selectedLessonIndex === null || lessonIndex === selectedLessonIndex) && chapter.blocks?.some((block) => block.type === "video" && block.projectorSlides?.length));
 const result = { generatedAt: new Date().toISOString(), courseId, targetCount: targets.length, results: [] };
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium", headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--no-zygote"] });
 try {
@@ -29,7 +33,7 @@ try {
       current.rendered = true;
       current.audioVisible = await projector.locator("video").count() > 0;
       current.slideVisible = await projector.getByRole("button", { name: /Lire la leçon|Mettre en pause/ }).count() > 0;
-      current.providerReferenceVisible = /DataCamp|Copilot/i.test(await projector.innerText());
+      current.providerReferenceVisible = /DataCamp|Explore more resources|Explorez plus de ressources/i.test(await projector.innerText());
     } catch (error) {
       current.error = error instanceof Error ? error.message : String(error);
       current.finalUrl = page.url();
