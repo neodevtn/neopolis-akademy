@@ -53,6 +53,7 @@ import { buildRecommendedLearningPath } from "@/lib/recommendedLearningPath";
 import { BrandLogo } from "@/components/BrandLogo";
 import { TrainingSearchPanel } from "@/components/TrainingSearchPanel";
 import { ReferralShareCard } from "@/components/ReferralShareCard";
+import { extractTargetJobRoles, getTrainingFormatDefinitions, resolveTrainingFormat } from "@/lib/trainingCatalogTaxonomy";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -206,7 +207,7 @@ export default function TrainingDashboard() {
       courses.forEach((c) => { totalLessonsMap[c.id] = c.lessonCount || 1; });
       const progressPct = getCertProgress(courseIds, totalLessonsMap);
       const metrics = getCertificationCatalogMetrics(cert.id, trainingIndex.courses);
-      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, ...metrics, catalogTag: (cert as any).catalogTag, progress: progressPct, completed: progressPct >= 100, group: (cert as any).group };
+      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, ...metrics, catalogTag: (cert as any).catalogTag, progress: progressPct, completed: progressPct >= 100, group: (cert as any).group, trainingFormat: resolveTrainingFormat(cert as any) };
     });
   }, [getCertProgress]);
 
@@ -827,9 +828,19 @@ function CatalogTab({
   const [roleFilter, setRoleFilter] = useState("all");
   const [technologyFilter, setTechnologyFilter] = useState("all");
   const [durationFilter, setDurationFilter] = useState("all");
+  const [trainingFormatFilter, setTrainingFormatFilter] = useState("all");
+  const trainingFormats = useMemo(() => getTrainingFormatDefinitions((trainingIndex as any).trainingFormats), []);
+  const coursesByCertification = useMemo(() => {
+    const values = new Map<string, any[]>();
+    for (const course of (trainingIndex as any).courses || []) {
+      values.set(course.certId, [...(values.get(course.certId) || []), course]);
+    }
+    return values;
+  }, []);
 
   const catalogMetadata = useMemo(() => certCompletionData.map((cert) => {
     const source = JSON.stringify({ title: cert.title, description: cert.description, group: cert.group }).toLowerCase();
+    const targetJobRoles = extractTargetJobRoles(coursesByCertification.get(cert.id) || []);
     const includes = (...terms: string[]) => terms.some((term) => source.includes(term));
     const skills = [
       includes("rag", "retrieval", "vector", "weaviate", "haystack", "llamaindex", "graph") && "rag",
@@ -852,12 +863,13 @@ function CatalogTab({
       skills.includes("data_bi") && "analyst",
       (skills.includes("prompting") || skills.includes("productivity")) && "business",
       includes("strategy", "governance", "management", "consulting") && "manager",
+      ...targetJobRoles,
     ].filter(Boolean) as string[];
     const activityCount = Number(cert.totalActivities || 0);
     const duration = activityCount <= 15 ? "short" : activityCount <= 30 ? "medium" : "long";
     const level = String((cert.level as any)?.en || "beginner").toLowerCase();
-    return { id: cert.id, level, skills, roles, technologies, duration };
-  }), [certCompletionData]);
+    return { id: cert.id, level, skills, roles: Array.from(new Set(roles)), technologies, duration, trainingFormat: cert.trainingFormat };
+  }), [certCompletionData, coursesByCertification]);
   const metadataByCertification = new Map(catalogMetadata.map((metadata) => [metadata.id, metadata]));
   const filterLabels = {
     skills: { rag: "RAG", agents: "Agents IA", prompting: "Prompt engineering", development: "Développement IA", data_bi: "Data & BI", productivity: "IA au travail" },
@@ -865,7 +877,9 @@ function CatalogTab({
     technologies: { claude: "Claude", openai: "OpenAI", langchain: "LangChain", langgraph: "LangGraph", hugging_face: "Hugging Face", pytorch: "PyTorch", snowflake: "Snowflake", databricks: "Databricks", mongodb: "MongoDB", weaviate: "Weaviate", haystack: "Haystack", crewai: "CrewAI", llamaindex: "LlamaIndex", google_cloud: "Google Cloud", microsoft_copilot: "Microsoft Copilot", windsurf: "Windsurf" },
     durations: { short: "Courte — jusqu’à 15 activités", medium: "Moyenne — 16 à 30 activités", long: "Approfondie — plus de 30 activités" },
   } as const;
-  const available = (key: "skills" | "roles" | "technologies") => Array.from(new Set(catalogMetadata.flatMap((metadata) => metadata[key]))).sort();
+  const available = (key: "skills" | "roles" | "technologies") => Array.from(new Set(catalogMetadata.flatMap((metadata) => metadata[key]))).sort((a, b) => a.localeCompare(b, "fr"));
+  const availableTrainingFormats = Array.from(new Set(catalogMetadata.map((metadata) => metadata.trainingFormat))).sort();
+  const trainingFormatLabels = Object.fromEntries(trainingFormats.map((format) => [format.id, t(format.title)]));
   const filteredCerts = certCompletionData.filter((cert) => {
     const metadata = metadataByCertification.get(cert.id);
     return (selectedGroup === "all" || cert.group === selectedGroup)
@@ -873,10 +887,11 @@ function CatalogTab({
       && (skillFilter === "all" || metadata?.skills.includes(skillFilter))
       && (roleFilter === "all" || metadata?.roles.includes(roleFilter))
       && (technologyFilter === "all" || metadata?.technologies.includes(technologyFilter))
-      && (durationFilter === "all" || metadata?.duration === durationFilter);
+      && (durationFilter === "all" || metadata?.duration === durationFilter)
+      && (trainingFormatFilter === "all" || metadata?.trainingFormat === trainingFormatFilter);
   });
-  const clearAdvancedFilters = () => { setLevelFilter("all"); setSkillFilter("all"); setRoleFilter("all"); setTechnologyFilter("all"); setDurationFilter("all"); };
-  const hasAdvancedFilters = [levelFilter, skillFilter, roleFilter, technologyFilter, durationFilter].some((filter) => filter !== "all");
+  const clearAdvancedFilters = () => { setLevelFilter("all"); setSkillFilter("all"); setRoleFilter("all"); setTechnologyFilter("all"); setDurationFilter("all"); setTrainingFormatFilter("all"); };
+  const hasAdvancedFilters = [levelFilter, skillFilter, roleFilter, technologyFilter, durationFilter, trainingFormatFilter].some((filter) => filter !== "all");
   const certificationTitles = Object.fromEntries(certCompletionData.map((cert) => [cert.id, t(cert.title)]));
 
   return (
@@ -887,12 +902,13 @@ function CatalogTab({
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground"><SlidersHorizontal className="h-4 w-4 text-primary" />{t({ en: "Filter by learner profile", fr: "Filtrer selon votre profil" })}</div>
           {hasAdvancedFilters && <button onClick={clearAdvancedFilters} className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"><X className="h-3.5 w-3.5" />{t({ en: "Reset filters", fr: "Réinitialiser" })}</button>}
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           <label className="text-xs font-medium text-muted-foreground">{t({ en: "Level", fr: "Niveau" })}<select value={levelFilter} onChange={(event) => setLevelFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All levels", fr: "Tous les niveaux" })}</option><option value="beginner">{t({ en: "Beginner", fr: "Débutant" })}</option><option value="intermediate">{t({ en: "Intermediate", fr: "Intermédiaire" })}</option><option value="advanced">{t({ en: "Advanced", fr: "Avancé" })}</option></select></label>
           <label className="text-xs font-medium text-muted-foreground">{t({ en: "Skill", fr: "Compétence" })}<select value={skillFilter} onChange={(event) => setSkillFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All skills", fr: "Toutes les compétences" })}</option>{available("skills").map((value) => <option key={value} value={value}>{filterLabels.skills[value as keyof typeof filterLabels.skills]}</option>)}</select></label>
-          <label className="text-xs font-medium text-muted-foreground">{t({ en: "Role", fr: "Métier" })}<select value={roleFilter} onChange={(event) => setRoleFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All roles", fr: "Tous les métiers" })}</option>{available("roles").map((value) => <option key={value} value={value}>{filterLabels.roles[value as keyof typeof filterLabels.roles]}</option>)}</select></label>
+          <label className="text-xs font-medium text-muted-foreground">{t({ en: "Role", fr: "Métier" })}<select value={roleFilter} onChange={(event) => setRoleFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All roles", fr: "Tous les métiers" })}</option>{available("roles").map((value) => <option key={value} value={value}>{filterLabels.roles[value as keyof typeof filterLabels.roles] || value}</option>)}</select></label>
           <label className="text-xs font-medium text-muted-foreground">{t({ en: "Technology", fr: "Technologie" })}<select value={technologyFilter} onChange={(event) => setTechnologyFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All technologies", fr: "Toutes les technologies" })}</option>{available("technologies").map((value) => <option key={value} value={value}>{filterLabels.technologies[value as keyof typeof filterLabels.technologies]}</option>)}</select></label>
           <label className="text-xs font-medium text-muted-foreground">{t({ en: "Estimated duration", fr: "Durée estimée" })}<select value={durationFilter} onChange={(event) => setDurationFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All durations", fr: "Toutes les durées" })}</option>{Object.entries(filterLabels.durations).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+          <label className="text-xs font-medium text-muted-foreground">{t({ en: "Training type", fr: "Sous-catégorie de formation" })}<select value={trainingFormatFilter} onChange={(event) => setTrainingFormatFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All training types", fr: "Toutes les sous-catégories" })}</option>{availableTrainingFormats.map((value) => <option key={value} value={value}>{trainingFormatLabels[value] || value}</option>)}</select></label>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">{t({ en: "Duration is estimated from the published number of learning activities.", fr: "La durée est estimée à partir du nombre d’activités pédagogiques publiées." })}</p>
       </div>
@@ -949,6 +965,7 @@ function CatalogTab({
                   <div className={`w-12 h-12 rounded-xl ${groupCfg.iconBg} flex items-center justify-center text-2xl`}>{cert.icon}</div>
                   <div className="flex flex-wrap justify-end gap-1.5">
                     {cert.catalogTag && <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">{t(cert.catalogTag)}</span>}
+                    {cert.trainingFormat && <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300">{trainingFormatLabels[cert.trainingFormat] || cert.trainingFormat}</span>}
                     <span className={`text-[11px] px-2.5 py-1 rounded-full font-semibold ${config.color}`}>{t(config.label)}</span>
                   </div>
                 </div>

@@ -1,6 +1,10 @@
 # Project TODO — Neopolis Akademy
 
 ## Audit comparatif avancé — DataCamp et Neopolis
+- [x] Auditer les métiers des 40 TP, les options du filtre et la taxonomie de formation actuelle afin d’identifier les ajouts nécessaires — les métiers sont portés par `targetJob` au niveau des cours TP et aucune taxonomie de format n’était déclarée dans le catalogue
+- [x] Ajouter les sous-catégories de formation « Préparation aux certifications », « Formation » et « Tutoriel / TP » au modèle catalogue et aux filtres — taxonomie déclarative `trainingFormats`, filtre dédié et badge de carte ajoutés
+- [x] Ajouter au filtre de recherche les métiers couverts par les TP et classer leurs 40 formations autonomes en « Tutoriel / TP » — les métiers `targetJob` remontent dynamiquement, l’intersection Business developer + Tutoriel / TP retourne le TP 01 et les 40 TP portent ce format
+- [ ] Tester filtres, cartes, recherche et vues publiques desktop/mobile, puis publier la taxonomie mise à jour
 - [x] Auditer la rubrique IA appliquée aux métiers - TP, ses 40 TP, les liens actuels et les dépendances d’indexation afin de préparer leur séparation en formations autonomes — cause confirmée : une certification regroupait les 40 cours, alors que le catalogue présente les certifications comme formations principales
 - [x] Réintégrer les huit lots de cinq TP après l’ajout du format mono-cours, puis vérifier que les 40 formations autonomes portent leurs métadonnées, contenus et supports — huit lots réintégrés et contrôlés ; les 40 certifications portent `isStandaloneTP: true`
 - [x] Étendre les tests de structure pour exiger pour chacun des 40 TP une formation mono-cours, son indicateur autonome et sa sous-catégorie métier — test dédié renforcé sur les 40 certifications, leur unique cours rattaché et leur sous-catégorie

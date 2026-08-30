@@ -15,18 +15,20 @@ const cleanSnippet = (value) => String(value || "")
   .slice(0, 240);
 
 const certById = new Map(catalog.certifications.map((cert) => [cert.id, cert]));
+const formatById = new Map((catalog.trainingFormats || []).map((format) => [format.id, format]));
 const entries = [];
 const toKeywords = (...values) => values.flatMap((value) => Array.isArray(value) ? value : [value])
   .flatMap((value) => typeof value === "object" && value !== null ? Object.values(value) : [value])
   .filter((value) => typeof value === "string" && value.trim().length > 0);
 
 for (const cert of catalog.certifications) {
+  const trainingFormat = formatById.get(cert.trainingFormat);
   entries.push({
     id: `certification:${cert.id}`,
     kind: "certification",
     title: localize(cert.title),
     subtitle: localize(cert.description),
-    keywords: toKeywords(cert.id, cert.group, localize(cert.level), localize(cert.title, "en"), localize(cert.description, "en"), (cert.subcategories || []).map((item) => item.title)),
+    keywords: toKeywords(cert.id, cert.group, cert.trainingFormat, trainingFormat?.title, localize(cert.level), localize(cert.title, "en"), localize(cert.description, "en"), (cert.subcategories || []).map((item) => item.title)),
     group: cert.group,
     certId: cert.id,
     href: `/training/${cert.id}`,
@@ -35,13 +37,14 @@ for (const cert of catalog.certifications) {
 
 for (const course of catalog.courses) {
   const cert = certById.get(course.certId);
+  const trainingFormat = formatById.get(cert?.trainingFormat);
   const courseTitle = localize(course.title || course.name);
   entries.push({
     id: `course:${course.id}`,
     kind: "course",
     title: courseTitle,
     subtitle: localize(course.description),
-    keywords: toKeywords(course.id, course.certId, cert?.group, course.subCategory, course.subCategoryId, course.tags, course.targetJob, course.tools, course.acquiredSkills, localize(course.title || course.name, "en"), localize(course.description, "en")),
+    keywords: toKeywords(course.id, course.certId, cert?.group, cert?.trainingFormat, trainingFormat?.title, course.subCategory, course.subCategoryId, course.tags, course.targetJob, course.tools, course.acquiredSkills, localize(course.title || course.name, "en"), localize(course.description, "en")),
     group: cert?.group,
     certId: course.certId,
     href: `/training/${course.certId}/${course.id}`,
@@ -61,7 +64,7 @@ for (const course of catalog.courses) {
         title: chapterTitle || lessonTitle || courseTitle,
         subtitle: lessonTitle || courseTitle,
         snippet: cleanSnippet(localize(firstText)),
-        keywords: toKeywords(courseTitle, lessonTitle, chapter.id, chapter.type, course.subCategory, course.tags, course.targetJob, course.tools, course.acquiredSkills, localize(chapter.title, "en"), localize(lesson.title, "en")),
+        keywords: toKeywords(courseTitle, lessonTitle, chapter.id, chapter.type, cert?.trainingFormat, trainingFormat?.title, course.subCategory, course.tags, course.targetJob, course.tools, course.acquiredSkills, localize(chapter.title, "en"), localize(lesson.title, "en")),
         group: cert?.group,
         certId: course.certId,
         href: `/training/${course.certId}/${course.id}?lesson=${lessonIndex}&chapter=${chapterIndex}`,

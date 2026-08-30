@@ -283,6 +283,7 @@ function ensureCatalog(index, tutorials) {
       subCategory: subcategory.title,
       canonicalOrder: tutorial.order,
       isStandaloneTP: true,
+      trainingFormat: "tutorial_tp",
       courses: [courseIdFor(tutorial)],
     };
     const certificationIndex = index.certifications.findIndex((entry) => entry.id === certification.id);
@@ -332,7 +333,7 @@ function verifyBatch(tutorials, batch) {
     const raw = JSON.stringify(course);
     if (course.title?.fr !== tutorial.title || course.metadata?.canonicalTutorialId !== tutorial.id || course.metadata?.canonicalOrder !== tutorial.order) throw new Error(`Métadonnées canoniques invalides pour le TP ${tutorial.order}.`);
     if (indexEntry.title?.fr !== tutorial.title || indexEntry.targetJob !== tutorial.targetJob || JSON.stringify(indexEntry.tools) !== JSON.stringify(tutorial.tools) || JSON.stringify(indexEntry.acquiredSkills) !== JSON.stringify(tutorial.acquiredSkills)) throw new Error(`Index métier incomplet pour le TP ${tutorial.order}.`);
-    if (indexEntry.certId !== standaloneCertification.id || standaloneCertification.courses?.[0] !== courseId || standaloneCertification.subCategoryId !== subcategoryFor(tutorial).id) throw new Error(`Formation autonome invalide pour le TP ${tutorial.order}.`);
+    if (indexEntry.certId !== standaloneCertification.id || standaloneCertification.courses?.[0] !== courseId || standaloneCertification.subCategoryId !== subcategoryFor(tutorial).id || standaloneCertification.trainingFormat !== "tutorial_tp") throw new Error(`Formation autonome invalide pour le TP ${tutorial.order}.`);
     if (!tutorial.sourceUrl.startsWith("https://") || course.sourceReference?.sourceUrl !== tutorial.sourceUrl) throw new Error(`URL source non sécurisée ou non canonique pour le TP ${tutorial.order}.`);
     if (!assets[tutorial.order]?.startsWith("/manus-storage/") || !raw.includes(assets[tutorial.order])) throw new Error(`Support fictif non relié au TP ${tutorial.order}.`);
     const chapters = course.lessons?.[0]?.chapters || [];
