@@ -9,6 +9,7 @@ import { normalizeCourseFeedbackComment, normalizeCourseRating } from "../shared
 import { normalizeReferralCode } from "../shared/referral";
 import { canLearnerOpenLifecycle, type CourseLifecycleStatus } from "../shared/courseLifecycle";
 import { getNewLearnerGroupMemberIds, needsDefaultLearnerGroup } from "../shared/defaultLearnerGroup";
+import { buildCourseCatalogKpis, type CourseCatalogKpi } from "./courseCatalogKpis";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -957,6 +958,27 @@ export async function getAdminAnalytics() {
     activeUsersLast7Days: activeCount,
     blockedUsers: blockedCount,
   };
+}
+
+export async function getCourseCatalogKpis(courses: Array<{ courseId: string; lessonsCount: number }>): Promise<Record<string, CourseCatalogKpi>> {
+  const db = await getDb();
+  if (!db) return buildCourseCatalogKpis({ courses, events: [], chapterProgress: [], completions: [], videoProgress: [] });
+
+  const courseIds = new Set(courses.map((course) => course.courseId));
+  const [events, chapters, completions, videos] = await Promise.all([
+    db.select({ userId: learningEvents.userId, courseId: learningEvents.courseId, eventType: learningEvents.eventType, durationSeconds: learningEvents.durationSeconds, createdAt: learningEvents.createdAt }).from(learningEvents),
+    db.select({ userId: chapterProgress.userId, courseId: chapterProgress.courseId, updatedAt: chapterProgress.updatedAt }).from(chapterProgress),
+    db.select({ userId: trainingProgress.userId, courseId: trainingProgress.courseId, lessonIndex: trainingProgress.lessonIndex, completedAt: trainingProgress.completedAt }).from(trainingProgress),
+    db.select({ userId: videoProgress.userId, courseId: videoProgress.courseId, watchedAt: videoProgress.watchedAt }).from(videoProgress),
+  ]);
+
+  return buildCourseCatalogKpis({
+    courses,
+    events: events.filter((row) => row.courseId && courseIds.has(row.courseId)),
+    chapterProgress: chapters.filter((row) => courseIds.has(row.courseId)),
+    completions: completions.filter((row) => courseIds.has(row.courseId)),
+    videoProgress: videos.filter((row) => courseIds.has(row.courseId)),
+  });
 }
 
 export async function getLearningReporting(input: { days: 7 | 30 | 90; certificationId?: string }) {

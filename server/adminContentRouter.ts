@@ -10,7 +10,7 @@ import { storagePut } from "./storage";
 import { applyCatalogMetrics } from "../shared/catalogMetrics";
 import { eq } from "drizzle-orm";
 import { courseLifecycleStates } from "../drizzle/schema";
-import { getDb } from "./db";
+import { getCourseCatalogKpis, getDb } from "./db";
 
 /**
  * Admin Content Management Router
@@ -122,11 +122,14 @@ export const adminContentRouter = router({
       }
     }
     const db = await getDb();
-    const states = db ? await db.select().from(courseLifecycleStates) : [];
+    const [states, kpisByCourse] = await Promise.all([
+      db ? db.select().from(courseLifecycleStates) : [],
+      getCourseCatalogKpis(courses),
+    ]);
     const statesByCourseId = new Map(states.map((state) => [state.courseId, state]));
     return courses.map((course) => {
       const state = statesByCourseId.get(course.courseId);
-      return { ...course, lifecycleStatus: state?.status || "active", lifecycleReason: state?.reason || null, lifecycleUpdatedAt: state?.updatedAt || null };
+      return { ...course, kpi: kpisByCourse[course.courseId], lifecycleStatus: state?.status || "active", lifecycleReason: state?.reason || null, lifecycleUpdatedAt: state?.updatedAt || null };
     });
   }),
 

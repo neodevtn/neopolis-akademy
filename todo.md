@@ -1,6 +1,10 @@
 # Project TODO — Neopolis Akademy
 
 ## Audit comparatif avancé — DataCamp et Neopolis
+- [x] Auditer les données de consultation, démarrage, progression et complétion disponibles afin de calculer des KPI de popularité, engagement et abandon par cours — 12 948 événements avec cours, 238 progressions de chapitre, 417 complétions et 9 870 événements de temps disponibles
+- [x] Définir des KPI réels, leurs formules, périodes et états de données insuffisantes, sans données estimées ou profils identifiables — démarrages distincts, actifs/minutes sur 30 jours et abandons non terminés inactifs depuis 14 jours ; état explicite si aucune donnée
+- [x] Ajouter l’agrégation sécurisée réservée aux administrateurs et l’affichage compact des KPI dans le catalogue — agrégation sans identité individuelle ajoutée à `adminContent.listCourses` et colonne KPI uniquement dans le tableau administrateur ; appel sans session vérifié HTTP 403
+- [ ] Tester les droits, les calculs, les états vides et les vues desktop/mobile, puis publier les KPI de catalogue
 - [x] Auditer les métiers des 40 TP, les options du filtre et la taxonomie de formation actuelle afin d’identifier les ajouts nécessaires — les métiers sont portés par `targetJob` au niveau des cours TP et aucune taxonomie de format n’était déclarée dans le catalogue
 - [x] Ajouter les sous-catégories de formation « Préparation aux certifications », « Formation » et « Tutoriel / TP » au modèle catalogue et aux filtres — taxonomie déclarative `trainingFormats`, filtre dédié et badge de carte ajoutés
 - [x] Ajouter au filtre de recherche les métiers couverts par les TP et classer leurs 40 formations autonomes en « Tutoriel / TP » — les métiers `targetJob` remontent dynamiquement, l’intersection Business developer + Tutoriel / TP retourne le TP 01 et les 40 TP portent ce format
