@@ -24,6 +24,7 @@ Cette note archive le contrôle final de la refonte qui rend les examens blancs 
 | Sonde navigateur locale apprenant/admin | Réussie |
 | Sonde navigateur publique apprenant/admin | Réussie après propagation du checkpoint `fad4ae01` |
 | Sonde post-complétion certifiante | Réussie localement après préparation QA contrôlée de la progression |
+| Sonde publique post-complétion certifiante | Réussie après propagation du checkpoint `2f4acc7c` |
 
 ## Résultat public de la sonde
 
@@ -56,3 +57,16 @@ Le contrôle complémentaire couvre explicitement le cas qui expliquait le faibl
 | CTA vers l’examen blanc | Oui |
 
 Le correctif associé précise le calcul de complétion des cours stockés comme **une leçon contenant plusieurs écrans** : lorsque le nombre d’écrans sert de total affiché, la progression chapitre complète prévaut sur la simple entrée de leçon, ce qui permet à l’appel d’examen de refléter l’état réel du parcours sans créer de nouvelle épreuve.
+
+## Contrôle public après publication du correctif de complétion
+
+Après publication du checkpoint `2f4acc7c` et propagation du domaine `akademy.neodev.click`, la sonde publique a été rejouée avec une session QA apprenante et une session administrateur. Les cinq points contrôlés sont passés : filtre catalogue **Avec examen blanc**, panneau de fiche certifiante, absence d’overflow mobile à 390 px, invitation d’examen après complétion du dernier cours et hiérarchie administrateur.
+
+| Point public post-publication | Résultat |
+|---|---|
+| Base contrôlée | `https://akademy.neodev.click` |
+| Cartes certifiantes filtrées | 4 |
+| Panneau d’examen visible sur fiche | Oui |
+| Détails d’épreuve | `60 questions`, `120 min`, `720/1000` |
+| CTA post-complétion | `/mock-exam/claude_certified_associate_foundations` |
+| Mobile 390 px | `clientWidth = 390`, `scrollWidth = 390`, aucun débordement |
