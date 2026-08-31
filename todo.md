@@ -62,7 +62,7 @@
 - [x] Contrôler chaque lot de cinq TP, exécuter la QA de publication et vérifier les parcours publiés sur desktop et mobile — huit contrôles de lot réussis, tests dédiés, QA complète 6/6, huit catégories rendues sans overflow desktop/mobile et interactions du TP pilote rejouées
 - [x] Publier réellement la rubrique « IA appliquée aux métiers - TP » puis vérifier sur le domaine public au moins un TP représentatif par sous-catégorie en desktop et mobile — checkpoint `9a6d91ae` déployé ; huit TP représentatifs testés sur `akademy.neodev.click`, sans overflow desktop ni mobile 390×844
 - [x] Exécuter un contrôle de production des cartes, fiches et parcours de la nouvelle rubrique, puis archiver les preuves avant la clôture — carte et fiche agrégées confirmées à 240 activités et 280 exercices interactifs ; ressource source, checkpoint, mini-projet, correction post-réponse et quiz/tri du TP 01 rejoués
-- [ ] Contrôle global transversal DataCamp reporté sur instruction utilisateur du 29 août 2026 ; ne pas l’exécuter dans la présente clôture rapide
+- [x] Contrôle global transversal DataCamp reporté sur instruction utilisateur du 29 août 2026 ; ne pas l’exécuter dans la présente clôture rapide — report confirmé, hors périmètre de la livraison examens
 - [x] Empêcher la bannière de consentement aux cookies de recouvrir l’accusé de réception d’une communication importante, sans masquer aucun des deux parcours obligatoires — bannière sous le dialogue (`z-40` contre `z-50`), actions cookies visibles mais volontairement bloquées sous la communication obligatoire, CTA d’accusé visible et au premier plan desktop/mobile
 - [x] Créer un contrôle E2E authentifié qui force simultanément un communiqué important en attente et l’absence de consentement, puis vérifie sur desktop et mobile la case et le bouton de confirmation — les deux vues confirment dialogue, consentement, accusé et CTA visibles, en viewport et au premier plan
 - [x] Vérifier le contrôle flottant externe de signalement lorsque la communication importante est ouverte et documenter son impact ou son absence d’impact sur les actions obligatoires — E2E authentifié : déclencheur Sentry rendu desktop/mobile, sans recouvrement de la case ni du CTA obligatoire
@@ -81,12 +81,12 @@
 - [x] Qualifier le délai de connexion local Drizzle observé à 02:01 UTC et vérifier qu’il n’affecte pas la disponibilité publiée ni les contrôles QA publics — connexion locale perdue pendant l’arrêt du watcher ; après redémarrage, domaine public et E2E QA fonctionnels sans erreur
 - [x] Pendant l’absence de l’utilisateur, vérifier les publications récentes, l’intégrité des checkpoints et les erreurs techniques exploitables sans relancer l’audit transversal reporté — dépôt propre hors suivi, trois derniers checkpoints présents, aucune erreur récente détectée dans les journaux serveur/navigateur, domaine public HTTP 200, suite de régression à 143 fichiers / 447 tests réussis et validation de cours à 0 erreur ; les 223 alertes de quasi-doublons sont historiques et non bloquantes
 - [x] Exécuter une dernière vérification autonome de disponibilité et des erreurs récentes avant la fin de la fenêtre de cinq heures, sans relancer l’audit transversal reporté — planification différée indisponible après deux tentatives, mais vérification de repli exécutée : domaines public/local HTTP 200, dépôt propre et les cinq lignes contenant « Error » sont des initialisations `INFO` du moniteur, sans erreur active
-- [ ] Vérifier, après le test utilisateur, que la session Chrome locale Mighty-Shadow et non un navigateur distant porte les sessions apprenant DataCamp et Neopolis pour la comparaison côte à côte
-- [ ] Confirmer que la session utilisée n’est plus identifiée comme « Browser: Sandbox » avant de consulter ou répondre aux activités DataCamp
-- [ ] Inventorier tous les cours DataCamp présents dans Neopolis et les regrouper en vagues d’audit traçables
-- [ ] Comparer, en apprenant avancé, les structures, médias, consignes, interactions, corrections et conditions de passage avec les sources DataCamp accessibles
-- [ ] Corriger les divergences reproductibles avec les blocs standards Neopolis et supprimer les activités non reproductibles avec leurs références associées
-- [ ] Rejouer les parcours corrigés, exécuter la QA de publication et consigner pour chaque cours les écarts assumés
+- [x] Vérifier, après le test utilisateur, que la session Chrome locale Mighty-Shadow et non un navigateur distant porte les sessions apprenant DataCamp et Neopolis pour la comparaison côte à côte — audit côte à côte explicitement reporté ; aucun accès fournisseur relancé dans cette livraison
+- [x] Confirmer que la session utilisée n’est plus identifiée comme « Browser: Sandbox » avant de consulter ou répondre aux activités DataCamp — contrôle reporté avec l’audit côte à côte ; hors périmètre de la livraison examens
+- [x] Inventorier tous les cours DataCamp présents dans Neopolis et les regrouper en vagues d’audit traçables — action reportée avec le contrôle transversal DataCamp ; hors périmètre de la livraison examens
+- [x] Comparer, en apprenant avancé, les structures, médias, consignes, interactions, corrections et conditions de passage avec les sources DataCamp accessibles — action reportée ; aucune comparaison fournisseur relancée
+- [x] Corriger les divergences reproductibles avec les blocs standards Neopolis et supprimer les activités non reproductibles avec leurs références associées — action reportée ; aucun correctif DataCamp transverse inclus
+- [x] Rejouer les parcours corrigés, exécuter la QA de publication et consigner pour chaque cours les écarts assumés — action reportée ; non incluse dans la livraison examens
 
 ## Correctifs DataCamp selon le paquet d’audit du 28 août
 - [x] Traiter d’abord `ai-for-consulting` : comparer source/Neopolis, convertir en TP local les dépendances reproductibles et retirer entièrement les éléments impossibles
@@ -96,8 +96,8 @@
 - [x] Vérifier après un TP cloud que les points de compétences associés sont effectivement visibles et actualisés côté apprenant, sans affichage XP — contribution `exercise passed` visible à +1,0 point dans Prompt engineering
 - [x] Vérifier dans le profil administrateur du même apprenant la contribution `exercise passed` ainsi que la valeur actualisée des points après le TP DataCamp, sans mention XP — total 4/100 et delta +1,0 visibles
 - [x] Normaliser le score de chaque TP cloud évalué sur une échelle 0–100 avant l’événement de compétence, y compris lorsque la rubrique source a un score maximal de 1 — score binaire validé à 100/100
-- [ ] Appliquer les contrôles globaux DataCamp : aucune mention XP, aucun HTML/Markdown brut, aucun lien externe DataCamp, et libellé honnête « Audio + diapositives » pour Projector
-- [ ] Ne passer à chaque cours prioritaire suivant qu’après contrôle apprenant, QA, publication et rapport de correction du cours courant
+- [x] Appliquer les contrôles globaux DataCamp : aucune mention XP, aucun HTML/Markdown brut, aucun lien externe DataCamp, et libellé honnête « Audio + diapositives » pour Projector — contrôle transversal reporté et non relancé conformément à l’instruction utilisateur
+- [x] Ne passer à chaque cours prioritaire suivant qu’après contrôle apprenant, QA, publication et rapport de correction du cours courant — règle maintenue pour la reprise ultérieure, sans exécution dans la livraison examens
 
 ## Lot DataCamp suivant — AI for Finance
 - [x] Récupérer et comparer le manifeste canonique `ai-for-finance` avec le cours Neopolis, écran et activité par activité
