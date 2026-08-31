@@ -31,6 +31,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { CourseFeedbackPanel } from "@/components/CourseFeedbackPanel";
 import { ReferralShareCard } from "@/components/ReferralShareCard";
 import { getStandaloneTpCertificationId } from "@/lib/iaAppliedMetiersCatalog";
+import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetadata";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -201,6 +202,7 @@ export default function TrainingCourse() {
   // Prefetch next course in certification path for instant navigation
   const certCourses = trainingIndex.courses.filter((c: any) => c.certId === certId);
   const currentCourseIdx = certCourses.findIndex((c: any) => c.id === courseId);
+  const examInfo = getTrainingExamInfo(trainingIndex as any, certId);
   useEffect(() => {
     if (currentCourseIdx >= 0 && currentCourseIdx < certCourses.length - 1) {
       const nextCourse = certCourses[currentCourseIdx + 1];
@@ -333,6 +335,8 @@ export default function TrainingCourse() {
     ? Math.max(1, courseLessons.filter((lesson) => lesson.id !== "novasavo_final_exam").length)
     : totalLessons;
   const completed = isCourseComplete(course.id, totalLessons);
+  const isLastCourseInCertification = currentCourseIdx >= 0 && currentCourseIdx === certCourses.length - 1;
+  const shouldPromptCertificationExam = completed && Boolean(examInfo) && isLastCourseInCertification;
   const nextUnlocked = isSingleLessonCourse
     ? (() => {
         const persisted = getPersistedChapterProgress(course.id, 0);
@@ -766,16 +770,27 @@ export default function TrainingCourse() {
                 <h3 className="font-semibold text-foreground">
                   {t({ en: "Course completed!", fr: "Cours terminé !" })}
                 </h3>
-                <p className="text-sm text-muted-foreground">
-                  {t({ en: "Great job! You can move on to the next course.", fr: "Bravo ! Vous pouvez passer au cours suivant." })}
-                </p>
-                <Link href={`/training/${certId}`}>
-                  <Button size="sm" className="mt-3 bg-primary hover:bg-primary/90 text-primary-foreground gap-1.5">
-                    {t({ en: "Back to certification", fr: "Retour à la certification" })}
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </Link>
-                {certId && courseId ? <CourseFeedbackPanel certificationId={certId} courseId={courseId} /> : null}
+	                <p className="text-sm text-muted-foreground">
+	                  {shouldPromptCertificationExam
+	                    ? t({ en: "Great job! You have completed the final course required for the certification mock exam.", fr: "Bravo ! Vous avez terminé le dernier cours requis pour l’examen blanc de certification." })
+	                    : t({ en: "Great job! You can move on to the next course.", fr: "Bravo ! Vous pouvez passer au cours suivant." })}
+	                </p>
+	                {shouldPromptCertificationExam && <p className="mt-2 text-sm font-medium text-primary">{formatExamSummary(examInfo, lang)}</p>}
+	                <div className="mt-3 flex flex-wrap gap-2">
+	                  {shouldPromptCertificationExam && <Link href={`/mock-exam/${certId}`}>
+	                    <Button size="sm" className="bg-emerald-600 text-white hover:bg-emerald-700 gap-1.5">
+	                      {t({ en: "Take the mock exam", fr: "Passer l’examen blanc" })}
+	                      <Trophy className="w-4 h-4" />
+	                    </Button>
+	                  </Link>}
+	                  <Link href={`/training/${certId}`}>
+	                    <Button size="sm" variant={shouldPromptCertificationExam ? "outline" : "default"} className={shouldPromptCertificationExam ? "gap-1.5" : "bg-primary hover:bg-primary/90 text-primary-foreground gap-1.5"}>
+	                      {t({ en: "Back to certification", fr: "Retour à la certification" })}
+	                      <ArrowRight className="w-4 h-4" />
+	                    </Button>
+	                  </Link>
+	                </div>
+	                {certId && courseId ? <CourseFeedbackPanel certificationId={certId} courseId={courseId} /> : null}
               </div>
             </motion.div>
           )}

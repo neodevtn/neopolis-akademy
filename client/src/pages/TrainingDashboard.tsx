@@ -54,6 +54,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { TrainingSearchPanel } from "@/components/TrainingSearchPanel";
 import { ReferralShareCard } from "@/components/ReferralShareCard";
 import { extractTargetJobRoles, getTrainingFormatDefinitions, resolveTrainingFormat } from "@/lib/trainingCatalogTaxonomy";
+import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetadata";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -207,7 +208,8 @@ export default function TrainingDashboard() {
       courses.forEach((c) => { totalLessonsMap[c.id] = c.lessonCount || 1; });
       const progressPct = getCertProgress(courseIds, totalLessonsMap);
       const metrics = getCertificationCatalogMetrics(cert.id, trainingIndex.courses);
-      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, ...metrics, catalogTag: (cert as any).catalogTag, progress: progressPct, completed: progressPct >= 100, group: (cert as any).group, trainingFormat: resolveTrainingFormat(cert as any) };
+      const examInfo = getTrainingExamInfo(trainingIndex as any, cert.id);
+      return { id: cert.id, title: cert.title, icon: cert.icon, description: cert.description, level: cert.level, ...metrics, catalogTag: (cert as any).catalogTag, progress: progressPct, completed: progressPct >= 100, group: (cert as any).group, trainingFormat: resolveTrainingFormat(cert as any), examInfo, hasExam: Boolean(examInfo) };
     });
   }, [getCertProgress]);
 
@@ -457,6 +459,7 @@ export default function TrainingDashboard() {
               <CatalogTab
                 certCompletionData={certCompletionData}
                 GROUP_CONFIG={catalogGroupConfig}
+                lang={lang}
                 t={t}
               />
             </motion.div>
@@ -807,10 +810,12 @@ function CommunicationsTab({ items, isLoading, page, total, totalPages, filters,
 function CatalogTab({
   certCompletionData,
   GROUP_CONFIG,
+  lang,
   t,
 }: {
   certCompletionData: any[];
   GROUP_CONFIG: any;
+  lang: string;
   t: (obj: { en: string; fr: string }) => string;
 }) {
   const [, navigate] = useLocation();
@@ -829,6 +834,7 @@ function CatalogTab({
   const [technologyFilter, setTechnologyFilter] = useState("all");
   const [durationFilter, setDurationFilter] = useState("all");
   const [trainingFormatFilter, setTrainingFormatFilter] = useState("all");
+  const [examFilter, setExamFilter] = useState<"all" | "with_exam" | "without_exam">("all");
   const trainingFormats = useMemo(() => getTrainingFormatDefinitions((trainingIndex as any).trainingFormats), []);
   const coursesByCertification = useMemo(() => {
     const values = new Map<string, any[]>();
@@ -868,7 +874,7 @@ function CatalogTab({
     const activityCount = Number(cert.totalActivities || 0);
     const duration = activityCount <= 15 ? "short" : activityCount <= 30 ? "medium" : "long";
     const level = String((cert.level as any)?.en || "beginner").toLowerCase();
-    return { id: cert.id, level, skills, roles: Array.from(new Set(roles)), technologies, duration, trainingFormat: cert.trainingFormat };
+    return { id: cert.id, level, skills, roles: Array.from(new Set(roles)), technologies, duration, trainingFormat: cert.trainingFormat, hasExam: cert.hasExam };
   }), [certCompletionData, coursesByCertification]);
   const metadataByCertification = new Map(catalogMetadata.map((metadata) => [metadata.id, metadata]));
   const filterLabels = {
@@ -888,10 +894,11 @@ function CatalogTab({
       && (roleFilter === "all" || metadata?.roles.includes(roleFilter))
       && (technologyFilter === "all" || metadata?.technologies.includes(technologyFilter))
       && (durationFilter === "all" || metadata?.duration === durationFilter)
-      && (trainingFormatFilter === "all" || metadata?.trainingFormat === trainingFormatFilter);
+      && (trainingFormatFilter === "all" || metadata?.trainingFormat === trainingFormatFilter)
+      && (examFilter === "all" || (examFilter === "with_exam" ? Boolean(metadata?.hasExam) : !metadata?.hasExam));
   });
-  const clearAdvancedFilters = () => { setLevelFilter("all"); setSkillFilter("all"); setRoleFilter("all"); setTechnologyFilter("all"); setDurationFilter("all"); setTrainingFormatFilter("all"); };
-  const hasAdvancedFilters = [levelFilter, skillFilter, roleFilter, technologyFilter, durationFilter, trainingFormatFilter].some((filter) => filter !== "all");
+  const clearAdvancedFilters = () => { setLevelFilter("all"); setSkillFilter("all"); setRoleFilter("all"); setTechnologyFilter("all"); setDurationFilter("all"); setTrainingFormatFilter("all"); setExamFilter("all"); };
+  const hasAdvancedFilters = [levelFilter, skillFilter, roleFilter, technologyFilter, durationFilter, trainingFormatFilter, examFilter].some((filter) => filter !== "all");
   const certificationTitles = Object.fromEntries(certCompletionData.map((cert) => [cert.id, t(cert.title)]));
 
   return (
@@ -902,13 +909,14 @@ function CatalogTab({
           <div className="flex items-center gap-2 text-sm font-semibold text-foreground"><SlidersHorizontal className="h-4 w-4 text-primary" />{t({ en: "Filter by learner profile", fr: "Filtrer selon votre profil" })}</div>
           {hasAdvancedFilters && <button onClick={clearAdvancedFilters} className="flex items-center gap-1 text-xs font-medium text-primary hover:underline"><X className="h-3.5 w-3.5" />{t({ en: "Reset filters", fr: "Réinitialiser" })}</button>}
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
           <label className="text-xs font-medium text-muted-foreground">{t({ en: "Level", fr: "Niveau" })}<select value={levelFilter} onChange={(event) => setLevelFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All levels", fr: "Tous les niveaux" })}</option><option value="beginner">{t({ en: "Beginner", fr: "Débutant" })}</option><option value="intermediate">{t({ en: "Intermediate", fr: "Intermédiaire" })}</option><option value="advanced">{t({ en: "Advanced", fr: "Avancé" })}</option></select></label>
           <label className="text-xs font-medium text-muted-foreground">{t({ en: "Skill", fr: "Compétence" })}<select value={skillFilter} onChange={(event) => setSkillFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All skills", fr: "Toutes les compétences" })}</option>{available("skills").map((value) => <option key={value} value={value}>{filterLabels.skills[value as keyof typeof filterLabels.skills]}</option>)}</select></label>
           <label className="text-xs font-medium text-muted-foreground">{t({ en: "Role", fr: "Métier" })}<select value={roleFilter} onChange={(event) => setRoleFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All roles", fr: "Tous les métiers" })}</option>{available("roles").map((value) => <option key={value} value={value}>{filterLabels.roles[value as keyof typeof filterLabels.roles] || value}</option>)}</select></label>
           <label className="text-xs font-medium text-muted-foreground">{t({ en: "Technology", fr: "Technologie" })}<select value={technologyFilter} onChange={(event) => setTechnologyFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All technologies", fr: "Toutes les technologies" })}</option>{available("technologies").map((value) => <option key={value} value={value}>{filterLabels.technologies[value as keyof typeof filterLabels.technologies]}</option>)}</select></label>
           <label className="text-xs font-medium text-muted-foreground">{t({ en: "Estimated duration", fr: "Durée estimée" })}<select value={durationFilter} onChange={(event) => setDurationFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All durations", fr: "Toutes les durées" })}</option>{Object.entries(filterLabels.durations).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
           <label className="text-xs font-medium text-muted-foreground">{t({ en: "Training type", fr: "Sous-catégorie de formation" })}<select value={trainingFormatFilter} onChange={(event) => setTrainingFormatFilter(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All training types", fr: "Toutes les sous-catégories" })}</option>{availableTrainingFormats.map((value) => <option key={value} value={value}>{trainingFormatLabels[value] || value}</option>)}</select></label>
+          <label className="text-xs font-medium text-muted-foreground">{t({ en: "Certification exam", fr: "Examen de certification" })}<select value={examFilter} onChange={(event) => setExamFilter(event.target.value as "all" | "with_exam" | "without_exam")} className="mt-1 h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground"><option value="all">{t({ en: "All trainings", fr: "Toutes les formations" })}</option><option value="with_exam">{t({ en: "With mock exam", fr: "Avec examen blanc" })}</option><option value="without_exam">{t({ en: "Without mock exam", fr: "Sans examen blanc" })}</option></select></label>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">{t({ en: "Duration is estimated from the published number of learning activities.", fr: "La durée est estimée à partir du nombre d’activités pédagogiques publiées." })}</p>
       </div>
@@ -964,10 +972,11 @@ function CatalogTab({
                 <div className="flex items-start justify-between mb-4">
                   <div className={`w-12 h-12 rounded-xl ${groupCfg.iconBg} flex items-center justify-center text-2xl`}>{cert.icon}</div>
                   <div className="flex flex-wrap justify-end gap-1.5">
-                    {cert.catalogTag && <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">{t(cert.catalogTag)}</span>}
-                    {cert.trainingFormat && <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300">{trainingFormatLabels[cert.trainingFormat] || cert.trainingFormat}</span>}
-                    <span className={`text-[11px] px-2.5 py-1 rounded-full font-semibold ${config.color}`}>{t(config.label)}</span>
-                  </div>
+	                    {cert.catalogTag && <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">{t(cert.catalogTag)}</span>}
+	                    {cert.trainingFormat && <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300">{trainingFormatLabels[cert.trainingFormat] || cert.trainingFormat}</span>}
+	                    {cert.examInfo && <span className="text-[10px] px-2.5 py-1 rounded-full font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">{t({ en: "Mock exam", fr: "Examen blanc" })}</span>}
+	                    <span className={`text-[11px] px-2.5 py-1 rounded-full font-semibold ${config.color}`}>{t(config.label)}</span>
+	                  </div>
                 </div>
                 <h3 className={`text-base font-semibold text-foreground ${groupCfg.hoverText} transition-colors mb-2 leading-tight`}>{t(cert.title)}</h3>
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-2 leading-relaxed">{t(cert.description)}</p>
@@ -975,10 +984,11 @@ function CatalogTab({
                   <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" />{cert.courseCount} {t({ en: "courses", fr: "cours" })}</span>
                   <span className="flex items-center gap-1"><Library className="w-3.5 h-3.5" />{cert.totalActivities} {t({ en: "activities", fr: "activités" })}</span>
                   <span className="flex items-center gap-1"><Dumbbell className="w-3.5 h-3.5" />{cert.exerciseCount} {t({ en: "interactive exercises", fr: "exercices interactifs" })}</span>
-                  {cert.videoCount > 0 && <span className="flex items-center gap-1"><Play className="w-3.5 h-3.5" />{cert.videoCount} {t({ en: "videos", fr: "vidéos" })}</span>}
-                  {cert.downloadCount > 0 && <span className="flex items-center gap-1"><Download className="w-3.5 h-3.5" />{cert.downloadCount} {t({ en: "downloads", fr: "téléchargements" })}</span>}
-                </div>
-                <div className="flex items-center gap-3">
+	                  {cert.videoCount > 0 && <span className="flex items-center gap-1"><Play className="w-3.5 h-3.5" />{cert.videoCount} {t({ en: "videos", fr: "vidéos" })}</span>}
+	                  {cert.downloadCount > 0 && <span className="flex items-center gap-1"><Download className="w-3.5 h-3.5" />{cert.downloadCount} {t({ en: "downloads", fr: "téléchargements" })}</span>}
+	                </div>
+	                {cert.examInfo && <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50/80 p-3 text-xs text-emerald-900 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-200"><p className="font-semibold">{t({ en: "Certification mock exam available", fr: "Examen blanc de certification disponible" })}</p><p className="mt-1">{formatExamSummary(cert.examInfo, lang)}</p></div>}
+	                <div className="flex items-center gap-3">
                   <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden">
                     <div className={`h-full rounded-full transition-all duration-500 ${cert.completed ? "bg-emerald-500" : groupCfg.progressColor}`} style={{ width: `${cert.progress}%` }} />
                   </div>

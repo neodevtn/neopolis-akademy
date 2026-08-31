@@ -1,6 +1,11 @@
 # Project TODO — Neopolis Akademy
 
 ## Audit comparatif avancé — DataCamp et Neopolis
+- [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
+- [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif
+- [x] Clarifier l’administration autour de la hiérarchie Catégorie de formation → Formation → Cours → Activités et séparer les surfaces catalogue et contenu — console catalogue renommée selon la structure apprenant, niveaux hiérarchiques affichés et bouton de gestion d’examen relié aux formations certifiantes
+- [x] Tester les règles d’éligibilité, métadonnées, droits administrateur et interfaces desktop/mobile avant publication — typage, validation cours, 486 tests, sonde navigateur apprenant/admin et matrice QA 6/6 réussis localement
+- [ ] Publier la refonte de visibilité des examens et de hiérarchie catalogue via checkpoint, puis vérifier sur `akademy.neodev.click` le filtre « Avec examen blanc », les badges questions/durée/seuil, l’invitation d’examen et la vue admin hiérarchisée
 - [x] Auditer les données de consultation, démarrage, progression et complétion disponibles afin de calculer des KPI de popularité, engagement et abandon par cours — 12 948 événements avec cours, 238 progressions de chapitre, 417 complétions et 9 870 événements de temps disponibles
 - [x] Définir des KPI réels, leurs formules, périodes et états de données insuffisantes, sans données estimées ou profils identifiables — démarrages distincts, actifs/minutes sur 30 jours et abandons non terminés inactifs depuis 14 jours ; état explicite si aucune donnée
 - [x] Ajouter l’agrégation sécurisée réservée aux administrateurs et l’affichage compact des KPI dans le catalogue — agrégation sans identité individuelle ajoutée à `adminContent.listCourses` et colonne KPI uniquement dans le tableau administrateur ; appel sans session vérifié HTTP 403

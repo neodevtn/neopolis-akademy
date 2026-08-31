@@ -15,6 +15,7 @@ import { isSequentialCourseCardLocked } from "@shared/learningAccess";
 import { BrandLogo } from "@/components/BrandLogo";
 import { getCertificationCatalogMetrics, getCourseCatalogMetrics } from "@/lib/catalogMetrics";
 import { IA_APPLIQUEE_METIERS_COLLECTION_ID, isStandaloneTpCertification } from "@/lib/iaAppliedMetiersCatalog";
+import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetadata";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -49,6 +50,8 @@ export default function TrainingCertification() {
   }, [cert, courses]);
   const certificationMetrics = getCertificationCatalogMetrics(certId || "", courses);
   const isStandaloneTP = isStandaloneTpCertification(cert as any);
+  const examInfo = getTrainingExamInfo(trainingIndex as any, certId);
+  const hasCertificationExam = Boolean(examInfo) && !isStandaloneTP;
   const courseIds = courses.map((c) => c.id);
   const isDataCampPartner = (cert as any)?.provider === "datacamp";
   const dataCampActivityTotal = useMemo(() => courses.reduce((sum, course) => sum + Number((course as any).totalActivities || (course as any).chapterCount || 0), 0), [courses]);
@@ -290,34 +293,34 @@ export default function TrainingCertification() {
         )}
 
         {relevantAchievements.length > 0 && (
-          <motion.section variants={fadeInUp} className="mb-6 rounded-2xl border border-border bg-card p-5 shadow-sm">
-            <div className="mb-4 flex items-center gap-2"><Award className="h-5 w-5 text-amber-600" /><h3 className="font-semibold text-foreground">{t({ en: "Your earned credentials", fr: "Vos compétences et certifications" })}</h3></div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {relevantAchievements.map((achievement: any) => <div key={achievement.id} className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-700 dark:bg-slate-900/30">
-                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${achievement.kind === "certification" ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"}`}>{achievement.kind === "certification" ? <Trophy className="h-5 w-5" /> : <Award className="h-5 w-5" />}</div>
-                <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold text-foreground">{achievement.title}</p><p className="text-xs text-muted-foreground">{new Date(achievement.issuedAt).toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US")}</p></div>
-                <Button size="icon" variant="ghost" onClick={() => window.open(`/api/achievement-certificate/${achievement.id}`, "_blank")} aria-label="Télécharger le diplôme"><Download className="h-4 w-4" /></Button>
-              </div>)}
-            </div>
-          </motion.section>
+	          <motion.section variants={fadeInUp} className="mb-6 min-w-0 max-w-full rounded-2xl border border-border bg-card p-5 shadow-sm">
+	            <div className="mb-4 flex min-w-0 items-center gap-2"><Award className="h-5 w-5 shrink-0 text-amber-600" /><h3 className="min-w-0 font-semibold text-foreground">{t({ en: "Your earned credentials", fr: "Vos compétences et certifications" })}</h3></div>
+	            <div className="grid min-w-0 max-w-full gap-3 sm:grid-cols-2">
+	              {relevantAchievements.map((achievement: any) => <div key={achievement.id} className="flex min-w-0 max-w-full items-center gap-3 rounded-xl border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-700 dark:bg-slate-900/30">
+	                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${achievement.kind === "certification" ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"}`}>{achievement.kind === "certification" ? <Trophy className="h-5 w-5" /> : <Award className="h-5 w-5" />}</div>
+	                <div className="min-w-0 flex-1 overflow-hidden"><p className="truncate text-sm font-semibold text-foreground">{achievement.title}</p><p className="truncate text-xs text-muted-foreground">{new Date(achievement.issuedAt).toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US")}</p></div>
+	                <Button size="icon" variant="ghost" className="shrink-0" onClick={() => window.open(`/api/achievement-certificate/${achievement.id}`, "_blank")} aria-label="Télécharger le diplôme"><Download className="h-4 w-4" /></Button>
+	              </div>)}
+	            </div>
+	          </motion.section>
         )}
 
         {/* Mock Exam CTA */}
-        {!isStandaloneTP && <motion.div variants={fadeInUp}>
+        {hasCertificationExam && <motion.div variants={fadeInUp}>
           {certComplete ? (
             <Link
               href={`/mock-exam/${certId}`}
-              className="flex items-center gap-4 bg-card rounded-2xl border border-border p-5 mb-6 shadow-sm hover:shadow-md hover:border-primary/30 transition-all group"
+              className="flex items-center gap-4 bg-emerald-50 dark:bg-emerald-950/25 rounded-2xl border border-emerald-200 dark:border-emerald-900/50 p-5 mb-6 shadow-sm hover:shadow-md hover:border-emerald-400/50 transition-all group"
             >
-              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 shrink-0">
+              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 shrink-0">
                 <Clock className="w-6 h-6" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
-                  {t({ en: "Take Mock Exam", fr: "Passer l'examen blanc" })}
+                <h3 className="font-semibold text-foreground group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors">
+                  {t({ en: "Your certification mock exam is unlocked", fr: "Votre examen blanc de certification est débloqué" })}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  {t({ en: "Timed practice exam simulating real certification conditions", fr: "Examen blanc chronométré simulant les conditions réelles de certification" })}
+                  {t({ en: "Start it now while the course sequence is fresh.", fr: "Lancez-le maintenant pendant que le parcours est encore frais." })} {formatExamSummary(examInfo, lang)}
                 </p>
               </div>
               <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -327,14 +330,14 @@ export default function TrainingCertification() {
               <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-secondary text-muted-foreground shrink-0">
                 <Clock className="w-6 h-6" />
               </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-muted-foreground">
-                  {t({ en: "Mock Exam Locked", fr: "Examen blanc verrouillé" })}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {t({ en: "Complete all courses to unlock the mock exam", fr: "Terminez tous les cours pour débloquer l'examen blanc" })}
-                </p>
-              </div>
+	              <div className="flex-1">
+	                <h3 className="font-semibold text-muted-foreground">
+	                  {t({ en: "Mock Exam Locked", fr: "Examen blanc verrouillé" })}
+	                </h3>
+	                <p className="text-sm text-muted-foreground">
+	                  {t({ en: "Complete all courses to unlock the mock exam", fr: "Terminez tous les cours pour débloquer l'examen blanc" })} · {formatExamSummary(examInfo, lang)}
+	                </p>
+	              </div>
             </div>
           )}
         </motion.div>}
@@ -475,9 +478,11 @@ export default function TrainingCertification() {
           <p className="text-sm text-muted-foreground mb-5">
             {isStandaloneTP
               ? t({ en: "Complete the short practical screens in order to validate this training.", fr: "Terminez les écrans pratiques courts dans l’ordre pour valider cette formation." })
-              : t({ en: "Complete each course in order to unlock the next one. Finish all courses to access the mock exam.", fr: "Terminez chaque cours dans l'ordre pour débloquer le suivant. Terminez tous les cours pour accéder à l'examen blanc." })}
-          </p>
-        </motion.div>
+              : hasCertificationExam
+                ? t({ en: "Complete each course in order to unlock the next one. Finish the full programme to access the certification mock exam.", fr: "Terminez chaque cours dans l'ordre pour débloquer le suivant. Terminez tout le programme pour accéder à l’examen blanc de certification." })
+                : t({ en: "Complete each course in order to unlock the next one.", fr: "Terminez chaque cours dans l'ordre pour débloquer le suivant." })}
+	        </p>
+	      </motion.div>
         <motion.div variants={staggerContainer} className="space-y-8">
           {courseGroups.map((courseGroup: any) => (
             <section key={courseGroup.id} className="space-y-3" aria-labelledby={`subcategory-${courseGroup.id}`}>
@@ -632,8 +637,24 @@ export default function TrainingCertification() {
             );
               })}
             </section>
-          ))}
-        </motion.div>
+	          ))}
+	        </motion.div>
+
+	        {hasCertificationExam && certComplete && <motion.div variants={fadeInUp} className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-6 shadow-sm dark:border-emerald-900/50 dark:bg-emerald-950/25">
+	          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+	            <div className="min-w-0">
+	              <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700 dark:text-emerald-300">{t({ en: "Final step", fr: "Étape finale" })}</p>
+	              <h3 className="mt-1 text-lg font-semibold text-foreground">{t({ en: "Take the certification mock exam", fr: "Passez l’examen blanc de certification" })}</h3>
+	              <p className="mt-1 text-sm text-muted-foreground">{formatExamSummary(examInfo, lang)}</p>
+	            </div>
+	            <Link href={`/mock-exam/${certId}`}>
+	              <Button className="w-full bg-emerald-600 text-white hover:bg-emerald-700 sm:w-auto">
+	                {t({ en: "Start the exam", fr: "Commencer l’examen" })}
+	                <ChevronRight className="ml-1.5 h-4 w-4" />
+	              </Button>
+	            </Link>
+	          </div>
+	        </motion.div>}
       </motion.main>
     </div>
   );
