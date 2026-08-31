@@ -4,7 +4,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { toast } from "sonner";
 import { announceAchievement } from "@/components/AchievementCelebration";
 import trainingIndex from "@/data/trainingIndex.json";
-import { canMapChapterProgressToLessons } from "./trainingProgressMapping";
+import { canMapChapterProgressToLessons, shouldPreferChapterProgressForSingleLessonCourse } from "./trainingProgressMapping";
 
 interface LastVisitedInfo {
   courseId: string;
@@ -126,19 +126,29 @@ export function TrainingProgressProvider({ children }: { children: ReactNode }) 
   // Returns how many "units" are completed for a given course considering both lesson-level and chapter-level progress
   // For single-lesson courses (totalUnits === 1), returns a fraction between 0 and 1 representing chapter progress
   const getCompletedUnits = useCallback((courseId: string, totalUnits: number): number => {
-    // First check lesson-level completions
     const lessonCompletions = progressData.filter((p) => p.courseId === courseId).length;
-    if (lessonCompletions > 0) return lessonCompletions;
-    
-    // For single-lesson courses (lessonCount === 1), use chapter progress as fractional completion
     const chapterEntry = chapterProgressData.find(
       (cp) => cp.courseId === courseId && cp.lessonIndex === 0
     );
+    if (!shouldPreferChapterProgressForSingleLessonCourse({
+      lessonCompletions,
+      totalUnits,
+      chapterTotal: chapterEntry?.totalChapters,
+    }) && lessonCompletions > 0) return lessonCompletions;
+
+    // For single-lesson courses (lessonCount === 1), use chapter progress as fractional completion
     if (chapterEntry) {
       if (totalUnits === 1 && chapterEntry.totalChapters > 1) {
         // Single-lesson course: return fraction of 1 based on chapter progress
         // chapterIndex is the current position (0-based), chapters before it are completed
         return chapterEntry.chapterIndex / chapterEntry.totalChapters;
+      }
+      if (shouldPreferChapterProgressForSingleLessonCourse({
+        lessonCompletions,
+        totalUnits,
+        chapterTotal: chapterEntry.totalChapters,
+      })) {
+        return Math.min(chapterEntry.chapterIndex, chapterEntry.totalChapters);
       }
       if (chapterEntry.totalChapters === totalUnits) {
         // Multi-lesson course where chapters map 1:1 to lessons

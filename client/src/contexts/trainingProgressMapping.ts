@@ -9,3 +9,24 @@ export function canMapChapterProgressToLessons(totalChapters: number, lessonCoun
     && lessonCount > 1
     && totalChapters === lessonCount;
 }
+
+/**
+ * Some courses are stored as one LMS lesson containing several short screens.
+ * When a caller evaluates completion against those screens, the single
+ * lesson-level completion must not hide the more precise chapter sentinel.
+ */
+export function shouldPreferChapterProgressForSingleLessonCourse({
+  lessonCompletions,
+  totalUnits,
+  chapterTotal,
+}: {
+  lessonCompletions: number;
+  totalUnits: number;
+  chapterTotal?: number | null;
+}): boolean {
+  return lessonCompletions === 1
+    && Number.isInteger(totalUnits)
+    && totalUnits > 1
+    && Number.isInteger(chapterTotal)
+    && chapterTotal === totalUnits;
+}
