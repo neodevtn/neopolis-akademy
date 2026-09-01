@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -31,6 +31,7 @@ import { ChapterSourceEditor } from "@/components/admin/ChapterSourceEditor";
 import { QuestionBankPanel } from "@/components/admin/QuestionBankPanel";
 import { CheckpointSettings } from "@/components/admin/CheckpointSettings";
 import { ExamBankSettings } from "@/components/admin/ExamBankSettings";
+import { ExamLearnerPreview } from "@/components/admin/ExamLearnerPreview";
 import { LessonRecommendationEditor, normalizeYouTubeId } from "@/components/admin/LessonRecommendationEditor";
 import { LegacyExerciseEditor } from "@/components/admin/LegacyExerciseEditor";
 import { LessonManager } from "@/components/admin/LessonManager";
@@ -114,6 +115,7 @@ export default function AdminContentManager() {
   const [selectedQuizKey, setSelectedQuizKey] = useState("");
   const [examQuestions, setExamQuestions] = useState<any[]>([]);
   const [examConfigDrafts, setExamConfigDrafts] = useState<Record<string, ExamConfiguration>>({});
+  const [examPreviewOpen, setExamPreviewOpen] = useState(false);
   const [catalogSettingsOpen, setCatalogSettingsOpen] = useState(false);
 
   const readViewMode = (params: URLSearchParams): ViewMode => {
@@ -820,6 +822,8 @@ export default function AdminContentManager() {
     const domains = Array.from(new Set(certQuestions.map((q: any) => typeof q.domain === "object" ? (q.domain.fr || q.domain.en || "") : q.domain)));
     const storedConfig = normalizeExamConfiguration((examConfigurationsQuery.data as Record<string, Partial<ExamConfiguration>> | undefined)?.[selectedCertId], certQuestions.length);
     const examConfig = examConfigDrafts[selectedCertId] || storedConfig;
+    const certification = trainingIndex.certifications.find((item) => item.id === selectedCertId);
+    const certificationTitle = certification ? t(certification.title) : "Formation";
 
     return (
       <div className="space-y-4">
@@ -850,6 +854,7 @@ export default function AdminContentManager() {
           isSaving={updateExamConfigurationMut.isPending || disableExamConfigurationMut.isPending || deleteExamConfigurationMut.isPending}
           onChange={(configuration) => setExamConfigDrafts((current) => ({ ...current, [selectedCertId]: configuration }))}
           onSave={() => updateExamConfigurationMut.mutate({ certificationId: selectedCertId, configuration: normalizeExamConfiguration(examConfig, certQuestions.length) })}
+          onPreview={() => setExamPreviewOpen(true)}
           onDisable={() => {
             if (confirm("Dépublier cet examen ? Les questions seront conservées, mais les apprenants ne pourront plus le démarrer.")) disableExamConfigurationMut.mutate({ certificationId: selectedCertId });
           }}
@@ -857,6 +862,16 @@ export default function AdminContentManager() {
             if (confirm("Supprimer définitivement cet examen et toute sa banque de questions ? Cette action est irréversible.")) deleteExamConfigurationMut.mutate({ certificationId: selectedCertId });
           }}
         />
+
+        <Dialog open={examPreviewOpen} onOpenChange={setExamPreviewOpen}>
+          <DialogContent className="grid-cols-[minmax(0,1fr)] max-h-[90vh] w-[calc(100vw-2rem)] min-w-0 max-w-3xl overflow-x-hidden overflow-y-auto bg-white p-4 sm:p-6">
+            <DialogHeader>
+              <DialogTitle>Prévisualisation apprenant</DialogTitle>
+              <DialogDescription>Cette prévisualisation utilise le brouillon actuellement affiché. Elle ne sauvegarde rien, ne crée aucune session et ne modifie aucune tentative.</DialogDescription>
+            </DialogHeader>
+            <ExamLearnerPreview certificationTitle={certificationTitle} certificationIcon={certification?.icon} configuration={examConfig} availableQuestions={certQuestions.length} />
+          </DialogContent>
+        </Dialog>
 
         <div className="border rounded-lg overflow-hidden max-h-[60vh] overflow-y-auto">
           <table className="w-full text-sm">

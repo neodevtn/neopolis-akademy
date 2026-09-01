@@ -29,3 +29,9 @@ Le même scénario a créé sur une formation sans épreuve une question tempora
 Après publication de la version `79cc6448`, le scénario a été rejoué sur `https://akademy.neodev.click`. Les huit contrôles sont tous positifs : les quatre examens existants restent visibles, les 111 points d’entrée de création restent disponibles, la banque et les réglages de l’examen de contrôle se chargent, puis le cycle création → publication → session protégée → dépublication → suppression est validé. Le rechargement post-suppression est également positif côté administration comme côté apprenant. La donnée temporaire de QA a été supprimée à la fin du scénario.
 
 La même QA publique a démarré une session temporaire de durée **une minute**, a attendu son expiration réelle, puis a soumis la seule réponse correcte. La réponse du serveur confirme simultanément `timedOut: true`, `passed: false` et `achievement: null`. Cette preuve est distincte des tests unitaires : le domaine publié ne peut donc attribuer aucun certificat après la durée configurée.
+
+## Prévisualisation et aide de configuration
+
+L’éditeur propose désormais huit aides contextuelles : code d’examen, questions par tentative, durée, score minimal, mélange des questions, mélange des choix, publication et domaines/pondérations. Les aides sont disponibles au survol et à la focalisation clavier, et expliquent les effets réels côté apprenant et serveur, notamment l’absence de certificat après expiration.
+
+Le bouton **Prévisualiser côté apprenant** ouvre une fenêtre non destructive fondée sur le brouillon courant. Elle ne crée ni session, ni tentative, ni sauvegarde. Elle restitue le statut disponible/brouillon/sans question, les informations d’examen, les conditions de passage et les domaines. La QA locale vérifie le reflet d’une durée non sauvegardée (119 minutes), les huit aides et le rendu sans débordement à 390 px. Les 502 tests de la suite complète ont réussi, avec deux tests explicitement ignorés.

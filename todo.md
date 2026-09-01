@@ -21,6 +21,12 @@
 - [x] Finaliser la preuve publique de passage : version auto-publiée `79cc6448` et QA publique de création, banque, session, dépublication et suppression réussies ; scénario contrôlé d’expiration rejoué sur le domaine public et absence de certificat confirmée
 - [x] Ajouter à la sonde publique une tentative volontairement expirée qui vérifie la réponse non réussie et l’absence de certificat, puis archiver la preuve associée — session d’une minute, réponse correcte après expiration, `timedOut: true`, `passed: false` et `achievement: null` confirmés dans le rapport QA public
 
+## Prévisualisation et aide de l’éditeur d’examen
+- [x] Auditer les composants de l’éditeur d’examen, les primitives d’infobulle disponibles et le rendu apprenant afin de définir une prévisualisation fidèle sans ouvrir de session ni modifier de données — réemploi de la primitive Tooltip et de l’introduction apprenant ; aucune session ni persistence n’est appelée par le brouillon
+- [x] Ajouter des aides contextuelles accessibles expliquant le code, la banque, le nombre de questions, la durée, le seuil, le mélange, la publication et les domaines/pondérations — huit boutons d’aide clavier/souris associés aux contrôles exacts de l’éditeur
+- [x] Ajouter une prévisualisation apprenant alimentée par la configuration en cours d’édition, avec états absence de questions, épreuve non publiée et résumé de passage — dialogue non interactif qui affiche le brouillon sans sauvegarde ; aperçu de l’état, métadonnées, conditions de durée et domaines
+- [ ] Publier puis vérifier sur le domaine public les aides clavier/souris, le reflet d’un brouillon non sauvegardé et la prévisualisation desktop/mobile sans débordement, avec preuves
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif

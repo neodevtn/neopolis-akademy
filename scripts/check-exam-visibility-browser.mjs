@@ -186,12 +186,60 @@ try {
   const editorText = await adminPage.locator("body").innerText();
   const timeLimit = await adminPage.locator("#exam-time-limit").inputValue();
   const scoreLimit = await adminPage.locator("#exam-passing-score").inputValue();
+  const helpControlCount = await adminPage.getByRole("button", { name: /^Aide\s*:/ }).count();
+  const durationHelp = adminPage.getByRole("button", { name: "Aide : Durée" });
+  await durationHelp.focus();
+  await durationHelp.hover();
+  const durationTooltip = adminPage.getByRole("tooltip");
+  await durationTooltip.waitFor({ state: "visible", timeout: 5000 });
+  const durationTooltipText = await durationTooltip.innerText();
+  const durationHelpVisible = durationTooltipText.includes("Une soumission après expiration est non réussie");
+  await adminPage.locator("#exam-time-limit").fill("119");
+  await adminPage.getByRole("button", { name: "Prévisualiser côté apprenant" }).click();
+  const previewDialog = adminPage.getByRole("dialog", { name: "Prévisualisation apprenant" });
+  await previewDialog.waitFor({ state: "visible", timeout: 5000 });
+  const previewText = await previewDialog.innerText();
+  const previewUsesDraft = previewText.includes("119 min") && previewText.includes("Examen disponible après complétion");
+  const previewExplainsNoSession = previewText.includes("aucune session créée");
+  await adminPage.waitForTimeout(250);
+  await adminPage.screenshot({ path: path.join(screenshotDir, "admin-exam-learner-preview-and-help.png"), fullPage: false });
+  await adminPage.keyboard.press("Escape");
+  await adminPage.setViewportSize({ width: 390, height: 844 });
+  await adminPage.getByRole("button", { name: "Prévisualiser côté apprenant" }).click();
+  const mobilePreviewDialog = adminPage.getByRole("dialog", { name: "Prévisualisation apprenant" });
+  await mobilePreviewDialog.waitFor({ state: "visible", timeout: 5000 });
+  await adminPage.waitForTimeout(250);
+  const mobilePreviewMetrics = await mobilePreviewDialog.evaluate((element) => {
+    const dialogRect = element.getBoundingClientRect();
+    const overflowing = [...element.querySelectorAll("*")]
+      .map((child) => {
+        const rect = child.getBoundingClientRect();
+        return {
+          tag: child.tagName.toLowerCase(),
+          className: typeof child.className === "string" ? child.className.slice(0, 120) : "",
+          text: (child.textContent || "").trim().slice(0, 80),
+          right: Math.round(rect.right),
+        };
+      })
+      .filter((child) => child.right > Math.ceil(dialogRect.right) + 2)
+      .slice(0, 6);
+    return { clientWidth: element.clientWidth, scrollWidth: element.scrollWidth, overflowing };
+  });
+  const mobilePreviewFits = mobilePreviewMetrics.scrollWidth <= mobilePreviewMetrics.clientWidth + 2;
+  await adminPage.screenshot({ path: path.join(screenshotDir, "admin-exam-learner-preview-mobile.png"), fullPage: false });
+  await adminPage.keyboard.press("Escape");
+  await adminPage.setViewportSize({ width: 1280, height: 720 });
   results.push({
     type: "admin_exam_editor_binding",
     selectedCertificationInUrl: new URL(adminPage.url()).searchParams.get("certificationId") === postCompletionCertificationId,
     loadsQuestionBank: editorText.includes("300 questions") && await adminPage.locator("tbody tr").count() > 0,
     exposesEditableDuration: timeLimit === "120",
     exposesOfficialPassingScore: scoreLimit === "720",
+    hasContextualHelp: helpControlCount >= 8 && durationHelpVisible,
+    previewUsesUnsavedDraft: previewUsesDraft,
+    previewDoesNotCreateSession: previewExplainsNoSession,
+    previewFitsMobile: mobilePreviewFits,
+    mobilePreviewMetrics,
   });
   await adminPage.screenshot({ path: path.join(screenshotDir, "admin-exam-editor-bank-and-duration.png"), fullPage: false });
 
@@ -309,7 +357,7 @@ const failures = results.filter((result) =>
   || result.type === "learner_post_completion_exam_cta" && (!result.hasCompletionMessage || !result.hasExamDetails || !result.hasExamCta)
   || result.type === "admin_catalog_hierarchy" && (!result.hasLearnerCatalogTitle || !result.hasHierarchyLevels || !result.hasExamManagement || !result.hasExamDetails)
   || result.type === "admin_exam_creation_entrypoint" && (result.unavailableExamCount < 1 || result.creationButtonCount < 1)
-  || result.type === "admin_exam_editor_binding" && (!result.selectedCertificationInUrl || !result.loadsQuestionBank || !result.exposesEditableDuration || !result.exposesOfficialPassingScore)
+  || result.type === "admin_exam_editor_binding" && (!result.selectedCertificationInUrl || !result.loadsQuestionBank || !result.exposesEditableDuration || !result.exposesOfficialPassingScore || !result.hasContextualHelp || !result.previewUsesUnsavedDraft || !result.previewDoesNotCreateSession || !result.previewFitsMobile)
   || result.type === "admin_exam_create_publish_cleanup" && (!result.opensCreationEditor || !result.savesQuestionAndPublication || !result.startsProtectedServerSession || !result.expiredSubmissionDeniedCertificate || !result.unpublishesAndCleansQuestion || !result.adminShowsDeletedExamUnavailable || !result.learnerShowsDeletedExamUnavailable),
 );
 if (failures.length) {
