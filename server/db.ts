@@ -1,7 +1,7 @@
 import { eq, desc, asc, sql, and, or, like, count, gt, isNull, isNotNull, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { customAlphabet } from "nanoid";
-import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog, learnerGroups, learnerGroupMemberships, learnerGroupCourses, courseLifecycleStates, invitationGroups, referralCampaigns, referralCodes, referralConversions, aiResponseEvaluations } from "../drizzle/schema";
+import { InsertUser, users, applications, InsertApplication, Application, trainingProgress, examAttempts, examSessions, InsertTrainingProgress, InsertExamAttempt, InsertExamSession, videoProgress, InsertVideoProgress, chapterProgress, userInvitations, videoFeedback, InsertVideoFeedback, passwordResetTokens, emailEvents, exerciseResults, learningEvents, learnerAchievements, learnerCompetencyContributions, InsertLearnerAchievement, courseFeedback, learnerActivityLog, learnerGroups, learnerGroupMemberships, learnerGroupCourses, courseLifecycleStates, invitationGroups, referralCampaigns, referralCodes, referralConversions, aiResponseEvaluations, examReminders, scheduledJobRegistry } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { engagementBucket, firstAttemptRate, isPedagogicalReportingEvent } from "./reportingMetrics";
 import { learnerReportingLabel } from "@shared/learnerReportingLabel";
@@ -408,6 +408,72 @@ export async function getExamAttempts(userId: number, certificationId?: string) 
   return await db.select().from(examAttempts)
     .where(eq(examAttempts.userId, userId))
     .orderBy(desc(examAttempts.finishedAt));
+}
+
+// ============ Exam reminder delivery (one durable record per learner/certification) ============
+export async function getExamReminderSnapshot() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [learners, lessonCompletions, chapterCompletions, attempts, reminders] = await Promise.all([
+    db.select({ id: users.id, name: users.name, email: users.email, blocked: users.blocked }).from(users).where(and(eq(users.blocked, 0), isNotNull(users.email))),
+    db.select({ userId: trainingProgress.userId, certificationId: trainingProgress.certificationId, courseId: trainingProgress.courseId, lessonIndex: trainingProgress.lessonIndex, completedAt: trainingProgress.completedAt }).from(trainingProgress),
+    db.select({ userId: chapterProgress.userId, courseId: chapterProgress.courseId, lessonIndex: chapterProgress.lessonIndex, chapterIndex: chapterProgress.chapterIndex, totalChapters: chapterProgress.totalChapters, updatedAt: chapterProgress.updatedAt }).from(chapterProgress),
+    db.select({ userId: examAttempts.userId, certificationId: examAttempts.certificationId }).from(examAttempts),
+    db.select({ userId: examReminders.userId, certificationId: examReminders.certificationId, status: examReminders.status }).from(examReminders),
+  ]);
+  return { learners, lessonCompletions, chapterCompletions, attempts, reminders };
+}
+
+/**
+ * Atomic once-only claim. A unique pair is never reclaimed, including when the
+ * provider reports a technical error: this deliberately favours anti-spam over
+ * a speculative retry that could duplicate a received email.
+ */
+export async function claimExamReminder(data: { userId: number; certificationId: string; completionQualifiedAt: Date }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  try {
+    const result = await db.insert(examReminders).values({ ...data, status: "sending" });
+    const reminderId = Number(result[0]?.insertId);
+    return Number.isFinite(reminderId) && reminderId > 0 ? { id: reminderId } : null;
+  } catch (error: any) {
+    if (error?.code === "ER_DUP_ENTRY" || error?.errno === 1062) return null;
+    throw error;
+  }
+}
+
+export async function markExamReminderSent(reminderId: number, resendMessageId?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(examReminders).set({
+    status: "sent",
+    resendMessageId: resendMessageId || null,
+    lastError: null,
+    sentAt: new Date(),
+  }).where(and(eq(examReminders.id, reminderId), eq(examReminders.status, "sending")));
+}
+
+export async function markExamReminderFailed(reminderId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(examReminders).set({ status: "failed", lastError: "provider_delivery_failed" })
+    .where(and(eq(examReminders.id, reminderId), eq(examReminders.status, "sending")));
+}
+
+export const EXAM_REMINDER_HEARTBEAT_KEY = "exam_reminder_daily";
+
+export async function isRegisteredProjectHeartbeatJob(jobKey: string, taskUid: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const row = await db.select({ id: scheduledJobRegistry.id }).from(scheduledJobRegistry)
+    .where(and(eq(scheduledJobRegistry.jobKey, jobKey), eq(scheduledJobRegistry.taskUid, taskUid))).limit(1);
+  return Boolean(row[0]);
+}
+
+export async function registerProjectHeartbeatJob(jobKey: string, taskUid: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(scheduledJobRegistry).values({ jobKey, taskUid }).onDuplicateKeyUpdate({ set: { taskUid } });
 }
 
 export async function getExamSession(userId: number, certificationId: string) {

@@ -974,6 +974,89 @@ export async function sendReminderEmail(data: ReminderEmailData): Promise<void> 
   console.log(`[Email] Reminder sent to ${data.to}`);
 }
 
+// ============================================================
+// CERTIFICATION EXAM REMINDER EMAIL
+// ============================================================
+
+export interface ExamReminderEmailData {
+  to: string;
+  firstName: string;
+  certificationTitle: string;
+  certificationId: string;
+  totalQuestions?: number;
+  timeLimit?: number;
+  passingScore?: number;
+  language?: Language;
+}
+
+function examReminderUrl(certificationId: string) {
+  return `https://akademy.neodev.click/mock-exam/${encodeURIComponent(certificationId)}`;
+}
+
+export function buildExamReminderHtml(data: ExamReminderEmailData): string {
+  const lang = data.language || "fr";
+  const firstName = escapeEmailHtml(data.firstName || (lang === "fr" ? "Bonjour" : "there"));
+  const certificationTitle = escapeEmailHtml(data.certificationTitle);
+  const details = [
+    data.totalQuestions ? `${data.totalQuestions} questions` : null,
+    data.timeLimit ? `${data.timeLimit} minutes` : null,
+    data.passingScore ? (lang === "fr" ? `seuil : ${data.passingScore}` : `passing score: ${data.passingScore}`) : null,
+  ].filter(Boolean).join(" · ");
+  const body = lang === "fr" ? `
+    <div style="padding: 32px;">
+      <h2 style="color: #0f1b2d; font-size: 20px; margin: 0 0 16px;">Bonjour ${firstName},</h2>
+      <p style="color: #374151; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Vous avez terminé le parcours de préparation <strong>${certificationTitle}</strong>.</p>
+      <p style="color: #374151; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Votre examen blanc est disponible. Il vous permet de vous entraîner dans les conditions prévues avant une certification.</p>
+      ${details ? `<p style="color: #475569; font-size: 14px; line-height: 1.6; margin: 0 0 24px;"><strong>Repères :</strong> ${details}</p>` : ""}
+      ${emailCtaButton("Commencer l’examen blanc", examReminderUrl(data.certificationId))}
+      <p style="color: #64748b; font-size: 13px; line-height: 1.6; margin: 24px 0 0;">Cette relance est unique. Elle ne sera plus envoyée dès qu’une première tentative est enregistrée.</p>
+    </div>` : `
+    <div style="padding: 32px;">
+      <h2 style="color: #0f1b2d; font-size: 20px; margin: 0 0 16px;">Hello ${firstName},</h2>
+      <p style="color: #374151; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">You have completed the preparation path for <strong>${certificationTitle}</strong>.</p>
+      <p style="color: #374151; font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Your mock exam is now available. It lets you practise under the planned conditions before certification.</p>
+      ${details ? `<p style="color: #475569; font-size: 14px; line-height: 1.6; margin: 0 0 24px;"><strong>At a glance:</strong> ${details}</p>` : ""}
+      ${emailCtaButton("Start the mock exam", examReminderUrl(data.certificationId))}
+      <p style="color: #64748b; font-size: 13px; line-height: 1.6; margin: 24px 0 0;">This is a one-time reminder. No further reminder is sent after a first attempt is recorded.</p>
+    </div>`;
+  return emailWrapper(emailHeader(lang === "fr" ? "Examen blanc disponible" : "Mock exam available") + body + emailFooter(lang));
+}
+
+export function buildExamReminderText(data: ExamReminderEmailData): string {
+  const lang = data.language || "fr";
+  const details = [
+    data.totalQuestions ? `${data.totalQuestions} questions` : null,
+    data.timeLimit ? `${data.timeLimit} minutes` : null,
+    data.passingScore ? (lang === "fr" ? `seuil : ${data.passingScore}` : `passing score: ${data.passingScore}`) : null,
+  ].filter(Boolean).join(" · ");
+  const url = examReminderUrl(data.certificationId);
+  if (lang === "fr") return `Bonjour ${data.firstName || ""},\n\nVous avez terminé le parcours de préparation ${data.certificationTitle}. Votre examen blanc est disponible.\n${details ? `\nRepères : ${details}\n` : ""}\nAccéder à l’examen : ${url}\n\nCette relance est unique. Elle ne sera plus envoyée dès qu’une première tentative est enregistrée.\n\nL’équipe Neopolis Akademy`;
+  return `Hello ${data.firstName || ""},\n\nYou have completed the preparation path for ${data.certificationTitle}. Your mock exam is available.\n${details ? `\nAt a glance: ${details}\n` : ""}\nStart the exam: ${url}\n\nThis is a one-time reminder. No further reminder is sent after a first attempt is recorded.\n\nThe Neopolis Akademy Team`;
+}
+
+export async function sendExamReminderEmail(data: ExamReminderEmailData): Promise<{ delivered: boolean; messageId?: string }> {
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (!resendApiKey) {
+    console.warn("[Email] Exam reminder skipped because the delivery provider is not configured");
+    return { delivered: false };
+  }
+  const resend = new Resend(resendApiKey);
+  const lang = data.language || "fr";
+  const subject = lang === "fr"
+    ? "Neopolis Akademy — Votre examen blanc est disponible"
+    : "Neopolis Akademy — Your mock exam is available";
+  const { data: emailData, error } = await resend.emails.send({
+    from: FROM_ADDRESS,
+    to: [data.to],
+    subject,
+    html: buildExamReminderHtml(data),
+    text: buildExamReminderText(data),
+  });
+  if (error) throw new Error("Exam reminder delivery failed");
+  console.info("[Email] Exam reminder accepted by provider");
+  return { delivered: true, messageId: emailData?.id };
+}
+
 
 // ============================================================
 // PASSWORD RESET EMAIL

@@ -1,5 +1,14 @@
 # Project TODO — Neopolis Akademy
 
+## Relance automatique des examens blancs
+- [x] Auditer les données de complétion de formation, tentatives d’examen, envois e-mail et mécanismes planifiés disponibles afin de cibler uniquement les apprenants éligibles sans doublons — `training_progress`, `chapter_progress`, `exam_attempts` et `exam_sessions` sont distingués ; les quatre examens réels proviennent de `trainingIndex.examConfig`
+- [x] Définir et documenter les règles de relance : délai après complétion, limite de fréquence, arrêt après tentative d’examen et contenu d’e-mail avec lien direct vers l’examen — délai de 24 h, une relance définitive par paire, arrêt à la première tentative et modèle officiel bilingue documentés dans `docs/exam-reminder-automation.md`
+- [x] Implémenter un traitement planifié idempotent, les garde-fous anti-doublon, les journaux d’envoi et les tests de régression serveur — tables `exam_reminders` et `scheduled_job_registry`, claim unique atomique, callback cron-only, journal pédagogique et neuf tests dédiés ajoutés
+- [x] Vérifier en environnement contrôlé la sélection des destinataires, l’absence de double relance et la sécurité d’accès au traitement planifié — tests ciblés 9/9, suite complète 495 réussis / 2 ignorés, validation catalogue sans erreur et callback local non authentifié refusé en 403 ; aucun e-mail réel n’a été expédié
+- [ ] Déployer la relance automatique des examens blancs via un checkpoint, puis vérifier que le service, le callback, les migrations et la documentation sont actifs sur `akademy.neodev.click`
+- [ ] Créer le job Heartbeat projet, enregistrer durablement son `taskUid` dans `scheduled_job_registry`, puis vérifier le callback cron réel et ses journaux sans divulgation de donnée personnelle
+- [ ] Archiver les preuves de contrôle et livrer la relance automatique des examens blancs
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif

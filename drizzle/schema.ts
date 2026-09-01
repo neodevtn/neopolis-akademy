@@ -253,6 +253,47 @@ export const examAttempts = mysqlTable("exam_attempts", {
 export type ExamAttempt = typeof examAttempts.$inferSelect;
 export type InsertExamAttempt = typeof examAttempts.$inferInsert;
 
+/**
+ * A single durable delivery record per learner and certification.  The unique
+ * pair is deliberately permanent: a retry can recover a technical failure,
+ * but no scheduler replay can cause a second examination reminder.
+ */
+export const examReminders = mysqlTable("exam_reminders", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  certificationId: varchar("certificationId", { length: 200 }).notNull(),
+  completionQualifiedAt: timestamp("completionQualifiedAt").notNull(),
+  status: mysqlEnum("status", ["sending", "sent", "failed"]).notNull().default("sending"),
+  resendMessageId: varchar("resendMessageId", { length: 255 }),
+  lastError: varchar("lastError", { length: 500 }),
+  sentAt: timestamp("sentAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("exam_reminders_user_cert_once").on(table.userId, table.certificationId),
+  index("exam_reminders_status_created_idx").on(table.status, table.createdAt),
+  index("exam_reminders_cert_completion_idx").on(table.certificationId, table.completionQualifiedAt),
+]);
+export type ExamReminder = typeof examReminders.$inferSelect;
+export type InsertExamReminder = typeof examReminders.$inferInsert;
+
+/**
+ * Trusted identities of project-level scheduled jobs. The callback checks its
+ * task UID against this registry rather than trusting a caller-supplied body.
+ */
+export const scheduledJobRegistry = mysqlTable("scheduled_job_registry", {
+  id: int("id").autoincrement().primaryKey(),
+  jobKey: varchar("jobKey", { length: 80 }).notNull(),
+  taskUid: varchar("taskUid", { length: 65 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("scheduled_job_registry_key_once").on(table.jobKey),
+  uniqueIndex("scheduled_job_registry_task_once").on(table.taskUid),
+]);
+export type ScheduledJobRegistry = typeof scheduledJobRegistry.$inferSelect;
+export type InsertScheduledJobRegistry = typeof scheduledJobRegistry.$inferInsert;
+
 /** Une unique session active par apprenant et certification, restaurée après rafraîchissement. */
 export const examSessions = mysqlTable("exam_sessions", {
   id: int("id").autoincrement().primaryKey(),
