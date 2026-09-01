@@ -216,7 +216,7 @@ try {
   await adminPage.waitForFunction(() => document.querySelectorAll("tbody tr").length === 1, { timeout: 15000 });
   await adminPage.locator("#exam-code").fill("QA-TEMPORARY-EXAM");
   await adminPage.locator("#exam-question-count").fill("1");
-  await adminPage.locator("#exam-time-limit").fill("5");
+  await adminPage.locator("#exam-time-limit").fill("1");
   await adminPage.locator("#exam-passing-score").fill("1000");
   await adminPage.getByRole("switch").nth(2).click();
   const saveRulesButton = adminPage.getByRole("button", { name: "Sauvegarder les règles" });
@@ -236,10 +236,21 @@ try {
     headers: { "content-type": "application/json" },
     data: { "0": { json: { certificationId: qaCertificationId } } },
   });
-  const clearResponse = await learnerSessionContext.request.post(`${baseUrl}/api/trpc/training.clearExamSession?batch=1`, {
+  const startPayload = await startResponse.json();
+  const startedSession = startPayload?.[0]?.result?.data?.json;
+  const storedQuestion = startedSession?.questions?.[0];
+  if (!storedQuestion) throw new Error("La session QA ne contient pas la question attendue.");
+  await new Promise((resolve) => setTimeout(resolve, 61_000));
+  const expiredSubmissionResponse = await learnerSessionContext.request.post(`${baseUrl}/api/trpc/training.submitExamAttempt?batch=1`, {
     headers: { "content-type": "application/json" },
-    data: { "0": { json: { certificationId: qaCertificationId } } },
+    data: { "0": { json: { certificationId: qaCertificationId, answers: [{ questionId: storedQuestion.id, selectedIds: storedQuestion.correctChoiceIds }] } } },
   });
+  const expiredSubmissionPayload = await expiredSubmissionResponse.json();
+  const expiredSubmission = expiredSubmissionPayload?.[0]?.result?.data?.json;
+  const expiredSubmissionDeniedCertificate = expiredSubmissionResponse.ok()
+    && expiredSubmission?.timedOut === true
+    && expiredSubmission?.passed === false
+    && expiredSubmission?.achievement == null;
   await learnerSessionContext.close();
   adminPage.once("dialog", (dialog) => dialog.accept());
   await Promise.all([
@@ -248,6 +259,11 @@ try {
   ]);
   const deleteExamButton = adminPage.getByRole("button", { name: "Supprimer l’examen" });
   await deleteExamButton.scrollIntoViewIfNeeded();
+  await deleteExamButton.waitFor({ state: "visible" });
+  await adminPage.waitForFunction(() => {
+    const button = [...document.querySelectorAll("button")].find((element) => element.textContent?.trim() === "Supprimer l’examen");
+    return Boolean(button && !button.disabled);
+  }, { timeout: 10000 });
   adminPage.once("dialog", (dialog) => dialog.accept());
   const deleteResponse = adminPage.waitForResponse((response) => response.url().includes("adminContent.deleteExamConfiguration") && response.ok());
   await deleteExamButton.click({ force: true });
@@ -272,7 +288,8 @@ try {
     type: "admin_exam_create_publish_cleanup",
     opensCreationEditor: Boolean(qaCertificationId),
     savesQuestionAndPublication: startResponse.ok(),
-    startsProtectedServerSession: startResponse.ok() && clearResponse.ok(),
+    startsProtectedServerSession: startResponse.ok(),
+    expiredSubmissionDeniedCertificate,
     unpublishesAndCleansQuestion: postCleanupResponse.ok() && postCleanupBody.includes("null"),
     adminShowsDeletedExamUnavailable,
     learnerShowsDeletedExamUnavailable,
@@ -293,7 +310,7 @@ const failures = results.filter((result) =>
   || result.type === "admin_catalog_hierarchy" && (!result.hasLearnerCatalogTitle || !result.hasHierarchyLevels || !result.hasExamManagement || !result.hasExamDetails)
   || result.type === "admin_exam_creation_entrypoint" && (result.unavailableExamCount < 1 || result.creationButtonCount < 1)
   || result.type === "admin_exam_editor_binding" && (!result.selectedCertificationInUrl || !result.loadsQuestionBank || !result.exposesEditableDuration || !result.exposesOfficialPassingScore)
-  || result.type === "admin_exam_create_publish_cleanup" && (!result.opensCreationEditor || !result.savesQuestionAndPublication || !result.startsProtectedServerSession || !result.unpublishesAndCleansQuestion || !result.adminShowsDeletedExamUnavailable || !result.learnerShowsDeletedExamUnavailable),
+  || result.type === "admin_exam_create_publish_cleanup" && (!result.opensCreationEditor || !result.savesQuestionAndPublication || !result.startsProtectedServerSession || !result.expiredSubmissionDeniedCertificate || !result.unpublishesAndCleansQuestion || !result.adminShowsDeletedExamUnavailable || !result.learnerShowsDeletedExamUnavailable),
 );
 if (failures.length) {
   console.error(JSON.stringify({ failures }, null, 2));
