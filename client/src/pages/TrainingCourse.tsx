@@ -202,7 +202,8 @@ export default function TrainingCourse() {
   // Prefetch next course in certification path for instant navigation
   const certCourses = trainingIndex.courses.filter((c: any) => c.certId === certId);
   const currentCourseIdx = certCourses.findIndex((c: any) => c.id === courseId);
-  const examInfo = getTrainingExamInfo(trainingIndex as any, certId);
+  const dynamicExamQuery = trpc.training.getExamDefinition.useQuery({ certificationId: certId || "" }, { enabled: Boolean(certId) });
+  const examInfo = dynamicExamQuery.isSuccess ? dynamicExamQuery.data : getTrainingExamInfo(trainingIndex as any, certId);
   useEffect(() => {
     if (currentCourseIdx >= 0 && currentCourseIdx < certCourses.length - 1) {
       const nextCourse = certCourses[currentCourseIdx + 1];

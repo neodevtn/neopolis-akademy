@@ -144,6 +144,7 @@ export default function AdminContentManager() {
     setViewMode(readViewMode(params));
     setSelectedCourseId(params.get("courseId") || "");
     setSelectedCertId(params.get("certificationId") || "");
+    setExamQuestions([]);
     const lesson = Number(params.get("lesson"));
     setSelectedLessonIdx(Number.isInteger(lesson) && lesson >= 0 ? lesson : 0);
     const chapter = Number(params.get("chapter"));
@@ -168,7 +169,7 @@ export default function AdminContentManager() {
     enabled: isAuthenticated && user?.role === "admin" && (viewMode === "exam-simulate" || viewMode === "edit-exam"),
   });
   const examConfigurationsQuery = trpc.adminContent.getExamConfigurations.useQuery(undefined, {
-    enabled: isAuthenticated && user?.role === "admin" && (viewMode === "exam-simulate" || viewMode === "edit-exam"),
+    enabled: isAuthenticated && user?.role === "admin" && (viewMode === "catalog" || viewMode === "exam-simulate" || viewMode === "edit-exam"),
   });
   const catalogQuery = trpc.adminContent.getTrainingIndex.useQuery(undefined, {
     enabled: isAuthenticated && user?.role === "admin" && viewMode === "catalog",
@@ -196,7 +197,15 @@ export default function AdminContentManager() {
     onError: (e) => toast.error(e.message),
   });
   const updateExamConfigurationMut = trpc.adminContent.updateExamConfiguration.useMutation({
-    onSuccess: () => { toast.success("Règles d’examen sauvegardées"); examConfigurationsQuery.refetch(); setExamQuestions([]); },
+    onSuccess: () => { toast.success("Examen sauvegardé"); examConfigurationsQuery.refetch(); setExamQuestions([]); },
+    onError: (e) => toast.error(e.message),
+  });
+  const disableExamConfigurationMut = trpc.adminContent.disableExamConfiguration.useMutation({
+    onSuccess: () => { toast.success("Examen dépublié ; la banque de questions est conservée."); examConfigurationsQuery.refetch(); setExamQuestions([]); },
+    onError: (e) => toast.error(e.message),
+  });
+  const deleteExamConfigurationMut = trpc.adminContent.deleteExamConfiguration.useMutation({
+    onSuccess: () => { toast.success("Examen supprimé définitivement."); setExamConfigDrafts((current) => { const next = { ...current }; delete next[selectedCertId]; return next; }); examConfigurationsQuery.refetch(); setExamQuestions([]); },
     onError: (e) => toast.error(e.message),
   });
   const updateExerciseMut = trpc.adminContent.updateExercise.useMutation({
@@ -271,7 +280,8 @@ export default function AdminContentManager() {
   const renderCatalog = () => {
     if (catalogQuery.isLoading) return <div className="py-10 text-center text-sm text-muted-foreground">Chargement du catalogue…</div>;
     if (!catalogQuery.data) return <div className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">Le catalogue est indisponible. Réessayez dans quelques instants.</div>;
-    return <div className="space-y-6"><CatalogOperationsConsole courses={coursesQuery.data || []} certifications={(catalogQuery.data as any).certifications || []} categories={(catalogQuery.data as any).categories || []} trainingFormats={(catalogQuery.data as any).trainingFormats || []} examConfig={(catalogQuery.data as any).examConfig || {}} catalogMode onOpenCatalogSettings={() => setCatalogSettingsOpen(true)} onOpenCourse={(courseId, mode) => { setCourseDraft(null); navigateContent(mode, { courseId, lesson: 0, chapter: 0 }); }} onManageExam={(certificationId) => { setSelectedCertId(certificationId); navigateContent("edit-exam"); }} onSetLifecycle={applyLifecycle} isSavingLifecycle={setCourseLifecycleMut.isPending || bulkSetCourseLifecycleMut.isPending} /><Dialog open={catalogSettingsOpen} onOpenChange={setCatalogSettingsOpen}><DialogContent className="max-h-[88vh] max-w-6xl overflow-y-auto"><DialogHeader><DialogTitle>Paramètres avancés du catalogue</DialogTitle></DialogHeader><CatalogMetadataEditor value={catalogQuery.data} onSave={(data) => updateCatalogMut.mutate({ data })} isSaving={updateCatalogMut.isPending} /></DialogContent></Dialog><CompetencyManager /></div>;
+    const publishedExamConfig = Object.fromEntries(Object.entries((examConfigurationsQuery.data as Record<string, any> | undefined) || {}).filter(([, configuration]) => configuration?.isPublished !== false));
+    return <div className="space-y-6"><CatalogOperationsConsole courses={coursesQuery.data || []} certifications={(catalogQuery.data as any).certifications || []} categories={(catalogQuery.data as any).categories || []} trainingFormats={(catalogQuery.data as any).trainingFormats || []} examConfig={{ ...((catalogQuery.data as any).examConfig || {}), ...publishedExamConfig }} catalogMode onOpenCatalogSettings={() => setCatalogSettingsOpen(true)} onOpenCourse={(courseId, mode) => { setCourseDraft(null); navigateContent(mode, { courseId, lesson: 0, chapter: 0 }); }} onManageExam={(certificationId) => navigateContent("edit-exam", { certificationId })} onSetLifecycle={applyLifecycle} isSavingLifecycle={setCourseLifecycleMut.isPending || bulkSetCourseLifecycleMut.isPending} /><Dialog open={catalogSettingsOpen} onOpenChange={setCatalogSettingsOpen}><DialogContent className="max-h-[88vh] max-w-6xl overflow-y-auto"><DialogHeader><DialogTitle>Paramètres avancés du catalogue</DialogTitle></DialogHeader><CatalogMetadataEditor value={catalogQuery.data} onSave={(data) => updateCatalogMut.mutate({ data })} isSaving={updateCatalogMut.isPending} /></DialogContent></Dialog><CompetencyManager /></div>;
   };
 
   // ─── COURSE VIEW (Consultation) ───
@@ -710,7 +720,7 @@ export default function AdminContentManager() {
     // Select the configured subset once per simulation attempt.
     const activeExamQuestions = examQuestions.length > 0 ? examQuestions : (() => {
       const source = examConfig.shuffleQuestions ? [...certQuestions].sort(() => Math.random() - 0.5) : [...certQuestions];
-      const selected = source.slice(0, Math.min(examConfig.questionCount, source.length)).map((question: any) => {
+      const selected = source.slice(0, Math.min(examConfig.totalQuestions, source.length)).map((question: any) => {
         if (!examConfig.shuffleChoices) return question;
         return { ...question, choices: [...(question.choices || [])].sort(() => Math.random() - 0.5) };
       });
@@ -725,7 +735,8 @@ export default function AdminContentManager() {
         <div className="flex items-center gap-3">
           <Badge variant="outline">{certQuestions.length} questions disponibles</Badge>
           <Badge>{activeExamQuestions.length} questions sélectionnées</Badge>
-          <Badge variant="secondary">Seuil : {examConfig.passingScore}%</Badge>
+          <Badge variant="secondary">Seuil : {examConfig.passingScore}/1000</Badge>
+          <Badge variant="secondary">Durée : {examConfig.timeLimit} min</Badge>
         </div>
 
         {!quizSimState.showResults && activeExamQuestions.length > 0 && (
@@ -803,6 +814,7 @@ export default function AdminContentManager() {
   const renderEditExam = () => {
     const allQuestions = examQuestionsQuery.data as any[] | undefined;
     if (!allQuestions) return <div className="text-center py-8 text-gray-500">Chargement...</div>;
+    if (!selectedCertId) return <div className="rounded-xl border border-dashed p-8 text-center"><p className="font-semibold">Sélectionnez une formation depuis le catalogue.</p><Button className="mt-4" variant="outline" onClick={() => navigateContent("catalog")}>Ouvrir le catalogue</Button></div>;
 
     const certQuestions = allQuestions.filter((q: any) => q.certificationId === selectedCertId);
     const domains = Array.from(new Set(certQuestions.map((q: any) => typeof q.domain === "object" ? (q.domain.fr || q.domain.en || "") : q.domain)));
@@ -835,9 +847,15 @@ export default function AdminContentManager() {
         <ExamBankSettings
           configuration={examConfig}
           availableQuestions={certQuestions.length}
-          isSaving={updateExamConfigurationMut.isPending}
+          isSaving={updateExamConfigurationMut.isPending || disableExamConfigurationMut.isPending || deleteExamConfigurationMut.isPending}
           onChange={(configuration) => setExamConfigDrafts((current) => ({ ...current, [selectedCertId]: configuration }))}
           onSave={() => updateExamConfigurationMut.mutate({ certificationId: selectedCertId, configuration: normalizeExamConfiguration(examConfig, certQuestions.length) })}
+          onDisable={() => {
+            if (confirm("Dépublier cet examen ? Les questions seront conservées, mais les apprenants ne pourront plus le démarrer.")) disableExamConfigurationMut.mutate({ certificationId: selectedCertId });
+          }}
+          onDelete={() => {
+            if (confirm("Supprimer définitivement cet examen et toute sa banque de questions ? Cette action est irréversible.")) deleteExamConfigurationMut.mutate({ certificationId: selectedCertId });
+          }}
         />
 
         <div className="border rounded-lg overflow-hidden max-h-[60vh] overflow-y-auto">

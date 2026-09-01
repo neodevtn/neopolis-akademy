@@ -50,7 +50,8 @@ export default function TrainingCertification() {
   }, [cert, courses]);
   const certificationMetrics = getCertificationCatalogMetrics(certId || "", courses);
   const isStandaloneTP = isStandaloneTpCertification(cert as any);
-  const examInfo = getTrainingExamInfo(trainingIndex as any, certId);
+  const dynamicExamQuery = trpc.training.getExamDefinition.useQuery({ certificationId: certId || "" }, { enabled: Boolean(certId) });
+  const examInfo = dynamicExamQuery.isSuccess ? dynamicExamQuery.data : getTrainingExamInfo(trainingIndex as any, certId);
   const hasCertificationExam = Boolean(examInfo) && !isStandaloneTP;
   const courseIds = courses.map((c) => c.id);
   const isDataCampPartner = (cert as any)?.provider === "datacamp";

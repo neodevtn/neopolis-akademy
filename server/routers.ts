@@ -18,7 +18,10 @@ import { adminContentRouter } from "./adminContentRouter";
 import { videoRecommendationsRouter } from "./videoRecommendationsRouter";
 import { createAdminNotification } from "./notificationsDb";
 import { createLearnerGroup, getCourseLifecycleState, getLearnerGroupDetail, listLearnerGroups, replaceLearnerGroupCourses, replaceLearnerGroupMembers, userCanAccessCourse } from "./db";
+import { updateExamSessionState } from "./db";
 import { applyCompetencyEvent, getCompetencyFramework, getCompetencyLeaderboard, getContentCompetencyTags, getGamificationConfig, getUserCompetencies, getUserGamification, replaceCompetencyFramework, saveGamificationConfig } from "./competencyService";
+import { getCertificationLessonCounts, getExamDefinition, getQuestionsForCertification, selectExamQuestions, type ExamQuestion } from "./examDefinition";
+import { scoreStoredExamSession, type StoredExamAnswer } from "./examAttemptScoring";
 import { COMPETENCY_SOURCE_TYPES } from "../shared/competencyFramework";
 import { backfillCompetencies } from "./competencyBackfill";
 import { completeLearnerOrientation, createLegacyOrientationReminderDraft, createOrientationProposal, getAdminOrientationOverview, getLearnerOrientation, respondToOrientationProposal, saveLearnerOrientationGoals } from "./orientationService";
@@ -537,31 +540,47 @@ export const appRouter = router({
         return { complete };
       }),
 
+    getExamDefinition: publicProcedure
+      .input(z.object({ certificationId: z.string().min(2).max(200) }))
+      .query(async ({ input }) => {
+        const definition = await getExamDefinition(input.certificationId);
+        return definition?.isPublished ? definition : null;
+      }),
+
+    startExamSession: protectedProcedure
+      .input(z.object({ certificationId: z.string().min(2).max(200) }))
+      .mutation(async ({ ctx, input }) => {
+        const definition = await getExamDefinition(input.certificationId);
+        if (!definition?.isPublished) throw new TRPCError({ code: "NOT_FOUND", message: "Cet examen blanc n’est pas disponible." });
+        const lessonCounts = getCertificationLessonCounts(input.certificationId);
+        if (!Object.keys(lessonCounts).length || !await isCertificationComplete(ctx.user.id, input.certificationId, lessonCounts)) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Terminez tous les cours de cette formation avant de démarrer l’examen." });
+        }
+        const questions = selectExamQuestions(await getQuestionsForCertification(input.certificationId), definition);
+        if (!questions.length) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Cet examen ne contient aucune question publiable." });
+        const startedAt = new Date();
+        const expiresAt = new Date(startedAt.getTime() + definition.timeLimit * 60_000);
+        await saveExamSession({ userId: ctx.user.id, certificationId: input.certificationId, questions, answers: [], currentIndex: 0, selectedIds: [], startedAt, expiresAt });
+        return { questions, startedAt, expiresAt, configuration: definition };
+      }),
+
     submitExamAttempt: protectedProcedure
       .input(z.object({
-        certificationId: z.string(),
-        score: z.number().min(100).max(1000),
-        totalQuestions: z.number(),
-        correctAnswers: z.number(),
-        passed: z.number().min(0).max(1),
-        domainScores: z.any(),
-        startedAt: z.date(),
+        certificationId: z.string().min(2).max(200),
+        answers: z.array(z.object({ questionId: z.string().min(1).max(240), selectedIds: z.array(z.string().min(1).max(80)).max(10) })).max(500),
       }))
       .mutation(async ({ ctx, input }) => {
-        const attempt = await createExamAttempt({
-          userId: ctx.user.id,
-          certificationId: input.certificationId,
-          score: input.score,
-          totalQuestions: input.totalQuestions,
-          correctAnswers: input.correctAnswers,
-          passed: input.passed,
-          domainScores: input.domainScores,
-          startedAt: input.startedAt,
-        });
-        const achievement = input.passed === 1
-          ? await awardCertification(ctx.user, input.certificationId, input.score, Number(attempt.id))
-          : null;
-        return { ...attempt, achievement };
+        const session = await getExamSession(ctx.user.id, input.certificationId);
+        if (!session) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Aucune session d’examen active à soumettre." });
+        const definition = await getExamDefinition(input.certificationId);
+        if (!definition?.isPublished) throw new TRPCError({ code: "NOT_FOUND", message: "Cet examen blanc n’est plus disponible." });
+        const questions = Array.isArray(session.questions) ? session.questions as ExamQuestion[] : [];
+        if (!questions.length) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "La session d’examen est invalide." });
+        const result = scoreStoredExamSession(questions, input.answers as StoredExamAnswer[], definition, new Date() >= new Date(session.expiresAt));
+        const attempt = await createExamAttempt({ userId: ctx.user.id, certificationId: input.certificationId, score: result.scaled, totalQuestions: result.total, correctAnswers: result.correct, passed: result.passed ? 1 : 0, domainScores: result.domainResults, startedAt: session.startedAt });
+        await clearExamSession(ctx.user.id, input.certificationId);
+        const achievement = result.passed ? await awardCertification(ctx.user, input.certificationId, result.scaled, Number(attempt.id)) : null;
+        return { ...attempt, ...result, achievement };
       }),
 
     getExamHistory: protectedProcedure
@@ -574,9 +593,8 @@ export const appRouter = router({
       getExamSession(ctx.user.id, input.certificationId)),
 
     saveExamSession: protectedProcedure.input(z.object({
-      certificationId: z.string(), questions: z.array(z.any()), answers: z.array(z.any()),
-      currentIndex: z.number().int().min(0), selectedIds: z.array(z.string()), startedAt: z.date(), expiresAt: z.date(),
-    })).mutation(async ({ ctx, input }) => saveExamSession({ ...input, userId: ctx.user.id })),
+      certificationId: z.string(), answers: z.array(z.any()), currentIndex: z.number().int().min(0), selectedIds: z.array(z.string()),
+    })).mutation(async ({ ctx, input }) => updateExamSessionState({ ...input, userId: ctx.user.id })),
 
     clearExamSession: protectedProcedure.input(z.object({ certificationId: z.string() })).mutation(async ({ ctx, input }) =>
       clearExamSession(ctx.user.id, input.certificationId)),

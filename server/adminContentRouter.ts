@@ -11,6 +11,8 @@ import { applyCatalogMetrics } from "../shared/catalogMetrics";
 import { eq } from "drizzle-orm";
 import { courseLifecycleStates } from "../drizzle/schema";
 import { getCourseCatalogKpis, getDb } from "./db";
+import { addExamQuestion, deleteExamConfiguration, deleteExamQuestion, disableExamConfiguration, getExamDefinitions, getMockExamQuestions, getQuestionsForCertification, saveExamConfiguration, updateExamQuestion } from "./examDefinition";
+import { normalizeExamConfiguration } from "../shared/examConfiguration";
 
 /**
  * Admin Content Management Router
@@ -271,44 +273,48 @@ export const adminContentRouter = router({
 
   // Get all mock exam questions
   getMockExamQuestions: adminProcedure.query(async () => {
-    const dataDir = getDataDir();
-    const filePath = path.join(dataDir, "mockExamQuestions.json");
-    try {
-      return await readJsonFile(filePath);
-    } catch {
-      return [];
-    }
+    return getMockExamQuestions();
   }),
 
   getExamConfigurations: adminProcedure.query(async () => {
-    const dataDir = getDataDir();
-    const filePath = path.join(dataDir, "examConfigurations.json");
-    try {
-      return await readJsonFile(filePath);
-    } catch {
-      return {};
-    }
+    return getExamDefinitions();
   }),
 
   updateExamConfiguration: adminProcedure
     .input(z.object({
       certificationId: z.string(),
       configuration: z.object({
-        questionCount: z.number().int().positive(),
-        passingScore: z.number().int().min(1).max(100),
+        examCode: z.string().max(100),
+        totalQuestions: z.number().int().positive(),
+        timeLimit: z.number().int().min(1).max(600),
+        passingScore: z.number().int().min(100).max(1000),
         shuffleQuestions: z.boolean(),
         shuffleChoices: z.boolean(),
+        isPublished: z.boolean(),
+        domains: z.array(z.object({
+          name: z.union([z.string(), z.record(z.string(), z.string())]),
+          weight: z.number().min(0).max(100),
+        })),
       }),
     }))
     .mutation(async ({ input }) => {
-      const dataDir = getDataDir();
-      const filePath = path.join(dataDir, "examConfigurations.json");
-      let data: Record<string, unknown> = {};
-      try { data = await readJsonFile(filePath); } catch { /* first configuration */ }
-      data[input.certificationId] = input.configuration;
-      await writeJsonFile(filePath, data);
+      const availableQuestions = (await getQuestionsForCertification(input.certificationId)).length;
+      if (input.configuration.isPublished && availableQuestions === 0) throw new Error("Ajoutez au moins une question avant de publier cet examen.");
+      const configuration = normalizeExamConfiguration(input.configuration, availableQuestions);
+      await saveExamConfiguration(input.certificationId, { ...configuration, isPublished: input.configuration.isPublished });
       return { success: true };
     }),
+
+  disableExamConfiguration: adminProcedure
+    .input(z.object({ certificationId: z.string() }))
+    .mutation(async ({ input }) => {
+      await disableExamConfiguration(input.certificationId);
+      return { success: true };
+    }),
+
+  deleteExamConfiguration: adminProcedure
+    .input(z.object({ certificationId: z.string() }))
+    .mutation(async ({ input }) => ({ success: await deleteExamConfiguration(input.certificationId) })),
 
   // Update a mock exam question by ID
   updateMockExamQuestion: adminProcedure
@@ -326,14 +332,8 @@ export const adminContentRouter = router({
       }),
     }))
     .mutation(async ({ input }) => {
-      const dataDir = getDataDir();
-      const filePath = path.join(dataDir, "mockExamQuestions.json");
-      const data: any[] = await readJsonFile(filePath);
-      const idx = data.findIndex((q: any) => q.id === input.questionId);
-      if (idx === -1) return { success: false, error: "Question not found" };
-      data[idx] = { ...data[idx], ...input.data };
-      await writeJsonFile(filePath, data);
-      return { success: true };
+      const success = await updateExamQuestion(input.questionId, input.data);
+      return success ? { success: true } : { success: false, error: "Question not found" };
     }),
 
   // Add a new mock exam question
@@ -350,25 +350,15 @@ export const adminContentRouter = router({
       explanation: z.union([z.string(), z.record(z.string(), z.string())]),
     }))
     .mutation(async ({ input }) => {
-      const dataDir = getDataDir();
-      const filePath = path.join(dataDir, "mockExamQuestions.json");
-      const data: any[] = await readJsonFile(filePath);
-      const newId = `q_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-      data.push({ id: newId, ...input });
-      await writeJsonFile(filePath, data);
-      return { success: true, id: newId };
+      const id = await addExamQuestion(input);
+      return { success: true, id };
     }),
 
   // Delete a mock exam question
   deleteMockExamQuestion: adminProcedure
     .input(z.object({ questionId: z.string() }))
     .mutation(async ({ input }) => {
-      const dataDir = getDataDir();
-      const filePath = path.join(dataDir, "mockExamQuestions.json");
-      const data: any[] = await readJsonFile(filePath);
-      const filtered = data.filter((q: any) => q.id !== input.questionId);
-      await writeJsonFile(filePath, filtered);
-      return { success: true };
+      return { success: await deleteExamQuestion(input.questionId) };
     }),
 
   // Update a lesson's chapter content (blocks)

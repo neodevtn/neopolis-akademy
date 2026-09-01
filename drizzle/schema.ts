@@ -254,6 +254,25 @@ export type ExamAttempt = typeof examAttempts.$inferSelect;
 export type InsertExamAttempt = typeof examAttempts.$inferInsert;
 
 /**
+ * Source administrable durable d’un examen par formation. Les anciens fichiers
+ * JSON restent une base de lecture pour les examens non encore modifiés ; dès
+ * qu’un administrateur crée ou modifie une épreuve, sa configuration complète
+ * et sa banque sont persistées ici et survivent aux déploiements.
+ */
+export const certificationExams = mysqlTable("certification_exams", {
+  id: int("id").autoincrement().primaryKey(),
+  certificationId: varchar("certificationId", { length: 200 }).notNull(),
+  configuration: json("configuration").notNull(),
+  questions: json("questions").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => [
+  uniqueIndex("certification_exams_cert_unique").on(table.certificationId),
+]);
+export type CertificationExam = typeof certificationExams.$inferSelect;
+export type InsertCertificationExam = typeof certificationExams.$inferInsert;
+
+/**
  * A single durable delivery record per learner and certification.  The unique
  * pair is deliberately permanent: a retry can recover a technical failure,
  * but no scheduler replay can cause a second examination reminder.

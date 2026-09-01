@@ -29,8 +29,13 @@ export default function MockExam() {
   const { isAuthenticated, loading: authLoading, user } = useAuth();
   const { isCertComplete } = useTrainingProgress();
 
-  // Get exam config
-  const examConfig = (trainingIndex as any).examConfig?.[certId || ""];
+  // Le serveur est la source de vérité : la configuration publiée peut évoluer
+  // depuis l’administration sans permettre au navigateur de la falsifier.
+  const examDefinitionQuery = trpc.training.getExamDefinition.useQuery(
+    { certificationId: certId || "" },
+    { enabled: Boolean(isAuthenticated && certId) },
+  );
+  const examConfig = examDefinitionQuery.data;
   const cert = trainingIndex.certifications.find((c) => c.id === certId);
   const courses = trainingIndex.courses.filter((c) => c.certId === certId);
 
@@ -62,38 +67,41 @@ export default function MockExam() {
     return isCertComplete(certId || "", courseIds, totalLessonsMap);
   }, [lessonsLoaded, totalLessonsMap, certId, courseIds, isCertComplete]);
 
-  // Load questions dynamically
-  const [allQuestions, setAllQuestions] = useState<any[]>([]);
-  const [questionsLoaded, setQuestionsLoaded] = useState(false);
-
-  useEffect(() => {
-    fetch("/data/mockExamQuestions.json")
-      .then(res => res.json())
-      .then(data => {
-        setAllQuestions(data);
-        setQuestionsLoaded(true);
-      })
-      .catch(() => setQuestionsLoaded(true));
-  }, []);
-
-  const certQuestions = allQuestions.filter((q: any) => q.certificationId === certId);
-
   // Exam state
   const [examQuestions, setExamQuestions] = useState<any[]>([]);
   const [examState, setExamState] = useState<ExamState>("intro");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [timeRemaining, setTimeRemaining] = useState(0);
-  const [startTime, setStartTime] = useState<Date | null>(null);
   const [selectedForCurrent, setSelectedForCurrent] = useState<string[]>([]);
   const [sessionRestored, setSessionRestored] = useState(false);
 
-  const timeLimit = (examConfig?.timeLimit || 90) * 60;
+  const [verifiedScore, setVerifiedScore] = useState<any>(null);
+  const submittedAttemptRef = useRef(false);
+  const confettiFired = useRef(false);
 
   // Submit exam attempt to server
   const submitAttemptMutation = trpc.training.submitExamAttempt.useMutation({
-    onSuccess: (result) => {
+    onSuccess: (result: any) => {
+      setVerifiedScore(result);
       if (result.achievement) announceAchievement(result.achievement);
+      if (result.passed && !confettiFired.current) {
+        confettiFired.current = true;
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ["#10b981", "#059669", "#34d399", "#fbbf24"] });
+      }
+    },
+  });
+  const startExamSessionMutation = trpc.training.startExamSession.useMutation({
+    onSuccess: (session) => {
+      setExamQuestions(session.questions);
+      setAnswers([]);
+      setCurrentIndex(0);
+      setSelectedForCurrent([]);
+      setTimeRemaining(getExamSessionRemainingSeconds(session.expiresAt));
+      setVerifiedScore(null);
+      submittedAttemptRef.current = false;
+      confettiFired.current = false;
+      setExamState("active");
     },
   });
   const activeSessionQuery = trpc.training.getExamSession.useQuery(
@@ -101,7 +109,6 @@ export default function MockExam() {
     { enabled: Boolean(isAuthenticated && certId) },
   );
   const saveExamSessionMutation = trpc.training.saveExamSession.useMutation();
-  const clearExamSessionMutation = trpc.training.clearExamSession.useMutation();
 
   useEffect(() => {
     if (activeSessionQuery.isLoading) return;
@@ -112,26 +119,21 @@ export default function MockExam() {
       setAnswers((session.answers as Answer[]) || []);
       setCurrentIndex(session.currentIndex || 0);
       setSelectedForCurrent((session.selectedIds as string[]) || []);
-      setStartTime(new Date(session.startedAt));
       setTimeRemaining(remaining);
       setExamState(remaining > 0 ? "active" : "review");
-      if (remaining === 0 && certId) clearExamSessionMutation.mutate({ certificationId: certId });
     }
     setSessionRestored(true);
   }, [activeSessionQuery.data, activeSessionQuery.isLoading, certId]);
 
   useEffect(() => {
-    if (!sessionRestored || examState !== "active" || !certId || !startTime || examQuestions.length === 0) return;
+    if (!sessionRestored || examState !== "active" || !certId || examQuestions.length === 0) return;
     saveExamSessionMutation.mutate({
       certificationId: certId,
-      questions: examQuestions,
       answers,
       currentIndex,
       selectedIds: selectedForCurrent,
-      startedAt: startTime,
-      expiresAt: new Date(Date.now() + timeRemaining * 1000),
     });
-  }, [sessionRestored, examState, certId, examQuestions, answers, currentIndex, selectedForCurrent, startTime, timeRemaining]);
+  }, [sessionRestored, examState, certId, examQuestions, answers, currentIndex, selectedForCurrent]);
 
   // Timer
   useEffect(() => {
@@ -151,23 +153,8 @@ export default function MockExam() {
   }, [examState]);
 
   const startExam = useCallback(() => {
-    // Shuffle and select questions
-    const shuffled = [...certQuestions].sort(() => Math.random() - 0.5);
-    const count = examConfig?.totalQuestions || Math.min(certQuestions.length, 20);
-    const questions = shuffled.slice(0, count);
-    const startedAt = new Date();
-    setExamQuestions(questions);
-    setExamState("active");
-    setTimeRemaining(timeLimit);
-    setStartTime(startedAt);
-    setAnswers([]);
-    setCurrentIndex(0);
-    setSelectedForCurrent([]);
-    if (certId) saveExamSessionMutation.mutate({
-      certificationId: certId, questions, answers: [], currentIndex: 0, selectedIds: [], startedAt,
-      expiresAt: new Date(startedAt.getTime() + timeLimit * 1000),
-    });
-  }, [certQuestions, examConfig, timeLimit, certId]);
+    if (certId && !startExamSessionMutation.isPending) startExamSessionMutation.mutate({ certificationId: certId });
+  }, [certId, startExamSessionMutation]);
 
   const confirmAnswer = useCallback(() => {
     const currentQ = examQuestions[currentIndex];
@@ -186,16 +173,14 @@ export default function MockExam() {
 
   const finishExam = useCallback(() => {
     setExamState("review");
-    if (certId) clearExamSessionMutation.mutate({ certificationId: certId });
-  }, [certId]);
+  }, []);
 
   const finishExamWithAnswer = useCallback((lastQId: string, lastSelected: string[]) => {
     // Calculate score with all answers including the last one
     const allAnswers = [...answers, { questionId: lastQId, selectedIds: lastSelected }];
     setAnswers(allAnswers);
     setExamState("review");
-    if (certId) clearExamSessionMutation.mutate({ certificationId: certId });
-  }, [answers, certId]);
+  }, [answers]);
 
   const toggleSelection = useCallback((choiceId: string) => {
     setSelectedForCurrent((prev) => {
@@ -206,89 +191,17 @@ export default function MockExam() {
     });
   }, []);
 
-  // Score calculation
-  const score = useMemo(() => {
-    if (examState !== "review" || examQuestions.length === 0) return null;
-    let correct = 0;
-    const domainResults: Record<string, { correct: number; total: number }> = {};
-
-    examQuestions.forEach((q: any) => {
-      const domain = typeof q.domain === "object" ? (lang === "fr" ? q.domain.fr : q.domain.en) : q.domain;
-      if (!domainResults[domain]) domainResults[domain] = { correct: 0, total: 0 };
-      domainResults[domain].total++;
-
-      const answer = answers.find((a) => a.questionId === q.id);
-      if (!answer) return;
-      const correctIds = [...q.correctChoiceIds].sort();
-      const selectedIds = [...answer.selectedIds].sort();
-      if (correctIds.length === selectedIds.length && correctIds.every((id: string, i: number) => id === selectedIds[i])) {
-        correct++;
-        domainResults[domain].correct++;
-      }
-    });
-
-    const total = examQuestions.length;
-    const pct = Math.round((correct / total) * 100);
-    const scaled = Math.round(100 + (pct / 100) * 900);
-    const passing = examConfig?.passingScore || 720;
-    return { correct, total, pct, scaled, passing, passed: scaled >= passing, domainResults };
-  }, [examState, answers, examQuestions, examConfig, lang]);
-
-  // Submit score to server when review state is reached
-  // Track if confetti was already fired for this exam session
-  const confettiFired = useRef(false);
-
+  // La réussite effective et le certificat dépendent exclusivement de cette
+  // soumission : le serveur contrôle la session et son horodatage d’expiration.
   useEffect(() => {
-    if (examState === "review" && score && startTime && certId) {
-      submitAttemptMutation.mutate({
-        certificationId: certId,
-        score: score.scaled,
-        totalQuestions: score.total,
-        correctAnswers: score.correct,
-        passed: score.passed ? 1 : 0,
-        domainScores: score.domainResults,
-        startedAt: startTime,
-      });
+    if (examState !== "review" || !certId || submittedAttemptRef.current) return;
+    submittedAttemptRef.current = true;
+    submitAttemptMutation.mutate({ certificationId: certId, answers });
+  }, [examState, certId, answers, submitAttemptMutation]);
 
-      // Fire confetti celebration if passed
-      if (score.passed && !confettiFired.current) {
-        confettiFired.current = true;
-        // First burst
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ["#10b981", "#059669", "#34d399", "#6ee7b7", "#fbbf24", "#f59e0b"],
-        });
-        // Second burst with delay
-        setTimeout(() => {
-          confetti({
-            particleCount: 60,
-            angle: 60,
-            spread: 55,
-            origin: { x: 0, y: 0.6 },
-            colors: ["#10b981", "#059669", "#34d399", "#fbbf24"],
-          });
-          confetti({
-            particleCount: 60,
-            angle: 120,
-            spread: 55,
-            origin: { x: 1, y: 0.6 },
-            colors: ["#10b981", "#059669", "#34d399", "#fbbf24"],
-          });
-        }, 400);
-        // Third burst
-        setTimeout(() => {
-          confetti({
-            particleCount: 40,
-            spread: 100,
-            origin: { y: 0.4 },
-            colors: ["#10b981", "#fbbf24", "#8b5cf6", "#ec4899"],
-          });
-        }, 800);
-      }
-    }
-  }, [examState]);
+  // Le résultat local ne sert qu’à conserver les réponses dans l’interface.
+  // Aucun score, succès ou certificat n’est présenté avant la confirmation du serveur.
+  const score = verifiedScore;
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
@@ -337,7 +250,11 @@ export default function MockExam() {
     );
   }
 
-  if (!cert || !examConfig) {
+  if (!cert || examDefinitionQuery.isLoading) {
+    return <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100"><p className="text-sm text-slate-500">{t({ en: "Loading exam…", fr: "Chargement de l’examen…" })}</p></div>;
+  }
+
+  if (!examConfig) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
         <div className="text-center">
@@ -476,13 +393,10 @@ export default function MockExam() {
 
             <button
               onClick={startExam}
-              disabled={!questionsLoaded || certQuestions.length === 0}
+              disabled={startExamSessionMutation.isPending}
               className="w-full py-3 px-6 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors text-lg"
             >
-              {questionsLoaded
-                ? t({ en: "Start Exam", fr: "Commencer l'examen" })
-                : t({ en: "Loading questions...", fr: "Chargement des questions..." })
-              }
+              {startExamSessionMutation.isPending ? t({ en: "Preparing exam…", fr: "Préparation de l’examen…" }) : t({ en: "Start Exam", fr: "Commencer l'examen" })}
             </button>
           </div>
         </main>
@@ -626,6 +540,8 @@ export default function MockExam() {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-8">
+        {!score && <div className="mb-8 rounded-2xl border border-slate-200 bg-white p-6 text-center"><p className="font-semibold text-slate-800">{t({ en: "Verifying your exam submission…", fr: "Vérification de votre soumission…" })}</p><p className="mt-2 text-sm text-slate-500">{t({ en: "The server checks the official time limit before validating the result.", fr: "Le serveur vérifie la durée officielle avant de valider le résultat." })}</p></div>}
+
         {/* Score Card */}
         {score && (
           <div className={`rounded-2xl border-2 p-8 mb-8 text-center ${
@@ -635,7 +551,9 @@ export default function MockExam() {
               {score.passed ? "🎉" : "📚"}
             </div>
             <h1 className="text-2xl font-bold mb-2">
-              {score.passed
+              {score.timedOut
+                ? t({ en: "Time limit reached", fr: "Durée d’examen dépassée" })
+                : score.passed
                 ? t({ en: "Congratulations! You passed!", fr: "Félicitations ! Vous avez réussi !" })
                 : t({ en: "Keep studying!", fr: "Continuez à étudier !" })
               }
@@ -669,7 +587,7 @@ export default function MockExam() {
               {t({ en: "Performance by Domain", fr: "Performance par domaine" })}
             </h2>
             <div className="space-y-3">
-              {Object.entries(score.domainResults).map(([domain, result]) => {
+              {Object.entries(score.domainResults as Record<string, { correct: number; total: number }>).map(([domain, result]) => {
                 const pct = result.total > 0 ? Math.round((result.correct / result.total) * 100) : 0;
                 return (
                   <div key={domain}>

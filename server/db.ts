@@ -494,6 +494,18 @@ export async function saveExamSession(data: InsertExamSession) {
   return getExamSession(data.userId, data.certificationId);
 }
 
+/** Met à jour seulement l’avancement d’une session déjà créée par le serveur. */
+export async function updateExamSessionState(data: { userId: number; certificationId: string; answers: unknown; currentIndex: number; selectedIds: string[] }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(examSessions).set({
+    answers: data.answers,
+    currentIndex: data.currentIndex,
+    selectedIds: data.selectedIds,
+  }).where(and(eq(examSessions.userId, data.userId), eq(examSessions.certificationId, data.certificationId)));
+  return getExamSession(data.userId, data.certificationId);
+}
+
 export async function clearExamSession(userId: number, certificationId: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
