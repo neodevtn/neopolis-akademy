@@ -36,7 +36,7 @@
 - [x] Vérifier et corriger la persistence de `timedOut` lors de la soumission afin que les expirations récentes puissent être distinguées dans le suivi administratif — `timeLimitMinutes` et `timedOut` persistés par le serveur, migration `0039` appliquée et filtre « Temps expiré » validé par QA
 - [x] Ajouter une QA explicite de pagination du suivi des examens avec passage page suivante/précédente sur des données de contrôle, puis archiver la preuve — page 2 et retour page 1 contrôlés dans la sonde navigateur
 - [x] Ajouter une QA ou un test explicite d’état vide en appliquant des filtres sans résultat et en vérifiant le message affiché — recherche impossible contrôlée et message « Aucune tentative ne correspond aux filtres appliqués » affiché
-- [ ] Publier le suivi des examens puis rejouer la QA sur le domaine public avec les filtres, les indicateurs, la navigation et la persistence d’expiration
+- [x] Publier le suivi des examens puis rejouer la QA sur le domaine public avec les filtres, les indicateurs, la navigation et la persistence d’expiration — version `7b461517` contrôlée sur `akademy.neodev.click` : navigation, statistiques, table, action profil, filtres, pagination, état vide et tentative expirée persistée tous validés ; configuration QA supprimée
 
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
