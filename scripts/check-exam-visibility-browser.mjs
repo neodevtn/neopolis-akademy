@@ -332,6 +332,44 @@ try {
   const learnerShowsDeletedExamUnavailable = (await deletedExamLearnerPage.locator("body").innerText()).includes("Examen blanc non disponible.");
   await deletedExamLearnerPage.screenshot({ path: path.join(screenshotDir, "learner-exam-deleted-state-mobile.png"), fullPage: false });
   await deletedExamLearnerContext.close();
+  await adminPage.goto(`${baseUrl}/admin/training?tab=exams&exam_monitoring_qa=1`, { waitUntil: "domcontentloaded" });
+  await adminPage.waitForFunction(() => document.body.innerText.includes("Suivi des examens"), { timeout: 15000 });
+  await adminPage.waitForFunction(() => document.body.innerText.includes("Temps expiré") || document.body.innerText.includes("Le suivi des examens ne peut pas être chargé"), { timeout: 15000 });
+  const monitoringText = await adminPage.locator("body").innerText();
+  const monitoringRows = await adminPage.locator("tbody tr").count();
+  const monitoringFilterCount = await adminPage.getByRole("combobox").count();
+  const monitoringControls = ["Terminé", "Durée", "Score", "Précédent", "Suivant"].every((label) => monitoringText.includes(label));
+  const monitoringMetrics = ["Tentatives", "Réussite", "Score moyen", "Temps moyen", "Temps expiré"].every((label) => monitoringText.includes(label));
+  const monitoringLearnerAction = await adminPage.getByRole("button", { name: /Voir le profil de/ }).count() > 0;
+  const activeMonitoringNav = await adminPage.locator('a[aria-current="page"]').filter({ hasText: "Suivi des examens" }).count() === 1;
+  const paginationAvailable = !(await adminPage.getByRole("button", { name: "Suivant", exact: true }).isDisabled());
+  let paginationWorks = false;
+  if (paginationAvailable) {
+    await adminPage.getByRole("button", { name: "Suivant", exact: true }).evaluate((element) => element.click());
+    await adminPage.waitForFunction(() => document.body.innerText.includes("page 2 sur"), { timeout: 10000 });
+    const onSecondPage = (await adminPage.locator("body").innerText()).includes("page 2 sur");
+    await adminPage.getByRole("button", { name: "Précédent", exact: true }).evaluate((element) => element.click());
+    await adminPage.waitForFunction(() => document.body.innerText.includes("page 1 sur"), { timeout: 10000 });
+    paginationWorks = onSecondPage && (await adminPage.locator("body").innerText()).includes("page 1 sur");
+  }
+  const expiredFilterResponse = adminPage.waitForResponse((response) => response.url().includes("admin.getExamMonitoring") && response.ok());
+  await adminPage.getByLabel("Filtrer par résultat").click();
+  await adminPage.getByRole("option", { name: "Temps expiré", exact: true }).click();
+  await expiredFilterResponse;
+  await adminPage.getByLabel("Rechercher une tentative d’examen").fill(qaCertificationId);
+  const searchFilterResponse = adminPage.waitForResponse((response) => response.url().includes("admin.getExamMonitoring") && response.ok());
+  await adminPage.getByRole("button", { name: "Rechercher", exact: true }).click();
+  const searchFilterPayload = await (await searchFilterResponse).json();
+  const searchFilterAttempts = searchFilterPayload?.[0]?.result?.data?.json?.attempts || [];
+  const searchFilterWorks = searchFilterAttempts.length > 0 && searchFilterAttempts.every((attempt) => attempt.status === "timed_out");
+  const expirationFilterWorks = searchFilterWorks;
+  await adminPage.getByLabel("Rechercher une tentative d’examen").fill("__exam-monitoring-empty-qa__");
+  const emptyFilterResponse = adminPage.waitForResponse((response) => response.url().includes("admin.getExamMonitoring") && response.ok());
+  await adminPage.getByRole("button", { name: "Rechercher", exact: true }).click();
+  await emptyFilterResponse;
+  await adminPage.waitForFunction(() => document.body.innerText.includes("Aucune tentative ne correspond aux filtres appliqués."), { timeout: 10000 });
+  const emptyStateWorks = (await adminPage.locator("body").innerText()).includes("Aucune tentative ne correspond aux filtres appliqués.");
+  await adminPage.screenshot({ path: path.join(screenshotDir, "admin-exam-monitoring.png"), fullPage: false });
   results.push({
     type: "admin_exam_create_publish_cleanup",
     opensCreationEditor: Boolean(qaCertificationId),
@@ -342,7 +380,20 @@ try {
     adminShowsDeletedExamUnavailable,
     learnerShowsDeletedExamUnavailable,
   });
-  await adminPage.screenshot({ path: path.join(screenshotDir, "admin-exam-creation-and-cleanup.png"), fullPage: false });
+  results.push({
+    type: "admin_exam_monitoring",
+    hasMonitoringTitle: monitoringText.includes("Suivi des examens"),
+    hasMonitoringMetrics: monitoringMetrics,
+    hasPagedTable: monitoringRows > 0 && monitoringControls,
+    hasSearchAndFilters: monitoringFilterCount >= 2,
+    hasLearnerAction: monitoringLearnerAction,
+    hasActiveMonitoringNavigation: activeMonitoringNav,
+    expirationFilterWorks,
+    searchFilterWorks,
+    paginationAvailable,
+    paginationWorks,
+    emptyStateWorks,
+  });
   await adminContext.close();
 } finally {
   await browser.close();
@@ -358,7 +409,8 @@ const failures = results.filter((result) =>
   || result.type === "admin_catalog_hierarchy" && (!result.hasLearnerCatalogTitle || !result.hasHierarchyLevels || !result.hasExamManagement || !result.hasExamDetails)
   || result.type === "admin_exam_creation_entrypoint" && (result.unavailableExamCount < 1 || result.creationButtonCount < 1)
   || result.type === "admin_exam_editor_binding" && (!result.selectedCertificationInUrl || !result.loadsQuestionBank || !result.exposesEditableDuration || !result.exposesOfficialPassingScore || !result.hasContextualHelp || !result.previewUsesUnsavedDraft || !result.previewDoesNotCreateSession || !result.previewFitsMobile)
-  || result.type === "admin_exam_create_publish_cleanup" && (!result.opensCreationEditor || !result.savesQuestionAndPublication || !result.startsProtectedServerSession || !result.expiredSubmissionDeniedCertificate || !result.unpublishesAndCleansQuestion || !result.adminShowsDeletedExamUnavailable || !result.learnerShowsDeletedExamUnavailable),
+  || result.type === "admin_exam_create_publish_cleanup" && (!result.opensCreationEditor || !result.savesQuestionAndPublication || !result.startsProtectedServerSession || !result.expiredSubmissionDeniedCertificate || !result.unpublishesAndCleansQuestion || !result.adminShowsDeletedExamUnavailable || !result.learnerShowsDeletedExamUnavailable)
+  || result.type === "admin_exam_monitoring" && (!result.hasMonitoringTitle || !result.hasMonitoringMetrics || !result.hasPagedTable || !result.hasSearchAndFilters || !result.hasLearnerAction || !result.hasActiveMonitoringNavigation || !result.expirationFilterWorks || !result.searchFilterWorks || !result.paginationAvailable || !result.paginationWorks || !result.emptyStateWorks),
 );
 if (failures.length) {
   console.error(JSON.stringify({ failures }, null, 2));

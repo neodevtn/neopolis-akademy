@@ -248,6 +248,8 @@ export const examAttempts = mysqlTable("exam_attempts", {
   domainScores: json("domainScores"), // JSON object with per-domain scores
   startedAt: timestamp("startedAt").notNull(),
   finishedAt: timestamp("finishedAt").defaultNow().notNull(),
+  timeLimitMinutes: int("timeLimitMinutes"), // snapshot at the time of submission; null for historical attempts
+  timedOut: int("timedOut").notNull().default(0), // 0 or 1, evaluated by the server at submission
 });
 
 export type ExamAttempt = typeof examAttempts.$inferSelect;

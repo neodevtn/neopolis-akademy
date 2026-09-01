@@ -32,6 +32,7 @@ import { AchievementGallery } from "@/components/AchievementGallery";
 import { CompetencyProfile } from "@/components/CompetencyProfile";
 import { CompetencyLeaderboard } from "@/components/admin/CompetencyLeaderboard";
 import { AdminFeedbackDashboard } from "@/components/AdminFeedbackDashboard";
+import { ExamMonitoringPanel } from "@/components/admin/ExamMonitoringPanel";
 import { buildNavigationUrl } from "@shared/navigationUrls";
 import { parseInvitationEmails, type InvitationEmailParseResult } from "@/lib/invitationEmails";
 import { buildRecentDailyActivity, summarizeLearningActivity } from "./admin/learningActivityAudit";
@@ -95,6 +96,7 @@ export default function AdminTraining() {
     invitations: { title: "Invitations directes", description: "Inviter, suivre ou annuler les invitations hors candidature" },
     selected: { title: "Candidats sélectionnés", description: "Vérifier l’activation des comptes et relancer les candidats retenus" },
     analytics: { title: "Reporting d’apprentissage", description: "Analyser la performance, l’implication et l’évolution des apprenants" },
+    exams: { title: "Suivi des examens", description: "Analyser les passages, résultats, scores et durées des évaluations certifiantes" },
     feedback: { title: "Feedback formations", description: "Piloter les notations, suggestions et réponses pédagogiques" },
     groups: { title: "Groupes d’apprenants", description: "Affecter des apprenants et ouvrir précisément les formations autorisées" },
   } as Record<string, { title: string; description: string }>)[activeTab] || { title: "Gestion des apprenants", description: "Suivi, invitations et analyses de la formation" };
@@ -162,7 +164,7 @@ export default function AdminTraining() {
   useEffect(() => {
     const params = new URLSearchParams(urlSearch);
     const tab = params.get("tab");
-    if (["learners", "invitations", "selected", "analytics", "feedback", "groups"].includes(tab || "")) setActiveTab(tab!);
+    if (["learners", "invitations", "selected", "analytics", "feedback", "groups", "exams"].includes(tab || "")) setActiveTab(tab!);
     else setActiveTab("learners");
     const learnerId = Number(params.get("learner"));
     if (Number.isInteger(learnerId) && learnerId > 0) setSelectedUserId(learnerId);
@@ -933,6 +935,9 @@ export default function AdminTraining() {
               <TabsTrigger value="analytics" className="gap-1.5">
                 <BarChart3 className="w-4 h-4" /> Reporting
               </TabsTrigger>
+              <TabsTrigger value="exams" className="gap-1.5">
+                <GraduationCap className="w-4 h-4" /> Examens
+              </TabsTrigger>
               <TabsTrigger value="feedback" className="gap-1.5">
                 <MessageSquareText className="w-4 h-4" /> Feedback
               </TabsTrigger>
@@ -1249,6 +1254,7 @@ export default function AdminTraining() {
               </div>
               <CompetencyLeaderboard />
             </TabsContent>
+            <TabsContent value="exams"><ExamMonitoringPanel onOpenLearner={(userId) => navigateTraining("learners", userId)} /></TabsContent>
             <TabsContent value="feedback"><AdminFeedbackDashboard /></TabsContent>
           </Tabs>
         </motion.div>

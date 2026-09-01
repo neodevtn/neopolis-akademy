@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { BrandLogo } from "@/components/BrandLogo";
-import { Activity, AlertTriangle, ArrowLeft, BarChart3, BookOpen, ChevronDown, FileImage, Gift, KanbanSquare, Layers, LayoutDashboard, Menu, MessageSquare, UserCheck, UserPlus, Users } from "lucide-react";
+import { Activity, AlertTriangle, ArrowLeft, BarChart3, BookOpen, ChevronDown, ClipboardCheck, FileImage, Gift, KanbanSquare, Layers, LayoutDashboard, Menu, MessageSquare, UserCheck, UserPlus, Users } from "lucide-react";
 
 type AdminPage = "candidatures" | "training" | "content" | "media" | "errors";
 type NavItem = { label: string; href: string; icon: typeof LayoutDashboard; page: AdminPage; description: string };
@@ -22,6 +22,7 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
     label: "Apprenants",
     items: [
       { label: "Suivi des apprenants", href: "/admin/training?tab=learners", icon: Users, page: "training", description: "Progression et engagement" },
+      { label: "Suivi des examens", href: "/admin/training?tab=exams", icon: ClipboardCheck, page: "training", description: "Résultats et durées" },
       { label: "Groupes d’apprenants", href: "/admin/training?tab=groups", icon: Layers, page: "training", description: "Accès aux formations" },
       { label: "Invitations directes", href: "/admin/training?tab=invitations", icon: UserPlus, page: "training", description: "Inviter et annuler" },
       { label: "Reporting", href: "/admin/training?tab=analytics", icon: BarChart3, page: "training", description: "Performance et tendances" },
@@ -53,7 +54,8 @@ interface AdminNavbarProps {
 }
 
 function getCurrentLabel(location: string, activePage: AdminPage) {
-  return NAV_GROUPS.flatMap((group) => group.items).find((item) => item.page === activePage && location === item.href)?.label
+  const requestedTab = new URLSearchParams(location.split("?")[1] || "").get("tab");
+  return NAV_GROUPS.flatMap((group) => group.items).find((item) => item.page === activePage && new URLSearchParams(item.href.split("?")[1] || "").get("tab") === requestedTab)?.label
     || NAV_GROUPS.flatMap((group) => group.items).find((item) => item.page === activePage)?.label
     || "Administration";
 }
@@ -70,7 +72,12 @@ export function AdminNavbar({ activePage, notificationSlot, accessRole = "admin"
     return () => root?.classList.remove("admin-navigation-shell");
   }, []);
 
-  const isActive = (item: NavItem) => currentLocation === item.href || (item.href === "/admin" && currentLocation === "/admin");
+  const isActive = (item: NavItem) => {
+    if (currentLocation === item.href || (item.href === "/admin" && currentLocation === "/admin")) return true;
+    const itemUrl = new URL(item.href, "https://admin.local");
+    const currentUrl = new URL(currentLocation, "https://admin.local");
+    return itemUrl.pathname === currentUrl.pathname && Boolean(itemUrl.searchParams.get("tab")) && itemUrl.searchParams.get("tab") === currentUrl.searchParams.get("tab");
+  };
 
   const visibleGroups = accessRole === "manager"
     ? NAV_GROUPS.map((group) => ({ ...group, items: group.items.filter((item) => item.href === "/admin?tab=activity") })).filter((group) => group.items.length)

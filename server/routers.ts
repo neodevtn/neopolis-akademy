@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getExamSession, saveExamSession, clearExamSession, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients, getReferralProgramForUser, getReferralAdminOverview, recordReferralConversion, updateReferralCampaign, updateReferralConversionStatus, saveAiResponseEvaluation } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getExamSession, saveExamSession, clearExamSession, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getExamMonitoring, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients, getReferralProgramForUser, getReferralAdminOverview, recordReferralConversion, updateReferralCampaign, updateReferralConversionStatus, saveAiResponseEvaluation } from "./db";
 import { awardCertification, awardCourseCompletionBadge } from "./achievementService";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
@@ -577,7 +577,7 @@ export const appRouter = router({
         const questions = Array.isArray(session.questions) ? session.questions as ExamQuestion[] : [];
         if (!questions.length) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "La session d’examen est invalide." });
         const result = scoreStoredExamSession(questions, input.answers as StoredExamAnswer[], definition, new Date() >= new Date(session.expiresAt));
-        const attempt = await createExamAttempt({ userId: ctx.user.id, certificationId: input.certificationId, score: result.scaled, totalQuestions: result.total, correctAnswers: result.correct, passed: result.passed ? 1 : 0, domainScores: result.domainResults, startedAt: session.startedAt });
+        const attempt = await createExamAttempt({ userId: ctx.user.id, certificationId: input.certificationId, score: result.scaled, totalQuestions: result.total, correctAnswers: result.correct, passed: result.passed ? 1 : 0, domainScores: result.domainResults, startedAt: session.startedAt, timeLimitMinutes: definition.timeLimit, timedOut: result.timedOut ? 1 : 0 });
         await clearExamSession(ctx.user.id, input.certificationId);
         const achievement = result.passed ? await awardCertification(ctx.user, input.certificationId, result.scaled, Number(attempt.id)) : null;
         return { ...attempt, ...result, achievement };
@@ -1028,6 +1028,21 @@ export const appRouter = router({
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await getAdminAnalytics();
+      }),
+
+    getExamMonitoring: protectedProcedure
+      .input(z.object({
+        page: z.number().int().min(1).default(1),
+        pageSize: z.number().int().min(1).max(100).default(15),
+        search: z.string().max(200).optional(),
+        certificationId: z.string().max(200).optional(),
+        status: z.enum(["all", "passed", "failed", "timed_out"]).default("all"),
+        sortBy: z.enum(["finishedAt", "score", "durationSeconds"]).default("finishedAt"),
+        sortDirection: z.enum(["asc", "desc"]).default("desc"),
+      }))
+      .query(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        return await getExamMonitoring(input);
       }),
 
     getLearningReports: protectedProcedure

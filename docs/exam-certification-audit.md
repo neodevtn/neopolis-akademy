@@ -37,3 +37,13 @@ L’éditeur propose désormais huit aides contextuelles : code d’examen, ques
 Le bouton **Prévisualiser côté apprenant** ouvre une fenêtre non destructive fondée sur le brouillon courant. Elle ne crée ni session, ni tentative, ni sauvegarde. Elle restitue le statut disponible/brouillon/sans question, les informations d’examen, les conditions de passage et les domaines. La QA locale vérifie le reflet d’une durée non sauvegardée (119 minutes), les huit aides et le rendu sans débordement à 390 px. Les 502 tests de la suite complète ont réussi, avec deux tests explicitement ignorés.
 
 Après publication de la version `6465c19f`, la même QA a été rejouée sur `https://akademy.neodev.click`. Elle confirme les huit aides contextuelles, l’affichage de la durée du brouillon non sauvegardé, l’absence de création de session et un dialogue mobile contenu à 356 px (`scrollWidth: 356`, sans descendant débordant). Les captures desktop et mobile sont archivées sous `docs/exam-visibility-screenshots/`.
+
+## Suivi administratif des examens
+
+L’onglet **Apprenants → Suivi des examens** liste chaque tentative sous forme de tableau paginé. Il associe l’apprenant, la formation, l’instant de soumission, le temps écoulé, le nombre de réponses justes, le score sur 1 000, son pourcentage et le résultat. La ligne comme l’action dédiée ouvrent la fiche de l’apprenant correspondant.
+
+Les indicateurs sont calculés sur le filtre actif : nombre de tentatives et d’apprenants concernés, taux et volume de réussite, score moyen, durée moyenne et nombre de délais expirés. La recherche porte sur l’apprenant et l’identifiant de formation ; les filtres de formation et de résultat, le tri par date/score/durée et la pagination sont exécutés côté serveur. Cette procédure reste réservée aux administrateurs.
+
+Les nouvelles tentatives conservent désormais la durée configurée et l’état d’expiration décidés par le serveur au moment de la soumission. Elles peuvent donc être filtrées de façon fiable comme « Temps expiré ». Les tentatives historiques restent visibles avec leur durée mesurée, mais ne peuvent pas être rétroactivement qualifiées comme expirées si cet état n’avait pas été enregistré.
+
+La QA locale a vérifié les indicateurs, la table, les actions, la navigation active malgré des paramètres supplémentaires, le filtre « Temps expiré », la recherche associée, un passage réel en page 2 puis retour à la page 1 et l’état vide après une recherche sans résultat. Les calculs et l’autorisation sont couverts par quatre tests dédiés ; la suite de régression compte 506 tests réussis et deux tests explicitement ignorés.

@@ -10,6 +10,7 @@ import { normalizeReferralCode } from "../shared/referral";
 import { canLearnerOpenLifecycle, type CourseLifecycleStatus } from "../shared/courseLifecycle";
 import { getNewLearnerGroupMemberIds, needsDefaultLearnerGroup } from "../shared/defaultLearnerGroup";
 import { buildCourseCatalogKpis, type CourseCatalogKpi } from "./courseCatalogKpis";
+import { buildExamMonitoringSummary, examAttemptStatus, examDurationSeconds, examScorePercent, type ExamMonitoringStatus } from "./examMonitoring";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -408,6 +409,68 @@ export async function getExamAttempts(userId: number, certificationId?: string) 
   return await db.select().from(examAttempts)
     .where(eq(examAttempts.userId, userId))
     .orderBy(desc(examAttempts.finishedAt));
+}
+
+export async function getExamMonitoring(input: {
+  page: number;
+  pageSize: number;
+  search?: string;
+  certificationId?: string;
+  status?: "all" | ExamMonitoringStatus;
+  sortBy?: "finishedAt" | "score" | "durationSeconds";
+  sortDirection?: "asc" | "desc";
+}) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const page = Math.max(1, input.page);
+  const pageSize = Math.min(100, Math.max(1, input.pageSize));
+  const normalizedSearch = input.search?.trim();
+  const status = input.status || "all";
+  const filters = [] as any[];
+  if (input.certificationId) filters.push(eq(examAttempts.certificationId, input.certificationId));
+  if (status === "passed") filters.push(eq(examAttempts.passed, 1));
+  if (status === "failed") filters.push(and(eq(examAttempts.passed, 0), eq(examAttempts.timedOut, 0)));
+  if (status === "timed_out") filters.push(eq(examAttempts.timedOut, 1));
+  if (normalizedSearch) {
+    const term = `%${normalizedSearch}%`;
+    filters.push(or(like(users.name, term), like(users.email, term), like(examAttempts.certificationId, term)));
+  }
+  const where = filters.length ? and(...filters) : undefined;
+  const durationExpression = sql<number>`TIMESTAMPDIFF(SECOND, ${examAttempts.startedAt}, ${examAttempts.finishedAt})`;
+  const sortBy = input.sortBy || "finishedAt";
+  const sortableColumns = { finishedAt: examAttempts.finishedAt, score: examAttempts.score, durationSeconds: durationExpression } as const;
+  const orderBy = (input.sortDirection || "desc") === "asc" ? asc(sortableColumns[sortBy]) : desc(sortableColumns[sortBy]);
+
+  const base = db.select({
+    id: examAttempts.id,
+    userId: examAttempts.userId,
+    certificationId: examAttempts.certificationId,
+    score: examAttempts.score,
+    totalQuestions: examAttempts.totalQuestions,
+    correctAnswers: examAttempts.correctAnswers,
+    passed: examAttempts.passed,
+    timedOut: examAttempts.timedOut,
+    startedAt: examAttempts.startedAt,
+    finishedAt: examAttempts.finishedAt,
+    timeLimitMinutes: examAttempts.timeLimitMinutes,
+    learnerName: users.name,
+    learnerEmail: users.email,
+  }).from(examAttempts).innerJoin(users, eq(examAttempts.userId, users.id));
+  const rows = where ? await base.where(where).orderBy(orderBy).limit(pageSize).offset((page - 1) * pageSize) : await base.orderBy(orderBy).limit(pageSize).offset((page - 1) * pageSize);
+  const allRows = where ? await base.where(where) : await base;
+  const [{ total }] = where
+    ? await db.select({ total: count() }).from(examAttempts).innerJoin(users, eq(examAttempts.userId, users.id)).where(where)
+    : await db.select({ total: count() }).from(examAttempts);
+
+  const normalizeRow = (row: typeof rows[number]) => ({
+    ...row,
+    learnerLabel: learnerReportingLabel({ name: row.learnerName, email: row.learnerEmail }),
+    status: examAttemptStatus(row),
+    durationSeconds: examDurationSeconds(row),
+    scorePercent: examScorePercent(row.score),
+  });
+  return { attempts: rows.map(normalizeRow), summary: buildExamMonitoringSummary(allRows), total: Number(total), page, pageSize };
 }
 
 // ============ Exam reminder delivery (one durable record per learner/certification) ============
