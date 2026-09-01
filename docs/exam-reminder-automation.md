@@ -38,3 +38,16 @@ Le callback HTTP est `POST /api/scheduled/exam-reminder`. Il accepte uniquement 
 ```
 
 La tâche est ensuite vérifiable et administrable depuis l’outil de planification du projet. Toute modification du callback exige un nouveau déploiement avant reprise du job.
+
+## Contrôles réalisés avant activation
+
+| Contrôle | Résultat |
+| --- | --- |
+| Migration de persistence | Les migrations `0036` et `0037` ont été générées, relues et appliquées avant publication. |
+| Logique métier | Neuf tests ciblés couvrent la configuration d’examen, le délai de 24 h, l’incomplétude, les cours multi-écrans, les tentatives, les comptes bloqués, l’idempotence et le lien du courriel. |
+| Régression | La suite complète a réussi : 495 tests réussis, 2 tests explicitement ignorés. La validation de catalogue a retourné 0 erreur. |
+| Sécurité du callback | Les appels POST non authentifiés reçoivent `403` localement et sur `https://akademy.neodev.click/api/scheduled/exam-reminder`. Aucun e-mail réel n’a été envoyé pendant la validation. |
+| Publication et planification | Version `70503b09` publiée. Le job `exam-reminder-daily` est actif, lié à `/api/scheduled/exam-reminder`, avec la fréquence `0 0 9 * * *` (UTC). Son identité est enregistrée dans le registre durable du projet. |
+| Authentification cron réelle | Une tâche de test temporaire, volontairement absente du registre, a exécuté le callback trois fois avec succès (`HTTP 200`, réponse agrégée `unregistered-task`). Elle a été supprimée immédiatement ; seul le job quotidien demeure actif. |
+
+Au moment de l’activation, l’historique du job quotidien ne comporte encore aucune exécution, ce qui est normal avant le premier créneau quotidien. Les résultats d’exécution se consultent dans le journal de la tâche ; ses réponses ne contiennent que des compteurs agrégés.
