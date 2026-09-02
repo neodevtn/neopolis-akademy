@@ -71,7 +71,7 @@
 - [x] Ajouter des procédures administrateur protégées et minimisées pour les données de profil, jalons, graphiques et KPI corrigés — enrichissement de détail et journal d’activité paginé, filtrable, réservé au rôle admin
 - [x] Implémenter l’interface responsive avec tableaux paginés, actions de navigation et états vides explicites sans concentrer les informations sur une seule vue — profil candidature, groupes, jalons, graphiques, progression, examens et journal sont répartis par onglet
 - [x] Couvrir les calculs, permissions, onglets, graphiques et navigation profil par tests et contrôles navigateur desktop/mobile — 522 tests réussis, QA authentifiée des 7 onglets, état vide et rendu 390 px sans débordement
-- [ ] Publier la fiche 360° et vérifier la cohérence des KPI sur le domaine public avant livraison
+- [x] Publier la fiche 360° et vérifier la cohérence des KPI sur le domaine public avant livraison — checkpoint `f418a110` déployé ; QA authentifiée publique : six KPI, sept onglets, état vide du journal et mobile `390/390` validés sans donnée de compte archivée
 
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`

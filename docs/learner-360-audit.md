@@ -17,3 +17,5 @@ L’historique d’activité est une procédure distincte réservée au rôle ad
 ## Contrôle local
 
 La QA authentifiée de la fiche de contrôle a vérifié les six KPI, les sept onglets, l’état vide de recherche dans l’historique et le profil mobile. La vue à 390 px conserve une largeur de document égale à la largeur du viewport et ne présente aucun débordement horizontal. Les captures de contrôle contenant des données de compte ne sont pas conservées dans le dépôt.
+
+Après publication du checkpoint `f418a110`, la même QA a été exécutée sur `https://akademy.neodev.click`. Les six KPI, les sept onglets, l’état vide et la vue mobile sont confirmés. Le document mobile retourne `clientWidth = 390` et `scrollWidth = 390`. Le rapport machine ne contient aucun nom, adresse e-mail, score ni identifiant : seulement les critères validés et les mesures de largeur.
