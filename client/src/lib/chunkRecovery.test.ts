@@ -1,5 +1,29 @@
-import { describe, expect, it } from "vitest";
-import { getClientBundleRecoveryScope, isRecoverableClientRenderError, isStaleClientBundleError } from "./chunkRecovery";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { getClientBundleRecoveryScope, isRecoverableClientRenderError, isStaleClientBundleError, retryStaleClientBundle } from "./chunkRecovery";
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
+function installRecoveryWindow() {
+  const values = new Map<string, string>();
+  const replace = vi.fn();
+  vi.stubGlobal("window", {
+    location: {
+      pathname: "/training/exemple/module",
+      href: "https://akademy.neodev.click/training/exemple/module?chapter=1",
+      replace,
+    },
+    sessionStorage: {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+      removeItem: (key: string) => values.delete(key),
+      get length() { return values.size; },
+      key: (index: number) => [...values.keys()][index] ?? null,
+    },
+  });
+  return { replace };
+}
 
 describe("isStaleClientBundleError", () => {
   it("recognizes the browser MIME error caused by a stale lazy chunk", () => {
@@ -48,5 +72,23 @@ describe("isStaleClientBundleError", () => {
 
   it("does not reload for an unrelated React rendering failure", () => {
     expect(isRecoverableClientRenderError(new Error("Objects are not valid as a React child"))).toBe(false);
+  });
+
+  it("recharges une seule fois une signature de module obsolète et conserve les paramètres du parcours", () => {
+    const { replace } = installRecoveryWindow();
+    const error = new TypeError("Cannot read properties of undefined (reading 'default')");
+
+    expect(retryStaleClientBundle(error)).toBe(true);
+    expect(replace).toHaveBeenCalledOnce();
+    expect(replace.mock.calls[0]?.[0]).toMatch(/^https:\/\/akademy\.neodev\.click\/training\/exemple\/module\?chapter=1&client-recovery=\d+$/);
+    expect(retryStaleClientBundle(error)).toBe(false);
+    expect(replace).toHaveBeenCalledOnce();
+  });
+
+  it("autorise un seul rechargement distinct si la signature suivante est celle d’un arbre React obsolète", () => {
+    const { replace } = installRecoveryWindow();
+    expect(retryStaleClientBundle(new TypeError("Cannot read properties of undefined (reading 'default')"))).toBe(true);
+    expect(retryStaleClientBundle(new DOMException("Failed to execute 'insertBefore' on 'Node'", "NotFoundError"))).toBe(true);
+    expect(replace).toHaveBeenCalledTimes(2);
   });
 });
