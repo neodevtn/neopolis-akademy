@@ -1,4 +1,4 @@
-import { Check, Copy, Facebook, Gift, Linkedin, MessageCircle, Send, Users } from "lucide-react";
+import { Check, Copy, Facebook, Gift, Linkedin, Mail, MessageCircle, Send, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ type ReferralShareCardProps = {
 
 const SOCIAL_TARGETS: Array<{ id: Exclude<ReferralShareTarget, "copy">; label: string; icon: typeof MessageCircle }> = [
   { id: "whatsapp", label: "WhatsApp", icon: MessageCircle },
+  { id: "messenger", label: "Messenger", icon: Send },
+  { id: "email", label: "E-mail", icon: Mail },
   { id: "linkedin", label: "LinkedIn", icon: Linkedin },
   { id: "facebook", label: "Facebook", icon: Facebook },
   { id: "x", label: "X", icon: Send },
@@ -37,7 +39,12 @@ export function ReferralShareCard({ content = "academy", courseId, certification
   const share = (target: Exclude<ReferralShareTarget, "copy">) => {
     const referralUrl = buildReferralUrl({ origin, referralCode, content, courseId, certificationId, achievementId, shareTitle: content === "course" ? title : undefined, target });
     const message = program.campaign.shareMessage || "Rejoignez Neopolis Akademy avec mon lien de parrainage.";
-    window.open(buildReferralShareUrl(target, referralUrl, message), "_blank", "noopener,noreferrer");
+    const shareUrl = buildReferralShareUrl(target, referralUrl, message);
+    if (target === "email") {
+      window.location.href = shareUrl;
+      return;
+    }
+    window.open(shareUrl, "_blank", "noopener,noreferrer");
   };
 
   const copy = async () => {
@@ -69,6 +76,7 @@ export function ReferralShareCard({ content = "academy", courseId, certification
       <div className="mt-3 flex flex-wrap gap-2">
         {SOCIAL_TARGETS.map(({ id, label, icon: Icon }) => <Button key={id} type="button" variant="outline" size="sm" onClick={() => share(id)} className="gap-1.5"><Icon className="h-3.5 w-3.5" />{label}</Button>)}
       </div>
+      <p className="mt-3 text-xs text-muted-foreground">Pour Messenger sur ordinateur, copiez le lien puis collez-le dans la conversation. Sur mobile, le bouton ouvre l’application Messenger.</p>
       <p className="mt-4 border-t border-border/70 pt-3 text-xs text-muted-foreground"><strong>Récompenses annoncées :</strong> {program.campaign.tokenRewardLabel} et {program.campaign.giftRewardLabel}. {program.campaign.eligibilityText}</p>
     </section>
   );

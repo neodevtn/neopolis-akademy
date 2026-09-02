@@ -73,6 +73,13 @@
 - [x] Couvrir les calculs, permissions, onglets, graphiques et navigation profil par tests et contrôles navigateur desktop/mobile — 522 tests réussis, QA authentifiée des 7 onglets, état vide et rendu 390 px sans débordement
 - [x] Publier la fiche 360° et vérifier la cohérence des KPI sur le domaine public avant livraison — checkpoint `f418a110` déployé ; QA authentifiée publique : six KPI, sept onglets, état vide du journal et mobile `390/390` validés sans donnée de compte archivée
 
+## Mise en valeur du programme de parrainage
+- [x] Auditer l’onglet, la page, les récompenses, le suivi de parrainage et les segments de communication existants afin de réutiliser uniquement les mécanismes administrables déjà présents — campagne active, lien tracé, récompense/cadeau administrés et audience `registered_invitees` réutilisés sans valeur fictive
+- [x] Ajouter un onglet apprenant « Parrainage » cohérent avec Catalogue et Compétences, avec un visuel, les récompenses réelles et des explications de partage par lien, e-mail, WhatsApp et Messenger — onglet `parrainage`, alias historique `parainnage`, visuel composé, cartes cadeaux, suivi et étapes de partage ajoutés ; cartes existantes réutilisées
+- [x] Préparer un communiqué court ciblant les apprenants inscrits, avec un lien direct vers l’onglet Parrainage et sans envoi avant confirmation explicite — brouillon non important « Partagez Neopolis Akademy et découvrez le parrainage », filtre `registered_invitees` + rôle apprenant, 107 destinataires agrégés, aucun envoi déclenché
+- [ ] Publier puis vérifier sur le domaine public le rendu desktop/mobile, les liens de partage, la navigation et le brouillon de 107 apprenants ; demander ensuite confirmation explicite pour l’envoi
+- [x] Corriger le débordement horizontal mobile détecté dans l’onglet Parrainage et couvrir le viewport 390 px avant publication — navigation responsive contenue et QA `390/390` réussie
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif

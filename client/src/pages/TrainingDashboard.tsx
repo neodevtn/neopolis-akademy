@@ -35,6 +35,7 @@ import {
   ChevronLeft,
   SlidersHorizontal,
   X,
+  Gift,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -53,6 +54,7 @@ import { buildRecommendedLearningPath } from "@/lib/recommendedLearningPath";
 import { BrandLogo } from "@/components/BrandLogo";
 import { TrainingSearchPanel } from "@/components/TrainingSearchPanel";
 import { ReferralShareCard } from "@/components/ReferralShareCard";
+import { ReferralProgramTab } from "@/components/ReferralProgramTab";
 import { extractTargetJobRoles, getTrainingFormatDefinitions, resolveTrainingFormat } from "@/lib/trainingCatalogTaxonomy";
 import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetadata";
 
@@ -293,6 +295,7 @@ export default function TrainingDashboard() {
     { id: "achievements", label: { en: "My Achievements", fr: "Mes acquis" }, icon: <Trophy className="w-4 h-4" /> },
     { id: "skills", label: { en: "My Skills", fr: "Mes compétences" }, icon: <Sparkles className="w-4 h-4" /> },
     { id: "catalog", label: { en: "Catalog", fr: "Catalogue" }, icon: <Library className="w-4 h-4" /> },
+    { id: "parrainage", label: { en: "Referrals", fr: "Parrainage" }, icon: <Gift className="w-4 h-4" /> },
     { id: "recommended", label: { en: "Learning Path", fr: "Parcours recommandé" }, icon: <Route className="w-4 h-4" /> },
     { id: "communications", label: { en: "Notifications", fr: "Communiqués" }, icon: <Bell className="w-4 h-4" /> },
   ];
@@ -387,7 +390,8 @@ export default function TrainingDashboard() {
           </div>
 
           {/* Tab Navigation */}
-          <div className="flex items-center gap-1 p-1 bg-secondary/50 rounded-xl w-fit mb-8">
+          <div className="mb-8 max-w-full overflow-x-auto rounded-xl bg-secondary/50 p-1">
+            <div className="flex w-max min-w-full items-center gap-1">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -403,6 +407,7 @@ export default function TrainingDashboard() {
                 {tab.id === "communications" && (learnerCommunicationsQuery.data?.unreadCount || 0) > 0 && <span className="min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">{learnerCommunicationsQuery.data?.unreadCount}</span>}
               </button>
             ))}
+            </div>
           </div>
         </motion.div>
 
@@ -462,6 +467,17 @@ export default function TrainingDashboard() {
                 lang={lang}
                 t={t}
               />
+            </motion.div>
+          )}
+          {activeTab === "parrainage" && (
+            <motion.div
+              key="parrainage"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3, ease: easeOut }}
+            >
+              <ReferralProgramTab t={t} />
             </motion.div>
           )}
           {activeTab === "achievements" && (

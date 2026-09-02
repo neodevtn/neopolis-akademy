@@ -1,6 +1,6 @@
 export const REFERRAL_CODE_PATTERN = /^NEO-[A-Z0-9]{6,24}$/;
 
-export type ReferralShareTarget = "whatsapp" | "linkedin" | "facebook" | "x" | "copy";
+export type ReferralShareTarget = "whatsapp" | "messenger" | "email" | "linkedin" | "facebook" | "x" | "copy";
 export type ReferralShareContent = "academy" | "course" | "achievement";
 
 export function normalizeReferralCode(value?: string | null): string | null {
@@ -35,6 +35,8 @@ export function buildReferralShareUrl(target: Exclude<ReferralShareTarget, "copy
   const encodedUrl = encodeURIComponent(referralUrl);
   const encodedMessage = encodeURIComponent(message);
   if (target === "whatsapp") return `https://wa.me/?text=${encodedMessage}%20${encodedUrl}`;
+  if (target === "messenger") return `fb-messenger://share/?link=${encodedUrl}`;
+  if (target === "email") return `mailto:?subject=${encodeURIComponent("Invitation Neopolis Akademy")}&body=${encodedMessage}%0A%0A${encodedUrl}`;
   if (target === "linkedin") return `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
   if (target === "facebook") return `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
   return `https://x.com/intent/post?text=${encodedMessage}&url=${encodedUrl}`;

@@ -30,6 +30,9 @@ describe("referral tracking", () => {
   it("prépare une URL de partage compatible avec chaque réseau", () => {
     const link = "https://akademy.neodev.click/apply?ref=NEO-AB12CD34";
     expect(buildReferralShareUrl("whatsapp", link, "Bonjour")).toContain("wa.me");
+    expect(buildReferralShareUrl("messenger", link, "Bonjour")).toBe(`fb-messenger://share/?link=${encodeURIComponent(link)}`);
+    expect(buildReferralShareUrl("email", link, "Bonjour")).toContain("mailto:?");
+    expect(buildReferralShareUrl("email", link, "Bonjour")).toContain(encodeURIComponent(link));
     expect(buildReferralShareUrl("linkedin", link, "Bonjour")).toContain("linkedin.com");
     expect(buildReferralShareUrl("facebook", link, "Bonjour")).toContain("facebook.com");
     expect(buildReferralShareUrl("x", link, "Bonjour")).toContain("x.com/intent");

@@ -4,6 +4,7 @@ export const LEARNER_DASHBOARD_TABS = [
   "achievements",
   "skills",
   "catalog",
+  "parrainage",
   "recommended",
   "communications",
 ] as const;
@@ -12,6 +13,7 @@ export type LearnerDashboardTab = (typeof LEARNER_DASHBOARD_TABS)[number];
 
 export function getLearnerDashboardTab(search: string): LearnerDashboardTab {
   const requestedTab = new URLSearchParams(search).get("tab");
+  if (requestedTab === "parainnage" || requestedTab === "referrals") return "parrainage";
   return LEARNER_DASHBOARD_TABS.includes(requestedTab as LearnerDashboardTab)
     ? (requestedTab as LearnerDashboardTab)
     : "my-path";
