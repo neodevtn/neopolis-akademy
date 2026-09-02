@@ -57,6 +57,13 @@
 - [x] Empêcher la remontée d’un rejet non géré quand une activité Projector ne dispose d’aucune source média lisible, conserver les slides et afficher une alternative compréhensible — promesse `play()` interceptée et message non bloquant dans le lecteur
 - [x] Transmettre la piste audio déclarée aux deux rendus Projector du lecteur de cours afin que les cours à MP4 indisponible utilisent leur audio local valide — repli audio validé sur deux activités, slides conservées et aucune erreur non gérée
 
+## Revue exhaustive des feedbacks utilisateurs Sentry — 7 derniers jours
+- [x] Recenser séparément chaque feedback utilisateur récent, son texte utile, sa date, sa route et les éléments techniques disponibles, sans archiver de donnée personnelle — trois feedbacks de la période documentés individuellement dans `docs/sentry-user-feedback-7day-audit-2026-09-02.md`
+- [x] Qualifier chaque feedback : bloquant, dégradant, historique, non reproductible ou lié à un déploiement, avec une décision de traitement explicite — un défaut actif confirmé ; accès historique et retour orientation sans trace ne se reproduisent plus, avec décision de suivi explicite
+- [x] Reproduire et corriger les défauts fonctionnels confirmés, avec des tests et des contrôles navigateur dédiés aux retours concernés — limite de cinq objectifs alignée client/serveur et contrôlée ; cours concerné actuellement accessible avec Full access
+- [x] Stabiliser la sonde publique d’orientation afin qu’elle cible le statut de capacité réellement rendu après cinq sélections, sans dépendre d’un parent DOM instable — sonde corrigée et publique : cinq sélections, sixième désactivée, message de limite, aucune sauvegarde et aucune erreur
+- [ ] Publier la revue de feedback et vérifier sur le domaine public l’orientation corrigée, l’accès au parcours concerné et l’absence de régression avant de livrer le rapport détaillé
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif

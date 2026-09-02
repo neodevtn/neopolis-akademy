@@ -37,7 +37,7 @@ try {
   const result = {
     checkedGoals: await goalCheckboxes.evaluateAll((elements) => elements.slice(0, 9).filter((input) => input.checked).length),
     sixthGoalDisabled: await goalCheckboxes.nth(5).isDisabled(),
-    capacityMessage: await goalsPanel.getByRole("status").innerText(),
+    capacityMessage: await page.getByRole("status").filter({ hasText: /compétence.*sélectionnée/i }).first().innerText(),
     saved: false,
     pageErrors,
   };
