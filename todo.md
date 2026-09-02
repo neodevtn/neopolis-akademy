@@ -62,7 +62,7 @@
 - [x] Qualifier chaque feedback : bloquant, dégradant, historique, non reproductible ou lié à un déploiement, avec une décision de traitement explicite — un défaut actif confirmé ; accès historique et retour orientation sans trace ne se reproduisent plus, avec décision de suivi explicite
 - [x] Reproduire et corriger les défauts fonctionnels confirmés, avec des tests et des contrôles navigateur dédiés aux retours concernés — limite de cinq objectifs alignée client/serveur et contrôlée ; cours concerné actuellement accessible avec Full access
 - [x] Stabiliser la sonde publique d’orientation afin qu’elle cible le statut de capacité réellement rendu après cinq sélections, sans dépendre d’un parent DOM instable — sonde corrigée et publique : cinq sélections, sixième désactivée, message de limite, aucune sauvegarde et aucune erreur
-- [ ] Publier la revue de feedback et vérifier sur le domaine public l’orientation corrigée, l’accès au parcours concerné et l’absence de régression avant de livrer le rapport détaillé
+- [x] Publier la revue de feedback et vérifier sur le domaine public l’orientation corrigée, l’accès au parcours concerné et l’absence de régression avant de livrer le rapport détaillé — rapport publié au checkpoint `e5a5e67a` ; contrôle public 5/5 sans sauvegarde ni erreur et parcours concerné accessible avec Full access
 
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
