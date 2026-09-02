@@ -372,6 +372,7 @@ export default function LessonViewer({
                 </div>
                 <ProjectorPlayer
                   mp4Url={block.mp4Url}
+                  audioUrl={block.audioUrl}
                   slides={block.projectorSlides}
                   timings={block.projectorTimings}
                   timingUnit={block.projectorTimingUnit}

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { PlayCircle, PauseCircle, SkipForward, SkipBack, Volume2 } from "lucide-react";
+import { AlertCircle, PlayCircle, PauseCircle, RotateCcw, SkipForward, SkipBack, Volume2 } from "lucide-react";
 import { findProjectorSlideIndex, timingToMediaTime, type ProjectorTiming, type ProjectorTimingUnit } from "./projectorTiming";
+import { resolveProjectorMediaSource } from "./projectorMediaSource";
 
 interface ProjectorSlide {
   number: number;
@@ -29,12 +30,14 @@ interface ProjectorPlayerProps {
 }
 
 export function ProjectorPlayer({ mp4Url, audioUrl, slides, timings, timingUnit = "seconds", duration, onPlay, onPause, onEnded }: ProjectorPlayerProps) {
-  const mediaUrl = mp4Url || audioUrl || "";
-  const audioRef = useRef<HTMLVideoElement>(null);
+  const media = resolveProjectorMediaSource(mp4Url, audioUrl);
+  const mediaUrl = media.url;
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [audioDuration, setAudioDuration] = useState(duration);
+  const [mediaError, setMediaError] = useState<string | null>(null);
   const animRef = useRef<number>(0);
 
   // Compute current slide based on time
@@ -62,16 +65,22 @@ export function ProjectorPlayer({ mp4Url, audioUrl, slides, timings, timingUnit 
     return () => cancelAnimationFrame(animRef.current);
   }, [isPlaying, computeSlideIndex]);
 
-  const togglePlay = () => {
-    if (!audioRef.current) return;
+  const togglePlay = async () => {
+    if (!audioRef.current || !mediaUrl) return;
     if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(false);
       onPause?.();
     } else {
-      audioRef.current.play();
-      setIsPlaying(true);
-      onPlay?.();
+      try {
+        setMediaError(null);
+        await audioRef.current.play();
+        setIsPlaying(true);
+        onPlay?.();
+      } catch {
+        setIsPlaying(false);
+        setMediaError("La piste audio ou vidéo de cette activité n’est pas lisible dans ce navigateur. Les slides restent disponibles ; essayez de relancer la lecture ou passez à la suite.");
+      }
     }
   };
 
@@ -99,6 +108,11 @@ export function ProjectorPlayer({ mp4Url, audioUrl, slides, timings, timingUnit 
     }
   };
 
+  const handleMediaError = () => {
+    setIsPlaying(false);
+    setMediaError("La piste audio ou vidéo de cette activité n’est pas disponible. Les slides restent consultables ; vous pouvez poursuivre la leçon.");
+  };
+
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const t = parseFloat(e.target.value);
     if (audioRef.current) {
@@ -122,12 +136,13 @@ export function ProjectorPlayer({ mp4Url, audioUrl, slides, timings, timingUnit 
       {/* Slide Display Area */}
       {/* Slide Display Area — clickable overlay to toggle play/pause */}
       <div
-        className="relative bg-gradient-to-br from-slate-900 to-slate-800 min-h-[320px] flex items-center justify-center p-6 cursor-pointer group"
-        onClick={togglePlay}
+        className={`relative bg-gradient-to-br from-slate-900 to-slate-800 min-h-[320px] flex items-center justify-center p-6 group ${mediaUrl ? "cursor-pointer" : "cursor-default"}`}
+        onClick={mediaUrl ? () => void togglePlay() : undefined}
         role="button"
-        aria-label={isPlaying ? "Mettre en pause" : "Lire la leçon"}
-        tabIndex={0}
-        onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); togglePlay(); } }}
+        aria-label={mediaUrl ? (isPlaying ? "Mettre en pause" : "Lire la leçon") : "Slides de la leçon"}
+        aria-disabled={!mediaUrl}
+        tabIndex={mediaUrl ? 0 : -1}
+        onKeyDown={(e) => { if (mediaUrl && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); void togglePlay(); } }}
       >
         <SlideRenderer slide={currentSlide} slideNumber={currentSlideIndex + 1} totalSlides={slides.length} />
         {/* Center play/pause overlay */}
@@ -141,19 +156,27 @@ export function ProjectorPlayer({ mp4Url, audioUrl, slides, timings, timingUnit 
       </div>
 
       {/* The media element drives the timeline for both MP4 and Projector audio-only lessons. */}
-      <video
+      <audio
         ref={audioRef}
         src={mediaUrl}
         preload="metadata"
-        playsInline
         onEnded={handleEnded}
         onLoadedMetadata={handleLoadedMetadata}
         onPlay={() => { setIsPlaying(true); onPlay?.(); }}
         onPause={() => { setIsPlaying(false); onPause?.(); }}
+        onError={handleMediaError}
         className="hidden"
-      >
-        <source src={mediaUrl} type={mp4Url ? "video/mp4" : "audio/mpeg"} />
-      </video>
+        data-media-kind={media.kind}
+        data-media-type={media.mimeType}
+      />
+
+      {mediaError && (
+        <div className="flex items-start gap-3 border-t border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-100" role="status" aria-live="polite">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+          <span className="min-w-0 flex-1">{mediaError}</span>
+          {mediaUrl && <button type="button" onClick={() => void togglePlay()} className="inline-flex shrink-0 items-center gap-1 font-semibold underline underline-offset-2"><RotateCcw className="h-3.5 w-3.5" />Réessayer</button>}
+        </div>
+      )}
 
       {/* Controls */}
       <div className="px-4 py-3 border-t border-border bg-muted/30">
@@ -178,7 +201,7 @@ export function ProjectorPlayer({ mp4Url, audioUrl, slides, timings, timingUnit 
             <button onClick={(e) => { e.stopPropagation(); goToSlide(currentSlideIndex - 1); }} aria-label="Slide précédente" className="p-1 text-muted-foreground hover:text-foreground transition-colors" disabled={currentSlideIndex === 0}>
               <SkipBack className="w-4 h-4" />
             </button>
-            <button onClick={(e) => { e.stopPropagation(); togglePlay(); }} aria-label={isPlaying ? "Pause" : "Lecture"} className="p-1 text-foreground hover:text-primary transition-colors">
+            <button onClick={(e) => { e.stopPropagation(); void togglePlay(); }} aria-label={isPlaying ? "Pause" : "Lecture"} className="p-1 text-foreground hover:text-primary transition-colors disabled:cursor-not-allowed disabled:opacity-50" disabled={!mediaUrl}>
               {isPlaying ? <PauseCircle className="w-8 h-8" /> : <PlayCircle className="w-8 h-8" />}
             </button>
             <button onClick={(e) => { e.stopPropagation(); goToSlide(currentSlideIndex + 1); }} aria-label="Slide suivante" className="p-1 text-muted-foreground hover:text-foreground transition-colors" disabled={currentSlideIndex >= slides.length - 1}>

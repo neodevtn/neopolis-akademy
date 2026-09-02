@@ -25,15 +25,21 @@ try {
   await context.addCookies([{ name: "app_session_id", value: cookie, url: baseUrl, httpOnly: true, sameSite: "Lax" }]);
   for (const { lessonIndex, chapterIndex } of targets) {
     const page = await context.newPage();
-    const current = { lessonIndex, chapterIndex, rendered: false, audioVisible: false, slideVisible: false, providerReferenceVisible: false };
+    const current = { lessonIndex, chapterIndex, rendered: false, audioVisible: false, slideVisible: false, providerReferenceVisible: false, playbackTriggered: false, unhandledMediaError: false };
     try {
+      page.on("pageerror", (error) => {
+        if (/not supported|supported sources|media/i.test(error.message)) current.unhandledMediaError = true;
+      });
       await page.goto(`${baseUrl}/training/${courseSlug}/${courseId}?lesson=${lessonIndex}&chapter=${chapterIndex}`, { waitUntil: "domcontentloaded" });
       await page.waitForSelector('[data-block-type="video"]', { timeout: 30000 });
       const projector = page.locator('[data-block-type="video"]');
       current.rendered = true;
-      current.audioVisible = await projector.locator("video").count() > 0;
+      current.audioVisible = await projector.locator("audio[data-media-kind='audio']").count() > 0;
       current.slideVisible = await projector.getByRole("button", { name: /Lire la leçon|Mettre en pause/ }).count() > 0;
       current.providerReferenceVisible = /Explore more(?: DataCamp)?|Explorez plus de ressources|learn more[^\n]*DataCamp|https?:\/\/[^\s]*(?:datacamp|github)\./i.test(await projector.innerText());
+      await projector.locator("div[role='button'][aria-label='Lire la leçon'], div[role='button'][aria-label='Mettre en pause']").first().click({ force: true });
+      current.playbackTriggered = true;
+      await page.waitForTimeout(250);
     } catch (error) {
       current.error = error instanceof Error ? error.message : String(error);
       current.finalUrl = page.url();
@@ -45,4 +51,4 @@ try {
 } finally { await browser.close(); }
 fs.writeFileSync(`docs/${courseId}_projector_matrix_qa_2026-08-28.json`, `${JSON.stringify(result, null, 2)}\n`);
 console.table(result.results);
-if (result.targetCount === 0 || result.results.some((item) => !item.rendered || !item.audioVisible || !item.slideVisible || item.providerReferenceVisible)) process.exitCode = 1;
+  if (result.targetCount === 0 || result.results.some((item) => !item.rendered || !item.audioVisible || !item.slideVisible || !item.playbackTriggered || item.unhandledMediaError || item.providerReferenceVisible)) process.exitCode = 1;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isRecoverableClientRenderError, isStaleClientBundleError } from "./chunkRecovery";
+import { getClientBundleRecoveryScope, isRecoverableClientRenderError, isStaleClientBundleError } from "./chunkRecovery";
 
 describe("isStaleClientBundleError", () => {
   it("recognizes the browser MIME error caused by a stale lazy chunk", () => {
@@ -12,6 +12,23 @@ describe("isStaleClientBundleError", () => {
 
   it("recognizes Vite preload errors raised outside the React error boundary", () => {
     expect(isStaleClientBundleError(new Error("vite:preloadError: failed to fetch dynamically imported module"))).toBe(true);
+  });
+
+  it("recognizes Chromium’s undefined default export signature from an obsolete lazy chunk", () => {
+    expect(isStaleClientBundleError(new TypeError("Cannot read properties of undefined (reading 'default')"))).toBe(true);
+  });
+
+  it("recognizes Firefox’s undefined lazy result signature from an obsolete lazy chunk", () => {
+    expect(isStaleClientBundleError(new TypeError('can\'t access property "default", S._result is undefined'))).toBe(true);
+  });
+
+  it("uses a separate recovery scope for an obsolete lazy default after another refresh", () => {
+    expect(getClientBundleRecoveryScope(new TypeError("Cannot read properties of undefined (reading 'default')"))).toBe("lazy-default");
+    expect(getClientBundleRecoveryScope(new Error("vite:preloadError"))).toBe("stale-chunk");
+  });
+
+  it("uses a separate recovery scope for a stale React DOM tree", () => {
+    expect(getClientBundleRecoveryScope(new DOMException("Failed to execute 'insertBefore' on 'Node'", "NotFoundError"))).toBe("react-tree");
   });
 
   it("does not mistake ordinary application errors for a stale bundle", () => {

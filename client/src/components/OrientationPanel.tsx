@@ -2,8 +2,9 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, ChevronRight, Compass, GraduationCap, Target } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { canAddOrientationGoal, MAX_ORIENTATION_GOALS, toggleOrientationGoal, type OrientationGoal } from "@/lib/orientationGoalSelection";
 
-type Goal = { competencyId: string; targetLevel: "bronze" | "silver" | "gold" };
+type Goal = OrientationGoal;
 
 const TARGETS = [
   { id: "bronze", label: "Bronze", points: 10, description: "Autonomie de base" },
@@ -62,9 +63,7 @@ export function OrientationPanel({
   const competencyRows = useMemo(() => (orientation?.competencies || []).filter((competency: any) => selectedGoalIds.has(competency.id)), [orientation?.competencies, goals]);
 
   const toggleGoal = (competencyId: string) => {
-    setGoals((current) => current.some((goal) => goal.competencyId === competencyId)
-      ? current.filter((goal) => goal.competencyId !== competencyId)
-      : [...current, { competencyId, targetLevel: "bronze" }]);
+    setGoals((current) => toggleOrientationGoal(current, competencyId));
   };
 
   const updateTarget = (competencyId: string, targetLevel: Goal["targetLevel"]) => {
@@ -122,15 +121,20 @@ export function OrientationPanel({
           <div>
             <h3 className="text-lg font-bold text-foreground">1. Vos compétences prioritaires</h3>
             <p className="mt-1 text-sm text-muted-foreground">Sélectionnez jusqu’à cinq compétences. Pour chacune, choisissez le niveau de maîtrise attendu.</p>
+            <p className="mt-2 text-sm font-medium text-primary" role="status" aria-live="polite">
+              {goals.length} / {MAX_ORIENTATION_GOALS} compétence{goals.length > 1 ? "s" : ""} sélectionnée{goals.length > 1 ? "s" : ""}
+              {goals.length >= MAX_ORIENTATION_GOALS ? " — limite atteinte : désélectionnez une compétence pour en choisir une autre." : ` — encore ${MAX_ORIENTATION_GOALS - goals.length} disponible${MAX_ORIENTATION_GOALS - goals.length > 1 ? "s" : ""}.`}
+            </p>
           </div>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {(orientation.competencies || []).map((competency: any) => {
               const selected = selectedGoalIds.has(competency.id);
               const goal = goals.find((item) => item.competencyId === competency.id);
+              const selectionDisabled = !canAddOrientationGoal(goals, competency.id);
               return (
-                <div key={competency.id} className={`rounded-xl border p-4 ${selected ? "border-primary bg-primary/5" : "border-border"}`}>
-                  <label className="flex cursor-pointer items-start gap-3">
-                    <input type="checkbox" checked={selected} onChange={() => toggleGoal(competency.id)} className="mt-1 h-4 w-4 accent-primary" />
+                <div key={competency.id} className={`rounded-xl border p-4 ${selected ? "border-primary bg-primary/5" : "border-border"} ${selectionDisabled ? "opacity-60" : ""}`}>
+                  <label className={`flex items-start gap-3 ${selectionDisabled ? "cursor-not-allowed" : "cursor-pointer"}`}>
+                    <input type="checkbox" checked={selected} disabled={selectionDisabled} onChange={() => toggleGoal(competency.id)} className="mt-1 h-4 w-4 accent-primary disabled:cursor-not-allowed" aria-describedby={selectionDisabled ? "orientation-goal-capacity" : undefined} />
                     <span>
                       <span className="block font-semibold text-foreground">{titleOf(competency.title)}</span>
                       <span className="mt-1 block text-xs leading-5 text-muted-foreground">{titleOf(competency.description, "")}</span>
@@ -149,6 +153,8 @@ export function OrientationPanel({
               );
             })}
           </div>
+
+          <span id="orientation-goal-capacity" className="sr-only">Vous pouvez sélectionner au maximum cinq compétences prioritaires.</span>
 
           <div className="rounded-xl border border-border bg-muted/30 p-4">
             <label className="flex cursor-pointer items-start gap-3">
