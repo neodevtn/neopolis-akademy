@@ -49,3 +49,9 @@ Les nouvelles tentatives conservent désormais la durée configurée et l’éta
 La QA locale a vérifié les indicateurs, la table, les actions, la navigation active malgré des paramètres supplémentaires, le filtre « Temps expiré », la recherche associée, un passage réel en page 2 puis retour à la page 1 et l’état vide après une recherche sans résultat. Les calculs et l’autorisation sont couverts par quatre tests dédiés ; la suite de régression compte 506 tests réussis et deux tests explicitement ignorés.
 
 Après publication de la version `7b461517`, le même scénario a été rejoué sur `https://akademy.neodev.click`. Tous les contrôles sont positifs : navigation active, indicateurs, table, action de fiche apprenant, filtres de résultat et de recherche, pagination effective et état vide. La tentative expirée de contrôle porte bien son état d’expiration persistant et est retournée par le filtre approprié. La configuration d’examen temporaire associée a été supprimée ; aucun examen artificiel ne reste publié.
+
+## Hygiène des données de statistiques
+
+Le 2 septembre 2026, les données pédagogiques de quatre comptes de contrôle — les comptes administrateurs et le compte apprenant de démonstration — ont été purgées à la demande du propriétaire. Cette opération a supprimé les progressions de formation, chapitres et vidéos, événements et journaux pédagogiques, évaluations IA, tentatives et sessions d’examen, relances, badges et certifications, contributions de compétences ainsi que les retours vidéo concernés.
+
+Les comptes eux-mêmes, leurs droits, leurs groupes, les contenus de formation, les configurations d’examen, les journaux administratifs et les données des autres apprenants ont été conservés. La vérification post-purge confirme zéro activité pédagogique ou tentative d’examen restante sur les comptes ciblés, tandis que des données apprenantes non ciblées subsistent pour alimenter les indicateurs.

@@ -38,6 +38,12 @@
 - [x] Ajouter une QA ou un test explicite d’état vide en appliquant des filtres sans résultat et en vérifiant le message affiché — recherche impossible contrôlée et message « Aucune tentative ne correspond aux filtres appliqués » affiché
 - [x] Publier le suivi des examens puis rejouer la QA sur le domaine public avec les filtres, les indicateurs, la navigation et la persistence d’expiration — version `7b461517` contrôlée sur `akademy.neodev.click` : navigation, statistiques, table, action profil, filtres, pagination, état vide et tentative expirée persistée tous validés ; configuration QA supprimée
 
+## Purge des données d’activité de démonstration et d’administration
+- [x] Identifier de façon agrégée les comptes administrateurs et le compte de démonstration, puis inventorier leurs données d’apprentissage et d’examen sans exposer leurs coordonnées — quatre comptes ciblés et volumes par table vérifiés sans afficher de coordonnées
+- [x] Vérifier les dépendances et préparer une purge transactionnelle limitée aux activités, progressions, sessions et tentatives concernées, sans supprimer les comptes ni les configurations pédagogiques — comptes, groupes, contenus, configurations et journaux administratifs exclus ; seules les traces pédagogiques et leurs dérivés sont visés
+- [x] Exécuter la purge autorisée, vérifier l’absence de données ciblées et contrôler que les statistiques ne comptent plus ces comptes — transaction effectuée sur progressions, événements, activités, évaluations, examens, relances, succès, compétences et retours associés ; toutes les catégories ciblées sont à zéro après contrôle
+- [x] Archiver la méthode et les compteurs de purge non identifiants, puis publier les preuves de vérification — méthode et résultats agrégés consignés dans `docs/exam-certification-audit.md`
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif
