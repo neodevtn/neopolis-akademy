@@ -71,6 +71,9 @@ export default function AdminTraining() {
   const [learnerSortBy, setLearnerSortBy] = useState<"lastSignedIn" | "name" | "email" | "createdAt" | "globalScore" | "role" | "blocked">("globalScore");
   const [learnerSortDirection, setLearnerSortDirection] = useState<"asc" | "desc">("desc");
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [learnerDetailTab, setLearnerDetailTab] = useState("overview");
+  const [activityLogPage, setActivityLogPage] = useState(1);
+  const [activityLogSearch, setActivityLogSearch] = useState("");
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmails, setInviteEmails] = useState("");
   const [inviteName, setInviteName] = useState("");
@@ -169,6 +172,9 @@ export default function AdminTraining() {
     const learnerId = Number(params.get("learner"));
     if (Number.isInteger(learnerId) && learnerId > 0) setSelectedUserId(learnerId);
     else setSelectedUserId(null);
+    setLearnerDetailTab("overview");
+    setActivityLogPage(1);
+    setActivityLogSearch("");
   }, [urlSearch]);
 
   const reportingInput = useMemo(() => ({
@@ -189,6 +195,10 @@ export default function AdminTraining() {
   const detailQuery = trpc.admin.getLearnerDetail.useQuery(
     { userId: selectedUserId! },
     { enabled: !!selectedUserId && isAuthenticated && user?.role === "admin" }
+  );
+  const learnerActivityPageQuery = trpc.admin.getLearnerActivityPage.useQuery(
+    { userId: selectedUserId!, page: activityLogPage, pageSize: 20, search: activityLogSearch || undefined },
+    { enabled: !!selectedUserId && isAuthenticated && user?.role === "admin" && learnerDetailTab === "activity" },
   );
 
   const integrityQueueQuery = trpc.adminTools.integrity.queue.useQuery(undefined, {
@@ -446,11 +456,28 @@ export default function AdminTraining() {
     const exerciseResults = (detail as any).exerciseResults ?? [];
     const achievements = (detail as any).achievements ?? [];
     const competencies = (detail as any).competencies ?? [];
-    const totalChaptersDone = chapterProg.length;
-    const totalVideosDone = videoProg.filter((v: any) => v.watched).length;
-    const totalSeconds = learningEvents.filter((e: any) => e.eventType === "learning_time").reduce((sum: number, e: any) => sum + (e.durationSeconds || 0), 0);
-    const firstAttempts = learningEvents.filter((e: any) => e.eventType === "exercise_submitted" && e.attemptNumber === 1);
-    const firstAttemptRate = firstAttempts.length ? Math.round((firstAttempts.filter((e: any) => e.success === 1).length / firstAttempts.length) * 100) : null;
+    const learnerMetrics = (detail as any).metrics ?? {
+      completedLessons: detail.progress.length,
+      completedChapters: chapterProg.reduce((sum: number, item: any) => sum + Math.min(Number(item.chapterIndex || 0), Number(item.totalChapters || 0)), 0),
+      watchedVideos: new Set(videoProg.map((item: any) => `${item.courseId}|${item.youtubeId}`)).size,
+      examAttempts: detail.attempts.length,
+      examsPassed: detail.attempts.filter((item: any) => item.passed).length,
+      firstExamPassRate: null,
+      activeSeconds: learningEvents.filter((event: any) => event.eventType === "learning_time").reduce((sum: number, event: any) => sum + Math.min(300, Math.max(0, Number(event.durationSeconds || 0))), 0),
+      timedOutExams: 0,
+    };
+    const totalChaptersDone = learnerMetrics.completedChapters;
+    const totalVideosDone = learnerMetrics.watchedVideos;
+    const totalSeconds = learnerMetrics.activeSeconds;
+    const firstAttemptRate = learnerMetrics.firstExamPassRate;
+    const firstExamAttempts = Object.values(detail.attempts.reduce((byCertification: Record<string, any>, attempt: any) => {
+      const current = byCertification[attempt.certificationId];
+      if (!current || new Date(attempt.startedAt).getTime() < new Date(current.startedAt).getTime()) byCertification[attempt.certificationId] = attempt;
+      return byCertification;
+    }, {} as Record<string, any>));
+    const candidateProfile = (detail as any).application ?? null;
+    const learnerGroups = (detail as any).groups ?? [];
+    const milestones = (detail as any).milestones ?? [];
     const integrity = learnerIntegrityQuery.data;
     const orientation = learnerOrientationQuery.data?.[0]?.orientation;
     const integrityTone = integrity?.assessment.level === "priority_review" ? "border-red-300 bg-red-50 dark:border-red-900/70 dark:bg-red-950/30" : integrity?.assessment.level === "review" ? "border-amber-300 bg-amber-50 dark:border-amber-900/70 dark:bg-amber-950/30" : "border-border bg-card";
@@ -465,12 +492,7 @@ export default function AdminTraining() {
       return course?.title?.fr || course?.title?.en || courseId;
     };
 
-    // Group progress by certification
-    const progressByCert: Record<string, { courseId: string; lessonIndex: number }[]> = {};
-    for (const p of detail.progress) {
-      if (!progressByCert[p.certificationId]) progressByCert[p.certificationId] = [];
-      progressByCert[p.certificationId].push({ courseId: p.courseId, lessonIndex: p.lessonIndex });
-    }
+    const certificationProgress = (detail as any).certificationProgress ?? [];
 
     return (
       <div className="min-h-screen bg-background">
@@ -534,7 +556,7 @@ export default function AdminTraining() {
             {/* Quick stats */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
               <div className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
-                <div className="text-2xl font-bold text-primary">{detail.progress.length}</div>
+                <div className="text-2xl font-bold text-primary">{learnerMetrics.completedLessons}</div>
                 <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><BookOpen className="w-3 h-3" /> Leçons terminées</div>
               </div>
               <div className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
@@ -546,7 +568,7 @@ export default function AdminTraining() {
                 <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><Video className="w-3 h-3" /> Vidéos vues</div>
               </div>
               <div className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
-                <div className="text-2xl font-bold text-primary">{detail.attempts.length}</div>
+                <div className="text-2xl font-bold text-primary">{learnerMetrics.examAttempts}</div>
                 <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><Award className="w-3 h-3" /> Examens passés</div>
               </div>
               <div className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
@@ -555,10 +577,45 @@ export default function AdminTraining() {
               </div>
               <div className="bg-card rounded-xl border border-border p-4 text-center shadow-sm">
                 <div className="text-2xl font-bold text-primary">{firstAttemptRate === null ? "—" : `${firstAttemptRate}%`}</div>
-                <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><CheckCircle2 className="w-3 h-3" /> Réussite 1re tentative</div>
+                <div className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><CheckCircle2 className="w-3 h-3" /> Réussite 1er examen</div>
               </div>
             </div>
 
+            <Tabs value={learnerDetailTab} onValueChange={(tab) => { setLearnerDetailTab(tab); if (tab === "activity") setActivityLogPage(1); }}>
+              <TabsList className="mb-6 grid h-auto w-full grid-cols-2 gap-1 rounded-xl bg-muted/50 p-1 sm:grid-cols-4 lg:grid-cols-7">
+                <TabsTrigger value="overview" className="text-xs sm:text-sm">Synthèse</TabsTrigger>
+                <TabsTrigger value="profile" className="text-xs sm:text-sm">Profil</TabsTrigger>
+                <TabsTrigger value="learning" className="text-xs sm:text-sm">Parcours</TabsTrigger>
+                <TabsTrigger value="exams" className="text-xs sm:text-sm">Évaluations</TabsTrigger>
+                <TabsTrigger value="skills" className="text-xs sm:text-sm">Compétences</TabsTrigger>
+                <TabsTrigger value="activity" className="text-xs sm:text-sm">Activité</TabsTrigger>
+                <TabsTrigger value="integrity" className="text-xs sm:text-sm">Intégrité</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="overview" className="mt-0 space-y-6">
+                <section className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                    <div><h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><BarChart3 className="h-5 w-5 text-primary" /> Vue d’ensemble</h3><p className="mt-1 text-sm text-muted-foreground">Indicateurs dédoublonnés et dates qui structurent le parcours de cet apprenant.</p></div>
+                    <span className="self-start rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">{latestLearningAt ? `Dernière activité : ${new Date(latestLearningAt).toLocaleString("fr-FR")}` : "Aucune activité enregistrée"}</span>
+                  </div>
+                  <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                    <AuditStat label="Examens réussis" value={learnerMetrics.examsPassed} detail={`${learnerMetrics.examAttempts} tentative${learnerMetrics.examAttempts > 1 ? "s" : ""} finalisée${learnerMetrics.examAttempts > 1 ? "s" : ""}`} />
+                    <AuditStat label="Examens hors délai" value={learnerMetrics.timedOutExams} detail="Soumissions refusées après durée" />
+                    <AuditStat label="Groupes d’accès" value={learnerGroups.length} detail={learnerGroups.some((group: any) => group.isSystem) ? "Accès total attribué" : "Accès selon les groupes"} />
+                  </div>
+                  <div className="mt-5 border-t border-border pt-4"><h4 className="text-sm font-semibold text-foreground">Dates clés</h4>{milestones.length === 0 ? <p className="mt-3 text-sm text-muted-foreground">Aucun jalon horodaté n’est encore disponible.</p> : <ol className="mt-3 grid gap-2 sm:grid-cols-2">{milestones.slice(0, 8).map((milestone: any) => <li key={milestone.id} className="flex items-start justify-between gap-3 rounded-lg bg-muted/30 p-3"><span className="text-sm font-medium text-foreground">{milestone.label}</span><time className="shrink-0 text-xs text-muted-foreground">{new Date(milestone.at).toLocaleDateString("fr-FR")}</time></li>)}</ol>}</div>
+                </section>
+              </TabsContent>
+
+              <TabsContent value="profile" className="mt-0">
+                <section className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between"><div><h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><FileText className="h-5 w-5 text-primary" /> Profil candidat et accès</h3><p className="mt-1 text-sm text-muted-foreground">Informations issues de la candidature, visibles uniquement à l’administration.</p></div>{candidateProfile ? <span className="self-start rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">Candidature {candidateProfile.status}</span> : <span className="self-start rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">Aucune candidature liée</span>}</div>
+                  {candidateProfile ? <div className="mt-5 grid gap-5 lg:grid-cols-2"><div className="grid gap-3 sm:grid-cols-2"><div className="rounded-xl border border-border bg-muted/20 p-3"><p className="text-xs text-muted-foreground">Situation</p><p className="mt-1 text-sm font-semibold text-foreground">{candidateProfile.currentRole || "—"}</p><p className="mt-1 text-xs text-muted-foreground">{candidateProfile.sector || "Secteur non renseigné"} · {candidateProfile.yearsExperience ?? 0} an(s) d’expérience</p></div><div className="rounded-xl border border-border bg-muted/20 p-3"><p className="text-xs text-muted-foreground">Localisation</p><p className="mt-1 text-sm font-semibold text-foreground">{[candidateProfile.city, candidateProfile.country].filter(Boolean).join(", ") || "—"}</p><p className="mt-1 text-xs text-muted-foreground">Téléphone renseigné : {candidateProfile.phone ? "oui" : "non"}</p></div><div className="rounded-xl border border-border bg-muted/20 p-3"><p className="text-xs text-muted-foreground">Niveaux déclarés</p><p className="mt-1 text-sm text-foreground">IA : {candidateProfile.aiKnowledge || "—"} · Code : {candidateProfile.programmingLevel || "—"}</p><p className="mt-1 text-xs text-muted-foreground">Cloud : {candidateProfile.cloudExperience || "—"}</p></div><div className="rounded-xl border border-border bg-muted/20 p-3"><p className="text-xs text-muted-foreground">Dossier</p><div className="mt-2 flex flex-wrap gap-2">{candidateProfile.cvFileUrl ? <a className="text-xs font-semibold text-primary underline-offset-4 hover:underline" href={candidateProfile.cvFileUrl} target="_blank" rel="noreferrer">Voir le CV</a> : null}{candidateProfile.videoFileUrl ? <a className="text-xs font-semibold text-primary underline-offset-4 hover:underline" href={candidateProfile.videoFileUrl} target="_blank" rel="noreferrer">Voir la vidéo</a> : null}{candidateProfile.linkedinUrl ? <a className="text-xs font-semibold text-primary underline-offset-4 hover:underline" href={candidateProfile.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn</a> : null}</div></div></div><div className="rounded-xl border border-border bg-muted/20 p-4"><h4 className="text-sm font-semibold text-foreground">Évaluation de candidature</h4><div className="mt-4 grid grid-cols-2 gap-3"><AuditStat label="Technique" value={Math.round(Number(candidateProfile.scoreTechnique || 0))} detail="Score candidature" /><AuditStat label="Métier" value={Math.round(Number(candidateProfile.scoreMetier || 0))} detail="Score candidature" /><AuditStat label="Communication" value={Math.round(Number(candidateProfile.scoreCommunication || 0))} detail="Score candidature" /><AuditStat label="Total" value={Math.round(Number(candidateProfile.scoreTotal || 0))} detail="Score candidature" /></div><p className="mt-4 text-xs text-muted-foreground">Candidature déposée le {candidateProfile.createdAt ? new Date(candidateProfile.createdAt).toLocaleDateString("fr-FR") : "—"}.</p></div></div> : <p className="mt-5 rounded-xl bg-muted/30 p-4 text-sm text-muted-foreground">Ce compte provient d’une invitation ou ne possède pas de candidature liée.</p>}
+                  <div className="mt-5 border-t border-border pt-4"><h4 className="text-sm font-semibold text-foreground">Groupes d’accès</h4>{learnerGroups.length === 0 ? <p className="mt-2 text-sm text-muted-foreground">Aucun groupe n’est actuellement rattaché à ce compte.</p> : <div className="mt-3 flex flex-wrap gap-2">{learnerGroups.map((group: any) => <span key={group.id} className="rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground">{group.name}{group.isSystem ? " · accès total" : ""}</span>)}</div>}</div>
+                </section>
+              </TabsContent>
+
+              <TabsContent value="activity" className="mt-0">
             <section className="mb-6 rounded-2xl border border-border bg-card p-5 shadow-sm" aria-label="Audit de l’activité d’apprentissage">
               <div className="flex flex-col gap-2 border-b border-border pb-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
@@ -592,7 +649,9 @@ export default function AdminTraining() {
                 </div>
               </div>
             </section>
+              </TabsContent>
 
+            <TabsContent value="integrity" className="mt-0">
             <section className={`mb-6 rounded-xl border p-5 ${integrityTone}`} aria-label="Revue d’intégrité pédagogique">
               <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                 <div>
@@ -625,7 +684,9 @@ export default function AdminTraining() {
                 </>
               )}
             </section>
+            </TabsContent>
 
+            <TabsContent value="skills" className="mt-0">
             <div className="mb-6">
               <AchievementGallery achievements={achievements} adminView emptyText="Cet apprenant n’a pas encore obtenu de badge ou de diplôme." />
             </div>
@@ -678,13 +739,15 @@ export default function AdminTraining() {
             <div className="mb-6">
               <CompetencyProfile competencies={competencies} adminView />
             </div>
+            </TabsContent>
 
+            <TabsContent value="exams" className="mt-0">
             <div className="bg-card rounded-2xl border border-border p-6 mb-6 shadow-sm">
               <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2"><Activity className="w-5 h-5 text-primary" /> Engagement et premières tentatives</h3>
               <div className="grid md:grid-cols-2 gap-5">
                 <div>
-                  <p className="text-sm font-medium text-foreground mb-2">Premières tentatives d’exercices</p>
-                  {firstAttempts.length === 0 ? <p className="text-sm text-muted-foreground">Aucune tentative enregistrée pour le moment.</p> : <div className="space-y-2">{firstAttempts.slice(0, 6).map((event: any) => <div key={event.id} className="flex justify-between text-sm border-b border-border pb-2"><span className="truncate pr-3">{event.exerciseId || "Exercice"}</span><span className={event.success === 1 ? "text-emerald-600 font-medium" : "text-amber-600 font-medium"}>{event.success === 1 ? "Réussi" : "À revoir"}{event.score != null ? ` · ${event.score}` : ""}</span></div>)}</div>}
+                  <p className="text-sm font-medium text-foreground mb-2">Premier examen par certification</p>
+                  {firstExamAttempts.length === 0 ? <p className="text-sm text-muted-foreground">Aucun premier examen finalisé pour le moment.</p> : <div className="space-y-2">{firstExamAttempts.slice(0, 6).map((attempt: any) => <div key={attempt.id} className="flex justify-between text-sm border-b border-border pb-2"><span className="truncate pr-3">{(trainingIndex.certifications as any[]).find((certification) => certification.id === attempt.certificationId)?.title?.fr || attempt.certificationId}</span><span className={attempt.passed ? "text-emerald-600 font-medium" : "text-amber-600 font-medium"}>{attempt.passed ? "Réussi" : attempt.timedOut ? "Temps expiré" : "Non réussi"}{attempt.score != null ? ` · ${attempt.score}/1000` : ""}</span></div>)}</div>}
                 </div>
                 <div>
                   <p className="text-sm font-medium text-foreground mb-2">Activité récente</p>
@@ -692,7 +755,9 @@ export default function AdminTraining() {
                 </div>
               </div>
             </div>
+            </TabsContent>
 
+            <TabsContent value="activity" className="mt-0">
             <div className="grid gap-6 mb-6 lg:grid-cols-2">
               <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
                 <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><FileText className="h-5 w-5 text-primary" /> Évaluations de cours</h3>
@@ -704,45 +769,44 @@ export default function AdminTraining() {
               </section>
               <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
                 <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground"><Clock className="h-5 w-5 text-primary" /> Journal d’activité détaillé</h3>
-                <p className="mt-1 text-sm text-muted-foreground">Actions horodatées complémentaires enregistrées pour ce profil.</p>
-                {activityLog.length === 0 ? <p className="mt-4 text-sm italic text-muted-foreground">Aucune action fine enregistrée.</p> : <div className="mt-4 max-h-80 divide-y divide-border overflow-y-auto">{activityLog.map((event: any) => <div key={event.id} className="py-3"><div className="flex items-start justify-between gap-3"><p className="text-sm font-medium text-foreground">{String(event.actionType).replaceAll("_", " ")}</p><time className="shrink-0 text-xs text-muted-foreground">{new Date(event.createdAt).toLocaleString("fr-FR")}</time></div><p className="mt-1 text-xs text-muted-foreground">{event.courseId || "Plateforme"}</p>{event.metadata?.rating ? <p className="mt-1 text-xs text-amber-600">Note donnée : {event.metadata.rating}/3</p> : null}</div>)}</div>}
+                <p className="mt-1 text-sm text-muted-foreground">Actions horodatées, recherchables et paginées pour ce profil.</p>
+                <Input className="mt-4" value={activityLogSearch} onChange={(event) => { setActivityLogSearch(event.target.value); setActivityLogPage(1); }} placeholder="Rechercher une action, un cours ou une formation…" aria-label="Rechercher dans le journal d’activité" />
+                {learnerActivityPageQuery.isLoading ? <div className="mt-4 h-32 animate-pulse rounded-lg bg-muted" /> : !learnerActivityPageQuery.data?.items.length ? <p className="mt-4 rounded-lg bg-muted/30 p-3 text-sm italic text-muted-foreground">Aucune action ne correspond à cette recherche.</p> : <><div className="mt-4 max-h-80 divide-y divide-border overflow-y-auto">{learnerActivityPageQuery.data.items.map((event: any) => <div key={event.id} className="py-3"><div className="flex items-start justify-between gap-3"><p className="text-sm font-medium text-foreground">{String(event.actionType).replaceAll("_", " ")}</p><time className="shrink-0 text-xs text-muted-foreground">{new Date(event.createdAt).toLocaleString("fr-FR")}</time></div><p className="mt-1 text-xs text-muted-foreground">{event.courseId ? courseTitle(event.courseId) : "Plateforme"}</p>{event.metadata?.rating ? <p className="mt-1 text-xs text-amber-600">Note donnée : {event.metadata.rating}/3</p> : null}</div>)}</div><div className="mt-4 flex items-center justify-between gap-3"><span className="text-xs text-muted-foreground">{learnerActivityPageQuery.data.total} action{learnerActivityPageQuery.data.total > 1 ? "s" : ""} · page {learnerActivityPageQuery.data.page}/{Math.max(1, Math.ceil(learnerActivityPageQuery.data.total / learnerActivityPageQuery.data.pageSize))}</span><div className="flex gap-2"><Button size="sm" variant="outline" disabled={learnerActivityPageQuery.data.page <= 1} onClick={() => setActivityLogPage((page) => Math.max(1, page - 1))}>Précédent</Button><Button size="sm" variant="outline" disabled={learnerActivityPageQuery.data.page >= Math.max(1, Math.ceil(learnerActivityPageQuery.data.total / learnerActivityPageQuery.data.pageSize))} onClick={() => setActivityLogPage((page) => page + 1)}>Suivant</Button></div></div></>}
               </section>
             </div>
+            </TabsContent>
 
             {/* Progress by certification */}
+            <TabsContent value="learning" className="mt-0">
             <div className="bg-card rounded-2xl border border-border p-6 mb-6 shadow-sm">
               <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-primary" /> Progression par certification
               </h3>
-              {Object.keys(progressByCert).length === 0 ? (
+              {certificationProgress.length === 0 ? (
                 <p className="text-sm text-muted-foreground italic">Aucune progression enregistrée.</p>
               ) : (
                 <div className="space-y-4">
-                  {Object.entries(progressByCert).map(([certId, items]) => {
-                    const cert = trainingIndex.certifications.find((c) => c.id === certId);
-                    const certCourses = trainingIndex.courses.filter((c) => c.certId === certId);
-                    const totalLessons = certCourses.reduce((acc, c) => acc + (c.lessonCount || 1), 0);
-                    const uniqueCourses = new Set(items.map((i) => i.courseId));
-                    const progressPct = totalLessons > 0 ? Math.round((items.length / totalLessons) * 100) : 0;
+                  {certificationProgress.map((progress: any) => {
+                    const cert = trainingIndex.certifications.find((c) => c.id === progress.certificationId);
                     return (
-                      <div key={certId} className="border border-border rounded-xl p-4">
+                      <div key={progress.certificationId} className="border border-border rounded-xl p-4">
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-medium text-sm text-foreground">
-                            {cert?.title?.fr || cert?.title?.en || certId}
+                            {cert?.title?.fr || cert?.title?.en || progress.certificationId}
                           </span>
                           <span className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium">
-                            {items.length} leçons / {totalLessons}
+                            {progress.completedLessons} leçon{progress.completedLessons > 1 ? "s" : ""} / {progress.totalLessons}
                           </span>
                         </div>
                         <div className="w-full h-2 bg-secondary rounded-full overflow-hidden mb-2">
                           <div
                             className="h-full bg-primary rounded-full transition-all duration-500"
-                            style={{ width: `${progressPct}%` }}
+                            style={{ width: `${progress.completionPercent}%` }}
                           />
                         </div>
                         <div className="flex items-center justify-between text-xs text-muted-foreground">
-                          <span>{uniqueCourses.size}/{certCourses.length} cours entamés</span>
-                          <span>{progressPct}% complété</span>
+                          <span>{progress.completedCourses}/{progress.totalCourses} cours terminés</span>
+                          <span>{progress.completionPercent}% complété</span>
                         </div>
                       </div>
                     );
@@ -750,8 +814,10 @@ export default function AdminTraining() {
                 </div>
               )}
             </div>
+            </TabsContent>
 
             {/* Exam attempts */}
+            <TabsContent value="exams" className="mt-0">
             <div className="bg-card rounded-2xl border border-border p-6 shadow-sm">
               <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <Award className="w-5 h-5 text-primary" /> Tentatives d'examen
@@ -798,6 +864,8 @@ export default function AdminTraining() {
                 </Table>
               )}
             </div>
+            </TabsContent>
+            </Tabs>
           </motion.div>
         </div>
       </div>

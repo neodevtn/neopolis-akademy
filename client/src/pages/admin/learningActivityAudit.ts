@@ -12,6 +12,12 @@ export type CourseActivitySummary = {
   latestAt: Date;
 };
 
+export const MAX_COUNTED_LEARNING_HEARTBEAT_SECONDS = 300;
+
+const countedLearningSeconds = (event: AuditableLearningEvent) => event.eventType === "learning_time"
+  ? Math.min(MAX_COUNTED_LEARNING_HEARTBEAT_SECONDS, Math.max(0, Number(event.durationSeconds || 0)))
+  : 0;
+
 const dayKey = (value: string | Date) => new Date(value).toLocaleDateString("en-CA");
 
 export function summarizeLearningActivity(events: AuditableLearningEvent[]) {
@@ -29,7 +35,7 @@ export function summarizeLearningActivity(events: AuditableLearningEvent[]) {
       eventCount: 0,
       latestAt: new Date(0),
     };
-    summary.activeSeconds += event.eventType === "learning_time" ? Number(event.durationSeconds || 0) : 0;
+    summary.activeSeconds += countedLearningSeconds(event);
     summary.eventCount += 1;
     if (eventDate > summary.latestAt) summary.latestAt = eventDate;
     byCourse[event.courseId] = summary;
@@ -52,7 +58,7 @@ export function buildRecentDailyActivity(events: AuditableLearningEvent[], dayCo
     return {
       key,
       label: date.toLocaleDateString("fr-FR", { weekday: "short" }).replace(".", ""),
-      durationSeconds: matchingEvents.reduce((sum, event) => sum + (event.eventType === "learning_time" ? Number(event.durationSeconds || 0) : 0), 0),
+      durationSeconds: matchingEvents.reduce((sum, event) => sum + countedLearningSeconds(event), 0),
       eventCount: matchingEvents.length,
     };
   });

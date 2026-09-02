@@ -64,6 +64,15 @@
 - [x] Stabiliser la sonde publique d’orientation afin qu’elle cible le statut de capacité réellement rendu après cinq sélections, sans dépendre d’un parent DOM instable — sonde corrigée et publique : cinq sélections, sixième désactivée, message de limite, aucune sauvegarde et aucune erreur
 - [x] Publier la revue de feedback et vérifier sur le domaine public l’orientation corrigée, l’accès au parcours concerné et l’absence de régression avant de livrer le rapport détaillé — rapport publié au checkpoint `e5a5e67a` ; contrôle public 5/5 sans sauvegarde ni erreur et parcours concerné accessible avec Full access
 
+## Fiche apprenant 360° et fiabilité des KPI
+- [x] Auditer les formules et sources des KPI de suivi apprenant : leçons, chapitres, vidéos, examens, temps actif et réussite à la première tentative — le nombre brut de trackers de chapitre et le KPI d’exercices sans source de tentative fiable ont été identifiés comme divergents
+- [x] Vérifier les KPI sur la fiche demandée à partir de données persistées agrégées et identifier chaque écart entre affichage et source — les écrans validés sont calculés par état réel ; le temps est borné par heartbeat ; la réussite mesure le premier examen par formation
+- [x] Définir une fiche 360° par onglets : synthèse, profil candidat, parcours et progression, examens, compétences, activité chronologique et graphiques — sept onglets : Synthèse, Profil, Parcours, Évaluations, Compétences, Activité et Intégrité
+- [x] Ajouter des procédures administrateur protégées et minimisées pour les données de profil, jalons, graphiques et KPI corrigés — enrichissement de détail et journal d’activité paginé, filtrable, réservé au rôle admin
+- [x] Implémenter l’interface responsive avec tableaux paginés, actions de navigation et états vides explicites sans concentrer les informations sur une seule vue — profil candidature, groupes, jalons, graphiques, progression, examens et journal sont répartis par onglet
+- [x] Couvrir les calculs, permissions, onglets, graphiques et navigation profil par tests et contrôles navigateur desktop/mobile — 522 tests réussis, QA authentifiée des 7 onglets, état vide et rendu 390 px sans débordement
+- [ ] Publier la fiche 360° et vérifier la cohérence des KPI sur le domaine public avant livraison
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif

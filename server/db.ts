@@ -11,6 +11,8 @@ import { canLearnerOpenLifecycle, type CourseLifecycleStatus } from "../shared/c
 import { getNewLearnerGroupMemberIds, needsDefaultLearnerGroup } from "../shared/defaultLearnerGroup";
 import { buildCourseCatalogKpis, type CourseCatalogKpi } from "./courseCatalogKpis";
 import { buildExamMonitoringSummary, examAttemptStatus, examDurationSeconds, examScorePercent, type ExamMonitoringStatus } from "./examMonitoring";
+import { buildLearner360Metrics, buildLearnerCertificationProgress } from "./learner360Metrics";
+import trainingIndex from "../client/src/data/trainingIndex.json";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -729,6 +731,19 @@ export async function getLearnerProgress(userId: number) {
   const achievements = await db.select().from(learnerAchievements).where(eq(learnerAchievements.userId, userId)).orderBy(desc(learnerAchievements.issuedAt));
   const { getUserCompetencies } = await import("./competencyService");
   const competencies = await getUserCompetencies(userId);
+  const metrics = buildLearner360Metrics({
+    lessons: progress,
+    chapters: chapterProg,
+    videos: videoProg,
+    attempts,
+    learningEvents: events,
+    courses: trainingIndex.courses.map((course) => ({ id: course.id, lessonCount: course.lessonCount })),
+  });
+  const certificationProgress = buildLearnerCertificationProgress({
+    lessons: progress,
+    chapters: chapterProg,
+    courses: trainingIndex.courses.map((course) => ({ id: course.id, certificationId: course.certId, lessonCount: course.lessonCount })),
+  });
 
   // Get user info for viaCandidature
   const [userRow] = await db.select({ email: users.email, name: users.name, createdAt: users.createdAt, lastSignedIn: users.lastSignedIn, role: users.role }).from(users).where(eq(users.id, userId)).limit(1);
@@ -738,7 +753,85 @@ export async function getLearnerProgress(userId: number) {
     viaCandidature = !!app;
   }
 
-  return { progress, attempts, chapterProgress: chapterProg, videoProgress: videoProg, exerciseResults: exercises, learningEvents: events, courseFeedback: feedback, activityLog, achievements, competencies, viaCandidature, userInfo: userRow || null };
+  const [application] = userRow?.email
+    ? await db.select({
+      id: applications.id,
+      phone: applications.phone,
+      country: applications.country,
+      city: applications.city,
+      sector: applications.sector,
+      currentRole: applications.currentRole,
+      yearsExperience: applications.yearsExperience,
+      programmingLevel: applications.programmingLevel,
+      aiKnowledge: applications.aiKnowledge,
+      cloudExperience: applications.cloudExperience,
+      certifications: applications.certifications,
+      languages: applications.languages,
+      linkedinUrl: applications.linkedinUrl,
+      websiteUrl: applications.websiteUrl,
+      cvFileUrl: applications.cvFileUrl,
+      videoFileUrl: applications.videoFileUrl,
+      scoreTechnique: applications.scoreTechnique,
+      scoreMetier: applications.scoreMetier,
+      scoreCommunication: applications.scoreCommunication,
+      scoreTotal: applications.scoreTotal,
+      status: applications.status,
+      createdAt: applications.createdAt,
+      updatedAt: applications.updatedAt,
+    }).from(applications).where(eq(applications.email, userRow.email)).limit(1)
+    : [];
+
+  const groups = await db.select({
+    id: learnerGroups.id,
+    name: learnerGroups.name,
+    color: learnerGroups.color,
+    isSystem: learnerGroups.isSystem,
+    assignedAt: learnerGroupMemberships.assignedAt,
+  }).from(learnerGroupMemberships)
+    .innerJoin(learnerGroups, eq(learnerGroupMemberships.groupId, learnerGroups.id))
+    .where(eq(learnerGroupMemberships.userId, userId))
+    .orderBy(desc(learnerGroupMemberships.assignedAt));
+
+  const firstProgressAt = progress.reduce<Date | null>((earliest, item) => !earliest || item.completedAt < earliest ? item.completedAt : earliest, null);
+  const latestProgressAt = progress.reduce<Date | null>((latest, item) => !latest || item.completedAt > latest ? item.completedAt : latest, null);
+  const firstExamAt = attempts.reduce<Date | null>((earliest, item) => !earliest || item.finishedAt < earliest ? item.finishedAt : earliest, null);
+  const latestExamAt = attempts.reduce<Date | null>((latest, item) => !latest || item.finishedAt > latest ? item.finishedAt : latest, null);
+  const milestones = [
+    userRow?.createdAt ? { id: "account_created", at: userRow.createdAt, label: "Compte créé", type: "account" } : null,
+    application?.createdAt ? { id: "application_submitted", at: application.createdAt, label: "Candidature déposée", type: "application" } : null,
+    firstProgressAt ? { id: "first_learning", at: firstProgressAt, label: "Premier apprentissage terminé", type: "learning" } : null,
+    latestProgressAt ? { id: "latest_learning", at: latestProgressAt, label: "Dernière leçon terminée", type: "learning" } : null,
+    firstExamAt ? { id: "first_exam", at: firstExamAt, label: "Premier examen soumis", type: "exam" } : null,
+    latestExamAt ? { id: "latest_exam", at: latestExamAt, label: "Dernier examen soumis", type: "exam" } : null,
+    ...achievements.map((achievement) => ({ id: `achievement_${achievement.id}`, at: achievement.issuedAt, label: "Badge ou certificat obtenu", type: "achievement" })),
+  ].filter((milestone): milestone is { id: string; at: Date; label: string; type: string } => Boolean(milestone)).sort((left, right) => right.at.getTime() - left.at.getTime());
+
+  return { progress, attempts, chapterProgress: chapterProg, videoProgress: videoProg, exerciseResults: exercises, learningEvents: events, courseFeedback: feedback, activityLog, achievements, competencies, metrics, certificationProgress, application: application || null, groups, milestones, viaCandidature, userInfo: userRow || null };
+}
+
+export async function getLearnerActivityLogPage(userId: number, page = 1, pageSize = 20, search?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const safePage = Math.max(1, page);
+  const safePageSize = Math.min(50, Math.max(1, pageSize));
+  const term = search?.trim();
+  const filters = [eq(learnerActivityLog.userId, userId)];
+  if (term) {
+    const pattern = `%${term}%`;
+    filters.push(or(
+      like(learnerActivityLog.actionType, pattern),
+      like(learnerActivityLog.courseId, pattern),
+      like(learnerActivityLog.certificationId, pattern),
+    )!);
+  }
+  const whereClause = and(...filters);
+  const items = await db.select().from(learnerActivityLog)
+    .where(whereClause)
+    .orderBy(desc(learnerActivityLog.createdAt))
+    .limit(safePageSize)
+    .offset((safePage - 1) * safePageSize);
+  const [{ total }] = await db.select({ total: count() }).from(learnerActivityLog).where(whereClause);
+  return { items, total: Number(total || 0), page: safePage, pageSize: safePageSize };
 }
 
 export async function getAllLearnersStats() {

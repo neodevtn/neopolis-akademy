@@ -24,4 +24,12 @@ describe("learningActivityAudit", () => {
     expect(days.map((day) => day.durationSeconds)).toEqual([120, 0, 60]);
     expect(days.map((day) => day.eventCount)).toEqual([1, 1, 1]);
   });
+
+  it("borne un heartbeat anormal avant qu’il atteigne un graphique", () => {
+    const summary = summarizeLearningActivity([
+      { courseId: "course_a", eventType: "learning_time", durationSeconds: 900, createdAt: "2026-08-22T10:00:00.000Z" },
+    ]);
+
+    expect(summary.courseActivity[0]).toMatchObject({ activeSeconds: 300 });
+  });
 });

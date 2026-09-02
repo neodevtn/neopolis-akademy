@@ -3,7 +3,9 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getExamSession, saveExamSession, clearExamSession, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation, getAdminAnalytics, getExamMonitoring, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients, getReferralProgramForUser, getReferralAdminOverview, recordReferralConversion, updateReferralCampaign, updateReferralConversionStatus, saveAiResponseEvaluation } from "./db";
+import { createApplication, getApplications, getApplicationById, updateApplicationStatus, getApplicationStats, getUserProgress, markLessonComplete, isCertificationComplete, createExamAttempt, getExamAttempts, getExamSession, saveExamSession, clearExamSession, getAllLearners, getLearnerProgress, getAllLearnersStats, getVideoProgress, toggleVideoProgress, getChapterProgress, upsertChapterProgress, blockUser, updateUserRole, createInvitation, getInvitations, getDirectInvitations, cancelInvitation,
+getAdminAnalytics, getExamMonitoring, getLearningReporting, exportLearnersCSV, submitVideoFeedback, getUserVideoFeedback, submitCourseFeedback, getMyCourseFeedback, getCourseFeedbackDashboard, moderateCourseFeedback, getSelectedCandidates, updateApplicationEmail, createInvitationWithTracking, getEmailDeliveryStats, updateInvitationDeliveryStatus, recordLearningEvent, getUserAchievements, getAdminEmailRecipients, getReferralProgramForUser, getReferralAdminOverview, recordReferralConversion, updateReferralCampaign, updateReferralConversionStatus, saveAiResponseEvaluation } from "./db";
+import { getLearnerActivityLogPage } from "./db";
 import { awardCertification, awardCourseCompletionBadge } from "./achievementService";
 import { calculateScore } from "./scoring";
 import { TRPCError } from "@trpc/server";
@@ -835,6 +837,15 @@ export const appRouter = router({
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await getLearnerProgress(input.userId);
+      }),
+
+    getLearnerActivityPage: protectedProcedure
+      .input(z.object({ userId: z.number(), page: z.number().min(1).default(1), pageSize: z.number().min(1).max(50).default(20), search: z.string().max(160).optional() }))
+      .query(async ({ ctx, input }) => {
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        }
+        return await getLearnerActivityLogPage(input.userId, input.page, input.pageSize, input.search);
       }),
 
     getStats: protectedProcedure
