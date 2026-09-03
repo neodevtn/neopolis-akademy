@@ -2,7 +2,8 @@ import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useRoute } from "wouter";
+import { useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
@@ -49,6 +50,14 @@ function TrainingDashboardRoute() { return <TrainingProgressArea><TrainingDashbo
 function TrainingCertificationRoute() { return <TrainingProgressArea><TrainingCertification /></TrainingProgressArea>; }
 function TrainingCourseRoute() { return <TrainingProgressArea><TrainingCourse /></TrainingProgressArea>; }
 function MockExamRoute() { return <TrainingProgressArea><MockExam /></TrainingProgressArea>; }
+function LocalizedPublicTrainingRedirect({ locale }: { locale: "en" | "ar" }) {
+  const [, params] = useRoute(locale === "en" ? "/en/ai-training/:themeSlug" : "/ar/ai-training/:themeSlug");
+  useEffect(() => {
+    const slug = params?.themeSlug ? `/${encodeURIComponent(params.themeSlug)}` : "";
+    window.location.assign(`/${locale}/ai-training${slug}`);
+  }, [locale, params?.themeSlug]);
+  return <PageLoader />;
+}
 
 function Router() {
   return (
@@ -58,6 +67,10 @@ function Router() {
         <Route path={"/ai-news"} component={AiNews} />
         <Route path={"/formations-ia"} component={PublicTrainingThemes} />
         <Route path={"/formations-ia/:themeSlug"} component={PublicTrainingThemes} />
+        <Route path={"/en/ai-training"} component={() => <LocalizedPublicTrainingRedirect locale="en" />} />
+        <Route path={"/en/ai-training/:themeSlug"} component={() => <LocalizedPublicTrainingRedirect locale="en" />} />
+        <Route path={"/ar/ai-training"} component={() => <LocalizedPublicTrainingRedirect locale="ar" />} />
+        <Route path={"/ar/ai-training/:themeSlug"} component={() => <LocalizedPublicTrainingRedirect locale="ar" />} />
         <Route path={"/refer"} component={ReferralLanding} />
         <Route path={"/apply"} component={Apply} />
         <Route path={"/admin"} component={AdminDashboard} />

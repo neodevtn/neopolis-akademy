@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { faqItems as faqItemsData } from "@/data/faqData";
 import DeferredHomeAuth from "@/components/DeferredHomeAuth";
+import { publicTrainingPath } from "@shared/publicTrainingLocale";
 
 // Chart.js is loaded only when the below-the-fold chart becomes visible.
 import type { Chart as ChartJS } from "chart.js";
@@ -160,7 +161,7 @@ function ParallaxImage() {
 }
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -201,7 +202,7 @@ export default function Home() {
             <NavLink href="#formule">{t({ fr: "La Formule", en: "The Formula", ar: "الصيغة" })}</NavLink>
             <NavLink href="#pourquoi">{t({ fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" })}</NavLink>
             <NavLink href="#partenaires">{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</NavLink>
-            <Link href="/formations-ia" className="whitespace-nowrap text-[12.5px] font-medium px-3 py-2 rounded-md relative transition-all duration-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50">{t({ fr: "Formations IA", en: "AI Training", ar: "تدريب الذكاء الاصطناعي" })}</Link>
+            <Link href={publicTrainingPath(lang)} className="whitespace-nowrap text-[12.5px] font-medium px-3 py-2 rounded-md relative transition-all duration-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50">{t({ fr: "Formations IA", en: "AI Training", ar: "تدريب الذكاء الاصطناعي" })}</Link>
             <Link href="/ai-news" className="whitespace-nowrap text-[12.5px] font-medium px-3 py-2 rounded-md relative transition-all duration-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50">AI News</Link>
             <NavLink href="#faq">FAQ</NavLink>
             <DeferredHomeAuth

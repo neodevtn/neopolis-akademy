@@ -108,6 +108,12 @@
 - [x] Ajouter des métadonnées SEO, données structurées, graphiques fondés sur le catalogue et une navigation publique entre thèmes et formations — title, description, canonical, Open Graph, Twitter, JSON-LD, sitemap et robots ajoutés ; indicateurs exclusivement dérivés du catalogue
 - [x] Vérifier les pages publiques, les titres, les liens, le rendu mobile et les éléments SEO avant publication — QA locale et publique 1280, 390 et 375 px réussie ; HTTP 200, 404/noindex, canonical, Open Graph, JSON-LD, sitemap et absence d’overflow validés après checkpoint `8c650dda`
 
+## Pages publiques multilingues et SEO MENA
+- [x] Auditer la sélection de langue, les routes et les métadonnées existantes afin de définir des URL stables en français, anglais et arabe — routes indexables retenues : `/formations-ia`, `/en/ai-training` et `/ar/ai-training`, avec le même slug de thème
+- [x] Localiser intégralement l’index et les pages thématiques publiques en français, anglais et arabe, avec support RTL accessible — contenu éditorial, cartes, métiers, compétences, formations, CTA, navigation et pages introuvables localisés ; 609 chaînes catalogue traduites et versionnées pour EN/AR
+- [x] Ajouter les balises `hreflang`, données structurées, canonical et sitemap pour les trois langues avec un ciblage éditorial MENA prudent — canonical auto-référent, alternatives FR/EN/AR/x-default, Open Graph, JSON-LD localisé et sitemap enrichi sans promesse pays par pays
+- [x] Vérifier les versions FR/EN/AR sur desktop et mobile, y compris le rendu RTL, les liens et le HTML exploitable par les robots — 543 tests réussis (2 ignorés), matrice QA de publication réussie ; sonde 18 routes × 3 formats, 404/noindex et sitemap valides ; revue visuelle desktop et mobile RTL sans débordement
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif

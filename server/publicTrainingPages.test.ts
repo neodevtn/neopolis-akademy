@@ -33,4 +33,35 @@ describe("pages publiques de formations IA", () => {
     expect(sitemap).toContain("https://akademy.neodev.click/formations-ia");
     expect(sitemap).toContain("finance-comptabilite-controle-gestion");
   });
+
+  it("rend l’index anglais avec canonical, hreflang et contenu éditorial localisé", () => {
+    const html = renderPublicTrainingIndex("en");
+
+    expect(html).toContain('<html lang="en" dir="ltr">');
+    expect(html).toContain("<h1>Free AI training by profession</h1>");
+    expect(html).toContain('<link rel="canonical" href="https://akademy.neodev.click/en/ai-training"');
+    expect(html).toContain('hreflang="fr-FR" href="https://akademy.neodev.click/formations-ia"');
+    expect(html).toContain('hreflang="ar" href="https://akademy.neodev.click/ar/ai-training"');
+    expect(html).toContain('"inLanguage":"en"');
+  });
+
+  it("rend une page thème arabe RTL avec les cartes catalogue localisées et ses alternatives SEO", () => {
+    const theme = getPublicTrainingTheme("finance-comptabilite-controle-gestion", "ar");
+    expect(theme).not.toBeNull();
+
+    const html = renderPublicTrainingTheme(theme!, "ar");
+    expect(html).toContain('<html lang="ar" dir="rtl">');
+    expect(html).toContain("الدورات المتاحة ضمن هذا الموضوع");
+    expect(html).toContain("أتمتة المحاسبة بالذكاء الاصطناعي");
+    expect(html).toContain('hreflang="en" href="https://akademy.neodev.click/en/ai-training/finance-comptabilite-controle-gestion"');
+    expect(html).toContain('"inLanguage":"ar"');
+  });
+
+  it("publie toutes les variantes linguistiques dans le sitemap avec leurs liens alternatifs", () => {
+    const sitemap = renderPublicTrainingSitemap();
+    expect(sitemap).toContain("https://akademy.neodev.click/en/ai-training");
+    expect(sitemap).toContain("https://akademy.neodev.click/ar/ai-training");
+    expect(sitemap).toContain('xmlns:xhtml="http://www.w3.org/1999/xhtml"');
+    expect(sitemap).toContain('hreflang="x-default"');
+  });
 });
