@@ -26,6 +26,8 @@ describe("pages publiques de formations IA", () => {
     expect(html).toContain('class="public-chrome-signin" href="/login">Se connecter</a>');
     expect(html).toContain('class="public-chrome-apply" href="/apply"><span>Postuler</span>');
     expect(html).toContain('<details class="public-chrome-mobile"><summary aria-label="Programme"><span aria-hidden="true">☰</span></summary>');
+    expect(html).toContain('.content-shell { width: 100%; max-width: 78rem; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 3rem); }');
+    expect(html).toContain('<main class="content-shell">');
     expect(html).toContain('<footer class="site-footer">');
     expect(html).toContain('href="/mentions-legales">Mentions légales</a>');
   });

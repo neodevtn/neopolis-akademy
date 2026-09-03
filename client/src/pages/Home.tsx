@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { faqItems as faqItemsData } from "@/data/faqData";
 import DeferredHomeAuth from "@/components/DeferredHomeAuth";
+import { scrollToHomePublicAnchor } from "@/lib/homePublicAnchors";
 
 // Chart.js is loaded only when the below-the-fold chart becomes visible.
 import type { Chart as ChartJS } from "chart.js";
@@ -135,6 +136,30 @@ function AnimatedSection({ children, className, style, id }: { children: React.R
   );
 }
 
+function HomeHashAnchorSync() {
+  useEffect(() => {
+    let retryTimer: number | undefined;
+    let animationFrame: number | undefined;
+
+    const sync = () => {
+      animationFrame = window.requestAnimationFrame(() => {
+        if (scrollToHomePublicAnchor(window.location.hash)) return;
+        retryTimer = window.setTimeout(() => scrollToHomePublicAnchor(window.location.hash), 180);
+      });
+    };
+
+    sync();
+    window.addEventListener("hashchange", sync);
+    return () => {
+      window.removeEventListener("hashchange", sync);
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      if (retryTimer) window.clearTimeout(retryTimer);
+    };
+  }, []);
+
+  return null;
+}
+
 /* ─── Parallax Image Component ─── */
 function ParallaxImage() {
   const { scrollY } = useScroll();
@@ -163,6 +188,7 @@ export default function Home() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--wise-canvas)" }}>
       <PublicSiteHeader active="home" />
+      <HomeHashAnchorSync />
 
       <main>
       {/* ─── Hero Band (Bubble cream paper) ─── */}
@@ -222,7 +248,7 @@ export default function Home() {
       <DeferredHomeAuth slot="resume" />
 
       {/* ─── Pourquoi maintenant (Gris Band) ─── */}
-      <AnimatedSection id="pourquoi" className="home-deferred-section" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+      <AnimatedSection id="pourquoi" className="home-deferred-section scroll-mt-20" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-8 md:py-12">
           <motion.div variants={fadeInUp} className="text-center mb-10 md:mb-14">
             <span className="wise-eyebrow mb-4 inline-flex">{t({ fr: "Urgence du marché", en: "Market urgency", ar: "إلحاح السوق" })}</span>
@@ -278,7 +304,7 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── La Formule (Green Band) ─── */}
-      <AnimatedSection id="formule" className="home-deferred-section" style={{ background: "var(--wise-canvas)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+      <AnimatedSection id="formule" className="home-deferred-section scroll-mt-20" style={{ background: "var(--wise-canvas)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-8">
           <motion.div variants={fadeInUp} className="text-center mb-8">
             <span className="wise-badge-positive mb-4">{t({ fr: "100% Gratuit", en: "100% Free", ar: "مجاني 100%" })}</span>
@@ -324,7 +350,7 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── Partenariats (Sage Band) ─── */}
-      <AnimatedSection id="partenaires" className="home-deferred-section" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3.5rem) clamp(1.25rem, 4vw, 3rem)" }}>
+      <AnimatedSection id="partenaires" className="home-deferred-section scroll-mt-20" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3.5rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-6">
           <motion.div variants={fadeInUp} className="text-center mb-8">
             <span className="wise-eyebrow mb-3 inline-flex">{t({ fr: "Écosystème", en: "Ecosystem", ar: "النظام البيئي" })}</span>
@@ -491,7 +517,7 @@ export default function Home() {
       </AnimatedSection>
 
       {/* ─── FAQ Section ─── */}
-      <AnimatedSection id="faq" className="home-deferred-section" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
+      <AnimatedSection id="faq" className="home-deferred-section scroll-mt-20" style={{ background: "var(--wise-canvas-soft)", padding: "clamp(2rem, 4vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
         <div className="container py-8">
           <motion.div variants={fadeInUp} className="text-center mb-8">
             <span className="wise-eyebrow mb-4 inline-flex">{t({ fr: "Support", en: "Support", ar: "الدعم" })}</span>

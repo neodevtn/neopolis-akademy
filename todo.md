@@ -135,6 +135,11 @@
 - [x] Extraire une configuration de style commune et l’appliquer aux deux rendus, sans modifier les parcours authentifiés — `PUBLIC_CHROME_STYLES` utilisé par le composant React et le HTML serveur ; actions différées authentifiées alignées sur les mêmes classes
 - [x] Vérifier côte à côte les menus et footers FR/EN/AR sur desktop et mobile avant publication — vérification desktop et mobile FR/AR ; bouton hamburger, CTA, langues et RTL validés ; TypeScript, test serveur, 548 tests et matrice QA réussis
 
+## Correctifs de navigation et de gabarit public
+- [x] Réparer les liens d’ancrage du menu et du footer pour atteindre les sections Formule, Pourquoi, Partenaires et FAQ depuis toute page publique — resynchronisation après montage React, URL partageables préservées et défilement contrôlé sous le menu fixe
+- [x] Aligner la largeur, les espacements et le rythme visuel des pages de détail Formation sur la page index publique de référence — enveloppe `content-shell` plafonnée à 78rem et padding progressif repris de l’accueil, sur index, domaines, héros et 404 publics
+- [ ] Vérifier les ancres, les pages de formation et le rendu responsive avant publication — contrôles locaux réussis sur les ancres Formule/FAQ, les pages index/détail et mobile 390 px ; contrôle du domaine public à refaire après checkpoint
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif
