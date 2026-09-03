@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { CANONICAL_ORIGIN, SHARE_IMAGE_URL, getSeoPage, injectSeoHead, renderSeoHead } from "./seo";
+import { CANONICAL_ORIGIN, SHARE_IMAGE_ALT, SHARE_IMAGE_URL, X_SHARE_IMAGE_URL, getSeoPage, injectSeoHead, renderSeoHead } from "./seo";
 
 describe("server-rendered sharing metadata", () => {
   it("publie un titre d’accueil borné et exactement six mots-clés ciblés", () => {
@@ -22,7 +22,11 @@ describe("server-rendered sharing metadata", () => {
     expect(metadata).toContain("<title>Candidature | Neopolis Akademy</title>");
     expect(metadata).toContain(`<link rel="canonical" href="${CANONICAL_ORIGIN}/apply" />`);
     expect(metadata).toContain(`<meta property="og:image" content="${SHARE_IMAGE_URL}" />`);
+    expect(metadata).toContain(`<meta property="og:image:secure_url" content="${SHARE_IMAGE_URL}" />`);
+    expect(metadata).toContain('<meta property="og:image:type" content="image/png" />');
+    expect(metadata).toContain(`<meta property="og:image:alt" content="${SHARE_IMAGE_ALT}" />`);
     expect(metadata).toContain('<meta name="twitter:card" content="summary_large_image" />');
+    expect(metadata).toContain(`<meta name="twitter:image" content="${X_SHARE_IMAGE_URL}" />`);
   });
 
   it("publie des métadonnées publiques dédiées à la rubrique AI News", () => {
@@ -38,7 +42,18 @@ describe("server-rendered sharing metadata", () => {
     expect(metadata).toContain("L’IA pour la finance | Formation recommandée par votre réseau");
     expect(metadata).toContain("Vous avez reçu une recommandation pour « L’IA pour la finance »");
     expect(metadata).toContain(`<link rel="canonical" href="${CANONICAL_ORIGIN}/refer" />`);
-    expect(metadata).toContain("og:url\" content=\"https://akademy.neodev.click/refer?ref=NEO-AB12CD34");
+    expect(metadata).toContain("og:url\" content=\"https://akademy.neodev.click/refer\"");
+    expect(metadata).not.toContain("og:url\" content=\"https://akademy.neodev.click/refer?ref=");
+    expect(metadata).toContain(`<meta property="og:image" content="${SHARE_IMAGE_URL}" />`);
+  });
+
+  it("couvre les liens de candidature parrainée avec les mêmes images publiques sans exposer le code de parrainage dans l’URL sociale", () => {
+    const metadata = renderSeoHead("/apply?ref=NEO-AB12CD34&utm_content=course&course=ai_for_finance__01");
+
+    expect(metadata).toContain(`<meta property="og:image" content="${SHARE_IMAGE_URL}" />`);
+    expect(metadata).toContain(`<meta name="twitter:image" content="${X_SHARE_IMAGE_URL}" />`);
+    expect(metadata).toContain('og:url" content="https://akademy.neodev.click/refer"');
+    expect(metadata).not.toContain('og:url" content="https://akademy.neodev.click/refer?ref=');
   });
 
   it("résout le titre français canonique pour les liens de cours publiés avant l’ajout du libellé de partage", () => {

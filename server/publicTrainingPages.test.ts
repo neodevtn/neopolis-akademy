@@ -16,6 +16,10 @@ describe("pages publiques de formations IA", () => {
     expect(html).toContain("application/ld+json");
     expect(html).toContain("Choisir une formation IA par grand domaine métier");
     expect(html).toContain('meta name="keywords" content="formations IA gratuites, formation IA par métier, compétences IA, formation professionnelle, zone MENA"');
+    expect(html).toContain('og-neopolis-akademy-1200x630_eef162a5.png');
+    expect(html).toContain('x-neopolis-akademy-1200x675_28f812f5.png');
+    expect(html).toContain('<meta property="og:image:secure_url"');
+    expect(html).toContain('<meta property="og:image:type" content="image/png" />');
   });
 
   it("expose le même menu principal et le même footer public dans le HTML des formations", () => {

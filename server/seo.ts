@@ -1,9 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
+import { PUBLIC_SOCIAL_ASSETS } from "@shared/publicSocialAssets";
 
 export const CANONICAL_ORIGIN = "https://akademy.neodev.click";
 export const SITE_NAME = "Neopolis Akademy";
-export const SHARE_IMAGE_URL = `${CANONICAL_ORIGIN}/api/assets/neopolis-akademy-social-share_7fc7d2a3.png`;
+export const SHARE_IMAGE_URL = `${CANONICAL_ORIGIN}${PUBLIC_SOCIAL_ASSETS.openGraph.path}`;
+export const X_SHARE_IMAGE_URL = `${CANONICAL_ORIGIN}${PUBLIC_SOCIAL_ASSETS.x.path}`;
+export const SHARE_IMAGE_ALT = "Neopolis Akademy — Formation certifiante en intelligence artificielle";
 
 type SeoPage = {
   title: string;
@@ -93,15 +96,6 @@ function titleFromIdentifier(value: string | null) {
   return normalized ? normalized.replace(/\bai\b/gi, "IA").replace(/\b\w/g, (letter) => letter.toUpperCase()) : "Neopolis Akademy";
 }
 
-function referralOpenGraphPath(url: URL) {
-  const params = new URLSearchParams();
-  ["ref", "utm_content", "course", "certification", "achievement", "share_title"].forEach((key) => {
-    const value = cleanedText(url.searchParams.get(key), key === "share_title" ? 140 : 80);
-    if (value) params.set(key, value);
-  });
-  return `/refer${params.size ? `?${params.toString()}` : ""}`;
-}
-
 function referralSeoPage(url: URL): SeoPage {
   const content = cleanedText(url.searchParams.get("utm_content"), 32);
   const courseTitle = cleanedText(url.searchParams.get("share_title"), 140) || titleFromIdentifier(url.searchParams.get("course") || url.searchParams.get("certification"));
@@ -117,7 +111,10 @@ function referralSeoPage(url: URL): SeoPage {
     : achievement
       ? "Un membre de votre réseau partage sa réussite et vous invite à découvrir les parcours pratiques de Neopolis Akademy."
       : "Un membre de votre réseau vous invite à découvrir les parcours pratiques de Neopolis Akademy avant de candidater.";
-  return { title, description, path: "/refer", openGraphPath: referralOpenGraphPath(url) };
+  // La cible réelle garde ses paramètres de recommandation, mais la carte sociale
+  // utilise une URL neutre : aucun identifiant ni libellé fourni par l’utilisateur
+  // n’est alors exposé aux robots de prévisualisation.
+  return { title, description, path: "/refer", openGraphPath: "/refer" };
 }
 
 export function getSeoPage(requestUrl: string): SeoPage {
@@ -183,14 +180,16 @@ export function renderSeoHead(requestUrl: string) {
     `<meta property="og:description" content="${description}" />`,
     `<meta property="og:url" content="${escapeHtml(openGraphUrl)}" />`,
     `<meta property="og:image" content="${SHARE_IMAGE_URL}" />`,
-    '<meta property="og:image:width" content="1200" />',
-    '<meta property="og:image:height" content="630" />',
-    '<meta property="og:image:alt" content="Logo Neopolis Akademy" />',
+    `<meta property="og:image:secure_url" content="${SHARE_IMAGE_URL}" />`,
+    `<meta property="og:image:type" content="${PUBLIC_SOCIAL_ASSETS.openGraph.type}" />`,
+    `<meta property="og:image:width" content="${PUBLIC_SOCIAL_ASSETS.openGraph.width}" />`,
+    `<meta property="og:image:height" content="${PUBLIC_SOCIAL_ASSETS.openGraph.height}" />`,
+    `<meta property="og:image:alt" content="${SHARE_IMAGE_ALT}" />`,
     '<meta name="twitter:card" content="summary_large_image" />',
     `<meta name="twitter:title" content="${title}" />`,
     `<meta name="twitter:description" content="${description}" />`,
-    `<meta name="twitter:image" content="${SHARE_IMAGE_URL}" />`,
-    '<meta name="twitter:image:alt" content="Logo Neopolis Akademy" />',
+    `<meta name="twitter:image" content="${X_SHARE_IMAGE_URL}" />`,
+    `<meta name="twitter:image:alt" content="${SHARE_IMAGE_ALT}" />`,
     robots,
   ].filter(Boolean).join("\n    ");
 }

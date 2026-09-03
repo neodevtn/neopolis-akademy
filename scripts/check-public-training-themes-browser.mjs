@@ -5,6 +5,8 @@ import { chromium } from "playwright-core";
 const root = process.cwd();
 const baseUrl = (process.env.PUBLIC_TRAINING_THEMES_QA_URL || "http://127.0.0.1:3000").replace(/\/$/, "");
 const outputPath = path.join(root, "docs", "public-training-themes-browser-qa.json");
+const openGraphImage = "https://akademy.neodev.click/manus-storage/og-neopolis-akademy-1200x630_eef162a5.png";
+const xImage = "https://akademy.neodev.click/manus-storage/x-neopolis-akademy-1200x675_28f812f5.png";
 const routes = [
   { path: "/formations-ia", locale: "fr-FR", direction: "ltr", expectedTitle: "Formations IA gratuites par métier | Neopolis Akademy", expectedText: "Choisir une formation IA par grand domaine métier" },
   { path: "/formations-ia/comptabilite-finance", locale: "fr-FR", direction: "ltr", expectedTitle: "Formation IA comptabilité et finance | Neopolis", expectedText: "Cas d’usage professionnels dans les formations associées" },
@@ -51,6 +53,8 @@ try {
         canonicalPresent: rawHtml.includes(`<link rel="canonical" href="https://akademy.neodev.click${route.path}"`),
         hreflangPresent: rawHtml.includes('hreflang="fr-FR"') && rawHtml.includes('hreflang="en"') && rawHtml.includes('hreflang="ar"') && rawHtml.includes('hreflang="x-default"'),
         openGraphPresent: rawHtml.includes('<meta property="og:title"'),
+        openGraphImagePresent: rawHtml.includes(`<meta property="og:image" content="${openGraphImage}"`) && rawHtml.includes(`<meta property="og:image:secure_url" content="${openGraphImage}"`) && rawHtml.includes('<meta property="og:image:type" content="image/png"') && rawHtml.includes('<meta property="og:image:width" content="1200"') && rawHtml.includes('<meta property="og:image:height" content="630"'),
+        xImagePresent: rawHtml.includes('<meta name="twitter:card" content="summary_large_image"') && rawHtml.includes(`<meta name="twitter:image" content="${xImage}"`),
         structuredDataPresent: rawHtml.includes('application/ld+json'),
         keywordCount,
         keywordsPresent: keywordCount >= 3 && keywordCount <= 8,
@@ -80,7 +84,7 @@ try {
     notFound: notFoundChecks,
     legacyRedirects,
     sitemap: { hasFrenchIndex: sitemap.includes(`${"https://akademy.neodev.click"}/formations-ia`), hasEnglishIndex: sitemap.includes(`${"https://akademy.neodev.click"}/en/ai-training`), hasArabicIndex: sitemap.includes(`${"https://akademy.neodev.click"}/ar/ai-training`), hasFinanceDomain: sitemap.includes("comptabilite-finance"), hasAlternates: sitemap.includes("xhtml:link") && sitemap.includes('hreflang="ar"') },
-    passed: results.every((result) => result.status === 200 && result.titleMatches && result.expectedTextVisible && result.languageMatches && result.directionMatches && result.canonicalPresent && result.hreflangPresent && result.openGraphPresent && result.structuredDataPresent && result.keywordsPresent && !result.overflow)
+    passed: results.every((result) => result.status === 200 && result.titleMatches && result.expectedTextVisible && result.languageMatches && result.directionMatches && result.canonicalPresent && result.hreflangPresent && result.openGraphPresent && result.openGraphImagePresent && result.xImagePresent && result.structuredDataPresent && result.keywordsPresent && !result.overflow)
       && notFoundChecks.every((result) => result.status === 404 && result.noindex)
       && legacyRedirects.every((result) => result.status === 301 && result.location?.endsWith("/comptabilite-finance"))
       && sitemap.includes(`${"https://akademy.neodev.click"}/formations-ia`) && sitemap.includes(`${"https://akademy.neodev.click"}/en/ai-training`) && sitemap.includes(`${"https://akademy.neodev.click"}/ar/ai-training`) && sitemap.includes("comptabilite-finance") && sitemap.includes("xhtml:link") && sitemap.includes('hreflang="ar"'),

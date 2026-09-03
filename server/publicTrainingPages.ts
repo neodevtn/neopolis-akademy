@@ -16,10 +16,13 @@ import {
   type PublicTrainingLocale,
 } from "@shared/publicTrainingLocale";
 import { PUBLIC_CHROME_STYLES } from "@shared/publicChromeStyles";
+import { PUBLIC_SOCIAL_ASSETS } from "@shared/publicSocialAssets";
 
 const SITE_NAME = "Neopolis Akademy";
 const ORIGIN = "https://akademy.neodev.click";
-const SHARE_IMAGE_URL = `${ORIGIN}/api/assets/neopolis-akademy-social-share_7fc7d2a3.png`;
+const SHARE_IMAGE_URL = `${ORIGIN}${PUBLIC_SOCIAL_ASSETS.openGraph.path}`;
+const X_SHARE_IMAGE_URL = `${ORIGIN}${PUBLIC_SOCIAL_ASSETS.x.path}`;
+const SHARE_IMAGE_ALT = "Neopolis Akademy — Formation certifiante en intelligence artificielle";
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 const OECD_URL = "https://www.oecd.org/en/publications/generative-ai-and-the-sme-workforce_2d08b99d-en.html";
 
@@ -74,13 +77,16 @@ function head({ locale, title, description, canonicalPath, keywords, noindex = f
     <meta property="og:description" content="${escapeHtml(description)}" />
     <meta property="og:url" content="${canonical}" />
     <meta property="og:image" content="${SHARE_IMAGE_URL}" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Logo Neopolis Akademy" />
+    <meta property="og:image:secure_url" content="${SHARE_IMAGE_URL}" />
+    <meta property="og:image:type" content="${PUBLIC_SOCIAL_ASSETS.openGraph.type}" />
+    <meta property="og:image:width" content="${PUBLIC_SOCIAL_ASSETS.openGraph.width}" />
+    <meta property="og:image:height" content="${PUBLIC_SOCIAL_ASSETS.openGraph.height}" />
+    <meta property="og:image:alt" content="${SHARE_IMAGE_ALT}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escapeHtml(title)}" />
     <meta name="twitter:description" content="${escapeHtml(description)}" />
-    <meta name="twitter:image" content="${SHARE_IMAGE_URL}" />
+    <meta name="twitter:image" content="${X_SHARE_IMAGE_URL}" />
+    <meta name="twitter:image:alt" content="${SHARE_IMAGE_ALT}" />
     ${noindex ? '<meta name="robots" content="noindex, follow" />' : ""}
     <script type="application/ld+json">${toJson(schema)}</script>`;
 }
