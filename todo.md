@@ -118,6 +118,13 @@
 - [x] Ajuster le `document.title` de l’accueil entre 30 et 60 caractères et ajouter une balise meta keywords de 3 à 8 termes ciblés — titre « Formations IA gratuites | Neopolis Akademy » (42 caractères) et six expressions ciblées ajoutés au rendu serveur de `/`
 - [x] Vérifier le HTML servi, les limites de caractères et le nombre de mots-clés avant publication — test SEO dédié réussi ; HTML local confirmé avec 42 caractères et exactement 6 mots-clés
 
+## Pages publiques par grands domaines métier
+- [x] Auditer les thèmes, catégories, sous-catégories, métiers et formations afin de construire des grands domaines fondés sur les données réelles — inventaire reproductible de 115 formations et 177 cours, catégories et sous-catégories analysées dans `scripts/audit-professional-domains.mjs`
+- [x] Définir les relations many-to-many entre grands domaines et formations, avec des cas d’usage par métier vérifiables dans les contenus pédagogiques — sept domaines, rattachements par catégories/sous-catégories/formation canonique, couverture de toutes les formations et cas d’usage issus des titres et compétences de cours
+- [x] Créer les pages publiques SEO multilingues par grand domaine, leurs liens de navigation et leurs données structurées — contenu HTML serveur, cas d’usage, formations associées, liaisons croisées, sitemap multilingue et redirections 301 des dix anciens thèmes
+- [x] Ajouter pour chaque page de domaine et chacune des trois langues un titre, une description et des mots-clés SEO propres au contenu affiché — title, description et cinq mots-clés spécifiques par domaine pour les versions FR/EN/AR, contrôlés par tests
+- [ ] Vérifier les relations, les contenus, le HTML indexable et la responsivité avant publication — tests, sonde SEO et captures locales réussis ; contrôle public à effectuer après checkpoint
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif

@@ -6,12 +6,12 @@ const root = process.cwd();
 const baseUrl = (process.env.PUBLIC_TRAINING_THEMES_QA_URL || "http://127.0.0.1:3000").replace(/\/$/, "");
 const outputPath = path.join(root, "docs", "public-training-themes-browser-qa.json");
 const routes = [
-  { path: "/formations-ia", locale: "fr-FR", direction: "ltr", expectedTitle: "Formations IA gratuites par métier", expectedText: "Choisir une formation IA par métier" },
-  { path: "/formations-ia/finance-comptabilite-controle-gestion", locale: "fr-FR", direction: "ltr", expectedTitle: "Formations IA gratuites pour la finance, la comptabilité et le contrôle de gestion", expectedText: "Répartition des activités par formation" },
-  { path: "/en/ai-training", locale: "en", direction: "ltr", expectedTitle: "Free AI training by profession", expectedText: "Choose AI training by profession" },
-  { path: "/en/ai-training/finance-comptabilite-controle-gestion", locale: "en", direction: "ltr", expectedTitle: "Free AI trainings for finance, accounting, and management control", expectedText: "Activities by training programme" },
-  { path: "/ar/ai-training", locale: "ar", direction: "rtl", expectedTitle: "تدريب مجاني في الذكاء الاصطناعي حسب المهنة", expectedText: "اختر تدريب الذكاء الاصطناعي حسب المهنة" },
-  { path: "/ar/ai-training/finance-comptabilite-controle-gestion", locale: "ar", direction: "rtl", expectedTitle: "دورات مجانية في الذكاء الاصطناعي للمالية والمحاسبة ومراقبة التكاليف", expectedText: "توزيع الأنشطة حسب البرنامج التدريبي" },
+  { path: "/formations-ia", locale: "fr-FR", direction: "ltr", expectedTitle: "Formations IA gratuites par métier | Neopolis Akademy", expectedText: "Choisir une formation IA par grand domaine métier" },
+  { path: "/formations-ia/comptabilite-finance", locale: "fr-FR", direction: "ltr", expectedTitle: "Formation IA comptabilité et finance | Neopolis", expectedText: "Cas d’usage professionnels dans les formations associées" },
+  { path: "/en/ai-training", locale: "en", direction: "ltr", expectedTitle: "Free AI training by profession | Neopolis Akademy", expectedText: "Choose AI training by broad professional domain" },
+  { path: "/en/ai-training/comptabilite-finance", locale: "en", direction: "ltr", expectedTitle: "AI training for accounting and finance | Neopolis", expectedText: "Professional use cases in associated training" },
+  { path: "/ar/ai-training", locale: "ar", direction: "rtl", expectedTitle: "تدريب مجاني في الذكاء الاصطناعي حسب المهنة | Neopolis Akademy", expectedText: "اختر تدريب الذكاء الاصطناعي حسب المجال المهني الرئيسي" },
+  { path: "/ar/ai-training/comptabilite-finance", locale: "ar", direction: "rtl", expectedTitle: "تدريب الذكاء الاصطناعي للمحاسبة والمالية | نيوبوليس", expectedText: "حالات استخدام مهنية في الدورات المرتبطة" },
 ];
 
 const browser = await chromium.launch({
@@ -37,12 +37,14 @@ try {
         direction: document.documentElement.dir,
       }));
       const rawHtml = await (await context.request.get(`${baseUrl}${route.path}`)).text();
+      const keywordMatch = rawHtml.match(/<meta name="keywords" content="([^"]+)"/);
+      const keywordCount = keywordMatch?.[1].split(",").map((keyword) => keyword.trim()).filter(Boolean).length || 0;
       const overflow = layout.scrollWidth > layout.clientWidth + 2;
       results.push({
         path: route.path,
         viewport,
         status: response?.status() || 0,
-        titleMatches: layout.title === `${route.expectedTitle} | Neopolis Akademy`,
+        titleMatches: layout.title === route.expectedTitle,
         expectedTextVisible: layout.text.includes(route.expectedText),
         languageMatches: layout.lang === route.locale,
         directionMatches: layout.direction === route.direction,
@@ -50,6 +52,8 @@ try {
         hreflangPresent: rawHtml.includes('hreflang="fr-FR"') && rawHtml.includes('hreflang="en"') && rawHtml.includes('hreflang="ar"') && rawHtml.includes('hreflang="x-default"'),
         openGraphPresent: rawHtml.includes('<meta property="og:title"'),
         structuredDataPresent: rawHtml.includes('application/ld+json'),
+        keywordCount,
+        keywordsPresent: keywordCount >= 3 && keywordCount <= 8,
         clientWidth: layout.clientWidth,
         scrollWidth: layout.scrollWidth,
         overflow,
@@ -63,16 +67,23 @@ try {
     const html = await response.text();
     return { path, status: response.status, noindex: html.includes('name="robots" content="noindex, follow"') };
   }));
+  const legacyRedirects = await Promise.all(["fr", "en", "ar"].map(async (locale) => {
+    const root = locale === "fr" ? "/formations-ia" : `/${locale}/ai-training`;
+    const response = await fetch(`${baseUrl}${root}/finance-comptabilite-controle-gestion`, { redirect: "manual" });
+    return { locale, status: response.status, location: response.headers.get("location") };
+  }));
   const sitemap = await (await fetch(`${baseUrl}/sitemap.xml`)).text();
   const report = {
     generatedAt: new Date().toISOString(),
     baseUrl,
     results,
     notFound: notFoundChecks,
-    sitemap: { hasFrenchIndex: sitemap.includes(`${"https://akademy.neodev.click"}/formations-ia`), hasEnglishIndex: sitemap.includes(`${"https://akademy.neodev.click"}/en/ai-training`), hasArabicIndex: sitemap.includes(`${"https://akademy.neodev.click"}/ar/ai-training`), hasFinanceTheme: sitemap.includes("finance-comptabilite-controle-gestion"), hasAlternates: sitemap.includes("xhtml:link") && sitemap.includes('hreflang="ar"') },
-    passed: results.every((result) => result.status === 200 && result.titleMatches && result.expectedTextVisible && result.languageMatches && result.directionMatches && result.canonicalPresent && result.hreflangPresent && result.openGraphPresent && result.structuredDataPresent && !result.overflow)
+    legacyRedirects,
+    sitemap: { hasFrenchIndex: sitemap.includes(`${"https://akademy.neodev.click"}/formations-ia`), hasEnglishIndex: sitemap.includes(`${"https://akademy.neodev.click"}/en/ai-training`), hasArabicIndex: sitemap.includes(`${"https://akademy.neodev.click"}/ar/ai-training`), hasFinanceDomain: sitemap.includes("comptabilite-finance"), hasAlternates: sitemap.includes("xhtml:link") && sitemap.includes('hreflang="ar"') },
+    passed: results.every((result) => result.status === 200 && result.titleMatches && result.expectedTextVisible && result.languageMatches && result.directionMatches && result.canonicalPresent && result.hreflangPresent && result.openGraphPresent && result.structuredDataPresent && result.keywordsPresent && !result.overflow)
       && notFoundChecks.every((result) => result.status === 404 && result.noindex)
-      && sitemap.includes(`${"https://akademy.neodev.click"}/formations-ia`) && sitemap.includes(`${"https://akademy.neodev.click"}/en/ai-training`) && sitemap.includes(`${"https://akademy.neodev.click"}/ar/ai-training`) && sitemap.includes("finance-comptabilite-controle-gestion") && sitemap.includes("xhtml:link") && sitemap.includes('hreflang="ar"'),
+      && legacyRedirects.every((result) => result.status === 301 && result.location?.endsWith("/comptabilite-finance"))
+      && sitemap.includes(`${"https://akademy.neodev.click"}/formations-ia`) && sitemap.includes(`${"https://akademy.neodev.click"}/en/ai-training`) && sitemap.includes(`${"https://akademy.neodev.click"}/ar/ai-training`) && sitemap.includes("comptabilite-finance") && sitemap.includes("xhtml:link") && sitemap.includes('hreflang="ar"'),
   };
   fs.writeFileSync(outputPath, `${JSON.stringify(report, null, 2)}\n`);
   console.log(JSON.stringify(report, null, 2));
