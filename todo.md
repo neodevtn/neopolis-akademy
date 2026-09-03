@@ -114,6 +114,10 @@
 - [x] Ajouter les balises `hreflang`, données structurées, canonical et sitemap pour les trois langues avec un ciblage éditorial MENA prudent — canonical auto-référent, alternatives FR/EN/AR/x-default, Open Graph, JSON-LD localisé et sitemap enrichi sans promesse pays par pays
 - [x] Vérifier les versions FR/EN/AR sur desktop et mobile, y compris le rendu RTL, les liens et le HTML exploitable par les robots — 543 tests réussis (2 ignorés), matrice QA de publication réussie ; sonde 18 routes × 3 formats, 404/noindex et sitemap valides ; revue visuelle desktop et mobile RTL sans débordement
 
+## Correction SEO de l’accueil
+- [x] Ajuster le `document.title` de l’accueil entre 30 et 60 caractères et ajouter une balise meta keywords de 3 à 8 termes ciblés — titre « Formations IA gratuites | Neopolis Akademy » (42 caractères) et six expressions ciblées ajoutés au rendu serveur de `/`
+- [x] Vérifier le HTML servi, les limites de caractères et le nombre de mots-clés avant publication — test SEO dédié réussi ; HTML local confirmé avec 42 caractères et exactement 6 mots-clés
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif

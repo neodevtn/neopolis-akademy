@@ -4,6 +4,18 @@ import { describe, expect, it } from "vitest";
 import { CANONICAL_ORIGIN, SHARE_IMAGE_URL, getSeoPage, injectSeoHead, renderSeoHead } from "./seo";
 
 describe("server-rendered sharing metadata", () => {
+  it("publie un titre d’accueil borné et exactement six mots-clés ciblés", () => {
+    const metadata = renderSeoHead("/");
+    const title = getSeoPage("/").title;
+    const keywords = getSeoPage("/").keywords?.split(",").map((keyword) => keyword.trim()).filter(Boolean) || [];
+
+    expect(title.length).toBeGreaterThanOrEqual(30);
+    expect(title.length).toBeLessThanOrEqual(60);
+    expect(title).toBe("Formations IA gratuites | Neopolis Akademy");
+    expect(keywords).toHaveLength(6);
+    expect(metadata).toContain('<meta name="keywords" content="formation IA gratuite, formations IA par métier, intelligence artificielle, compétences IA, formation professionnelle, MENA" />');
+  });
+
   it("builds canonical social metadata without query parameters", () => {
     const metadata = renderSeoHead("/apply?utm_source=whatsapp");
 

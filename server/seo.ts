@@ -9,14 +9,16 @@ type SeoPage = {
   title: string;
   description: string;
   path: string;
+  keywords?: string;
   openGraphPath?: string;
   noindex?: boolean;
 };
 
 const DEFAULT_PAGE: SeoPage = {
-  title: "Neopolis Akademy | Formation certifiante en Intelligence Artificielle",
+  title: "Formations IA gratuites | Neopolis Akademy",
   description:
     "Développez vos compétences en intelligence artificielle avec les parcours certifiants de Neopolis Akademy.",
+  keywords: "formation IA gratuite, formations IA par métier, intelligence artificielle, compétences IA, formation professionnelle, MENA",
   path: "/",
 };
 
@@ -164,6 +166,7 @@ export function renderSeoHead(requestUrl: string) {
   const page = getSeoPage(requestUrl);
   const title = escapeHtml(page.title);
   const description = escapeHtml(page.description);
+  const keywords = page.keywords ? `<meta name="keywords" content="${escapeHtml(page.keywords)}" />` : "";
   const canonicalUrl = `${CANONICAL_ORIGIN}${page.path}`;
   const openGraphUrl = `${CANONICAL_ORIGIN}${page.openGraphPath || page.path}`;
   const robots = page.noindex ? '<meta name="robots" content="noindex, nofollow" />' : "";
@@ -171,6 +174,7 @@ export function renderSeoHead(requestUrl: string) {
   return [
     `<title>${title}</title>`,
     `<meta name="description" content="${description}" />`,
+    keywords,
     `<link rel="canonical" href="${canonicalUrl}" />`,
     `<meta property="og:type" content="website" />`,
     `<meta property="og:site_name" content="${SITE_NAME}" />`,
