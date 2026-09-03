@@ -13,6 +13,7 @@ const stages = [
   { name: "typescript", command: ["pnpm", ["check"]] },
   { name: "course_validation", command: ["pnpm", ["validate-courses"]] },
   { name: "unit_tests", command: ["pnpm", ["vitest", "run"]] },
+  { name: "public_training_seo", command: ["node", ["scripts/check-public-training-themes-browser.mjs"]], env: { ...process.env, PUBLIC_TRAINING_THEMES_QA_URL: qaBaseUrl } },
   { name: "interaction_audit", command: ["pnpm", ["audit-interactions"]] },
 ];
 

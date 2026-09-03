@@ -12,6 +12,7 @@ import DeferredCookieConsent from "./components/DeferredCookieConsent";
 const Home = lazy(() => import("./pages/Home"));
 const Apply = lazy(() => import("./pages/Apply"));
 const AiNews = lazy(() => import("./pages/AiNews"));
+const PublicTrainingThemes = lazy(() => import("./pages/PublicTrainingThemes"));
 const ReferralLanding = lazy(() => import("./pages/ReferralLanding"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminTraining = lazy(() => import("./pages/AdminTraining"));
@@ -55,6 +56,8 @@ function Router() {
       <Switch>
         <Route path={"/"} component={Home} />
         <Route path={"/ai-news"} component={AiNews} />
+        <Route path={"/formations-ia"} component={PublicTrainingThemes} />
+        <Route path={"/formations-ia/:themeSlug"} component={PublicTrainingThemes} />
         <Route path={"/refer"} component={ReferralLanding} />
         <Route path={"/apply"} component={Apply} />
         <Route path={"/admin"} component={AdminDashboard} />

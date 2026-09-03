@@ -6,6 +6,7 @@ import { getStandaloneTpCertificationIdForOrder } from "../client/src/lib/iaAppl
 const root = path.resolve(import.meta.dirname, "..");
 const source = JSON.parse(fs.readFileSync(path.resolve(root, "../ia_appliquee_metiers_tp_bundle/catalogue_ia_appliquee_metiers_tp.json"), "utf8"));
 const catalog = JSON.parse(fs.readFileSync(path.join(root, "client/src/data/trainingIndex.json"), "utf8"));
+const publicTitleOverrides = JSON.parse(fs.readFileSync(path.join(root, "shared/trainingDisplayTitleOverrides.json"), "utf8"));
 const coursesDirectory = path.join(root, "client/public/data/courses");
 const certificationId = "ia_appliquee_metiers_tp";
 
@@ -22,6 +23,7 @@ const expectedSubcategories = [
 
 const courseId = (order: number) => `${certificationId}__${String(order).padStart(2, "0")}`;
 const text = (value: unknown) => typeof value === "string" ? value : (value as { fr?: string })?.fr || "";
+const displayTitle = (id: string, sourceTitle: string) => publicTitleOverrides[id]?.fr || sourceTitle;
 
 describe("rubrique IA appliquée aux métiers - TP", () => {
   const tutorials = source.tutorials as any[];
@@ -37,10 +39,10 @@ describe("rubrique IA appliquée aux métiers - TP", () => {
     tutorials.forEach((tutorial) => {
       const course = JSON.parse(fs.readFileSync(path.join(coursesDirectory, `${courseId(tutorial.order)}.json`), "utf8"));
       const indexed = indexedCourses.find((entry: any) => entry.id === courseId(tutorial.order));
-      expect(text(course.title)).toBe(tutorial.title);
+      expect(text(course.title)).toBe(displayTitle(courseId(tutorial.order), tutorial.title));
       expect(course.metadata.canonicalTutorialId).toBe(tutorial.id);
       expect(course.metadata.canonicalOrder).toBe(tutorial.order);
-      expect(text(indexed.title)).toBe(tutorial.title);
+      expect(text(indexed.title)).toBe(displayTitle(courseId(tutorial.order), tutorial.title));
       expect(indexed.targetJob).toBe(tutorial.targetJob);
       expect(indexed.tools).toEqual(tutorial.tools);
       expect(indexed.acquiredSkills).toEqual(tutorial.acquiredSkills);
@@ -59,7 +61,7 @@ describe("rubrique IA appliquée aux métiers - TP", () => {
       expect(indexedCourses.filter((course: any) => course.subCategory?.fr === title)).toHaveLength(to - from + 1);
       matching.forEach((tutorial) => {
         const certification = independentCertifications.find((entry: any) => entry.id === getStandaloneTpCertificationIdForOrder(tutorial.order));
-        expect(certification?.title?.fr).toBe(tutorial.title);
+        expect(certification?.title?.fr).toBe(displayTitle(getStandaloneTpCertificationIdForOrder(tutorial.order), tutorial.title));
         expect(certification?.courses).toEqual([courseId(tutorial.order)]);
         expect(certification?.subCategory?.fr).toBe(title);
         expect(certification?.isStandaloneTP).toBe(true);

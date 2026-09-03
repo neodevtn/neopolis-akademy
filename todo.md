@@ -102,6 +102,12 @@
 - [x] Appliquer de façon ciblée le rôle admin-apprenant à Mohamed Rayene Khelil sans modifier ses données d’apprentissage — rôle confirmé après mise à jour ciblée, sans écriture pédagogique
 - [x] Afficher un badge Admin-apprenant dans les profils et listes administratives concernés, puis vérifier le rendu et les accès — badge de fiche 360° et liste vérifié par QA authentifiée, sans overflow mobile
 
+## Pages publiques thématiques et SEO des formations
+- [x] Retirer les mentions visibles de partenaires et de sources d’origine des titres, cartes, fiches et résultats de recherche sans modifier les identifiants techniques internes — 17 titres de catalogue et 8 titres rendus dans les cours normalisés ; identifiants et métadonnées techniques préservés ; index de recherche régénéré
+- [x] Créer des pages publiques indexables par thème et métier, accessibles depuis le catalogue et décrivant l’offre réelle de formations IA gratuites — index `/formations-ia` et 10 pages thématiques rendus en HTML serveur, reliés depuis l’accueil et le catalogue
+- [x] Ajouter des métadonnées SEO, données structurées, graphiques fondés sur le catalogue et une navigation publique entre thèmes et formations — title, description, canonical, Open Graph, Twitter, JSON-LD, sitemap et robots ajoutés ; indicateurs exclusivement dérivés du catalogue
+- [ ] Vérifier les pages publiques, les titres, les liens, le rendu mobile et les éléments SEO avant publication — QA locale 1280, 390 et 375 px réussie ; vérification du domaine public à rejouer après checkpoint
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif

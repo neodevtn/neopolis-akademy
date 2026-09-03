@@ -39,6 +39,7 @@ const ROUTE_PAGES: Record<string, Omit<SeoPage, "path">> = {
     title: "Formations en intelligence artificielle | Neopolis Akademy",
     description:
       "Découvrez les parcours de formation et de certification Neopolis Akademy en intelligence artificielle.",
+    noindex: true,
   },
 };
 
@@ -71,12 +72,12 @@ function titleFromIdentifier(value: string | null) {
       path.resolve(process.cwd(), "client/public/data/courses"),
       path.resolve(process.cwd(), "dist/public/data/courses"),
     ]) {
-      try {
-        const course = JSON.parse(fs.readFileSync(path.join(directory, `${id}.json`), "utf8"));
-        const title = course?.title;
-        if (typeof course?.sourceCourseTitle === "string" && course.sourceCourseTitle.trim()) return course.sourceCourseTitle.trim();
-        if (typeof title === "string" && title.trim()) return title.trim();
-        if (title && typeof title === "object") return cleanedText(title.fr || title.en || "", 140) || "Neopolis Akademy";
+	      try {
+	        const course = JSON.parse(fs.readFileSync(path.join(directory, `${id}.json`), "utf8"));
+	        const title = course?.title;
+	        if (typeof title === "string" && title.trim()) return title.trim();
+	        if (title && typeof title === "object") return cleanedText(title.fr || title.en || "", 140) || "Neopolis Akademy";
+	        if (typeof course?.sourceCourseTitle === "string" && course.sourceCourseTitle.trim()) return course.sourceCourseTitle.trim();
       } catch {
         // A missing or malformed public course file must not prevent a share preview.
       }
@@ -130,6 +131,7 @@ export function getSeoPage(requestUrl: string): SeoPage {
       description:
         "Suivez un parcours Neopolis Akademy pour développer vos compétences et préparer vos certifications en intelligence artificielle.",
       path,
+      noindex: true,
     };
   }
 

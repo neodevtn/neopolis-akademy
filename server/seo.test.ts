@@ -48,6 +48,12 @@ describe("server-rendered sharing metadata", () => {
     expect(renderSeoHead("/admin/training?tab=learners")).toContain('name="robots" content="noindex, nofollow"');
   });
 
+  it("exclut les parcours authentifiés de l’indexation tout en laissant la découverte publique aux pages thématiques", () => {
+    expect(getSeoPage("/training?tab=catalog").noindex).toBe(true);
+    expect(getSeoPage("/training/formation-exemple").noindex).toBe(true);
+    expect(renderSeoHead("/training/formation-exemple")).toContain('name="robots" content="noindex, nofollow"');
+  });
+
   it("inserts a single escaped head block in the server HTML template", () => {
     const result = injectSeoHead("<head><!--seo-head--></head>", "/training");
     expect(result).toContain("<title>Formations en intelligence artificielle | Neopolis Akademy</title>");

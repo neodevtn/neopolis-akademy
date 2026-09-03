@@ -201,6 +201,7 @@ export default function Home() {
             <NavLink href="#formule">{t({ fr: "La Formule", en: "The Formula", ar: "الصيغة" })}</NavLink>
             <NavLink href="#pourquoi">{t({ fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" })}</NavLink>
             <NavLink href="#partenaires">{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</NavLink>
+            <Link href="/formations-ia" className="whitespace-nowrap text-[12.5px] font-medium px-3 py-2 rounded-md relative transition-all duration-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50">{t({ fr: "Formations IA", en: "AI Training", ar: "تدريب الذكاء الاصطناعي" })}</Link>
             <Link href="/ai-news" className="whitespace-nowrap text-[12.5px] font-medium px-3 py-2 rounded-md relative transition-all duration-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50">AI News</Link>
             <NavLink href="#faq">FAQ</NavLink>
             <DeferredHomeAuth
@@ -1134,6 +1135,7 @@ function MobileMenuButton() {
                 <a href="#formule" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "La Formule", en: "The Formula", ar: "الصيغة" })}</a>
                 <a href="#pourquoi" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" })}</a>
                 <a href="#partenaires" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</a>
+                <Link href="/formations-ia" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Formations IA", en: "AI Training", ar: "تدريب الذكاء الاصطناعي" })}</Link>
                 <Link href="/ai-news" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>AI News</Link>
                 <a href="#faq" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>FAQ</a>
                 <div className="h-px my-1" style={{ background: "var(--wise-rule)" }} />
