@@ -25,3 +25,7 @@ Chaque URL publique dispose de valeurs SEO localisées pour le français, l’an
 ## Contrôles locaux
 
 Les pages **Comptabilité & Finance**, **Informatique & Développement** et **Administratif & RH** ont été vérifiées en bureau à 1280 × 720. Les paragraphes de domaine, les indicateurs dérivés du catalogue, la répartition des activités, les cas d’usage et les formations associées sont présents. Les contrôles mobiles à 390 × 844 ont couvert la page Finance en français, Commerce/Marketing/Relation client en anglais, ainsi qu’Administratif/RH en arabe RTL. Les grilles se replient correctement en une colonne et aucun débordement horizontal n’a été constaté.
+
+## Validation publiée
+
+Après propagation du checkpoint `9a08b922`, la sonde multilingue a été rejouée sur `https://akademy.neodev.click`. Les index et pages Finance en français, anglais et arabe ont tous répondu HTTP 200 à 1280 × 720, 390 × 844 et 375 × 667. Les contrôles confirment pour chaque page le titre attendu, la description, cinq mots-clés, le canonical, les alternatives `hreflang`, Open Graph, JSON-LD et l’absence de débordement horizontal. Les routes inconnues restent en HTTP 404 avec `noindex`; les anciens slugs de thème Finance redirigent en HTTP 301 vers le grand domaine correspondant. La page Finance publiée a aussi été inspectée dans le navigateur : son paragraphe métier, sept formations associées, indicateurs catalogue et quatre cas d’usage sont affichés.
