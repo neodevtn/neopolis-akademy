@@ -80,6 +80,13 @@
 - [x] Publier puis vérifier sur le domaine public le rendu desktop/mobile, les liens de partage, la navigation et le brouillon de 107 apprenants ; demander ensuite confirmation explicite pour l’envoi — onglet publié au checkpoint `eec0185d`, lien tracé et canaux vérifiés publiquement, mobile `390/390`; après confirmation, le brouillon a été envoyé une seule fois avec statut `sent`, horodatage présent et 107 destinataires agrégés
 - [x] Corriger le débordement horizontal mobile détecté dans l’onglet Parrainage et couvrir le viewport 390 px avant publication — navigation responsive contenue et QA `390/390` réussie
 
+## Contrôle de bout en bout des invitations de démonstration
+- [x] Auditer les invitations de démonstration existantes, les actions d’acceptation et les groupes associés sans exposer de jeton, d’adresse ou d’identifiant personnel — compte de démonstration existant, invité temporaire à créer et groupe Full access identifiés ; aucune invitation pendante réutilisée
+- [x] Exécuter les scénarios contrôlés d’acceptation pour le compte démo et l’invité `invite_demo`, puis vérifier activation, groupe Full access, session et accès au catalogue — les deux branches réelles réussissent : invitation acceptée, session créée, Full access présent, arrivée à `/training` et zéro erreur de page
+- [x] Nettoyer les invitations, comptes et relations temporaires créés uniquement pour la QA, préserver les comptes et données préexistants, puis archiver des résultats agrégés — mot de passe démo restauré ; compte/invitations/appartenances temporaires supprimés et compteur final à zéro
+- [x] Diagnostiquer la validation de la page d’acceptation lorsque la sonde ne rend pas le formulaire attendu, sans exposer de jeton ni de coordonnées — API valide et formulaire réel rendu ; seul le sélecteur de test attendait à tort un titre sémantique
+- [x] Vérifier et corriger le rendu du formulaire après une validation d’invitation réussie si le parcours réel reste bloqué sur un état de chargement ou une erreur client — aucun défaut applicatif constaté : formulaire, confirmation et redirection vérifiés dans les deux branches
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif
