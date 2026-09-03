@@ -620,7 +620,7 @@ export async function getHistoricalAchievementCandidates() {
   const [progress, passedAttempts, learners] = await Promise.all([
     db.select().from(trainingProgress),
     db.select().from(examAttempts).where(eq(examAttempts.passed, 1)),
-    db.select().from(users).where(and(eq(users.role, "user"), eq(users.blocked, 0))),
+    db.select().from(users).where(and(inArray(users.role, ["user", "admin_learner"]), eq(users.blocked, 0))),
   ]);
   return { progress, passedAttempts, learners };
 }
@@ -942,7 +942,7 @@ export async function blockUser(userId: number, blocked: boolean) {
   return { userId, blocked };
 }
 
-export async function updateUserRole(userId: number, role: "user" | "manager" | "admin") {
+export async function updateUserRole(userId: number, role: "user" | "manager" | "admin" | "admin_learner") {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.update(users).set({ role }).where(eq(users.id, userId));

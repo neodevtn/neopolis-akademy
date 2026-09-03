@@ -20,6 +20,7 @@ import { normalizeEditableMarkdown } from "@/components/admin/wysiwygMarkdown";
 import { Checkbox } from "@/components/ui/checkbox";
 import { COMMUNICATION_AUDIENCE_LABELS, COMMUNICATION_CRITERIA_LOGIC_LABELS, COURSE_PROGRESS_STATUS_LABELS, type CommunicationAudience, type CommunicationCriteriaLogic, type CourseProgressStatus } from "@shared/communicationRecipients";
 import { toPreviewMediaUrl } from "@/lib/mediaUrl";
+import { isAdministrativeRole } from "@shared/roles";
 
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
@@ -35,6 +36,7 @@ const NOTIF_ICONS: Record<string, { icon: any; color: string }> = {
 
 export default function AdminDashboard() {
   const { user, loading, isAuthenticated } = useAuth();
+  const isAdmin = isAdministrativeRole(user?.role);
   const [, navigate] = useLocation();
   const urlSearch = useSearch();
   const getTabFromUrl = (): TabType => {
@@ -104,7 +106,7 @@ export default function AdminDashboard() {
     setActiveTab(getTabFromUrl());
   }, [urlSearch]);
 
-  const canAccessLogs = user?.role === "admin" || user?.role === "manager";
+  const canAccessLogs = isAdmin || user?.role === "manager";
   useEffect(() => {
     if (user?.role === "manager" && activeTab !== "activity") {
       setActiveTab("activity");
@@ -123,10 +125,10 @@ export default function AdminDashboard() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [notifOpen]);
 
-  const statsQuery = trpc.applications.stats.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
+  const statsQuery = trpc.applications.stats.useQuery(undefined, { enabled: isAuthenticated && isAdmin });
   const applicationsQuery = trpc.applications.list.useQuery(
     statusFilter === "all" ? {} : { status: statusFilter },
-    { enabled: isAuthenticated && user?.role === "admin" }
+    { enabled: isAuthenticated && isAdmin }
   );
   const requestedApplicationId = useMemo(() => {
     const value = Number(new URLSearchParams(urlSearch).get("application"));
@@ -134,7 +136,7 @@ export default function AdminDashboard() {
   }, [urlSearch]);
   const directApplicationQuery = trpc.applications.getById.useQuery(
     { id: requestedApplicationId || 0 },
-    { enabled: isAuthenticated && user?.role === "admin" && requestedApplicationId !== null, retry: false },
+    { enabled: isAuthenticated && isAdmin && requestedApplicationId !== null, retry: false },
   );
   useEffect(() => {
     if (requestedApplicationId === null) {
@@ -193,7 +195,7 @@ export default function AdminDashboard() {
     onSuccess: () => { notesQuery.refetch(); toast.success("Note supprimée"); },
   });
 
-  const tagsQuery = trpc.adminTools.tags.list.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
+  const tagsQuery = trpc.adminTools.tags.list.useQuery(undefined, { enabled: isAuthenticated && isAdmin });
 
   const bulkUpdateMutation = trpc.adminTools.bulk.updateStatus.useMutation({
     onSuccess: (data) => {
@@ -208,8 +210,8 @@ export default function AdminDashboard() {
 
   const communicationsQuery = trpc.adminTools.communications.list.useQuery(undefined, { enabled: activeTab === "communications" });
   const communicationSegmentsQuery = trpc.adminTools.communications.segments.list.useQuery(undefined, { enabled: activeTab === "communications" || commDialog });
-  const competencyFrameworkQuery = trpc.competencies.getFramework.useQuery(undefined, { enabled: commDialog && isAuthenticated && user?.role === "admin" });
-  const communicationSegmentOptionsQuery = trpc.adminTools.communications.getSegmentOptions.useQuery(undefined, { enabled: commDialog && isAuthenticated && user?.role === "admin", staleTime: 60_000 });
+  const competencyFrameworkQuery = trpc.competencies.getFramework.useQuery(undefined, { enabled: commDialog && isAuthenticated && isAdmin });
+  const communicationSegmentOptionsQuery = trpc.adminTools.communications.getSegmentOptions.useQuery(undefined, { enabled: commDialog && isAuthenticated && isAdmin, staleTime: 60_000 });
   const communicationRecipientFilter = useMemo(() => ({
     audience: commAudience,
     criteriaLogic: commCriteriaLogic,
@@ -291,7 +293,7 @@ export default function AdminDashboard() {
   }, [commAudience, commCourseId, commCourseProgressStatus, commActivityWithinDays, commUseCompetencyFilter, commCompetencyId, commMinCompetencyLevel, commManualEmails.length, communicationSegmentOptionsQuery.data?.courses, competencyFrameworkQuery.data?.definitions]);
 
   const analyticsQuery = trpc.adminTools.analytics.getLearnerAnalytics.useQuery(undefined, { enabled: activeTab === "analytics" });
-  const referralOverviewQuery = trpc.referral.getAdminOverview.useQuery(undefined, { enabled: activeTab === "referrals" && isAuthenticated && user?.role === "admin" });
+  const referralOverviewQuery = trpc.referral.getAdminOverview.useQuery(undefined, { enabled: activeTab === "referrals" && isAuthenticated && isAdmin });
   const updateReferralCampaignMutation = trpc.referral.updateCampaign.useMutation({
     onSuccess: () => { referralOverviewQuery.refetch(); toast.success("Programme de parrainage mis à jour"); },
     onError: (error) => toast.error(error.message || "Impossible de mettre à jour le programme"),
@@ -338,7 +340,7 @@ export default function AdminDashboard() {
   });
 
   // Notifications
-  const notifCountQuery = trpc.adminTools.notifications.unreadCount.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin", refetchInterval: 30000 });
+  const notifCountQuery = trpc.adminTools.notifications.unreadCount.useQuery(undefined, { enabled: isAuthenticated && isAdmin, refetchInterval: 30000 });
   const notifListQuery = trpc.adminTools.notifications.list.useQuery(undefined, { enabled: notifOpen });
   const markReadMutation = trpc.adminTools.notifications.markRead.useMutation({
     onSuccess: () => { notifCountQuery.refetch(); notifListQuery.refetch(); },
@@ -453,7 +455,7 @@ export default function AdminDashboard() {
       <AdminNavbar
         activePage="candidatures"
         accessRole={user?.role}
-        notificationSlot={user?.role === "admin" ? (
+        notificationSlot={isAdmin ? (
           <div className="relative" ref={notifRef}>
             <button
               onClick={() => setNotifOpen(!notifOpen)}

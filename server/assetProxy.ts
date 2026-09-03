@@ -1,4 +1,5 @@
 import type { Express, Request, Response } from "express";
+import { isAdministrativeRole } from "../shared/roles";
 import { ENV } from "./_core/env";
 
 /**
@@ -118,7 +119,7 @@ export function registerAssetProxy(app: Express) {
       try {
         const { sdk } = await import("./_core/sdk");
         const user = await sdk.authenticateRequest(req);
-        if (!user || user.role !== "admin") {
+        if (!user || !isAdministrativeRole(user.role)) {
           res.status(403).json({ error: "Accès réservé aux administrateurs" });
           return;
         }

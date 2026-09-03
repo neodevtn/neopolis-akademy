@@ -54,7 +54,7 @@ export async function getIntegrityReviewQueue() {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const [learners, reviews] = await Promise.all([
-    db.select({ id: users.id, name: users.name, email: users.email, blocked: users.blocked, lastSignedIn: users.lastSignedIn }).from(users).where(eq(users.role, "user")),
+    db.select({ id: users.id, name: users.name, email: users.email, blocked: users.blocked, lastSignedIn: users.lastSignedIn }).from(users).where(inArray(users.role, ["user", "admin_learner"])),
     db.select().from(learnerIntegrityReviews).orderBy(desc(learnerIntegrityReviews.updatedAt)),
   ]);
   const reviewByUser = new Map(reviews.map((review) => [review.userId, review]));

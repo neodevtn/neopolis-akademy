@@ -15,6 +15,7 @@ import type { MediaAsset, MediaKind } from "@shared/contentStudio";
 import { MediaPreviewDialog } from "@/components/admin/MediaPreviewDialog";
 import { MediaCourseInsertionDialog } from "@/components/admin/MediaCourseInsertionDialog";
 import { toBlockMediaUrl, toPreviewMediaUrl } from "@/lib/mediaUrl";
+import { isAdministrativeRole } from "@shared/roles";
 
 type CatalogAsset = MediaAsset & { managed?: boolean };
 
@@ -49,8 +50,9 @@ function asBase64(file: File) {
 
 export default function AdminMediaLibrary() {
   const { user, isAuthenticated } = useAuth();
+  const isAdmin = isAdministrativeRole(user?.role);
   const utils = trpc.useUtils();
-  const mediaQuery = trpc.adminContent.listMediaAssets.useQuery(undefined, { enabled: isAuthenticated && user?.role === "admin" });
+  const mediaQuery = trpc.adminContent.listMediaAssets.useQuery(undefined, { enabled: isAuthenticated && isAdmin });
   const invalidate = () => utils.adminContent.listMediaAssets.invalidate();
   const saveMutation = trpc.adminContent.saveMediaAsset.useMutation({ onSuccess: invalidate });
   const uploadMutation = trpc.adminContent.uploadMediaAsset.useMutation({ onSuccess: invalidate });
@@ -147,7 +149,7 @@ export default function AdminMediaLibrary() {
     } catch (error) { toast.error(error instanceof Error ? error.message : "Import impossible."); }
   };
 
-  if (!isAuthenticated || user?.role !== "admin") return <div className="p-8 text-center">Accès administrateur requis.</div>;
+  if (!isAuthenticated || !isAdmin) return <div className="p-8 text-center">Accès administrateur requis.</div>;
 
   return <div className="min-h-screen bg-slate-50">
     <AdminNavbar activePage="media" />

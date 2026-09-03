@@ -1,4 +1,6 @@
-export type LearningRole = "admin" | "manager" | "user" | null | undefined;
+import { canBypassLearningSequence, type UserRole } from "./roles";
+
+export type LearningRole = UserRole | null | undefined;
 
 export function isSequentialCourseCardLocked(input: {
   previousCourseCompleted: boolean;
@@ -6,7 +8,7 @@ export function isSequentialCourseCardLocked(input: {
   courseStarted: boolean;
   role: LearningRole;
 }): boolean {
-  if (input.role === "admin") return false;
+  if (canBypassLearningSequence(input.role)) return false;
   return !input.previousCourseCompleted && !input.courseCompleted && !input.courseStarted;
 }
 
@@ -14,7 +16,7 @@ export function isSequentialCourseRouteLocked(input: {
   previousCourseCompleted: boolean;
   role: LearningRole;
 }): boolean {
-  return input.role !== "admin" && !input.previousCourseCompleted;
+  return !canBypassLearningSequence(input.role) && !input.previousCourseCompleted;
 }
 
 export function isSequentialLessonLocked(input: {
@@ -22,5 +24,5 @@ export function isSequentialLessonLocked(input: {
   nextUnlocked: number;
   role: LearningRole;
 }): boolean {
-  return input.role !== "admin" && input.lessonIndex > input.nextUnlocked;
+  return !canBypassLearningSequence(input.role) && input.lessonIndex > input.nextUnlocked;
 }

@@ -34,6 +34,7 @@ import NumericAnswerExercise from "@/components/NumericAnswerExercise";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getContextualCourseEditorHref } from "@/lib/courseEditorLink";
 import { isEvaluationGateLocked, requiredCorrectAnswers } from "@shared/evaluationRules";
+import { isAdministrativeRole } from "@shared/roles";
 
 export default function LessonViewer({
   lesson,
@@ -212,7 +213,7 @@ export default function LessonViewer({
   }, [validatedChapter, totalChapters]); // onChapterChange is stable (useCallback in parent)
 
   const chapter = chapters[currentChapter];
-  const canEditCurrentChapter = user?.role === "admin";
+  const canEditCurrentChapter = isAdministrativeRole(user?.role);
   const currentChapterEditHref = getContextualCourseEditorHref({ courseId, lessonIndex, chapterIndex: currentChapter });
   const novasavoInteractionIds = (chapter?.blocks || [])
     .filter((block: any) => ["inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback", "knowledge_check"].includes(block.type))

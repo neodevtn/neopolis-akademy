@@ -57,6 +57,7 @@ import { ReferralShareCard } from "@/components/ReferralShareCard";
 import { ReferralProgramTab } from "@/components/ReferralProgramTab";
 import { extractTargetJobRoles, getTrainingFormatDefinitions, resolveTrainingFormat } from "@/lib/trainingCatalogTaxonomy";
 import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetadata";
+import { isAdministrativeRole } from "@shared/roles";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -103,6 +104,7 @@ export default function TrainingDashboard() {
   const { lang, t } = useLanguage();
   const { getCertProgress, getLastVisitedCourse } = useTrainingProgress();
   const { isAuthenticated, loading: authLoading, user, logout } = useAuth();
+  const isAdmin = isAdministrativeRole(user?.role);
   const { theme, toggleTheme } = useTheme();
   const [, navigate] = useLocation();
   const urlSearch = useSearch();
@@ -322,7 +324,7 @@ export default function TrainingDashboard() {
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
             <LanguageSwitcher />
-            {user?.role === "admin" && (
+            {isAdmin && (
               <Link href="/admin" className="text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-400 hover:bg-amber-500/25 transition-colors hidden sm:block">
                 Admin
               </Link>

@@ -29,6 +29,7 @@ import { isSchedulableCommunicationDate, toOneShotCommunicationCron } from "@sha
 import type { CommunicationRecipientFilter } from "./adminDb";
 import { getIntegrityReviewQueue, getLearnerIntegrityReview, reviewLearnerIntegrity } from "./integrityService";
 import { canAccessAdminLogs } from "../shared/adminLogAccess";
+import { isAdministrativeRole } from "../shared/roles";
 
 const SALT_ROUNDS = 10;
 
@@ -52,7 +53,7 @@ function sessionTokenFromRequest(req: { headers: { cookie?: string } }) {
 
 // Helper to enforce admin role
 function assertAdmin(ctx: { user: { role: string } }) {
-  if (ctx.user.role !== "admin") {
+  if (!isAdministrativeRole(ctx.user.role)) {
     throw new TRPCError({ code: "FORBIDDEN", message: "Accès réservé aux administrateurs" });
   }
 }

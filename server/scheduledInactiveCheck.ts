@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { sdk } from "./_core/sdk";
 import { getDb } from "./db";
 import { users, trainingProgress, videoProgress, adminNotifications } from "../drizzle/schema";
-import { eq, and, lt, sql, notInArray, count } from "drizzle-orm";
+import { eq, and, lt, sql, notInArray, count, inArray } from "drizzle-orm";
 import { createAdminNotification } from "./notificationsDb";
 
 /**
@@ -26,7 +26,7 @@ export async function inactiveLearnerCheckHandler(req: Request, res: Response) {
 
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
-    // Find users who are NOT admin, NOT blocked, and whose lastSignedIn is > 7 days ago
+    // Find learner roles (including admin-learners), not blocked, whose lastSignedIn is > 7 days ago.
     // Also check that they have at least some training progress (i.e. they are actual learners)
     const inactiveUsers = await db
       .select({
@@ -38,7 +38,7 @@ export async function inactiveLearnerCheckHandler(req: Request, res: Response) {
       .from(users)
       .where(
         and(
-          eq(users.role, "user"),
+          inArray(users.role, ["user", "admin_learner"]),
           eq(users.blocked, 0),
           lt(users.lastSignedIn, sevenDaysAgo)
         )

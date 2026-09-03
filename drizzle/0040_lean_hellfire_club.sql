@@ -1,0 +1,1 @@
+ALTER TABLE `users` MODIFY COLUMN `role` enum('user','manager','admin','admin_learner') NOT NULL DEFAULT 'user';

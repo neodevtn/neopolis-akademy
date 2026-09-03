@@ -27,6 +27,17 @@ describe("sequential learning access", () => {
     expect(isSequentialLessonLocked({ lessonIndex: 2, nextUnlocked: 0, role: "admin" })).toBe(false);
   });
 
+  it("keeps admins-apprenants on the learner sequence", () => {
+    expect(isSequentialCourseCardLocked({
+      previousCourseCompleted: false,
+      courseCompleted: false,
+      courseStarted: false,
+      role: "admin_learner",
+    })).toBe(true);
+    expect(isSequentialCourseRouteLocked({ previousCourseCompleted: false, role: "admin_learner" })).toBe(true);
+    expect(isSequentialLessonLocked({ lessonIndex: 2, nextUnlocked: 0, role: "admin_learner" })).toBe(true);
+  });
+
   it("keeps completed and in-progress learner cards accessible", () => {
     expect(isSequentialCourseCardLocked({
       previousCourseCompleted: false,

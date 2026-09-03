@@ -37,6 +37,7 @@ import { buildNavigationUrl } from "@shared/navigationUrls";
 import { parseInvitationEmails, type InvitationEmailParseResult } from "@/lib/invitationEmails";
 import { buildRecentDailyActivity, summarizeLearningActivity } from "./admin/learningActivityAudit";
 import { resolveLocalizedText } from "@shared/localizedText";
+import { isAdministrativeRole } from "@shared/roles";
 
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
@@ -62,6 +63,7 @@ function AuditStat({ label, value, detail }: { label: string; value: number; det
 
 export default function AdminTraining() {
   const { user, loading, isAuthenticated } = useAuth();
+  const isAdmin = isAdministrativeRole(user?.role);
   const [, navigate] = useLocation();
   const urlSearch = useSearch();
   const [activeTab, setActiveTab] = useState(() => new URLSearchParams(typeof window === "undefined" ? "" : window.location.search).get("tab") || "learners");
@@ -184,33 +186,33 @@ export default function AdminTraining() {
 
   // Queries
   const statsQuery = trpc.admin.getStats.useQuery(undefined, {
-    enabled: isAuthenticated && user?.role === "admin",
+    enabled: isAuthenticated && isAdmin,
   });
 
   const learnersQuery = trpc.admin.getLearners.useQuery(
     { page, pageSize, search: search || undefined, sortBy: learnerSortBy, sortDirection: learnerSortDirection },
-    { enabled: isAuthenticated && user?.role === "admin" && activeTab === "learners" }
+    { enabled: isAuthenticated && isAdmin && activeTab === "learners" }
   );
 
   const detailQuery = trpc.admin.getLearnerDetail.useQuery(
     { userId: selectedUserId! },
-    { enabled: !!selectedUserId && isAuthenticated && user?.role === "admin" }
+    { enabled: !!selectedUserId && isAuthenticated && isAdmin }
   );
   const learnerActivityPageQuery = trpc.admin.getLearnerActivityPage.useQuery(
     { userId: selectedUserId!, page: activityLogPage, pageSize: 20, search: activityLogSearch || undefined },
-    { enabled: !!selectedUserId && isAuthenticated && user?.role === "admin" && learnerDetailTab === "activity" },
+    { enabled: !!selectedUserId && isAuthenticated && isAdmin && learnerDetailTab === "activity" },
   );
 
   const integrityQueueQuery = trpc.adminTools.integrity.queue.useQuery(undefined, {
-    enabled: isAuthenticated && user?.role === "admin" && activeTab === "learners",
+    enabled: isAuthenticated && isAdmin && activeTab === "learners",
   });
   const learnerIntegrityQuery = trpc.adminTools.integrity.getForLearner.useQuery(
     { userId: selectedUserId! },
-    { enabled: !!selectedUserId && isAuthenticated && user?.role === "admin" },
+    { enabled: !!selectedUserId && isAuthenticated && isAdmin },
   );
   const learnerOrientationQuery = trpc.orientation.getAdminOverview.useQuery(
     { userId: selectedUserId!, limit: 1 },
-    { enabled: !!selectedUserId && isAuthenticated && user?.role === "admin" },
+    { enabled: !!selectedUserId && isAuthenticated && isAdmin },
   );
   const integrityByUserId = useMemo(
     () => new Map((integrityQueueQuery.data || []).map((item) => [item.id, item])),
@@ -219,23 +221,23 @@ export default function AdminTraining() {
 
   const invitationsQuery = trpc.admin.getInvitations.useQuery(
     { page: 1, pageSize: 50 },
-    { enabled: isAuthenticated && user?.role === "admin" && activeTab === "invitations" }
+    { enabled: isAuthenticated && isAdmin && activeTab === "invitations" }
   );
 
   const directInvitationsQuery = trpc.admin.getDirectInvitations.useQuery(
     { page: directInvitationTable.page, pageSize: 10, search: directInvitationTable.search || undefined, sortBy: directInvitationTable.sortBy, sortDirection: directInvitationTable.sortDirection },
-    { enabled: isAuthenticated && user?.role === "admin" && activeTab === "invitations" }
+    { enabled: isAuthenticated && isAdmin && activeTab === "invitations" }
   );
   const learnerGroupsQuery = trpc.admin.listLearnerGroups.useQuery(undefined, {
-    enabled: isAuthenticated && user?.role === "admin" && ["groups", "invitations", "selected"].includes(activeTab),
+    enabled: isAuthenticated && isAdmin && ["groups", "invitations", "selected"].includes(activeTab),
   });
   const groupLearnersQuery = trpc.admin.getLearners.useQuery(
     { page: 1, pageSize: 200, sortBy: "name", sortDirection: "asc" },
-    { enabled: isAuthenticated && user?.role === "admin" && activeTab === "groups" },
+    { enabled: isAuthenticated && isAdmin && activeTab === "groups" },
   );
   const learnerGroupDetailQuery = trpc.admin.getLearnerGroupDetail.useQuery(
     { groupId: selectedGroupId! },
-    { enabled: isAuthenticated && user?.role === "admin" && activeTab === "groups" && !!selectedGroupId },
+    { enabled: isAuthenticated && isAdmin && activeTab === "groups" && !!selectedGroupId },
   );
   useEffect(() => {
     if (!learnerGroupDetailQuery.data) return;
@@ -261,11 +263,11 @@ export default function AdminTraining() {
   });
 
   const analyticsQuery = trpc.admin.getAnalytics.useQuery(undefined, {
-    enabled: isAuthenticated && user?.role === "admin" && activeTab === "analytics",
+    enabled: isAuthenticated && isAdmin && activeTab === "analytics",
   });
 
   const learningReportsQuery = trpc.admin.getLearningReports.useQuery(reportingInput, {
-    enabled: isAuthenticated && user?.role === "admin" && activeTab === "analytics",
+    enabled: isAuthenticated && isAdmin && activeTab === "analytics",
   });
 
   const exportQuery = trpc.admin.exportLearners.useQuery(undefined, {
@@ -286,11 +288,11 @@ export default function AdminTraining() {
   });
 
   const selectedCandidatesQuery = trpc.admin.getSelectedCandidates.useQuery({ page: selectedCandidateTable.page, pageSize: 10, search: selectedCandidateTable.search || undefined, sortBy: selectedCandidateTable.sortBy, sortDirection: selectedCandidateTable.sortDirection }, {
-    enabled: isAuthenticated && user?.role === "admin" && activeTab === "selected",
+    enabled: isAuthenticated && isAdmin && activeTab === "selected",
   });
 
   const emailStatsQuery = trpc.admin.getEmailDeliveryStats.useQuery(undefined, {
-    enabled: isAuthenticated && user?.role === "admin" && activeTab === "selected",
+    enabled: isAuthenticated && isAdmin && activeTab === "selected",
   });
 
   // Mutations
@@ -396,7 +398,7 @@ export default function AdminTraining() {
     );
   }
 
-  if (user?.role !== "admin") {
+  if (!isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <div className="text-center bg-card rounded-2xl border border-border p-10 shadow-sm max-w-md">
@@ -540,13 +542,21 @@ export default function AdminTraining() {
                         {selectedLearner?.blocked ? <UserCheck className="w-4 h-4" /> : <UserX className="w-4 h-4" />}
                         {selectedLearner?.blocked ? "Débloquer" : "Bloquer"}
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => roleMutation.mutate({ userId: selectedUserId, role: selectedLearner?.role === "admin" ? "user" : "admin" })}
-                        className="gap-2"
-                      >
-                        <ShieldCheck className="w-4 h-4" />
-                        {selectedLearner?.role === "admin" ? "Rétrograder en utilisateur" : "Promouvoir admin"}
-                      </DropdownMenuItem>
+                      {selectedLearner?.role !== "user" && (
+                        <DropdownMenuItem onClick={() => roleMutation.mutate({ userId: selectedUserId, role: "user" })} className="gap-2">
+                          <UserCheck className="w-4 h-4" /> Définir apprenant
+                        </DropdownMenuItem>
+                      )}
+                      {selectedLearner?.role !== "admin_learner" && (
+                        <DropdownMenuItem onClick={() => roleMutation.mutate({ userId: selectedUserId, role: "admin_learner" })} className="gap-2">
+                          <ShieldCheck className="w-4 h-4" /> Définir admin-apprenant
+                        </DropdownMenuItem>
+                      )}
+                      {selectedLearner?.role !== "admin" && (
+                        <DropdownMenuItem onClick={() => roleMutation.mutate({ userId: selectedUserId, role: "admin" })} className="gap-2">
+                          <Shield className="w-4 h-4" /> Définir administrateur
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
@@ -1094,8 +1104,10 @@ export default function AdminTraining() {
                             <TableCell>
                               {learner.role === "admin" ? (
                                 <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">Admin</span>
+                              ) : learner.role === "admin_learner" ? (
+                                <span className="text-xs px-2 py-1 rounded-full bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300 font-medium">Admin-apprenant</span>
                               ) : (
-                                <span className="text-xs px-2 py-1 rounded-full bg-secondary text-muted-foreground font-medium">User</span>
+                                <span className="text-xs px-2 py-1 rounded-full bg-secondary text-muted-foreground font-medium">Apprenant</span>
                               )}
                             </TableCell>
                             <TableCell className="text-sm text-muted-foreground">
@@ -1136,13 +1148,21 @@ export default function AdminTraining() {
                                       {learner.blocked ? <UserCheck className="w-4 h-4" /> : <UserX className="w-4 h-4" />}
                                       {learner.blocked ? "Débloquer" : "Bloquer"}
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      onClick={() => roleMutation.mutate({ userId: learner.id, role: learner.role === "admin" ? "user" : "admin" })}
-                                      className="gap-2"
-                                    >
-                                      <ShieldCheck className="w-4 h-4" />
-                                      {learner.role === "admin" ? "Rétrograder" : "Promouvoir admin"}
-                                    </DropdownMenuItem>
+                                    {learner.role !== "user" && (
+                                      <DropdownMenuItem onClick={() => roleMutation.mutate({ userId: learner.id, role: "user" })} className="gap-2">
+                                        <UserCheck className="w-4 h-4" /> Définir apprenant
+                                      </DropdownMenuItem>
+                                    )}
+                                    {learner.role !== "admin_learner" && (
+                                      <DropdownMenuItem onClick={() => roleMutation.mutate({ userId: learner.id, role: "admin_learner" })} className="gap-2">
+                                        <ShieldCheck className="w-4 h-4" /> Définir admin-apprenant
+                                      </DropdownMenuItem>
+                                    )}
+                                    {learner.role !== "admin" && (
+                                      <DropdownMenuItem onClick={() => roleMutation.mutate({ userId: learner.id, role: "admin" })} className="gap-2">
+                                        <Shield className="w-4 h-4" /> Définir administrateur
+                                      </DropdownMenuItem>
+                                    )}
                                   </DropdownMenuContent>
                                 </DropdownMenu>
                               </div>

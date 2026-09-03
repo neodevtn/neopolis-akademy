@@ -9,12 +9,14 @@ import { Input } from "@/components/ui/input";
 import { getLoginUrl } from "@/const";
 import { AlertTriangle, ChevronLeft, ChevronRight, RefreshCw, Search, Filter, Clock, Globe, Code, Layers, Trash2, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
+import { isAdministrativeRole } from "@shared/roles";
 
 type SourceFilter = "all" | "window" | "promise" | "boundary" | "manual";
 type OperationalLog = { id: string; timestamp: number; type: string; category: "learning" | "incident"; courseId: string; details: { message?: string } };
 
 export default function AdminErrors() {
   const { user, loading, isAuthenticated } = useAuth();
+  const isAdmin = isAdministrativeRole(user?.role);
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
@@ -26,16 +28,16 @@ export default function AdminErrors() {
 
   const errorsQuery = trpc.system.getClientErrors.useQuery(
     { limit: 100, source: sourceFilter === "all" ? undefined : sourceFilter, search: searchQuery.trim() || undefined },
-    { enabled: isAuthenticated && user?.role === "admin", refetchInterval: 15_000 }
+    { enabled: isAuthenticated && isAdmin, refetchInterval: 15_000 }
   );
 
   const statsQuery = trpc.system.getClientErrorStats.useQuery(
     undefined,
-    { enabled: isAuthenticated && user?.role === "admin", refetchInterval: 15_000 }
+    { enabled: isAuthenticated && isAdmin, refetchInterval: 15_000 }
   );
   const operationalLogsQuery = trpc.system.getOperationalLogs.useQuery(
     { page: operationalPage, pageSize: 25, search: operationalSearch.trim() || undefined },
-    { enabled: isAuthenticated && user?.role === "admin", refetchInterval: 15_000 }
+    { enabled: isAuthenticated && isAdmin, refetchInterval: 15_000 }
   );
 
   useEffect(() => {
@@ -124,7 +126,7 @@ export default function AdminErrors() {
     );
   }
 
-  if (!isAuthenticated || user?.role !== "admin") {
+  if (!isAuthenticated || !isAdmin) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: "var(--wise-canvas)" }}>
         <AlertTriangle size={48} style={{ color: "var(--wise-mute)" }} />

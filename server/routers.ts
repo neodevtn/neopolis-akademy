@@ -32,6 +32,7 @@ import { invokeLLM } from "./_core/llm";
 import { evaluateFreeResponseWithOpenRouter } from "./openrouterEvaluation";
 import { buildCourseAssistantMessages, extractCourseAssistantText, isClearlyOutOfScopeCourseAssistantQuestion, outOfScopeCourseAssistantReply } from "./courseAssistant";
 import { getAiNewsFeed } from "./aiNews";
+import { isAdministrativeRole } from "@shared/roles";
 
 const orientationGoalsSchema = z.array(z.object({
   competencyId: z.string().min(2).max(80),
@@ -84,11 +85,11 @@ export const appRouter = router({
       userId: z.number().int().positive().optional(),
       limit: z.number().int().min(1).max(200).optional(),
     }).optional()).query(async ({ ctx, input }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
       return getAdminOrientationOverview(input || {});
     }),
     prepareLegacyReminder: protectedProcedure.mutation(async ({ ctx }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
       return createLegacyOrientationReminderDraft(ctx.user.id);
     }),
     proposeAdjustment: protectedProcedure.input(z.object({
@@ -99,7 +100,7 @@ export const appRouter = router({
       certificationTargetDates: z.record(z.string(), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)).default({}),
       justification: z.string().trim().min(8).max(2000),
     })).mutation(async ({ ctx, input }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
       return createOrientationProposal({ ...input, proposedBy: ctx.user.id });
     }),
   }),
@@ -107,18 +108,18 @@ export const appRouter = router({
     getMine: protectedProcedure.query(async ({ ctx }) => getUserCompetencies(ctx.user.id)),
     getGamification: protectedProcedure.query(async ({ ctx }) => getUserGamification(ctx.user.id)),
     getFramework: protectedProcedure.query(async ({ ctx }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
       return getCompetencyFramework();
     }),
     getGamificationConfig: protectedProcedure.query(async ({ ctx }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
       return getGamificationConfig();
     }),
     saveGamificationConfig: protectedProcedure.input(z.object({
       ranks: z.array(z.object({ id: z.string().min(2).max(40), label: z.string().min(1).max(80), minPoints: z.number().min(0).max(100), color: z.string().min(1).max(40), icon: z.string().min(1).max(80), sortOrder: z.number().int(), active: z.number().int().min(0).max(1) })).min(1),
       settings: z.object({ weeklyGoalPoints: z.number().min(0.5).max(100), pointsLabel: z.string().min(1).max(120), rewardNotice: z.string().min(20).max(2000) }),
     })).mutation(async ({ ctx, input }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
       return saveGamificationConfig(input);
     }),
     saveFramework: protectedProcedure
@@ -127,7 +128,7 @@ export const appRouter = router({
         rules: z.array(z.object({ id: z.number().int().optional(), competencyId: z.string().min(2).max(80), sourceType: z.enum(COMPETENCY_SOURCE_TYPES), sourceKey: z.string().min(1).max(255), label: z.string().min(1).max(255), points: z.union([z.string(), z.number()]).refine((value) => Number.isFinite(Number(value)) && Number(value) > 0 && Number(value) <= 100, "Les points doivent être compris entre 0 et 100."), minScore: z.union([z.string(), z.number()]).nullable().optional().refine((value) => value === null || value === undefined || (Number.isFinite(Number(value)) && Number(value) >= 0 && Number(value) <= 100), "Le score minimal doit être compris entre 0 et 100."), active: z.number().int().min(0).max(1), sortOrder: z.number().int() })),
       }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+        if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
         return replaceCompetencyFramework({
           definitions: input.definitions.map((definition) => ({ ...definition, maxPoints: Number(definition.maxPoints).toFixed(2) })),
           rules: input.rules.map(({ id: _id, ...rule }) => ({ ...rule, points: Number(rule.points).toFixed(2), minScore: rule.minScore === null || rule.minScore === undefined ? null : Number(rule.minScore).toFixed(2) })),
@@ -141,11 +142,11 @@ export const appRouter = router({
         return { contributions: await applyCompetencyEvent({ userId: ctx.user.id, sourceType: input.sourceType, sourceKey: input.sourceKey, eventKey: input.eventKey, score: input.score, competencyTags, evidence: { certificationId: input.certificationId, courseId: input.courseId, lessonIndex: input.lessonIndex, chapterIndex: input.chapterIndex, competencyTags } }) };
       }),
     backfill: protectedProcedure.mutation(async ({ ctx }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
       return backfillCompetencies();
     }),
     leaderboard: protectedProcedure.input(z.object({ competencyId: z.string().optional(), limit: z.number().int().min(1).max(200).optional() }).optional()).query(async ({ ctx, input }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
       return getCompetencyLeaderboard(input || {});
     }),
   }),
@@ -165,7 +166,7 @@ export const appRouter = router({
   referral: router({
     getMine: protectedProcedure.query(async ({ ctx }) => getReferralProgramForUser(ctx.user.id)),
     getAdminOverview: protectedProcedure.query(async ({ ctx }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
       return getReferralAdminOverview();
     }),
     updateCampaign: protectedProcedure.input(z.object({
@@ -173,7 +174,7 @@ export const appRouter = router({
       tokenRewardLabel: z.string().trim().min(2).max(300), giftRewardLabel: z.string().trim().min(2).max(300),
       eligibilityText: z.string().trim().max(4000).optional(), shareMessage: z.string().trim().max(1200).optional(),
     })).mutation(async ({ ctx, input }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
       await updateReferralCampaign(input);
       return { success: true };
     }),
@@ -181,7 +182,7 @@ export const appRouter = router({
       id: z.number().int().positive(), status: z.enum(["pending", "eligible", "rewarded", "rejected"]),
       rewardNote: z.string().trim().max(2000).optional(),
     })).mutation(async ({ ctx, input }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
       await updateReferralConversionStatus({ ...input, reviewedBy: ctx.user.id });
       return { success: true };
     }),
@@ -400,7 +401,7 @@ export const appRouter = router({
         sector: z.string().optional(),
       }).optional())
       .query(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await getApplications(input);
@@ -409,7 +410,7 @@ export const appRouter = router({
     getById: protectedProcedure
       .input(z.object({ id: z.number() }))
       .query(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         const app = await getApplicationById(input.id);
@@ -427,7 +428,7 @@ export const appRouter = router({
         recommendedCourses: z.array(z.string()).optional(),
       }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         const result = await updateApplicationStatus(input.id, input.status);
@@ -463,7 +464,7 @@ export const appRouter = router({
       }),
 
     stats: protectedProcedure.query(async ({ ctx }) => {
-      if (ctx.user.role !== "admin") {
+      if (!isAdministrativeRole(ctx.user.role)) {
         throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
       }
       return await getApplicationStats();
@@ -472,7 +473,7 @@ export const appRouter = router({
     exportPDF: protectedProcedure
       .input(z.object({ applicationId: z.number() }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         const app = await getApplicationById(input.applicationId);
@@ -489,7 +490,7 @@ export const appRouter = router({
         language: z.enum(["fr", "en"]).default("fr"),
       }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         const app = await getApplicationById(input.applicationId);
@@ -647,7 +648,7 @@ export const appRouter = router({
       }),
 
     getFeedbackDashboard: protectedProcedure.query(async ({ ctx }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
       return getCourseFeedbackDashboard();
     }),
 
@@ -656,7 +657,7 @@ export const appRouter = router({
       status: z.enum(["new", "in_review", "responded", "resolved", "dismissed"]),
       adminResponse: z.string().trim().max(4000).optional(),
     })).mutation(async ({ ctx, input }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN" });
       return moderateCourseFeedback({ feedbackId: input.feedbackId, adminId: ctx.user.id, status: input.status, adminResponse: input.adminResponse });
     }),
 
@@ -824,7 +825,7 @@ export const appRouter = router({
         sortDirection: z.enum(["asc", "desc"]).default("desc"),
       }).optional())
       .query(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await getAllLearners(input?.page || 1, input?.pageSize || 20, input?.search, input?.sortBy, input?.sortDirection);
@@ -833,7 +834,7 @@ export const appRouter = router({
     getLearnerDetail: protectedProcedure
       .input(z.object({ userId: z.number() }))
       .query(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await getLearnerProgress(input.userId);
@@ -842,7 +843,7 @@ export const appRouter = router({
     getLearnerActivityPage: protectedProcedure
       .input(z.object({ userId: z.number(), page: z.number().min(1).default(1), pageSize: z.number().min(1).max(50).default(20), search: z.string().max(160).optional() }))
       .query(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await getLearnerActivityLogPage(input.userId, input.page, input.pageSize, input.search);
@@ -850,7 +851,7 @@ export const appRouter = router({
 
     getStats: protectedProcedure
       .query(async ({ ctx }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await getAllLearnersStats();
@@ -859,16 +860,16 @@ export const appRouter = router({
     blockUser: protectedProcedure
       .input(z.object({ userId: z.number(), blocked: z.boolean() }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await blockUser(input.userId, input.blocked);
       }),
 
     updateUserRole: protectedProcedure
-      .input(z.object({ userId: z.number(), role: z.enum(["user", "manager", "admin"]) }))
+      .input(z.object({ userId: z.number(), role: z.enum(["user", "manager", "admin", "admin_learner"]) }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         if (input.userId === ctx.user.id) {
@@ -878,12 +879,12 @@ export const appRouter = router({
       }),
 
     listLearnerGroups: protectedProcedure.query(async ({ ctx }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
       return listLearnerGroups();
     }),
 
     getLearnerGroupDetail: protectedProcedure.input(z.object({ groupId: z.number() })).query(async ({ ctx, input }) => {
-      if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+      if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
       const group = await getLearnerGroupDetail(input.groupId);
       if (!group) throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" });
       return group;
@@ -892,21 +893,21 @@ export const appRouter = router({
     createLearnerGroup: protectedProcedure
       .input(z.object({ name: z.string().trim().min(2).max(160), description: z.string().max(2000).optional(), color: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional() }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         return createLearnerGroup({ ...input, createdBy: ctx.user.id });
       }),
 
     replaceLearnerGroupMembers: protectedProcedure
       .input(z.object({ groupId: z.number(), userIds: z.array(z.number()).max(500) }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         return replaceLearnerGroupMembers(input.groupId, Array.from(new Set(input.userIds)), ctx.user.id);
       }),
 
     replaceLearnerGroupCourses: protectedProcedure
       .input(z.object({ groupId: z.number(), courses: z.array(z.object({ courseId: z.string().min(1).max(200), certificationId: z.string().max(200).optional() })).max(500) }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         return replaceLearnerGroupCourses(input.groupId, input.courses, ctx.user.id);
       }),
 
@@ -919,7 +920,7 @@ export const appRouter = router({
         groupIds: z.array(z.number()).max(100).optional().default([]),
       }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         const invitation = await createInvitation(input.email, input.name || null, ctx.user.id, 7, input.groupIds);
@@ -946,7 +947,7 @@ export const appRouter = router({
     getInvitations: protectedProcedure
       .input(z.object({ page: z.number().min(1).default(1), pageSize: z.number().min(1).max(100).default(20) }).optional())
       .query(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await getInvitations(input?.page || 1, input?.pageSize || 20);
@@ -961,14 +962,14 @@ export const appRouter = router({
         sortDirection: z.enum(["asc", "desc"]).default("desc"),
       }).optional())
       .query(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         return await getDirectInvitations(input?.page || 1, input?.pageSize || 20, input?.search, input?.sortBy, input?.sortDirection);
       }),
 
     cancelInvitation: protectedProcedure
       .input(z.object({ invitationId: z.number() }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         return await cancelInvitation(input.invitationId);
       }),
 
@@ -983,7 +984,7 @@ export const appRouter = router({
         groupIds: z.array(z.number()).max(100).optional().default([]),
       }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         const results: { email: string; success: boolean; error?: string }[] = [];
@@ -1016,7 +1017,7 @@ export const appRouter = router({
     resendInvitation: protectedProcedure
       .input(z.object({ email: z.string().email() }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         // Re-create invitation (old one will be superseded)
@@ -1035,7 +1036,7 @@ export const appRouter = router({
 
     getAnalytics: protectedProcedure
       .query(async ({ ctx }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await getAdminAnalytics();
@@ -1052,7 +1053,7 @@ export const appRouter = router({
         sortDirection: z.enum(["asc", "desc"]).default("desc"),
       }))
       .query(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
+        if (!isAdministrativeRole(ctx.user.role)) throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         return await getExamMonitoring(input);
       }),
 
@@ -1062,7 +1063,7 @@ export const appRouter = router({
         certificationId: z.string().optional(),
       }))
       .query(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await getLearningReporting(input);
@@ -1070,7 +1071,7 @@ export const appRouter = router({
 
     exportLearners: protectedProcedure
       .query(async ({ ctx }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await exportLearnersCSV();
@@ -1086,7 +1087,7 @@ export const appRouter = router({
         sortDirection: z.enum(["asc", "desc"]).default("desc"),
       }).optional())
       .query(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await getSelectedCandidates(input?.page || 1, input?.pageSize || 10, input?.search, input?.sortBy, input?.sortDirection);
@@ -1098,7 +1099,7 @@ export const appRouter = router({
         newEmail: z.string().email(),
       }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await updateApplicationEmail(input.applicationId, input.newEmail);
@@ -1113,7 +1114,7 @@ export const appRouter = router({
         groupIds: z.array(z.number()).max(100).optional().default([]),
       }))
       .mutation(async ({ ctx, input }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         // Create invitation with tracking
@@ -1158,7 +1159,7 @@ export const appRouter = router({
 
     getEmailDeliveryStats: protectedProcedure
       .query(async ({ ctx }) => {
-        if (ctx.user.role !== "admin") {
+        if (!isAdministrativeRole(ctx.user.role)) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
         }
         return await getEmailDeliveryStats();

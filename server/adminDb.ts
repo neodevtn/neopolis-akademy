@@ -434,7 +434,7 @@ export async function getAdminActivityActors() {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select({ id: users.id, name: users.name, email: users.email, role: users.role })
-    .from(users).where(inArray(users.role, ["admin", "manager"])).orderBy(users.name);
+    .from(users).where(inArray(users.role, ["admin", "admin_learner", "manager"])).orderBy(users.name);
 }
 
 // ============ Bulk Actions ============
@@ -461,7 +461,7 @@ export async function getLearnerAnalytics() {
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   const fourteenDaysAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
 
-  // All users (non-admin)
+  // Learners include admin-learners, whose personal progression remains meaningful.
   const allLearners = await db.select({
     id: users.id,
     name: users.name,
@@ -469,7 +469,7 @@ export async function getLearnerAnalytics() {
     lastSignedIn: users.lastSignedIn,
     createdAt: users.createdAt,
     blocked: users.blocked,
-  }).from(users).where(eq(users.role, "user"));
+  }).from(users).where(inArray(users.role, ["user", "admin_learner"]));
 
   // Inactive users (not signed in for 7+ days, not blocked)
   const inactiveUsers = allLearners.filter(u =>
@@ -574,7 +574,7 @@ export async function getCommunicationSegmentOptions() {
   if (!db) throw new Error("Database not available");
   const [courses, allUsers, invitations] = await Promise.all([
     getCommunicationCourseOptions(),
-    db.select({ email: users.email, name: users.name, blocked: users.blocked }).from(users).where(eq(users.role, "user")),
+    db.select({ email: users.email, name: users.name, blocked: users.blocked }).from(users).where(inArray(users.role, ["user", "admin_learner"])),
     db.select({ email: userInvitations.email, name: userInvitations.name, status: userInvitations.status }).from(userInvitations),
   ]);
   const recipients = new Map<string, { email: string; name: string | null; source: "learner" | "invitation" }>();

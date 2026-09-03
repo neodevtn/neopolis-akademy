@@ -46,12 +46,14 @@ import { normalizeExamConfiguration, type ExamConfiguration } from "@shared/exam
 import { toBlockMediaUrl } from "@/lib/mediaUrl";
 import { moveItem } from "@shared/lessonManagement";
 import { buildNavigationUrl } from "@shared/navigationUrls";
+import { isAdministrativeRole } from "@shared/roles";
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
 type ViewMode = "browse" | "catalog" | "course" | "quiz-simulate" | "exam-simulate" | "edit-course" | "edit-quiz" | "edit-exam";
 
 export default function AdminContentManager() {
   const { user, isAuthenticated } = useAuth();
+  const isAdmin = isAdministrativeRole(user?.role);
   const { t, lang } = useLanguage();
   const [, navigate] = useLocation();
   const urlSearch = useSearch();
@@ -155,26 +157,26 @@ export default function AdminContentManager() {
 
   // Queries
   const coursesQuery = trpc.adminContent.listCourses.useQuery(undefined, {
-    enabled: isAuthenticated && user?.role === "admin",
+    enabled: isAuthenticated && isAdmin,
   });
   const courseDetailQuery = trpc.adminContent.getCourse.useQuery(
     { courseId: selectedCourseId },
     { enabled: !!selectedCourseId && viewMode !== "browse" }
   );
   const globalMediaQuery = trpc.adminContent.listMediaAssets.useQuery(undefined, {
-    enabled: isAuthenticated && user?.role === "admin" && viewMode === "edit-course",
+    enabled: isAuthenticated && isAdmin && viewMode === "edit-course",
   });
   const quizzesQuery = trpc.adminContent.getQuizzes.useQuery(undefined, {
-    enabled: isAuthenticated && user?.role === "admin" && (viewMode === "quiz-simulate" || viewMode === "edit-quiz" || viewMode === "edit-course"),
+    enabled: isAuthenticated && isAdmin && (viewMode === "quiz-simulate" || viewMode === "edit-quiz" || viewMode === "edit-course"),
   });
   const examQuestionsQuery = trpc.adminContent.getMockExamQuestions.useQuery(undefined, {
-    enabled: isAuthenticated && user?.role === "admin" && (viewMode === "exam-simulate" || viewMode === "edit-exam"),
+    enabled: isAuthenticated && isAdmin && (viewMode === "exam-simulate" || viewMode === "edit-exam"),
   });
   const examConfigurationsQuery = trpc.adminContent.getExamConfigurations.useQuery(undefined, {
-    enabled: isAuthenticated && user?.role === "admin" && (viewMode === "catalog" || viewMode === "exam-simulate" || viewMode === "edit-exam"),
+    enabled: isAuthenticated && isAdmin && (viewMode === "catalog" || viewMode === "exam-simulate" || viewMode === "edit-exam"),
   });
   const catalogQuery = trpc.adminContent.getTrainingIndex.useQuery(undefined, {
-    enabled: isAuthenticated && user?.role === "admin" && viewMode === "catalog",
+    enabled: isAuthenticated && isAdmin && viewMode === "catalog",
   });
 
   // Mutations
@@ -254,7 +256,7 @@ export default function AdminContentManager() {
   }, [coursesQuery.data, searchQuery]);
 
   // Auth guard
-  if (!isAuthenticated || user?.role !== "admin") {
+  if (!isAuthenticated || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <p className="text-gray-500">Accès réservé aux administrateurs.</p>

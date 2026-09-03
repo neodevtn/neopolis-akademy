@@ -6,6 +6,7 @@ import { resolveI18n } from "./contentDetectors";
 import { normalizeChapterProgress } from "./chapterProgress";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { isSequentialLessonLocked } from "@shared/learningAccess";
+import { canBypassLearningSequence } from "@shared/roles";
 
 export function LessonSidebarContent({
   lessons,
@@ -100,7 +101,7 @@ export function LessonSidebarContent({
       </p>
       {lessons.map((lesson, idx) => {
         const completed = isLessonComplete(courseId, idx);
-        const isCurrent = (idx === nextUnlocked && !completed) || (user?.role === "admin" && activeLessonIndex === idx && !completed);
+        const isCurrent = (idx === nextUnlocked && !completed) || (canBypassLearningSequence(user?.role) && activeLessonIndex === idx && !completed);
         const isLocked = isSequentialLessonLocked({ lessonIndex: idx, nextUnlocked, role: user?.role });
         const isActive = activeLessonIndex === idx;
 

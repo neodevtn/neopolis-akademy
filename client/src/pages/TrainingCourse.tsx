@@ -27,6 +27,7 @@ import LessonSidebar from "./training/LessonSidebar";
 import { useCourseData, prefetchCourse } from "@/hooks/useCourseData";
 import { buildNavigationUrl } from "@shared/navigationUrls";
 import { isSequentialCourseRouteLocked } from "@shared/learningAccess";
+import { canBypassLearningSequence } from "@shared/roles";
 import { BrandLogo } from "@/components/BrandLogo";
 import { CourseFeedbackPanel } from "@/components/CourseFeedbackPanel";
 import { ReferralShareCard } from "@/components/ReferralShareCard";
@@ -50,6 +51,7 @@ export default function TrainingCourse() {
   const urlSearch = useSearch();
   const { lang, t } = useLanguage();
   const { isAuthenticated, loading: authLoading, logout, user } = useAuth();
+  const canBypassSequence = canBypassLearningSequence(user?.role);
   const { theme, toggleTheme } = useTheme();
   const { isLessonComplete, markLessonComplete, getNextUnlockedLesson, isCourseComplete, getChapterProgress: getPersistedChapterProgress, saveChapterProgress: persistChapterProgress } = useTrainingProgress();
 
@@ -193,7 +195,7 @@ export default function TrainingCourse() {
   const standaloneTpCertificationId = getStandaloneTpCertificationId(course, certId);
   const courseAccessQuery = trpc.trainingAccess.canOpen.useQuery(
     { courseId: courseId || "" },
-    { enabled: isAuthenticated && !!courseId && user?.role !== "admin" },
+    { enabled: isAuthenticated && !!courseId && !canBypassSequence },
   );
 
   // Course data with caching and prefetching
@@ -264,11 +266,11 @@ export default function TrainingCourse() {
     );
   }
 
-  if (user?.role !== "admin" && courseAccessQuery.isLoading) {
+  if (!canBypassSequence && courseAccessQuery.isLoading) {
     return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
   }
 
-  if (user?.role !== "admin" && courseAccessQuery.data && !courseAccessQuery.data.allowed) {
+  if (!canBypassSequence && courseAccessQuery.data && !courseAccessQuery.data.allowed) {
     const inactive = courseAccessQuery.data.reason === "course_inactive";
     return <div className="min-h-screen bg-background"><main className="mx-auto max-w-lg px-5 py-28 text-center"><div className="rounded-2xl border border-border bg-card p-9"><Lock className="mx-auto mb-5 h-10 w-10 text-amber-600" /><h1 className="text-xl font-bold text-foreground">{inactive ? "Formation temporairement indisponible" : "Formation visible, accès non attribué"}</h1><p className="mt-3 text-sm leading-relaxed text-muted-foreground">{inactive ? (courseAccessQuery.data.lifecycle?.reason || "Cette formation a été désactivée ou archivée par l’administration. Elle reste visible au catalogue mais ne peut pas être ouverte actuellement.") : "Cette formation est disponible au catalogue, mais n’est pas encore affectée à l’un de vos groupes d’apprenants. Contactez votre administrateur."}</p><Button className="mt-6" variant="outline" onClick={() => navigate("/training")}>Retour au catalogue</Button></div></main></div>;
   }
@@ -609,10 +611,10 @@ export default function TrainingCourse() {
             const displayedLesson = courseLessons[displayedIndex];
             const isReviewMode = isSingleLessonCourse
               ? (chapterProgress !== null && chapterProgress.current < nextUnlocked)
-              : (activeLessonIndex !== null && (isLessonComplete(course.id, activeLessonIndex) || user?.role === "admin"));
+              : (activeLessonIndex !== null && (isLessonComplete(course.id, activeLessonIndex) || canBypassSequence));
             const isCurrentLesson = isSingleLessonCourse
               ? !completed
-              : (user?.role === "admin" || (displayedIndex === nextUnlocked && !isLessonComplete(course.id, nextUnlocked)));
+              : (canBypassSequence || (displayedIndex === nextUnlocked && !isLessonComplete(course.id, nextUnlocked)));
 
             // If no active review and current lesson is completed, show nothing (course complete state handles it)
             if (!displayedLesson) return null;

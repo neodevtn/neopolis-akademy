@@ -92,6 +92,11 @@
 - [x] Sauvegarder l’état actuel du compte, restaurer le rôle apprenant et corriger la visibilité des données sans toucher aux autres utilisateurs — rôle déjà `user`, restauration idempotente exécutée sans modifier les données pédagogiques
 - [x] Vérifier les statistiques et l’accès à l’espace apprenant après restauration, puis archiver un bilan non identifiant — compte actif et non bloqué ; total de compétences non nul et procédure de progression personnelle indépendante du rôle admin
 
+## Rôle admin-apprenant
+- [x] Auditer les contrôles de rôle et définir `admin_learner` comme administrateur autorisé et apprenant comptabilisé — permission administrative centralisée ; le séquencement reste explicitement préservé
+- [x] Étendre le schéma, les procédures d’administration, les menus et les libellés pour administrer le rôle admin-apprenant — migration `0040_lean_hellfire_club.sql` appliquée, sélection explicite dans le suivi apprenants et raccourci Administration depuis Formation
+- [x] Vérifier que le rôle admin-apprenant conserve les permissions admin, les accès aux formations et les statistiques/progressions personnelles — populations pédagogiques, communication, intégrité, relances et réussite historique incluses ; 527 tests réussis, 2 ignorés
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif
