@@ -17,3 +17,11 @@ Les contenus et héros des pages publiques de formations utiliseront une nouvell
 Les contrôles directs de `/#formule` et `/#faq` ont été rejoués après chargement de l’accueil : le navigateur se positionne respectivement sur les sections **La Formule complète** et **Questions fréquentes**, malgré le montage asynchrone de l’application. Les quatre identifiants de navigation sont couverts par le contrat `homePublicAnchorIds`.
 
 Les captures desktop et mobile de l’index Formations et du domaine Informatique & Développement confirment une même enveloppe de lecture : `78rem` au maximum, padding progressif identique à l’accueil et passage à `1rem` sur mobile. Aucun débordement horizontal n’a été observé à 390 px. Le typage, 549 tests et les sept contrôles de la matrice de publication sont passés.
+
+## Contrôle publié
+
+Après propagation, la navigation directe vers `https://akademy.neodev.click/#formule` a été vérifiée dans le navigateur : la page est positionnée à 1 849 pixels sous le sommet et le titre **La Formule complète** est affiché. L’ancre n’est donc plus absorbée par le chargement asynchrone de l’accueil.
+
+Les liens `/#pourquoi` et `/#partenaires` ont ensuite été vérifiés sur le domaine public. Le premier se positionne à 657 pixels et expose le titre **Pourquoi se transformer maintenant ?** ; le second se positionne à 2 618 pixels et expose **Nos Partenaires Technologiques**. Ces deux destinations sont donc atteintes après le chargement de l’application.
+
+Enfin, `/#faq` se positionne à 7 086 pixels et affiche le titre **Questions fréquentes**. Les quatre ancres publiques demandées — Formule, Pourquoi, Partenaires et FAQ — ont donc été validées en production.

@@ -138,13 +138,13 @@
 ## Correctifs de navigation et de gabarit public
 - [x] Réparer les liens d’ancrage du menu et du footer pour atteindre les sections Formule, Pourquoi, Partenaires et FAQ depuis toute page publique — resynchronisation après montage React, URL partageables préservées et défilement contrôlé sous le menu fixe
 - [x] Aligner la largeur, les espacements et le rythme visuel des pages de détail Formation sur la page index publique de référence — enveloppe `content-shell` plafonnée à 78rem et padding progressif repris de l’accueil, sur index, domaines, héros et 404 publics
-- [ ] Vérifier les ancres, les pages de formation et le rendu responsive avant publication — contrôles locaux réussis sur les ancres Formule/FAQ, les pages index/détail et mobile 390 px ; contrôle du domaine public à refaire après checkpoint
+- [x] Vérifier les ancres, les pages de formation et le rendu responsive avant publication — domaine public contrôlé : `/#formule`, `/#pourquoi`, `/#partenaires` et `/#faq` atteignent leurs sections après montage ; gabarit Formation publié dans le même checkpoint
 
 ## Aperçus de partage LinkedIn, Meta et X
 - [x] Intégrer les visuels fournis dans le stockage web du projet et vérifier leurs dimensions, formats et accessibilité publique — visuels Open Graph 1200 × 630, X 1200 × 675, carré 1200 × 1200 et icône 512 × 512 publiés dans le stockage persistant ; PNG accessibles publiquement après suivi de redirection
 - [x] Ajouter les métadonnées Open Graph, Facebook/Meta, LinkedIn et Twitter/X aux routes publiques avec titres, descriptions et URL canoniques appropriés — `og:image`, URL sécurisée, type, dimensions, texte alternatif et cartes X intégrés au rendu SPA et SSR, avec URLs absolues de marque
 - [x] Couvrir les liens d’invitation, de recommandation et de parrainage avec un aperçu social sans exposer de paramètres ou de données personnelles — `/refer`, `/apply?ref=…` et la page d’invitation reçoivent les visuels ; `og:url` de recommandation est neutralisée vers `/refer`
-- [ ] Vérifier le HTML servi, les images absolues et les aperçus de partage des principales pages publiques avant publication — sonde locale 11 routes et matrice QA enrichie réussies ; contrôle public après checkpoint à effectuer
+- [x] Vérifier le HTML servi, les images absolues et les aperçus de partage des principales pages publiques avant publication — sonde publique sur 11 routes réussie après propagation ; images Open Graph et X accessibles en HTTP 200 / `image/png`, titres, descriptions et canoniques présents
 
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
