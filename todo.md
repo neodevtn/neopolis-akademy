@@ -87,6 +87,11 @@
 - [x] Diagnostiquer la validation de la page d’acceptation lorsque la sonde ne rend pas le formulaire attendu, sans exposer de jeton ni de coordonnées — API valide et formulaire réel rendu ; seul le sélecteur de test attendait à tort un titre sémantique
 - [x] Vérifier et corriger le rendu du formulaire après une validation d’invitation réussie si le parcours réel reste bloqué sur un état de chargement ou une erreur client — aucun défaut applicatif constaté : formulaire, confirmation et redirection vérifiés dans les deux branches
 
+## Restauration ciblée du compte apprenant
+- [x] Inventorier de façon agrégée les données de progression, examens, compétences et activités de Mohamed Rayene Khelil avant toute modification de rôle — données persistées confirmées : progressions, vidéos, examen, compétences, succès, événements et journal d’activité
+- [x] Sauvegarder l’état actuel du compte, restaurer le rôle apprenant et corriger la visibilité des données sans toucher aux autres utilisateurs — rôle déjà `user`, restauration idempotente exécutée sans modifier les données pédagogiques
+- [x] Vérifier les statistiques et l’accès à l’espace apprenant après restauration, puis archiver un bilan non identifiant — compte actif et non bloqué ; total de compétences non nul et procédure de progression personnelle indépendante du rôle admin
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif
