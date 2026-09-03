@@ -31,6 +31,7 @@ try {
   const page = await context.newPage();
   await page.goto(`${baseUrl}/admin/training?tab=learners&learner=${learnerId}`, { waitUntil: "commit", timeout: 60_000 });
   await page.getByText("Leçons terminées", { exact: true }).waitFor({ state: "visible", timeout: 45_000 });
+  await page.getByText("Admin-apprenant", { exact: true }).waitFor({ state: "visible", timeout: 20_000 });
   for (const label of ["Chapitres validés", "Vidéos vues", "Examens passés", "Temps actif", "Réussite 1er examen"]) {
     await page.getByText(label, { exact: true }).waitFor({ state: "visible", timeout: 20_000 });
   }
@@ -64,11 +65,20 @@ try {
   if (dimensions.scrollWidth > dimensions.clientWidth + 2) throw new Error(`Débordement mobile détecté (${dimensions.scrollWidth}/${dimensions.clientWidth}).`);
   await page.screenshot({ path: path.join(screenshotsDir, "learner-360-mobile.png"), fullPage: true });
 
+  await page.setViewportSize({ width: 1280, height: 850 });
+  await page.goto(`${baseUrl}/admin?tab=kanban`, { waitUntil: "commit", timeout: 60_000 });
+  await page.getByRole("heading", { name: "Tableau de bord — Candidatures", exact: true }).waitFor({ state: "visible", timeout: 45_000 });
+  const kanbanVisible = await page.getByText("Vue Kanban — Candidatures", { exact: true }).count();
+  const kanbanNavigation = await page.getByText("Kanban candidatures", { exact: true }).count();
+  if (kanbanVisible || kanbanNavigation) throw new Error("La vue Kanban ou son lien reste visible.");
+
   const report = {
     status: "passed",
     learnerIdChecked: true,
     kpis: 6,
     tabs: tabs.map(([tab]) => tab),
+    adminLearnerBadge: true,
+    legacyKanbanRedirect: true,
     activityEmptyState: true,
     mobileOverflow: false,
     mobileWidth: dimensions.clientWidth,

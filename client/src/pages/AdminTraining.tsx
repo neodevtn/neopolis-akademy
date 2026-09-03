@@ -512,7 +512,7 @@ export default function AdminTraining() {
                     {selectedLearner?.name || (detail as any).userInfo?.name || "Apprenant"}
                   </h2>
                   <p className="text-sm text-muted-foreground">{selectedLearner?.email || (detail as any).userInfo?.email || "—"}</p>
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="flex flex-wrap items-center gap-2 mt-2">
                     {viaCandidature ? (
                       <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 font-medium flex items-center gap-1">
                         <FileText className="w-3 h-3" /> Via candidature
@@ -520,6 +520,11 @@ export default function AdminTraining() {
                     ) : (
                       <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-muted-foreground font-medium flex items-center gap-1">
                         <Mail className="w-3 h-3" /> Via invitation directe
+                      </span>
+                    )}
+                    {selectedLearner?.role === "admin_learner" && (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300 font-medium flex items-center gap-1">
+                        <ShieldCheck className="w-3 h-3" /> Admin-apprenant
                       </span>
                     )}
                   </div>

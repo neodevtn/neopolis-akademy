@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { Link, useLocation, useSearch } from "wouter";
-import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Columns3, Bell, BellRing, UserX, FileCheck, CalendarClock, Save, Filter, Gift, Search } from "lucide-react";
+import { ArrowLeft, Download, Users, CheckCircle, XCircle, Clock, TrendingUp, Loader2, ExternalLink, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, FileText, Camera, Linkedin, Github, Globe, Twitter, Video, Mail, Send, Tag, MessageSquare, StickyNote, Eye, Zap, AlertTriangle, BarChart3, Plus, X, Trash2, Activity, Bell, BellRing, UserX, FileCheck, CalendarClock, Save, Filter, Gift, Search } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 import { AdminNavbar } from "@/components/AdminNavbar";
@@ -21,10 +21,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { COMMUNICATION_AUDIENCE_LABELS, COMMUNICATION_CRITERIA_LOGIC_LABELS, COURSE_PROGRESS_STATUS_LABELS, type CommunicationAudience, type CommunicationCriteriaLogic, type CourseProgressStatus } from "@shared/communicationRecipients";
 import { toPreviewMediaUrl } from "@/lib/mediaUrl";
 import { isAdministrativeRole } from "@shared/roles";
+import { resolveAdminDashboardTab, type AdminDashboardTab } from "@/lib/adminDashboardTabs";
 
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
-type TabType = "candidatures" | "kanban" | "communications" | "invitations" | "analytics" | "activity" | "referrals";
+type TabType = AdminDashboardTab;
 
 // Notification type icons
 const NOTIF_ICONS: Record<string, { icon: any; color: string }> = {
@@ -41,7 +42,7 @@ export default function AdminDashboard() {
   const urlSearch = useSearch();
   const getTabFromUrl = (): TabType => {
     const tab = new URLSearchParams(urlSearch).get("tab");
-    return ["candidatures", "kanban", "communications", "invitations", "analytics", "activity", "referrals"].includes(tab || "") ? tab as TabType : "candidatures";
+    return resolveAdminDashboardTab(tab);
   };
   const [activeTab, setActiveTab] = useState<TabType>(getTabFromUrl);
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -1024,69 +1025,6 @@ export default function AdminDashboard() {
               <div className="overflow-x-auto rounded-xl border border-border bg-card"><table className="w-full min-w-[900px] text-sm"><thead className="border-b border-border bg-muted/30 text-left text-xs uppercase tracking-wide text-muted-foreground"><tr><th className="px-4 py-3">Parrain</th><th className="px-4 py-3">Candidat</th><th className="px-4 py-3">Origine</th><th className="px-4 py-3">Date</th><th className="px-4 py-3">Note</th><th className="px-4 py-3">Validation</th></tr></thead><tbody>{referralOverviewQuery.data.conversions.length ? referralOverviewQuery.data.conversions.map((conversion: any) => <tr key={conversion.id} className="border-b border-border/60 last:border-0"><td className="px-4 py-3"><p className="font-medium">{conversion.referrerName || "Apprenant"}</p><p className="text-xs text-muted-foreground">{conversion.referrerEmail || "—"}</p></td><td className="px-4 py-3"><a className="text-primary hover:underline" href={buildNavigationUrl("/admin", { tab: "candidatures", application: conversion.applicationId })}>{conversion.referredEmail}</a></td><td className="px-4 py-3">{conversion.shareTarget || conversion.sourceChannel || "Lien direct"}</td><td className="px-4 py-3 text-muted-foreground">{new Date(conversion.createdAt).toLocaleDateString("fr-FR")}</td><td className="px-4 py-3"><Input aria-label={`Note récompense ${conversion.referredEmail}`} value={referralNotes[conversion.id] ?? conversion.rewardNote ?? ""} onChange={(event) => setReferralNotes((notes) => ({ ...notes, [conversion.id]: event.target.value }))} placeholder="Motif / référence" /></td><td className="px-4 py-3"><Select value={conversion.status} onValueChange={(status) => updateReferralConversionMutation.mutate({ id: conversion.id, status: status as "pending" | "eligible" | "rewarded" | "rejected", rewardNote: referralNotes[conversion.id] ?? conversion.rewardNote ?? "" })}><SelectTrigger className="w-36"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="pending">À examiner</SelectItem><SelectItem value="eligible">Éligible</SelectItem><SelectItem value="rewarded">Récompensé</SelectItem><SelectItem value="rejected">Non retenu</SelectItem></SelectContent></Select></td></tr>) : <tr><td colSpan={6} className="px-4 py-12 text-center text-muted-foreground">Aucune candidature attribuée pour le moment. Les liens partagés par les apprenants apparaîtront ici dès la soumission d’une candidature.</td></tr>}</tbody></table></div>
             </> : <p className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">Le programme de parrainage n’a pas pu être chargé.</p>}
           </section>
-        )}
-
-        {/* ==================== KANBAN TAB ==================== */}
-        {activeTab === "kanban" && (
-          <>
-            <h1 className="wise-display-md mb-8">Vue Kanban — Candidatures</h1>
-            {applicationsQuery.isLoading ? (
-              <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {(["en_attente", "selectionne", "refuse"] as const).map((status) => {
-                  const statusLabels: Record<string, { label: string; color: string; bg: string }> = {
-                    en_attente: { label: "En attente", color: "var(--wise-warning)", bg: "rgba(234,179,8,0.08)" },
-                    selectionne: { label: "Sélectionnés", color: "var(--wise-positive)", bg: "rgba(34,197,94,0.08)" },
-                    refuse: { label: "Refusés", color: "var(--wise-negative)", bg: "rgba(239,68,68,0.08)" },
-                  };
-                  const { label, color, bg } = statusLabels[status];
-                  const items = (applicationsQuery.data || []).filter((a: any) => a.status === status);
-                  return (
-                    <div key={status} className="rounded-xl border border-border p-4" style={{ backgroundColor: bg }}>
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-semibold text-sm" style={{ color }}>{label}</h3>
-                        <Badge variant="outline" className="text-xs">{items.length}</Badge>
-                      </div>
-                      <div className="space-y-3 max-h-[60vh] overflow-y-auto">
-                        {items.length === 0 ? (
-                          <p className="text-xs text-muted-foreground text-center py-8">Aucune candidature</p>
-                        ) : items.map((app: any) => (
-                          <div key={app.id} className="bg-card rounded-lg border border-border p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onClick={() => setExpandedId(app.id === expandedId ? null : app.id)}>
-                            <div className="flex items-center gap-2 mb-1">
-                              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: color }}>
-                                {(app.firstName?.[0] || "").toUpperCase()}{(app.lastName?.[0] || "").toUpperCase()}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium truncate">{app.firstName} {app.lastName}</p>
-                                <p className="text-xs text-muted-foreground truncate">{app.email}</p>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2 mt-2">
-                              <span className="text-xs text-muted-foreground">{app.country}</span>
-                              {app.totalScore != null && (
-                                <Badge variant="outline" className="text-xs">{(app.totalScore * 100).toFixed(0)}%</Badge>
-                              )}
-                            </div>
-                            {status === "en_attente" && (
-                              <div className="flex gap-2 mt-2">
-                                <Button size="sm" variant="outline" className="text-xs h-7 flex-1" style={{ color: "var(--wise-positive)" }} onClick={(e) => { e.stopPropagation(); setDecisionDialog({ open: true, appId: app.id, status: "selectionne", app }); }}>
-                                  <CheckCircle className="w-3 h-3 mr-1" /> Accepter
-                                </Button>
-                                <Button size="sm" variant="outline" className="text-xs h-7 flex-1" style={{ color: "var(--wise-negative)" }} onClick={(e) => { e.stopPropagation(); setDecisionDialog({ open: true, appId: app.id, status: "refuse", app }); }}>
-                                  <XCircle className="w-3 h-3 mr-1" /> Refuser
-                                </Button>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </>
         )}
 
         {/* ==================== ACTIVITY TAB ==================== */}

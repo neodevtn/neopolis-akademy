@@ -97,6 +97,11 @@
 - [x] Étendre le schéma, les procédures d’administration, les menus et les libellés pour administrer le rôle admin-apprenant — migration `0040_lean_hellfire_club.sql` appliquée, sélection explicite dans le suivi apprenants et raccourci Administration depuis Formation
 - [x] Vérifier que le rôle admin-apprenant conserve les permissions admin, les accès aux formations et les statistiques/progressions personnelles — populations pédagogiques, communication, intégrité, relances et réussite historique incluses ; 527 tests réussis, 2 ignorés
 
+## Rationalisation des candidatures et visibilité admin-apprenant
+- [x] Retirer la vue Kanban — Candidatures, ses liens et tout raccourci orphelin sans supprimer les données de candidature — ancienne URL normalisée vers Candidatures, avec test de non-régression
+- [x] Appliquer de façon ciblée le rôle admin-apprenant à Mohamed Rayene Khelil sans modifier ses données d’apprentissage — rôle confirmé après mise à jour ciblée, sans écriture pédagogique
+- [x] Afficher un badge Admin-apprenant dans les profils et listes administratives concernés, puis vérifier le rendu et les accès — badge de fiche 360° et liste vérifié par QA authentifiée, sans overflow mobile
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif
