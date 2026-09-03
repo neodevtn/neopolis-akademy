@@ -106,7 +106,7 @@
 - [x] Retirer les mentions visibles de partenaires et de sources d’origine des titres, cartes, fiches et résultats de recherche sans modifier les identifiants techniques internes — 17 titres de catalogue et 8 titres rendus dans les cours normalisés ; identifiants et métadonnées techniques préservés ; index de recherche régénéré
 - [x] Créer des pages publiques indexables par thème et métier, accessibles depuis le catalogue et décrivant l’offre réelle de formations IA gratuites — index `/formations-ia` et 10 pages thématiques rendus en HTML serveur, reliés depuis l’accueil et le catalogue
 - [x] Ajouter des métadonnées SEO, données structurées, graphiques fondés sur le catalogue et une navigation publique entre thèmes et formations — title, description, canonical, Open Graph, Twitter, JSON-LD, sitemap et robots ajoutés ; indicateurs exclusivement dérivés du catalogue
-- [ ] Vérifier les pages publiques, les titres, les liens, le rendu mobile et les éléments SEO avant publication — QA locale 1280, 390 et 375 px réussie ; vérification du domaine public à rejouer après checkpoint
+- [x] Vérifier les pages publiques, les titres, les liens, le rendu mobile et les éléments SEO avant publication — QA locale et publique 1280, 390 et 375 px réussie ; HTTP 200, 404/noindex, canonical, Open Graph, JSON-LD, sitemap et absence d’overflow validés après checkpoint `8c650dda`
 
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
