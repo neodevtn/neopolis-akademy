@@ -130,6 +130,11 @@
 - [x] Créer un gabarit public commun avec navigation et footer cohérents en FR/EN/AR, sans modifier les zones authentifiées — composants `PublicSiteHeader` et `PublicSiteFooter` créés avec logo officiel, navigation principale, langues, CTA et footer à quatre colonnes ; menu mobile accessible et liens localisés
 - [x] Appliquer le gabarit aux pages publiques et vérifier desktop/mobile, RTL et rendu HTML serveur — Accueil, AI News, Candidature, Parrainage et Mentions légales utilisent le gabarit React ; rendu serveur Formations harmonisé avec menu mobile sans JavaScript ; TypeScript, 548 tests, matrice QA, contrôle HTML et revue desktop/mobile réussis
 
+## Convergence visuelle stricte du menu public
+- [x] Comparer les dimensions, espacements, typographies, boutons et états de langue des menus React et serveur à partir des captures de référence — analyse panoramique complète des deux références ; divergences identifiées sur la graisse des liens, la densité, le bouton connexion, le CTA, l’état actif et le déclencheur mobile
+- [x] Extraire une configuration de style commune et l’appliquer aux deux rendus, sans modifier les parcours authentifiés — `PUBLIC_CHROME_STYLES` utilisé par le composant React et le HTML serveur ; actions différées authentifiées alignées sur les mêmes classes
+- [x] Vérifier côte à côte les menus et footers FR/EN/AR sur desktop et mobile avant publication — vérification desktop et mobile FR/AR ; bouton hamburger, CTA, langues et RTL validés ; TypeScript, test serveur, 548 tests et matrice QA réussis
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif

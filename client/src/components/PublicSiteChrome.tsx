@@ -4,6 +4,7 @@ import { Link, useLocation } from "wouter";
 import DeferredHomeAuth from "@/components/DeferredHomeAuth";
 import { type Language, useLanguage } from "@/contexts/LanguageContext";
 import { publicTrainingPath } from "@shared/publicTrainingLocale";
+import { PUBLIC_CHROME_STYLES } from "@shared/publicChromeStyles";
 
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 
@@ -42,7 +43,7 @@ function LocaleLinks({ onNavigate }: { onNavigate?: () => void }) {
   const languageNames: Record<Language, string> = { fr: "FR", en: "EN", ar: "AR" };
 
   return (
-    <nav className="flex shrink-0 items-center gap-0.5" aria-label={t(labels.languages)} dir="ltr">
+    <nav className="public-chrome-language" aria-label={t(labels.languages)} dir="ltr">
       {(["fr", "en", "ar"] as const).map((locale) => (
         <a
           key={locale}
@@ -51,7 +52,7 @@ function LocaleLinks({ onNavigate }: { onNavigate?: () => void }) {
           hrefLang={locale}
           aria-current={locale === lang ? "page" : undefined}
           onClick={() => { setLang(locale); onNavigate?.(); }}
-          className={`rounded-md px-2.5 py-2 text-xs font-bold tracking-wide transition-colors ${locale === lang ? "bg-slate-100 text-[#173b73]" : "text-slate-600 hover:bg-slate-50 hover:text-slate-950"}`}
+          className="public-chrome-language-link"
         >
           {languageNames[locale]}
         </a>
@@ -82,7 +83,7 @@ function NavigationLinks({ page, onNavigate }: { page: PublicPage; onNavigate?: 
           href={item.href}
           onClick={onNavigate}
           aria-current={item.active ? "page" : undefined}
-          className={`whitespace-nowrap rounded-md px-3 py-2 text-[12.5px] font-medium transition-colors ${item.active ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-50 hover:text-slate-950"}`}
+          className="public-chrome-nav-link"
         >
           {t(item.label)}
         </Link>
@@ -95,25 +96,24 @@ function MobilePublicMenu({ page }: { page: PublicPage }) {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   return (
-    <div className="relative lg:hidden">
+    <div className="public-chrome-mobile">
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
         aria-expanded={open}
         aria-controls="public-mobile-navigation"
         aria-label={t(labels.menu)}
-        className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200"
+        className="public-chrome-mobile-trigger"
       >
         {open ? <X size={19} /> : <Menu size={19} />}
       </button>
       {open && (
-        <div id="public-mobile-navigation" className="absolute end-0 top-11 z-50 w-[min(22rem,calc(100vw-1.5rem))] rounded-xl border border-slate-200 bg-white p-3 shadow-xl">
-          <nav className="flex flex-col gap-1" aria-label={t(labels.menu)}>
+        <div id="public-mobile-navigation" className="public-chrome-mobile-panel">
+          <nav className="public-chrome-nav" aria-label={t(labels.menu)}>
             <NavigationLinks page={page} onNavigate={() => setOpen(false)} />
-            <div className="my-2 h-px bg-slate-200" />
-            <Link href="/login" onClick={() => setOpen(false)} className="rounded-md px-3 py-2 text-sm font-semibold text-[#173b73] hover:bg-slate-50">{t(labels.signIn)}</Link>
-            <Link href="/apply" onClick={() => setOpen(false)} className="rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800">{t(labels.apply)}</Link>
-            <div className="mt-2 border-t border-slate-200 pt-2"><LocaleLinks onNavigate={() => setOpen(false)} /></div>
+            <Link href="/login" onClick={() => setOpen(false)} className="public-chrome-signin">{t(labels.signIn)}</Link>
+            <Link href="/apply" onClick={() => setOpen(false)} className="public-chrome-apply"><span>{t(labels.apply)}</span><ChevronRight size={14} /></Link>
+            <LocaleLinks onNavigate={() => setOpen(false)} />
           </nav>
         </div>
       )}
@@ -124,21 +124,24 @@ function MobilePublicMenu({ page }: { page: PublicPage }) {
 export function PublicSiteHeader({ active = "home" }: { active?: PublicPage }) {
   const { t } = useLanguage();
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/90 bg-white/95 text-slate-950 backdrop-blur-md">
-      <div className="mx-auto flex min-h-16 max-w-[1440px] items-center gap-3 px-4 sm:px-6 lg:px-8">
-        <Link href="/" aria-label="Neopolis Akademy" className="flex shrink-0 items-center"><img src={LOGO_URL} alt="Neopolis Akademy" width={180} height={63} decoding="async" className="h-9 w-auto object-contain" /></Link>
-        <nav className="mx-auto hidden min-w-0 items-center gap-0.5 lg:flex" aria-label={t(labels.menu)}>
+    <>
+      <style>{PUBLIC_CHROME_STYLES}</style>
+      <header className="public-chrome-header">
+      <div className="public-chrome-shell">
+        <Link href="/" aria-label="Neopolis Akademy" className="public-chrome-brand"><img src={LOGO_URL} alt="Neopolis Akademy" width={180} height={63} decoding="async" className="public-chrome-logo" /></Link>
+        <nav className="public-chrome-nav" aria-label={t(labels.menu)}>
           <NavigationLinks page={active} />
-          <DeferredHomeAuth slot="training" fallback={<Link href="/login" className="rounded-md px-3 py-2 text-[12.5px] font-semibold text-[#173b73] hover:bg-slate-50">{t(labels.signIn)}</Link>} />
+          <DeferredHomeAuth slot="training" fallback={<Link href="/login" className="public-chrome-signin">{t(labels.signIn)}</Link>} />
         </nav>
-        <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2 lg:ml-0">
-          <div className="hidden sm:block"><LocaleLinks /></div>
+        <div className="public-chrome-actions">
+          <div className="public-chrome-locale-desktop"><LocaleLinks /></div>
           <div className="hidden lg:block"><DeferredHomeAuth slot="logout" /></div>
-          <div className="hidden lg:block"><DeferredHomeAuth slot="header-primary" fallback={<Link href="/apply" className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800"><span>{t(labels.apply)}</span><ChevronRight size={14} /></Link>} /></div>
+          <div className="hidden lg:block"><DeferredHomeAuth slot="header-primary" fallback={<Link href="/apply" className="public-chrome-apply"><span>{t(labels.apply)}</span><ChevronRight size={14} /></Link>} /></div>
           <MobilePublicMenu page={active} />
         </div>
       </div>
-    </header>
+      </header>
+    </>
   );
 }
 

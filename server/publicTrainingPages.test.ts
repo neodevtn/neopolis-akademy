@@ -21,11 +21,11 @@ describe("pages publiques de formations IA", () => {
   it("expose le même menu principal et le même footer public dans le HTML des formations", () => {
     const html = renderPublicTrainingIndex();
 
-    expect(html).toContain('href="/#formule">La Formule</a>');
-    expect(html).toContain('href="/ai-news">AI News</a>');
-    expect(html).toContain('href="/login">Se connecter</a>');
-    expect(html).toContain('class="apply-link" href="/apply">Postuler</a>');
-    expect(html).toContain('<details class="mobile-nav"><summary>Menu</summary>');
+    expect(html).toContain('class="public-chrome-nav-link" href="/#formule">La Formule</a>');
+    expect(html).toContain('class="public-chrome-nav-link" href="/ai-news">AI News</a>');
+    expect(html).toContain('class="public-chrome-signin" href="/login">Se connecter</a>');
+    expect(html).toContain('class="public-chrome-apply" href="/apply"><span>Postuler</span>');
+    expect(html).toContain('<details class="public-chrome-mobile"><summary aria-label="Programme"><span aria-hidden="true">☰</span></summary>');
     expect(html).toContain('<footer class="site-footer">');
     expect(html).toContain('href="/mentions-legales">Mentions légales</a>');
   });

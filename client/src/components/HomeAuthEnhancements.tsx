@@ -85,7 +85,7 @@ export default function HomeAuthEnhancements({ slot, fallback = null, onNavigate
   if (slot === "header-primary") {
     if (!isAuthenticated) return <>{fallback}</>;
     return (
-      <Link href="/training" aria-label={t({ fr: "Mon espace apprenant", en: "My learning space", ar: "مساحة التعلّم الخاصة بي" })} className="flex shrink-0 items-center gap-1.5 rounded-lg bg-slate-900 px-2.5 py-2 text-xs font-semibold text-white transition-all duration-200 hover:shadow-md active:scale-[0.97] sm:px-4 md:px-5 md:py-2.5 md:text-sm">
+      <Link href="/training" aria-label={t({ fr: "Mon espace apprenant", en: "My learning space", ar: "مساحة التعلّم الخاصة بي" })} className="public-chrome-apply">
         <LayoutDashboard size={14} /> <span className="hidden sm:inline">{t({ fr: "Mon espace", en: "My learning", ar: "مساحتي" })}</span>
       </Link>
     );
@@ -114,7 +114,7 @@ export default function HomeAuthEnhancements({ slot, fallback = null, onNavigate
   }
 
   return (
-    <Link href={destination} className="text-[11px] font-semibold px-3.5 py-1.5 ml-1 rounded-full transition-all duration-200 text-white hover:shadow-md" style={{ background: "#1e3a6e" }}>
+    <Link href={destination} className="public-chrome-signin">
       {label}
     </Link>
   );
