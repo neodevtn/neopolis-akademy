@@ -18,6 +18,18 @@ describe("pages publiques de formations IA", () => {
     expect(html).toContain('meta name="keywords" content="formations IA gratuites, formation IA par métier, compétences IA, formation professionnelle, zone MENA"');
   });
 
+  it("expose le même menu principal et le même footer public dans le HTML des formations", () => {
+    const html = renderPublicTrainingIndex();
+
+    expect(html).toContain('href="/#formule">La Formule</a>');
+    expect(html).toContain('href="/ai-news">AI News</a>');
+    expect(html).toContain('href="/login">Se connecter</a>');
+    expect(html).toContain('class="apply-link" href="/apply">Postuler</a>');
+    expect(html).toContain('<details class="mobile-nav"><summary>Menu</summary>');
+    expect(html).toContain('<footer class="site-footer">');
+    expect(html).toContain('href="/mentions-legales">Mentions légales</a>');
+  });
+
   it("rend une page de grand domaine avec cas d’usage, formations, indicateurs et métadonnées propres", () => {
     const theme = getPublicTrainingTheme("comptabilite-finance");
     expect(theme).not.toBeNull();

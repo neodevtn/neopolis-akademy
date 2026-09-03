@@ -2,8 +2,7 @@ import { Button } from "@/components/ui/button";
 import { BookOpen, CheckCircle2, Gift, GraduationCap, ShieldCheck, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
-
-const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
+import { PublicSiteFooter, PublicSiteHeader } from "@/components/PublicSiteChrome";
 
 function readableIdentifier(value?: string | null) {
   if (!value) return "un parcours Neopolis Akademy";
@@ -42,12 +41,9 @@ export default function ReferralLanding() {
   const isAchievement = content === "achievement";
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-blue-50/50 text-foreground">
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
-        <Link href="/" aria-label="Accueil Neopolis Akademy"><img src={LOGO_URL} alt="Neopolis Akademy" className="h-9 w-auto" /></Link>
-        <Link href="/training" className="text-sm font-medium text-primary hover:underline">Découvrir les formations</Link>
-      </header>
-
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-slate-50 via-white to-blue-50/50 text-foreground">
+      <PublicSiteHeader active="referral" />
+      <main className="flex-1">
       <section className="mx-auto grid w-full max-w-6xl gap-10 px-5 pb-16 pt-10 sm:px-8 lg:grid-cols-[1.12fr_0.88fr] lg:items-center lg:pt-16">
         <div className="min-w-0">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5 text-sm font-semibold text-primary"><Users className="h-4 w-4" /> Recommandation Neopolis Akademy</div>
@@ -73,6 +69,8 @@ export default function ReferralLanding() {
           </ul>
         </aside>
       </section>
-    </main>
+      </main>
+      <PublicSiteFooter />
+    </div>
   );
 }

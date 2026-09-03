@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ProcessStepper } from "@/components/ProcessStepper";
+import { PublicSiteFooter, PublicSiteHeader } from "@/components/PublicSiteChrome";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "wouter";
 import { motion, useInView, AnimatePresence, useScroll, useTransform } from "framer-motion";
@@ -20,13 +20,10 @@ import {
   Sparkles,
   Target,
   Rocket,
-  Menu,
-  X,
   PlayCircle,
 } from "lucide-react";
 import { faqItems as faqItemsData } from "@/data/faqData";
 import DeferredHomeAuth from "@/components/DeferredHomeAuth";
-import { publicTrainingPath } from "@shared/publicTrainingLocale";
 
 // Chart.js is loaded only when the below-the-fold chart becomes visible.
 import type { Chart as ChartJS } from "chart.js";
@@ -161,72 +158,15 @@ function ParallaxImage() {
 }
 
 export default function Home() {
-  const { t, lang } = useLanguage();
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "var(--wise-canvas)" }}>
-      {/* ─── Navigation (Modern minimal header) ─── */}
-      <motion.nav
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 right-0 z-50"
-      >
-        <div
-          className="flex items-center w-full transition-all duration-[380ms]"
-          style={{
-            height: scrolled ? "56px" : "64px",
-            paddingInline: "clamp(1rem, 3vw, 2.5rem)",
-            background: "rgba(255, 255, 255, 0.97)",
-            backdropFilter: "blur(12px) saturate(140%)",
-            WebkitBackdropFilter: "blur(12px) saturate(140%)",
-            borderBottom: scrolled ? "1px solid rgba(0,0,0,0.06)" : "1px solid transparent",
-            boxShadow: scrolled ? "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)" : "none",
-            transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-          }}
-        >
-          {/* Logo */}
-          <Link href="/" className="flex items-center shrink-0">
-            <img src={LOGO_URL} alt="Neopolis Development" width={180} height={63} decoding="async" className="h-8 md:h-9 object-contain" />
-          </Link>
-
-          {/* Center nav links */}
-          <div className="hidden lg:flex items-center gap-1 mx-auto">
-            <NavLink href="#formule">{t({ fr: "La Formule", en: "The Formula", ar: "الصيغة" })}</NavLink>
-            <NavLink href="#pourquoi">{t({ fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" })}</NavLink>
-            <NavLink href="#partenaires">{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</NavLink>
-            <Link href={publicTrainingPath(lang)} className="whitespace-nowrap text-[12.5px] font-medium px-3 py-2 rounded-md relative transition-all duration-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50">{t({ fr: "Formations IA", en: "AI Training", ar: "تدريب الذكاء الاصطناعي" })}</Link>
-            <Link href="/ai-news" className="whitespace-nowrap text-[12.5px] font-medium px-3 py-2 rounded-md relative transition-all duration-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50">AI News</Link>
-            <NavLink href="#faq">FAQ</NavLink>
-            <DeferredHomeAuth
-              slot="training"
-              fallback={<Link href="/login" className="text-[11px] font-semibold px-3.5 py-1.5 ml-1 rounded-full transition-all duration-200 text-white hover:shadow-md" style={{ background: "#1e3a6e" }}>{t({ fr: "Se connecter", en: "Sign in", ar: "تسجيل الدخول" })}</Link>}
-            />
-          </div>
-
-          {/* Right actions */}
-          <div className="flex items-center gap-1 sm:gap-2 ml-auto lg:ml-0 shrink-0">
-            <LanguageSwitcher />
-            <DeferredHomeAuth slot="logout" />
-            <DeferredHomeAuth
-              slot="header-primary"
-              fallback={<Link href="/apply"><span className="flex items-center gap-1.5 text-xs md:text-sm font-semibold px-3 sm:px-4 md:px-5 py-2 md:py-2.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 hover:shadow-md active:scale-[0.97]">{t({ fr: "Postuler", en: "Apply", ar: "تقدّم" })} <ChevronRight size={14} /></span></Link>}
-            />
-            <MobileMenuButton />
-          </div>
-        </div>
-      </motion.nav>
+      <PublicSiteHeader active="home" />
 
       <main>
       {/* ─── Hero Band (Bubble cream paper) ─── */}
-      <section className="overflow-hidden pt-[66px]" style={{ background: "var(--wise-canvas)" }}>
+      <section className="overflow-hidden" style={{ background: "var(--wise-canvas)" }}>
         <div className="container" style={{ padding: "clamp(1.5rem, 3vh, 3rem) clamp(1.25rem, 4vw, 3rem)" }}>
           <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-6 lg:gap-12 items-center">
             <div>
@@ -591,53 +531,7 @@ export default function Home() {
       </div>
 
       </main>
-      {/* ─── Footer (Dark) ─── */}
-      <footer className="wise-footer">
-        <div className="container py-10">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="md:col-span-1">
-              <img src={LOGO_URL} alt="Neopolis Akademy" width={137} height={48} decoding="async" className="h-12 object-contain mb-3" />
-              <p className="wise-body-sm">
-                {t({ fr: "Transformer la menace de l'IA en opportunité.", en: "Turning the AI threat into opportunity.", ar: "تحويل تهديد الذكاء الاصطناعي إلى فرصة." })}
-              </p>
-              <div className="flex items-center gap-1.5 mt-2">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--neo-primary)" }}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                <span className="wise-body-sm" style={{ color: "var(--neo-primary)" }}>{t({ fr: "Registered Partner du Claude Partner Network", en: "Registered Partner of the Claude Partner Network", ar: "شريك مسجل في Claude Partner Network" })}</span>
-              </div>
-            </div>
-            <div>
-              <h3 className="wise-label mb-3">{t({ fr: "Programme", en: "Program", ar: "البرنامج" })}</h3>
-              <ul className="space-y-1.5">
-                <li><a href="#formule" className="wise-body-sm hover:underline">{t({ fr: "La Formule", en: "The Formula", ar: "الصيغة" })}</a></li>
-                <li><a href="#pourquoi" className="wise-body-sm hover:underline">{t({ fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" })}</a></li>
-                <li><a href="#partenaires" className="wise-body-sm hover:underline">{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</a></li>
-                <li><a href="#process" className="wise-body-sm hover:underline">{t({ fr: "Process Commercial", en: "Sales Process", ar: "العملية التجارية" })}</a></li>
-                <li><a href="#faq" className="wise-body-sm hover:underline">FAQ</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="wise-label mb-3">{t({ fr: "Outils", en: "Tools", ar: "الأدوات" })}</h3>
-              <ul className="space-y-1.5">
-                <li><Link href="/training" className="wise-body-sm hover:underline">{t({ fr: "Formation", en: "Training", ar: "التدريب" })}</Link></li>
-                <li><Link href="/apply" className="wise-body-sm hover:underline">{t({ fr: "Postuler", en: "Apply", ar: "تقدّم" })}</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="wise-label mb-3">{t({ fr: "Contact", en: "Contact", ar: "الاتصال" })}</h3>
-              <ul className="space-y-1.5">
-                <li><a href="mailto:info@neopolis-dev.com" className="wise-body-sm hover:underline">info@neopolis-dev.com</a></li>
-                <li><a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="wise-body-sm hover:underline">{t({ fr: "À propos de Neopolis Dev ↗", en: "About Neopolis Dev ↗", ar: "حول Neopolis Dev ↗" })}</a></li>
-                <li><a href="https://www.anthropic.com/news/claude-partner-network" target="_blank" rel="noopener noreferrer" className="wise-body-sm hover:underline">Claude Partner Network ↗</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-8 pt-6" style={{ borderTop: "1px solid var(--wise-rule)" }}>
-            <p className="text-center wise-body-sm" style={{ color: "var(--wise-mute)" }}>
-              © 2026 <a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="hover:underline">Neopolis Development</a>. {t({ fr: "Tous droits réservés.", en: "All rights reserved.", ar: "جميع الحقوق محفوظة." })} · <Link href="/mentions-legales" className="hover:underline">{t({ fr: "Mentions légales", en: "Legal notice", ar: "الإشعار القانوني" })}</Link>
-            </p>
-          </div>
-        </div>
-      </footer>
+      <PublicSiteFooter />
     </div>
   );
 }
@@ -645,19 +539,6 @@ export default function Home() {
 /* ═══════════════════════════════════════════════════════════
    SUB-COMPONENTS
    ═══════════════════════════════════════════════════════════ */
-
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <a
-      href={href}
-      className="whitespace-nowrap text-[12.5px] font-medium px-3 py-2 rounded-md relative group transition-all duration-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-    >
-      {children}
-      <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-[2px] rounded-full group-hover:w-3/5 transition-all duration-300 ease-out" style={{ background: "#1e3a6e" }} />
-    </a>
-  );
-}
-
 
 function FormulaCard({ icon, step, title, description, badge, image }: { icon: React.ReactNode; step: string; title: string; description: string; badge: string; image: { src: string; srcSet: string } }) {
   const { t } = useLanguage();
@@ -1108,53 +989,6 @@ function HeroGraphic() {
     </div>
   );
 }
-
-function MobileMenuButton() {
-  const { t, lang } = useLanguage();
-  const [open, setOpen] = useState(false);
-  const publicTrainingHref = lang === "en" ? "/en/ai-training" : lang === "ar" ? "/ar/ai-training" : "/formations-ia";
-  return (
-    <>
-      <button
-        onClick={() => setOpen(!open)}
-        className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg"
-        style={{ backgroundColor: "var(--neo-primary-light)" }}
-        aria-label="Menu"
-      >
-        {open ? <X size={20} style={{ color: "var(--wise-ink)" }} /> : <Menu size={20} style={{ color: "var(--wise-ink)" }} />}
-      </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-            className="md:hidden fixed top-16 left-0 right-0 z-50 px-4 pt-2"
-          >
-            <div className="rounded-2xl p-4 shadow-xl" style={{ backgroundColor: "#ffffff", border: "1px solid rgba(0,0,0,0.06)" }}>
-              <nav className="flex flex-col gap-2">
-                <a href="#formule" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "La Formule", en: "The Formula", ar: "الصيغة" })}</a>
-                <a href="#pourquoi" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Pourquoi maintenant", en: "Why now", ar: "لماذا الآن" })}</a>
-                <a href="#partenaires" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Partenaires", en: "Partners", ar: "الشركاء" })}</a>
-                <Link href={publicTrainingHref} onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>{t({ fr: "Formations IA", en: "AI Training", ar: "تدريب الذكاء الاصطناعي" })}</Link>
-                <Link href="/ai-news" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>AI News</Link>
-                <a href="#faq" onClick={() => setOpen(false)} className="text-sm font-medium py-2.5 px-3 rounded-lg hover:bg-gray-50 transition-colors" style={{ color: "var(--wise-ink)" }}>FAQ</a>
-                <div className="h-px my-1" style={{ background: "var(--wise-rule)" }} />
-                <DeferredHomeAuth
-                  slot="mobile-training"
-                  onNavigate={() => setOpen(false)}
-                  fallback={<a href="/login" onClick={() => setOpen(false)} className="text-sm font-semibold py-2.5 px-3 rounded-lg transition-colors" style={{ background: "rgba(30,58,110,0.08)", color: "#1e3a6e" }}>{t({ fr: "Se connecter 🔒", en: "Sign in 🔒", ar: "تسجيل الدخول 🔒" })}</a>}
-                />
-              </nav>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
-}
-
 
 /* ─── Flow Diagram (animated on scroll) ─── */
 function FlowDiagram() {

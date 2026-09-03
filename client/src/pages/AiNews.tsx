@@ -4,9 +4,7 @@ import { ArrowUpRight, BookOpen, Clock3, ExternalLink, Filter, Loader2, Newspape
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-
-const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
+import { PublicSiteFooter, PublicSiteHeader } from "@/components/PublicSiteChrome";
 
 function formatDate(value: string | null) {
   if (!value) return "Date non communiquée";
@@ -40,20 +38,10 @@ export default function AiNews() {
   const unavailableCount = feed.data?.sources.filter((source) => source.status === "unavailable").length || 0;
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-950">
-      <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex min-h-16 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:px-8">
-          <Link href="/" aria-label="Accueil Neopolis Akademy" className="shrink-0"><img src={LOGO_URL} alt="Neopolis Akademy" className="h-8 w-auto sm:h-9" /></Link>
-          <nav className="ml-auto hidden items-center gap-1 md:flex" aria-label="Navigation publique">
-            <Link href="/" className="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-950">Accueil</Link>
-            <Link href="/ai-news" className="rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white" aria-current="page">AI News</Link>
-            <Link href="/training" className="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-950">Formations</Link>
-          </nav>
-          <LanguageSwitcher />
-        </div>
-      </header>
+    <div className="flex min-h-screen flex-col bg-[#f8fafc] text-slate-950">
+      <PublicSiteHeader active="news" />
 
-      <main>
+      <main className="flex-1">
         <section className="border-b border-slate-200 bg-[radial-gradient(circle_at_84%_14%,rgba(30,58,110,0.15),transparent_30%),linear-gradient(135deg,#fff_0%,#edf4ff_100%)]">
           <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[1.3fr_0.7fr] lg:px-8">
             <div className="max-w-3xl">
@@ -92,6 +80,7 @@ export default function AiNews() {
 
         <section className="border-t border-slate-200 bg-white"><div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8"><div><div className="flex items-center gap-2 text-sm font-bold text-slate-900"><BookOpen size={18} /> À propos des sources</div><p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">AI News présente titres, extraits limités et liens issus de flux publics. Les prépublications arXiv n’ont pas nécessairement fait l’objet d’une évaluation par les pairs.</p></div><Link href="/training" className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800">Explorer les formations <ExternalLink size={15} /></Link></div></section>
       </main>
+      <PublicSiteFooter />
     </div>
   );
 }

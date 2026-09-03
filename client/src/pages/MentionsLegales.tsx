@@ -1,23 +1,10 @@
-import { Link } from "wouter";
-import { ArrowLeft } from "lucide-react";
+import { PublicSiteFooter, PublicSiteHeader } from "@/components/PublicSiteChrome";
 
 export default function MentionsLegales() {
   return (
-    <div className="min-h-screen" style={{ background: "var(--wise-canvas)" }}>
-      {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl" style={{ background: "rgba(250, 248, 243, 0.92)", borderBottom: "1px solid var(--wise-rule)" }}>
-        <div className="container flex items-center gap-4 py-4">
-          <Link href="/">
-            <button className="flex items-center gap-2 text-sm font-medium hover:opacity-70 transition-opacity" style={{ color: "var(--wise-ink)" }}>
-              <ArrowLeft size={16} />
-              Retour à l'accueil
-            </button>
-          </Link>
-        </div>
-      </header>
-
-      {/* Content */}
-      <main className="container py-12 md:py-16 max-w-[800px]">
+    <div className="flex min-h-screen flex-col" style={{ background: "var(--wise-canvas)" }}>
+      <PublicSiteHeader active="legal" />
+      <main className="container flex-1 py-12 md:py-16 max-w-[800px]">
         <h1 className="wise-display-md mb-8">Mentions Légales</h1>
 
         {/* Éditeur */}
@@ -147,6 +134,7 @@ export default function MentionsLegales() {
           </p>
         </div>
       </main>
+      <PublicSiteFooter />
     </div>
   );
 }

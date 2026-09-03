@@ -15,8 +15,7 @@ import {
 } from "@shared/validation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translateValidationError } from "@/data/validationMessages";
-
-const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
+import { PublicSiteFooter, PublicSiteHeader } from "@/components/PublicSiteChrome";
 
 const africanCountriesData: {fr: string; en: string; ar: string}[] = [
   {fr: "Algérie", en: "Algeria", ar: "الجزائر"}, {fr: "Angola", en: "Angola", ar: "أنغولا"}, {fr: "Bénin", en: "Benin", ar: "بنين"},
@@ -476,8 +475,10 @@ export default function Apply() {
   // Result page
   if (step === 11 && result) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
-        <div className="max-w-lg w-full text-center wise-card p-8">
+      <div className="flex min-h-screen flex-col" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
+        <PublicSiteHeader active="apply" />
+        <main className="flex flex-1 items-center justify-center p-4">
+          <div className="max-w-lg w-full text-center wise-card p-8">
           <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "var(--wise-primary-pale)" }}>
             <CheckCircle className="w-10 h-10" style={{ color: "var(--wise-positive)" }} />
           </div>
@@ -490,21 +491,17 @@ export default function Apply() {
           </div>
           <p className="wise-body-md mb-6">{t({fr: "Si votre profil est retenu, vous serez contacté sous 48h.", en: "If your profile is selected, you will be contacted within 48 hours.", ar: "إذا تم اختيار ملفك، سيتم الاتصال بك خلال 48 ساعة."})}</p>
           <Link href="/"><button className="wise-btn-secondary">{t({fr: "Retour à l'accueil", en: "Back to Home", ar: "العودة إلى الرئيسية"})}</button></Link>
-        </div>
+          </div>
+        </main>
+        <PublicSiteFooter />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
-      <nav className="sticky top-0 z-50 backdrop-blur-md" style={{ backgroundColor: "rgba(255,255,255,0.85)", borderBottom: "1px solid var(--wise-canvas-soft)" }}>
-        <div className="container flex items-center justify-between h-16">
-          <Link href="/"><div className="flex items-center gap-2 cursor-pointer"><img src={LOGO_URL} alt="Neopolis Akademy" className="h-8 object-contain" /></div></Link>
-          <Link href="/"><button className="wise-btn-tertiary text-sm px-4 py-2 flex items-center gap-2"><ArrowLeft className="w-4 h-4" /> {t({fr: "Retour", en: "Back", ar: "رجوع"})}</button></Link>
-        </div>
-      </nav>
-
-      <div className="container py-6 md:py-12 px-4 md:px-6 max-w-2xl mx-auto">
+    <div className="flex min-h-screen flex-col" style={{ backgroundColor: "var(--wise-canvas-soft)" }}>
+      <PublicSiteHeader active="apply" />
+      <main className="container flex-1 py-6 md:py-12 px-4 md:px-6 max-w-2xl mx-auto">
         <motion.div
           className="mb-10"
           initial={{ opacity: 0, y: -10 }}
@@ -1082,7 +1079,8 @@ export default function Apply() {
             </button>
           )}
         </div>
-      </div>
+      </main>
+      <PublicSiteFooter />
     </div>
   );
 }

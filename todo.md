@@ -125,6 +125,11 @@
 - [x] Ajouter pour chaque page de domaine et chacune des trois langues un titre, une description et des mots-clés SEO propres au contenu affiché — title, description et cinq mots-clés spécifiques par domaine pour les versions FR/EN/AR, contrôlés par tests
 - [x] Vérifier les relations, les contenus, le HTML indexable et la responsivité avant publication — tests exhaustifs de métadonnées et relations réussis ; sonde SEO publique FR/EN/AR à 1280, 390 et 375 px validée avec HTTP 200, 404/noindex, redirections 301, hreflang, canonical, Open Graph, JSON-LD, cinq mots-clés par page et aucun overflow
 
+## Harmonisation du gabarit des pages publiques
+- [x] Auditer les en-têtes, pieds de page, liens et sélecteurs de langue des routes publiques existantes — divergences recensées sur Accueil, AI News, pages de formations HTML, Candidature, Parrainage et Mentions légales ; les espaces administratifs et d’apprentissage restent exclus
+- [x] Créer un gabarit public commun avec navigation et footer cohérents en FR/EN/AR, sans modifier les zones authentifiées — composants `PublicSiteHeader` et `PublicSiteFooter` créés avec logo officiel, navigation principale, langues, CTA et footer à quatre colonnes ; menu mobile accessible et liens localisés
+- [x] Appliquer le gabarit aux pages publiques et vérifier desktop/mobile, RTL et rendu HTML serveur — Accueil, AI News, Candidature, Parrainage et Mentions légales utilisent le gabarit React ; rendu serveur Formations harmonisé avec menu mobile sans JavaScript ; TypeScript, 548 tests, matrice QA, contrôle HTML et revue desktop/mobile réussis
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif
