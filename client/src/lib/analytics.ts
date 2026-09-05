@@ -147,7 +147,7 @@ export function createDataLayerGtag(dataLayer: unknown[]): GtagCommand {
 }
 
 export function initializeAnalytics() {
-  if (typeof window === "undefined" || !MEASUREMENT_ID || !hasAnalyticsConsent()) return Promise.resolve(false);
+  if (typeof window === "undefined" || !MEASUREMENT_ID) return Promise.resolve(false);
   if (window.gtag) return Promise.resolve(true);
   if (scriptPromise) return scriptPromise.then(() => true);
 
@@ -204,7 +204,7 @@ export function trackEventOnce(name: AnalyticsEventName, key: string, params: Sa
 }
 
 export function trackPageView(location = typeof window === "undefined" ? "/" : window.location.href) {
-  if (!hasAnalyticsConsent() || !MEASUREMENT_ID) return false;
+  if (!MEASUREMENT_ID) return false;
   const pageLocation = sanitizeAnalyticsLocation(location);
   if (trackedPageLocations.has(pageLocation)) return false;
   trackedPageLocations.add(pageLocation);

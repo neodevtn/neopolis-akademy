@@ -64,7 +64,11 @@ try {
   await page.goto(`${baseUrl}/?ga4-consent-qa=1`, { waitUntil: "domcontentloaded" });
   await page.waitForTimeout(2_000);
   const scriptsBeforeConsent = await page.locator('script[src*="www.googletagmanager.com"]').count();
-  if (scriptsBeforeConsent !== 0) throw new Error("GA4 chargé avant consentement.");
+  const deniedByDefault = await page.evaluate(() => Array.isArray(window.dataLayer) && window.dataLayer.some((entry) => {
+    const values = Array.from(entry || []);
+    return values[0] === "consent" && values[1] === "default" && values[2]?.analytics_storage === "denied";
+  }));
+  if (scriptsBeforeConsent !== 1 || !deniedByDefault) throw new Error("Consent Mode avancé non initialisé avec stockage refusé par défaut.");
 
   await page.getByRole("button", { name: "Accepter" }).click();
   await page.waitForFunction(() => {
@@ -82,6 +86,11 @@ try {
   const result = {
     scriptsBeforeConsent,
     scriptsAfterConsent,
+    deniedByDefault,
+    grantedAfterChoice: await page.evaluate(() => Array.isArray(window.dataLayer) && window.dataLayer.some((entry) => {
+      const values = Array.from(entry || []);
+      return values[0] === "consent" && values[1] === "update" && values[2]?.analytics_storage === "granted";
+    })),
     gtagReady: await page.evaluate(() => typeof window.gtag === "function"),
     pageViewQueued: await page.evaluate(() => Array.isArray(window.dataLayer) && window.dataLayer.some((entry) => Array.from(entry || []).slice(0, 2).join("|") === "event|page_view")),
     googleScriptRequested: googleRequests.some((request) => googleTagHostnames.has(request.hostname)),
@@ -96,7 +105,7 @@ try {
   };
 
   console.log(JSON.stringify(result));
-  if (result.scriptsAfterConsent !== 1 || !result.gtagReady || !result.pageViewQueued || !result.googleScriptRequested || !result.googleCollectionRequested || !result.googleCollectionResponseSuccess || result.googleCollectionFailureCount !== 0 || result.cspErrorCount !== 0) {
+  if (result.scriptsBeforeConsent !== 1 || result.scriptsAfterConsent !== 1 || !result.deniedByDefault || !result.grantedAfterChoice || !result.gtagReady || !result.pageViewQueued || !result.googleScriptRequested || !result.googleCollectionRequested || !result.googleCollectionResponseSuccess || result.googleCollectionFailureCount !== 0 || result.cspErrorCount !== 0) {
     throw new Error(`GA4 production consent QA failed: ${JSON.stringify(result)}`);
   }
   await context.close();
