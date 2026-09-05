@@ -35,6 +35,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getContextualCourseEditorHref } from "@/lib/courseEditorLink";
 import { isEvaluationGateLocked, requiredCorrectAnswers } from "@shared/evaluationRules";
 import { isAdministrativeRole } from "@shared/roles";
+import { trackEventOnce } from "@/lib/analytics";
 
 export default function LessonViewer({
   lesson,
@@ -67,7 +68,7 @@ export default function LessonViewer({
   isReviewMode?: boolean;
   courseExercises?: any[];
   onChapterChange?: (current: number, total: number) => void;
-  onMediaPlaybackChange?: (isPlaying: boolean) => void;
+  onMediaPlaybackChange?: (isPlaying: boolean, mediaId?: string) => void;
   initialChapter?: number;
   courseTheme?: any;
 }) {
@@ -227,6 +228,34 @@ export default function LessonViewer({
     completedMatching: matchingCompleted,
     completedInlineInteractions: completedNovasavoInteractions,
   });
+  const analyticsParams = {
+    course_slug: courseId,
+    category_slug: certId,
+    language: lang,
+    lesson_slug: `lesson-${lessonIndex + 1}`,
+    lesson_index: lessonIndex,
+  };
+  const trackChapterComplete = (chapterIndex: number) => trackEventOnce("chapter_complete", `chapter-complete:${courseId}:${lessonIndex}:${chapterIndex}`, {
+    ...analyticsParams,
+    chapter_index: chapterIndex,
+  });
+  const trackVideoProgress = (videoId: string, progress: number) => {
+    [25, 50, 75].forEach((milestone) => {
+      if (progress >= milestone) trackEventOnce("video_progress", `video-progress:${courseId}:${videoId}:${milestone}`, {
+        ...analyticsParams,
+        video_id: videoId,
+        progress_percent: milestone,
+      });
+    });
+  };
+
+  useEffect(() => {
+    const blocks = chapter?.blocks || [];
+    const hasQuiz = chapter?.type === "quiz" || chapter?.type === "checkpoint" || blocks.some((block: any) => ["single_choice_exercise", "multi_choice_exercise", "checkpoint", "knowledge_check"].includes(block.type));
+    const hasExercise = blocks.some((block: any) => ["exercise", "cloud_exercise", "bucket_sort", "matching", "fill_blank", "terminal_sim", "code_repl", "ordering", "ai_evaluation", "resource_review", "inline_myth_reality", "inline_multiple_choice_feedback", "inline_scenario_question_feedback"].includes(block.type));
+    if (hasQuiz) trackEventOnce("quiz_start", `quiz-start:${courseId}:${lessonIndex}:${currentChapter}`, analyticsParams);
+    if (hasExercise) trackEventOnce("exercise_start", `exercise-start:${courseId}:${lessonIndex}:${currentChapter}`, { ...analyticsParams, status: "opened" });
+  }, [chapter, courseId, currentChapter, lessonIndex]);
 
   if (!chapter && !showQuiz) {
     return (
@@ -258,6 +287,7 @@ export default function LessonViewer({
       case "course_completion_next_unit_panel":
         return <div key={blockIdx} className="novasavo-learning-block w-full min-w-0 max-w-full"><NovasavoLearningBlock block={block} lang={lang} courseId={courseId} lessonTitle={resolveI18n(lesson.title, lang)} screenTitle={resolveI18n(chapter?.title, lang)} onComplete={(id, isCorrect) => {
           setCompletedNovasavoInteractions((current) => new Set(current).add(id));
+          trackEventOnce("exercise_complete", `exercise-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, status: isCorrect ? "passed" : "completed" });
           if (isCorrect) recordCompetencyOutcome.mutate({
             sourceType: "checkpoint_passed",
             sourceKey: courseId,
@@ -274,6 +304,7 @@ export default function LessonViewer({
       case "knowledge_check":
         return <KnowledgeCheckBlock key={blockIdx} block={block} lang={lang} onComplete={(id, isCorrect) => {
           setCompletedNovasavoInteractions((current) => new Set(current).add(id));
+          trackEventOnce("quiz_complete", `quiz-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, score_band: isCorrect ? "75_100" : "0_49", passed: Boolean(isCorrect) });
           if (isCorrect) recordCompetencyOutcome.mutate({ sourceType: "checkpoint_passed", sourceKey: courseId, eventKey: `knowledge-check:${courseId}:${lessonIndex}:${currentChapter}:${id}`, score: 100, certificationId: certId, courseId, lessonIndex, chapterIndex: currentChapter });
         }} />;
       case "sequence_visual":
@@ -378,9 +409,10 @@ export default function LessonViewer({
                   timings={block.projectorTimings}
                   timingUnit={block.projectorTimingUnit}
                   duration={block.projectorDuration || 300}
-                  onPlay={() => onMediaPlaybackChange?.(true)}
-                  onPause={() => onMediaPlaybackChange?.(false)}
-                  onEnded={() => { onMediaPlaybackChange?.(false); toggleVideoComplete(mp4Key); }}
+                  onPlay={() => onMediaPlaybackChange?.(true, mp4Key)}
+                  onPause={() => onMediaPlaybackChange?.(false, mp4Key)}
+                  onProgress={(progress) => trackVideoProgress(mp4Key, progress)}
+                  onEnded={() => { onMediaPlaybackChange?.(false, mp4Key); toggleVideoComplete(mp4Key); }}
                 />
                 <div className="flex items-center justify-between px-4 py-2 border border-t-0 border-border rounded-b-xl bg-card">
                   <button
@@ -441,9 +473,13 @@ export default function LessonViewer({
                 preload="metadata"
                 playsInline
                 className="w-full max-h-[480px] bg-black"
-                onPlay={() => onMediaPlaybackChange?.(true)}
-                onPause={() => onMediaPlaybackChange?.(false)}
-                onEnded={() => { onMediaPlaybackChange?.(false); toggleVideoComplete(mp4Key); }}
+                onPlay={() => onMediaPlaybackChange?.(true, mp4Key)}
+                onPause={() => onMediaPlaybackChange?.(false, mp4Key)}
+                onTimeUpdate={(event) => {
+                  const duration = event.currentTarget.duration;
+                  if (Number.isFinite(duration) && duration > 0) trackVideoProgress(mp4Key, (event.currentTarget.currentTime / duration) * 100);
+                }}
+                onEnded={() => { onMediaPlaybackChange?.(false, mp4Key); toggleVideoComplete(mp4Key); }}
               >
                 <source src={block.mp4Url} type="video/mp4" />
                 {block.hlsUrl && <source src={block.hlsUrl} type="application/x-mpegURL" />}
@@ -510,9 +546,10 @@ export default function LessonViewer({
                   timings={block.projectorTimings}
                   timingUnit={block.projectorTimingUnit}
                   duration={block.projectorDuration || 300}
-                  onPlay={() => onMediaPlaybackChange?.(true)}
-                  onPause={() => onMediaPlaybackChange?.(false)}
-                  onEnded={() => { onMediaPlaybackChange?.(false); toggleVideoComplete(audioKey); }}
+                  onPlay={() => onMediaPlaybackChange?.(true, audioKey)}
+                  onPause={() => onMediaPlaybackChange?.(false, audioKey)}
+                  onProgress={(progress) => trackVideoProgress(audioKey, progress)}
+                  onEnded={() => { onMediaPlaybackChange?.(false, audioKey); toggleVideoComplete(audioKey); }}
                 />
                 <div className="flex items-center justify-between px-4 py-2 border border-t-0 border-border rounded-b-xl bg-card">
                   <button
@@ -575,9 +612,13 @@ export default function LessonViewer({
                   controls
                   preload="metadata"
                   className="w-full"
-                  onPlay={() => onMediaPlaybackChange?.(true)}
-                  onPause={() => onMediaPlaybackChange?.(false)}
-                  onEnded={() => { onMediaPlaybackChange?.(false); toggleVideoComplete(audioKey); }}
+                  onPlay={() => onMediaPlaybackChange?.(true, audioKey)}
+                  onPause={() => onMediaPlaybackChange?.(false, audioKey)}
+                  onTimeUpdate={(event) => {
+                    const duration = event.currentTarget.duration;
+                    if (Number.isFinite(duration) && duration > 0) trackVideoProgress(audioKey, (event.currentTarget.currentTime / duration) * 100);
+                  }}
+                  onEnded={() => { onMediaPlaybackChange?.(false, audioKey); toggleVideoComplete(audioKey); }}
                 >
                   <source src={block.audioUrl} type="audio/mpeg" />
                 </audio>
@@ -685,7 +726,7 @@ export default function LessonViewer({
               exercise={exercise}
               index={0}
               lang={lang as "en" | "fr"}
-              onComplete={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })}
+              onComplete={(id) => { trackEventOnce("exercise_complete", `exercise-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, status: "completed" }); setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; }); }}
             />
           </div>
         );
@@ -736,7 +777,7 @@ export default function LessonViewer({
                 correction: block.correction,
               }}
               lang={lang as "en" | "fr"}
-              onComplete={() => setMatchingCompleted((prev) => { const next = new Set(Array.from(prev)); next.add(matchingId); return next; })}
+              onComplete={() => { trackEventOnce("exercise_complete", `exercise-complete:${courseId}:${lessonIndex}:${currentChapter}:${matchingId}`, { ...analyticsParams, content_id: matchingId, status: "completed" }); setMatchingCompleted((prev) => { const next = new Set(Array.from(prev)); next.add(matchingId); return next; }); }}
             />
           </div>
         );
@@ -766,7 +807,7 @@ export default function LessonViewer({
             hint={typeof block.hint === 'string' ? block.hint : (block.hint?.[lang] || block.hint?.en || '')}
             lang={lang as 'en' | 'fr'}
             questionNumber={quizBlocksBefore + 1}
-            onCorrect={(id) => setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; })}
+            onCorrect={(id) => { trackEventOnce("quiz_complete", `quiz-complete:${courseId}:${lessonIndex}:${currentChapter}:${id}`, { ...analyticsParams, content_id: id, score_band: "75_100", passed: true }); setCompletedExercises((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; }); }}
           />
         );
       }
@@ -795,6 +836,7 @@ export default function LessonViewer({
               href={dlUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackEventOnce("download_resource", `download:${courseId}:${lessonIndex}:${currentChapter}:${blockIdx}`, { ...analyticsParams, resource_type: typeof _dlFilename === "string" && _dlFilename.includes(".") ? _dlFilename.split(".").pop() : "resource", resource_name_sanitized: String(_dlFilename || `resource-${blockIdx}`).toLowerCase().replace(/[^a-z0-9_-]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 80) || `resource-${blockIdx}` })}
               className="block rounded-2xl overflow-hidden hover:opacity-90 transition-opacity group mb-4"
               style={{ backgroundColor: dlColor }}
             >
@@ -1183,6 +1225,7 @@ export default function LessonViewer({
               lang={lang}
               t={t}
               onPass={(result) => {
+                trackEventOnce("quiz_complete", `chapter-quiz-complete:${courseId}:${lessonIndex}:${currentChapter}`, { ...analyticsParams, content_id: "chapter-quiz", score_band: result?.total && result.correct / result.total < 0.5 ? "0_49" : result?.total && result.correct / result.total < 0.75 ? "50_74" : "75_100", passed: true });
                 if (result?.total) recordCompetencyOutcome.mutate({
                   sourceType: "checkpoint_passed",
                   sourceKey: courseId,
@@ -1196,6 +1239,7 @@ export default function LessonViewer({
                 setChapterQuizPassed((prev) => { const next = new Set(Array.from(prev)); next.add(currentChapter); return next; });
                 setShowChapterQuiz(false);
                 // Advance validated progress (quiz passed = chapter validated)
+                trackChapterComplete(currentChapter);
                 setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
                 setCurrentChapter((p) => p + 1);
                 setShowTranscript(false);
@@ -1279,6 +1323,7 @@ export default function LessonViewer({
                       // three-chapter lesson from remaining at 2/3.
                       const completionProgress = getPersistedCompletionProgress(totalChapters);
                       onChapterChange?.(completionProgress.current, completionProgress.total);
+                      trackChapterComplete(currentChapter);
                       setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
                       onComplete();
                     }}
@@ -1372,9 +1417,11 @@ export default function LessonViewer({
                     disabled={isGated}
                     onClick={() => {
                       if (needsQuiz) {
+                        trackEventOnce("quiz_start", `chapter-quiz-start:${courseId}:${lessonIndex}:${currentChapter}`, { ...analyticsParams, content_id: "chapter-quiz" });
                         setShowChapterQuiz(true);
                       } else {
                         // Always advance validatedChapter when Next is clicked (it's only clickable when all gates pass)
+                        trackChapterComplete(currentChapter);
                         setValidatedChapter((prev) => Math.max(prev, currentChapter + 1));
                         setCurrentChapter((p) => p + 1);
                         setShowTranscript(false);

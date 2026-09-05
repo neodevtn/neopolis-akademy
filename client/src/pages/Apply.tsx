@@ -16,6 +16,7 @@ import {
 import { useLanguage } from "@/contexts/LanguageContext";
 import { translateValidationError } from "@/data/validationMessages";
 import { PublicSiteFooter, PublicSiteHeader } from "@/components/PublicSiteChrome";
+import { trackEvent } from "@/lib/analytics";
 
 const africanCountriesData: {fr: string; en: string; ar: string}[] = [
   {fr: "Algérie", en: "Algeria", ar: "الجزائر"}, {fr: "Angola", en: "Angola", ar: "أنغولا"}, {fr: "Bénin", en: "Benin", ar: "بنين"},
@@ -139,6 +140,7 @@ export default function Apply() {
   const [result, setResult] = useState<{ id: number; success: boolean; message: string } | null>(null);
   const cvInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
+  const formStartedRef = useRef(false);
 
   // Video recording state
   const [isRecording, setIsRecording] = useState(false);
@@ -269,6 +271,7 @@ export default function Apply() {
 
   const submitMutation = trpc.applications.submit.useMutation({
     onSuccess: (data) => {
+      trackEvent("application_submit", { content_type: "application", application_stage: "submitted" });
       setResult(data);
       setStep(11); // result step
       setServerError("");
@@ -301,6 +304,10 @@ export default function Apply() {
   const progress = Math.min((step / totalSteps) * 100, 100);
 
   const updateField = (field: keyof FormData, value: string) => {
+    if (!formStartedRef.current) {
+      formStartedRef.current = true;
+      trackEvent("application_start", { content_type: "application", application_stage: "step_1" });
+    }
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => { const next = { ...prev }; delete next[field]; return next; });
@@ -365,7 +372,11 @@ export default function Apply() {
     return true;
   };
 
-  const handleNext = () => { if (validateStep()) setStep(s => s + 1); };
+  const handleNext = () => {
+    if (!validateStep()) return;
+    trackEvent("application_step", { content_type: "application", application_stage: `step_${step}` });
+    setStep(s => s + 1);
+  };
   const handleBack = () => setStep(s => s - 1);
 
   const handleSubmit = async () => {

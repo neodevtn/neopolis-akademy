@@ -27,9 +27,10 @@ interface ProjectorPlayerProps {
   onPlay?: () => void;
   onPause?: () => void;
   onEnded?: () => void;
+  onProgress?: (percent: number) => void;
 }
 
-export function ProjectorPlayer({ mp4Url, audioUrl, slides, timings, timingUnit = "seconds", duration, onPlay, onPause, onEnded }: ProjectorPlayerProps) {
+export function ProjectorPlayer({ mp4Url, audioUrl, slides, timings, timingUnit = "seconds", duration, onPlay, onPause, onEnded, onProgress }: ProjectorPlayerProps) {
   const media = resolveProjectorMediaSource(mp4Url, audioUrl);
   const mediaUrl = media.url;
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -164,6 +165,10 @@ export function ProjectorPlayer({ mp4Url, audioUrl, slides, timings, timingUnit 
         onLoadedMetadata={handleLoadedMetadata}
         onPlay={() => { setIsPlaying(true); onPlay?.(); }}
         onPause={() => { setIsPlaying(false); onPause?.(); }}
+        onTimeUpdate={(event) => {
+          const mediaDuration = event.currentTarget.duration;
+          if (Number.isFinite(mediaDuration) && mediaDuration > 0) onProgress?.(Math.min(100, Math.max(0, (event.currentTarget.currentTime / mediaDuration) * 100)));
+        }}
         onError={handleMediaError}
         className="hidden"
         data-media-kind={media.kind}

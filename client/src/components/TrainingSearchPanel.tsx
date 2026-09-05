@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { BookOpen, Filter, GraduationCap, Layers3, Loader2, Search, X } from "lucide-react";
 import { searchTrainingContent, type TrainingSearchEntry, type TrainingSearchKind } from "@/lib/trainingSearch";
+import { trackEvent } from "@/lib/analytics";
 
 type SearchKindFilter = TrainingSearchKind | "all";
 
@@ -28,6 +29,7 @@ export function TrainingSearchPanel({ groups, certificationTitles, initialQuery 
   const [kind, setKind] = useState<SearchKindFilter>("all");
   const [group, setGroup] = useState("all");
   const [entries, setEntries] = useState<TrainingSearchEntry[] | null>(null);
+  const [lastTrackedSearch, setLastTrackedSearch] = useState("");
   const deferredQuery = useDeferredValue(query);
   const normalizedQuery = deferredQuery.trim();
 
@@ -53,6 +55,14 @@ export function TrainingSearchPanel({ groups, certificationTitles, initialQuery 
   }, [entries, group, kind, normalizedQuery]);
 
   const searchPending = normalizedQuery.length >= 2 && !entries;
+
+  useEffect(() => {
+    if (!entries || normalizedQuery.length < 2) return;
+    const fingerprint = `${normalizedQuery.length}:${kind}:${group}:${results.length}`;
+    if (fingerprint === lastTrackedSearch) return;
+    setLastTrackedSearch(fingerprint);
+    trackEvent("search", { content_type: "training_catalog", search_category: kind, result_count: results.length });
+  }, [entries, group, kind, lastTrackedSearch, normalizedQuery.length, results.length]);
 
   return (
     <section className="rounded-2xl border border-border bg-card p-4 shadow-sm sm:p-5" aria-labelledby="training-search-title">

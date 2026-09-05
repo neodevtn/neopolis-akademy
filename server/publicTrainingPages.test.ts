@@ -1,11 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { getPublicTrainingTheme, getPublicTrainingThemes } from "@shared/publicTrainingThemes";
 import {
+  renderPublicCatalogueCourse,
+  renderPublicCatalogueTraining,
+  renderPublicTrainingCatalogue,
   renderPublicTrainingIndex,
   renderPublicTrainingNotFound,
   renderPublicTrainingSitemap,
   renderPublicTrainingTheme,
 } from "./publicTrainingPages";
+import { getPublicCatalogueTrainings, getPublicCatalogueSitemapEntries } from "@shared/publicTrainingCatalog";
 
 describe("pages publiques de formations IA", () => {
   it("rend l’index avec contenu, SEO et données structurées", () => {
@@ -53,6 +57,25 @@ describe("pages publiques de formations IA", () => {
     expect(html).toContain(`https://akademy.neodev.click/formations-ia/${theme!.slug}`);
     expect(html).toContain('"@type":"Organization"');
     expect(html).toContain('"sameAs"');
+    expect(html).not.toContain('href="/training/');
+  });
+
+  it("rend le catalogue, une formation et un cours comme des pages publiques distinctes", () => {
+    const training = getPublicCatalogueTrainings("fr").find((item) => item.courses.length > 0);
+    expect(training).toBeDefined();
+    const course = training!.courses[0];
+
+    const catalogueHtml = renderPublicTrainingCatalogue("fr");
+    const trainingHtml = renderPublicCatalogueTraining(training!, "fr");
+    const courseHtml = renderPublicCatalogueCourse(training!, course, "fr");
+
+    expect(catalogueHtml).toContain("<h1>Catalogue des formations IA</h1>");
+    expect(trainingHtml).toContain(`<h1>${training!.title}</h1>`);
+    expect(trainingHtml).toContain(`https://akademy.neodev.click/formations-ia/catalogue/${training!.slug}`);
+    expect(courseHtml).toContain(`<h1>${course.title.replace(/'/g, "&#39;")}</h1>`);
+    expect(courseHtml).toContain('"@type":"Course"');
+    expect(courseHtml).toContain('hreflang="en"');
+    expect(courseHtml).not.toContain('href="/training/');
   });
 
   it("rend une vraie page introuvable non indexable et un sitemap avec les routes publiques", () => {
@@ -64,6 +87,10 @@ describe("pages publiques de formations IA", () => {
     expect(sitemap).toContain("https://akademy.neodev.click/mentions-legales");
     expect(sitemap).toContain("https://akademy.neodev.click/formations-ia");
     expect(sitemap).toContain("comptabilite-finance");
+    expect(sitemap).toContain("/formations-ia/catalogue/");
+    expect(sitemap).not.toContain("/training/");
+    expect(sitemap).not.toContain("<lastmod>");
+    expect((sitemap.match(/<url>/g) || []).length).toBeGreaterThan(getPublicCatalogueSitemapEntries().length);
   });
 
   it("rend l’index anglais avec canonical, hreflang et contenu éditorial localisé", () => {

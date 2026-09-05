@@ -7,4 +7,6 @@ export const ENV = {
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
+  ga4MeasurementId: process.env.VITE_GA4_MEASUREMENT_ID ?? "",
+  googleSiteVerification: process.env.GOOGLE_SITE_VERIFICATION ?? "",
 };

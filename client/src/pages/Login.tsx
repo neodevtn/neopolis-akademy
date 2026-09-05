@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { AlertCircle, LogIn, Mail } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { BrandLogo } from "@/components/BrandLogo";
+import { trackEvent } from "@/lib/analytics";
 
 export default function Login() {
   const [, navigate] = useLocation();
@@ -39,6 +40,7 @@ export default function Login() {
       }
 
       // Redirect based on role
+      trackEvent("login", { method: "password", role_type: data.role === "admin" ? "admin" : "learner" });
       if (data.role === "admin") {
         window.location.href = "/admin";
       } else {

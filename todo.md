@@ -155,6 +155,16 @@
 - [x] Corriger la longueur du titre et de la description d’accueil, l’unicité du H1, la cohérence des mots-clés et les alternates hreflang FR/EN/AR — titre 53 caractères, description 149 caractères, H1 aligné, fallback avec H1 distinct du rendu client et URL `/`, `/en`, `/ar` avec `hreflang` réciproque testés localement
 - [x] Généraliser sur chaque route publique les titres, descriptions, mots-clés et une hiérarchie H1/H2 explicite, avec contenu localisé lorsqu’une variante de langue existe — routes publiques statiques à 52–57 caractères / 123–153 caractères, cinq ou six mots-clés ; candidature et parrainage complétés en H1/H2 ; domaines SSR déjà couverts ; 28 contrats ciblés réussis localement
 - [x] Ajouter un H1 de secours dans le HTML `noscript` des pages publiques afin que les robots sans JavaScript reçoivent une hiérarchie complète sans dupliquer le H1 rendu côté client — accueil, AI News, candidature, parrainage et mentions légales contrôlés dans le HTML brut ; 20 tests SEO ciblés, 559 tests et la matrice QA réussis
+- [ ] Ajouter un H2 de secours dans le HTML `noscript` afin que les robots sans JavaScript reçoivent aussi une hiérarchie H1/H2 complète sur chaque page publique React
+
+## GA4, Search Console et sitemap public
+- [x] Auditer le consentement, les routes publiques, le sitemap et les points d’instrumentation existants sans exposer de données personnelles — événements comparés au cahier des charges ; routes privées exclues et dictionnaire de paramètres validé par tests
+- [x] Ajouter un service Analytics central avec consentement par défaut refusé, anti-doublon et événements non personnels — GA4 reste conditionnel au consentement, `page_view` SPA est dédoublonné et les 20 événements requis sont implémentés avec paramètres fonctionnels filtrés
+- [x] Ajouter durablement la validation Search Console au HTML serveur et documenter les identifiants de mesure sans les propager en données utilisateur — balise servie depuis l’environnement dans les réponses HTML, sans valeur recopiée dans les artefacts
+- [x] Générer un sitemap depuis les données réellement publiques et vérifier chaque URL canonique, indexable et accessible — sonde XML/HTTP/SEO exhaustive locale : 910 URL, toutes HTTP 200, auto-canoniques, indexables, avec H1/H2 et métadonnées
+- [x] Mettre à jour llms.txt pour ne référencer que les pages publiques réellement accessibles sans session — liens catalogue FR/EN/AR ajoutés ; lecteur, comptes, évaluations et progression restent absents
+- [x] Créer des fiches publiques indexables pour les formations et les cours à partir du catalogue, avec descriptions, métriques, compétences et appels à l’action sans accès au contenu protégé — index, 345 fiches formation et 531 fiches cours localisées, avec hreflang, JSON-LD Course et fil d’Ariane
+- [ ] Publier puis vérifier GA4, Search Console, le sitemap et les routes publiques sur le domaine de production
 
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`

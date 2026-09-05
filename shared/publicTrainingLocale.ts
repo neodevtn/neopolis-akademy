@@ -37,6 +37,7 @@ export const publicTrainingCopy = {
     discoverAccess: "Découvrir l’accès",
     paths: "parcours",
     courses: "cours",
+    lessons: "leçons",
     activities: "activités",
     exercises: "exercices",
     videos: "vidéos",
@@ -70,6 +71,14 @@ export const publicTrainingCopy = {
     notFoundTitle: "Thème de formation introuvable",
     notFoundText: "La page demandée n’existe pas ou n’est plus disponible.",
     notFoundLink: "Voir les formations IA par métier",
+    catalogueTitle: "Catalogue des formations IA",
+    catalogueLead: "Explorez les formations et les cours disponibles dans le catalogue Neopolis Akademy. Les informations affichées sont issues des données pédagogiques publiées.",
+    trainingOverview: "Présentation de la formation",
+    courseOverview: "Présentation du cours",
+    includedCourses: "Cours inclus dans cette formation",
+    courseSkills: "Compétences et thèmes abordés",
+    accessTraining: "Accéder à la plateforme",
+    breadcrumbCatalogue: "Catalogue",
     footer: "Neopolis Akademy · Parcours et travaux pratiques IA. Les contenus affichés proviennent du catalogue de formation de la plateforme.",
     menaDescription: "Formations IA gratuites par métier pour les professionnels de la zone MENA : data, finance, marketing, RH, support client, opérations, juridique et ingénierie IA.",
   },
@@ -85,6 +94,7 @@ export const publicTrainingCopy = {
     discoverAccess: "Explore access",
     paths: "learning paths",
     courses: "courses",
+    lessons: "lessons",
     activities: "activities",
     exercises: "exercises",
     videos: "videos",
@@ -118,6 +128,14 @@ export const publicTrainingCopy = {
     notFoundTitle: "Training topic not found",
     notFoundText: "The page you requested does not exist or is no longer available.",
     notFoundLink: "View AI training by profession",
+    catalogueTitle: "AI training catalogue",
+    catalogueLead: "Explore the training programmes and courses available in the Neopolis Akademy catalogue. Displayed information comes from published learning data.",
+    trainingOverview: "Training programme overview",
+    courseOverview: "Course overview",
+    includedCourses: "Courses included in this training programme",
+    courseSkills: "Skills and topics covered",
+    accessTraining: "Access the platform",
+    breadcrumbCatalogue: "Catalogue",
     footer: "Neopolis Akademy · AI learning paths and practical work. The displayed content comes from the platform training catalogue.",
     menaDescription: "Free AI training by profession for professionals across the MENA region: data, finance, marketing, HR, customer support, operations, legal work, and AI engineering.",
   },
@@ -133,6 +151,7 @@ export const publicTrainingCopy = {
     discoverAccess: "اكتشف الوصول",
     paths: "مسارات تعليمية",
     courses: "دورات",
+    lessons: "دروس",
     activities: "أنشطة",
     exercises: "تمارين",
     videos: "فيديوهات",
@@ -166,6 +185,14 @@ export const publicTrainingCopy = {
     notFoundTitle: "موضوع التدريب غير موجود",
     notFoundText: "الصفحة المطلوبة غير موجودة أو لم تعد متاحة.",
     notFoundLink: "عرض تدريب الذكاء الاصطناعي حسب المهنة",
+    catalogueTitle: "كتالوج تدريبات الذكاء الاصطناعي",
+    catalogueLead: "استكشف البرامج التدريبية والدورات المتاحة في كتالوج Neopolis Akademy. المعلومات المعروضة مستمدة من بيانات التعلم المنشورة.",
+    trainingOverview: "نظرة عامة على البرنامج التدريبي",
+    courseOverview: "نظرة عامة على الدورة",
+    includedCourses: "الدورات المشمولة في هذا البرنامج",
+    courseSkills: "المهارات والموضوعات التي يغطيها التدريب",
+    accessTraining: "الدخول إلى المنصة",
+    breadcrumbCatalogue: "الكتالوج",
     footer: "Neopolis Akademy · مسارات تعلم الذكاء الاصطناعي وأعمال تطبيقية. يأتي المحتوى المعروض من كتالوج التدريب على المنصة.",
     menaDescription: "تدريب مجاني في الذكاء الاصطناعي حسب المهنة للمهنيين في منطقة الشرق الأوسط وشمال أفريقيا: البيانات والمالية والتسويق والموارد البشرية ودعم العملاء والعمليات والقانون وهندسة الذكاء الاصطناعي.",
   },
@@ -176,6 +203,16 @@ export function publicTrainingPath(locale: PublicTrainingLocale, themeSlug?: str
   return themeSlug ? `${root}/${encodeURIComponent(themeSlug)}` : root;
 }
 
+export function publicTrainingCataloguePath(locale: PublicTrainingLocale, trainingSlug?: string, courseSlug?: string) {
+  const root = `${publicTrainingLocaleMeta[locale].pathPrefix}/catalogue`;
+  if (!trainingSlug) return root;
+  return courseSlug ? `${root}/${encodeURIComponent(trainingSlug)}/${encodeURIComponent(courseSlug)}` : `${root}/${encodeURIComponent(trainingSlug)}`;
+}
+
 export function publicTrainingHrefAlternates(themeSlug?: string) {
   return publicTrainingLocales.map((locale) => ({ locale, href: publicTrainingPath(locale, themeSlug) }));
+}
+
+export function publicTrainingCatalogueHrefAlternates(trainingSlug?: string, courseSlug?: string) {
+  return publicTrainingLocales.map((locale) => ({ locale, href: publicTrainingCataloguePath(locale, trainingSlug, courseSlug) }));
 }

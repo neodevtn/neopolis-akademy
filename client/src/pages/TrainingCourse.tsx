@@ -33,6 +33,7 @@ import { CourseFeedbackPanel } from "@/components/CourseFeedbackPanel";
 import { ReferralShareCard } from "@/components/ReferralShareCard";
 import { getStandaloneTpCertificationId } from "@/lib/iaAppliedMetiersCatalog";
 import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetadata";
+import { trackEvent, trackEventOnce } from "@/lib/analytics";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -64,6 +65,29 @@ export default function TrainingCourse() {
   const lastInteractionAtRef = useRef(Date.now());
   const mediaPlayingRef = useRef(false);
   const learningPositionRef = useRef<{ lessonIndex: number | null; chapterIndex?: number }>({ lessonIndex: null });
+  const viewedCourseRef = useRef<string | null>(null);
+  const begunCourseRef = useRef<string | null>(null);
+  const completedCourseRef = useRef<string | null>(null);
+  const startedVideoRef = useRef(false);
+  const startedLessonsRef = useRef<Set<string>>(new Set());
+  const progressMilestonesRef = useRef<Set<string>>(new Set());
+
+  const trackProgressMilestones = useCallback((completedUnits: number, totalUnits: number, completionSource: "chapter" | "lesson") => {
+    if (!certId || !courseId || totalUnits <= 0) return;
+    const progressPercent = Math.min(100, Math.max(0, Math.round((completedUnits / totalUnits) * 100)));
+    [10, 25, 50, 75].forEach((milestone) => {
+      const key = `${courseId}:${milestone}`;
+      if (progressPercent < milestone || progressMilestonesRef.current.has(key)) return;
+      progressMilestonesRef.current.add(key);
+      trackEvent("course_progress", {
+        course_slug: courseId,
+        category_slug: certId,
+        language: lang,
+        progress_percent: milestone,
+        completion_source: completionSource,
+      });
+    });
+  }, [certId, courseId, lang]);
 
   useEffect(() => {
     const routeClass = "training-course-page";
@@ -105,17 +129,27 @@ export default function TrainingCourse() {
   const handleChapterChange = useCallback((current: number, total: number) => {
     const safeProgress = normalizeChapterProgress({ current, total });
     setChapterProgress(safeProgress);
+    trackProgressMilestones(safeProgress.current, safeProgress.total, "chapter");
     navigateCoursePosition(0, safeProgress.current);
     // Persist chapter progress to database - uses refs/closures to avoid stale values
     if (courseId) {
       persistChapterProgress(courseId, 0, safeProgress.current, safeProgress.total);
     }
-  }, [courseId, navigateCoursePosition, persistChapterProgress]);
+  }, [courseId, navigateCoursePosition, persistChapterProgress, trackProgressMilestones]);
 
-  const handleMediaPlaybackChange = useCallback((isPlaying: boolean) => {
+  const handleMediaPlaybackChange = useCallback((isPlaying: boolean, mediaId?: string) => {
     mediaPlayingRef.current = isPlaying;
     if (isPlaying) lastInteractionAtRef.current = Date.now();
-  }, []);
+    if (isPlaying && !startedVideoRef.current && certId && courseId) {
+      startedVideoRef.current = true;
+      trackEventOnce("video_start", `video-start:${courseId}:${mediaId || activeLessonIndex || "unknown"}`, {
+        course_slug: courseId,
+        category_slug: certId,
+        language: lang,
+        video_id: mediaId || `lesson-${(activeLessonIndex ?? 0) + 1}`,
+      });
+    }
+  }, [activeLessonIndex, certId, courseId, lang]);
 
   useEffect(() => {
     const recordInteraction = () => {
@@ -133,8 +167,13 @@ export default function TrainingCourse() {
   useEffect(() => {
     // A lesson change must not inherit the playing state of a previous media block.
     mediaPlayingRef.current = false;
+    startedVideoRef.current = false;
     lastInteractionAtRef.current = Date.now();
   }, [courseId, activeLessonIndex]);
+
+  useEffect(() => {
+    progressMilestonesRef.current.clear();
+  }, [courseId]);
 
   useEffect(() => {
     learningPositionRef.current = {
@@ -192,6 +231,12 @@ export default function TrainingCourse() {
 
   const course = trainingIndex.courses.find((c: any) => c.id === courseId);
   const cert = trainingIndex.certifications.find((c: any) => c.id === certId);
+  const courseAnalyticsParams = useMemo(() => ({
+    course_slug: courseId,
+    category_slug: certId,
+    language: lang,
+    level: typeof (course as any)?.level === "string" ? (course as any).level : undefined,
+  }), [certId, course?.level, courseId, lang]);
   const standaloneTpCertificationId = getStandaloneTpCertificationId(course, certId);
   const courseAccessQuery = trpc.trainingAccess.canOpen.useQuery(
     { courseId: courseId || "" },
@@ -200,6 +245,40 @@ export default function TrainingCourse() {
 
   // Course data with caching and prefetching
   const { courseLessons, courseExercises, courseSections, loading: lessonsLoading, error: courseLoadError, retry: retryCourseLoad } = useCourseData(courseId);
+
+  useEffect(() => {
+    if (!isAuthenticated || !course || !certId || !courseId || viewedCourseRef.current === courseId) return;
+    viewedCourseRef.current = courseId;
+    trackEvent("view_course", { ...courseAnalyticsParams, content_type: "course" });
+  }, [certId, course, courseAnalyticsParams, courseId, isAuthenticated]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !certId || !courseId || activeLessonIndex === null || begunCourseRef.current === courseId) return;
+    begunCourseRef.current = courseId;
+    trackEvent("begin_course", { ...courseAnalyticsParams, lesson_index: activeLessonIndex });
+  }, [activeLessonIndex, certId, courseAnalyticsParams, courseId, isAuthenticated]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !certId || !courseId || activeLessonIndex === null) return;
+    const key = `${courseId}:${activeLessonIndex}`;
+    if (startedLessonsRef.current.has(key)) return;
+    startedLessonsRef.current.add(key);
+    trackEventOnce("lesson_start", `lesson-start:${key}`, {
+      ...courseAnalyticsParams,
+      lesson_slug: `lesson-${activeLessonIndex + 1}`,
+      lesson_index: activeLessonIndex,
+    });
+  }, [activeLessonIndex, certId, courseAnalyticsParams, courseId, isAuthenticated]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !certId || !courseId || !courseLessons.length || completedCourseRef.current === courseId) return;
+    const totalUnits = courseLessons.length === 1 && (courseLessons[0]?.chapters?.length || 0) > 1
+      ? courseLessons[0].chapters.length
+      : courseLessons.length;
+    if (!isCourseComplete(courseId, totalUnits)) return;
+    completedCourseRef.current = courseId;
+    trackEvent("course_complete", { ...courseAnalyticsParams, completion_source: "learner_progress" });
+  }, [certId, courseAnalyticsParams, courseId, courseLessons, isAuthenticated, isCourseComplete]);
 
   // Prefetch next course in certification path for instant navigation
   const certCourses = trainingIndex.courses.filter((c: any) => c.certId === certId);
@@ -357,6 +436,9 @@ export default function TrainingCourse() {
 
 
   const toggleVideoComplete = (videoId: string) => {
+    if (certId && courseId && !completedVideos.has(videoId)) {
+      trackEventOnce("video_complete", `video-complete:${courseId}:${videoId}`, { ...courseAnalyticsParams, video_id: videoId });
+    }
     if (isAuthenticated && courseId) {
       toggleVideoMutation.mutate({ courseId, youtubeId: videoId });
     } else {
@@ -375,6 +457,8 @@ export default function TrainingCourse() {
   const handleMarkLessonComplete = (lessonIndex: number) => {
     if (certId && courseId) {
       markLessonComplete(certId, courseId, lessonIndex);
+      trackEventOnce("lesson_complete", `lesson-complete:${courseId}:${lessonIndex}`, { ...courseAnalyticsParams, lesson_slug: `lesson-${lessonIndex + 1}`, lesson_index: lessonIndex, completion_source: "lesson_validation" });
+      trackProgressMilestones(lessonIndex + 1, Math.max(1, courseLessons.length), "lesson");
     }
   };
 
@@ -400,7 +484,7 @@ export default function TrainingCourse() {
             </div>
           </div>
           <div className="training-header-actions flex shrink-0 items-center gap-0.5 sm:gap-3">
-            {certId && courseId ? <Button variant="ghost" size="sm" onClick={() => setShareOpen(true)} className="shrink-0 gap-1.5 px-2 text-muted-foreground hover:text-foreground sm:px-3" title="Partager cette formation">
+            {certId && courseId ? <Button variant="ghost" size="sm" onClick={() => { trackEvent("share_click", { certification_id: certId, course_id: courseId, content_type: "course" }); setShareOpen(true); }} className="shrink-0 gap-1.5 px-2 text-muted-foreground hover:text-foreground sm:px-3" title="Partager cette formation">
               <Share2 className="h-4 w-4" />
               <span className="hidden lg:inline">Partager</span>
             </Button> : null}
@@ -753,6 +837,7 @@ export default function TrainingCourse() {
                         return;
                       }
                       setChapterProgress(normalizeChapterProgress({ current, total }));
+                      trackProgressMilestones(current, total, "chapter");
                       setChapterProgressLessonIndex(displayedIndex);
                       navigateCoursePosition(displayedIndex, current);
                     }}
@@ -780,7 +865,7 @@ export default function TrainingCourse() {
 	                </p>
 	                {shouldPromptCertificationExam && <p className="mt-2 text-sm font-medium text-primary">{formatExamSummary(examInfo, lang)}</p>}
 	                <div className="mt-3 flex flex-wrap gap-2">
-	                  {shouldPromptCertificationExam && <Link href={`/mock-exam/${certId}`}>
+                  {shouldPromptCertificationExam && <Link href={`/mock-exam/${certId}`}>
 	                    <Button size="sm" className="bg-emerald-600 text-white hover:bg-emerald-700 gap-1.5">
 	                      {t({ en: "Take the mock exam", fr: "Passer l’examen blanc" })}
 	                      <Trophy className="w-4 h-4" />

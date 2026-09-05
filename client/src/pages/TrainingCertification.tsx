@@ -7,7 +7,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { getLoginUrl } from "@/const";
 import trainingIndex from "@/data/trainingIndex.json";
 import { CheckCircle2, PlayCircle, BookOpen, ArrowLeft, Clock, LogIn, Download, Trophy, History, Moon, Sun, ChevronRight, Layers, Lock, Target, Brain, Award } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { motion } from "framer-motion";
@@ -16,6 +16,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { getCertificationCatalogMetrics, getCourseCatalogMetrics } from "@/lib/catalogMetrics";
 import { IA_APPLIQUEE_METIERS_COLLECTION_ID, isStandaloneTpCertification } from "@/lib/iaAppliedMetiersCatalog";
 import { formatExamSummary, getTrainingExamInfo } from "@/lib/trainingExamMetadata";
+import { trackEvent } from "@/lib/analytics";
 
 /* ─── Animation Variants ─── */
 const easeOut: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -35,9 +36,22 @@ export default function TrainingCertification() {
   const { isAuthenticated, loading: authLoading, user } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { isCourseComplete, getCertProgress, isCertComplete, isLoading: progressLoading, isLessonComplete, getChapterProgress } = useTrainingProgress();
+  const viewedCertificationRef = useRef<string | null>(null);
 
   const cert = trainingIndex.certifications.find((c) => c.id === certId);
   const courses = cert ? trainingIndex.courses.filter((c) => c.certId === certId) : [];
+
+  useEffect(() => {
+    if (!isAuthenticated || !certId || !cert || viewedCertificationRef.current === certId) return;
+    viewedCertificationRef.current = certId;
+    trackEvent("view_course", {
+      course_slug: certId,
+      category_slug: String((cert as any).group || (cert as any).trainingFormat || "training"),
+      language: lang,
+      level: typeof (cert as any).level === "string" ? (cert as any).level : undefined,
+      content_type: "training_detail",
+    });
+  }, [cert, certId, isAuthenticated, lang]);
   const courseGroups = useMemo(() => {
     const configured = (cert as any)?.subcategories || [];
     const groups = configured.map((subcategory: any) => ({

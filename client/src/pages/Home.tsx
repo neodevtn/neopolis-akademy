@@ -24,6 +24,7 @@ import {
 import { faqItems as faqItemsData } from "@/data/faqData";
 import DeferredHomeAuth from "@/components/DeferredHomeAuth";
 import { scrollToHomePublicAnchor } from "@/lib/homePublicAnchors";
+import { trackEvent } from "@/lib/analytics";
 
 // Chart.js is loaded only when the below-the-fold chart becomes visible.
 import type { Chart as ChartJS } from "chart.js";
@@ -221,7 +222,7 @@ export default function Home() {
               <motion.div variants={fadeInUp} className="mb-6">
                 <DeferredHomeAuth
                   slot="hero-actions"
-                  fallback={<div className="flex flex-wrap gap-3"><Link href="/apply" className="wise-btn-primary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">{t({ fr: "Déposer ma candidature", en: "Submit my application", ar: "تقديم طلبي" })} <ArrowRight size={18} /></Link><a href="#formule" className="wise-btn-secondary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">{t({ fr: "Découvrir le programme", en: "Discover the program", ar: "اكتشف البرنامج" })}</a></div>}
+                  fallback={<div className="flex flex-wrap gap-3"><Link href="/apply" onClick={() => trackEvent("cta_click", { content_type: "home_hero", content_id: "apply_primary" })} className="wise-btn-primary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">{t({ fr: "Déposer ma candidature", en: "Submit my application", ar: "تقديم طلبي" })} <ArrowRight size={18} /></Link><a href="#formule" onClick={() => trackEvent("cta_click", { content_type: "home_hero", content_id: "discover_program" })} className="wise-btn-secondary flex items-center gap-2 text-sm md:text-base px-5 md:px-7 py-3 md:py-3.5">{t({ fr: "Découvrir le programme", en: "Discover the program", ar: "اكتشف البرنامج" })}</a></div>}
                 />
               </motion.div>
 
@@ -512,7 +513,7 @@ export default function Home() {
             <p className="wise-body-lg mb-10 max-w-[42ch] mx-auto" style={{ color: "rgba(255,255,255,0.85)" }}>
               {t({ fr: "Formation et certification 100% gratuites – 296 places seulement", en: "Training and certification 100% free – only 296 spots", ar: "تدريب وشهادة مجانية 100% – 296 مقعداً فقط" })}
             </p>
-            <Link href="/apply" className="text-base md:text-lg px-8 md:px-10 py-4 md:py-5 flex items-center gap-3 mx-auto font-semibold rounded-lg transition-all" style={{ background: "#ffffff", color: "var(--neo-primary)" }}>
+            <Link href="/apply" onClick={() => trackEvent("cta_click", { content_type: "home_closing", content_id: "apply_primary" })} className="text-base md:text-lg px-8 md:px-10 py-4 md:py-5 flex items-center gap-3 mx-auto font-semibold rounded-lg transition-all" style={{ background: "#ffffff", color: "var(--neo-primary)" }}>
               {t({ fr: "Postuler maintenant", en: "Apply now", ar: "قدّم الآن" })} <ArrowRight size={20} />
             </Link>
           </motion.div>

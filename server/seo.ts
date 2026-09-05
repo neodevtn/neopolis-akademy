@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { PUBLIC_SOCIAL_ASSETS } from "@shared/publicSocialAssets";
+import { ENV } from "./_core/env";
 
 export const CANONICAL_ORIGIN = "https://akademy.neodev.click";
 export const SITE_NAME = "Neopolis Akademy";
@@ -319,7 +320,12 @@ export function renderPublicCrawlerFallback(requestUrl: string) {
   if (!fallback) return "";
 
   const locale = LOCALE_METADATA[page.locale || "fr"];
-  return `<main style="max-width:78rem;margin:0 auto;padding:2rem 1.25rem;font-family:Inter,Arial,sans-serif;color:#172033;background:#fff" dir="${locale.dir}"><h1>${escapeHtml(fallback.heading)}</h1><p>${escapeHtml(fallback.description)}</p><nav aria-label="Navigation publique"><ul>${fallback.links.map((link) => `<li><a href="${link.href}">${escapeHtml(link.label)}</a></li>`).join("")}</ul></nav></main>`;
+  const navigationHeading = {
+    fr: "Explorer les ressources",
+    en: "Explore resources",
+    ar: "استكشف الموارد",
+  }[page.locale || "fr"];
+  return `<main style="max-width:78rem;margin:0 auto;padding:2rem 1.25rem;font-family:Inter,Arial,sans-serif;color:#172033;background:#fff" dir="${locale.dir}"><h1>${escapeHtml(fallback.heading)}</h1><p>${escapeHtml(fallback.description)}</p><h2>${escapeHtml(navigationHeading)}</h2><nav aria-label="Navigation publique"><ul>${fallback.links.map((link) => `<li><a href="${link.href}">${escapeHtml(link.label)}</a></li>`).join("")}</ul></nav></main>`;
 }
 
 export function renderSeoHead(requestUrl: string) {
@@ -336,6 +342,9 @@ export function renderSeoHead(requestUrl: string) {
   const structuredData = page.noindex
     ? ""
     : `<script type="application/ld+json">${toJsonLd(publicPageSchema(page, canonicalUrl))}</script>`;
+  const searchConsoleVerification = ENV.googleSiteVerification
+    ? `<meta name="google-site-verification" content="${escapeHtml(ENV.googleSiteVerification)}" />`
+    : "";
   const homeAlternates = Object.values(LOCALIZED_HOME_PAGES).some((home) => home.path === page.path)
     ? [
         ...Object.values(LOCALIZED_HOME_PAGES).map((home) => `<link rel="alternate" hreflang="${LOCALE_METADATA[home.locale || "fr"].hreflang}" href="${CANONICAL_ORIGIN}${home.path}" />`),
@@ -346,6 +355,7 @@ export function renderSeoHead(requestUrl: string) {
   return [
     `<title>${title}</title>`,
     `<meta name="description" content="${description}" />`,
+    searchConsoleVerification,
     keywords,
     `<link rel="canonical" href="${canonicalUrl}" />`,
     `<meta property="og:type" content="website" />`,

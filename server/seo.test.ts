@@ -157,9 +157,12 @@ describe("server-rendered sharing metadata", () => {
 
     expect(home).toContain("Formations IA gratuites par métier");
     expect(home).toContain("<h1>Formations IA gratuites par métier</h1>");
+    expect(home).toContain("<h2>Explorer les ressources</h2>");
     expect(home).toContain('href="/formations-ia"');
     expect(renderPublicCrawlerFallback("/en")).toContain("Free AI training by profession");
     expect(renderPublicCrawlerFallback("/ar")).toContain("تدريب مجاني في الذكاء الاصطناعي حسب المهنة");
+    expect(renderPublicCrawlerFallback("/en")).toContain("<h2>Explore resources</h2>");
+    expect(renderPublicCrawlerFallback("/ar")).toContain("<h2>استكشف الموارد</h2>");
     expect(referral).toContain("Parrainage Neopolis Akademy");
     expect(referral).not.toContain("NEO-AB12CD34");
     expect(renderPublicCrawlerFallback("/admin/training")).toBe("");
@@ -193,7 +196,9 @@ describe("server-rendered sharing metadata", () => {
 
     expect(llms).toMatch(/^#\s+Neopolis Akademy/m);
     expect(llms).toContain("https://akademy.neodev.click/");
-    expect(llms).toContain("https://akademy.neodev.click/training");
+    expect(llms).toContain("https://akademy.neodev.click/formations-ia");
+    expect(llms).toContain("https://akademy.neodev.click/formations-ia/catalogue");
+    expect(llms).not.toContain("https://akademy.neodev.click/training");
     expect(llms).toMatch(/\[[^\]]+\]\(https:\/\//);
   });
 

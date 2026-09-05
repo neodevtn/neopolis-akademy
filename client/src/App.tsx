@@ -2,8 +2,9 @@ import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch, useRoute } from "wouter";
+import { Route, Switch, useLocation, useRoute } from "wouter";
 import { useEffect } from "react";
+import { trackPageView } from "./lib/analytics";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
@@ -99,6 +100,14 @@ function Router() {
   );
 }
 
+function AnalyticsRouteTracker() {
+  const [location] = useLocation();
+  useEffect(() => {
+    trackPageView(window.location.href);
+  }, [location]);
+  return null;
+}
+
 function App() {
   return (
     <ErrorBoundary>
@@ -106,6 +115,7 @@ function App() {
         <LanguageProvider>
           <TooltipProvider>
             <Toaster />
+            <AnalyticsRouteTracker />
             <Suspense fallback={null}><DeferredAuthenticatedOverlays /></Suspense>
             <Router />
             <DeferredCookieConsent />

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Cookie, Shield } from "lucide-react";
 import { Link } from "wouter";
 import { useLanguage } from "../contexts/LanguageContext";
+import { updateAnalyticsConsent } from "@/lib/analytics";
 
 const COOKIE_CONSENT_KEY = "neopolis_cookie_consent";
 
@@ -20,12 +21,13 @@ export default function CookieConsent() {
 
   const handleAccept = () => {
     localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
+    updateAnalyticsConsent(true);
     setVisible(false);
-    window.location.reload();
   };
 
   const handleRefuse = () => {
     localStorage.setItem(COOKIE_CONSENT_KEY, "refused");
+    updateAnalyticsConsent(false);
     setVisible(false);
   };
 
@@ -61,9 +63,9 @@ export default function CookieConsent() {
                 </p>
                 <p className="text-xs leading-relaxed" style={{ color: "var(--wise-ink-soft)" }}>
                   {t({
-                    fr: "Ce site utilise uniquement des cookies techniques nécessaires au fonctionnement (authentification, session). Aucun cookie publicitaire n'est utilisé.",
-                    en: "This site only uses technical cookies necessary for operation (authentication, session). No advertising cookies are used.",
-                    ar: "يستخدم هذا الموقع فقط ملفات تعريف الارتباط التقنية الضرورية للتشغيل (المصادقة، الجلسة). لا يتم استخدام أي ملفات تعريف ارتباط إعلانية."
+                    fr: "Ce site utilise des cookies techniques nécessaires au fonctionnement. Avec votre accord, des mesures d’audience anonymisées nous aident à améliorer les formations. Aucun cookie publicitaire n’est utilisé.",
+                    en: "This site uses technical cookies necessary for operation. With your consent, anonymized audience measurement helps improve training. No advertising cookies are used.",
+                    ar: "يستخدم هذا الموقع ملفات تعريف ارتباط تقنية ضرورية للتشغيل. وبموافقتك، تساعدنا قياسات الجمهور المجهّلة على تحسين التدريب. لا تُستخدم ملفات تعريف ارتباط إعلانية."
                   })}{" "}
                   <Link href="/mentions-legales" className="underline" style={{ color: "var(--wise-positive-deep)" }}>
                     {t({ fr: "En savoir plus", en: "Learn more", ar: "اعرف المزيد" })}

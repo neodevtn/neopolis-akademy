@@ -9,15 +9,27 @@ import {
 } from "@shared/publicTrainingThemes";
 import {
   publicTrainingCopy,
+  publicTrainingCatalogueHrefAlternates,
+  publicTrainingCataloguePath,
   publicTrainingHrefAlternates,
   publicTrainingLocaleMeta,
   publicTrainingLocales,
   publicTrainingPath,
   type PublicTrainingLocale,
 } from "@shared/publicTrainingLocale";
+import {
+  getPublicCatalogueCourse,
+  getPublicCatalogueTraining,
+  getPublicCatalogueTrainings,
+  getPublicCatalogueTrainingSlug,
+  type PublicCatalogueCourse,
+  type PublicCatalogueMetrics,
+  type PublicCatalogueTraining,
+} from "@shared/publicTrainingCatalog";
 import { PUBLIC_CHROME_STYLES } from "@shared/publicChromeStyles";
 import { PUBLIC_SOCIAL_ASSETS } from "@shared/publicSocialAssets";
 import { ORGANIZATION_SOCIAL_PROFILES } from "./seo";
+import { ENV } from "./_core/env";
 
 const SITE_NAME = "Neopolis Akademy";
 const ORIGIN = "https://akademy.neodev.click";
@@ -26,7 +38,7 @@ const X_SHARE_IMAGE_URL = `${ORIGIN}${PUBLIC_SOCIAL_ASSETS.x.path}`;
 const SHARE_IMAGE_ALT = "Neopolis Akademy — Formation certifiante en intelligence artificielle";
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 const OECD_URL = "https://www.oecd.org/en/publications/generative-ai-and-the-sme-workforce_2d08b99d-en.html";
-const CORE_PUBLIC_SITEMAP_PATHS = ["/", "/ai-news", "/apply", "/mentions-legales"] as const;
+const CORE_PUBLIC_SITEMAP_PATHS = ["/", "/en", "/ar", "/ai-news", "/apply", "/refer", "/mentions-legales"] as const;
 
 const escapeHtml = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 const toJson = (value: unknown) => JSON.stringify(value).replace(/</g, "\\u003c");
@@ -67,7 +79,7 @@ function publicChromeCopy(locale: PublicTrainingLocale) {
   };
 }
 
-function head({ locale, title, description, canonicalPath, keywords, noindex = false, schema, themeSlug }: {
+function head({ locale, title, description, canonicalPath, keywords, noindex = false, schema, themeSlug, hrefAlternates, xDefaultPath }: {
   locale: PublicTrainingLocale;
   title: string;
   description: string;
@@ -76,19 +88,22 @@ function head({ locale, title, description, canonicalPath, keywords, noindex = f
   noindex?: boolean;
   schema: Record<string, unknown>;
   themeSlug?: string;
+  hrefAlternates?: { locale: PublicTrainingLocale; href: string }[];
+  xDefaultPath?: string;
 }) {
   const canonical = absolute(canonicalPath);
   const meta = publicTrainingLocaleMeta[locale];
-  const alternates = publicTrainingHrefAlternates(themeSlug);
+  const alternates = hrefAlternates || publicTrainingHrefAlternates(themeSlug);
   return `
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${escapeHtml(title)}</title>
     <meta name="description" content="${escapeHtml(description)}" />
+    ${ENV.googleSiteVerification ? `<meta name="google-site-verification" content="${escapeHtml(ENV.googleSiteVerification)}" />` : ""}
     ${keywords ? `<meta name="keywords" content="${escapeHtml(keywords)}" />` : ""}
     <link rel="canonical" href="${canonical}" />
     ${alternates.map(({ locale: alternateLocale, href }) => `<link rel="alternate" hreflang="${publicTrainingLocaleMeta[alternateLocale].languageTag}" href="${absolute(href)}" />`).join("\n    ")}
-    <link rel="alternate" hreflang="x-default" href="${absolute(publicTrainingPath("fr", themeSlug))}" />
+    <link rel="alternate" hreflang="x-default" href="${absolute(xDefaultPath || publicTrainingPath("fr", themeSlug))}" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="${meta.ogLocale}" />
     ${publicTrainingLocales.filter((item) => item !== locale).map((item) => `<meta property="og:locale:alternate" content="${publicTrainingLocaleMeta[item].ogLocale}" />`).join("\n    ")}
@@ -152,16 +167,38 @@ function styles() {
 function layout(body: string, options: Parameters<typeof head>[0]) {
   const copy = publicTrainingCopy[options.locale];
   const chrome = publicChromeCopy(options.locale);
-  const languageLinks = publicTrainingLocales.map((locale) => `<a class="public-chrome-language-link" href="${publicTrainingPath(locale, options.themeSlug)}" hreflang="${publicTrainingLocaleMeta[locale].languageTag}"${locale === options.locale ? ' aria-current="page"' : ""}>${publicTrainingCopy[locale].languageLabel}</a>`).join("");
+  const navigationAlternates = options.hrefAlternates || publicTrainingHrefAlternates(options.themeSlug);
+  const languageLinks = navigationAlternates.map(({ locale, href }) => `<a class="public-chrome-language-link" href="${href}" hreflang="${publicTrainingLocaleMeta[locale].languageTag}"${locale === options.locale ? ' aria-current="page"' : ""}>${publicTrainingCopy[locale].languageLabel}</a>`).join("");
   return `<!doctype html><html lang="${publicTrainingLocaleMeta[options.locale].languageTag}" dir="${publicTrainingLocaleMeta[options.locale].direction}"><head>${head(options)}${styles()}</head><body>
     <header class="public-chrome-header"><div class="public-chrome-shell"><a class="public-chrome-brand" href="/" aria-label="Neopolis Akademy"><img class="public-chrome-logo" src="${LOGO_URL}" alt="Neopolis Akademy" width="180" height="63" /></a><nav class="public-chrome-nav" aria-label="${escapeHtml(chrome.program)}"><a class="public-chrome-nav-link" href="/#formule">${escapeHtml(chrome.formula)}</a><a class="public-chrome-nav-link" href="/#pourquoi">${escapeHtml(chrome.why)}</a><a class="public-chrome-nav-link" href="/#partenaires">${escapeHtml(chrome.partners)}</a><a class="public-chrome-nav-link" href="${publicTrainingPath(options.locale)}" aria-current="page">${escapeHtml(copy.navTraining)}</a><a class="public-chrome-nav-link" href="/ai-news">${escapeHtml(copy.navNews)}</a><a class="public-chrome-nav-link" href="/#faq">${escapeHtml(chrome.faq)}</a><a class="public-chrome-signin" href="/login">${escapeHtml(copy.navSignIn)}</a></nav><div class="public-chrome-actions"><nav class="public-chrome-language public-chrome-locale-desktop" aria-label="Language">${languageLinks}</nav><details class="public-chrome-mobile"><summary aria-label="${escapeHtml(chrome.program)}"><span aria-hidden="true">☰</span></summary><nav class="public-chrome-mobile-panel" aria-label="${escapeHtml(chrome.program)}"><div class="public-chrome-nav"><a class="public-chrome-nav-link" href="/#formule">${escapeHtml(chrome.formula)}</a><a class="public-chrome-nav-link" href="/#pourquoi">${escapeHtml(chrome.why)}</a><a class="public-chrome-nav-link" href="/#partenaires">${escapeHtml(chrome.partners)}</a><a class="public-chrome-nav-link" href="${publicTrainingPath(options.locale)}" aria-current="page">${escapeHtml(copy.navTraining)}</a><a class="public-chrome-nav-link" href="/ai-news">${escapeHtml(copy.navNews)}</a><a class="public-chrome-nav-link" href="/#faq">${escapeHtml(chrome.faq)}</a><a class="public-chrome-signin" href="/login">${escapeHtml(copy.navSignIn)}</a><a class="public-chrome-apply" href="/apply"><span>${escapeHtml(chrome.apply)}</span><span class="public-chrome-apply-chevron">›</span></a><nav class="public-chrome-language" aria-label="Language">${languageLinks}</nav></div></nav></details><a class="public-chrome-apply" href="/apply"><span>${escapeHtml(chrome.apply)}</span><span class="public-chrome-apply-chevron">›</span></a></div></div></header>
-    ${body}<footer class="site-footer"><div class="shell"><div class="footer-grid"><div><img class="footer-logo" src="${LOGO_URL}" alt="Neopolis Akademy" width="137" height="48" /><p>${escapeHtml(chrome.lead)}</p></div><div><h2 class="footer-title">${escapeHtml(chrome.program)}</h2><ul class="footer-list"><li><a href="/#formule">${escapeHtml(chrome.formula)}</a></li><li><a href="/#pourquoi">${escapeHtml(chrome.why)}</a></li><li><a href="/#partenaires">${escapeHtml(chrome.partners)}</a></li><li><a href="/#faq">${escapeHtml(chrome.faq)}</a></li></ul></div><div><h2 class="footer-title">${escapeHtml(chrome.explore)}</h2><ul class="footer-list"><li><a href="${publicTrainingPath(options.locale)}">${escapeHtml(copy.navTraining)}</a></li><li><a href="/ai-news">${escapeHtml(copy.navNews)}</a></li><li><a href="/training?tab=catalog">${escapeHtml(copy.navCatalogue)}</a></li><li><a href="/apply">${escapeHtml(chrome.apply)}</a></li></ul></div><div><h2 class="footer-title">${escapeHtml(chrome.contact)}</h2><ul class="footer-list"><li><a href="mailto:info@neopolis-dev.com">info@neopolis-dev.com</a></li><li><a href="https://www.neopolis-dev.com" rel="noopener noreferrer">Neopolis Development ↗</a></li><li><a href="https://fr.linkedin.com/company/neopolis-development" rel="noopener noreferrer">LinkedIn ↗</a></li><li><a href="https://fr-fr.facebook.com/neopolisdev/" rel="noopener noreferrer">Facebook ↗</a></li><li><a href="/mentions-legales">${escapeHtml(chrome.legal)}</a></li></ul></div></div><div class="footer-bottom">© 2026 Neopolis Development. ${escapeHtml(chrome.rights)}</div></div></footer></body></html>`;
+    ${body}<footer class="site-footer"><div class="shell"><div class="footer-grid"><div><img class="footer-logo" src="${LOGO_URL}" alt="Neopolis Akademy" width="137" height="48" /><p>${escapeHtml(chrome.lead)}</p></div><div><h2 class="footer-title">${escapeHtml(chrome.program)}</h2><ul class="footer-list"><li><a href="/#formule">${escapeHtml(chrome.formula)}</a></li><li><a href="/#pourquoi">${escapeHtml(chrome.why)}</a></li><li><a href="/#partenaires">${escapeHtml(chrome.partners)}</a></li><li><a href="/#faq">${escapeHtml(chrome.faq)}</a></li></ul></div><div><h2 class="footer-title">${escapeHtml(chrome.explore)}</h2><ul class="footer-list"><li><a href="${publicTrainingPath(options.locale)}">${escapeHtml(copy.navTraining)}</a></li><li><a href="/ai-news">${escapeHtml(copy.navNews)}</a></li><li><a href="${publicTrainingCataloguePath(options.locale)}">${escapeHtml(copy.navCatalogue)}</a></li><li><a href="/apply">${escapeHtml(chrome.apply)}</a></li></ul></div><div><h2 class="footer-title">${escapeHtml(chrome.contact)}</h2><ul class="footer-list"><li><a href="mailto:info@neopolis-dev.com">info@neopolis-dev.com</a></li><li><a href="https://www.neopolis-dev.com" rel="noopener noreferrer">Neopolis Development ↗</a></li><li><a href="https://fr.linkedin.com/company/neopolis-development" rel="noopener noreferrer">LinkedIn ↗</a></li><li><a href="https://fr-fr.facebook.com/neopolisdev/" rel="noopener noreferrer">Facebook ↗</a></li><li><a href="/mentions-legales">${escapeHtml(chrome.legal)}</a></li></ul></div></div><div class="footer-bottom">© 2026 Neopolis Development. ${escapeHtml(chrome.rights)}</div></div></footer></body></html>`;
 }
 
 function metricCards(metrics: PublicTrainingMetrics, locale: PublicTrainingLocale) {
   const copy = publicTrainingCopy[locale];
   const metricsToDisplay = [[metrics.certificationCount, copy.paths], [metrics.courseCount, copy.courses], [metrics.activityCount, copy.activities], [metrics.exerciseCount, copy.exercises], [metrics.videoCount, copy.videos]];
   return `<div class="metrics" aria-label="${escapeHtml(SITE_NAME)}">${metricsToDisplay.map(([value, label]) => `<div class="metric"><span class="metric-number">${number(value as number, locale)}</span><span class="metric-label">${escapeHtml(label as string)}</span></div>`).join("")}</div>`;
+}
+
+function catalogueMetricCards(metrics: PublicCatalogueMetrics | PublicCatalogueCourse["metrics"], locale: PublicTrainingLocale) {
+  const copy = publicTrainingCopy[locale];
+  const metricsToDisplay = [
+    ["courseCount" in metrics ? metrics.courseCount : metrics.lessonCount, "courseCount" in metrics ? copy.courses : copy.lessons],
+    [metrics.lessonCount, copy.lessons],
+    [metrics.totalActivities, copy.activities],
+    [metrics.exerciseCount, copy.exercises],
+    [metrics.videoCount, copy.videos],
+  ];
+  return `<div class="metrics" aria-label="${escapeHtml(SITE_NAME)}">${metricsToDisplay.map(([value, label]) => `<div class="metric"><span class="metric-number">${number(value as number, locale)}</span><span class="metric-label">${escapeHtml(label as string)}</span></div>`).join("")}</div>`;
+}
+
+function breadcrumb(items: { label: string; href?: string }[]) {
+  return `<nav class="section-intro" aria-label="Breadcrumb">${items.map((item) => item.href ? `<a href="${item.href}">${escapeHtml(item.label)}</a>` : `<span>${escapeHtml(item.label)}</span>`).join(" <span aria-hidden=\"true\">/</span> ")}</nav>`;
+}
+
+function catalogueTrainingPath(locale: PublicTrainingLocale, certificationId: string) {
+  const trainingSlug = getPublicCatalogueTrainingSlug(certificationId);
+  return trainingSlug ? publicTrainingCataloguePath(locale, trainingSlug) : publicTrainingCataloguePath(locale);
 }
 
 function themeCard(theme: PublicTrainingTheme, locale: PublicTrainingLocale) {
@@ -171,7 +208,7 @@ function themeCard(theme: PublicTrainingTheme, locale: PublicTrainingLocale) {
 
 function hero(title: string, lead: string, locale: PublicTrainingLocale) {
   const copy = publicTrainingCopy[locale];
-  return `<section class="hero"><div class="content-shell"><p class="eyebrow">Neopolis Akademy · ${escapeHtml(copy.freeTraining)}</p><h1>${escapeHtml(title)}</h1><p class="lead">${escapeHtml(lead)}</p><div class="actions"><a class="button button-primary" href="/training?tab=catalog">${escapeHtml(copy.viewCatalogue)}</a><a class="button button-secondary" href="/apply">${escapeHtml(copy.discoverAccess)}</a></div></div></section>`;
+  return `<section class="hero"><div class="content-shell"><p class="eyebrow">Neopolis Akademy · ${escapeHtml(copy.freeTraining)}</p><h1>${escapeHtml(title)}</h1><p class="lead">${escapeHtml(lead)}</p><div class="actions"><a class="button button-primary" href="${publicTrainingCataloguePath(locale)}">${escapeHtml(copy.viewCatalogue)}</a><a class="button button-secondary" href="/apply">${escapeHtml(copy.discoverAccess)}</a></div></div></section>`;
 }
 
 function publicIndexSchema(locale: PublicTrainingLocale) {
@@ -181,7 +218,28 @@ function publicIndexSchema(locale: PublicTrainingLocale) {
 }
 
 function themeSchema(theme: PublicTrainingTheme, locale: PublicTrainingLocale) {
-  return { "@context": "https://schema.org", "@type": "CollectionPage", name: `${theme.title} | ${SITE_NAME}`, description: theme.description, url: absolute(publicTrainingPath(locale, theme.slug)), inLanguage: publicTrainingLocaleMeta[locale].languageTag, mainEntity: { "@type": "ItemList", numberOfItems: theme.certifications.length, itemListElement: theme.certifications.map((certification, index) => ({ "@type": "ListItem", position: index + 1, item: { "@type": "Course", name: certification.title, description: certification.description, provider: { "@type": "Organization", name: SITE_NAME, url: ORIGIN }, url: `${ORIGIN}/training/${encodeURIComponent(certification.id)}` } })) } };
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `${theme.title} | ${SITE_NAME}`,
+    description: theme.description,
+    url: absolute(publicTrainingPath(locale, theme.slug)),
+    inLanguage: publicTrainingLocaleMeta[locale].languageTag,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: theme.certifications.length,
+      itemListElement: theme.certifications.map((certification, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "Course",
+          name: certification.title,
+          description: certification.description,
+          provider: { "@type": "Organization", name: SITE_NAME, url: ORIGIN },
+        },
+      })),
+    },
+  };
 }
 
 export function renderPublicTrainingIndex(locale: PublicTrainingLocale = "fr") {
@@ -192,10 +250,110 @@ export function renderPublicTrainingIndex(locale: PublicTrainingLocale = "fr") {
   return layout(body, { locale, title: `${copy.indexTitle} | ${SITE_NAME}`, description: copy.menaDescription, keywords: copy.indexKeywords, canonicalPath: publicTrainingPath(locale), schema: publicIndexSchema(locale) });
 }
 
-export function renderPublicTrainingTheme(theme: PublicTrainingTheme, locale: PublicTrainingLocale = "fr") {
+function catalogueKeywords(values: string[]) {
+  return Array.from(new Set(values.map((value) => value.trim()).filter(Boolean))).slice(0, 8).join(", ");
+}
+
+function catalogueSchema(training: PublicCatalogueTraining, locale: PublicTrainingLocale, path: string, course?: PublicCatalogueCourse) {
+  const item = course || training;
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: item.title,
+    description: item.description,
+    url: absolute(path),
+    inLanguage: publicTrainingLocaleMeta[locale].languageTag,
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: publicTrainingCopy[locale].breadcrumbCatalogue, item: absolute(publicTrainingCataloguePath(locale)) },
+        { "@type": "ListItem", position: 2, name: training.title, item: absolute(publicTrainingCataloguePath(locale, training.slug)) },
+        ...(course ? [{ "@type": "ListItem", position: 3, name: course.title, item: absolute(path) }] : []),
+      ],
+    },
+    mainEntity: {
+      "@type": "Course",
+      name: item.title,
+      description: item.description,
+      url: absolute(path),
+      inLanguage: publicTrainingLocaleMeta[locale].languageTag,
+      educationalLevel: item.level || undefined,
+      provider: { "@type": "Organization", name: SITE_NAME, url: ORIGIN },
+    },
+  };
+}
+
+function catalogueCard(training: PublicCatalogueTraining, locale: PublicTrainingLocale) {
+  const copy = publicTrainingCopy[locale];
+  return `<a class="training-card" href="${publicTrainingCataloguePath(locale, training.slug)}"><div class="training-top"><span class="training-icon" aria-hidden="true">${escapeHtml(training.icon)}</span><h2>${escapeHtml(training.title)}</h2></div><p class="card-copy">${escapeHtml(training.description)}</p><span class="badge">${escapeHtml(training.format)}${training.level ? ` · ${escapeHtml(training.level)}` : ""}</span><p class="stats-line">${number(training.metrics.courseCount, locale)} ${escapeHtml(copy.courses)} · ${number(training.metrics.totalActivities, locale)} ${escapeHtml(copy.activities)} · ${number(training.metrics.exerciseCount, locale)} ${escapeHtml(copy.exercises)} · ${number(training.metrics.videoCount, locale)} ${escapeHtml(copy.videos)}</p></a>`;
+}
+
+function courseCard(training: PublicCatalogueTraining, course: PublicCatalogueCourse, locale: PublicTrainingLocale) {
+  const copy = publicTrainingCopy[locale];
+  return `<a class="training-card" href="${publicTrainingCataloguePath(locale, training.slug, course.slug)}"><h3>${escapeHtml(course.title)}</h3><p class="card-copy">${escapeHtml(course.description)}</p>${course.level ? `<span class="badge">${escapeHtml(course.level)}</span>` : ""}<p class="stats-line">${number(course.metrics.lessonCount, locale)} ${escapeHtml(copy.lessons)} · ${number(course.metrics.totalActivities, locale)} ${escapeHtml(copy.activities)} · ${number(course.metrics.exerciseCount, locale)} ${escapeHtml(copy.exercises)} · ${number(course.metrics.videoCount, locale)} ${escapeHtml(copy.videos)}</p></a>`;
+}
+
+export function renderPublicTrainingCatalogue(locale: PublicTrainingLocale = "fr") {
+  const copy = publicTrainingCopy[locale];
+  const trainings = getPublicCatalogueTrainings(locale);
+  const body = `${hero(copy.catalogueTitle, copy.catalogueLead, locale)}<main class="content-shell"><section aria-labelledby="catalogue-list"><h2 id="catalogue-list">${escapeHtml(copy.catalogueTitle)}</h2><p class="section-intro">${escapeHtml(copy.catalogueLead)}</p><div class="training-grid">${trainings.map((training) => catalogueCard(training, locale)).join("")}</div></section></main>`;
+  return layout(body, {
+    locale,
+    title: `${copy.catalogueTitle} | ${SITE_NAME}`,
+    description: copy.catalogueLead,
+    keywords: catalogueKeywords([copy.catalogueTitle, copy.freeTraining, copy.navTraining, copy.skills]),
+    canonicalPath: publicTrainingCataloguePath(locale),
+    hrefAlternates: publicTrainingCatalogueHrefAlternates(),
+    xDefaultPath: publicTrainingCataloguePath("fr"),
+    schema: { "@context": "https://schema.org", "@type": "CollectionPage", name: copy.catalogueTitle, description: copy.catalogueLead, url: absolute(publicTrainingCataloguePath(locale)), inLanguage: publicTrainingLocaleMeta[locale].languageTag },
+  });
+}
+
+export function renderPublicCatalogueTraining(training: PublicCatalogueTraining, locale: PublicTrainingLocale = "fr") {
+  const copy = publicTrainingCopy[locale];
+  const path = publicTrainingCataloguePath(locale, training.slug);
+  const body = `${hero(training.title, training.description || copy.catalogueLead, locale)}<main class="content-shell">${breadcrumb([{ label: copy.breadcrumbCatalogue, href: publicTrainingCataloguePath(locale) }, { label: training.title }])}<section aria-labelledby="training-overview"><h2 id="training-overview">${escapeHtml(copy.trainingOverview)}</h2><p class="section-intro">${escapeHtml(training.description || copy.catalogueLead)}</p>${catalogueMetricCards(training.metrics, locale)}<p><span class="badge">${escapeHtml(training.format)}${training.level ? ` · ${escapeHtml(training.level)}` : ""}</span></p></section><section class="split" aria-labelledby="course-list"><div><h2 id="course-list">${escapeHtml(copy.includedCourses)}</h2><div class="training-grid">${training.courses.map((course) => courseCard(training, course, locale)).join("")}</div></div><aside class="panel"><h2>${escapeHtml(copy.rolesTitle)}</h2>${training.roles.length ? `<h3>${escapeHtml(copy.targetRoles)}</h3><div class="chip-list">${training.roles.map((role) => `<span class="chip">${escapeHtml(role)}</span>`).join("")}</div>` : ""}<h3 style="margin-top:22px">${escapeHtml(copy.skills)}</h3><div class="chip-list">${training.skills.map((skill) => `<span class="chip">${escapeHtml(skill)}</span>`).join("")}</div>${training.relatedDomains.length ? `<h3 style="margin-top:22px">${escapeHtml(copy.relatedDomains)}</h3><div class="chip-list">${training.relatedDomains.map((domain) => `<a class="chip" href="${publicTrainingPath(locale, domain.slug)}">${escapeHtml(domain.title)}</a>`).join("")}</div>` : ""}</aside></section><section class="context"><h2>${escapeHtml(copy.accessTraining)}</h2><p>${escapeHtml(copy.availableTrainingText)} <a href="/login">${escapeHtml(copy.navSignIn)}</a>.</p></section></main>`;
+  return layout(body, {
+    locale,
+    title: `${training.title} | ${SITE_NAME}`,
+    description: training.description || copy.catalogueLead,
+    keywords: catalogueKeywords([training.title, training.format, training.level, ...training.skills]),
+    canonicalPath: path,
+    hrefAlternates: publicTrainingCatalogueHrefAlternates(training.slug),
+    xDefaultPath: publicTrainingCataloguePath("fr", training.slug),
+    schema: catalogueSchema(training, locale, path),
+  });
+}
+
+export function renderPublicCatalogueCourse(training: PublicCatalogueTraining, course: PublicCatalogueCourse, locale: PublicTrainingLocale = "fr") {
+  const copy = publicTrainingCopy[locale];
+  const path = publicTrainingCataloguePath(locale, training.slug, course.slug);
+  const body = `${hero(course.title, course.description || training.description || copy.catalogueLead, locale)}<main class="content-shell">${breadcrumb([{ label: copy.breadcrumbCatalogue, href: publicTrainingCataloguePath(locale) }, { label: training.title, href: publicTrainingCataloguePath(locale, training.slug) }, { label: course.title }])}<section aria-labelledby="course-overview"><h2 id="course-overview">${escapeHtml(copy.courseOverview)}</h2><p class="section-intro">${escapeHtml(course.description || training.description || copy.catalogueLead)}</p>${catalogueMetricCards(course.metrics, locale)}${course.level ? `<span class="badge">${escapeHtml(course.level)}</span>` : ""}</section><section class="split"><div><h2>${escapeHtml(copy.courseSkills)}</h2><div class="chip-list">${[...course.skills, ...course.tags].map((skill) => `<span class="chip">${escapeHtml(skill)}</span>`).join("")}</div></div><aside class="panel"><h2>${escapeHtml(copy.trainingOverview)}</h2><p class="section-intro">${escapeHtml(training.title)}</p><a class="button" style="background:#173f7b;color:#fff" href="${publicTrainingCataloguePath(locale, training.slug)}">${escapeHtml(copy.includedCourses)}</a></aside></section><section class="context"><h2>${escapeHtml(copy.accessTraining)}</h2><p>${escapeHtml(copy.availableTrainingText)} <a href="/login">${escapeHtml(copy.navSignIn)}</a>.</p></section></main>`;
+  return layout(body, {
+    locale,
+    title: `${course.title} | ${SITE_NAME}`,
+    description: course.description || training.description || copy.catalogueLead,
+    keywords: catalogueKeywords([course.title, course.level, ...course.skills, ...course.tags]),
+    canonicalPath: path,
+    hrefAlternates: publicTrainingCatalogueHrefAlternates(training.slug, course.slug),
+    xDefaultPath: publicTrainingCataloguePath("fr", training.slug, course.slug),
+    schema: catalogueSchema(training, locale, path, course),
+  });
+}
+
+function renderPublicTrainingThemeLegacy(theme: PublicTrainingTheme, locale: PublicTrainingLocale = "fr") {
   const copy = publicTrainingCopy[locale];
   const maxMetric = Math.max(...theme.certifications.map((certification) => certification.metrics.activityCount), 1);
   const body = `${hero(theme.title, theme.description, locale)}<main class="content-shell"><section aria-labelledby="theme-overview"><h2 id="theme-overview">${escapeHtml(copy.themeOverview)}</h2><p class="section-intro">${escapeHtml(theme.introduction)}</p>${metricCards(theme.metrics, locale)}</section><div class="split"><section class="panel" aria-labelledby="volume-title"><h2 id="volume-title">${escapeHtml(copy.volumeTitle)}</h2><p class="section-intro">${escapeHtml(copy.volumeText)}</p><div class="bar-list">${theme.certifications.map((certification) => `<div><div class="bar-title"><span>${escapeHtml(certification.title)}</span><span>${number(certification.metrics.activityCount, locale)}</span></div><div class="bar-track" role="img" aria-label="${escapeHtml(certification.title)}: ${number(certification.metrics.activityCount, locale)} ${escapeHtml(copy.activities)}"><div class="bar-fill" style="width:${Math.max(4, Math.round((certification.metrics.activityCount / maxMetric) * 100))}%"></div></div></div>`).join("")}</div></section><aside class="panel" aria-labelledby="roles-title"><h2 id="roles-title">${escapeHtml(copy.rolesTitle)}</h2><p class="section-intro">${escapeHtml(copy.rolesText)}</p><h3>${escapeHtml(copy.targetRoles)}</h3><div class="chip-list">${(theme.roles.length ? theme.roles : [copy.transversal]).slice(0, 14).map((role) => `<span class="chip">${escapeHtml(role)}</span>`).join("")}</div><h3 style="margin-top:22px">${escapeHtml(copy.skills)}</h3><div class="chip-list">${(theme.skills.length ? theme.skills : [copy.appliedSkills]).slice(0, 14).map((skill) => `<span class="chip">${escapeHtml(skill)}</span>`).join("")}</div></aside></div>${theme.useCases.length ? `<section aria-labelledby="use-cases-title" style="margin-top:42px"><h2 id="use-cases-title">${escapeHtml(copy.useCasesTitle)}</h2><p class="section-intro">${escapeHtml(copy.useCasesText)}</p><div class="use-case-grid">${theme.useCases.map((useCase) => `<a class="use-case" href="/training/${encodeURIComponent(useCase.certificationId)}"><h3>${escapeHtml(useCase.title)}</h3><p>${escapeHtml(useCase.summary)}</p><div class="chip-list">${useCase.skills.map((skill) => `<span class="chip">${escapeHtml(skill)}</span>`).join("")}</div></a>`).join("")}</div></section>` : ""}<section aria-labelledby="formations-title" style="margin-top:42px"><h2 id="formations-title">${escapeHtml(copy.availableTraining)}</h2><p class="section-intro">${escapeHtml(copy.availableTrainingText)}</p><div class="training-grid">${theme.certifications.map((certification) => `<a class="training-card" href="/training/${encodeURIComponent(certification.id)}"><div class="training-top"><span class="training-icon" aria-hidden="true">${escapeHtml(certification.icon)}</span><h3>${escapeHtml(certification.title)}</h3></div><p class="card-copy">${escapeHtml(certification.description)}</p><span class="badge">${escapeHtml(certification.trainingFormat)} · ${escapeHtml(certification.level)}</span><p class="stats-line">${number(certification.metrics.courseCount, locale)} ${escapeHtml(copy.courses)} · ${number(certification.metrics.activityCount, locale)} ${escapeHtml(copy.activities)} · ${number(certification.metrics.exerciseCount, locale)} ${escapeHtml(copy.exercises)} · ${number(certification.metrics.videoCount, locale)} ${escapeHtml(copy.videos)}</p>${certification.relatedDomains.length ? `<p class="domain-line">${escapeHtml(copy.relatedDomains)}: ${escapeHtml(certification.relatedDomains.join(" · "))}</p>` : ""}</a>`).join("")}</div></section><section class="context"><h2>${escapeHtml(copy.otherJobs)}</h2><p>${escapeHtml(copy.otherJobsText)} <a href="${publicTrainingPath(locale)}">${escapeHtml(copy.allThemes)}</a>.</p></section></main>`;
+  return layout(body, { locale, title: theme.seo.title, description: theme.seo.description, keywords: theme.seo.keywords, canonicalPath: publicTrainingPath(locale, theme.slug), schema: themeSchema(theme, locale), themeSlug: theme.slug });
+}
+
+export function renderPublicTrainingTheme(theme: PublicTrainingTheme, locale: PublicTrainingLocale = "fr") {
+  const copy = publicTrainingCopy[locale];
+  const maxMetric = Math.max(...theme.certifications.map((certification) => certification.metrics.activityCount), 1);
+  const useCases = theme.useCases.map((useCase) => `<a class="use-case" href="${catalogueTrainingPath(locale, useCase.certificationId)}"><h3>${escapeHtml(useCase.title)}</h3><p>${escapeHtml(useCase.summary)}</p><div class="chip-list">${useCase.skills.map((skill) => `<span class="chip">${escapeHtml(skill)}</span>`).join("")}</div></a>`).join("");
+  const trainings = theme.certifications.map((certification) => `<a class="training-card" href="${catalogueTrainingPath(locale, certification.id)}"><div class="training-top"><span class="training-icon" aria-hidden="true">${escapeHtml(certification.icon)}</span><h3>${escapeHtml(certification.title)}</h3></div><p class="card-copy">${escapeHtml(certification.description)}</p><span class="badge">${escapeHtml(certification.trainingFormat)} · ${escapeHtml(certification.level)}</span><p class="stats-line">${number(certification.metrics.courseCount, locale)} ${escapeHtml(copy.courses)} · ${number(certification.metrics.activityCount, locale)} ${escapeHtml(copy.activities)} · ${number(certification.metrics.exerciseCount, locale)} ${escapeHtml(copy.exercises)} · ${number(certification.metrics.videoCount, locale)} ${escapeHtml(copy.videos)}</p></a>`).join("");
+  const body = `${hero(theme.title, theme.description, locale)}<main class="content-shell"><section aria-labelledby="theme-overview"><h2 id="theme-overview">${escapeHtml(copy.themeOverview)}</h2><p class="section-intro">${escapeHtml(theme.introduction)}</p>${metricCards(theme.metrics, locale)}</section><div class="split"><section class="panel" aria-labelledby="volume-title"><h2 id="volume-title">${escapeHtml(copy.volumeTitle)}</h2><p class="section-intro">${escapeHtml(copy.volumeText)}</p><div class="bar-list">${theme.certifications.map((certification) => `<div><div class="bar-title"><span>${escapeHtml(certification.title)}</span><span>${number(certification.metrics.activityCount, locale)}</span></div><div class="bar-track" role="img" aria-label="${escapeHtml(certification.title)}: ${number(certification.metrics.activityCount, locale)} ${escapeHtml(copy.activities)}"><div class="bar-fill" style="width:${Math.max(4, Math.round((certification.metrics.activityCount / maxMetric) * 100))}%"></div></div></div>`).join("")}</div></section><aside class="panel" aria-labelledby="roles-title"><h2 id="roles-title">${escapeHtml(copy.rolesTitle)}</h2><p class="section-intro">${escapeHtml(copy.rolesText)}</p><h3>${escapeHtml(copy.targetRoles)}</h3><div class="chip-list">${(theme.roles.length ? theme.roles : [copy.transversal]).slice(0, 14).map((role) => `<span class="chip">${escapeHtml(role)}</span>`).join("")}</div><h3 style="margin-top:22px">${escapeHtml(copy.skills)}</h3><div class="chip-list">${(theme.skills.length ? theme.skills : [copy.appliedSkills]).slice(0, 14).map((skill) => `<span class="chip">${escapeHtml(skill)}</span>`).join("")}</div></aside></div>${useCases ? `<section aria-labelledby="use-cases-title" style="margin-top:42px"><h2 id="use-cases-title">${escapeHtml(copy.useCasesTitle)}</h2><p class="section-intro">${escapeHtml(copy.useCasesText)}</p><div class="use-case-grid">${useCases}</div></section>` : ""}<section aria-labelledby="formations-title" style="margin-top:42px"><h2 id="formations-title">${escapeHtml(copy.availableTraining)}</h2><p class="section-intro">${escapeHtml(copy.availableTrainingText)}</p><div class="training-grid">${trainings}</div></section><section class="context"><h2>${escapeHtml(copy.otherJobs)}</h2><p>${escapeHtml(copy.otherJobsText)} <a href="${publicTrainingPath(locale)}">${escapeHtml(copy.allThemes)}</a>.</p></section></main>`;
   return layout(body, { locale, title: theme.seo.title, description: theme.seo.description, keywords: theme.seo.keywords, canonicalPath: publicTrainingPath(locale, theme.slug), schema: themeSchema(theme, locale), themeSlug: theme.slug });
 }
 
@@ -205,9 +363,18 @@ export function renderPublicTrainingNotFound(locale: PublicTrainingLocale = "fr"
 }
 
 export function renderPublicTrainingSitemap() {
-  const routes = publicTrainingLocales.flatMap((locale) => [undefined, ...getPublicTrainingThemes(locale).map((theme) => theme.slug)].map((themeSlug) => ({ locale, themeSlug, path: publicTrainingPath(locale, themeSlug) })));
-  const coreRoutes = CORE_PUBLIC_SITEMAP_PATHS.map((route) => `<url><loc>${absolute(route)}</loc></url>`).join("");
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${coreRoutes}${routes.map((route) => `<url><loc>${absolute(route.path)}</loc>${publicTrainingHrefAlternates(route.themeSlug).map((alternate) => `<xhtml:link rel="alternate" hreflang="${publicTrainingLocaleMeta[alternate.locale].languageTag}" href="${absolute(alternate.href)}" />`).join("")}<xhtml:link rel="alternate" hreflang="x-default" href="${absolute(publicTrainingPath("fr", route.themeSlug))}" /></url>`).join("")}</urlset>`;
+  const url = (path: string, alternates?: { locale: PublicTrainingLocale; href: string }[], xDefaultPath?: string) => `<url><loc>${absolute(path)}</loc>${alternates?.map((alternate) => `<xhtml:link rel="alternate" hreflang="${publicTrainingLocaleMeta[alternate.locale].languageTag}" href="${absolute(alternate.href)}" />`).join("") || ""}${alternates ? `<xhtml:link rel="alternate" hreflang="x-default" href="${absolute(xDefaultPath || alternates.find((item) => item.locale === "fr")?.href || path)}" />` : ""}</url>`;
+  const coreRoutes = CORE_PUBLIC_SITEMAP_PATHS.map((path) => url(path));
+  const themeRoutes = publicTrainingLocales.flatMap((locale) => [
+    url(publicTrainingPath(locale), publicTrainingHrefAlternates(), publicTrainingPath("fr")),
+    ...getPublicTrainingThemes(locale).map((theme) => url(publicTrainingPath(locale, theme.slug), publicTrainingHrefAlternates(theme.slug), publicTrainingPath("fr", theme.slug))),
+  ]);
+  const catalogueRoutes = publicTrainingLocales.flatMap((locale) => getPublicCatalogueTrainings(locale).flatMap((training) => [
+    url(publicTrainingCataloguePath(locale, training.slug), publicTrainingCatalogueHrefAlternates(training.slug), publicTrainingCataloguePath("fr", training.slug)),
+    ...training.courses.map((course) => url(publicTrainingCataloguePath(locale, training.slug, course.slug), publicTrainingCatalogueHrefAlternates(training.slug, course.slug), publicTrainingCataloguePath("fr", training.slug, course.slug))),
+  ]));
+  const catalogueIndexes = publicTrainingLocales.map((locale) => url(publicTrainingCataloguePath(locale), publicTrainingCatalogueHrefAlternates(), publicTrainingCataloguePath("fr")));
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${[...coreRoutes, ...themeRoutes, ...catalogueIndexes, ...catalogueRoutes].join("")}</urlset>`;
 }
 
 export function registerPublicTrainingPages(app: Express) {
@@ -219,9 +386,27 @@ export function registerPublicTrainingPages(app: Express) {
     const alias = getPublicTrainingThemeAlias(req.params.themeSlug);
     return alias ? res.redirect(301, publicTrainingPath(locale, alias)) : sendHtml(res, renderPublicTrainingNotFound(locale), 404);
   };
+  const catalogue = (locale: PublicTrainingLocale) => (_req: Request, res: Response) => sendHtml(res, renderPublicTrainingCatalogue(locale));
+  const catalogueTraining = (locale: PublicTrainingLocale) => (req: Request, res: Response) => {
+    const training = getPublicCatalogueTraining(req.params.trainingSlug, locale);
+    return training ? sendHtml(res, renderPublicCatalogueTraining(training, locale)) : sendHtml(res, renderPublicTrainingNotFound(locale), 404);
+  };
+  const catalogueCourse = (locale: PublicTrainingLocale) => (req: Request, res: Response) => {
+    const result = getPublicCatalogueCourse(req.params.trainingSlug, req.params.courseSlug, locale);
+    return result ? sendHtml(res, renderPublicCatalogueCourse(result.training, result.course, locale)) : sendHtml(res, renderPublicTrainingNotFound(locale), 404);
+  };
   app.get("/formations-ia", index("fr"));
   app.get("/en/ai-training", index("en"));
   app.get("/ar/ai-training", index("ar"));
+  app.get("/formations-ia/catalogue", catalogue("fr"));
+  app.get("/en/ai-training/catalogue", catalogue("en"));
+  app.get("/ar/ai-training/catalogue", catalogue("ar"));
+  app.get("/formations-ia/catalogue/:trainingSlug/:courseSlug", catalogueCourse("fr"));
+  app.get("/en/ai-training/catalogue/:trainingSlug/:courseSlug", catalogueCourse("en"));
+  app.get("/ar/ai-training/catalogue/:trainingSlug/:courseSlug", catalogueCourse("ar"));
+  app.get("/formations-ia/catalogue/:trainingSlug", catalogueTraining("fr"));
+  app.get("/en/ai-training/catalogue/:trainingSlug", catalogueTraining("en"));
+  app.get("/ar/ai-training/catalogue/:trainingSlug", catalogueTraining("ar"));
   app.get("/formations-ia/:themeSlug", theme("fr"));
   app.get("/en/ai-training/:themeSlug", theme("en"));
   app.get("/ar/ai-training/:themeSlug", theme("ar"));

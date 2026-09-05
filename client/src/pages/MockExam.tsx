@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { announceAchievement } from "@/components/AchievementCelebration";
 import { BrandLogo } from "@/components/BrandLogo";
 import { canRestoreExamSession, getExamSessionRemainingSeconds } from "@shared/examSession";
+import { trackEvent } from "@/lib/analytics";
 
 type ExamState = "intro" | "active" | "review" | "locked";
 
@@ -80,9 +81,27 @@ export default function MockExam() {
   const submittedAttemptRef = useRef(false);
   const confettiFired = useRef(false);
 
+  const scoreBand = (value: unknown) => {
+    const score = typeof value === "number" && Number.isFinite(value) ? value : null;
+    if (score === null) return "not_available";
+    if (score < 50) return "0_49";
+    if (score < 75) return "50_74";
+    return "75_100";
+  };
+
   // Submit exam attempt to server
   const submitAttemptMutation = trpc.training.submitExamAttempt.useMutation({
     onSuccess: (result: any) => {
+      if (certId) trackEvent("certificate_mock_complete", {
+        certification_id: certId,
+        content_type: "certification_mock",
+        language: lang,
+        score_band: scoreBand(result?.score),
+        passed: Boolean(result?.passed),
+      });
+      if (certId && result.achievement?.kind === "certification") {
+        trackEvent("certificate_earned", { certification_id: certId, content_type: "certificate" });
+      }
       setVerifiedScore(result);
       if (result.achievement) announceAchievement(result.achievement);
       if (result.passed && !confettiFired.current) {
@@ -93,6 +112,7 @@ export default function MockExam() {
   });
   const startExamSessionMutation = trpc.training.startExamSession.useMutation({
     onSuccess: (session) => {
+      if (certId) trackEvent("certificate_mock_start", { certification_id: certId, content_type: "certification_mock", language: lang });
       setExamQuestions(session.questions);
       setAnswers([]);
       setCurrentIndex(0);

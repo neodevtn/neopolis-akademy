@@ -3,7 +3,8 @@ import { ChevronRight, Menu, X } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import DeferredHomeAuth from "@/components/DeferredHomeAuth";
 import { type Language, useLanguage } from "@/contexts/LanguageContext";
-import { publicTrainingPath } from "@shared/publicTrainingLocale";
+import { trackEvent } from "@/lib/analytics";
+import { publicTrainingCataloguePath, publicTrainingPath } from "@shared/publicTrainingLocale";
 import { PUBLIC_CHROME_STYLES } from "@shared/publicChromeStyles";
 
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
@@ -34,6 +35,8 @@ const labels = {
 function localizedPath(location: string, locale: Language) {
   const normalized = location.split("?")[0] || "/";
   if (/^\/(?:en|ar)?$/.test(normalized)) return locale === "fr" ? "/" : `/${locale}`;
+  const catalogueMatch = normalized.match(/^\/(?:formations-ia|en\/ai-training|ar\/ai-training)\/catalogue(?:\/([^/]+))?(?:\/([^/]+))?$/);
+  if (catalogueMatch) return publicTrainingCataloguePath(locale, catalogueMatch[1], catalogueMatch[2]);
   const match = normalized.match(/^\/(?:formations-ia|en\/ai-training|ar\/ai-training)(?:\/([^/]+))?$/);
   return match ? publicTrainingPath(locale, match[1]) : location;
 }
@@ -113,7 +116,7 @@ function MobilePublicMenu({ page }: { page: PublicPage }) {
           <nav className="public-chrome-nav" aria-label={t(labels.menu)}>
             <NavigationLinks page={page} onNavigate={() => setOpen(false)} />
             <Link href="/login" onClick={() => setOpen(false)} className="public-chrome-signin">{t(labels.signIn)}</Link>
-            <Link href="/apply" onClick={() => setOpen(false)} className="public-chrome-apply"><span>{t(labels.apply)}</span><ChevronRight size={14} /></Link>
+            <Link href="/apply" onClick={() => { trackEvent("cta_click", { content_type: "public_navigation", content_id: "apply_mobile_menu" }); setOpen(false); }} className="public-chrome-apply"><span>{t(labels.apply)}</span><ChevronRight size={14} /></Link>
             <LocaleLinks onNavigate={() => setOpen(false)} />
           </nav>
         </div>
@@ -137,7 +140,7 @@ export function PublicSiteHeader({ active = "home" }: { active?: PublicPage }) {
         <div className="public-chrome-actions">
           <div className="public-chrome-locale-desktop"><LocaleLinks /></div>
           <div className="hidden lg:block"><DeferredHomeAuth slot="logout" /></div>
-          <div className="hidden lg:block"><DeferredHomeAuth slot="header-primary" fallback={<Link href="/apply" className="public-chrome-apply"><span>{t(labels.apply)}</span><ChevronRight size={14} /></Link>} /></div>
+          <div className="hidden lg:block"><DeferredHomeAuth slot="header-primary" fallback={<Link href="/apply" onClick={() => trackEvent("cta_click", { content_type: "public_navigation", content_id: "apply_header" })} className="public-chrome-apply"><span>{t(labels.apply)}</span><ChevronRight size={14} /></Link>} /></div>
           <MobilePublicMenu page={active} />
         </div>
       </div>
@@ -163,7 +166,7 @@ export function PublicSiteFooter() {
           </div>
           <div>
             <h2 className="text-xs font-bold uppercase tracking-[0.12em] text-white">{t(labels.explore)}</h2>
-            <ul className="mt-3 space-y-2 text-sm"><li><Link href={publicTrainingPath(lang)} className="hover:text-white hover:underline">{t(labels.training)}</Link></li><li><Link href="/ai-news" className="hover:text-white hover:underline">{t(labels.news)}</Link></li><li><Link href="/training?tab=catalog" className="hover:text-white hover:underline">{t({ fr: "Catalogue", en: "Catalogue", ar: "الكتالوج" })}</Link></li><li><Link href="/apply" className="hover:text-white hover:underline">{t(labels.apply)}</Link></li></ul>
+            <ul className="mt-3 space-y-2 text-sm"><li><Link href={publicTrainingPath(lang)} className="hover:text-white hover:underline">{t(labels.training)}</Link></li><li><Link href="/ai-news" className="hover:text-white hover:underline">{t(labels.news)}</Link></li><li><Link href={publicTrainingCataloguePath(lang)} className="hover:text-white hover:underline">{t({ fr: "Catalogue", en: "Catalogue", ar: "الكتالوج" })}</Link></li><li><Link href="/apply" className="hover:text-white hover:underline">{t(labels.apply)}</Link></li></ul>
           </div>
           <div>
             <h2 className="text-xs font-bold uppercase tracking-[0.12em] text-white">{t(labels.contact)}</h2>

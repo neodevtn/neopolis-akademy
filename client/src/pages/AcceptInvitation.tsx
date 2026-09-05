@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle, CheckCircle2, Loader2, ShieldAlert } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
+import { trackEvent } from "@/lib/analytics";
 
 export default function AcceptInvitation() {
   const [, navigate] = useLocation();
@@ -73,6 +74,7 @@ export default function AcceptInvitation() {
       const data = await res.json();
 
       if (res.ok) {
+        trackEvent("sign_up", { method: "invitation" });
         setStatus("success");
         setTimeout(() => {
           window.location.href = "/training";

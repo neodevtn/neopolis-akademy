@@ -8,6 +8,7 @@ import superjson from "superjson";
 import App from "./App";
 import { getLoginUrl } from "./const";
 import { clearStaleClientBundleRecovery, retryStaleClientBundle } from "./lib/chunkRecovery";
+import { initializeAnalytics } from "./lib/analytics";
 import "./index.css";
 
 // Initialize Sentry for error monitoring, performance & user feedback after
@@ -78,6 +79,7 @@ window.addEventListener("vite:preloadError", (event) => {
   if (retryStaleClientBundle(preloadEvent.payload || preloadEvent)) event.preventDefault();
 });
 window.setTimeout(clearStaleClientBundleRecovery, 10_000);
+void initializeAnalytics();
 
 const queryClient = new QueryClient();
 
