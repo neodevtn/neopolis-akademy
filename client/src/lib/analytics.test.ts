@@ -75,6 +75,19 @@ describe("analytics privacy guards", () => {
     }
   });
 
+  it("représente séparément le défaut de consentement et sa mise à jour accordée", () => {
+    const dataLayer: unknown[] = [];
+    const gtag = createDataLayerGtag(dataLayer);
+
+    gtag("consent", "default", { analytics_storage: "denied" });
+    gtag("consent", "update", { analytics_storage: "granted" });
+
+    expect(dataLayer.map((entry) => Array.from(entry as ArrayLike<unknown>).slice(0, 2))).toEqual([
+      ["consent", "default"],
+      ["consent", "update"],
+    ]);
+  });
+
   it("supprime les paramètres de parrainage et les fragments des vues de page", () => {
     expect(sanitizeAnalyticsLocation("https://akademy.neodev.click/refer?ref=NEO-123&utm_source=linkedin#share")).toBe("https://akademy.neodev.click/refer");
     expect(sanitizeAnalyticsLocation("/training/a/b?lesson=2&chapter=3&email=test@example.test", "https://akademy.neodev.click")).toBe("https://akademy.neodev.click/training/a/b?lesson=2&chapter=3");

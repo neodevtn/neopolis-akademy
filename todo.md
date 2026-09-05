@@ -2744,3 +2744,4 @@
 - [ ] Corriger, publier et documenter uniquement une anomalie applicative confirmée ; sinon fournir les étapes de validation côté propriété Analytics
 - [ ] Autoriser explicitement l’hôte gtag dans `connect-src`, avec les seuls endpoints Analytics requis, puis vérifier que le runtime de collecte s’initialise après consentement
 - [ ] Préserver le pointeur dynamique vers `window.dataLayer` après chargement de gtag afin que les événements postérieurs à l’initialisation soient traités par le runtime Google
+- [ ] Émettre la mise à jour de consentement après l’initialisation effective de gtag afin que le runtime interprète la transition accordée dans l’ordre documenté

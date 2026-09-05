@@ -141,7 +141,6 @@ export function initializeAnalytics() {
   window.dataLayer = window.dataLayer || [];
   window.gtag = createDataLayerGtag(window.dataLayer);
   dispatchGtag("consent", "default", { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
-  dispatchGtag("consent", "update", { analytics_storage: "granted" });
 
   scriptPromise = new Promise((resolve) => {
     const script = document.createElement("script");
@@ -157,6 +156,7 @@ export function initializeAnalytics() {
     // est plus fiable pour une balise injectée après un consentement explicite.
     dispatchGtag("js", new Date());
     dispatchGtag("config", MEASUREMENT_ID, { send_page_view: false, anonymize_ip: true });
+    dispatchGtag("consent", "update", { analytics_storage: "granted" });
     return true;
   });
 }
