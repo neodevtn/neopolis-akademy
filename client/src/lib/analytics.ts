@@ -118,15 +118,24 @@ function dispatchGtag(command: Parameters<GtagCommand>[0], target: Parameters<Gt
   return true;
 }
 
+/**
+ * gtag.js lit des objets `Arguments` dans dataLayer, conformément au snippet
+ * officiel. Des tableaux ordinaires visualisent bien les commandes locales,
+ * mais ne sont pas interprétés de façon fiable par le chargeur Google.
+ */
+export function createDataLayerGtag(dataLayer: unknown[]): GtagCommand {
+  return function gtag(command, target, params) {
+    dataLayer.push(arguments);
+  };
+}
+
 export function initializeAnalytics() {
   if (typeof window === "undefined" || !MEASUREMENT_ID || !hasAnalyticsConsent()) return Promise.resolve(false);
   if (window.gtag) return Promise.resolve(true);
   if (scriptPromise) return scriptPromise.then(() => true);
 
   window.dataLayer = window.dataLayer || [];
-  window.gtag = ((command, target, params) => {
-    window.dataLayer?.push([command, target, params]);
-  }) as GtagCommand;
+  window.gtag = createDataLayerGtag(window.dataLayer);
   dispatchGtag("consent", "default", { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
   dispatchGtag("consent", "update", { analytics_storage: "granted" });
   dispatchGtag("js", new Date());

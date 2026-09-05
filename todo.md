@@ -2737,3 +2737,8 @@
 - [x] Auditer la CSP réellement servie, autoriser de manière minimale le script gtag et les endpoints de collecte GA4, puis couvrir le contrat par tests — `script-src` autorise uniquement gtag, et `connect-src` uniquement la télémétrie existante, Sentry et les endpoints GA4 nécessaires, sans joker `https:` ; contrat de tests ajouté
 - [x] Confirmer si `/apply` est volontairement indexable ; sinon la retirer du sitemap et appliquer `noindex, nofollow` — la candidature reste publiquement accessible mais transactionnelle, donc exclue des moteurs, des données structurées et du sitemap ; les aperçus sociaux des liens parrainés restent canoniques vers `/refer`
 - [x] Publier le correctif, vérifier les en-têtes CSP et l’absence de violation GA4 sur le domaine public, puis consigner le diagnostic Sitemap Search Console — domaine propagé : CSP explicite, gtag chargé après consentement sans erreur, `/apply` noindex hors sitemap, XML HTTP 200 et diagnostic de récupération documenté
+
+## Diagnostic de réception Google Analytics
+- [ ] Vérifier la requête de collecte GA4 après consentement, la réponse HTTP et les signaux de blocage navigateur sans collecter ni afficher de donnée personnelle
+- [ ] Contrôler la configuration de propriété disponible et distinguer un délai de réception d’un défaut de balise ou de flux
+- [ ] Corriger, publier et documenter uniquement une anomalie applicative confirmée ; sinon fournir les étapes de validation côté propriété Analytics

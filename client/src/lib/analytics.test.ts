@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ANALYTICS_EVENT_NAMES, sanitizeAnalyticsLocation, sanitizeAnalyticsParams } from "./analytics";
+import { ANALYTICS_EVENT_NAMES, createDataLayerGtag, sanitizeAnalyticsLocation, sanitizeAnalyticsParams } from "./analytics";
 
 describe("analytics privacy guards", () => {
   it("expose la nomenclature stable des événements métier attendus", () => {
@@ -47,6 +47,17 @@ describe("analytics privacy guards", () => {
       score_band: "75_100",
       passed: true,
     });
+  });
+
+  it("met les commandes dans dataLayer au format standard attendu par gtag.js", () => {
+    const dataLayer: unknown[] = [];
+    const gtag = createDataLayerGtag(dataLayer);
+
+    gtag("config", "measurement-test", { send_page_view: false });
+
+    expect(dataLayer).toHaveLength(1);
+    expect(Array.isArray(dataLayer[0])).toBe(false);
+    expect(Array.from(dataLayer[0] as ArrayLike<unknown>)).toEqual(["config", "measurement-test", { send_page_view: false }]);
   });
 
   it("supprime les paramètres de parrainage et les fragments des vues de page", () => {
