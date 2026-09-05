@@ -78,6 +78,13 @@ describe("pages publiques de formations IA", () => {
     expect(courseHtml).not.toContain('href="/training/');
   });
 
+  it("ne divulgue pas la provenance d’import dans le HTML de catalogue public", () => {
+    const html = renderPublicTrainingCatalogue("fr");
+
+    expect(html.toLowerCase()).not.toContain("cours partenaire");
+    expect(html.toLowerCase()).not.toContain("hugging face learn autorisé");
+  });
+
   it("rend une vraie page introuvable non indexable et un sitemap avec les routes publiques", () => {
     expect(renderPublicTrainingNotFound()).toContain('name="robots" content="noindex, follow"');
     const sitemap = renderPublicTrainingSitemap();

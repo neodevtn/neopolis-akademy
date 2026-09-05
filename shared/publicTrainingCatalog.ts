@@ -57,6 +57,19 @@ const localizedCatalogueCache = new Map<PublicTrainingLocale, PublicCatalogueTra
 
 const localize = (value: string | LocalizedText | undefined, locale: PublicTrainingLocale, fallback = "") => localizePublicTrainingText(value, locale, fallback);
 
+/** Les fiches SEO décrivent le contenu et non son historique d’import. */
+function publicDescription(value: string | LocalizedText | undefined, locale: PublicTrainingLocale) {
+  return localize(value, locale)
+    .replace(/\b(?:un(?:e)?\s+)?cours\s+partenaire(?:\s+(?:de\s+)?formation)?(?:\s+autorisée?)?/gi, "Formation pratique")
+    .replace(/\bcours\s+Hugging\s+Face(?:\s+Learn)?\s+autorisée?/gi, "Formation pratique")
+    .replace(/\b(?:an?\s+)?authorized\s+partner\s+course\b/gi, "Practical training")
+    .replace(/\bcours\s+partenaire\b/gi, "Formation pratique")
+    .replace(/\bformation\s+pratique\s+(?:de\s+)?formation\s+autorisée?/gi, "Formation pratique")
+    .replace(/\bformation\s+pratique\s+autorisée?/gi, "Formation pratique")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
 export type PublicCatalogueMetrics = ReturnType<typeof getCertificationCatalogMetrics>;
 
 export type PublicCatalogueCourse = {
@@ -109,7 +122,7 @@ function trainingFromCertification(certification: CatalogCertification, locale: 
   return {
     slug: certificationSlugs.get(certification.id) || "formation-ia",
     title: localize(certification.title, locale, "Formation IA"),
-    description: localize(certification.description, locale),
+    description: publicDescription(certification.description, locale),
     level: localize(certification.level, locale),
     icon: certification.icon || "◈",
     format: formatLabel(certification, locale),
@@ -120,7 +133,7 @@ function trainingFromCertification(certification: CatalogCertification, locale: 
     courses: certificationCourses.map((course) => ({
       slug: courseSlugs.get(course.id) || "cours-ia",
       title: localize(course.title, locale, "Cours IA"),
-      description: localize(course.description, locale),
+      description: publicDescription(course.description, locale),
       level: localize(course.level, locale),
       metrics: getCourseCatalogMetrics(course),
       skills: (course.acquiredSkills || []).map((skill) => localize(skill, locale, skill)).filter(Boolean).slice(0, 10),

@@ -28,4 +28,14 @@ describe("catalogue public de formation", () => {
     expect(foundCourse?.course.title).toBe(training!.courses[0].title);
     expect(getPublicCatalogueCourse(training!.slug, "inexistant", "en")).toBeNull();
   });
+
+  it("retire des fiches publiques les formulations de provenance d’import", () => {
+    for (const locale of ["fr", "en", "ar"] as const) {
+      const descriptions = getPublicCatalogueTrainings(locale)
+        .flatMap((training) => [training.description, ...training.courses.map((course) => course.description)]);
+
+      const prohibitedDescription = descriptions.find((description) => /cours partenaire|partner course|hugging face learn autorisé/i.test(description));
+      expect(prohibitedDescription, locale).toBeUndefined();
+    }
+  });
 });
