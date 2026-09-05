@@ -100,12 +100,18 @@ try {
     googleTagResponseSuccess: googleTagResponses.some((status) => status >= 200 && status < 400),
     googleRuntimeLoaded: await page.evaluate(() => Boolean(window.google_tag_manager)),
     dataLayerUsesArguments: await page.evaluate(() => Array.isArray(window.dataLayer) && window.dataLayer.every((entry) => !Array.isArray(entry))),
+    dataLayerPushPatched: await page.evaluate(() => typeof window.dataLayer?.push === "function" && !String(window.dataLayer.push).includes("[native code]")),
+    runtimeObjectsPresent: await page.evaluate(() => Boolean(window.google_tag_manager) && Boolean(window.google_tag_data)),
+    queuedCommandOrder: await page.evaluate(() => Array.isArray(window.dataLayer) ? window.dataLayer.slice(0, 8).map((entry) => {
+      const values = Array.from(entry || []);
+      return [typeof values[0] === "string" ? values[0] : "unknown", typeof values[1] === "string" ? values[1] : (values[1] instanceof Date ? "date" : "value")];
+    }) : []),
     googleRelatedRequestTypes: [...new Set(googleRelatedRequests.map((request) => `${request.hostname}:${request.resourceType}`))].sort(),
     cspErrorCount: cspErrors.length,
   };
 
   console.log(JSON.stringify(result));
-  if (result.scriptsBeforeConsent !== 1 || result.scriptsAfterConsent !== 1 || !result.deniedByDefault || !result.grantedAfterChoice || !result.gtagReady || !result.pageViewQueued || !result.googleScriptRequested || !result.googleCollectionRequested || !result.googleCollectionResponseSuccess || result.googleCollectionFailureCount !== 0 || result.cspErrorCount !== 0) {
+  if (result.scriptsBeforeConsent !== 1 || result.scriptsAfterConsent !== 1 || !result.deniedByDefault || !result.grantedAfterChoice || !result.gtagReady || !result.pageViewQueued || !result.googleScriptRequested || !result.dataLayerPushPatched || !result.runtimeObjectsPresent || !result.googleCollectionRequested || !result.googleCollectionResponseSuccess || result.googleCollectionFailureCount !== 0 || result.cspErrorCount !== 0) {
     throw new Error(`GA4 production consent QA failed: ${JSON.stringify(result)}`);
   }
   await context.close();

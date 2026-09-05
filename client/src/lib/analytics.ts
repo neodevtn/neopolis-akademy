@@ -154,6 +154,11 @@ export function initializeAnalytics() {
   window.dataLayer = window.dataLayer || [];
   window.gtag = createDataLayerGtag(window.dataLayer);
   dispatchGtag("consent", "default", { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
+  // Comme dans le snippet Google documenté, la destination est déclarée dans
+  // la file avant l’exécution du script externe. Le runtime peut ainsi prendre
+  // en charge la configuration et les événements dès son initialisation.
+  dispatchGtag("js", new Date());
+  dispatchGtag("config", MEASUREMENT_ID, { send_page_view: false, anonymize_ip: true });
 
   scriptPromise = new Promise((resolve) => {
     const script = document.createElement("script");
@@ -165,10 +170,6 @@ export function initializeAnalytics() {
   });
   return scriptPromise.then((loaded) => {
     if (!loaded) return false;
-    // La configuration suit le chargement effectif du runtime gtag. Ce séquencement
-    // est plus fiable pour une balise injectée après un consentement explicite.
-    dispatchGtag("js", new Date());
-    dispatchGtag("config", MEASUREMENT_ID, { send_page_view: false, anonymize_ip: true });
     dispatchAnalyticsConsent(hasAnalyticsConsent());
     return true;
   });
