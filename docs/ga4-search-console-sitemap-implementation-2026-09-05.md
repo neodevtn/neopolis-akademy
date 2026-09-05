@@ -15,7 +15,7 @@ Les événements `login`, `sign_up` et `search` font partie du vocabulaire recom
 | Consentement | `analytics_storage`, `ad_storage`, `ad_user_data` et `ad_personalization` refusés par défaut ; acceptation limitée à `analytics_storage` accordé, les paramètres publicitaires restant refusés. |
 | `page_view` SPA | Configuration GA4 avec `send_page_view: false`, suivie d’une vue contrôlée au démarrage et à chaque changement effectif `pathname + search` nettoyé. |
 | Paramètres | Liste blanche de chaînes techniques sans caractères à risque, valeurs bornées et suppression systématique des query strings. |
-| Sitemap | Uniquement routes réellement publiques et indexables : pages éditoriales, index/domaines Formation, catalogue, fiches de formation et fiches de cours, avec variantes de langue réellement rendues ; aucune route privée, query string, redirection, brouillon, candidature transactionnelle ou 404. |
+| Sitemap | `/sitemap.xml` est un index XML direct vers un fichier statique et cinq lots de formations/cours de 200 URL maximum. Seules les routes réellement publiques et indexables sont incluses ; aucune route privée, query string, redirection, candidature transactionnelle ou 404. |
 | CSP GA4 | `script-src` autorise explicitement `www.googletagmanager.com`; `connect-src` autorise explicitement les points de collecte GA4, Sentry et la télémétrie existante, sans joker `https:`. |
 
 ## Dictionnaire d’événements GA4
@@ -44,7 +44,7 @@ Le catalogue canonique alimente désormais des fiches publiques séparées, sous
 
 Les routes sont disponibles en français, anglais et arabe, avec canonical absolue auto-référente, alternatives `hreflang` réciproques, Open Graph, carte X et données structurées `BreadcrumbList` et `Course`. Les appels à l’action mènent vers la connexion ou la candidature ; aucun lien public ne donne accès au lecteur `/training`.
 
-La sonde locale du 5 septembre 2026 a analysé le XML puis contrôlé chaque URL listée. Elle a initialement validé 910 URL indexables. Après la désindexation volontaire de `/apply`, le sitemap publié comprend **909 URL indexables** : 6 pages éditoriales et index, 1 actualité, 21 pages de catégories, 3 index de catalogue, 345 fiches de formation et 531 fiches de cours. La répartition est de 306 URL françaises, 302 anglaises et 301 arabes. Aucun `lastmod` synthétique n’est émis, car le catalogue ne fournit pas de date de publication fiable par fiche.
+La sonde locale du 5 septembre 2026 a analysé l’index, les six fichiers XML puis contrôlé chaque URL listée. Après la désindexation volontaire de `/apply`, la couverture comprend **909 URL indexables** : 8 pages éditoriales et index, 1 actualité, 21 pages de catégories, 3 index de catalogue, 345 fiches de formation et 531 fiches de cours. La répartition est de 305 URL françaises, 302 anglaises et 302 arabes. Les fichiers sont `/sitemaps/static.xml` (33 URL), `/sitemaps/formations-1.xml` à `formations-4.xml` (200 URL chacun) et `/sitemaps/formations-5.xml` (76 URL). Aucun `lastmod` synthétique n’est émis, car le catalogue ne fournit pas de date de publication fiable par fiche.
 
 ## Contrôle local avant consentement
 
@@ -58,7 +58,7 @@ Après publication du correctif CSP, une sonde navigateur indépendante a confir
 
 La candidature `/apply` reste accessible au public pour déposer un dossier, mais elle est désormais `noindex, nofollow`, sans données structurées, sans contenu de secours pour robot et sans entrée sitemap. Les liens de recommandation continuent d’utiliser la page publique canonique `/refer` pour leurs aperçus sociaux.
 
-Le sitemap actuellement servi répond HTTP 200, `application/xml; charset=utf-8`, avec 909 balises `<loc>` et une déclaration XML valide. `robots.txt` y référence l’URL canonique. Le même test avec un en-tête User-Agent déclarant Googlebot retourne le même statut et le même volume, ce qui écarte un filtrage applicatif simple par User-Agent. Ce test ne prouve pas l’identité réseau d’un robot Google ni l’état interne Search Console. Le message « Impossible de récupérer le sitemap » reçu juste après publication doit donc être réessayé depuis Search Console après propagation ; si l’erreur persiste, il faudra examiner les journaux de la couche d’hébergement ou de protection réseau au moment précis de la tentative Google.
+Le sitemap est désormais livré comme un index XML indépendant de toute session. L’index et chacun de ses six fichiers répondent directement HTTP 200 avec `application/xml; charset=utf-8`, sans redirection, cookie ni repli HTML. `robots.txt` conserve l’URL canonique de l’index. Les contrôles Googlebot desktop et Googlebot Smartphone reçoivent la même liste et les mêmes statuts. Ce test écarte un filtrage applicatif simple par User-Agent, sans prétendre prouver l’identité réseau d’un robot Google ni l’état interne Search Console.
 
 ## Références
 

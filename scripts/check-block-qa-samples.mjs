@@ -75,6 +75,12 @@ try {
         const rendered = await page.locator(selector).count();
         const measurement = await page.evaluate(() => ({ clientWidth: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth }));
         const rateLimited = /too many requests|trop de requêtes/i.test(bodyText);
+        const retryableFailure = rateLimited || (!locked && rendered < 1);
+        if (retryableFailure && attempt === 0) {
+          await page.waitForTimeout(750);
+          await page.reload({ waitUntil: "domcontentloaded" });
+          continue;
+        }
         const screenshot = resolve(screenshotsDir, `${mobile ? "mobile" : "desktop"}-${sample.type}-${sample.courseId}-l${sample.lessonIndex + 1}-e${sample.chapterIndex + 1}.png`);
         await page.screenshot({ path: screenshot, fullPage: false });
         results.push({ type: sample.type, courseId: sample.courseId, lessonIndex: sample.lessonIndex, chapterIndex: sample.chapterIndex, required: sample.required, locked, url, finalUrl: page.url(), bodyText: bodyText.slice(0, 500), rendered, rateLimited, clientWidth: measurement.clientWidth, scrollWidth: measurement.scrollWidth, overflow: measurement.scrollWidth > measurement.clientWidth + 2, screenshot });

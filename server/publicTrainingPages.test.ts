@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { getPublicTrainingTheme, getPublicTrainingThemes } from "@shared/publicTrainingThemes";
+import express from "express";
+import type { AddressInfo } from "node:net";
 import {
+  getPublicTrainingSitemapFiles,
+  registerPublicTrainingPages,
   renderPublicCatalogueCourse,
   renderPublicCatalogueTraining,
   renderPublicTrainingCatalogue,
@@ -87,17 +91,21 @@ describe("pages publiques de formations IA", () => {
 
   it("rend une vraie page introuvable non indexable et un sitemap avec les routes publiques", () => {
     expect(renderPublicTrainingNotFound()).toContain('name="robots" content="noindex, follow"');
-    const sitemap = renderPublicTrainingSitemap();
-    expect(sitemap).toContain("https://akademy.neodev.click/");
-    expect(sitemap).toContain("https://akademy.neodev.click/ai-news");
-    expect(sitemap).not.toContain("https://akademy.neodev.click/apply");
-    expect(sitemap).toContain("https://akademy.neodev.click/mentions-legales");
-    expect(sitemap).toContain("https://akademy.neodev.click/formations-ia");
-    expect(sitemap).toContain("comptabilite-finance");
-    expect(sitemap).toContain("/formations-ia/catalogue/");
-    expect(sitemap).not.toContain("/training/");
-    expect(sitemap).not.toContain("<lastmod>");
-    expect((sitemap.match(/<url>/g) || []).length).toBeGreaterThan(getPublicCatalogueSitemapEntries().length);
+    const index = renderPublicTrainingSitemap();
+    const sitemapFiles = getPublicTrainingSitemapFiles();
+    const urlsets = sitemapFiles.map((file) => file.xml).join("\n");
+    expect(index).toContain("<sitemapindex");
+    expect(index).toContain("https://akademy.neodev.click/sitemaps/static.xml");
+    expect(urlsets).toContain("https://akademy.neodev.click/");
+    expect(urlsets).toContain("https://akademy.neodev.click/ai-news");
+    expect(urlsets).not.toContain("https://akademy.neodev.click/apply");
+    expect(urlsets).toContain("https://akademy.neodev.click/mentions-legales");
+    expect(urlsets).toContain("https://akademy.neodev.click/formations-ia");
+    expect(urlsets).toContain("comptabilite-finance");
+    expect(urlsets).toContain("/formations-ia/catalogue/");
+    expect(urlsets).not.toContain("/training/");
+    expect(urlsets).not.toContain("<lastmod>");
+    expect(sitemapFiles.reduce((total, file) => total + file.urlCount, 0)).toBeGreaterThan(getPublicCatalogueSitemapEntries().length);
   });
 
   it("rend l’index anglais avec canonical, hreflang et contenu éditorial localisé", () => {
@@ -141,10 +149,71 @@ describe("pages publiques de formations IA", () => {
   });
 
   it("publie toutes les variantes linguistiques dans le sitemap avec leurs liens alternatifs", () => {
-    const sitemap = renderPublicTrainingSitemap();
+    const sitemap = getPublicTrainingSitemapFiles().map((file) => file.xml).join("\n");
     expect(sitemap).toContain("https://akademy.neodev.click/en/ai-training");
     expect(sitemap).toContain("https://akademy.neodev.click/ar/ai-training");
     expect(sitemap).toContain('xmlns:xhtml="http://www.w3.org/1999/xhtml"');
     expect(sitemap).toContain('hreflang="x-default"');
+  });
+
+  it("partitionne toutes les URL canoniques en fichiers XML uniques de 200 URL maximum", () => {
+    const sitemapFiles = getPublicTrainingSitemapFiles();
+    const index = renderPublicTrainingSitemap();
+    const indexLocations = [...index.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+    const allLocations = sitemapFiles.flatMap((file) => [...file.xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]));
+
+    expect(index).toMatch(/^<\?xml version="1\.0" encoding="UTF-8"\?>\n<sitemapindex xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/);
+    expect(index).toMatch(/<\/sitemapindex>$/);
+    expect(indexLocations).toEqual(sitemapFiles.map((file) => `https://akademy.neodev.click${file.path}`));
+    expect(sitemapFiles[0]?.path).toBe("/sitemaps/static.xml");
+    expect(sitemapFiles.every((file) => file.urlCount > 0 && file.urlCount <= 200)).toBe(true);
+    expect(sitemapFiles.every((file) => file.xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>\n<urlset'))).toBe(true);
+    expect(sitemapFiles.every((file) => file.xml.endsWith("</urlset>"))).toBe(true);
+    expect(sitemapFiles.every((file) => (file.xml.match(/<url>/g) || []).length === file.urlCount)).toBe(true);
+    expect(new Set(allLocations).size).toBe(allLocations.length);
+    expect(allLocations.every((url) => url.startsWith("https://akademy.neodev.click/") && !new URL(url).search)).toBe(true);
+    expect(allLocations.some((url) => /\/(training|admin|login|account|api)(?:\/|$)/.test(new URL(url).pathname))).toBe(false);
+  });
+
+  it("sert l’index et chaque lot sans session pour Googlebot desktop et smartphone", async () => {
+    const app = express();
+    registerPublicTrainingPages(app);
+    const server = await new Promise<ReturnType<typeof app.listen>>((resolve) => {
+      const listener = app.listen(0, "127.0.0.1", () => resolve(listener));
+    });
+    try {
+      const port = (server.address() as AddressInfo).port;
+      const baseUrl = `http://127.0.0.1:${port}`;
+      const userAgents = [
+        "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+        "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+      ];
+      for (const userAgent of userAgents) {
+        const indexResponse = await fetch(`${baseUrl}/sitemap.xml`, { redirect: "manual", headers: { "user-agent": userAgent } });
+        const indexBody = await indexResponse.text();
+        expect(indexResponse.status).toBe(200);
+        expect(indexResponse.headers.get("content-type")).toBe("application/xml; charset=utf-8");
+        expect(indexResponse.headers.get("location")).toBeNull();
+        expect(indexResponse.headers.get("set-cookie")).toBeNull();
+        expect(indexResponse.headers.get("content-encoding")).toBeNull();
+        const sitemapPaths = [...indexBody.matchAll(/<loc>https:\/\/akademy\.neodev\.click([^<]+)<\/loc>/g)].map((match) => match[1]);
+        expect(sitemapPaths).toEqual(getPublicTrainingSitemapFiles().map((file) => file.path));
+        for (const sitemapPath of sitemapPaths) {
+          const response = await fetch(`${baseUrl}${sitemapPath}`, { redirect: "manual", headers: { "user-agent": userAgent } });
+          const body = await response.text();
+          expect(response.status).toBe(200);
+          expect(response.headers.get("content-type")).toBe("application/xml; charset=utf-8");
+          expect(response.headers.get("location")).toBeNull();
+          expect(response.headers.get("set-cookie")).toBeNull();
+          expect(response.headers.get("content-encoding")).toBeNull();
+          expect(body).toMatch(/^<\?xml version="1\.0" encoding="UTF-8"\?>\n<urlset/);
+        }
+      }
+      const robotsResponse = await fetch(`${baseUrl}/robots.txt`, { redirect: "manual" });
+      expect(robotsResponse.status).toBe(200);
+      expect(await robotsResponse.text()).toContain("Sitemap: https://akademy.neodev.click/sitemap.xml");
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+    }
   });
 });

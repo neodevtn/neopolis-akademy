@@ -2763,3 +2763,12 @@
 - [x] Reproduire le défaut sur la fiche apprenant fournie avec une session administrateur et relever uniquement les erreurs techniques non personnelles — une note historique hors échelle provoquait `String.repeat(-2)` et interrompait le rendu avant les indicateurs
 - [x] Corriger la cause dans la vue de suivi apprenant, puis ajouter un test de non-régression ciblé — la note est désormais bornée entre 0 et 3 avant le rendu, avec deux tests dédiés et une reproduction locale de la fiche complète
 - [x] Publier et contrôler la fiche apprenant ainsi que la liste des apprenants sans dégrader la navigation administrative — sur la version publiée, la fiche se rend avec les six indicateurs et les sept onglets, sans erreur de page ; les seuls avertissements de police proviennent de l’en-tête QA interne appliqué aux polices externes et ne concernent pas les visiteurs
+
+## Correction urgente — index de sitemaps et bornage AdminTraining
+- [x] Auditer la livraison actuelle de `/sitemap.xml`, les URL publiques incluses, `robots.txt` et les contrôles Search Console existants — l’ancien document monolithique contenait 909 URL et `/apply` était déjà correctement exclue
+- [x] Transformer `/sitemap.xml` en index XML direct et répartir les URL publiques dans `/sitemaps/*.xml` avec 200 URL maximum par fichier — un fichier statique de 33 URL et cinq lots formations/cours de 200, 200, 200, 200 et 76 URL
+- [x] Garantir HTTP 200 direct, UTF-8, `application/xml; charset=utf-8`, URL HTTPS absolues, aucun cookie, aucune redirection, aucune route privée ni `/apply` — contrats de réponse et exclusions validés localement
+- [x] Ajouter des tests XML, doublons, canonical, indexabilité, Googlebot desktop/mobile et cohérence de l’index avec tous les lots — 909 pages vérifiées, sans doublon, avec canonical auto-référent, indexables et HTTP 200
+- [x] Renforcer le bornage réutilisable des valeurs utilisées par `String.repeat` pour les données négatives, incohérentes ou historiques, avec tests dédiés — bornage 0–3 testé avec valeurs négatives, décimales, excessives, infinies et textuelles
+- [ ] Exécuter la suite complète, publier, vérifier chaque sitemap sur le domaine public et produire le rapport par fichier
+- [x] Stabiliser le contrôle navigateur desktop sous charge de publication en relançant une fois uniquement les blocs momentanément absents ou limités, sans masquer un échec persistant — la matrice complète passe désormais ses neuf étapes

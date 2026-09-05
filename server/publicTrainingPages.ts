@@ -362,23 +362,56 @@ export function renderPublicTrainingNotFound(locale: PublicTrainingLocale = "fr"
   return layout(`<main class="content-shell" style="padding:72px 0"><h1>${escapeHtml(copy.notFoundTitle)}</h1><p class="section-intro">${escapeHtml(copy.notFoundText)}</p><a class="button" style="background:#173f7b;color:#fff" href="${publicTrainingPath(locale)}">${escapeHtml(copy.notFoundLink)}</a></main>`, { locale, title: `${copy.notFoundTitle} | ${SITE_NAME}`, description: copy.notFoundText, canonicalPath: publicTrainingPath(locale), noindex: true, schema: { "@context": "https://schema.org", "@type": "WebPage", name: copy.notFoundTitle } });
 }
 
-export function renderPublicTrainingSitemap() {
-  const url = (path: string, alternates?: { locale: PublicTrainingLocale; href: string }[], xDefaultPath?: string) => `<url><loc>${absolute(path)}</loc>${alternates?.map((alternate) => `<xhtml:link rel="alternate" hreflang="${publicTrainingLocaleMeta[alternate.locale].languageTag}" href="${absolute(alternate.href)}" />`).join("") || ""}${alternates ? `<xhtml:link rel="alternate" hreflang="x-default" href="${absolute(xDefaultPath || alternates.find((item) => item.locale === "fr")?.href || path)}" />` : ""}</url>`;
-  const coreRoutes = CORE_PUBLIC_SITEMAP_PATHS.map((path) => url(path));
-  const themeRoutes = publicTrainingLocales.flatMap((locale) => [
-    url(publicTrainingPath(locale), publicTrainingHrefAlternates(), publicTrainingPath("fr")),
-    ...getPublicTrainingThemes(locale).map((theme) => url(publicTrainingPath(locale, theme.slug), publicTrainingHrefAlternates(theme.slug), publicTrainingPath("fr", theme.slug))),
-  ]);
-  const catalogueRoutes = publicTrainingLocales.flatMap((locale) => getPublicCatalogueTrainings(locale).flatMap((training) => [
-    url(publicTrainingCataloguePath(locale, training.slug), publicTrainingCatalogueHrefAlternates(training.slug), publicTrainingCataloguePath("fr", training.slug)),
-    ...training.courses.map((course) => url(publicTrainingCataloguePath(locale, training.slug, course.slug), publicTrainingCatalogueHrefAlternates(training.slug, course.slug), publicTrainingCataloguePath("fr", training.slug, course.slug))),
+const PUBLIC_SITEMAP_BATCH_SIZE = 200;
+
+export type PublicSitemapFile = {
+  path: string;
+  urlCount: number;
+  xml: string;
+};
+
+function sitemapUrl(path: string, alternates?: { locale: PublicTrainingLocale; href: string }[], xDefaultPath?: string) {
+  return `<url><loc>${escapeHtml(absolute(path))}</loc>${alternates?.map((alternate) => `<xhtml:link rel="alternate" hreflang="${escapeHtml(publicTrainingLocaleMeta[alternate.locale].languageTag)}" href="${escapeHtml(absolute(alternate.href))}" />`).join("") || ""}${alternates ? `<xhtml:link rel="alternate" hreflang="x-default" href="${escapeHtml(absolute(xDefaultPath || alternates.find((item) => item.locale === "fr")?.href || path))}" />` : ""}</url>`;
+}
+
+function sitemapUrlset(entries: string[]) {
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${entries.join("")}</urlset>`;
+}
+
+export function getPublicTrainingSitemapFiles(): PublicSitemapFile[] {
+  const staticEntries = [
+    ...CORE_PUBLIC_SITEMAP_PATHS.map((path) => sitemapUrl(path)),
+    ...publicTrainingLocales.flatMap((locale) => [
+      sitemapUrl(publicTrainingPath(locale), publicTrainingHrefAlternates(), publicTrainingPath("fr")),
+      ...getPublicTrainingThemes(locale).map((theme) => sitemapUrl(publicTrainingPath(locale, theme.slug), publicTrainingHrefAlternates(theme.slug), publicTrainingPath("fr", theme.slug))),
+    ]),
+    ...publicTrainingLocales.map((locale) => sitemapUrl(publicTrainingCataloguePath(locale), publicTrainingCatalogueHrefAlternates(), publicTrainingCataloguePath("fr"))),
+  ];
+  const formationEntries = publicTrainingLocales.flatMap((locale) => getPublicCatalogueTrainings(locale).flatMap((training) => [
+    sitemapUrl(publicTrainingCataloguePath(locale, training.slug), publicTrainingCatalogueHrefAlternates(training.slug), publicTrainingCataloguePath("fr", training.slug)),
+    ...training.courses.map((course) => sitemapUrl(publicTrainingCataloguePath(locale, training.slug, course.slug), publicTrainingCatalogueHrefAlternates(training.slug, course.slug), publicTrainingCataloguePath("fr", training.slug, course.slug))),
   ]));
-  const catalogueIndexes = publicTrainingLocales.map((locale) => url(publicTrainingCataloguePath(locale), publicTrainingCatalogueHrefAlternates(), publicTrainingCataloguePath("fr")));
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${[...coreRoutes, ...themeRoutes, ...catalogueIndexes, ...catalogueRoutes].join("")}</urlset>`;
+
+  const files: PublicSitemapFile[] = [{ path: "/sitemaps/static.xml", urlCount: staticEntries.length, xml: sitemapUrlset(staticEntries) }];
+  for (let index = 0; index < formationEntries.length; index += PUBLIC_SITEMAP_BATCH_SIZE) {
+    const entries = formationEntries.slice(index, index + PUBLIC_SITEMAP_BATCH_SIZE);
+    files.push({ path: `/sitemaps/formations-${Math.floor(index / PUBLIC_SITEMAP_BATCH_SIZE) + 1}.xml`, urlCount: entries.length, xml: sitemapUrlset(entries) });
+  }
+  return files;
+}
+
+export function renderPublicTrainingSitemap() {
+  const sitemapFiles = getPublicTrainingSitemapFiles();
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapFiles.map((file) => `<sitemap><loc>${escapeHtml(absolute(file.path))}</loc></sitemap>`).join("")}</sitemapindex>`;
+}
+
+export function renderPublicTrainingSitemapFile(pathname: string) {
+  return getPublicTrainingSitemapFiles().find((file) => file.path === pathname) || null;
 }
 
 export function registerPublicTrainingPages(app: Express) {
   const sendHtml = (res: Response, html: string, status = 200) => res.status(status).set({ "Cache-Control": "no-cache", "Content-Type": "text/html; charset=utf-8" }).send(html);
+  const sendXml = (res: Response, xml: string) => res.status(200).set({ "Cache-Control": "public, max-age=300, stale-while-revalidate=3600", "Content-Type": "application/xml; charset=utf-8", "X-Content-Type-Options": "nosniff" }).send(xml);
   const index = (locale: PublicTrainingLocale) => (_req: Request, res: Response) => sendHtml(res, renderPublicTrainingIndex(locale));
   const theme = (locale: PublicTrainingLocale) => (req: Request, res: Response) => {
     const resolved = getPublicTrainingTheme(req.params.themeSlug, locale);
@@ -410,6 +443,10 @@ export function registerPublicTrainingPages(app: Express) {
   app.get("/formations-ia/:themeSlug", theme("fr"));
   app.get("/en/ai-training/:themeSlug", theme("en"));
   app.get("/ar/ai-training/:themeSlug", theme("ar"));
-  app.get("/sitemap.xml", (_req: Request, res: Response) => res.status(200).set({ "Cache-Control": "no-cache", "Content-Type": "application/xml; charset=utf-8" }).send(renderPublicTrainingSitemap()));
+  app.get("/sitemap.xml", (_req: Request, res: Response) => sendXml(res, renderPublicTrainingSitemap()));
+  app.get("/sitemaps/:sitemapFile", (req: Request, res: Response) => {
+    const sitemap = renderPublicTrainingSitemapFile(`/sitemaps/${req.params.sitemapFile}`);
+    return sitemap ? sendXml(res, sitemap.xml) : res.status(404).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send("Sitemap introuvable");
+  });
   app.get("/robots.txt", (_req: Request, res: Response) => res.status(200).set({ "Cache-Control": "no-cache", "Content-Type": "text/plain; charset=utf-8" }).send(`User-agent: *\nAllow: /\nSitemap: ${ORIGIN}/sitemap.xml\n`));
 }

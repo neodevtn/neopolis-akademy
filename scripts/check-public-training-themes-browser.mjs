@@ -76,18 +76,20 @@ try {
     const response = await fetch(`${baseUrl}${root}/finance-comptabilite-controle-gestion`, { redirect: "manual" });
     return { locale, status: response.status, location: response.headers.get("location") };
   }));
-  const sitemap = await (await fetch(`${baseUrl}/sitemap.xml`)).text();
+  const sitemapIndex = await (await fetch(`${baseUrl}/sitemap.xml`)).text();
+  const sitemapPaths = [...sitemapIndex.matchAll(/<loc>https:\/\/akademy\.neodev\.click([^<]+)<\/loc>/g)].map((match) => match[1]);
+  const sitemap = (await Promise.all(sitemapPaths.map(async (sitemapPath) => (await fetch(`${baseUrl}${sitemapPath}`)).text()))).join("\n");
   const report = {
     generatedAt: new Date().toISOString(),
     baseUrl,
     results,
     notFound: notFoundChecks,
     legacyRedirects,
-    sitemap: { hasFrenchIndex: sitemap.includes(`${"https://akademy.neodev.click"}/formations-ia`), hasEnglishIndex: sitemap.includes(`${"https://akademy.neodev.click"}/en/ai-training`), hasArabicIndex: sitemap.includes(`${"https://akademy.neodev.click"}/ar/ai-training`), hasFinanceDomain: sitemap.includes("comptabilite-finance"), hasAlternates: sitemap.includes("xhtml:link") && sitemap.includes('hreflang="ar"') },
+    sitemap: { fileCount: sitemapPaths.length, hasFrenchIndex: sitemap.includes(`${"https://akademy.neodev.click"}/formations-ia`), hasEnglishIndex: sitemap.includes(`${"https://akademy.neodev.click"}/en/ai-training`), hasArabicIndex: sitemap.includes(`${"https://akademy.neodev.click"}/ar/ai-training`), hasFinanceDomain: sitemap.includes("comptabilite-finance"), hasAlternates: sitemap.includes("xhtml:link") && sitemap.includes('hreflang="ar"') },
     passed: results.every((result) => result.status === 200 && result.titleMatches && result.expectedTextVisible && result.languageMatches && result.directionMatches && result.canonicalPresent && result.hreflangPresent && result.openGraphPresent && result.openGraphImagePresent && result.xImagePresent && result.structuredDataPresent && result.keywordsPresent && !result.overflow)
       && notFoundChecks.every((result) => result.status === 404 && result.noindex)
       && legacyRedirects.every((result) => result.status === 301 && result.location?.endsWith("/comptabilite-finance"))
-      && sitemap.includes(`${"https://akademy.neodev.click"}/formations-ia`) && sitemap.includes(`${"https://akademy.neodev.click"}/en/ai-training`) && sitemap.includes(`${"https://akademy.neodev.click"}/ar/ai-training`) && sitemap.includes("comptabilite-finance") && sitemap.includes("xhtml:link") && sitemap.includes('hreflang="ar"'),
+      && sitemapPaths.length > 1 && sitemap.includes(`${"https://akademy.neodev.click"}/formations-ia`) && sitemap.includes(`${"https://akademy.neodev.click"}/en/ai-training`) && sitemap.includes(`${"https://akademy.neodev.click"}/ar/ai-training`) && sitemap.includes("comptabilite-finance") && sitemap.includes("xhtml:link") && sitemap.includes('hreflang="ar"'),
   };
   fs.writeFileSync(outputPath, `${JSON.stringify(report, null, 2)}\n`);
   console.log(JSON.stringify(report, null, 2));
