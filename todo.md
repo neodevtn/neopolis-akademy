@@ -2770,5 +2770,5 @@
 - [x] Garantir HTTP 200 direct, UTF-8, `application/xml; charset=utf-8`, URL HTTPS absolues, aucun cookie, aucune redirection, aucune route privée ni `/apply` — contrats de réponse et exclusions validés localement
 - [x] Ajouter des tests XML, doublons, canonical, indexabilité, Googlebot desktop/mobile et cohérence de l’index avec tous les lots — 909 pages vérifiées, sans doublon, avec canonical auto-référent, indexables et HTTP 200
 - [x] Renforcer le bornage réutilisable des valeurs utilisées par `String.repeat` pour les données négatives, incohérentes ou historiques, avec tests dédiés — bornage 0–3 testé avec valeurs négatives, décimales, excessives, infinies et textuelles
-- [ ] Exécuter la suite complète, publier, vérifier chaque sitemap sur le domaine public et produire le rapport par fichier
+- [x] Exécuter la suite complète, publier, vérifier chaque sitemap sur le domaine public et produire le rapport par fichier — 586 tests réussis, matrice de publication en neuf étapes réussie, puis six fichiers et 909 URL validés sur `akademy.neodev.click` avec Googlebot desktop/mobile
 - [x] Stabiliser le contrôle navigateur desktop sous charge de publication en relançant une fois uniquement les blocs momentanément absents ou limités, sans masquer un échec persistant — la matrice complète passe désormais ses neuf étapes
