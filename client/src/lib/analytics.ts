@@ -73,7 +73,7 @@ const ALLOWED_EVENT_PARAMS = new Set([
 const ALLOWED_QUERY_PARAMS = new Set(["tab", "lesson", "chapter"]);
 const trackedPageLocations = new Set<string>();
 const trackedEventKeys = new Set<string>();
-let scriptPromise: Promise<void> | null = null;
+let scriptPromise: Promise<boolean> | null = null;
 
 function looksLikePersonalOrSensitiveValue(value: string) {
   return /\b[\w.+-]+@[\w-]+\.[\w.-]+\b|https?:\/\/|\b(?:token|password|bearer|secret)\b|(?:\+?\d[\s.-]?){7,}\d/.test(value);
@@ -138,24 +138,31 @@ export function initializeAnalytics() {
   window.gtag = createDataLayerGtag(window.dataLayer);
   dispatchGtag("consent", "default", { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
   dispatchGtag("consent", "update", { analytics_storage: "granted" });
-  dispatchGtag("js", new Date());
-  dispatchGtag("config", MEASUREMENT_ID, { send_page_view: false, anonymize_ip: true });
 
   scriptPromise = new Promise((resolve) => {
     const script = document.createElement("script");
     script.async = true;
     script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(MEASUREMENT_ID)}`;
-    script.onload = () => resolve();
-    script.onerror = () => resolve();
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
     document.head.appendChild(script);
   });
-  return scriptPromise.then(() => true);
+  return scriptPromise.then((loaded) => {
+    if (!loaded) return false;
+    // La configuration suit le chargement effectif du runtime gtag. Ce séquencement
+    // est plus fiable pour une balise injectée après un consentement explicite.
+    dispatchGtag("js", new Date());
+    dispatchGtag("config", MEASUREMENT_ID, { send_page_view: false, anonymize_ip: true });
+    return true;
+  });
 }
 
 export function updateAnalyticsConsent(granted: boolean) {
   if (typeof window === "undefined") return;
   if (granted) {
-    void initializeAnalytics().then(() => trackPageView());
+    void initializeAnalytics().then((loaded) => {
+      if (loaded) trackPageView();
+    });
     return;
   }
   dispatchGtag("consent", "update", { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
