@@ -106,6 +106,8 @@ Toutes les routes publiques indexables sont couvertes par des métadonnées spé
 
 La hiérarchie de contenu est également explicite : les pages d’accueil, AI News, candidature, parrainage et mentions légales utilisent au moins un H1 et un H2 ; les pages Formation rendues côté serveur utilisent déjà un H1 de page suivi de H2 de section. La candidature ne rend qu’un H1 par état visible — formulaire ou confirmation — et utilise désormais les H2 pour l’étape et le message de suivi. Les routes de connexion, de récupération, d’invitation, de diagnostic, d’administration, d’apprentissage et d’examen sont volontairement exclues de l’indexation, car elles sont transactionnelles ou protégées.
 
+Le contenu `noscript` injecté à l’accueil, AI News, la candidature, le parrainage et les mentions légales rend maintenant lui aussi un H1. Les robots qui ne suivent pas les scripts reçoivent donc un titre de page sémantique au lieu d’un simple H2. Ce H1 n’est pas affiché lorsque JavaScript est disponible, ce qui évite de dupliquer le H1 visuel des composants React. Les 20 contrats SEO ciblés, la suite complète de 559 tests (2 ignorés) et la matrice `qa:publish` ont été rejoués après ce correctif.
+
 ## Références
 
 [1] [Chrome for Developers — *Reduce unused JavaScript*](https://developer.chrome.com/docs/lighthouse/performance/unused-javascript)

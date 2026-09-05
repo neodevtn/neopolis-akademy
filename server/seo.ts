@@ -319,7 +319,7 @@ export function renderPublicCrawlerFallback(requestUrl: string) {
   if (!fallback) return "";
 
   const locale = LOCALE_METADATA[page.locale || "fr"];
-  return `<main style="max-width:78rem;margin:0 auto;padding:2rem 1.25rem;font-family:Inter,Arial,sans-serif;color:#172033;background:#fff" dir="${locale.dir}"><h2>${escapeHtml(fallback.heading)}</h2><p>${escapeHtml(fallback.description)}</p><nav aria-label="Navigation publique"><ul>${fallback.links.map((link) => `<li><a href="${link.href}">${escapeHtml(link.label)}</a></li>`).join("")}</ul></nav></main>`;
+  return `<main style="max-width:78rem;margin:0 auto;padding:2rem 1.25rem;font-family:Inter,Arial,sans-serif;color:#172033;background:#fff" dir="${locale.dir}"><h1>${escapeHtml(fallback.heading)}</h1><p>${escapeHtml(fallback.description)}</p><nav aria-label="Navigation publique"><ul>${fallback.links.map((link) => `<li><a href="${link.href}">${escapeHtml(link.label)}</a></li>`).join("")}</ul></nav></main>`;
 }
 
 export function renderSeoHead(requestUrl: string) {

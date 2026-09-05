@@ -156,7 +156,7 @@ describe("server-rendered sharing metadata", () => {
     const referral = renderPublicCrawlerFallback("/refer?ref=NEO-AB12CD34");
 
     expect(home).toContain("Formations IA gratuites par métier");
-    expect(home).not.toContain("<h1>");
+    expect(home).toContain("<h1>Formations IA gratuites par métier</h1>");
     expect(home).toContain('href="/formations-ia"');
     expect(renderPublicCrawlerFallback("/en")).toContain("Free AI training by profession");
     expect(renderPublicCrawlerFallback("/ar")).toContain("تدريب مجاني في الذكاء الاصطناعي حسب المهنة");
