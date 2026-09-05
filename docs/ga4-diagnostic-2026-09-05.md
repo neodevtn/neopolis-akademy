@@ -27,3 +27,11 @@ Le HAR fourni contient 63 entrées. L’analyse a volontairement exclu les URL c
 À la demande du propriétaire, l’implémentation utilise maintenant le **Consent Mode avancé** plutôt qu’une suppression du choix utilisateur. La balise se charge avec le stockage Analytics refusé par défaut et peut émettre une page vue minimale sans stockage ; les événements pédagogiques détaillés restent conditionnés à l’acceptation. Le stockage publicitaire, les données publicitaires et la personnalisation publicitaire restent refusés. Le bandeau apparaît rapidement dans une session vierge et précède désormais les communiqués importants.
 
 La sonde publiée confirme la présence du script, le défaut `denied`, la transition `granted` après choix, la file standard et l’absence d’erreur CSP. La réception effective dans les rapports GA4 reste le dernier critère de clôture.
+
+## Cause racine et preuve de correction
+
+Une comparaison sous les mêmes en-têtes de sécurité a montré que le runtime Google fonctionne lorsque l’amorçage est exécuté depuis un script classique avant l’application. Le correctif final ajoute donc un bootstrap auto-hébergé dans le HTML : il place `consent default`, `js` et `config` dans `dataLayer`, puis charge gtag. L’application React reste responsable des vues SPA, de la transition accordée après choix et des événements pédagogiques protégés par consentement.
+
+La sonde locale après ce correctif confirme une destination active, un callback client disponible sans en consigner la valeur, une requête `/g/collect`, une réponse Google 2xx, aucune erreur CSP et aucun échec réseau. Le profil Chromium privé confirme également zéro cookie initial, un stockage de consentement vide et un bandeau visible sans erreur.
+
+Au dernier contrôle, le domaine public servait encore l’ancien HTML sans référence au bootstrap, après un échec de déploiement lié au quota Cloud Run `ServicesPerProject`. Le code est donc validé mais la preuve publique finale dépend de la propagation d’un checkpoint lorsque ce quota externe redevient disponible.
