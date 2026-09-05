@@ -149,7 +149,7 @@
 ## Audit et optimisation SEO SEOptimer
 - [x] Examiner le rapport SEOptimer et confirmer les écarts signalés directement dans le HTML et les réponses publiques — rapport B, sept recommandations qualifiées ; racine sans redirection, analytics conditionnel conforme, SPF/DMARC et coordonnées identifiés comme réglages externes
 - [x] Appliquer les améliorations SEO et techniques pertinentes, sans recommandations décoratives ni régression de contenu — balises robots publiques, mots-clés ciblés, données structurées Organization/WebPage, profils officiels vérifiés, contenu `noscript`, sitemap enrichi, images différées et HTML révalidé
-- [ ] Vérifier les corrections localement et sur le domaine public avant publication — TypeScript, 554 tests (2 ignorés), build, sonde locale et matrice QA réussis ; contrôle du domaine public à effectuer après checkpoint
+- [x] Vérifier les corrections localement et sur le domaine public avant publication — TypeScript, 554 tests (2 ignorés), build et matrice QA réussis ; contrôle public après checkpoint `7f494abb` validé sur les routes publiques, de parrainage et Formation FR/EN/AR, avec 404/noindex et redirections 301 contrôlés
 - [x] Généraliser les directives SEO, le balisage structuré et les optimisations de chargement aux pages publiques et de parrainage, avec des exceptions explicites pour les espaces privés — accueil, AI News, candidature, parrainage, mentions légales et formations couverts ; espaces privés préservés en `noindex, nofollow`
 
 ## Audit comparatif avancé — DataCamp et Neopolis

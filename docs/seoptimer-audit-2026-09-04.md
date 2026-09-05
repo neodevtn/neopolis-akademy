@@ -55,7 +55,11 @@ Le head global inclut un graphe JSON-LD avec `Organization` et `WebPage`, un log
 
 Les enrichissements de progression de l’accueil restent chargés à l’inactivité du navigateur et le `ProcessStepper`, situé sous le pli, est maintenant chargé à la demande. Le bundle de la page Home est passé de 127,40 kB (28,56 kB gzip) à 117,42 kB (26,16 kB gzip) dans le build local, soit une réduction mesurée de 9,98 kB minifiés et 2,40 kB gzip pour ce fragment. Les images non critiques du bloc partenaire sont différées. Enfin, le document HTML est révalidé à chaque utilisation plutôt que totalement interdit de cache : les assets versionnés restent immuables, le navigateur revalide le HTML pour recevoir un nouveau hash après publication.
 
-Les tests TypeScript, les 554 tests automatisés (2 ignorés) et la matrice `qa:publish` ont réussi localement. La matrice couvre notamment la validation de catalogue, les pages Formation, les métadonnées sociales, le contrôle d’interactions et les contrôles de blocs desktop/mobile. La vérification publique reste à rejouer après le checkpoint.
+Les tests TypeScript, les 554 tests automatisés (2 ignorés) et la matrice `qa:publish` ont réussi localement. La matrice couvre notamment la validation de catalogue, les pages Formation, les métadonnées sociales, le contrôle d’interactions et les contrôles de blocs desktop/mobile.
+
+## Validation publiée
+
+Après propagation du checkpoint `7f494abb`, les contrôles ont été rejoués sur `https://akademy.neodev.click`. Les pages publiques d’accueil, AI News, candidature, parrainage et mentions légales servent la directive `index, follow` enrichie, les images Open Graph, les données structurées et les contenus de secours prévus. La page Formation et ses variantes FR/EN/AR conservent canonical, `hreflang`, images sociales, JSON-LD et l’absence de débordement aux largeurs 1280, 390 et 375 pixels. Les thèmes inexistants répondent HTTP 404 avec `noindex`, tandis que les redirections des anciens thèmes renvoient HTTP 301 vers les nouveaux domaines. Les routes d’apprentissage restent `noindex, nofollow`.
 
 ## Références
 
