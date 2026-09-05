@@ -1,5 +1,4 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { ProcessStepper } from "@/components/ProcessStepper";
 import { PublicSiteFooter, PublicSiteHeader } from "@/components/PublicSiteChrome";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "wouter";
@@ -28,6 +27,8 @@ import { scrollToHomePublicAnchor } from "@/lib/homePublicAnchors";
 
 // Chart.js is loaded only when the below-the-fold chart becomes visible.
 import type { Chart as ChartJS } from "chart.js";
+
+const ProcessStepper = lazy(() => import("@/components/ProcessStepper").then((module) => ({ default: module.ProcessStepper })));
 
 /* ─── Animated Counter Hook ─── */
 function useCountUp(end: number, duration = 2000, startOnView = true) {
@@ -372,7 +373,7 @@ export default function Home() {
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: "#ffffff" }}>
-                      <img src="/api/assets/logo-anthropic-64_459b0a03.webp" alt="Anthropic" width={32} height={32} decoding="async" className="w-8 h-8 object-contain" />
+                      <img src="/api/assets/logo-anthropic-64_459b0a03.webp" alt="Anthropic" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" />
                     </div>
                     <div>
                       <h3 className="text-white font-bold text-lg">Anthropic</h3>
@@ -404,7 +405,7 @@ export default function Home() {
                   <div className="flex flex-col items-center justify-center">
                     <div className="text-center">
                       <div className="inline-flex items-center gap-3 px-5 py-3 rounded-xl mb-2" style={{ background: "rgba(255,255,255,0.08)" }}>
-                        <img src="/api/assets/neopolis-home-claude-icon-64_ca898f2a.webp" alt="Claude AI" width={64} height={64} decoding="async" className="w-10 h-10 object-contain" />
+                        <img src="/api/assets/neopolis-home-claude-icon-64_ca898f2a.webp" alt="Claude AI" width={64} height={64} loading="lazy" decoding="async" className="w-10 h-10 object-contain" />
                         <span className="text-2xl font-bold text-white">Claude</span>
                       </div>
                       <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>{t({ fr: "Modèle IA le plus avancé au monde", en: "World's most advanced AI model", ar: "أكثر نماذج الذكاء الاصطناعي تقدمًا" })}</p>
@@ -457,7 +458,9 @@ export default function Home() {
           </motion.div>
 
           {/* Stepper horizontal interactif - 5 phases */}
-          <ProcessStepper />
+          <Suspense fallback={<div className="min-h-56" aria-hidden="true" />}>
+            <ProcessStepper />
+          </Suspense>
 
 
           {/* Rémunération */}

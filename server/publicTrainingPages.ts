@@ -17,6 +17,7 @@ import {
 } from "@shared/publicTrainingLocale";
 import { PUBLIC_CHROME_STYLES } from "@shared/publicChromeStyles";
 import { PUBLIC_SOCIAL_ASSETS } from "@shared/publicSocialAssets";
+import { ORGANIZATION_SOCIAL_PROFILES } from "./seo";
 
 const SITE_NAME = "Neopolis Akademy";
 const ORIGIN = "https://akademy.neodev.click";
@@ -25,11 +26,30 @@ const X_SHARE_IMAGE_URL = `${ORIGIN}${PUBLIC_SOCIAL_ASSETS.x.path}`;
 const SHARE_IMAGE_ALT = "Neopolis Akademy — Formation certifiante en intelligence artificielle";
 const LOGO_URL = "/api/assets/neopolis-akademy-official-logo_40a16b6c.svg";
 const OECD_URL = "https://www.oecd.org/en/publications/generative-ai-and-the-sme-workforce_2d08b99d-en.html";
+const CORE_PUBLIC_SITEMAP_PATHS = ["/", "/ai-news", "/apply", "/mentions-legales"] as const;
 
 const escapeHtml = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 const toJson = (value: unknown) => JSON.stringify(value).replace(/</g, "\\u003c");
 const number = (value: number, locale: PublicTrainingLocale) => new Intl.NumberFormat(publicTrainingLocaleMeta[locale].numberLocale).format(value);
 const absolute = (path: string) => `${ORIGIN}${path}`;
+
+function organizationSchema() {
+  return {
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: ORIGIN,
+    logo: `${ORIGIN}${PUBLIC_SOCIAL_ASSETS.square.path}`,
+    sameAs: ORGANIZATION_SOCIAL_PROFILES,
+  };
+}
+
+function schemaWithOrganization(schema: Record<string, unknown>) {
+  const { "@context": _context, ...pageSchema } = schema;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [organizationSchema(), pageSchema],
+  };
+}
 
 function publicChromeCopy(locale: PublicTrainingLocale) {
   return {
@@ -77,6 +97,7 @@ function head({ locale, title, description, canonicalPath, keywords, noindex = f
     <meta property="og:description" content="${escapeHtml(description)}" />
     <meta property="og:url" content="${canonical}" />
     <meta property="og:image" content="${SHARE_IMAGE_URL}" />
+    <meta property="og:image:url" content="${SHARE_IMAGE_URL}" />
     <meta property="og:image:secure_url" content="${SHARE_IMAGE_URL}" />
     <meta property="og:image:type" content="${PUBLIC_SOCIAL_ASSETS.openGraph.type}" />
     <meta property="og:image:width" content="${PUBLIC_SOCIAL_ASSETS.openGraph.width}" />
@@ -87,8 +108,8 @@ function head({ locale, title, description, canonicalPath, keywords, noindex = f
     <meta name="twitter:description" content="${escapeHtml(description)}" />
     <meta name="twitter:image" content="${X_SHARE_IMAGE_URL}" />
     <meta name="twitter:image:alt" content="${SHARE_IMAGE_ALT}" />
-    ${noindex ? '<meta name="robots" content="noindex, follow" />' : ""}
-    <script type="application/ld+json">${toJson(schema)}</script>`;
+    ${noindex ? '<meta name="robots" content="noindex, follow" />' : '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />'}
+    <script type="application/ld+json">${toJson(schemaWithOrganization(schema))}</script>`;
 }
 
 function styles() {
@@ -134,7 +155,7 @@ function layout(body: string, options: Parameters<typeof head>[0]) {
   const languageLinks = publicTrainingLocales.map((locale) => `<a class="public-chrome-language-link" href="${publicTrainingPath(locale, options.themeSlug)}" hreflang="${publicTrainingLocaleMeta[locale].languageTag}"${locale === options.locale ? ' aria-current="page"' : ""}>${publicTrainingCopy[locale].languageLabel}</a>`).join("");
   return `<!doctype html><html lang="${publicTrainingLocaleMeta[options.locale].languageTag}" dir="${publicTrainingLocaleMeta[options.locale].direction}"><head>${head(options)}${styles()}</head><body>
     <header class="public-chrome-header"><div class="public-chrome-shell"><a class="public-chrome-brand" href="/" aria-label="Neopolis Akademy"><img class="public-chrome-logo" src="${LOGO_URL}" alt="Neopolis Akademy" width="180" height="63" /></a><nav class="public-chrome-nav" aria-label="${escapeHtml(chrome.program)}"><a class="public-chrome-nav-link" href="/#formule">${escapeHtml(chrome.formula)}</a><a class="public-chrome-nav-link" href="/#pourquoi">${escapeHtml(chrome.why)}</a><a class="public-chrome-nav-link" href="/#partenaires">${escapeHtml(chrome.partners)}</a><a class="public-chrome-nav-link" href="${publicTrainingPath(options.locale)}" aria-current="page">${escapeHtml(copy.navTraining)}</a><a class="public-chrome-nav-link" href="/ai-news">${escapeHtml(copy.navNews)}</a><a class="public-chrome-nav-link" href="/#faq">${escapeHtml(chrome.faq)}</a><a class="public-chrome-signin" href="/login">${escapeHtml(copy.navSignIn)}</a></nav><div class="public-chrome-actions"><nav class="public-chrome-language public-chrome-locale-desktop" aria-label="Language">${languageLinks}</nav><details class="public-chrome-mobile"><summary aria-label="${escapeHtml(chrome.program)}"><span aria-hidden="true">☰</span></summary><nav class="public-chrome-mobile-panel" aria-label="${escapeHtml(chrome.program)}"><div class="public-chrome-nav"><a class="public-chrome-nav-link" href="/#formule">${escapeHtml(chrome.formula)}</a><a class="public-chrome-nav-link" href="/#pourquoi">${escapeHtml(chrome.why)}</a><a class="public-chrome-nav-link" href="/#partenaires">${escapeHtml(chrome.partners)}</a><a class="public-chrome-nav-link" href="${publicTrainingPath(options.locale)}" aria-current="page">${escapeHtml(copy.navTraining)}</a><a class="public-chrome-nav-link" href="/ai-news">${escapeHtml(copy.navNews)}</a><a class="public-chrome-nav-link" href="/#faq">${escapeHtml(chrome.faq)}</a><a class="public-chrome-signin" href="/login">${escapeHtml(copy.navSignIn)}</a><a class="public-chrome-apply" href="/apply"><span>${escapeHtml(chrome.apply)}</span><span class="public-chrome-apply-chevron">›</span></a><nav class="public-chrome-language" aria-label="Language">${languageLinks}</nav></div></nav></details><a class="public-chrome-apply" href="/apply"><span>${escapeHtml(chrome.apply)}</span><span class="public-chrome-apply-chevron">›</span></a></div></div></header>
-    ${body}<footer class="site-footer"><div class="shell"><div class="footer-grid"><div><img class="footer-logo" src="${LOGO_URL}" alt="Neopolis Akademy" width="137" height="48" /><p>${escapeHtml(chrome.lead)}</p></div><div><h2 class="footer-title">${escapeHtml(chrome.program)}</h2><ul class="footer-list"><li><a href="/#formule">${escapeHtml(chrome.formula)}</a></li><li><a href="/#pourquoi">${escapeHtml(chrome.why)}</a></li><li><a href="/#partenaires">${escapeHtml(chrome.partners)}</a></li><li><a href="/#faq">${escapeHtml(chrome.faq)}</a></li></ul></div><div><h2 class="footer-title">${escapeHtml(chrome.explore)}</h2><ul class="footer-list"><li><a href="${publicTrainingPath(options.locale)}">${escapeHtml(copy.navTraining)}</a></li><li><a href="/ai-news">${escapeHtml(copy.navNews)}</a></li><li><a href="/training?tab=catalog">${escapeHtml(copy.navCatalogue)}</a></li><li><a href="/apply">${escapeHtml(chrome.apply)}</a></li></ul></div><div><h2 class="footer-title">${escapeHtml(chrome.contact)}</h2><ul class="footer-list"><li><a href="mailto:info@neopolis-dev.com">info@neopolis-dev.com</a></li><li><a href="https://www.neopolis-dev.com" rel="noopener noreferrer">Neopolis Development ↗</a></li><li><a href="/mentions-legales">${escapeHtml(chrome.legal)}</a></li></ul></div></div><div class="footer-bottom">© 2026 Neopolis Development. ${escapeHtml(chrome.rights)}</div></div></footer></body></html>`;
+    ${body}<footer class="site-footer"><div class="shell"><div class="footer-grid"><div><img class="footer-logo" src="${LOGO_URL}" alt="Neopolis Akademy" width="137" height="48" /><p>${escapeHtml(chrome.lead)}</p></div><div><h2 class="footer-title">${escapeHtml(chrome.program)}</h2><ul class="footer-list"><li><a href="/#formule">${escapeHtml(chrome.formula)}</a></li><li><a href="/#pourquoi">${escapeHtml(chrome.why)}</a></li><li><a href="/#partenaires">${escapeHtml(chrome.partners)}</a></li><li><a href="/#faq">${escapeHtml(chrome.faq)}</a></li></ul></div><div><h2 class="footer-title">${escapeHtml(chrome.explore)}</h2><ul class="footer-list"><li><a href="${publicTrainingPath(options.locale)}">${escapeHtml(copy.navTraining)}</a></li><li><a href="/ai-news">${escapeHtml(copy.navNews)}</a></li><li><a href="/training?tab=catalog">${escapeHtml(copy.navCatalogue)}</a></li><li><a href="/apply">${escapeHtml(chrome.apply)}</a></li></ul></div><div><h2 class="footer-title">${escapeHtml(chrome.contact)}</h2><ul class="footer-list"><li><a href="mailto:info@neopolis-dev.com">info@neopolis-dev.com</a></li><li><a href="https://www.neopolis-dev.com" rel="noopener noreferrer">Neopolis Development ↗</a></li><li><a href="https://fr.linkedin.com/company/neopolis-development" rel="noopener noreferrer">LinkedIn ↗</a></li><li><a href="https://fr-fr.facebook.com/neopolisdev/" rel="noopener noreferrer">Facebook ↗</a></li><li><a href="/mentions-legales">${escapeHtml(chrome.legal)}</a></li></ul></div></div><div class="footer-bottom">© 2026 Neopolis Development. ${escapeHtml(chrome.rights)}</div></div></footer></body></html>`;
 }
 
 function metricCards(metrics: PublicTrainingMetrics, locale: PublicTrainingLocale) {
@@ -185,7 +206,8 @@ export function renderPublicTrainingNotFound(locale: PublicTrainingLocale = "fr"
 
 export function renderPublicTrainingSitemap() {
   const routes = publicTrainingLocales.flatMap((locale) => [undefined, ...getPublicTrainingThemes(locale).map((theme) => theme.slug)].map((themeSlug) => ({ locale, themeSlug, path: publicTrainingPath(locale, themeSlug) })));
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${routes.map((route) => `<url><loc>${absolute(route.path)}</loc>${publicTrainingHrefAlternates(route.themeSlug).map((alternate) => `<xhtml:link rel="alternate" hreflang="${publicTrainingLocaleMeta[alternate.locale].languageTag}" href="${absolute(alternate.href)}" />`).join("")}<xhtml:link rel="alternate" hreflang="x-default" href="${absolute(publicTrainingPath("fr", route.themeSlug))}" /></url>`).join("")}</urlset>`;
+  const coreRoutes = CORE_PUBLIC_SITEMAP_PATHS.map((route) => `<url><loc>${absolute(route)}</loc></url>`).join("");
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${coreRoutes}${routes.map((route) => `<url><loc>${absolute(route.path)}</loc>${publicTrainingHrefAlternates(route.themeSlug).map((alternate) => `<xhtml:link rel="alternate" hreflang="${publicTrainingLocaleMeta[alternate.locale].languageTag}" href="${absolute(alternate.href)}" />`).join("")}<xhtml:link rel="alternate" hreflang="x-default" href="${absolute(publicTrainingPath("fr", route.themeSlug))}" /></url>`).join("")}</urlset>`;
 }
 
 export function registerPublicTrainingPages(app: Express) {

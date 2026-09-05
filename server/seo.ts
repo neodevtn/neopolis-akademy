@@ -7,6 +7,10 @@ export const SITE_NAME = "Neopolis Akademy";
 export const SHARE_IMAGE_URL = `${CANONICAL_ORIGIN}${PUBLIC_SOCIAL_ASSETS.openGraph.path}`;
 export const X_SHARE_IMAGE_URL = `${CANONICAL_ORIGIN}${PUBLIC_SOCIAL_ASSETS.x.path}`;
 export const SHARE_IMAGE_ALT = "Neopolis Akademy — Formation certifiante en intelligence artificielle";
+export const ORGANIZATION_SOCIAL_PROFILES = [
+  "https://fr-fr.facebook.com/neopolisdev/",
+  "https://fr.linkedin.com/company/neopolis-development",
+] as const;
 
 type SeoPage = {
   title: string;
@@ -30,15 +34,23 @@ const ROUTE_PAGES: Record<string, Omit<SeoPage, "path">> = {
     title: "Candidature | Neopolis Akademy",
     description:
       "Candidatez au programme Neopolis Akademy et développez vos compétences en intelligence artificielle.",
+    keywords: "candidature formation IA, programme IA, compétences IA, formation professionnelle, Neopolis Akademy",
   },
   "/ai-news": {
     title: "AI News | Veille intelligence artificielle | Neopolis Akademy",
     description:
       "Suivez les annonces, outils, analyses et prépublications qui comptent dans l’intelligence artificielle.",
+    keywords: "actualités intelligence artificielle, veille IA, outils IA, analyses IA, Neopolis Akademy",
   },
   "/mentions-legales": {
     title: "Mentions légales | Neopolis Akademy",
     description: "Consultez les mentions légales de la plateforme Neopolis Akademy.",
+    keywords: "mentions légales, Neopolis Akademy, plateforme formation IA, protection des données, conditions d’utilisation",
+  },
+  "/refer": {
+    title: "Parrainage | Neopolis Akademy",
+    description: "Partagez les parcours pratiques Neopolis Akademy avec votre réseau professionnel.",
+    keywords: "parrainage formation IA, recommander formation IA, réseau professionnel, parcours IA, Neopolis Akademy",
   },
   "/training": {
     title: "Formations en intelligence artificielle | Neopolis Akademy",
@@ -114,7 +126,13 @@ function referralSeoPage(url: URL): SeoPage {
   // La cible réelle garde ses paramètres de recommandation, mais la carte sociale
   // utilise une URL neutre : aucun identifiant ni libellé fourni par l’utilisateur
   // n’est alors exposé aux robots de prévisualisation.
-  return { title, description, path: "/refer", openGraphPath: "/refer" };
+  return {
+    title,
+    description,
+    keywords: "formation IA recommandée, parrainage formation, compétences IA, parcours professionnel, Neopolis Akademy",
+    path: "/refer",
+    openGraphPath: "/refer",
+  };
 }
 
 export function getSeoPage(requestUrl: string): SeoPage {
@@ -159,6 +177,96 @@ function escapeHtml(value: string) {
   });
 }
 
+function toJsonLd(value: unknown) {
+  return JSON.stringify(value).replace(/</g, "\\u003c");
+}
+
+function publicPageSchema(page: SeoPage, canonicalUrl: string) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        name: SITE_NAME,
+        url: CANONICAL_ORIGIN,
+        logo: `${CANONICAL_ORIGIN}${PUBLIC_SOCIAL_ASSETS.square.path}`,
+        sameAs: ORGANIZATION_SOCIAL_PROFILES,
+      },
+      {
+        "@type": "WebPage",
+        name: page.title,
+        description: page.description,
+        url: canonicalUrl,
+        inLanguage: "fr-FR",
+        isPartOf: {
+          "@type": "WebSite",
+          name: SITE_NAME,
+          url: CANONICAL_ORIGIN,
+        },
+      },
+    ],
+  };
+}
+
+type PublicFallback = {
+  heading: string;
+  description: string;
+  links: Array<{ href: string; label: string }>;
+};
+
+const PUBLIC_CRAWLER_FALLBACKS: Record<string, PublicFallback> = {
+  "/": {
+    heading: "Formations IA gratuites par métier",
+    description: "Neopolis Akademy propose des parcours pratiques en intelligence artificielle pour développer des compétences adaptées aux métiers.",
+    links: [
+      { href: "/formations-ia", label: "Explorer les formations IA par métier" },
+      { href: "/apply", label: "Déposer une candidature" },
+      { href: "/ai-news", label: "Consulter AI News" },
+    ],
+  },
+  "/ai-news": {
+    heading: "AI News",
+    description: "Retrouvez une veille éditoriale sur les annonces, analyses et outils liés à l’intelligence artificielle.",
+    links: [
+      { href: "/formations-ia", label: "Explorer les formations IA" },
+      { href: "/apply", label: "Découvrir les modalités d’accès" },
+    ],
+  },
+  "/apply": {
+    heading: "Candidature à Neopolis Akademy",
+    description: "Déposez votre candidature pour accéder aux parcours de formation Neopolis Akademy en intelligence artificielle.",
+    links: [
+      { href: "/formations-ia", label: "Voir les formations disponibles" },
+      { href: "/", label: "Découvrir le programme" },
+    ],
+  },
+  "/refer": {
+    heading: "Parrainage Neopolis Akademy",
+    description: "Découvrez les parcours pratiques Neopolis Akademy recommandés par votre réseau professionnel.",
+    links: [
+      { href: "/formations-ia", label: "Explorer les formations IA" },
+      { href: "/apply", label: "Déposer une candidature" },
+    ],
+  },
+  "/mentions-legales": {
+    heading: "Mentions légales",
+    description: "Consultez les informations légales et les conditions d’utilisation de Neopolis Akademy.",
+    links: [
+      { href: "/", label: "Retour à l’accueil" },
+      { href: "/formations-ia", label: "Explorer les formations IA" },
+    ],
+  },
+};
+
+export function renderPublicCrawlerFallback(requestUrl: string) {
+  const page = getSeoPage(requestUrl);
+  if (page.noindex) return "";
+  const fallback = PUBLIC_CRAWLER_FALLBACKS[page.path];
+  if (!fallback) return "";
+
+  return `<main style="max-width:78rem;margin:0 auto;padding:2rem 1.25rem;font-family:Inter,Arial,sans-serif;color:#172033;background:#fff"><h1>${escapeHtml(fallback.heading)}</h1><p>${escapeHtml(fallback.description)}</p><nav aria-label="Navigation publique"><ul>${fallback.links.map((link) => `<li><a href="${link.href}">${escapeHtml(link.label)}</a></li>`).join("")}</ul></nav></main>`;
+}
+
 export function renderSeoHead(requestUrl: string) {
   const page = getSeoPage(requestUrl);
   const title = escapeHtml(page.title);
@@ -166,7 +274,12 @@ export function renderSeoHead(requestUrl: string) {
   const keywords = page.keywords ? `<meta name="keywords" content="${escapeHtml(page.keywords)}" />` : "";
   const canonicalUrl = `${CANONICAL_ORIGIN}${page.path}`;
   const openGraphUrl = `${CANONICAL_ORIGIN}${page.openGraphPath || page.path}`;
-  const robots = page.noindex ? '<meta name="robots" content="noindex, nofollow" />' : "";
+  const robots = page.noindex
+    ? '<meta name="robots" content="noindex, nofollow" />'
+    : '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />';
+  const structuredData = page.noindex
+    ? ""
+    : `<script type="application/ld+json">${toJsonLd(publicPageSchema(page, canonicalUrl))}</script>`;
 
   return [
     `<title>${title}</title>`,
@@ -180,6 +293,7 @@ export function renderSeoHead(requestUrl: string) {
     `<meta property="og:description" content="${description}" />`,
     `<meta property="og:url" content="${escapeHtml(openGraphUrl)}" />`,
     `<meta property="og:image" content="${SHARE_IMAGE_URL}" />`,
+    `<meta property="og:image:url" content="${SHARE_IMAGE_URL}" />`,
     `<meta property="og:image:secure_url" content="${SHARE_IMAGE_URL}" />`,
     `<meta property="og:image:type" content="${PUBLIC_SOCIAL_ASSETS.openGraph.type}" />`,
     `<meta property="og:image:width" content="${PUBLIC_SOCIAL_ASSETS.openGraph.width}" />`,
@@ -191,9 +305,12 @@ export function renderSeoHead(requestUrl: string) {
     `<meta name="twitter:image" content="${X_SHARE_IMAGE_URL}" />`,
     `<meta name="twitter:image:alt" content="${SHARE_IMAGE_ALT}" />`,
     robots,
+    structuredData,
   ].filter(Boolean).join("\n    ");
 }
 
 export function injectSeoHead(template: string, requestUrl: string) {
-  return template.replace("<!--seo-head-->", () => renderSeoHead(requestUrl));
+  return template
+    .replace("<!--seo-head-->", () => renderSeoHead(requestUrl))
+    .replace("<!--seo-content-->", () => renderPublicCrawlerFallback(requestUrl));
 }

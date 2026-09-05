@@ -128,7 +128,7 @@ export function PublicSiteHeader({ active = "home" }: { active?: PublicPage }) {
       <style>{PUBLIC_CHROME_STYLES}</style>
       <header className="public-chrome-header">
       <div className="public-chrome-shell">
-        <Link href="/" aria-label="Neopolis Akademy" className="public-chrome-brand"><img src={LOGO_URL} alt="Neopolis Akademy" width={180} height={63} decoding="async" className="public-chrome-logo" /></Link>
+        <Link href="/" aria-label="Neopolis Akademy" className="public-chrome-brand"><img src={LOGO_URL} alt="Neopolis Akademy" width={180} height={63} decoding="async" fetchPriority="high" className="public-chrome-logo" /></Link>
         <nav className="public-chrome-nav" aria-label={t(labels.menu)}>
           <NavigationLinks page={active} />
           <DeferredHomeAuth slot="training" fallback={<Link href="/login" className="public-chrome-signin">{t(labels.signIn)}</Link>} />
@@ -166,7 +166,7 @@ export function PublicSiteFooter() {
           </div>
           <div>
             <h2 className="text-xs font-bold uppercase tracking-[0.12em] text-white">{t(labels.contact)}</h2>
-            <ul className="mt-3 space-y-2 text-sm"><li><a href="mailto:info@neopolis-dev.com" className="hover:text-white hover:underline">info@neopolis-dev.com</a></li><li><a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="hover:text-white hover:underline">Neopolis Development ↗</a></li><li><Link href="/mentions-legales" className="hover:text-white hover:underline">{t(labels.legal)}</Link></li></ul>
+            <ul className="mt-3 space-y-2 text-sm"><li><a href="mailto:info@neopolis-dev.com" className="hover:text-white hover:underline">info@neopolis-dev.com</a></li><li><a href="https://www.neopolis-dev.com" target="_blank" rel="noopener noreferrer" className="hover:text-white hover:underline">Neopolis Development ↗</a></li><li><a href="https://fr.linkedin.com/company/neopolis-development" target="_blank" rel="noopener noreferrer" className="hover:text-white hover:underline">LinkedIn ↗</a></li><li><a href="https://fr-fr.facebook.com/neopolisdev/" target="_blank" rel="noopener noreferrer" className="hover:text-white hover:underline">Facebook ↗</a></li><li><Link href="/mentions-legales" className="hover:text-white hover:underline">{t(labels.legal)}</Link></li></ul>
           </div>
         </div>
         <div className="mt-8 border-t border-white/15 pt-5 text-center text-xs text-slate-400">© {currentYear} Neopolis Development. {t(labels.allRights)}</div>

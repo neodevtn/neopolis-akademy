@@ -146,6 +146,12 @@
 - [x] Couvrir les liens d’invitation, de recommandation et de parrainage avec un aperçu social sans exposer de paramètres ou de données personnelles — `/refer`, `/apply?ref=…` et la page d’invitation reçoivent les visuels ; `og:url` de recommandation est neutralisée vers `/refer`
 - [x] Vérifier le HTML servi, les images absolues et les aperçus de partage des principales pages publiques avant publication — sonde publique sur 11 routes réussie après propagation ; images Open Graph et X accessibles en HTTP 200 / `image/png`, titres, descriptions et canoniques présents
 
+## Audit et optimisation SEO SEOptimer
+- [x] Examiner le rapport SEOptimer et confirmer les écarts signalés directement dans le HTML et les réponses publiques — rapport B, sept recommandations qualifiées ; racine sans redirection, analytics conditionnel conforme, SPF/DMARC et coordonnées identifiés comme réglages externes
+- [x] Appliquer les améliorations SEO et techniques pertinentes, sans recommandations décoratives ni régression de contenu — balises robots publiques, mots-clés ciblés, données structurées Organization/WebPage, profils officiels vérifiés, contenu `noscript`, sitemap enrichi, images différées et HTML révalidé
+- [ ] Vérifier les corrections localement et sur le domaine public avant publication — TypeScript, 554 tests (2 ignorés), build, sonde locale et matrice QA réussis ; contrôle du domaine public à effectuer après checkpoint
+- [x] Généraliser les directives SEO, le balisage structuré et les optimisations de chargement aux pages publiques et de parrainage, avec des exceptions explicites pour les espaces privés — accueil, AI News, candidature, parrainage, mentions légales et formations couverts ; espaces privés préservés en `noindex, nofollow`
+
 ## Audit comparatif avancé — DataCamp et Neopolis
 - [x] Auditer les formations certifiantes, les examens blancs, les invitations de fin de cours et les métadonnées de durée/questions réellement disponibles — 4 formations certifiantes configurées, chacune avec code examen, nombre de questions, durée, seuil et domaines issus de `trainingIndex.examConfig`
 - [x] Rendre les examens visibles dans les cartes, filtres et fiches de formation avec un appel à l’action post-complétion lorsque l’épreuve est éligible — filtre « Avec examen blanc », badges catalogue, résumé questions/durée/seuil et CTA d’examen ajoutés sans créer d’examen fictif

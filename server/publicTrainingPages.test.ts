@@ -17,6 +17,7 @@ describe("pages publiques de formations IA", () => {
     expect(html).toContain("Choisir une formation IA par grand domaine métier");
     expect(html).toContain('meta name="keywords" content="formations IA gratuites, formation IA par métier, compétences IA, formation professionnelle, zone MENA"');
     expect(html).toContain('og-neopolis-akademy-1200x630_eef162a5.png');
+    expect(html).toContain('<meta property="og:image:url"');
     expect(html).toContain('x-neopolis-akademy-1200x675_28f812f5.png');
     expect(html).toContain('<meta property="og:image:secure_url"');
     expect(html).toContain('<meta property="og:image:type" content="image/png" />');
@@ -33,6 +34,8 @@ describe("pages publiques de formations IA", () => {
     expect(html).toContain('.content-shell { width: 100%; max-width: 78rem; margin-inline: auto; padding-inline: clamp(1.25rem, 4vw, 3rem); }');
     expect(html).toContain('<main class="content-shell">');
     expect(html).toContain('<footer class="site-footer">');
+    expect(html).toContain('href="https://fr.linkedin.com/company/neopolis-development"');
+    expect(html).toContain('href="https://fr-fr.facebook.com/neopolisdev/"');
     expect(html).toContain('href="/mentions-legales">Mentions légales</a>');
   });
 
@@ -48,11 +51,17 @@ describe("pages publiques de formations IA", () => {
     expect(html).toContain(`<title>${theme!.seo.title}</title>`);
     expect(html).toContain(`meta name="keywords" content="${theme!.seo.keywords}"`);
     expect(html).toContain(`https://akademy.neodev.click/formations-ia/${theme!.slug}`);
+    expect(html).toContain('"@type":"Organization"');
+    expect(html).toContain('"sameAs"');
   });
 
   it("rend une vraie page introuvable non indexable et un sitemap avec les routes publiques", () => {
     expect(renderPublicTrainingNotFound()).toContain('name="robots" content="noindex, follow"');
     const sitemap = renderPublicTrainingSitemap();
+    expect(sitemap).toContain("https://akademy.neodev.click/");
+    expect(sitemap).toContain("https://akademy.neodev.click/ai-news");
+    expect(sitemap).toContain("https://akademy.neodev.click/apply");
+    expect(sitemap).toContain("https://akademy.neodev.click/mentions-legales");
     expect(sitemap).toContain("https://akademy.neodev.click/formations-ia");
     expect(sitemap).toContain("comptabilite-finance");
   });

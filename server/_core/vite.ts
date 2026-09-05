@@ -8,7 +8,10 @@ import viteConfig from "../../vite.config";
 import { injectSeoHead } from "../seo";
 
 export const SPA_DOCUMENT_NO_CACHE_HEADERS = {
-  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+  // Le navigateur peut mémoriser le document, mais doit systématiquement le
+  // revalider avant réutilisation. Cela préserve l’invalidation des bundles
+  // après une publication tout en évitant un blocage total du cache HTML.
+  "Cache-Control": "no-cache, must-revalidate, proxy-revalidate",
   Pragma: "no-cache",
   Expires: "0",
 } as const;
@@ -75,8 +78,8 @@ export function serveStatic(app: Express) {
 
   app.get("/index.html", (_req, res) => res.redirect(301, "/"));
   // Les bundles Vite possèdent un hash de contenu. Ils peuvent être conservés un an,
-  // alors que le document HTML reste explicitement non cacheable plus bas afin de
-  // toujours pointer vers le bundle courant après une publication.
+  // alors que le document HTML est revalidé plus bas afin de toujours pointer
+  // vers le bundle courant après une publication.
   app.use(
     "/assets",
     express.static(path.resolve(distPath, "assets"), {
