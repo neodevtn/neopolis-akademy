@@ -28,7 +28,7 @@ describe("securityHeaders", () => {
     const policy = buildContentSecurityPolicy(false);
 
     expect(policy).toContain("script-src 'self' 'unsafe-inline' https://manus-analytics.com https://www.youtube.com https://www.googletagmanager.com");
-    expect(policy).toContain("connect-src 'self' https://manus-analytics.com https://sentry.neopolis-dev.com https://www.google-analytics.com https://region1.google-analytics.com");
+    expect(policy).toContain("connect-src 'self' https://manus-analytics.com https://sentry.neopolis-dev.com https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com");
     expect(policy).not.toMatch(/connect-src[^;]*\shttps:\s/);
     expect(policy).not.toContain("'unsafe-eval'");
   });

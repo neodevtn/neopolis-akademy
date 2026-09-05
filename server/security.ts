@@ -50,8 +50,10 @@ function checkRateLimit(ip: string, prefix: string, maxRequests: number, windowM
 
 const GA4_SCRIPT_ORIGINS = ["https://www.googletagmanager.com"] as const;
 const GA4_CONNECT_ORIGINS = [
+  "https://www.googletagmanager.com",
   "https://www.google-analytics.com",
   "https://region1.google-analytics.com",
+  "https://analytics.google.com",
 ] as const;
 
 /**

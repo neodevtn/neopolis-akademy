@@ -18,6 +18,8 @@ try {
   const googleRequests = [];
   const googleResponses = [];
   const googleRequestFailures = [];
+  const googleRelatedRequests = [];
+  const googleTagResponses = [];
 
   page.on("console", (message) => {
     if (message.type() === "error" && /content security policy|googletagmanager|google-analytics/i.test(message.text())) {
@@ -26,12 +28,18 @@ try {
   });
   page.on("request", (request) => {
     const hostname = new URL(request.url()).hostname;
+    if (hostname.includes("google")) {
+      googleRelatedRequests.push({ hostname, resourceType: request.resourceType() });
+    }
     if (googleTelemetryHostnames.has(hostname)) {
       googleRequests.push({ hostname, resourceType: request.resourceType() });
     }
   });
   page.on("response", (response) => {
     const hostname = new URL(response.url()).hostname;
+    if (googleTagHostnames.has(hostname)) {
+      googleTagResponses.push(response.status());
+    }
     if (googleCollectionHostnames.has(hostname)) {
       googleResponses.push({ hostname, status: response.status() });
     }
@@ -70,13 +78,17 @@ try {
     googleCollectionRequested: googleRequests.some((request) => googleCollectionHostnames.has(request.hostname)),
     googleCollectionResponseSuccess: googleResponses.some((response) => response.status >= 200 && response.status < 400),
     googleCollectionFailureCount: googleRequestFailures.length,
+    googleTagResponseSuccess: googleTagResponses.some((status) => status >= 200 && status < 400),
+    googleRuntimeLoaded: await page.evaluate(() => Boolean(window.google_tag_manager)),
+    dataLayerUsesArguments: await page.evaluate(() => Array.isArray(window.dataLayer) && window.dataLayer.every((entry) => !Array.isArray(entry))),
+    googleRelatedRequestTypes: [...new Set(googleRelatedRequests.map((request) => `${request.hostname}:${request.resourceType}`))].sort(),
     cspErrorCount: cspErrors.length,
   };
 
+  console.log(JSON.stringify(result));
   if (result.scriptsAfterConsent !== 1 || !result.gtagReady || !result.pageViewQueued || !result.googleScriptRequested || !result.googleCollectionRequested || !result.googleCollectionResponseSuccess || result.googleCollectionFailureCount !== 0 || result.cspErrorCount !== 0) {
     throw new Error(`GA4 production consent QA failed: ${JSON.stringify(result)}`);
   }
-  console.log(JSON.stringify(result));
   await context.close();
 } finally {
   await browser.close();
