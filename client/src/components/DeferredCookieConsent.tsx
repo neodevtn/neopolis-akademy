@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 
-const CookieConsent = lazy(() => import("./CookieConsent"));
+import CookieConsent from "./CookieConsent";
 import { COOKIE_CONSENT_KEY } from "@/lib/cookieConsentState";
 
 /**
@@ -27,9 +27,5 @@ export default function DeferredCookieConsent() {
 
   if (!shouldLoad) return null;
 
-  return (
-    <Suspense fallback={null}>
-      <CookieConsent />
-    </Suspense>
-  );
+  return <CookieConsent />;
 }
